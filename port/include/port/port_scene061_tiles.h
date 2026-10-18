@@ -1,7 +1,9 @@
 #ifndef PORT_SCENE061_TILES_H
 #define PORT_SCENE061_TILES_H
 
-/* Scene 061: improved version accepted by the user (2026-10-18).
+#include "port_scene_wide_tiles.h"
+
+/* Scene 061: retained layout, wider diagonal correction under review (2026-10-18).
  * Coordinates and steps are in original 8x8 tiles. Call only for event 061,
  * on BG3 (floor) or BG2 (wall), including original coordinates: the completed
  * left floor ornament spans the old map edge. Do not pass the result
@@ -35,6 +37,9 @@ static inline int PortScene061TileSource(int bg, int width, int height, int* x, 
             return 1;
         }
     }
+    if (width == 32 && height == 32 &&
+        (*x < 0 || *x >= 32 || *y < 0 || *y >= 32))
+        return PortSceneWideSource(61, bg, x, y);
     steps = bg == 3 ? floorSteps : wallSteps;
     for (i = 0; i < 64 && (*x < 0 || *x >= width); ++i) {
         edge = *x < 0 ? 0 : 1;
