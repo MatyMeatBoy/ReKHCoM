@@ -29,8 +29,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097 y 098.
-- Pendientes de ciclo completo: 099, 102, 104, 110,
+  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098 y 099.
+- Pendientes de ciclo completo: 102, 104, 110,
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -39,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 16 fondos y 7 escenarios de jefe; 23 piezas en total.
+- Pendiente en esta tanda: 15 fondos y 7 escenarios de jefe; 22 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -317,4 +317,23 @@ Evidencia EU: `build/preliminar-v1/ready/escena-098`; capturas regionales en
 `build/preliminar-v1/regional-098-us` y `regional-098-jp`, Original EU en
 `build/preliminar-v1/original/escena-098`. Captura:
 `build/preliminar-v1/ready/escena-098/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 099
+
+Sala de la Reina de Corazones, batalla del evento 099. BG3 mezcla la pared,
+la chimenea, el jarrón y el piso en un solo mapa. Los objetos y adornos
+centrales permanecen únicos. A los lados se prolonga un solo módulo ornamental
+y luego un panel rosa limpio. El piso ajedrezado usa dos colores opacos de la
+paleta original, con celdas que crecen hacia el primer plano; así no se copian
+la chimenea ni el punto de fuga central en los márgenes.
+
+Verificación: escena 099 pasa 12 comparaciones EU (cuatro ventanas, estados
+100/300/1000), y vista Original pasa las 12 sin cambios. US y JP pasan la
+muestra rápida. El recorte GBA se mantiene idéntico en todas las capturas.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-099`; capturas regionales en
+`build/preliminar-v1/regional-099-us` y `regional-099-jp`, Original EU en
+`build/preliminar-v1/original/escena-099`. Captura:
+`build/preliminar-v1/ready/escena-099/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.

@@ -215,6 +215,49 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==99 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Queen's chamber: mirror only the side wallpaper modules and the
+         * checker floor. The centered fireplace, lamp, arch and vase stay
+         * unique; the clean panel supplies the unseen top/bottom rows. */
+        if (v[1]!=3) return 0;
+        if (ox<0 || ox>=w) {
+            int distance=ox<0?-ox-1:ox-w;
+            if (oy<3) {
+                sx=PortSceneTileMod(ox,w);
+            } else if (distance<8) {
+                sx=ox<0?distance:w-1-distance;
+            } else {
+                /* Past one edge module, continue with the clean pink panel. */
+                sx=11;
+            }
+        }
+        if ((ox<0 || ox>=w) && oy>=16 && oy<21) {
+            /* Continue clean wall trim without the candle motifs or vase. */
+            sx=ox<0?4+PortSceneTileMod(-ox-1,3):29+PortSceneTileMod(ox-w,3);
+        } else if ((ox<0 || ox>=w) && oy>=21) {
+            /* Beyond the authored edges, continue the floor with solid
+             * palette-matched checker cells; repeating the perspective map
+             * would introduce extra vanishing points in the wide margins. */
+            int distance=ox<0?-ox-1:ox-w;
+            int cellWidth=oy<24?2:oy<26?3:oy<31?6:8;
+            int baseDark;
+            int dark;
+            if (oy<h) baseDark=oy<24 || (oy>=29 && oy<31);
+            else baseDark=PortSceneTileMod((oy-h)/2,2)!=0;
+            dark=baseDark ^ ((distance/cellWidth)&1);
+            if (dark) { sx=5; sy=31; }
+            else if (oy>=24 && oy<26) { sx=5; sy=25; }
+            else { sx=2; sy=31; }
+            if (oy>=h) sy=h-1;
+        }
+        if (oy<0) {
+            sy=PortSceneTileMod(oy,3);
+        } else if (oy>=h && ox>=0 && ox<w) {
+            /* Hold the nearest clean checker row past the room map. */
+            sy=31;
+        }
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;
