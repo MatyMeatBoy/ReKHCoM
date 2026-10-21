@@ -24,6 +24,10 @@ def fixtures():
  list_id,index=events[88]
  result.append(dict(name='evento-088-escena-087',scene=87,
                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
+ # Atlantica's Ursula chamber art is also used by the follow-up event 106.
+ list_id,index=events[106]
+ result.append(dict(name='evento-106-escena-104',scene=104,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
  for event_id in (82,83,84,85):
   list_id,index=events[event_id]

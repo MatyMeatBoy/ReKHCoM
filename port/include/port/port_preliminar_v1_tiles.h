@@ -27,6 +27,26 @@ static inline const PortPreliminarRecipe* PortPreliminarFind(uint32_t hash, int 
 static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x, int* y) {
     const int16_t* v = p->v;
     int ox=*x, oy=*y, sx=ox, sy=oy, w=v[4], h=v[5];
+    if (v[0]==104 && v[1]==3) {
+        /* Atlantica's Ursula chamber continues along a 32px/16px diagonal
+         * rhythm. Sample the left four-tile rib/floor strip in its original
+         * orientation so the wall and floor remain continuous and the
+         * central mouth is never copied. Above the opaque source, use the
+         * clean right-hand wall stripes; below it, continue the solid purple
+         * backing instead of reflecting blank row 31 or inventing floor. */
+        if (ox>=0 && ox<w && oy>=0 && oy<h-1) return 1;
+        sx=PortSceneTileMod(ox,4);
+        sy=oy-(ox-sx)/2;
+        if (sy<0) {
+            sx=40+PortSceneTileMod(ox,4);
+            sy=0;
+        } else if (sy>=h-1) {
+            sx=0;
+            sy=30;
+        }
+        if (sx<0 || sx>=w || sy<0 || sy>=h-1) return 0;
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0]==45) {
         if (v[1]==2) {
             if (ox>=0 && ox<64 && oy>=0 && oy<64) return 1;

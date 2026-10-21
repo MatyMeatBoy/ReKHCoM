@@ -31,7 +31,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
   179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
   099 y 102.
-- Pendientes de ciclo completo: 104, 110,
+- Pendientes de ciclo completo: 110,
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -40,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 14 fondos y 7 escenarios de jefe; 21 piezas en total.
+- Pendiente en esta tanda: 13 fondos y 7 escenarios de jefe; 20 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -358,3 +358,25 @@ Evidencia EU: `build/preliminar-v1/ready/escena-102`; capturas regionales en
 `build/preliminar-v1/original/escena-102`. Captura:
 `build/preliminar-v1/ready/escena-102/escena-102/3440x1440-300-despues.png`.
 Estado: preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 104
+
+Cámara orgánica de Úrsula en Atlantica, compartida por las escenas 104 y 106.
+BG3 mantiene completa la sala central y su boca única. En los márgenes se
+prolonga el corredor con el período natural de 32 px en horizontal y 16 px en
+vertical: así continúan las costillas diagonales sin reflejar ni duplicar la
+boca. El muro usa su franja de estrías verticales; el respaldo inferior
+continúa en púrpura sólido, sin espejar la fila vacía del mapa. BG2 conserva
+los objetos y detalles propios. El encuadre GBA de 240×160 sigue idéntico.
+
+Verificación: escenas 104 y 106 pasan 24 comparaciones EU (cuatro ventanas,
+estados 100/300/1000); el recorte nativo permanece idéntico. La vista Original
+pasa las 24 comparaciones. EU, US y JP pasan la muestra rápida en ambas
+entradas.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-104` y
+`build/preliminar-v1/ready/evento-106-escena-104`; capturas regionales en
+`build/preliminar-v1/regional-104-us` y `regional-104-jp`; Original EU en
+`build/preliminar-v1/original-104-eu`. Captura:
+`build/preliminar-v1/ready/escena-104/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
