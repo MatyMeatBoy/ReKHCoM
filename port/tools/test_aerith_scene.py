@@ -43,7 +43,8 @@ def main():
         shutil.copy2(exe_source, run / "khcom.exe")
         shutil.copy2(dll_source, run / "SDL3.dll")
         (run / "kh_com.ini").write_text(
-            f"config_version=11\nview_mode={view_mode}\nzoom=6\n"
+            # Zoom IDs are twice the pixel scale: 12 is the x6 review setting.
+            f"config_version=11\nview_mode={view_mode}\nzoom=12\n"
             "hd_text=0\nvsync=0\nfullscreen=0\n",
             encoding="ascii",
         )
@@ -51,7 +52,9 @@ def main():
         env = dict(os.environ, SDL_VIDEO_DRIVER="dummy", SDL_AUDIO_DRIVER="dummy",
                    KHCOM_FAST="1", KHCOM_EVENT=f"{list_id}:{index}",
                    KHCOM_WINDOW=WINDOW, KHCOM_KEYS=keys,
-                   KHCOM_SHOTS=",".join(map(str, FRAMES)), KHCOM_QUIT=str(QUIT))
+                   KHCOM_SHOTS=",".join(map(str, FRAMES)),
+                   KHCOM_OUTPUT_SHOT=",".join(map(str, FRAMES)),
+                   KHCOM_QUIT=str(QUIT))
         if native_frame:
             env["KHCOM_AERITH_NATIVE_FRAME"] = native_frame
         else:
@@ -61,7 +64,9 @@ def main():
                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
         for frame in FRAMES:
-            shot = run / f"shot_{frame:05d}.bmp"
+            # KHCOM_OUTPUT_SHOT captures the final presented window. KHCOM_SHOTS
+            # is retained as a native-canvas diagnostic, not the review image.
+            shot = run / f"out_{frame:05d}.bmp"
             if not shot.is_file():
                 raise SystemExit(f"Falta captura {label} {frame}")
             results.append((label, frame, shot))
@@ -78,7 +83,7 @@ def main():
         wide_path = next(p for label, f, p in results if label == "native-after" and f == frame)
         with Image.open(gba_path) as a, Image.open(wide_path) as b:
             a, b = a.convert("RGB"), b.convert("RGB")
-            rows.append({"frame": frame, "gba_size": list(a.size), "wide_size": list(b.size)})
+            rows.append({"frame": frame, "gba_size": list(a.size), "candidate_size": list(b.size)})
         with Image.open(next(p for label, f, p in results if label == "wide-before" and f == frame)) as before, \
              Image.open(next(p for label, f, p in results if label == "native-after" and f == frame)) as after:
             diff = ImageChops.difference(before.convert("RGB"), after.convert("RGB"))
@@ -88,7 +93,7 @@ def main():
                 image.convert("RGB").save(out / f"aerith-{frame:04d}-{label}.png")
     report = {"event": "009 Traverse Town E4", "window": WINDOW,
               "zoom": 6, "frames": rows,
-              "review": "wide-before shows current framing; native-after tests the fixed GBA composition; gba-reference shows cartridge output."}
+              "review": "All PNGs are final presented-window captures. wide-before shows current framing; native-after tests the fixed GBA composition; gba-reference shows cartridge output."}
     (out / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
     print(f"Revisa las capturas PNG y report.json en: {out}")

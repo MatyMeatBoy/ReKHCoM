@@ -14,8 +14,10 @@ mezcla de color. La prueba no inventa un fundido para Aerith: permite revisar
 el efecto del cartucho en el encuadre fijo propuesto. Otras escenas deben
 revisarse individualmente antes de añadirlas a la lista.
 
-`Probar Aerith - encuadre.bat` ejecuta el evento 009 a zoom 6 y guarda una
+`Probar Aerith - encuadre.bat` ejecuta el evento 009 a escala x6 y guarda una
 referencia GBA, la panorámica actual y la propuesta de encuadre nativo
-en `build/scene-aerith-review`. Las capturas y `report.json` permiten revisar
-los fotogramas alrededor de la entrada y salida de Aerith. La BAT usa
-`KHCOM_AERITH_NATIVE_FRAME=on` para la pasada candidata.
+en `build/scene-aerith-review`. El informe usa las capturas de la ventana ya
+presentada (`KHCOM_OUTPUT_SHOT`); los BMP del lienzo PPU quedan como diagnóstico.
+Las capturas y `report.json` permiten revisar los fotogramas alrededor de la
+entrada y salida de Aerith. La BAT usa `KHCOM_AERITH_NATIVE_FRAME=on` para la
+pasada candidata.
