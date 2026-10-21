@@ -1,13 +1,17 @@
 from pathlib import Path
-import sys,re,json,struct
+import argparse,sys,re,json,struct
 from PIL import Image,ImageDraw
-sys.path.insert(0,'port/tools');import scene_tile_data as s
-root=Path.cwd();out=root/'build/preliminar-v1/inventory';out.mkdir(parents=True,exist_ok=True)
+parser=argparse.ArgumentParser(description='Inventory event backgrounds from one regional ROM.')
+parser.add_argument('--region',choices=('eu','us','jp'),default='eu')
+region=parser.parse_args().region
+root=Path.cwd();sys.path.insert(0,'port/tools');import scene_tile_data as s
+s.ROM=(root/'roms'/{'eu':'B8CP.gba','us':'B8CE.gba','jp':'B8CJ.gba'}[region]).read_bytes()
+out=root/'build/preliminar-v1/inventory'/region;out.mkdir(parents=True,exist_ok=True)
 src=(root/'src/evt/event_index_data.c').read_text();body=src.split('gEventBackgroundDefs[] = {',1)[1].split('};',1)[0];names=re.findall(r'(NULL|&gEventBg\w+)',body)
 groups={}
 for i,n in enumerate(names):
  if n!='NULL':groups.setdefault(n[1:],[]).append(i)
-syms=(root/'build/eu/pc/rom_symbols.s').read_text();rows=[];thumbs=[]
+syms=(root/f'build/{region}/pc/rom_symbols.s').read_text();rows=[];thumbs=[]
 for n,events in groups.items():
  try:
   address=int(re.search(r'\.set _'+n+r', (0x[0-9a-fA-F]+)',syms)[1],16);d=s.at(address,48)

@@ -45,6 +45,21 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         if (oy<43) { *x=0; *y=oy; return 1; }
         *x=56+PortSceneTileMod(ox,8); *y=56+PortSceneTileMod(oy,8); return 1;
     }
+    if (v[0]==54) {
+        /* Keep the island and pier unique. BG3's leftmost 128px is clear
+         * sky/sea and safe as a water donor at horizontal map edges. */
+        if (v[1]==2) return ox>=0 && ox<64 && oy>=0 && oy<64;
+        if (ox>=0 && ox<64 && oy>=0 && oy<64) return 1;
+        if (oy<0) {
+            *x=PortSceneTileMod(ox,8); *y=PortSceneTileMod(oy,8); return 1;
+        }
+        if (oy>=64) {
+            *x=PortSceneTileMod(ox,16); *y=48+PortSceneTileMod(oy-48,8); return 1;
+        }
+        /* Above the island, the full row carries the clouds and horizon;
+         * below it, restrict donors to the eight-tile open-water margin. */
+        *x=PortSceneTileMod(ox,oy<24?64:16); *y=oy; return 1;
+    }
     if (v[0]==7 && (ox<0 || ox>=64 || oy<0 || oy>=64)) {
         if (v[1]==2) {
             if (ox>=64) {

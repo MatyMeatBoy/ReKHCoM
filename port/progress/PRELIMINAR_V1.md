@@ -16,6 +16,9 @@ El selector `KHCOM_PRELIMINAR_V1=1` solo activa perfiles promovidos en `READY`
 de `port/tools/preliminar_v1_recipes.py`. Los demás parámetros son estudios
 pendientes, desactivados. Los estudios iniciales de jefes quedan en archivos
 privados de `build/preliminar-v1`, fuera del renderizador entregado.
+El inventario acepta `--region eu|us|jp`; al generar la tabla C se combinan
+los tres archivos `scenes.json` para que cada perfil cubra los hashes de las
+tres ediciones del juego.
 
 ## Inventario
 
@@ -25,8 +28,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
-  045, 053 (también evento 177).
-- Pendientes de ciclo completo: 054, 055, 081, 087, 090,
+  045, 053 (también evento 177) y 054 (también evento 178).
+- Pendientes de ciclo completo: 055, 081, 087, 090,
   095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
   122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
@@ -36,6 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
+- Pendiente en esta tanda: 23 fondos y 7 escenarios de jefe; 30 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -152,3 +156,27 @@ Evidencia: `build/preliminar-v1/verify-053*`,
 `build/preliminar-v1/original-053` y capturas del evento 177 bajo
 `build/preliminar-v1/verify-053-event177`. Estado: listo para comentarios;
 no aprobado por el usuario.
+
+## Registro 054
+
+Playa de Isla del Destino, compartida entre el inicio 054 y el evento 178 de
+Riku. La isla, su costa, las palmeras, la vegetación y la pasarela se conservan
+como elementos únicos; la receta extiende solo el cielo y el océano.
+
+- BG2 queda limitado a los 64×64 tiles originales, manteniendo intacta la
+  silueta completa de la isla y de la pasarela.
+- BG3 conserva su contenido original dentro del mapa. En los bordes, el cielo
+  y las nubes usan una muestra de cielo despejado; el mar toma un tramo limpio
+  de 16 tiles de ancho para espaciar las olas y evitar repetir la isla.
+- Las palmeras y el acantilado no aparecen en los donantes de mar; el horizonte
+  continúa en una línea horizontal sin escalones.
+
+Verificación: ambos inicios, en EU/US/JP, cuatro ventanas y estados 100/300/1000;
+12 pares por evento y región, con extensión activa y cero diferencias en los
+240×160 nativos. Vista Original idéntica en los cuatro tamaños EU para ambos
+eventos. No cubre todos los fotogramas de las secuencias.
+
+Evidencia: `build/preliminar-v1/verify-054-eu`, `verify-054-us`,
+`verify-054-jp` y `original-054-eu`. Captura final:
+`build/preliminar-v1/verify-054-eu/escena-054/3440x1440-300-despues.png`.
+Estado: preliminar implementada para comentarios; no aprobada por el usuario.

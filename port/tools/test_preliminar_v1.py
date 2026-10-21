@@ -18,6 +18,8 @@ def fixtures():
  # gEventBg053 is reused in Riku's Destiny Islands event. Keep the same
  # recipe, but exercise its different character placement and camera start.
  result.append(dict(name='evento-177-escena-053',scene=53,start=('KHCOM_EVENT','1:28')))
+ # gEventBg054 is also reused for Riku's return to Destiny Islands.
+ result.append(dict(name='evento-178-escena-054',scene=54,start=('KHCOM_EVENT','1:29')))
  for c in battle_cases():
   if c['arena'] in BOSSES:result.append(dict(name=c['arena'],start=('KHCOM_BATTLE',f"{c['battle']}:{c['stage']}:0")))
  return result

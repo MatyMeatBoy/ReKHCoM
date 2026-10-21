@@ -17,9 +17,11 @@ def package(build,out,evidence):
  (out/'user-data').mkdir(exist_ok=True)
  (out/'user-data/kh_com.ini').write_text('config_version=11\nview_mode=4\nzoom=6\nhd_text=0\nfullscreen=0\nvsync=1\n')
  menu=['@echo off','setlocal','for /f "tokens=1 delims==" %%V in (\'set KHCOM_ 2^>nul\') do set "%%V="','echo Preliminar V1 - piezas terminadas para comentar']
- labels={7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino'}
+ labels={7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino',54:'054 - Playa de Isla del Destino (Riku)'}
  for i,c in enumerate(selected,1):
-  label='177 - Isla del Destino (Riku)' if c['name']=='evento-177-escena-053' else labels.get(c.get('scene'),c['name'])
+  label=('177 - Isla del Destino (Riku)' if c['name']=='evento-177-escena-053' else
+         '178 - Isla del Destino (Riku)' if c['name']=='evento-178-escena-054' else
+         labels.get(c.get('scene'),c['name']))
   menu.append(f"echo {i}. {label}")
  menu+=['set "pieza=1"','set /p "pieza=Escena [1]: "']
  for i,c in enumerate(selected,1):
