@@ -1271,6 +1271,16 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             const BgWorld* wd = &sBgWorldLatched[bg];
             int wx = l->valid ? l->x + gx + (hofs - l->hofs) : wd->x + gx + (hofs - wd->hofs);
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
+            if (sPreliminarRecipe[bg] && sPreliminarRecipe[bg]->v[0]==44 && bg==2) {
+                int sx,sy;
+                if (PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
+                    int index=SinglePanelIndex(l,cnt,sx,sy);
+                    out[x]=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
+                    sInWorld[x]=1;
+                    continue;
+                }
+                goto scalar_world;
+            }
             if (sAgrabah109Layer[bg] == 2) {
                 if (Agrabah109DecorPixel(l, chars, wx, wy, &out[x])) {
                     sInWorld[x] = 1;
@@ -2834,6 +2844,8 @@ void PortPpuBeginFrame(void) {
     memset(sAgrabahLayer, 0, sizeof(sAgrabahLayer));
     memset(sPreliminarRecipe, 0, sizeof(sPreliminarRecipe));
     if (sPreliminarV1 && !sBattleView) {
+        const char* skipValue=getenv("KHCOM_PRELIMINAR_SKIP");
+        int skip=skipValue?atoi(skipValue):-1;
         for (b=1; b<4; b++) {
             const BgLatch* l=&sBgLatch[b];
             if (l->valid && l->width <= 4 && l->height <= 4) {
@@ -2843,6 +2855,8 @@ void PortPpuBeginFrame(void) {
                     for (xx=0; xx<l->width*32; xx++)
                         hash=(hash^(uint32_t)MapTile(l,xx,yy))*16777619u;
                 sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
+                if (sPreliminarRecipe[b] && sPreliminarRecipe[b]->v[0]==skip)
+                    sPreliminarRecipe[b]=NULL;
             }
         }
     }

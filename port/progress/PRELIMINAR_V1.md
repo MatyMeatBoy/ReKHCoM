@@ -24,8 +24,8 @@ afin. Se identifican mapas por sus datos y dimensiones, incluido EU que los
 descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
-- En cierre: 007 (también evento 009).
-- Pendientes de ciclo completo: 044, 045, 053, 054, 055, 081, 087, 090,
+- Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186).
+- Pendientes de ciclo completo: 045, 053, 054, 055, 081, 087, 090,
   095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
   122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
@@ -72,3 +72,33 @@ Verificación de cierre 007:
 - Copia jugable privada: `../ReKHCoM-preliminarV1`, lanzador
   `Probar Preliminar V1.bat`. Contiene solo piezas cerradas en su menú.
 - Estado: preliminar implementada para comentarios, no aprobada por el usuario.
+
+## Registro 044
+
+Plaza de Ciudad del Paso al atardecer. El reloj y la silueta central son
+únicos. Se conservan ventanas especiales, farolas y jardineras originales.
+El perfil se asocia a los datos compartidos por 044/186; las capturas recorren
+044, no toda la secuencia de 186.
+
+- Cielo desde una tira completa sin edificios ni el relleno marrón lateral.
+- Tejado rojo, fachada amarilla diagonal y fachada derecha horizontal con
+  sus continuidades independientes. El edificio central no se replica.
+- Borde de ladrillo izquierdo desde x=120..127, un hueco entre jardineras:
+  muestrear en píxeles conserva los desplazamientos alternos de 4 px. Copiar
+  tiles completos introducía trozos de maceta o escalones en la diagonal.
+- El suelo sigue la franja de sol por la diagonal opuesta a la fachada;
+  los donantes de sombra proceden del suelo real, no del relleno del mapa.
+- Paleta BG activa y cambios solo fuera del rectángulo GBA.
+
+Verificación: 16 casos / 27 pares pasan, sin diferencias en los 240×160.
+EU: cuatro ventanas x3 y estados 100/300/1000. US/JP: una muestra amplia x3
+3440×1440 en el estado 300; vista Original de las tres regiones. No equivale
+a probar todas las fases o todas las cámaras de las escenas compartidas.
+Los diez controles (004/006/007/014/057/061/074/107/109/130) permanecen
+idénticos en toda la imagen al activar solo la receta 044.
+
+Evidencia privada: `build/preliminar-v1/final-044*`. Se comparó la misma
+instantánea y el mismo ejecutable en cada par. `KHCOM_PRELIMINAR_SKIP=44`
+permite apagar solo esta receta manteniendo activadas las anteriores.
+La copia jugable se actualiza con las dos piezas terminadas. El resto de la
+tanda y los siete jefes siguen pendientes de su ciclo completo.

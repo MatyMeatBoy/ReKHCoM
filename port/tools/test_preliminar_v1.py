@@ -35,6 +35,7 @@ def capture(c,a,out):
  env['KHCOM_FAST']='1'
  env['KHCOM_AGRABAH_WIDE']='1';env['KHCOM_AGRABAH109_WIDE']='1'
  frames=[300] if a.quick else [100,300,1000]
+ subject=a.subject if a.subject is not None else c.get('scene') if c.get('scene') in READY else None
  (d/'kh_com.ini').write_text(f'config_version=11\nview_mode={0 if a.original else 4}\nzoom=6\nhd_text=0\nvsync=0\nfullscreen=0\n')
  signature=str(exe.stat().st_mtime_ns)
  if not (d/'build.txt').exists() or (d/'build.txt').read_text()!=signature or not all((d/f'frame{f}.khst').exists() for f in frames):
@@ -46,7 +47,8 @@ def capture(c,a,out):
    pair=[]
    for enabled in [False,True]:
     replay=dict(env,KHCOM_WINDOW=f'{width}x{height}',KHCOM_LOADSTATE=f'frame{f}.khst',KHCOM_QUIT='14',KHCOM_SHOTS='12',KHCOM_OUTPUT_SHOT='12')
-    if enabled:replay['KHCOM_PRELIMINAR_V1']='1'
+    if enabled or subject is not None:replay['KHCOM_PRELIMINAR_V1']='1'
+    if not enabled and subject is not None:replay['KHCOM_PRELIMINAR_SKIP']=str(subject)
     run(exe,d,replay,rom)
     with Image.open(d/'shot_00012.bmp') as im:
      pair.append(im.convert('RGB'))
@@ -57,7 +59,7 @@ def capture(c,a,out):
    results.append(dict(window=[width,height],frame=f,native_diff=native,changed=changed is not None,passed=native is None))
   print(c['name'],width,'native',sum(not r['passed'] for r in results),flush=True)
  for p in d.glob('*.bmp'):p.unlink()
- expected=c.get('scene') in READY and not a.original
+ expected=c.get('scene')==subject and subject in READY and not a.original
  changed=any(r['changed'] for r in results)
  row=dict(**c,checks=results,passed=all(r['passed'] for r in results) and (changed if expected else not changed),visual_review='pending');(d/'report.json').write_text(json.dumps(row,indent=2));return row
 
@@ -83,7 +85,7 @@ def gallery(out,rows):
   sheet.save(out/f'revision-{start//6+1}.png')
 
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--build',default='build/agrabah109-eu');p.add_argument('--out',default='build/preliminar-v1/eu');p.add_argument('--region',default='eu',choices=['eu','us','jp']);p.add_argument('--only');p.add_argument('--quick',action='store_true');p.add_argument('--original',action='store_true');a=p.parse_args();out=ROOT/a.out;out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--build',default='build/agrabah109-eu');p.add_argument('--out',default='build/preliminar-v1/eu');p.add_argument('--region',default='eu',choices=['eu','us','jp']);p.add_argument('--only');p.add_argument('--quick',action='store_true');p.add_argument('--original',action='store_true');p.add_argument('--subject',type=int);a=p.parse_args();out=ROOT/a.out;out.mkdir(parents=True,exist_ok=True)
  rows=[]
  for c in fixtures():
   if a.only and c['name'] not in a.only.split(','):continue

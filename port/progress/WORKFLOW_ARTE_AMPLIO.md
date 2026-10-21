@@ -70,6 +70,10 @@ fondo sin la extensión, porque esta exigía el modo combate.
   también cuando la pieza original usa paleta OBJ.
 - Comparar la misma instantánea y ejecutable antes/después: el avance del
   texto y la animación pueden diferir entre arranques independientes.
+- En cada nueva pieza de la tanda, apagar solo su receta para los controles,
+  manteniendo activadas las anteriores. Si una tira limpia mide un tile y la
+  diagonal necesita alternar 4 px, usar muestreo de píxeles con ese desfase;
+  no recortar el borde ni aceptar fragmentos del adorno vecino como donantes.
 
 En todos los casos:
 - Guardar **índices de paleta** y resolverlos con la paleta activa en cada

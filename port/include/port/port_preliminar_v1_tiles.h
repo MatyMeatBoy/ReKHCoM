@@ -49,9 +49,37 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
             if (sy>=0 && sy<64) { *x=sx; *y=sy; return 1; }
         }
     }
-    if (v[0]==44 && v[1]==3 && (ox<10 || ox>=56) &&
-        (oy<26 || (ox<0 && 2*oy+ox<64))) {
-        *x=16+PortSceneTileMod(ox,8); *y=oy<0?0:oy>25?25:oy; return 1;
+    if (v[0]==44) {
+        int diagonal=2*oy+ox;
+        if (v[1]==3 && oy<21 && (ox<11 || ox>=56 || oy<0)) {
+            *x=11+PortSceneTileMod(ox-11,8); *y=oy<0?0:oy; return 1;
+        }
+        if (v[1]==3 && ((ox>=8 && ox<64 && oy>=64) ||
+            (ox<8 && diagonal>=116) || (ox>=64 && oy>=48))) {
+            /* Sunlight crosses the ground in the opposite diagonal from
+             * the yellow facade. Continue that band independently. */
+            int light=2*oy-ox;
+            if (light<64 || light>114) {
+                *x=48+PortSceneTileMod(ox-48,8); *y=48+PortSceneTileMod(oy-48,4); return 1;
+            }
+            sx=24+PortSceneTileMod(ox-24,4); sy=oy+(sx-ox)/2;
+            while (sy>=64) { sx-=4; sy-=2; }
+            if (2*sy+sx<124) { sx+=8; sy+=4; }
+            *x=sx; *y=sy; return sy>=0 && sy<64;
+        }
+        if (ox<8) {
+            if (v[1]==2) {
+                if (diagonal>=68 && diagonal<80) sx=8+PortSceneTileMod(ox-8,4);
+                else return 0;
+                *x=sx; *y=oy+(ox-sx)/2;
+                return *y>=0 && *y<64;
+            }
+            if (oy>=21 && diagonal<64) { *x=0; *y=22; return 1; }
+            sx=12+PortSceneTileMod(ox-12,4); sy=oy+(ox-sx)/2;
+            if (sy>=0 && sy<64) { *x=sx; *y=sy; return 1; }
+            *x=PortSceneTileMod(ox,8); *y=56+PortSceneTileMod(sy-56,8); return 1;
+        }
+        if (ox>=64 && oy>=21 && oy<24 && v[1]==3) { *x=0; *y=22; return 1; }
     }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
@@ -77,5 +105,17 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *y=v[offset+1]+PortSceneTileMod(sy-v[offset+1],v[offset+3]);
         return 1;
     }
+}
+
+static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (p && p->v[0]==44 && p->v[1]==2 && wx<64 &&
+        2*wy+wx>=114*8 && 2*wy+wx<124*8) {
+        /* Clean curb at x=120..127, between the original flower boxes.
+         * Alternating columns need a FOUR PIXEL vertical offset: retaining
+         * the pixel phase is essential, rather than clipping half a tile. */
+        *sx=120+PortSceneTileMod(wx-120,8); *sy=wy+(wx-*sx)/2;
+        return *sy>=0 && *sy<512;
+    }
+    return 0;
 }
 #endif
