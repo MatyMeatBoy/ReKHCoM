@@ -29,10 +29,9 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183).
-- Pendientes de ciclo completo: 081, 087, 090,
-  095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
-  122, 124, 129, 131 y 132.
+  179, 181 y 183), 081 (eventos 082–085).
+- Pendientes de ciclo completo: 087, 090, 095, 097, 098, 099, 102, 104,
+  110, 112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
@@ -40,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 22 fondos y 7 escenarios de jefe; 29 piezas en total.
+- Pendiente en esta tanda: 21 fondos y 7 escenarios de jefe; 28 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -204,3 +203,23 @@ regiones; esto no recorre todas las fases de sus secuencias.
 Evidencia: `build/preliminar-v1/verify-055-eu`, `verify-055-us`,
 `verify-055-jp`, `verify-055-shared-eu` y `original-055-eu`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 081
+
+Pasillo orgánico de Monstro E3, compartido entre los inicios 081–085 (combate,
+victoria, dos fallos y reintento). BG3 prolonga el piso y BG1 el borde
+orgánico con bandas diagonales de ocho tiles; BG2 continúa el tejido y las
+manchas del entorno. Los personajes, enemigos y diálogos permanecen ligados a
+cada inicio de evento. La repetición de textura en la extensión queda como
+punto de comentario visual.
+
+Verificación: los cinco inicios pasan las 12 comparaciones EU (cuatro ventanas,
+estados 100/300/1000) con cero diferencias en el área nativa 240×160. Los cinco
+pasan también la muestra rápida en US; el inicio 081 pasa la muestra rápida en
+JP. Vista Original: los cinco inicios pasan muestra rápida EU sin diferencia
+nativa.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-081` y
+`evento-082-escena-081` a `evento-085-escena-081`. Captura:
+`build/preliminar-v1/ready/escena-081/3440x1440-300-despues.png`. Estado: preliminar
+implementada para comentarios; no aprobada por el usuario.

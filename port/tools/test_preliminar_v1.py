@@ -20,6 +20,11 @@ def fixtures():
  result.append(dict(name='evento-177-escena-053',scene=53,start=('KHCOM_EVENT','1:28')))
  # gEventBg054 is also reused for Riku's return to Destiny Islands.
  result.append(dict(name='evento-178-escena-054',scene=54,start=('KHCOM_EVENT','1:29')))
+ # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
+ for event_id in (82,83,84,85):
+  list_id,index=events[event_id]
+  result.append(dict(name=f'evento-{event_id:03}-escena-081',scene=81,
+                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg055 spans both Sora's transition and three Riku event states.
  for event_id in (56,179,181,183):
   list_id,index=events[event_id]
