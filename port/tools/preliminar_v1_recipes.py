@@ -6,7 +6,7 @@ Generate the C table with --generate. The inventory tool supplies content hashes
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-READY={7,44,45,53,54,55,81,87,90,95} # Complete each fixture before promoting the next recipe.
+READY={7,44,45,53,54,55,81,87,90,95,97} # Complete each fixture before promoting the next recipe.
 # id: effective width/height, left band, right band, slope on each side,
 # quiet upper rectangle, quiet lower rectangle, repeat architecture layers.
 # Slope +1 follows 2*y+x; -1 follows 2*y-x. Unique props are excluded.

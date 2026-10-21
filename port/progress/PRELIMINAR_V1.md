@@ -29,8 +29,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088) y 095.
-- Pendientes de ciclo completo: 097, 098, 099, 102, 104, 110,
+  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095 y 097.
+- Pendientes de ciclo completo: 098, 099, 102, 104, 110,
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -39,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 18 fondos y 7 escenarios de jefe; 25 piezas en total.
+- Pendiente en esta tanda: 17 fondos y 7 escenarios de jefe; 24 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -280,4 +280,22 @@ Evidencia EU: `build/preliminar-v1/ready/escena-095`; capturas regionales en
 `build/preliminar-v1/regional-095-us` y `regional-095-jp`, Original EU en
 `build/preliminar-v1/original/escena-095`. Captura:
 `build/preliminar-v1/ready/escena-095/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 097
+
+Bosque de 100 Acre. BG3 es una textura continua de suelo; se extiende desde
+el tramo ocupado de 40×40 tiles para cubrir los laterales. BG2 conserva los
+árboles, flores y piedras originales sin repetirlos. Los personajes mantienen
+su posición y el perfil solo afecta a la vista extendida.
+
+Verificación: escena 097 pasa 12 comparaciones EU (cuatro ventanas, estados
+100/300/1000), sin diferencias en los 240×160 nativos. Pasa muestra rápida en
+US y JP; Original EU pasa las 12 comparaciones sin cambios. La revisión visual
+del usuario queda pendiente.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-097`; capturas regionales en
+`build/preliminar-v1/regional-097-us` y `regional-097-jp`, Original EU en
+`build/preliminar-v1/original/escena-097`. Captura:
+`build/preliminar-v1/ready/escena-097/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
