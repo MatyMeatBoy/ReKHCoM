@@ -28,6 +28,10 @@ def fixtures():
  list_id,index=events[106]
  result.append(dict(name='evento-106-escena-104',scene=104,
                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
+ # gEventBg110 is also used for Agrabah's follow-up event 111.
+ list_id,index=events[111]
+ result.append(dict(name='evento-111-escena-110',scene=110,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
  for event_id in (82,83,84,85):
   list_id,index=events[event_id]

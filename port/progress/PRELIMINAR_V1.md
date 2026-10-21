@@ -30,8 +30,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
   179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
-  099 y 102.
-- Pendientes de ciclo completo: 110,
+ 099 y 102, 110 (también evento 111).
+- Pendientes de ciclo completo:
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -40,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 13 fondos y 7 escenarios de jefe; 20 piezas en total.
+- Pendiente en esta tanda: 12 fondos y 7 escenarios de jefe; 19 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -379,4 +379,25 @@ Evidencia EU: `build/preliminar-v1/ready/escena-104` y
 `build/preliminar-v1/regional-104-us` y `regional-104-jp`; Original EU en
 `build/preliminar-v1/original-104-eu`. Captura:
 `build/preliminar-v1/ready/escena-104/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 110
+
+Pasillo de Agrabah E2, compartido por los eventos 110 y 111. BG3 prolonga
+los relieves de la pared con una banda amplia para reducir repeticiones y
+continúa la diagonal de la pared con su misma pendiente; las tiras de borde
+evitan volver a dibujar las columnas. El suelo abierto usa su propia muestra.
+BG2 no se copia: jarrones, barriles, puestos y rocas de utilería siguen únicos.
+El encuadre GBA de 240×160 permanece idéntico.
+
+Verificación: escenas 110 y 111 pasan 24 comparaciones EU (cuatro ventanas,
+estados 100/300/1000); el recorte nativo permanece idéntico. La vista Original
+pasa las 24 comparaciones. EU, US y JP pasan la muestra rápida en ambas
+entradas.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-110` y
+`build/preliminar-v1/ready/evento-111-escena-110`; capturas regionales en
+`build/preliminar-v1/regional-110-us` y `regional-110-jp`; Original EU en
+`build/preliminar-v1/original-110-eu`. Captura:
+`build/preliminar-v1/ready/escena-110/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
