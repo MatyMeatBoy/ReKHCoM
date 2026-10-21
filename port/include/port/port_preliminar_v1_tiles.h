@@ -244,6 +244,20 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==116 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Captain Hook's cabin is a single isometric room: continue only the
+         * brick wall above its diagonal floor line and the plank floor below.
+         * Sampling the whole map would repeat windows/props and create extra
+         * perspective corners in ultrawide margins. BG2 remains unique. */
+        if (2*oy+ox<32) {
+            sx=PortSceneTileMod(ox,8);
+            sy=4;
+        } else {
+            sx=8+PortSceneTileMod(ox-8,8);
+            sy=22+PortSceneTileMod(oy-22,4);
+        }
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0]==99 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
         /* Queen's chamber: mirror only the side wallpaper modules and the
          * checker floor. The centered fireplace, lamp, arch and vase stay
