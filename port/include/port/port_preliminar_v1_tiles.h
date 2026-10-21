@@ -244,6 +244,19 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==120 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Olympus Coliseum E0: continue the yellow wall above its 2:1
+         * diagonal and the sunlit ground below. BG2's frieze and BG1's near
+         * parapet remain unique; repeating the full map creates false edges. */
+        if (2*oy+ox<32) {
+            sx=PortSceneTileMod(ox,8);
+            sy=4;
+        } else {
+            sx=16+PortSceneTileMod(ox-16,8);
+            sy=16+PortSceneTileMod(oy-16,8);
+        }
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0]==118 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
         /* Neverland's E3 deck BG3 also contains the hull and sea beyond the
          * diagonal rail. Extend only clean deck boards; preserve the rail and
