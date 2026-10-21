@@ -134,6 +134,48 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *y=8+PortSceneTileMod(oy-8+phase,8);
         return 1;
     }
+    if (v[0]==90 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* BG3 merges scenery with unique props. Continue skyline, wall and
+         * floor as separate diagonal bands. The wall donor is the prop-free
+         * stretch x8..23, avoiding the central gate and the graves; BG1
+         * overlays remain unique. */
+        if (v[1]!=3) return 0;
+        {
+            int diagonal=2*oy+ox;
+            if (oy<24 || (ox<0 && diagonal<72)) {
+                if (ox<0) {
+                    int phase=PortSceneTileMod(-ox-1,52);
+                    sx=phase<26?phase:51-phase;
+                } else if (ox>=w) {
+                    int phase=PortSceneTileMod(ox-w,16);
+                    sx=56+(phase<8?7-phase:phase-8);
+                }
+                sy=oy<0?PortSceneTileMod(oy,8):oy;
+                if (oy>=24) {
+                    sy=(diagonal-sx)/2;
+                    if (sy<0) sy=0;
+                    if (sy>=24) sy=23;
+                }
+            } else if (diagonal>=84 && diagonal<104) {
+                sx=8+PortSceneTileMod(ox-8,16);
+                sy=(diagonal-sx)/2;
+                if (sy<0 || sy>=h) return 0;
+            } else if (diagonal>=104) {
+                if (ox<0) sx=PortSceneTileMod(ox,16);
+                else if (ox>=w) sx=48+PortSceneTileMod(ox-48,16);
+                else sx=48+PortSceneTileMod(ox-48,16);
+                sy=48+PortSceneTileMod((diagonal-sx)/2-48,16);
+            } else {
+                /* Clear night backdrop below the distant hills, before the
+                 * diagonal masonry starts; this eight-tile donor has no fence. */
+                sx=PortSceneTileMod(ox,8);
+                sy=24+PortSceneTileMod(oy-24,8);
+            }
+        }
+        if (sx<0 || sx>=w || sy<0 || sy>=h) return 0;
+        *x=sx; *y=sy;
+        return 1;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;

@@ -30,7 +30,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
   179, 181 y 183), 081 (eventos 082–085) y 087 (evento 088).
-- Pendientes de ciclo completo: 090, 095, 097, 098, 099, 102, 104, 110,
+- Pendientes de ciclo completo: 095, 097, 098, 099, 102, 104, 110,
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -39,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 20 fondos y 7 escenarios de jefe; 27 piezas en total.
+- Pendiente en esta tanda: 19 fondos y 7 escenarios de jefe; 26 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -242,3 +242,23 @@ Evidencia EU: `build/preliminar-v1/ready/escena-087` y
 `evento-088-escena-087`. Captura: `build/preliminar-v1/ready/escena-087/
 3440x1440-300-despues.png`. Estado: preliminar implementada para comentarios;
 no aprobada por el usuario.
+
+## Registro 090
+
+Cementerio de Halloween Town. BG3 reúne cielo, luna, muro, verja y piso en la
+misma capa, así que no se repiten sus bordes completos. La luna, el portón y
+las lápidas permanecen únicos; BG1 queda limitado al mapa original. La
+extensión de BG3 usa tres donantes limpios: cielo y colinas sin luna, un tramo
+de muro sin portón ni lápidas que continúa por la diagonal, y textura de piso
+sin tumbas. Entre las colinas y el muro se conserva el fondo nocturno oscuro.
+
+Verificación: evento 090 pasa 12 comparaciones EU (cuatro ventanas, estados
+100/300/1000), sin diferencias en los 240×160 nativos. Pasa muestra rápida en
+US y JP; Original EU pasa las 12 comparaciones sin cambios. Esto cubre la
+entrada y esos estados, no cada cámara o fase de la escena.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-090`; capturas regionales en
+`build/preliminar-v1/regional-090-us` y `regional-090-jp`, Original EU en
+`build/preliminar-v1/original/escena-090`. Captura:
+`build/preliminar-v1/ready/escena-090/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
