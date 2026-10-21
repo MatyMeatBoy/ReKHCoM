@@ -26,6 +26,7 @@
 #include "port/port_scene074_tiles.h"
 #include "port/port_agrabah_tiles.h"
 #include "port/port_agrabah109_tiles.h"
+#include "port/port_preliminar_v1_tiles.h"
 
 extern const void* gMsgwinMapBlocks[4];
 
@@ -75,6 +76,8 @@ static int sBgIso[4];
 static int sBgIsoLatched[4];
 static int sEventBackdropProfile = -1; /* derived at frame start, not saved */
 static int sUseSceneProfiles;
+static int sPreliminarV1;
+static const PortPreliminarRecipe* sPreliminarRecipe[4];
 static int sAgrabahLayer[4]; /* rebuilt from actual map data each frame */
 static int sAgrabah109Layer[4];
 static int sAgrabah109ShopPal[2]; /* live OBJ palette slots, rebuilt per frame */
@@ -942,6 +945,10 @@ static int WorldEntry(const BgLatch* l, int wx, int wy) {
  * so apply profiles before testing declared map bounds. */
 static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
     int bg = (int)(l - sBgLatch), tx = wx >> 3, ty = wy >> 3, supported = 0, ok = 0;
+    if (sPreliminarRecipe[bg]) {
+        ok = PortPreliminarTileSource(sPreliminarRecipe[bg], &tx, &ty);
+        return ok ? MapTile(l, tx, ty) : -1;
+    }
     if (sAgrabah109Layer[bg]) {
         ok = PortAgrabah109TileSource(sAgrabah109Layer[bg], &tx, &ty);
         return ok ? MapTile(l, tx, ty) : -1;
@@ -2809,6 +2816,7 @@ void PortPpuBeginFrame(void) {
     sBgTextCount = 0;
     sEventBackdropProfile = PortEventBackdropProfile();
     sUseSceneProfiles = getenv("KHCOM_NO_SCENE_PROFILES") == NULL;
+    sPreliminarV1 = getenv("KHCOM_PRELIMINAR_V1") != NULL;
     sSinglePanelBg = PortEventBackdropPanel();
 
     memset(sTitleBand, 0, sizeof(sTitleBand));
@@ -2824,7 +2832,21 @@ void PortPpuBeginFrame(void) {
      * Recompute to handle exits, reused allocations and state loads alike.
      * Preview is opt-in until visually approved. */
     memset(sAgrabahLayer, 0, sizeof(sAgrabahLayer));
-    if (getenv("KHCOM_AGRABAH_WIDE")) {
+    memset(sPreliminarRecipe, 0, sizeof(sPreliminarRecipe));
+    if (sPreliminarV1 && !sBattleView) {
+        for (b=1; b<4; b++) {
+            const BgLatch* l=&sBgLatch[b];
+            if (l->valid && l->width <= 4 && l->height <= 4) {
+                uint32_t hash=2166136261u;
+                int xx,yy;
+                for (yy=0; yy<l->height*32; yy++)
+                    for (xx=0; xx<l->width*32; xx++)
+                        hash=(hash^(uint32_t)MapTile(l,xx,yy))*16777619u;
+                sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
+            }
+        }
+    }
+    if (sPreliminarV1 || getenv("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 2 && l->height == 2) {
@@ -2842,7 +2864,7 @@ void PortPpuBeginFrame(void) {
     }
     memset(sAgrabah109Layer, 0, sizeof(sAgrabah109Layer));
     sAgrabah109ShopPal[0] = sAgrabah109ShopPal[1] = -1;
-    if (getenv("KHCOM_AGRABAH109_WIDE")) {
+    if (sPreliminarV1 || getenv("KHCOM_AGRABAH109_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 1 && l->height == 1) {
