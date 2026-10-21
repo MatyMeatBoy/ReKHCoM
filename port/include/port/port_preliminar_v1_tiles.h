@@ -60,6 +60,15 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
          * below it, restrict donors to the eight-tile open-water margin. */
         *x=PortSceneTileMod(ox,oy<24?64:16); *y=oy; return 1;
     }
+    if (v[0]==55) {
+        /* The palm, island and debris live on BG2. Keep them unique; continue
+         * BG3's cloud band at the sides and use its palette background as sea. */
+        if (v[1]==2) return ox>=0 && ox<64 && oy>=0 && oy<64;
+        if (oy<0) { *x=PortSceneTileMod(ox,64); *y=PortSceneTileMod(oy,4); return 1; }
+        if (ox>=0 && ox<64 && oy>=0 && oy<32) return 1;
+        if (oy>=0 && oy<8) { *x=PortSceneTileMod(ox,64); *y=oy; return 1; }
+        return 0;
+    }
     if (v[0]==7 && (ox<0 || ox>=64 || oy<0 || oy>=64)) {
         if (v[1]==2) {
             if (ox>=64) {

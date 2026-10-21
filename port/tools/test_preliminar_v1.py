@@ -20,6 +20,11 @@ def fixtures():
  result.append(dict(name='evento-177-escena-053',scene=53,start=('KHCOM_EVENT','1:28')))
  # gEventBg054 is also reused for Riku's return to Destiny Islands.
  result.append(dict(name='evento-178-escena-054',scene=54,start=('KHCOM_EVENT','1:29')))
+ # gEventBg055 spans both Sora's transition and three Riku event states.
+ for event_id in (56,179,181,183):
+  list_id,index=events[event_id]
+  result.append(dict(name=f'evento-{event_id:03}-escena-055',scene=55,
+                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
  for c in battle_cases():
   if c['arena'] in BOSSES:result.append(dict(name=c['arena'],start=('KHCOM_BATTLE',f"{c['battle']}:{c['stage']}:0")))
  return result

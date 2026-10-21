@@ -28,8 +28,9 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
-  045, 053 (también evento 177) y 054 (también evento 178).
-- Pendientes de ciclo completo: 055, 081, 087, 090,
+  045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
+  179, 181 y 183).
+- Pendientes de ciclo completo: 081, 087, 090,
   095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
   122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
@@ -39,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 23 fondos y 7 escenarios de jefe; 30 piezas en total.
+- Pendiente en esta tanda: 22 fondos y 7 escenarios de jefe; 29 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -180,3 +181,26 @@ Evidencia: `build/preliminar-v1/verify-054-eu`, `verify-054-us`,
 `verify-054-jp` y `original-054-eu`. Captura final:
 `build/preliminar-v1/verify-054-eu/escena-054/3440x1440-300-despues.png`.
 Estado: preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 055
+
+Escena del colapso de Isla del Destino, compartida por 055, 056, 179, 181 y
+183. Se conserva la atmósfera oscura de la escena: BG3 prolonga lateralmente
+la franja de nubes moradas y cielo negro; BG2 mantiene la palmera y los restos
+únicos en la isla. No se copia ningún fragmento del acantilado ni de los restos.
+
+- La banda lateral usa solo las primeras ocho filas de tiles de BG3, por encima
+  de la isla. El resto del espacio exterior conserva el cielo oscuro original.
+- BG2 queda limitado al mapa original para evitar duplicar palmera y escombros.
+- Se mantiene el negro que rodea la isla dentro del mapa; rellenarlo de turquesa
+  crea un corte rectangular frente al cielo oscuro dibujado por la escena.
+
+Verificación: los cinco inicios compartidos pasan 12 pares EU cada uno, cuatro
+ventanas y estados 100/300/1000; cero diferencias en los 240×160 nativos. El
+inicio 055 también pasa 12 pares en US y JP y el control Original EU resulta
+idéntico. Los cinco inicios pasan además la muestra rápida 3440×1440 en las tres
+regiones; esto no recorre todas las fases de sus secuencias.
+
+Evidencia: `build/preliminar-v1/verify-055-eu`, `verify-055-us`,
+`verify-055-jp`, `verify-055-shared-eu` y `original-055-eu`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
