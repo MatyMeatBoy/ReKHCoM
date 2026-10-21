@@ -30,9 +30,9 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
   179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
- 099 y 102, 110 (también evento 111), 112 (también evento 114), 115, 116, 117.
+ 099 y 102, 110 (también evento 111), 112 (también evento 114), 115, 116, 117, 118.
 - Pendientes de ciclo completo:
-  118, 120, 121, 122, 124, 129, 131 y 132.
+  120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
@@ -40,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 8 fondos y 7 escenarios de jefe; 15 piezas en total.
+- Pendiente en esta tanda: 7 fondos y 7 escenarios de jefe; 14 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -472,4 +472,21 @@ Verificación: escena 117 pasa 12 comparaciones EU (cuatro ventanas, estados
 Evidencia EU: `build/preliminar-v1/ready/escena-117`; informes Original EU y
 regionales US/JP junto a la evidencia. Captura principal:
 `build/preliminar-v1/ready/escena-117/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 118
+
+Cubierta de Neverland E3, compartida con el evento 119. BG3 extiende el entablado
+desde una muestra limpia para no repetir la borda, el casco ni el mar. BG2 conserva
+únicos el mástil, cañones, cajas y utilería. Ambos fixtures, 118 y 119, usan la
+misma receta; el viewport GBA de 240×160 permanece intacto.
+
+Verificación: cada fixture pasa 12 comparaciones EU (cuatro ventanas, estados
+100/300/1000), Original pasa otras 12 sin cambios; US y JP pasan una muestra
+3440×1440, estado 300, por fixture. Cero diferencias nativas en todas.
+
+Evidencia: `build/preliminar-v1/ready/escena-118` y
+`build/preliminar-v1/ready/evento-119-escena-118`; incluye controles Original EU
+y muestras US/JP. Captura principal:
+`build/preliminar-v1/ready/escena-118/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.

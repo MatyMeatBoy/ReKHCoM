@@ -36,6 +36,10 @@ def fixtures():
  list_id,index=events[114]
  result.append(dict(name='evento-114-escena-112',scene=112,
                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
+ # gEventBg118 is shared by Neverland's follow-up ending event.
+ list_id,index=events[119]
+ result.append(dict(name='evento-119-escena-118',scene=118,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
  for event_id in (82,83,84,85):
   list_id,index=events[event_id]
