@@ -1056,6 +1056,41 @@ static void TiledBackdropCoordinates(int bg, int* wx, int* wy) {
     }
 }
 
+/* Scene 102's BG3 is an isometric floor/water silhouette, not a rectangle.
+ * Fill only its transparent added-view pixels from plain floor or water
+ * tiles, leaving the original composition and its diagonal trim untouched. */
+static uint16_t Preliminar102Underlay(const uint8_t* chars, int bpp8, int wx, int wy) {
+    int sea = 2 * wy - wx < -18 * 8;
+    /* Use a small contiguous floor patch, not one repeating tile: its native
+     * texture remains varied while avoiding the diagonal trim and props. */
+    int sx = sea ? 30 : 24 + (((wx >> 3) % 8 + 8) % 8);
+    int sy = sea ? 4 : 18 + (((wy >> 3) % 4 + 4) % 4);
+    int entry = MapTile(&sBgLatch[3], sx, sy);
+    int px = ((wx % 8) + 8) % 8, py = ((wy % 8) + 8) % 8;
+    int ci, pal, tile;
+    if (entry < 0) return PLTT16[0] & 0x7FFF;
+    tile = entry & 0x3FF;
+    if (entry & 0x400) px = 7 - px;
+    if (entry & 0x800) py = 7 - py;
+    if (bpp8) {
+        ci = chars[tile * 64 + py * 8 + px];
+        return PLTT16[ci] & 0x7FFF;
+    }
+    ci = (chars[tile * 32 + py * 4 + (px >> 1)] >> ((px & 1) * 4)) & 15;
+    pal = (entry >> 12) * 16;
+    return PLTT16[pal + ci] & 0x7FFF;
+}
+
+static uint16_t Preliminar102ViewUnderlay(int gx, int gy) {
+    const BgLatch* l = &sBgLatch[3];
+    uint16_t cnt = IO16(0x0E);
+    int hofs = IO16(0x1C) & 0x1FF, vofs = IO16(0x1E) & 0x1FF;
+    int wx = l->x + gx + (hofs - l->hofs), wy = l->y + gy + (vofs - l->vofs);
+    const uint8_t* chars = VRAM8 + ((cnt >> 2) & 3) * 0x4000;
+    TiledBackdropCoordinates(3, &wx, &wy);
+    return Preliminar102Underlay(chars, (cnt >> 7) & 1, wx, wy);
+}
+
 static int VramEntry(int bg, int gx, int gy) {
     uint16_t cnt = IO16(0x08 + bg * 2);
     const uint16_t* screen = (const uint16_t*)(VRAM8 + ((cnt >> 8) & 31) * 0x800);
@@ -1310,6 +1345,17 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             gx = (gx < 0 ? 0 : gx >= GBA_SCREEN_W ? GBA_SCREEN_W - 1 : gx);
         if (mosH > 1)
             gx -= ((gx % mosH) + mosH) % mosH;
+        if (gPortScreen.wide && bg == 3 && sBgLatch[3].valid &&
+            sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0] == 102 &&
+            (outside || gx < 0 || gx >= GBA_SCREEN_W)) {
+            const BgLatch* l = &sBgLatch[3];
+            int wx = l->x + gx + (hofs - l->hofs);
+            int wy = l->y + gy + (vofs - l->vofs);
+            TiledBackdropCoordinates(3, &wx, &wy);
+            out[x] = Preliminar102Underlay(chars, bpp8, wx, wy);
+            sInWorld[x] = 1;
+            continue;
+        }
         if (guardPatio && (outside || gx < 0 || gx >= GBA_SCREEN_W)) {
             const BgLatch* l = &sBgLatch[bg];
             int wx = l->x + gx + (hofs - l->hofs);
@@ -1451,18 +1497,18 @@ scalar_world:
                     cachedValid = 1;
                 }
                 we = cachedEntry;
-            }
-            if (we < 0) {
-                out[x] = sWorldPadding[bg];
-                continue;
+                if (we < 0) {
+                    if (gPortScreen.wide && bg == 3 && sPreliminarRecipe[bg] &&
+                        sPreliminarRecipe[bg]->v[0] == 102)
+                        out[x] = Preliminar102Underlay(chars, bpp8, wx, wy);
+                    else
+                        out[x] = sWorldPadding[bg];
+                    continue;
+                }
+                px = wx & 7; fy = wy & 7;
             }
             sInWorld[x] = 1;
             entry = we;
-            {
-                int wx = l->x + gx + (hofs - l->hofs), wy = l->y + gy + (vofs - l->vofs);
-                TiledBackdropCoordinates(bg, &wx, &wy);
-                px = wx & 7; fy = wy & 7;
-            }
             tile = entry & 0x3FF;
             fx = (entry & 0x400) ? 7 - px : px;
             fyy = (entry & 0x800) ? 7 - fy : fy;
@@ -1536,6 +1582,15 @@ scalar_world:
                     }
                 }
             }
+        }
+        if (out[x] == TRANSPARENT && gPortScreen.wide && bg == 3 &&
+            sPreliminarRecipe[bg] && sPreliminarRecipe[bg]->v[0] == 102 &&
+            (outside || gx < 0 || gx >= GBA_SCREEN_W) && sBgLatch[bg].valid) {
+            const BgLatch* l = &sBgLatch[bg];
+            int wx = l->x + gx + (hofs - l->hofs);
+            int wy = l->y + gy + (vofs - l->vofs);
+            TiledBackdropCoordinates(bg, &wx, &wy);
+            out[x] = Preliminar102Underlay(chars, bpp8, wx, wy);
         }
     }
 }
@@ -2113,6 +2168,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     uint16_t marginFill = TRANSPARENT;
     int gyLine = y - gPortScreen.originY;
     int collect = objects && (sHudLayer || sHdText || PortHd2dActive());
+    int scene102Fill = gPortScreen.wide && !sBattleView && sBgLatch[3].valid &&
+        sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0] == 102;
     int row = y * w;
 
     if (eva > 16) eva = 16;
@@ -2145,6 +2202,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             int gx = x - gPortScreen.originX;
             int margin = gx < 0 || gx >= GBA_SCREEN_W || gyLine < 0 || gyLine >= GBA_SCREEN_H;
             dst[x] = sColorLut[bg >= 0 ? sBgLine[bg][x] :
+                               scene102Fill && margin ? Preliminar102ViewUnderlay(gx, gyLine) :
                                margin && marginFill != TRANSPARENT ? marginFill : sInWorld[x] ? backdrop : 0];
             if (collect) {
                 sMsgMask[row + x] = 0;
@@ -2183,6 +2241,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
                 break;
             }
         }
+        if (bg < 0 && scene102Fill && margin)
+            bd = Preliminar102ViewUnderlay(gx, gyLine);
         if (collect) {
             int message = 0;
             if (docked)
@@ -2470,7 +2530,6 @@ static void RenderLine(int y, int gy) {
                 break;
         }
     }
-
     for (b = 0; b < 4; b++) {
         if (!bgOn[b])
             continue;

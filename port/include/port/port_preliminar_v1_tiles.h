@@ -258,6 +258,12 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0] == 102) {
+        /* The authored BG3 already contains its diagonal corridor. Do not
+         * repeat that silhouette into the wide margins; the renderer fills
+         * them from floor/water swatches outside the unchanged GBA viewport. */
+        return ox >= 0 && ox < w && oy >= 0 && oy < h;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;
