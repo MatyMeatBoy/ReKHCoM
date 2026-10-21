@@ -244,6 +244,19 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==121 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Coliseum E1: the back wall ends on a 2:1 diagonal into the pale
+         * stone floor. Continue each material from clean source patches;
+         * BG2's heraldry and corner pillar remain unique. */
+        if (2*oy+ox<40) {
+            sx=PortSceneTileMod(ox,8);
+            sy=4;
+        } else {
+            sx=24+PortSceneTileMod(ox-24,8);
+            sy=16+PortSceneTileMod(oy-16,8);
+        }
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0]==120 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
         /* Olympus Coliseum E0: continue the yellow wall above its 2:1
          * diagonal and the sunlit ground below. BG2's frieze and BG1's near
