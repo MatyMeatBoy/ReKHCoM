@@ -197,6 +197,24 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         return 1;
     }
+    if (v[0]==98 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Queen of Hearts room: its wallpaper and checker floor are one
+         * isometric room separated by the back-wall diagonal. Repeat only
+         * clean texture cells; BG1's table and BG3's fireplace/door stay put. */
+        if (v[1]!=3) return 0;
+        {
+            int diagonal=oy<0?0:oy>=h?128:ox<0?2*oy+ox:2*oy-(ox-w);
+            if (diagonal<80) {
+                /* Wide clean wallpaper panel above the red cornice. */
+                sx=32+PortSceneTileMod(ox-32,16);
+                sy=PortSceneTileMod(oy,5);
+            } else {
+                sx=40+PortSceneTileMod(ox-40,8);
+                sy=48+PortSceneTileMod(oy-48,8);
+            }
+        }
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;

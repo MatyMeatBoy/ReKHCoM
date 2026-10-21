@@ -29,8 +29,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095 y 097.
-- Pendientes de ciclo completo: 098, 099, 102, 104, 110,
+  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097 y 098.
+- Pendientes de ciclo completo: 099, 102, 104, 110,
   112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
@@ -39,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 17 fondos y 7 escenarios de jefe; 24 piezas en total.
+- Pendiente en esta tanda: 16 fondos y 7 escenarios de jefe; 23 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -298,4 +298,23 @@ Evidencia EU: `build/preliminar-v1/ready/escena-097`; capturas regionales en
 `build/preliminar-v1/regional-097-us` y `regional-097-jp`, Original EU en
 `build/preliminar-v1/original/escena-097`. Captura:
 `build/preliminar-v1/ready/escena-097/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 098
+
+Sala de la Reina de Corazones. La extensión mantiene la chimenea, la mesa,
+la puerta, la reina y los naipes en su lugar original. BG1 (la mesa y sus
+objetos) queda limitado al mapa original. BG3 extiende el papel tapiz y el
+piso ajedrezado con muestras limpias de sus propias superficies y una
+transición diagonal que sigue la forma del salón; no replica los elementos
+únicos de la habitación.
+
+Verificación: escena 098 pasa 12 capturas EU (cuatro ventanas, estados
+100/300/1000), y vista Original pasa sus 12 capturas sin cambios. US y JP
+pasan la muestra rápida. El recorte GBA se verifica en cada captura.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-098`; capturas regionales en
+`build/preliminar-v1/regional-098-us` y `regional-098-jp`, Original EU en
+`build/preliminar-v1/original/escena-098`. Captura:
+`build/preliminar-v1/ready/escena-098/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
