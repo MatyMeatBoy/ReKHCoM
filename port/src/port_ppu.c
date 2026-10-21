@@ -979,7 +979,8 @@ static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
 static uint16_t WorldPadding(int bg, const BgLatch* l) {
     int corner, bpp8 = (IO16(8 + bg * 2) & 0x80) != 0;
     unsigned base = ((IO16(8 + bg * 2) >> 2) & 3) * 0x4000;
-    if (!l->valid || sBgDockedLatched[bg] || sScreenBg[bg]) return TRANSPARENT;
+    if (!l->valid || sBgDockedLatched[bg] || sScreenBg[bg] ||
+        (sPreliminarRecipe[bg] && bg!=3)) return TRANSPARENT;
     /* With the floor continued past the map, the layers above it end there. */
     if (!sBgIsoLatched[bg] && (sBgIsoLatched[0] | sBgIsoLatched[1] | sBgIsoLatched[2] | sBgIsoLatched[3]))
         return TRANSPARENT;
@@ -1121,6 +1122,70 @@ static int SinglePanelIndex(const BgLatch* l, uint16_t cnt, int x, int y) {
     if (off >= 0x10000) return -1;
     value = (VRAM8[off] >> ((xx & 1) * 4)) & 15;
     return (entry >> 12) * 16 + value;
+}
+
+/* Reconstruct one complete, original fir from its overlapping occurrences.
+ * Work in palette indices, then keep the component attached to its tip.
+ * No raster art is stored in the repository or extra game objects created.
+ * The cache is derived from exact live character bytes, so state loads and
+ * reused VRAM allocations cannot retain an unrelated tree. Palette remains live. */
+static uint8_t sPreliminarFir[88*152], sPreliminarFirChars[0x4000];
+static uint8_t sPreliminarFirSeen[88*152];
+static uint16_t sPreliminarFirQueue[88*152];
+static int sPreliminarFirValid;
+static void PreparePreliminarFir(void) {
+    const BgLatch* l=&sBgLatch[2];
+    uint16_t cnt=IO16(12);
+    const uint8_t* chars=VRAM8+((cnt>>2)&3)*0x4000;
+    static const int shifts[5][2]={{0,0},{264,8},{-48,56},{280,112},{208,128}};
+    int x,y,i,j,head=0,tail=0;
+    if (sPreliminarFirValid && !memcmp(chars,sPreliminarFirChars,0x4000)) return;
+    memcpy(sPreliminarFirChars,chars,0x4000);
+    for (y=0;y<152;y++) for (x=0;x<88;x++) {
+        int c[5],best=x+80<116?1:0,bestCount=0;
+        for (i=0;i<5;i++) {
+            c[i]=SinglePanelIndex(l,cnt,x+80+shifts[i][0],y+224+shifts[i][1]);
+            if (c[i]<0 || !(c[i]&15)) c[i]=0;
+        }
+        for (j=0;j<5;j++) if (c[j]==c[best]) bestCount++;
+        for (i=0;i<5;i++) {
+            int count=0;
+            for (j=0;j<5;j++) if (c[i]==c[j]) count++;
+            if (count>bestCount) { best=i; bestCount=count; }
+        }
+        sPreliminarFir[y*88+x]=(uint8_t)c[best];
+    }
+    memset(sPreliminarFirSeen,0,sizeof(sPreliminarFirSeen));
+    if (sPreliminarFir[43]) { sPreliminarFirQueue[tail++]=43; sPreliminarFirSeen[43]=1; }
+    while (head<tail) {
+        int pos=sPreliminarFirQueue[head++],xx,yy;
+        x=pos%88; y=pos/88;
+        for (yy=y-1;yy<=y+1;yy++) for (xx=x-1;xx<=x+1;xx++) {
+            int n;
+            if (xx<0 || xx>=88 || yy<0 || yy>=152) continue;
+            n=yy*88+xx;
+            if (!sPreliminarFirSeen[n] && sPreliminarFir[n]) {
+                sPreliminarFirSeen[n]=1;
+                sPreliminarFirQueue[tail++]=(uint16_t)n;
+            }
+        }
+    }
+    for (i=0;i<88*152;i++) if (!sPreliminarFirSeen[i]) sPreliminarFir[i]=0;
+    sPreliminarFirValid=1;
+}
+
+static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
+    static const int anchors[][2]={{-880,544},{-608,376},{-400,488},{-168,560},
+                                  {616,408},{856,496},{1080,384},{1312,560}};
+    unsigned i;
+    if (!sPreliminarFirValid || (wx>=0 && wx<512) || wy<224 || wy>=560) return 0;
+    for (i=0;i<sizeof(anchors)/sizeof(anchors[0]);i++) {
+        int x=wx-anchors[i][0]+44, y=wy-anchors[i][1]+152,ci;
+        if (x<0 || x>=88 || y<0 || y>=152) continue;
+        ci=sPreliminarFir[y*88+x];
+        if (ci) { *color=PLTT16[ci]&0x7fff; return 1; }
+    }
+    return 0;
 }
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
@@ -1271,8 +1336,13 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             const BgWorld* wd = &sBgWorldLatched[bg];
             int wx = l->valid ? l->x + gx + (hofs - l->hofs) : wd->x + gx + (hofs - wd->hofs);
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
-            if (sPreliminarRecipe[bg] && sPreliminarRecipe[bg]->v[0]==44 && bg==2) {
+            if (sPreliminarRecipe[bg] && bg==2 &&
+                (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) {
                 int sx,sy;
+                if (sPreliminarRecipe[bg]->v[0]==45 && PreliminarFirPixel(wx,wy,&out[x])) {
+                    sInWorld[x]=1;
+                    continue;
+                }
                 if (PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
                     int index=SinglePanelIndex(l,cnt,sx,sy);
                     out[x]=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
@@ -2855,11 +2925,16 @@ void PortPpuBeginFrame(void) {
                     for (xx=0; xx<l->width*32; xx++)
                         hash=(hash^(uint32_t)MapTile(l,xx,yy))*16777619u;
                 sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
+                if (getenv("KHCOM_PRELIMINAR_LOG"))
+                    PortLog("preliminar bg%d %dx%d hash=%08x scene=%d",b,l->width,l->height,hash,
+                            sPreliminarRecipe[b]?sPreliminarRecipe[b]->v[0]:-1);
                 if (sPreliminarRecipe[b] && sPreliminarRecipe[b]->v[0]==skip)
                     sPreliminarRecipe[b]=NULL;
             }
         }
     }
+    if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
+        PreparePreliminarFir();
     if (sPreliminarV1 || getenv("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];

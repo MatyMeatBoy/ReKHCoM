@@ -27,6 +27,24 @@ static inline const PortPreliminarRecipe* PortPreliminarFind(uint32_t hash, int 
 static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x, int* y) {
     const int16_t* v = p->v;
     int ox=*x, oy=*y, sx=ox, sy=oy, w=v[4], h=v[5];
+    if (v[0]==45) {
+        if (v[1]==2) {
+            if (ox>=0 && ox<64 && oy>=0 && oy<64) return 1;
+            if (oy>=22 && oy<27) { *x=10+PortSceneTileMod(ox-10,4); *y=oy; return 1; }
+            return 0;
+        }
+        if (oy<0) { *x=24; *y=0; return 1; }
+        if (oy<27 && (ox<10 || ox>=54)) {
+            *x=oy<15?24:10+PortSceneTileMod(ox-10,12); *y=oy; return 1;
+        }
+        if (ox>=0 && ox<64 && oy<64) return 1;
+        if (oy>=64) {
+            sy=62+PortSceneTileMod(oy-62,2); sx=ox+oy-sy;
+            if (sx>=0 && sx<64) { *x=sx; *y=sy; return 1; }
+        }
+        if (oy<43) { *x=0; *y=oy; return 1; }
+        *x=56+PortSceneTileMod(ox,8); *y=56+PortSceneTileMod(oy,8); return 1;
+    }
     if (v[0]==7 && (ox<0 || ox>=64 || oy<0 || oy>=64)) {
         if (v[1]==2) {
             if (ox>=64) {

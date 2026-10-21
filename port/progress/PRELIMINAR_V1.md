@@ -24,8 +24,9 @@ afin. Se identifican mapas por sus datos y dimensiones, incluido EU que los
 descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
-- Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186).
-- Pendientes de ciclo completo: 045, 053, 054, 055, 081, 087, 090,
+- Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
+  045.
+- Pendientes de ciclo completo: 053, 054, 055, 081, 087, 090,
   095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
   122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
@@ -100,5 +101,30 @@ idénticos en toda la imagen al activar solo la receta 044.
 Evidencia privada: `build/preliminar-v1/final-044*`. Se comparó la misma
 instantánea y el mismo ejecutable en cada par. `KHCOM_PRELIMINAR_SKIP=44`
 permite apagar solo esta receta manteniendo activadas las anteriores.
-La copia jugable se actualiza con las dos piezas terminadas. El resto de la
-tanda y los siete jefes siguen pendientes de su ciclo completo.
+
+## Registro 045
+
+Entrada al bosque del castillo. El castillo, verja, sendero central y grupo
+de personajes se mantienen únicos. La expansión usa la paleta y los gráficos
+de tiles activos del mapa original; no añade sprites ni imágenes rasterizadas.
+
+- BG3 extiende el cielo y la línea distante de abetos y verja con bandas
+  separadas. El sendero continúa por su diagonal y la hierba rellena el resto.
+- BG2 continúa la verja horizontal. Los abetos de primer plano se forman a
+  partir de cinco apariciones originales parcialmente solapadas: se combinan
+  los índices de paleta más consistentes y se conserva el componente conectado
+  a la punta, para no repetir copas cortadas. Se dibujan solo fuera del mapa.
+- La caché del abeto se deriva de los bytes activos de los tiles y se invalida
+  cuando estos cambian; el color se obtiene de la paleta en cada dibujo.
+
+Verificación: 12 pares por región (EU, US y JP), cuatro ventanas y estados
+100/300/1000; cero diferencias en los 240×160 nativos. El modo Original da
+imagen idéntica en los cuatro tamaños EU. Controles completos de 007 y 044
+siguen pasando en EU. Esto cubre el evento 045 y esos estados, no toda la
+secuencia compartida 046/187/188 ni cada cámara o transición.
+
+Evidencia privada: `build/preliminar-v1/verify-045*`,
+`build/preliminar-v1/original-045` y `build/preliminar-v1/regression-007-044`.
+La copia jugable contiene ahora 007, 044 y 045. Estado: preliminar para
+comentarios; no aprobada por el usuario. Las escenas restantes y los siete
+jefes siguen pendientes.

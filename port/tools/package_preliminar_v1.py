@@ -17,7 +17,8 @@ def package(build,out,evidence):
  (out/'user-data').mkdir(exist_ok=True)
  (out/'user-data/kh_com.ini').write_text('config_version=11\nview_mode=4\nzoom=6\nhd_text=0\nfullscreen=0\nvsync=1\n')
  menu=['@echo off','setlocal','for /f "tokens=1 delims==" %%V in (\'set KHCOM_ 2^>nul\') do set "%%V="','echo Preliminar V1 - piezas terminadas para comentar']
- for i,c in enumerate(selected,1):menu.append(f"echo {i}. {c['name']}")
+ labels={7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo'}
+ for i,c in enumerate(selected,1):menu.append(f"echo {i}. {labels.get(c.get('scene'),c['name'])}")
  menu+=['set "pieza=1"','set /p "pieza=Escena [1]: "']
  for i,c in enumerate(selected,1):
   menu.append(f'if "%pieza%"=="{i}" set "{c["start"][0]}={c["start"][1]}"')
@@ -25,7 +26,7 @@ def package(build,out,evidence):
  menu+=['if not defined KHCOM_EVENT exit /b','echo 1. 1920x1080','echo 2. 2560x1080','echo 3. 3440x1440','echo 4. 3840x1080','set "ancho=1"','set /p "ancho=Ventana [1]: "','set "KHCOM_WINDOW=1920x1080"']
  for i,(w,h) in enumerate(WINDOWS[1:],2):menu.append(f'if "%ancho%"=="{i}" set "KHCOM_WINDOW={w}x{h}"')
  menu+=['set "KHCOM_PRELIMINAR_V1=1"','set "KHCOM_AGRABAH_WIDE=1"','set "KHCOM_AGRABAH109_WIDE=1"','set "antes=N"','set /p "antes=Ver antes del arreglo? [S/N, N]: "','if /i "%antes%"=="S" set "KHCOM_PRELIMINAR_SKIP=%escena%"','set "KHCOM_KEYS=60-63:A"','cd /d "%~dp0"','khcom.exe --language es --rom "roms/B8CP.gba" --data-dir "user-data"','endlocal']
- (out/'Probar Preliminar V1.bat').write_text('\r\n'.join(menu)+'\r\n',encoding='ascii')
+ (out/'Probar Preliminar V1.bat').write_bytes(('\r\n'.join(menu)+'\r\n').encode('ascii'))
  for c in selected:
   source=evidence/c['name'];dest=out/'revision'/c['name'];dest.mkdir(parents=True,exist_ok=True)
   report=json.loads((source/'report.json').read_text())
