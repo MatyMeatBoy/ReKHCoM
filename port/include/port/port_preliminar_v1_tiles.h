@@ -176,6 +176,27 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *x=sx; *y=sy;
         return 1;
     }
+    if (v[0]==95 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* BG3 merges the maze, throne and garden. Continue a throne-free
+         * skyline, a short flower-hedge module, then open lawn. The red path,
+         * throne and BG1 trees/arch/stairs/chairs remain unique. */
+        if (v[1]!=3) return 0;
+        if (oy<8) {
+            *x=PortSceneTileMod(ox,64); *y=PortSceneTileMod(oy,6); return 1;
+        }
+        if (oy<12) {
+            int phase=PortSceneTileMod(ox,64);
+            *x=phase<32?phase:63-phase; *y=8+PortSceneTileMod(oy-8,4); return 1;
+        }
+        /* BG3 is transparent below y=44. Fill the distant park with a broad,
+         * mirrored sample of its clean grass margin, never the maze or path. */
+        {
+            int phase=PortSceneTileMod(ox,32);
+            *x=phase<16?48+phase:63-(phase-16);
+            *y=40+PortSceneTileMod(oy-40,4);
+        }
+        return 1;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;
