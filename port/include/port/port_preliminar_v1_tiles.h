@@ -47,6 +47,15 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         if (sx<0 || sx>=w || sy<0 || sy>=h-1) return 0;
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==112 && v[1]==3 && !(ox>=0 && ox<w && oy>=0 && oy<h) &&
+        ((ox>=w && 4*oy-ox>=16) || oy>=h)) {
+        /* Continue the open floor beyond the right wall's diagonal and below
+         * the room from a fully painted patch. The wall band remains visible
+         * above that line; BG2's props stay unique. */
+        *x=16+PortSceneTileMod(ox,8);
+        *y=36+PortSceneTileMod(oy,8);
+        return 1;
+    }
     if (v[0]==45) {
         if (v[1]==2) {
             if (ox>=0 && ox<64 && oy>=0 && oy<64) return 1;

@@ -974,6 +974,50 @@ static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
     return WorldEntry(l, wx, wy);
 }
 
+/* Sample a world pixel from an authored tile in scene 112, using its active
+ * tile palette and flip bits. */
+static uint16_t Preliminar112SamplePixel(const BgLatch* l, uint16_t cnt, int tx, int ty, int wx, int wy) {
+    int bpp8=(cnt&0x80)!=0;
+    int entry=MapTile(l,tx,ty),px=wx&7,py=wy&7,ci;
+    unsigned base=((cnt>>2)&3)*0x4000;
+    unsigned off;
+    const uint8_t* chars;
+    if(entry<0)return TRANSPARENT;
+    if(entry&0x400)px=7-px;
+    if(entry&0x800)py=7-py;
+    off=(entry&1023)*(bpp8?64:32);
+    if(base+off+(bpp8?64:32)>0x10000)return TRANSPARENT;
+    chars=VRAM8+base+off;
+    if(bpp8)ci=chars[py*8+px];
+    else ci=(chars[py*4+(px>>1)]>>((px&1)*4))&15;
+    return ci?(PLTT16[(bpp8?0:(entry>>12)*16)+ci]&0x7fff):TRANSPARENT;
+}
+
+static uint16_t Preliminar112FloorPixel(const BgLatch* l, uint16_t cnt, int wx, int wy) {
+    return Preliminar112SamplePixel(l,cnt,16+PortSceneTileMod(wx>>3,8),
+                                    36+PortSceneTileMod(wy>>3,8),wx,wy);
+}
+
+static uint16_t Preliminar112WallPixel(int wx, int wy) {
+    const BgLatch* l=&sBgLatch[2];
+    uint16_t cnt=IO16(0x0C);
+    if(!l->valid||!l->map)return TRANSPARENT;
+    return Preliminar112SamplePixel(l,cnt,60+PortSceneTileMod(wx>>3,4),
+                                    PortSceneTileMod(wy>>3,8),wx,wy);
+}
+
+/* The wide margins sometimes have no visible map layer: continue the clean
+ * upper wall there, then fall back to the open floor if that tile is empty. */
+static uint16_t Preliminar112ViewUnderlay(int gx, int gy) {
+    const BgLatch* l=&sBgLatch[3];
+    uint16_t cnt=IO16(0x0E);
+    int hofs=IO16(0x1C)&0x1ff,vofs=IO16(0x1E)&0x1ff;
+    int wx=l->x+gx+(hofs-l->hofs),wy=l->y+gy+(vofs-l->vofs);
+    uint16_t wall=Preliminar112WallPixel(wx,wy);
+    if(wall!=TRANSPARENT)return wall;
+    return Preliminar112FloorPixel(l,cnt,wx,wy);
+}
+
 /* Only a completely uniform, opaque corner tile is safe exterior padding.
  * Carry its palette colour beyond the map without stretching scenery or UI. */
 static uint16_t WorldPadding(int bg, const BgLatch* l) {
@@ -2170,6 +2214,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     int collect = objects && (sHudLayer || sHdText || PortHd2dActive());
     int scene102Fill = gPortScreen.wide && !sBattleView && sBgLatch[3].valid &&
         sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0] == 102;
+    int scene112Fill = gPortScreen.wide && !sBattleView && sBgLatch[3].valid &&
+        sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0] == 112;
     int row = y * w;
 
     if (eva > 16) eva = 16;
@@ -2203,6 +2249,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             int margin = gx < 0 || gx >= GBA_SCREEN_W || gyLine < 0 || gyLine >= GBA_SCREEN_H;
             dst[x] = sColorLut[bg >= 0 ? sBgLine[bg][x] :
                                scene102Fill && margin ? Preliminar102ViewUnderlay(gx, gyLine) :
+                               scene112Fill && margin ? Preliminar112ViewUnderlay(gx, gyLine) :
                                margin && marginFill != TRANSPARENT ? marginFill : sInWorld[x] ? backdrop : 0];
             if (collect) {
                 sMsgMask[row + x] = 0;
@@ -2243,6 +2290,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         }
         if (bg < 0 && scene102Fill && margin)
             bd = Preliminar102ViewUnderlay(gx, gyLine);
+        if (bg < 0 && scene112Fill && margin)
+            bd = Preliminar112ViewUnderlay(gx, gyLine);
         if (collect) {
             int message = 0;
             if (docked)

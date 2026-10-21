@@ -32,6 +32,10 @@ def fixtures():
  list_id,index=events[111]
  result.append(dict(name='evento-111-escena-110',scene=110,
                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
+ # Agrabah's shared backdrop also appears in the departure follow-up event.
+ list_id,index=events[114]
+ result.append(dict(name='evento-114-escena-112',scene=112,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
  for event_id in (82,83,84,85):
   list_id,index=events[event_id]

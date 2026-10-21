@@ -74,6 +74,11 @@ fondo sin la extensión, porque esta exigía el modo combate.
   manteniendo activadas las anteriores. Si una tira limpia mide un tile y la
   diagonal necesita alternar 4 px, usar muestreo de píxeles con ese desfase;
   no recortar el borde ni aceptar fragmentos del adorno vecino como donantes.
+- Revisar cada capa exportada por separado además del compuesto: una celda
+  transparente puede parecer cubierta por otra capa en el inventario y quedar
+  negra en los márgenes ampliados. Rellenar solo los píxeles sin capa visible
+  con la superficie que corresponde a su zona (pared arriba, suelo abajo),
+  manteniendo únicos los objetos de la capa decorativa.
 
 En todos los casos:
 - Guardar **índices de paleta** y resolverlos con la paleta activa en cada

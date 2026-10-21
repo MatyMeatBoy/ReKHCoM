@@ -30,9 +30,9 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
   179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
- 099 y 102, 110 (también evento 111).
+ 099 y 102, 110 (también evento 111), 112 (también evento 114).
 - Pendientes de ciclo completo:
-  112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
+  115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
@@ -40,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 12 fondos y 7 escenarios de jefe; 19 piezas en total.
+- Pendiente en esta tanda: 11 fondos y 7 escenarios de jefe; 18 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -400,4 +400,26 @@ Evidencia EU: `build/preliminar-v1/ready/escena-110` y
 `build/preliminar-v1/regional-110-us` y `regional-110-jp`; Original EU en
 `build/preliminar-v1/original-110-eu`. Captura:
 `build/preliminar-v1/ready/escena-110/3440x1440-300-despues.png`. Estado:
+preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 112
+
+Salida de Agrabah, compartida por los eventos 112 y 114. BG3 prolonga la
+superficie de arena con una muestra completa del suelo y conserva la pared
+superior con un módulo limpio de BG2. Los andamios, la puerta, barriles,
+personajes y demás utilería permanecen únicos: BG2 no se repite en los márgenes.
+Los huecos sin capas visibles usan una muestra de pared arriba y suelo abajo;
+esto elimina el bloque negro de las celdas transparentes sin cubrir el muro con
+arena. El viewport GBA de 240×160 no cambia.
+
+Verificación: eventos 112 y 114 pasan 24 comparaciones EU en vista amplia
+(cuatro ventanas y estados 100/300/1000), con cero diferencias nativas. La vista
+Original pasa las 24 comparaciones sin cambios. US y JP pasan una captura rápida
+de cada evento a 3440×1440, estado 300. La evidencia regional queda registrada
+en los informes de cada fixture; no cubre cada transición de los eventos.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-112` y
+`build/preliminar-v1/ready/evento-114-escena-112`; capturas Original EU y
+regionales US/JP bajo esos mismos directorios. Captura principal:
+`build/preliminar-v1/ready/escena-112/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
