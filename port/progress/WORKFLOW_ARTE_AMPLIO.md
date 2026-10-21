@@ -102,6 +102,14 @@ las escenas que necesitan extensión y todas las peleas de jefes pendientes.
 No parar a pedir aprobación de cada pieza. Aplicar el workflow mejorado a toda
 la tanda; conservar las versiones ya aprobadas y sus recetas.
 
+**Precisión en la tanda (indicación del usuario, 21/10): terminar una pieza
+antes de avanzar a la siguiente.** El inventario puede prepararse en conjunto,
+pero cada escena/jefe debe recorrer completo el ciclo de estudiar el original,
+elegir donantes, implementar, revisar capturas, corregir, comprobar y cerrar su
+entrega. Solo entonces empezar la siguiente. Una compilación general o unas
+capturas iniciales no cuentan como piezas terminadas. Mantener una lista
+explícita de terminadas y pendientes; no trasladar errores a toda la tanda.
+
 1. Implementaciones reales, listas para integrar: código del renderizador,
    paletas activas, pruebas y documentación. No entregar montajes ni conceptos
    como sustituto de los fondos funcionando en el juego.
