@@ -123,6 +123,17 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         if (ox>=64 && oy>=21 && oy<24 && v[1]==3) { *x=0; *y=22; return 1; }
     }
+    if (v[0]==87 && v[1]==3 &&
+        (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* The chamber floor is repeatable, but BG3 also contains both room
+         * walls. Extend only its clean interior swath; keep BG2's statues and
+         * the authored perimeter strictly inside the original room. */
+        int chunk=ox>=0?ox/w:(ox-(w-1))/w;
+        int phase=PortSceneTileMod(chunk*3,8);
+        *x=PortSceneTileMod(ox,w);
+        *y=8+PortSceneTileMod(oy-8+phase,8);
+        return 1;
+    }
     if (v[0] == 97) {
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;

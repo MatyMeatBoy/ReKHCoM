@@ -17,8 +17,9 @@ def package(build,out,evidence):
  (out/'user-data').mkdir(exist_ok=True)
  (out/'user-data/kh_com.ini').write_text('config_version=11\nview_mode=4\nzoom=6\nhd_text=0\nfullscreen=0\nvsync=1\n')
  menu=['@echo off','setlocal','for /f "tokens=1 delims==" %%V in (\'set KHCOM_ 2^>nul\') do set "%%V="','echo Preliminar V1 - piezas terminadas para comentar']
- labels={81:'081 - Pasillo de Monstro E3',7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino',54:'054 - Playa de Isla del Destino (Riku)',55:'055 - Isla del Destino se desmorona'}
+ labels={87:'087 - Sala oscura de Halloween Town',81:'081 - Pasillo de Monstro E3',7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino',54:'054 - Playa de Isla del Destino (Riku)',55:'055 - Isla del Destino se desmorona'}
  shared={
+  'evento-088-escena-087':'088 - Halloween Town (E0)',
   'evento-082-escena-081':'082 - Monstro E3 (Victoria)',
   'evento-083-escena-081':'083 - Monstro E3 (Fallo 1)',
   'evento-084-escena-081':'084 - Monstro E3 (Fallo 2)',

@@ -20,6 +20,10 @@ def fixtures():
  result.append(dict(name='evento-177-escena-053',scene=53,start=('KHCOM_EVENT','1:28')))
  # gEventBg054 is also reused for Riku's return to Destiny Islands.
  result.append(dict(name='evento-178-escena-054',scene=54,start=('KHCOM_EVENT','1:29')))
+ # gEventBg087 is reused in Halloween Town's follow-up E0 event.
+ list_id,index=events[88]
+ result.append(dict(name='evento-088-escena-087',scene=87,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg081 is shared across the Monstro E3 fight's success/failure/retry states.
  for event_id in (82,83,84,85):
   list_id,index=events[event_id]

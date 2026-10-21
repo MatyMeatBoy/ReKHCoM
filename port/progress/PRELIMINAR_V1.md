@@ -29,9 +29,9 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
   045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183), 081 (eventos 082–085).
-- Pendientes de ciclo completo: 087, 090, 095, 097, 098, 099, 102, 104,
-  110, 112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
+  179, 181 y 183), 081 (eventos 082–085) y 087 (evento 088).
+- Pendientes de ciclo completo: 090, 095, 097, 098, 099, 102, 104, 110,
+  112, 115, 116, 117, 118, 120, 121, 122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
@@ -39,7 +39,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
 - Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
   Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 21 fondos y 7 escenarios de jefe; 28 piezas en total.
+- Pendiente en esta tanda: 20 fondos y 7 escenarios de jefe; 27 piezas en total.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -223,3 +223,22 @@ Evidencia EU: `build/preliminar-v1/ready/escena-081` y
 `evento-082-escena-081` a `evento-085-escena-081`. Captura:
 `build/preliminar-v1/ready/escena-081/3440x1440-300-despues.png`. Estado: preliminar
 implementada para comentarios; no aprobada por el usuario.
+
+
+## Registro 087
+
+Sala oscura de Halloween Town E0, compartida por los eventos 087 y 088. La
+sala original mantiene sus dos estatuas, el muro superior y el muro diagonal
+del frente. BG2 queda dentro del recinto. BG3 extiende solo el piso con un
+tramo limpio de la textura interior; una fase determinista alterna sus ocho
+filas cada bloque horizontal para que no aparezca siempre el mismo mosaico.
+
+Verificación: ambos eventos pasan 12 comparaciones EU (cuatro ventanas, estados
+100/300/1000), con cero diferencias nativas. Ambos pasan la muestra rápida en
+US y JP. Vista Original EU: 087 pasa las 12 comparaciones y 088 la muestra
+rápida, sin diferencias nativas.
+
+Evidencia EU: `build/preliminar-v1/ready/escena-087` y
+`evento-088-escena-087`. Captura: `build/preliminar-v1/ready/escena-087/
+3440x1440-300-despues.png`. Estado: preliminar implementada para comentarios;
+no aprobada por el usuario.
