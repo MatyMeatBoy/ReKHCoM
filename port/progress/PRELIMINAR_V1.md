@@ -25,8 +25,8 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
 - Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
-  045.
-- Pendientes de ciclo completo: 053, 054, 055, 081, 087, 090,
+  045, 053 (también evento 177).
+- Pendientes de ciclo completo: 054, 055, 081, 087, 090,
   095, 097, 098, 099, 102, 104, 110, 112, 115, 116, 117, 118, 120, 121,
   122, 124, 129, 131 y 132.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
@@ -125,6 +125,30 @@ secuencia compartida 046/187/188 ni cada cámara o transición.
 
 Evidencia privada: `build/preliminar-v1/verify-045*`,
 `build/preliminar-v1/original-045` y `build/preliminar-v1/regression-007-044`.
-La copia jugable contiene ahora 007, 044 y 045. Estado: preliminar para
+La copia jugable contiene ahora 007, 044, 045 y 053. Estado: preliminar para
 comentarios; no aprobada por el usuario. Las escenas restantes y los siete
 jefes siguen pendientes.
+
+## Registro 053
+
+Tramo de playa de Isla del Destino, compartido también con el evento 177 de
+Riku. Se conserva la colocación de las palmeras, arbustos y personajes.
+
+- BG3 continúa muro, vegetación, arena y terreno siguiendo la diagonal
+  original. Usa bandas laterales limpias del muro y texturas de arena y suelo
+  fuera de la zona ocupada; las palmeras no se repiten en la extensión.
+- BG2 sigue la orilla y el patrón de olas con la misma fase diagonal; el agua
+  profunda se rellena con el azul del propio mapa.
+- La pendiente al trazar x mantiene la línea del muro y la playa paralelas a
+  la costa en ambos extremos.
+
+Verificación: 12 pares en EU, US y JP, cuatro ventanas y estados 100/300/1000;
+cero diferencias nativas. El evento 177 pasa los mismos 12 pares en EU con
+sus personajes y cámara propios. El modo Original resulta idéntico en los
+cuatro tamaños EU. La prueba cubre esos inicios y estados, no toda la secuencia
+ni cada cámara de ambos eventos.
+
+Evidencia: `build/preliminar-v1/verify-053*`,
+`build/preliminar-v1/original-053` y capturas del evento 177 bajo
+`build/preliminar-v1/verify-053-event177`. Estado: listo para comentarios;
+no aprobado por el usuario.
