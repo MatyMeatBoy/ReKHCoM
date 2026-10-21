@@ -244,6 +244,14 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
+    if (v[0]==117 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
+        /* Captain Hook's treasure room BG3 has a large dark empty triangle
+         * outside the clean planked center. Extend only an intact floor patch;
+         * BG2's chests, coils and crates stay unique. */
+        sx=8+PortSceneTileMod(ox-8,8);
+        sy=20+PortSceneTileMod(oy-20,8);
+        *x=sx; *y=sy; return 1;
+    }
     if (v[0]==116 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
         /* Captain Hook's cabin is a single isometric room: continue only the
          * brick wall above its diagonal floor line and the plank floor below.
