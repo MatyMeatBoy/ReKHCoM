@@ -16,11 +16,16 @@ from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parents[2]
 FRAMES = (180, 380, 600)
+# a fight where Darkside attacks: punch, crouch, claw and the raised arms (the poses closed from their own pixels)
+ATTACK_FRAMES = (300, 780, 1020, 1620)
+ATTACK_KEYS = '60-63:A,200-1700:A'
 
 
 def run(case, args, root):
-    region, actor, aspect, battle, stage, original = case
-    label = f'{region}-{actor}-{aspect}-{battle}-{int(original)}'
+    region, actor, aspect, battle, stage, original = case[:6]
+    attacks = len(case) > 6
+    frames = ATTACK_FRAMES if attacks else FRAMES
+    label = f'{region}-{actor}-{aspect}-{battle}-{int(original)}' + ('-attacks' if attacks else '')
     images = []
     for enabled in (False, True):
         d = root / label / ('after' if enabled else 'before')
@@ -31,8 +36,9 @@ def run(case, args, root):
         (d / 'kh_com.ini').write_text(f'config_version=11\nview_mode={0 if original else 4}\nzoom={zoom}\nhd_text=0\nvsync=0\n')
         env = dict(os.environ, SDL_VIDEO_DRIVER='dummy', SDL_AUDIO_DRIVER='dummy', KHCOM_FAST='1',
                    KHCOM_WINDOW=f'{width}x{height}', KHCOM_BATTLE=f'{battle}:{stage}:{int(actor == "riku")}',
-                   KHCOM_KEYS='60-63:A,200-380:LEFT,400-600:RIGHT', KHCOM_QUIT='610',
-                   KHCOM_SHOTS=','.join(map(str, FRAMES)), KHCOM_OUTPUT_SHOT=','.join(map(str, FRAMES)))
+                   KHCOM_KEYS=ATTACK_KEYS if attacks else '60-63:A,200-380:LEFT,400-600:RIGHT',
+                   KHCOM_QUIT=str(max(frames) + 10),
+                   KHCOM_SHOTS=','.join(map(str, frames)), KHCOM_OUTPUT_SHOT=','.join(map(str, frames)))
         env['KHCOM_DARKSIDE_BEACH'] = '1' if enabled else '0'
         code = {'eu': 'B8CP', 'us': 'B8CE', 'jp': 'B8CJ'}[region]
         p = subprocess.run([str(d / 'khcom.exe'), '--rom', str(ROOT / 'roms' / (code + '.gba'))],
@@ -40,7 +46,7 @@ def run(case, args, root):
         if p.returncode or 'CRASH' in (d / 'kh_com.log').read_text(errors='replace'):
             raise RuntimeError(f'{label}: process failed: {p.returncode}')
         internal = []
-        for frame in FRAMES:
+        for frame in frames:
             with Image.open(d / f'shot_{frame:05d}.bmp') as image:
                 internal.append(image.convert('RGB'))
             with Image.open(d / f'out_{frame:05d}.bmp') as image:
@@ -57,7 +63,7 @@ def run(case, args, root):
         black_reduction.append(sum(n for n, c in before.getcolors(w * h) if c == (0, 0, 0)) -
                                sum(n for n, c in after.getcolors(w * h) if c == (0, 0, 0)))
     should_change = battle == 198 and not original
-    passed = native_changes == 0 and ((changed == len(FRAMES) and min(black_reduction) > 0)
+    passed = native_changes == 0 and ((changed == len(frames) and min(black_reduction) > 0)
                                     if should_change else changed == 0)
     result = dict(case=label, passed=passed, changed_frames=changed, native_changed_frames=native_changes,
                   removed_black_pixels=black_reduction)
@@ -78,6 +84,7 @@ def main():
              for region in ('eu', 'us', 'jp') for aspect in ('16x9', '32x9')]
     cases += [('eu', 'riku', aspect, 198, 11, False) for aspect in ('16x9', '32x9')]
     cases += [(region, 'sora', '16x9', 198, 11, True) for region in ('eu', 'us', 'jp')]
+    cases += [('eu', 'sora', '16x9', 198, 11, False, 'attacks'), ('jp', 'riku', '32x9', 198, 11, False, 'attacks')]
     # unrelated arenas stay identical: Guard Armor, Hook, a world field
     cases += [('eu', 'sora', '32x9', 199, 1, False), ('eu', 'sora', '32x9', 177, 6, False),
               ('eu', 'sora', '32x9', 0, 5, False)]

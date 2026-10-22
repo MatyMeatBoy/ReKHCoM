@@ -13,7 +13,9 @@
  *
  * Identified by the map blocks themselves, never by battle number or mode. Source tiles stay in the user's ROM;
  * colours come from the live palette, so the game's fades and flashes apply. */
+#include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include "port/port.h"
 #include "port/port_battle_backdrop.h"
 
@@ -32,9 +34,12 @@ static short sShoreRight[SHORE_RUN], sShoreLeft[SHORE_RUN];
 static int sPrepared;
 
 int PortDarksideBeachOn(void) {
-    /* KHCOM_DARKSIDE_BEACH=1 shows it until the user approves it; then on by default (=0 turns it off) */
+    /* KHCOM_DARKSIDE_BEACH=1 (or the Preliminar V1 review copy) shows it until the user approves it; then on by
+       default (=0 turns it off) */
     const char* v = getenv("KHCOM_DARKSIDE_BEACH");
-    return v != NULL && atoi(v) != 0;
+    if (v != NULL)
+        return atoi(v) != 0;
+    return getenv("KHCOM_PRELIMINAR_V1") != NULL;
 }
 
 static unsigned Entry(int tx, int ty) {
@@ -228,28 +233,148 @@ static int FramePixel(const uint16_t* frame, const uint8_t* tiles, int x, int y)
     return (tiles[(entry & 1023) * 32 + py * 4 + px / 2] >> ((px & 1) * 4)) & 15;
 }
 
+/* The other poses have no drawing: their right half is closed with the frame's own pixels, flipped (the rule for any
+   cut edge, LOGICA_APROBADOS.md). A pose facing the camera (the eye near the cut) mirrors its left half over the
+   body's axis; the axis is the one whose mirror best continues the columns at the cut. A pose in profile, and any row
+   the mirror leaves cut, closes each cut run with the pixels just left of the cut, flipped, as a rounded edge (half
+   an ellipse, 0.6 of the run's half height deep). The game's outline (index 1) where the new piece meets the
+   outside. Read from VRAM as the game loaded it (some poses change the map and keep the previous frame's tiles), and
+   rebuilt when the map or those tiles change. */
+#define CLOSE_W 96
+static const void* sCloseMap;
+static uint32_t sCloseSum;
+static int sCloseOn;
+static unsigned char sFrame[256][256]; /* the frame's palette indices (bank * 16 + index, 0 transparent) */
+static unsigned char sClose[256][CLOSE_W];
+
+static void BuildClose(void) {
+    static unsigned char edge[256][CLOSE_W];
+    long ex = 0, n = 0;
+    int x, y, j;
+    for (y = 0; y < 256; y++)
+        for (x = 0; x < 256; x++)
+            if ((sFrame[y][x] & 15) == 12 || (sFrame[y][x] & 15) == 13) { /* the yellow eye */
+                ex += x;
+                n++;
+            }
+    memset(sClose, 0, sizeof(sClose));
+    if (n && ex * 2 >= 400 * n) { /* the eye at x >= 200: facing the camera */
+        int center = (int)((ex * 2 + n / 2) / n), best = -1, a, a2 = center;
+        for (a = center - 24; a <= center + 24; a++) {
+            int score = 0;
+            for (j = 0; j < 4; j++) {
+                int sx = a - 256 - j;
+                if (sx < 0 || sx >= 256)
+                    continue;
+                for (y = 0; y < 256; y++)
+                    score += ((sFrame[y][255 - j] != 0) == (sFrame[y][sx] != 0)) + (sFrame[y][255 - j] == sFrame[y][sx]);
+            }
+            if (score > best) {
+                best = score;
+                a2 = a;
+            }
+        }
+        for (y = 0; y < 256; y++)
+            for (j = 0; j < CLOSE_W; j++) {
+                int sx = a2 - 256 - j;
+                if (sx >= 0 && sx < 256)
+                    sClose[y][j] = sFrame[y][sx];
+            }
+    }
+    for (y = 0; y < 256;) {
+        int y0 = y, len;
+        if (!sFrame[y][255] || sClose[y][0]) {
+            y++;
+            continue;
+        }
+        while (y < 256 && sFrame[y][255] && !sClose[y][0])
+            y++;
+        len = y - y0;
+        for (x = y0; x < y; x++) {
+            double t = (x - y0 + 0.5) / len * 2 - 1, r = 1 - t * t;
+            int depth = (int)(len / 2.0 * 0.6 * (r > 0 ? sqrt(r) : 0) + 0.5);
+            for (j = 0; j < depth && j < CLOSE_W; j++)
+                sClose[x][j] = sFrame[x][255 - j] ? sFrame[x][255 - j] : 1;
+        }
+    }
+    /* the outline: new pixels with the outside next to them */
+    for (y = 0; y < 256; y++)
+        for (j = 0; j < CLOSE_W; j++) {
+            int l, r, u, d;
+            edge[y][j] = 0;
+            if (!sClose[y][j])
+                continue;
+            l = j ? sClose[y][j - 1] != 0 : sFrame[y][255] != 0;
+            r = j + 1 < CLOSE_W && sClose[y][j + 1];
+            u = y > 0 && sClose[y - 1][j];
+            d = y < 255 && sClose[y + 1][j];
+            edge[y][j] = !(l && r && u && d);
+        }
+    for (y = 0; y < 256; y++)
+        for (j = 0; j < CLOSE_W; j++)
+            if (edge[y][j])
+                sClose[y][j] = 1;
+}
+
+static const DarksidePose* FindPose(const uint16_t* frame) {
+    size_t k;
+    for (k = 0; k < sizeof(kPoses) / sizeof(kPoses[0]); k++)
+        if (kPoses[k].map == frame)
+            return &kPoses[k];
+    return NULL;
+}
+
+void PortDarksideBeginFrame(int bg, const void* const* maps) {
+    const uint16_t* frame = (const uint16_t*)maps[2];
+    unsigned cnt = *(const uint16_t*)(uintptr_t)(GBA_IO + 8 + bg * 2);
+    const uint8_t* chars = (const uint8_t*)(uintptr_t)GBA_VRAM + ((cnt >> 2) & 3) * 0x4000;
+    uint32_t sum = 2166136261u;
+    int i, x, y;
+    sCloseOn = !FindPose(frame);
+    if (!sCloseOn)
+        return;
+    for (i = 0; i < 0x4000; i += 4)
+        sum = (sum ^ (chars[i] | chars[i + 1] << 8 | chars[i + 2] << 16 | (uint32_t)chars[i + 3] << 24)) * 16777619u;
+    if (frame == sCloseMap && sum == sCloseSum)
+        return;
+    for (y = 0; y < 256; y++)
+        for (x = 0; x < 256; x++) {
+            unsigned entry = frame[(y >> 3) * 32 + (x >> 3)];
+            int px = x & 7, py = y & 7, v;
+            if (entry & 0x400) px = 7 - px;
+            if (entry & 0x800) py = 7 - py;
+            v = (chars[((entry & 1023) * 32 + py * 4 + px / 2) & 0x3FFF] >> ((px & 1) * 4)) & 15;
+            sFrame[y][x] = (unsigned char)(v ? (entry >> 12) * 16 + v : 0);
+        }
+    BuildClose();
+    sCloseMap = frame;
+    sCloseSum = sum;
+}
+
 /* The block's own coordinates, in the copy of the map nearest the original picture (cx, cy: its middle, in
    pixels). 1: drawn here. */
 int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color) {
     const uint16_t* frame = (const uint16_t*)maps[2];
-    const DarksidePose* pose = NULL;
-    int mx, my, v;
-    size_t k;
-    for (k = 0; k < sizeof(kPoses) / sizeof(kPoses[0]); k++)
-        if (kPoses[k].map == frame)
-            pose = &kPoses[k];
-    if (!pose)
-        return 0;
+    const DarksidePose* pose = FindPose(frame);
+    const uint16_t* pltt = (const uint16_t*)(uintptr_t)GBA_PLTT;
+    int bx = x & 511, by = (y & 511) - 256, v = 0;
     if (2 * (x - cx) < -512 || 2 * (x - cx) >= 512 || 2 * (y - cy) < -512 || 2 * (y - cy) >= 512)
         return 0;
-    mx = (x & 511) - DARKSIDE_ART_LEFT;
-    my = (y & 511) - 256 - pose->top;
-    if (mx < 0 || mx >= DARKSIDE_ART_W || my < 0 || my >= pose->rows)
+    if (by < 0 || bx < (pose ? DARKSIDE_ART_LEFT : BEACH_W) || bx >= BEACH_W + CLOSE_W)
         return 0;
-    v = (pose->art[my][mx >> 1] >> ((mx & 1) * 4)) & 15;
-    if (!v || ((x & 511) < BEACH_W && FramePixel(frame, pose->tiles, x & 511, (y & 511) - 256)))
-        return 0; /* the cartridge's own pixel stays */
-    *color = ((const uint16_t*)(uintptr_t)GBA_PLTT)[v] & 0x7FFF; /* the body's bank 0, live */
+    /* every pixel of this strip is decided here: the caller's tile runs would carry a transparent pixel over the
+       rest of its tile */
+    if (!pose) {
+        if (sCloseOn && frame == sCloseMap)
+            v = sClose[by][bx - BEACH_W];
+    } else if (bx < BEACH_W && (v = FramePixel(frame, pose->tiles, bx, by)) != 0) {
+        v |= (frame[(by >> 3) * 32 + (bx >> 3)] >> 12) * 16; /* the cartridge's own pixel stays */
+    } else {
+        int mx = bx - DARKSIDE_ART_LEFT, my = by - pose->top;
+        if (mx < DARKSIDE_ART_W && my >= 0 && my < pose->rows)
+            v = (pose->art[my][mx >> 1] >> ((mx & 1) * 4)) & 15; /* the body's bank 0 */
+    }
+    *color = v ? pltt[v] & 0x7FFF : 0x8000; /* live */
     return 1;
 }
 

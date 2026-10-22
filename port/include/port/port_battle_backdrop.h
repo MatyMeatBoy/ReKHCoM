@@ -13,6 +13,8 @@ int PortDarksideLayer(const void* const* maps);
 /* cx, cy: the map tile at the middle of the original picture (the body's single copy is the one nearest it) */
 int PortDarksideTileSource(int layer, int* tx, int* ty, int cx, int cy);
 int PortDarksideShorePixel(int x, int y, uint16_t* color);
+/* once a frame for the body layer: rebuilds the closed right half of the poses without a drawing */
+void PortDarksideBeginFrame(int bg, const void* const* maps);
 int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color);
 
 #endif

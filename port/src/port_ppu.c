@@ -3154,8 +3154,11 @@ void PortPpuBeginFrame(void) {
             }
         }
     }
-    for (b = 0; b < 2; b++)
+    for (b = 0; b < 2; b++) {
         sDarksideLayer[b] = sBgLatch[b].valid ? PortDarksideLayer((const void* const*)sBgLatch[b].map) : 0;
+        if (sDarksideLayer[b] == 2)
+            PortDarksideBeginFrame(b, (const void* const*)sBgLatch[b].map);
+    }
     sDarksideLayer[2] = sDarksideLayer[3] = 0;
     memset(sAgrabah109Layer, 0, sizeof(sAgrabah109Layer));
     sAgrabah109ShopPal[0] = sAgrabah109ShopPal[1] = -1;
