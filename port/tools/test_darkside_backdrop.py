@@ -16,7 +16,7 @@ from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parents[2]
 FRAMES = (180, 380, 600)
-# a fight where Darkside attacks: punch, crouch, claw and the raised arms (the poses closed from their own pixels)
+# a fight where Darkside attacks: punch, crouch, claw and the raised arms (each pose drawn from the finished model)
 ATTACK_FRAMES = (300, 780, 1020, 1620)
 ATTACK_KEYS = '60-63:A,200-1700:A'
 
