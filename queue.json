@@ -82,10 +82,10 @@
     "escena-110": {
       "id": "escena-110",
       "piece": "Escena 110: pilares y patrones",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "art_110",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:27:31.992229+00:00",
+      "updated_at": "2026-10-24T16:27:50.380235+00:00",
       "branch": "codex/art-110-clouds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/53",
       "approval": "Preliminar solicitada por usuario; hija179b6da22e5c4bd39181d5ab14d7b9d3 pendiente humana, apagada para jugadores",
@@ -95,9 +95,15 @@
           "at": "2026-10-24T16:27:31.992229+00:00",
           "owner": "art_110",
           "detail": "24/24EU; check_sources; padreSHA y2nubes verificados"
+        },
+        {
+          "at": "2026-10-24T16:27:50.380235+00:00",
+          "owner": "art_110",
+          "detail": "PR53 merged e3e9c917d6c479f516a9c7c295923644c1a7ef86; preliminar apagada en juego normal, espera valoracion humana"
         }
       ],
-      "claimed_at": "2026-10-24T16:19:12.745390+00:00"
+      "claimed_at": "2026-10-24T16:19:12.745390+00:00",
+      "completed_at": "2026-10-24T16:27:50.380235+00:00"
     },
     "visor-paneo": {
       "id": "visor-paneo",
@@ -541,13 +547,8 @@
       "claimed_at": "2026-10-24T16:26:04.132955+00:00"
     }
   },
-  "integrator": {
-    "owner": "root",
-    "token": "d7870194469762e07918c412bdba78bee16d51a99dd01173",
-    "created_at": "2026-10-24T16:19:12.746926+00:00",
-    "updated_at": "2026-10-24T16:25:04.486968+00:00"
-  },
-  "updated_at": "2026-10-24T16:27:31.992229+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-24T16:27:50.380235+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
