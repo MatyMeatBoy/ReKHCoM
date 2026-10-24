@@ -22,7 +22,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-081 | Escena 081 | pendiente | — | — | — | 2026-10-24T20:56:31.609976+00:00 |
 | escena-087 | Escena 087 | integrado | r4 | https://github.com/MatyMeatBoy/ReKHCoM/pull/76 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:09:57.187038+00:00 |
 | escena-090 | Escena 090 | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/80 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:15.958964+00:00 |
-| escena-095 | Escena 095 | pr_abierto | codex-095 | https://github.com/MatyMeatBoy/ReKHCoM/pull/81 | — | 2026-10-24T21:18:14.625067+00:00 |
+| escena-095 | Escena 095 | integrado | codex-095 | https://github.com/MatyMeatBoy/ReKHCoM/pull/81 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:21.537366+00:00 |
 | escena-097 | Escena 097 | pendiente | — | — | — | 2026-10-24T20:56:37.047208+00:00 |
 | escena-099 | Escena 099 | pr_abierto | codex-099 | https://github.com/MatyMeatBoy/ReKHCoM/pull/79 | — | 2026-10-24T21:13:45.911157+00:00 |
 | escena-102 | Escena 102 | pendiente | — | — | — | 2026-10-24T20:54:33.971827+00:00 |

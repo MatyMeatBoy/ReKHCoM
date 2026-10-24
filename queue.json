@@ -527,13 +527,13 @@
     "escena-095": {
       "id": "escena-095",
       "piece": "Escena 095",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-095",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:18:14.625067+00:00",
+      "updated_at": "2026-10-24T22:10:21.537366+00:00",
       "branch": "claude/worker-codex-095",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/81",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "063184fedd8043a492e2fe4b5ea34b25",
       "evidence": [
         {
@@ -555,10 +555,16 @@
           "at": "2026-10-24T21:18:14.625067+00:00",
           "owner": "codex-095",
           "detail": "7361b7926; propuesta parcial; hija7d7e94537fb94d2d892df07eda21705f; nube castillo pendiente; build EU y check_sources ok; GBA sin diferencias1920/3440 arranques directos"
+        },
+        {
+          "at": "2026-10-24T22:10:21.537366+00:00",
+          "owner": "codex-095",
+          "detail": "merge PR #81 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T21:06:42.798159+00:00",
-      "sent": "7d7e94537fb94d2d892df07eda21705f"
+      "sent": "7d7e94537fb94d2d892df07eda21705f",
+      "completed_at": "2026-10-24T22:10:21.537366+00:00"
     },
     "escena-097": {
       "id": "escena-097",
@@ -1546,7 +1552,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:15.958964+00:00",
+  "updated_at": "2026-10-24T22:10:21.537366+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
