@@ -380,10 +380,10 @@
     "escena-061": {
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
-      "status": "en_curso",
-      "owner": "codex-escena-061",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:11:27.518271+00:00",
+      "updated_at": "2026-10-24T22:13:45.575257+00:00",
       "branch": "codex/escena-061-comentarios",
       "pr": null,
       "approval": null,
@@ -408,6 +408,11 @@
           "at": "2026-10-24T20:41:20.899024+00:00",
           "owner": "r3c",
           "detail": "released: En origin/main el pasillo ya llega completo al borde inferior derecho (nube 2 parece resuelta por cambios posteriores a la revision); la nube 1 (cachito, wall top ~x354-387,y20-38 de 960x270) es ambigua: quedan muescas pequenas en la base de la pared, necesita aclarar con el usuario cual. Requiere captura 3840 y comparacion contra la hija"
+        },
+        {
+          "at": "2026-10-24T22:13:45.575257+00:00",
+          "owner": "codex-escena-061",
+          "detail": "released: Diagnóstico contrastado con los estudios previos: nube 2 ya está resuelta en origin/main. La nube 1 apunta a muescas pequeñas en la base de la pared y no identifica cuál; no hay referencia para elegir sin cambiar el diseño aprobado. Liberada para seguir con otras revisiones."
         }
       ],
       "claimed_at": "2026-10-24T22:11:15.987855+00:00"
@@ -1589,7 +1594,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:11:27.518271+00:00",
+  "updated_at": "2026-10-24T22:13:45.575257+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
