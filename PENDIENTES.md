@@ -44,5 +44,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | queue_tools | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | queue_docs | — | — | 2026-10-24T16:35:00.794556+00:00 |
+| catalogo-titulo60 | Catalogo actual: titulo original y barras | pendiente | — | — | — | 2026-10-24T16:35:09.541342+00:00 |
 
 Integrador: libre
