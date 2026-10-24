@@ -1436,13 +1436,13 @@
     "agrabah-genio-arriba": {
       "id": "agrabah-genio-arriba",
       "piece": "Agrabah: continuar patrón superior durante aparición del Genio",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte",
       "created_at": "2026-10-24T21:13:29.198479+00:00",
-      "updated_at": "2026-10-24T21:25:42.702557+00:00",
+      "updated_at": "2026-10-24T22:10:48.641527+00:00",
       "branch": "codex/agrabah-genio-arriba",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/82",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "Pedido usuario 24/10; captura codex-clipboard-e8b02d26-fe7f-49f5-8e28-23f13662592d.png",
       "evidence": [
         {
@@ -1454,10 +1454,16 @@
           "at": "2026-10-24T21:25:42.702557+00:00",
           "owner": "codex-arte",
           "detail": "Pilares superiores y ventana existente; EU build/check_sources; subida Genio a1920/3840 sin cambio GBA. Preliminar optativa."
+        },
+        {
+          "at": "2026-10-24T22:10:48.641527+00:00",
+          "owner": "codex-arte",
+          "detail": "merge PR #82 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T21:13:36.439471+00:00",
-      "sent": "a5789640eda44d0e9bac19d218cf40a0"
+      "sent": "a5789640eda44d0e9bac19d218cf40a0",
+      "completed_at": "2026-10-24T22:10:48.641527+00:00"
     },
     "menu-barajas-sincronia": {
       "id": "menu-barajas-sincronia",
@@ -1576,7 +1582,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:43.491600+00:00",
+  "updated_at": "2026-10-24T22:10:48.641527+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
