@@ -241,12 +241,12 @@
     "darkside-arena": {
       "id": "darkside-arena",
       "piece": "Darkside · arena y contexto",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:30:59.071547+00:00",
+      "updated_at": "2026-10-24T19:31:05.340366+00:00",
       "branch": "claude/arte-w3",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/70",
       "approval": "sin aprobacion aun: espera valoracion del usuario en la app",
       "reference": "{\"family_id\": \"85b593a92f164922966b64436ccf06ab\", \"submissions\": [{\"submission\": \"20261024-053517-3760ea\", \"created\": \"2026-10-24T08:35:18.138480+00:00\", \"image_id\": \"85b593a92f164922966b64436ccf06ab\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"a9c2fc57-3230-4b29-9ba2-e4ed55dd9710\", \"cf381e34-5147-4bc8-9ed2-7dd491f9c8b8\", \"c1979ac2-61ef-411c-a79a-7f9237dde2c8\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053517-3760ea\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -1008,7 +1008,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:30:59.071547+00:00",
+  "updated_at": "2026-10-24T19:31:05.340366+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

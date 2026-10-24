@@ -14,7 +14,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | primer-arranque | Primer arranque · elección de modo con vista previa | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/60 | Pedido del usuario en el envío 20261024-131202-943804 | 2026-10-24T17:09:01.184010+00:00 |
 | botones-editor | Botones táctiles · editor de posición | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/59 | Pedido del usuario en el envío 20261024-131133-57e115 (funcionalidad, no arte) | 2026-10-24T17:08:44.643502+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:30:33.228367+00:00 |
-| darkside-arena | Darkside · arena y contexto | listo_pr | claude-sonnet-w3 | claude/arte-w3 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:30:59.071547+00:00 |
+| darkside-arena | Darkside · arena y contexto | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:31:05.340366+00:00 |
 | escena-004 | Escena 004 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:17:59.492616+00:00 |
 | escena-057 | Escena 057 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:04.945801+00:00 |
 | escena-061 | Escena 061 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:21.150175+00:00 |
