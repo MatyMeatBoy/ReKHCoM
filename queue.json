@@ -266,15 +266,21 @@
     "escena-004": {
       "id": "escena-004",
       "piece": "Escena 004 · integrada",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w1",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:17:59.492616+00:00",
+      "updated_at": "2026-10-24T19:33:28.290346+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"22fc4ea176864111880e02b851a58445\", \"submissions\": [{\"submission\": \"20261024-132007-6cb5fe\", \"created\": \"2026-10-24T16:20:07.160578+00:00\", \"image_id\": \"22fc4ea176864111880e02b851a58445\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"c4afbf3a-d8f4-439d-8842-5dfee64215b3\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-132007-6cb5fe\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:33:28.290346+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "Usa el relleno iso generico (IsoEntry/IsoPrepare en port_ppu.c, compartido por otras escenas): tocarlo afecta otro desarrollo. Hallazgo: el pilar de edificio derecho termina en corte recto y a la derecha/abajo-derecha el suelo se rellena por paso diagonal; falta decidir si la regla debe ser especifica de 004 (perfil propio) en vez de tocar el generico. Captura base EU 3840x1080 z6 en build/w1/004-base.png (wt-sonnet-w1)."
+        }
+      ],
       "claimed_at": "2026-10-24T19:17:59.492616+00:00"
     },
     "escena-057": {
@@ -1056,7 +1062,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:33:22.141316+00:00",
+  "updated_at": "2026-10-24T19:33:28.290346+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
