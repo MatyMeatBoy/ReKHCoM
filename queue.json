@@ -296,10 +296,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "r3a",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:30:18.454311+00:00",
+      "updated_at": "2026-10-24T20:31:34.559289+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -331,7 +331,7 @@
           "detail": "released: Liberada de nuevo: ver evidencia anterior (mapa donante por mata completa)."
         }
       ],
-      "claimed_at": "2026-10-24T20:30:09.440781+00:00"
+      "claimed_at": "2026-10-24T20:31:34.559289+00:00"
     },
     "escena-061": {
       "id": "escena-061",
@@ -1246,7 +1246,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:31:29.065659+00:00",
+  "updated_at": "2026-10-24T20:31:34.559794+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
