@@ -881,6 +881,19 @@
       ],
       "claimed_at": "2026-10-24T17:00:07.976667+00:00",
       "completed_at": "2026-10-24T17:09:15.351516+00:00"
+    },
+    "hd-orden-calidad": {
+      "id": "hd-orden-calidad",
+      "piece": "Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T17:20:42.466751+00:00",
+      "updated_at": "2026-10-24T17:20:42.466751+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "usuario chat 24/10",
+      "evidence": []
     }
   },
   "integrator": {
@@ -889,7 +902,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:09:08.957912+00:00"
   },
-  "updated_at": "2026-10-24T17:10:12.671131+00:00",
+  "updated_at": "2026-10-24T17:20:42.466751+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
