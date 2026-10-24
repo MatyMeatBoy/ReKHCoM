@@ -101,6 +101,19 @@
       "approval": null,
       "reference": "ca689d6c9b5e41a3a029aab9d345096b / envío 20261024-131133-57e115",
       "evidence": []
+    },
+    "primer-arranque": {
+      "id": "primer-arranque",
+      "piece": "Primer arranque · elección de modo con vista previa",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:24:40.325531+00:00",
+      "updated_at": "2026-10-24T16:24:40.325531+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "envío 20261024-131202-943804",
+      "evidence": []
     }
   },
   "integrator": {
@@ -109,5 +122,5 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:19:12.746926+00:00"
   },
-  "updated_at": "2026-10-24T16:24:35.327412+00:00"
+  "updated_at": "2026-10-24T16:24:40.325531+00:00"
 }

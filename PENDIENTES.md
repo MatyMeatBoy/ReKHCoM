@@ -11,5 +11,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-110 | Escena 110: pilares y patrones | en_curso | art_110 | — | — | 2026-10-24T16:19:12.745390+00:00 |
 | visor-paneo | Visor revision: paneo con boton derecho y limites | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:20:10.214368+00:00 |
 | botones-tactiles | Botones táctiles · editor de posición | pendiente | — | — | — | 2026-10-24T16:24:35.327412+00:00 |
+| primer-arranque | Primer arranque · elección de modo con vista previa | pendiente | — | — | — | 2026-10-24T16:24:40.325531+00:00 |
 
 Integrador: root (ocupado; 2026-10-24T16:19:12.746926+00:00)
