@@ -492,10 +492,10 @@
     "escena-102": {
       "id": "escena-102",
       "piece": "Escena 102",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w2",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:32:27.805574+00:00",
+      "updated_at": "2026-10-24T19:44:28.562674+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -505,6 +505,11 @@
           "at": "2026-10-24T19:32:27.805574+00:00",
           "owner": "claude-sonnet-w2",
           "detail": "No resuelto por w2: requiere estudio de tiles por escena (patron/estructura) fuera del tiempo disponible; reserva liberable. 115-118 dependen del PR #71 (ready=1 en tabla)"
+        },
+        {
+          "at": "2026-10-24T19:44:28.562674+00:00",
+          "owner": "claude-sonnet-w2",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:17:14.781075+00:00"
@@ -1138,7 +1143,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:23.060329+00:00",
+  "updated_at": "2026-10-24T19:44:28.562674+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
