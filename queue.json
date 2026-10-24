@@ -1423,11 +1423,11 @@
       "status": "en_curso",
       "owner": "codex-arte",
       "created_at": "2026-10-24T21:16:36.776353+00:00",
-      "updated_at": "2026-10-24T21:20:39.553994+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T21:20:46.542298+00:00",
+      "branch": "codex/menu-barajas-sincronia",
       "pr": null,
       "approval": null,
-      "reference": null,
+      "reference": "Capturas usuario d88ea9fc / 94ade1fe; pestañas al moverse izquierda",
       "evidence": [
         {
           "at": "2026-10-24T21:17:10.310731+00:00",
@@ -1444,7 +1444,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:20:39.553994+00:00",
+  "updated_at": "2026-10-24T21:20:46.542298+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
