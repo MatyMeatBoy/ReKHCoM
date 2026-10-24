@@ -576,13 +576,13 @@
     "issue-049": {
       "id": "issue-049",
       "piece": "Auditar issue49 Steam Deck Gaming Mode y arreglos existentes",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "claude-relevo",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T17:04:15.692310+00:00",
+      "updated_at": "2026-10-24T17:09:56.772053+00:00",
       "branch": "codex/issue-049-steam-native",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/58",
-      "approval": "pedido-usuario-20261024",
+      "approval": "Pedido del usuario (cola de Codex; integrar: chat 24/10)",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
       "evidence": [
         {
@@ -609,6 +609,11 @@
           "at": "2026-10-24T17:04:15.692310+00:00",
           "owner": "claude-funciones",
           "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+        },
+        {
+          "at": "2026-10-24T17:09:56.772053+00:00",
+          "owner": "claude-relevo",
+          "detail": "Pruebas del PR pasan en relevo"
         }
       ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
@@ -878,7 +883,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:09:08.957912+00:00"
   },
-  "updated_at": "2026-10-24T17:09:48.882861+00:00",
+  "updated_at": "2026-10-24T17:09:56.772053+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
