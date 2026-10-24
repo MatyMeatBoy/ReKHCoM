@@ -266,10 +266,10 @@
     "escena-004": {
       "id": "escena-004",
       "piece": "Escena 004 · integrada",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:33:28.290346+00:00",
+      "updated_at": "2026-10-24T19:43:42.689763+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -279,6 +279,11 @@
           "at": "2026-10-24T19:33:28.290346+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Usa el relleno iso generico (IsoEntry/IsoPrepare en port_ppu.c, compartido por otras escenas): tocarlo afecta otro desarrollo. Hallazgo: el pilar de edificio derecho termina en corte recto y a la derecha/abajo-derecha el suelo se rellena por paso diagonal; falta decidir si la regla debe ser especifica de 004 (perfil propio) en vez de tocar el generico. Captura base EU 3840x1080 z6 en build/w1/004-base.png (wt-sonnet-w1)."
+        },
+        {
+          "at": "2026-10-24T19:43:42.689763+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:17:59.492616+00:00"
@@ -1098,7 +1103,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:35:47.690263+00:00",
+  "updated_at": "2026-10-24T19:43:42.689763+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

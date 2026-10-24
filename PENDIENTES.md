@@ -15,7 +15,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | botones-editor | Botones táctiles · editor de posición | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/59 | Pedido del usuario en el envío 20261024-131133-57e115 (funcionalidad, no arte) | 2026-10-24T17:08:44.643502+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:30:33.228367+00:00 |
 | darkside-arena | Darkside · arena y contexto | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:31:05.340366+00:00 |
-| escena-004 | Escena 004 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:28.290346+00:00 |
+| escena-004 | Escena 004 · integrada | pendiente | — | — | — | 2026-10-24T19:43:42.689763+00:00 |
 | escena-057 | Escena 057 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:34.580193+00:00 |
 | escena-061 | Escena 061 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:47.791248+00:00 |
 | escena-074 | Escena 074 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:53.864882+00:00 |
