@@ -379,15 +379,21 @@
     "escena-090": {
       "id": "escena-090",
       "piece": "Escena 090",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w1",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:18:49.063739+00:00",
+      "updated_at": "2026-10-24T19:34:13.263284+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"0717ed4c3a554005a74694e692dc20f0\", \"submissions\": [{\"submission\": \"20261024-130932-cd374d\", \"created\": \"2026-10-24T16:09:32.502995+00:00\", \"image_id\": \"0551fbab97804de9802ed1b48160e278\", \"version\": \"Revisión · Rejas completas sobre el muro hasta el borde izquierdo; colinas del horizonte seguidas sin escalones (3 colinas = 32 til\", \"clouds\": 5, \"cloud_ids\": [\"95704790-5c8d-4105-8d35-08a512711b5c\", \"39cf5085-7845-47bb-97a6-a54618a17e43\", \"457889ba-b51d-4723-b38e-3024c3648890\", \"974e5120-2850-4555-adae-8258ed56511f\", \"7edf298e-d674-4d36-9989-47556eb91638\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130932-cd374d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:34:13.263284+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "Probado en rama local (descartado, no commiteado): reja recta como donante derecho (cols 48-51 muro, 46-53 reja) deja costura con la subida original, hay lapidas/casa en los donantes y las colinas del cielo no casan. Requiere decision visual sobre la esquina entre la rampa y el muro recto. Capturas build/w1/090-base/t1/t2.png."
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:49.063739+00:00"
     },
     "escena-095": {
@@ -1086,7 +1092,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:34:07.847479+00:00",
+  "updated_at": "2026-10-24T19:34:13.263284+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
