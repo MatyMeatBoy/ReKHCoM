@@ -1503,22 +1503,28 @@
     "mapa-camara-suavidad": {
       "id": "mapa-camara-suavidad",
       "piece": "Mapa: investigar suavidad de cámara con texto HD y GBA mejorado",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte",
       "created_at": "2026-10-24T21:29:26.870726+00:00",
-      "updated_at": "2026-10-24T21:46:15.529240+00:00",
+      "updated_at": "2026-10-24T22:10:32.354023+00:00",
       "branch": "codex/mapa-camara-suavidad",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/86",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "Usuario24/10: leve avance poco natural caminando; combate más suave; comparar frame pacing/cámara/redondeo",
       "evidence": [
         {
           "at": "2026-10-24T21:46:15.529240+00:00",
           "owner": "codex-arte",
           "detail": "HUD crop:18.13 a9.21ms trabajo map software;8pares ventana completa idénticos;velocidad/cámara/VSync intactos. EU/check_sources."
+        },
+        {
+          "at": "2026-10-24T22:10:32.354023+00:00",
+          "owner": "codex-arte",
+          "detail": "merge PR #86 en main 24/10; build PC y pruebas de humo"
         }
       ],
-      "claimed_at": "2026-10-24T21:32:38.631001+00:00"
+      "claimed_at": "2026-10-24T21:32:38.631001+00:00",
+      "completed_at": "2026-10-24T22:10:32.354023+00:00"
     },
     "video-vrr-optin": {
       "id": "video-vrr-optin",
@@ -1558,7 +1564,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:27.053419+00:00",
+  "updated_at": "2026-10-24T22:10:32.354023+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
