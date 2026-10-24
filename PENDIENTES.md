@@ -52,4 +52,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:05:35.750414+00:00 |
 | visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | pr_abierto | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/61 | Pedido del usuario en chat 24/10 | 2026-10-24T17:02:11.995008+00:00 |
 
-Integrador: claude-integrador (ocupado; 2026-10-24T17:08:53.481315+00:00)
+Integrador: claude-integrador (ocupado; 2026-10-24T17:09:08.957912+00:00)
