@@ -865,10 +865,10 @@
     "malefica-01": {
       "id": "malefica-01",
       "piece": "Maléfica 01 · ala recortada",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-malefica01",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T22:17:38.065630+00:00",
+      "updated_at": "2026-10-24T22:25:15.044405+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -893,9 +893,15 @@
           "at": "2026-10-24T20:55:58.386336+00:00",
           "owner": "r4",
           "detail": "released: Pide dibujar a Malefica hasta la cola como pixel art o buscar en archivos: arte nuevo de sprite, revision aislada con el usuario."
+        },
+        {
+          "at": "2026-10-24T22:25:15.044405+00:00",
+          "owner": "codex-malefica01",
+          "detail": "Respondido envío 20261024-054906-282e24/nube 0a14d4f2 con hija 4d253e4072d34f03b7569a987702c511; localizada fuente maleficent spritetobase.jpg con cola completa. Aviso de limitación: la pose exacta del fotograma 240 requiere valoración humana."
         }
       ],
-      "claimed_at": "2026-10-24T22:17:38.065630+00:00"
+      "claimed_at": "2026-10-24T22:17:38.065630+00:00",
+      "sent": "4d253e4072d34f03b7569a987702c511"
     },
     "malefica-arena": {
       "id": "malefica-arena",
@@ -1604,7 +1610,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:17:38.065630+00:00",
+  "updated_at": "2026-10-24T22:25:15.044405+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
