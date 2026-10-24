@@ -553,12 +553,12 @@
     "escena-099": {
       "id": "escena-099",
       "piece": "Escena 099",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-099",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:07:34.826505+00:00",
+      "updated_at": "2026-10-24T21:13:45.911157+00:00",
       "branch": "claude/worker-codex-099",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/79",
       "approval": null,
       "reference": "d3e87dca65eb4e9fb10535b3e731419d",
       "evidence": [
@@ -581,9 +581,15 @@
           "at": "2026-10-24T21:04:17.533916+00:00",
           "owner": "claude-int",
           "detail": "released: Para Codex (usuario 25/10). Muro lateral en franjas planas: continuar marcos y paneles ajedrezados."
+        },
+        {
+          "at": "2026-10-24T21:13:45.911157+00:00",
+          "owner": "codex-099",
+          "detail": "cef4d9e5a; hija ae36f45ef10e45cc809620075f0c8626; EU build y check_sources OK; test_preliminar_v1 quick escena099 3440x1440 frame300 passed native_diff null. Propuesta pendiente valoracion; Claude integra."
         }
       ],
-      "claimed_at": "2026-10-24T21:06:53.462445+00:00"
+      "claimed_at": "2026-10-24T21:06:53.462445+00:00",
+      "sent": "ae36f45ef10e45cc809620075f0c8626"
     },
     "escena-102": {
       "id": "escena-102",
@@ -1400,7 +1406,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:13:36.439471+00:00",
+  "updated_at": "2026-10-24T21:13:45.911157+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
