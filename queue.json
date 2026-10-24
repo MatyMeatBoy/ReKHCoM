@@ -236,15 +236,21 @@
     "darkside-arena": {
       "id": "darkside-arena",
       "piece": "Darkside · arena y contexto",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:17:26.534499+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T19:29:45.937473+00:00",
+      "branch": "claude/arte-w3",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"85b593a92f164922966b64436ccf06ab\", \"submissions\": [{\"submission\": \"20261024-053517-3760ea\", \"created\": \"2026-10-24T08:35:18.138480+00:00\", \"image_id\": \"85b593a92f164922966b64436ccf06ab\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"a9c2fc57-3230-4b29-9ba2-e4ed55dd9710\", \"cf381e34-5147-4bc8-9ed2-7dd491f9c8b8\", \"c1979ac2-61ef-411c-a79a-7f9237dde2c8\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053517-3760ea\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:29:45.937473+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "hija 14ffdd662e9d4fde9316e74c7f1e8208 (playa activada en captura)"
+        }
+      ],
       "claimed_at": "2026-10-24T19:17:26.534499+00:00"
     },
     "escena-004": {
@@ -968,7 +974,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:22:36.983312+00:00",
+  "updated_at": "2026-10-24T19:29:45.937473+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
