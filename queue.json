@@ -144,15 +144,16 @@
     "botones-editor": {
       "id": "botones-editor",
       "piece": "Botones táctiles · editor de posición",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-funciones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:26:26.894729+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"ca689d6c9b5e41a3a029aab9d345096b\", \"submissions\": [{\"submission\": \"20261024-131133-57e115\", \"created\": \"2026-10-24T16:11:33.348232+00:00\", \"image_id\": \"ca689d6c9b5e41a3a029aab9d345096b\", \"version\": \"v1 · fila Opciones > Mover botones táctiles\", \"clouds\": 1, \"cloud_ids\": [\"48407a5e-ac9e-4cc7-a09c-91324a566ea4\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131133-57e115\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:26:26.894729+00:00"
     },
     "darkside-06": {
       "id": "darkside-06",
@@ -528,7 +529,7 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:25:04.486968+00:00"
   },
-  "updated_at": "2026-10-24T16:26:04.132955+00:00",
+  "updated_at": "2026-10-24T16:26:26.894729+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
