@@ -421,9 +421,9 @@
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
       "status": "en_curso",
-      "owner": "codex-arte",
+      "owner": "codex-escena-074",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:13:52.041157+00:00",
+      "updated_at": "2026-10-24T22:14:59.975996+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -443,6 +443,11 @@
           "at": "2026-10-24T20:45:01.042645+00:00",
           "owner": "r4",
           "detail": "released: Solo existe una version de 074 en la app (catalogo: scene-74, id 303416c3); no hay version mejorada previa de la que partir. Mi captura after==before (el perfil 074 siempre activo, KHCOM_PRELIMINAR no lo alterna). El patron (suelo BG3 diagonal + borde/charcos BG2) requiere decidir periodos del tile-map de la diagonal (BG2 repeat 20x10 en port_scene_wide_tiles.h) y comparar contra la version buena que el usuario recuerda: pedirle cual era."
+        },
+        {
+          "at": "2026-10-24T22:14:59.975996+00:00",
+          "owner": "codex",
+          "detail": "El usuario confirma 24/10 que nadie trabaja en arte y autoriza tomar las revisiones visibles de Atlas; se retoma el diagnóstico del patrón 074 para entregar propuesta visual, sin esperar dato del usuario."
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00"
@@ -1594,7 +1599,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:13:52.041157+00:00",
+  "updated_at": "2026-10-24T22:14:59.975996+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -1755,6 +1760,16 @@
       "to_owner": null,
       "expected_commit": "30334b63ffab020b8e19a4b2c09069726defac19",
       "evidence": "same session lost the token (quiet output); re-acquire"
+    },
+    {
+      "at": "2026-10-24T22:14:59.975996+00:00",
+      "actor": "codex",
+      "operation": "recover-task",
+      "task": "escena-074",
+      "from_owner": "codex-arte",
+      "to_owner": "codex-escena-074",
+      "expected_commit": "bb3789c3fe04d7510c464666a8e759deaa9e2ad8",
+      "evidence": "El usuario confirma 24/10 que nadie trabaja en arte y autoriza tomar las revisiones visibles de Atlas; se retoma el diagnóstico del patrón 074 para entregar propuesta visual, sin esperar dato del usuario."
     }
   ]
 }
