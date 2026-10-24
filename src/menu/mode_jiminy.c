@@ -4,6 +4,7 @@
  */
 
 #include "sprites_msg.h"
+#include "engine.h"
 #include "jiminy_journal.h"
 #include "sprites_bos5.h"
 #include "sprites_emy.h"
@@ -1185,6 +1186,9 @@ static const JiminyDetail sJiminyEntry20Details[33] = {
 #endif
 
 #include "jiminy_placeholders.inc"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#endif
 static JiminyWork* sJiminyWork;
 
 enum JiminyState {
@@ -1657,6 +1661,9 @@ void mode_jiminy_0() {
 }
 
 void mode_jiminy_1() {
+#ifdef PLATFORM_PC
+    PortSideStyle(PORT_SIDE_GROUND_BANDS); /* the lists (and back from a page) */
+#endif
     s32 i;
     u16 flags;
     u16 alpha;
@@ -1923,7 +1930,13 @@ void mode_jiminy_1() {
         }
     }
 
-    if (sJiminyWork->flags & JIMINY_FLAG_SHOW_TITLE) {
+    if ((sJiminyWork->flags & JIMINY_FLAG_SHOW_TITLE)
+#ifdef PLATFORM_PC
+        /* the title's HD banner: the sprite stays over the list's BG, which carries the title once it has slid in */
+        || (sJiminyWork->state == JIMINY_STATE_LIST && sJiminyWork->tiles != NULL &&
+            PortHdSpriteAny(((ObjTiles*)sJiminyWork->tiles)->src))
+#endif
+    ) {
 #ifdef VERSION_EU
         switch (gLanguage) {
         case LANGUAGE_ENGLISH:
@@ -2078,6 +2091,9 @@ void SplitThreeDecimalDigits(s16 value, u8* out) {
 }
 
 void JiminyDetailUpdate() {
+#ifdef PLATFORM_PC
+    PortSideStyle(PORT_SIDE_GROUND_SHEETS); /* the open book: each side's own ground in the wide view */
+#endif
     s32 count;
     const JiminyDetail* entries;
     s16 i;

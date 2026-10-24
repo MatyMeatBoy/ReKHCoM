@@ -283,8 +283,21 @@ static void H_gfx_blend(int on) { vkp_ui_blend(on != 0); }
 
 /* ---- bridge: audio and controllers ----------------------------------------- */
 
-static int H_audio_open(int rate) { return plat_audio_open(rate) ? 0 : -1; }
-static void H_audio_push(const int16_t *frames, uint32_t count) { plat_audio_push(frames, count); }
+static int sGameRate = 48000; /* the rate the game opened the audio at */
+static int H_audio_open(int rate) { sGameRate = rate; return plat_audio_open(rate) ? 0 : -1; }
+static void GamePush(const int16_t *frames, uint32_t count) { plat_audio_push(frames, count); }
+
+/* HD music: the host decodes the track the game names and mixes it into the game's blocks (shared/hd_music_host.h) */
+#define HD_MUSIC_LOG Log
+#include "hd_music_host.h"
+/* the network link's socket (shared/udp_host.h): none on this host yet, the link stays the cable */
+#include "udp_host.h"
+static void H_audio_push(const int16_t *frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
+/* HD movies: only the Android host plays them (bridge entry hd_movie); the game plays its own movie */
+static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
+    (void)movie, (void)subs1, (void)subs2, (void)font;
+    return 0;
+}
 static uint32_t H_audio_queued(void) { return (uint32_t)plat_audio_queued_frames(); }
 static void H_audio_clear(void) { plat_audio_clear(); }
 static void H_audio_ratio(double ratio) { plat_audio_set_ratio(ratio); }
@@ -320,6 +333,9 @@ static int H_pad_poll(HostPad *out, int count)
 }
 static int H_quit_requested(void) { return sQuit; }
 static void H_set_title(const char *s) { (void)s; }
+/* no touch screen and no background state here (bridge entries of the Android 64-bit host) */
+static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
+static int H_app_state(void) { return 0; }
 
 /* ---- guest memory ------------------------------------------------------------- */
 
@@ -1020,6 +1036,11 @@ int main(void)
         [HF_log_e] = (uintptr_t)(double (*)(double))log, [HF_fmod] = (uintptr_t)(double (*)(double, double))fmod,
         [HF_sinf] = (uintptr_t)(float (*)(float))sinf, [HF_cosf] = (uintptr_t)(float (*)(float))cosf,
         [HF_powf] = (uintptr_t)(float (*)(float, float))powf, [HF_set_title] = (uintptr_t)H_set_title, [HF_notify] = (uintptr_t)H_notify,
+        [HF_touch_poll] = (uintptr_t)H_touch_poll, [HF_app_state] = (uintptr_t)H_app_state,
+        [HF_hd_music] = (uintptr_t)H_hd_music,
+        [HF_hd_movie] = (uintptr_t)H_hd_movie,
+        [HF_udp_open] = (uintptr_t)H_udp_open, [HF_udp_resolve] = (uintptr_t)H_udp_resolve,
+        [HF_udp_send] = (uintptr_t)H_udp_send, [HF_udp_recv] = (uintptr_t)H_udp_recv,
     };
     for (int i = 0; i < HF_COUNT; ++i)
         if (!t[i])

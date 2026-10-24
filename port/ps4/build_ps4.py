@@ -9,7 +9,7 @@ on Windows (the toolchain ships Windows tools) or Linux.
     python port/ps4/build_ps4.py host                  # only the host and the package (guest images already built)
     python port/ps4/build_ps4.py test-host             # the same host for Linux, headless (run it in the Linux VM)
 
-Needs: OO_PS4_TOOLCHAIN (default D:/ReKHCoM-build/ps4/toolchain, the OpenOrbis v0.5.4 release), clang and ld.lld
+Needs: OO_PS4_TOOLCHAIN (default D:/01Claude/ReKHCoM-build/ps4/toolchain, the OpenOrbis v0.5.4 release), clang and ld.lld
 (the repository's llvm-mingw on Windows), .NET 6 or later for PkgTool, and the generated assets of each region
 (build/<region>, as for the desktop build). Output: port/ps4/dist/ReKHCoM-ps4-alpha.pkg.
 """
@@ -24,7 +24,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 BUILD = HERE / 'build'
 DIST = HERE / 'dist'
-OO = Path(os.environ.get('OO_PS4_TOOLCHAIN', 'D:/ReKHCoM-build/ps4/toolchain'))
+OO = Path(os.environ.get('OO_PS4_TOOLCHAIN', 'D:/01Claude/ReKHCoM-build/ps4/toolchain'))
 WINDOWS = os.name == 'nt'
 LLVM = ROOT.parent / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin'
 CLANG = os.environ.get('CLANG', str(LLVM / 'clang.exe') if WINDOWS else 'clang-18')
@@ -50,7 +50,7 @@ def tool(name):
 
 def version():
     import re
-    text = (ROOT / 'port/decompui/decompui.cpp').read_text(encoding='utf-8')
+    text = (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8')
     major, minor = re.search(r'#define REKHCOM_VERSION\s+"v(\d+)\.(\d+)', text).groups()
     return f'{int(major):02d}.{int(minor):02d}'
 

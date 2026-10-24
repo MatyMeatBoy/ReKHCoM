@@ -287,11 +287,16 @@ const char* PortHarnessModeName(void) {
 }
 
 int PortHarnessMode(const char* name, int arg) {
-    extern Mode gModeTitle;
+    extern Mode gModeTitle, gModeMsShop, gModeMsCharge, gModeContinue, gModeWLogo, gModeEventselect,
+        gModeRikuDeckTutorial, gModeVsbattle, gModeSioBattle;
     static Mode* const modes[] = {
         &gModeTitle, &gModeDeck, &gModeStatus, &gModeJiminy, &gModeAllmap, &gModeMapinspect, &gModeWorldinspect,
         &gModeWorldselect, &gModeWORLDSELECT, &gModeWorldwarp, &gModeMsTop, &gModePremire,
         &gModeSioBtlOption, &gModeDebug, &gModePooh, &gModeStaffRoll, &gModeMovie,
+        /* the rest of test_android_scenarios.py's menu list (KHCOM_MODE) */
+        &gModeMsShop, &gModeMsCharge, &gModeContinue, &gModeWLogo, &gModeEventselect, &gModeRikuDeckTutorial,
+        &gModeVsbattle,
+        &gModeSioBattle, /* the link battle's menus (the network cable's tests, ONLINE_ESTUDIO.md) */
     };
     u32 i;
 
@@ -453,6 +458,18 @@ int PortHarnessMode(const char* name, int arg) {
         SetActiveDeckIndex((u8)deck);
         return 1;
     }
+    /* eventplay:N - a story event requested as the game does (RequestEventMode), not from the debug event menu: an
+       event that starts a battle goes on into it and, once won, into the event after it (issue #46) */
+    if (strcmp(name, "eventplay") == 0) {
+        extern void RequestEventMode(u16 eventId);
+        RequestEventMode((u16)arg);
+        return 1;
+    }
+    /* worlds:MASK - the world cards Sora holds (gGameState.availableWorlds), for the world select */
+    if (strcmp(name, "worlds") == 0) {
+        gGameState.availableWorlds = (u16)arg;
+        return 1;
+    }
     /* movieend:ID - a movie as the final events hand over to it
        (mode_event.c EVENT_EXIT_MOVIE_ENDING: with the heap reset) */
     if (strcmp(name, "movieend") == 0) {
@@ -509,8 +526,9 @@ int PortHarnessMode(const char* name, int arg) {
     }
     /* noharm: the player cannot be hurt for the rest of the battle (the
        no-damage challenges), as the game's own invincibility frames do */
-    if (strcmp(name, "noharm") == 0 && gBtlWork != NULL && gBtlWork->actor != NULL) {
-        gBtlWork->actor->invincibleTimer = 0x7FFF;
+    if (strcmp(name, "noharm") == 0) {
+        if (gBtlWork != NULL && gBtlWork->actor != NULL) /* outside a battle: nothing to do */
+            gBtlWork->actor->invincibleTimer = 0x7FFF;
         return 1;
     }
     /* battleid:ID|WORLD<<8 - any battle in a given world, as PortRematchBegin
@@ -702,6 +720,19 @@ int PortHarnessMode(const char* name, int arg) {
         MosaicStartIn(16, 15);
         return 1;
     }
+    /* btllog: every battle object (kind, HP, flags) and the enemy counts, to see
+       what keeps a battle open (test_event_battles.py) */
+    if (strcmp(name, "btllog") == 0 && gBtlWork != NULL) {
+        BtlObj* obj = ListPoolFirst(&gBtlWork->pool);
+        PortLog("btllog: enemies %d pending %d", gBtlWork->enemyCount, gBtlWork->pendingEnemies);
+        while (obj != NULL) {
+            PortLog("btllog: kind %d hp %d/%d flags %08x%08x kindFlags %04x self %d parent %d at %d,%d,%d", obj->kind,
+                    obj->hp, obj->maxHp, (unsigned)(obj->flags >> 32), (unsigned)obj->flags, obj->kindFlags,
+                    obj->self == obj, obj->parent != NULL, obj->x >> 8, obj->y >> 8, obj->z >> 8);
+            obj = ListPoolNext(&obj->node);
+        }
+        return 1;
+    }
     /* battlewin: every enemy leaves as Oogie Boogie's helpers do, so the game
        ends the battle by its own route (white fade, rewards, back to the room) */
     if (strcmp(name, "battlewin") == 0 && gBtlWork != NULL
@@ -715,14 +746,22 @@ int PortHarnessMode(const char* name, int arg) {
         }
         return 1;
     }
-    /* bosskill: every enemy takes a hit worth all its HP through the game's own
-       damage route (ApplyBtlObjHit), so it is defeated as a real hit would */
-    if (strcmp(name, "bosskill") == 0 && gBtlWork != NULL
-        && strcmp(PortHarnessModeName(), "mode_battle") == 0) {
-        BtlObj* obj = ListPoolFirst(&gBtlWork->pool);
+    /* bosskill: every enemy that can be hit takes a hit worth all its HP through
+       the game's own damage route (ApplyBtlObjHit), so it is defeated as a real hit
+       would; the unhittable parts wait, as for the player (Guard Armor's torso
+       until its limbs are gone: hit all at once, its pieces were released after
+       BeginBossDefeat zeroed the count, which wrapped to 250 and never closed) */
+    if (strcmp(name, "bosskill") == 0) {
+        /* outside a battle there is nothing to hit (a list of them spans a whole story chain) */
+        BtlObj* obj = gBtlWork != NULL && strcmp(PortHarnessModeName(), "mode_battle") == 0
+                          ? ListPoolFirst(&gBtlWork->pool) : NULL;
         while (obj != NULL) {
-            if (obj != gBtlWork->actor && obj->hp > 0 && obj->maxHp > 0) {
+            if (obj != gBtlWork->actor && obj->hp > 0 && obj->maxHp > 0 && !(obj->flags & BTLOBJ_FLAG_UNHITTABLE)) {
+                /* no knockback, as the game's delayed damage (battle_runtime.c): a stale
+                   knockbackLift threw a Bandit up for thousands of frames */
                 obj->damage = obj->hp;
+                obj->knockbackSpeed = 0;
+                obj->knockbackLift = 0;
                 obj->flags |= BTLOBJ_FLAG_DAMAGE_PENDING;
             }
             obj = ListPoolNext(&obj->node);
@@ -775,6 +814,10 @@ int PortHarnessMode(const char* name, int arg) {
     }
     for (i = 0; i < sizeof(modes) / sizeof(modes[0]); i++) {
         if (strcmp(modes[i]->name, name) == 0) {
+            /* the link battle comes from the title, which resets the game state first (ChkBtlReset sets the VS
+               arena's bounds: without it the battle's camera had no room) */
+            if (modes[i] == &gModeSioBattle || modes[i] == &gModeVsbattle)
+                ResetGameState();
             ModeRequest(modes[i], arg);
             return 1;
         }

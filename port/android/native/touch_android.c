@@ -39,6 +39,23 @@ static const Button buttons[]={
 };
 static SDL_Texture* icons[2];
 static uint16_t uiHeld;
+/* Android: with the touch controls hidden and a gamepad connected, nothing is drawn, not even the options button or
+   the pad in the menus (issue #38); with no gamepad the options button stays, the only way into the menu. */
+static int AllHidden(void) {
+#if defined(PORT_SWITCH)
+    /* Switch: the Joy-Cons are always there and Minus + Plus held opens the options (issue #36) */
+    return gPortConfig.hideTouchControls;
+#elif defined(__EMSCRIPTEN__)
+    return 0;
+#else
+    int count=0;
+    SDL_JoystickID* ids;
+    if(!gPortConfig.hideTouchControls) return 0;
+    ids=SDL_GetGamepads(&count);
+    SDL_free(ids);
+    return count>0;
+#endif
+}
 void PortAndroidTouchClear(void) { SDL_memset(fingers,0,sizeof(fingers)); uiHeld=0; }
 void PortAndroidTouchSettingsChanged(void) {
     PortAndroidTouchClear();
@@ -105,6 +122,7 @@ uint16_t PortAndroidTouchKeys(void) {
 #endif
     uint16_t keys=0;
     int i,b;
+    if(AllHidden()) return 0;
     int panels = !gPortConfig.hideTouchControls || PortUiActive();
     for(i=0;i<10;i++) if(fingers[i].active) {
         float fx=fingers[i].x,fy=fingers[i].y;
@@ -163,6 +181,7 @@ void PortAndroidTouchDraw(SDL_Renderer* r) {
     if(!touchEnabled)return;
 #endif
     int w,h,b; uint16_t keys=PortAndroidTouchKeys();
+    if(AllHidden())return;
     SDL_GetCurrentRenderOutputSize(r,&w,&h); if(w<=0 || h<=0)return;
     aspect=(float)w/h;
 #if defined(__EMSCRIPTEN__) || defined(PORT_TOUCH_CENTERED_LAYOUT)

@@ -394,7 +394,31 @@ bool SDL_RenderPresent(SDL_Renderer* r) {
     return true;
 }
 SDL_Surface* SDL_RenderReadPixels(SDL_Renderer* r, const SDL_Rect* rect) { (void)r; (void)rect; SetError("not supported"); return NULL; }
-bool SDL_RenderDebugText(SDL_Renderer* r, float x, float y, const char* s) { (void)r; (void)x; (void)y; (void)s; return true; }
+/* SDL's debug text, for the touch controls' labels (port/android/native/touch_android.c): 8-pixel cells, a 5x7
+   glyph for the letters they use (each row 5 bits, high bit left); any other character leaves its cell empty. */
+bool SDL_RenderDebugText(SDL_Renderer* r, float x, float y, const char* s) {
+    static const struct { char c; unsigned char rows[7]; } glyphs[] = {
+        { 'A', { 0x0E, 0x11, 0x11, 0x1F, 0x11, 0x11, 0x11 } }, { 'B', { 0x1E, 0x11, 0x11, 0x1E, 0x11, 0x11, 0x1E } },
+        { 'C', { 0x0E, 0x11, 0x10, 0x10, 0x10, 0x11, 0x0E } }, { 'E', { 0x1F, 0x10, 0x10, 0x1E, 0x10, 0x10, 0x1F } },
+        { 'L', { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x1F } }, { 'R', { 0x1E, 0x11, 0x11, 0x1E, 0x14, 0x12, 0x11 } },
+        { 'S', { 0x0F, 0x10, 0x10, 0x0E, 0x01, 0x01, 0x1E } }, { 'T', { 0x1F, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 } },
+        { '.', { 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x0C } },
+    };
+    for (; *s; s++, x += 8) {
+        size_t g;
+        for (g = 0; g < sizeof(glyphs) / sizeof(glyphs[0]) && glyphs[g].c != *s; g++) {
+        }
+        if (g == sizeof(glyphs) / sizeof(glyphs[0]))
+            continue;
+        for (int row = 0; row < 7; row++)
+            for (int col = 0; col < 5; col++)
+                if (glyphs[g].rows[row] & (0x10 >> col)) {
+                    SDL_FRect px = { x + 1 + col, y + row, 1, 1 };
+                    SDL_RenderFillRect(r, &px);
+                }
+    }
+    return true;
+}
 
 /* ---- textures ---- */
 
@@ -570,6 +594,8 @@ void SDL_DestroyAudioStream(SDL_AudioStream* s) { s->open = false; h_audio_clear
 bool SDL_PauseAudioStreamDevice(SDL_AudioStream* s) { (void)s; return true; }
 bool SDL_ResumeAudioStreamDevice(SDL_AudioStream* s) { (void)s; return true; }
 bool SDL_ClearAudioStream(SDL_AudioStream* s) { (void)s; h_audio_clear(); return true; }
+/* the fade before an HD movie (PortAudioMovieHold): the hosts have no output level; the movie just starts */
+bool SDL_SetAudioStreamGain(SDL_AudioStream* s, float gain) { (void)s; (void)gain; return true; }
 bool SDL_SetAudioStreamFrequencyRatio(SDL_AudioStream* s, float ratio) {
     if (ratio != s->ratio) { s->ratio = ratio; SetRatio(s); }
     return true;
@@ -602,7 +628,13 @@ bool SDL_PutAudioStreamData(SDL_AudioStream* s, const void* buf, int len) {
     return true;
 }
 
-int SDL_GetAudioStreamQueued(SDL_AudioStream* s) { (void)s; return (int)(h_audio_queued() * 8u); }
+/* SDL counts what is queued in the input's format: the host reports frames at the device rate (outRate) */
+int SDL_GetAudioStreamQueued(SDL_AudioStream* s) {
+    uint64_t frames = h_audio_queued();
+    if (s->outRate > 0 && s->inRate > 0)
+        frames = frames * (uint64_t)s->inRate / (uint64_t)s->outRate;
+    return (int)(frames * 8u);
+}
 
 /* ---- events, gamepads ---- */
 
@@ -736,6 +768,58 @@ static void Refresh(void) {
     }
 }
 
+/* Touch screen and background state (the Android 64-bit host; other hosts report none): the fingers now against the
+   last ones become FINGER_DOWN / MOTION / UP, a change of state WILL_ENTER_BACKGROUND / DID_ENTER_FOREGROUND. */
+static void RefreshTouch(void) {
+    static HostTouch last[HOSTTOUCH_MAX];
+    static int lastCount, background;
+    HostTouch now[HOSTTOUCH_MAX];
+    int count = h_touch_poll(now, HOSTTOUCH_MAX), i, j, state = h_app_state();
+    SDL_Event e;
+
+    if (state != background) {
+        memset(&e, 0, sizeof(e));
+        e.type = state ? SDL_EVENT_WILL_ENTER_BACKGROUND : SDL_EVENT_DID_ENTER_FOREGROUND;
+        Push(&e);
+        background = state;
+    }
+    if (count < 0)
+        count = 0;
+    for (i = 0; i < count; i++) {
+        const HostTouch* before = NULL;
+        for (j = 0; j < lastCount; j++)
+            if (last[j].id == now[i].id)
+                before = &last[j];
+        if (before && before->x == now[i].x && before->y == now[i].y)
+            continue;
+        memset(&e, 0, sizeof(e));
+        e.type = before ? SDL_EVENT_FINGER_MOTION : SDL_EVENT_FINGER_DOWN;
+        e.tfinger.touchID = 1;
+        e.tfinger.fingerID = now[i].id;
+        e.tfinger.x = now[i].x;
+        e.tfinger.y = now[i].y;
+        e.tfinger.dx = before ? now[i].x - before->x : 0;
+        e.tfinger.dy = before ? now[i].y - before->y : 0;
+        e.tfinger.pressure = 1.0f;
+        Push(&e);
+    }
+    for (j = 0; j < lastCount; j++) {
+        for (i = 0; i < count && now[i].id != last[j].id; i++) {
+        }
+        if (i < count)
+            continue;
+        memset(&e, 0, sizeof(e));
+        e.type = SDL_EVENT_FINGER_UP;
+        e.tfinger.touchID = 1;
+        e.tfinger.fingerID = last[j].id;
+        e.tfinger.x = last[j].x;
+        e.tfinger.y = last[j].y;
+        Push(&e);
+    }
+    memcpy(last, now, sizeof(HostTouch) * (size_t)count);
+    lastCount = count;
+}
+
 bool SDL_PollEvent(SDL_Event* e) {
     static bool fresh = true; /* the pads are read once per drain of the queue */
     if (sQHead == sQTail && fresh) {
@@ -747,6 +831,7 @@ bool SDL_PollEvent(SDL_Event* e) {
             Push(&q);
         }
         Refresh();
+        RefreshTouch();
     }
     if (sQHead == sQTail) {
         fresh = true;

@@ -125,7 +125,13 @@ void Event_0(s32 arg) {
     }
 
     // @bug? Should mask with 0x7FFF.
+#ifdef PLATFORM_PC
+    /* From the debug event select (bit 0x8000) the original reads 0x8000 entries past the table: a ROM word that is
+       not a pointer, which crashes the relocatable builds (Android 64, Switch, Vita). The game itself never sets it. */
+    if (gEventSequenceDefs[sEventId & 0x7FFF]->keyframes->flags & CAMERA_KEYFRAME_FLAG_FADE_IN_WHITE) {
+#else
     if (gEventSequenceDefs[sEventId & 0x8000]->keyframes->flags & CAMERA_KEYFRAME_FLAG_FADE_IN_WHITE) {
+#endif
         FadeStartIn(FADE_MODE_WHITE, 999);
     }
 
@@ -354,6 +360,10 @@ void EventUpdate() {
 }
 
 void Event_2() {
+#ifdef PLATFORM_PC
+    extern void PortHdSceneForget(void);
+    PortHdSceneForget(); /* the next event offers its HD scene again, wherever its task lands */
+#endif
     TaskPoolDestroy(&sEventTaskPool);
     EwramFree(gEventState);
     gEventState = NULL;

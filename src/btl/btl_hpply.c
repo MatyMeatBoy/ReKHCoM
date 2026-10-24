@@ -18,6 +18,10 @@
 #include "engine.h"
 #ifdef PLATFORM_PC
 #include "port/port.h"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#include "port/port_hdlayout.h"
+#endif
 #endif
 #include <stddef.h>
 #include "sprite_palettes.h"
@@ -226,9 +230,23 @@ s32 task_btl_hpply_1(BtlHpplyWork* work) {
 
     switch (work->gaugeMode) {
     case BTL_HPPLY_GAUGE_MODE_SINGLE:
+#ifdef PLATFORM_PC
+        /* @bug: leaving the deck menu back into a battle, a frame can run before the maximum HP is set; the
+           cartridge's division by zero returns garbage, platforms without fault recovery close (issue #40) */
+        if (actor->maxHp <= 0) {
+            work->hpRatio = 0;
+            break;
+        }
+#endif
         work->hpRatio = (work->displayHp << 8) / actor->maxHp;
         break;
     case BTL_HPPLY_GAUGE_MODE_EXTRA_BAR:
+#ifdef PLATFORM_PC
+        if (actor->maxHp <= 280) {
+            work->hpRatio = 0;
+            break;
+        }
+#endif
         work->hpRatio = ((work->displayHp - 280) << 8) / (actor->maxHp - 280);
         break;
     case BTL_HPPLY_GAUGE_MODE_MAIN_BAR:
@@ -329,6 +347,22 @@ void task_btl_hpply_2(BtlHpplyWork* work) {
     s32 scale;
     ObjAffine* affine;
 
+#ifdef PLATFORM_PC
+    /* HD cards: Re:CoM's HP ring around the HD face takes the place of the gauge (port_hdsprites.c); the face
+       moves in so the ring and its bar fit in the corner */
+    {
+        BtlObj* actor = gBtlWork->actor;
+        int ratio = actor != NULL && actor->maxHp > 0 ? work->displayHp * 256 / actor->maxHp : 0;
+        /* Re:CoM 1.5's own gauge (port_hdlayout.c, its logic read from Re:CoM's executable): face, ring and bar
+           from gauge.lad, so nothing of the cartridge's gauge is drawn */
+        if (actor != NULL && PortHdGauge(actor->hp, actor->maxHp, (gGameState.flags & GAME_FLAG_RIKU) != 0))
+            return;
+        if (PortHdHpRing(((ObjTiles*)work->tiles)->src, work->gfx, ratio)) {
+            DrawSprite(14, 15, work->gfx, work->tiles, work->palette, NULL, SPRITE_PRIORITY(1) | SPRITE_FLAG_NO_MOSAIC, 1);
+            return;
+        }
+    }
+#endif
     DrawSprite(4, 2, work->gfx, work->tiles, work->palette, NULL, SPRITE_PRIORITY(1) | SPRITE_FLAG_NO_MOSAIC, 1);
 
 #ifdef PLATFORM_PC

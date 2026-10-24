@@ -50,7 +50,7 @@ def main():
         if f'rekhcom-{region}.wasm' not in (site / f'rekhcom-{region}.js').read_text():
             raise RuntimeError('JS/Wasm filename mismatch')
     release = re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"',
-                        (ROOT/'port/decompui/decompui.cpp').read_text(encoding='utf-8'))[1]
+                        (ROOT/'port/include/port/port_version.h').read_text(encoding='utf-8'))[1]
     manifest = {'version':release+'-web-alpha', 'source_commit':git('rev-parse','HEAD'),
                 'source_dirty':bool(git('diff','--name-only')),
                 'built_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(), 'files':{}}

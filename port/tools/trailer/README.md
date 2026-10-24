@@ -5,7 +5,7 @@ privadas en `roms/B8CP.gba`, `B8CE.gba`, `B8CJ.gba`. No se incluyen ROMs,
 vídeos del juego ni fuentes de Windows en estos scripts.
 
 Ejecutar desde este directorio, con builds release EU/US/JP terminadas.
-`KHCOM_TRAILER_DIR` cambia la salida (default: ../Trailer/v182 fuera del repo).
+`KHCOM_TRAILER_DIR` cambia la salida (default: ../arte/Trailer/v182 fuera del repo).
 `KHCOM_TRAILER_SAVE` puede apuntar a un .sav para copiar a los arneses;
 ninguna prueba escribe en el archivo original. Los mandos físicos se
 inhabilitan solo en los procesos de grabación.

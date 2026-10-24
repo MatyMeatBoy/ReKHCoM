@@ -43,6 +43,9 @@
 #include "default_bg_map.h"
 #include "battle_ids.h"
 #include "macros.h"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#endif
 
 #ifndef PORT_MENU_LEFT
 #define PORT_MENU_LEFT(x) (x)
@@ -1115,6 +1118,25 @@ void Level_Up_2(LevelUpWork* work) {
 #endif
 
     if (work->loaded[0] != 0) {
+#ifdef PLATFORM_PC
+        /* the header's HD banner: the sprite stays over the BG copy the choice screens carry */
+        if ((work->state == LEVEL_UP_STATE_SELECT || work->state == LEVEL_UP_STATE_RESULT) &&
+            work->tilesPalettes[6] != NULL &&
+            PortHdSpriteFind(((ObjTiles*)work->tilesPalettes[6])->src,
+#ifdef VERSION_EU
+                             gLevelUpHeaderSpritesByLanguage[gLanguage][10]
+#else
+                             gLevelUpHeaderFrames[10]
+#endif
+                             ))
+            DrawSprite(PORT_MENU_LEFT(work->headerX), 0,
+#ifdef VERSION_EU
+                       gLevelUpHeaderSpritesByLanguage[gLanguage][10],
+#else
+                       gLevelUpHeaderFrames[10],
+#endif
+                       work->tilesPalettes[6], work->tilesPalettes[7], NULL, 0, 50);
+#endif
         switch (work->state) {
         case LEVEL_UP_STATE_SLIDE_IN:
             DrawSprite(PORT_MENU_LEFT(work->headerX), 0,

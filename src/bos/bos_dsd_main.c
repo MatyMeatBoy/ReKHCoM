@@ -216,7 +216,8 @@ void BosDsdMainUpdateDrift(DsdMainWork* work) {
         }
 
         if ((work->dsd->flags & DSD_FLAG_PLAYER_ON_PLATFORM) == 0) {
-            gBtlWork->actor->x += work->dsd->driftX;
+            /* @bug: no actor yet in the scene before the fight (EVENT_180); the cartridge writes to the BIOS */
+            BIOS_PTR(gBtlWork->actor)->x += work->dsd->driftX;
         }
 
         if (work->lastBreakDifference != gBtlWork->breakDifference) {

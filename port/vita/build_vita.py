@@ -95,10 +95,7 @@ def build_guest(region, jobs):
         if src.stem in build_ps5.PORT_EXCLUDED:
             continue
         if src.name in build_ps5.PORT_PATCHES:
-            patched = PS5 / 'build' / f'guest-{region}' / 'patched' / src.name
-            if not patched.exists():
-                sys.exit(f'{patched} missing: run port/ps5/build_ps5.py guest --region {region} once (it writes the patched copies)')
-            src = patched
+            src = build_ps5.patched_source(src, out / 'patched')
         units.append((src, out / 'port' / (src.stem + '.o'), port_flags))
     units.append((pc / 'rom_relocs.c', out / 'port/rom_relocs.o', port_flags))
     for src in sorted((PS5 / 'guest/src').glob('*.c')):
@@ -128,14 +125,28 @@ GUEST_LD = '''SECTIONS {
 VM_SCRIPT = r'''set -e
 export VITASDK=/root/consoles/vitasdk PATH=/root/consoles/vitasdk/bin:$PATH
 cd /root/share
-FLAGS="-mcpu=cortex-a9 -mfpu=neon -mthumb -O2"
-LIBS="-lSceDisplay_stub -lSceCtrl_stub -lSceAudio_stub -lScePower_stub -lSceAppMgr_stub -lSceSysmem_stub -lm"
+FLAGS="-mcpu=cortex-a9 -mfpu=neon -mthumb -O2 -DREKHCOM_VITA_GPU"
+# the picture on the GPU: SDL2's GXM renderer (VitaSDK's own package, installed once into the VM's SDK)
+# a run killed while installing leaves the package database locked
+[ -f $VITASDK/arm-vita-eabi/lib/libSDL2.a ] || { find $VITASDK -name db.lck -delete; yes | vdpm sdl2; }
+[ -f $VITASDK/arm-vita-eabi/lib/libSDL2.a ]
+LIBS="-lSDL2 -lSceGxm_stub -lSceDisplay_stub -lSceCtrl_stub -lSceAudio_stub -lSceAudioIn_stub -lScePower_stub
+ -lSceAppMgr_stub -lSceAppUtil_stub -lSceSysmem_stub -lSceSysmodule_stub -lSceIme_stub -lSceHid_stub -lSceTouch_stub
+ -lSceMotion_stub -lSceCommonDialog_stub -lSceKernelDmacMgr_stub -lm"
+LIBS=$(echo $LIBS)
 for r in REGIONS; do
   arm-vita-eabi-ld -r -T guest.ld --whole-archive guest-$r.a -o guest-$r-r.o
   arm-vita-eabi-objcopy -G guest_main -G gHostTable guest-$r-r.o guest-$r.o
   arm-vita-eabi-gcc $FLAGS -Wall -DREKHCOM_VITA_REGION=\"$r\" -Isrc -c src/switch_host.c -o host-$r.o
   arm-vita-eabi-gcc $FLAGS -Wl,-q host-$r.o guest-$r.o $LIBS -o eboot-$r.elf
-  vita-elf-create eboot-$r.elf eboot-$r.velf
+  # vita-elf-create appends its SCE data to the code segment: when the code ends right below the data segment there
+  # is no room ("segment 1 overlaps"); 8 KiB of padding moves the end and leaves it
+  if ! vita-elf-create eboot-$r.elf eboot-$r.velf; then
+    echo 'const unsigned char rekhcom_vita_pad[8192] __attribute__((used)) = { 1 };' > pad.c
+    arm-vita-eabi-gcc $FLAGS -c pad.c -o pad.o
+    arm-vita-eabi-gcc $FLAGS -Wl,-q host-$r.o guest-$r.o pad.o $LIBS -o eboot-$r.elf
+    vita-elf-create eboot-$r.elf eboot-$r.velf
+  fi
   vita-make-fself -s -c eboot-$r.velf eboot-$r.self
 done
 mv eboot-eu.self eboot.bin
@@ -184,14 +195,16 @@ def package(regions):
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', assets / 'achievements/badges.png')
     livearea(pkg / 'sce_sys')
     (share / 'src').mkdir()
-    for src in (SWITCH / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h'):
+    for src in (SWITCH / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/udp_host.h',
+                ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     (share / 'guest.ld').write_text(GUEST_LD)
     script = VM_SCRIPT.replace('REGIONS', ' '.join(regions)).replace('TITLEID', TITLE_ID)
     (share / 'build.sh').write_bytes(script.encode())
     out = BUILD / 'vm-out'
+    shutil.rmtree(out, ignore_errors=True)  # a package left by an earlier run must never pass for this one
     command = [sys.executable, ROOT / 'port/tools/linux_vm_test.py', '--share', share, '--disk', build_switch.VM_DISK, '--fresh-share',
-               '--mem', '4096', '--cpus', '4', '--run', 'bash /root/share/build.sh', '--run-timeout', '1500',
+               '--net', '--mem', '4096', '--cpus', '4', '--run', 'bash /root/share/build.sh', '--run-timeout', '1500',
                '--fetch', '/root/share/ReKHCoM.vpk', '--out', out]
     build_switch.run(command, cwd=ROOT, env=dict(os.environ, MSYS_NO_PATHCONV='1', PYTHONUTF8='1'))
     vpk = out / 'ReKHCoM.vpk'
@@ -229,7 +242,8 @@ def test(region, env, shots):
     shutil.copy2(BUILD / f'guest-{region}.a', share)
     shutil.copy2(ROOT / 'roms' / ({'eu': 'B8CP', 'us': 'B8CE', 'jp': 'B8CJ'}[region] + '.gba'), share / 'data')
     shutil.copytree(PS5 / 'assets/fonts', share / 'assets/fonts')
-    for src in (SWITCH / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h'):
+    for src in (SWITCH / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/udp_host.h',
+                ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     (share / 'guest.ld').write_text(GUEST_LD)
     script = (TEST_SCRIPT.replace('@REGION@', region).replace('@ENV@', ' '.join(f"{k}='{v}'" for k, v in env.items()))

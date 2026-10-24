@@ -102,7 +102,7 @@ def quiver(names):
 
 
 if not args.post:
-    launcher = re.search(r'REKHCOM_VERSION\s+"([^"]+)"', (ROOT / 'port/decompui/decompui.cpp').read_text()).group(1)
+    launcher = re.search(r'REKHCOM_VERSION\s+"([^"]+)"', (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8')).group(1)
     check(launcher == V, f'launcher version {launcher}')
     rc = re.search(r'REKHCOM_RC_VERSION_TEXT\s+"([^"]+)"', (ROOT / 'port/decompui/rekhcom.rc').read_text()).group(1)
     check('v' + rc == V, f'executable file details (rekhcom.rc) {rc}')
@@ -113,11 +113,14 @@ if not args.post:
     badges = subprocess.run([sys.executable, str(ROOT / 'port/tools/gen_badges_inc.py'), '--check'],
                             capture_output=True).returncode == 0
     check(badges, 'built-in badge atlas matches port/assets/achievements/badges.png (gen_badges_inc.py)')
+    sources = subprocess.run([sys.executable, str(ROOT / 'port/tools/check_sources.py')], capture_output=True, text=True)
+    check(sources.returncode == 0, 'console SDL shim and Java literals (check_sources.py)' +
+          (': ' + sources.stdout.strip().splitlines()[0] if sources.returncode else ''))
     head = int(subprocess.check_output(['git', 'log', '-1', '--format=%ct'], cwd=ROOT, text=True))
     dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True)
     check(not dirty.strip(), 'working tree committed (packages come from HEAD)')
     main = sorted(p.name for p in (STAGE / 'main').glob('*'))
-    for kind in ('windows-x86.zip', 'linux-x86.tar.gz', 'steamdeck-i386.tar.gz', 'anbernic-alpha.zip', 'android-alpha.apk'):
+    for kind in ('windows-x86.zip', 'linux-x86.tar.gz', 'steamdeck-i386.tar.gz', 'anbernic-beta.zip', 'android-beta.apk'):
         hit = [n for n in main if n.endswith(kind)]
         check(bool(hit) and all((STAGE / 'main' / n).stat().st_mtime >= head - 60 for n in hit),
               f'staged {kind} built after HEAD')

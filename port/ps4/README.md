@@ -32,7 +32,7 @@ python port/ps4/build_ps4.py            # guest images (eu us jp), host, package
 python port/ps4/build_ps4.py host       # host and package only
 ```
 
-Needs the OpenOrbis toolchain v0.5.4 (`OO_PS4_TOOLCHAIN`, default `D:/ReKHCoM-build/ps4/toolchain`), clang/ld.lld
+Needs the OpenOrbis toolchain v0.5.4 (`OO_PS4_TOOLCHAIN`, default `D:/01Claude/ReKHCoM-build/ps4/toolchain`), clang/ld.lld
 (the repository's llvm-mingw on Windows) and .NET 6+ for PkgTool. Output: `port/ps4/dist/ReKHCoM-ps4-alpha.pkg`.
 
 ## Not available yet

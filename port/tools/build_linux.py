@@ -3,7 +3,7 @@
 The game core needs 32-bit pointers (ROM structures embed them), so Linux
 builds are i386 (PCs, Steam Deck) or armhf. Prepare once:
 
-    python port/tools/linux_sysroot.py --arch i386 --out D:/ReKHCoM-build/linux/i386
+    python port/tools/linux_sysroot.py --arch i386 --out D:/01Claude/ReKHCoM-build/linux/i386
     (then SDL3 and FreeType, see port/progress/LINUX.md)
 
     python port/tools/build_linux.py --arch i386 --versions eu us jp
@@ -287,14 +287,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--arch', choices=ARCHES, default='i386')
     ap.add_argument('--versions', nargs='+', default=['eu', 'us', 'jp'])
-    ap.add_argument('--base', type=Path, help='prepared sysroot/SDL/FreeType folder (default D:/ReKHCoM-build/linux/<arch>)')
+    ap.add_argument('--base', type=Path, help='prepared sysroot/SDL/FreeType folder (default D:/01Claude/ReKHCoM-build/linux/<arch>)')
     ap.add_argument('--jobs', type=int, default=os.cpu_count())
     ap.add_argument('--bundle', type=Path, help='also assemble a self-contained folder here')
     ap.add_argument('--package', metavar='VERSION', help='build i386 and armhf, all regions, and write '
                     'build/releases/ReKHCoM-VERSION-{linux-x86.tar.gz,steamdeck.tar.gz,anbernic-alpha.zip}')
     args = ap.parse_args()
     if args.package:
-        bases = {a: Path('D:/ReKHCoM-build/linux') / a for a in ARCHES}
+        bases = {a: Path('D:/01Claude/ReKHCoM-build/linux') / a for a in ARCHES}
         for arch in ARCHES:
             for version in ('eu', 'us', 'jp'):
                 out = ROOT / 'build' / f'linux-{arch}-{version}'
@@ -302,7 +302,7 @@ def main():
                 subprocess.check_call(['ninja', '-f', str(out / 'build.ninja'), '-j', str(args.jobs)], cwd=ROOT)
         package(args.package, bases['i386'], bases['armhf'])
         return
-    base = args.base or Path('D:/ReKHCoM-build/linux') / args.arch
+    base = args.base or Path('D:/01Claude/ReKHCoM-build/linux') / args.arch
     for version in args.versions:
         out = ROOT / 'build' / f'linux-{args.arch}-{version}'
         configure(version, args.arch, base, out)

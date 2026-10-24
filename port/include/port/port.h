@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include "port/port_zoom.h"
 
 #include "../../../include/gba/gba_space.h"
@@ -41,6 +42,21 @@ unsigned int GbaSpaceBusAddress(const void* p);
 #else
 #define PORT_GBA_MAP_MEMORY(p) ((uintptr_t)(p) - 0x02000000u < 0x08000000u)
 #endif
+
+/* A test/log switch (KHCOM_...) read once: getenv is slow on Windows (it locks and walks the environment) and some
+   switches sit in per-row, per-pixel or audio paths; read there each time it slowed a 32:9 frame to a second. The
+   environment never changes while the game runs. A core that races the first read just sees the switch unset.
+   getter: the call the site used before (getenv or SDL_getenv: on Android they can differ). */
+#define PORT_ENV_ONCE(out, getter, name)           \
+    do {                                           \
+        static const char* volatile portEnvValue_; \
+        static volatile int portEnvRead_;          \
+        if (!portEnvRead_) {                       \
+            portEnvValue_ = getter(name);          \
+            portEnvRead_ = 1;                      \
+        }                                          \
+        (out) = portEnvValue_;                     \
+    } while (0)
 
 #define GBA_SCREEN_W 240
 #define GBA_SCREEN_H 160
@@ -112,7 +128,7 @@ typedef struct PortConfig {
     int narrowFit;        /* scenes without a wide view: 1 fill the height, 0 exact pixels */
     int scanlines;        /* 0..100 % intensity */
     int colorCorrection;  /* emulate the GBA LCD colours */
-    int frameSkip;        /* reserved */
+    int frameSkip;        /* 1: a late frame runs the game and the line events but is not drawn (slow devices) */
     int showFps;
     int windowScale;
     int fullscreenWidth;  /* 0 = desktop resolution (borderless) */
@@ -149,6 +165,18 @@ typedef struct PortConfig {
     int battleZoom;            /* experimental: 0 follows main zoom, otherwise a battle-only pixel scale */
     int padLayout;             /* face buttons: 0 detect (Nintendo pads swap A/B, X/Y), 1 Xbox positions, 2 Nintendo */
     int discordPresence;       /* on by default: Discord shows the world, floor, character and level (port_discord.c) */
+    int hdMovies;              /* HD mod (HD_MOD.md): imported Re:CoM movies replace the cartridge's (on when imported) */
+    int hdMusic;               /* HD mod: the imported Re:CoM soundtrack replaces the background music (port_hdmusic.c) */
+    int hdScenes;              /* HD mod, full: the imported Re:CoM cutscenes replace the story scenes they match (off) */
+    int hdSubtitles;           /* HD mod: the HD movies and scenes show Re:CoM's subtitles in the game's language (on) */
+    int hdCards;               /* HD mod, beta: battle cards drawn with Re:CoM's HD art (port_hdsprites.c, off) */
+    int hdTitle;               /* HD mod, beta: the title screen's logo drawn with Re:CoM's HD art (port_hdsprites.c, off) */
+    int graphicsMode;          /* PORT_MODE_*: chosen on the first start (0 asks), each with its presets (PortApplyGraphicsMode) */
+    int graphicsModeApplied;   /* the mode whose presets were last applied: the launcher only changes graphics_mode */
+    int gbaBorder;             /* GBA classic: the decorative border around the GBA picture (0 none, 1..3 designs) */
+    int netDelay;              /* net_delay: the online link's input delay in frames (0 automatic, from the round trip) */
+    int netStats;              /* net_stats: during an online link, the round trip, input delay and last rollback on screen */
+    char onlineName[25];       /* online_name: the player's name on the lobby's rooms (relay servers; Steam uses its own) */
 } PortConfig;
 
 extern PortConfig gPortConfig;
@@ -178,6 +206,9 @@ int PortEventBackdropProfile(void); /* current story event, -1 outside events */
 void PortConfigLoad(void);
 void PortConfigSetDataPath(const char* path);
 void PortConfigSave(void);
+/* Graphics modes (first start, launcher, Options > reset to a mode's defaults). */
+enum { PORT_MODE_CHOOSE, PORT_MODE_HD, PORT_MODE_GBA_ENHANCED, PORT_MODE_GBA_CLASSIC, PORT_MODE_COUNT };
+void PortApplyGraphicsMode(int mode);
 int PortSaveSlotSelectEnabled(void);
 void PortConfigView(int mode, int* w, int* h);
 /* Internal size and pixel scale that fill an outW x outH output (auto view). */
@@ -218,6 +249,12 @@ void PortAchievementsShutdown(void);
 void PortDiscordFrame(void);     /* port_discord.c: Discord Rich Presence, desktop builds */
 void PortDiscordShutdown(void);
 int PortDiscordAvailable(void);  /* 0 where there is no Discord (Android, web, consoles) */
+void PortHdMusicFrame(void);     /* port_hdmusic.c: the imported Re:CoM soundtrack in place of the BGM */
+void PortHdMusicShutdown(void);
+const char* PortHdMusicTrack(int song); /* the Re:CoM track of a cartridge song, NULL if none */
+int PortHdMoviePlay(int movieId);  /* port_hdmovie.c: 1 if the imported HD movie played in place of the cartridge's */
+void PortAudioMovieHold(int hold); /* port_audio.c: 1 fades the game's sound out for an HD movie, 0 brings it back */
+int PortHdScenePlay(int eventId);  /* port_hdmovie.c: 1 if the event's imported Re:CoM scene played (full mod) */
 /* badgeIndex: position in the official set (its badges.png atlas); -1 = none */
 void PortAchievementToast(const char* title, const char* detail, const char* label, int badgeIndex);
 void PortAchievementToastDraw(void* renderer, int width, int height);
@@ -292,6 +329,7 @@ uint32_t PortMenuTabPixel(int y, int phase, int side);
 
 void PortPpuSetResolution(int w, int h);
 void PortPpuRenderFrame(void);
+void PortPpuRunFrameEvents(void); /* a skipped frame's line events, nothing drawn */
 void PortPpuVBlankLines(void);
 /* HUD layer: sprites anchored with PortHudBegin, drawn at their own scale. */
 extern int gPortHudScale;   /* output pixels per HUD pixel; 0 = no separate layer */
@@ -299,6 +337,12 @@ extern int gPortHudW;
 extern int gPortHudH;
 int PortPpuHudActive(void);
 void PortPpuRenderHud(uint32_t* buf);
+/* The HUD sprites in front of HD sprites, after PortPpuRenderHud (NULL: none this frame). */
+const uint32_t* PortPpuHudOver(void);
+/* What the cartridge draws in front of the HD parts of the game's picture, canvas-sized (NULL: none this frame). */
+const uint32_t* PortPpuMainOver(void);
+/* The same for the screen layer (menus), gPortOverlayW x 160 (NULL: none this frame). */
+const uint32_t* PortPpuScreenOver(void);
 /* HD text: a dialogue glyph the PPU left out of the picture, at its place on
    the world canvas (hud 0) or the HUD canvas (hud 1), with its colours. */
 typedef struct PortTextGlyph {

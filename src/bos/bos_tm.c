@@ -201,19 +201,20 @@ u8 task_bos_tm_1(TmWork* work) {
         break;
     }
 
-    gBosTmActorY = gBtlWork->actor->y >> 8;
-    gBosTmActorOriginZ = gBtlWork->actor->originZ >> 8;
-    gBosTmActorZ = gBtlWork->actor->z >> 8;
+    /* @bug: during the scene before the battle (EVENT_099) there is no actor yet; the cartridge reads the BIOS */
+    gBosTmActorY = BIOS_PTR(gBtlWork->actor)->y >> 8;
+    gBosTmActorOriginZ = BIOS_PTR(gBtlWork->actor)->originZ >> 8;
+    gBosTmActorZ = BIOS_PTR(gBtlWork->actor)->z >> 8;
     gBosTmBossY = gBtlWork->bossY >> 8;
 
     if ((gBtlWork->flags & BTL_FLAG_PLAYER_CARD_ACTION) && work->state != BOS_TM_STATE_DEFEATED) {
-        if (gBtlWork->actor->originZ <= -0x2D00) {
+        if (BIOS_PTR(gBtlWork->actor)->originZ <= -0x2D00) {
             gBtlWork->bossPriorityOffset = -10;
         } else {
             gBtlWork->bossPriorityOffset = 10;
         }
     } else {
-        if (gBtlWork->actor->z <= -0x2D00) {
+        if (BIOS_PTR(gBtlWork->actor)->z <= -0x2D00) {
             gBtlWork->bossPriorityOffset = -10;
         } else {
             gBtlWork->bossPriorityOffset = 10;

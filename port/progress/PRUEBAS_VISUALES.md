@@ -19,13 +19,13 @@ copia jugable aparte, nunca sobre sus carpetas ReKHCoM-vX (esas se conservan).
 
 ## 2. Entregar la copia al usuario
 
-1. Carpeta nueva en la raíz del proyecto: descomprimir el último paquete
+1. Carpeta nueva en `KHCoMPC/pruebas/` (21/10: las copias jugables de versiones van en `KHCoMPC/jugar/`): descomprimir el último paquete
    Windows (`build/releases/ReKHCoM-<ver>-windows-x86.zip`) en
    `ReKHCoM-<ver>-<tema>/`.
 2. Sustituir `bin/khcom_eu.exe` por `build/pc-eu/khcom.exe`.
 3. Copiar las ROM a `roms/` y `roms/B8CP.gba` como `bin/baserom.gba`
    (el exe suelto busca `baserom.gba` a su lado).
-4. Crear en la raíz un `Probar <tema>.bat` que fije `KHCOM_MODE` (para ir
+4. Crear junto a ella, en `pruebas/`, un `Probar <tema>.bat` que fije `KHCOM_MODE` (para ir
    directo a la sala) y lance `bin/khcom_eu.exe`. En .bat usar `/` en las rutas
    internas; no usar `\b`/`\r` en plantillas de texto.
 5. Decir al usuario qué .bat abrir; esperar su aprobación antes de activar

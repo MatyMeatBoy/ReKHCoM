@@ -36,7 +36,7 @@ Una vez:
 
     python port/tools/linux_prepare.py
 
-Descarga los paquetes Debian 12 (i386 y armhf) a `D:/ReKHCoM-build/linux`,
+Descarga los paquetes Debian 12 (i386 y armhf) a `D:/01Claude/ReKHCoM-build/linux`,
 genera el pkg-config sustituto y los toolchains de CMake y compila SDL3
 (compartida) y FreeType (estática) para cada arquitectura.
 
@@ -53,7 +53,7 @@ completa) y `ReKHCoM-vX-anbernic-alpha.zip`.
 ## Pruebas
 
 `port/tools/linux_vm_test.py` arranca QEMU (imágenes Debian 12 nocloud en
-`D:/ReKHCoM-build/linux/vm`), pasa la carpeta como un tar usado de disco y
+`D:/01Claude/ReKHCoM-build/linux/vm`), pasa la carpeta como un tar usado de disco y
 devuelve archivos por la consola serie (la UART pierde caracteres si se
 escribe deprisa: el script envía en trozos).
 

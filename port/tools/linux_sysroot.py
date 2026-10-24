@@ -4,7 +4,7 @@ Downloads the Packages index of one Debian release/architecture, resolves the
 dependencies of the requested packages and extracts their data archives into
 <out>/sysroot. Nothing is executed from the packages.
 
-    python port/tools/linux_sysroot.py --arch i386 --out D:/ReKHCoM-build/linux/i386
+    python port/tools/linux_sysroot.py --arch i386 --out D:/01Claude/ReKHCoM-build/linux/i386
 """
 import argparse
 import hashlib

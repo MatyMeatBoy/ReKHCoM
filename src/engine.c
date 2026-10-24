@@ -813,6 +813,9 @@ void UpdateSpriteOam() {
     u32 flip;
     u32 flags;
     s16 yMask = OAM_Y_MASK;
+#ifdef PLATFORM_PC
+    s16 partX = 0, partY = 0, partW = 0, partH = 0;
+#endif
 
     if (gSpriteWork->oamUpdatesPaused) {
         return;
@@ -872,6 +875,12 @@ void UpdateSpriteOam() {
             }
 
             EngineObjSize(attr0, attr1, &width, &height);
+#ifdef PLATFORM_PC
+            partX = x;
+            partY = y;
+            partW = width;
+            partH = height;
+#endif
 
             if (affine != NULL) {
                 x += width >> 1;
@@ -947,6 +956,8 @@ void UpdateSpriteOam() {
             /* Full-range position for the wide view (OAM keeps 9/8 bits). */
             PortOamSetPosition(emitted, x, y);
             PortOamSetSource(emitted, (int)(entry - gSpriteWork->entries));
+            PortOamSetHdPart(emitted, ((ObjTiles*)entry->tiles)->src, entry->sprite, partX, partY, partW, partH,
+                             affine != NULL ? 0 : entry->flags, ((ObjPalette*)entry->palette)->src, attr2 >> 12);
 #endif
             tiles = entry->tiles;
 

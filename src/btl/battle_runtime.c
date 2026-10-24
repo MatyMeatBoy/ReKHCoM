@@ -1686,9 +1686,10 @@ void InitEnemyBtlObj(BtlObj* obj, const EmyKind* kind, s32 x, s32 y, s32 z) {
     obj->btl = NULL;
     obj->badStatus = BAD_STATUS_NONE;
     obj->badStatusTimer = 0;
-    obj->confuseTargetX = gBtlWork->actor->x;
-    obj->confuseTargetY = gBtlWork->actor->y;
-    obj->confuseTargetZ = gBtlWork->actor->z;
+    /* @bug: in the scene before Riku's B3 boss the enemies are created before the battle actor (NULL read) */
+    obj->confuseTargetX = BIOS_PTR(gBtlWork->actor)->x;
+    obj->confuseTargetY = BIOS_PTR(gBtlWork->actor)->y;
+    obj->confuseTargetZ = BIOS_PTR(gBtlWork->actor)->z;
     obj->vx = 0;
     obj->vy = 0;
     obj->popCooldown = 0;

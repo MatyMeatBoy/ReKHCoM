@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
  <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+ <!-- the network link battle (alpha, netlink.cfg): UDP to the other player or a relay; nothing else goes out -->
+ <uses-permission android:name="android.permission.INTERNET"/>
  <application android:label="ReKHCoM Alpha" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:theme="@android:style/Theme.Material.NoActionBar"
               android:allowBackup="false" android:extractNativeLibs="true" android:usesCleartextTraffic="false">
   <activity android:name="com.rekhcom.android.LauncherActivity" android:exported="true">

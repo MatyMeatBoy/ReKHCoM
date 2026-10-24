@@ -8,7 +8,9 @@ marker. So the files for other systems carry their platform in the name, the
 web player is not attached (it is served by GitHub Pages). The PS5 package
 sits in the same release, next to the others (user, 19/10): its updater wants the
 exact name PPSA98511.zip on a stable vX.Y.Z release, so the name stays and the
-upload gives it a visible label (gh: "PPSA98511.zip#ReKHCoM-vX-ps5-alpha (PPSA98511.zip)").
+upload gives it a visible label (gh: "PPSA98511.zip#ReKHCoM-vX-ps5-beta (PPSA98511.zip)").
+From v1.9.14 (user, 21/10) PC files keep their plain names and every other platform is published as -beta
+(still being debugged); the build outputs keep their -alpha names.
 Quiver's catalog entry picks the Windows file by its releaseAssetFilter
 "windows-x86.zip" (docs/quiver/submission-draft.json), so the second .zip does not
 compete with it. Never edit a published stable's existing files: Quiver pins them.
@@ -28,12 +30,12 @@ MAIN = {
     f'ReKHCoM-{V}-windows-x86.zip': f'ReKHCoM-{V}-windows-x86.zip',
     f'ReKHCoM-{V}-linux-x86.tar.gz': f'ReKHCoM-{V}-linux-x86.tar.gz',
     f'ReKHCoM-{V}-steamdeck.tar.gz': f'ReKHCoM-{V}-steamdeck-i386.tar.gz',
-    f'ReKHCoM-{V}-anbernic-alpha.zip': f'ReKHCoM-{V}-linux-armhf-anbernic-alpha.zip',
-    f'ReKHCoM-{V}-android-alpha.apk': f'ReKHCoM-{V}-android-alpha.apk',
+    f'ReKHCoM-{V}-anbernic-alpha.zip': f'ReKHCoM-{V}-linux-armhf-anbernic-beta.zip',
+    f'ReKHCoM-{V}-android-alpha.apk': f'ReKHCoM-{V}-android-beta.apk',
     'PPSA98511.zip': 'PPSA98511.zip',
-    f'ReKHCoM-{V}-ps4-alpha.pkg': f'ReKHCoM-{V}-ps4-alpha.pkg',
-    f'ReKHCoM-{V}-switch-alpha.nro': f'ReKHCoM-{V}-switch-alpha.nro',  # build/switch/ReKHCoM.nro (build_switch.py)
-    f'ReKHCoM-{V}-vita-alpha.vpk': f'ReKHCoM-{V}-vita-alpha.vpk',  # build/vita/ReKHCoM.vpk (build_vita.py)
+    f'ReKHCoM-{V}-ps4-alpha.pkg': f'ReKHCoM-{V}-ps4-beta.pkg',
+    f'ReKHCoM-{V}-switch-alpha.nro': f'ReKHCoM-{V}-switch-beta.nro',  # build/switch/ReKHCoM.nro (build_switch.py)
+    f'ReKHCoM-{V}-vita-alpha.vpk': f'ReKHCoM-{V}-vita-beta.vpk',  # build/vita/ReKHCoM.vpk (build_vita.py)
 }
 
 
@@ -54,4 +56,3 @@ def stage(mapping, folder):
 if OUT.exists():
     shutil.rmtree(OUT)
 print('\n'.join(stage(MAIN, OUT / 'main')))
-print('\n'.join(stage(PS5, OUT / 'ps5')))

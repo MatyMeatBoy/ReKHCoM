@@ -7,7 +7,7 @@ q="(1-P)"
 b=(f"if(lt({q},0.35),1-0.5*{ease(f'({q}/0.35)')},"
    f"if(lt({q},0.72),0.5,0.5-0.5*{ease(f'(({q}-0.72)/0.28)')}))")
 expr=f"if(lt(abs(X-W*{b}),W*0.0016),if(eq(PLANE,0),250,128),if(gt(X,W*{b}),B,A))"
-F="C\:/Windows/Fonts/pala.ttf"
+F=r"C\:/Windows/Fonts/pala.ttf"
 # labels follow the halves: ORIGINAL TEXT fades out at the end, HD TEXT in
 lab=(f"drawbox=x=0:y=0:w=iw:h=110:color=black@0.55:t=fill,"
      f"drawtext=fontfile='{F}':text='ORIGINAL TEXT':fontsize=58:fontcolor=white:x=80:y=26:alpha='if(lt(t,0.3),t/0.3,if(gt(t,4.6),max(0,(5.0-t)/0.4),1))',"

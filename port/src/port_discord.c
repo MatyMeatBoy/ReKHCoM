@@ -9,16 +9,12 @@
  *
  * Desktop builds only (Windows, Linux): Android, the web and the console images get the empty functions below.
  */
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-
 #include "port/port.h"
 
 /* The Discord application (discord.com/developers): its name is the game shown in the profile. KHCOM_DISCORD_APP_ID
    replaces it for tests. */
 #ifndef REKHCOM_DISCORD_APP_ID
-#define REKHCOM_DISCORD_APP_ID ""
+#define REKHCOM_DISCORD_APP_ID "1562303132728426516"
 #endif
 /* Pictures by URL (Discord fetches them): the repository's port/assets/discord. */
 #define DISCORD_ART "https://raw.githubusercontent.com/MatyMeatBoy/ReKHCom/main/port/assets/discord/"
@@ -29,6 +25,9 @@
 
 #ifdef DISCORD_IPC
 #include <SDL3/SDL.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
 
 #include "game_state.h"
 #include "menu/world_types.h"
@@ -175,17 +174,83 @@ static int Open(void) {
     return 0;
 }
 
+/* A test run (hidden window or a scheduled quit) never shows itself in the player's Discord profile: the batteries
+   start hundreds of games while the player plays. KHCOM_DISCORD_IPC (the presence's own tests) still connects. */
+static int HarnessRun(void) {
+    static int known = -1;
+    if (known < 0) {
+        const char* video = SDL_getenv("SDL_VIDEO_DRIVER");
+        known = SDL_getenv("KHCOM_DISCORD_IPC") == NULL
+                && (SDL_getenv("KHCOM_QUIT") != NULL
+                    || (video != NULL && (strcmp(video, "dummy") == 0 || strcmp(video, "offscreen") == 0)));
+    }
+    return known;
+}
+
 static const char* AppId(void) {
     const char* id = SDL_getenv("KHCOM_DISCORD_APP_ID");
     return id != NULL && *id ? id : REKHCOM_DISCORD_APP_ID;
 }
 
+/* The game's language: English, French, German, Italian, Spanish, Japanese (as port_ui.c's Lang()). */
+#ifdef VERSION_EU
+extern uint32_t gLanguage;
+#endif
+enum { DL_EN, DL_FR, DL_DE, DL_IT, DL_ES, DL_JA, DL_COUNT };
+static int Lang(void) {
+#ifdef VERSION_EU
+    return gLanguage < DL_JA ? (int)gLanguage : DL_EN;
+#elif defined(VERSION_JP)
+    return DL_JA;
+#else
+    return DL_EN;
+#endif
+}
+
+/* World names as in the translated achievements (port/achievements/official_set_eu.inc). */
 static const char* WorldName(int world) {
-    static const char* const names[] = {
-        NULL, "Agrabah", "Atlantica", "Olympus Coliseum", "Wonderland", "Monstro", "Halloween Town", "Never Land",
-        "Hollow Bastion", "Destiny Islands", "Traverse Town", "Twilight Town", "Castle Oblivion", "100 Acre Wood",
+    static const char* const names[][DL_COUNT] = {
+        { NULL, NULL, NULL, NULL, NULL, NULL },
+        { "Agrabah", "Agrabah", "Agrabah", "Agrabah", "Agrabah", "アグラバー" },
+        { "Atlantica", "Atlantica", "Atlantica", "Atlantica", "Atlántica", "アトランティカ" },
+        { "Olympus Coliseum", "Colisée de l'Olympe", "Arena des Olymps", "Monte Olimpo", "Coliseo del Olimpo",
+          "オリンポスコロシアム" },
+        { "Wonderland", "Pays des Merveilles", "Wunderland", "Paese delle Meraviglie", "País de las Maravillas",
+          "ワンダーランド" },
+        { "Monstro", "Monstro", "Monstro", "Monstro", "Monstruo", "モンストロ" },
+        { "Halloween Town", "Halloween Town", "Halloween Town", "Halloween Town", "Ciudad de Halloween",
+          "ハロウィンタウン" },
+        { "Never Land", "Pays Imaginaire", "Nimmerland", "L'Isola che non c'è", "País de Nunca Jamás", "ネバーランド" },
+        { "Hollow Bastion", "Forteresse oubliée", "Hollow Bastion", "Fortezza Oscura", "Bastión Hueco",
+          "ホロウバスティオン" },
+        { "Destiny Islands", "Île du Destin", "Insel des Schicksals", "Isola del destino", "Islas del Destino",
+          "デスティニーアイランド" },
+        { "Traverse Town", "Ville de Traverse", "Traverse Town", "Traverse Town", "Ciudad de Paso", "トラヴァースタウン" },
+        { "Twilight Town", "Cité du crépuscule", "Dimmerstadt", "Crepuscopoli", "Villa Crepúsculo", "トワイライトタウン" },
+        { "Castle Oblivion", "Manoir Oblivion", "Schloss des Entfallens", "Castello dell'Oblio", "Castillo del Olvido",
+          "忘却の城" },
+        { "100 Acre Wood", "Forêt des Rêves Bleus", "Hundertmorgenwald", "Bosco dei Cento Acri",
+          "Bosque de los Cien Acres", "100エーカーの森" },
     };
-    return world > 0 && world < (int)(sizeof(names) / sizeof(names[0])) ? names[world] : NULL;
+    return world > 0 && world < (int)(sizeof(names) / sizeof(names[0])) ? names[world][Lang()] : NULL;
+}
+
+/* The activity's words, in the game's language. */
+enum { T_TITLE, T_FLOOR, T_BASEMENT, T_CHOOSING, T_LEVEL, T_BATTLE, T_SCENE, T_VERSUS, T_SORA, T_RIKU, T_COUNT };
+static const char* Text(int id) {
+    static const char* const text[T_COUNT][DL_COUNT] = {
+        { "Title screen", "Écran titre", "Titelbildschirm", "Schermata del titolo", "Pantalla de título", "タイトル画面" },
+        { "Floor %d", "Étage %d", "Ebene %d", "Piano %d", "Piso %d", "%d階" },
+        { "Floor B%d", "Étage B%d", "Ebene B%d", "Piano B%d", "Piso B%d", "地下%d階" },
+        { "choosing a world", "choix du monde", "Weltwahl", "scelta del mondo", "eligiendo mundo", "ワールド選択" },
+        { "Lv", "Niv.", "Lv", "Liv.", "Nv.", "Lv" },
+        { "In battle", "En combat", "Im Kampf", "In battaglia", "En combate", "バトル中" },
+        { "In a scene", "En cinématique", "In einer Szene", "In una scena", "En una escena", "イベント中" },
+        { "vs %s", "contre %s", "gegen %s", "contro %s", "contra %s", "VS %s" },
+        { "Sora", "Sora", "Sora", "Sora", "Sora", "ソラ" },
+        { "Riku", "Riku", "Riku", "Riku", "Riku", "リク" },
+    };
+    return text[id][Lang()];
 }
 
 /* Boss battles: the boss's name and its achievement badge (port/assets/discord/badge<n>.png, the atlas index of
@@ -235,49 +300,50 @@ static int sFieldSeen;
 
 /* The activity's JSON for what is on screen now. */
 static void Describe(char* out, size_t size) {
-    char details[128], state[128], large[64], largeText[32], small[192] = "";
+    char details[128], state[128], large[64], largeText[96], small[256] = "";
     int riku = (gGameState.flags & GAME_FLAG_RIKU) != 0, floor = gGameState.floor + 1;
     const char* world;
     Mode* m = gCurrentMode;
     int boss = BossIndex(), badge;
     int known = (sFieldSeen || m == &gModeBattle) && gGameState.world != 0; /* a battle always has its world */
 
-    world = known ? WorldName(gGameState.world) : "Castle Oblivion";
+    world = WorldName(known ? gGameState.world : WORLD_CASTLE_OBLIVION);
     if (OnTitle()) {
-        SDL_strlcpy(details, "Title screen", sizeof(details));
+        SDL_strlcpy(details, Text(T_TITLE), sizeof(details));
         state[0] = 0;
         SDL_strlcpy(large, "logo", sizeof(large));
         SDL_strlcpy(largeText, "ReKHCoM", sizeof(largeText));
     } else {
-        char where[48];
-        if (riku)
-            SDL_snprintf(where, sizeof(where), "Floor B%d", floor);
-        else
-            SDL_snprintf(where, sizeof(where), "Floor %d", floor);
+        char where[48], extra[64] = "";
+        SDL_snprintf(where, sizeof(where), Text(riku ? T_BASEMENT : T_FLOOR), floor);
         if (m == &gModeWorldselect || m == &gModeWORLDSELECT || world == NULL)
-            SDL_snprintf(details, sizeof(details), "%s - choosing a world", where);
+            SDL_snprintf(details, sizeof(details), "%s - %s", where, Text(T_CHOOSING));
         else
             SDL_snprintf(details, sizeof(details), "%s - %s", world, where);
-        if (boss >= 0)
-            SDL_snprintf(state, sizeof(state), "%s - Lv %d - vs %s", riku ? "Riku" : "Sora",
-                         gGameState.progression.level, kBosses[boss].name);
-        else
-            SDL_snprintf(state, sizeof(state), "%s - Lv %d%s", riku ? "Riku" : "Sora", gGameState.progression.level,
-                         m == &gModeBattle ? " - In battle" : m == &gModeEvent ? " - In a scene" : "");
-        SDL_strlcpy(large, riku ? "riku" : "sora", sizeof(large));
-        SDL_strlcpy(largeText, riku ? "Riku" : "Sora", sizeof(largeText));
-        /* the small picture: the world's achievement badge (port/assets/discord/world<id>.png), the logo in the
-           castle and while choosing a world */
+        if (boss >= 0) {
+            SDL_strlcpy(extra, " - ", sizeof(extra));
+            SDL_snprintf(extra + 3, sizeof(extra) - 3, Text(T_VERSUS), kBosses[boss].name);
+        } else if (m == &gModeBattle || m == &gModeEvent) {
+            SDL_snprintf(extra, sizeof(extra), " - %s", Text(m == &gModeBattle ? T_BATTLE : T_SCENE));
+        }
+        SDL_snprintf(state, sizeof(state), "%s - %s %d%s", Text(riku ? T_RIKU : T_SORA), Text(T_LEVEL),
+                     gGameState.progression.level, extra);
+        /* the large picture: the boss's achievement badge (port/assets/discord/badge<n>.png), else the world's
+           (world<id>.png), the logo in the castle and while choosing a world; the small one: the character */
         badge = boss < 0 ? 0 : riku ? kBosses[boss].riku : kBosses[boss].sora;
-        if (badge)
-            SDL_snprintf(small, sizeof(small), ",\"small_image\":\"" DISCORD_ART "badge%d.png\",\"small_text\":\"%s\"",
-                         badge, kBosses[boss].name);
-        else if (known && m != &gModeWorldselect && m != &gModeWORLDSELECT && gGameState.world >= 1 &&
-            gGameState.world <= WORLD_100_ACRE_WOOD && gGameState.world != WORLD_CASTLE_OBLIVION)
-            SDL_snprintf(small, sizeof(small), ",\"small_image\":\"" DISCORD_ART "world%d.png\",\"small_text\":\"%s\"",
-                         gGameState.world, world);
-        else
-            SDL_strlcpy(small, ",\"small_image\":\"" DISCORD_ART "logo.png\",\"small_text\":\"ReKHCoM\"", sizeof(small));
+        if (badge) {
+            SDL_snprintf(large, sizeof(large), "badge%d", badge);
+            SDL_strlcpy(largeText, kBosses[boss].name, sizeof(largeText));
+        } else if (known && m != &gModeWorldselect && m != &gModeWORLDSELECT && gGameState.world >= 1 &&
+                   gGameState.world <= WORLD_100_ACRE_WOOD && gGameState.world != WORLD_CASTLE_OBLIVION) {
+            SDL_snprintf(large, sizeof(large), "world%d", gGameState.world);
+            SDL_strlcpy(largeText, world, sizeof(largeText));
+        } else {
+            SDL_strlcpy(large, "logo", sizeof(large));
+            SDL_strlcpy(largeText, world != NULL ? world : "ReKHCoM", sizeof(largeText));
+        }
+        SDL_snprintf(small, sizeof(small), ",\"small_image\":\"" DISCORD_ART "%s.png\",\"small_text\":\"%s\"",
+                     riku ? "riku" : "sora", Text(riku ? T_RIKU : T_SORA));
     }
     SDL_snprintf(out, size,
                  "\"details\":\"%s\",%s%s%s\"timestamps\":{\"start\":%lld},"
@@ -302,7 +368,7 @@ void PortDiscordFrame(void) {
         sFieldSeen = 0;
     else if (gCurrentMode == &gModeMapFld)
         sFieldSeen = 1;
-    if (!gPortConfig.discordPresence || !*AppId()) {
+    if (!gPortConfig.discordPresence || !*AppId() || HarnessRun()) {
         if (sConnected)
             Close();
         return;

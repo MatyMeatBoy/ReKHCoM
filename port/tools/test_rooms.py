@@ -14,13 +14,16 @@ middle and the end go to a contact sheet for the widescreen review.
     python port/tools/test_rooms.py [--version eu] [--build build/pc] [--jobs 4] [--frames 3000]
 """
 import argparse
+import json
 import os
 import shutil
 import subprocess
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from PIL import Image
+
+import case_bin
 
 ROOT = Path(__file__).resolve().parents[2]
 WORLDS = 13
@@ -51,21 +54,29 @@ def keys(frames):
     return ",".join(out)
 
 
-def run(exe_dir, work, case, frames, timeout):
+def run(exe_dir, work, case, frames, timeout, resume=False, version="eu"):
     mode, world, floor = case
     name = f"room_{mode}_{world:02d}_{floor:02d}"
     d = work / name
+    mid = START + (frames - START) // 2
+    shots = [d / f"shot_{mid:05d}.bmp", d / f"shot_{frames:05d}.bmp"]
+    # each finished case leaves result.json: --resume keeps it and goes on from the first case without one
+    if resume and (d / "result.json").exists():
+        try:
+            status, modes, faults = json.loads((d / "result.json").read_text())
+            return name, status, modes, faults, [s for s in shots if s.exists()]
+        except (ValueError, OSError):
+            pass
     shutil.rmtree(d, ignore_errors=True)
     d.mkdir(parents=True)
-    for f in ("khcom.exe", "SDL3.dll"):
-        shutil.copy2(exe_dir / f, d / f)
+    case_bin.place(exe_dir, work, d)
     (d / "kh_com.ini").write_text("config_version=2\nview_mode=4\n")
-    mid = START + (frames - START) // 2
     env = dict(os.environ, SDL_VIDEO_DRIVER="dummy", SDL_AUDIO_DRIVER="dummy", KHCOM_FAST="1",
                KHCOM_MODE=f"{START}:room:{mode * 10000 + world * 100 + floor}", KHCOM_KEYS=keys(frames),
                KHCOM_SHOTS=f"{mid},{frames}", KHCOM_QUIT=str(frames + 1), KHCOM_TRACE_MODES="1")
     try:
-        code = subprocess.run([str(d / "khcom.exe")], cwd=str(d), env=env, timeout=timeout,
+        rom = ROOT / "roms" / ({"eu": "B8CP", "us": "B8CE", "jp": "B8CJ"}[version] + ".gba")
+        code = subprocess.run([str(d / "khcom.exe"), "--rom", str(rom)], cwd=str(d), env=env, timeout=timeout,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
     except subprocess.TimeoutExpired:
         code = "timeout"
@@ -78,7 +89,8 @@ def run(exe_dir, work, case, frames, timeout):
             if m not in modes:
                 modes.append(m)
     status = "ok" if code == 0 and not faults else (f"exit {code}" if code != 0 else "fault")
-    shots = [d / f"shot_{mid:05d}.bmp", d / f"shot_{frames:05d}.bmp"]
+    (d / "result.tmp").write_text(json.dumps([status, modes, faults[:2]]))
+    os.replace(d / "result.tmp", d / "result.json")
     return name, status, modes, faults[:2], [s for s in shots if s.exists()]
 
 
@@ -89,12 +101,21 @@ def main():
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--frames", type=int, default=3000)
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--resume", action="store_true", help="keep the cases that already finished (their result.json)")
     args = ap.parse_args()
     exe_dir = ROOT / (args.build or ("build/pc" if args.version == "eu" else f"build/pc-{args.version}"))
-    # two levels under the repository, where the exe finds ../../roms
+    # one folder of cases per version (they used to share build/, so two versions could not run side by side)
     work = ROOT / "build" / f"roomtest_{args.version}"
+    cases_dir = ROOT / "build" / f"roomcases_{args.version}"
+    cases_dir.mkdir(parents=True, exist_ok=True)
+    results = []
     with ThreadPoolExecutor(args.jobs) as pool:
-        results = list(pool.map(lambda c: run(exe_dir, work.parent, c, args.frames, args.timeout), cases()))
+        futures = [pool.submit(run, exe_dir, cases_dir, c, args.frames, args.timeout, args.resume,
+                               args.version) for c in cases()]
+        for k, fut in enumerate(as_completed(futures), 1):
+            results.append(fut.result())
+            print(f"[{k}/{len(futures)}] {results[-1][0]} {results[-1][1]}", flush=True)
+    results.sort()
     lines, thumbs = [], []
     for name, status, modes, faults, shots in results:
         lines.append(f"{name:18s} {status:10s} {' > '.join(modes)}{'  ' + ' | '.join(faults) if faults else ''}")
@@ -112,8 +133,7 @@ def main():
             sheet.paste(Image.open(s).convert("RGB").resize((tw, th)), ((k % cols) * tw, (k // cols) * th))
             k += 1
     sheet.save(work / "rooms.png")
-    for name, _ in thumbs:
-        shutil.rmtree(work.parent / name, ignore_errors=True)
+    shutil.rmtree(cases_dir, ignore_errors=True)
     print("\n".join(l for l in lines if " ok " not in l))
     print(f"report: {work / 'report.txt'}")
 

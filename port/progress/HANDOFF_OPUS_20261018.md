@@ -22,7 +22,7 @@ sus instrucciones al pie de la letra. Cola única: PENDIENTES_VIGENTES.md.
 - **v1.9.4 estable**: ver sección «Estado de v1.9.4» al final (se completa al publicar).
 - Receta de publicación: bump `REKHCOM_VERSION` en `port/decompui/decompui.cpp`,
   CHANGELOG, etiqueta de `port/web/index.html`; `build_all.py --platform all --package
-  --release-version vX --web-sdl-build D:/ReKHCoM-build/web-sdl --web-work D:/ReKHCoM-build/web`
+  --release-version vX --web-sdl-build D:/01Claude/ReKHCoM-build/web-sdl --web-work D:/01Claude/ReKHCoM-build/web`
   (PS5 no: requiere host Linux); zip de `build/web` como `-web-alpha.zip` con carpeta
   raíz; SHA256SUMS; `gh release create` (`--prerelease --latest=false` para nightly);
   `python port/tools/publish_web.py --sdl-source ../toolchain/SDL3-3.4.18 --publish`

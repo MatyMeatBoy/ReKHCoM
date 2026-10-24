@@ -55,3 +55,10 @@ u16 GetRandom() {
     x &= 0x7FFF;
     return x;
 }
+
+#ifdef PLATFORM_PC
+/* the random generators' state, for the network link's desync check (mode_vsbattle.c VsBattleStateHash) */
+u32 PortRandomState(void) {
+    return sRandSeed ^ sRandomState[0] ^ (sRandomState[1] << 7) ^ (sRandomState[2] << 13) ^ (sRandomState[3] << 21);
+}
+#endif

@@ -1,6 +1,7 @@
 /* Address metadata only; audio and sequences are read from the user's JP ROM. */
 #if defined(VERSION_EU)
 static const UndubSample kUndubSamples[] = {
+    { 0x1dde294, 0x1e9d718, 0x1e06cf8, 2390 }, /* the voice group's first instrument, SONG_VO_SR_ATTACK00 (issue #45, check_undub.py) */
     { 0x1dde2a0, 0x1e9e070, 0x1e07650, 2300 },
     { 0x1dde2ac, 0x1e9e970, 0x1e07f50, 2318 },
     { 0x1dde2b8, 0x1e9f280, 0x1e08860, 2839 },
@@ -138,6 +139,7 @@ static const UndubSong kUndubSongs[] = {
 #endif
 #if defined(VERSION_US)
 static const UndubSample kUndubSamples[] = {
+    { 0x1d6e368, 0x1e2d7ec, 0x1e06cf8, 2390 }, /* the voice group's first instrument, SONG_VO_SR_ATTACK00 (issue #45, check_undub.py) */
     { 0x1d6e374, 0x1e2e144, 0x1e07650, 2300 },
     { 0x1d6e380, 0x1e2ea44, 0x1e07f50, 2318 },
     { 0x1d6e38c, 0x1e2f354, 0x1e08860, 2839 },

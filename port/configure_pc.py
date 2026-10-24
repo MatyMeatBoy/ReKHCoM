@@ -89,7 +89,9 @@ def main():
                    f"-DVERSION_{VERSION.upper()} -DPLATFORM_PC {quoted} -Iport/include -I{rel(sdl_arch / 'include')}"
                    + (" -DPORT_HD2D" if args.hd2d else "") + (" -DPORT_GBA_RELOC" if args.reloc else ""))
     port_cflags += " -DPORT_RETROACHIEVEMENTS -DRC_CLIENT_SUPPORTS_HASH -Iport/third_party/rcheevos/include"
-    ldflags = (f"-L{rel(sdl_arch / 'lib')} -lSDL3 -lgdi32 -lwinhttp -lcrypt32 -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic -Wl,--disable-dynamicbase -Wl,--large-address-aware "
+    # the PPU draws the rows beyond the GBA picture on several cores (port_ppu.c, RenderOuterRows)
+    port_cflags += " -DPORT_PPU_THREADS"
+    ldflags = (f"-L{rel(sdl_arch / 'lib')} -lSDL3 -lgdi32 -lwinhttp -lcrypt32 -lws2_32 -lmfplat -lmfreadwrite -lmfuuid -lole32 -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic -Wl,--disable-dynamicbase -Wl,--large-address-aware "
                + ("" if args.debug else "-Wl,--subsystem,windows"))
     if args.reloc:
         # above the bus range, which the check build reserves without access (port_memory.c)
@@ -168,7 +170,7 @@ def decompui(n, toolchain, sdl_arch, debug, ra_objs):
     n.variable("cxx", "\"" + str(cxx).replace("\\", "/") + "\"")
     n.variable("ui_cxxflags", f"{'-O0 -g' if debug else '-O2'} -std=c++17 -I{rel(imgui)} -I{rel(ui / 'third_party')} "
                               f"-I{rel(sdl_arch / 'include')} -DRC_CLIENT_SUPPORTS_HASH -Iport/third_party/rcheevos/include -Iport/include")
-    n.variable("ui_ldflags", f"-static-libstdc++ -static-libgcc -L{rel(sdl_arch / 'lib')} -lSDL3 -lopengl32 -lcomdlg32 -lbcrypt -lshell32 -lole32 -luuid -lwinhttp -lcrypt32 -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic "
+    n.variable("ui_ldflags", f"-static-libstdc++ -static-libgcc -L{rel(sdl_arch / 'lib')} -lSDL3 -lopengl32 -lcomdlg32 -lbcrypt -lshell32 -lole32 -luuid -lwinhttp -lcrypt32 -lmfplat -lmfreadwrite -lmfuuid -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic "
                              + ("" if debug else "-mwindows"))
     n.rule("cxx_ui", "$cxx $ui_cxxflags -MD -MF $out.d -c $in -o $out", description="CXX $in",
            depfile="$out.d", deps="gcc")
@@ -186,6 +188,9 @@ def decompui(n, toolchain, sdl_arch, debug, ra_objs):
     n.build("$builddir/decompui/offline_achievements.o", "cc_port", "port/achievements/offline_achievements.c",
             implicit=["port/achievements/official_set_eu.inc"])
     objs += ra_objs + ["$builddir/decompui/offline_achievements.o"]
+    # miniz: the HD importer writes PNG (hd_import.inc)
+    n.build("$builddir/decompui/miniz_unit.o", "cc_port", "port/decompui/miniz_unit.c")
+    objs.append("$builddir/decompui/miniz_unit.o")
     n.build("$builddir/ReKHCoM.exe", "link_ui", objs)
     art = ui / "assets" / "boxart.jpg"
     n.rule("copy_asset", 'cmd /c (if not exist "$dir_win" mkdir "$dir_win") & copy /y "$in_win" "$out_win" >nul',

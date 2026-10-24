@@ -61,6 +61,12 @@ int PortSpriteShiftY(int entry, int y);
    entry an OAM slot was built from. */
 void PortSpriteTag(int entry);
 void PortOamSetSource(int oamIndex, int entry);
+/* The title's logo is on BG2 (title, end of the credits): with the HD title it is drawn HD (port_ppu.c). */
+void PortTitleLogoBg(int on);
+/* HD sprites: the ROM tiles and frame an OAM slot shows, and the part's box in
+   the frame's own coordinates (before the entry's flips and affine). */
+void PortOamSetHdPart(int oamIndex, const void* tiles, const void* frame, int x, int y, int w, int h, int flags,
+                      const void* palette, int bank);
 /* Start of a new OAM list: forget which entry each slot came from. */
 void PortOamTagsReset(void);
 /* HD text: the pixel-font character of the sprites being drawn (0: none). */
@@ -108,16 +114,23 @@ void PortBgSplitBands(int bg, int enabled);
 void PortBgClip(int bg, int on);
 /* Battles: world-map layers repeat sideways past their edge. */
 void PortSetBattleView(int on);
+/* Marluxia's last fight (bos_lst*.c), presentation only: its field is a screen background that wraps like the
+   hardware's, and the body's map as built before the game clears its rows off the screen (the wide view shows one
+   body, whole). Cleared with the battle view. */
+void PortMarluxiaField(int on);
+void PortMarluxiaBodyMap(const void* map);
 /* Authored arena bounds and repeatable side bands; screen margins only. */
 void PortSetBattleArenaBands(int left, int right, int leftStart, int leftWidth,
                              int rightStart, int rightWidth);
 /* GBA-size screens: how the side bars beyond them are filled. */
 enum { PORT_SIDE_STRETCH, PORT_SIDE_COLOR, PORT_SIDE_TEXTURE, PORT_SIDE_BLUR, PORT_SIDE_MENU, PORT_SIDE_PATTERN, PORT_SIDE_PIXEL_FADE, PORT_SIDE_EDGE_FADE,
        PORT_SIDE_BLUR_BANDS, PORT_SIDE_GROUND_BANDS, PORT_SIDE_MOVIE,
-       PORT_SIDE_SCENE_BANDS /* the PPU's own margin (scenery carried on) with the frame's bars drawn on */ };
+       PORT_SIDE_SCENE_BANDS, /* the PPU's own margin (scenery carried on) with the frame's bars drawn on */
+       PORT_SIDE_GROUND_SHEETS /* the journal's open book: GROUND_BANDS with each side's own ground (23/10) */ };
 void PortSideStyle(int style);
 /* Only the illustrated title BG; never text, logo, sprites or other modes. */
 void PortTitleArtFade(int enabled);
+void PortTitleArtFadeFirst(int enabled);
 void PortTitleBands(int enabled);
 void PortMenuPanelSide(int side);
 /* Status has authored BG panels; foreground badges must never fill margins. */

@@ -44,6 +44,9 @@
 #include "card_worldselect.h"
 #include "registration_data.h"
 #include "sprite_palettes.h"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#endif
 
 #ifdef VERSION_EU
 static void* sMapInspectScrollMarkerSpritesByLanguage[5] = {
@@ -964,6 +967,25 @@ void MapInspectDraw() {
     s16 barOffset;
     void* anim;
 
+#ifdef PLATFORM_PC
+    /* the title's HD banner: the sprite stays over the BG copy the menu switches to once it has slid in */
+    if (sMapInspectState == MAP_INSPECT_STATE_MENU && sMapInspectBarTiles != NULL &&
+        PortHdSpriteFind(sMapInspectBarTiles->src,
+#ifdef VERSION_EU
+                         sMapInspectTitleSpritesByLanguage[gLanguage]
+#else
+                         gMapInspectBarFrame5
+#endif
+                         )) {
+        DrawMenuHeader(0, 0,
+#ifdef VERSION_EU
+            sMapInspectTitleSpritesByLanguage[gLanguage],
+#else
+            gMapInspectBarFrame5,
+#endif
+            sMapInspectBarTiles, sMapInspectBarPalette, NULL, SPRITE_PRIORITY(3), 0xBB8);
+    }
+#endif
     if (sMapInspectState != MAP_INSPECT_STATE_MENU) {
         DrawMenuHeader(sMapInspectBarX >> 8, 0,
 #ifdef VERSION_EU

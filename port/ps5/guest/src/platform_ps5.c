@@ -44,6 +44,11 @@ void PortPs5LockSettings(void) {
 int guest_main(void) {
     static char name[] = "ReKHCoM";
     static char* argv[] = { name, NULL };
+    static char rom[1024];
+    extern const char* gPortRomPath;
+    /* the cartridge the host was given (Android: the copy the launcher made), else the data folder's */
+    if (h_getenv("KHCOM_ROM", rom, sizeof(rom)) > 0)
+        gPortRomPath = rom;
     WriteDefaultSettings();
     return main(1, argv);
 }

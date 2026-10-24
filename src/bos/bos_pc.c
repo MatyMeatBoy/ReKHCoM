@@ -5515,7 +5515,13 @@ void task_bos_pc_0(PcWork* work, TaskPool* pool) {
     }
 
     // @bug flt[0] is NULL when no floats were created (NULL read).
-    BosPcFltGetPosition(BIOS_PTR(work->flt[0]), &x, &y, &z);
+#ifdef PLATFORM_PC
+    /* the cartridge reads the BIOS for the task, then its value as the work pointer (SRAM mirror): no position */
+    if (work->flt[0] == NULL)
+        x = y = z = 0;
+    else
+#endif
+    BosPcFltGetPosition(work->flt[0], &x, &y, &z);
     SetBattleActorPosition(x, y, z - 0x400);
     CreateBosPcAcdTask(work, pool);
     btl = gBtlWork;
@@ -6013,7 +6019,12 @@ u8 task_bos_pc_1(PcWork* work, Task* task) {
     btl->bossX = body->x;
     btl->bossY = body->y;
     btl->bossZ = body->z;
+#ifdef PLATFORM_PC
+    /* @bug: a frame before the maximum HP is set divides by zero (the gauges' #40 class) */
+    work->shared.hpRatio = work->body.maxHp > 0 ? (work->body.hp << 8) / work->body.maxHp : 0;
+#else
     work->shared.hpRatio = (work->body.hp << 8) / work->body.maxHp;
+#endif
     return alive;
 }
 

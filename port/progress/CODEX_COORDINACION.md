@@ -240,7 +240,7 @@ editor de cartas y 4:3 con zoom/HD pendientes. Menus relativos fuera de stable.
   idiomas, nombres por banco, sync serializado y fallo quota.
   web_touch_conformance.c PASS: centro y pulsaciones en 5 proporciones.
 - Compilando EU/US/JP: build/web-alpha2-build.log (sesión75596). Emsdk6.0.12,
-  SDL estático en D:/ReKHCoM-build/web-sdl. No desplegar hasta compilar/probar.
+  SDL estático en D:/01Claude/ReKHCoM-build/web-sdl. No desplegar hasta compilar/probar.
 - Próximo: prueba real de fuentes, regresión PC tras extraer layout, caché por
   hash de shell/motores/fuentes; publicar Pages y prerelease web-alpha2.
 
@@ -281,8 +281,8 @@ editor de cartas y 4:3 con zoom/HD pendientes. Menus relativos fuera de stable.
 - Prioridad del usuario: publicar el juego real en GitHub Pages. EU probado por
   usuario en Chrome hasta diálogos iniciales; SD correcto. No afirmar test de
   combate Web, sesiones largas ni rendimiento móvil todavía.
-- Emsdk 6.0.12 en D:/ReKHCoM-build/toolchain/emsdk; SDL3 3.4.18 estático en
-  D:/ReKHCoM-build/web-sdl. build_all.py --platform web compila EU/US/JP.
+- Emsdk 6.0.12 en D:/01Claude/ReKHCoM-build/toolchain/emsdk; SDL3 3.4.18 estático en
+  D:/01Claude/ReKHCoM-build/web-sdl. build_all.py --platform web compila EU/US/JP.
 - build_web.py transforma imports fijos LLVM a constantes; conserva ABI wasm32,
   relocaciones de funciones reales y Asyncify para bucles de juego/películas.
 - test_web_abi.py PASS: constantes, hardware fijo, globales nativos, espera
@@ -389,7 +389,7 @@ editor de cartas y 4:3 con zoom/HD pendientes. Menus relativos fuera de stable.
   incluido gNumMusicPlayers=26; el bucle sale de tabla. -Bsymbolic resuelve
   localmente estas referencias; tras corregirlo el título arranca. Verificador
   ELF en build_android.py rechaza futuras relocaciones a símbolos absolutos.
-- AVD aislado en D:/ReKHCoM-build/android-avd (C: sin espacio suficiente).
+- AVD aislado en D:/01Claude/ReKHCoM-build/android-avd (C: sin espacio suficiente).
   Scripts/logs locales build/start_android_emulator.py, build/android_ui.py,
   build/android-{first,second}-launch.log y capturas android-title.png.
 - Liberados 1.073.755.621 bytes de ZIPs ya extraídos y con hash oficial

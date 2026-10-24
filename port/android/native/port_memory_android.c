@@ -35,6 +35,20 @@ void PortBiosAreaRefresh(void) {
 static uint8_t sSramShadow[GBA_SRAM_SIZE];
 static int sSramLoaded;
 
+/* The range is claimed as soon as this library is loaded (the activity's onCreate), before the graphics driver, the
+   audio stack and the Java heap's growth can land in it: on some phones (Google Pixel, issue #22) they took part of
+   it by the time the game started. PortMemoryInit then only commits the regions. */
+static int sEarlyReserved;
+
+__attribute__((constructor)) static void ReserveGbaSpaceEarly(void) {
+    const uintptr_t low = GBA_EWRAM, high = GBA_SRAM + GBA_SRAM_SIZE;
+    void* space = mmap((void*)low, high - low, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (space == (void*)low)
+        sEarlyReserved = 1;
+    else if (space != MAP_FAILED)
+        munmap(space, high - low);
+}
+
 int PortMemoryInit(void) {
     static const struct { uintptr_t base; size_t bytes; } regions[] = {
         {GBA_EWRAM,GBA_EWRAM_SIZE},{GBA_IWRAM,GBA_IWRAM_SIZE},
@@ -44,7 +58,9 @@ int PortMemoryInit(void) {
     };
     const uintptr_t low=GBA_EWRAM, high=GBA_SRAM+GBA_SRAM_SIZE;
     size_t page=(size_t)sysconf(_SC_PAGESIZE), i;
-    void* space=mmap((void*)low,high-low,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+    char taken[512]="";
+    void* space=sEarlyReserved ? (void*)low : mmap((void*)low,high-low,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+    PortLog("GBA space: %s", sEarlyReserved ? "reserved when the library loaded" : "reserved at start");
     if (space!=(void*)low) {
         FILE* maps=fopen("/proc/self/maps","r");
         char line[256];
@@ -53,7 +69,10 @@ int PortMemoryInit(void) {
         /* What already lies in the hardware range (diagnostics on devices). */
         while(maps && fgets(line,sizeof(line),maps)) {
             unsigned long a=0,b=0;
-            if(sscanf(line,"%lx-%lx",&a,&b)==2 && a<high && b>low) PortLog("GBA space taken: %s",line);
+            if(sscanf(line,"%lx-%lx",&a,&b)==2 && a<high && b>low) {
+                PortLog("GBA space taken: %s",line);
+                if (strlen(taken)+strlen(line)<sizeof(taken)) strcat(taken,line);
+            }
         }
         if(maps) fclose(maps);
         if (space!=MAP_FAILED) munmap(space,high-low);
@@ -76,7 +95,10 @@ int PortMemoryInit(void) {
                 uintptr_t start=regions[i].base & ~(uintptr_t)(page-1);
                 munmap((void*)start,(regions[i].base+regions[i].bytes-start+page-1)&~(page-1));
             }
-            PortFatal("Cannot reserve the GBA address space 0x02000000-0x0E010000");
+            /* the mappings in the way go in the message itself: Android keeps the log out of the player's reach */
+            PortFatal("Cannot reserve the GBA address space 0x02000000-0x0E010000.\n"
+                      "Please restart the phone and try again; if it still fails, send a screenshot of this message "
+                      "(issue #22).\n\nIn use:\n%s", taken[0] ? taken : "(nothing listed)");
             return 0;
         }
         PortLog("GBA space: reserved region by region");

@@ -12,7 +12,9 @@ typedef struct { uint32_t dest, source; int header, oldHeader; } UndubSong;
 #include "port/port_undub_map.h"
 
 #ifndef VERSION_JP
-static uint8_t* sJapanese;
+/* The Japanese cartridge is read in pieces when the voices are copied, never held whole (32 MB did not fit beside
+   the game on the Vita, report in #44); sPath is the dump found and verified. */
+static char sPath[512];
 static int sChecked;
 #endif
 
@@ -22,58 +24,137 @@ static uint32_t Read32(const uint8_t* p) {
 static void Write32(uint8_t* p, uint32_t n) {
     p[0] = n; p[1] = n >> 8; p[2] = n >> 16; p[3] = n >> 24;
 }
-static uint32_t Crc32(const uint8_t* p, size_t n) {
+
+#ifndef VERSION_JP
+#if !__STDC_HOSTED__
+#include "bridge_calls.h"
+#endif
+
+/* path is the original Japanese cartridge: its header, its size and its CRC, read 64 KB at a time */
+static int IsJapanese(const char* path) {
+    static uint8_t buf[0x10000];
     uint32_t table[256], crc = ~0u;
+    size_t total = 0, got, k;
     unsigned i, j;
+    FILE* f = fopen(path, "rb");
+    if (!f)
+        return 0;
     for (i = 0; i < 256; i++) {
         uint32_t c = i;
         for (j = 0; j < 8; j++) c = (c >> 1) ^ (0xEDB88320u & (0u - (c & 1)));
         table[i] = c;
     }
-    for (i = 0; i < n; i++) crc = (crc >> 8) ^ table[(crc ^ p[i]) & 255];
-    return ~crc;
+    while ((got = fread(buf, 1, sizeof(buf), f)) > 0) {
+        if (total == 0 && (got < 0xB0 || memcmp(buf + 0xAC, "B8CJ", 4) != 0))
+            break;
+        for (k = 0; k < got; k++) crc = (crc >> 8) ^ table[(crc ^ buf[k]) & 255];
+        total += got;
+        if (total > GBA_ROM_SIZE)
+            break;
+    }
+    fclose(f);
+    return total == GBA_ROM_SIZE && ~crc == 0x8D5A0D84u;
 }
+
+/* every .gba of a folder until one is the Japanese cartridge (the consoles take a dump of any name) */
+static int FindIn(const char* folder) {
+    char path[512];
+#if !__STDC_HOSTED__
+    char name[256];
+    int dir = h_dir_open(folder);
+    if (dir < 0)
+        return 0;
+    while (h_dir_next(dir, name, sizeof(name))) {
+        size_t n = strlen(name);
+        if (n > 4 && strcasecmp(name + n - 4, ".gba") == 0) {
+            SDL_snprintf(path, sizeof(path), "%s/%s", folder, name);
+            if (IsJapanese(path)) {
+                SDL_snprintf(sPath, sizeof(sPath), "%s", path);
+                h_dir_close(dir);
+                return 1;
+            }
+        }
+    }
+    h_dir_close(dir);
+#else
+    int count = 0, i, found = 0;
+    char** names = SDL_GlobDirectory(folder, "*.gba", SDL_GLOB_CASEINSENSITIVE, &count);
+    for (i = 0; names && i < count && !found; i++) {
+        SDL_snprintf(path, sizeof(path), "%s/%s", folder, names[i]);
+        if (IsJapanese(path)) {
+            SDL_snprintf(sPath, sizeof(sPath), "%s", path);
+            found = 1;
+        }
+    }
+    SDL_free(names);
+    if (found)
+        return 1;
+#endif
+    return 0;
+}
+#endif
 
 int PortUndubAvailable(void) {
 #ifdef VERSION_JP
     return 0; /* already Japanese */
 #else
-    static const char* names[] = { "roms/B8CJ.gba", "../../roms/B8CJ.gba" };
+    static const char* names[] = { "roms/B8CJ.gba", "../../roms/B8CJ.gba", "B8CJ.gba" };
+    char folder[512];
     size_t i;
-    if (sChecked) return sJapanese != NULL;
+    if (sChecked) return sPath[0] != 0;
     sChecked = 1;
-    for (i = 0; i < SDL_arraysize(names); i++) {
-        FILE* f = fopen(PortConfigPath(names[i]), "rb");
-        if (!f) continue;
-        sJapanese = malloc(GBA_ROM_SIZE);
-        if (!sJapanese) { fclose(f); return 0; }
-        int ok = fread(sJapanese, 1, GBA_ROM_SIZE, f) == GBA_ROM_SIZE && fgetc(f) == EOF;
-        fclose(f);
-        if (ok && memcmp(sJapanese + 0xAC, "B8CJ", 4) == 0 && Crc32(sJapanese, GBA_ROM_SIZE) == 0x8D5A0D84u)
+    for (i = 0; i < SDL_arraysize(names); i++)
+        if (IsJapanese(PortConfigPath(names[i]))) {
+            SDL_snprintf(sPath, sizeof(sPath), "%s", PortConfigPath(names[i]));
             return 1;
-        free(sJapanese); sJapanese = NULL;
-    }
-    return 0;
+        }
+    /* any name: the data folder (the consoles' ROM folder) and its roms folder */
+    SDL_snprintf(folder, sizeof(folder), "%s", PortConfigPath("roms"));
+    if (FindIn(folder))
+        return 1;
+    SDL_snprintf(folder, sizeof(folder), "%s", PortConfigPath(""));
+    for (i = SDL_strlen(folder); i > 0 && (folder[i - 1] == '/' || folder[i - 1] == '\\'); i--)
+        folder[i - 1] = 0;
+    return FindIn(folder[0] ? folder : ".");
 #endif
 }
+
+#ifndef VERSION_JP
+/* n bytes of the Japanese cartridge from offset at into out */
+static int ReadJapanese(FILE* f, uint32_t at, void* out, uint32_t n) {
+    return fseek(f, (long)at, SEEK_SET) == 0 && fread(out, 1, n, f) == n;
+}
+#endif
 
 void PortUndubApply(void) {
 #ifndef VERSION_JP
     uint8_t* rom = (uint8_t*)(uintptr_t)GBA_ROM;
     size_t i;
+    unsigned samples = 0, songs = 0;
+    FILE* f;
     if (!gPortConfig.undub) return;
-    if (!PortUndubAvailable()) { PortLog("undub: original Japanese ROM unavailable; original audio retained"); return; }
+    if (!PortUndubAvailable() || (f = fopen(sPath, "rb")) == NULL) {
+        PortLog("undub: original Japanese ROM unavailable; original audio retained");
+        return;
+    }
     for (i = 0; i < SDL_arraysize(kUndubSamples); i++) {
         const UndubSample* s = &kUndubSamples[i];
-        if (s->source) memcpy(rom + s->dest, sJapanese + s->source, s->size);
-        else memset(rom + s->dest, 0, s->size); /* removed English-only voice */
+        if (s->source && !ReadJapanese(f, s->source, rom + s->dest, s->size))
+            continue; /* the English voice stays where it points */
+        if (!s->source)
+            memset(rom + s->dest, 0, s->size); /* removed English-only voice */
         Write32(rom + s->pointer, GBA_ROM + s->dest);
+        samples++;
     }
     for (i = 0; i < SDL_arraysize(kUndubSongs); i++) {
         const UndubSong* s = &kUndubSongs[i];
-        const uint8_t* from = sJapanese + s->source;
+        uint8_t* from = malloc((size_t)s->header + 12);
         uint8_t* to = rom + s->dest;
         int k, out = 0, running = -1;
+        if (from == NULL || !ReadJapanese(f, s->source, from, (uint32_t)s->header + 12)) {
+            free(from);
+            continue;
+        }
         /* Voice tracks contain only single-byte MIDI commands/arguments.
          * Remove redundant note opcodes and centre-pan commands, as Undub
          * does. The original header stays pinned for native gSongTable. */
@@ -95,8 +176,10 @@ void PortUndubApply(void) {
 #endif
         Write32(to + s->oldHeader + 4, Read32(from + s->header + 4) + groupDelta);
         Write32(to + s->oldHeader + 8, GBA_ROM + s->dest);
+        free(from);
+        songs++;
     }
-    PortLog("undub: %u Japanese samples, %u voice tracks loaded", (unsigned)SDL_arraysize(kUndubSamples),
-            (unsigned)SDL_arraysize(kUndubSongs));
+    fclose(f);
+    PortLog("undub: %u Japanese samples, %u voice tracks loaded (%s)", samples, songs, sPath);
 #endif
 }

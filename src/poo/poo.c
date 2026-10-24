@@ -810,8 +810,9 @@ void UpdatePoohAction(PoohWork* work, PooNode* node) {
         if (work->lookTimer <= 59) {
             targetLookAngle = work->lookAngle;
             // @bug node is NULL near the screen's edge (NULL read).
-            work->lookTarget = GetAngle(work->pos.x, work->pos.y, ((s32*)BIOS_PTR(BIOS_PTR(node)->pos))[0],
-                                        ((s32*)BIOS_PTR(BIOS_PTR(node)->pos))[1]);
+            // The open-bus word read through NULL is then used as a pointer: BUS_PTR decodes it like the bus.
+            work->lookTarget = GetAngle(work->pos.x, work->pos.y, BUS_PTR(s32*, BIOS_PTR(node)->pos)[0],
+                                        BUS_PTR(s32*, BIOS_PTR(node)->pos)[1]);
             ApproachAngle(&targetLookAngle, work->lookTarget, 4);
             work->lookAngle = targetLookAngle;
             work->lookTimer++;
@@ -1730,7 +1731,12 @@ u16 GetPooMapTile(u16 x, u16 y) {
     tx = (x >> 3) & 0x1F;
     ty = (y >> 3) & 0x1F;
     // @bug Reads past the end of gPooBg3MapBlocks off the map.
+#ifdef PLATFORM_PC
+    /* the word past the table is no pointer: read where the bus sends it (BUS_PTR) */
+    return *BUS_PTR(const u16*, (__UINTPTR_TYPE__)blocks[by * 16 + bx] + (ty * 32 + tx) * 2);
+#else
     return blocks[by * 16 + bx][ty * 32 + tx];
+#endif
 }
 
 u8 IsPooPosBlocked(PooPos* pos) {

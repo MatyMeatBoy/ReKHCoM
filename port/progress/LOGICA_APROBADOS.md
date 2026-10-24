@@ -94,3 +94,11 @@ Workflow completo (tiles, píxeles, pixel art, pruebas en x3 entero): WORKFLOW_A
 
 - Agrabah 109: aprobada **con honores** el 21/10. Borde diagonal completado con una tira donante intacta; puestos y grupos de jarrones completos intercalados con separaciones variadas, como arte de fondo y con paletas BG/OBJ activas. GBA y OAM intactos. Receta en AGRABAH_109_REVISION.md; mejoras incorporadas a WORKFLOW_ARTE_AMPLIO.md para la tanda Preliminar V1.
 
+- Jafar, sala de lava (Preliminar V2): aprobada el 24/10 ("se veía genial, quedaba muy bueno el efecto"). Encendida
+  para todos; `KHCOM_JAFAR_WIDE=0` la apaga. Pared, columnas, orilla y lava siguen por sus períodos de tiles; los
+  pilares móviles solo en la sala; un solo genio. Receta en BATTLE_SCENERY_TECHNIQUE.md punto 12 (`port_jafar.c`).
+
+- Integración (22/10): 107/108 y 109 encendidas por defecto para los jugadores; `KHCOM_AGRABAH_WIDE=0` /
+  `KHCOM_AGRABAH109_WIDE=0` las apagan en las pruebas. Regla: lo aprobado (o con honores) va encendido, nunca detrás
+  de una variable de prueba.
+

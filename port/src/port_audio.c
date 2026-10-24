@@ -13,6 +13,12 @@
 
 #include "m4a.h"
 #include "port/port.h"
+
+static int AudioLog(void) {
+    const char* v;
+    PORT_ENV_ONCE(v, SDL_getenv, "KHCOM_AUDIOLOG");
+    return v != NULL;
+}
 #include "port/port_audio.h"
 #include "port/port_state.h"
 
@@ -238,7 +244,7 @@ static void PsgRender(int n, int rate) {
         if (info != NULL && info->cgbChans != NULL) {
             const MusicPlayerTrack* t = info->cgbChans[ch].track;
             if (t != NULL && gMPlayInfo_BGM.tracks != NULL && t >= gMPlayInfo_BGM.tracks
-                && t < gMPlayInfo_BGM.tracks + MAX_MUSICPLAYER_TRACKS)
+                && t < gMPlayInfo_BGM.tracks + gMPlayInfo_BGM.trackCount) /* its own tracks only (m4a_port.c) */
                 gain[ch] = gPortMix.musicGain;
         }
     }
@@ -327,7 +333,9 @@ static void PsgRender(int n, int rate) {
             if (sPsg[ch].on)
                 nr52 |= 1 << ch;
         IO8(0x84) = nr52;
-        if ((nr51 & ((nr52 & 15) * 0x11)) && SDL_getenv("KHCOM_PSGLOG")) {
+        const char* psgLog;
+        PORT_ENV_ONCE(psgLog, SDL_getenv, "KHCOM_PSGLOG");
+        if ((nr51 & ((nr52 & 15) * 0x11)) && psgLog) {
             static int sLogged;
             if (sLogged++ < 20)
                 PortLog("psg: channels %x nr50 %02x nr51 %02x", nr52 & 15, nr50, nr51);
@@ -427,6 +435,29 @@ void PortAudioReset(void) {
     sQueuedAvg = -1.0f;
 }
 
+/* An HD movie takes the sound over (port_hdmovie.c): the game's output and the HD track fade out in 150 ms, so
+   nothing of the field's music plays under the movie and nothing stops with a pop; after it they are back at full
+   level and the game's output primes again as after a pause. */
+void PortAudioMovieHold(int hold) {
+    extern void PortHdMusicGain(float gain);
+    extern void PortHdMusicHold(void);
+    int i;
+    if (hold) {
+        for (i = 9; i >= 0; i--) {
+            if (sStream != NULL)
+                SDL_SetAudioStreamGain(sStream, i / 10.0f);
+            PortHdMusicGain(i / 10.0f);
+            SDL_Delay(15);
+        }
+        PortHdMusicHold();
+        PortAudioReset();
+    } else {
+        if (sStream != NULL)
+            SDL_SetAudioStreamGain(sStream, 1.0f);
+        PortHdMusicGain(1.0f);
+    }
+}
+
 int PortAudioInit(void) {
     SDL_AudioSpec out = { SDL_AUDIO_F32, 2, OUT_RATE };
 
@@ -478,7 +509,7 @@ static void Queue(int n, int rate) {
                 return;
             SDL_ResumeAudioStreamDevice(sStream);
             sStreamPriming = 0;
-            if (SDL_getenv("KHCOM_AUDIOLOG"))
+            if (AudioLog())
                 PortLog("audio: playback primed with %.0f samples at %d Hz", queued, rate);
         }
         if (sQueuedAvg < 0)
@@ -494,7 +525,7 @@ static void Queue(int n, int rate) {
         else
             ratio = 1.0f;
         SDL_SetAudioStreamFrequencyRatio(sStream, ratio);
-        if (SDL_getenv("KHCOM_AUDIOLOG")) {
+        if (AudioLog()) {
             static int sTick;
             if (++sTick % 60 == 0) {
                 SDL_AudioSpec src, dst;
@@ -542,10 +573,13 @@ static void SmoothFilter(int n, int rate) {
 /* While the options menu pauses the game: send the m4a mix only (its click);
    a movie or stream must not advance behind the menu. */
 void PortAudioMenuFrame(void) {
-    if (gPortMix.ready && InM4aBuffer(IO32(0xBC)))
+    extern void PortHdMusicHold(void);
+    if (gPortMix.ready && InM4aBuffer(IO32(0xBC))) {
         PortAudioFrame();
-    else
+    } else {
         gPortMix.ready = 0;
+        PortHdMusicHold(); /* the cartridge is silent: the HD track waits with it */
+    }
 }
 
 void PortAudioFrame(void) {
@@ -559,6 +593,7 @@ void PortAudioFrame(void) {
 
     gPortMix.musicGain = gPortConfig.musicVolume / 100.0f;
     gPortMix.sfxGain = gPortConfig.sfxVolume / 100.0f;
+    PortHdMusicFrame(); /* the imported HD track, if any, silences the cartridge's BGM channels */
 
     if (gPortMix.ready && InM4aBuffer(IO32(0xBC))) {
         /* m4a: FIFO A carries the right mix, FIFO B the left one. */

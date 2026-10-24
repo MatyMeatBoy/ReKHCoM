@@ -3,11 +3,13 @@
  * (port/ps5/shared/bridge_list.h) and starts the game. The image keeps its GBA space as arrays of its own
  * (PORT_GBA_RELOC), so nothing has to be mapped at the GBA's low addresses.
  *
- * Video is the PS4 host's software rasterizer (port/ps4/ps4_host.c: every draw is an axis-aligned quad) into a
- * 1280x720 frame that SDL2 uploads and scales; sound is an SDL2 audio queue at 48 kHz; controllers come from libnx.
+ * Video goes to the GPU: the game's quads are SDL2 textures drawn with SDL_RenderGeometry (issue #35: the software
+ * rasterizer held the console to 20-25 fps); sound is an SDL2 audio queue at 48 kHz; controllers and the touch screen
+ * come from libnx.
  *
  * With __vita__ (port/vita/build_vita.py) the same file is the PS Vita host: the game image is ARMv7 code linked into
- * the same executable (one per region), video is the same rasterizer into a 960x544 display buffer, sound a
+ * the same executable (one per region), video is the PS4 host's software rasterizer (port/ps4/ps4_host.c) into a
+ * 960x544 display buffer, sound a
  * sceAudioOut port and the controls sceCtrl.
  *
  * Without __SWITCH__ or __vita__ the same file is a headless Linux AArch64 test host (the frame stays in memory,
@@ -42,6 +44,9 @@
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/power.h>
 #define DATA_ROOT "ux0:data/ReKHCoM"
+#ifdef REKHCOM_VITA_GPU
+#include <SDL2/SDL.h>
+#endif
 int _newlib_heap_size_user = 64 * 1024 * 1024; /* textures of the rasterizer, the notices */
 unsigned int sceUserMainThreadStackSize = 4 * 1024 * 1024; /* the game runs on the main thread */
 #define REKHCOM_LINKED_GUEST
@@ -52,6 +57,12 @@ unsigned int sceUserMainThreadStackSize = 4 * 1024 * 1024; /* the game runs on t
 #endif
 
 #include "bridge.h"
+
+/* the picture on the GPU through SDL2: Switch, and the Vita built with REKHCOM_VITA_GPU (GXM); else the software
+   rasterizer below */
+#if defined(__SWITCH__) || (defined(__vita__) && defined(REKHCOM_VITA_GPU))
+#define HOST_GPU 1
+#endif
 
 #ifdef REKHCOM_LINKED_GUEST
 /* the game image is part of this executable (the Vita's, port/vita/build_vita.py) */
@@ -185,7 +196,11 @@ static void H_dir_close(int d) {
 
 /* ---- video: software rasterizer (as port/ps4/ps4_host.c) ----------------- */
 
-#ifdef __vita__
+#if defined(__vita__) && defined(HOST_GPU)
+#define FB_W 960
+#define FB_H 544
+#define PIX(c) (c)
+#elif defined(__vita__)
 #define FB_W 960
 #define FB_H 544
 /* the display reads A8B8G8R8: on the Vita the rasterizer keeps red and blue swapped from textures to screen */
@@ -196,13 +211,16 @@ static void H_dir_close(int d) {
 #define PIX(c) (c)
 #endif
 static int sW = FB_W, sH = FB_H;
+#ifndef HOST_GPU
 static uint32_t* sFb; /* XRGB */
 static int sPitch = FB_W;
+#endif
 static int sFrame; /* frames shown (the test host's --shot and KHCOM_PADS count them) */
-#ifdef __SWITCH__
+#ifdef HOST_GPU
 static SDL_Window* sWindow;
 static SDL_Renderer* sRenderer;
-static SDL_Texture* sScreen;
+static SDL_Texture* sGpuTex[4096];
+static int sGpuW[4096], sGpuSmooth[4096];
 #elif defined(__vita__)
 static void* sVram[2];
 static int sBack;
@@ -211,13 +229,16 @@ static int sShotFrame[16], sShots; /* --shot N file, repeatable */
 static const char* sShotFile[16];
 #endif
 
+static int sBlend = 1;
+#ifndef HOST_GPU
 typedef struct Tex {
     int w, h, smooth;
     uint32_t* argb;
 } Tex;
 static Tex sTex[4096];
-static int sClip[4], sHasClip, sBlend = 1;
+static int sClip[4], sHasClip;
 static int sColumns[FB_W];
+#endif
 
 static void H_gfx_size(int* w, int* h) {
     *w = sW;
@@ -225,17 +246,28 @@ static void H_gfx_size(int* w, int* h) {
 }
 
 static void VideoInit(void) {
-    sFb = calloc((size_t)FB_W * FB_H, 4);
-#ifdef __SWITCH__
+#ifdef HOST_GPU
+#ifdef __vita__
+    SDL_Init(SDL_INIT_VIDEO); /* the sound stays on sceAudioOut */
+#else
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+#endif
     sWindow = SDL_CreateWindow("ReKHCoM", 0, 0, FB_W, FB_H, SDL_WINDOW_FULLSCREEN);
     sRenderer = sWindow ? SDL_CreateRenderer(sWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC) : NULL;
-    sScreen = sRenderer ? SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, FB_W, FB_H) : NULL;
-    if (!sScreen)
+    if (!sRenderer) {
         Log("video: %s", SDL_GetError());
-    else
-        Log("video: %dx%d through SDL %s", FB_W, FB_H, SDL_GetCurrentVideoDriver());
-#elif defined(__vita__)
+        return;
+    }
+    SDL_RenderSetLogicalSize(sRenderer, FB_W, FB_H);
+    {
+        SDL_RendererInfo info;
+        SDL_GetRendererInfo(sRenderer, &info);
+        Log("video: %dx%d on the GPU (SDL %s, %s)", FB_W, FB_H, SDL_GetCurrentVideoDriver(), info.name);
+    }
+#else
+    sFb = calloc((size_t)FB_W * FB_H, 4);
+#endif
+#if defined(__vita__) && !defined(HOST_GPU)
     for (int i = 0; i < 2; i++) {
         SceUID block = sceKernelAllocMemBlock("display", SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW, 2 * 1024 * 1024, NULL);
         if (block < 0 || sceKernelGetMemBlockBase(block, &sVram[i]) < 0) {
@@ -250,13 +282,9 @@ static void VideoInit(void) {
 }
 
 static void Present(void) {
-#ifdef __SWITCH__
-    if (!sScreen)
-        return;
-    SDL_UpdateTexture(sScreen, NULL, sFb, FB_W * 4);
-    SDL_RenderClear(sRenderer);
-    SDL_RenderCopy(sRenderer, sScreen, NULL, NULL);
-    SDL_RenderPresent(sRenderer);
+#ifdef HOST_GPU
+    if (sRenderer)
+        SDL_RenderPresent(sRenderer);
 #elif defined(__vita__)
     if (sVram[0]) {
         SceDisplayFrameBuf fb = { sizeof(fb), sVram[sBack], FB_W, SCE_DISPLAY_PIXELFORMAT_A8B8G8R8, FB_W, FB_H };
@@ -284,6 +312,76 @@ static void Present(void) {
     sFrame++;
 }
 
+#ifdef HOST_GPU
+/* ---- video: the GPU (as port/android64/host/android64_host.c, SDL2 here) ---------------------------------------- */
+
+static void H_gfx_begin(uint32_t clear) {
+    if (!sRenderer)
+        return;
+    SDL_RenderSetClipRect(sRenderer, NULL);
+    SDL_SetRenderDrawColor(sRenderer, (clear >> 16) & 255, (clear >> 8) & 255, clear & 255, 255);
+    if (clear >> 24)
+        SDL_RenderClear(sRenderer);
+}
+static int H_tex_create(const void* rgba, int w, int h, int smooth) {
+    if (!sRenderer)
+        return -1;
+    for (int i = 0; i < 4096; i++)
+        if (!sGpuTex[i]) {
+            sGpuTex[i] = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, w, h);
+            if (!sGpuTex[i])
+                return -1;
+            SDL_UpdateTexture(sGpuTex[i], NULL, rgba, w * 4);
+            SDL_SetTextureBlendMode(sGpuTex[i], SDL_BLENDMODE_BLEND);
+            sGpuW[i] = w;
+            sGpuSmooth[i] = smooth;
+            return i;
+        }
+    return -1;
+}
+static void H_tex_update(int id, const void* rgba) { SDL_UpdateTexture(sGpuTex[id], NULL, rgba, sGpuW[id] * 4); }
+static void H_tex_free(int id) {
+    SDL_DestroyTexture(sGpuTex[id]);
+    sGpuTex[id] = NULL;
+}
+static void H_gfx_clip(int x, int y, int w, int h) {
+    SDL_Rect r = { x, y, w, h };
+    SDL_RenderSetClipRect(sRenderer, w > 0 ? &r : NULL);
+}
+static void H_gfx_blend(int on) { sBlend = on; }
+
+/* HostVertex triangles; the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters (port/ps5/guest/src/sdl_shim.c):
+   those are drawn crisp (nearest), as the software hosts read them */
+static void H_gfx_draw(int id, const void* verts, int count) {
+    const HostVertex* v = verts;
+    SDL_Texture* t = id >= 0 && id < 4096 ? sGpuTex[id] : NULL;
+    static SDL_Vertex out[8192];
+    int crisp = 0;
+    float shift = 0;
+    if ((id >= 0 && !t) || !sRenderer)
+        return;
+    if (count > 8192)
+        count = 8192;
+    if (count > 0 && t) {
+        shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
+        crisp = shift > 0;
+        SDL_SetTextureScaleMode(t, crisp || !sGpuSmooth[id] ? SDL_ScaleModeNearest : SDL_ScaleModeLinear);
+        SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    }
+    for (int i = 0; i < count; i++) {
+        out[i].position.x = v[i].x;
+        out[i].position.y = v[i].y;
+        out[i].tex_coord.x = v[i].u - shift;
+        out[i].tex_coord.y = v[i].v;
+        out[i].color.r = (v[i].argb >> 16) & 255;
+        out[i].color.g = (v[i].argb >> 8) & 255;
+        out[i].color.b = v[i].argb & 255;
+        out[i].color.a = v[i].argb >> 24;
+    }
+    SDL_SetRenderDrawBlendMode(sRenderer, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    SDL_RenderGeometry(sRenderer, t, out, count, NULL, 0);
+}
+#else
 static void H_gfx_begin(uint32_t clear) {
     sHasClip = 0;
     if (clear >> 24)
@@ -487,6 +585,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         }
     }
 }
+#endif
 
 static const char* sAssetRoot = "assets";
 static int sToast = -1, sToastW, sToastH;
@@ -518,7 +617,7 @@ static void DrawBox(int id, int w, int h, float y0, uint32_t tint) {
     float k = sW / 1920.0f, dw = w * k, dh = h * k, x0 = (sW - dw) / 2;
     HostVertex q[6] = { { x0, y0, 0, 0, tint }, { x0 + dw, y0, 1, 0, tint }, { x0, y0 + dh, 0, 1, tint },
                         { x0 + dw, y0, 1, 0, tint }, { x0, y0 + dh, 0, 1, tint }, { x0 + dw, y0 + dh, 1, 1, tint } };
-    sHasClip = 0;
+    H_gfx_clip(0, 0, 0, 0);
     sBlend = 1;
     H_gfx_draw(id, q, 6);
 }
@@ -579,7 +678,9 @@ static int AudioThread(SceSize args, void* argp) {
 static double sRatio = 1.0, sPos;
 static int16_t sLast[2];
 
+static int sGameRate = 48000; /* the rate the game opened the audio at */
 static int H_audio_open(int rate) {
+    sGameRate = rate;
 #ifdef __SWITCH__
     if (sAudio)
         return 0;
@@ -630,7 +731,7 @@ static void Queue(const int16_t* f, uint32_t n) {
 #endif
 }
 
-static void H_audio_push(const int16_t* frames, uint32_t count) {
+static void GamePush(const int16_t* frames, uint32_t count) {
     static int16_t* out;
     static size_t cap;
     if (!count)
@@ -665,6 +766,18 @@ static void H_audio_push(const int16_t* frames, uint32_t count) {
     sLast[0] = frames[count * 2 - 2];
     sLast[1] = frames[count * 2 - 1];
     Queue(out, (uint32_t)n);
+}
+
+/* HD music: the host decodes the track the game names and mixes it into the game's blocks (shared/hd_music_host.h) */
+#define HD_MUSIC_LOG Log
+#include "hd_music_host.h"
+/* the network link's socket (shared/udp_host.h): none on this host yet, the link stays the cable */
+#include "udp_host.h"
+static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
+/* HD movies: only the Android host plays them (bridge entry hd_movie); the game plays its own movie */
+static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
+    (void)movie, (void)subs1, (void)subs2, (void)font;
+    return 0;
 }
 static uint32_t H_audio_queued(void) {
 #ifdef __SWITCH__
@@ -721,8 +834,12 @@ static int H_pad_poll(HostPad* out, int count) {
     for (size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++)
         if (b & map[i].key)
             out[0].buttons |= 1u << map[i].bit;
-    if ((b & HidNpadButton_Minus) && (b & (HidNpadButton_StickL | HidNpadButton_StickR)))
+    /* Minus + Plus held three seconds opens the options, the PS consoles' touchpad hold (issue #36) */
+    if ((b & HidNpadButton_Minus) && (b & (HidNpadButton_StickL | HidNpadButton_StickR | HidNpadButton_Plus)))
         out[0].buttons |= 1u << 16;
+    /* the game does not see that Select + Start (A + B + Select + Start, the soft reset, still reaches it) */
+    if ((b & HidNpadButton_Minus) && (b & HidNpadButton_Plus) && !(b & (HidNpadButton_A | HidNpadButton_B)))
+        out[0].buttons &= ~((1u << 2) | (1u << 3));
     out[0].lx = (int16_t)SDL_clamp(l.x, -32767, 32767);
     out[0].ly = (int16_t)SDL_clamp(-l.y, -32767, 32767);
     out[0].rx = (int16_t)SDL_clamp(r.x, -32767, 32767);
@@ -781,6 +898,25 @@ static int H_pad_poll(HostPad* out, int count) {
 }
 static int H_quit_requested(void) { return sQuit; }
 static void H_set_title(const char* s) { (void)s; }
+#ifdef __SWITCH__
+/* the handheld touch screen, normalized as SDL fingers (touch_android.c's options button, issue #35) */
+static int H_touch_poll(HostTouch* fingers, int max) {
+    HidTouchScreenState st = { 0 };
+    int n = 0;
+    if (hidGetTouchScreenStates(&st, 1))
+        for (int i = 0; i < st.count && n < max; i++, n++) {
+            fingers[n].id = st.touches[i].finger_id;
+            fingers[n].x = st.touches[i].x / 1280.0f;
+            fingers[n].y = st.touches[i].y / 720.0f;
+        }
+    return n;
+}
+#else
+/* no touch screen here (bridge entry of the Android 64-bit host) */
+static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
+#endif
+/* no background state here */
+static int H_app_state(void) { return 0; }
 
 #ifndef REKHCOM_LINKED_GUEST
 /* ---- the game image: a Mach-O executable of 32-bit load commands ---------------------------------------------- */
@@ -954,6 +1090,7 @@ int main(int argc, char** argv) {
 #ifdef __SWITCH__
     (void)argc, (void)argv;
     padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    hidInitializeTouchScreen();
     padInitializeDefault(&sPad);
     romfsInit();
     sAssetRoot = "romfs:/assets";
@@ -1050,7 +1187,8 @@ int main(int argc, char** argv) {
         HM(sin, (double (*)(double))sin), HM(cos, (double (*)(double))cos), HM(tan, (double (*)(double))tan),
         HM(atan2, (double (*)(double, double))atan2), HM(pow, (double (*)(double, double))pow), HM(exp, (double (*)(double))exp),
         HM(log_e, (double (*)(double))log), HM(fmod, (double (*)(double, double))fmod), HM(sinf, (float (*)(float))sinf),
-        HM(cosf, (float (*)(float))cosf), HM(powf, (float (*)(float, float))powf), HF(set_title), HF(notify),
+        HM(cosf, (float (*)(float))cosf), HM(powf, (float (*)(float, float))powf), HF(set_title), HF(notify), HF(touch_poll), HF(app_state), HF(hd_music), HF(hd_movie),
+        HF(udp_open), HF(udp_resolve), HF(udp_send), HF(udp_recv),
     };
     for (int i = 0; i < HF_COUNT; ++i)
         if (!t[i]) {

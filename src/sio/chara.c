@@ -535,6 +535,15 @@ u8 SioHasError() {
     return FALSE;
 }
 
+/* frames an accepted side waits for the other's accept: the cable answers at once; over the network the other's
+   words come a round trip later (port/progress/ONLINE_ESTUDIO.md), so it waits up to two seconds */
+#ifdef PLATFORM_PC
+#include "port/port_netlink.h"
+#define SIO_CONNECT_RETRY_LIMIT (PortNetlinkRole() ? 120 : 10)
+#else
+#define SIO_CONNECT_RETRY_LIMIT 10
+#endif
+
 #ifdef VERSION_JP
 #define SIO_CONNECT_ID 0xC0F0
 #else
@@ -693,7 +702,7 @@ s32 SioConnectRecv() {
         } else {
             gSioConnectRetries++;
 
-            if (gSioConnectRetries > 10) {
+            if (gSioConnectRetries > SIO_CONNECT_RETRY_LIMIT) {
                 return SIO_LINK_RESULT_ERROR;
             }
         }
@@ -735,7 +744,7 @@ s32 SioConnectRecvAuto() {
         } else {
             gSioConnectRetries++;
 
-            if (gSioConnectRetries > 10) {
+            if (gSioConnectRetries > SIO_CONNECT_RETRY_LIMIT) {
                 return SIO_LINK_RESULT_ERROR;
             }
         }

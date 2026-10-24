@@ -33,6 +33,10 @@
 #include <stddef.h>
 #include "sprite_palettes.h"
 #include "macros.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#include "port/port_hdsprites.h"
+#endif
 
 enum WorldWarpState {
     WORLD_WARP_STATE_BARS_IN,
@@ -365,6 +369,15 @@ void WorldWarpDraw() {
         DrawSprite(0x80, sWorldWarpBarY[0] >> 8, gWorldWarpBarFrame1, sWorldWarpBarTiles, sWorldWarpBarPalette, NULL, SPRITE_PRIORITY(3), 0xBB9);
         DrawSprite(0x80, sWorldWarpBarY[1] >> 8, gWorldWarpBarFrame2, sWorldWarpBarTiles, sWorldWarpBarPalette, NULL, SPRITE_PRIORITY(3), 0xBB9);
     }
+#ifdef PLATFORM_PC
+    /* this version stops drawing the title sprite while selecting: the BG copy stays, the HD banner goes over it */
+    else {
+        int level = (int)(gFadeWork->amount >> 8) * 255 / 31;
+        PortHdStillSprite(gWorldWarpBarTiles, gWorldWarpBarFrame0, sWorldWarpBarX >> 8, 0,
+                          gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
+                          gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
+    }
+#endif
 #endif
 
     if (sWorldWarpState == WORLD_WARP_STATE_SELECT) {

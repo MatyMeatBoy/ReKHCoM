@@ -114,7 +114,11 @@ void PortAchievementToastDraw(void* opaqueRenderer, int width, int height) {
     if (!sCount || width < 96 || height < 64) return;
     /* Only the explicitly labelled preview harness may use deterministic
      * frame time, so video encoding speed cannot change its captured motion. */
-    if (SDL_getenv("KHCOM_ACHIEVEMENT_PREVIEW") && SDL_getenv("KHCOM_TOAST_FRAMECLOCK"))
+    const char* preview;
+    const char* frameClock;
+    PORT_ENV_ONCE(preview, SDL_getenv, "KHCOM_ACHIEVEMENT_PREVIEW");
+    PORT_ENV_ONCE(frameClock, SDL_getenv, "KHCOM_TOAST_FRAMECLOCK");
+    if (preview && frameClock)
         now = (++sPreviewClock * 1000) / 60;
     if (sVisible && sOutputWidth != width) {
         if (!Prepare(renderer, width)) return;

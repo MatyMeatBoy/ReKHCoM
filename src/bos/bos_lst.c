@@ -2482,7 +2482,12 @@ u8 task_bos_lst_1(BosLstWork* work) {
     obj = &work->body;
     alive = 1;
     work->offsetX = work->offsetX / 512;
+#ifdef PLATFORM_PC
+    /* @bug: a frame before the maximum HP is set divides by zero (the gauges' #40 class) */
+    work->hpRatio = work->body.maxHp > 0 ? (work->body.hp * 255) / work->body.maxHp : 0;
+#else
     work->hpRatio = (work->body.hp * 255) / work->body.maxHp;
+#endif
     btl = &gBtlWork;
     actor = (*btl)->actor;
     actor->flags |= BTLOBJ_FLAG_HIDE_SHADOW;
@@ -2794,6 +2799,9 @@ void task_bos_lst_2(BosLstWork* work) {
             DmaCopy16(3, src + 169, &work->bgMap[10 * 32 + 18], 0x1C);
         }
 
+#ifdef PLATFORM_PC
+        PortMarluxiaBodyMap(work->bgMap); /* whole, before the rows off the screen are cleared */
+#endif
         if (sy < 0) {
             CpuFastFill(0, work->bgMap, ((-sy) >> 3) * 64);
         } else if (sy <= DISPLAY_HEIGHT - 1) {

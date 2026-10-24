@@ -3732,6 +3732,9 @@ u8 StaffRollShowTitleBg(StaffRollWork* work) {
         LoadBgTiles(2, gTitleLogoBgTiles, sizeof(gTitleLogoBgTiles));
         LoadBgMap(2, gTitleLogoBgMap, 0x400);
         LoadBgPalette(2, gTitleLogoBgPalette, sizeof(gTitleLogoBgPalette));
+#ifdef PLATFORM_PC
+        PortTitleLogoBg(1); /* the title's logo closes the credits: HD with the HD title */
+#endif
         SetBgAffine(2, 0, Q_8_8(1), Q_8_8(1), 0x7800, 0x5C00);
         work->creditsState = STAFF_ROLL_TITLE_BG_STATE_FADE_IN;
         work->creditsTimer = 0;
@@ -4530,6 +4533,9 @@ void mode_StaffRoll_1() {
 }
 
 void mode_StaffRoll_2() {
+#ifdef PLATFORM_PC
+    PortTitleLogoBg(0);
+#endif
     StaffRollWork* work;
 
     work = sStaffRollWork;

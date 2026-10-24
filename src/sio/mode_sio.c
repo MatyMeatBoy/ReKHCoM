@@ -149,6 +149,16 @@ void mode_sio_battle_0(s32 arg) {
     s32 i;
 
     sSioBattleWork = EwramAlloc(sizeof(SioBattleWork));
+#ifdef PLATFORM_PC
+    {
+        /* online with a lobby (port_lobby.c): the rooms first, unless a link is already going (back from a battle) */
+        extern int PortLobbyWanted(void);
+        extern void PortUiOpenLobby(void);
+        extern int NetLinkConnected(void);
+        if (PortLobbyWanted() && !NetLinkConnected())
+            PortUiOpenLobby();
+    }
+#endif
     FadeStartIn(FADE_MODE_BLACK, 16);
     SetBgMode0();
     SetupBg(0, 0, 7, 0);

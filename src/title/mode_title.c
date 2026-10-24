@@ -146,6 +146,7 @@ void TitleFinishIntro() {
 
 #ifdef PLATFORM_PC
     PortTitleBands(1);
+    PortTitleArtFadeFirst(0); /* BG0 takes the press-start bar */
 #endif
     SetBgBlend(0, 5, 16);
     EnableBg(1);
@@ -166,6 +167,7 @@ void PortUiIntroSkipReset(void);
 void mode_title_0() {
 #ifdef PLATFORM_PC
     PortUiIntroSkipReset(); /* the logos' skip prompt, if it was still up */
+    PortTitleLogoBg(1);     /* BG2 is the logo: HD with the HD title */
     PortTitleBands(0);
     PortSideStyle(PORT_SIDE_COLOR); /* side bars in the screen's background colour */
 #endif
@@ -174,6 +176,7 @@ void mode_title_0() {
 #ifdef PLATFORM_PC
     /* Riku's illustration already ends in white within the native canvas. */
     PortTitleArtFade(!(gGameState.flags & GAME_FLAG_RIKU_TITLE));
+    PortTitleArtFadeFirst(!(gGameState.flags & GAME_FLAG_RIKU_TITLE));
 #endif
     SaveLoadHeader();
     InitMapCardInventory();
@@ -245,10 +248,15 @@ void mode_title_0() {
 #ifdef PLATFORM_PC
 void PortUiTitleHint(void);
 void PortUiOpenOptions(void);
+int PortUiNeedsModeChoice(void);
+void PortUiOpenModeChoice(void);
 #endif
 
 void mode_title_1() {
 #ifdef PLATFORM_PC
+    /* the first start: the graphics mode (HD, GBA enhanced, GBA classic) before anything else */
+    if (PortUiNeedsModeChoice())
+        PortUiOpenModeChoice();
     /* PC options: offered on the "press start" and menu screens. */
     if (sTitleState == TITLE_STATE_PRESS_START || sTitleState == TITLE_STATE_MENU) {
         PortUiTitleHint();
@@ -472,7 +480,9 @@ void mode_title_1() {
 
 void mode_title_2() {
 #ifdef PLATFORM_PC
+    PortTitleLogoBg(0);
     PortTitleArtFade(0);
+    PortTitleArtFadeFirst(0);
     PortTitleBands(0);
 #endif
     TaskPoolDestroy(&sTitleTaskPool);

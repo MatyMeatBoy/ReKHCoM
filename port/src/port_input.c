@@ -13,7 +13,7 @@
 
 extern Mode* gCurrentMode;
 extern Mode gModeBattle;
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
 #endif
 
@@ -133,7 +133,7 @@ void PortInputInit(void) {
 void PortInputHandleEvent(const void* p) {
     const SDL_Event* ev = (const SDL_Event*)p;
     size_t i;
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
     PortAndroidTouchEvent(p);
 #endif
 
@@ -224,7 +224,7 @@ uint16_t PortInputKeys(void) {
     uint16_t keys = sKeyboard;
     SDL_JoystickID* ids;
     int count, i;
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
     keys |= PortAndroidTouchKeys();
 #endif
 

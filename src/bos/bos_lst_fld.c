@@ -467,6 +467,9 @@ void BosLstFldSetScrollSpeed(Task* task, s32 speed) {
 void task_bos_lst_fld_0(LstFldWork* work, LstFldArg* arg) {
     s32 i;
 
+#ifdef PLATFORM_PC
+    PortMarluxiaField(1);
+#endif
     LoadBgTiles(0, arg->tiles, arg->tilesSize);
     LoadBgPalette(0, arg->palette, arg->paletteSize);
     gBtlWork->scale = Q_8_8(1);
@@ -718,5 +721,8 @@ void task_bos_lst_fld_2() {
 }
 
 void task_bos_lst_fld_3(LstFldWork* work) {
+#ifdef PLATFORM_PC
+    PortMarluxiaField(0);
+#endif
     ScanlineDmaReset();
 }

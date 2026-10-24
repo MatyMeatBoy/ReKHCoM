@@ -460,6 +460,17 @@ s32 task_btl_map_1(BtlMapWork* work) {
     SetBgAffine(gBtlWork->mapBg, gBtlWork->rotation, gBtlWork->scale,
                   gBtlWork->scale, gBtlWork->viewX,
                   gBtlWork->viewY + 0x2800);
+#ifdef PLATFORM_PC
+    {
+        extern int PortBtlCamTrace(void);
+        extern void PortLog(const char* fmt, ...);
+        if (PortBtlCamTrace())
+            PortLog("btlcam bg %d scale %d view %x,%x target %x,%x lim x %x-%x y %x-%x", gBtlWork->mapBg,
+                    gBtlWork->scale, (unsigned)gBtlWork->viewX, (unsigned)gBtlWork->viewY, (unsigned)gBtlWork->x2,
+                    (unsigned)gBtlWork->y2, (unsigned)work->xMin, (unsigned)work->xMax, (unsigned)work->yMin,
+                    (unsigned)work->yMax);
+    }
+#endif
     return 1;
 }
 

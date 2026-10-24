@@ -22,7 +22,7 @@ PortConfig gPortConfig = {
     1,                  /* narrowFit */
     0,                  /* scanlines */
     0,                  /* colorCorrection */
-    0,                  /* frameSkip */
+    1,                  /* frameSkip: a late frame is not drawn, the logic stays exact (test_frameskip.py) */
     0,                  /* showFps */
     4,                  /* windowScale */
     0,                  /* fullscreenWidth: 0 = the desktop's resolution */
@@ -75,6 +75,9 @@ PortConfig gPortConfig = {
 #define CONFIG_VERSION PORT_ZOOM_CONFIG_VERSION
 
 static int sConfigVersion;
+/* a settings file from before the graphics modes (no graphics_mode line): the player's own settings, which "GBA
+   enhanced" keeps as they are when the first start asks for a mode */
+static int sUpgradedSettings;
 static char sDataPath[768];
 
 void PortConfigSetDataPath(const char* path) {
@@ -109,6 +112,7 @@ static const Key sKeys[] = {
     { "scanlines", &gPortConfig.scanlines, 0, 100 },
     { "color_correction", &gPortConfig.colorCorrection, 0, 1 },
     { "show_fps", &gPortConfig.showFps, 0, 1 },
+    { "experimental_frame_skip", &gPortConfig.frameSkip, 0, 1 },
     { "window_scale", &gPortConfig.windowScale, 1, 8 },
     { "fullscreen_width", &gPortConfig.fullscreenWidth, 0, 16384 },
     { "fullscreen_height", &gPortConfig.fullscreenHeight, 0, 16384 },
@@ -119,6 +123,17 @@ static const Key sKeys[] = {
     { "stock_button", &gPortConfig.stockButton, 0, 1 },
     { "pad_layout", &gPortConfig.padLayout, 0, 2 },
     { "discord_presence", &gPortConfig.discordPresence, 0, 1 },
+    { "net_stats", &gPortConfig.netStats, 0, 1 },
+    { "net_delay", &gPortConfig.netDelay, 0, 8 },
+    { "hd_movies", &gPortConfig.hdMovies, 0, 1 },
+    { "hd_music", &gPortConfig.hdMusic, 0, 1 },
+    { "hd_scenes", &gPortConfig.hdScenes, 0, 1 },
+    { "hd_subtitles", &gPortConfig.hdSubtitles, 0, 1 },
+    { "hd_cards", &gPortConfig.hdCards, 0, 1 },
+    { "hd_title", &gPortConfig.hdTitle, 0, 1 },
+    { "graphics_mode", &gPortConfig.graphicsMode, 0, PORT_MODE_COUNT - 1 },
+    { "graphics_mode_applied", &gPortConfig.graphicsModeApplied, 0, PORT_MODE_COUNT - 1 },
+    { "gba_border", &gPortConfig.gbaBorder, 0, 3 },
     { "invert_card_scroll", &gPortConfig.invertCardScroll, 0, 1 },
     { "game_language", &gPortConfig.gameLanguage, 0, 5 },
     { "experimental_moogle_notice", &gPortConfig.moogleNotice, 0, 1 },
@@ -291,15 +306,54 @@ void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* sca
     gPortAutoScaleF = f;
 }
 
+/* Test harness: KHCOM_CONFIG="key=value;key=value" sets settings over kh_com.ini (the batteries run with the HD
+   options on without writing each case's file). */
+static void ApplyEnvConfig(void) {
+    const char* env = SDL_getenv("KHCOM_CONFIG");
+    char buf[512], *item, *next;
+    size_t i;
+    if (!env)
+        return;
+    SDL_strlcpy(buf, env, sizeof(buf));
+    for (item = buf; item; item = next) {
+        char* eq;
+        next = SDL_strchr(item, ';');
+        if (next)
+            *next++ = ' ';
+        eq = SDL_strchr(item, '=');
+        if (!eq)
+            continue;
+        *eq = ' ';
+        for (i = 0; i < sizeof(sKeys) / sizeof(sKeys[0]); i++)
+            if (SDL_strcmp(Trim(item), sKeys[i].name) == 0)
+                *sKeys[i].value = SDL_clamp(SDL_atoi(eq + 1), sKeys[i].min, sKeys[i].max);
+    }
+}
+
+static void PortConfigLoadFile(void);
+
 void PortConfigLoad(void) {
+    PortConfigLoadFile();
+    ApplyEnvConfig();
+}
+
+static void PortConfigLoadFile(void) {
     FILE* f = fopen(PortConfigPath("kh_com.ini"), "r");
     char line[256];
 
     gPortConfig.discordPresence = 1; /* on unless the file says otherwise */
+    gPortConfig.netStats = 1;        /* the online alpha: the network line shows unless turned off */
+#ifdef PORT_SWITCH
+    gPortConfig.hideTouchControls = 1; /* the console has buttons; Minus + Plus held opens the options (issue #36) */
+#endif
+    gPortConfig.hdSubtitles = 1;
+    gPortConfig.hdMovies = 1;        /* the HD mod is used once imported (HD_MOD.md); the full scenes mod is opt-in */
+    gPortConfig.hdMusic = 1;
 
     /* a package preset (the Steam Deck's fullscreen) ships as
        kh_com.default.ini, so an update extracted over an install never
        replaces the player's own kh_com.ini */
+    sUpgradedSettings = f != NULL; /* the player's own file (not the package's preset) */
     if (f == NULL)
         f = fopen(PortConfigPath("kh_com.default.ini"), "r");
     if (f == NULL)
@@ -308,9 +362,15 @@ void PortConfigLoad(void) {
         char* eq = strchr(line, '=');
         size_t i;
 
+        if (SDL_strncmp(line, "graphics_mode=", 14) == 0)
+            sUpgradedSettings = 0;
         if (line[0] == '#' || line[0] == ';' || eq == NULL)
             continue;
         *eq = '\0';
+        if (SDL_strcmp(Trim(line), "online_name") == 0) { /* the one text setting */
+            SDL_strlcpy(gPortConfig.onlineName, Trim(eq + 1), sizeof(gPortConfig.onlineName));
+            continue;
+        }
         for (i = 0; i < sizeof(sKeys) / sizeof(sKeys[0]); i++) {
             if (SDL_strcmp(Trim(line), sKeys[i].name) == 0) {
                 int v = SDL_atoi(eq + 1);
@@ -362,12 +422,42 @@ void PortConfigLoad(void) {
        KHCOM_HD_HUD_DEV=1 (then kh_com.ini's hd_hud applies). */
     if (!SDL_getenv("KHCOM_HD_HUD_DEV"))
         gPortConfig.hdHud = 0;
+    /* the launcher changed the graphics mode: its presets now */
+    if (gPortConfig.graphicsMode != PORT_MODE_CHOOSE && gPortConfig.graphicsMode != gPortConfig.graphicsModeApplied)
+        PortApplyGraphicsMode(gPortConfig.graphicsMode);
 #ifndef PORT_HD2D
     /* HD-2D look: pending as well (too many scenes still wrong); forced off
        outside its own build unless KHCOM_HD2D_DEV=1. */
     if (!SDL_getenv("KHCOM_HD2D_DEV"))
         gPortConfig.hd2d = 0;
 #endif
+}
+
+/* A graphics mode's presets (the player can change any of them afterwards in Options or the launcher):
+   HD: every HD asset of the imported mod and every improvement on; GBA enhanced: the port's improvements (wide
+   view, one-button controls) with the HD extras off; GBA classic: everything off, the GBA picture at a whole scale
+   with a decorative border, almost an emulator but native. */
+void PortApplyGraphicsMode(int mode) {
+    extern void PortSetQolButtons(int on);
+    int hd = mode == PORT_MODE_HD, classic = mode == PORT_MODE_GBA_CLASSIC;
+    if (mode <= PORT_MODE_CHOOSE || mode >= PORT_MODE_COUNT)
+        return;
+    gPortConfig.graphicsMode = gPortConfig.graphicsModeApplied = mode;
+    if (mode == PORT_MODE_GBA_ENHANCED && sUpgradedSettings) { /* an update: the player's settings are that mode */
+        sUpgradedSettings = 0;
+        return;
+    }
+    sUpgradedSettings = 0;
+    gPortConfig.viewMode = classic ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
+    gPortConfig.hdText = hd;
+    gPortConfig.hdCards = hd;
+    gPortConfig.hdTitle = hd;
+    gPortConfig.hdMusic = hd;
+    gPortConfig.hdMovies = !classic; /* HD intros (opening, credits, endings): on unless GBA Original */
+    gPortConfig.hdSubtitles = !classic;
+    gPortConfig.hdScenes = hd;
+    PortSetQolButtons(!classic);
+    gPortConfig.gbaBorder = classic ? (gPortConfig.gbaBorder ? gPortConfig.gbaBorder : 1) : 0;
 }
 
 void PortConfigSave(void) {
@@ -380,6 +470,8 @@ void PortConfigSave(void) {
     sConfigVersion = CONFIG_VERSION;
     for (i = 0; i < sizeof(sKeys) / sizeof(sKeys[0]); i++)
         fprintf(f, "%s=%d\n", sKeys[i].name, *sKeys[i].value);
+    if (gPortConfig.onlineName[0])
+        fprintf(f, "online_name=%s\n", gPortConfig.onlineName);
     fclose(f);
 #ifdef __EMSCRIPTEN__
     EM_ASM({ if(Module.persistSoon)Module.persistSoon(); });

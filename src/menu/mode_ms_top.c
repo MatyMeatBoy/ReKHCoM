@@ -38,6 +38,9 @@
 #include "sprite_palettes.h"
 #include "card_message_data.h"
 #include "jiminy_records_index_data.h"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#endif
 
 enum MsTopState {
     MS_TOP_STATE_BARS_IN,
@@ -331,6 +334,24 @@ void MsTopDraw() {
     s32 i;
     u16 flags;
 
+#ifdef PLATFORM_PC
+    /* the title's HD banner: the sprite stays over the BG copy the shop switches to once it has slid in */
+    if (!sMsTopBarVisible && sMsTopBarTiles != NULL &&
+        PortHdSpriteFind(sMsTopBarTiles->src,
+#ifdef VERSION_EU
+                         sMsTopTitleSpritesByLanguage[gLanguage]
+#else
+                         gMsTopBarFrame0
+#endif
+                         ))
+        DrawSprite(0, 0,
+#ifdef VERSION_EU
+                   sMsTopTitleSpritesByLanguage[gLanguage],
+#else
+                   gMsTopBarFrame0,
+#endif
+                   sMsTopBarTiles, sMsTopBarPalette, NULL, SPRITE_PRIORITY(1), 0x7D0); /* over BG2 */
+#endif
     if (sMsTopBarVisible) {
 #ifdef VERSION_EU
         DrawSprite(sMsTopBarX >> 8, 0, sMsTopTitleSpritesByLanguage[gLanguage], sMsTopBarTiles, sMsTopBarPalette, NULL, SPRITE_PRIORITY(2), 0x7D0);

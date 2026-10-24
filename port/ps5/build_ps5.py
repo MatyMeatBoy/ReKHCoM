@@ -63,6 +63,30 @@ PORT_PATCHES = {
 PORT_EXCLUDED = {'port_memory', 'port_sections', 'port_state', 'port_hdtext', 'port_watchdog', 'port_biosfault'}
 
 
+def patched_source(src, folder):
+    """src with its PORT_PATCHES applied, written to folder (only when the text changes, so builds stay incremental).
+    The console images (PS5, PS4, Switch, Vita, Android 64-bit) all compile these copies."""
+    text = src.read_text(encoding='utf-8')
+    for patch in PORT_PATCHES[src.name]:
+        if len(patch) == 4:  # (start marker, end marker, old, new): replaced between the markers only
+            start, end, old, new = patch
+            a = text.find(start)
+            b = text.find(end, a)
+            if a < 0 or b < 0 or old not in text[a:b]:
+                sys.exit(f'{src.name}: the PS5 patch no longer applies')
+            text = text[:a] + text[a:b].replace(old, new) + text[b:]
+            continue
+        anchor, new = patch
+        if text.count(anchor) != 1:
+            sys.exit(f'{src.name}: the PS5 patch no longer applies')
+        text = text.replace(anchor, new)
+    patched = folder / src.name
+    patched.parent.mkdir(parents=True, exist_ok=True)
+    if not patched.exists() or patched.read_text(encoding='utf-8') != text:
+        patched.write_text(text, encoding='utf-8', newline='\n')
+    return patched
+
+
 def run(cmd, **kw):
     r = subprocess.run([str(c) for c in cmd], **kw)
     if r.returncode:
@@ -94,8 +118,11 @@ def compile_all(jobs, units):
         if obj.exists() and obj.stat().st_mtime >= src.stat().st_mtime and not os.environ.get('REBUILD'):
             dep = obj.with_suffix('.d')
             if dep.exists():
-                newest = max((Path(p).stat().st_mtime for p in re.findall(r'(/[^\s\\]+)', dep.read_text()) if Path(p).exists()),
-                             default=0)
+                # make syntax: "obj: dep dep \" lines, spaces inside a path escaped as "\ " (Windows: C:/Users/.../00\ Claude)
+                text = dep.read_text().replace('\\\n', ' ')
+                text = text[re.search(r':\s', text).end():] if re.search(r':\s', text) else ''
+                paths = [p.replace('\\ ', ' ').strip() for p in re.findall(r'(?:\\ |\S)+', text)]
+                newest = max((Path(p).stat().st_mtime for p in paths if Path(p).exists()), default=0)
                 if newest <= obj.stat().st_mtime:
                     return None
         cmd = [CLANG, *extra, '-MD', '-MF', obj.with_suffix('.d'), '-c', src, '-o', obj]
@@ -134,24 +161,7 @@ def build_guest(region, jobs):
         if src.stem in PORT_EXCLUDED:
             continue
         if src.name in PORT_PATCHES:
-            text = src.read_text()
-            for patch in PORT_PATCHES[src.name]:
-                if len(patch) == 4:  # (start marker, end marker, old, new): replaced between the markers only
-                    start, end, old, new = patch
-                    a = text.find(start)
-                    b = text.find(end, a)
-                    if a < 0 or b < 0 or old not in text[a:b]:
-                        sys.exit(f'{src.name}: the PS5 patch no longer applies')
-                    text = text[:a] + text[a:b].replace(old, new) + text[b:]
-                    continue
-                anchor, new = patch
-                if text.count(anchor) != 1:
-                    sys.exit(f'{src.name}: the PS5 patch no longer applies')
-                text = text.replace(anchor, new)
-            patched = out / 'patched' / src.name
-            patched.parent.mkdir(parents=True, exist_ok=True)
-            patched.write_text(text)
-            src = patched
+            src = patched_source(src, out / 'patched')
         units.append((src, out / 'port' / (src.stem + '.o'), port_flags))
     units.append((pc / 'rom_relocs.c', out / 'port/rom_relocs.o', port_flags))
     for src in sorted((HERE / 'guest/src').glob('*.c')):
@@ -161,8 +171,11 @@ def build_guest(region, jobs):
     compile_all(jobs, units)
     objects = [u[1] for u in units]
     elf = out / 'guest.elf'
+    # the object list goes in a response file: from a deep Windows folder it passes the 32 K command line limit
+    rsp = out / 'guest_objects.rsp'
+    rsp.write_text('\n'.join('"' + str(o).replace('\\', '/') + '"' for o in objects) + '\n', encoding='utf-8')
     run([LLD, '-m', 'elf32_x86_64', '-static', '--no-gc-sections', '-T', HERE / 'guest/guest.ld', '-Map', out / 'guest.map',
-         '-o', elf, *objects])
+         '-o', elf, f'@{rsp}'])
     binary = out / 'guest.bin'
     run([os.environ.get('OBJCOPY', 'llvm-objcopy-18'), '-O', 'binary', elf, binary])
     print(f'guest {region}: {binary} ({binary.stat().st_size} bytes)')

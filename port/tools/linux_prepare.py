@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 TC = ROOT.parent / 'toolchain'
-BASE = Path('D:/ReKHCoM-build/linux')
+BASE = Path('D:/01Claude/ReKHCoM-build/linux')
 TRIPLES = {'i386': ('i686', 'i686-linux-gnu', ''),
            'armhf': ('armv7', 'arm-linux-gnueabihf', '-march=armv7-a -mfpu=neon -mfloat-abi=hard -mthumb')}
 

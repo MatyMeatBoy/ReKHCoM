@@ -117,7 +117,7 @@ estados a Git. Conservar historial y trabajo de Claude; no integrar a ciegas.
 ## Licencias y herramientas
 
 Usuario autorizo instalar SDK/NDK y acepto licencias necesarias. AVD local
-`D:/ReKHCoM-build/android-avd/ReKHCoMTest.avd`; definir ANDROID_AVD_HOME al lanzarlo.
+`D:/01Claude/ReKHCoM-build/android-avd/ReKHCoMTest.avd`; definir ANDROID_AVD_HOME al lanzarlo.
 Usar app separada `com.rekhcom.android.smoke` para pruebas; nunca limpiar la app
 del jugador. No publicar APK como probada en telefono por pasar emulador x86.
 

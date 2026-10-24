@@ -2895,10 +2895,25 @@ u8 UpdateEventSeqSkip() {
    not an answer to a yes/no choice) opens it; its "skip scene" ends the scene
    exactly as holding START does, where the game allows that. */
 void PortUiOpenScenePause(int skippable);
-static u8 sPortStartFrames, sPortStartChoice, sPortSkipRequest;
+static u8 sPortStartFrames, sPortStartChoice, sPortSkipRequest, sPortStartVoid;
+static unsigned sPortStartSerial;
+static const void* sPortStartWork; /* the event the START count belongs to */
+static u16 sPortStartEvent;
+unsigned PortUiOpenSerial(void);
 
 void PortEventSkipScene(void) {
     sPortSkipRequest = TRUE;
+}
+
+int PortHdScenePlay(int eventId);
+/* the event whose HD scene was offered (once per event): its task and number, forgotten when the event mode ends
+   (mode_event.c Event_2). The task alone was not enough: an event that hands over to the next one (the last battle's
+   event to the capsule room's ending, issue #42) gets its task at the same address, and the ending's scene was
+   never offered. */
+static const void* sPortHdSceneWork;
+static u16 sPortHdSceneEvent;
+void PortHdSceneForget(void) {
+    sPortHdSceneWork = NULL;
 }
 
 static int PortEventSkippable(u16 eventId) {
@@ -2911,7 +2926,7 @@ u8 UpdateEventSeq(EventSeqWork* work, void* task) {
     const EventSequenceDef* seqDef;
     u8 i;
 #ifdef PLATFORM_PC
-    u8 portSkip = FALSE;
+    u8 portSkip = FALSE, portHd = FALSE;
 #endif
 
     if (gEventState == NULL) {
@@ -2919,23 +2934,50 @@ u8 UpdateEventSeq(EventSeqWork* work, void* task) {
     }
 
 #ifdef PLATFORM_PC
+    /* A tap is a START pressed and released within this event, alone, with the options never opened meanwhile: a
+       START held into the event, or the one of START + SELECT (the options) released as they close, opened the
+       pause on its own (23/10). */
+    if (sPortStartWork != work || sPortStartEvent != work->eventId) {
+        sPortStartWork = work;
+        sPortStartEvent = work->eventId;
+        sPortStartFrames = 0;
+        sPortStartVoid = (GetKeysHeld() & START_BUTTON) != 0;
+    }
     if (GetKeysHeld() & START_BUTTON) {
-        if (sPortStartFrames == 0)
+        if (sPortStartFrames == 0) {
             sPortStartChoice = gEventState->msgWaitActive && gEventState->askedYesNo;
+            sPortStartSerial = PortUiOpenSerial();
+        }
+        if (GetKeysHeld() & SELECT_BUTTON)
+            sPortStartVoid = TRUE;
         if (sPortStartFrames < 255)
             sPortStartFrames++;
     } else {
-        if (sPortStartFrames > 0 && sPortStartFrames <= 32 && !sPortStartChoice && !work->ending)
+        if (sPortStartFrames > 0 && sPortStartFrames <= 32 && !sPortStartChoice && !work->ending && !sPortStartVoid
+            && sPortStartSerial == PortUiOpenSerial())
             PortUiOpenScenePause(PortEventSkippable(work->eventId));
         sPortStartFrames = 0;
+        sPortStartVoid = FALSE;
     }
     if (sPortSkipRequest) {
         sPortSkipRequest = FALSE;
         portSkip = PortEventSkippable(work->eventId) && !work->ending;
     }
+    /* the full HD mod: the event's Re:CoM scene plays first, then the event ends as skipping it does */
+    if ((sPortHdSceneWork != work || sPortHdSceneEvent != work->eventId) && !work->ending) {
+        sPortHdSceneWork = work;
+        sPortHdSceneEvent = work->eventId;
+        if (PortEventSkippable(work->eventId) && PortHdScenePlay(work->eventId))
+            portSkip = portHd = TRUE;
+    }
 #endif
 
+#ifdef PLATFORM_PC
+    /* holding START skips the scene, but not the START of START + SELECT (the options) */
+    if ((GetKeysHeld() & START_BUTTON) != 0 && !sPortStartVoid && sPortStartSerial == PortUiOpenSerial()) {
+#else
     if ((GetKeysHeld() & START_BUTTON) != 0) {
+#endif
         switch (work->eventId) {
         case EVENT_068_13F_CASTLE_OBLIVION_LAST3:
         case EVENT_083_MONSTORO_E3_FAILURE_1:
@@ -2957,7 +2999,12 @@ u8 UpdateEventSeq(EventSeqWork* work, void* task) {
         gEventState->skipHoldTime = 64;
         work->ending = TRUE;
         gEventState->ending = TRUE;
+#ifdef PLATFORM_PC
+        /* after an HD scene (which ends on black) the event's own picture never shows: its fade-out is already black */
+        FadeStartOut(FADE_MODE_BLACK, portHd ? 1 : 64);
+#else
         FadeStartOut(FADE_MODE_BLACK, 64);
+#endif
         SetTaskUpdate(task, (TaskUpdateFunc)UpdateEventSeqSkip);
 
         for (i = 0; i < 32; i++) {
@@ -3366,9 +3413,10 @@ u8 event_chara_1(EventCharaWork* work, void* task) {
 
     if (work->arg.chara == EVENT_CHARA_SORA) {
         if (gBtlWork != NULL) {
-            gBtlWork->actor->x = work->obj.x - 0x7800;
-            gBtlWork->actor->y = work->obj.y - 0x5000;
-            gBtlWork->actor->z = 0;
+            /* @bug: before a battle starts its actor is NULL; the cartridge writes to the BIOS (ignored) */
+            BIOS_PTR(gBtlWork->actor)->x = work->obj.x - 0x7800;
+            BIOS_PTR(gBtlWork->actor)->y = work->obj.y - 0x5000;
+            BIOS_PTR(gBtlWork->actor)->z = 0;
         }
     }
 
@@ -4996,20 +5044,21 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     x = (work->obj.x >> 8) - (gEventState->x >> 8);
     y = (work->obj.y >> 8) + (work->obj.z >> 8) - (gEventState->y >> 8);
 
-    // @bug obj.anim is NULL for characters without an animation (NULL read).
-    // BIOS_PTR: the port reads what the GBA does there (its BIOS area).
+    // @bug obj.anim is NULL for characters without an animation (NULL read), and a stale word when the debug menu
+    // starts the same event again (0x40004000 seen in the events battery, 23/10).
+    // BUS_PTR: the port reads what the GBA's bus gives there (its BIOS area, open bus).
     switch (work->keyframes[work->keyframe].anim) {
     case 0x2EB:
     case 0x2F1:
     case 0x2F2:
         if (work->arg.eventId != EVENT_158_RIKU_B11F_ENTRANCE) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                     m4aSongNumStart(SONG_SND_958);
                     SetEventSoundPosition(SONG_SND_958, x, y);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 6) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                     m4aSongNumStart(SONG_SND_959);
                     SetEventSoundPosition(SONG_SND_959, x, y);
                 }
@@ -5018,13 +5067,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x2E6:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN2_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN2_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN2_STONER);
                 SetEventSoundPosition(SONG_EV_MAN2_STONER, x, y);
             }
@@ -5032,13 +5081,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x375:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5046,8 +5095,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x398:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_SND_373);
                 SetEventSoundPosition(SONG_SND_373, x, y);
             }
@@ -5055,8 +5104,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x399:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_SND_374);
                 SetEventSoundPosition(SONG_SND_374, x, y);
             }
@@ -5064,21 +5113,21 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x5E:
-        if (BIOS_PTR(work->obj.anim)->timer == 9) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 9) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_EV01_01);
             }
         }
 
         break;
     case 0x1C2:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN2_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN2_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_MAN2_STONER);
                 SetEventSoundPosition(SONG_EV_MAN2_STONER, x, y);
             }
@@ -5087,13 +5136,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x1C0:
     case 0x1C1:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN2_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN2_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_MAN2_STONER);
                 SetEventSoundPosition(SONG_EV_MAN2_STONER, x, y);
             }
@@ -5102,13 +5151,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x34B:
     case 0x34C:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5116,13 +5165,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x2B2:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5138,8 +5187,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x20B:
     case 0x2C7:
     case 0x2C8:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 if ((u16)(work->arg.eventId - EVENT_177_RIKU_B3F_E0) <= 1) {
                     m4aSongNumStart(SONG_EV_SR_DIRTL);
                     SetEventSoundPosition(SONG_EV_SR_DIRTL, x, y);
@@ -5149,7 +5198,7 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
                 }
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 if ((u16)(work->arg.eventId - EVENT_177_RIKU_B3F_E0) <= 1) {
                     m4aSongNumStart(SONG_EV_SR_DIRTR);
                     SetEventSoundPosition(SONG_EV_SR_DIRTR, x, y);
@@ -5163,8 +5212,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x2C5:
     case 0x2C6:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 if ((u16)(work->arg.eventId - EVENT_177_RIKU_B3F_E0) <= 1) {
                     m4aSongNumStart(SONG_EV_SR_DIRTL);
                     SetEventSoundPosition(SONG_EV_SR_DIRTL, x, y);
@@ -5174,7 +5223,7 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
                 }
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 if ((u16)(work->arg.eventId - EVENT_177_RIKU_B3F_E0) <= 1) {
                     m4aSongNumStart(SONG_EV_SR_DIRTR);
                     SetEventSoundPosition(SONG_EV_SR_DIRTR, x, y);
@@ -5188,13 +5237,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x371:
     case 0x372:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5203,13 +5252,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x1EE:
     case 0x1F6:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5217,13 +5266,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x345:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5231,13 +5280,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x344:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5245,13 +5294,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x341:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 9) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 9) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5263,13 +5312,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x30E:
     case 0x30F:
     case 0x310:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 9) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 9) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5278,13 +5327,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x275:
     case 0x276:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_WOMAN_DIRT_L);
                 SetEventSoundPosition(SONG_EV_WOMAN_DIRT_L, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_WOMAN_DIRT_R);
                 SetEventSoundPosition(SONG_EV_WOMAN_DIRT_R, x, y);
             }
@@ -5292,13 +5341,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x277:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_WOMAN_DIRT_L);
                 SetEventSoundPosition(SONG_EV_WOMAN_DIRT_L, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 m4aSongNumStart(SONG_EV_WOMAN_DIRT_R);
                 SetEventSoundPosition(SONG_EV_WOMAN_DIRT_R, x, y);
             }
@@ -5306,13 +5355,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x2A5:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_MAN2_DIRTL);
                 SetEventSoundPosition(SONG_EV_MAN2_DIRTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 m4aSongNumStart(SONG_EV_MAN2_DIRTR);
                 SetEventSoundPosition(SONG_EV_MAN2_DIRTR, x, y);
             }
@@ -5320,13 +5369,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x2A8:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN_DIRTL);
                 SetEventSoundPosition(SONG_EV_MAN_DIRTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN_DIRTR);
                 SetEventSoundPosition(SONG_EV_MAN_DIRTR, x, y);
             }
@@ -5334,13 +5383,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x271:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5348,13 +5397,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x241:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN_MARBLEL);
                 SetEventSoundPosition(SONG_EV_MAN_MARBLEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_MAN_MARBLER);
                 SetEventSoundPosition(SONG_EV_MAN_MARBLER, x, y);
             }
@@ -5362,13 +5411,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x17A:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5377,13 +5426,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x178:
     case 0x179:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5392,13 +5441,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x19C:
     case 0x19D:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5407,13 +5456,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x14A:
     case 0x14B:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_WOMAN2_DIRTL);
                 SetEventSoundPosition(SONG_EV_WOMAN2_DIRTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_WOMAN2_DIRTR);
                 SetEventSoundPosition(SONG_EV_WOMAN2_DIRTR, x, y);
             }
@@ -5421,13 +5470,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x157:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_MAN_WOODL);
                 SetEventSoundPosition(SONG_EV_MAN_WOODL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_MAN_WOODR);
                 SetEventSoundPosition(SONG_EV_MAN_WOODR, x, y);
             }
@@ -5435,13 +5484,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x23E:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN_RMARBLEL);
                 SetEventSoundPosition(SONG_EV_MAN_RMARBLEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_MAN_RMARBLER);
                 SetEventSoundPosition(SONG_EV_MAN_RMARBLER, x, y);
             }
@@ -5450,13 +5499,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x16C:
     case 0x16E:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_MAN_DIRTL);
                 SetEventSoundPosition(SONG_EV_MAN_DIRTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_MAN_DIRTR);
                 SetEventSoundPosition(SONG_EV_MAN_DIRTR, x, y);
             }
@@ -5467,13 +5516,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x123:
     case 0x128:
     case 0x129:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5484,8 +5533,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0xE0:
     case 0xE1:
     case 0xE2:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 if (work->arg.eventId == EVENT_097_WONDERLAND_E2) {
                     m4aSongNumStart(SONG_EV_WOMAN_DIRT_L);
                     SetEventSoundPosition(SONG_EV_WOMAN_DIRT_L, x, y);
@@ -5495,7 +5544,7 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
                 }
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 if (work->arg.eventId == EVENT_097_WONDERLAND_E2) {
                     m4aSongNumStart(SONG_EV_WOMAN_DIRT_R);
                     SetEventSoundPosition(SONG_EV_WOMAN_DIRT_R, x, y);
@@ -5509,13 +5558,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0xD6:
     case 0xD9:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5524,13 +5573,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0xCA:
     case 0xCB:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_SND_954);
                 SetEventSoundPosition(SONG_SND_954, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_SND_955);
                 SetEventSoundPosition(SONG_SND_955, x, y);
             }
@@ -5539,13 +5588,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0xD3:
     case 0xD4:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_SND_956);
                 SetEventSoundPosition(SONG_SND_956, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_SND_957);
                 SetEventSoundPosition(SONG_SND_957, x, y);
             }
@@ -5554,13 +5603,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x10A:
     case 0x10B:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5569,8 +5618,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x83:
     case 0x88:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_EV01_03);
                 SetEventSoundPosition(SONG_EV_EV01_03, x, y);
             }
@@ -5580,8 +5629,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x12:
     case 0x13:
     case 0x66:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_EV01_01);
                 SetEventSoundPosition(SONG_EV_EV01_01, x, y);
             }
@@ -5594,12 +5643,12 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x8:
     case 0x9:
         if (gEventBackgroundDefs[work->arg.eventId] != NULL) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                     PlaySoraFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, TRUE);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 5) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                     PlaySoraFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, FALSE);
                 }
             }
@@ -5611,12 +5660,12 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x288:
     case 0x28C:
         if (gEventBackgroundDefs[work->arg.eventId] != NULL) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                     PlayDonaldFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, TRUE);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 6) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                     PlayDonaldFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, FALSE);
                 }
             }
@@ -5628,12 +5677,12 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x289:
     case 0x28D:
         if (gEventBackgroundDefs[work->arg.eventId] != NULL) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 3) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                     PlayDonaldFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, TRUE);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 7) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                     PlayDonaldFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, FALSE);
                 }
             }
@@ -5648,12 +5697,12 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0x266:
     case 0x267:
         if (gEventBackgroundDefs[work->arg.eventId] != NULL) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 3) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                     PlayGoofyFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, TRUE);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 7) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                     PlayGoofyFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, FALSE);
                 }
             }
@@ -5666,12 +5715,12 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0xD:
     case 0xE:
         if (gEventBackgroundDefs[work->arg.eventId] != NULL) {
-            if (BIOS_PTR(work->obj.anim)->timer == 0) {
-                if (BIOS_PTR(work->obj.anim)->frame == 3) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                     PlaySoraFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, TRUE);
                 }
 
-                if (BIOS_PTR(work->obj.anim)->frame == 7) {
+                if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                     PlaySoraFootstep(work, gEventBackgroundDefs[work->arg.eventId]->groundType, FALSE);
                 }
             }
@@ -5680,13 +5729,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0xB8:
     case 0xBA:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5694,8 +5743,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0xBB:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_EV34_00);
                 SetEventSoundPosition(SONG_EV_EV34_00, x, y);
             }
@@ -5703,8 +5752,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0xC1:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_CARDTHR);
                 SetEventSoundPosition(SONG_EV_CARDTHR, x, y);
             }
@@ -5713,8 +5762,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0xE9:
     case 0xEA:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_SND_324);
                 SetEventSoundPosition(SONG_SND_324, x, y);
             }
@@ -5727,13 +5776,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0xF8:
     case 0xF9:
     case 0xFA:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_PI_FOOTR);
                 SetEventSoundPosition(SONG_EV_PI_FOOTR, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_EV_PI_FOOTL);
                 SetEventSoundPosition(SONG_EV_PI_FOOTL, x, y);
             }
@@ -5746,13 +5795,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
     case 0xFB:
     case 0xFC:
     case 0xFD:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_PI_FOOTL);
                 SetEventSoundPosition(SONG_EV_PI_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_EV_PI_FOOTR);
                 SetEventSoundPosition(SONG_EV_PI_FOOTR, x, y);
             }
@@ -5761,13 +5810,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x280:
     case 0x281:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5776,13 +5825,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x18D:
     case 0x18E:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5790,8 +5839,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x18F:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 4) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 4) {
                 m4aSongNumStart(SONG_BTL_GMIC_OK);
             }
         }
@@ -5799,13 +5848,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x159:
     case 0x15D:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_STONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_STONER, x, y);
             }
@@ -5813,8 +5862,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x15E:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_CARDTHR);
                 SetEventSoundPosition(SONG_EV_CARDTHR, x, y);
             }
@@ -5823,13 +5872,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x185:
     case 0x186:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5837,13 +5886,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x187:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 7) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 7) {
                 m4aSongNumStart(SONG_EV_MAN_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_EV_MAN_STONER);
                 SetEventSoundPosition(SONG_EV_MAN_STONER, x, y);
             }
@@ -5852,8 +5901,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x2E7:
     case 0x2E8:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_GE_ENTRY);
                 SetEventSoundPosition(SONG_EV_GE_ENTRY, x, y);
             }
@@ -5862,13 +5911,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x2AE:
     case 0x2AF:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN2_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN2_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN2_STONER);
                 SetEventSoundPosition(SONG_EV_MAN2_STONER, x, y);
             }
@@ -5877,13 +5926,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x1C5:
     case 0x1C6:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_MAN2_STONEL);
                 SetEventSoundPosition(SONG_EV_MAN2_STONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_MAN2_STONER);
                 SetEventSoundPosition(SONG_EV_MAN2_STONER, x, y);
             }
@@ -5892,13 +5941,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x27A:
     case 0x27D:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONEL);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONEL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_EV_WOMAN_RSTONER);
                 SetEventSoundPosition(SONG_EV_WOMAN_RSTONER, x, y);
             }
@@ -5907,13 +5956,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x10F:
     case 0x11B:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 6) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 6) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5922,13 +5971,13 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
         break;
     case 0x110:
     case 0x11C:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 5) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 5) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTL);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTL, x, y);
             }
 
-            if (BIOS_PTR(work->obj.anim)->frame == 2) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 2) {
                 m4aSongNumStart(SONG_SYS_POO_FOOTR);
                 SetEventSoundPosition(SONG_SYS_POO_FOOTR, x, y);
             }
@@ -5936,8 +5985,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x118:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_EV_AL_LAND);
                 SetEventSoundPosition(SONG_EV_AL_LAND, x, y);
             }
@@ -5945,8 +5994,8 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x29E:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 3) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 3) {
                 m4aSongNumStart(SONG_VO_GE_ATTACK02);
                 SetEventSoundPosition(SONG_VO_GE_ATTACK02, x, y);
             }
@@ -5954,16 +6003,16 @@ s32 PlayEventCharaAnimSounds(EventCharaWork* work) {
 
         break;
     case 0x2A2:
-        if (BIOS_PTR(work->obj.anim)->timer == 0) {
-            if (BIOS_PTR(work->obj.anim)->frame == 1) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 0) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 1) {
                 m4aSongNumStart(SONG_EV_GE_FOOTUP);
             }
         }
 
         break;
     case 0x1DE:
-        if (BIOS_PTR(work->obj.anim)->timer == 1) {
-            if (BIOS_PTR(work->obj.anim)->frame == 0) {
+        if (BUS_PTR(struct AnimState*, work->obj.anim)->timer == 1) {
+            if (BUS_PTR(struct AnimState*, work->obj.anim)->frame == 0) {
                 m4aSongNumStart(SONG_BTL_DARKDEAD);
                 SetEventSoundPosition(SONG_BTL_DARKDEAD, x, y);
             }
@@ -6593,6 +6642,15 @@ u8 MsgwinCloseUpdate(MsgWinWork* work, void* task) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+/* @bug: an entry with no text (EVENT_196 in EU and others) reads the BIOS for its language's string, then that value
+   as the text; the port lays out an empty one instead */
+static const u8 sMsgwinNoText[] = { MSG_CODE_END };
+#define MSGWIN_TEXT(entry) ((entry)->text != NULL ? LANGSTR((entry)->text) : (void*)sMsgwinNoText)
+#else
+#define MSGWIN_TEXT(entry) LANGSTR((entry)->text)
+#endif
+
 void MsgwinLoadEntry(MsgWinWork* work) {
     const MessageScriptEntry* entry = &work->script[work->scriptIndex];
     s32 position;
@@ -6614,9 +6672,9 @@ void MsgwinLoadEntry(MsgWinWork* work) {
 
 #ifdef VERSION_JP
     if (entry->portraitId == PORTRAIT_NONE) {
-        work->charCount = LayoutMsgGlyphsSjis(0x2E00, gMsgwinTextY[work->position], (u8*)entry->text);
+        work->charCount = LayoutMsgGlyphsSjis(0x2E00, gMsgwinTextY[work->position], (u8*)MSGWIN_TEXT(entry));
     } else {
-        work->charCount = LayoutMsgGlyphsSjis(gMsgwinTextX[work->position], gMsgwinTextY[work->position], (u8*)entry->text);
+        work->charCount = LayoutMsgGlyphsSjis(gMsgwinTextX[work->position], gMsgwinTextY[work->position], (u8*)MSGWIN_TEXT(entry));
     }
 #else
     // @bug In EU, EVENT_196_DAMI_JUUJIRO has no text (NULL read).
@@ -6624,13 +6682,13 @@ void MsgwinLoadEntry(MsgWinWork* work) {
         if (work->nextText != NULL) {
             work->charCount = LayoutMsgGlyphsPage(0x2E00, gMsgwinTextY[work->position] - 0x200, work->nextText, &work->nextText);
         } else {
-            work->charCount = LayoutMsgGlyphsPage(0x2E00, gMsgwinTextY[work->position] - 0x200, LANGSTR(entry->text), &work->nextText);
+            work->charCount = LayoutMsgGlyphsPage(0x2E00, gMsgwinTextY[work->position] - 0x200, MSGWIN_TEXT(entry), &work->nextText);
         }
     } else {
         if (work->nextText != NULL) {
             work->charCount = LayoutMsgGlyphsPage(gMsgwinTextX[work->position], gMsgwinTextY[work->position] - 0x200, work->nextText, &work->nextText);
         } else {
-            work->charCount = LayoutMsgGlyphsPage(gMsgwinTextX[work->position], gMsgwinTextY[work->position] - 0x200, LANGSTR(entry->text), &work->nextText);
+            work->charCount = LayoutMsgGlyphsPage(gMsgwinTextX[work->position], gMsgwinTextY[work->position] - 0x200, MSGWIN_TEXT(entry), &work->nextText);
         }
     }
 #endif

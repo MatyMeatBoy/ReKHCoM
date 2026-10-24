@@ -31,12 +31,17 @@ for f in "$DIR"/roms/*.gba "$DIR"/*.gba; do
     fi
 done
 
+# Everything this script and the game print goes to ReKHCoM.log next to it (Steam's Game Mode shows no terminal).
+exec >"$DIR/ReKHCoM.log" 2>&1
+echo "ReKHCoM.sh: $(date), folder $DIR, region ${REGION:-auto}"
+
 if [ -z "$ROM" ]; then
-    msg="Kingdom Hearts: Chain of Memories ROM not found. Copy your cartridge dump (EU, US or JP, 32 MiB) into: $DIR/roms"
-    echo "$msg" >&2
-    command -v zenity >/dev/null 2>&1 && zenity --error --text="$msg" 2>/dev/null
-    command -v kdialog >/dev/null 2>&1 && kdialog --error "$msg" 2>/dev/null
-    exit 1
+    # No dump found: the game itself says so in its own window, which Steam's Game Mode shows (zenity is not there).
+    echo "Kingdom Hearts: Chain of Memories ROM not found. Copy your cartridge dump (EU, US or JP, 32 MiB) into: $DIR/roms"
+    REGION=${REGION:-eu}
+    export LD_LIBRARY_PATH="$DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    cd "$DIR" || exit 1
+    exec "./bin/khcom_$REGION" --data-dir "$DIR" "$@"
 fi
 
 # X11/XWayland and PulseAudio/PipeWire are reached through the bundled client

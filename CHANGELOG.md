@@ -1,11 +1,99 @@
 # Changelog
 
-## v1.9.13 — in progress (prerelease v1.9.13-pre1, 2026-10-20)
+## v2.0 — 2026-10-22
 
-- Nintendo Switch (alpha, never run on a console yet): a homebrew `ReKHCoM.nro` for custom
+**The HD mod.** With your own copy of KINGDOM HEARTS -HD 1.5+2.5 ReMIX- on PC, the launcher imports Re:Chain of
+Memories' HD music, movies and story scenes (with their subtitles in every language Re:CoM has), and the game uses
+them in place of the cartridge's: the opening and endings, 97 of Re:CoM's 100 story scenes, and the HD soundtrack.
+All optional, under Options > Re:CoM improvements and in the New Game window. v1.9.15 came out only as a test
+prerelease; this release carries all of it.
+
+Windows, Linux and Steam Deck are stable; Android, Switch, PS Vita, PS4, PS5, Anbernic and the web player are betas.
+HD music plays on PC, Steam Deck, Android and the consoles; HD movies and scenes on Windows and Android.
+
+- **HD graphics (beta)**, imported the same way, where Re:CoM has the very same picture: the battle cards
+  (illustrations, frames and values), Sora's and Riku's faces on the HP gauge, the battle words (Card Break, Guard,
+  Recover, Level Up, in each European language) and the title screen's logo, from its intro to the credits, with
+  "Chain of Memories" under the Kingdom Hearts logo. Options > Re:CoM improvements: "HD cards and battle HUD",
+  "HD title logo".
+- **Graphics modes**, asked on the first start: **HD mode** (every HD asset and improvement) or **GBA mode**, then
+  **GBA enhanced** (the widescreen view and ReKHCoM's improvements, HD extras off) or **GBA classic** (everything off:
+  the GBA picture at a whole scale inside a decorative border in the manner of the Super Game Boy's, almost an
+  emulator but native). The launcher's Graphics has "Graphics mode" (choose on start by default), and Options
+  "Reset to a mode's defaults". A new game in GBA classic still offers the widescreen view.
+
+- HD scenes: smooth in and out of each scene (no flash of the event's picture when it ends), skipping a scene or
+  movie fades the picture and its sound out instead of cutting them, the field's music fades out before a scene
+  starts, and the scene pause sounds like the game's menus.
+- Agrabah: the street of Aladdin's rescue and the Genie's market now continue to the edges of the widescreen view.
+
+- Switch: with "Hide touch controls" on, no touch button shows anywhere, pause and Options included; hold Minus +
+  Plus for three seconds to open the Options (#36).
+- Switch and PS Vita: when the console cannot draw every frame, the frame is skipped instead of slowing the game:
+  the game and the sound keep their original speed (#35, #36). Options > Experimental, on by default everywhere.
+- PS Vita: the picture is drawn by the GPU.
+- Consoles and Android 64-bit: the sound's buffer level is measured in the right units.
+- Android: the HD mod's movies play (opening and endings, with subtitles), imported from the PC's `hd` folder.
+- HD mod: the sound effects play again with the HD music on (button clicks, menus, attacks, level-up, pause:
+  most of them were taken for music and muted with it), and the HD music now plays at the cartridge's loudness.
+- HD mod: no more hitch at doors and battle starts when the HD track changes (it loads in the background, in
+  silence instead of a moment of the cartridge's song), and no jump or overlap around menus: the HD track keeps
+  playing under the Options as the cartridge's song does, and waits in place when the game holds its sound.
+- HD movies and scenes: our scene pause works on them (Start/Escape: back to the game or skip, after asking);
+  they no longer end by themselves when the dialogue's button was still pressed.
+- HD scenes: 97 of Re:CoM's 100 scenes now replace their story event (25 more, one corrected), matched by their
+  dialogue in five languages and their order; the other three exist only in Re:CoM or are part of the opening.
+- Options: the HD mod's settings are under "Re:CoM improvements"; the New Game window offers HD music and movies,
+  and, for Re:CoM, the HD scenes.
+- Battle start: no more frame of the small heart over the battlefield right before the white flash (widescreen).
+- Title: the first illustration (the developer credit over Sora) now fades into white at its right edge too.
+- Windows: the HD movies also play with the software renderer (they closed the game there).
+- Battle HP gauges: no division by zero when the deck menu goes back into a battle before the HP are set
+  (closed the game on Android, the web and Linux ARM; #40).
+
+## v1.9.14 — 2026-10-21
+
+v1.9.13 came out only as a test prerelease; this stable release carries all of it. Windows, Linux and
+Steam Deck are stable; Android, Switch, PS Vita, PS4, PS5, Anbernic and the web player are betas
+(their files say "beta": we are still debugging them, reports welcome).
+
+- Android: phones where the game's usual memory range is taken (Poco F8 Ultra, Huawei Mate XT) load
+  the 64-bit game elsewhere instead of stopping with "The game image could not be loaded" (#22, #34).
+  The error box itself has a "Share log" button, so a log can be sent without reaching Settings.
+- Android: remapping a key without a keyboard can be cancelled with a gamepad button, a touch or
+  Back (#37); "Hide touch controls" with a gamepad connected hides every touch button, menus
+  included (#38).
+- Android: no more crash in the debug event select and at two spots of the 100 Acre Wood that the
+  PC recovered silently.
+- Windows: faster widescreen drawing (the area beyond the GBA picture uses several CPU cores).
+- HD mod (beta): marked as beta in the launcher.
+
+### From v1.9.13 (test prerelease)
+
+- Nintendo Switch (beta): a homebrew `ReKHCoM.nro` for custom
   firmware (Atmosphère, Homebrew Menu in title takeover). Copy it and your cartridge dump (EU, US
-  or JP) to `sdmc:/switch/ReKHCoM/`. Same game as the PC version: widescreen, HD text, options,
-  achievements. Minus + L3 / R3 save and load a state.
+  or JP) to `sdmc:/switch/ReKHCoM/`. Minus + L3 / R3 save and load a state.
+- PS Vita (beta): `ReKHCoM.vpk` for HENkaku/Ensō, installed with
+  VitaShell; the cartridge dump goes in `ux0:data/ReKHCoM/`. Select + L / R save and load a state.
+- Discord: with the Discord app open, your profile shows the world and floor, Sora or Riku with
+  the level, the boss you are fighting and the session time, in the game's language, with the
+  world's or boss's achievement badge. On by default; Options and the launcher can turn it off.
+- Options: "Return to title screen" in the Re:CoM section (confirm twice), the game's own reset.
+- Android: no more crash right before the Trickmaster battle in Wonderland (#33). The APK now
+  carries a 64-bit version that phones use automatically: it does not need the GBA address range
+  that some phones keep busy ("Cannot reserve the GBA address space", #22, #34). Older 32-bit
+  phones keep the previous version, in the same APK; saves are kept when updating.
+- HD mod (optional): with KINGDOM HEARTS HD 1.5+2.5 ReMIX installed (Steam or Epic), the launcher
+  imports Re:Chain of Memories' music, movies and subtitles from your own copy (nothing is shipped
+  with ReKHCoM). The music replaces the cartridge's on every platform; the movies and the full
+  scenes mod play on Windows. Android's launcher imports the `hd` folder made on the PC.
+- Switch: the picture is drawn by the GPU instead of the CPU (the console was held to 20-25 fps,
+  #35), and the touch screen works in the Options.
+- HD text: the "a" no longer looks like an "o" and the "r" is easier to read.
+- Windows: the game opens straight in fullscreen, without a window flashing first, and Windows
+  SmartScreen no longer stops the game after the launcher was allowed.
+- Agrabah: the widescreen margins of the street and the Genie's market are completed.
+- Achievements: "No conseguido" instead of "Pendiente" in Spanish.
 
 ## v1.9.12 — 2026-10-20
 

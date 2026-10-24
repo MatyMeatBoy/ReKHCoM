@@ -211,9 +211,22 @@ s32 task_btl_hpoth_1(BtlHpothWork* work) {
 
     switch (gaugeMode) {
     case BTL_HPOTH_GAUGE_MODE_SINGLE:
+#ifdef PLATFORM_PC
+        /* @bug: as the player's gauge (btl_hpply.c), a frame before the maximum HP is set divides by zero */
+        if (actor->maxHp <= 0) {
+            work->hpRatio = 0;
+            break;
+        }
+#endif
         work->hpRatio = (work->displayHp << 8) / actor->maxHp;
         break;
     case BTL_HPOTH_GAUGE_MODE_EXTRA_BAR:
+#ifdef PLATFORM_PC
+        if (actor->maxHp <= 280) {
+            work->hpRatio = 0;
+            break;
+        }
+#endif
         work->hpRatio = ((work->displayHp - 280) << 8) / (actor->maxHp - 280);
         break;
     case BTL_HPOTH_GAUGE_MODE_MAIN_BAR:

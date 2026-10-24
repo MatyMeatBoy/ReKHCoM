@@ -111,6 +111,7 @@ typedef enum SDL_FlipMode {
 typedef Uint32 SDL_BlendMode;
 #define SDL_BLENDMODE_NONE 0u
 #define SDL_BLENDMODE_BLEND 1u
+#define SDL_BLENDMODE_ADD 2u /* the host blends on or off: drawn as BLEND (Re:CoM's layouts, port_hdlayout.c) */
 typedef enum SDL_TextureAccess {
     SDL_TEXTUREACCESS_STATIC = 0,
     SDL_TEXTUREACCESS_STREAMING = 1
@@ -207,6 +208,7 @@ bool SDL_PauseAudioStreamDevice(SDL_AudioStream* stream);
 bool SDL_ResumeAudioStreamDevice(SDL_AudioStream* stream);
 bool SDL_ClearAudioStream(SDL_AudioStream* stream);
 bool SDL_SetAudioStreamFrequencyRatio(SDL_AudioStream* stream, float ratio);
+bool SDL_SetAudioStreamGain(SDL_AudioStream* stream, float gain);
 bool SDL_SetAudioStreamFormat(SDL_AudioStream* stream, const SDL_AudioSpec* srcSpec, const SDL_AudioSpec* dstSpec);
 bool SDL_GetAudioStreamFormat(SDL_AudioStream* stream, SDL_AudioSpec* srcSpec, SDL_AudioSpec* dstSpec);
 bool SDL_PutAudioStreamData(SDL_AudioStream* stream, const void* buf, int len);
@@ -253,7 +255,8 @@ typedef int SDL_Scancode;
 #define SDLK_EQUALS 0x0000003Du
 #define SDLK_KP_MINUS 0x40000056u
 #define SDLK_KP_PLUS 0x40000057u
-#define SDLK_DELETE 0x4000004Cu
+#define SDLK_DELETE 0x0000007Fu
+#define SDLK_AC_BACK 0x4000011Au
 
 typedef enum SDL_EventType {
     SDL_EVENT_QUIT = 0x100,
@@ -263,6 +266,8 @@ typedef enum SDL_EventType {
     SDL_EVENT_WINDOW_FOCUS_LOST = 0x20C,
     SDL_EVENT_KEY_DOWN = 0x300,
     SDL_EVENT_KEY_UP = 0x301,
+    SDL_EVENT_MOUSE_BUTTON_DOWN = 0x401,
+    SDL_EVENT_MOUSE_BUTTON_UP = 0x402,
     SDL_EVENT_GAMEPAD_BUTTON_DOWN = 0x650,
     SDL_EVENT_GAMEPAD_BUTTON_UP = 0x651,
     SDL_EVENT_GAMEPAD_AXIS_MOTION = 0x652,

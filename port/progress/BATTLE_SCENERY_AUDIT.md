@@ -29,13 +29,13 @@ a la silueta del mapa no se rellenan automáticamente.
 | # | Pelea / escenario | Evidencia observada | Trabajo pendiente | Estado |
 |---|---|---|---|---|
 | 1 | Guard Armor | Recorte rectangular del patio; bloques negros laterales, y copias del patio separadas en 32:9. | Continuación integrada y aceptada; 13/13 pruebas de píxeles. | Terminada |
-| 2 | Darkside | Escenario en una ventana estrecha; negro alrededor, partes del jefe cortadas y repetidas en 32:9. | Extender playa/cielo y mantener una sola capa de Darkside con su encuadre correcto. | Pendiente |
+| 2 | Darkside | Escenario en una ventana estrecha; negro alrededor, partes del jefe cortadas y repetidas en 32:9. | Hecho 22/10, espera aprobación (`KHCOM_DARKSIDE_BEACH=1`): playa por bandas de su patrón base (cielo 1, mar 8, arena 4 tiles; la orilla por columnas limpias), arena debajo; humo (BG2) una sola copia; cuerpo validado aunque su mapa termine (antes se cortaba en el borde GBA). Mitad derecha de Darkside dibujada (no existe en el cartucho): pose quieta (cuadros 0-4) desde la referencia del usuario, `gen_darkside_body.py`; faltan 5 poses (8, 9, 10, 13/21-28, 36-40, 41-45) con su referencia. Evento 180 (Riku) incluido. `test_darkside_backdrop.py` 14/14. | Propuesta |
 | 3 | Oogie Boogie | La sala/ruleta acaba en bordes rectos; negro lateral y copias parciales de la sala en ultrawide. | Continuar paredes/suelo sin duplicar la ruleta, puerta, rejas ni al jefe. | Pendiente |
 | 4 | Jafar | Lava, muros y pilares quedan en un rectángulo aislado; al mover la cámara aparece negro en varios lados. | Continuar lava y paredes, respetando los tres pilares móviles y sus límites jugables. | Pendiente |
-| 5 | Maléfica dragón | El salón tiene cortes; el cuerpo del dragón aparece repetido en 32:9. | Continuar columnas/baldosas y evitar el wrap de la capa del dragón. | Pendiente |
-| 6 | Úrsula | Aparecen dos Úrsulas en la captura 16:9 al mover a la izquierda; también se repite en 32:9. | Extender caverna y suelo, manteniendo una sola Úrsula y un solo tridente. | Pendiente |
+| 5 | Maléfica dragón | El salón tiene cortes; el cuerpo del dragón aparece repetido en 32:9. | Continuar columnas/baldosas y evitar el wrap de la capa del dragón. | Preliminar V2 hecha 23/10 (salón por bahías de 72 px, un solo dragón; `KHCOM_ARENAS_V2=1`), espera aprobación |
+| 6 | Úrsula | Aparecen dos Úrsulas en la captura 16:9 al mover a la izquierda; también se repite en 32:9. | Extender caverna y suelo, manteniendo una sola Úrsula y un solo tridente. | Preliminar V2 hecha 23/10 (bajo el suelo lo que trae el mapa, una sola Úrsula, lomo continuo), espera aprobación |
 | 7 | Marluxia final | La plataforma/jefe y sus efectos se cortan; en 32:9 reaparecen fragmentos en los laterales. | Separar plataforma/jefe de las extensiones del fondo; revisar los modos horizonte/túnel/estrellas y sus transiciones. | Pendiente |
-| 8 | Trickmaster (Alicia) | El tablero termina antes del borde inferior y deja una banda negra. | **Solo prolongar el ajedrez hacia abajo**, respetando perspectiva y alternancia. Conservar la habitación actual. | Pendiente |
+| 8 | Trickmaster (Alicia) | El tablero termina antes del borde inferior y deja una banda negra. | **Solo prolongar el ajedrez hacia abajo**, respetando perspectiva y alternancia. Conservar la habitación actual. | Preliminar V2 hecha 23/10 (ajedrez en su perspectiva hacia abajo), espera aprobación |
 
 La lista cuenta escenarios, no el número de veces que aparece cada jefe en
 Sora/Reverse-Rebirth. Estos ocho escenarios afectan a sus respectivas peleas

@@ -30,7 +30,7 @@ def capture(case):
                    KHCOM_QUIT='1002', KHCOM_SHOTS=','.join(map(str,FRAMES)),
                    KHCOM_OUTPUT_SHOT=','.join(map(str,FRAMES)))
         env.pop('KHCOM_AGRABAH_WIDE',None)
-        if enabled: env['KHCOM_AGRABAH_WIDE']='1'
+        env['KHCOM_AGRABAH_WIDE']='1' if enabled else '0'  # on by default since 22/10
         code = dict(eu='B8CP',us='B8CE',jp='B8CJ')[region]
         frames=[]
         # Replay precisely the same game state on each side. Text advance and
@@ -80,7 +80,7 @@ def make_states(pair):
              KHCOM_EVENT=f'0:{event-1}',KHCOM_WINDOW='720x480',KHCOM_QUIT='1004',
              KHCOM_KEYS='60-63:A,360-363:A,480-483:A,600-603:A,720-723:A',
              KHCOM_SAVESTATE=','.join(f'{f}:frame{f}.khst' for f in FRAMES))
-    env.pop('KHCOM_AGRABAH_WIDE',None)
+    env['KHCOM_AGRABAH_WIDE']='0'  # states from the original picture
     subprocess.run([str(d/'khcom.exe'),'--language','es','--rom',str(ROOT/f'roms/{code}.gba')],
                    cwd=d,env=env,timeout=240,check=True,capture_output=True)
     if not all((d/f'frame{f}.khst').exists() for f in FRAMES): raise RuntimeError('missing states')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A stand-in for Discord's local IPC, to check the game's Rich Presence (port/src/port_discord.c) without Discord.
+r"""A stand-in for Discord's local IPC, to check the game's Rich Presence (port/src/port_discord.c) without Discord.
 
 Serves one Windows named pipe, answers the handshake with READY and writes every frame it receives to a JSON lines
 file. Run it, then the game with KHCOM_DISCORD_IPC set to the same pipe and KHCOM_DISCORD_APP_ID to any number.

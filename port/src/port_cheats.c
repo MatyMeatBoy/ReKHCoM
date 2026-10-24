@@ -30,7 +30,9 @@ int PortCheatDamage(int damage, int player) {
         out = 0;
     else if (damage > 0 && !player && gPortConfig.cheatOneHit)
         out = 9999;
-    if (out != damage && SDL_getenv("KHCOM_DAMAGELOG"))
+    const char* damageLog;
+    PORT_ENV_ONCE(damageLog, SDL_getenv, "KHCOM_DAMAGELOG");
+    if (out != damage && damageLog)
         PortLog("cheat: %s damage %d -> %d", player ? "player" : "enemy", damage, out);
     return out;
 }

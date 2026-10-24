@@ -34,7 +34,7 @@ LLD = os.environ.get('LLD', str(LLVM / 'ld.lld.exe') if WINDOWS else 'ld.lld-18'
 TARGET = '--target=arm64_32-apple-watchos'
 CPU = '-mcpu=cortex-a57'  # the Switch's CPU (ARMv8.0): without it clang targets Apple's and emits ARMv8.3 (xpaci)
 BASE = 0x10000000
-VM_DISK = Path('D:/ReKHCoM-build/ps5/ps5env.qcow2')  # the consoles build VM (port/progress/TOOLKIT_CONSOLAS.md)
+VM_DISK = Path('D:/01Claude/ReKHCoM-build/ps5/ps5env.qcow2')  # the consoles build VM (port/progress/TOOLKIT_CONSOLAS.md)
 sys.path.insert(0, str(PS5))
 import build_ps5  # noqa: E402  (its PORT_PATCHES and PORT_EXCLUDED are shared)
 
@@ -109,7 +109,8 @@ def build_guest(region, jobs):
     game_flags = [*common_flags(), '-w', '-std=gnu89', '-include', ROOT / 'port/include/port/game_prefix.h', '-DPLATFORM_PC',
                   f'-DVERSION_{upper}', *includes]
     port_flags = [*common_flags(), '-w', '-std=gnu11', '-DSTBI_NO_THREAD_LOCALS', f'-I{PS5 / "third_party/stb"}',
-                  f'-I{ROOT / "port/src"}', '-DPLATFORM_PC', f'-DVERSION_{upper}', *includes]
+                  f'-I{ROOT / "port/src"}', f'-I{ROOT / "port/android/native"}', '-DPLATFORM_PC', f'-DVERSION_{upper}',
+                  '-DPORT_TOUCH', *includes]
     units = []
     for src in sorted((ROOT / 'src').rglob('*.c')):
         units.append((src, out / 'game' / src.relative_to(ROOT / 'src').with_suffix('.o'), game_flags))
@@ -117,23 +118,24 @@ def build_guest(region, jobs):
         if src.stem in build_ps5.PORT_EXCLUDED:
             continue
         if src.name in build_ps5.PORT_PATCHES:
-            patched = PS5 / 'build' / f'guest-{region}' / 'patched' / src.name
-            if not patched.exists():
-                sys.exit(f'{patched} missing: run port/ps5/build_ps5.py guest --region {region} once (it writes the patched copies)')
-            src = patched
+            src = build_ps5.patched_source(src, out / 'patched')
         units.append((src, out / 'port' / (src.stem + '.o'), port_flags))
     units.append((pc / 'rom_relocs.c', out / 'port/rom_relocs.o', port_flags))
     for src in sorted((PS5 / 'guest/src').glob('*.c')):
         if src.stem not in GUEST_SKIP:
             units.append((src, out / 'ps5' / (src.stem + '.o'), port_flags))
     units.append((HERE / 'guest/stubs_a64.c', out / 'switch/stubs_a64.o', port_flags))
+    # the touch controls (the options button on the handheld screen, issue #35; the Android 64-bit build's controls)
+    units.append((ROOT / 'port/android/native/touch_android.c', out / 'port/touch_android.o', port_flags))
     macho_symbols(pc / 'rom_symbols_reloc.s', out / 'rom_symbols.s')
     for src in (out / 'rom_symbols.s', HERE / 'guest/crt0_a64.S'):
         units.append((src, out / 'asm' / (src.stem + '.o'), [TARGET, CPU, '-c']))
     compile_all(jobs, units)
     image = BUILD / f'guest-{region}.macho'
+    objects = out / 'objects.rsp'  # the object list as a response file: too long for a Windows command line
+    objects.write_text('\n'.join('"' + u[1].as_posix() + '"' for u in units) + '\n')
     run([LLD, '-flavor', 'darwin', '-arch', 'arm64_32', '-platform_version', 'watchos', '9.0', '9.0', '-e', '_switch_boot',
-         '-pagezero_size', hex(BASE), '-map', out / 'guest.map', '-o', image, *[u[1] for u in units]])
+         '-pagezero_size', hex(BASE), '-map', out / 'guest.map', '-o', image, f'@{objects}'])
     print(f'guest {region}: {image} ({image.stat().st_size} bytes)')
     return image
 
@@ -168,7 +170,7 @@ ls -l ReKHCoM.nro
 
 
 def version():
-    text = (ROOT / 'port/decompui/decompui.cpp').read_text(encoding='utf-8')
+    text = (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8')
     return re.search(r'#define REKHCOM_VERSION\s+"v([^"]+)"', text).group(1)
 
 
@@ -193,11 +195,13 @@ def build_host(regions):
     (assets / 'achievements').mkdir()
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', assets / 'achievements/badges.png')
     (share / 'src').mkdir()
-    for src in (HERE / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h'):
+    for src in (HERE / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/udp_host.h',
+                ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     Image.open(PS5 / 'sce_sys/icon0.png').convert('RGB').resize((256, 256), Image.LANCZOS).save(share / 'icon.jpg', quality=92)
     (share / 'build.sh').write_bytes(VM_SCRIPT.replace('VERSION', version()).encode())
     out = BUILD / 'host-out'
+    shutil.rmtree(out, ignore_errors=True)  # a .nro left by an earlier run must never pass for this one
     command = [sys.executable, ROOT / 'port/tools/linux_vm_test.py', '--share', share, '--disk', VM_DISK, '--fresh-share', '--mem', '4096',
                '--cpus', '4', '--run', 'bash /root/share/build.sh', '--fetch', '/root/share/ReKHCoM.nro', '--out', out]
     run(command, cwd=ROOT, env=dict(os.environ, MSYS_NO_PATHCONV='1', PYTHONUTF8='1'))

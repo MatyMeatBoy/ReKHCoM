@@ -697,7 +697,8 @@ static void cardbattle_0(CardBattleWork* work) {
     u8 i;
 
     CpuFill32(0, work, sizeof(CardBattleWork));
-    gCardBattleState->rikuWork = work;
+    // @bug As Sora's: gCardBattleState is only allocated later (NULL write; the link battle's rival side).
+    BIOS_PTR(gCardBattleState)->rikuWork = work;
     work->tiles = AllocSpriteFrameTiles(0x80);
     work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
     UpdateSpriteFrameTiles(work->tiles, gStockValueFrames[0], gStockValueTiles);
@@ -878,7 +879,7 @@ static void cardbattle_0(CardBattleWork* work) {
     sRikuSelectedCard = NULL;
     CreateRikuCardDisplay(work, work->listIndex);
     sRikuCardRequest = CARD_REQUEST_NONE;
-    gCardBattleState->rikuListIndex = work->listIndex;
+    BIOS_PTR(gCardBattleState)->rikuListIndex = work->listIndex; // @bug the same NULL state as above
 }
 
 static u8 cardbattle_1(CardBattleWork* work, void* task) {

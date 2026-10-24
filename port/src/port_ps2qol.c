@@ -53,7 +53,9 @@ static int PortScaleDifficulty(int damage, int player) {
     scaled = damage * DamagePercent(player) / 100;
     if (scaled < 1)
         scaled = 1;
-    if (SDL_getenv("KHCOM_DAMAGELOG"))
+    const char* damageLog;
+    PORT_ENV_ONCE(damageLog, SDL_getenv, "KHCOM_DAMAGELOG");
+    if (damageLog)
         PortLog("damage: %s %d -> %d (difficulty %d)", player ? "player" : "enemy", damage, scaled,
                 gPortConfig.ps2Difficulty);
     return scaled;

@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import struct
 import urllib.request
 
@@ -52,16 +53,19 @@ def main():
     p.add_argument('--regions',nargs='+',choices=['eu','us','jp'],default=['eu','us','jp'])
     p.add_argument('--jobs',type=int,default=3)
     p.add_argument('--abi',choices=['armeabi-v7a','x86'],default='armeabi-v7a')
+    p.add_argument('--no-arm64',action='store_true',help='Leave out the 64-bit build (arm64-v8a host + game images, ANDROID_64.md)')
     p.add_argument('--native-only',action='store_true')
     p.add_argument('--ubsan',action='store_true',help='Test build: log shifts by 32+, divisions by zero, NULL and misaligned accesses to logcat (tag ReKHCoM-UBSAN)')
     p.add_argument('--smoke',action='store_true',help='Separate test app: starts a debug battle, captures frame 600 and exits at 900')
     p.add_argument('--smoke-env',default='',help='Smoke app only: KEY=VALUE;KEY=VALUE harness settings replacing the debug battle')
     args=p.parse_args()
+    # seconds instead of a failed guest or Gradle build minutes later (check_sources.py)
+    subprocess.run([sys.executable,str(ROOT/'port/tools/check_sources.py')],check=True)
     release=re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"',
-                      (ROOT/'port/decompui/decompui.cpp').read_text(encoding='utf-8'))[1]
-    version_name=release.removeprefix('v')+'-android-alpha'
-    parts=re.match(r'v(\d+)\.(\d+)\.(\d+)',release)
-    major,minor,patch=map(int,parts.groups())
+                      (ROOT/'port/include/port/port_version.h').read_text(encoding='utf-8'))[1]
+    version_name=release.removeprefix('v')+'-android-beta'
+    parts=re.match(r'v(\d+)\.(\d+)(?:\.(\d+))?',release)  # v2.0 = v2.0.0
+    major,minor,patch=(int(g or 0) for g in parts.groups())
     nightly=re.search(r'nightly\.(\d{8})\.(\d+)$',release)
     version_code=major*1000000+minor*10000+patch*100+(int(nightly[2]) if nightly else 99)
     if args.jobs<1:p.error('--jobs must be positive')
@@ -80,7 +84,6 @@ def main():
     def run(cmd,cwd=ROOT):subprocess.run([str(x) for x in cmd],cwd=cwd,env=env,check=True)
     for region in args.regions:
         if not (ROOT/f'build/{region}/pc/rom_symbols.s').is_file():
-            import sys
             run([sys.executable,'port/tools/gen_pc_assets.py','--version',region])
     run([cmake,'-S',ROOT/'port/android','-B',native,'-G','Ninja',f'-DCMAKE_MAKE_PROGRAM={ninja}',
          f'-DCMAKE_TOOLCHAIN_FILE={ndk}/build/cmake/android.toolchain.cmake','-DANDROID_ABI='+args.abi,
@@ -90,6 +93,16 @@ def main():
     run([ninja,'-C',native,'-j',args.jobs])
     for region in args.regions:
         verify_fixed_symbols(native/f'librekhcom_{region}.so')
+    # the 64-bit build (port/progress/ANDROID_64.md): its host library and the game images (AArch64, 32-bit pointers)
+    native64=ROOT/'build/android-native-arm64-v8a'
+    if not args.no_arm64:
+        run([cmake,'-S',ROOT/'port/android','-B',native64,'-G','Ninja',f'-DCMAKE_MAKE_PROGRAM={ninja}',
+             f'-DCMAKE_TOOLCHAIN_FILE={ndk}/build/cmake/android.toolchain.cmake','-DANDROID_ABI=arm64-v8a',
+             '-DANDROID_PLATFORM=android-21',f'-DSDL_SOURCE_DIR={sdl}','-DCMAKE_BUILD_TYPE=Release',
+             f'-DFREETYPE_SOURCE_DIR={ROOT.parent / "toolchain/freetype-2.14.3"}'])
+        run([ninja,'-C',native64,'-j',args.jobs])
+        import sys as _sys
+        run([_sys.executable,ROOT/'port/android64/build_android64.py','--regions',*args.regions,'--jobs',str(args.jobs)])
     if args.native_only:return
     stage=ROOT/('build/android-app'+suffix);stage.mkdir(exist_ok=True)
     shutil.copytree(ROOT/'port/android/app',stage/'app',dirs_exist_ok=True)
@@ -101,6 +114,9 @@ def main():
         if args.smoke_env:
             settings=dict(item.split('=',1) for item in args.smoke_env.split(';') if item)
         metadata=''.join(f'<meta-data android:name="SDL_ENV.{k}" android:value="{v}"/>\n' for k,v in settings.items())
+        # the test app's game activity is exported: Android 14+ no longer lets "run-as ... am start" reach it
+        text=text.replace('android:name="com.rekhcom.android.GameActivity" android:exported="false"',
+                          'android:name="com.rekhcom.android.GameActivity" android:exported="true"')
         manifest.write_text(text.replace('  <activity',metadata+'  <activity',1),encoding='utf-8')
     else:
         assert 'SDL_ENV.' not in manifest.read_text(encoding='utf-8')
@@ -143,6 +159,19 @@ android {
     for name in desired:
         source=native/('SDL/'+name if name=='libSDL3.so' else name)
         shutil.copy2(source,libs/name);run([strip,'--strip-unneeded',libs/name])
+    libs64=stage/'app/src/main/jniLibs/arm64-v8a'
+    images=stage/'app/src/main/assets'
+    images.mkdir(parents=True,exist_ok=True)
+    for old in list(images.glob('guest-*.macho'))+(list(libs64.glob('*.so')) if libs64.exists() else []):
+        assert old.resolve().is_relative_to(stage.resolve())
+        old.unlink()
+    with64=not args.no_arm64
+    if with64:
+        libs64.mkdir(parents=True,exist_ok=True)
+        for name,source in (('libSDL3.so',native64/'SDL/libSDL3.so'),('librekhcom64.so',native64/'librekhcom64.so')):
+            shutil.copy2(source,libs64/name);run([strip,'--strip-unneeded',libs64/name])
+        for region in args.regions:
+            shutil.copy2(ROOT/f'build/android64/guest-{region}.macho',images/f'guest-{region}.macho')
     notices=stage/'app/src/main/assets/licenses';notices.mkdir(parents=True,exist_ok=True)
     shutil.copytree(ROOT/'port/assets/fonts',stage/'app/src/main/assets/fonts',dirs_exist_ok=True)
     # achievement badges: the game reads APK assets without the "assets/" prefix (PortLoadAsset)
@@ -157,6 +186,9 @@ android {
     with zipfile.ZipFile(apk) as z:
         assert z.testzip() is None
         assert not any(Path(n).suffix.lower() in ['.gba','.sav','.khst','.ini'] for n in z.namelist())
+        if with64:
+            assert 'lib/arm64-v8a/librekhcom64.so' in z.namelist(), 'the 64-bit host is missing'
+            assert all(f'assets/guest-{r}.macho' in z.namelist() for r in args.regions), 'a 64-bit game image is missing'
         for name in desired:
             member=f'lib/{args.abi}/{name}'
             assert member in z.namelist()

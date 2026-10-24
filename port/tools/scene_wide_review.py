@@ -25,9 +25,8 @@ def source(event, layer, x, y):
             return 0, 0
         steps = ((8,-4),(-8,4),(8,4),(-8,-4))
     elif event == 61:
-        if layer == 'bg2' and 32 <= x <= 36 and y == 5:
-        return source(event,layer,x,y)
-    if -5 <= x <= 3 and 3 <= y <= 7:
+        # as port_scene061_tiles.h (PortScene061TileSource): the completed floor diamond over the old map edge
+        if -5 <= x <= 3 and 3 <= y <= 7:
             return (x+12,y+6) if layer == 'bg3' else (0,3)
         if layer == 'bg2' and 32 <= x <= 36 and y == 5:
             return (16,17,2,3,16)[x-32], 0

@@ -244,6 +244,20 @@ static int MapWorldTile(int bg, int tx, int ty) {
     }
 }
 
+/* The PPU draws the wide view's rows above and below the GBA picture on several cores (port_ppu.c,
+   RenderOuterRows): the room's tables that MapWorldTile fills on first use are filled here first, on one core, so
+   those rows only read them. Same results: each table depends only on the room. */
+void MapWorldTilePrime(void) {
+    int sx, sy, tx;
+    if (sMapCells == NULL || sMapRoomDef == NULL)
+        return;
+    if (sMapTopClose < 0)
+        sMapTopClose = getenv("KHCOM_TOPCLOSE") == NULL || atoi(getenv("KHCOM_TOPCLOSE")) != 0;
+    MapFindEdgeStrip(&sx, &sy);
+    for (tx = 0; tx < 512; tx++)
+        MapPlainBaseTile(tx);
+}
+
 static void MapPortSetWorld(s32 x, s32 y) {
     PortSetBgWorld(3, MapWorldTile, x, y);
     PortSetBgWorld(2, MapWorldTile, x, y);

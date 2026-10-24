@@ -2,7 +2,7 @@
 """Build the PS5 package (PPSA98511.zip) from Windows, inside the prepared Debian VM.
 
 The PS5 app needs a native Linux host. On this machine the VM image is
-D:/ReKHCoM-build/ps5/ps5env.qcow2 (dependencies already installed); this script
+D:/01Claude/ReKHCoM-build/ps5/ps5env.qcow2 (dependencies already installed); this script
 packs the committed source (git archive HEAD) and the ROMs, boots it through
 port/tools/linux_vm_test.py, runs build_all.py --platform ps5 --package inside
 and fetches the zip.
@@ -25,8 +25,8 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-IMAGE = Path('D:/ReKHCoM-build/ps5/ps5env.qcow2')
-SHARE = Path('D:/ReKHCoM-build/ps5/share-release')
+IMAGE = Path('D:/01Claude/ReKHCoM-build/ps5/ps5env.qcow2')
+SHARE = Path('D:/01Claude/ReKHCoM-build/ps5/share-release')
 
 
 def main():
@@ -37,7 +37,7 @@ def main():
     ap.add_argument('--cpus', default='8')
     args = ap.parse_args()
     version = args.version or re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"',
-                                        (ROOT / 'port/decompui/decompui.cpp').read_text(encoding='utf-8'))[1]
+                                        (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8'))[1]
     if not IMAGE.is_file():
         sys.exit(f'PS5 VM image not found: {IMAGE}')
     # The VM disk is persistent: two QEMU processes on it would corrupt it.
@@ -81,6 +81,7 @@ def main():
     (SHARE / 'build-release.sh').write_bytes(script.encode())
     args.out.mkdir(parents=True, exist_ok=True)
     fetched = args.out / 'ps5-fetch'
+    shutil.rmtree(fetched, ignore_errors=True)  # a package left by a failed run must never pass for this one
     command = [sys.executable, str(ROOT / 'port/tools/linux_vm_test.py'), '--share', str(SHARE),
                '--disk', str(IMAGE), '--net', '--run-timeout', '10800', '--mem', args.mem, '--cpus', args.cpus,
                '--bg-run', 'bash /root/share/build-release.sh', '--poll', '30', '--stall', '900',

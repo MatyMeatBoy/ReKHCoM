@@ -751,21 +751,32 @@ int rename(const char* a, const char* b) { return h_rename(a, b); }
 
 /* ---- process ------------------------------------------------------------- */
 
+/* Values longer than a slot (the harness' KHCOM_MODE / KHCOM_KEYS lists run to kilobytes) are read again into a
+   bigger one: cut at 159 bytes, the Android story scenarios lost their key presses and stalled in the event. */
 char* getenv(const char* name) {
     enum { SLOTS = 128 };
-    static char slots[SLOTS][160];
+    static char* slots[SLOTS];
     static const char* keys[SLOTS];
     static int used;
-    int i, n;
+    int i, n, cap = 160;
     for (i = 0; i < used; i++)
         if (strcmp(keys[i], name) == 0)
-            return slots[i][0] == 1 ? NULL : slots[i];
+            return slots[i] && slots[i][0] == 1 ? NULL : slots[i];
     if (used == SLOTS) /* the table is full: start over, nothing is returned from it for long */
         used = 0;
     i = used++;
-    n = h_getenv(name, slots[i], (int)sizeof(slots[i]) - 1);
     free((void*)keys[i]);
     keys[i] = strdup(name);
+    for (;;) {
+        free(slots[i]);
+        slots[i] = malloc((size_t)cap);
+        if (!slots[i])
+            return NULL;
+        n = h_getenv(name, slots[i], cap - 1);
+        if (n < cap - 2 || cap >= (1 << 20))
+            break;
+        cap *= 4; /* it filled the slot: maybe cut */
+    }
     if (n < 0) { slots[i][0] = 1; slots[i][1] = 0; return NULL; }
     slots[i][n] = 0;
     return slots[i];

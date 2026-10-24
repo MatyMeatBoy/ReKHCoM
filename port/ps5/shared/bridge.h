@@ -50,4 +50,11 @@ typedef struct HostPad {
 } HostPad;
 #define HOSTPAD_MAX 4
 
+/* A finger on the touch screen: id, position as a fraction of the screen (0..1). */
+typedef struct HostTouch {
+    uint32_t id;
+    float x, y;
+} HostTouch;
+#define HOSTTOUCH_MAX 10
+
 #endif

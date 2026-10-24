@@ -6,6 +6,7 @@
 #include "types.h"
 #ifdef PLATFORM_PC
 #include "engine.h"
+#include "port/port_hdsprites.h"
 #endif
 #include "worldinspect_data.h"
 #include "registration_data.h"
@@ -597,6 +598,15 @@ void WorldInspectDraw() {
                       sWorldInspectBarTiles, sWorldInspectBarPalette, NULL,
                       SPRITE_PRIORITY(3), 3001);
     }
+#if defined(PLATFORM_PC) && !defined(VERSION_EU)
+    /* this version stops drawing the title sprite while selecting: the BG copy stays, the HD banner goes over it */
+    else {
+        int level = (int)(gFadeWork->amount >> 8) * 255 / 31;
+        PortHdStillSprite(gWorldInspectBarTiles, gWorldInspectBarFrame0, sWorldInspectBarX >> 8, 0,
+                          gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
+                          gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
+    }
+#endif
 
     prio = SPRITE_PRIORITY(1);
 

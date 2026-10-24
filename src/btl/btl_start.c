@@ -32,8 +32,9 @@ void task_btl_start_0(BtlStartWork* work) {
 
 s32 task_btl_start_1(BtlStartWork* work) {
 #ifdef PLATFORM_PC
-    /* The heart: GBA-size until the white flash hides the switch back. */
-    if (work->timer < 43)
+    /* The heart: GBA-size until the white flash hides the switch back. The flash set at timer 43 reaches the screen
+       one frame later, so the framing holds through 43 too (a frame of the small heart over the stage showed). */
+    if (work->timer <= 43)
         PortFitScreen();
 #endif
     if (work->timer <= 20) {

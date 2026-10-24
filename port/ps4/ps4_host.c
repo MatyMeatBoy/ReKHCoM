@@ -570,7 +570,9 @@ static void* AudioThread(void* arg) {
 }
 #endif
 
+static int sGameRate = 48000; /* the rate the game opened the audio at */
 static int H_audio_open(int rate) {
+    sGameRate = rate;
     if (rate != 48000)
         Log("audio: the game asked for %d Hz; the output is 48000 Hz", rate);
     if (sAudioOpen)
@@ -597,7 +599,7 @@ static void AudioClose(void) {
 }
 
 /* The game paces audio to its own 59.7275 Hz frame clock and stretches the sound by a hair (linear), as the PS5 does. */
-static void H_audio_push(const int16_t* frames, uint32_t count) {
+static void GamePush(const int16_t* frames, uint32_t count) {
     static int16_t* out;
     static size_t cap;
     if (!count)
@@ -636,6 +638,18 @@ static void H_audio_push(const int16_t* frames, uint32_t count) {
     sLast[0] = frames[count * 2 - 2];
     sLast[1] = frames[count * 2 - 1];
     RingPut(out, (uint32_t)n);
+}
+
+/* HD music: the host decodes the track the game names and mixes it into the game's blocks (shared/hd_music_host.h) */
+#define HD_MUSIC_LOG Log
+#include "hd_music_host.h"
+/* the network link's socket (shared/udp_host.h): none on this host yet, the link stays the cable */
+#include "udp_host.h"
+static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
+/* HD movies: only the Android host plays them (bridge entry hd_movie); the game plays its own movie */
+static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
+    (void)movie, (void)subs1, (void)subs2, (void)font;
+    return 0;
 }
 static uint32_t H_audio_queued(void) {
 #ifdef REKHCOM_PS4
@@ -720,6 +734,9 @@ static int H_pad_poll(HostPad* out, int count) {
 }
 static int H_quit_requested(void) { return sQuit; }
 static void H_set_title(const char* s) { (void)s; }
+/* no touch screen and no background state here (bridge entries of the Android 64-bit host) */
+static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
+static int H_app_state(void) { return 0; }
 
 /* ---- what the GBA does with stray pointers and divisions by zero --------------------------------------------------
  * The same handler as the PS5 host (port/ps5/app/ps5_host.c, where the reasoning is written out): a read or write the
@@ -1212,7 +1229,8 @@ int main(int argc, char** argv) {
         HM(sin, (double (*)(double))sin), HM(cos, (double (*)(double))cos), HM(tan, (double (*)(double))tan),
         HM(atan2, (double (*)(double, double))atan2), HM(pow, (double (*)(double, double))pow), HM(exp, (double (*)(double))exp),
         HM(log_e, (double (*)(double))log), HM(fmod, (double (*)(double, double))fmod), HM(sinf, (float (*)(float))sinf),
-        HM(cosf, (float (*)(float))cosf), HM(powf, (float (*)(float, float))powf), HF(set_title), HF(notify),
+        HM(cosf, (float (*)(float))cosf), HM(powf, (float (*)(float, float))powf), HF(set_title), HF(notify), HF(touch_poll), HF(app_state), HF(hd_music), HF(hd_movie),
+        HF(udp_open), HF(udp_resolve), HF(udp_send), HF(udp_recv),
     };
     for (int i = 0; i < HF_COUNT; ++i)
         if (!t[i]) {

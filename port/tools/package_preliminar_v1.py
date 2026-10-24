@@ -55,4 +55,4 @@ def package(build,out,evidence):
  (out/'LEEME.txt').write_text('Preliminar V1: versiones implementadas pendientes de comentarios del usuario.\nEjecutar Probar Preliminar V1.bat. Escala x3, cuatro ventanas y opcion antes/despues.\nCodex hace commits; Claude integra. No se ha integrado ni publicado.\nPiezas disponibles: '+', '.join(c['name'] for c in selected)+'\n',encoding='utf-8')
  print(out)
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--build',default='build/agrabah109-eu');p.add_argument('--out',default='../ReKHCoM-preliminarV1');p.add_argument('--evidence',default='build/preliminar-v1/ready');a=p.parse_args();package(Path(a.build),(ROOT/a.out).resolve(),ROOT/a.evidence)
+ p=argparse.ArgumentParser();p.add_argument('--build',default='build/agrabah109-eu');p.add_argument('--out',default='../pruebas/ReKHCoM-preliminarV1');p.add_argument('--evidence',default='build/preliminar-v1/ready');a=p.parse_args();package(Path(a.build),(ROOT/a.out).resolve(),ROOT/a.evidence)

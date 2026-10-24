@@ -37,6 +37,9 @@
 #include "card_message_data.h"
 #include "event_ids.h"
 #include "player_progression_types.h"
+#ifdef PLATFORM_PC
+#include "port/port_hdsprites.h"
+#endif
 
 #ifdef VERSION_EU
 static void* sWorldselectBg1Maps[5] = {
@@ -554,6 +557,25 @@ void WorldselectDraw() {
     void* tiles;
     void* pal;
 
+#ifdef PLATFORM_PC
+    /* the title's HD banner: the sprite stays over the BG copy the screen switches to once it has slid in */
+    if (sWorldselectStep >= WORLDSELECT_STEP_TUTORIAL && sWorldselectStep <= WORLDSELECT_STEP_START_ANIM &&
+        sWorldselectTitleTiles != NULL &&
+        PortHdSpriteFind(sWorldselectTitleTiles->src,
+#ifdef VERSION_EU
+                         sWorldselectTitleGfx[gLanguage]
+#else
+                         gWorldselectTitleFrame0
+#endif
+                         ))
+        DrawSprite(0, 0,
+#ifdef VERSION_EU
+                   sWorldselectTitleGfx[gLanguage],
+#else
+                   gWorldselectTitleFrame0,
+#endif
+                   sWorldselectTitleTiles, sWorldselectOverlayPalette, NULL, SPRITE_PRIORITY(0), 0x3E8); /* over BG1 */
+#endif
     if (sWorldselectStep < WORLDSELECT_STEP_TUTORIAL || sWorldselectStep > WORLDSELECT_STEP_START_ANIM) {
         DrawSprite(sWorldselectTitleX >> 8, 0,
 #ifdef VERSION_EU

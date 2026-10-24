@@ -8,6 +8,7 @@
  * output. The result is read by port_audio.c instead of the FIFO DMA.
  */
 #include <string.h>
+#include <SDL3/SDL.h>
 
 #include "m4a.h"
 #include "port/port.h"
@@ -590,7 +591,27 @@ static int IsMusicChannel(const SoundChannel* chan) {
     const MusicPlayerTrack* t = chan->track;
     const MusicPlayerInfo* bgm = &gMPlayInfo_BGM;
 
-    return t != NULL && bgm->tracks != NULL && t >= bgm->tracks && t < bgm->tracks + MAX_MUSICPLAYER_TRACKS;
+    /* the BGM player's own tracks only: the sound effect players' tracks follow them in memory, so a bound of
+       MAX_MUSICPLAYER_TRACKS counted button sounds as music (silenced with the HD music, issue of 22/10) */
+    return t != NULL && bgm->tracks != NULL && t >= bgm->tracks && t < bgm->tracks + bgm->trackCount;
+}
+
+/* KHCOM_AUDIOCHECK=1 (harness): every sounding channel's track is looked up in the player table (its real track
+   counts); a channel taken for music that is not the BGM player's, or the other way round, is logged */
+static void AudioCheck(const SoundChannel* chan) {
+    static int reported[32];
+    const MusicPlayerTrack* t = chan->track;
+    int i, owner = -1, music;
+    if (t == NULL)
+        return;
+    for (i = 0; i < NUM_MUSIC_PLAYERS && i < 32; i++) {
+        const MusicPlayer* p = &gMPlayTable[i];
+        if (t >= p->track && t < p->track + p->numTracks)
+            owner = i;
+    }
+    music = owner >= 0 && gMPlayTable[owner].info == &gMPlayInfo_BGM;
+    if (music != IsMusicChannel(chan) && owner >= 0 && !reported[owner]++)
+        PortLog("audio check: player %d's channel taken for %s", owner, music ? "a sound effect" : "music");
 }
 
 /* Reverb history, one slot per DMA period frame (as the PCM ring buffer). */
@@ -641,6 +662,13 @@ static void MixChannel(SoundInfo* info, SoundChannel* chan, int n, int over) {
 
     if (!(flags & CHAN_ON))
         return;
+    {
+        static int check = -1;
+        if (check < 0)
+            check = SDL_getenv("KHCOM_AUDIOCHECK") != NULL;
+        if (check)
+            AudioCheck(chan);
+    }
 
     if (flags & SOUND_CHANNEL_SF_START) {
         if (flags & SOUND_CHANNEL_SF_STOP) {

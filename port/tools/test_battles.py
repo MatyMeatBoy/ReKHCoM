@@ -18,6 +18,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import case_bin
+
 ROOT = Path(__file__).resolve().parents[2]
 
 def battle_entries():
@@ -34,17 +36,21 @@ def stage_table():
     return re.findall(r"\{\s*(\w+),", body)
 
 
-def run(exe_dir, work, version, index, stage, frames, timeout, riku=False):
+def run(exe_dir, work, version, index, stage, frames, timeout, riku=False, stock=False):
     d = work / f"{index:03d}"
     if d.exists():
         shutil.rmtree(d)
     d.mkdir(parents=True)
-    for f in ("khcom.exe", "SDL3.dll"):
-        shutil.copy(exe_dir / f, d / f)
+    case_bin.place(exe_dir, work, d)
     (d / "kh_com.ini").write_text("config_version=2\n")
     keys = ["60-63:A"]
     dirs = ("RIGHT", "LEFT", "UP", "DOWN")
     for n, f in enumerate(range(300, frames, 24)):
+        if stock:  # stocking cards (L+R) over and over, standing still while the enemies hit (KH_COM_VITA #12)
+            keys.append(f"{f}-{f + 3}:{'L+R' if n % 3 else 'R'}")
+            if n % 6 == 5:
+                keys.append(f"{f + 8}-{f + 11}:A")
+            continue
         keys.append(f"{f}-{f + 3}:A")
         if n % 4 == 0:
             keys.append(f"{f + 6}-{f + 20}:{dirs[(n // 4) % 4]}")
@@ -75,11 +81,12 @@ def main():
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--only", help="comma list of entry indices")
     ap.add_argument("--riku", action="store_true", help="fight as Riku (Reverse/Rebirth)")
+    ap.add_argument("--stock", action="store_true", help="stock cards (L+R) all along while taking hits")
     ap.add_argument("--build", help="folder with khcom.exe (default build/pc or build/pc-<version>)")
     args = ap.parse_args()
 
     exe_dir = ROOT / (args.build or ("build/pc" if args.version == "eu" else f"build/pc-{args.version}"))
-    work = ROOT / "build" / "battletest" / (args.version + ("_riku" if args.riku else ""))
+    work = ROOT / "build" / "battletest" / (args.version + ("_riku" if args.riku else "") + ("_stock" if args.stock else ""))
     work.mkdir(parents=True, exist_ok=True)
     stages = stage_table()
     entries = battle_entries()
@@ -96,7 +103,7 @@ def main():
 
     results = {}
     with ThreadPoolExecutor(args.jobs) as pool:
-        futures = {pool.submit(run, exe_dir, work, args.version, i, stage_for(w), args.frames, args.timeout, args.riku): (i, w, b)
+        futures = {pool.submit(run, exe_dir, work, args.version, i, stage_for(w), args.frames, args.timeout, args.riku, args.stock): (i, w, b)
                    for i, w, b in entries}
         for fut, (i, w, b) in futures.items():
             results[i] = (w, b) + fut.result()

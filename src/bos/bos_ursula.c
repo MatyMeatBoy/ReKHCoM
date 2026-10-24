@@ -863,6 +863,22 @@ void task_bos_ursula_border_2(UrsulaBorderWork* work) {
     WorldToScreen(&rightX, &rightY, 0x18000, 0x19800, -0x800);
     DrawSprite(leftX, leftY, gBosUrsulaBorderFrame0, work->tiles, work->palette, NULL, SPRITE_PRIORITY(2), 0xFB00);
     DrawSprite(rightX, rightY, gUnk_0979D8B8, work->tiles, work->palette, NULL, SPRITE_PRIORITY(2), 0xFB00);
+#ifdef PLATFORM_PC
+    {
+        /* the wide view (Preliminar V2 of the boss arenas, waits for approval): the rocky ridge goes on beside the
+           picture, the same two halves one cave (512 world pixels) to each side, as the cave behind them repeats */
+        extern int PortArenasV2(void);
+        int side;
+        if (PortArenasV2())
+            for (side = -1; side <= 1; side += 2) {
+                WorldToScreen(&leftX, &leftY, 0x8000 + side * 0x20000, 0x19800, -0x800);
+                WorldToScreen(&rightX, &rightY, 0x18000 + side * 0x20000, 0x19800, -0x800);
+                DrawSprite(leftX, leftY, gBosUrsulaBorderFrame0, work->tiles, work->palette, NULL, SPRITE_PRIORITY(2),
+                           0xFB00);
+                DrawSprite(rightX, rightY, gUnk_0979D8B8, work->tiles, work->palette, NULL, SPRITE_PRIORITY(2), 0xFB00);
+            }
+    }
+#endif
 }
 
 void task_bos_ursula_border_3(UrsulaBorderWork* work) {

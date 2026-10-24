@@ -460,6 +460,9 @@ static u16 sMovieSubLowerWidths[MOVIE_SUB_MAX_CHARS];
 
 #ifdef PLATFORM_PC
 void PortUiOpenMoviePause(void);
+unsigned PortUiOpenSerial(void);
+u32 PortFrameCount(void);
+int PortHdMoviePlay(int movieId);
 static u8 sPortMovieSkip;
 
 void PortMovieSkipRequest(void) {
@@ -482,14 +485,31 @@ s32 HandleMovieFrame(s32 arg) {
     /* START pauses any cinematic under the scene pause (#24); its "skip cinematic"
        ends the movie here, after the pause has closed. */
     {
-        static u16 sPrevStart;
+        /* a tap, as event_message.c's scene pause: START pressed and released within 32 frames, alone (not START +
+           SELECT, the options) and with the options never opened meanwhile (23/10) */
+        static u8 sStartHeld, sStartVoid;
+        static unsigned sOptionsSerial;
+        static u32 sStartAt; /* the frame START went down: the movie's own frames are fewer than the display's */
         u16 start = keys & START_BUTTON;
 
-        if (sMovieFrame == 0)
-            sPrevStart = start;
-        if (start && !sPrevStart)
-            PortUiOpenMoviePause();
-        sPrevStart = start;
+        if (sMovieFrame == 0) {
+            sStartHeld = start != 0;
+            sStartVoid = start != 0; /* held into the movie */
+        }
+        if (start) {
+            if (!sStartHeld) {
+                sStartHeld = TRUE;
+                sStartAt = PortFrameCount();
+                sOptionsSerial = PortUiOpenSerial();
+            }
+            if (keys & SELECT_BUTTON)
+                sStartVoid = TRUE;
+        } else {
+            if (sStartHeld && !sStartVoid && PortFrameCount() - sStartAt <= 32 && sOptionsSerial == PortUiOpenSerial())
+                PortUiOpenMoviePause();
+            sStartHeld = FALSE;
+            sStartVoid = FALSE;
+        }
         if (sPortMovieSkip) {
             sPortMovieSkip = FALSE;
             PortUiSkipPrompt(FALSE);
@@ -808,6 +828,13 @@ void mode_movie_1() {
         sMovieModeState++;
         break;
     case MOVIE_MODE_STATE_PLAY:
+#ifdef PLATFORM_PC
+        /* the player's imported HD movie (port/progress/HD_MOD.md) plays instead; the game goes on as after its own */
+        if (PortHdMoviePlay(sMovieId)) {
+            sMovieModeState = MOVIE_MODE_STATE_EXIT;
+            break;
+        }
+#endif
         m4aSoundVSyncOff();
         gVBlankHandlerOverride = MovieVBlankIntr;
         IwramHeapInit(GetIwramHeapStart(), GetIwramHeapSize());

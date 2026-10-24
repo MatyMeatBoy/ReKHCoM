@@ -47,7 +47,7 @@ build SDL 3.4.18 with its Emscripten CMake toolchain, SDL_STATIC=ON,
 SDL_SHARED=OFF. Then, from the repository root:
 
 ```powershell
-python port/tools/build_web.py --emsdk D:/ReKHCoM-build/toolchain/emsdk --sdl-build D:/ReKHCoM-build/web-sdl --sdl-source ../toolchain/android/SDL3-3.4.18 --work D:/ReKHCoM-build/web --region eu
+python port/tools/build_web.py --emsdk D:/01Claude/ReKHCoM-build/toolchain/emsdk --sdl-build D:/01Claude/ReKHCoM-build/web-sdl --sdl-source ../toolchain/android/SDL3-3.4.18 --work D:/01Claude/ReKHCoM-build/web --region eu
 python -m http.server 8765 --bind 127.0.0.1 --directory build/web
 ```
 

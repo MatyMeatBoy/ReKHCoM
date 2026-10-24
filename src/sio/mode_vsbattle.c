@@ -2,6 +2,9 @@
  * mode_vsbattle.c
  * Link Battle Mode
  */
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 
 #include "macros.h"
 #include "mode_vsbattle.h"
@@ -34,6 +37,9 @@ void mode_vsbattle_0(u32 playerId) {
     VsTaskArg arg2;
     BtlWork** rikuBtl;
 
+#ifdef PLATFORM_PC
+    PortSetBattleView(1); /* as mode_battle.c: the stage repeats sideways in the wide margins */
+#endif
     gBtlWork = EwramAlloc(sizeof(BtlWork));
     rikuBtl = &gRikuBtlWork;
     *rikuBtl = EwramAlloc(sizeof(BtlWork));
@@ -43,6 +49,15 @@ void mode_vsbattle_0(u32 playerId) {
     } else {
         SeedRandom(gCharaLinkRecv.seed);
     }
+#ifdef PLATFORM_PC
+    {
+        extern int PortNetlinkTrace(void);
+        extern void PortLog(const char* format, ...);
+        if (PortNetlinkTrace()) /* the battle's seed: the parent's, sent in the link exchange (chara.c) */
+            PortLog("netlink: vs seed sent %04x received %04x, player %d", gCharaLinkSend.seed, gCharaLinkRecv.seed,
+                    gSioPlayerId);
+    }
+#endif
 
     VsBtlWorkInit();
     AllocBattleTiles();
@@ -108,6 +123,9 @@ void mode_vsbattle_1() {
 }
 
 void mode_vsbattle_2() {
+#ifdef PLATFORM_PC
+    PortSetBattleView(0);
+#endif
     BgFxFree();
     TaskPoolDestroy(&gBtlWork->taskPools[1]);
     TaskPoolDestroy(&gBtlWork->taskPools[0]);
@@ -167,3 +185,48 @@ void PlayVsBattleBgm() {
 }
 
 Mode gModeVsbattle = { "mode_vsbattle", (ModeInitFunc)mode_vsbattle_0, mode_vsbattle_1, mode_vsbattle_2 };
+
+#ifdef PLATFORM_PC
+/* The network link (sio.c): the link battle is running, the one part of the link that plays on guessed packets */
+int VsBattleRunning(void) {
+    extern Mode* gCurrentMode;
+    return gCurrentMode == &gModeVsbattle;
+}
+
+/* The network link's desync check (sio.c): a hash of what both games must agree on during a link battle, in
+   player order (the cable's parent first): each fighter's position and HP, and the random generators. 0 when no
+   link battle is running. */
+u32 VsBattleStateHash(void) {
+    extern u32 PortRandomState(void);
+    BtlWork* bySide[2];
+    u32 h = 2166136261u;
+    int i;
+    if (gBtlWork == NULL || gRikuBtlWork == NULL || !(gBtlWork->flags & BTL_FLAG_VS_BATTLE))
+        return 0;
+    bySide[gSioPlayerId == SIO_PLAYER_PARENT ? 0 : 1] = gBtlWork;
+    bySide[gSioPlayerId == SIO_PLAYER_PARENT ? 1 : 0] = gRikuBtlWork;
+    for (i = 0; i < 2; i++) {
+        const BtlObj* a = bySide[i]->actor;
+        if (a == NULL)
+            continue;
+        h = (h ^ (u32)a->x) * 16777619u;
+        h = (h ^ (u32)a->y) * 16777619u;
+        h = (h ^ (u32)a->z) * 16777619u;
+        h = (h ^ (u32)(u16)a->hp) * 16777619u;
+    }
+    h = (h ^ PortRandomState()) * 16777619u;
+    {
+        /* KHCOM_NETLINK_TRACE: the parts, to find what two games disagree on */
+        extern int PortNetlinkTrace(void);
+        extern void PortLog(const char* format, ...);
+        if (PortNetlinkTrace()) {
+            const BtlObj* a = bySide[0]->actor;
+            const BtlObj* b = bySide[1]->actor;
+            PortLog("netlink: hash %08x p1 %d,%d,%d hp %d p2 %d,%d,%d hp %d rng %08x", (unsigned)h, a ? (int)a->x : 0,
+                    a ? (int)a->y : 0, a ? (int)a->z : 0, a ? (int)a->hp : 0, b ? (int)b->x : 0, b ? (int)b->y : 0,
+                    b ? (int)b->z : 0, b ? (int)b->hp : 0, (unsigned)PortRandomState());
+        }
+    }
+    return h ? h : 1;
+}
+#endif

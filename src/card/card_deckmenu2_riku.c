@@ -25,6 +25,9 @@
 
 #ifdef PLATFORM_PC
 #include <stdlib.h>
+#include <string.h>
+#include "engine.h"
+#include "port/port_hdsprites.h"
 void PortLog(const char* format, ...);
 void PortRegisterBgTextTile(void* address, int code, int style, const void* source32);
 void PortClearBgTextTiles(void);
@@ -560,6 +563,20 @@ static void Deckmenu2_2(RikuDeckMenuWork* work) {
         DrawSprite(work->bannerX >> 8, 0, gRikuDeckTitleBannerFrames[0], work->tiles12, work->palette3, NULL, 0, 10);
 #endif
     }
+#ifdef PLATFORM_PC
+    /* the title's HD banner over the BG copy the menu keeps once it has slid in (its tiles released), as in Sora's */
+    else if (memcmp(GetBgScreenBase(3), gRikuDeckReviewGridMap, 128) == 0) {
+        int level = (int)(gFadeWork->amount >> 8) * 255 / 31;
+        PortHdStillSprite(
+#ifdef VERSION_EU
+            gRikuDeckTitleBannerTilesByLanguage[gLanguage], gRikuDeckTitleBannerSpritesByLanguage[gLanguage][0],
+#else
+            gRikuDeckTitleBannerTiles, gRikuDeckTitleBannerFrames[0],
+#endif
+            work->bannerX >> 8, 0, gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
+            gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
+    }
+#endif
 
     if (work->tiles6 != NULL) {
         DrawSprite(work->topBarX >> 8, work->topBarY >> 8, gDeckMenuBarFrames[0], work->tiles6,

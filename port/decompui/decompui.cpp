@@ -62,9 +62,7 @@ namespace fs = std::filesystem;
 #include "../achievements/offline_achievements.h"
 #include "../achievements/toast_layout.h"
 
-#ifndef REKHCOM_VERSION
-#define REKHCOM_VERSION "v1.9.13"
-#endif
+#include "../include/port/port_version.h"
 
 static bool sSpanish;
 
@@ -147,6 +145,82 @@ static bool ReadFile(const fs::path& path, std::vector<unsigned char>& out, size
 
 static fs::path RomPath(int v) {
     return sRoot / "roms" / (std::string(kVersions[v].code) + ".gba");
+}
+
+/* The player's own files in an install: saves (every bank and version), settings, the RetroAchievements login and the
+   achievements earned offline, the online settings, save states, ROMs and the HD mod. */
+static bool IsPlayerFile(const std::string& name) {
+    auto starts = [&](const char* p) { return name.rfind(p, 0) == 0; };
+    auto ends = [&](const char* s) { size_t n = strlen(s); return name.size() >= n && name.compare(name.size() - n, n, s) == 0; };
+    if (name == "kh_com.default.ini") /* shipped with the package */
+        return false;
+    return (starts("kh_com") && (ends(".sav") || ends(".ini"))) || name == "decompui.ini" ||
+           name == "retroachievements.ini" || (starts("achievements") && ends(".dat")) || name == "netlink.cfg" ||
+           ends(".gba");
+}
+
+static bool HasPlayerData(const fs::path& dir) {
+    std::error_code ec;
+    for (const auto& f : fs::directory_iterator(dir, ec))
+        if (f.is_regular_file(ec) && IsPlayerFile(f.path().filename().string()))
+            return true;
+    return fs::is_directory(dir / "roms", ec) && !fs::is_empty(dir / "roms", ec);
+}
+
+/* An update unpacked beside the old install instead of over it: up to v1.9.10 the ZIP had a versioned top folder
+   (ReKHCoM-v1.9.10-windows-x86/), so "extract over the same folder" put the new version next to it, with no saves.
+   A new install with no player files of its own takes them from the newest ReKHCoM install inside it or beside it:
+   files and folders copied (never over one already here), the HD mod moved (gigabytes; a rename on the same disk). */
+static void AdoptPreviousInstall() {
+    std::error_code ec;
+    if (HasPlayerData(sRoot))
+        return;
+    fs::path best;
+    fs::file_time_type bestTime{};
+    auto consider = [&](const fs::path& dir) {
+        std::string name = dir.filename().string();
+        std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+        if (fs::equivalent(dir, sRoot, ec) || name.rfind("rekhcom", 0) != 0 || !HasPlayerData(dir))
+            return;
+        fs::file_time_type t{};
+        for (const auto& f : fs::directory_iterator(dir, ec))
+            if (f.is_regular_file(ec) && IsPlayerFile(f.path().filename().string()))
+                t = std::max(t, f.last_write_time(ec));
+        if (best.empty() || t > bestTime)
+            best = dir, bestTime = t;
+    };
+    for (const auto& d : fs::directory_iterator(sRoot, ec))
+        if (d.is_directory(ec))
+            consider(d.path());
+    for (const auto& d : fs::directory_iterator(sRoot.parent_path(), ec))
+        if (d.is_directory(ec))
+            consider(d.path());
+    if (best.empty())
+        return;
+    int copied = 0;
+    for (const auto& f : fs::directory_iterator(best, ec)) {
+        std::string name = f.path().filename().string();
+        fs::path to = sRoot / name;
+        if (f.is_directory(ec) && (name == "roms" || name == "states")) {
+            /* the package has its own roms/ (its notes): merged, nothing here replaced */
+            fs::copy(f.path(), to, fs::copy_options::recursive | fs::copy_options::skip_existing, ec);
+            copied += !ec;
+            continue;
+        }
+        if (fs::exists(to, ec))
+            continue;
+        if (f.is_regular_file(ec) && IsPlayerFile(name)) {
+            copied += fs::copy_file(f.path(), to, ec) ? 1 : 0;
+        } else if (f.is_directory(ec) && name == "hd") {
+            fs::rename(f.path(), to, ec); /* another disk: left there, the launcher's import makes a new one */
+            copied += !ec;
+        }
+    }
+    if (copied)
+        Notice(std::string(T("Se trajeron tus partidas, opciones y ROMs de la instalación anterior: ",
+                             "Your saves, settings and ROMs were brought over from the previous install: ")) +
+                   best.u8string(),
+               false);
 }
 
 static void ScanInstall() {
@@ -243,11 +317,13 @@ static const Setting kSettings[] = {
     { "cheat_unlock_riku", 0 },
     { "cheat_one_hit", 0 },
     { "cheat_infinite_hp", 0 },
+    { "debug_gba_map_logic", 0 },
     { "experimental_save_point_slot_select", 0 },
     { "experimental_hide_touch_controls", 0 },
     { "config_version", PORT_ZOOM_CONFIG_VERSION }, { "view_mode", 4 },   { "zoom", PORT_ZOOM_DEFAULT },         { "scale_mode", 0 },
     { "filter", 0 },         { "fullscreen", 0 },  { "vsync", 1 },        { "hud_size", 1 },
-    { "narrow_fit", 1 },     { "scanlines", 0 },   { "color_correction", 0 }, { "show_fps", 0 }, { "discord_presence", 1 },
+    { "narrow_fit", 1 },     { "scanlines", 0 },   { "color_correction", 0 }, { "show_fps", 0 }, { "experimental_frame_skip", 1 }, { "discord_presence", 1 }, { "net_stats", 1 }, { "net_delay", 0 }, { "hd_movies", 1 }, { "hd_music", 1 }, { "hd_scenes", 0 }, { "hd_subtitles", 1 }, { "hd_cards", 0 }, { "hd_title", 0 },
+    { "graphics_mode", 0 }, { "graphics_mode_applied", 0 }, { "gba_border", 0 },
     { "window_scale", 4 },   { "fullscreen_width", 0 }, { "fullscreen_height", 0 },
     { "master_volume", 100 }, { "music_volume", 100 }, { "sfx_volume", 100 },
     { "dodge_button", 1 },   { "stock_button", 1 }, { "pad_layout", 0 }, { "experimental_moogle_notice", 0 }, { "hd_text", 0 },
@@ -373,18 +449,28 @@ static void SaveIni() {
             sIni[kv.first] = kv.second; /* the game's change, not the launcher's */
     }
     sIniOnDisk = sIni;
+    std::string onlineName; /* the one text setting (the lobby's name): kept as written */
+    {
+        std::ifstream in(sRoot / "kh_com.ini");
+        std::string l;
+        while (std::getline(in, l))
+            if (l.rfind("online_name=", 0) == 0)
+                onlineName = l;
+    }
     std::ofstream f(sRoot / "kh_com.ini", std::ios::trunc);
     f << "# Kingdom Hearts: Chain of Memories (PC) settings\n";
     for (const Setting& s : kSettings)
         f << s.key << "=" << sIni[s.key] << "\n";
     /* keys this launcher does not know (newer game options) are kept */
     for (const auto& kv : sIni) {
-        bool known = false;
+        bool known = kv.first == "online_name";
         for (const Setting& s : kSettings)
             known = known || kv.first == s.key;
         if (!known)
             f << kv.first << "=" << kv.second << "\n";
     }
+    if (!onlineName.empty())
+        f << onlineName << "\n";
 }
 
 /* Language the European game starts in (the language screen's cursor):
@@ -971,6 +1057,9 @@ static void DrawCover(float w, float h) {
 }
 
 static void CreateDesktopShortcut();
+static void AddToSteam();
+static void InstallElsewhereRow();
+static void ReportProblemRow();
 
 static void PageHome(SDL_Window* window) {
     float avail = ImGui::GetContentRegionAvail().x;
@@ -990,16 +1079,24 @@ static void PageHome(SDL_Window* window) {
     /* the two secondary actions side by side, under the play bar */
     {
         float gap = Px(10), full = ImGui::GetContentRegionAvail().x;
-        float half = ready ? (full - gap) * 0.5f : full;
-        if (ImGui::Button(T("Instalar ROM...", "Install ROM..."), ImVec2(half, 0)))
+        float third = ready ? (full - 2 * gap) / 3.0f : full;
+        if (ImGui::Button(T("Instalar ROM...", "Install ROM..."), ImVec2(third, 0)))
             PickRom(window);
         if (ready) {
             ImGui::SameLine(0, gap);
-            if (ImGui::Button(T("Acceso directo", "Desktop shortcut"), ImVec2(half, 0)))
+            if (ImGui::Button(T("Acceso directo", "Desktop shortcut"), ImVec2(third, 0)))
                 CreateDesktopShortcut();
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("%s", T("Un acceso \"ReKHCoM\" que abre el juego sin pasar por el launcher.",
                                           "A \"ReKHCoM\" shortcut that opens the game without the launcher."));
+            ImGui::SameLine(0, gap);
+            if (ImGui::Button(T("Añadir a Steam", "Add to Steam"), ImVec2(third, 0)))
+                AddToSteam();
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("%s", T("Lo añade a tu biblioteca de Steam como juego externo, con su portada "
+                                          "(para jugar con el mando de Steam o en Steam Deck / Big Picture).",
+                                          "Adds it to your Steam library as a non-Steam game, with its cover (to play "
+                                          "with Steam Input, Big Picture or on a Steam Deck)."));
         }
     }
     if (!ready) {
@@ -1164,6 +1261,8 @@ static void PageHome(SDL_Window* window) {
                                       "A save from an emulator (mGBA, VBA, NO$GBA...) or GameShark / Action Replay. "
                                       "It is converted to this version if it comes from another region; the current "
                                       "one is backed up first."));
+        InstallElsewhereRow();
+        ReportProblemRow();
     }
     ImGui::EndChild();
 
@@ -1211,6 +1310,21 @@ static bool ZoomRow(const char* label, const char* help, int& value, bool inheri
     return true;
 }
 
+/* A graphics mode's presets, as the game's PortApplyGraphicsMode (port_config.c): set here so that what the player
+   changes afterwards in the launcher stays (the game applies a mode only when graphics_mode_applied differs). */
+static void ApplyGraphicsMode(int mode) {
+    bool hd = mode == 1, classic = mode == 3;
+    Ini("graphics_mode") = mode;
+    if (mode == 0) /* choose: the game asks on its next start */
+        return;
+    Ini("graphics_mode_applied") = mode;
+    Ini("view_mode") = classic ? 0 : 4;
+    for (const char* k : { "hd_text", "hd_cards", "hd_title", "hd_music", "hd_movies", "hd_subtitles", "hd_scenes" })
+        Ini(k) = hd;
+    Ini("dodge_button") = Ini("stock_button") = !classic;
+    Ini("gba_border") = classic ? (Ini("gba_border") ? Ini("gba_border") : 1) : 0;
+}
+
 static void PageGraphics() {
     const char* views[] = { T("Original 240x160", "Original 240x160"), T("Panorámica 284x160", "Wide 284x160"),
                             T("Ampliada 320x180", "Extended 320x180"), T("Máxima 384x216", "Maximum 384x216"),
@@ -1225,6 +1339,28 @@ static void PageGraphics() {
 
     BeginCard("display");
     Eyebrow(T("PANTALLA", "DISPLAY"));
+    {
+        const char* modes[] = { T("Escoger al empezar", "Choose on start"), T("Modo HD", "HD mode"),
+                                T("GBA mejorado", "GBA enhanced"), T("GBA clásico", "GBA classic") };
+        int mode = std::clamp(Ini("graphics_mode"), 0, 3);
+        if (CycleRow(T("Modo gráfico", "Graphics mode"),
+                     T("HD: cartas, logo, música y videos de Re:CoM (mod HD importado) y todas las mejoras. GBA mejorado: "
+                       "vista amplia y mejoras sin extras HD. GBA clásico: la imagen de GBA a escala entera con borde, "
+                       "todo apagado. Elegir un modo pone sus valores; luego puedes cambiar cualquiera.",
+                       "HD: Re:CoM's cards, logo, music and movies (imported HD mod) and every improvement. GBA enhanced: "
+                       "wide view and improvements without HD extras. GBA classic: the GBA picture at a whole scale with a "
+                       "border, everything off. Choosing a mode sets its values; you can change any of them afterwards."),
+                     mode, 4, modes)) {
+            ApplyGraphicsMode(mode);
+            changed = true;
+        }
+        const char* borders[] = { T("No", "Off"), "1", "2", "3" };
+        if (Ini("view_mode") == 0)
+            changed |= CycleRow(T("Borde (vista Original)", "Border (Original view)"),
+                                T("Un marco decorativo alrededor de la imagen de GBA, como el del Super Game Boy.",
+                                  "A decorative frame around the GBA picture, like the Super Game Boy's."),
+                                Ini("gba_border"), 4, borders);
+    }
     changed |= CycleRow(T("Vista", "View"), T("Auto adapta el encuadre a la ventana.",
                                               "Auto adapts the view to the window."),
                         Ini("view_mode"), 5, views);
@@ -1302,6 +1438,8 @@ static void PageGraphics() {
         SaveIni();
 }
 
+#include "hd_import.inc"
+
 static void PageSound() {
     bool changed = false;
     BeginCard("sound");
@@ -1315,9 +1453,188 @@ static void PageSound() {
                          T("Requiere la ROM japonesa original verificada en roms/B8CJ.gba. Se aplica al iniciar el juego; conserva los textos europeos o ingleses.",
                            "Requires the verified original Japanese ROM in roms/B8CJ.gba. Applied when starting the game; keeps European or English text."), Ini("undub"));
     ImGui::EndDisabled();
+    ImGui::Separator();
+    changed |= HdModCard();
     ImGui::EndChild();
     if (changed)
         SaveIni();
+}
+
+/* The link battle over the network (alpha, port/progress/ONLINE_ESTUDIO.md): netlink.cfg holds one line the game
+   reads when the link starts: off, steam:host, steam:join, host:<port>, join:<ip>:<port> or
+   relay:<server>:<port>:<CODE>:host|join (a relay by a room code, port/tools/netlink_relay.py: crossplay with Android). */
+static void NetlinkRows() {
+    static int mode = -1, port = 47777;
+    static char ip[64] = "", room[17] = "", name[25] = "";
+    static const char* const kSpecs[9] = { "off", "steam:host", "steam:join", "host", "join", "relay-host", "relay-join",
+                                           "lobby:steam", "lobby-server" };
+    const char* const names[9] = { T("Desactivado (cable)", "Off (cable)"), T("Steam: crear sala", "Steam: open a room"),
+                                   T("Steam: unirse a un amigo", "Steam: join a friend"),
+                                   T("IP: alojar", "IP: host"), T("IP: unirse", "IP: join"),
+                                   T("Relay: crear sala", "Relay: open a room"), T("Relay: unirse a una sala", "Relay: join a room"),
+                                   T("Salas en el juego (Steam)", "Rooms in the game (Steam)"),
+                                   T("Salas en el juego (servidor)", "Rooms in the game (server)") };
+    fs::path cfg = sRoot / "netlink.cfg";
+    bool save = false;
+    if (mode < 0) {
+        std::string line;
+        std::ifstream f(cfg);
+        std::getline(f, line);
+        mode = 0;
+        for (int i = 1; i < 3; i++)
+            if (line == kSpecs[i])
+                mode = i;
+        if (line == "lobby:steam" || line == "lobby")
+            mode = 7;
+        else if (line.rfind("lobby:", 0) == 0) { /* lobby:<server>:<port> */
+            size_t colon = line.rfind(':');
+            mode = 8;
+            snprintf(ip, sizeof(ip), "%s", line.substr(6, colon - 6).c_str());
+            port = std::atoi(line.c_str() + colon + 1);
+        }
+        {
+            std::ifstream ini(sRoot / "kh_com.ini");
+            std::string l;
+            while (std::getline(ini, l))
+                if (l.rfind("online_name=", 0) == 0)
+                    snprintf(name, sizeof(name), "%s", l.substr(12).c_str());
+        }
+        if (line.rfind("host:", 0) == 0) {
+            mode = 3;
+            port = std::atoi(line.c_str() + 5);
+        } else if (line.rfind("join:", 0) == 0) {
+            size_t colon = line.rfind(':');
+            mode = 4;
+            snprintf(ip, sizeof(ip), "%s", line.substr(5, colon - 5).c_str());
+            port = std::atoi(line.c_str() + colon + 1);
+        } else if (line.rfind("relay:", 0) == 0) { /* relay:<server>:<port>:<code>:host|join */
+            std::vector<std::string> f;
+            size_t at = 6, next;
+            while ((next = line.find(':', at)) != std::string::npos) {
+                f.push_back(line.substr(at, next - at));
+                at = next + 1;
+            }
+            f.push_back(line.substr(at));
+            if (f.size() == 4) {
+                mode = f[3] == "host" ? 5 : 6;
+                snprintf(ip, sizeof(ip), "%s", f[0].c_str());
+                port = std::atoi(f[1].c_str());
+                snprintf(room, sizeof(room), "%s", f[2].c_str());
+            }
+        }
+        if (port <= 0 || port > 65535)
+            port = 47777;
+    }
+    save |= CycleRow(T("Enlace en red (alpha)", "Network link (alpha)"),
+                     T("La batalla de enlace (Título > Batalla de enlace) por internet en vez del cable. Steam: los dos "
+                       "con Steam abierto; uno crea la sala y el otro se une (prefiere la sala de un amigo de Steam). "
+                       "IP: quien aloja abre el puerto UDP en su router; el otro escribe su IP. Relay: los dos escriben "
+                       "el mismo servidor y el mismo código de sala (también con Android).",
+                       "The link battle (Title > Link battle) over the internet instead of the cable. Steam: both with "
+                       "Steam open; one opens a room and the other joins (a Steam friend's room first). IP: the host "
+                       "opens the UDP port on the router; the other types the host's IP. Relay: both type the same server "
+                       "and room code (Android too)."),
+                     mode, 9, names);
+    if (mode == 4 || mode == 5 || mode == 6 || mode == 8) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextUnformatted(mode >= 5 ? T("Servidor", "Server") : T("IP de quien aloja", "Host's IP"));
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(Px(220));
+        save |= ImGui::InputText("##netlink_ip", ip, sizeof(ip));
+    }
+    if (mode >= 3 && mode != 7) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextUnformatted(T("Puerto UDP", "UDP port"));
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(Px(120));
+        save |= ImGui::InputInt("##netlink_port", &port, 0, 0);
+        port = std::clamp(port, 1, 65535);
+    }
+    if (mode == 8) { /* the name on the rooms this player opens (Steam shows its own) */
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextUnformatted(T("Tu nombre", "Your name"));
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(Px(220));
+        if (ImGui::InputText("##online_name", name, sizeof(name))) {
+            std::vector<std::string> lines;
+            std::string l;
+            {
+                std::ifstream ini(sRoot / "kh_com.ini");
+                while (std::getline(ini, l))
+                    if (l.rfind("online_name=", 0) != 0)
+                        lines.push_back(l);
+            }
+            std::ofstream out(sRoot / "kh_com.ini", std::ios::trunc);
+            for (const std::string& x : lines)
+                out << x << "\n";
+            if (name[0])
+                out << "online_name=" << name << "\n";
+        }
+    }
+    if (mode == 5 || mode == 6) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextUnformatted(T("Código de sala", "Room code"));
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(Px(160));
+        if (ImGui::InputText("##netlink_room", room, sizeof(room), ImGuiInputTextFlags_CharsUppercase | ImGuiInputTextFlags_CharsNoBlank)) {
+            char* w = room;
+            for (const char* r = room; *r; r++) /* letters and digits: the relay's codes */
+                if ((*r >= 'A' && *r <= 'Z') || (*r >= '0' && *r <= '9'))
+                    *w++ = *r;
+            *w = 0;
+            save = true;
+        }
+    }
+    if (mode == 1 || mode == 2 || mode == 7) {
+        std::error_code ec;
+        bool dll = fs::exists(sRoot / "bin" / "steam_api.dll", ec) || fs::exists(sRoot / "steam_api.dll", ec);
+        ImGui::PushFont(sFontSmall);
+        ImGui::TextColored(dll ? kMuted : kAccent, "%s",
+                           dll ? T("Usa la app de pruebas de Valve (Spacewar, 480): no hace falta tenerla.",
+                                   "Uses Valve's test app (Spacewar, 480): you do not need to own it.")
+                               : T("Falta steam_api.dll junto al juego.", "steam_api.dll is missing next to the game."));
+        ImGui::PopFont();
+    }
+    if (mode != 0) { /* the link's own settings, in kh_com.ini */
+        static const char* const delays[9] = { "Auto", "1", "2", "3", "4", "5", "6", "7", "8" };
+        static const char* const onOff[2] = { "No", T("Sí", "Yes") };
+        int delay = std::clamp(Ini("net_delay"), 0, 8), stats = Ini("net_stats") != 0;
+        if (CycleRow(T("Retardo de entrada (en línea)", "Input delay (online)"),
+                     T("Cuadros de demora de las teclas. Auto: según el ping al conectar (1-2); más alto = menos "
+                       "correcciones del rollback con mucho ping. Lo elige quien aloja.",
+                       "Frames of delay on the keys. Auto: from the ping when linking (1-2); higher = fewer rollback "
+                       "corrections on a high ping. The host's choice counts."),
+                     delay, 9, delays)) {
+            sIni["net_delay"] = delay;
+            SaveIni();
+        }
+        if (CycleRow(T("Mostrar el estado de la red", "Show the network state"),
+                     T("Arriba a la izquierda durante el enlace: ping, retardo y el último rollback.",
+                       "Top left during the link: ping, delay and the last rollback."),
+                     stats, 2, onOff)) {
+            sIni["net_stats"] = stats;
+            SaveIni();
+        }
+    }
+    if (save) {
+        std::ofstream f(cfg, std::ios::trunc);
+        if (mode == 3)
+            f << "host:" << port << "\n";
+        else if (mode == 4)
+            f << "join:" << ip << ":" << port << "\n";
+        else if ((mode == 5 || mode == 6) && ip[0] && room[0])
+            f << "relay:" << ip << ":" << port << ":" << room << ":" << (mode == 5 ? "host" : "join") << "\n";
+        else if (mode == 5 || mode == 6)
+            f << "off\n"; /* until the server and the code are written */
+        else if (mode == 7)
+            f << "lobby:steam\n";
+        else if (mode == 8 && ip[0])
+            f << "lobby:" << ip << ":" << port << "\n";
+        else if (mode == 8)
+            f << "off\n"; /* until the server is written */
+        else
+            f << kSpecs[mode] << "\n";
+    }
 }
 
 static void PageExtras() {
@@ -1379,6 +1696,11 @@ static void PageExtras() {
                            "Reverses L/R and right-stick horizontal card scrolling in battle. Menus and L+R combinations stay unchanged. Off by default."),
                          Ini("invert_card_scroll"));
     ImGui::Separator();
+    changed |= ToggleRow(T("Saltar cuadros si va lento", "Skip frames when slow"),
+                         T("Si el equipo no llega a tiempo, ese cuadro no se dibuja: la lógica y el sonido siguen a la velocidad original. Comprobado: la lógica queda idéntica. Activado por defecto.",
+                           "When the device falls behind, that frame is not drawn: the logic and the sound keep the original speed. Verified: the logic stays identical. On by default."),
+                         Ini("experimental_frame_skip"));
+    ImGui::Separator();
     ImGui::PushStyleColor(ImGuiCol_Text, kMuted);
     ImGui::TextWrapped("%s", T("En pruebas: pueden tener fallos visuales.", "Being tested: expect visual glitches."));
     ImGui::PopStyleColor();
@@ -1424,6 +1746,8 @@ static void PageExtras() {
                            "cartridge."),
                          Ini("ps2_mode"));
 #endif
+    ImGui::Separator();
+    NetlinkRows();
     ImGui::EndChild();
     if (changed)
         SaveIni();
@@ -1859,6 +2183,409 @@ static void CreateDesktopShortcut() {
            !ok);
 }
 
+/* ---- "Add to Steam": a non-Steam game in Steam's shortcuts.vdf (binary KeyValues: 0x00 a map, 0x01 a string,
+   0x02 an int32, 0x07 a uint64, 0x08 the map's end; names and strings end with a zero) ---- */
+struct Vdf {
+    unsigned char type = 0;
+    std::string text;
+    uint64_t number = 0;
+    std::vector<std::pair<std::string, Vdf>> items;
+    Vdf* Find(const std::string& key) {
+        for (auto& kv : items)
+            if (_stricmp(kv.first.c_str(), key.c_str()) == 0)
+                return &kv.second;
+        return nullptr;
+    }
+    Vdf& Set(const std::string& key, unsigned char t) {
+        Vdf* v = Find(key);
+        if (!v) {
+            items.emplace_back(key, Vdf());
+            v = &items.back().second;
+        }
+        v->type = t;
+        return *v;
+    }
+};
+
+static bool VdfRead(const std::string& d, size_t& at, Vdf& map) {
+    auto str = [&](std::string& out) {
+        size_t end = d.find('\0', at);
+        if (end == std::string::npos)
+            return false;
+        out = d.substr(at, end - at);
+        at = end + 1;
+        return true;
+    };
+    while (at < d.size()) {
+        unsigned char t = (unsigned char)d[at++];
+        if (t == 0x08)
+            return true;
+        std::string key;
+        if (!str(key))
+            return false;
+        Vdf& v = map.items.emplace_back(key, Vdf()).second;
+        v.type = t;
+        if (t == 0x00) {
+            if (!VdfRead(d, at, v))
+                return false;
+        } else if (t == 0x01) {
+            if (!str(v.text))
+                return false;
+        } else if (t == 0x02 || t == 0x07) {
+            size_t n = t == 0x02 ? 4 : 8;
+            if (at + n > d.size())
+                return false;
+            memcpy(&v.number, d.data() + at, n);
+            at += n;
+        } else {
+            return false; /* a type this does not know: the file is left alone */
+        }
+    }
+    return false;
+}
+
+static void VdfWrite(std::string& out, const Vdf& map) {
+    for (const auto& kv : map.items) {
+        out += (char)kv.second.type;
+        out += kv.first;
+        out += '\0';
+        if (kv.second.type == 0x00) {
+            VdfWrite(out, kv.second);
+        } else if (kv.second.type == 0x01) {
+            out += kv.second.text;
+            out += '\0';
+        } else {
+            out.append((const char*)&kv.second.number, kv.second.type == 0x02 ? 4 : 8);
+        }
+    }
+    out += (char)0x08;
+}
+
+static uint32_t Crc32(const std::string& s) {
+    uint32_t c = 0xFFFFFFFFu;
+    for (unsigned char b : s) {
+        c ^= b;
+        for (int k = 0; k < 8; k++)
+            c = (c >> 1) ^ (0xEDB88320u & (0u - (c & 1)));
+    }
+    return ~c;
+}
+
+/* The Steam account to add it to: the one that signed in last in config/loginusers.vdf ("MostRecent", else the
+   newest "timestamp"), else every account folder in userdata. */
+static std::vector<fs::path> SteamUserConfigs(const fs::path& steam) {
+    std::vector<fs::path> out;
+    std::error_code ec;
+    std::ifstream f(steam / "config" / "loginusers.vdf");
+    std::string line, id, best;
+    unsigned long long newest = 0;
+    bool mostRecent = false;
+    auto value = [](const std::string& l) { /* the second quoted string of a line */
+        size_t a = l.find('"', l.find('"', l.find('"') + 1) + 1);
+        size_t b = a == std::string::npos ? a : l.find('"', a + 1);
+        return b == std::string::npos ? std::string() : l.substr(a + 1, b - a - 1);
+    };
+    while (std::getline(f, line)) {
+        size_t q = line.find('"');
+        size_t e = q == std::string::npos ? q : line.find('"', q + 1);
+        if (e != std::string::npos && e - q - 1 == 17 && std::isdigit((unsigned char)line[q + 1]) &&
+            line.find('"', e + 1) == std::string::npos)
+            id = line.substr(q + 1, 17);
+        if (id.empty() || mostRecent)
+            continue;
+        if (line.find("\"MostRecent\"") != std::string::npos && value(line) == "1") {
+            best = id;
+            mostRecent = true;
+        } else if (line.find("\"timestamp\"") != std::string::npos) {
+            unsigned long long t = std::strtoull(value(line).c_str(), nullptr, 10);
+            if (t >= newest) {
+                newest = t;
+                best = id;
+            }
+        }
+    }
+    if (!best.empty()) {
+        fs::path p = steam / "userdata" / std::to_string(std::stoull(best) & 0xFFFFFFFFull) / "config";
+        if (fs::is_directory(p, ec))
+            return { p };
+    }
+    for (const auto& e : fs::directory_iterator(steam / "userdata", ec))
+        if (e.path().filename() != "0" && fs::is_directory(e.path() / "config", ec))
+            out.push_back(e.path() / "config");
+    return out;
+}
+
+/* Adds (or updates) "ReKHCoM" in Steam as a non-Steam game that starts this version's game like the desktop
+   shortcut, with the launcher's cover and logo as its Steam artwork. Steam reads the list when it starts. */
+static void AddToSteam() {
+    const VersionState& st = sState[sSelected];
+    if (!st.installed || !fs::exists(st.exe))
+        return;
+    fs::path steam;
+    if (const char* test = SDL_getenv("DECOMPUI_STEAM")) { /* harness: a copy of Steam's folders */
+        steam = fs::u8path(test);
+    } else {
+        wchar_t buf[MAX_PATH];
+        DWORD size = sizeof(buf);
+        if (RegGetValueW(HKEY_CURRENT_USER, L"Software\\Valve\\Steam", L"SteamPath", RRF_RT_REG_SZ, nullptr, buf, &size) ==
+            ERROR_SUCCESS)
+            steam = fs::path(buf);
+    }
+    std::vector<fs::path> configs = steam.empty() ? std::vector<fs::path>() : SteamUserConfigs(steam);
+    if (configs.empty()) {
+        Notice(T("No se encontró Steam (o ninguna cuenta ha iniciado sesión en él).",
+                 "Steam was not found (or no account has signed in to it)."), true);
+        return;
+    }
+    std::string exe = "\"" + st.exe.u8string() + "\"", dir = "\"" + sRoot.u8string() + "\"";
+    std::string args = "--data-dir \"" + sRoot.u8string() + "\" --rom \"" + RomPath(sSelected).u8string() + "\"";
+    std::string name = "ReKHCoM";
+    uint32_t appid = Crc32(exe + name) | 0x80000000u;
+    int done = 0;
+    std::error_code ec;
+    for (const fs::path& config : configs) {
+        fs::path file = config / "shortcuts.vdf";
+        Vdf root;
+        if (fs::exists(file, ec)) {
+            std::ifstream in(file, std::ios::binary);
+            std::string d((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+            size_t at = 0;
+            if (!VdfRead(d, at, root))
+                continue; /* not understood: never overwritten */
+        }
+        Vdf& list = root.Find("shortcuts") ? *root.Find("shortcuts") : root.Set("shortcuts", 0x00);
+        list.type = 0x00;
+        Vdf* entry = nullptr;
+        for (auto& kv : list.items) {
+            Vdf* e = kv.second.Find("Exe");
+            if (kv.second.type == 0x00 && e && _stricmp(e->text.c_str(), exe.c_str()) == 0)
+                entry = &kv.second;
+        }
+        if (!entry) {
+            entry = &list.items.emplace_back(std::to_string(list.items.size()), Vdf()).second;
+            entry->type = 0x00;
+        }
+        entry->Set("appid", 0x02).number = appid;
+        entry->Set("AppName", 0x01).text = name;
+        entry->Set("Exe", 0x01).text = exe;
+        entry->Set("StartDir", 0x01).text = dir;
+        entry->Set("icon", 0x01).text = (sRoot / "ReKHCoM.exe").u8string();
+        entry->Set("LaunchOptions", 0x01).text = args;
+        entry->Set("AllowOverlay", 0x02).number = 1;
+        entry->Set("AllowDesktopConfig", 0x02).number = 1;
+        if (!entry->Find("tags"))
+            entry->Set("tags", 0x00);
+        std::string out;
+        VdfWrite(out, root);
+        if (fs::exists(file, ec))
+            fs::copy_file(file, config / "shortcuts.vdf.rekhcom-backup", fs::copy_options::overwrite_existing, ec);
+        std::ofstream(file, std::ios::binary | std::ios::trunc).write(out.data(), (std::streamsize)out.size());
+        /* the artwork: the cover as the library's capsule, the logo over the hero */
+        fs::create_directories(config / "grid", ec);
+        std::string id = std::to_string(appid);
+        fs::copy_file(sRoot / "assets" / "boxart.jpg", config / "grid" / (id + "p.jpg"), fs::copy_options::overwrite_existing, ec);
+        fs::copy_file(sRoot / "assets" / "logo.png", config / "grid" / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
+        done++;
+    }
+    Notice(done ? T("Añadido a Steam. Si Steam está abierto, reinícialo para verlo en la biblioteca.",
+                    "Added to Steam. If Steam is open, restart it to see it in the library.")
+                : T("No se pudo leer la lista de juegos de Steam; no se cambió nada.",
+                    "Steam's game list could not be read; nothing was changed."),
+           !done);
+}
+
+/* ---- "Install in another folder": the whole ReKHCoM folder (game, launcher, ROMs, saves, HD mod) copied into
+   another one, e.g. X:/Games/ReKHCoM, with a progress bar. The folder it came from is never deleted (the player's
+   saves stay there too until they remove it). ---- */
+struct InstallJob {
+    std::atomic<bool> running{ false }, finished{ false }, ok{ false };
+    std::atomic<long long> done{ 0 }, total{ 0 };
+    fs::path dst;
+};
+static InstallJob sInstall;
+
+static void InstallCopy(fs::path from, fs::path to) {
+    std::error_code ec;
+    std::vector<fs::path> files;
+    long long total = 0;
+    for (auto it = fs::recursive_directory_iterator(from, ec); !ec && it != fs::recursive_directory_iterator(); it.increment(ec))
+        if (it->is_regular_file(ec)) {
+            files.push_back(it->path());
+            total += (long long)it->file_size(ec);
+        }
+    sInstall.total = total;
+    bool ok = !ec;
+    std::vector<char> buf(1 << 22);
+    for (const fs::path& f : files) {
+        fs::path out = to / fs::relative(f, from, ec);
+        fs::create_directories(out.parent_path(), ec);
+        std::ifstream in(f, std::ios::binary);
+        std::ofstream o(out, std::ios::binary | std::ios::trunc);
+        if (!in || !o) {
+            ok = false;
+            continue;
+        }
+        while (in.read(buf.data(), (std::streamsize)buf.size()) || in.gcount() > 0) {
+            o.write(buf.data(), in.gcount());
+            sInstall.done += in.gcount();
+        }
+        ok = ok && (bool)o;
+    }
+    sInstall.ok = ok;
+    sInstall.finished = true;
+    sInstall.running = false;
+}
+
+/* The folder to install into: chosen in the system dialog, opening at <drive>:\Games when there is one. */
+static fs::path PickInstallFolder() {
+    fs::path out;
+    IFileOpenDialog* dialog = nullptr;
+    if (FAILED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog))))
+        return out;
+    DWORD options = 0;
+    dialog->GetOptions(&options);
+    dialog->SetOptions(options | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM);
+    dialog->SetTitle(sUiLanguage == 1 ? L"Carpeta donde instalar ReKHCoM" : L"Folder to install ReKHCoM in");
+    std::error_code ec;
+    for (wchar_t d = L'D'; d <= L'Z'; d++) {
+        std::wstring games = std::wstring(1, d) + L":\\Games";
+        IShellItem* item = nullptr;
+        if (fs::is_directory(games, ec) &&
+            SUCCEEDED(SHCreateItemFromParsingName(games.c_str(), nullptr, IID_PPV_ARGS(&item)))) {
+            dialog->SetFolder(item);
+            item->Release();
+            break;
+        }
+    }
+    if (SUCCEEDED(dialog->Show(nullptr))) {
+        IShellItem* item = nullptr;
+        if (SUCCEEDED(dialog->GetResult(&item))) {
+            PWSTR path = nullptr;
+            if (SUCCEEDED(item->GetDisplayName(SIGDN_FILESYSPATH, &path))) {
+                out = path;
+                CoTaskMemFree(path);
+            }
+            item->Release();
+        }
+    }
+    dialog->Release();
+    return out;
+}
+
+static void InstallElsewhereRow() {
+    std::error_code ec;
+    ImGui::BeginDisabled(sInstall.running);
+    if (ImGui::Button(T("Instalar en otra carpeta...", "Install in another folder..."), ImVec2(-FLT_MIN, 0))) {
+        fs::path pick = PickInstallFolder();
+        if (!pick.empty()) {
+            fs::path dst = _wcsicmp(pick.filename().c_str(), L"ReKHCoM") == 0 ? pick : pick / "ReKHCoM";
+            fs::path rel = fs::relative(dst, sRoot, ec);
+            bool inside = !ec && !rel.empty() && rel.native()[0] != L'.';
+            if (fs::equivalent(dst, sRoot, ec) || inside)
+                Notice(T("Elige una carpeta fuera de esta instalación.", "Choose a folder outside this installation."), true);
+            else if (fs::exists(dst, ec) && !fs::is_empty(dst, ec))
+                Notice(T("Esa carpeta ya tiene archivos: elige una vacía (no se sobrescribe nada).",
+                         "That folder is not empty: choose an empty one (nothing is overwritten)."), true);
+            else {
+                sInstall.dst = dst;
+                sInstall.done = 0;
+                sInstall.total = 0;
+                sInstall.finished = false;
+                sInstall.running = true;
+                std::thread(InstallCopy, sRoot, dst).detach();
+            }
+        }
+    }
+    ImGui::EndDisabled();
+    if (ImGui::IsItemHovered())
+        ImGui::SetTooltip("%s", T("Copia todo (juego, ROMs, partidas, mod HD) a otra carpeta, p. ej. D:/Games/ReKHCoM. "
+                                  "Esta carpeta no se borra.",
+                                  "Copies everything (game, ROMs, saves, HD mod) to another folder, e.g. "
+                                  "D:/Games/ReKHCoM. This folder is not deleted."));
+    if (sInstall.running) {
+        long long total = sInstall.total;
+        ImGui::ProgressBar(total > 0 ? (float)((double)sInstall.done / (double)total) : 0.0f, ImVec2(-FLT_MIN, 0));
+    } else if (sInstall.finished) {
+        ImGui::PushFont(sFontSmall);
+        ImGui::TextColored(sInstall.ok ? kText : kAccent, "%s %s", sInstall.ok ? T("Instalado en", "Installed in")
+                                                                            : T("Copia incompleta en", "Incomplete copy in"),
+                           sInstall.dst.u8string().c_str());
+        ImGui::PopFont();
+        if (sInstall.ok && ImGui::Button(T("Abrir desde ahí (cierra este)", "Open from there (closes this one)"),
+                                         ImVec2(-FLT_MIN, 0))) {
+            ShellExecuteW(nullptr, L"open", (sInstall.dst / "ReKHCoM.exe").wstring().c_str(), nullptr,
+                          sInstall.dst.wstring().c_str(), SW_SHOWNORMAL);
+            SDL_Event quit = {};
+            quit.type = SDL_EVENT_QUIT;
+            SDL_PushEvent(&quit);
+        }
+    }
+}
+
+/* ---- "Report a problem": a new GitHub issue opened in the browser, filled with the version, the selected game and
+   the last game log's header and end. Nothing is sent by itself: the player sees it and submits it. Personal folders
+   (the user profile) are hidden in the text. ---- */
+static std::string UrlEncode(const std::string& s) {
+    static const char* hex = "0123456789ABCDEF";
+    std::string out;
+    for (unsigned char c : s) {
+        if (std::isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
+            out += (char)c;
+        } else {
+            out += '%';
+            out += hex[c >> 4];
+            out += hex[c & 15];
+        }
+    }
+    return out;
+}
+
+static void ReportProblemRow() {
+    if (!SDL_getenv("DECOMPUI_REPORT_URL") && !ImGui::Button(T("Reportar un problema...", "Report a problem..."), ImVec2(-FLT_MIN, 0))) {
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("%s", T("Abre un reporte en GitHub con la versión y el final del registro del juego; lo "
+                                      "revisas y lo envías tú (necesitas una cuenta de GitHub).",
+                                      "Opens a GitHub report with the version and the end of the game's log; you "
+                                      "review and submit it (needs a GitHub account)."));
+        return;
+    }
+    std::vector<std::string> lines;
+    {
+        std::ifstream f(sRoot / "kh_com.log");
+        std::string line;
+        while (std::getline(f, line))
+            lines.push_back(line);
+    }
+    std::string log;
+    size_t head = std::min<size_t>(lines.size(), 12), tail = lines.size() > 52 ? lines.size() - 40 : head;
+    for (size_t i = 0; i < head; i++)
+        log += lines[i] + "\n";
+    if (tail > head)
+        log += "...\n";
+    for (size_t i = std::max(tail, head); i < lines.size(); i++)
+        log += lines[i] + "\n";
+    /* the user profile's folder (it carries the account name) as %USERPROFILE%, in both slash styles */
+    if (const char* profile = getenv("USERPROFILE")) {
+        std::string a = profile, b = a;
+        std::replace(b.begin(), b.end(), '\\', '/');
+        for (const std::string& p : { a, b }) {
+            for (size_t at; !p.empty() && (at = log.find(p)) != std::string::npos;)
+                log.replace(at, p.size(), "%USERPROFILE%");
+        }
+    }
+    if (log.size() > 2000) /* GitHub takes addresses up to ~8 KB, the text grows when encoded */
+        log = log.substr(log.size() - 2000);
+    std::string body = std::string("**What happened** (and what you were doing):\n\n\n**Platform / device**: Windows\n"
+                                   "**Version**: ") + REKHCOM_VERSION + " " + kVersions[sSelected].regionEn +
+                       "\n\n**Log** (kh_com.log):\n```\n" + (log.empty() ? std::string("(no log yet)\n") : log) + "```\n";
+    std::string url = "https://github.com/MatyMeatBoy/ReKHCoM/issues/new?title=" + UrlEncode("[Bug] ") +
+                      "&body=" + UrlEncode(body);
+    if (const char* test = SDL_getenv("DECOMPUI_REPORT_URL")) /* harness: the address written there, no browser */
+        std::ofstream(fs::u8path(test)) << url;
+    else
+        ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+}
+
 /* Runs the game with the shared data folder; the launcher waits hidden. */
 static void Launch(SDL_Window* window) {
     const VersionState& st = sState[sSelected];
@@ -1967,10 +2694,79 @@ static fs::path ExeDir() {
     return fs::path(path).parent_path();
 }
 
-int main(int, char**) {
+/* The player opened this launcher, so the programs it ships are trusted too: drop the "downloaded from the internet"
+   mark (Zone.Identifier) that the ZIP passed to them, or Windows SmartScreen stops bin\khcom_*.exe. Only this
+   install's own .exe and .dll files. */
+static void UnblockOwnFiles() {
+    std::error_code ec;
+    for (const fs::path& dir : { sRoot, sRoot / "bin" })
+        for (const auto& entry : fs::directory_iterator(dir, ec)) {
+            std::wstring ext = entry.path().extension().wstring();
+            for (auto& ch : ext)
+                ch = (wchar_t)towlower(ch);
+            if (entry.is_regular_file(ec) && (ext == L".exe" || ext == L".dll"))
+                DeleteFileW((entry.path().wstring() + L":Zone.Identifier").c_str());
+        }
+}
+
+int main(int argc, char** argv) {
     sRoot = ExeDir();
+    UnblockOwnFiles();
     ApplyUiLanguage();
+    /* ReKHCoM.exe --hd-import [<source folder>] [--scenes] [--sprites-only] [--quality 0|1|2]: the HD mod import without the window
+       (power users, tests); without a folder the installed game is looked for */
+    /* ReKHCoM.exe --hd-compress --quality 1|2: the installed movies and scenes re-encoded in place, without the window */
+    for (int i = 1; i < argc; i++)
+        if (strcmp(argv[i], "--hd-compress") == 0) {
+            int quality = 1;
+            for (int j = 1; j < argc; j++)
+                if (strcmp(argv[j], "--quality") == 0 && j + 1 < argc)
+                    quality = atoi(argv[j + 1]);
+            hd::sJob.running = true;
+            hd::Compress(sRoot, quality);
+            fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
+            return 0;
+        }
+    for (int i = 1; i < argc; i++)
+        if (strcmp(argv[i], "--hd-import") == 0) {
+            fs::path source = i + 1 < argc && argv[i + 1][0] != '-' ? fs::u8path(argv[i + 1]) : hd::FindInstall();
+            bool scenes = false, spritesOnly = false;
+            int quality = 0;
+            for (int j = 1; j < argc; j++) {
+                if (strcmp(argv[j], "--quality") == 0 && j + 1 < argc)
+                    quality = atoi(argv[j + 1]);
+                scenes |= strcmp(argv[j], "--scenes") == 0;
+                spritesOnly |= strcmp(argv[j], "--sprites-only") == 0;
+            }
+            if (source.empty()) {
+                fprintf(stderr, "KINGDOM HEARTS -HD 1.5+2.5 ReMIX- not found\n");
+                return 1;
+            }
+            hd::sJob.running = true;
+            hd::Run(source, sRoot, !spritesOnly, scenes && !spritesOnly, !spritesOnly, true, quality);
+            fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
+            return 0;
+        }
+    AdoptPreviousInstall();
+    hd::MoveScenes(sRoot / "hd"); /* the layout of older versions, moved on every start (not only on the HD page) */
     ScanInstall();
+    /* a dump left next to the launcher (the simplest install: drop it in the folder) is checked and installed once */
+    {
+        std::error_code ec;
+        for (const auto& e : fs::directory_iterator(sRoot, ec)) {
+            std::string ext = e.path().extension().string();
+            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+            if (ext != ".gba" || e.file_size(ec) != kRomSize)
+                continue;
+            std::vector<unsigned char> head;
+            bool already = false;
+            if (ReadFile(e.path(), head) && head.size() == kRomSize)
+                for (int v = 0; v < kVersionCount; v++)
+                    already |= sState[v].installed && std::memcmp(head.data() + 0xAC, kVersions[v].code, 4) == 0;
+            if (!already)
+                InstallRom(e.path());
+        }
+    }
     LoadIni();
     LoadLauncherState();
     SaveLauncherState(); /* the first time, keeps the language chosen from the system */
@@ -1985,6 +2781,20 @@ int main(int, char**) {
     if (SDL_getenv("DECOMPUI_SHORTCUT")) { /* harness: the shortcut alone, then exit */
         CreateDesktopShortcut();
         return 0;
+    }
+    if (SDL_getenv("DECOMPUI_REPORT_URL")) { /* harness: the report's address alone, then exit */
+        ReportProblemRow();
+        return 0;
+    }
+    if (SDL_getenv("DECOMPUI_STEAM")) { /* harness: "Add to Steam" into that folder, then exit */
+        AddToSteam();
+        return 0;
+    }
+    if (const char* to = SDL_getenv("DECOMPUI_INSTALL_TO")) { /* harness: "Install in another folder" there, then exit */
+        InstallCopy(sRoot, fs::u8path(to));
+        fprintf(stderr, "install: %s, %lld of %lld bytes\n", sInstall.ok ? "ok" : "failed", (long long)sInstall.done,
+                (long long)sInstall.total);
+        return sInstall.ok ? 0 : 1;
     }
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))
         return 1;

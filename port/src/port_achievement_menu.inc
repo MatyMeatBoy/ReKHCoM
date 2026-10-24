@@ -91,7 +91,7 @@ static void AchievementMenuText(const char* text, int x, int y, int right, uint3
     }
 }
 static void DrawAchievementMenu(int l, int width, int height) {
-    static const char* const filters[2][3] = {{"All", "Locked", "Unlocked"}, {"Todos", "Pendientes", "Conseguidos"}};
+    static const char* const filters[2][3] = {{"All", "Locked", "Unlocked"}, {"Todos", "No conseguidos", "Conseguidos"}};
     int indices[256], earned, count = AchievementMenuRows(indices, &earned), es = l == LANG_ES;
     int x = 10, top = MENU_TOP + 23, rows = SDL_max(1, (height - top - 94) / 16), i, y;
     int right = width - 10;
@@ -110,7 +110,7 @@ static void DrawAchievementMenu(int l, int width, int height) {
         MenuBar(x, y, right - x, selected);
         /* A filled red mark denotes earned; grey remains locked/unknown. */
         Fill(x + 2, y + 1, 7, 7, info.state == 1 ? MENU_RED : MENU_GREY);
-        SDL_snprintf(text, sizeof(text), "%s", info.state ? (es ? "Conseguido" : "Unlocked") : (es ? "Pendiente" : "Locked"));
+        SDL_snprintf(text, sizeof(text), "%s", info.state ? (es ? "Conseguido" : "Unlocked") : (es ? "No conseguido" : "Locked"));
         DrawText(text, right - TextWidth(text) - 4, y - 2, info.state == 1 ? MENU_RED_DARK : MENU_DIM, 0xFFD8D8D8u);
         AchievementMenuText(info.title, x + 16, y - 2, right - TextWidth(text) - 12, info.state == 1 ? MENU_INK : MENU_DIM);
     }

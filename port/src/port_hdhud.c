@@ -110,6 +110,7 @@ static void LoadHudAsset(HudAsset* asset) {
 
 int PortHdHudSpriteRegister(const uint32_t* pixels, int w, int h, int slot, int x, int y, int flip, int alpha) {
     uint64_t hash = 14695981039346656037ULL;
+    const char* layout;
     int i, k, l=w, t=h, r=-1, b=-1;
     if (!gPortConfig.hdHud || !sAssetRenderer || !gPortHudScale || PortUiActive() || !pixels) return 0;
     hash ^= (unsigned)w; hash *= 1099511628211ULL;
@@ -119,7 +120,8 @@ int PortHdHudSpriteRegister(const uint32_t* pixels, int w, int h, int slot, int 
         if (pixels[i] >> 24) { l=SDL_min(l,i%w); r=SDL_max(r,i%w); t=SDL_min(t,i/w); b=SDL_max(b,i/w); }
     }
     if (r<l) return 0;
-    if (SDL_getenv("KHCOM_HUD_LAYOUT") && (uint32_t)SDL_atoi(SDL_getenv("KHCOM_HUD_LAYOUT"))==PortFrameCount())
+    PORT_ENV_ONCE(layout, SDL_getenv, "KHCOM_HUD_LAYOUT");
+    if (layout && (uint32_t)SDL_atoi(layout)==PortFrameCount())
         PortLog("hud-asset: frame=%u slot=%d hash=%016llx",PortFrameCount(),slot,(unsigned long long)hash);
     if (!sAssets) sAssets = SDL_calloc(512, sizeof(*sAssets));
     if (!sAssetDraws) sAssetDraws = SDL_calloc(128, sizeof(*sAssetDraws));
@@ -171,7 +173,9 @@ void PortHdHudDrawSprites(SDL_Renderer* renderer, int width, int height) {
 int PortHdHudPlayerFrameReady(void) {
     /* Fitting probe only: keep native frame until interior-row alignment and
        full-health end caps are verified against the original. */
-    return SDL_getenv("KHCOM_HDHUD_FRAME_PROBE") && gPortConfig.hdHud &&
+    const char* probe;
+    PORT_ENV_ONCE(probe, SDL_getenv, "KHCOM_HDHUD_FRAME_PROBE");
+    return probe && gPortConfig.hdHud &&
            sPlayerFrame && sWhitePlayerFrame && gPortHudScale && !PortUiActive();
 }
 static void LoadPlayerFrame(SDL_Renderer* renderer) {
@@ -306,8 +310,14 @@ static void LoadLabel(SDL_Renderer* renderer) {
 }
 
 /* Developer-only ROM-local references; never ship these extracted sprites. */
+static int HudExport(void) {
+    const char* v;
+    PORT_ENV_ONCE(v, SDL_getenv, "KHCOM_HUD_EXPORT");
+    return v != NULL;
+}
+
 uint32_t* PortHdHudExportBuffer(void) {
-    if (!SDL_getenv("KHCOM_HUD_EXPORT") && !(gPortConfig.hdHud && gPortHudScale)) return NULL;
+    if (!HudExport() && !(gPortConfig.hdHud && gPortHudScale)) return NULL;
     if (!sExportPixels) sExportPixels = SDL_calloc(64 * 64, sizeof(uint32_t));
     return sExportPixels;
 }
@@ -318,7 +328,7 @@ void PortHdHudExportSprite(int w, int h, int part, int ax, int ay) {
     char name[160];
     int i;
     FILE* f;
-    if (!sExportPixels || !SDL_getenv("KHCOM_HUD_EXPORT")) return;
+    if (!sExportPixels || !HudExport()) return;
     hash ^= (unsigned)w; hash *= 1099511628211ULL;
     hash ^= (unsigned)h; hash *= 1099511628211ULL;
     for (i = 0; i < w * h; i++) { hash ^= sExportPixels[i]; hash *= 1099511628211ULL; }
@@ -498,7 +508,8 @@ static void DrawVitalityBar(SDL_Renderer* renderer, int width, int height, int p
     if (!gPortConfig.hdHud || !scale || PortUiActive() ||
         !(player ? PortPpuPlayerHudBar(rect, rows) : PortPpuEnemyHudBar(rect, rows))) return;
     if (player) {
-        const char* trace = SDL_getenv("KHCOM_HUD_FULLHP_TRACE");
+        const char* trace;
+        PORT_ENV_ONCE(trace, SDL_getenv, "KHCOM_HUD_FULLHP_TRACE");
         while (trace && *trace) {
             if ((uint32_t)SDL_atoi(trace) == PortFrameCount())
                 PortLog("HD HUD: fullhp frame=%u value=%d", PortFrameCount(), PortPpuPlayerHudFullHp());
@@ -558,7 +569,9 @@ void PortHdHudDraw(SDL_Renderer* renderer, int width, int height) {
     frame.h = (rect[3] - rect[1] + 1) * scale;
     frame.x = (width - gPortHudW * scale) * 0.5f + rect[0] * scale;
     frame.y = (height - gPortHudH * scale) * 0.5f + rect[1] * scale;
-    if (SDL_getenv("KHCOM_HDHUDLOG")) PortLog("HD HUD rect: %d,%d,%d,%d -> %.1f,%.1f %.1fx%.1f src %.1fx%.1f", rect[0], rect[1], rect[2], rect[3], frame.x, frame.y, frame.w, frame.h, sSource.w, sSource.h);
+    const char* hudLog;
+    PORT_ENV_ONCE(hudLog, SDL_getenv, "KHCOM_HDHUDLOG");
+    if (hudLog) PortLog("HD HUD rect: %d,%d,%d,%d -> %.1f,%.1f %.1fx%.1f src %.1fx%.1f", rect[0], rect[1], rect[2], rect[3], frame.x, frame.y, frame.w, frame.h, sSource.w, sSource.h);
     SDL_SetTextureColorMod(sFrame, tint, tint, tint);
     SDL_RenderTexture(renderer, sFrame, &sSource, &frame);
     if ((bld & 0x10) && effect == 2 && amount) {

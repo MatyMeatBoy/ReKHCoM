@@ -38,9 +38,14 @@ extern unsigned char gPortBiosArea[];
 /* BIOS_LOW_PTR(p): the same for any pointer into the first 64 KiB (a small
    number read as a pointer, e.g. a counter of another task's work). */
 #define BIOS_LOW_PTR(p) ((unsigned long)(p) < 0x10000ul ?     (__typeof__(p))(void*)(gPortBiosArea + (unsigned long)(p)) : (p))
+/* BUS_PTR(type, p): a value used as a pointer although it is none (an open-bus word, a word past a ROM table),
+   decoded as the GBA bus does (port/src/port_bus.c); a real pointer into the GBA space is left as it is. */
+void* PortBusPtr(__UINTPTR_TYPE__ p);
+#define BUS_PTR(type, p) ((type)PortBusPtr((__UINTPTR_TYPE__)(p)))
 #else
 #define BIOS_PTR(p) (p)
 #define BIOS_LOW_PTR(p) (p)
+#define BUS_PTR(type, p) ((type)(p))
 #endif
 
 /*

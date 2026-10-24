@@ -2,7 +2,7 @@
 import os,shutil
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-T=Path(os.environ.get('KHCOM_TRAILER_DIR',ROOT.parent/'Trailer/v182')).resolve()
+T=Path(os.environ.get('KHCOM_TRAILER_DIR',ROOT.parent/'arte/Trailer/v182')).resolve()
 FF=shutil.which('ffmpeg')
 if not FF:
  candidates=sorted((Path(os.environ['LOCALAPPDATA'])/'Microsoft/WinGet/Packages').glob('Gyan.FFmpeg_*/ffmpeg-*/bin/ffmpeg.exe'))

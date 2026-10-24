@@ -27,7 +27,7 @@ function renderAchievements(){
     badge.style.backgroundPosition=(-(index%10)*48)+'px '+(-Math.floor(index/10)*48)+'px';
     const text=document.createElement('div'),heading=document.createElement('h2'),detail=document.createElement('p'),state=document.createElement('small');
     heading.textContent=title;detail.textContent=description;
-    state.textContent=value+' '+(value===1?optionWord('point','punto'):optionWord('points','puntos'))+' · '+(unlocked?optionWord('Unlocked','Conseguido'):optionWord('Locked','Pendiente'));
+    state.textContent=value+' '+(value===1?optionWord('point','punto'):optionWord('points','puntos'))+' · '+(unlocked?optionWord('Unlocked','Conseguido'):optionWord('Locked','No conseguido'));
     text.append(heading,detail,state);row.append(badge,text);grid.append(row);
   });
   if(!grid.children.length){const empty=document.createElement('p');empty.textContent=optionWord('No achievements match this filter.','No hay logros con ese filtro.');grid.append(empty);}

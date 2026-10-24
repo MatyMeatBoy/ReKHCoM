@@ -65,7 +65,7 @@ static void AchievementRow(int id, const char* title, const char* description, b
     ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + width - Px(70));
     ImGui::TextColored(kMuted, "%s", description);
     if (detail && *detail) ImGui::TextColored(kMuted, "%s", detail);
-    else ImGui::TextColored(unlocked ? kGood : kMuted, "%s", unlocked ? T("Desbloqueado", "Unlocked") : T("Pendiente", "Locked"));
+    else ImGui::TextColored(unlocked ? kGood : kMuted, "%s", unlocked ? T("Conseguido", "Unlocked") : T("No conseguido", "Locked"));
     ImGui::PopTextWrapPos();
     ImGui::PopFont();
     ImGui::EndGroup();
@@ -81,7 +81,7 @@ static void AchievementFilters() {
     ImGui::SetNextItemWidth(Px(240));
     ImGui::InputTextWithHint("##achsearch", T("Buscar logro...", "Find achievement..."), sAchievementSearch, sizeof(sAchievementSearch));
     ImGui::SameLine();
-    const char* filters[] = {T("Todos", "All"), T("Pendientes", "Locked"), T("Desbloqueados", "Unlocked")};
+    const char* filters[] = {T("Todos", "All"), T("No conseguidos", "Locked"), T("Conseguidos", "Unlocked")};
     ImGui::SetNextItemWidth(Px(180));
     ImGui::Combo("##achfilter", &sAchievementFilter, filters, 3);
     ImGui::Spacing();
@@ -106,7 +106,7 @@ static void PageAchievementAccount() {
         ImGui::TextColored(kGood, "%s", user->display_name);
         ImGui::Text(T("Puntos: %u · Softcore: %u", "Points: %u · Softcore: %u"), user->score, user->score_softcore);
         ImGui::BeginDisabled(KhRaBusy(sRaUi));
-        if (ImGui::Button(T("Cerrar sesión y olvidar token", "Sign out and forget token"))) KhRaLogout(sRaUi);
+        if (ImGui::Button(T("Cerrar sesión y olvidar la cuenta", "Sign out and forget the account"))) KhRaLogout(sRaUi);
         ImGui::EndDisabled();
     } else if (enabled) {
         ImGui::BeginDisabled(KhRaBusy(sRaUi));
@@ -173,7 +173,7 @@ static void PageOfficialAchievements() {
         char detail[120];
         std::snprintf(detail, sizeof(detail), a->points == 1 ? T("%u punto · %s", "%u point · %s") : T("%u puntos · %s", "%u points · %s"), a->points,
             onAccount ? T("Conseguido en tu cuenta", "Earned on your account") :
-            game ? T("Conseguido", "Unlocked") : T("Pendiente", "Locked"));
+            game ? T("Conseguido", "Unlocked") : T("No conseguido", "Locked"));
         ImVec2 uv0, uv1;
         GLuint badge = OfficialAchievementBadge(i, unlocked, &uv0, &uv1);
         if (table) ImGui::TableNextColumn();

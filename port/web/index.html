@@ -3,12 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<title>ReKHCoM · Web v1.9.12 Alpha</title>
+<title>ReKHCoM · Web v2.0 Beta</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="web.css">
 <main>
-  <header><a class="brand" href="https://github.com/MatyMeatBoy/ReKHCoM"><small>REKHCOM · DECOMP PORT · WEB v1.9.12 ALPHA</small><img src="logo.png" alt="ReKHCoM — Kingdom Hearts Re:Chain of Memories" width="300" height="160"></a><label><span class="visually-hidden">Web · v1.9.12 Alpha</span><select id="interface-language" aria-label="Website language"><option value="en">English</option><option value="es">Español</option></select></label></header>
+  <header><a class="brand" href="https://github.com/MatyMeatBoy/ReKHCoM"><small>REKHCOM · DECOMP PORT · WEB v2.0 BETA</small><img src="logo.png" alt="ReKHCoM — Kingdom Hearts Re:Chain of Memories" width="300" height="160"></a><label><span class="visually-hidden">Web · v1.9.15 Beta</span><select id="interface-language" aria-label="Website language"><option value="en">English</option><option value="es">Español</option></select></label></header>
   <nav class="tabs" role="tablist" aria-label="Launcher">
     <button role="tab" id="tab-game" aria-controls="panel-game" aria-selected="true" data-panel="game" data-en="Play" data-es="Juego">Play</button>
     <button role="tab" id="tab-graphics" aria-controls="panel-graphics" aria-selected="false" tabindex="-1" data-panel="graphics" data-en="Graphics" data-es="Gráficos">Graphics</button>
@@ -82,7 +82,7 @@
     <h1 data-en="Achievements" data-es="Logros">Achievements</h1>
     <p class="hint" data-en="The official RetroAchievements set (by its authors at retroachievements.org) for the European version. Earned as you play, no account needed; progress is stored in this browser. Cheats, rematches and loading a save state pause achievements until the game is restarted." data-es="El set oficial de RetroAchievements (sus autores en retroachievements.org) para la versión europea. Se consiguen al jugar, sin cuenta; el progreso se guarda en este navegador. Los trucos, las revanchas y cargar un savestate pausan los logros hasta reiniciar el juego.">The official RetroAchievements set (by its authors at retroachievements.org) for the European version. Earned as you play, no account needed; progress is stored in this browser. Cheats, rematches and loading a save state pause achievements until the game is restarted.</p>
     <p id="achievement-progress" role="status"></p><progress id="achievement-meter" max="90" value="0" aria-label="Achievements / Logros"></progress>
-    <div class="achievement-filters"><input type="search" id="achievement-search" aria-label="Search achievements / Buscar logros"><select id="achievement-filter" aria-label="Filter achievements / Filtrar logros"><option value="all" data-en="All" data-es="Todos">All</option><option value="locked" data-en="Locked" data-es="Pendientes">Locked</option><option value="unlocked" data-en="Unlocked" data-es="Conseguidos">Unlocked</option></select></div>
+    <div class="achievement-filters"><input type="search" id="achievement-search" aria-label="Search achievements / Buscar logros"><select id="achievement-filter" aria-label="Filter achievements / Filtrar logros"><option value="all" data-en="All" data-es="Todos">All</option><option value="locked" data-en="Locked" data-es="No conseguidos">Locked</option><option value="unlocked" data-en="Unlocked" data-es="Conseguidos">Unlocked</option></select></div>
     <div id="achievement-grid" class="achievement-grid"></div>
     <p class="hint" data-en="RetroAchievements account access is currently available in the Windows launcher. Official unlock submissions and Hardcore are still under validation." data-es="La conexión con tu cuenta RetroAchievements está disponible por ahora en el launcher Windows. Los desbloqueos oficiales y Hardcore siguen en validación.">RetroAchievements account access is currently available in the Windows launcher. Official unlock submissions and Hardcore are still under validation.</p>
   </section>

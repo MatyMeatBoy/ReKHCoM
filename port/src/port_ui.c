@@ -7,13 +7,14 @@
  * gamepad, as bound) / Guide anywhere. The game is paused while it is open.
  */
 #include <SDL3/SDL.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "port/port.h"
 #include "port/port_aspect.h"
 #include "port/port_ui.h"
 #include "port/port_achievement_list.h"
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
 #endif
 #include "port/pad_layout.h"
@@ -82,7 +83,17 @@ enum {
     ITEM_MOOGLE_NOTICE,
     ITEM_INVERT_CARD_SCROLL,
     ITEM_HIDE_TOUCH,
+    ITEM_FRAMESKIP,
     ITEM_RECOM_EXTRAS, /* section heading, not selectable */
+    ITEM_HD_MOVIES,    /* the HD mod (HD_MOD.md): shown only once imported */
+    ITEM_HD_MUSIC,
+    ITEM_HD_SCENES,
+    ITEM_HD_SUBTITLES,
+    ITEM_HD_CARDS,     /* HD cards, faces and battle words (port_hdsprites.c), once imported */
+    ITEM_HD_TITLE,     /* the title's HD logo */
+    ITEM_MODE_RESET,   /* a graphics mode's defaults (PortApplyGraphicsMode), confirmed twice */
+    ITEM_GBA_BORDER,   /* GBA classic: the decorative border around the GBA picture (Original view) */
+    ITEM_TITLE,        /* back to the title screen, as the game's own Continue screen does */
     ITEM_UNSTOCK,
     ITEM_PS2_MODE,
     ITEM_PS2_MENU,     /* opens the Re:CoM page */
@@ -94,6 +105,7 @@ enum {
     /* the Re:Chain of Memories page */
     ITEM_PS2_DIFFICULTY,
     ITEM_PS2_FASTTEXT,
+    ITEM_PS2_HDSCENES, /* the HD mod's scenes in place of the events (only once imported) */
     ITEM_PS2_BACK,
     /* the new game page: how to start it */
     ITEM_NG_VERSION,
@@ -135,15 +147,23 @@ enum {
 };
 
 /* Two pages, each a run of items: the options and the Re:CoM settings. */
-enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS };
+enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS, PAGE_LOBBY };
 static int sPage;
+static int sTitleArmed, sTitleRequest; /* ITEM_TITLE: confirmed once / due once the menu has closed */
+static int sModePick = PORT_MODE_HD, sModeArmed, sModeConfirmKey; /* ITEM_MODE_RESET: the mode shown, confirmed once */
+static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
+    { "Choose", "Choisir", "Wählen", "Scegli", "Escoger", "選ぶ" },
+    { "HD mode", "Mode HD", "HD-Modus", "Modalità HD", "Modo HD", "HDモード" },
+    { "GBA enhanced", "GBA amélioré", "GBA verbessert", "GBA migliorato", "GBA mejorado", "GBA強化" },
+    { "GBA classic", "GBA classique", "GBA klassisch", "GBA classico", "GBA clásico", "GBAクラシック" },
+};
 static void AchievementMenuOpen(void);
 static int AchievementMenuInput(const SDL_Event* ev);
 static int sControlPad, sControlCapture;
 static void ControlBindingName(int binding, int l, char* out, size_t size);
 static int sNgRecom; /* new game page: the Re:CoM version chosen */
 static int sNgQol;   /* the one-button controls as set before the new game page */
-enum { WIZ_VERSION, WIZ_DIFFICULTY, WIZ_OPTIONS };
+enum { WIZ_VERSION, WIZ_DIFFICULTY, WIZ_OPTIONS, WIZ_MODE, WIZ_MODE_GBA }; /* the last two: the graphics mode */
 static int sWizStep, sWizCursor; /* the new game window's step and row */
 static void WizKey(int key);
 static int PageFirst(void) {
@@ -152,21 +172,48 @@ static int PageFirst(void) {
 static int PageEnd(void) {
     return sPage == PAGE_REMATCH ? ITEM_REMATCH_BACK + 1 : sPage == PAGE_CHEATS ? ITEM_CHEATS_BACK + 1 : sPage == PAGE_CONTROLS ? ITEM_CONTROLS_BACK + 1 : sPage == PAGE_PS2 ? ITEM_PS2_BACK + 1 : sPage == PAGE_NEWGAME ? ITEM_NG_START + 1 : ITEM_CLOSE + 1;
 }
+/* the HD mod's rows appear once the launcher imported its files (checked once a second at most) */
+static int HdImported(const char* file) {
+    static char last[64];
+    static int result;
+    static Uint64 when;
+    Uint64 now = SDL_GetTicks();
+    if (strcmp(last, file) != 0 || now - when > 1000) {
+        FILE* f = fopen(PortConfigPath(file), "rb");
+        result = f != NULL;
+        if (f)
+            fclose(f);
+        SDL_strlcpy(last, file, sizeof(last));
+        when = now;
+    }
+    return result;
+}
+
 /* rows shown only where they apply */
 static int ItemVisible(int item) {
     switch (item) {
-#if !defined(__ANDROID__) && !defined(__EMSCRIPTEN__)
+#if !defined(__ANDROID__) && !defined(__EMSCRIPTEN__) && !defined(PORT_ANDROID64) && !defined(PORT_TOUCH)
         case ITEM_HIDE_TOUCH: return 0;
-#else
+#endif
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64)
         case ITEM_REMATCH_MENU: return 0; /* rematches need states, not on these yet */
 #endif
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) /* the console images hide them through build_ps5.PORT_PATCHES */
         case ITEM_FULLSCREEN:
         case ITEM_FS_RES: return 0;
 #endif
         case ITEM_INTZOOM:
         case ITEM_SCALE: return 0;
         case ITEM_DISCORD: return PortDiscordAvailable();
+        case ITEM_HD_MOVIES: return HdImported("hd/movies/ROP.mp4");
+        case ITEM_HD_MUSIC: return HdImported("hd/music/Title.ogg");
+        case ITEM_HD_SCENES:
+        case ITEM_PS2_HDSCENES: /* hd/scenes since 23/10; an older import keeps them in hd/movies */
+            return HdImported("hd/scenes/zz_event_011.mp4") || HdImported("hd/movies/zz_event_011.mp4");
+        case ITEM_HD_SUBTITLES: return HdImported("hd/subs/ROP.us.txt");
+        case ITEM_HD_CARDS: return HdImported("hd/sprites/gCardWep01Tiles.png");
+        case ITEM_HD_TITLE: return 0; /* part of HD HUD (ITEM_HD_CARDS) since 23/10 */
+        case ITEM_GBA_BORDER: return gPortConfig.viewMode == PORT_VIEW_ORIGINAL;
         /* the version and its difficulty are chosen at New Game and stay
            with the save, as in the original: no switch for them here */
         case ITEM_PS2_MODE:
@@ -199,9 +246,9 @@ static const char* const sMainZoom[LANG_COUNT] = {
 };
 static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "View", "Vue", "Ansicht", "Visuale", "Vista", "表示" },
-    { "Aspect ratio", "Format d'image", "Seitenverhältnis", "Proporzioni", "Relación de aspecto", "アスペクト比" },
+    { "Aspect ratio", "Format d'image", "Seitenverhältnis", "Proporzioni", "Relación de aspecto", "画面の形" },
     { "Zoom", "Zoom", "Zoom", "Zoom", "Zoom", "ズーム" },
-    { "Integer scales only", "Échelles entières seules", "Nur ganze Pixelskalen", "Solo scale intere", "Solo escalas enteras", "整数スケールのみ" },
+    { "Integer scales only", "Échelles entières seules", "Nur ganze Pixelskalen", "Solo scale intere", "Solo escalas enteras", "せいすうスケールのみ" },
     { "Scaling", "Mise à l'échelle", "Skalierung", "Scala", "Escalado", "スケール" },
     { "HUD size", "Taille du HUD", "HUD-Größe", "Dimensione HUD", "Tamaño del HUD", "HUDサイズ" },
     { "GBA-size scenes", "Scènes format GBA", "Szenen im GBA-Format", "Scene formato GBA", "Escenas tamaño GBA", "GBAサイズの場面" },
@@ -241,27 +288,43 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Invert card scrolling", "Inverser le défilement", "Kartenauswahl umkehren", "Inverti scorrimento carte",
       "Invertir selección de cartas", "カード送りを反転" },
     { "Hide touch controls", "Masquer les commandes tactiles", "Touch-Steuerung ausblenden",
-      "Nascondi controlli touch", "Ocultar controles táctiles", "タッチ操作を非表示" },
+      "Nascondi controlli touch", "Ocultar controles táctiles", "タッチボタンを非表示" },
+    { "Skip frames when slow", "Sauter des images si lent", "Bilder überspringen wenn langsam",
+      "Salta fotogrammi se lento", "Saltar cuadros si va lento", "遅い時はフレームを飛ばす" },
     { "Re:CoM improvements", "Améliorations Re:CoM", "Re:CoM-Verbesserungen", "Miglioramenti Re:CoM", "Mejoras de Re:CoM", "Re:CoMの改善" },
+    { "HD intros", "Intros HD", "HD-Intros", "Intro HD", "Intros HD", "HDイントロ" }, /* opening, credits, endings */
+    { "HD music", "Musique HD", "HD-Musik", "Musica HD", "Música HD", "HDミュージック" },
+    { "HD scenes", "Scènes HD", "HD-Szenen", "Scene HD", "Escenas HD", "HDシーン" },
+    { "HD subtitles", "Sous-titres HD", "HD-Untertitel", "Sottotitoli HD", "Subtítulos HD", "HDじまく" },
+    { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
+    { "HD title logo", "Logo de titre HD", "HD-Titellogo", "Logo del titolo HD", "Logo del título HD", "HDタイトルロゴ" },
+    { "Reset to a mode's defaults", "Réglages d'un mode", "Standard eines Modus", "Predefiniti di una modalità",
+      "Restablecer según el modo", "モードの初期値に戻す" },
+    { "Border (Original view)", "Bordure (vue originale)", "Rahmen (Originalansicht)", "Cornice (vista originale)",
+      "Borde (vista Original)", "わく（オリジナル表示）" },
+    { "Return to title screen", "Retour à l'écran titre", "Zurück zum Titelbildschirm",
+      "Torna alla schermata del titolo", "Volver a la pantalla de título", "タイトル画面に戻る" },
     { "Return stocked cards", "Rendre les cartes en réserve", "Vorratskarten zurücknehmen",
-      "Riprendi carte accumulate", "Devolver cartas acumuladas", "ストックを手札に戻す" },
+      "Riprendi carte accumulate", "Devolver cartas acumuladas", "ストックをてふだに戻す" },
     { "Re:CoM mode", "Mode Re:CoM", "Re:CoM-Modus", "Modalità Re:CoM", "Modo Re:CoM", "Re:CoMモード" },
     { "Re:CoM settings", "Réglages Re:CoM", "Re:CoM-Einstellungen", "Impostazioni Re:CoM", "Ajustes Re:CoM",
-      "Re:CoM設定" },
-    { "Controls", "Commandes", "Steuerung", "Controlli", "Controles", "操作" },
+      "Re:CoMオプション" },
+    { "Controls", "Commandes", "Steuerung", "Controlli", "Controles", "コントロール" },
     { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" },
     { "Boss rematches", "Revanches de boss", "Boss-Revanchen", "Rivincite coi boss", "Revancha de jefes", "ボス再戦" },
-    { "Achievements", "Succès", "Erfolge", "Obiettivi", "Logros", "実績" },
+    { "Achievements", "Succès", "Erfolge", "Obiettivi", "Logros", "じっせき" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
-    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難易度" },
+    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難しさ" },
     { "Fast dialogue", "Dialogues rapides", "Schnelle Dialoge", "Dialoghi veloci", "Diálogos rápidos",
       "会話を早く" },
+    { "HD scenes in place of the events", "Scènes HD à la place des évènements", "HD-Szenen statt der Ereignisse",
+      "Scene HD al posto degli eventi", "Reemplazar escenas por las HD", "イベントをHDシーンに置き換え" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
     { "Version", "Version", "Version", "Versione", "Versión", "バージョン" },
-    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難易度" },
+    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難しさ" },
     { "HD text", "Texte HD", "HD-Text", "Testo HD", "Texto HD", "HDテキスト" },
     { "One-button dodge and stock", "Roulade et réserve en un bouton", "Ausweichen und Vorrat mit einer Taste",
-      "Capriola e accumulo con un tasto", "Rodar y acumular con un botón", "ワンボタン操作" },
+      "Capriola e accumulo con un tasto", "Rodar y acumular con un botón", "ワンボタンそうさ" },
     { "Start", "Commencer", "Beginnen", "Inizia", "Comenzar", "はじめる" },
     { "Enter debug mode", "Entrer en mode debug", "Debug-Modus starten", "Entra in modalità debug", "Entrar al modo debug", "デバッグモード" },
     { "Unlock Riku", "Débloquer Riku", "Riku freischalten", "Sblocca Riku", "Desbloquear a Riku", "リクを解放" },
@@ -269,11 +332,11 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Nemici sconfitti con un colpo", "Enemigos caen de un golpe", "敵を一撃で倒す" },
     { "Infinite HP", "PV infinis", "Unendliche KP", "PS infiniti", "Vida infinita", "HP無限" },
     { "Level 99 with every bonus", "Niveau 99 avec tous les bonus", "Stufe 99 mit allen Boni",
-      "Livello 99 con tutti i bonus", "Nivel 99 con todos los bonos", "全ボーナス付きレベル99" },
+      "Livello 99 con tutti i bonus", "Nivel 99 con todos los bonos", "全ボーナスつきレベル99" },
     { "Every map card (9 each)", "Toutes les cartes de salle (9)", "Alle Raumkarten (je 9)",
-      "Tutte le carte stanza (9)", "Todas las cartas de mapa (9 c/u)", "全マップカード (各9枚)" },
+      "Tutte le carte stanza (9)", "Todas las cartas de mapa (9 c/u)", "全マップカード (9枚ずつ)" },
     { "Complete the journal", "Compléter le journal", "Tagebuch vervollständigen",
-      "Completa il diario", "Completar el diario", "日記をすべて埋める" },
+      "Completa il diario", "Completar el diario", "日記をすべてうめる" },
     { "Debug mode", "Mode debug", "Debug-Modus", "Modalità debug", "Modo debug", "デバッグモード" },
     { "[ReKHCoM] GBA map logic", "[ReKHCoM] Logique carte GBA", "[ReKHCoM] GBA-Kartenlogik",
       "[ReKHCoM] Logica mappa GBA", "[ReKHCoM] Lógica Mapa GBA", "[ReKHCoM] GBAマップロジック" },
@@ -306,10 +369,10 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Acumular", "Stock", "Stock", "Accumula", "Acumular", "ストック" },
     { "Esquivar", "Esquive", "Ausweichen", "Schiva", "Esquivar", "ドッジ" },
     { "Devolver cartas", "Rendre les cartes", "Karten zurückgeben", "Restituisci carte", "Devolver cartas", "カードを戻す" },
-    { "Restaurar valores predeterminados", "Restaurer les valeurs par défaut", "Standardwerte wiederherstellen", "Ripristina valori predefiniti", "Restaurar valores predeterminados", "初期設定に戻す" },
-    { "Nintendo controller", "Manette Nintendo", "Nintendo-Controller", "Controller Nintendo", "Mando Nintendo", "任天堂のコントローラー" },
+    { "Restaurar valores predeterminados", "Restaurer les valeurs par défaut", "Standardwerte wiederherstellen", "Ripristina valori predefiniti", "Restaurar valores predeterminados", "初期値に戻す" },
+    { "Nintendo controller", "Manette Nintendo", "Nintendo-Controller", "Controller Nintendo", "Mando Nintendo", "ニンテンドーのコントローラー" },
     { "Force Nintendo layout", "Forcer la disposition Nintendo", "Nintendo-Belegung erzwingen", "Forza disposizione Nintendo",
-      "Forzar mando Nintendo", "任天堂配置に固定" },
+      "Forzar mando Nintendo", "ニンテンドーの配置にこてい" },
     { "Volver", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
@@ -319,7 +382,7 @@ static const char* const sCheatsHelp[LANG_COUNT] = {
     "Debug: nur im Titel. Stufe, Karten, Tagebuch: auf der Karte.",
     "Debug: solo dal titolo. Livello, carte, diario: sulla mappa.",
     "Debug: solo en el título. Nivel, cartas y diario: en el mapa; luego guarda.",
-    "デバッグはタイトルで。レベル・カード・日記はマップ上で。保存して反映。",
+    "デバッグはタイトルで。レベル・カード・日記はマップ上で。セーブすると有効になります。",
 };
 static const char* const sRematchTitle[LANG_COUNT] = { "Boss rematches", "Revanches de boss", "Boss-Revanchen",
     "Rivincite coi boss", "Revancha de jefes", "ボス再戦" };
@@ -332,7 +395,7 @@ static const char* const sRematchHelp[LANG_COUNT] = {
     "倒したボスと再戦（部屋から）。終了後ここへ戻り、戦闘の結果は残りません。",
 };
 static const char* const sCheatDone[LANG_COUNT] = {
-    "Cheat applied", "Code appliqué", "Cheat angewendet", "Trucco applicato", "Truco aplicado", "チートを適用",
+    "Cheat applied", "Code appliqué", "Cheat angewendet", "Trucco applicato", "Truco aplicado", "チートを使う",
 };
 static const char* const sNgTitle[LANG_COUNT] = { "New game", "Nouvelle partie", "Neues Spiel", "Nuova partita",
     "Nueva partida", "ニューゲーム" };
@@ -348,7 +411,7 @@ static const char* const sNgDescOriginal[LANG_COUNT] = {
     "Die originale Game-Boy-Advance-Version, genau wie auf dem Modul.",
     "La versione originale per Game Boy Advance, esattamente come sulla cartuccia.",
     "La versión original de Game Boy Advance, exactamente como en el cartucho.",
-    "ゲームボーイアドバンス版そのままのオリジナル。",
+    "ゲームボーイアドバンスそのままのオリジナル。",
 };
 static const char* const sNgDescRecom[LANG_COUNT] = {
     "With improvements from Re:Chain of Memories (PS2): difficulty levels and faster dialogue.",
@@ -356,7 +419,7 @@ static const char* const sNgDescRecom[LANG_COUNT] = {
     "Mit Verbesserungen aus Re:Chain of Memories (PS2): Schwierigkeitsgrade und schnellere Dialoge.",
     "Con i miglioramenti di Re:Chain of Memories (PS2): livelli di difficoltà e dialoghi più rapidi.",
     "Con mejoras de Re:Chain of Memories (PS2): niveles de dificultad y diálogos más rápidos.",
-    "Re:チェイン オブ メモリーズ (PS2) の改良入り：難易度の選択と会話の高速化。",
+    "Re:チェイン オブ メモリーズ (PS2) の改良入り：難しさの選択と会話の高速化。",
 };
 static const char* const sNgDescDifficulty[3][LANG_COUNT] = {
     { "As the original: the cartridge's damage.", "Comme l'original : les dégâts de la cartouche.",
@@ -377,13 +440,45 @@ static const char* const sNgDescHd[LANG_COUNT] = {
     "Diálogos con una fuente nítida a la resolución de la ventana.",
     "会話をウィンドウ解像度のくっきりしたフォントで表示。",
 };
+static const char* const sNgDescHdMusic[LANG_COUNT] = {
+    "Re:Chain of Memories' soundtrack from your KH HD 1.5+2.5 in place of the cartridge's music.",
+    "La bande-son de Re:Chain of Memories de votre KH HD 1.5+2.5 à la place de la musique de la cartouche.",
+    "Der Soundtrack von Re:Chain of Memories aus deinem KH HD 1.5+2.5 statt der Musik des Moduls.",
+    "La colonna sonora di Re:Chain of Memories del tuo KH HD 1.5+2.5 al posto della musica della cartuccia.",
+    "La banda sonora de Re:Chain of Memories de tu KH HD 1.5+2.5 en lugar de la música del cartucho.",
+    "カートリッジの音楽の代わりにKH HD 1.5+2.5のRe:チェイン オブ メモリーズのサウンドトラック。",
+};
+static const char* const sNgDescHdMovies[LANG_COUNT] = {
+    "The opening, the credits and the endings as the HD movies of your KH HD 1.5+2.5.",
+    "L'ouverture, le générique et les fins avec les vidéos HD de votre KH HD 1.5+2.5.",
+    "Intro, Abspann und Enden als HD-Videos aus deinem KH HD 1.5+2.5.",
+    "L'introduzione, i titoli di coda e i finali con i video HD del tuo KH HD 1.5+2.5.",
+    "La introducción, los créditos y los finales con los videos HD de tu KH HD 1.5+2.5.",
+    "オープニング、スタッフロール、エンディングをKH HD 1.5+2.5のHDムービーで。",
+};
+static const char* const sNgDescHdScenes[LANG_COUNT] = {
+    "Story scenes that Re:CoM has as movies play them instead (English voices, subtitles in your language).",
+    "Les scènes que Re:CoM a en vidéo les jouent à la place (voix anglaises, sous-titres dans votre langue).",
+    "Szenen, die Re:CoM als Video hat, laufen stattdessen so (englische Stimmen, Untertitel in deiner Sprache).",
+    "Le scene che Re:CoM ha come video vengono riprodotte così (voci inglesi, sottotitoli nella tua lingua).",
+    "Las escenas que Re:CoM tiene en video se ven así (voces en inglés, subtítulos en tu idioma).",
+    "Re:CoMでムービーになっている場面はそれで再生（英語音声、じまくはゲームの言語）。",
+};
+static const char* const sNgDescHdHud[LANG_COUNT] = {
+    "The HUD is what is drawn over the game: cards, HP, battle words and the title's logo, in Re:CoM's HD art.",
+    "L'ATH est ce qui s'affiche par-dessus le jeu : cartes, PV, mots de combat et logo du titre, en art HD de Re:CoM.",
+    "Das HUD ist, was über dem Spiel liegt: Karten, KP, Kampfwörter und das Titellogo, in Re:CoMs HD-Grafik.",
+    "L'HUD è ciò che appare sopra il gioco: carte, PV, parole di battaglia e logo del titolo, con la grafica HD di Re:CoM.",
+    "El HUD es lo que se dibuja sobre el juego: cartas, vida, palabras de combate y el logo del título, con el arte HD de Re:CoM.",
+    "HUDはゲームの上に表示されるもの（カード、HP、戦闘の文字、タイトルロゴ）で、Re:CoMのHDの絵になります。",
+};
 static const char* const sNgDescQol[LANG_COUNT] = {
     "One button for the dodge roll and for stocking cards (L+R).",
     "Un bouton pour la roulade et pour la réserve (L+R).",
     "Eine Taste für Ausweichen und Vorrat (L+R).",
     "Un tasto per la capriola e per l'accumulo (L+R).",
     "Un botón para rodar y para acumular cartas (L+R).",
-    "ドッジロールとカードストック（L+R）を専用ボタンで操作。",
+    "ドッジロールとカードストック（L+R）を別のボタンで使う。",
 };
 static const char* const sNgDescStart[LANG_COUNT] = {
     "Everything here can be changed later with START + SELECT.",
@@ -442,8 +537,8 @@ static const char* const sOnOff[2][LANG_COUNT] = {
 static const char* const sViews[PORT_VIEW_COUNT][LANG_COUNT] = {
     { "Original 240x160", "Originale 240x160", "Original 240x160", "Originale 240x160", "Original 240x160", "オリジナル 240x160" },
     { "Wide 284x160", "Large 284x160", "Breit 284x160", "Panoramica 284x160", "Panorámica 284x160", "ワイド 284x160" },
-    { "Extended 320x180", "Étendue 320x180", "Erweitert 320x180", "Estesa 320x180", "Ampliada 320x180", "拡張 320x180" },
-    { "Maximum 384x216", "Maximale 384x216", "Maximal 384x216", "Massima 384x216", "Máxima 384x216", "最大 384x216" },
+    { "Extended 320x180", "Étendue 320x180", "Erweitert 320x180", "Estesa 320x180", "Ampliada 320x180", "ワイド＋ 320x180" },
+    { "Maximum 384x216", "Maximale 384x216", "Maximal 384x216", "Massima 384x216", "Máxima 384x216", "いちばん広い 384x216" },
     { "Auto (fill window)", "Auto (remplir)", "Auto (füllen)", "Auto (riempi)", "Auto (llenar ventana)", "自動 (画面に合わせる)" },
 };
 static const char* const sZoomHeavy[LANG_COUNT] = {
@@ -454,7 +549,7 @@ static const char* const sZoomHeavy[LANG_COUNT] = {
 static const char* const sScales[PORT_SCALE_COUNT][LANG_COUNT] = {
     { "Integer", "Entière", "Ganzzahlig", "Intera", "Entero", "ドットばい" },
     { "Fit", "Ajuster", "Einpassen", "Adatta", "Ajustar", "合わせる" },
-    { "Stretch", "Étirer", "Strecken", "Allunga", "Estirar", "引き伸ばし" },
+    { "Stretch", "Étirer", "Strecken", "Allunga", "Estirar", "引きのばし" },
 };
 static const char* const sFilters[PORT_FILTER_COUNT][LANG_COUNT] = {
     { "Sharp", "Net", "Scharf", "Nitido", "Nítido", "シャープ" },
@@ -463,23 +558,23 @@ static const char* const sFilters[PORT_FILTER_COUNT][LANG_COUNT] = {
 };
 static const char* const sHudSizes[3][LANG_COUNT] = {
     { "Original", "Original", "Original", "Originale", "Original", "オリジナル" },
-    { "Large", "Grand", "Groß", "Grande", "Grande", "大きい" },
-    { "Larger", "Plus grand", "Größer", "Più grande", "Más grande", "もっと大きい" },
+    { "Large", "Grand", "Groß", "Grande", "Grande", "おおきい" },
+    { "Larger", "Plus grand", "Größer", "Più grande", "Más grande", "もっとおおきい" },
 };
 static const char* const sAspect[PORT_ASPECT_COUNT][LANG_COUNT] = {
     { "Fill window", "Remplir la fenêtre", "Fenster füllen", "Riempi finestra", "Llenar ventana", "ウィンドウに合わせる" },
     { "16:9", "16:9", "16:9", "16:9", "16:9", "16:9" },
     { "21:9", "21:9", "21:9", "21:9", "21:9", "21:9" },
-    { "Force 21:9", "Forcer 21:9", "21:9 erzwingen", "Forza 21:9", "Forzar 21:9", "21:9に固定" },
-    { "Force 32:9", "Forcer 32:9", "32:9 erzwingen", "Forza 32:9", "Forzar 32:9", "32:9に固定" },
+    { "Force 21:9", "Forcer 21:9", "21:9 erzwingen", "Forza 21:9", "Forzar 21:9", "21:9にこてい" },
+    { "Force 32:9", "Forcer 32:9", "32:9 erzwingen", "Forza 32:9", "Forzar 32:9", "32:9にこてい" },
     { "4:3", "4:3", "4:3", "4:3", "4:3", "4:3" },
     { "GBA 3:2", "GBA 3:2", "GBA 3:2", "GBA 3:2", "GBA 3:2", "GBA 3:2" },
 };
 static const char* const sPressA[LANG_COUNT] = { "A: apply", "A : appliquer", "A: übernehmen", "A: applica",
     "A: aplicar", "A: 決定" };
-static const char* const sIntegralReference[LANG_COUNT] = { "integer", "entière", "ganzzahlig", "intera", "íntegra", "整数" };
+static const char* const sIntegralReference[LANG_COUNT] = { "integer", "entière", "ganzzahlig", "intera", "íntegra", "せいすう" };
 static const char* const sNarrow[2][LANG_COUNT] = {
-    { "Exact pixels", "Pixels exacts", "Exakte Pixel", "Pixel esatti", "Píxel exacto", "等倍ピクセル" },
+    { "Exact pixels", "Pixels exacts", "Exakte Pixel", "Pixel esatti", "Píxel exacto", "1:1ピクセル" },
     { "Fill height", "Remplir la hauteur", "Höhe füllen", "Riempi altezza", "Llenar altura", "高さに合わせる" },
 };
 static const char* const sDesktop[LANG_COUNT] = { "Desktop", "Bureau", "Desktop", "Desktop", "Escritorio",
@@ -561,6 +656,8 @@ static int NextChar(const char** s) {
             return 0x0D;
         case 0x25CB:
             return 0x0E;
+        case 0xFF1A:
+            return ':'; /* the Japanese font has no full-width colon */
     }
 #ifdef VERSION_JP
     if (c >= 0x3000)
@@ -852,9 +949,43 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_FPS:
             SDL_strlcpy(out, sOnOff[gPortConfig.showFps != 0][l], size);
             break;
+        case ITEM_FRAMESKIP:
+            SDL_strlcpy(out, sOnOff[gPortConfig.frameSkip != 0][l], size);
+            break;
         case ITEM_DISCORD:
             SDL_strlcpy(out, sOnOff[gPortConfig.discordPresence != 0][l], size);
             break;
+        case ITEM_HD_MOVIES:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdMovies != 0][l], size);
+            break;
+        case ITEM_HD_MUSIC:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdMusic != 0][l], size);
+            break;
+        case ITEM_HD_SCENES:
+        case ITEM_PS2_HDSCENES:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdScenes != 0][l], size);
+            break;
+        case ITEM_HD_SUBTITLES:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdSubtitles != 0][l], size);
+            break;
+        case ITEM_HD_CARDS:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdCards != 0][l], size);
+            break;
+        case ITEM_HD_TITLE:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdTitle != 0][l], size);
+            break;
+        case ITEM_GBA_BORDER:
+            if (gPortConfig.gbaBorder)
+                SDL_snprintf(out, size, "%d", gPortConfig.gbaBorder);
+            else
+                SDL_strlcpy(out, sOnOff[0][l], size);
+            break;
+        case ITEM_MODE_RESET: {
+            static const char* const again[LANG_COUNT] = { "Confirm again", "Confirmer encore", "Nochmal bestätigen",
+                                                           "Conferma di nuovo", "Confirma otra vez", "もう一度決定" };
+            SDL_strlcpy(out, sModeArmed ? again[l] : sModeNames[sModePick][l], size);
+            break;
+        }
         case ITEM_DODGE:
             SDL_strlcpy(out, sOnOff[gPortConfig.dodgeButton != 0][l], size);
             break;
@@ -925,6 +1056,12 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_PS2_MENU:
             SDL_strlcpy(out, "\xE2\x86\x92", size);
             break;
+        case ITEM_TITLE: {
+            static const char* const again[LANG_COUNT] = { "Confirm again", "Confirmer encore", "Nochmal bestätigen",
+                                                           "Conferma di nuovo", "Confirma otra vez", "もう一度決定" };
+            SDL_strlcpy(out, sTitleArmed ? again[l] : "\xE2\x86\x92", size);
+            break;
+        }
         case ITEM_PS2_DIFFICULTY:
         case ITEM_NG_DIFFICULTY:
             SDL_strlcpy(out, sDifficulty[SDL_clamp(gPortConfig.ps2Difficulty, 0, 2)][l], size);
@@ -1054,8 +1191,50 @@ static void Change(int item, int dir) {
         case ITEM_FPS:
             gPortConfig.showFps = !gPortConfig.showFps;
             break;
+        case ITEM_FRAMESKIP:
+            gPortConfig.frameSkip = !gPortConfig.frameSkip;
+            break;
         case ITEM_DISCORD:
             gPortConfig.discordPresence = !gPortConfig.discordPresence;
+            break;
+        case ITEM_HD_MOVIES:
+            gPortConfig.hdMovies = !gPortConfig.hdMovies;
+            break;
+        case ITEM_HD_MUSIC:
+            gPortConfig.hdMusic = !gPortConfig.hdMusic;
+            break;
+        case ITEM_HD_SCENES:
+        case ITEM_PS2_HDSCENES:
+            gPortConfig.hdScenes = !gPortConfig.hdScenes;
+            break;
+        case ITEM_HD_SUBTITLES:
+            gPortConfig.hdSubtitles = !gPortConfig.hdSubtitles;
+            break;
+        case ITEM_HD_CARDS: /* HD HUD: the cards, the battle HUD and the title's logo together */
+            gPortConfig.hdCards = !gPortConfig.hdCards;
+            gPortConfig.hdTitle = gPortConfig.hdCards;
+            break;
+        case ITEM_HD_TITLE:
+            gPortConfig.hdTitle = !gPortConfig.hdTitle;
+            break;
+        case ITEM_GBA_BORDER:
+            gPortConfig.gbaBorder = Wrap(gPortConfig.gbaBorder + (dir ? dir : 1), 4);
+            break;
+        case ITEM_MODE_RESET:
+            /* left/right choose the mode; confirmed twice, its presets replace the current settings */
+            if (sModeConfirmKey) {
+                if (sModeArmed) {
+                    sModeArmed = 0;
+                    PortApplyGraphicsMode(sModePick);
+                    PortConfigSave();
+                } else {
+                    sModeArmed = 1;
+                }
+            } else if (dir) {
+                sModePick = 1 + (sModePick - 1 + (dir < 0 ? PORT_MODE_COUNT - 2 : 1)) % (PORT_MODE_COUNT - 1);
+                sModeArmed = 0;
+            }
+            sModeConfirmKey = 0;
             break;
         case ITEM_DODGE:
             gPortConfig.dodgeButton = !gPortConfig.dodgeButton;
@@ -1096,7 +1275,7 @@ static void Change(int item, int dir) {
             break;
         case ITEM_HIDE_TOUCH:
             gPortConfig.hideTouchControls = !gPortConfig.hideTouchControls;
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
             PortAndroidTouchSettingsChanged();
 #endif
             break;
@@ -1106,6 +1285,15 @@ static void Change(int item, int dir) {
         case ITEM_CHEATS_MENU:
             if (dir > 0) { sPage = PAGE_CHEATS; sCursor = sScroll = ITEM_CHEAT_DEBUG; }
             break;
+        case ITEM_TITLE: /* a second confirm returns to the title; unsaved progress is lost, as with A+B+Start+Select */
+            if (dir > 0 && sTitleArmed) {
+                sTitleArmed = 0;
+                sTitleRequest = 1;
+                Close();
+            } else if (dir > 0) {
+                sTitleArmed = 1;
+            }
+            return;
         case ITEM_ACHIEVEMENTS_MENU:
             if (dir > 0) AchievementMenuOpen();
             return;
@@ -1243,6 +1431,14 @@ static int sClosing; /* frames left of the menu fading to black */
 static int sReturn;  /* frames left of the black fading back to the game */
 static int sHarnessTick;
 
+/* Options > Return to title screen, once the menu has closed (PortFrame resets the game). */
+int PortUiTakeTitleRequest(void) {
+    if (!sTitleRequest || sOpen)
+        return 0;
+    sTitleRequest = 0;
+    return 1;
+}
+
 int PortUiMenuCanvas(void) {
     return sOpen && sFade >= MENU_FADE;
 }
@@ -1260,10 +1456,21 @@ int PortUiTakeMenuSound(int open) {
     return take;
 }
 
+/* Counts every opening of the options: an event reading a START tap ignores one held across an opening (START +
+   SELECT opens them; the START released when they close is not a tap of the scene's). */
+static unsigned sOpenSerial;
+unsigned PortUiOpenSerial(void) {
+    return sOpenSerial;
+}
+
 void PortUiOpenOptions(void) {
     if (sOpen)
         return;
     sOpen = 1;
+    sOpenSerial++;
+    sTitleArmed = 0;
+    sModeArmed = 0;
+    sModePick = gPortConfig.graphicsMode > PORT_MODE_CHOOSE ? gPortConfig.graphicsMode : PORT_MODE_HD;
     sOpenSound = !SDL_getenv("KHCOM_OPTIONS_SHOT");
     sCloseSound = 0;
     sFade = SDL_getenv("KHCOM_OPTIONS_SHOT") ? MENU_FADE * 2 : 0; /* test shots: no fade */
@@ -1304,6 +1511,37 @@ void PortUiOpenNewGame(void) {
     sWizStep = WIZ_VERSION;
     sWizCursor = 0;
     PortVideoApplyConfig();
+}
+
+/* The first start (graphics_mode=0 in kh_com.ini): which mode, before the title. Unattended runs keep the settings
+   as they are unless a test drives this window (KHCOM_MODE_CHOICE). */
+int PortUiNeedsModeChoice(void) {
+    if (gPortConfig.graphicsMode != PORT_MODE_CHOOSE || sOpen)
+        return 0;
+    return !(SDL_getenv("KHCOM_FAST") || SDL_getenv("KHCOM_BOT")) || SDL_getenv("KHCOM_MODE_CHOICE");
+}
+
+static int sModeNoHd; /* nothing of the HD mod imported: the HD mode is not offered (24/10, seen on Android) */
+void PortUiOpenModeChoice(void) {
+    PortUiOpenOptions();
+    sOpenSound = 0;
+    sPage = PAGE_NEWGAME;
+    sModeNoHd = !(ItemVisible(ITEM_HD_CARDS) || ItemVisible(ITEM_HD_MOVIES) || ItemVisible(ITEM_HD_MUSIC));
+    sWizStep = sModeNoHd ? WIZ_MODE_GBA : WIZ_MODE;
+    sWizCursor = 0;
+}
+
+/* The online lobby (port_lobby.c), before the link battle's menu: the public rooms, open one, enter one, or the
+   cable. The game waits under it as under the options. */
+static int sLobbyCursor;
+static void LobbyKey(int key);
+void PortUiOpenLobby(void) {
+    extern void PortLobbyRefresh(void);
+    PortUiOpenOptions();
+    sOpenSound = 0; /* the game's own confirm has just sounded */
+    sPage = PAGE_LOBBY;
+    sLobbyCursor = 0;
+    PortLobbyRefresh();
 }
 
 void PortUiForceClose(void) {
@@ -1370,6 +1608,29 @@ void PortUiNotice(const char* text) {
     else
         SDL_strlcpy(sNotice, text, sizeof(sNotice));
     sNoticeFrames = 120;
+}
+
+/* src/sio/sio.c over the network: the other player has not been heard for a while; the game waits (nothing is
+   cut) and goes on when the packets come back. */
+void PortUiLinkWaitingNotice(int seconds, int canGiveUp) {
+    static const char* const text[LANG_COUNT] = {
+        "Waiting for the other player... %d s", "En attente de l'autre joueur... %d s",
+        "Warte auf den anderen Spieler... %d s", "In attesa dell'altro giocatore... %d s",
+        "Esperando al otro jugador... %d s", "Waiting for the other player... %d s",
+    };
+    static const char* const giveUp[LANG_COUNT] = { "   (hold B: leave)", "   (B maintenu : quitter)",
+                                                    "   (B halten: verlassen)", "   (tieni B: esci)",
+                                                    "   (mantén B: salir)", "   (hold B: leave)" };
+    SDL_snprintf(sNotice, sizeof(sNotice), text[Lang()], seconds);
+    if (canGiveUp)
+        SDL_strlcat(sNotice, giveUp[Lang()], sizeof(sNotice));
+    sNoticeFrames = 90;
+}
+
+/* port_steamlink.c's state on screen: Spanish for the Spanish game, English otherwise */
+void PortUiLinkNotice(const char* en, const char* es, const char* name) {
+    SDL_snprintf(sNotice, sizeof(sNotice), Lang() == LANG_ES ? es : en, name ? name : "");
+    sNoticeFrames = 240;
 }
 
 /* map_tasks.c / poo.c: moogle points picked up on the field. Pickups close
@@ -1476,6 +1737,27 @@ int PortUiHandleEvent(const void* p) {
         if (click) { extern void PortMenuSoundClick(void); PortMenuSoundClick(); }
         return AchievementMenuInput(ev);
     }
+    if (sPage == PAGE_LOBBY && (ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN)) {
+        int key = -1;
+        if (ev->type == SDL_EVENT_KEY_DOWN) {
+            switch (ev->key.key) {
+                case SDLK_UP: case SDLK_W: key = 0; break;
+                case SDLK_DOWN: case SDLK_S: key = 1; break;
+                case SDLK_RETURN: case SDLK_SPACE: case SDLK_X: case SDLK_K: key = ev->key.repeat ? -1 : 3; break;
+                case SDLK_ESCAPE: case SDLK_BACKSPACE: case SDLK_Z: case SDLK_J: key = ev->key.repeat ? -1 : 4; break;
+            }
+        } else {
+            switch (UiPadButton(ev)) {
+                case SDL_GAMEPAD_BUTTON_DPAD_UP: key = 0; break;
+                case SDL_GAMEPAD_BUTTON_DPAD_DOWN: key = 1; break;
+                case SDL_GAMEPAD_BUTTON_SOUTH: case SDL_GAMEPAD_BUTTON_START: key = 3; break;
+                case SDL_GAMEPAD_BUTTON_EAST: key = 4; break;
+            }
+        }
+        if (key >= 0)
+            LobbyKey(key);
+        return 1;
+    }
     if (sPage == PAGE_NEWGAME && (ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN)) {
         int key = -1;
         if (ev->type == SDL_EVENT_KEY_DOWN) {
@@ -1502,13 +1784,16 @@ int PortUiHandleEvent(const void* p) {
     if (sPage == PAGE_CONTROLS && sControlCapture && sCursor >= ITEM_CONTROL_A && sCursor <= ITEM_CONTROL_UNSTOCK) {
         int action = sCursor - ITEM_CONTROL_A;
         if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat) {
-            if (ev->key.key == SDLK_ESCAPE) sControlCapture = 0;
+            if (ev->key.key == SDLK_ESCAPE || ev->key.key == SDLK_AC_BACK) sControlCapture = 0;
             else if (!sControlPad) { gPortConfig.keys[action][0] = ev->key.key == SDLK_DELETE ? 0 : (int)ev->key.key; sControlCapture = 0; PortConfigSave(); }
             else if (ev->key.key == SDLK_DELETE) { gPortConfig.pad[action] = -1; sControlCapture = 0; PortConfigSave(); }
             return 1;
         }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) { gPortConfig.pad[action] = ev->gbutton.button; sControlCapture = 0; PortConfigSave(); return 1; }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value) > 16000) { gPortConfig.pad[action] = PORT_PAD_AXIS_BASE + ev->gaxis.axis * 2 + (ev->gaxis.value < 0); sControlCapture = 0; PortConfigSave(); return 1; }
+        /* waiting for a key with no keyboard (issue #37): a gamepad button, a tap or a click cancels it */
+        if (!sControlPad && (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_MOUSE_BUTTON_DOWN || ev->type == SDL_EVENT_FINGER_DOWN))
+            sControlCapture = 0;
         return 1;
     }
     if (ev->type == SDL_EVENT_KEY_DOWN) {
@@ -1533,6 +1818,7 @@ int PortUiHandleEvent(const void* p) {
             case SDLK_SPACE:
             case SDLK_X:
             case SDLK_K:
+                sModeConfirmKey = sCursor == ITEM_MODE_RESET;
                 if (sCursor == ITEM_CLOSE)
                     Close();
                 else if (sCursor == ITEM_FS_RES)
@@ -1580,6 +1866,7 @@ int PortUiHandleEvent(const void* p) {
                 Change(sCursor, 1);
                 break;
             case SDL_GAMEPAD_BUTTON_SOUTH:
+                sModeConfirmKey = sCursor == ITEM_MODE_RESET;
                 if (sCursor == ITEM_CLOSE)
                     Close();
                 else if (sCursor == ITEM_FS_RES)
@@ -1700,6 +1987,20 @@ void PortUiSetFps(float fps, float logic) {
     SDL_snprintf(sFpsText, sizeof(sFpsText), "%.1f FPS   %.1f Hz", fps, logic);
 }
 
+/* the online link's line (net_stats): round trip, input delay, the last rollback's frames */
+static const char* NetLine(void) {
+    extern int NetLinkStats(int* rttMs, int* delay);
+    extern int PortRollbackLastDepth(void);
+    static char text[64];
+    int rtt, delay;
+    if (!gPortConfig.netStats || !NetLinkStats(&rtt, &delay))
+        return NULL;
+    SDL_snprintf(text, sizeof(text), Lang() == LANG_ES ? "Red %d ms  retardo %d  rollback %d" :
+                                                         "Net %d ms  delay %d  rollback %d",
+                 rtt, delay, PortRollbackLastDepth());
+    return text;
+}
+
 int PortUiDrawNotice(uint32_t* frame, int width, int height) {
     const char* text = sNotice;
 
@@ -1707,7 +2008,7 @@ int PortUiDrawNotice(uint32_t* frame, int width, int height) {
         sNoticeFrames--;
     else if (gPortConfig.showFps)
         text = sFpsText;
-    else
+    else if (!(text = NetLine()))
         return 0;
     sFb = frame;
     sFbW = width;
@@ -1867,12 +2168,79 @@ static void ShortValue(int item, char* out, size_t size) {
 
 /* ---- the new game window: a few steps, as modern games ask on first start - */
 
-static const char* const sWizAsk[3][LANG_COUNT] = {
+static const char* const sWizAsk[5][LANG_COUNT] = {
     { "Which version do you want to play?", "Quelle version veux-tu jouer ?", "Welche Version möchtest du spielen?",
       "Quale versione vuoi giocare?", "¿Qué versión quieres jugar?", "どのバージョンで遊びますか？" },
-    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難易度" },
+    { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難しさ" },
     { "Before you start", "Avant de commencer", "Bevor es losgeht", "Prima di iniziare", "Antes de empezar",
       "はじめる前に" },
+    { "How do you want to play?", "Comment veux-tu jouer ?", "Wie möchtest du spielen?", "Come vuoi giocare?",
+      "¿Cómo quieres jugar?", "どの見た目で遊びますか？" },
+    { "Which GBA?", "Quel GBA ?", "Welcher GBA?", "Quale GBA?", "¿Qué GBA?", "どちらのGBA？" },
+};
+/* the graphics mode, asked once on the first start (PortUiOpenModeChoice); Options and the launcher change it later */
+static const char* const sModeDescHd[LANG_COUNT] = {
+    "Re:Chain of Memories' cards, logo, faces, music and movies (imported by the launcher from your Kingdom Hearts HD "
+    "1.5+2.5), HD text and every improvement.",
+    "Cartes, logo, portraits, musique et vidéos de Re:Chain of Memories (importés par le lanceur depuis ton Kingdom "
+    "Hearts HD 1.5+2.5), texte HD et toutes les améliorations.",
+    "Karten, Logo, Porträts, Musik und Videos aus Re:Chain of Memories (vom Launcher aus deinem Kingdom Hearts HD "
+    "1.5+2.5 importiert), HD-Text und alle Verbesserungen.",
+    "Carte, logo, ritratti, musica e video di Re:Chain of Memories (importati dal launcher dal tuo Kingdom Hearts HD "
+    "1.5+2.5), testo HD e tutti i miglioramenti.",
+    "Cartas, logo, retratos, música y videos de Re:Chain of Memories (los importa el launcher desde tu Kingdom Hearts "
+    "HD 1.5+2.5), texto HD y todas las mejoras.",
+    "Re:Chain of Memoriesのカード・ロゴ・顔・音楽・ムービー（ランチャーがKingdom Hearts HD 1.5+2.5から取り込み）、"
+    "HDテキストとすべての改善。",
+};
+static const char* const sModeDescHdMissing[LANG_COUNT] = {
+    "Not imported yet: the launcher does it (HD mod).", "Pas encore importé : le lanceur s'en charge (mod HD).",
+    "Noch nicht importiert: das macht der Launcher (HD-Mod).", "Non ancora importato: lo fa il launcher (mod HD).",
+    "Aún sin importar: lo hace el launcher (Mod HD).", "まだ取り込まれていません：ランチャー（HD MOD）で行えます。",
+};
+static const char* const sModeDescGba[LANG_COUNT] = {
+    "The cartridge's graphics. Then choose enhanced or classic.",
+    "Les graphismes de la cartouche. Puis choisis amélioré ou classique.",
+    "Die Grafik des Moduls. Danach verbessert oder klassisch wählen.",
+    "La grafica della cartuccia. Poi scegli migliorato o classico.",
+    "Los gráficos del cartucho. Después eliges mejorado o clásico.",
+    "カートリッジのグラフィック。次に強化かクラシックを選びます。",
+};
+static const char* const sModeDescEnhanced[LANG_COUNT] = {
+    "ReKHCoM's wide view and improvements, with the HD extras off.",
+    "La vue large et les améliorations de ReKHCoM, sans les extras HD.",
+    "ReKHCoMs Breitbild und Verbesserungen, ohne die HD-Extras.",
+    "La vista larga e i miglioramenti di ReKHCoM, senza gli extra HD.",
+    "La vista amplia y las mejoras de ReKHCoM, con los extras HD apagados.",
+    "ReKHCoMのワイド表示と改善（HDの追加要素はオフ）。",
+};
+static const char* const sModeDescClassic[LANG_COUNT] = {
+    "As on the console: the 240x160 picture at a whole scale with a decorative border, every improvement off. "
+    "Almost an emulator, but native.",
+    "Comme sur la console : l'image 240x160 à une échelle entière avec une bordure décorative, toutes les "
+    "améliorations désactivées. Presque un émulateur, mais natif.",
+    "Wie auf der Konsole: das 240x160-Bild in ganzzahliger Größe mit einem Zierrahmen, alle Verbesserungen aus. "
+    "Fast ein Emulator, aber nativ.",
+    "Come sulla console: l'immagine 240x160 a scala intera con una cornice decorativa, tutti i miglioramenti "
+    "disattivati. Quasi un emulatore, ma nativo.",
+    "Como en la consola: la imagen de 240x160 a escala entera con un borde decorativo y todas las mejoras apagadas. "
+    "Casi un emulador, pero nativo.",
+    "本体と同じ：240x160の画面をせいすう倍で表示し、まわりにかざりのわく。改善はすべてオフ。ほぼエミュレーター、でもネイティブ。",
+};
+static const char* const sWizWide[LANG_COUNT] = { "Wide view", "Vue large", "Breitbild", "Vista larga",
+                                                  "Vista amplia", "ワイド表示" };
+static const char* const sWizWideDesc[LANG_COUNT] = {
+    "More of the world at the sides, as ReKHCoM shows it. Off: the GBA's 240x160 picture.",
+    "Plus du monde sur les côtés, comme ReKHCoM le montre. Désactivé : l'image 240x160 du GBA.",
+    "Mehr von der Welt an den Seiten, wie ReKHCoM sie zeigt. Aus: das 240x160-Bild des GBA.",
+    "Più mondo ai lati, come lo mostra ReKHCoM. Disattivata: l'immagine 240x160 del GBA.",
+    "Más mundo a los lados, como lo muestra ReKHCoM. Apagada: la imagen de 240x160 del GBA.",
+    "ReKHCoMのように左右に世界を広く表示。オフ：GBAの240x160の画面。",
+};
+static const char* const sModeLater[LANG_COUNT] = {
+    "You can change it later in Options or the launcher.", "Modifiable plus tard dans les Options ou le lanceur.",
+    "Später in den Optionen oder im Launcher änderbar.", "Puoi cambiarlo poi nelle Opzioni o nel launcher.",
+    "Puedes cambiarlo luego en Opciones o en el launcher.", "あとでオプションやランチャーで変更できます。",
 };
 static const char* const sWizConfirm[LANG_COUNT] = { "Confirm", "Confirmer", "Bestätigen", "Conferma", "Confirmar",
     "決定" };
@@ -1895,8 +2263,39 @@ static const char* const sWizHelpFirst[LANG_COUNT] = {
     "\xE2\x86\x91\xE2\x86\x93 選択   A 決定",
 };
 
+/* the options step: HD text, the one-button controls, then the HD mod's music, movies and (Re:CoM) scenes once
+   imported, then Start */
+enum { WOPT_WIDE, WOPT_HDTEXT, WOPT_QOL, WOPT_HDMUSIC, WOPT_HDMOVIES, WOPT_HDSCENES, WOPT_HDHUD, WOPT_START };
+static int WizOptions(int* kinds) {
+    int n = 0;
+    /* GBA classic starts with everything off: a new game still offers the wide view */
+    if (gPortConfig.graphicsMode == PORT_MODE_GBA_CLASSIC)
+        kinds[n++] = WOPT_WIDE;
+    kinds[n++] = WOPT_HDTEXT;
+    kinds[n++] = WOPT_QOL;
+    if (ItemVisible(ITEM_HD_MUSIC))
+        kinds[n++] = WOPT_HDMUSIC;
+    if (ItemVisible(ITEM_HD_MOVIES))
+        kinds[n++] = WOPT_HDMOVIES;
+    if (ItemVisible(ITEM_HD_SCENES))
+        kinds[n++] = WOPT_HDSCENES;
+    if (ItemVisible(ITEM_HD_CARDS))
+        kinds[n++] = WOPT_HDHUD;
+    kinds[n++] = WOPT_START;
+    return n;
+}
+
 static int WizRows(void) {
-    return sWizStep == WIZ_VERSION ? 2 : sWizStep == WIZ_DIFFICULTY ? 3 : 3;
+    int kinds[9];
+    return sWizStep == WIZ_VERSION || sWizStep >= WIZ_MODE ? 2 : sWizStep == WIZ_DIFFICULTY ? 3 : WizOptions(kinds);
+}
+
+/* the first start: the graphics mode's presets, then the game goes on */
+static void ModeChosen(int mode) {
+    PortApplyGraphicsMode(mode);
+    PortConfigSave();
+    PortVideoApplyConfig();
+    Close();
 }
 
 static void WizFinish(void) {
@@ -1907,11 +2306,22 @@ static void WizFinish(void) {
 
 /* key: 0 up, 1 down, 2 left/right (toggle), 3 A, 4 B */
 static void WizKey(int key) {
+    extern void PortMenuSoundClick(void);
+    extern void PortMenuSoundDecide(int confirm);
     int rows = WizRows();
+    /* the menus' own sounds, as in the options: the cursor's click, a toggle's click, A and B (23/10) */
+    if (key == 0 || key == 1 || (key == 2 && sWizStep == WIZ_OPTIONS))
+        PortMenuSoundClick();
+    else if (key == 3 || (key == 4 && (sWizStep == WIZ_MODE_GBA || sWizStep == WIZ_OPTIONS || sWizStep == WIZ_DIFFICULTY)))
+        PortMenuSoundDecide(key == 3);
     switch (key) {
         case 0: sWizCursor = (sWizCursor + rows - 1) % rows; return;
         case 1: sWizCursor = (sWizCursor + 1) % rows; return;
         case 4:
+            if (sWizStep == WIZ_MODE_GBA && !sModeNoHd) {
+                sWizStep = WIZ_MODE;
+                sWizCursor = 1;
+            }
             if (sWizStep == WIZ_OPTIONS) {
                 sWizStep = sNgRecom ? WIZ_DIFFICULTY : WIZ_VERSION;
                 sWizCursor = sNgRecom ? (gPortConfig.ps2Difficulty == 1 ? 0 : gPortConfig.ps2Difficulty == 0 ? 1 : 2) : 0;
@@ -1922,6 +2332,19 @@ static void WizKey(int key) {
             return;
         default:
             break;
+    }
+    if (sWizStep == WIZ_MODE && key == 3) {
+        if (sWizCursor == 0) {
+            ModeChosen(PORT_MODE_HD);
+        } else {
+            sWizStep = WIZ_MODE_GBA;
+            sWizCursor = 0;
+        }
+        return;
+    }
+    if (sWizStep == WIZ_MODE_GBA && key == 3) {
+        ModeChosen(sWizCursor == 0 ? PORT_MODE_GBA_ENHANCED : PORT_MODE_GBA_CLASSIC);
+        return;
     }
     if (sWizStep == WIZ_VERSION && key == 3) {
         /* each version comes with its presets: the original as on the
@@ -1941,15 +2364,69 @@ static void WizKey(int key) {
         sWizStep = WIZ_OPTIONS;
         sWizCursor = 0;
     } else if (sWizStep == WIZ_OPTIONS) {
-        if (sWizCursor == 0 && (key == 2 || key == 3)) {
-            gPortConfig.hdText = !gPortConfig.hdText;
-            PortVideoApplyConfig();
-        } else if (sWizCursor == 1 && (key == 2 || key == 3)) {
-            PortSetQolButtons(!PortQolButtons());
-        } else if (sWizCursor == 2 && key == 3) {
-            WizFinish();
+        int kinds[9], toggle = key == 2 || key == 3;
+        WizOptions(kinds);
+        switch (kinds[sWizCursor]) {
+            case WOPT_WIDE:
+                if (toggle) {
+                    gPortConfig.viewMode = gPortConfig.viewMode == PORT_VIEW_ORIGINAL ? PORT_VIEW_AUTO : PORT_VIEW_ORIGINAL;
+                    PortVideoApplyConfig();
+                }
+                break;
+            case WOPT_HDTEXT:
+                if (toggle) {
+                    gPortConfig.hdText = !gPortConfig.hdText;
+                    PortVideoApplyConfig();
+                }
+                break;
+            case WOPT_QOL:
+                if (toggle)
+                    PortSetQolButtons(!PortQolButtons());
+                break;
+            case WOPT_HDMUSIC:
+                if (toggle)
+                    gPortConfig.hdMusic = !gPortConfig.hdMusic;
+                break;
+            case WOPT_HDMOVIES:
+                if (toggle)
+                    gPortConfig.hdMovies = !gPortConfig.hdMovies;
+                break;
+            case WOPT_HDSCENES:
+                if (toggle)
+                    gPortConfig.hdScenes = !gPortConfig.hdScenes;
+                break;
+            case WOPT_HDHUD:
+                if (toggle)
+                    gPortConfig.hdTitle = gPortConfig.hdCards = !gPortConfig.hdCards;
+                break;
+            default:
+                if (key == 3)
+                    WizFinish();
+                break;
         }
     }
+}
+
+/* A three-byte UTF-8 character (Japanese): a line may break before and after it, it has no spaces. */
+static int WideChar(const char* s) {
+    return ((unsigned char)*s & 0xF0) == 0xE0;
+}
+
+/* Japanese punctuation that never starts a line (、。）」): kept at the end of the line before. */
+static int ClosingMark(const char* s) {
+    return !SDL_strncmp(s, "\xE3\x80\x81", 3) || !SDL_strncmp(s, "\xE3\x80\x82", 3) ||
+           !SDL_strncmp(s, "\xEF\xBC\x89", 3) || !SDL_strncmp(s, "\xE3\x80\x8D", 3);
+}
+
+/* The end of the next unit that is not broken: a word, or one Japanese character with its closing marks. */
+static const char* WrapUnit(const char* q) {
+    if (WideChar(q)) {
+        q += 3;
+        while (WideChar(q) && ClosingMark(q)) q += 3;
+        return q;
+    }
+    while (*q && *q != ' ' && !WideChar(q)) q++;
+    return q;
 }
 
 /* Text wrapped to maxW; returns the lines drawn (draw = 0: only measures). */
@@ -1962,8 +2439,7 @@ static int DrawWrapped(const char* text, int x, int y, int maxW, uint32_t color,
         const char* q = p;
         int n;
         while (1) {
-            const char* e = q;
-            while (*e && *e != ' ') e++;
+            const char* e = WrapUnit(q);
             n = (int)(e - p);
             if (n >= (int)sizeof(line)) break;
             SDL_memcpy(line, p, (size_t)n);
@@ -1971,7 +2447,7 @@ static int DrawWrapped(const char* text, int x, int y, int maxW, uint32_t color,
             if (TextWidth(line) > maxW && best != NULL) break;
             best = e;
             if (!*e) break;
-            q = e + 1;
+            q = *e == ' ' ? e + 1 : e;
         }
         if (best == NULL) best = p + SDL_strlen(p);
         n = SDL_min((int)(best - p), (int)sizeof(line) - 1);
@@ -1979,19 +2455,30 @@ static int DrawWrapped(const char* text, int x, int y, int maxW, uint32_t color,
         line[n] = 0;
         if (draw) DrawText(line, x, y + lines * 11, color, 0xFFD8D8D8u);
         lines++;
-        p = *best ? best + 1 : best;
+        p = *best == ' ' ? best + 1 : best;
     }
     return lines;
 }
 
 static void DrawWizard(int l, int width, int height) {
-    const char* labels[3];
-    const char* subs[3];
-    const char* values[3] = { NULL, NULL, NULL };
-    int rows = WizRows(), i, panelW = SDL_min(width - 24, 250), x0, y0, h, y, textW;
+    const char* labels[6];
+    const char* subs[6];
+    const char* values[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
+    int rows = WizRows(), i, panelW = SDL_min(width - 24, 250), x0, y0, h, y, textW, later, compact;
     static const int order[3] = { 1, 0, 2 };
 
-    if (sWizStep == WIZ_VERSION) {
+    if (sWizStep == WIZ_MODE) {
+        static char hd[600];
+        int imported = ItemVisible(ITEM_HD_CARDS);
+        SDL_snprintf(hd, sizeof(hd), "%s%s%s", sModeDescHd[l], imported ? "" : " ", imported ? "" : sModeDescHdMissing[l]);
+        labels[0] = sModeNames[PORT_MODE_HD][l]; subs[0] = hd;
+        static const char* const gbaMode[LANG_COUNT] = { "GBA mode", "Mode GBA", "GBA-Modus", "Modalità GBA",
+                                                         "Modo GBA", "GBAモード" };
+        labels[1] = gbaMode[l]; subs[1] = sModeDescGba[l];
+    } else if (sWizStep == WIZ_MODE_GBA) {
+        labels[0] = sModeNames[PORT_MODE_GBA_ENHANCED][l]; subs[0] = sModeDescEnhanced[l];
+        labels[1] = sModeNames[PORT_MODE_GBA_CLASSIC][l]; subs[1] = sModeDescClassic[l];
+    } else if (sWizStep == WIZ_VERSION) {
         labels[0] = sVersions[0][l]; subs[0] = sNgDescOriginal[l];
         labels[1] = sVersions[1][l]; subs[1] = sNgDescRecom[l];
     } else if (sWizStep == WIZ_DIFFICULTY) {
@@ -2000,21 +2487,76 @@ static void DrawWizard(int l, int width, int height) {
             subs[i] = sNgDescDifficulty[order[i]][l];
         }
     } else {
-        labels[0] = sLabels[ITEM_NG_HDTEXT][l]; subs[0] = sNgDescHd[l];
-        values[0] = sOnOff[gPortConfig.hdText != 0][l];
-        labels[1] = sLabels[ITEM_NG_QOL][l]; subs[1] = sNgDescQol[l];
-        values[1] = sOnOff[PortQolButtons() != 0][l];
-        labels[2] = sWizConfirm[l]; subs[2] = sNgDescStart[l];
+        int kinds[9], n = WizOptions(kinds);
+        for (i = 0; i < n; i++) {
+            switch (kinds[i]) {
+                case WOPT_WIDE:
+                    labels[i] = sWizWide[l]; subs[i] = sWizWideDesc[l];
+                    values[i] = sOnOff[gPortConfig.viewMode != PORT_VIEW_ORIGINAL][l];
+                    break;
+                case WOPT_HDTEXT:
+                    labels[i] = sLabels[ITEM_NG_HDTEXT][l]; subs[i] = sNgDescHd[l];
+                    values[i] = sOnOff[gPortConfig.hdText != 0][l];
+                    break;
+                case WOPT_QOL:
+                    labels[i] = sLabels[ITEM_NG_QOL][l]; subs[i] = sNgDescQol[l];
+                    values[i] = sOnOff[PortQolButtons() != 0][l];
+                    break;
+                case WOPT_HDMUSIC:
+                    labels[i] = sLabels[ITEM_HD_MUSIC][l]; subs[i] = sNgDescHdMusic[l];
+                    values[i] = sOnOff[gPortConfig.hdMusic != 0][l];
+                    break;
+                case WOPT_HDMOVIES:
+                    labels[i] = sLabels[ITEM_HD_MOVIES][l]; subs[i] = sNgDescHdMovies[l];
+                    values[i] = sOnOff[gPortConfig.hdMovies != 0][l];
+                    break;
+                case WOPT_HDSCENES:
+                    labels[i] = sLabels[ITEM_HD_SCENES][l]; subs[i] = sNgDescHdScenes[l];
+                    values[i] = sOnOff[gPortConfig.hdScenes != 0][l];
+                    break;
+                case WOPT_HDHUD:
+                    labels[i] = sLabels[ITEM_HD_CARDS][l]; subs[i] = sNgDescHdHud[l];
+                    values[i] = sOnOff[gPortConfig.hdCards != 0][l];
+                    break;
+                default:
+                    labels[i] = sWizConfirm[l]; subs[i] = sNgDescStart[l];
+                    break;
+            }
+        }
     }
     textW = panelW - 30;
-    /* measure, then a white window in the middle of a darkened screen */
-    h = 22;
-    for (i = 0; i < rows; i++)
-        h += 14 + DrawWrapped(subs[i], 0, 0, textW, 0, 0) * 11 + 4;
-    h += 14;
+    /* measure, then a white window in the middle of a darkened screen; on the GBA's 160 lines (Original view) a
+       window too tall shows only the chosen row's description */
+    later = sWizStep >= WIZ_MODE ? DrawWrapped(sModeLater[l], 0, 0, panelW - 16, 0, 0) * 11 + 2 : 0;
+    for (compact = 0; compact < 2; compact++) {
+        h = 22;
+        for (i = 0; i < rows; i++)
+            h += 14 + (compact && i != sWizCursor ? 0 : DrawWrapped(subs[i], 0, 0, textW, 0, 0) * 11 + 4);
+        h += 14 + later;
+        if (h <= height - 4)
+            break;
+    }
+    compact = compact > 0;
     x0 = (width - panelW) / 2;
     y0 = SDL_max(2, (height - h) / 2);
-    Fill(0, 0, width, height, 0xFF000000u);
+    {
+        /* on the wide view's row the picture shows behind the window, so the change is seen */
+        int kinds[8];
+        if (sWizStep == WIZ_OPTIONS && WizOptions(kinds) > sWizCursor && kinds[sWizCursor] == WOPT_WIDE) {
+            /* the wide view's row: a night sky fills the whole picture, so its width shows (the GBA's 240x160
+               inside the border, or the whole window) */
+            int yy;
+            for (yy = 0; yy < height; yy++) {
+                int t = yy * 255 / SDL_max(1, height - 1);
+                Fill(0, yy, width, 1, 0xFF000000u | (uint32_t)(16 + t * 32 / 255) << 16 | (uint32_t)(16 + t * 16 / 255) << 8 |
+                                          (uint32_t)(56 + t * 40 / 255));
+            }
+            for (yy = 0; yy < 60; yy++) /* stars at fixed places, spread over the whole width */
+                Fill((yy * 97 + 13) % width, (yy * 53 + 7) % height, 1, 1, 0xFFC0C8F0u);
+        } else {
+            Fill(0, 0, width, height, 0xFF000000u);
+        }
+    }
     Fill(x0 - 2, y0 - 2, panelW + 4, h + 4, MENU_GREY);
     Fill(x0, y0, panelW, h, 0xFFFFFFFFu);
     DrawText(sWizAsk[sWizStep][l], x0 + 8, y0 + 4, MENU_RED_DARK, 0xFFD8D8D8u);
@@ -2034,9 +2576,13 @@ static void DrawWizard(int l, int width, int height) {
             DrawText(values[i], vx, y, MENU_INK, 0xFFD8D8D8u);
         }
         y += 14;
-        y += DrawWrapped(subs[i], x0 + 24, y, textW, sel ? MENU_INK : MENU_DIM, 1) * 11 + 4;
+        if (!compact || sel)
+            y += DrawWrapped(subs[i], x0 + 24, y, textW, sel ? MENU_INK : MENU_DIM, 1) * 11 + 4;
     }
-    DrawText(sWizStep == WIZ_VERSION ? sWizHelpFirst[l] : sWizHelp[l], x0 + 8, y0 + h - 12, MENU_DIM, 0xFFFFFFFFu);
+    if (sWizStep >= WIZ_MODE)
+        DrawWrapped(sModeLater[l], x0 + 8, y0 + h - 14 - later, panelW - 16, MENU_DIM, 1);
+    DrawText(sWizStep == WIZ_VERSION || sWizStep == WIZ_MODE ? sWizHelpFirst[l] : sWizHelp[l], x0 + 8, y0 + h - 12,
+             MENU_DIM, 0xFFFFFFFFu);
 }
 
 #include "port_control_diagram.inc"
@@ -2144,9 +2690,9 @@ static const char* const sNintendoNote[LANG_COUNT] = {
     "Los mandos de Nintendo (Switch Pro, Joy-Con, 8BitDo en modo Switch) tienen A y B, X e Y al revés que los de "
     "Xbox. ReKHCoM los detecta; actívalo si el tuyo se toma por un mando de Xbox (por ejemplo con Steam o Lutris). "
     "Activado: el botón rotulado A es la A del juego, B es B, X es X e Y es Y. Tus asignaciones no cambian.",
-    "任天堂のコントローラー（Switch Pro、ジョイコン、Switchモードの8BitDo）は Xboxと比べて AとB、XとYが逆です。 "
-    "ReKHCoMは自動で判別します。 Xboxのパッドと判定される場合（SteamやLutris経由など）はオンに。 "
-    "オン: Aと書かれたボタンがゲームのA、BはB、XはX、YはYになります。 割り当ては変わりません。",
+    "ニンテンドーのコントローラー（Switch Pro、ジョイコン、Switchモードの8BitDo）は Xboxとくらべて AとB、XとYが逆です。 "
+    "ReKHCoMは自動で判別します。 Xboxのパッドと判定される場合（SteamやLutrisを通してなど）はオンに。 "
+    "オン: Aと書かれたボタンがゲームのA、BはB、XはX、YはYになります。 わりあては変わりません。",
 };
 
 static void DrawNintendoNote(int l, int width, int height, int left) {
@@ -2166,6 +2712,161 @@ static void DrawNintendoNote(int l, int width, int height, int left) {
 }
 #include "port_achievement_menu.inc"
 
+/* ---- the online lobby ---------------------------------------------------------------------------------------- */
+int PortLobbyBackend(void);
+int PortLobbyReady(void);
+void PortLobbyRefresh(void);
+void PortLobbyFrame(void);
+int PortLobbyRoomCount(void);
+const char* PortLobbyRoomName(int i);
+int PortLobbyRoomRegion(int i);
+int PortLobbyRegion(void);
+const char* PortLobbyPlayerName(void);
+const char* PortLobbyMyCode(void);
+void PortLobbyCreate(void);
+void PortLobbyJoin(int i);
+void PortLobbyCable(void);
+
+enum { LROW_CREATE = -1, LROW_REFRESH = -2, LROW_RETRY = -3, LROW_CABLE = -4 }; /* >= 0: a room */
+static const char* const sLobbyTitle[LANG_COUNT] = { "Online battle", "Combat en ligne", "Online-Kampf",
+                                                     "Battaglia online", "Batalla en línea", "Online battle" };
+static const char* const sLobbyCreate[LANG_COUNT] = { "Open a public room", "Ouvrir une salle publique",
+                                                      "Öffentlichen Raum öffnen", "Apri una stanza pubblica",
+                                                      "Abrir una sala pública", "Open a public room" };
+static const char* const sLobbyRefresh[LANG_COUNT] = { "Refresh", "Actualiser", "Aktualisieren", "Aggiorna",
+                                                       "Actualizar", "Refresh" };
+static const char* const sLobbyRetry[LANG_COUNT] = { "Try again", "Réessayer", "Erneut versuchen", "Riprova",
+                                                     "Reintentar", "Try again" };
+static const char* const sLobbyCable[LANG_COUNT] = { "Play by cable (local)", "Jouer par câble (local)",
+                                                     "Per Kabel spielen (lokal)", "Gioca via cavo (locale)",
+                                                     "Jugar por cable (local)", "Play by cable (local)" };
+static const char* const sLobbyRoom[LANG_COUNT] = { "%s's room", "Salle de %s", "Raum von %s", "Stanza di %s",
+                                                    "Sala de %s", "%s's room" };
+static const char* const sLobbyLogin[LANG_COUNT] = {
+    "Open Steam and sign in to play online.", "Ouvrez Steam et connectez-vous pour jouer en ligne.",
+    "Öffne Steam und melde dich an, um online zu spielen.", "Apri Steam e accedi per giocare online.",
+    "Abre Steam e inicia sesión para jugar en línea.", "Open Steam and sign in to play online." };
+static const char* const sLobbyNoServer[LANG_COUNT] = {
+    "The room server does not answer.", "Le serveur de salles ne répond pas.", "Der Raumserver antwortet nicht.",
+    "Il server delle stanze non risponde.", "El servidor de salas no responde.", "The room server does not answer." };
+static const char* const sLobbyAsking[LANG_COUNT] = { "Looking for rooms...", "Recherche de salles...",
+                                                      "Suche nach Räumen...", "Ricerca di stanze...",
+                                                      "Buscando salas...", "Looking for rooms..." };
+static const char* const sLobbyEmpty[LANG_COUNT] = {
+    "No public rooms right now: open one.", "Aucune salle publique : ouvrez-en une.",
+    "Gerade keine öffentlichen Räume: öffne einen.", "Nessuna stanza pubblica: aprine una.",
+    "No hay salas públicas ahora: abre una.", "No public rooms right now: open one." };
+static const char* const sLobbyAs[LANG_COUNT] = { "Playing as %s", "Joueur : %s", "Spieler: %s", "Giocatore: %s",
+                                                  "Jugando como %s", "Playing as %s" };
+static const char* const sLobbyOther[LANG_COUNT] = { "another version", "autre version", "andere Version",
+                                                     "altra versione", "otra versión", "another version" };
+static const char* const sLobbyHelp[LANG_COUNT] = { "Confirm: choose   Back: cable", "Valider : choisir   Retour : câble",
+                                                    "Bestätigen: wählen   Zurück: Kabel", "Conferma: scegli   Indietro: cavo",
+                                                    "Confirmar: elegir   Atrás: cable", "Confirm: choose   Back: cable" };
+static const char* const sLobbyOpened[LANG_COUNT] = { "Room open: waiting for a rival", "Salle ouverte : en attente",
+                                                      "Raum offen: warte auf Gegner", "Stanza aperta: in attesa",
+                                                      "Sala abierta: esperando rival", "Room open: waiting for a rival" };
+
+/* the rows: open a room, the rooms, refresh, the cable; signed out or no server: try again, the cable */
+static int LobbyRows(int* rows) {
+    int n = 0, i, ready = PortLobbyReady(), count = PortLobbyRoomCount();
+    if (ready < 0) {
+        rows[n++] = LROW_RETRY;
+        rows[n++] = LROW_CABLE;
+        return n;
+    }
+    rows[n++] = LROW_CREATE;
+    for (i = 0; i < count && n < 10; i++)
+        rows[n++] = i;
+    rows[n++] = LROW_REFRESH;
+    rows[n++] = LROW_CABLE;
+    return n;
+}
+
+static void LobbyKey(int key) {
+    int rows[16], n = LobbyRows(rows), row;
+    sLobbyCursor = SDL_clamp(sLobbyCursor, 0, n - 1);
+    if (key == 0 || key == 1) {
+        sLobbyCursor = (sLobbyCursor + (key == 0 ? n - 1 : 1)) % n;
+        return;
+    }
+    if (key == 4) {
+        PortLobbyCable();
+        Close();
+        return;
+    }
+    if (key != 3)
+        return;
+    row = rows[sLobbyCursor];
+    if (row == LROW_CABLE) {
+        PortLobbyCable();
+        Close();
+    } else if (row == LROW_REFRESH || row == LROW_RETRY) {
+        PortLobbyRefresh();
+    } else if (row == LROW_CREATE) {
+        PortLobbyCreate();
+        if (PortLobbyMyCode()[0])
+            PortUiLinkNotice("Room %s open: waiting for a rival", "Sala %s abierta: esperando rival", PortLobbyMyCode());
+        else
+            PortUiLinkNotice(sLobbyOpened[0], sLobbyOpened[4], NULL);
+        Close();
+    } else if (row >= 0 && PortLobbyRoomRegion(row) == PortLobbyRegion()) {
+        PortLobbyJoin(row);
+        Close();
+    }
+}
+
+static void DrawLobby(int l, int width, int height) {
+    int rows[16], n, i, panelW = SDL_min(width - 24, 250), x0, y0, h, y, ready, count;
+    char status[160], label[96];
+    PortLobbyFrame();
+    n = LobbyRows(rows);
+    sLobbyCursor = SDL_clamp(sLobbyCursor, 0, n - 1);
+    ready = PortLobbyReady();
+    count = PortLobbyRoomCount();
+    if (ready == -1)
+        SDL_strlcpy(status, sLobbyLogin[l], sizeof(status));
+    else if (ready == -2)
+        SDL_strlcpy(status, sLobbyNoServer[l], sizeof(status));
+    else if (count < 0)
+        SDL_strlcpy(status, sLobbyAsking[l], sizeof(status));
+    else if (count == 0)
+        SDL_strlcpy(status, sLobbyEmpty[l], sizeof(status));
+    else
+        SDL_snprintf(status, sizeof(status), sLobbyAs[l], PortLobbyPlayerName());
+    h = 22 + DrawWrapped(status, 0, 0, panelW - 16, 0, 0) * 11 + 4 + n * 14 + 16;
+    x0 = (width - panelW) / 2;
+    y0 = SDL_max(2, (height - h) / 2);
+    Fill(0, 0, width, height, 0xFF000000u);
+    Fill(x0 - 2, y0 - 2, panelW + 4, h + 4, MENU_GREY);
+    Fill(x0, y0, panelW, h, 0xFFFFFFFFu);
+    DrawText(sLobbyTitle[l], x0 + 8, y0 + 4, MENU_RED_DARK, 0xFFD8D8D8u);
+    Fill(x0 + 8, y0 + 17, panelW - 16, 1, MENU_GREY);
+    y = y0 + 22;
+    y += DrawWrapped(status, x0 + 8, y, panelW - 16, ready < 0 ? MENU_RED_DARK : MENU_DIM, 1) * 11 + 4;
+    for (i = 0; i < n; i++) {
+        int sel = i == sLobbyCursor, row = rows[i], other = 0;
+        const char* text = label;
+        if (row == LROW_CREATE) text = sLobbyCreate[l];
+        else if (row == LROW_REFRESH) text = sLobbyRefresh[l];
+        else if (row == LROW_RETRY) text = sLobbyRetry[l];
+        else if (row == LROW_CABLE) text = sLobbyCable[l];
+        else {
+            static const char* const regions[3] = { "EU", "US", "JP" };
+            int region = PortLobbyRoomRegion(row);
+            other = region != PortLobbyRegion();
+            SDL_snprintf(label, sizeof(label), sLobbyRoom[l], PortLobbyRoomName(row));
+            if (other)
+                SDL_snprintf(label + SDL_strlen(label), sizeof(label) - SDL_strlen(label), " (%s, %s)",
+                             region >= 0 && region < 3 ? regions[region] : "?", sLobbyOther[l]);
+        }
+        MenuBar(x0 + 8, y + 2, panelW - 16, sel);
+        DrawText(text, x0 + 24, y, other ? MENU_DIM : MENU_INK, 0xFFD8D8D8u);
+        y += 14;
+    }
+    DrawText(sLobbyHelp[l], x0 + 8, y0 + h - 12, MENU_DIM, 0xFFFFFFFFu);
+}
+
 static void DrawMenu(int l, int width, int height) {
     int rows, i, x, y, labelW = 0, valueW = 0, barX = 10, barW, top = MENU_TOP, artX;
     int rowH = sPage == PAGE_CONTROLS && sControlPad ? 14 : 16;
@@ -2177,6 +2878,7 @@ static void DrawMenu(int l, int width, int height) {
     }
 
     if (sPage == PAGE_ACHIEVEMENTS) { DrawAchievementMenu(l, width, height); return; }
+    if (sPage == PAGE_LOBBY) { DrawLobby(l, width, height); return; }
     if (sPage == PAGE_NEWGAME) {
         DrawWizard(l, width, height);
         return;
@@ -2320,6 +3022,34 @@ static int HarnessOptionsAction(void) {
         }
         return changed;
     }
+    if (sPage == PAGE_LOBBY && (SDL_getenv("KHCOM_LOBBY_KEYS") || SDL_getenv("KHCOM_LOBBY_SHOTS"))) {
+        const char* w = SDL_getenv("KHCOM_LOBBY_KEYS");
+        const char* t = SDL_getenv("KHCOM_LOBBY_SHOTS");
+        sHarnessTick++;
+        while (t && *t) { /* the window as lobby_<tick>.bmp */
+            if (SDL_atoi(t) == sHarnessTick) {
+                extern void PortHarnessShot(const char* name);
+                char name[32];
+                SDL_snprintf(name, sizeof(name), "lobby_%d.bmp", sHarnessTick);
+                PortHarnessShot(name);
+            }
+            t = SDL_strchr(t, ',');
+            if (t)
+                t++;
+        }
+        while (w && *w) {
+            const char* comma = SDL_strchr(w, ',');
+            const char* colon = SDL_strchr(w, ':');
+            if (colon && (!comma || colon < comma) && SDL_atoi(w) == sHarnessTick) {
+                PortLog("lobby-test: tick=%d cursor=%d rooms=%d key=%d", sHarnessTick, sLobbyCursor,
+                        PortLobbyRoomCount(), SDL_atoi(colon + 1));
+                LobbyKey(SDL_atoi(colon + 1));
+                changed = 1;
+            }
+            w = comma ? comma + 1 : NULL;
+        }
+        return 0;
+    }
     if (sPage == PAGE_NEWGAME && SDL_getenv("KHCOM_WIZARD_KEYS")) {
         const char* w = SDL_getenv("KHCOM_WIZARD_KEYS");
         sHarnessTick++;
@@ -2333,6 +3063,19 @@ static int HarnessOptionsAction(void) {
                 changed = 1;
             }
             w = comma ? comma + 1 : NULL;
+        }
+        if (SDL_getenv("KHCOM_WIZARD_SHOTS")) { /* tick list: the window's picture as wizard_<tick>.bmp */
+            const char* t = SDL_getenv("KHCOM_WIZARD_SHOTS");
+            while (t && *t) {
+                if (SDL_atoi(t) == sHarnessTick) {
+                    extern void PortHarnessShot(const char* name);
+                    char name[32];
+                    SDL_snprintf(name, sizeof(name), "wizard_%d.bmp", sHarnessTick);
+                    PortHarnessShot(name);
+                }
+                t = SDL_strchr(t, ',');
+                if (t) t++;
+            }
         }
         return changed;
     }
@@ -2450,12 +3193,33 @@ void PortUiOpenMoviePause(void) {
     sSceneMovie = 1;
 }
 
+/* The same pause over an imported HD movie or scene (port_hdmovie.c): skipping only stops the movie; the cartridge
+   movie or the event then ends as after the movie itself. */
+static int sHdMoviePause, sHdMovieSkip;
+
+void PortUiOpenHdMoviePause(void) {
+    PortUiOpenMoviePause();
+    sHdMoviePause = sScenePause;
+    sHdMovieSkip = 0;
+}
+
+int PortUiHdMovieSkipTaken(void) {
+    int skip = sHdMovieSkip;
+    sHdMovieSkip = 0;
+    return skip;
+}
+
 static void ScenePauseClose(int skip) {
     extern void PortInputSuppressUntilRelease(void);
     extern void PortEventSkipScene(void);
     extern void PortMovieSkipRequest(void);
     sScenePause = 0;
     PortInputSuppressUntilRelease(); /* the closing press does not reach the scene */
+    if (sHdMoviePause) {
+        sHdMoviePause = 0;
+        sHdMovieSkip = skip;
+        return;
+    }
     if (skip) {
         if (sSceneMovie)
             PortMovieSkipRequest();
@@ -2533,6 +3297,16 @@ static int ScenePauseEvent(const SDL_Event* ev) {
            ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_UP;
 }
 
+/* The panel's rectangle on the frame, kept for the presenter: it draws the panel again above the HD layers (an HD
+   portrait, HD text or the black an HD scene ends on covered it, and the paused game looked hung: 23/10). */
+static int sScenePauseRect[4];
+int PortUiScenePauseRect(int r[4]) {
+    if (!sScenePause)
+        return 0;
+    SDL_memcpy(r, sScenePauseRect, sizeof(sScenePauseRect));
+    return r[2] > 0 && r[3] > 0;
+}
+
 static void DrawScenePause(int l, int width, int height) {
     const char* title = sSceneStep == 0 ? sScenePauseTitle[l] : (sSceneMovie ? sMoviePauseAsk[l] : sScenePauseAsk[l]);
     const char* rows[2];
@@ -2546,6 +3320,10 @@ static void DrawScenePause(int l, int width, int height) {
     x0 = (width - panelW) / 2;
     y0 = (height - h) / 2;
     Shade(0, 0, width, height, 0xFF000000u, 120); /* the paused scene stays behind */
+    sScenePauseRect[0] = x0 - 2;
+    sScenePauseRect[1] = y0 - 2;
+    sScenePauseRect[2] = panelW + 4;
+    sScenePauseRect[3] = h + 4;
     Fill(x0 - 2, y0 - 2, panelW + 4, h + 4, MENU_GREY);
     Fill(x0, y0, panelW, h, 0xFFFFFFFFu);
     DrawText(title, x0 + 8, y0 + 4, MENU_RED_DARK, 0xFFD8D8D8u);
@@ -2555,6 +3333,12 @@ static void DrawScenePause(int l, int width, int height) {
         MenuBar(x0 + 8, y + 2, panelW - 16, i == sSceneCursor);
         DrawText(rows[i], x0 + 24, y, on ? MENU_INK : MENU_DIM, 0xFFD8D8D8u);
     }
+}
+
+/* 1 if PortUiDraw writes on the frame this time (port_main.c presents the PPU's frame without a copy otherwise):
+   the options, the scene pause, the skip prompt or the title hint. Keep in step with PortUiDraw below. */
+int PortUiDrawsOnFrame(void) {
+    return sScenePause || sOpen || (sSkipPrompt && !sSkipOwnLayer) || sTitleHintFrames > 0;
 }
 
 void PortUiDraw(uint32_t* frame, int width, int height) {
@@ -2572,6 +3356,13 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
             shotStep = sSceneStep * 2 + sSceneCursor; /* harness: one shot per state */
             sHarnessTick = 100 + shotStep;
             HarnessOptionsShot(frame, width, height);
+            {
+                /* and the window as presented, every layer drawn: the panel must be on top of them */
+                extern void PortHarnessShot(const char* name);
+                char name[48];
+                SDL_snprintf(name, sizeof(name), "scenepause_out_%d.bmp", shotStep);
+                PortHarnessShot(name);
+            }
         }
         return;
     }

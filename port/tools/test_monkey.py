@@ -24,6 +24,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import case_bin
+
 ROOT = Path(__file__).resolve().parents[2]
 FPS = 59.7275
 ROMS = {"eu": "B8CP", "us": "B8CE", "jp": "B8CJ"}
@@ -55,8 +57,7 @@ def run(exe_dir, work, version, case, seed, frames, timeout, save):
     if d.exists():
         shutil.rmtree(d)
     d.mkdir(parents=True)
-    for f in ("khcom.exe", "SDL3.dll"):
-        shutil.copy(exe_dir / f, d / f)
+    case_bin.place(exe_dir, work, d)
     (d / "kh_com.ini").write_text("config_version=2\n")
     env = dict(os.environ, SDL_VIDEO_DRIVER="dummy", SDL_AUDIO_DRIVER="dummy", KHCOM_FAST="1")
     step = max(600, frames // 20)

@@ -124,7 +124,12 @@ s32 task_btl_hpenm_1(BtlHpenmWork* work) {
         break;
     case BTL_HPENM_GAUGE_LAYER_GREEN:
         if (work->gaugeSize <= 6) {
+#ifdef PLATFORM_PC
+            /* @bug: a frame before the maximum HP is set divides by zero (the gauges' #40 class) */
+            work->hpRatio = actor->maxHp > 0 ? (work->displayHp << 8) / actor->maxHp : 0;
+#else
             work->hpRatio = (work->displayHp << 8) / actor->maxHp;
+#endif
         } else {
             work->hpRatio = (work->displayHp << 8) / 560;
         }
@@ -140,6 +145,11 @@ static void task_btl_hpenm_2_Body(BtlHpenmWork* work);
 
 /* Enemy HP gauge: top-right corner of the screen. */
 void task_btl_hpenm_2(BtlHpenmWork* work) {
+    extern int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who);
+    /* Re:CoM 1.5's enemy gauge (port_hdlayout.c, its logic read from Re:CoM's executable) in the cartridge's place */
+    if (PortHdEnemyGauge(work->visible, work->actor ? work->actor->hp : 0, work->actor ? work->actor->maxHp : 0,
+                         work->actor))
+        return;
     PortHudBegin(1, -1);
     gPortHdHudPart = PortHdHudEnemy(work->visible, work->hpRatio, work->gaugeLayer) ? 1 : 0;
     task_btl_hpenm_2_Body(work);
