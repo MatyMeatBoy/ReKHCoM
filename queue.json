@@ -803,10 +803,10 @@
     "malefica-arena": {
       "id": "malefica-arena",
       "piece": "Maléfica · arena y contexto",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:55:07.233653+00:00",
+      "updated_at": "2026-10-24T20:56:03.994220+00:00",
       "branch": "claude/arte-w3",
       "pr": null,
       "approval": null,
@@ -821,6 +821,11 @@
           "at": "2026-10-24T19:45:03.784441+00:00",
           "owner": "claude-sonnet-w3",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:56:03.994220+00:00",
+          "owner": "r4",
+          "detail": "released: Sin nubes ni brief medible en la mesa; depende de malefica-01 (sprite) y del contexto de arena: decision visual."
         }
       ],
       "claimed_at": "2026-10-24T20:55:07.233653+00:00"
@@ -1338,7 +1343,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:55:58.386336+00:00",
+  "updated_at": "2026-10-24T20:56:03.994220+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
