@@ -534,10 +534,10 @@
     "escena-099": {
       "id": "escena-099",
       "piece": "Escena 099",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:53:40.488842+00:00",
+      "updated_at": "2026-10-24T20:54:28.404023+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -552,6 +552,11 @@
           "at": "2026-10-24T19:44:23.060329+00:00",
           "owner": "claude-sonnet-w2",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:54:28.404023+00:00",
+          "owner": "r4",
+          "detail": "released: Un comentario sobre franja superior completa (0..20% de alto, todo el ancho) sin tile/estructura concreta; requiere rehacer el patron superior con el usuario."
         }
       ],
       "claimed_at": "2026-10-24T20:53:40.488842+00:00"
@@ -1300,7 +1305,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:54:13.751883+00:00",
+  "updated_at": "2026-10-24T20:54:28.404023+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
