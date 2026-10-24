@@ -560,19 +560,20 @@
     "entrada-agentes": {
       "id": "entrada-agentes",
       "piece": "Entrada automatica Claude/Codex sin contexto para cola compartida",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "root",
       "created_at": "2026-10-24T16:28:44.261620+00:00",
-      "updated_at": "2026-10-24T16:28:44.261620+00:00",
+      "updated_at": "2026-10-24T16:29:09.748516+00:00",
       "branch": null,
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "EMPEZAR_AQUI.md",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:29:09.748516+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:28:54.178497+00:00",
+  "updated_at": "2026-10-24T16:29:09.748516+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

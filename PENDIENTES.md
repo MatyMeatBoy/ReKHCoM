@@ -40,6 +40,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-historico | Catalogar artes modificados desde la primera build | en_curso | queue_docs | codex/catalogo-historico | pedido-usuario-20261024 | 2026-10-24T16:25:44.880147+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | en_curso | art_110 | — | pedido-usuario-20261024 | 2026-10-24T16:27:31.992229+00:00 |
 | logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | pr_abierto | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/54 | Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo) | 2026-10-24T16:28:10.510424+00:00 |
-| entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | pendiente | — | — | pedido-usuario-20261024 | 2026-10-24T16:28:44.261620+00:00 |
+| entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:29:09.748516+00:00 |
 
 Integrador: libre
