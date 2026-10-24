@@ -682,10 +682,10 @@
     "malefica-arena": {
       "id": "malefica-arena",
       "piece": "Maléfica · arena y contexto",
-      "status": "en_revision",
-      "owner": "claude-sonnet-w3",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:29:53.860342+00:00",
+      "updated_at": "2026-10-24T19:45:03.784441+00:00",
       "branch": "claude/arte-w3",
       "pr": null,
       "approval": null,
@@ -695,6 +695,11 @@
           "at": "2026-10-24T19:29:53.860342+00:00",
           "owner": "claude-sonnet-w3",
           "detail": "comentario general: 'arena bien'; sin nubes ni cambios; sprites se comentan aparte. Nada que subir."
+        },
+        {
+          "at": "2026-10-24T19:45:03.784441+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:17:36.685471+00:00"
@@ -1168,7 +1173,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:57.679310+00:00",
+  "updated_at": "2026-10-24T19:45:03.784441+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
