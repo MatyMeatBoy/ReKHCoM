@@ -657,10 +657,10 @@
     "malefica-01": {
       "id": "malefica-01",
       "piece": "Maléfica 01 · ala recortada",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w3",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:29:59.381947+00:00",
+      "updated_at": "2026-10-24T19:44:57.679310+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -670,6 +670,11 @@
           "at": "2026-10-24T19:29:59.381947+00:00",
           "owner": "claude-sonnet-w3",
           "detail": "Pide terminar el sprite de Malefica hasta la cola (buscar en ROM o dibujar pixel art): arte nuevo grande, necesita decision visual/estudio aislado estilo Darkside. Sin tocar."
+        },
+        {
+          "at": "2026-10-24T19:44:57.679310+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:17:31.604424+00:00"
@@ -1163,7 +1168,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:51.894313+00:00",
+  "updated_at": "2026-10-24T19:44:57.679310+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
