@@ -56,6 +56,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | diario-entradas | Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado) | pendiente | — | — | — | 2026-10-24T20:56:20.251705+00:00 |
 | diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | pendiente | — | — | — | 2026-10-24T20:56:26.140798+00:00 |
 | agrabah-genio-arriba | Agrabah: continuar patrón superior durante aparición del Genio | en_curso | codex-arte | codex/agrabah-genio-arriba | — | 2026-10-24T21:15:14.218554+00:00 |
-| menu-barajas-sincronia | Ver barajas: sincronizar extensión al cambiar pestañas hacia izquierda | pendiente | — | — | — | 2026-10-24T21:17:10.310731+00:00 |
+| menu-barajas-sincronia | Ver barajas: sincronizar extensión al cambiar pestañas hacia izquierda | en_curso | codex-arte | — | — | 2026-10-24T21:20:39.553994+00:00 |
 
 Integrador: claude-integrador (ocupado; 2026-10-24T19:35:47.688714+00:00)
