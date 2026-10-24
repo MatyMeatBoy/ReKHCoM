@@ -54,4 +54,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-orden-calidad | Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/63 | Pedido del usuario chat 24/10 | 2026-10-24T17:23:38.289244+00:00 |
 | savestates-trucos | Savestates v2.0: F8 cargar, apagados por defecto, en Trucos con aviso, sin logros | pr_abierto | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/65 | Pedido del usuario chat 24/10 | 2026-10-24T17:40:51.230265+00:00 |
 
-Integrador: claude-integrador (ocupado; 2026-10-24T17:23:32.186631+00:00)
+Integrador: claude-integrador (ocupado; 2026-10-24T17:40:58.494100+00:00)
