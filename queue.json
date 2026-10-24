@@ -108,10 +108,10 @@
     "visor-paneo": {
       "id": "visor-paneo",
       "piece": "Visor revision: paneo con boton derecho y limites",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:20:10.214368+00:00",
-      "updated_at": "2026-10-24T16:25:25.059446+00:00",
+      "updated_at": "2026-10-24T16:28:48.040505+00:00",
       "branch": "codex/review-right-pan-lane",
       "pr": null,
       "approval": "pedido-usuario-20261024",
@@ -121,6 +121,11 @@
           "at": "2026-10-24T16:25:04.486968+00:00",
           "owner": "root",
           "detail": "Handoff explicito del dueño root al carril queue_tools; sin cambios de paneo iniciados; usuario solicita trabajo en carriles."
+        },
+        {
+          "at": "2026-10-24T16:28:48.040505+00:00",
+          "owner": "queue_tools",
+          "detail": "Chromium offline passed right drag6modes, bounds, cleanup, legacy gestures, zero data writes; commit d96c134eb"
         }
       ],
       "claimed_at": "2026-10-24T16:20:10.214368+00:00"
@@ -567,7 +572,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:28:44.261620+00:00",
+  "updated_at": "2026-10-24T16:28:48.040505+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
