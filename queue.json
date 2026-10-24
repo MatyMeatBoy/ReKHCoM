@@ -341,10 +341,10 @@
     "escena-074": {
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:33:53.864882+00:00",
+      "updated_at": "2026-10-24T19:44:00.436138+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -354,6 +354,11 @@
           "at": "2026-10-24T19:33:53.864882+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Pedido de buscar version mejorada previa en la app: no se hizo. Receta PortSceneWideSource(74) usa periodo 20x10 para bg2. Captura base build/w1/074-base.png."
+        },
+        {
+          "at": "2026-10-24T19:44:00.436138+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:18:27.395278+00:00"
@@ -1113,7 +1118,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:43:54.314869+00:00",
+  "updated_at": "2026-10-24T19:44:00.436138+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
