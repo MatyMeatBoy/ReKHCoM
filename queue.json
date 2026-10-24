@@ -159,10 +159,10 @@
     "primer-arranque": {
       "id": "primer-arranque",
       "piece": "Primer arranque · elección de modo con vista previa",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T16:24:40.325531+00:00",
-      "updated_at": "2026-10-24T16:59:54.004977+00:00",
+      "updated_at": "2026-10-24T17:09:01.184010+00:00",
       "branch": "claude/primer-arranque",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/60",
       "approval": "Pedido del usuario en el envío 20261024-131202-943804",
@@ -172,9 +172,15 @@
           "at": "2026-10-24T16:59:46.422195+00:00",
           "owner": "claude-funciones",
           "detail": "Hija 2f30654b7e724653a0b12e104ec1d8b6; capturas 4 proporciones"
+        },
+        {
+          "at": "2026-10-24T17:09:01.184010+00:00",
+          "owner": "claude-funciones",
+          "detail": "PR60 merged e8b31e913"
         }
       ],
-      "claimed_at": "2026-10-24T16:24:49.620474+00:00"
+      "claimed_at": "2026-10-24T16:24:49.620474+00:00",
+      "completed_at": "2026-10-24T17:09:01.184010+00:00"
     },
     "botones-editor": {
       "id": "botones-editor",
@@ -855,7 +861,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:08:53.481315+00:00"
   },
-  "updated_at": "2026-10-24T17:08:53.481315+00:00",
+  "updated_at": "2026-10-24T17:09:01.185011+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
