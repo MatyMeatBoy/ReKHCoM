@@ -32,7 +32,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-117 | Escena 117 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | escena-118 | Escena 118 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | escena-120 | Escena 120 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
-| malefica-01 | Maléfica 01 · ala recortada | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
+| malefica-01 | Maléfica 01 · ala recortada | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:31.604424+00:00 |
 | malefica-arena | Maléfica · arena y contexto | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | oogie-arena | Oogie Boogie · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | trickmaster-arena | Trickmaster · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
