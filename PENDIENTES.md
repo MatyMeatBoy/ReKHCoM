@@ -10,7 +10,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | docs-cola | Inventario y protocolo para Claude | integrado | queue_docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/52 | pedido-usuario-20261024 | 2026-10-24T16:25:04.486968+00:00 |
 | escena-110 | Escena 110: pilares y patrones | en_curso | art_110 | codex/art-110-clouds | — | 2026-10-24T16:25:04.486968+00:00 |
 | visor-paneo | Visor revision: paneo con boton derecho y limites | en_curso | queue_tools | codex/review-right-pan-lane | pedido-usuario-20261024 | 2026-10-24T16:25:25.059446+00:00 |
-| botones-tactiles | Botones táctiles · editor de posición | en_curso | claude-funciones | — | — | 2026-10-24T16:24:44.939865+00:00 |
+| botones-tactiles | Botones táctiles · editor de posición | bloqueado | claude-funciones | — | — | 2026-10-24T16:26:31.887864+00:00 |
 | primer-arranque | Primer arranque · elección de modo con vista previa | en_curso | claude-funciones | — | — | 2026-10-24T16:24:49.620474+00:00 |
 | botones-editor | Botones táctiles · editor de posición | en_curso | claude-funciones | — | — | 2026-10-24T16:26:26.894729+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
