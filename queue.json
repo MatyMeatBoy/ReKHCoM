@@ -359,15 +359,16 @@
     "escena-099": {
       "id": "escena-099",
       "piece": "Escena 099",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T19:17:09.442899+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"00f2dd9ba4824a1a8248091663dda777\", \"submissions\": [{\"submission\": \"20261024-131033-00cca4\", \"created\": \"2026-10-24T16:10:33.912974+00:00\", \"image_id\": \"d3e87dca65eb4e9fb10535b3e731419d\", \"version\": \"Revisión · Suelo como Guard Armor: el ajedrezado sigue en perspectiva (casillas medidas en el mapa: anchura que crece con la fila, \", \"clouds\": 1, \"cloud_ids\": [\"bab8281c-e1c9-4e01-b894-a3a05e339e8b\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131033-00cca4\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T19:17:09.442899+00:00"
     },
     "escena-102": {
       "id": "escena-102",
@@ -941,7 +942,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T17:41:05.159923+00:00",
+  "updated_at": "2026-10-24T19:17:09.442899+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
