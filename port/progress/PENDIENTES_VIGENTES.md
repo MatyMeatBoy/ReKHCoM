@@ -11,6 +11,22 @@ Reglas del usuario:
 - Nunca borrar carpetas ReKHCoM-vX sin que el usuario lo pida.
 - Publicar (releases, comentarios en issues) solo con el OK del usuario.
 
+## TRASPASO 24/10 — Codex retoma el carril de arte
+
+Pedido actual: acabar los preliminares faltantes, jefes si quedan y luego escenas, sin parar entre piezas.
+GitHub autenticado. Rama `codex/preliminar-v1`: sincronizada con main `97380c88d`, conservando las recetas
+más avanzadas hasta 121 y el protocolo visual P0–P7. Los cambios locales recuperados de 122 están preservados
+en el stash `Recovered scene 122 draft before syncing current handoff`; ese borrador no cuenta como entrega.
+
+- Jefes: Jafar aprobado; los demás ya tienen copia V2 y esperan comentarios, incluidas las 7 poses de Darkside.
+  No rehacerlos ni convertir esa espera en aprobación.
+- 122/123 cerrada para comentarios: tres planos, friso entero y relieves completados. EU 24 amplia + 24 Original;
+  US/JP dos muestras amplias + dos Original por región; ocho controles sin cambios y check_sources correcto.
+  Ficha ESCENA122_REVISION.md y evidencia privada resume-122; copia Preliminar V1 actualizada.
+- En curso siguiente: 121 reabierta por friso/columna/textura; después 124, 129, 131 y 132.
+- Conservar pendientes independientes: actores Cheshire/Aerith, fundido de Aerith y Original x6 con .bat.
+- Pruebas de juego ocultas y mudas, compilaciones `-j 1`. Evidencia privada en `build/preliminar-v1/resume-122`.
+
 ## TRASPASO 24/10 tarde (Claude; quedan pocos tokens) — LEER PRIMERO
 
 **Objetivo nuevo del usuario (24/10): el repo autosuficiente.** Cualquiera (otro modelo con la cuenta de GitHub del

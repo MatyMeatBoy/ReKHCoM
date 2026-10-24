@@ -1710,8 +1710,9 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             const BgWorld* wd = &sBgWorldLatched[bg];
             int wx = l->valid ? l->x + gx + (hofs - l->hofs) : wd->x + gx + (hofs - wd->hofs);
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
-            if (sPreliminarRecipe[bg] && bg==2 &&
-                (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) {
+            if (sPreliminarRecipe[bg] &&
+                ((bg==2 && (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) ||
+                 sPreliminarRecipe[bg]->v[0]==122)) {
                 int sx,sy;
                 if (sPreliminarRecipe[bg]->v[0]==45 && PreliminarFirPixel(wx,wy,&out[x])) {
                     sInWorld[x]=1;

@@ -32,15 +32,18 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
   179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
  099 y 102, 110 (también evento 111), 112 (también evento 114), 115, 116, 117, 118, 120, 121.
 - Pendientes de ciclo completo:
-  122, 124, 129, 131 y 132.
+  124, 129, 131 y 132.
+- Reabierta: 121, por el rechazo de friso/columna/mampostería; ver workflow.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
   130 (biblioteca), paneles 073/149/173/189 y variantes del castillo. Las
   islas de 054/055 se conservan; se estudia solo el agua/cielo de alrededor.
-- Jefes pendientes: Darkside, Oogie Boogie, Jafar, Maléfica dragón, Úrsula,
-  Trickmaster (solo suelo inferior), Marluxia final.
-- Pendiente en esta tanda: 5 fondos y 7 escenarios de jefe; 12 piezas en total.
+- Jefes (actualización 24/10): Jafar aprobado; Oogie, Maléfica, Úrsula,
+  Trickmaster y Marluxia tienen Preliminar V2 jugable, pendiente de comentarios.
+  Darkside conserva su playa y espera comentarios de sus siete poses.
+- Pendiente en esta tanda: 4 fondos nuevos y la revisión reabierta de 121.
+  No rehacer la V2 de jefes ni contabilizarla como aprobada.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
 ## Registro 007
@@ -521,3 +524,16 @@ Evidencia: `build/preliminar-v1/ready/escena-121`, con controles Original EU y
 muestras US/JP. Captura principal:
 `build/preliminar-v1/ready/escena-121/3440x1440-300-despues.png`. Estado:
 preliminar implementada para comentarios; no aprobada por el usuario.
+
+## Registro 122/123 (24/10)
+
+Muro del Coliseo E2 corregido: tres planos, friso completo en su diagonal y
+relieves originales completados en los bordes, sin añadir otros. Pavimento
+con módulos completos de las dos capas; paleta activa y OAM intactos.
+
+EU: 24 pares amplios y 24 Original en ambos eventos; US/JP: dos muestras
+amplias y dos Original por región; ocho controles de fondos anteriores sin
+cambios. Cero diferencias GBA. Ficha, donantes, revisión a 1:1/x3, SHA256 y
+límites de cobertura en [ESCENA122_REVISION.md](ESCENA122_REVISION.md).
+Evidencia final: `build/preliminar-v1/resume-122` y `ready/escena-122`,
+`ready/evento-123-escena-122`. Propuesta comprobada, pendiente del usuario.

@@ -11,14 +11,15 @@ def package(build,out,evidence):
   if not report['passed'] or len(report.get('checks',[]))<12:raise RuntimeError('incomplete fixture: '+c['name'])
  out.mkdir(parents=True,exist_ok=True)
  for n in ('khcom.exe','SDL3.dll'):shutil.copy2(ROOT/build/n,out/n)
- for n in ('assets',):
-  if (ROOT/n).exists():shutil.copytree(ROOT/n,out/n,dirs_exist_ok=True)
+ for source in (ROOT/'assets',ROOT/build/'assets'):
+  if source.exists():shutil.copytree(source,out/'assets',dirs_exist_ok=True)
  (out/'roms').mkdir(exist_ok=True);shutil.copy2(ROOT/'roms/B8CP.gba',out/'roms/B8CP.gba')
  (out/'user-data').mkdir(exist_ok=True)
  (out/'user-data/kh_com.ini').write_text('config_version=11\nview_mode=4\nzoom=6\nhd_text=0\nfullscreen=0\nvsync=1\n')
  menu=['@echo off','setlocal','for /f "tokens=1 delims==" %%V in (\'set KHCOM_ 2^>nul\') do set "%%V="','echo Preliminar V1 - piezas terminadas para comentar']
- labels={121:'121 - Coliseo E1 patio interior',120:'120 - Coliseo E0',118:'118 - Cubierta de Neverland E3',117:'117 - Neverland E1 bodega de tesoros',116:'116 - Camarote del Capitan Garfio',115:'115 - Neverland E0 interior del barco',112:'112 - Salida de Agrabah',110:'110 - Pasillo de Agrabah E2',104:'104 - Camara organica de Ursula en Atlantica',102:'102 - Sala submarina de Atlantica',99:'099 - Sala de la Reina de Corazones (jefe)',98:'098 - Sala de la Reina de Corazones',97:'097 - Bosque de 100 Acre',95:'095 - Patio del laberinto de Wonderland',90:'090 - Cementerio de Halloween Town',87:'087 - Sala oscura de Halloween Town',81:'081 - Pasillo de Monstro E3',7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino',54:'054 - Playa de Isla del Destino (Riku)',55:'055 - Isla del Destino se desmorona'}
+ labels={122:'122 - Coliseo E2 muro de Cloud',121:'121 - Coliseo E1 patio interior',120:'120 - Coliseo E0',118:'118 - Cubierta de Neverland E3',117:'117 - Neverland E1 bodega de tesoros',116:'116 - Camarote del Capitan Garfio',115:'115 - Neverland E0 interior del barco',112:'112 - Salida de Agrabah',110:'110 - Pasillo de Agrabah E2',104:'104 - Camara organica de Ursula en Atlantica',102:'102 - Sala submarina de Atlantica',99:'099 - Sala de la Reina de Corazones (jefe)',98:'098 - Sala de la Reina de Corazones',97:'097 - Bosque de 100 Acre',95:'095 - Patio del laberinto de Wonderland',90:'090 - Cementerio de Halloween Town',87:'087 - Sala oscura de Halloween Town',81:'081 - Pasillo de Monstro E3',7:'007 - Patio de Ciudad de Paso',44:'044 - Plaza al atardecer',45:'045 - Entrada al bosque del castillo',53:'053 - Playa de Isla del Destino',54:'054 - Playa de Isla del Destino (Riku)',55:'055 - Isla del Destino se desmorona'}
  shared={
+  'evento-123-escena-122':'123 - Coliseo E2 (escena compartida)',
   'evento-088-escena-087':'088 - Halloween Town (E0)',
   'evento-106-escena-104':'106 - Atlantica (escena compartida)',
   'evento-111-escena-110':'111 - Agrabah E2 (escena compartida)',
@@ -52,7 +53,7 @@ def package(build,out,evidence):
   if not report['passed'] or len(report.get('checks',[]))<12:raise RuntimeError('incomplete fixture: '+c['name'])
   for p in source.glob('*.png'):shutil.copy2(p,dest/p.name)
   shutil.copy2(source/'report.json',dest/'report.json')
- (out/'LEEME.txt').write_text('Preliminar V1: versiones implementadas pendientes de comentarios del usuario.\nEjecutar Probar Preliminar V1.bat. Escala x3, cuatro ventanas y opcion antes/despues.\nCodex hace commits; Claude integra. No se ha integrado ni publicado.\nPiezas disponibles: '+', '.join(c['name'] for c in selected)+'\n',encoding='utf-8')
+ (out/'LEEME.txt').write_text('Preliminar V1: versiones implementadas pendientes de comentarios del usuario.\nEjecutar Probar Preliminar V1.bat. Escala x3, cuatro ventanas y opcion antes/despues.\nCopia privada para revision; las propuestas esperan comentarios y no se activan por defecto.\nPiezas disponibles: '+', '.join(c['name'] for c in selected)+'\n',encoding='utf-8')
  print(out)
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--build',default='build/agrabah109-eu');p.add_argument('--out',default='../pruebas/ReKHCoM-preliminarV1');p.add_argument('--evidence',default='build/preliminar-v1/ready');a=p.parse_args();package(Path(a.build),(ROOT/a.out).resolve(),ROOT/a.evidence)

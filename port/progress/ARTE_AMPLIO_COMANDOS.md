@@ -1,6 +1,7 @@
 # Comandos del workflow de arte amplio
 
-PowerShell desde `C:\Users\MP\Documents\00 Claude\KHCoMPC\khcom-codex`.
+PowerShell desde la raÌz del repositorio clonado. La toolchain est· en
+`../toolchain`, como describe `EMPEZAR_AQUI.md`.
 Ejecutar **una orden de compilaci√≥n/juego a la vez** y esperar su final.
 Ejemplo real 121: cambiar id/directorio al revisar otra pieza. No sobreescribir
 evidencia aprobada. Los comandos producen datos; hay que abrir las im√°genes.
@@ -84,7 +85,7 @@ y regionales en la evidencia de la pieza. El informe principal consumido por
 el paquete es el de la matriz amplia EU; no sustituirlo por el r√°pido/Original.
 
 ```powershell
-python port/tools/package_preliminar_v1.py --build build/agrabah109-eu --evidence build/preliminar-v1/ready --out ../ReKHCoM-preliminarV1
+python port/tools/package_preliminar_v1.py --build build/agrabah109-eu --evidence build/preliminar-v1/ready --out ../pruebas/ReKHCoM-preliminarV1
 ```
 
 El empaquetador comprueba `passed` y al menos 12 checks por fixture; no comprueba
