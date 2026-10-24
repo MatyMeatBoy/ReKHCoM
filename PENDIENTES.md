@@ -33,7 +33,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-118 | Escena 118 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:19:06.129508+00:00 |
 | escena-120 | Escena 120 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:19:11.451668+00:00 |
 | malefica-01 | Maléfica 01 · ala recortada | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:31.604424+00:00 |
-| malefica-arena | Maléfica · arena y contexto | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:36.685471+00:00 |
+| malefica-arena | Maléfica · arena y contexto | en_revision | claude-sonnet-w3 | claude/arte-w3 | — | 2026-10-24T19:29:53.860342+00:00 |
 | oogie-arena | Oogie Boogie · arena | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:42.462804+00:00 |
 | trickmaster-arena | Trickmaster · arena | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:47.815046+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |

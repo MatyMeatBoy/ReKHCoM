@@ -506,15 +506,21 @@
     "malefica-arena": {
       "id": "malefica-arena",
       "piece": "Maléfica · arena y contexto",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:17:36.685471+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T19:29:53.860342+00:00",
+      "branch": "claude/arte-w3",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"submissions\": [{\"submission\": \"20261024-053355-5d5bcf\", \"created\": \"2026-10-24T08:33:56.427759+00:00\", \"image_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 0, \"cloud_ids\": [], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053355-5d5bcf\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:29:53.860342+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "comentario general: 'arena bien'; sin nubes ni cambios; sprites se comentan aparte. Nada que subir."
+        }
+      ],
       "claimed_at": "2026-10-24T19:17:36.685471+00:00"
     },
     "oogie-arena": {
@@ -974,7 +980,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:29:45.937473+00:00",
+  "updated_at": "2026-10-24T19:29:53.860342+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
