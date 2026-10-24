@@ -528,15 +528,21 @@
     "escena-097": {
       "id": "escena-097",
       "piece": "Escena 097",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:55:45.193745+00:00",
+      "updated_at": "2026-10-24T20:56:37.047208+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"31b66c063867439eb236a0a492a64ede\", \"submissions\": [{\"submission\": \"20261024-053021-97caa8\", \"created\": \"2026-10-24T08:30:21.947864+00:00\", \"image_id\": \"31b66c063867439eb236a0a492a64ede\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 1, \"cloud_ids\": [\"a5e3a2c8-8b65-42f7-86d1-22dc373e330a\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053021-97caa8\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T20:56:37.047208+00:00",
+          "owner": "r4",
+          "detail": "released: Gato debe ocultarse fuera de escena hasta la escena real del GBA: cambio de logica de objeto por escena especifica; contradice regla 'sin objetos propios del port' sin decision del usuario."
+        }
+      ],
       "claimed_at": "2026-10-24T20:55:45.193745+00:00"
     },
     "escena-099": {
@@ -1370,7 +1376,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:56:31.609976+00:00",
+  "updated_at": "2026-10-24T20:56:37.047208+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
