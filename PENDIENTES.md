@@ -57,7 +57,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | pendiente | — | — | — | 2026-10-24T20:56:26.140798+00:00 |
 | agrabah-genio-arriba | Agrabah: continuar patrón superior durante aparición del Genio | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/82 | — | 2026-10-24T21:25:42.702557+00:00 |
 | menu-barajas-sincronia | Ver barajas: sincronizar extensión al cambiar pestañas hacia izquierda | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/84 | — | 2026-10-24T21:30:29.391225+00:00 |
-| menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/85 | — | 2026-10-24T21:40:18.097123+00:00 |
+| menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/85 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:37.598254+00:00 |
 | mapa-camara-suavidad | Mapa: investigar suavidad de cámara con texto HD y GBA mejorado | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/86 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:32.354023+00:00 |
 | video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:04.558305+00:00 |
 

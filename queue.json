@@ -1482,23 +1482,29 @@
     "menu-naipes-texto-parpadeo": {
       "id": "menu-naipes-texto-parpadeo",
       "piece": "Añadir naipes: cantidad HD parpadea al pulsar selector",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte",
       "created_at": "2026-10-24T21:25:49.435859+00:00",
-      "updated_at": "2026-10-24T21:40:18.097123+00:00",
+      "updated_at": "2026-10-24T22:10:37.598254+00:00",
       "branch": "codex/menu-naipes-texto-parpadeo",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/85",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "Captura usuario 6b1f1e62-a4ef-4d22-8597-4fa3d5c0c31d; 24/10",
       "evidence": [
         {
           "at": "2026-10-24T21:40:18.097123+00:00",
           "owner": "codex-arte",
           "detail": "EU/check_sources;21 cuadros glifos55constantes y21pares HDapagado idénticos. Máscara tinta evita centro hueco selector."
+        },
+        {
+          "at": "2026-10-24T22:10:37.598254+00:00",
+          "owner": "codex-arte",
+          "detail": "merge PR #85 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T21:30:11.725772+00:00",
-      "sent": "7116d737f2284b269ee859ebaf65596f"
+      "sent": "7116d737f2284b269ee859ebaf65596f",
+      "completed_at": "2026-10-24T22:10:37.598254+00:00"
     },
     "mapa-camara-suavidad": {
       "id": "mapa-camara-suavidad",
@@ -1564,7 +1570,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:32.354023+00:00",
+  "updated_at": "2026-10-24T22:10:37.598254+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
