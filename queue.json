@@ -296,10 +296,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "r3a",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:32:53.771792+00:00",
+      "updated_at": "2026-10-24T20:32:59.197612+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -336,7 +336,7 @@
           "detail": "released: Reproducido a 3440x1440 z6 EU: pasto cortado a la mitad en la arena derecha (nubes 5/6). Causa: el mapa BG3 original solo tiene 5 matas de 8 tiles de ancho no alineadas al periodo 8 de PortSceneWideSource (sx mas cercano a 12), asi que la seleccion por tile parte las matas; y la pared arriba-izquierda repite solo tablones lisos sin el patron de arbol/enredadera (nubes 1-4). Arreglo = redisenar la seleccion de donante de 057 por bloques de mata y medir el periodo vertical de la pared; decision de diseno mayor que no cierro como parche con cuidado de no romper lo aprobado."
         }
       ],
-      "claimed_at": "2026-10-24T20:31:34.559289+00:00"
+      "claimed_at": "2026-10-24T20:32:59.197612+00:00"
     },
     "escena-061": {
       "id": "escena-061",
@@ -1251,7 +1251,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:32:53.771792+00:00",
+  "updated_at": "2026-10-24T20:32:59.197612+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
