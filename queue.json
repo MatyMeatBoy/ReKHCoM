@@ -159,12 +159,12 @@
     "primer-arranque": {
       "id": "primer-arranque",
       "piece": "Primer arranque · elección de modo con vista previa",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T16:24:40.325531+00:00",
-      "updated_at": "2026-10-24T16:59:46.422195+00:00",
+      "updated_at": "2026-10-24T16:59:54.004977+00:00",
       "branch": "claude/primer-arranque",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/60",
       "approval": "Pedido del usuario en el envío 20261024-131202-943804",
       "reference": "envío 20261024-131202-943804",
       "evidence": [
@@ -759,7 +759,7 @@
     "created_at": "2026-10-24T16:37:50.251155+00:00",
     "updated_at": "2026-10-24T16:37:50.251155+00:00"
   },
-  "updated_at": "2026-10-24T16:59:46.422195+00:00",
+  "updated_at": "2026-10-24T16:59:54.004977+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
