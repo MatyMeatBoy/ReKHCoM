@@ -1175,6 +1175,19 @@
       ],
       "claimed_at": "2026-10-24T17:32:26.706772+00:00",
       "completed_at": "2026-10-24T17:41:05.159923+00:00"
+    },
+    "diario-entradas": {
+      "id": "diario-entradas",
+      "piece": "Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T19:45:56.107112+00:00",
+      "updated_at": "2026-10-24T19:45:56.107112+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "captura del usuario 24/10 en el chat",
+      "evidence": []
     }
   },
   "integrator": {
@@ -1183,7 +1196,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:45:14.721608+00:00",
+  "updated_at": "2026-10-24T19:45:56.107112+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
