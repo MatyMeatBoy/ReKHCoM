@@ -470,15 +470,21 @@
     "escena-116": {
       "id": "escena-116",
       "piece": "Escena 116",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:18:31.769745+00:00",
+      "updated_at": "2026-10-24T19:32:40.087698+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"e0fa5eb6-cd8a-4917-b254-d58ca869243f\", \"3cb85cdf-ecce-4400-aff2-a18a4f49d7a3\", \"18fa5cec-0c77-4e3e-a5be-a2648882ed8d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:32:40.087698+00:00",
+          "owner": "claude-sonnet-w2",
+          "detail": "No resuelto por w2: requiere estudio de tiles por escena (patron/estructura) fuera del tiempo disponible; reserva liberable. 115-118 dependen del PR #71 (ready=1 en tabla)"
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:31.769745+00:00"
     },
     "escena-117": {
@@ -1038,7 +1044,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:32:34.185272+00:00",
+  "updated_at": "2026-10-24T19:32:40.087698+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
