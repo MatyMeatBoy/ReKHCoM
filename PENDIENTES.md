@@ -35,7 +35,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | malefica-01 | Maléfica 01 · ala recortada | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:29:59.381947+00:00 |
 | malefica-arena | Maléfica · arena y contexto | en_revision | claude-sonnet-w3 | claude/arte-w3 | — | 2026-10-24T19:29:53.860342+00:00 |
 | oogie-arena | Oogie Boogie · arena | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:30:05.154178+00:00 |
-| trickmaster-arena | Trickmaster · arena | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:47.815046+00:00 |
+| trickmaster-arena | Trickmaster · arena | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:30:10.580054+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
 | catalogo-historico | Catalogar artes modificados desde la primera build | integrado | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/57 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:09:48.882861+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | integrado | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/58 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:10:12.671131+00:00 |
