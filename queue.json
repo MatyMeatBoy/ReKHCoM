@@ -88,6 +88,19 @@
       "reference": "port/tools/art_review/web",
       "evidence": [],
       "claimed_at": "2026-10-24T16:20:10.214368+00:00"
+    },
+    "botones-tactiles": {
+      "id": "botones-tactiles",
+      "piece": "Botones táctiles · editor de posición",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:24:35.327412+00:00",
+      "updated_at": "2026-10-24T16:24:35.327412+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "ca689d6c9b5e41a3a029aab9d345096b / envío 20261024-131133-57e115",
+      "evidence": []
     }
   },
   "integrator": {
@@ -96,5 +109,5 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:19:12.746926+00:00"
   },
-  "updated_at": "2026-10-24T16:21:45.757518+00:00"
+  "updated_at": "2026-10-24T16:24:35.327412+00:00"
 }
