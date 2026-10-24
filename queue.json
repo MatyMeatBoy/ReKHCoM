@@ -296,10 +296,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_curso",
-      "owner": "r3b",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:28:19.137272+00:00",
+      "updated_at": "2026-10-24T20:30:01.854499+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -319,6 +319,11 @@
           "at": "2026-10-24T20:25:51.037202+00:00",
           "owner": "r2b",
           "detail": "released: worker murio por limite de sesion 24/10 16:55; liberado por coordinador"
+        },
+        {
+          "at": "2026-10-24T20:30:01.854499+00:00",
+          "owner": "r3b",
+          "detail": "released: Render EU 3440x1440 z6 actual (build/prelim/57-after.png): faltan mitades de matas de pasto en el borde derecho (fragmentos sueltos en diagonal) porque PortSceneWideSource (period 8, donante 'mas cercano a x=12' por tile) corta las matas multi-tile; hace falta un mapa donante por mata completa (como 053) y medir periodo vertical del muro, no un parche. Decision de diseno de tile-map mayor; no cerrado. Nota: art_piece.py necesita --data /d/01Claude/ReKHCoM-build/w3-desk y prelim_shot.sh usa build/pc (aqui build/pc-eu)."
         }
       ],
       "claimed_at": "2026-10-24T20:28:19.137272+00:00"
@@ -1231,7 +1236,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:28:22.622502+00:00",
+  "updated_at": "2026-10-24T20:30:01.854499+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
