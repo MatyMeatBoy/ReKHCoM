@@ -297,10 +297,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_curso",
-      "owner": "r3c",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:41:26.393594+00:00",
+      "updated_at": "2026-10-24T20:41:35.098308+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -345,6 +345,11 @@
           "at": "2026-10-24T20:40:14.272836+00:00",
           "owner": "r3c",
           "detail": "released: 6 nubes (patron hacia arriba x4, mitad derecha del pasto, derecha del pasto): requiere medir periodo vertical y donantes de pasto completos en port_scene057_tiles.h; no abordado en esta ronda por tamano"
+        },
+        {
+          "at": "2026-10-24T20:41:35.098308+00:00",
+          "owner": "r3c",
+          "detail": "released: 6 nubes (patron hacia arriba x4, mitad derecha del pasto, derecha del pasto): requiere medir periodo vertical y donantes de pasto completos en port_scene057_tiles.h; no abordado, pieza grande"
         }
       ],
       "claimed_at": "2026-10-24T20:41:26.393594+00:00"
@@ -1279,7 +1284,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:41:26.393594+00:00",
+  "updated_at": "2026-10-24T20:41:35.098308+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
