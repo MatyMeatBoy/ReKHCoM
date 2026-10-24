@@ -383,11 +383,11 @@
       "status": "en_curso",
       "owner": "codex-escena-061",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:11:15.987855+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T22:11:27.518271+00:00",
+      "branch": "codex/escena-061-comentarios",
       "pr": null,
       "approval": null,
-      "reference": "{\"family_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"submissions\": [{\"submission\": \"20261024-131809-942e10\", \"created\": \"2026-10-24T16:18:09.236653+00:00\", \"image_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 2, \"cloud_ids\": [\"cdd2fde6-7989-4806-8d7f-e39ace95d44a\", \"c88c9dea-c19c-4cea-a704-1aea287cb68b\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131809-942e10\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "reference": "f31927d3f7014eb3a51e52fcf7323003; envío 20261024-131809-942e10",
       "evidence": [
         {
           "at": "2026-10-24T19:33:47.791248+00:00",
@@ -1589,7 +1589,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:11:20.305228+00:00",
+  "updated_at": "2026-10-24T22:11:27.518271+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
