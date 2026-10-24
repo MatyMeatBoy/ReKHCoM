@@ -14,7 +14,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | primer-arranque | Primer arranque · elección de modo con vista previa | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/60 | Pedido del usuario en el envío 20261024-131202-943804 | 2026-10-24T17:09:01.184010+00:00 |
 | botones-editor | Botones táctiles · editor de posición | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/59 | Pedido del usuario en el envío 20261024-131133-57e115 (funcionalidad, no arte) | 2026-10-24T17:08:44.643502+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:20.680235+00:00 |
-| darkside-arena | Darkside · arena y contexto | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
+| darkside-arena | Darkside · arena y contexto | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:26.534499+00:00 |
 | escena-004 | Escena 004 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | escena-057 | Escena 057 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | escena-061 | Escena 061 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
