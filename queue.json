@@ -379,10 +379,10 @@
     "escena-087": {
       "id": "escena-087",
       "piece": "Escena 087",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:34:07.845904+00:00",
+      "updated_at": "2026-10-24T19:44:05.913430+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -392,6 +392,11 @@
           "at": "2026-10-24T19:34:07.845904+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Receta v==87 bg3 en port_preliminar_v1_tiles.h; mapa estudiado con prelim_map.py 087: el borde piedra/suelo es escalon 4x2 y el bisel claro solo existe en el tramo original; falta decidir donante del bisel y la arista de la pared derecha. Captura base build/w1/087-base.png."
+        },
+        {
+          "at": "2026-10-24T19:44:05.913430+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:18:43.471113+00:00"
@@ -1118,7 +1123,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:00.436138+00:00",
+  "updated_at": "2026-10-24T19:44:05.913430+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
