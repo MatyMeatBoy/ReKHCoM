@@ -506,11 +506,11 @@
       "status": "en_curso",
       "owner": "codex-095",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:06:42.798159+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T21:07:26.942237+00:00",
+      "branch": "claude/worker-codex-095",
       "pr": null,
       "approval": null,
-      "reference": "{\"family_id\": \"f3fbf809b7e344bdadc74df3d132977f\", \"submissions\": [{\"submission\": \"20261024-130959-c53dec\", \"created\": \"2026-10-24T16:09:59.707476+00:00\", \"image_id\": \"063184fedd8043a492e2fe4b5ea34b25\", \"version\": \"Revisión · A ambos lados sigue el laberinto detrás de los setos y los setos continúan en su diagonal (con sus arbolitos a la izquie\", \"clouds\": 2, \"cloud_ids\": [\"c97b37ea-0aeb-48ad-a8bc-5f8975e97205\", \"d6b9f5ce-4dc7-45bf-9daa-9f2357f6849b\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130959-c53dec\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "reference": "063184fedd8043a492e2fe4b5ea34b25",
       "evidence": [
         {
           "at": "2026-10-24T19:34:18.832816+00:00",
@@ -1386,7 +1386,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:06:53.462445+00:00",
+  "updated_at": "2026-10-24T21:07:26.942237+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
