@@ -216,15 +216,21 @@
     "darkside-06": {
       "id": "darkside-06",
       "piece": "Darkside 06 · Puñetazo",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:17:20.680235+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T19:22:36.983312+00:00",
+      "branch": "claude/arte-w3",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"c498295fb154440b9d231994a434814f\", \"submissions\": [{\"submission\": \"20261024-130718-f3041e\", \"created\": \"2026-10-24T16:07:18.963072+00:00\", \"image_id\": \"ad293ae9c5324daf883db049dd30af46\", \"version\": \"Revisión 6 · El brazo naranja nace donde termina el hombro azul (23 px más arriba), con la costura redibujada y el contorno oscuro de\", \"clouds\": 1, \"cloud_ids\": [\"d0b95f3f-9107-4d93-ab1a-72a12859deb1\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130718-f3041e\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:22:36.983312+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "hija r7 4d6a039e51ad4b8f8f52cb1b1d070ba0 subida a la mesa (brazo 11 px mas abajo que r6); cambio de tool darkside_revise.py r7 va por PR"
+        }
+      ],
       "claimed_at": "2026-10-24T19:17:20.680235+00:00"
     },
     "darkside-arena": {
@@ -962,7 +968,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:19:11.451668+00:00",
+  "updated_at": "2026-10-24T19:22:36.983312+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
