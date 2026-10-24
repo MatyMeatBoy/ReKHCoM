@@ -885,15 +885,21 @@
     "hd-orden-calidad": {
       "id": "hd-orden-calidad",
       "piece": "Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro)",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T17:20:42.466751+00:00",
-      "updated_at": "2026-10-24T17:20:49.155749+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T17:23:15.937731+00:00",
+      "branch": "claude/hd-orden-calidad",
       "pr": null,
-      "approval": null,
+      "approval": "Pedido del usuario chat 24/10",
       "reference": "usuario chat 24/10",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T17:23:15.937731+00:00",
+          "owner": "claude-funciones",
+          "detail": "test_launcher 11/11"
+        }
+      ],
       "claimed_at": "2026-10-24T17:20:49.155749+00:00"
     }
   },
@@ -903,7 +909,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:09:08.957912+00:00"
   },
-  "updated_at": "2026-10-24T17:20:49.155749+00:00",
+  "updated_at": "2026-10-24T17:23:15.937731+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
