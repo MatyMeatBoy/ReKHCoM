@@ -1315,10 +1315,10 @@
     "diario-entradas": {
       "id": "diario-entradas",
       "piece": "Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado)",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T19:45:56.107112+00:00",
-      "updated_at": "2026-10-24T20:55:26.032390+00:00",
+      "updated_at": "2026-10-24T20:56:20.251705+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -1328,6 +1328,11 @@
           "at": "2026-10-24T20:26:01.752077+00:00",
           "owner": "r2a",
           "detail": "released: worker murio por limite de sesion 24/10 16:55; liberado por coordinador"
+        },
+        {
+          "at": "2026-10-24T20:56:20.251705+00:00",
+          "owner": "r4",
+          "detail": "released: Pieza de UI (menus del Diario) sin nubes medibles en la mesa; necesita revision de capturas de cada entrada y decisiones de margen, no cabe en 5 min."
         }
       ],
       "claimed_at": "2026-10-24T20:55:26.032390+00:00"
@@ -1353,7 +1358,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:56:14.513799+00:00",
+  "updated_at": "2026-10-24T20:56:20.251705+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
