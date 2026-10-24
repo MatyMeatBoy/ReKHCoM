@@ -535,12 +535,12 @@
     "logica-aprobados": {
       "id": "logica-aprobados",
       "piece": "LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T16:25:59.216941+00:00",
-      "updated_at": "2026-10-24T16:28:05.349434+00:00",
+      "updated_at": "2026-10-24T16:28:10.510424+00:00",
       "branch": "claude/logica-aprobados",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/54",
       "approval": "Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo)",
       "reference": "usuario 24/10 chat; envios 20261024-132007-6cb5fe, 131858-65bb72, 131809-942e10, 131734-82dad2",
       "evidence": [
@@ -554,7 +554,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:28:05.349434+00:00",
+  "updated_at": "2026-10-24T16:28:10.510424+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
