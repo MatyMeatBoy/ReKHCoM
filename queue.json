@@ -523,10 +523,10 @@
     "catalogo-historico": {
       "id": "catalogo-historico",
       "piece": "Catalogar artes modificados desde la primera build",
-      "status": "pr_abierto",
-      "owner": "queue_docs",
+      "status": "en_curso",
+      "owner": "claude-relevo",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T16:33:42.306071+00:00",
+      "updated_at": "2026-10-24T17:04:05.852952+00:00",
       "branch": "codex/catalogo-historico",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/57",
       "approval": "pedido-usuario-20261024",
@@ -541,6 +541,11 @@
           "at": "2026-10-24T16:33:36.587669+00:00",
           "owner": "queue_docs",
           "detail": "17 familias cargadas; 77 versiones previas identicas; repeticion 17 preservadas; 11 tests OK; 587e6b50f"
+        },
+        {
+          "at": "2026-10-24T17:04:05.852952+00:00",
+          "owner": "claude-funciones",
+          "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
         }
       ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
@@ -791,7 +796,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:03:25.390995+00:00"
   },
-  "updated_at": "2026-10-24T17:03:56.813416+00:00",
+  "updated_at": "2026-10-24T17:04:05.852952+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -841,6 +846,16 @@
       "from_owner": "root",
       "to_owner": "claude-relevo",
       "expected_commit": "8cc69a90fc129daa769a98990a0e5250c89ad203",
+      "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+    },
+    {
+      "at": "2026-10-24T17:04:05.852952+00:00",
+      "actor": "claude-funciones",
+      "operation": "recover-task",
+      "task": "catalogo-historico",
+      "from_owner": "queue_docs",
+      "to_owner": "claude-relevo",
+      "expected_commit": "749f7aaab02e70eae2930c2c4758b2fa2fab6383",
       "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
     }
   ]
