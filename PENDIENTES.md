@@ -12,7 +12,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | visor-paneo | Visor revision: paneo con boton derecho y limites | integrado | queue_tools | https://github.com/MatyMeatBoy/ReKHCoM/pull/55 | pedido-usuario-20261024 | 2026-10-24T16:34:21.231726+00:00 |
 | botones-tactiles | Botones táctiles · editor de posición | bloqueado | claude-funciones | — | — | 2026-10-24T16:26:31.887864+00:00 |
 | primer-arranque | Primer arranque · elección de modo con vista previa | en_curso | claude-funciones | — | — | 2026-10-24T16:24:49.620474+00:00 |
-| botones-editor | Botones táctiles · editor de posición | en_curso | claude-funciones | — | — | 2026-10-24T16:26:26.894729+00:00 |
+| botones-editor | Botones táctiles · editor de posición | en_revision | claude-funciones | claude/botones-editor | — | 2026-10-24T16:43:28.831725+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | darkside-arena | Darkside · arena y contexto | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | escena-004 | Escena 004 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
