@@ -404,10 +404,10 @@
     "escena-090": {
       "id": "escena-090",
       "piece": "Escena 090",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:34:13.263284+00:00",
+      "updated_at": "2026-10-24T19:44:11.688796+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -417,6 +417,11 @@
           "at": "2026-10-24T19:34:13.263284+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Probado en rama local (descartado, no commiteado): reja recta como donante derecho (cols 48-51 muro, 46-53 reja) deja costura con la subida original, hay lapidas/casa en los donantes y las colinas del cielo no casan. Requiere decision visual sobre la esquina entre la rampa y el muro recto. Capturas build/w1/090-base/t1/t2.png."
+        },
+        {
+          "at": "2026-10-24T19:44:11.688796+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:18:49.063739+00:00"
@@ -1123,7 +1128,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:05.913430+00:00",
+  "updated_at": "2026-10-24T19:44:11.688796+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
