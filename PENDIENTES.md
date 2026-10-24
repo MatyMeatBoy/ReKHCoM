@@ -37,7 +37,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | oogie-arena | Oogie Boogie · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | trickmaster-arena | Trickmaster · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
-| catalogo-historico | Catalogar artes modificados desde la primera build | pr_abierto | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/57 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:09:39.767437+00:00 |
+| catalogo-historico | Catalogar artes modificados desde la primera build | integrado | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/57 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:09:48.882861+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | en_curso | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/58 | pedido-usuario-20261024 | 2026-10-24T17:04:15.692310+00:00 |
 | logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/54 | Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo) | 2026-10-24T17:07:39.585290+00:00 |
 | entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | integrado | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:34:21.232737+00:00 |
