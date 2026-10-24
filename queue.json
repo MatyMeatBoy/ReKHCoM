@@ -1516,13 +1516,8 @@
       "claimed_at": "2026-10-24T21:46:30.644125+00:00"
     }
   },
-  "integrator": {
-    "owner": "claude-integrador",
-    "token": "5d48c766e3967d08940da8ae0d4c05ad12583a1987e9d118",
-    "created_at": "2026-10-24T17:03:25.390995+00:00",
-    "updated_at": "2026-10-24T19:35:47.688714+00:00"
-  },
-  "updated_at": "2026-10-24T22:04:43.776626+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-24T22:08:11.217785+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -1663,6 +1658,16 @@
       "to_owner": "claude-relevo",
       "expected_commit": "4288e6a5b1506a2eda0da75316b2c7de49bdb151",
       "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+    },
+    {
+      "at": "2026-10-24T22:08:11.217785+00:00",
+      "actor": "claude-integrador",
+      "operation": "recover-integrator",
+      "task": null,
+      "from_owner": "claude-integrador",
+      "to_owner": null,
+      "expected_commit": "685f4a9725f3ec87afe6dd6982ad63ece5d4bfd1",
+      "evidence": "previous claude-integrador session ended, token lost; same role resumes 24/10"
     }
   ]
 }
