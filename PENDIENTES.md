@@ -61,4 +61,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | mapa-camara-suavidad | Mapa: investigar suavidad de cámara con texto HD y GBA mejorado | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/86 | — | 2026-10-24T21:46:15.529240+00:00 |
 | video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | — | 2026-10-24T21:53:47.138244+00:00 |
 
-Integrador: libre
+Integrador: claude-integrador (ocupado; 2026-10-24T22:09:42.808458+00:00)
