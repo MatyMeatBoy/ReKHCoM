@@ -37,7 +37,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | oogie-arena | Oogie Boogie · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | trickmaster-arena | Trickmaster · arena | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
-| catalogo-historico | Catalogar artes modificados desde la primera build | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:25:04.486968+00:00 |
+| catalogo-historico | Catalogar artes modificados desde la primera build | en_curso | queue_docs | codex/catalogo-historico | pedido-usuario-20261024 | 2026-10-24T16:25:44.880147+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:25:04.486968+00:00 |
 
 Integrador: root (ocupado; 2026-10-24T16:25:04.486968+00:00)
