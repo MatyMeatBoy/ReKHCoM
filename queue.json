@@ -300,11 +300,11 @@
       "status": "en_curso",
       "owner": "codex-escena-057",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:04:36.748590+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T22:04:43.776626+00:00",
+      "branch": "codex/escena-057-comentarios",
       "pr": null,
       "approval": null,
-      "reference": "{\"family_id\": \"e49d2f465f9346d28ba013d9a81de938\", \"submissions\": [{\"submission\": \"20261024-131858-65bb72\", \"created\": \"2026-10-24T16:18:58.085051+00:00\", \"image_id\": \"e49d2f465f9346d28ba013d9a81de938\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 6, \"cloud_ids\": [\"48698279-7fda-4f2e-ad18-a969a6d74884\", \"1cf25458-d2e2-4636-b911-6cb43e80c554\", \"3bfbfb61-d07d-414f-91de-c5719a98c680\", \"6017947e-6640-4119-8fd5-d9a66acc9c32\", \"0e4b369f-d0bd-48b6-b0bc-839126eaac54\", \"953d1ce3-808e-45e2-9342-473172f33652\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131858-65bb72\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "reference": "e49d2f465f9346d28ba013d9a81de938; envío 20261024-131858-65bb72",
       "evidence": [
         {
           "at": "2026-10-24T19:33:34.580193+00:00",
@@ -1522,7 +1522,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T22:04:36.748590+00:00",
+  "updated_at": "2026-10-24T22:04:43.776626+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
