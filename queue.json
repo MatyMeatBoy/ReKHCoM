@@ -911,10 +911,10 @@
     "savestates-trucos": {
       "id": "savestates-trucos",
       "piece": "Savestates v2.0: F8 cargar, apagados por defecto, en Trucos con aviso, sin logros",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T17:32:13.721145+00:00",
-      "updated_at": "2026-10-24T17:40:51.230265+00:00",
+      "updated_at": "2026-10-24T17:41:05.159923+00:00",
       "branch": "claude/savestates-trucos",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/65",
       "approval": "Pedido del usuario chat 24/10",
@@ -924,9 +924,15 @@
           "at": "2026-10-24T17:40:43.913784+00:00",
           "owner": "claude-funciones",
           "detail": "test_asset_options confirm_states ok"
+        },
+        {
+          "at": "2026-10-24T17:41:05.159923+00:00",
+          "owner": "claude-funciones",
+          "detail": "merged b3a3545272f2a31f5835f8b4eb7596fbc72d2b5c"
         }
       ],
-      "claimed_at": "2026-10-24T17:32:26.706772+00:00"
+      "claimed_at": "2026-10-24T17:32:26.706772+00:00",
+      "completed_at": "2026-10-24T17:41:05.159923+00:00"
     }
   },
   "integrator": {
@@ -935,7 +941,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T17:40:58.494100+00:00",
+  "updated_at": "2026-10-24T17:41:05.159923+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
