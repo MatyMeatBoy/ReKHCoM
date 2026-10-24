@@ -589,13 +589,13 @@
     "escena-099": {
       "id": "escena-099",
       "piece": "Escena 099",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-099",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:13:45.911157+00:00",
+      "updated_at": "2026-10-24T22:10:27.053419+00:00",
       "branch": "claude/worker-codex-099",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/79",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "d3e87dca65eb4e9fb10535b3e731419d",
       "evidence": [
         {
@@ -622,10 +622,16 @@
           "at": "2026-10-24T21:13:45.911157+00:00",
           "owner": "codex-099",
           "detail": "cef4d9e5a; hija ae36f45ef10e45cc809620075f0c8626; EU build y check_sources OK; test_preliminar_v1 quick escena099 3440x1440 frame300 passed native_diff null. Propuesta pendiente valoracion; Claude integra."
+        },
+        {
+          "at": "2026-10-24T22:10:27.053419+00:00",
+          "owner": "codex-099",
+          "detail": "merge PR #79 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T21:06:53.462445+00:00",
-      "sent": "ae36f45ef10e45cc809620075f0c8626"
+      "sent": "ae36f45ef10e45cc809620075f0c8626",
+      "completed_at": "2026-10-24T22:10:27.053419+00:00"
     },
     "escena-102": {
       "id": "escena-102",
@@ -1552,7 +1558,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:21.537366+00:00",
+  "updated_at": "2026-10-24T22:10:27.053419+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
