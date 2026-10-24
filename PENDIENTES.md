@@ -19,7 +19,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-057 | Escena 057 · integrada | pendiente | — | — | — | 2026-10-24T20:41:35.098308+00:00 |
 | escena-061 | Escena 061 · integrada | pendiente | — | — | — | 2026-10-24T20:41:20.899024+00:00 |
 | escena-074 | Escena 074 · integrada | pendiente | — | — | — | 2026-10-24T20:45:01.042645+00:00 |
-| escena-081 | Escena 081 | en_curso | r4 | — | — | 2026-10-24T20:55:39.221992+00:00 |
+| escena-081 | Escena 081 | pendiente | — | — | — | 2026-10-24T20:56:31.609976+00:00 |
 | escena-087 | Escena 087 | pr_abierto | r4 | https://github.com/MatyMeatBoy/ReKHCoM/pull/76 | — | 2026-10-24T20:52:05.658259+00:00 |
 | escena-090 | Escena 090 | pendiente | — | — | — | 2026-10-24T20:52:36.579213+00:00 |
 | escena-095 | Escena 095 | pendiente | — | — | — | 2026-10-24T20:53:03.464553+00:00 |
