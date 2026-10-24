@@ -102,7 +102,6 @@ enum {
     ITEM_PS2_MENU,     /* opens the Re:CoM page */
     ITEM_CONTROLS_MENU,
     ITEM_CHEATS_MENU,
-    ITEM_REMATCH_MENU,
     ITEM_ACHIEVEMENTS_MENU,
     ITEM_CLOSE,
     ITEM_TITLE,        /* back to the title screen, as the game's own Continue screen does: last, asked twice */
@@ -122,6 +121,7 @@ enum {
     ITEM_CHEAT_ONEHIT,
     ITEM_CHEAT_INFHP,
     ITEM_CHEAT_STATES,
+    ITEM_REMATCH_MENU, /* boss rematches: they keep the field in a state, as the quick states */
     ITEM_CHEAT_MAXLEVEL,
     ITEM_CHEAT_MAPCARDS,
     ITEM_CHEAT_JOURNAL,
@@ -310,7 +310,6 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Re:CoMオプション" },
     { "Controls", "Commandes", "Steuerung", "Controlli", "Controles", "コントロール" },
     { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" },
-    { "Boss rematches", "Revanches de boss", "Boss-Revanchen", "Rivincite coi boss", "Revancha de jefes", "ボス再戦" },
     { "Achievements", "Succès", "Erfolge", "Obiettivi", "Logros", "じっせき" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
     { "Return to title screen", "Retour à l'écran titre", "Zurück zum Titelbildschirm",
@@ -334,6 +333,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Infinite HP", "PV infinis", "Unendliche KP", "PS infiniti", "Vida infinita", "HP無限" },
     { "Quick states (F5 save, F8 load)", "États rapides (F5 sauver, F8 charger)", "Schnellstände (F5 sichern, F8 laden)",
       "Stati rapidi (F5 salva, F8 carica)", "Estados rápidos (F5 guarda, F8 carga)", "クイックステート (F5セーブ/F8ロード)" },
+    { "Boss rematches", "Revanches de boss", "Boss-Revanchen", "Rivincite coi boss", "Revancha de jefes", "ボス再戦" },
     { "Level 99 with every bonus", "Niveau 99 avec tous les bonus", "Stufe 99 mit allen Boni",
       "Livello 99 con tutti i bonus", "Nivel 99 con todos los bonos", "全ボーナスつきレベル99" },
     { "Every map card (9 each)", "Toutes les cartes de salle (9)", "Alle Raumkarten (je 9)",
@@ -397,6 +397,27 @@ static const char* const sRematchHelp[LANG_COUNT] = {
     "Jefes ya vencidos, desde una sala. Vuelves aquí; no se conserva nada del combate.",
     "倒したボスと再戦（部屋から）。終了後ここへ戻り、戦闘の結果は残りません。",
 };
+/* why a rematch cannot be fought now (PortRematchWhyNot, main.c): 1 playing as Riku, 2 not walking a room,
+   3 that boss not beaten yet in the story */
+static const char* const sRematchWhy[3][LANG_COUNT] = {
+    { "Only in Sora's story.", "Seulement dans l'histoire de Sora.", "Nur in Soras Geschichte.",
+      "Solo nella storia di Sora.", "Solo en la historia de Sora.", "ソラの物語でのみ。" },
+    { "Available while walking a room (not in a battle, menu or scene).",
+      "Disponible en marchant dans une salle (pas en combat, menu ou scène).",
+      "Verfügbar beim Gehen in einem Raum (nicht im Kampf, Menü oder in Szenen).",
+      "Disponibile camminando in una stanza (non in battaglia, menu o scena).",
+      "Disponible caminando en una sala (no en combate, menú ni escena).",
+      "へやを歩いているときに使えます（戦闘・メニュー・イベント中は不可）。" },
+    { "Beat this boss in the story first.", "Bats d'abord ce boss dans l'histoire.",
+      "Besiege diesen Boss zuerst in der Geschichte.", "Sconfiggi prima questo boss nella storia.",
+      "Vence primero a este jefe en la historia.", "まず物語でこのボスを倒してください。" },
+};
+static int Lang(void);
+static const char* RematchWhy(int i) {
+    extern int PortRematchWhyNot(int i);
+    int why = PortRematchWhyNot(i);
+    return sRematchWhy[SDL_clamp(why, 1, 3) - 1][Lang()];
+}
 static const char* const sCheatDone[LANG_COUNT] = {
     "Cheat applied", "Code appliqué", "Cheat angewendet", "Trucco applicato", "Truco aplicado", "チートを使う",
 };
@@ -1140,13 +1161,15 @@ static void ResetControlBindings(void) {
 }
 
 static void Change(int item, int dir) {
-    if (!ItemEnabled(item))
-        return;
     if (item >= ITEM_REMATCH_0 && item <= ITEM_REMATCH_LAST) {
-        if (dir > 0 && PortRematchStart(item - ITEM_REMATCH_0))
+        if (dir > 0 && !ItemEnabled(item)) /* not now: why, and when it can be fought */
+            PortUiNotice(RematchWhy(item - ITEM_REMATCH_0));
+        else if (dir > 0 && PortRematchStart(item - ITEM_REMATCH_0))
             Close();
         return;
     }
+    if (!ItemEnabled(item))
+        return;
     switch (item) {
         case ITEM_VIEW:
             gPortConfig.viewMode = sViewOrder[Wrap(ViewIndex() + dir, PORT_VIEW_COUNT)];
@@ -1309,7 +1332,7 @@ static void Change(int item, int dir) {
             if (dir > 0) { sPage = PAGE_REMATCH; sCursor = sScroll = ITEM_REMATCH_0; }
             break;
         case ITEM_REMATCH_BACK:
-            sPage = PAGE_MAIN; sCursor = ITEM_REMATCH_MENU; sScroll = 0;
+            sPage = PAGE_CHEATS; sCursor = ITEM_REMATCH_MENU; sScroll = ITEM_CHEAT_DEBUG;
             break;
         case ITEM_CONTROLS_MENU:
             if (dir > 0) {
@@ -1718,7 +1741,8 @@ static void Move(int dir) {
         if (sCursor == ITEM_EXPERIMENTAL || sCursor == ITEM_RECOM_EXTRAS || sCursor == ITEM_CHEAT_DEBUG_HEADING ||
             sCursor == ITEM_CONTROL_NINTENDO_HEADING)
             sCursor = first + Wrap(sCursor - first + dir, n);
-    } while (!ItemEnabled(sCursor) || !ItemVisible(sCursor));
+    } while ((!ItemEnabled(sCursor) && !(sCursor >= ITEM_REMATCH_0 && sCursor <= ITEM_REMATCH_LAST)) ||
+             !ItemVisible(sCursor));
 }
 
 static int ScenePauseEvent(const SDL_Event* ev);
@@ -3497,6 +3521,9 @@ static void DrawMenu(int l, int width, int height) {
         ItemEnabled(sCursor) && PortConfigZoomHeavy(zoom))
         /* a demanding zoom: say so where the help line is */
         MenuButton(barX, height - 15, sZoomHeavy[l], '!');
+    else if (sPage == PAGE_REMATCH && sCursor >= ITEM_REMATCH_0 && sCursor <= ITEM_REMATCH_LAST && !ItemEnabled(sCursor))
+        /* a rematch not available now: when it is, where the help line is */
+        MenuButton(barX, height - 15, RematchWhy(sCursor - ITEM_REMATCH_0), '!');
     else
         DrawText(sPage == PAGE_REMATCH ? sRematchHelp[l] : sPage == PAGE_CHEATS ? sCheatsHelp[l] : sPage == PAGE_CONTROLS ? (l == LANG_ES ? "←/→: teclado/mando; confirmar: asignar; Supr: borrar" : "Left/right: keyboard or gamepad; confirm: bind; Delete: clear") : sPage == PAGE_NEWGAME ? sHelpNg[l] : sHelp[l], barX, height - 13, MENU_DIM, 0xFFFFFFFFu);
     if (sConfirm)

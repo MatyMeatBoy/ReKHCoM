@@ -274,6 +274,17 @@ int PortRematchAvailable(int i) {
     return sRematches[i].card < 0 || IsCardKindObtained(sRematches[i].card);
 }
 
+/* why a rematch cannot be fought now, for the options to say so: 0 it can, 1 playing as Riku, 2 not walking a
+   room, 3 that boss not beaten yet */
+int PortRematchWhyNot(int i) {
+    const char* mode = GetModeName();
+    if (i < 0 || i >= (int)ARRAY_COUNT(sRematches) || (gGameState.flags & GAME_FLAG_RIKU))
+        return 1;
+    if (strcmp(mode, "Mode_MapFld") != 0 && strcmp(mode, "Mode_MapFix") != 0)
+        return 2;
+    return sRematches[i].card < 0 || IsCardKindObtained(sRematches[i].card) ? 0 : 3;
+}
+
 /* in the boss's own world and arena; everything is restored afterwards */
 void PortRematchBegin(int i) {
     extern u8 gWorldBattleStages[];
