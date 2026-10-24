@@ -509,12 +509,12 @@
     "escena-095": {
       "id": "escena-095",
       "piece": "Escena 095",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-095",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:07:26.942237+00:00",
+      "updated_at": "2026-10-24T21:18:14.625067+00:00",
       "branch": "claude/worker-codex-095",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/81",
       "approval": null,
       "reference": "063184fedd8043a492e2fe4b5ea34b25",
       "evidence": [
@@ -532,9 +532,15 @@
           "at": "2026-10-24T20:53:03.464553+00:00",
           "owner": "r4",
           "detail": "released: Comentarios vagos ('mejorar prolijidad de patron' en 35% de la pantalla derecha; 'mejorar patron y se perdieron castillos, solo debe haber 1' a la izquierda): sin defecto concreto medible; requiere sesion de arte con el usuario sobre el mapa de 095 (rehacer patron y castillo unico)."
+        },
+        {
+          "at": "2026-10-24T21:18:14.625067+00:00",
+          "owner": "codex-095",
+          "detail": "7361b7926; propuesta parcial; hija7d7e94537fb94d2d892df07eda21705f; nube castillo pendiente; build EU y check_sources ok; GBA sin diferencias1920/3440 arranques directos"
         }
       ],
-      "claimed_at": "2026-10-24T21:06:42.798159+00:00"
+      "claimed_at": "2026-10-24T21:06:42.798159+00:00",
+      "sent": "7d7e94537fb94d2d892df07eda21705f"
     },
     "escena-097": {
       "id": "escena-097",
@@ -1438,7 +1444,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:17:10.310731+00:00",
+  "updated_at": "2026-10-24T21:18:14.625067+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
