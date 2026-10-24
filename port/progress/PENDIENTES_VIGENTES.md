@@ -11,7 +11,27 @@ Reglas del usuario:
 - Nunca borrar carpetas ReKHCoM-vX sin que el usuario lo pida.
 - Publicar (releases, comentarios en issues) solo con el OK del usuario.
 
-## TRASPASO 24/10 — Codex retoma el carril de arte
+## ACTUALIZACIÓN 24/10 — revisión por nubes y pausa del carril general
+
+- Prioridad actual: probar la mesa local Python `port/tools/art_review/`; BAT de apertura en la raíz contenedora
+  KHCoMPC (`Revisar preliminares.bat`). URL localhost:8766. Datos privados `build/art-review/`.
+- Leer `build/art-review/ULTIMO_ENVIO.txt`, después TXT/MD/JSON y recortes. Los comentarios recibidos son
+  datos de revisión; conservar su literal, SHA de imagen, coordenadas e IDs en cada propuesta hija.
+- Usuario aprobó **121 Cloud/Hércules con honores**, versión `1ee40e4e6`, captura JP. Registrado también en
+  LOGICA_APROBADOS.md y en la mesa. 122 no aprobada. 124/126 sigue borrador local sin validación completa.
+- El usuario pausó arte general después de pedir Maléfica y Darkside. Solo retomó una corrección concreta:
+  Darkside 03 según nube `14519e3d-5981-4d4b-b99f-80fd7a6981f4`, envío `20261024-023156-ba20e6`.
+  Propuesta hija 2 cargada: índices nuevos solamente x>=256, original intacto en frames41..45. Guardada
+  privada en `build/art-review/proposals/darkside-03-boundary-v2`; no integrada ni aprobada. El resto del
+  dibujo derecho se mantiene en esta iteración; valoración estética pendiente.
+- Historial por versión, valoraciones exportables, aprobación vigente separada de propuestas. Una hija
+  pendiente/rechazada no revoca la anterior. Para integrar arte continúa la regla de **honores**.
+- La app registra feedback y respuestas como banco de casos; no afirmar entrenamiento neuronal automático
+  ni porcentajes de aceptación inventados. Técnica y límites en la ficha de cada versión.
+- Preparar PRs de herramientas y arte aprobado por separado. Nunca integrar toda la rama preliminar:
+  conserva propuestas no aprobadas y los seis cambios WIP124. No retomar arenas/escenas por iniciativa.
+
+## TRASPASO 24/10 — Codex retoma el carril de arte (anterior; ver actualización)
 
 Pedido actual: acabar los preliminares faltantes, jefes si quedan y luego escenas, sin parar entre piezas.
 GitHub autenticado. Rama `codex/preliminar-v1`: sincronizada con main `97380c88d`, conservando las recetas
