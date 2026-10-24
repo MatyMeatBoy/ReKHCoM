@@ -535,10 +535,10 @@
     "catalogo-historico": {
       "id": "catalogo-historico",
       "piece": "Catalogar artes modificados desde la primera build",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-relevo",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T17:09:31.302700+00:00",
+      "updated_at": "2026-10-24T17:09:39.767437+00:00",
       "branch": "codex/catalogo-historico",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/57",
       "approval": "Pedido del usuario (cola de Codex; integrar: chat 24/10)",
@@ -872,7 +872,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:09:08.957912+00:00"
   },
-  "updated_at": "2026-10-24T17:09:31.302700+00:00",
+  "updated_at": "2026-10-24T17:09:39.767437+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
