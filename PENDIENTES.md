@@ -20,7 +20,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-061 | Escena 061 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:47.791248+00:00 |
 | escena-074 | Escena 074 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:53.864882+00:00 |
 | escena-081 | Escena 081 | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
-| escena-087 | Escena 087 | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:43.471113+00:00 |
+| escena-087 | Escena 087 | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:34:07.845904+00:00 |
 | escena-090 | Escena 090 | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:49.063739+00:00 |
 | escena-095 | Escena 095 | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:54.650423+00:00 |
 | escena-097 | Escena 097 | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
