@@ -266,12 +266,12 @@
     "escena-004": {
       "id": "escena-004",
       "piece": "Escena 004 · integrada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "r3c",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:28:14.959222+00:00",
+      "updated_at": "2026-10-24T20:39:54.069693+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/75",
       "approval": null,
       "reference": "{\"family_id\": \"22fc4ea176864111880e02b851a58445\", \"submissions\": [{\"submission\": \"20261024-132007-6cb5fe\", \"created\": \"2026-10-24T16:20:07.160578+00:00\", \"image_id\": \"22fc4ea176864111880e02b851a58445\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"c4afbf3a-d8f4-439d-8842-5dfee64215b3\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-132007-6cb5fe\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -291,7 +291,8 @@
           "detail": "released: worker murio por limite de sesion 24/10 16:55; liberado por coordinador"
         }
       ],
-      "claimed_at": "2026-10-24T20:28:14.959222+00:00"
+      "claimed_at": "2026-10-24T20:28:14.959222+00:00",
+      "sent": "d39a773a8c174176b3870d672367d05d"
     },
     "escena-057": {
       "id": "escena-057",
@@ -1268,7 +1269,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:36:18.923493+00:00",
+  "updated_at": "2026-10-24T20:39:54.069693+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
