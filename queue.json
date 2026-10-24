@@ -485,13 +485,13 @@
     "escena-090": {
       "id": "escena-090",
       "piece": "Escena 090",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:15:06.574506+00:00",
+      "updated_at": "2026-10-24T22:10:15.958964+00:00",
       "branch": "claude/worker-codex-arte",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/80",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "0551fbab97804de9802ed1b48160e278",
       "evidence": [
         {
@@ -513,10 +513,16 @@
           "at": "2026-10-24T21:15:06.574506+00:00",
           "owner": "codex-arte",
           "detail": "e78d466d4; EU build/check_sources; 12 pares, GBA diff0. Propuesta pendiente valoración."
+        },
+        {
+          "at": "2026-10-24T22:10:15.958964+00:00",
+          "owner": "codex-arte",
+          "detail": "merge PR #80 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T21:06:05.566310+00:00",
-      "sent": "37a6f9b61f0e427988c96890ce9b4f09"
+      "sent": "37a6f9b61f0e427988c96890ce9b4f09",
+      "completed_at": "2026-10-24T22:10:15.958964+00:00"
     },
     "escena-095": {
       "id": "escena-095",
@@ -1540,7 +1546,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:10:10.127915+00:00",
+  "updated_at": "2026-10-24T22:10:15.958964+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
