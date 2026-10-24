@@ -680,10 +680,10 @@
     "escena-117": {
       "id": "escena-117",
       "piece": "Escena 117",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:54:05.979083+00:00",
+      "updated_at": "2026-10-24T20:54:50.170366+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -698,6 +698,11 @@
           "at": "2026-10-24T19:44:46.219927+00:00",
           "owner": "claude-sonnet-w2",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:54:50.170366+00:00",
+          "owner": "r4",
+          "detail": "released: 'Completar caja y muro' (una nube): requiere dibujar/continuar caja y muro; sin donante claro identificado en tiempo."
         }
       ],
       "claimed_at": "2026-10-24T20:54:05.979083+00:00"
@@ -1320,7 +1325,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:54:44.400734+00:00",
+  "updated_at": "2026-10-24T20:54:50.170366+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
