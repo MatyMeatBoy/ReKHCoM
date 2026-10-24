@@ -306,15 +306,21 @@
     "escena-061": {
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w1",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:18:21.150175+00:00",
+      "updated_at": "2026-10-24T19:33:47.791248+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"submissions\": [{\"submission\": \"20261024-131809-942e10\", \"created\": \"2026-10-24T16:18:09.236653+00:00\", \"image_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 2, \"cloud_ids\": [\"cdd2fde6-7989-4806-8d7f-e39ace95d44a\", \"c88c9dea-c19c-4cea-a704-1aea287cb68b\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131809-942e10\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:33:47.791248+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "Perfil port_scene061_tiles.h (pasos suelo/pared); requiere localizar el hueco de ~3x2 tiles en (354..387,20..38) y el pasillo (641..879,206..270) de la imagen 960x270. Sin iteraciones visuales. Captura base build/w1/061-base.png."
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:21.150175+00:00"
     },
     "escena-074": {
@@ -1068,7 +1074,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:33:34.580193+00:00",
+  "updated_at": "2026-10-24T19:33:47.791248+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
