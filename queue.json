@@ -291,10 +291,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:33:34.580193+00:00",
+      "updated_at": "2026-10-24T19:43:48.431473+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -304,6 +304,11 @@
           "at": "2026-10-24T19:33:34.580193+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Receta en port_scene057_tiles.h + PortSceneWideSource(57) (periodo 8 horizontal, pared bg2 se rellena con (0,0)). Pendiente medir periodo vertical real y donante completo de la mata; no se llego a iterar. Captura base build/w1/057-base.png."
+        },
+        {
+          "at": "2026-10-24T19:43:48.431473+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:18:04.945801+00:00"
@@ -1103,7 +1108,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:43:42.689763+00:00",
+  "updated_at": "2026-10-24T19:43:48.431473+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
