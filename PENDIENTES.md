@@ -45,5 +45,10 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | queue_docs | — | — | 2026-10-24T16:35:00.794556+00:00 |
 | catalogo-titulo60 | Catalogo actual: titulo original y barras | en_curso | queue_docs | — | — | 2026-10-24T16:35:20.105695+00:00 |
+| catalogo-naipes-mundo | Catalogo actual: Naipes mundo | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
+| catalogo-idioma-copyright | Catalogo actual: idioma y copyright | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
+| catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
+| catalogo-peliculas | Catalogo actual: pelicula y subtitulos | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
+| catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
 
 Integrador: libre
