@@ -760,14 +760,20 @@
       "id": "catalogo-campo-arena",
       "piece": "Catalogo actual: mapas de campo y HUD original",
       "status": "en_curso",
-      "owner": "queue_docs",
+      "owner": "claude-relevo",
       "created_at": "2026-10-24T16:37:32.168773+00:00",
-      "updated_at": "2026-10-24T16:37:32.168773+00:00",
+      "updated_at": "2026-10-24T17:05:13.273173+00:00",
       "branch": null,
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "capture_catalog.py; fixtures existentes",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T17:05:13.273173+00:00",
+          "owner": "claude-funciones",
+          "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+        }
+      ],
       "claimed_at": "2026-10-24T16:37:32.168773+00:00"
     },
     "catalogo-peliculas": {
@@ -825,7 +831,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:03:25.390995+00:00"
   },
-  "updated_at": "2026-10-24T17:05:01.322386+00:00",
+  "updated_at": "2026-10-24T17:05:13.273173+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -935,6 +941,16 @@
       "from_owner": "queue_docs",
       "to_owner": "claude-relevo",
       "expected_commit": "3ab65f5248e83b388dedf399f87e0d4418c60e7c",
+      "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+    },
+    {
+      "at": "2026-10-24T17:05:13.273173+00:00",
+      "actor": "claude-funciones",
+      "operation": "recover-task",
+      "task": "catalogo-campo-arena",
+      "from_owner": "queue_docs",
+      "to_owner": "claude-relevo",
+      "expected_commit": "0e34baa18ad831b27346dc2c59dd2331c6eb5125",
       "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
     }
   ]
