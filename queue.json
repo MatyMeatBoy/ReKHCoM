@@ -1516,13 +1516,8 @@
       "claimed_at": "2026-10-24T21:46:30.644125+00:00"
     }
   },
-  "integrator": {
-    "owner": "claude-integrador",
-    "token": "fb66207bfe6a67fc40149d537453ee1f0ffd536e9b009530",
-    "created_at": "2026-10-24T22:08:16.378269+00:00",
-    "updated_at": "2026-10-24T22:08:16.378269+00:00"
-  },
-  "updated_at": "2026-10-24T22:08:16.378785+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-24T22:09:37.563360+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -1673,6 +1668,16 @@
       "to_owner": null,
       "expected_commit": "685f4a9725f3ec87afe6dd6982ad63ece5d4bfd1",
       "evidence": "previous claude-integrador session ended, token lost; same role resumes 24/10"
+    },
+    {
+      "at": "2026-10-24T22:09:37.563360+00:00",
+      "actor": "claude-integrador",
+      "operation": "recover-integrator",
+      "task": null,
+      "from_owner": "claude-integrador",
+      "to_owner": null,
+      "expected_commit": "30334b63ffab020b8e19a4b2c09069726defac19",
+      "evidence": "same session lost the token (quiet output); re-acquire"
     }
   ]
 }
