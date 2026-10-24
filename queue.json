@@ -506,6 +506,19 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
       "evidence": [],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
+    },
+    "logica-aprobados": {
+      "id": "logica-aprobados",
+      "piece": "LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:59.216941+00:00",
+      "updated_at": "2026-10-24T16:25:59.216941+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "usuario 24/10 chat; envios 20261024-132007-6cb5fe, 131858-65bb72, 131809-942e10, 131734-82dad2",
+      "evidence": []
     }
   },
   "integrator": {
@@ -514,7 +527,7 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:25:04.486968+00:00"
   },
-  "updated_at": "2026-10-24T16:25:44.880147+00:00",
+  "updated_at": "2026-10-24T16:25:59.216941+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
