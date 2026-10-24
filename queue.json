@@ -30,12 +30,12 @@
     "tools-cola": {
       "id": "tools-cola",
       "piece": "Toma atomica y bloqueo de integracion",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:21:40.742957+00:00",
+      "updated_at": "2026-10-24T16:21:45.757518+00:00",
       "branch": "codex/art-queue-tools",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/51",
       "approval": "pedido-usuario-20261024",
       "reference": "PENDIENTES_VIGENTES.md",
       "evidence": [
@@ -96,5 +96,5 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:19:12.746926+00:00"
   },
-  "updated_at": "2026-10-24T16:21:40.742957+00:00"
+  "updated_at": "2026-10-24T16:21:45.757518+00:00"
 }
