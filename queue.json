@@ -685,10 +685,10 @@
     "escena-118": {
       "id": "escena-118",
       "piece": "Escena 118",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "r4",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:44:51.894313+00:00",
+      "updated_at": "2026-10-24T20:54:13.751883+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -705,7 +705,7 @@
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
-      "claimed_at": "2026-10-24T19:19:06.129508+00:00"
+      "claimed_at": "2026-10-24T20:54:13.751883+00:00"
     },
     "escena-120": {
       "id": "escena-120",
@@ -1300,7 +1300,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:54:05.979083+00:00",
+  "updated_at": "2026-10-24T20:54:13.751883+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
