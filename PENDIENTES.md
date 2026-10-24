@@ -43,5 +43,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | integrado | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:34:21.232737+00:00 |
 | editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | queue_tools | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
+| catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | pendiente | — | — | — | 2026-10-24T16:34:49.200664+00:00 |
 
 Integrador: libre
