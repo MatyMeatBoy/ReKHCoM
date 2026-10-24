@@ -620,10 +620,10 @@
     "escena-115": {
       "id": "escena-115",
       "piece": "Escena 115",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:53:52.161171+00:00",
+      "updated_at": "2026-10-24T20:54:39.212011+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -638,6 +638,11 @@
           "at": "2026-10-24T19:44:34.425952+00:00",
           "owner": "claude-sonnet-w2",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:54:39.212011+00:00",
+          "owner": "r4",
+          "detail": "released: Piquetes en el patron y 'algunas escotillas mal' sin cual: ambiguo, pedir al usuario que marque las escotillas."
         }
       ],
       "claimed_at": "2026-10-24T20:53:52.161171+00:00"
@@ -1310,7 +1315,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:54:33.971827+00:00",
+  "updated_at": "2026-10-24T20:54:39.212011+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
