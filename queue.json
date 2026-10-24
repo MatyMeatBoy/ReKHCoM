@@ -30,15 +30,21 @@
     "tools-cola": {
       "id": "tools-cola",
       "piece": "Toma atomica y bloqueo de integracion",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:19:12.745390+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T16:21:40.742957+00:00",
+      "branch": "codex/art-queue-tools",
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "PENDIENTES_VIGENTES.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T16:21:40.742957+00:00",
+          "owner": "queue_tools",
+          "detail": "5 offline tests passed; claims and integrator CAS races verified; commit 48e6abe44"
+        }
+      ],
       "claimed_at": "2026-10-24T16:19:12.745390+00:00"
     },
     "docs-cola": {
@@ -90,5 +96,5 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:19:12.746926+00:00"
   },
-  "updated_at": "2026-10-24T16:20:10.214368+00:00"
+  "updated_at": "2026-10-24T16:21:40.742957+00:00"
 }
