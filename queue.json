@@ -399,15 +399,21 @@
     "escena-095": {
       "id": "escena-095",
       "piece": "Escena 095",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w1",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:18:54.650423+00:00",
+      "updated_at": "2026-10-24T19:34:18.832816+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"f3fbf809b7e344bdadc74df3d132977f\", \"submissions\": [{\"submission\": \"20261024-130959-c53dec\", \"created\": \"2026-10-24T16:09:59.707476+00:00\", \"image_id\": \"063184fedd8043a492e2fe4b5ea34b25\", \"version\": \"Revisión · A ambos lados sigue el laberinto detrás de los setos y los setos continúan en su diagonal (con sus arbolitos a la izquie\", \"clouds\": 2, \"cloud_ids\": [\"c97b37ea-0aeb-48ad-a8bc-5f8975e97205\", \"d6b9f5ce-4dc7-45bf-9daa-9f2357f6849b\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130959-c53dec\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:34:18.832816+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "Laberinto izquierdo/derecho (v==95 bg3) con periodo 12 deja costuras; el castillo/siluetas del horizonte se pierde en filas 8-11 espejadas. Necesita medir periodo del laberinto y reescribir franjas de cielo; sin iteraciones. Captura base build/w1/095-base.png."
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:54.650423+00:00"
     },
     "escena-097": {
@@ -1092,7 +1098,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:34:13.263284+00:00",
+  "updated_at": "2026-10-24T19:34:18.833834+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
