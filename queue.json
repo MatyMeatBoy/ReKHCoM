@@ -531,12 +531,12 @@
     "issue-049": {
       "id": "issue-049",
       "piece": "Auditar issue49 Steam Deck Gaming Mode y arreglos existentes",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "art_110",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T16:36:50.782431+00:00",
+      "updated_at": "2026-10-24T16:37:07.244533+00:00",
       "branch": "codex/issue-049-steam-native",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/58",
       "approval": "pedido-usuario-20261024",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
       "evidence": [
@@ -554,6 +554,11 @@
           "at": "2026-10-24T16:36:50.782431+00:00",
           "owner": "art_110",
           "detail": "Commit 65933558d; Debian12 GLib y desktop-file-validate 4/4, Git sh 4/4, py_compile/sh-n/check_sources/diffcheck pasan. Instalacion XDG absoluta y guia de reparacion del shortcut nativo. Sin prueba de Steam real ni cambios de Windows/Proton."
+        },
+        {
+          "at": "2026-10-24T16:37:07.244533+00:00",
+          "owner": "art_110",
+          "detail": "PR58 abierto y adjunto a app. 65933558d; 4/4 Debian12 con GLib real y desktop-file-validate, 4/4 Gitsh; fuentes Valve y freedesktop en STEAM_DECK_49.md. Sin cambios automaticos a Steam ni claim de hardware/Proton verificado."
         }
       ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
@@ -662,7 +667,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:36:50.782431+00:00",
+  "updated_at": "2026-10-24T16:37:07.244533+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
