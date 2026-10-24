@@ -732,10 +732,10 @@
     "trickmaster-arena": {
       "id": "trickmaster-arena",
       "piece": "Trickmaster · arena",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w3",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:30:10.580054+00:00",
+      "updated_at": "2026-10-24T19:45:14.721608+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -745,6 +745,11 @@
           "at": "2026-10-24T19:30:10.580054+00:00",
           "owner": "claude-sonnet-w3",
           "detail": "Ambiguo: 'solo debe haber una chimenea en el patron como en la escena preliminar' (nube 2 sobre la 4a chimenea a 32:9) y nube 1 'mis comentarios que la escena' ininteligible. El mapa trae 2 chimeneas por periodo de 256 px (cada 128). Falta saber cual conservar."
+        },
+        {
+          "at": "2026-10-24T19:45:14.721608+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:17:47.815046+00:00"
@@ -1178,7 +1183,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:45:09.437496+00:00",
+  "updated_at": "2026-10-24T19:45:14.721608+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
