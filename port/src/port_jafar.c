@@ -123,3 +123,10 @@ int PortJafarGenieCleared(int x, int y) {
         return 0;
     return ((const uint16_t*)(const void*)gBosJfMajinMapBuffer)[((my - 256) >> 3) * 32 + ((mx - 256) >> 3)] == 0;
 }
+/* The genie's buffer is the map's 256x256 quadrant at (256, 256). Beside the picture only one whole copy of it is
+   drawn, the one nearest the picture's middle: a 512-wide window around the middle cut him at its edge and showed
+   the rest of him (and his attacks) mirrored on the far side, jumping sides as the camera moved (user, 24/10). */
+int PortJafarGenieVisible(int x, int y, int cx, int cy) {
+    int qx = 256 + FloorDiv(cx - 384 + 256, 512) * 512, qy = 256 + FloorDiv(cy - 384 + 256, 512) * 512;
+    return x >= qx && x < qx + 256 && y >= qy && y < qy + 256;
+}

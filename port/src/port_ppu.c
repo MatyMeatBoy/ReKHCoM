@@ -1657,7 +1657,7 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                 sInWorld[x] = 1;
                 continue;
             }
-            if (jfLayer == 2 && (!PortMaleficentDragonVisible(wx, wy, cx, cy) || PortJafarGenieCleared(wx, wy))) {
+            if (jfLayer == 2 && (!PortJafarGenieVisible(wx, wy, cx, cy) || PortJafarGenieCleared(wx, wy))) {
                 out[x] = TRANSPARENT;
                 continue;
             }

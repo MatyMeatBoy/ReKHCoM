@@ -35,6 +35,7 @@ int PortJafarLayer(const void* const* maps);
 int PortJafarMapBuffer(const void* block);
 int PortJafarHallPixel(int x, int y, int cx, int cy, uint16_t* color);
 int PortJafarGenieCleared(int x, int y);
+int PortJafarGenieVisible(int x, int y, int cx, int cy);
 
 /* Marluxia's last fight (port_marluxia.c): the field wraps beyond the picture, the body drawn once and whole */
 int PortMarluxiaFieldOn(void);
