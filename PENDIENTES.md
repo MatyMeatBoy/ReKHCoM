@@ -34,7 +34,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-120 | Escena 120 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T19:34:03.490259+00:00 |
 | malefica-01 | Maléfica 01 · ala recortada | pendiente | — | — | — | 2026-10-24T19:44:57.679310+00:00 |
 | malefica-arena | Maléfica · arena y contexto | pendiente | — | claude/arte-w3 | — | 2026-10-24T19:45:03.784441+00:00 |
-| oogie-arena | Oogie Boogie · arena | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:30:05.154178+00:00 |
+| oogie-arena | Oogie Boogie · arena | pendiente | — | — | — | 2026-10-24T19:45:09.437496+00:00 |
 | trickmaster-arena | Trickmaster · arena | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:30:10.580054+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
 | catalogo-historico | Catalogar artes modificados desde la primera build | integrado | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/57 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:09:48.882861+00:00 |
