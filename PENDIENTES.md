@@ -32,7 +32,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-117 | Escena 117 | pendiente | — | — | — | 2026-10-24T19:44:46.219927+00:00 |
 | escena-118 | Escena 118 | pendiente | — | — | — | 2026-10-24T19:44:51.894313+00:00 |
 | escena-120 | Escena 120 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T19:34:03.490259+00:00 |
-| malefica-01 | Maléfica 01 · ala recortada | en_curso | r2c | — | — | 2026-10-24T19:52:14.991315+00:00 |
+| malefica-01 | Maléfica 01 · ala recortada | pendiente | — | — | — | 2026-10-24T20:25:56.746713+00:00 |
 | malefica-arena | Maléfica · arena y contexto | pendiente | — | claude/arte-w3 | — | 2026-10-24T19:45:03.784441+00:00 |
 | oogie-arena | Oogie Boogie · arena | pendiente | — | — | — | 2026-10-24T19:45:09.437496+00:00 |
 | trickmaster-arena | Trickmaster · arena | pendiente | — | — | — | 2026-10-24T19:45:14.721608+00:00 |
