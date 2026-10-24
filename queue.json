@@ -476,11 +476,11 @@
       "status": "en_curso",
       "owner": "codex-arte",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T21:06:05.566310+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T21:06:18.946911+00:00",
+      "branch": "claude/worker-codex-arte",
       "pr": null,
       "approval": null,
-      "reference": "{\"family_id\": \"0717ed4c3a554005a74694e692dc20f0\", \"submissions\": [{\"submission\": \"20261024-130932-cd374d\", \"created\": \"2026-10-24T16:09:32.502995+00:00\", \"image_id\": \"0551fbab97804de9802ed1b48160e278\", \"version\": \"Revisión · Rejas completas sobre el muro hasta el borde izquierdo; colinas del horizonte seguidas sin escalones (3 colinas = 32 til\", \"clouds\": 5, \"cloud_ids\": [\"95704790-5c8d-4105-8d35-08a512711b5c\", \"39cf5085-7845-47bb-97a6-a54618a17e43\", \"457889ba-b51d-4723-b38e-3024c3648890\", \"974e5120-2850-4555-adae-8258ed56511f\", \"7edf298e-d674-4d36-9989-47556eb91638\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130932-cd374d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "reference": "0551fbab97804de9802ed1b48160e278",
       "evidence": [
         {
           "at": "2026-10-24T19:34:13.263284+00:00",
@@ -1386,7 +1386,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:06:05.566310+00:00",
+  "updated_at": "2026-10-24T21:06:18.946911+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
