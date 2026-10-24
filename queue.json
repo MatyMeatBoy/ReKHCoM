@@ -392,10 +392,10 @@
     "escena-074": {
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:42:22.867093+00:00",
+      "updated_at": "2026-10-24T20:45:01.042645+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -410,6 +410,11 @@
           "at": "2026-10-24T19:44:00.436138+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:45:01.042645+00:00",
+          "owner": "r4",
+          "detail": "released: Solo existe una version de 074 en la app (catalogo: scene-74, id 303416c3); no hay version mejorada previa de la que partir. Mi captura after==before (el perfil 074 siempre activo, KHCOM_PRELIMINAR no lo alterna). El patron (suelo BG3 diagonal + borde/charcos BG2) requiere decidir periodos del tile-map de la diagonal (BG2 repeat 20x10 en port_scene_wide_tiles.h) y comparar contra la version buena que el usuario recuerda: pedirle cual era."
         }
       ],
       "claimed_at": "2026-10-24T20:42:22.867093+00:00"
@@ -1284,7 +1289,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:42:22.867093+00:00",
+  "updated_at": "2026-10-24T20:45:01.042645+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
