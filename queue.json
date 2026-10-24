@@ -460,10 +460,10 @@
     "escena-081": {
       "id": "escena-081",
       "piece": "Escena 081",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-arte",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:56:31.609976+00:00",
+      "updated_at": "2026-10-24T22:41:40.977686+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -475,7 +475,7 @@
           "detail": "released: Comentarios 'falta mitad del patron... creo que habia una mejora' y 'mejorar': ambiguo; solo una version en la app; pedir al usuario cual mitad."
         }
       ],
-      "claimed_at": "2026-10-24T20:55:39.221992+00:00"
+      "claimed_at": "2026-10-24T22:41:40.977686+00:00"
     },
     "escena-087": {
       "id": "escena-087",
@@ -1622,7 +1622,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:34:33.755578+00:00",
+  "updated_at": "2026-10-24T22:41:40.977686+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
