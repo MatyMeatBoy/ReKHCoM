@@ -27,7 +27,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-099 | Escena 099 | pendiente | — | — | — | 2026-10-24T19:44:23.060329+00:00 |
 | escena-102 | Escena 102 | pendiente | — | — | — | 2026-10-24T19:44:28.562674+00:00 |
 | escena-112 | Escena 112 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T19:33:22.141316+00:00 |
-| escena-115 | Escena 115 | bloqueado | claude-sonnet-w2 | — | — | 2026-10-24T19:32:34.185272+00:00 |
+| escena-115 | Escena 115 | pendiente | — | — | — | 2026-10-24T19:44:34.425952+00:00 |
 | escena-116 | Escena 116 | bloqueado | claude-sonnet-w2 | — | — | 2026-10-24T19:32:40.087698+00:00 |
 | escena-117 | Escena 117 | bloqueado | claude-sonnet-w2 | — | — | 2026-10-24T19:32:46.023958+00:00 |
 | escena-118 | Escena 118 | bloqueado | claude-sonnet-w2 | — | — | 2026-10-24T19:32:51.405101+00:00 |
