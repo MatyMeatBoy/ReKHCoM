@@ -911,15 +911,16 @@
     "savestates-trucos": {
       "id": "savestates-trucos",
       "piece": "Savestates v2.0: F8 cargar, apagados por defecto, en Trucos con aviso, sin logros",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-funciones",
       "created_at": "2026-10-24T17:32:13.721145+00:00",
-      "updated_at": "2026-10-24T17:32:13.721145+00:00",
+      "updated_at": "2026-10-24T17:32:26.706772+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "usuario chat 24/10",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T17:32:26.706772+00:00"
     }
   },
   "integrator": {
@@ -928,7 +929,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:23:32.186631+00:00"
   },
-  "updated_at": "2026-10-24T17:32:13.721145+00:00",
+  "updated_at": "2026-10-24T17:32:26.706772+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
