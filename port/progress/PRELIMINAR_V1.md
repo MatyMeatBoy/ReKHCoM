@@ -27,13 +27,11 @@ afin. Se identifican mapas por sus datos y dimensiones, incluido EU que los
 descomprime en RAM. Las escenas compartidas usan una sola receta.
 
 - Aprobadas anteriormente: 004, 057, 061, 074, 107/108 y 109.
-- Cerradas para comentarios: 007 (también evento 009), 044 (mapa compartido con 186),
-  045, 053 (también evento 177), 054 (también evento 178) y 055 (eventos 056,
-  179, 181 y 183), 081 (eventos 082–085), 087 (evento 088), 095, 097, 098,
- 099 y 102, 110 (también evento 111), 112 (también evento 114), 115, 116, 117, 118, 120, 121.
+- Cerradas para comentarios: 007/009, 044/186, 045, 053/177, 054/178,
+  055/056/179/181/183, 081/082–085, 087/088, 090, 095, 097, 098, 099, 102,
+  104/106, 110/111, 112/114, 115, 116, 117, 118/119, 120, 121 (corregida 24/10) y 122/123.
 - Pendientes de ciclo completo:
   124, 129, 131 y 132.
-- Reabierta: 121, por el rechazo de friso/columna/mampostería; ver workflow.
 - Mantener límites dibujados: habitaciones del castillo, 006 (sala delimitada),
   075/086 (tesoro), 076 (cámara circular), 089 (recinto del cementerio),
   091 (puzzle), 094 (casa), 101 (plataforma de hielo), 103 (recinto marino),
@@ -42,7 +40,7 @@ descomprime en RAM. Las escenas compartidas usan una sola receta.
 - Jefes (actualización 24/10): Jafar aprobado; Oogie, Maléfica, Úrsula,
   Trickmaster y Marluxia tienen Preliminar V2 jugable, pendiente de comentarios.
   Darkside conserva su playa y espera comentarios de sus siete poses.
-- Pendiente en esta tanda: 4 fondos nuevos y la revisión reabierta de 121.
+- Pendiente en esta tanda: 4 fondos nuevos.
   No rehacer la V2 de jefes ni contabilizarla como aprobada.
 - Conservar Guard Armor aprobado, Hook y Monstro según indicación previa.
 
@@ -537,3 +535,14 @@ cambios. Cero diferencias GBA. Ficha, donantes, revisión a 1:1/x3, SHA256 y
 límites de cobertura en [ESCENA122_REVISION.md](ESCENA122_REVISION.md).
 Evidencia final: `build/preliminar-v1/resume-122` y `ready/escena-122`,
 `ready/evento-123-escena-122`. Propuesta comprobada, pendiente del usuario.
+
+## Revisión 121, 24/10 (sustituye la propuesta anterior)
+
+Se corrigen las rayas verticales, el friso que desaparecía y el corte del
+fuste/ventanas en y=0. Tres planos independientes, módulos completos de
+mampostería limpia y detalles originales completos; sin nuevas columnas,
+emblemas ni ventanas. Ficha [ESCENA121_REVISION.md](ESCENA121_REVISION.md).
+EU 12 pares amplios + 12 Original; muestras amplias/Original US y JP y ocho
+controles, incluida 122, sin diferencias nativas ni cambios en otros fondos.
+Evidencia final `build/preliminar-v1/resume-121` y `ready/escena-121`.
+Propuesta corregida/comprobada, pendiente del usuario.

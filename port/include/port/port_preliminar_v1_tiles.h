@@ -244,19 +244,6 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
-    if (v[0]==121 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
-        /* Coliseum E1: the back wall ends on a 2:1 diagonal into the pale
-         * stone floor. Continue each material from clean source patches;
-         * BG2's heraldry and corner pillar remain unique. */
-        if (2*oy+ox<40) {
-            sx=PortSceneTileMod(ox,8);
-            sy=4;
-        } else {
-            sx=24+PortSceneTileMod(ox-24,8);
-            sy=16+PortSceneTileMod(oy-16,8);
-        }
-        *x=sx; *y=sy; return 1;
-    }
     if (v[0]==120 && v[1]==3 && (ox<0 || ox>=w || oy<0 || oy>=h)) {
         /* Olympus Coliseum E0: continue the yellow wall above its 2:1
          * diagonal and the sunlit ground below. BG2's frieze and BG1's near
@@ -376,6 +363,49 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
 }
 
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (p && p->v[0]==121 && (wx<0 || wx>=384 || wy<0 || wy>=256)) {
+        if (p->v[1]==2) {
+            *sx=504; *sy=248; /* empty map cell, not the emblem */
+            if (wx<0) {
+                int x=PortSceneTileMod(wx,16), y=wy+(wx-x)/2;
+                if (y>=128 && y<160) { *sx=x; *sy=y; }
+            } else if (wx>=224) {
+                int x=240+PortSceneTileMod(wx-240,16), y=wy+(wx-x)/2;
+                if (y>=40 && y<64) { *sx=x; *sy=y; }
+            }
+            /* The original corner shaft crosses y=0. Continue that shaft,
+             * and complete the two existing windows from the intact first
+             * window; do not place windows at any new positions. */
+            if (wy<0 && wx>=214 && wx<234) {
+                *sx=wx; *sy=PortSceneTileMod(wy,32);
+            } else if (wy<0 && wx>=284 && wx<292 && wy>=-10) {
+                *sx=wx-20; *sy=wy+10;
+            } else if (wy<0 && wx>=304 && wx<312 && wy>=-20) {
+                *sx=wx-40; *sy=wy+20;
+            }
+        } else if (p->v[1]==3) {
+            int floor;
+            if (wx<192) {
+                *sx=PortSceneTileMod(wx,32);
+                *sy=wy+(wx-*sx)/2;
+                if (*sy<0) *sy=PortSceneTileMod(*sy,64);
+                floor=2*wy+wx>=272;
+            } else if (wx>=224) {
+                *sx=224+PortSceneTileMod(wx-224,32);
+                *sy=wy+(wx-*sx)/2;
+                if (*sy<0) *sy=PortSceneTileMod(*sy,32);
+                floor=2*wy+wx>=336;
+            } else {
+                *sx=wx; *sy=PortSceneTileMod(wy,32);
+                floor=2*wy-wx>=-112;
+            }
+            if (floor) {
+                *sx=PortSceneTileMod(wx,128);
+                *sy=160+PortSceneTileMod(wy-160,64);
+            }
+        } else return 0;
+        return 1;
+    }
     if (p && p->v[0]==122 && (wx<0 || wx>=440 || wy<0 || wy>=336)) {
         /* Three original wall planes: the central face spans x=184..311.
          * Side walls follow 2*y-x, with their own intercepts. Translate in

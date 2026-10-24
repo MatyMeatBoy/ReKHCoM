@@ -23,7 +23,10 @@ en el stash `Recovered scene 122 draft before syncing current handoff`; ese borr
 - 122/123 cerrada para comentarios: tres planos, friso entero y relieves completados. EU 24 amplia + 24 Original;
   US/JP dos muestras amplias + dos Original por región; ocho controles sin cambios y check_sources correcto.
   Ficha ESCENA122_REVISION.md y evidencia privada resume-122; copia Preliminar V1 actualizada.
-- En curso siguiente: 121 reabierta por friso/columna/textura; después 124, 129, 131 y 132.
+- 121 corregida y cerrada para comentarios: tres planos, friso completo, fuste y ventanas restaurados.
+  EU 12 amplia + 12 Original, muestras amplias/Original US y JP; ocho controles sin cambios, incluida 122.
+  Ficha ESCENA121_REVISION.md, copia V1 actualizada.
+- Siguiente: 124/126; después 129/151, 131/153 y 132/133/154.
 - Conservar pendientes independientes: actores Cheshire/Aerith, fundido de Aerith y Original x6 con .bat.
 - Pruebas de juego ocultas y mudas, compilaciones `-j 1`. Evidencia privada en `build/preliminar-v1/resume-122`.
 
