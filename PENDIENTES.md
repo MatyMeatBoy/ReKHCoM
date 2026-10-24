@@ -59,6 +59,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | menu-barajas-sincronia | Ver barajas: sincronizar extensión al cambiar pestañas hacia izquierda | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/84 | — | 2026-10-24T21:30:29.391225+00:00 |
 | menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/85 | — | 2026-10-24T21:40:18.097123+00:00 |
 | mapa-camara-suavidad | Mapa: investigar suavidad de cámara con texto HD y GBA mejorado | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/86 | — | 2026-10-24T21:46:15.529240+00:00 |
-| video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | en_curso | codex-arte | codex/video-vrr-optin | — | 2026-10-24T21:47:28.571988+00:00 |
+| video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | — | 2026-10-24T21:53:47.138244+00:00 |
 
 Integrador: claude-integrador (ocupado; 2026-10-24T19:35:47.688714+00:00)
