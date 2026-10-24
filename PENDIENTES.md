@@ -57,7 +57,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | pendiente | — | — | — | 2026-10-24T20:56:26.140798+00:00 |
 | agrabah-genio-arriba | Agrabah: continuar patrón superior durante aparición del Genio | pr_abierto | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/82 | — | 2026-10-24T21:25:42.702557+00:00 |
 | menu-barajas-sincronia | Ver barajas: sincronizar extensión al cambiar pestañas hacia izquierda | en_curso | codex-arte | codex/menu-barajas-sincronia | — | 2026-10-24T21:20:46.542298+00:00 |
-| menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | en_curso | codex-arte | — | — | 2026-10-24T21:30:11.725772+00:00 |
+| menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | en_curso | codex-arte | codex/menu-naipes-texto-parpadeo | — | 2026-10-24T21:30:18.613077+00:00 |
 | mapa-camara-suavidad | Mapa: investigar suavidad de cámara con texto HD y GBA mejorado | pendiente | — | — | — | 2026-10-24T21:29:26.870726+00:00 |
 
 Integrador: claude-integrador (ocupado; 2026-10-24T19:35:47.688714+00:00)
