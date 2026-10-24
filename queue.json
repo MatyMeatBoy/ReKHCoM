@@ -447,13 +447,13 @@
     "escena-087": {
       "id": "escena-087",
       "piece": "Escena 087",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "r4",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:52:05.658259+00:00",
+      "updated_at": "2026-10-24T22:09:57.187038+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/76",
-      "approval": null,
+      "approval": "orden del usuario en el chat 24/10: integrar todos los PR",
       "reference": "{\"family_id\": \"78cc05ed39314dc9b88235eca0f3ad1c\", \"submissions\": [{\"submission\": \"20261024-130825-fd09bc\", \"created\": \"2026-10-24T16:08:25.568324+00:00\", \"image_id\": \"a4e8046fa4404186b64fa82106e8c707\", \"version\": \"Revisión · Siguen las estructuras de la sala: la losa de piedra de arriba a la izquierda, el escalón de piedra de abajo en su diago\", \"clouds\": 2, \"cloud_ids\": [\"351e6c56-e343-4a87-b417-0ee50057d149\", \"cc543b72-cc57-4978-827e-8f3d21dd36ac\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130825-fd09bc\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -465,10 +465,16 @@
           "at": "2026-10-24T19:44:05.913430+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T22:09:57.187038+00:00",
+          "owner": "r4",
+          "detail": "merge PR #76 en main 24/10; build PC y pruebas de humo"
         }
       ],
       "claimed_at": "2026-10-24T20:45:06.992192+00:00",
-      "sent": "52879b0b9b9a4d578adcc36ce568601f"
+      "sent": "52879b0b9b9a4d578adcc36ce568601f",
+      "completed_at": "2026-10-24T22:09:57.187038+00:00"
     },
     "escena-090": {
       "id": "escena-090",
@@ -1522,7 +1528,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:09:42.808458+00:00",
+  "updated_at": "2026-10-24T22:09:57.187038+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
