@@ -54,6 +54,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-orden-calidad | Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/63 | Pedido del usuario chat 24/10 | 2026-10-24T17:23:38.289244+00:00 |
 | savestates-trucos | Savestates v2.0: F8 cargar, apagados por defecto, en Trucos con aviso, sin logros | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/65 | Pedido del usuario chat 24/10 | 2026-10-24T17:41:05.159923+00:00 |
 | diario-entradas | Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado) | pendiente | — | — | — | 2026-10-24T20:56:20.251705+00:00 |
-| diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | en_curso | r4 | — | — | 2026-10-24T20:55:32.978973+00:00 |
+| diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | pendiente | — | — | — | 2026-10-24T20:56:26.140798+00:00 |
 
 Integrador: claude-integrador (ocupado; 2026-10-24T19:35:47.688714+00:00)
