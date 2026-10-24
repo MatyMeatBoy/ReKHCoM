@@ -466,15 +466,16 @@
     "escena-120": {
       "id": "escena-120",
       "piece": "Escena 120",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T19:19:11.451668+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"e15f20f324a742eaa9b98cde42603751\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"e15f20f324a742eaa9b98cde42603751\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"15dc21aa-8dec-46bf-a706-4a5adcb57b65\", \"35bb5139-c858-4a8e-ae72-d41ab493a1cd\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T19:19:11.451668+00:00"
     },
     "malefica-01": {
       "id": "malefica-01",
@@ -961,7 +962,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:19:06.129508+00:00",
+  "updated_at": "2026-10-24T19:19:11.451668+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
