@@ -833,10 +833,10 @@
     "oogie-arena": {
       "id": "oogie-arena",
       "piece": "Oogie Boogie · arena",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:55:13.872692+00:00",
+      "updated_at": "2026-10-24T20:56:09.226192+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -851,6 +851,11 @@
           "at": "2026-10-24T19:45:09.437496+00:00",
           "owner": "claude-sonnet-w3",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:56:09.226192+00:00",
+          "owner": "r4",
+          "detail": "released: Dos nubes piden dibujar a mano como pixel artist las puntas faltantes de los botones del suelo (arte nuevo, no patron); las otras dos nubes ya aprueban. Requiere arte original."
         }
       ],
       "claimed_at": "2026-10-24T20:55:13.872692+00:00"
@@ -1343,7 +1348,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:56:03.994220+00:00",
+  "updated_at": "2026-10-24T20:56:09.226192+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
