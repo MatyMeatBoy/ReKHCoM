@@ -16,6 +16,8 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mferror.h>
+#include <d3d11.h>
+#include <d3d10.h>
 
 namespace hd {
 
@@ -1161,7 +1163,9 @@ template <class T> static void Release(T*& p) {
 }
 
 /* src (a plain MP4) re-encoded into dst at quality q. False when anything failed (dst is then removed). */
-static bool Transcode(const fs::path& src, const fs::path& dst, const Quality& q) {
+/* gpu: the graphics card's device manager, so decoding and encoding both run there and the frames never come back
+   to the processor; nullptr decodes on the processor (TranscodeBest picks) */
+static bool Transcode(const fs::path& src, const fs::path& dst, const Quality& q, IMFDXGIDeviceManager* gpu = nullptr) {
     IMFAttributes* attr = nullptr;
     IMFSourceReader* reader = nullptr;
     IMFSinkWriter* writer = nullptr;
@@ -1171,9 +1175,13 @@ static bool Transcode(const fs::path& src, const fs::path& dst, const Quality& q
     UINT32 w = 0, h = 0, num = 30, den = 1, outW, outH;
     LONGLONG duration = 0;
     PROPVARIANT var;
-    HRESULT hr = MFCreateAttributes(&attr, 2);
+    HRESULT hr = MFCreateAttributes(&attr, 3);
     if (SUCCEEDED(hr))
         attr->SetUINT32(MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING, TRUE);
+    if (SUCCEEDED(hr) && gpu) {
+        attr->SetUnknown(MF_SOURCE_READER_D3D_MANAGER, gpu);
+        attr->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+    }
     if (SUCCEEDED(hr))
         hr = MFCreateSourceReaderFromURL(src.wstring().c_str(), attr, &reader);
     Release(attr);
@@ -1272,6 +1280,8 @@ static bool Transcode(const fs::path& src, const fs::path& dst, const Quality& q
     if (SUCCEEDED(hr)) {
         attr->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, getenv("KHCOM_ENC_HW") ? atoi(getenv("KHCOM_ENC_HW")) : TRUE);
         attr->SetGUID(MF_TRANSCODE_CONTAINERTYPE, MFTranscodeContainerType_MPEG4); /* MP4 also under a .part name */
+        if (gpu)
+            attr->SetUnknown(MF_SINK_WRITER_D3D_MANAGER, gpu);
         hr = MFCreateSinkWriterFromURL(dst.wstring().c_str(), nullptr, attr, &writer);
     }
     Release(attr);
@@ -1357,6 +1367,58 @@ static void MoveScenes(const fs::path& hdDir) {
         if (!fs::exists(to / name, ec))
             fs::rename(f.path(), to / name, ec);
     }
+}
+
+/* The graphics card's path, as HandBrake, OBS and Microsoft's Media Foundation samples do it: a Direct3D 11 device
+   shared through a DXGI device manager by the decoder and the encoder, so the frames stay in the card's memory and the
+   processor only moves the file. ~5 processor threads a movie less than decoding there. KHCOM_ENC_GPU=0 turns it off. */
+static bool Mp4Ok(const fs::path& f);
+
+struct Gpu {
+    ID3D11Device* device = nullptr;
+    IMFDXGIDeviceManager* manager = nullptr;
+    UINT token = 0;
+    ~Gpu() {
+        if (manager)
+            manager->Release();
+        if (device)
+            device->Release();
+    }
+    bool Open() {
+        static const PFN_D3D11_CREATE_DEVICE create = [] {
+            HMODULE d3d = LoadLibraryW(L"d3d11.dll");
+            return d3d ? (PFN_D3D11_CREATE_DEVICE)(void*)GetProcAddress(d3d, "D3D11CreateDevice") : nullptr;
+        }();
+        static const D3D_FEATURE_LEVEL levels[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1 };
+        if (!create || FAILED(create(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_VIDEO_SUPPORT, levels, 3,
+                                     D3D11_SDK_VERSION, &device, nullptr, nullptr)))
+            return false;
+        ID3D10Multithread* threads = nullptr; /* the decoder and the encoder use it from their own threads */
+        if (SUCCEEDED(device->QueryInterface(__uuidof(ID3D10Multithread), (void**)&threads))) {
+            threads->SetMultithreadProtected(TRUE);
+            threads->Release();
+        }
+        return SUCCEEDED(MFCreateDXGIDeviceManager(&token, &manager)) && SUCCEEDED(manager->ResetDevice(device, token));
+    }
+};
+
+static std::atomic<bool> sGpuFailed{ false }; /* once the card's path failed, the rest go by the processor */
+
+static bool TranscodeBest(const fs::path& src, const fs::path& dst, const Quality& q) {
+    const char* e = getenv("KHCOM_ENC_GPU");
+    if (!(e && atoi(e) == 0) && !sGpuFailed) {
+        Gpu gpu;
+        if (gpu.Open() && Transcode(src, dst, q, gpu.manager) && Mp4Ok(dst))
+            return true;
+        if (sJob.cancel)
+            return false;
+        if (!sGpuFailed.exchange(true))
+            fprintf(stderr, "hd import: the graphics card's path failed on %s, the processor does the rest\n", src.filename().u8string().c_str());
+        std::error_code ec;
+        fs::remove(dst, ec);
+        sJob.partial[tSlot] = 0;
+    }
+    return Transcode(src, dst, q);
 }
 
 /* ---- an import cut short (the launcher closed, a crash, the power) ---------------------------------------------
@@ -1478,7 +1540,7 @@ static bool ImportMovie(const fs::path& src, const fs::path& dst, int quality) {
         ok = CopyMovie(src, plain);
         if (ok) {
             sJob.partial[tSlot] = 0;
-            if (Transcode(plain, part, q)) {
+            if (TranscodeBest(plain, part, q)) {
                 fs::rename(part, dst, ec);
             } else if (!sJob.cancel) {
                 fs::remove(part, ec);
@@ -1789,7 +1851,7 @@ static void Compress(fs::path data, int quality) {
                  (workers > 1 ? " (" + std::to_string(workers) + T(" a la vez)", " at once)") : std::string()));
         fs::path plain = fs::path(f).replace_extension(".source.mp4");
         fs::rename(f, plain, ec);
-        if (!ec && Transcode(plain, f, q) && fs::file_size(f, ec) < size) {
+        if (!ec && TranscodeBest(plain, f, q) && fs::file_size(f, ec) < size) {
             fs::remove(plain, ec);
             compressed++;
         } else { /* failed, or not smaller: the movie as it was */
