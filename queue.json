@@ -553,10 +553,10 @@
     "issue-049": {
       "id": "issue-049",
       "piece": "Auditar issue49 Steam Deck Gaming Mode y arreglos existentes",
-      "status": "pr_abierto",
-      "owner": "art_110",
+      "status": "en_curso",
+      "owner": "claude-relevo",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T16:37:07.244533+00:00",
+      "updated_at": "2026-10-24T17:04:15.692310+00:00",
       "branch": "codex/issue-049-steam-native",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/58",
       "approval": "pedido-usuario-20261024",
@@ -581,6 +581,11 @@
           "at": "2026-10-24T16:37:07.244533+00:00",
           "owner": "art_110",
           "detail": "PR58 abierto y adjunto a app. 65933558d; 4/4 Debian12 con GLib real y desktop-file-validate, 4/4 Gitsh; fuentes Valve y freedesktop en STEAM_DECK_49.md. Sin cambios automaticos a Steam ni claim de hardware/Proton verificado."
+        },
+        {
+          "at": "2026-10-24T17:04:15.692310+00:00",
+          "owner": "claude-funciones",
+          "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
         }
       ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
@@ -796,7 +801,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:03:25.390995+00:00"
   },
-  "updated_at": "2026-10-24T17:04:05.852952+00:00",
+  "updated_at": "2026-10-24T17:04:15.692310+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -856,6 +861,16 @@
       "from_owner": "queue_docs",
       "to_owner": "claude-relevo",
       "expected_commit": "749f7aaab02e70eae2930c2c4758b2fa2fab6383",
+      "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+    },
+    {
+      "at": "2026-10-24T17:04:15.692310+00:00",
+      "actor": "claude-funciones",
+      "operation": "recover-task",
+      "task": "issue-049",
+      "from_owner": "art_110",
+      "to_owner": "claude-relevo",
+      "expected_commit": "c60369ca21b71a35de5de43a59e111c6e3277806",
       "evidence": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
     }
   ]
