@@ -352,10 +352,10 @@
     "escena-061": {
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
-      "status": "en_curso",
-      "owner": "r3c",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:40:19.648910+00:00",
+      "updated_at": "2026-10-24T20:41:20.899024+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -375,6 +375,11 @@
           "at": "2026-10-24T20:31:29.065659+00:00",
           "owner": "r3a",
           "detail": "released: Reproducido a 3840x1080 z6 EU: nube 1 = escalon en el borde suelo/pared (aprox 1610,210 px) donde el suelo extendido (PortSceneWideSource, rama BG3/BG2 fuera del mapa) cambia de periodo; ademas rectangulos purpura sueltos en la pared. Nube 2 (hueco abajo-der) NO se reproduce con main actual (suelo continuo hasta el borde). Arreglar el escalon exige elegir otra distribucion de fallback en el perfil 061 aprobado: decision visual, no un parche seguro."
+        },
+        {
+          "at": "2026-10-24T20:41:20.899024+00:00",
+          "owner": "r3c",
+          "detail": "released: En origin/main el pasillo ya llega completo al borde inferior derecho (nube 2 parece resuelta por cambios posteriores a la revision); la nube 1 (cachito, wall top ~x354-387,y20-38 de 960x270) es ambigua: quedan muescas pequenas en la base de la pared, necesita aclarar con el usuario cual. Requiere captura 3840 y comparacion contra la hija"
         }
       ],
       "claimed_at": "2026-10-24T20:40:19.648910+00:00"
@@ -1274,7 +1279,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:40:19.648910+00:00",
+  "updated_at": "2026-10-24T20:41:20.899024+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
