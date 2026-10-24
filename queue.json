@@ -106,15 +106,16 @@
     "primer-arranque": {
       "id": "primer-arranque",
       "piece": "Primer arranque · elección de modo con vista previa",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-funciones",
       "created_at": "2026-10-24T16:24:40.325531+00:00",
-      "updated_at": "2026-10-24T16:24:40.325531+00:00",
+      "updated_at": "2026-10-24T16:24:49.620474+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "envío 20261024-131202-943804",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:24:49.620474+00:00"
     }
   },
   "integrator": {
@@ -123,5 +124,5 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:19:12.746926+00:00"
   },
-  "updated_at": "2026-10-24T16:24:44.939865+00:00"
+  "updated_at": "2026-10-24T16:24:49.620474+00:00"
 }
