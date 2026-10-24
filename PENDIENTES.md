@@ -28,7 +28,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-102 | Escena 102 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:17:14.781075+00:00 |
 | escena-112 | Escena 112 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:18:10.495489+00:00 |
 | escena-115 | Escena 115 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:18:16.636181+00:00 |
-| escena-116 | Escena 116 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
+| escena-116 | Escena 116 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:18:31.769745+00:00 |
 | escena-117 | Escena 117 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | escena-118 | Escena 118 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
 | escena-120 | Escena 120 | pendiente | — | — | — | 2026-10-24T16:25:04.486463+00:00 |
