@@ -1466,15 +1466,16 @@
     "mapa-camara-suavidad": {
       "id": "mapa-camara-suavidad",
       "piece": "Mapa: investigar suavidad de cámara con texto HD y GBA mejorado",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-arte",
       "created_at": "2026-10-24T21:29:26.870726+00:00",
-      "updated_at": "2026-10-24T21:29:26.870726+00:00",
+      "updated_at": "2026-10-24T21:32:38.631001+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario24/10: leve avance poco natural caminando; combate más suave; comparar frame pacing/cámara/redondeo",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T21:32:38.631001+00:00"
     }
   },
   "integrator": {
@@ -1483,7 +1484,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:30:29.391225+00:00",
+  "updated_at": "2026-10-24T21:32:38.631001+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
