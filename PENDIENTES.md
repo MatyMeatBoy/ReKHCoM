@@ -14,7 +14,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | primer-arranque | Primer arranque · elección de modo con vista previa | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/60 | Pedido del usuario en el envío 20261024-131202-943804 | 2026-10-24T17:09:01.184010+00:00 |
 | botones-editor | Botones táctiles · editor de posición | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/59 | Pedido del usuario en el envío 20261024-131133-57e115 (funcionalidad, no arte) | 2026-10-24T17:08:44.643502+00:00 |
 | darkside-06 | Darkside 06 · Puñetazo | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:30:33.228367+00:00 |
-| darkside-arena | Darkside · arena y contexto | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:31:05.340366+00:00 |
+| darkside-arena | Darkside · arena y contexto | integrado | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:43.491600+00:00 |
 | escena-004 | Escena 004 · integrada | integrado | r3c | https://github.com/MatyMeatBoy/ReKHCoM/pull/75 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:10.127915+00:00 |
 | escena-057 | Escena 057 · integrada | en_curso | codex-escena-057 | codex/escena-057-comentarios | — | 2026-10-24T22:04:43.776626+00:00 |
 | escena-061 | Escena 061 · integrada | pendiente | — | — | — | 2026-10-24T20:41:20.899024+00:00 |
