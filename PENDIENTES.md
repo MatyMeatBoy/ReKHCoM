@@ -50,6 +50,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
 | catalogo-peliculas | Catalogo actual: pelicula y subtitulos | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
 | catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | queue_docs | — | pedido-usuario-20261024 | 2026-10-24T16:37:32.168773+00:00 |
-| visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | en_curso | claude-funciones | — | — | 2026-10-24T17:00:07.976667+00:00 |
+| visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | listo_pr | claude-funciones | claude/visor-paneo-zoom | Pedido del usuario en chat 24/10 | 2026-10-24T17:02:01.161542+00:00 |
 
 Integrador: root (ocupado; 2026-10-24T16:37:50.251155+00:00)
