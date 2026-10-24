@@ -560,20 +560,31 @@
     "entrada-agentes": {
       "id": "entrada-agentes",
       "piece": "Entrada automatica Claude/Codex sin contexto para cola compartida",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "root",
       "created_at": "2026-10-24T16:28:44.261620+00:00",
-      "updated_at": "2026-10-24T16:29:09.748516+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-24T16:31:30.104663+00:00",
+      "branch": "codex/agent-entry",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/56",
       "approval": "pedido-usuario-20261024",
       "reference": "EMPEZAR_AQUI.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T16:31:30.103996+00:00",
+          "owner": "root",
+          "detail": "AGENTS y CLAUDE enlazanprotocolo; check_sources ydiffcheckok"
+        }
+      ],
       "claimed_at": "2026-10-24T16:29:09.748516+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-24T16:29:09.748516+00:00",
+  "integrator": {
+    "owner": "root",
+    "token": "ef4a8dbe1fbd62c7b7635ce45a38397da52ee148ecbc90cd",
+    "created_at": "2026-10-24T16:31:30.104663+00:00",
+    "updated_at": "2026-10-24T16:31:30.104663+00:00"
+  },
+  "updated_at": "2026-10-24T16:31:30.104663+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
