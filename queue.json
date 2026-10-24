@@ -461,10 +461,10 @@
     "escena-090": {
       "id": "escena-090",
       "piece": "Escena 090",
-      "status": "en_curso",
-      "owner": "r4",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:52:20.762873+00:00",
+      "updated_at": "2026-10-24T20:52:36.579213+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -479,6 +479,11 @@
           "at": "2026-10-24T19:44:11.688796+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:52:36.579213+00:00",
+          "owner": "r4",
+          "detail": "released: 5 nubes mezcladas (reja recta vs diagonal a elegir con tiles de apoyo; 2 'patron aun no llega al 100%' en bordes izq/der; 1 'patron 100%' que es aprobacion parcial). Requiere identificar que reja (recta) del mapa BG3 usar y rehacer la diagonal de muro/reja: decision visual de varias partes, no cerrable sin ver la reja recta en el mapa con el usuario."
         }
       ],
       "claimed_at": "2026-10-24T20:52:20.762873+00:00"
@@ -1290,7 +1295,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T20:52:20.762873+00:00",
+  "updated_at": "2026-10-24T20:52:36.579213+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
