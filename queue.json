@@ -423,8 +423,8 @@
       "status": "en_curso",
       "owner": "codex-escena-074",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:14:59.975996+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T22:15:06.951477+00:00",
+      "branch": "codex/escena-061-comentarios",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"303416c343704456aea87be42f0508bf\", \"submissions\": [{\"submission\": \"20261024-131734-82dad2\", \"created\": \"2026-10-24T16:17:34.567220+00:00\", \"image_id\": \"303416c343704456aea87be42f0508bf\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"6a54075b-093d-43d2-9fdc-26d370de15de\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131734-82dad2\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
@@ -448,6 +448,11 @@
           "at": "2026-10-24T22:14:59.975996+00:00",
           "owner": "codex",
           "detail": "El usuario confirma 24/10 que nadie trabaja en arte y autoriza tomar las revisiones visibles de Atlas; se retoma el diagnóstico del patrón 074 para entregar propuesta visual, sin esperar dato del usuario."
+        },
+        {
+          "at": "2026-10-24T22:15:06.951477+00:00",
+          "owner": "codex-escena-074",
+          "detail": "Recuperada con autorización del usuario; working tree origin/main en khcom-061"
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00"
@@ -1599,7 +1604,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T22:14:59.975996+00:00",
+  "updated_at": "2026-10-24T22:15:06.951477+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
