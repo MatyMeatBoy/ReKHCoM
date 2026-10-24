@@ -885,12 +885,12 @@
     "hd-orden-calidad": {
       "id": "hd-orden-calidad",
       "piece": "Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro)",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T17:20:42.466751+00:00",
-      "updated_at": "2026-10-24T17:23:15.937731+00:00",
+      "updated_at": "2026-10-24T17:23:24.564582+00:00",
       "branch": "claude/hd-orden-calidad",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/63",
       "approval": "Pedido del usuario chat 24/10",
       "reference": "usuario chat 24/10",
       "evidence": [
@@ -909,7 +909,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:09:08.957912+00:00"
   },
-  "updated_at": "2026-10-24T17:23:15.937731+00:00",
+  "updated_at": "2026-10-24T17:23:24.566041+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
