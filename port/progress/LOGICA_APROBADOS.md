@@ -151,3 +151,12 @@ Regla general que sale de las cuatro: medir el período de cada estructura en **
 **en todas las direcciones** hasta los bordes de la pantalla más ancha, y no dar por terminado un lado sin revisar
 los demás. Las escenas hermanas que usaron estas recetas se revisan con estas reglas al tocarlas.
 
+
+## Comentarios nuevos 24/10 (112, 120; sin valorar)
+
+- 112 y 120 (usuario): los personajes que esperan fuera de la cámara GBA (Aladdin, Pepito) no deben verse en el margen
+  hasta entrar en el rectángulo original. Es la regla de la escena 097 (`sceneActorFrame`), ahora también para las
+  recetas Preliminar V1 de 112 y 120. Las demás nubes (patrón/pilares/puerta de 112, estructura y muro de 120) siguen
+  abiertas: requieren estudio de tiles por escena.
+- Comprobar que `port_preliminar_v1_data.inc` lleva `ready=1` en la escena: con `ready=0` la receta no se aplica ni
+  con `KHCOM_PRELIMINAR_V1` y la captura sale sin extensión.

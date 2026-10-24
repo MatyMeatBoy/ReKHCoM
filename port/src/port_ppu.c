@@ -2204,6 +2204,13 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
        240x160 camera. Keep the extended backgrounds, but let those actors
        enter and leave through the original frame as authored. */
     int sceneActorFrame = gPortScreen.wide && sEventBackdropProfile == 97 && !sEnvActorFrameOff;
+    /* Same rule for Preliminar V1 scenes whose actors wait beyond the camera (user 24/10: 112 Aladdin, 120 Pepito) */
+    if (gPortScreen.wide && !sEnvActorFrameOff) {
+        int pb;
+        for (pb = 1; pb < 4; pb++)
+            if (sPreliminarRecipe[pb] && (sPreliminarRecipe[pb]->v[0] == 112 || sPreliminarRecipe[pb]->v[0] == 120))
+                sceneActorFrame = 1;
+    }
     int mapping1d = (dispcnt >> 6) & 1;
     int bitmapMode = (dispcnt & 7) >= 3;
     uint16_t mosaic = IO16(0x4C);
