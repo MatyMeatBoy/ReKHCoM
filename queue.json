@@ -380,10 +380,10 @@
     "escena-061": {
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-escena-061",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T20:41:20.899024+00:00",
+      "updated_at": "2026-10-24T22:11:15.987855+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -410,7 +410,7 @@
           "detail": "released: En origin/main el pasillo ya llega completo al borde inferior derecho (nube 2 parece resuelta por cambios posteriores a la revision); la nube 1 (cachito, wall top ~x354-387,y20-38 de 960x270) es ambigua: quedan muescas pequenas en la base de la pared, necesita aclarar con el usuario cual. Requiere captura 3840 y comparacion contra la hija"
         }
       ],
-      "claimed_at": "2026-10-24T20:40:19.648910+00:00"
+      "claimed_at": "2026-10-24T22:11:15.987855+00:00"
     },
     "escena-074": {
       "id": "escena-074",
@@ -1594,7 +1594,7 @@
     "created_at": "2026-10-24T22:09:42.808458+00:00",
     "updated_at": "2026-10-24T22:09:42.808458+00:00"
   },
-  "updated_at": "2026-10-24T22:11:02.653978+00:00",
+  "updated_at": "2026-10-24T22:11:15.987855+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
