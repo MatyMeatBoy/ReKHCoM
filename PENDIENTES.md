@@ -31,7 +31,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-116 | Escena 116 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:18:31.769745+00:00 |
 | escena-117 | Escena 117 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:18:37.923673+00:00 |
 | escena-118 | Escena 118 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:19:06.129508+00:00 |
-| escena-120 | Escena 120 | en_curso | claude-sonnet-w2 | — | — | 2026-10-24T19:19:11.451668+00:00 |
+| escena-120 | Escena 120 | en_curso | claude-sonnet-w2 | claude/arte-w2 | — | 2026-10-24T19:31:46.997024+00:00 |
 | malefica-01 | Maléfica 01 · ala recortada | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:29:59.381947+00:00 |
 | malefica-arena | Maléfica · arena y contexto | en_revision | claude-sonnet-w3 | claude/arte-w3 | — | 2026-10-24T19:29:53.860342+00:00 |
 | oogie-arena | Oogie Boogie · arena | bloqueado | claude-sonnet-w3 | — | — | 2026-10-24T19:30:05.154178+00:00 |
