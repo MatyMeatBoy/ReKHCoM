@@ -373,15 +373,16 @@
     "escena-102": {
       "id": "escena-102",
       "piece": "Escena 102",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T19:17:14.781075+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"b5ee78894f994aa684c59f38def14509\", \"submissions\": [{\"submission\": \"20261024-131106-953533\", \"created\": \"2026-10-24T16:11:06.592604+00:00\", \"image_id\": \"d3b580a4ed584e52805644def7d3f1ad\", \"version\": \"Revisión · Camino extendido en isométrica a ambos lados: su borde trasero (y la curva que sube a la izquierda), su borde delantero,\", \"clouds\": 2, \"cloud_ids\": [\"25a3fda7-a585-4933-9092-2049310ac923\", \"3d9ad7e1-0ed6-4745-b54c-7d95b53b5f97\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131106-953533\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T19:17:14.781075+00:00"
     },
     "escena-112": {
       "id": "escena-112",
@@ -942,7 +943,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:17:09.442899+00:00",
+  "updated_at": "2026-10-24T19:17:14.781075+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
