@@ -885,10 +885,10 @@
     "hd-orden-calidad": {
       "id": "hd-orden-calidad",
       "piece": "Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-funciones",
       "created_at": "2026-10-24T17:20:42.466751+00:00",
-      "updated_at": "2026-10-24T17:23:24.564582+00:00",
+      "updated_at": "2026-10-24T17:23:38.289244+00:00",
       "branch": "claude/hd-orden-calidad",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/63",
       "approval": "Pedido del usuario chat 24/10",
@@ -898,9 +898,15 @@
           "at": "2026-10-24T17:23:15.937731+00:00",
           "owner": "claude-funciones",
           "detail": "test_launcher 11/11"
+        },
+        {
+          "at": "2026-10-24T17:23:38.289244+00:00",
+          "owner": "claude-funciones",
+          "detail": "merged 02219725ca210bb8137f831dd60db0e581218d51"
         }
       ],
-      "claimed_at": "2026-10-24T17:20:49.155749+00:00"
+      "claimed_at": "2026-10-24T17:20:49.155749+00:00",
+      "completed_at": "2026-10-24T17:23:38.289244+00:00"
     }
   },
   "integrator": {
@@ -909,7 +915,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:23:32.186631+00:00"
   },
-  "updated_at": "2026-10-24T17:23:32.193687+00:00",
+  "updated_at": "2026-10-24T17:23:38.289244+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
