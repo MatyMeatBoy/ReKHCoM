@@ -16,7 +16,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-06 | Darkside 06 · Puñetazo | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:30:33.228367+00:00 |
 | darkside-arena | Darkside · arena y contexto | pr_abierto | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | sin aprobacion aun: espera valoracion del usuario en la app | 2026-10-24T19:31:05.340366+00:00 |
 | escena-004 | Escena 004 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:28.290346+00:00 |
-| escena-057 | Escena 057 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:04.945801+00:00 |
+| escena-057 | Escena 057 · integrada | bloqueado | claude-sonnet-w1 | — | — | 2026-10-24T19:33:34.580193+00:00 |
 | escena-061 | Escena 061 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:21.150175+00:00 |
 | escena-074 | Escena 074 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:27.395278+00:00 |
 | escena-081 | Escena 081 | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
