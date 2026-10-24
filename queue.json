@@ -108,12 +108,12 @@
     "visor-paneo": {
       "id": "visor-paneo",
       "piece": "Visor revision: paneo con boton derecho y limites",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:20:10.214368+00:00",
-      "updated_at": "2026-10-24T16:28:48.040505+00:00",
+      "updated_at": "2026-10-24T16:28:54.178497+00:00",
       "branch": "codex/review-right-pan-lane",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/55",
       "approval": "pedido-usuario-20261024",
       "reference": "port/tools/art_review/web",
       "evidence": [
@@ -572,7 +572,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:28:48.040505+00:00",
+  "updated_at": "2026-10-24T16:28:54.178497+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
