@@ -30,10 +30,10 @@
     "tools-cola": {
       "id": "tools-cola",
       "piece": "Toma atomica y bloqueo de integracion",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:21:45.757518+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
       "branch": "codex/art-queue-tools",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/51",
       "approval": "pedido-usuario-20261024",
@@ -43,23 +43,41 @@
           "at": "2026-10-24T16:21:40.742957+00:00",
           "owner": "queue_tools",
           "detail": "5 offline tests passed; claims and integrator CAS races verified; commit 48e6abe44"
+        },
+        {
+          "at": "2026-10-24T16:25:04.486968+00:00",
+          "owner": "queue_tools",
+          "detail": "PR51 merged aedffc4c8e26537c4f48a0738e883246beaeef5f"
         }
       ],
-      "claimed_at": "2026-10-24T16:19:12.745390+00:00"
+      "claimed_at": "2026-10-24T16:19:12.745390+00:00",
+      "completed_at": "2026-10-24T16:25:04.486968+00:00"
     },
     "docs-cola": {
       "id": "docs-cola",
       "piece": "Inventario y protocolo para Claude",
-      "status": "en_curso",
+      "status": "integrado",
       "owner": "queue_docs",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:19:12.745390+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/52",
       "approval": "pedido-usuario-20261024",
       "reference": "PENDIENTES_VIGENTES.md",
-      "evidence": [],
-      "claimed_at": "2026-10-24T16:19:12.745390+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-24T16:25:04.486968+00:00",
+          "owner": "queue_docs",
+          "detail": "PR verificado por root"
+        },
+        {
+          "at": "2026-10-24T16:25:04.486968+00:00",
+          "owner": "queue_docs",
+          "detail": "PR52 merged 6b6b138868e5454f341bb7750e42b795c40b5f46"
+        }
+      ],
+      "claimed_at": "2026-10-24T16:19:12.745390+00:00",
+      "completed_at": "2026-10-24T16:25:04.486968+00:00"
     },
     "escena-110": {
       "id": "escena-110",
@@ -67,11 +85,11 @@
       "status": "en_curso",
       "owner": "art_110",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:19:12.745390+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "branch": "codex/art-110-clouds",
       "pr": null,
       "approval": null,
-      "reference": "PENDIENTES_VIGENTES.md",
+      "reference": "e767407ba71849c18d41033041e74f9d / 20261024-054123-fb2267",
       "evidence": [],
       "claimed_at": "2026-10-24T16:19:12.745390+00:00"
     },
@@ -79,14 +97,20 @@
       "id": "visor-paneo",
       "piece": "Visor revision: paneo con boton derecho y limites",
       "status": "en_curso",
-      "owner": "root",
+      "owner": "queue_tools",
       "created_at": "2026-10-24T16:20:10.214368+00:00",
-      "updated_at": "2026-10-24T16:20:10.214368+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
       "branch": null,
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "port/tools/art_review/web",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T16:25:04.486968+00:00",
+          "owner": "root",
+          "detail": "Handoff explicito del dueño root al carril queue_tools; sin cambios de paneo iniciados; usuario solicita trabajo en carriles."
+        }
+      ],
       "claimed_at": "2026-10-24T16:20:10.214368+00:00"
     },
     "botones-tactiles": {
@@ -116,13 +140,385 @@
       "reference": "envío 20261024-131202-943804",
       "evidence": [],
       "claimed_at": "2026-10-24T16:24:49.620474+00:00"
+    },
+    "botones-editor": {
+      "id": "botones-editor",
+      "piece": "Botones táctiles · editor de posición",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"ca689d6c9b5e41a3a029aab9d345096b\", \"submissions\": [{\"submission\": \"20261024-131133-57e115\", \"created\": \"2026-10-24T16:11:33.348232+00:00\", \"image_id\": \"ca689d6c9b5e41a3a029aab9d345096b\", \"version\": \"v1 · fila Opciones > Mover botones táctiles\", \"clouds\": 1, \"cloud_ids\": [\"48407a5e-ac9e-4cc7-a09c-91324a566ea4\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131133-57e115\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "darkside-06": {
+      "id": "darkside-06",
+      "piece": "Darkside 06 · Puñetazo",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"c498295fb154440b9d231994a434814f\", \"submissions\": [{\"submission\": \"20261024-130718-f3041e\", \"created\": \"2026-10-24T16:07:18.963072+00:00\", \"image_id\": \"ad293ae9c5324daf883db049dd30af46\", \"version\": \"Revisión 6 · El brazo naranja nace donde termina el hombro azul (23 px más arriba), con la costura redibujada y el contorno oscuro de\", \"clouds\": 1, \"cloud_ids\": [\"d0b95f3f-9107-4d93-ab1a-72a12859deb1\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130718-f3041e\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "darkside-arena": {
+      "id": "darkside-arena",
+      "piece": "Darkside · arena y contexto",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"85b593a92f164922966b64436ccf06ab\", \"submissions\": [{\"submission\": \"20261024-053517-3760ea\", \"created\": \"2026-10-24T08:35:18.138480+00:00\", \"image_id\": \"85b593a92f164922966b64436ccf06ab\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"a9c2fc57-3230-4b29-9ba2-e4ed55dd9710\", \"cf381e34-5147-4bc8-9ed2-7dd491f9c8b8\", \"c1979ac2-61ef-411c-a79a-7f9237dde2c8\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053517-3760ea\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-004": {
+      "id": "escena-004",
+      "piece": "Escena 004 · integrada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"22fc4ea176864111880e02b851a58445\", \"submissions\": [{\"submission\": \"20261024-132007-6cb5fe\", \"created\": \"2026-10-24T16:20:07.160578+00:00\", \"image_id\": \"22fc4ea176864111880e02b851a58445\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"c4afbf3a-d8f4-439d-8842-5dfee64215b3\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-132007-6cb5fe\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-057": {
+      "id": "escena-057",
+      "piece": "Escena 057 · integrada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"e49d2f465f9346d28ba013d9a81de938\", \"submissions\": [{\"submission\": \"20261024-131858-65bb72\", \"created\": \"2026-10-24T16:18:58.085051+00:00\", \"image_id\": \"e49d2f465f9346d28ba013d9a81de938\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 6, \"cloud_ids\": [\"48698279-7fda-4f2e-ad18-a969a6d74884\", \"1cf25458-d2e2-4636-b911-6cb43e80c554\", \"3bfbfb61-d07d-414f-91de-c5719a98c680\", \"6017947e-6640-4119-8fd5-d9a66acc9c32\", \"0e4b369f-d0bd-48b6-b0bc-839126eaac54\", \"953d1ce3-808e-45e2-9342-473172f33652\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131858-65bb72\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-061": {
+      "id": "escena-061",
+      "piece": "Escena 061 · integrada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"submissions\": [{\"submission\": \"20261024-131809-942e10\", \"created\": \"2026-10-24T16:18:09.236653+00:00\", \"image_id\": \"f31927d3f7014eb3a51e52fcf7323003\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 2, \"cloud_ids\": [\"cdd2fde6-7989-4806-8d7f-e39ace95d44a\", \"c88c9dea-c19c-4cea-a704-1aea287cb68b\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131809-942e10\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-074": {
+      "id": "escena-074",
+      "piece": "Escena 074 · integrada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"303416c343704456aea87be42f0508bf\", \"submissions\": [{\"submission\": \"20261024-131734-82dad2\", \"created\": \"2026-10-24T16:17:34.567220+00:00\", \"image_id\": \"303416c343704456aea87be42f0508bf\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"6a54075b-093d-43d2-9fdc-26d370de15de\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131734-82dad2\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-081": {
+      "id": "escena-081",
+      "piece": "Escena 081",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"6c6842a887784f77aa0c4795867f6cda\", \"submissions\": [{\"submission\": \"20261024-054647-2e12c3\", \"created\": \"2026-10-24T08:46:48.301243+00:00\", \"image_id\": \"6c6842a887784f77aa0c4795867f6cda\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"39da304e-9908-462a-bd6e-76f2f460b069\", \"2d2a10df-d949-4cb3-b569-8c00b0b29c2b\", \"c9614270-df71-47cc-a535-211681ac8e2e\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054647-2e12c3\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-087": {
+      "id": "escena-087",
+      "piece": "Escena 087",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"78cc05ed39314dc9b88235eca0f3ad1c\", \"submissions\": [{\"submission\": \"20261024-130825-fd09bc\", \"created\": \"2026-10-24T16:08:25.568324+00:00\", \"image_id\": \"a4e8046fa4404186b64fa82106e8c707\", \"version\": \"Revisión · Siguen las estructuras de la sala: la losa de piedra de arriba a la izquierda, el escalón de piedra de abajo en su diago\", \"clouds\": 2, \"cloud_ids\": [\"351e6c56-e343-4a87-b417-0ee50057d149\", \"cc543b72-cc57-4978-827e-8f3d21dd36ac\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130825-fd09bc\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-090": {
+      "id": "escena-090",
+      "piece": "Escena 090",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"0717ed4c3a554005a74694e692dc20f0\", \"submissions\": [{\"submission\": \"20261024-130932-cd374d\", \"created\": \"2026-10-24T16:09:32.502995+00:00\", \"image_id\": \"0551fbab97804de9802ed1b48160e278\", \"version\": \"Revisión · Rejas completas sobre el muro hasta el borde izquierdo; colinas del horizonte seguidas sin escalones (3 colinas = 32 til\", \"clouds\": 5, \"cloud_ids\": [\"95704790-5c8d-4105-8d35-08a512711b5c\", \"39cf5085-7845-47bb-97a6-a54618a17e43\", \"457889ba-b51d-4723-b38e-3024c3648890\", \"974e5120-2850-4555-adae-8258ed56511f\", \"7edf298e-d674-4d36-9989-47556eb91638\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130932-cd374d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-095": {
+      "id": "escena-095",
+      "piece": "Escena 095",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"f3fbf809b7e344bdadc74df3d132977f\", \"submissions\": [{\"submission\": \"20261024-130959-c53dec\", \"created\": \"2026-10-24T16:09:59.707476+00:00\", \"image_id\": \"063184fedd8043a492e2fe4b5ea34b25\", \"version\": \"Revisión · A ambos lados sigue el laberinto detrás de los setos y los setos continúan en su diagonal (con sus arbolitos a la izquie\", \"clouds\": 2, \"cloud_ids\": [\"c97b37ea-0aeb-48ad-a8bc-5f8975e97205\", \"d6b9f5ce-4dc7-45bf-9daa-9f2357f6849b\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-130959-c53dec\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-097": {
+      "id": "escena-097",
+      "piece": "Escena 097",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"31b66c063867439eb236a0a492a64ede\", \"submissions\": [{\"submission\": \"20261024-053021-97caa8\", \"created\": \"2026-10-24T08:30:21.947864+00:00\", \"image_id\": \"31b66c063867439eb236a0a492a64ede\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 1, \"cloud_ids\": [\"a5e3a2c8-8b65-42f7-86d1-22dc373e330a\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053021-97caa8\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-099": {
+      "id": "escena-099",
+      "piece": "Escena 099",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"00f2dd9ba4824a1a8248091663dda777\", \"submissions\": [{\"submission\": \"20261024-131033-00cca4\", \"created\": \"2026-10-24T16:10:33.912974+00:00\", \"image_id\": \"d3e87dca65eb4e9fb10535b3e731419d\", \"version\": \"Revisión · Suelo como Guard Armor: el ajedrezado sigue en perspectiva (casillas medidas en el mapa: anchura que crece con la fila, \", \"clouds\": 1, \"cloud_ids\": [\"bab8281c-e1c9-4e01-b894-a3a05e339e8b\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131033-00cca4\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-102": {
+      "id": "escena-102",
+      "piece": "Escena 102",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"b5ee78894f994aa684c59f38def14509\", \"submissions\": [{\"submission\": \"20261024-131106-953533\", \"created\": \"2026-10-24T16:11:06.592604+00:00\", \"image_id\": \"d3b580a4ed584e52805644def7d3f1ad\", \"version\": \"Revisión · Camino extendido en isométrica a ambos lados: su borde trasero (y la curva que sube a la izquierda), su borde delantero,\", \"clouds\": 2, \"cloud_ids\": [\"25a3fda7-a585-4933-9092-2049310ac923\", \"3d9ad7e1-0ed6-4745-b54c-7d95b53b5f97\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131106-953533\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-112": {
+      "id": "escena-112",
+      "piece": "Escena 112",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"submissions\": [{\"submission\": \"20261024-054012-207689\", \"created\": \"2026-10-24T08:40:13.196096+00:00\", \"image_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 4, \"cloud_ids\": [\"0485a8a5-4a1d-43bd-9d32-29c26b2df5d6\", \"40ef4c05-f677-4ff6-97b8-871488d1b80c\", \"31fcf3cd-d3b9-430f-ae52-956eaa97fe9f\", \"1b8a37dc-7181-4202-840a-ce783a185ebe\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054012-207689\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-115": {
+      "id": "escena-115",
+      "piece": "Escena 115",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.485456+00:00",
+      "updated_at": "2026-10-24T16:25:04.485456+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"db8a052dda2c4b4da6bf0cd8bd67fa91\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"db8a052dda2c4b4da6bf0cd8bd67fa91\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"9339b058-672f-4a82-822c-7ce25ff04c51\", \"7d5b6edc-353d-4295-951c-729eeb878545\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-116": {
+      "id": "escena-116",
+      "piece": "Escena 116",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"e0fa5eb6-cd8a-4917-b254-d58ca869243f\", \"3cb85cdf-ecce-4400-aff2-a18a4f49d7a3\", \"18fa5cec-0c77-4e3e-a5be-a2648882ed8d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-117": {
+      "id": "escena-117",
+      "piece": "Escena 117",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"36884a8a1d154965aac5f8955d59b753\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"36884a8a1d154965aac5f8955d59b753\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 1, \"cloud_ids\": [\"2ec4c3da-edd7-40c1-8f65-f11c159c7e0d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-118": {
+      "id": "escena-118",
+      "piece": "Escena 118",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"813b1467-7fd3-4b61-b772-ef80bd47525f\", \"888b3be3-5e85-45db-807b-d1b69592dbde\", \"afdad54b-8187-4c8a-a07b-fbdaf1540390\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "escena-120": {
+      "id": "escena-120",
+      "piece": "Escena 120",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"e15f20f324a742eaa9b98cde42603751\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"e15f20f324a742eaa9b98cde42603751\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"15dc21aa-8dec-46bf-a706-4a5adcb57b65\", \"35bb5139-c858-4a8e-ae72-d41ab493a1cd\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "malefica-01": {
+      "id": "malefica-01",
+      "piece": "Maléfica 01 · ala recortada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"25aa0ffe25b14be5855a107bd882b6f6\", \"submissions\": [{\"submission\": \"20261024-054906-282e24\", \"created\": \"2026-10-24T08:49:06.727790+00:00\", \"image_id\": \"25aa0ffe25b14be5855a107bd882b6f6\", \"version\": \"V2 · captura de revisión · frame 240\", \"clouds\": 1, \"cloud_ids\": [\"0a14d4f2-3179-4d31-9326-4c2523a110dd\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054906-282e24\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "malefica-arena": {
+      "id": "malefica-arena",
+      "piece": "Maléfica · arena y contexto",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"submissions\": [{\"submission\": \"20261024-053355-5d5bcf\", \"created\": \"2026-10-24T08:33:56.427759+00:00\", \"image_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 0, \"cloud_ids\": [], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053355-5d5bcf\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "oogie-arena": {
+      "id": "oogie-arena",
+      "piece": "Oogie Boogie · arena",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"b7df95116b0543719423d2b29c7aa17f\", \"submissions\": [{\"submission\": \"20261024-055323-3bb655\", \"created\": \"2026-10-24T08:53:24.272947+00:00\", \"image_id\": \"b7df95116b0543719423d2b29c7aa17f\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 4, \"cloud_ids\": [\"dba684a3-e22f-413a-98f7-23bad667c4dd\", \"d4ea5fe4-40a5-447e-8c9d-6aac6680c8bf\", \"5948e8de-8db0-490f-986e-27c6387075e3\", \"8ea1959d-e833-4233-b81b-249548f7dbe0\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-055323-3bb655\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "trickmaster-arena": {
+      "id": "trickmaster-arena",
+      "piece": "Trickmaster · arena",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "{\"family_id\": \"bcf3aec4ee7f40748959a87960d4ed5d\", \"submissions\": [{\"submission\": \"20261024-055415-313327\", \"created\": \"2026-10-24T08:54:15.585062+00:00\", \"image_id\": \"bcf3aec4ee7f40748959a87960d4ed5d\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"1af25b7c-0563-40b4-8871-61383c531251\", \"1ece841c-34b2-44a8-8d6d-039f73542fbb\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-055415-313327\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
+    },
+    "integrar-darkside-01": {
+      "id": "integrar-darkside-01",
+      "piece": "Activar Darkside 01 con honores tras resolver arena/contexto",
+      "status": "bloqueado",
+      "owner": "cola-dependencias",
+      "created_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "reference": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "evidence": [
+        {
+          "at": "2026-10-24T16:25:04.486968+00:00",
+          "owner": "cola-dependencias",
+          "detail": "Receta ya en main; depende de darkside-arena. No declarar activacion global cerrada."
+        }
+      ],
+      "claimed_at": "2026-10-24T16:25:04.486463+00:00"
+    },
+    "catalogo-historico": {
+      "id": "catalogo-historico",
+      "piece": "Catalogar artes modificados desde la primera build",
+      "status": "en_curso",
+      "owner": "queue_docs",
+      "created_at": "2026-10-24T16:25:04.486968+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "pedido-usuario-20261024",
+      "reference": "App de revision y LOGICA_APROBADOS.md",
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:25:04.486968+00:00"
+    },
+    "issue-049": {
+      "id": "issue-049",
+      "piece": "Auditar issue49 Steam Deck Gaming Mode y arreglos existentes",
+      "status": "en_curso",
+      "owner": "root",
+      "created_at": "2026-10-24T16:25:04.486968+00:00",
+      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "pedido-usuario-20261024",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:25:04.486968+00:00"
     }
   },
   "integrator": {
     "owner": "root",
     "token": "d7870194469762e07918c412bdba78bee16d51a99dd01173",
     "created_at": "2026-10-24T16:19:12.746926+00:00",
-    "updated_at": "2026-10-24T16:19:12.746926+00:00"
+    "updated_at": "2026-10-24T16:25:04.486968+00:00"
   },
-  "updated_at": "2026-10-24T16:24:49.620474+00:00"
+  "updated_at": "2026-10-24T16:25:04.486968+00:00",
+  "recoveries": [
+    {
+      "at": "2026-10-24T16:25:04.486968+00:00",
+      "actor": "root",
+      "operation": "recover-task",
+      "task": "visor-paneo",
+      "from_owner": "root",
+      "to_owner": "queue_tools",
+      "expected_commit": "9ccf27dad63a523b61cb232ae88351c543568c29",
+      "evidence": "Handoff explicito del dueño root al carril queue_tools; sin cambios de paneo iniciados; usuario solicita trabajo en carriles."
+    }
+  ]
 }
