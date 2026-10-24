@@ -509,15 +509,16 @@
     "trickmaster-arena": {
       "id": "trickmaster-arena",
       "piece": "Trickmaster · arena",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T19:17:47.815046+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"bcf3aec4ee7f40748959a87960d4ed5d\", \"submissions\": [{\"submission\": \"20261024-055415-313327\", \"created\": \"2026-10-24T08:54:15.585062+00:00\", \"image_id\": \"bcf3aec4ee7f40748959a87960d4ed5d\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"1af25b7c-0563-40b4-8871-61383c531251\", \"1ece841c-34b2-44a8-8d6d-039f73542fbb\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-055415-313327\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T19:17:47.815046+00:00"
     },
     "integrar-darkside-01": {
       "id": "integrar-darkside-01",
@@ -948,7 +949,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:17:42.462804+00:00",
+  "updated_at": "2026-10-24T19:17:47.815046+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
