@@ -53,4 +53,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/61 | Pedido del usuario en chat 24/10 | 2026-10-24T17:09:15.351516+00:00 |
 | hd-orden-calidad | Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro) | pr_abierto | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/63 | Pedido del usuario chat 24/10 | 2026-10-24T17:23:24.564582+00:00 |
 
-Integrador: claude-integrador (ocupado; 2026-10-24T17:09:08.957912+00:00)
+Integrador: claude-integrador (ocupado; 2026-10-24T17:23:32.186631+00:00)
