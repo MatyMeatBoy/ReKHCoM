@@ -326,15 +326,21 @@
     "escena-074": {
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w1",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:18:27.395278+00:00",
+      "updated_at": "2026-10-24T19:33:53.864882+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"303416c343704456aea87be42f0508bf\", \"submissions\": [{\"submission\": \"20261024-131734-82dad2\", \"created\": \"2026-10-24T16:17:34.567220+00:00\", \"image_id\": \"303416c343704456aea87be42f0508bf\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"6a54075b-093d-43d2-9fdc-26d370de15de\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131734-82dad2\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:33:53.864882+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "Pedido de buscar version mejorada previa en la app: no se hizo. Receta PortSceneWideSource(74) usa periodo 20x10 para bg2. Captura base build/w1/074-base.png."
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:27.395278+00:00"
     },
     "escena-081": {
@@ -1074,7 +1080,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:33:47.791248+00:00",
+  "updated_at": "2026-10-24T19:33:53.864882+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
