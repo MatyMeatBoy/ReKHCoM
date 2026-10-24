@@ -108,10 +108,10 @@
     "visor-paneo": {
       "id": "visor-paneo",
       "piece": "Visor revision: paneo con boton derecho y limites",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "queue_tools",
       "created_at": "2026-10-24T16:20:10.214368+00:00",
-      "updated_at": "2026-10-24T16:28:54.178497+00:00",
+      "updated_at": "2026-10-24T16:34:21.231726+00:00",
       "branch": "codex/review-right-pan-lane",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/55",
       "approval": "pedido-usuario-20261024",
@@ -126,9 +126,15 @@
           "at": "2026-10-24T16:28:48.040505+00:00",
           "owner": "queue_tools",
           "detail": "Chromium offline passed right drag6modes, bounds, cleanup, legacy gestures, zero data writes; commit d96c134eb"
+        },
+        {
+          "at": "2026-10-24T16:34:21.231726+00:00",
+          "owner": "queue_tools",
+          "detail": "PR55 merged ff11f2edffb18bb09a04d64493e52fbf50e82e75"
         }
       ],
-      "claimed_at": "2026-10-24T16:20:10.214368+00:00"
+      "claimed_at": "2026-10-24T16:20:10.214368+00:00",
+      "completed_at": "2026-10-24T16:34:21.231726+00:00"
     },
     "botones-tactiles": {
       "id": "botones-tactiles",
@@ -565,10 +571,10 @@
     "entrada-agentes": {
       "id": "entrada-agentes",
       "piece": "Entrada automatica Claude/Codex sin contexto para cola compartida",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "root",
       "created_at": "2026-10-24T16:28:44.261620+00:00",
-      "updated_at": "2026-10-24T16:31:30.104663+00:00",
+      "updated_at": "2026-10-24T16:34:21.232737+00:00",
       "branch": "codex/agent-entry",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/56",
       "approval": "pedido-usuario-20261024",
@@ -578,18 +584,47 @@
           "at": "2026-10-24T16:31:30.103996+00:00",
           "owner": "root",
           "detail": "AGENTS y CLAUDE enlazanprotocolo; check_sources ydiffcheckok"
+        },
+        {
+          "at": "2026-10-24T16:34:21.232737+00:00",
+          "owner": "root",
+          "detail": "PR56 merged 0daa1be1062cafc8a0f35b60cfbe05aa81d704a5"
         }
       ],
-      "claimed_at": "2026-10-24T16:29:09.748516+00:00"
+      "claimed_at": "2026-10-24T16:29:09.748516+00:00",
+      "completed_at": "2026-10-24T16:34:21.232737+00:00"
+    },
+    "editor-tiles-backend": {
+      "id": "editor-tiles-backend",
+      "piece": "Editor avanzado: catalogo nativo tiles sprites y proyectos",
+      "status": "en_curso",
+      "owner": "queue_tools",
+      "created_at": "2026-10-24T16:34:21.232737+00:00",
+      "updated_at": "2026-10-24T16:34:21.233245+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "pedido-usuario-20261024",
+      "reference": "Editor tiles modding solicitado en chat",
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:34:21.233245+00:00"
+    },
+    "editor-tiles-ui": {
+      "id": "editor-tiles-ui",
+      "piece": "Editor avanzado: lienzo herramientas y galeria por escena/mundo/global",
+      "status": "en_curso",
+      "owner": "root",
+      "created_at": "2026-10-24T16:34:21.233245+00:00",
+      "updated_at": "2026-10-24T16:34:21.233245+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "pedido-usuario-20261024",
+      "reference": "Editor tiles modding solicitado en chat",
+      "evidence": [],
+      "claimed_at": "2026-10-24T16:34:21.233245+00:00"
     }
   },
-  "integrator": {
-    "owner": "root",
-    "token": "ef4a8dbe1fbd62c7b7635ce45a38397da52ee148ecbc90cd",
-    "created_at": "2026-10-24T16:31:30.104663+00:00",
-    "updated_at": "2026-10-24T16:31:30.104663+00:00"
-  },
-  "updated_at": "2026-10-24T16:33:42.306071+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-24T16:34:21.233245+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

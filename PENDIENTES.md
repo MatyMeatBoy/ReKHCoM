@@ -9,7 +9,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | tools-cola | Toma atomica y bloqueo de integracion | integrado | queue_tools | https://github.com/MatyMeatBoy/ReKHCoM/pull/51 | pedido-usuario-20261024 | 2026-10-24T16:25:04.486968+00:00 |
 | docs-cola | Inventario y protocolo para Claude | integrado | queue_docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/52 | pedido-usuario-20261024 | 2026-10-24T16:25:04.486968+00:00 |
 | escena-110 | Escena 110: pilares y patrones | integrado | art_110 | https://github.com/MatyMeatBoy/ReKHCoM/pull/53 | Preliminar solicitada por usuario; hija179b6da22e5c4bd39181d5ab14d7b9d3 pendiente humana, apagada para jugadores | 2026-10-24T16:27:50.380235+00:00 |
-| visor-paneo | Visor revision: paneo con boton derecho y limites | pr_abierto | queue_tools | https://github.com/MatyMeatBoy/ReKHCoM/pull/55 | pedido-usuario-20261024 | 2026-10-24T16:28:54.178497+00:00 |
+| visor-paneo | Visor revision: paneo con boton derecho y limites | integrado | queue_tools | https://github.com/MatyMeatBoy/ReKHCoM/pull/55 | pedido-usuario-20261024 | 2026-10-24T16:34:21.231726+00:00 |
 | botones-tactiles | Botones táctiles · editor de posición | bloqueado | claude-funciones | — | — | 2026-10-24T16:26:31.887864+00:00 |
 | primer-arranque | Primer arranque · elección de modo con vista previa | en_curso | claude-funciones | — | — | 2026-10-24T16:24:49.620474+00:00 |
 | botones-editor | Botones táctiles · editor de posición | en_curso | claude-funciones | — | — | 2026-10-24T16:26:26.894729+00:00 |
@@ -40,6 +40,8 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-historico | Catalogar artes modificados desde la primera build | pr_abierto | queue_docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/57 | pedido-usuario-20261024 | 2026-10-24T16:33:42.306071+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | en_curso | art_110 | — | pedido-usuario-20261024 | 2026-10-24T16:27:31.992229+00:00 |
 | logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | pr_abierto | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/54 | Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo) | 2026-10-24T16:28:10.510424+00:00 |
-| entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | pr_abierto | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:31:30.104663+00:00 |
+| entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | integrado | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:34:21.232737+00:00 |
+| editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | queue_tools | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
+| editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | root | — | pedido-usuario-20261024 | 2026-10-24T16:34:21.233245+00:00 |
 
-Integrador: root (ocupado; 2026-10-24T16:31:30.104663+00:00)
+Integrador: libre
