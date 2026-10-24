@@ -421,12 +421,18 @@
       "status": "en_curso",
       "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:18:10.495489+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T19:31:11.205666+00:00",
+      "branch": "claude/arte-w2",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"submissions\": [{\"submission\": \"20261024-054012-207689\", \"created\": \"2026-10-24T08:40:13.196096+00:00\", \"image_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 4, \"cloud_ids\": [\"0485a8a5-4a1d-43bd-9d32-29c26b2df5d6\", \"40ef4c05-f677-4ff6-97b8-871488d1b80c\", \"31fcf3cd-d3b9-430f-ae52-956eaa97fe9f\", \"1b8a37dc-7181-4202-840a-ce783a185ebe\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054012-207689\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:31:11.205666+00:00",
+          "owner": "claude-sonnet-w2",
+          "detail": "PR #71 habilita receta y oculta actores fuera de camara; nubes de patron/estructura sin resolver; sin hija subida"
+        }
+      ],
       "claimed_at": "2026-10-24T19:18:10.495489+00:00"
     },
     "escena-115": {
@@ -1008,7 +1014,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:31:05.340366+00:00",
+  "updated_at": "2026-10-24T19:31:11.205666+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
