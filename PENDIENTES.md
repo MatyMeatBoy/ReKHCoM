@@ -53,7 +53,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/61 | Pedido del usuario en chat 24/10 | 2026-10-24T17:09:15.351516+00:00 |
 | hd-orden-calidad | Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/63 | Pedido del usuario chat 24/10 | 2026-10-24T17:23:38.289244+00:00 |
 | savestates-trucos | Savestates v2.0: F8 cargar, apagados por defecto, en Trucos con aviso, sin logros | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/65 | Pedido del usuario chat 24/10 | 2026-10-24T17:41:05.159923+00:00 |
-| diario-entradas | Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado) | en_curso | r2a | — | — | 2026-10-24T19:52:01.927662+00:00 |
+| diario-entradas | Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado) | pendiente | — | — | — | 2026-10-24T20:26:01.752077+00:00 |
 | diario-subentradas | Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal | pendiente | — | — | — | 2026-10-24T19:47:09.121895+00:00 |
 
 Integrador: claude-integrador (ocupado; 2026-10-24T19:35:47.688714+00:00)
