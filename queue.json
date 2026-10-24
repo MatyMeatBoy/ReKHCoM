@@ -492,15 +492,21 @@
     "malefica-01": {
       "id": "malefica-01",
       "piece": "Maléfica 01 · ala recortada",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-sonnet-w3",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T19:17:31.604424+00:00",
+      "updated_at": "2026-10-24T19:29:59.381947+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"25aa0ffe25b14be5855a107bd882b6f6\", \"submissions\": [{\"submission\": \"20261024-054906-282e24\", \"created\": \"2026-10-24T08:49:06.727790+00:00\", \"image_id\": \"25aa0ffe25b14be5855a107bd882b6f6\", \"version\": \"V2 · captura de revisión · frame 240\", \"clouds\": 1, \"cloud_ids\": [\"0a14d4f2-3179-4d31-9326-4c2523a110dd\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054906-282e24\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T19:29:59.381947+00:00",
+          "owner": "claude-sonnet-w3",
+          "detail": "Pide terminar el sprite de Malefica hasta la cola (buscar en ROM o dibujar pixel art): arte nuevo grande, necesita decision visual/estudio aislado estilo Darkside. Sin tocar."
+        }
+      ],
       "claimed_at": "2026-10-24T19:17:31.604424+00:00"
     },
     "malefica-arena": {
@@ -980,7 +986,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:29:53.860342+00:00",
+  "updated_at": "2026-10-24T19:29:59.381947+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
