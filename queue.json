@@ -266,10 +266,10 @@
     "escena-004": {
       "id": "escena-004",
       "piece": "Escena 004 · integrada",
-      "status": "en_curso",
-      "owner": "r2b",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:51:34.190643+00:00",
+      "updated_at": "2026-10-24T20:25:45.629365+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -284,6 +284,11 @@
           "at": "2026-10-24T19:43:42.689763+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
+        },
+        {
+          "at": "2026-10-24T20:25:45.629365+00:00",
+          "owner": "r2b",
+          "detail": "released: worker murio por limite de sesion 24/10 16:55; liberado por coordinador"
         }
       ],
       "claimed_at": "2026-10-24T19:51:34.190643+00:00"
@@ -1210,7 +1215,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:52:14.991315+00:00",
+  "updated_at": "2026-10-24T20:25:45.629365+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
