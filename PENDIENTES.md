@@ -17,7 +17,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-arena | Darkside · arena y contexto | en_curso | claude-sonnet-w3 | — | — | 2026-10-24T19:17:26.534499+00:00 |
 | escena-004 | Escena 004 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:17:59.492616+00:00 |
 | escena-057 | Escena 057 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:04.945801+00:00 |
-| escena-061 | Escena 061 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
+| escena-061 | Escena 061 · integrada | en_curso | claude-sonnet-w1 | — | — | 2026-10-24T19:18:21.150175+00:00 |
 | escena-074 | Escena 074 · integrada | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | escena-081 | Escena 081 | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
 | escena-087 | Escena 087 | pendiente | — | — | — | 2026-10-24T16:25:04.485456+00:00 |
