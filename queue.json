@@ -1469,8 +1469,8 @@
       "status": "en_curso",
       "owner": "codex-arte",
       "created_at": "2026-10-24T21:29:26.870726+00:00",
-      "updated_at": "2026-10-24T21:32:38.631001+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T21:32:45.583859+00:00",
+      "branch": "codex/mapa-camara-suavidad",
       "pr": null,
       "approval": null,
       "reference": "Usuario24/10: leve avance poco natural caminando; combate más suave; comparar frame pacing/cámara/redondeo",
@@ -1484,7 +1484,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T21:32:38.631001+00:00",
+  "updated_at": "2026-10-24T21:32:45.583859+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
