@@ -452,15 +452,16 @@
     "escena-118": {
       "id": "escena-118",
       "piece": "Escena 118",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-sonnet-w2",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T16:25:04.486463+00:00",
+      "updated_at": "2026-10-24T19:19:06.129508+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"813b1467-7fd3-4b61-b772-ef80bd47525f\", \"888b3be3-5e85-45db-807b-d1b69592dbde\", \"afdad54b-8187-4c8a-a07b-fbdaf1540390\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-24T19:19:06.129508+00:00"
     },
     "escena-120": {
       "id": "escena-120",
@@ -960,7 +961,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T17:40:58.494100+00:00"
   },
-  "updated_at": "2026-10-24T19:18:54.650423+00:00",
+  "updated_at": "2026-10-24T19:19:06.129508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
