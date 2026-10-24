@@ -39,6 +39,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
 | catalogo-historico | Catalogar artes modificados desde la primera build | en_curso | queue_docs | codex/catalogo-historico | pedido-usuario-20261024 | 2026-10-24T16:25:44.880147+00:00 |
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | en_curso | art_110 | — | pedido-usuario-20261024 | 2026-10-24T16:27:31.992229+00:00 |
-| logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | en_curso | claude-funciones | — | — | 2026-10-24T16:26:04.132955+00:00 |
+| logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | listo_pr | claude-funciones | claude/logica-aprobados | Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo) | 2026-10-24T16:28:05.349434+00:00 |
 
 Integrador: libre
