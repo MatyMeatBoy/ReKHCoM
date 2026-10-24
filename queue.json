@@ -82,15 +82,21 @@
     "escena-110": {
       "id": "escena-110",
       "piece": "Escena 110: pilares y patrones",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "art_110",
       "created_at": "2026-10-24T16:19:12.745390+00:00",
-      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "updated_at": "2026-10-24T16:27:31.992229+00:00",
       "branch": "codex/art-110-clouds",
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/53",
+      "approval": "Preliminar solicitada por usuario; hija179b6da22e5c4bd39181d5ab14d7b9d3 pendiente humana, apagada para jugadores",
       "reference": "e767407ba71849c18d41033041e74f9d / 20261024-054123-fb2267",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T16:27:31.992229+00:00",
+          "owner": "art_110",
+          "detail": "24/24EU; check_sources; padreSHA y2nubes verificados"
+        }
+      ],
       "claimed_at": "2026-10-24T16:19:12.745390+00:00"
     },
     "visor-paneo": {
@@ -504,14 +510,20 @@
       "id": "issue-049",
       "piece": "Auditar issue49 Steam Deck Gaming Mode y arreglos existentes",
       "status": "en_curso",
-      "owner": "root",
+      "owner": "art_110",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T16:25:04.486968+00:00",
+      "updated_at": "2026-10-24T16:27:31.992229+00:00",
       "branch": null,
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-24T16:27:31.992229+00:00",
+          "owner": "root",
+          "detail": "Usuario ordena arreglar49 y revisarProton; root traspasa auditoria+fix a art_110 tras terminar escena110."
+        }
+      ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
     },
     "logica-aprobados": {
@@ -535,7 +547,7 @@
     "created_at": "2026-10-24T16:19:12.746926+00:00",
     "updated_at": "2026-10-24T16:25:04.486968+00:00"
   },
-  "updated_at": "2026-10-24T16:26:31.888370+00:00",
+  "updated_at": "2026-10-24T16:27:31.992229+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -546,6 +558,16 @@
       "to_owner": "queue_tools",
       "expected_commit": "9ccf27dad63a523b61cb232ae88351c543568c29",
       "evidence": "Handoff explicito del dueño root al carril queue_tools; sin cambios de paneo iniciados; usuario solicita trabajo en carriles."
+    },
+    {
+      "at": "2026-10-24T16:27:31.992229+00:00",
+      "actor": "root",
+      "operation": "recover-task",
+      "task": "issue-049",
+      "from_owner": "root",
+      "to_owner": "art_110",
+      "expected_commit": "95eab6dbeb11a23a08cc1cf0467f8ebc5432e4f3",
+      "evidence": "Usuario ordena arreglar49 y revisarProton; root traspasa auditoria+fix a art_110 tras terminar escena110."
     }
   ]
 }
