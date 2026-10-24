@@ -77,6 +77,8 @@ class ReviewTest(unittest.TestCase):
         try:
             state=json.load(urllib.request.urlopen(url+'/api/state'))
             self.assertEqual(state['assets'][0]['id'],self.a['id'])
+            self.assertEqual(state['app_build'],state['disk_build'])
+            self.assertEqual(len(state['app_build']),20)
             request=urllib.request.Request(url+'/api/save',data=json.dumps(self.a).encode(),headers={'X-Art-Review':'local','Origin':'https://example.com'})
             with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen(request)
             self.assertEqual(error.exception.code,403)

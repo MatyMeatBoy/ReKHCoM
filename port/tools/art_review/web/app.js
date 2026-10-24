@@ -1,6 +1,17 @@
 const $ = id => document.getElementById(id);
 let assets = [], approvals = [], current = null, mode = 'draw', start = null, draft = null, editing = null, selected = null;
 let historical=false, chosenVerdict='pending';
+let followLatest=true, loadedBuild=null, pendingUpdate=null, checkingUpdate=false;
+let libraryTab='pending';
+const deskTop=document.querySelector('.workspace-top'),deskToolbar=document.querySelector('.toolbar');
+function positionDeskControls(){
+  const inSidebar=window.innerWidth>1000&&!document.body.classList.contains('focus-mode');
+  if(inSidebar){$('deskControls').append(deskTop,deskToolbar);document.body.classList.add('side-controls');}
+  else{const w=document.querySelector('.workspace');w.insertBefore(deskTop,$('approvalInfo'));w.insertBefore(deskToolbar,$('updates'));document.body.classList.remove('side-controls');}
+  if(window.innerWidth<=760||document.body.classList.contains('focus-mode'))document.querySelector('.workspace').insertBefore($('libraryTabs'),deskTop);
+  else document.querySelector('.library').insertBefore($('libraryTabs'),$('searchPieces'));
+}
+positionDeskControls();
 let scale = 1, saveChain = Promise.resolve(), changed = false, generalTimer, lastPath = '', fitMode = true;
 const labels = {pending:'Pendiente de revisión', changes_requested:'Necesita mejoras', approved:'Aprobado', honors:'★ Aprobado con honores'};
 const categories = {general:'General', silhouette:'Silueta / anatomía', seam:'Corte / unión', tiles:'Tiles', palette:'Color / luz', perspective:'Perspectiva', provenance:'Procedencia', app:'Aplicación'};
@@ -10,19 +21,47 @@ async function api(path, data) {
   const result = await response.json(); if (!response.ok) throw Error(result.error || 'No se pudo guardar'); return result;
 }
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+const revisionNav=el('div','revision-nav'),revisionLabel=el('label','','Revisión'),revisionPicker=el('select'),previousRevision=el('button','','←'),nextRevision=el('button','','→');
+revisionPicker.id='revisionPicker';revisionPicker.setAttribute('aria-label','Revisión de la pieza');previousRevision.setAttribute('aria-label','Revisión anterior');nextRevision.setAttribute('aria-label','Revisión siguiente');revisionLabel.append(revisionPicker);revisionNav.append(previousRevision,revisionLabel,nextRevision);$('title').after(revisionNav);
+function pieceVersions(){const family=approvals.find(f=>f.version_ids.includes(current?.id));return family?family.version_ids.map(id=>assets.find(a=>a.id===id)).filter(Boolean):current?[current]:[];}
+function showRevisions(){
+  const versions=pieceVersions();revisionPicker.replaceChildren();
+  for(const [i,a] of versions.entries()){const option=el('option','',`R${i+1} · ${a.version} · ${a.annotations.length} nube(s)`);option.value=a.id;option.selected=a.id===current.id;revisionPicker.append(option);}
+  const index=versions.findIndex(a=>a.id===current.id);previousRevision.disabled=index<=0;nextRevision.disabled=index>=versions.length-1;
+}
+revisionPicker.onchange=()=>choose(revisionPicker.value);
+previousRevision.onclick=()=>{const list=pieceVersions(),i=list.findIndex(a=>a.id===current.id);if(i>0)choose(list[i-1].id);};
+nextRevision.onclick=()=>{const list=pieceVersions(),i=list.findIndex(a=>a.id===current.id);if(i<list.length-1)choose(list[i+1].id);};
 function gallery() {
   $('gallery').replaceChildren();
   $('assetPicker').replaceChildren();
-  for (const a of assets) {
-    const option=el('option','',a.title+' · '+a.version);option.value=a.id;option.selected=a.id===current?.id;$('assetPicker').append(option);
-    const button = el('button','asset' + (a.id === current?.id ? ' active' : ''));
-    const img = el('img'); img.src = a.image_url; img.alt = ''; button.append(img,el('strong','',a.title),el('small',a.status==='honors'?'honors':'',labels[a.status]),el('small','',a.version));
-    button.onclick = () => choose(a.id); $('gallery').append(button);
+  const byId=new Map(assets.map(a=>[a.id,a])),groups=new Map();
+  for(const a of assets){let root=a;const seen=new Set();while(root.parent_id&&byId.has(root.parent_id)&&!seen.has(root.id)){seen.add(root.id);root=byId.get(root.parent_id);}if(!groups.has(root.id))groups.set(root.id,{root,versions:[]});groups.get(root.id).versions.push(a);}
+  const search=$('searchPieces').value.trim().toLocaleLowerCase('es');let total=0;
+  for (const {root,versions} of groups.values()) {
+    const last=versions.at(-1),family=approvals.find(f=>f.family_id===root.id);
+    const a=libraryTab==='accepted'?byId.get(family?.approved_version):(['pending','changes_requested'].includes(last.status)?last:null);
+    if(!a||search&&!(`${root.title} ${a.version}`).toLocaleLowerCase('es').includes(search))continue;total++;
+    const option=el('option','',root.title+' · '+a.version);option.value=a.id;option.selected=a.id===current?.id;$('assetPicker').append(option);
+    const button = el('button','asset' + (versions.some(v=>v.id===current?.id) ? ' active' : ''));
+    const img = el('img'); img.src = a.image_url;img.loading='lazy';img.alt = ''; button.append(img,el('strong','',root.title),el('small',a.status==='honors'?'honors':'',labels[a.status]),el('small','',a.version),el('small','',versions.length+' revisión(es) · ver Historial'));
+    button.onclick = () => choose(a.id,{follow:libraryTab==='pending'}); $('gallery').append(button);
   }
+  if(current&&!Array.from($('assetPicker').options).some(o=>o.value===current.id)){
+    const pinned=el('option','',`En revisión: ${current.title} · ${labels[current.status]} (fuera del filtro)`);pinned.value=current.id;pinned.selected=true;$('assetPicker').prepend(pinned);
+  }
+  if(!total)$('gallery').append(el('p','subtle','No hay piezas en esta pestaña.'));
+  $('tabPending').setAttribute('aria-selected',String(libraryTab==='pending'));$('tabAccepted').setAttribute('aria-selected',String(libraryTab==='accepted'));
 }
-async function choose(id) {
+function setLibraryTab(value){libraryTab=value;gallery();}
+$('tabPending').onclick=()=>setLibraryTab('pending');$('tabAccepted').onclick=()=>setLibraryTab('accepted');$('searchPieces').oninput=gallery;
+async function choose(id, options={}) {
   try { await flushGeneral(); await saveChain; } catch(e) { return toast(e.message); }
   current = assets.find(a => a.id === id); selected = null;
+  libraryTab=['approved','honors'].includes(current.status)?'accepted':'pending';
+  followLatest=options.follow===true;
+  const address=new URL(location.href);address.searchParams.set('image',id);address.searchParams.delete('latest');history.replaceState(null,'',address);
+  if(followLatest)address.searchParams.delete('view');else address.searchParams.set('view','history');history.replaceState(null,'',address);
   historical=false;$('historyBanner').hidden=true;
   for(const k of ['status','general','draw','submit','rate'])$(k).disabled=false;
   localStorage.setItem('atlas-selected', id);
@@ -34,7 +73,7 @@ async function choose(id) {
   $('empty').hidden = true; $('paper').hidden = false;
   $('art').src = current.image_url; $('art').alt = current.title;
   $('overlay').setAttribute('viewBox',`0 0 ${current.width} ${current.height}`);
-  gallery(); renderNotes(); fit(); showApproval(); $('saved').textContent = 'Guardado en este PC';
+  gallery(); renderNotes(); fit(); showApproval(); showRevisions(); $('saved').textContent = 'Guardado en este PC';
 }
 function showApproval(){
   const family=approvals.find(f=>f.version_ids.includes(current?.id));
@@ -46,7 +85,7 @@ async function updateRegistry(){const state=await api('/api/state');approvals=st
 function resize() {
   if (!current) return;
   $('paper').style.width = current.width * scale + 'px'; $('paper').style.height = current.height * scale + 'px';
-  $('zoom').value = scale * 100; $('zoomValue').textContent = Math.round(scale * 100) + '%'; renderClouds();
+  $('zoom').value = scale * 100; $('zoomValue').textContent = Math.round(scale * 100) + '%';$('zoomNumber').value=Math.round(scale*100); renderClouds();
 }
 function fit() { if (!current) return; fitMode=true; scale = Math.max(.03,Math.min(($('viewport').clientWidth - 24) / current.width, ($('viewport').clientHeight - 24) / current.height, 4)); resize(); $('viewport').scrollTo(0,0); }
 function zoomTo(value, anchor) {
@@ -54,14 +93,23 @@ function zoomTo(value, anchor) {
   const viewport=$('viewport'),before=$('paper').getBoundingClientRect(),vr=viewport.getBoundingClientRect();
   const p=anchor||{x:vr.left+viewport.clientWidth/2,y:vr.top+viewport.clientHeight/2};
   const px=(p.x-before.left)/scale,py=(p.y-before.top)/scale;
-  scale=Math.max(.05,Math.min(8,value));resize();
+  scale=Math.max(.05,Math.min(32,value));resize();
   const after=$('paper').getBoundingClientRect();viewport.scrollLeft+=after.left+px*scale-p.x;viewport.scrollTop+=after.top+py*scale-p.y;
 }
 $('fit').onclick = fit; $('zoom').oninput = () => zoomTo(Number($('zoom').value)/100);
-$('actual').onclick=()=>zoomTo(1);$('minus').onclick=()=>zoomTo(scale/1.2);$('plus').onclick=()=>zoomTo(scale*1.2);
+$('zoom').max='3200';
+const zoomNumber=el('input');zoomNumber.id='zoomNumber';zoomNumber.type='number';zoomNumber.min='5';zoomNumber.max='3200';zoomNumber.setAttribute('aria-label','Zoom en porcentaje');$('zoomValue').before(zoomNumber);$('zoomValue').hidden=true;zoomNumber.onchange=()=>zoomTo(Number(zoomNumber.value)/100);
+const fitWidth=el('button','','Ancho');fitWidth.id='fitWidth';$('fit').after(fitWidth);fitWidth.onclick=()=>zoomTo(($('viewport').clientWidth-24)/current.width);
+$('actual').onclick=()=>zoomTo(1);$('minus').onclick=()=>zoomTo(scale/1.5);$('plus').onclick=()=>zoomTo(scale*1.5);
 $('viewport').addEventListener('wheel',e=>{if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();zoomTo(scale*Math.exp(-e.deltaY*.004),{x:e.clientX,y:e.clientY});},{passive:false});
-window.addEventListener('resize', ()=>{if(fitMode)fit();else resize();});
-$('focus').onclick=()=>{document.body.classList.toggle('focus-mode');$('focus').textContent=document.body.classList.contains('focus-mode')?'Restaurar paneles ⛶':'Ampliar mesa ⛶';fit();};
+window.addEventListener('resize', ()=>{positionDeskControls();if(fitMode)fit();else resize();});
+$('focus').onclick=()=>{document.body.classList.toggle('focus-mode');positionDeskControls();$('focus').textContent=document.body.classList.contains('focus-mode')?'Restaurar paneles ⛶':'Ampliar mesa ⛶';fit();};
+let spaceHeld=false,pan=null;
+window.addEventListener('keydown',e=>{if(e.code==='Space'&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(document.activeElement?.tagName)){spaceHeld=true;e.preventDefault();}});
+window.addEventListener('keyup',e=>{if(e.code==='Space')spaceHeld=false;});window.addEventListener('blur',()=>{spaceHeld=false;pan=null;});
+$('viewport').addEventListener('pointerdown',e=>{if(e.button===1||(spaceHeld&&e.button===0)){e.preventDefault();e.stopPropagation();pan={x:e.clientX,y:e.clientY,left:$('viewport').scrollLeft,top:$('viewport').scrollTop};$('viewport').setPointerCapture(e.pointerId);}},true);
+$('viewport').addEventListener('pointermove',e=>{if(pan){$('viewport').scrollLeft=pan.left+pan.x-e.clientX;$('viewport').scrollTop=pan.top+pan.y-e.clientY;}});
+$('viewport').addEventListener('pointerup',()=>pan=null);$('viewport').addEventListener('pointercancel',()=>pan=null);
 $('showNotes').onclick=()=>document.body.classList.toggle('notes-open');$('closeNotes').onclick=()=>document.body.classList.remove('notes-open');
 $('assetPicker').onchange=()=>choose($('assetPicker').value);
 $('refresh').onclick=async()=>{try{await flushGeneral();await saveChain;const state=await api('/api/state');assets=state.assets;approvals=state.approvals||[];await choose(current?.id||assets[0].id);toast('Versiones actualizadas');}catch(e){toast(e.message);}};
@@ -140,7 +188,7 @@ function persist() {
     const latest=assets.find(a=>a.id===snapshot.id);snapshot.revision=latest.revision;
     const saved=await api('/api/save',snapshot);assets[assets.findIndex(a=>a.id===saved.id)]=saved;
     if(current?.id===saved.id)current.revision=saved.revision;
-    changed=false;gallery();await updateRegistry();$('saved').textContent='Guardado en este PC';return saved;
+    changed=false;await updateRegistry();libraryTab=['approved','honors'].includes(current.status)?'accepted':'pending';gallery();showRevisions();$('saved').textContent='Guardado en este PC';return saved;
   });
   saveChain=task;task.catch(e=>{$('saved').textContent='Error al guardar';toast(e.message+' No cierres esta página.');});return task;
 }
@@ -202,4 +250,51 @@ $('history').onclick=async()=>{
   }catch(e){toast(e.message);}
 };
 $('closeHistory').onclick=()=>$('historyDialog').close();$('backLive').onclick=()=>choose(current.id);
-api('/api/state').then(state=>{assets=state.assets;approvals=state.approvals||[];const requested=new URLSearchParams(location.search).get('image');if(assets.length)choose(assets.find(a=>a.id===(requested||localStorage.getItem('atlas-selected')))?.id||assets[0].id);else{$('empty').hidden=false;$('paper').hidden=true;$('saved').textContent='Listo para importar';}}).catch(e=>toast(e.message));
+function latestDescendant(id, list=assets){
+  const descendants=new Set([id]);let grew=true;
+  while(grew){grew=false;for(const a of list)if(descendants.has(a.parent_id)&&!descendants.has(a.id)){descendants.add(a.id);grew=true;}}
+  return list.filter(a=>descendants.has(a.id)).at(-1)?.id||id;
+}
+function safeToUpdate(){return !historical&&!changed&&!generalTimer&&!start&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);}
+async function applyPendingUpdate(){
+  if(!pendingUpdate)return;
+  if(!safeToUpdate())return toast('Termina o guarda el comentario abierto; la actualización queda esperando.');
+  const update=pendingUpdate;pendingUpdate=null;$('updates').hidden=true;
+  if(update.kind==='app')return location.reload();
+  const address=new URL(location.href);address.searchParams.set('image',update.id);address.searchParams.set('delivery',update.id);address.searchParams.delete('view');location.replace(address.href);
+}
+$('applyUpdate').onclick=applyPendingUpdate;
+async function checkUpdates(){
+  if(checkingUpdate||!current)return;checkingUpdate=true;
+  try{
+    const state=await api('/api/state');
+    if(loadedBuild&&state.disk_build&&state.disk_build!==loadedBuild){
+      pendingUpdate={kind:'app'};$('updateMessage').textContent='Hay una actualización de la app. Tus comentarios están conservados.';
+      $('applyUpdate').textContent='Actualizar app';$('updates').hidden=false;
+      if(safeToUpdate())await applyPendingUpdate();return;
+    }
+    const latest=latestDescendant(current.id,state.assets);
+    if(latest!==current.id){
+      pendingUpdate={kind:'image',id:latest,state};$('updateMessage').textContent='Hay una propuesta más reciente de esta pieza. La anterior sigue en el historial.';
+      $('applyUpdate').textContent='Mostrar nueva versión';$('updates').hidden=false;
+      if(followLatest&&safeToUpdate())await applyPendingUpdate();
+    }else if(safeToUpdate()&&(state.assets.length!==assets.length||state.assets.some(a=>{const old=assets.find(x=>x.id===a.id);return old&&(old.revision!==a.revision||old.status!==a.status);}))) {
+      const previousStatus=current.status;assets=state.assets;approvals=state.approvals||[];current=assets.find(a=>a.id===current.id)||current;
+      if(current.status!==previousStatus)libraryTab=['approved','honors'].includes(current.status)?'accepted':'pending';
+      $('status').value=current.status;$('general').value=current.general;gallery();renderNotes();showApproval();showRevisions();
+    }
+  }catch{/* A launcher restart can briefly make the server unavailable. Retry without touching edits. */}
+  finally{checkingUpdate=false;}
+}
+setInterval(checkUpdates,5000);window.addEventListener('focus',checkUpdates);
+api('/api/state').then(state=>{
+  document.title='Atlas '+state.app_version+' · Revisión de arte';
+  assets=state.assets;approvals=state.approvals||[];loadedBuild=state.disk_build;
+  const params=new URLSearchParams(location.search),requested=params.get('image'),remembered=localStorage.getItem('atlas-selected');
+  if(assets.length){
+    let id=assets.find(a=>a.id===(requested||remembered))?.id||assets.at(-1).id;
+    const historicalView=params.get('view')==='history';
+    id=params.get('latest')==='1'?(state.latest_delivery_id||assets.at(-1).id):(historicalView?id:latestDescendant(id));
+    choose(id,{follow:!historicalView});
+  }else{$('empty').hidden=false;$('paper').hidden=true;$('saved').textContent='Listo para importar';}
+}).catch(e=>toast(e.message));

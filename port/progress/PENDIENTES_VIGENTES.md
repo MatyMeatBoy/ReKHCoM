@@ -13,6 +13,12 @@ Reglas del usuario:
 
 ## ACTUALIZACIÓN 24/10 — revisión por nubes y pausa del carril general
 
+- PR de herramientas **#48**, rama `codex/art-review-local`, para integrar por Claude cuando corresponda;
+  no merge automático. Instrucciones completas en **HANDOFF_REVISION_APP.md**. Toda nueva entrega debe
+  regresar a la app como revisión hija de su pieza, con nubes previas e historial consultables.
+- HUD compacto con controles a la derecha, zoom hasta3200%, tabs Preliminares/Ya aceptados y selector
+  directo de revisiones. Catálogo:49 piezas/50 revisiones,9 aceptadas/4 con honores. Un BAT raíz y un
+  servidor8766; launcher reutiliza/actualiza y las pestañas recargan sin descartar comentarios en edición.
 - Prioridad actual: probar la mesa local Python `port/tools/art_review/`; BAT de apertura en la raíz contenedora
   KHCoMPC (`Revisar preliminares.bat`). URL localhost:8766. Datos privados `build/art-review/`.
 - Leer `build/art-review/ULTIMO_ENVIO.txt`, después TXT/MD/JSON y recortes. Los comentarios recibidos son

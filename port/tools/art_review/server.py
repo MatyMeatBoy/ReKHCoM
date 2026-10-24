@@ -5,9 +5,11 @@ import hashlib
 import io
 import json
 import math
+import subprocess
 import shutil
 import sqlite3
 import threading
+import sys
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -16,10 +18,12 @@ from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
 from PIL import Image, ImageDraw
+from runtime_version import build_id
 
 ROOT = Path(__file__).resolve().parents[3]
 WEB = Path(__file__).with_name('web')
 STATUSES = ['pending', 'changes_requested', 'approved', 'honors']
+RUNNING_BUILD = build_id()
 
 
 def now():
@@ -295,6 +299,12 @@ class Store:
 
 def handler(store):
     class Handler(BaseHTTPRequestHandler):
+        def handle(self):
+            try:
+                super().handle()
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                pass  # Browser reloaded/closed during the response; persisted reviews are unaffected.
+
         def log_message(self, fmt, *args):
             pass
 
@@ -315,7 +325,11 @@ def handler(store):
                 return self.reply(403, dict(error='Solo localhost'))
             route = urlparse(self.path).path
             if route == '/api/state':
-                return self.reply(200, dict(assets=store.all(), approvals=store.approvals(), data_dir=str(store.root), app_version='0.2.0'))
+                assets=store.all()
+                delivered=[a for a in assets if not a.get('revision_info',{}).get('catalog_key')]
+                return self.reply(200, dict(assets=store.all(), approvals=store.approvals(), data_dir=str(store.root),
+                    app_version='0.4.0', app_build=RUNNING_BUILD, disk_build=build_id(), auto_restart=True,
+                    latest_delivery_id=(delivered or assets)[-1]['id'] if assets else None))
             if route == '/api/history':
                 try:
                     return self.reply(200, dict(events=store.history(parse_qs(urlparse(self.path).query).get('id',[''])[0])))
@@ -376,7 +390,28 @@ def main():
     args = parser.parse_args()
     server = ThreadingHTTPServer(('127.0.0.1', args.port), handler(Store(args.data)))
     print('Revisión de arte: http://127.0.0.1:%s — Datos: %s' % (args.port, args.data), flush=True)
-    server.serve_forever()
+    restart = threading.Event()
+    stopped = threading.Event()
+    def watch_code():
+        candidate = None
+        while not stopped.wait(2):
+            current_build = build_id()
+            if current_build != RUNNING_BUILD and current_build == candidate:
+                restart.set()
+                server.shutdown()
+                return
+            candidate = current_build
+    threading.Thread(target=watch_code,daemon=True).start()
+    try:
+        server.serve_forever()
+    finally:
+        stopped.set()
+        server.server_close()
+    if restart.is_set():
+        # Close the only listener before replacing this process. No second port/server.
+        subprocess.Popen([sys.executable,str(Path(__file__).resolve()),'--data',str(args.data.resolve()),'--port',str(args.port)],
+            cwd=ROOT, stdin=subprocess.DEVNULL, stdout=sys.stdout, stderr=sys.stderr,
+            creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
 
 
 if __name__ == '__main__':

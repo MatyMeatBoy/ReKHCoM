@@ -3,6 +3,16 @@
 Python 3.11+ y Pillow. Sin hosting ni cuentas. Ejecutar `launch.ps1` o
 `python port/tools/art_review/server.py`; abrir http://127.0.0.1:8766.
 El launcher crea un entorno virtual privado en `build/art-review/.venv`.
+Al abrir el BAT compara la huella del código con la del servidor. Si cambió, verifica
+que el proceso del puerto pertenece a esta app, reinicia únicamente ese servidor y
+abre la última entrega con una URL nueva. No hace `git pull` ni cambia los datos.
+Solo hay un launcher de usuario: `Revisar preliminares.bat` en la raíz contenedora.
+Un mutex impide arranques simultáneos desde ese BAT. El servidor vigila cambios de
+código estables y cierra su listener antes de reemplazarse, siempre en el mismo puerto.
+Las pestañas actualizadas consultan novedades cada cinco segundos: muestran la nueva
+propuesta de la pieza recargando la página y conservan la anterior en el historial. Si hay un formulario o
+comentario en edición, esperan y muestran un aviso. La consulta intencional de una
+versión anterior avisa de la nueva sin forzar el cambio de imagen.
 
 Arrastrar un rectángulo dibuja una nube de revisión; al soltar abre el comentario.
 Repetir para todas las zonas. Las nubes se pueden seleccionar, editar y eliminar.
@@ -65,6 +75,24 @@ origen, cambio, técnica, comprobaciones, hipótesis y límites. El export JSONL
 estos datos con el siguiente veredicto humano. Ver `revise_darkside_boundary.py` como
 primer caso reproducible: lee el envío real, verifica SHA, modifica índices nativos
 fuera del bloque original, comprueba los cinco frames y registra una propuesta hija.
+
+## Catálogo y espacio de revisión
+
+Una tarjeta por pieza, no por versión. `Preliminares` muestra su última propuesta
+pendiente; `Ya aceptados` muestra la aprobación vigente (indicando honores cuando
+corresponde). Una familia puede figurar en ambas si se intenta mejorar una aceptada.
+Todas las revisiones anteriores y sus comentarios siguen disponibles en Historial.
+
+En escritorio los controles se trasladan a la columna derecha para dedicar toda la
+altura a la imagen. Zoom 5–3200%, porcentaje editable, ajuste al ancho, Ctrl+rueda y
+espacio+arrastrar (o botón central) para desplazarse. En ventanas estrechas los tabs
+y el selector aparecen sobre el lienzo.
+
+`sync_catalog.py --arenas <carpeta-v2-after>` cataloga las entregas V1 `ready` y V2,
+con una captura canónica por escena y referencias a las vistas de eventos compartidos.
+No convierte cada experimento ni cada resolución/frame en una revisión artística.
+Importa las aprobaciones conocidas de LOGICA_APROBADOS con su procedencia explícita.
+El informe privado `catalogo.json` enumera cada fuente cargada y cualquier ausente.
 
 El BAT raíz de un checkout puede llamar al `launch.ps1` de esta carpeta. En la carpeta
 contenedora KHCoMPC el BAT local apunta al checkout `khcom-codex`. No requiere Node.
