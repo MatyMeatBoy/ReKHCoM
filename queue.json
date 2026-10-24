@@ -534,8 +534,8 @@
       "status": "en_curso",
       "owner": "art_110",
       "created_at": "2026-10-24T16:25:04.486968+00:00",
-      "updated_at": "2026-10-24T16:27:31.992229+00:00",
-      "branch": null,
+      "updated_at": "2026-10-24T16:35:54.963331+00:00",
+      "branch": "codex/issue-049-steam-native",
       "pr": null,
       "approval": "pedido-usuario-20261024",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/49",
@@ -544,6 +544,11 @@
           "at": "2026-10-24T16:27:31.992229+00:00",
           "owner": "root",
           "detail": "Usuario ordena arreglar49 y revisarProton; root traspasa auditoria+fix a art_110 tras terminar escena110."
+        },
+        {
+          "at": "2026-10-24T16:35:54.963331+00:00",
+          "owner": "art_110",
+          "detail": "Wrapper y desktop nativos corregidos; VM Debian12 /bin/sh + GLib gio launch y desktop-file-validate 4/4; Git sh 4/4; sin Steam Deck real. Preparando PR."
         }
       ],
       "claimed_at": "2026-10-24T16:25:04.486968+00:00"
@@ -652,7 +657,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-24T16:35:20.105695+00:00",
+  "updated_at": "2026-10-24T16:35:54.963331+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
