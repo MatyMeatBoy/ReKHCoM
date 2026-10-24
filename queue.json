@@ -429,10 +429,10 @@
     "escena-095": {
       "id": "escena-095",
       "piece": "Escena 095",
-      "status": "bloqueado",
-      "owner": "claude-sonnet-w1",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T19:34:18.832816+00:00",
+      "updated_at": "2026-10-24T19:44:17.355979+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -442,6 +442,11 @@
           "at": "2026-10-24T19:34:18.832816+00:00",
           "owner": "claude-sonnet-w1",
           "detail": "Laberinto izquierdo/derecho (v==95 bg3) con periodo 12 deja costuras; el castillo/siluetas del horizonte se pierde en filas 8-11 espejadas. Necesita medir periodo del laberinto y reescribir franjas de cielo; sin iteraciones. Captura base build/w1/095-base.png."
+        },
+        {
+          "at": "2026-10-24T19:44:17.355979+00:00",
+          "owner": "claude-sonnet-w1",
+          "detail": "released: ronda 1 cerrada por el coordinador; diagnostico en la evidencia anterior"
         }
       ],
       "claimed_at": "2026-10-24T19:18:54.650423+00:00"
@@ -1128,7 +1133,7 @@
     "created_at": "2026-10-24T17:03:25.390995+00:00",
     "updated_at": "2026-10-24T19:35:47.688714+00:00"
   },
-  "updated_at": "2026-10-24T19:44:11.688796+00:00",
+  "updated_at": "2026-10-24T19:44:17.355979+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
