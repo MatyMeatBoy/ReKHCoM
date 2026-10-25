@@ -44,7 +44,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c | pedido-usuario-20261024 | 2026-10-25T07:21:28.813748+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c | pedido-usuario-20261024 | 2026-10-25T07:21:40.828461+00:00 |
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:22:52.512473+00:00 |
-| catalogo-titulo60 | Catalogo actual: titulo original y barras | en_curso | claude-integrador | — | — | 2026-10-25T07:20:29.541437+00:00 |
+| catalogo-titulo60 | Catalogo actual: titulo original y barras | listo_pr | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:22:57.288394+00:00 |
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:35.232233+00:00 |
 | catalogo-idioma-copyright | Catalogo actual: idioma y copyright | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:40.654526+00:00 |
 | catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:46.415799+00:00 |
