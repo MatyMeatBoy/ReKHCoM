@@ -1317,10 +1317,10 @@
     "catalogo-retratos59": {
       "id": "catalogo-retratos59",
       "piece": "Catalogo actual: retratos de dialogo Sora y Riku",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-integrador",
       "created_at": "2026-10-24T16:34:49.200664+00:00",
-      "updated_at": "2026-10-25T07:22:47.872194+00:00",
+      "updated_at": "2026-10-25T07:22:52.512473+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/101",
       "approval": null,
@@ -1338,6 +1338,11 @@
         },
         {
           "at": "2026-10-25T07:22:47.872194+00:00",
+          "owner": "claude-integrador",
+          "detail": "cerrado como no recuperable (ARTE_HISTORICO, PR #101)"
+        },
+        {
+          "at": "2026-10-25T07:22:52.512473+00:00",
           "owner": "claude-integrador",
           "detail": "cerrado como no recuperable (ARTE_HISTORICO, PR #101)"
         }
@@ -1884,7 +1889,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:22:47.872194+00:00",
+  "updated_at": "2026-10-25T07:22:52.514010+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
