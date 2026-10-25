@@ -1985,13 +1985,13 @@
     "darkside-arena-revision": {
       "id": "darkside-arena-revision",
       "piece": "Darkside arena: comentario pendiente de sprites y fadeout",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T07:59:11.839095+00:00",
-      "updated_at": "2026-10-25T08:20:39.999983+00:00",
+      "updated_at": "2026-10-25T13:54:40.978119+00:00",
       "branch": "codex/atlas-darkside",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/106",
-      "approval": null,
+      "approval": "Autorizacion directa del usuario25/10 para integrar aprobados; registro del merge existente",
       "reference": "433401942ccd4f4284514144e9d77364",
       "evidence": [
         {
@@ -2013,10 +2013,16 @@
           "at": "2026-10-25T08:20:39.999983+00:00",
           "owner": "codex-atlas",
           "detail": "Nueva nube mejorar fading respondida. Cobertura 2D estable solo en pose reach; EU 16:9/32:9 240/330, centro identico 4/4, source checks ok."
+        },
+        {
+          "at": "2026-10-25T13:54:40.978119+00:00",
+          "owner": "codex-atlas",
+          "detail": "Auditoria de cola: PR106 ya MERGED con SHA 6036096309535fcb9c863bff8683c12389255b17. No cambia aprobaciones Atlas ni responde comentarios posteriores."
         }
       ],
       "claimed_at": "2026-10-25T07:59:17.517859+00:00",
-      "sent": "9bdf48c45429486fbeb750cfd32cde3f"
+      "sent": "9bdf48c45429486fbeb750cfd32cde3f",
+      "completed_at": "2026-10-25T13:54:40.978119+00:00"
     },
     "malefica-arena-respuesta": {
       "id": "malefica-arena-respuesta",
@@ -2332,7 +2338,7 @@
     "created_at": "2026-10-25T13:54:30.693009+00:00",
     "updated_at": "2026-10-25T13:54:30.693009+00:00"
   },
-  "updated_at": "2026-10-25T13:54:35.735007+00:00",
+  "updated_at": "2026-10-25T13:54:40.978119+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
