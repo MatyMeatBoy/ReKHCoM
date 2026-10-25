@@ -202,3 +202,7 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - Switch (SWITCH_MOTOR.md); Vita/PS4 a la GPU (RENDIMIENTO.md); PPU de GBA en varios núcleos.
 - Online (~70 %, ONLINE_ESTUDIO.md); menús Re:CoM en HD (HUD_HD_RECOM.md); rutas de Sora y Reverse/Rebirth (#39).
 - Mejoras de lo «aprobado con mejoras».
+
+## Atlas: sintesis aprobada, pendiente de integracion
+
+Version humana aprobada `823cdf38241144b1b282bcf3f2532120`: requisito HD dinamico, tinta dentro de la silueta, banda neutra y TOTAL desplazado de10 a9. Rama codex/sintesis-requisito-hd actualizada con main; PR125 se reabre tras aprobacion. La sugerencia posterior sobre contorno/numeros queda para una hija nueva; no se declara respondida ni se elevan honores.

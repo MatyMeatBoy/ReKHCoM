@@ -39,7 +39,7 @@ Los problemas que esperan datos (cara HD de Sora recortada al recibir daño, cua
 | Escena099 | `ac568c9ae6c642beb8990ac107cd7a0c` | #122 | Propuesta entregada; GBA2/2 idéntico |
 | Escenas004/005 | `8827dd92eb9c4392876f611cbf4cfcb2` | #123 | Propuesta entregada; GBA3/3 idéntico |
 | Añadir naipes | `27f14d9fe9bb4428b0dccf98c1e06a8c` | #124 | Propuesta entregada;61frames de oclusión correctos |
-| Síntesis | Pendiente de captura real | Pendiente | Implementación en `codex/sintesis-requisito-hd`, validación serial pendiente |
+| Síntesis | `b77d47de367749538ebe7469598d3926` y `c08283ad450f4455937a3f1e1ead3302` | #125 | Propuesta runtime entregada;2.000 combinaciones,20 inicializaciones, pago10→9 y HDoff idéntico4/4 |
 
 Subir una propuesta no resuelve automáticamente la valoración ni equivale a integración.
 

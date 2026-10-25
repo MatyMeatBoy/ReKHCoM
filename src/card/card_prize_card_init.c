@@ -46,6 +46,9 @@
 #include <stddef.h>
 #include "lockon.h"
 #include "card_prize_card_init.h"
+#ifdef PLATFORM_PC
+#include "synthesis_requirement_hd.inc"
+#endif
 #include "battle.h"
 #include "sprite_palettes.h"
 #include "battle_ids.h"
@@ -1483,6 +1486,9 @@ void SELMAP_EVKEY_0(SelmapEventKeyWork* work, SelmapEventKeyArgs* args) {
 
     for (i = 0; i < work->keyCount; i++) {
         InitEventKeyCard(&work->cards[i], GetEventKey(i));
+#ifdef PLATFORM_PC
+        SynthesisHdRemember(i, GetEventKey(i));
+#endif
 
         if (work->cards[i].sprite.palette != NULL) {
             FadeSetPaletteExcluded(work->cards[i].sprite.palette->index + 16, TRUE);
@@ -1609,6 +1615,9 @@ s32 UpdateSelmapEventKeyClose(SelmapEventKeyWork* work) {
 
 void SELMAP_EVKEY_2(SelmapEventKeyWork* work) {
     s32 i;
+#ifdef PLATFORM_PC
+    int firstEntry;
+#endif
 
     switch (work->args->closeMode) {
     case SELMAP_EVENT_KEY_CLOSE_NONE:
@@ -1622,6 +1631,9 @@ void SELMAP_EVKEY_2(SelmapEventKeyWork* work) {
         }
 
         for (i = work->paidCount; i < work->keyCount; i++) {
+#ifdef PLATFORM_PC
+            firstEntry = gSpriteWork->entryCount;
+#endif
             if (i == work->paidCount) {
                 DrawLayeredCardSpriteScaled(&work->cards[i].sprite, SPRITE_PRIORITY(2) | SPRITE_FLAG_MOSAIC, 0,
                               (gSineTable[(u8)work->pulseAngle] >> 8) * 8 + Q_8_8(1));
@@ -1647,6 +1659,9 @@ void SELMAP_EVKEY_2(SelmapEventKeyWork* work) {
             } else {
                 DrawLayeredCardSprite(&work->cards[i].sprite, SPRITE_PRIORITY(2) | SPRITE_FLAG_MOSAIC);
             }
+#ifdef PLATFORM_PC
+            SynthesisHdTag(work, i, firstEntry);
+#endif
         }
 
         break;
