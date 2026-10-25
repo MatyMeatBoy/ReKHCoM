@@ -2625,10 +2625,23 @@
       "approval": null,
       "reference": "../khcom-claude-int/build/atlas-all-briefs.json",
       "evidence": []
+    },
+    "trickmaster-rail-finish": {
+      "id": "trickmaster-rail-finish",
+      "piece": "Trickmaster: terminar postes y alinear travesano",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T18:53:05.854532+00:00",
+      "updated_at": "2026-10-25T18:53:05.854532+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-125448-4ee67a / 7c6c539b5c264f24a9b655a8432e2cc7",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:08:35.815510+00:00",
+  "updated_at": "2026-10-25T18:53:05.854532+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
