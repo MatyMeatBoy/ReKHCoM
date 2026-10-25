@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0-pre18 — 2026-10-25
+
+Test build: pre17 plus
+
+- Options: the HD section in order (HD text with its font choice, HD intros, HD music, HD cutscenes, HD HUD).
+- Bonus Elite fits wide screens (16:9 to 32:9).
+- RetroAchievements: unlocks made signed in but without a connection are sent on the next start.
+- Steam Deck / Linux: test option REKHCOM_GPU=1 (Launch Options: `REKHCOM_GPU=1 %command%`) to try the GPU (#140).
+- Approved art in the wide view for more scenes.
+
 ## v2.0-pre17 — 2026-10-25
 
 Test build: pre16 plus

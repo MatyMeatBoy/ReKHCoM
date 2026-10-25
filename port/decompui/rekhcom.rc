@@ -5,7 +5,7 @@
 // executable without them looks anonymous. Bump with REKHCOM_VERSION
 // (release_check.py compares them).
 #define REKHCOM_RC_VERSION 2,0,0,0
-#define REKHCOM_RC_VERSION_TEXT "2.0-pre17"
+#define REKHCOM_RC_VERSION_TEXT "2.0-pre18"
 
 1 VERSIONINFO
 FILEVERSION REKHCOM_RC_VERSION
