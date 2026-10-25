@@ -2411,8 +2411,27 @@ static void Quit(void) {
 
 static void PumpEvents(void) {
     SDL_Event ev;
+#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
+    /* the game takes no mouse: the pointer hides after 3 s still over the window, back when it moves (user 25/10) */
+    static Uint64 sMouseMoved;
+    static int sMouseHidden;
+    Uint64 now = SDL_GetTicks();
+    if (!sMouseHidden && now - sMouseMoved > 3000) {
+        SDL_HideCursor();
+        sMouseHidden = 1;
+    }
+#endif
 
     while (SDL_PollEvent(&ev)) {
+#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
+        if (ev.type == SDL_EVENT_MOUSE_MOTION || ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            sMouseMoved = now;
+            if (sMouseHidden) {
+                SDL_ShowCursor();
+                sMouseHidden = 0;
+            }
+        }
+#endif
         KhPadNormalizeEvent(&ev, gPortConfig.padLayout);
 #ifdef __EMSCRIPTEN__
         if(ev.type==SDL_EVENT_RENDER_DEVICE_RESET) {
