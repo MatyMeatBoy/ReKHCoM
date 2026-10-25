@@ -444,12 +444,21 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         }
         *x=sx; *y=sy; return 1;
     }
-    if (v[0] == 102 && v[1] == 2 && oy < 0) {
-        /* Continue each top-cut shaft through the top of the viewport with
-         * its five-row spiral; a flat truncation leaves an open pipe end
-         * suspended in the sea (user's second annotation, 24/10). */
-        if (!((ox>=22 && ox<30) || (ox>=35 && ox<39) || (ox>=45 && ox<49))) return 0;
-        *y = PortSceneTileMod(oy, 5); return 1;
+    if (v[0] == 102 && v[1] == 2) {
+        /* Three short shafts start below the map's top. Continue each in
+         * its own column and five-row phase, including blank map cells.
+         * Called only for the added viewport; cartridge pixels stay intact. */
+        int start = -1;
+        if (ox>=31 && ox<35) start=3;
+        else if (ox>=40 && ox<44) start=1;
+        else if (ox>=49 && ox<53) start=6;
+        if (start>=0 && oy<start) {
+            *y=start+PortSceneTileMod(oy-start,5); return 1;
+        }
+        if (oy<0) {
+            if (!((ox>=22 && ox<30) || (ox>=35 && ox<39) || (ox>=45 && ox<49))) return 0;
+            *y=PortSceneTileMod(oy,5); return 1;
+        }
     }
     if (v[0] == 102) {
         /* The authored BG3 already contains its diagonal corridor. Do not
