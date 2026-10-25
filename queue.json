@@ -1767,19 +1767,20 @@
     "issue83-jafar-recogida": {
       "id": "issue83-jafar-recogida",
       "piece": "Jafar Android #83: reproducir recogida de carta y corregir crash",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-jafar83",
       "created_at": "2026-10-25T05:44:39.164448+00:00",
-      "updated_at": "2026-10-25T05:44:39.164448+00:00",
+      "updated_at": "2026-10-25T05:44:44.944777+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Issue83 Samsung Tab S6 Lite Android13; no stack disponible",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T05:44:44.944777+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:44:39.164448+00:00",
+  "updated_at": "2026-10-25T05:44:44.944777+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
