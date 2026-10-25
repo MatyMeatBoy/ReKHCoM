@@ -1281,14 +1281,14 @@
     "editor-tiles-ui": {
       "id": "editor-tiles-ui",
       "piece": "Editor avanzado: lienzo herramientas y galeria por escena/mundo/global",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "claude-integrador",
       "created_at": "2026-10-24T16:34:21.233245+00:00",
-      "updated_at": "2026-10-25T07:20:18.232228+00:00",
+      "updated_at": "2026-10-25T07:21:36.180084+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c",
       "approval": "pedido-usuario-20261024",
-      "reference": "Editor tiles modding solicitado en chat",
+      "reference": "226bd523c",
       "evidence": [
         {
           "at": "2026-10-24T17:03:56.813416+00:00",
@@ -1299,9 +1299,15 @@
           "at": "2026-10-25T07:20:18.232228+00:00",
           "owner": "claude-integrador",
           "detail": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
+        },
+        {
+          "at": "2026-10-25T07:21:36.180084+00:00",
+          "owner": "claude-integrador",
+          "detail": "editor de tiles en main (226bd523c)"
         }
       ],
-      "claimed_at": "2026-10-24T16:34:21.233245+00:00"
+      "claimed_at": "2026-10-24T16:34:21.233245+00:00",
+      "sent": "226bd523c"
     },
     "catalogo-retratos59": {
       "id": "catalogo-retratos59",
@@ -1867,7 +1873,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:21:28.813748+00:00",
+  "updated_at": "2026-10-25T07:21:36.180084+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
