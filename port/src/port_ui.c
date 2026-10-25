@@ -2546,7 +2546,7 @@ static void GbaKey(int code, int cx, int cy) {
                 c = 0xFF5F5480u;
             Pixel(cx + dx, cy + dy, c);
         }
-    DrawGlyph(code, cx - GlyphWidth(code) / 2, cy - 6, 0xFFF4F0FCu, 0xFF2A2338u); /* its letter's 7 rows centred */
+    DrawGlyph(code, cx - GlyphWidth(code) / 2 + 1, cy - 4, 0xFFF4F0FCu, 0xFF41385Au); /* its letter's 7 rows centred */
 }
 
 static void MenuButton(int x, int y, const char* text, int key) {
