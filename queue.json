@@ -2724,10 +2724,23 @@
       ],
       "claimed_at": "2026-10-25T19:02:43.829842+00:00",
       "sent": "f092a251c3e44a56b1b4727eb3183855"
+    },
+    "atlas-boss-sprite-workflow": {
+      "id": "atlas-boss-sprite-workflow",
+      "piece": "Atlas: modo interno escena o sprite y cobertura de animaciones de bosses",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T19:34:47.192699+00:00",
+      "updated_at": "2026-10-25T19:34:47.192699+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Pedido directo del usuario: cada sprite individual antes/despues; Malefica completa, reutilizable para bosses.",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:21:43.191392+00:00",
+  "updated_at": "2026-10-25T19:34:47.192699+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
