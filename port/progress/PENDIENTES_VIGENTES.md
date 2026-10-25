@@ -128,6 +128,12 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
   «somos amigables con esto», los logros son locales, no van a RetroAchievements y tienen su lista. El arte del cartel
   pasa por Atlas. Cómo: una marca en el save de ReKHCoM (no en la SRAM del juego) + un tercer archivo de logros locales
   (`achievements_cheat_*.dat`), y el filtro de rc_client sin enviar nada mientras la marca esté.
+- **Modo rebelde en Trucos (detalle del usuario 25/10):** en el menú de Trucos, una sección propia «Modo rebelde» con
+  las barritas separadoras como las de Opciones (y mejorar de paso las barritas de Trucos), que solo aparece con el modo
+  activado y muestra un indicador de que está activo. Sus logros se ven ahí (no en Logros normal); en el launcher, en
+  pestañas nuevas de Logros, solo si hay un save en modo rebelde. Con A sobre el modo: opción de desactivarlo y volver al
+  modo normal, con la lista de lo que se apagará (los trucos y funciones que lo activaron). Depurar todo con el harness
+  (`KHCOM_OPTIONS_SHOT` del menú de Trucos, partida con y sin la marca).
 - **Baterías 25/10 (de la corrida de las 15:22):** Android US: batallas 123/124 de Agrabah y 4 menús US (status,
   worldselect, Deck, jiminy) con timeout (casos en khcom-claude-int/build/android-scenarios/cases/us-*). Regla: un
   timeout es un bug; reproducir solos (`test_android_scenarios.py --only`), arreglar y buscar parientes. El build de
