@@ -73,7 +73,7 @@ static int SceneMenuInput(const SDL_Event* ev) {
         case SDLK_LEFT: case SDLK_A: move = -5; break;
         case SDLK_RIGHT: case SDLK_D: move = 5; break;
         case SDLK_Q: case SDLK_PAGEUP: case SDLK_E: case SDLK_PAGEDOWN: case SDLK_TAB: case SDLK_X: tab = 1; break;
-        case SDLK_RETURN: case SDLK_KP_ENTER: case SDLK_SPACE: case SDLK_K: play = !ev->key.repeat; break;
+        case SDLK_RETURN: case SDLK_SPACE: case SDLK_K: play = !ev->key.repeat; break;
         case SDLK_ESCAPE: case SDLK_BACKSPACE: case SDLK_F1: case SDLK_Z: case SDLK_J: back = !ev->key.repeat; break;
         }
     } else if (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
