@@ -121,8 +121,8 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
   ahí los logros que corresponden son los de Re:CoM.
 - **Regla de logros (también en REGLAS_DEL_USUARIO.md):** lo que cambia el juego (partidas, bancos, trucos, editar
   saves) bloquea los logros oficiales o pasa a la lista de Re:CoM; gráficos, audio, escenas y controles no importan.
-- **Trucos y «logros tramposo»:** los trucos (salvo las mejoras del modo Re:CoM) apagan los logros oficiales. La
-  primera vez que se activa uno (o se detecta una partida editada) se desbloquea un modo oculto, **logros tramposo**:
+- **Trucos y «Modo rebelde»** (nombre del usuario, menos agresivo que «tramposo»; EN Rebel mode, FR Mode rebelle, DE Rebellen-Modus, IT Modalità ribelle, JA 反逆モード): los trucos (salvo las mejoras del modo Re:CoM) apagan los logros oficiales. La
+  primera vez que se activa uno (o se detecta una partida editada) se desbloquea un modo oculto, el **Modo rebelde**:
   logros locales, las dos listas (oficial y Re:CoM) pero aparte, que no se sincronizan con RetroAchievements; no se ven
   en el launcher hasta que se activan. Aviso en el juego con un cartel amigable en pixel art del estilo del juego:
   «somos amigables con esto», los logros son locales, no van a RetroAchievements y tienen su lista. El arte del cartel

@@ -61,4 +61,4 @@ Sintetizadas de sus pedidos hasta el 24/10/2026. Hablarle en español, breve y d
   protocolo de COLA_COLABORATIVA y anotar el relevo; nunca tocar el árbol sin commitear del otro.
 - Logros (25/10): lo que cambia el juego (partidas, bancos de partidas, trucos, editar saves) bloquea los logros
   oficiales o pasa a la lista de Re:CoM; gráficos, audio, escenas y controles no importan. Los trucos
-  (salvo mejoras del modo Re:CoM) llevan a los «logros tramposo», locales y aparte.
+  (salvo mejoras del modo Re:CoM) llevan al «Modo rebelde» (logros locales y aparte).

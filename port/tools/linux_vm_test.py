@@ -143,7 +143,11 @@ def main():
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     con = Console(proc)
     try:
-        con.expect(r'login: ', 900)
+        # Debian 13's image asks its first-boot questions (keymap, time zone, root password): Enter skips each one
+        for _ in range(20):
+            if con.expect(r'login: |Press any key to proceed|to skip|\[[^\]]*\]: ?$', 900).endswith('login: '):
+                break
+            con.send('\n')
         con.send('root\n')
         con.expect(r'# ', 120)
         con.send('stty -echo cols 250; export PS1="# "\n')
