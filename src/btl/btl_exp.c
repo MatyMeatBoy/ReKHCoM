@@ -346,7 +346,21 @@ s32 task_btl_exp_1(BtlExpWork* work) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+static void task_btl_exp_2_Body(BtlExpWork* work);
+
+/* EXP gained / to the next level: under the player's HP gauge, so at the top-left corner of the screen with it
+   (it stayed at the GBA picture's left edge in the wide view, user 25/10). */
 void task_btl_exp_2(BtlExpWork* work) {
+    PortHudBegin(-1, -1);
+    task_btl_exp_2_Body(work);
+    PortHudEnd();
+}
+
+static void task_btl_exp_2_Body(BtlExpWork* work) {
+#else
+void task_btl_exp_2(BtlExpWork* work) {
+#endif
     s32 i;
     s16 x;
     u16 y;
