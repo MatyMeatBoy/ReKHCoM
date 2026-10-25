@@ -60,5 +60,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | menu-naipes-texto-parpadeo | Añadir naipes: cantidad HD parpadea al pulsar selector | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/85 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:37.598254+00:00 |
 | mapa-camara-suavidad | Mapa: investigar suavidad de cámara con texto HD y GBA mejorado | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/86 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:32.354023+00:00 |
 | video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:04.558305+00:00 |
+| agrabah-jafar-arena | Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara | pendiente | — | — | — | 2026-10-25T04:45:45.022710+00:00 |
 
 Integrador: libre
