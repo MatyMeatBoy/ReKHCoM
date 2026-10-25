@@ -2649,19 +2649,20 @@
     "escena099-wallfinish": {
       "id": "escena099-wallfinish",
       "piece": "Escena099: patron lateral completo como la arena",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T19:02:37.899890+00:00",
-      "updated_at": "2026-10-25T19:02:37.899890+00:00",
+      "updated_at": "2026-10-25T19:02:43.829842+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261025-125411-7d1750 / ac568c9ae6c642beb8990ac107cd7a0c",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T19:02:43.829842+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:02:37.899890+00:00",
+  "updated_at": "2026-10-25T19:02:43.829842+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
