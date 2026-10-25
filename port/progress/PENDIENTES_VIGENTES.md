@@ -114,6 +114,21 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - **Estados rápidos en consolas/Android/web:** `port_state` excluido en consolas; en Android/web la fila de revanchas
   se oculta. Medir el tamaño del estado y escribirlo por el puente (H_fopen) antes de encenderlo.
 
+## TRASPASO (25/10 noche, última sesión de Claude)
+
+- **Hecho y en main:** todo lo de 1e/1f de código salvo lo de abajo; últimos: filtro de audio GBA/HD, primer arranque
+  con pantalla completa/ventana, modo rebelde (lista local, Trucos, launcher, filigrana negra, partidas editadas,
+  descripciones), «Modo de logros», banco de partidas solo en el título, herramienta de anuncios, opciones no
+  instaladas con una línea roja estándar «No instalado: cárgalo desde el launcher (Mod HD)» y sin clic con A.
+- **Corriendo al cerrar:** baterías de PC (`run_batteries.py --status` en khcom-claude-int) y el retest Android de
+  Agrabah 123/124 con la app smoke completa (`build/android-scenarios/cases/us-battle-12*`). Si dan timeout de verdad
+  (no por falta de imagen: mirar kh_com_host.log), reproducir y arreglar.
+- **Falta de código:** la línea roja también en Opciones (hoy esas filas usan el cartel de la derecha, sNeedHd/sNeedJp;
+  unificar el texto) y en la versión japonesa («añade la ROM japonesa en el launcher»); banco de partidas por banco
+  (diseño abajo, aplazado); quitar Start+Select cuando Atlas entregue el botón Opciones; título/Opciones en HD (Atlas).
+- **Pruebas para el usuario en pruebas/:** escena de Aerith x6 y barriles de Agrabah x4 (.bat).
+- **Esperando:** duartepedro (#163: piso 12 y revisión de la galería), Atlas (6 piezas nuevas en la cola).
+
 ## 1f. Pedidos del usuario 25/10 noche, segunda tanda (con capturas; anotados por si no se alcanzan)
 
 Hecho esta tanda: #140 cerrado (el jugador confirmó: la build deck1 va sin bajones), «Quitar de Steam» (#158),

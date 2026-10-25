@@ -2623,13 +2623,10 @@ static const char* const sModeDescHd[LANG_COUNT] = {
     "Re:Chain of Memoriesのカード・ロゴ・顔・音楽・ムービー（ランチャーがKingdom Hearts HD 1.5+2.5から取り込み）、"
     "HDテキストとすべての改善。",
 };
-static const char* const sModeDescHdMissing[LANG_COUNT] = {
-    "Not loaded yet: import it from the launcher (HD mod) and it turns on here.",
-    "Pas encore chargé : importe-le depuis le lanceur (mod HD) et il s'active ici.",
-    "Noch nicht geladen: im Launcher importieren (HD-Mod), dann hier einschaltbar.",
-    "Non ancora caricato: importalo dal launcher (mod HD) e si attiva qui.",
-    "Aún no está cargado: impórtalo desde el launcher (Mod HD) y se activa aquí.",
-    "まだ読みこまれていません：ランチャー（HD MOD）で取りこむと、ここでオンにできます。",
+static const char* const sModeDescHdMissing[LANG_COUNT] = { /* the standard line, in red under the description */
+    "Not installed: load it from the launcher (HD mod).", "Non installé : charge-le depuis le lanceur (mod HD).",
+    "Nicht installiert: im Launcher laden (HD-Mod).", "Non installato: caricalo dal launcher (mod HD).",
+    "No instalado: cárgalo desde el launcher (Mod HD).", "ないです：ランチャー（HD MOD）でいれてください。",
 };
 static const char* const sModeDescGba[LANG_COUNT] = {
     "The cartridge's graphics. Then choose enhanced or classic.",
@@ -2902,6 +2899,11 @@ static void WizKey(int key) {
     extern void PortMenuSoundClick(void);
     extern void PortMenuSoundDecide(int confirm);
     int rows = WizRows();
+    if (sWizStep == WIZ_OPTIONS && (key == 2 || key == 3)) { /* a row not installed: no click, nothing changes */
+        int kinds[9];
+        if (WizOptions(kinds) > sWizCursor && !WizOptionAvailable(kinds[sWizCursor]))
+            return;
+    }
     /* the menus' own sounds, as in the options: the cursor's click, a toggle's click, A and B (23/10) */
     if (key == 0 || key == 1 || (key == 2 && (sWizStep == WIZ_OPTIONS || sWizStep == WIZ_ASSETS)))
         PortMenuSoundClick();
@@ -3079,7 +3081,7 @@ static void DrawWizard(int l, int width, int height) {
     const char* subs[9];
     const char* values[9] = { NULL };
     int dim[9] = { 0 };
-    static char missing[9][400];
+    const char* missingLine[9] = { 0 }; /* red under a row's description: why it is off */
     int rows = WizRows(), i, panelW = SDL_min(width - 24, 250), x0, y0, h, y, textW, later, compact;
     static const int order[3] = { 1, 0, 2 };
 
@@ -3106,7 +3108,8 @@ static void DrawWizard(int l, int width, int height) {
     } else if (sWizStep == WIZ_MODE) {
         static char hd[600];
         int imported = ItemVisible(ITEM_HD_CARDS);
-        SDL_snprintf(hd, sizeof(hd), "%s%s%s", sModeDescHd[l], imported ? "" : " ", imported ? "" : sModeDescHdMissing[l]);
+        SDL_snprintf(hd, sizeof(hd), "%s", sModeDescHd[l]);
+        if (!imported) missingLine[0] = sModeDescHdMissing[l];
         labels[0] = sModeNames[PORT_MODE_HD][l]; subs[0] = hd;
         static const char* const gbaMode[LANG_COUNT] = { "GBA mode", "Mode GBA", "GBA-Modus", "Modalità GBA",
                                                          "Modo GBA", "GBAモード" };
@@ -3164,8 +3167,7 @@ static void DrawWizard(int l, int width, int height) {
             if (!WizOptionAvailable(kinds[i])) { /* greyed and off, with how to get it */
                 dim[i] = 1;
                 values[i] = sOnOff[0][l];
-                SDL_snprintf(missing[i], sizeof(missing[i]), "%s %s", subs[i], sModeDescHdMissing[l]);
-                subs[i] = missing[i];
+                missingLine[i] = sModeDescHdMissing[l];
             }
         }
     }
@@ -3177,7 +3179,8 @@ static void DrawWizard(int l, int width, int height) {
     for (compact = 0; compact < 2; compact++) {
         h = 22;
         for (i = 0; i < rows; i++)
-            h += 14 + (compact && i != sWizCursor ? 0 : DrawWrapped(subs[i], 0, 0, textW, 0, 0) * 11 + 4);
+            h += 14 + (compact && i != sWizCursor ? 0 : DrawWrapped(subs[i], 0, 0, textW, 0, 0) * 11 + 4 +
+                                                         (missingLine[i] ? DrawWrapped(missingLine[i], 0, 0, textW, 0, 0) * 11 : 0));
         h += 14 + later;
         if (h <= height - 4)
             break;
@@ -3247,8 +3250,11 @@ static void DrawWizard(int l, int width, int height) {
             DrawText(values[i], vx, y, dim[i] ? MENU_DIM : MENU_INK, 0xFFD8D8D8u);
         }
         y += 14;
-        if (!compact || sel)
+        if (!compact || sel) {
             y += DrawWrapped(subs[i], x0 + 24, y, textW, sel && !dim[i] ? MENU_INK : MENU_DIM, 1) * 11 + 4;
+            if (missingLine[i])
+                y += DrawWrapped(missingLine[i], x0 + 24, y - 4, textW, MENU_RED_DARK, 1) * 11;
+        }
     }
     if (sWizStep >= WIZ_MODE || sWizStep == WIZ_VERSION)
         DrawWrapped(sWizStep == WIZ_VERSION ? sVersionNote[l] : sModeLater[l], x0 + 8, y0 + h - 14 - later, panelW - 16,
