@@ -2209,12 +2209,18 @@ static void PageExtras() {
                          Ini("hd2d"));
     ImGui::Separator();
 #endif
-    changed |= ToggleRow(T("Filtro de audio", "Audio filter"),
-                         T("Interpolación cúbica de las muestras y un filtro paso bajo suave: menos aspereza metálica "
-                           "en los agudos que dejan las bajas frecuencias de muestreo de la GBA.",
-                           "Cubic sample interpolation and a gentle low-pass: less of the metallic edge the GBA's "
-                           "low sample rates leave in the treble."),
-                         Ini("smooth_audio"));
+    {
+        /* two profiles (user 25/10): GBA smooths and softens the cartridge's sound; HD only smooths it (crisper beside
+           the HD music) */
+        static const char* filtersEs[3] = { "No", "GBA (16 bits)", "HD" };
+        static const char* filtersEn[3] = { "Off", "GBA (16-bit)", "HD" };
+        changed |= CycleRow(T("Filtro de audio", "Audio filter"),
+                            T("GBA: interpolación cúbica y un paso bajo suave, menos aspereza metálica en los agudos del "
+                              "sonido de 16 bits. HD: solo la interpolación, más nítido junto a la música HD.",
+                              "GBA: cubic interpolation and a gentle low-pass, less of the metallic edge in the 16-bit "
+                              "sound's treble. HD: the interpolation only, crisper beside the HD music."),
+                            Ini("smooth_audio"), 3, sSpanish ? filtersEs : filtersEn);
+    }
     ImGui::Separator();
 #ifdef REKHCOM_SHOW_EXTRA_OPTIONS /* Re:CoM is chosen at New Game, per save */
     changed |= ToggleRow(T("Modo Re:CoM", "Re:CoM mode"),

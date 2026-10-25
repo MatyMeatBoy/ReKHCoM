@@ -649,7 +649,7 @@ void PortAudioFrame(void) {
         sOut[i * 2 + 0] = SDL_clamp(l / 1024.0f * master, -1.0f, 1.0f);
         sOut[i * 2 + 1] = SDL_clamp(r / 1024.0f * master, -1.0f, 1.0f);
     }
-    if (gPortConfig.smoothAudio)
+    if (gPortConfig.smoothAudio == 1) /* the GBA profile's low-pass; the HD one keeps only the interpolation */
         SmoothFilter(n, rate);
     Queue(n, rate);
 

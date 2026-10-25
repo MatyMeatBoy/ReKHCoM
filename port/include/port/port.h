@@ -144,7 +144,7 @@ typedef struct PortConfig {
     int unstockButton;    /* experimental return-stocked-cards control; opt-in, off by default */
     int saveBank;         /* 1..PORT_SAVE_BANKS: which save file holds the game's two slots */
     int hd2d;             /* experimental HD-2D look (on by default in --hd2d builds) */
-    int smoothAudio;      /* experimental: cubic sample interpolation and a gentle low-pass */
+    int smoothAudio;      /* experimental: 0 off, 1 GBA (cubic interpolation and a gentle low-pass), 2 HD (interpolation only) */
     int ps2Mode;          /* experimental Re:Chain of Memories mode; off: the game exactly as on the cartridge */
     int ps2Difficulty;    /* Re:CoM mode: 0 standard, 1 beginner, 2 proud */
     int ps2FastText;      /* experimental: event dialogue types one character a frame */

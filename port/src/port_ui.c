@@ -1233,8 +1233,18 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_HDHUD:
             SDL_strlcpy(out, sOnOff[gPortConfig.hdHud != 0][l], size);
             break;
-        case ITEM_SMOOTHAUDIO:
-            SDL_strlcpy(out, sOnOff[gPortConfig.smoothAudio != 0][l], size);
+        case ITEM_SMOOTHAUDIO: {
+            /* two profiles (user 25/10): the cartridge's 16-bit sound smoothed and softened, or only smoothed (crisper
+               next to the HD music) */
+            static const char* const kProfile[2][LANG_COUNT] = {
+                { "GBA (16-bit)", "GBA (16 bits)", "GBA (16 Bit)", "GBA (16 bit)", "GBA (16 bits)", "GBA (16ビット)" },
+                { "HD", "HD", "HD", "HD", "HD", "HD" } };
+            if (gPortConfig.smoothAudio == 1 || gPortConfig.smoothAudio == 2)
+                SDL_strlcpy(out, kProfile[gPortConfig.smoothAudio - 1][l], size);
+            else
+                SDL_strlcpy(out, sOnOff[0][l], size);
+            break;
+        }
             break;
         case ITEM_SAVE_SLOT_EXPERIMENTAL:
             SDL_strlcpy(out, sOnOff[gPortConfig.savePointSlotSelect != 0][l], size);
@@ -1497,8 +1507,8 @@ static void Change(int item, int dir) {
         case ITEM_HDHUD:
             gPortConfig.hdHud = !gPortConfig.hdHud;
             break;
-        case ITEM_SMOOTHAUDIO:
-            gPortConfig.smoothAudio = !gPortConfig.smoothAudio;
+        case ITEM_SMOOTHAUDIO: /* off, GBA (16-bit), HD */
+            gPortConfig.smoothAudio = Wrap(gPortConfig.smoothAudio + dir, 3);
             break;
         case ITEM_SAVE_SLOT_EXPERIMENTAL:
             gPortConfig.savePointSlotSelect = !gPortConfig.savePointSlotSelect;

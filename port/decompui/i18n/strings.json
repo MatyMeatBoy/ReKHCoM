@@ -332,10 +332,6 @@
   "es": "No se pudo escribir en la carpeta roms."
  },
  {
-  "en": "Cubic sample interpolation and a gentle low-pass: less of the metallic edge the GBA's low sample rates leave in the treble.",
-  "es": "Interpolación cúbica de las muestras y un filtro paso bajo suave: menos aspereza metálica en los agudos que dejan las bajas frecuencias de muestreo de la GBA."
- },
- {
   "en": "D-pad ",
   "es": "Cruceta "
  },
@@ -530,6 +526,10 @@
  {
   "en": "GBA-size scenes",
   "es": "Escenas tamaño GBA"
+ },
+ {
+  "en": "GBA: cubic interpolation and a gentle low-pass, less of the metallic edge in the 16-bit sound's treble. HD: the interpolation only, crisper beside the HD music.",
+  "es": "GBA: interpolación cúbica y un paso bajo suave, menos aspereza metálica en los agudos del sonido de 16 bits. HD: solo la interpolación, más nítido junto a la música HD."
  },
  {
   "en": "Game language",

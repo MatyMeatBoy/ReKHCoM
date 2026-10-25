@@ -161,7 +161,7 @@ static const Key sKeys[] = {
     { "card_hud_raise", &gPortConfig.cardHudRaise, 0, 16 },
     { "save_bank", &gPortConfig.saveBank, 1, PORT_SAVE_BANKS },
     { "hd2d", &gPortConfig.hd2d, 0, 1 },
-    { "smooth_audio", &gPortConfig.smoothAudio, 0, 1 },
+    { "smooth_audio", &gPortConfig.smoothAudio, 0, 2 },
     { "ps2_mode", &gPortConfig.ps2Mode, 0, 1 },
     { "ps2_difficulty", &gPortConfig.ps2Difficulty, 0, 2 },
     { "ps2_fast_text", &gPortConfig.ps2FastText, 0, 1 },
