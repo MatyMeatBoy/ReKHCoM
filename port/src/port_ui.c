@@ -129,6 +129,7 @@ enum {
     ITEM_HEAD_MORE, /* section heading, not selectable */
     ITEM_CONTROLS_MENU,
     ITEM_ACHIEVEMENTS_MENU,
+    ITEM_ACH_MODE,     /* which list this game earns: normal (RetroAchievements), Re:CoM or Rebel mode; a sign says why */
     ITEM_SCENES_MENU,  /* the scene gallery (port_scene_gallery_menu.inc) */
     ITEM_REMATCH_MENU,
     ITEM_CHEATS_MENU,
@@ -204,6 +205,36 @@ static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
 static void AchievementMenuOpen(void);
 static void RebelMenuOpen(void);
 extern int PortRebelActive(void);
+int PortRecomActive(void);
+static int AchMode(void) { /* 0 normal, 1 Re:CoM, 2 Rebel mode */
+    return PortRebelActive() ? 2 : gPortConfig.ps2Mode && PortRecomActive() ? 1 : 0;
+}
+static const char* AchModeName(int l) {
+    static const char* const kNames[3][6] = {
+        { "Normal", "Normal", "Normal", "Normale", "Normal", "ノーマル" },
+        { "Re:CoM", "Re:CoM", "Re:CoM", "Re:CoM", "Re:CoM", "Re:CoM" },
+        { "Rebel", "Rebelle", "Rebell", "Ribelle", "Rebelde", "反逆" } };
+    return kNames[AchMode()][l];
+}
+static const char* const sAchModeNote[3][6] = {
+    { "Normal: the official list, synced with RetroAchievements when an account is signed in.",
+      "Normal : la liste officielle, synchronisée avec RetroAchievements si un compte est connecté.",
+      "Normal: die offizielle Liste, mit RetroAchievements abgeglichen, wenn ein Konto angemeldet ist.",
+      "Normale: la lista ufficiale, sincronizzata con RetroAchievements se c'è un account.",
+      "Normal: la lista oficial, sincronizada con RetroAchievements si hay una cuenta iniciada.",
+      "ノーマル: こうしきのリスト。アカウントがあればRetroAchievementsとどうきします。" },
+    { "Re:CoM: this game earns the Re:CoM list, on this computer only. For the normal list, start a game in the original version.",
+      "Re:CoM : cette partie gagne la liste Re:CoM, sur cet ordinateur. Pour la liste normale, commence une partie en version originale.",
+      "Re:CoM: dieses Spiel sammelt die Re:CoM-Liste, nur auf diesem PC. Für die normale Liste ein Spiel in der Originalfassung beginnen.",
+      "Re:CoM: questa partita ottiene la lista Re:CoM, solo su questo PC. Per la lista normale inizia una partita nella versione originale.",
+      "Re:CoM: esta partida gana la lista Re:CoM, solo en este equipo. Para la lista normal, empieza una partida en la versión original.",
+      "Re:CoM: このゲームはRe:CoMのリスト(このPCだけ)。ノーマルはオリジナルでゲームをはじめてください。" },
+    { "Rebel: cheats are on; achievements go to their own list on this computer. A: turn it off.",
+      "Rebelle : astuces actives ; les succès vont dans leur liste sur cet ordinateur. A : désactiver.",
+      "Rebell: Cheats aktiv; Erfolge in eigener Liste auf diesem PC. A: ausschalten.",
+      "Ribelle: trucchi attivi; obiettivi in una lista a parte su questo PC. A: spegni.",
+      "Rebelde: hay trucos; los logros van a su propia lista en este equipo. A: apagarlo.",
+      "反逆: チートがオン。じっせきはこのPCの別リストへ。A: オフにする" } };
 static const char* RebelValue(int l) { /* Cheats > Rebel mode's value */
     static const char* const kOn[] = { "On", "Activé", "An", "Attiva", "Activo", "オン" };
     static const char* const kOff[] = { "Off", "Désactivé", "Aus", "Spenta", "Apagado", "オフ" };
@@ -234,6 +265,8 @@ static int IsHeading(int item) {
 
 /* the rows that open a page or a window: A (or a tap) does, left and right do not (25/10) */
 static int OpensSomething(int item) {
+    if (item == ITEM_ACH_MODE)
+        return PortRebelActive(); /* A turns Rebel mode off; the other modes only explain */
     switch (item) {
         case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
         case ITEM_CHEAT_REBEL_LIST: case ITEM_CHEAT_REBEL:
@@ -403,6 +436,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "More", "Plus", "Mehr", "Altro", "Más", "その他" },
     { "Controls", "Commandes", "Steuerung", "Controlli", "Controles", "コントロール" },
     { "Achievements", "Succès", "Erfolge", "Obiettivi", "Logros", "じっせき" },
+    { "Achievements mode", "Mode des succès", "Erfolgsmodus", "Modalità obiettivi", "Modo de logros", "じっせきのモード" },
     { "Scenes", "Scènes", "Szenen", "Scene", "Escenas", "シーン" },
     { "Boss rematches", "Revanches de boss", "Boss-Revanchen", "Rivincite coi boss", "Revancha de jefes", "ボス再戦" },
     { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" },
@@ -1233,6 +1267,9 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_CHEAT_REBEL:
             SDL_strlcpy(out, RebelValue(l), size);
             break;
+        case ITEM_ACH_MODE:
+            SDL_strlcpy(out, AchModeName(l), size);
+            break;
         case ITEM_CHEAT_DEBUG:
         case ITEM_CONTROL_RESET:
             SDL_strlcpy(out, "\xE2\x86\x92", size);
@@ -1494,6 +1531,7 @@ static void Change(int item, int dir) {
             if (dir > 0) RebelMenuOpen();
             return;
         case ITEM_CHEAT_REBEL:
+        case ITEM_ACH_MODE: /* in Rebel mode A offers to turn it off; the other modes only explain (their sign) */
             if (dir > 0 && PortRebelActive())
                 ConfirmOpen(CONFIRM_REBEL);
             return;
@@ -4034,6 +4072,8 @@ static void DrawMenu(int l, int width, int height) {
     int zoom = sCursor == ITEM_BATTLE_ZOOM && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom;
     if (NeedsLauncher(sCursor) && ItemVisible(sCursor) && selY >= 0)
         DrawNeedNote(NeedsLauncher(sCursor) == NEED_JP ? sNeedJp[l] : sNeedHd[l], width, height, barX + barW + 8, selY);
+    else if (sPage == PAGE_MAIN && sCursor == ITEM_ACH_MODE && selY >= 0)
+        DrawNeedNote(sAchModeNote[AchMode()][l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_SAVEBANK && !ItemEnabled(ITEM_SAVEBANK) && selY >= 0)
         DrawNeedNote(sBankNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HD_SCENES && selY >= 0)
