@@ -66,4 +66,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
 | transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | en_curso | codex-transiciones | — | — | 2026-10-25T05:58:34.495227+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-25T05:54:32.144206+00:00)
+Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)
