@@ -88,5 +88,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-112-r20261025 | Escena 112 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:30.735751+00:00 |
 | atlas-remates-115-r20261025 | Escena 115 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:55.925715+00:00 |
 | atlas-remates-116-r20261025 | Escena 116 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:08.317688+00:00 |
+| atlas-remates-117-r20261025 | Escena 117 comentarios posteriores | pendiente | — | — | — | 2026-10-25T16:07:15.563505+00:00 |
 
 Integrador: libre

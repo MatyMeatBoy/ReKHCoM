@@ -2544,10 +2544,23 @@
       "reference": "familia 5882ccbacc0b4573b6d815725b93bf4c; envio 20261025-025038-6d4bd5; parent 4767d7d89689440084a12cf7beeab8b9",
       "evidence": [],
       "claimed_at": "2026-10-25T16:07:08.317688+00:00"
+    },
+    "atlas-remates-117-r20261025": {
+      "id": "atlas-remates-117-r20261025",
+      "piece": "Escena 117 comentarios posteriores",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T16:07:15.563505+00:00",
+      "updated_at": "2026-10-25T16:07:15.563505+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "familia 36884a8a1d154965aac5f8955d59b753; envio 20261025-025109-a6d61f; parent ff9f8d6e16a149708fb8a08c5c80d431",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:07:08.317688+00:00",
+  "updated_at": "2026-10-25T16:07:15.563505+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
