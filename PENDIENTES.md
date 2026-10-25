@@ -80,7 +80,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/124 | — | 2026-10-25T13:48:35.544380+00:00 |
 | darkside-06-feedback-revision | Darkside 06 costura nueva | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/127 | — | 2026-10-25T16:04:23.228699+00:00 |
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
-| agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | en_curso | codex-atlas-escenas | codex/atlas-escenas-107-108 | — | 2026-10-25T16:05:16.065210+00:00 |
+| agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | en_curso | codex-atlas | codex/atlas-escenas-107-108 | — | 2026-10-25T19:06:37.822321+00:00 |
 | darkside-arena-feedback-revision | Darkside arena sprite faltante | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/129 | — | 2026-10-25T16:06:00.579096+00:00 |
 | atlas-remates-102-r20261025 | Escena 102 remates posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:05:09.523321+00:00 |
 | escena-110-179b6da22e5c4bd39181d5ab14d7b9d3 | Escena 110 revision Atlas 179b6da22e5c4bd39181d5ab14d7b9d3 | en_curso | codex-atlas-escenas | codex/atlas-escena-110-179b6da | — | 2026-10-25T16:06:21.548877+00:00 |

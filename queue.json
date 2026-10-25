@@ -2429,9 +2429,9 @@
       "id": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
       "piece": "Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03",
       "status": "en_curso",
-      "owner": "codex-atlas-escenas",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T16:03:24.879479+00:00",
-      "updated_at": "2026-10-25T16:05:16.065210+00:00",
+      "updated_at": "2026-10-25T19:06:37.822321+00:00",
       "branch": "codex/atlas-escenas-107-108",
       "pr": null,
       "approval": null,
@@ -2441,6 +2441,11 @@
           "at": "2026-10-25T16:05:16.065210+00:00",
           "owner": "codex-atlas-escenas",
           "detail": "Preparada offline; donante inferior completo x256..287, fase por pixel. diff --check y 66444 coordenadas sin salir del donante. Sin compilar/ejecutar por orden usuario. Pendiente test serial, captura hija y PR."
+        },
+        {
+          "at": "2026-10-25T19:06:37.822321+00:00",
+          "owner": "codex-atlas",
+          "detail": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
         }
       ],
       "claimed_at": "2026-10-25T16:03:30.914656+00:00"
@@ -2662,7 +2667,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:02:43.829842+00:00",
+  "updated_at": "2026-10-25T19:06:37.822321+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -2973,6 +2978,16 @@
       "to_owner": "codex-atlas-patrones",
       "expected_commit": "0b9cfb64c567945d63a93ade7ad8025e068d5e9c",
       "evidence": "Relevo expreso del usuario en este chat: terminar todo Atlas rapido con la logica nueva. Reserva anterior revisada: su rama codex/escena-057-comentarios no esta checked out en ningun worktree registrado; consulta de procesos no encuentra el carril. Sesion de trabajo de esa rama detenida, WIP ajeno conservado. Se retoma la misma tarea, sin usar antiguedad como criterio."
+    },
+    {
+      "at": "2026-10-25T19:06:37.822321+00:00",
+      "actor": "codex-atlas",
+      "operation": "recover-task",
+      "task": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
+      "from_owner": "codex-atlas-escenas",
+      "to_owner": "codex-atlas",
+      "expected_commit": "e2b72de0a1036d4d5f00bd15e429be52730f7fcf",
+      "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
     }
   ]
 }
