@@ -435,10 +435,10 @@
     "escena-074": {
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas-patrones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T16:05:22.999511+00:00",
+      "updated_at": "2026-10-25T19:00:44.174045+00:00",
       "branch": "codex/atlas-074-patrones",
       "pr": null,
       "approval": null,
@@ -483,9 +483,15 @@
           "at": "2026-10-25T16:05:22.999511+00:00",
           "owner": "codex-atlas-patrones",
           "detail": "074 lista para prueba serial. Worktree C:/Users/MP/Documents/00 Claude/KHCoMPC/khcom-atlas-patrones-074; commit c58ebe430; offline 19 coincidencias originales, 480 tiles modulo, 3072 coordenadas nativas; sin compilar/ejecutar. Captura y subida hija antes de PR pendientes del turno."
+        },
+        {
+          "at": "2026-10-25T19:00:44.174045+00:00",
+          "owner": "codex-atlas-patrones",
+          "detail": "Propuesta real en Atlas3840x1080 frame300, centroGBAidentico; modulo8x4 fase20,10;29b9c80e5. Sin PR hasta revision Atlas."
         }
       ],
-      "claimed_at": "2026-10-24T22:13:52.041157+00:00"
+      "claimed_at": "2026-10-24T22:13:52.041157+00:00",
+      "sent": "bc670454666c47f986d068eeb45e79ad"
     },
     "escena-081": {
       "id": "escena-081",
@@ -2642,7 +2648,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T18:53:14.078372+00:00",
+  "updated_at": "2026-10-25T19:00:44.174045+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
