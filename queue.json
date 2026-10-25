@@ -460,13 +460,13 @@
     "escena-081": {
       "id": "escena-081",
       "piece": "Escena 081",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:45:08.665839+00:00",
+      "updated_at": "2026-10-25T04:20:17.798719+00:00",
       "branch": "claude/worker-escena-081",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/89",
-      "approval": null,
+      "approval": "pending-human",
       "reference": "{\"family_id\": \"6c6842a887784f77aa0c4795867f6cda\", \"submissions\": [{\"submission\": \"20261024-054647-2e12c3\", \"created\": \"2026-10-24T08:46:48.301243+00:00\", \"image_id\": \"6c6842a887784f77aa0c4795867f6cda\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"39da304e-9908-462a-bd6e-76f2f460b069\", \"2d2a10df-d949-4cb3-b569-8c00b0b29c2b\", \"c9614270-df71-47cc-a535-211681ac8e2e\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054647-2e12c3\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -478,10 +478,16 @@
           "at": "2026-10-24T22:45:08.665839+00:00",
           "owner": "codex-arte",
           "detail": "Hija enviada a Atlas; periodo diagonal ampliado de 8 a 16 tiles en bg1/bg2/bg3. Build/captura EU revisados, PR abierto."
+        },
+        {
+          "at": "2026-10-25T04:20:17.798719+00:00",
+          "owner": "codex-arte",
+          "detail": "PR #89 merge verificado en GitHub; merge commit be9c4540e3ff7b934a3841ad8e530d4846674800; propuesta sigue pendiente aprobación humana"
         }
       ],
       "claimed_at": "2026-10-24T22:41:40.977686+00:00",
-      "sent": "d03972341e324de2838eb705e2deb7b0"
+      "sent": "d03972341e324de2838eb705e2deb7b0",
+      "completed_at": "2026-10-25T04:20:17.798719+00:00"
     },
     "escena-087": {
       "id": "escena-087",
@@ -1639,7 +1645,7 @@
     "created_at": "2026-10-25T04:18:42.131411+00:00",
     "updated_at": "2026-10-25T04:19:44.606168+00:00"
   },
-  "updated_at": "2026-10-25T04:20:12.410411+00:00",
+  "updated_at": "2026-10-25T04:20:17.798719+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
