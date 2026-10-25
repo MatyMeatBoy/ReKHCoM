@@ -2265,10 +2265,10 @@
     "sintesis-requisito-hd": {
       "id": "sintesis-requisito-hd",
       "piece": "Síntesis: requisito HD dinámico runtime",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-sintesis",
       "created_at": "2026-10-25T13:37:36.238311+00:00",
-      "updated_at": "2026-10-25T13:47:18.576790+00:00",
+      "updated_at": "2026-10-25T13:48:31.249149+00:00",
       "branch": "codex/sintesis-requisito-hd",
       "pr": null,
       "approval": "Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija",
@@ -2278,6 +2278,11 @@
           "at": "2026-10-25T13:47:18.576790+00:00",
           "owner": "codex-sintesis",
           "detail": "Worktree khcom-sintesis-hd: implementación OAM local + assets 4x preparada. Sin compilar/juego por RAM; captura hija Atlas y PR pendientes de autorización serial."
+        },
+        {
+          "at": "2026-10-25T13:48:31.249149+00:00",
+          "owner": "codex-sintesis",
+          "detail": "Commit 0cfab16fb9e346138987d009a29715054046e130. Código preparado en khcom-sintesis-hd; 405 assets/cajas OAM, AST Python y tablas generadas verificados; sin compilar ni ejecutar juego. Pendientes prueba serial, HDoff contra base y captura hija Atlas real antes de PR. Traspaso port/progress/SINTESIS_REQUISITO_HD.md. No feedback marcado respondido."
         }
       ],
       "claimed_at": "2026-10-25T13:38:05.200080+00:00"
@@ -2304,7 +2309,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:47:18.576790+00:00",
+  "updated_at": "2026-10-25T13:48:31.249149+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
