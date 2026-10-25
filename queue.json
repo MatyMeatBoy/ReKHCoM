@@ -948,13 +948,13 @@
     "oogie-arena": {
       "id": "oogie-arena",
       "piece": "Oogie Boogie · arena",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-oogie-arena",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T22:34:33.755578+00:00",
+      "updated_at": "2026-10-25T04:20:12.410411+00:00",
       "branch": "claude/worker-oogie",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/88",
-      "approval": null,
+      "approval": "pending-human",
       "reference": "{\"family_id\": \"b7df95116b0543719423d2b29c7aa17f\", \"submissions\": [{\"submission\": \"20261024-055323-3bb655\", \"created\": \"2026-10-24T08:53:24.272947+00:00\", \"image_id\": \"b7df95116b0543719423d2b29c7aa17f\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 4, \"cloud_ids\": [\"dba684a3-e22f-413a-98f7-23bad667c4dd\", \"d4ea5fe4-40a5-447e-8c9d-6aac6680c8bf\", \"5948e8de-8db0-490f-986e-27c6387075e3\", \"8ea1959d-e833-4233-b81b-249548f7dbe0\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-055323-3bb655\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -976,10 +976,16 @@
           "at": "2026-10-24T22:34:33.755578+00:00",
           "owner": "codex-oogie-arena",
           "detail": "Propuesta hija enviada a Atlas con remates laterales de tiles GBA y vacío oscuro; PR con el renderer pendiente de revisión humana."
+        },
+        {
+          "at": "2026-10-25T04:20:12.410411+00:00",
+          "owner": "codex-oogie-arena",
+          "detail": "PR #88 merge verificado en GitHub; merge commit f9bbbbe95d1b75104640a848b43de5de2ec8bcf6; versión sigue preliminar apagada, sin honores"
         }
       ],
       "claimed_at": "2026-10-24T22:26:04.324588+00:00",
-      "sent": "7420dbb247c440e2b70a1285ce21dbe8"
+      "sent": "7420dbb247c440e2b70a1285ce21dbe8",
+      "completed_at": "2026-10-25T04:20:12.410411+00:00"
     },
     "trickmaster-arena": {
       "id": "trickmaster-arena",
@@ -1633,7 +1639,7 @@
     "created_at": "2026-10-25T04:18:42.131411+00:00",
     "updated_at": "2026-10-25T04:19:44.606168+00:00"
   },
-  "updated_at": "2026-10-25T04:19:44.606168+00:00",
+  "updated_at": "2026-10-25T04:20:12.410411+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
