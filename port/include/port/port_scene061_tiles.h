@@ -37,6 +37,19 @@ static inline int PortScene061TileSource(int bg, int width, int height, int* x, 
             return 1;
         }
     }
+    if (width == 32 && height == 32 && bg == 3 &&
+        (*x < 0 || *x >= 32 || *y < 0 || *y >= 32)) {
+        /* Keep the whole 16-column floor module together. Picking the
+         * closest four-column donor independently breaks large ornaments
+         * into unrelated checkerboard fragments at the extended corridor. */
+        int sx = 4 + PortSceneTileMod(*x - 4, 16);
+        int sy = *y + (sx - *x) / 2;
+        if (sy >= 0 && sy < 32) {
+            *x = sx;
+            *y = sy;
+            return 1;
+        }
+    }
     if (width == 32 && height == 32 &&
         (*x < 0 || *x >= 32 || *y < 0 || *y >= 32))
         return PortSceneWideSource(61, bg, x, y);
