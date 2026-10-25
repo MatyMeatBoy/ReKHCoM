@@ -1722,22 +1722,28 @@
     "steam-cuenta-verificacion": {
       "id": "steam-cuenta-verificacion",
       "piece": "Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-tecnico",
       "created_at": "2026-10-25T05:32:26.432629+00:00",
-      "updated_at": "2026-10-25T05:33:24.215279+00:00",
+      "updated_at": "2026-10-25T05:54:36.785918+00:00",
       "branch": "codex/steam-account-parser",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/97",
-      "approval": null,
+      "approval": "Usuario 25/10: solucionar resto y pushear soluciones; verificacion funcional sin cambios visuales",
       "reference": "Pedido de pendientes 25/10; hipótesis del handoff no confirmada, parser selecciona cuenta activa",
       "evidence": [
         {
           "at": "2026-10-25T05:33:24.215279+00:00",
           "owner": "codex-tecnico",
           "detail": "23c0595ca. Cuatro casos pasan; lectura real selecciona cuenta activa. Entrada ya existe. No hay fallo del parser; no reiniciar Steam durante Deadlock. Check_sources OK."
+        },
+        {
+          "at": "2026-10-25T05:54:36.785918+00:00",
+          "owner": "codex-tecnico",
+          "detail": "Merged 5e413a93a50ca08c9b65267bf49bd6a9e843081f; 4/4 fixtures y cuenta activa real correctos"
         }
       ],
-      "claimed_at": "2026-10-25T05:32:32.363112+00:00"
+      "claimed_at": "2026-10-25T05:32:32.363112+00:00",
+      "completed_at": "2026-10-25T05:54:36.785918+00:00"
     },
     "titulo-stutter": {
       "id": "titulo-stutter",
@@ -1785,7 +1791,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T05:54:32.144206+00:00"
   },
-  "updated_at": "2026-10-25T05:54:32.144206+00:00",
+  "updated_at": "2026-10-25T05:54:36.785918+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
