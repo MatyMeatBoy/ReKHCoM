@@ -82,8 +82,13 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - [ ] **Logros sin conexión con cuenta:** guardar en disco los desbloqueos hechos con sesión y sin red, y subirlos al
   volver (RA lo permite: cola segura de un cliente con sesión). Hoy rc_client los reintenta solo mientras el juego vive.
 - [ ] **Banco de partidas:** cada banco con su primer arranque (idioma, modo, pantalla completa/ventana), sus ajustes y
-  sus logros locales (avisos de nuevo aunque haya cuenta); traer de la cuenta los que falten en local.
-- [ ] **Primer arranque:** preguntar pantalla completa o ventana con el estilo de la elección de modo HD/GBA.
+  sus logros locales (avisos de nuevo aunque haya cuenta); traer de la cuenta los que falten en local. Aplazado (25/10):
+  toca cómo juego y launcher comparten kh_com.ini. Diseño: kh_com.ini guarda save_bank y es el banco 1; los bancos 2-5
+  leen encima kh_com_bankN.ini (si falta, primer arranque); los logros locales por banco
+  (achievements_official_eu_bankN.dat); el launcher debe editar el banco elegido. Hacerlo con el launcher a la vez.
+- [x] **Primer arranque:** pantalla completa o ventana tras el modo, en PC y Linux (25/10).
+- [x] **Herramienta de anuncios:** `port/tools/announce_release.py vX` escribe los textos de X, Reddit y Patreon desde
+  el CHANGELOG en build/announce/vX/ (publicar con OK del usuario; Codex donde haga falta el navegador).
 - [ ] **Título en HD** hasta cargar la partida, y Opciones en HD cuando el HUD HD está activo (diseño; ir a Atlas).
 - [ ] **Galería de escenas** (ver §1c).
 
