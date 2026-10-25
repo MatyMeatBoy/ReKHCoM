@@ -2244,16 +2244,23 @@
     "escena-004-muro-derecho": {
       "id": "escena-004-muro-derecho",
       "piece": "Escena004: completar muro derecho y revisar escena de Leon equivalente",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:33:32.092325+00:00",
-      "updated_at": "2026-10-25T13:34:04.096225+00:00",
+      "updated_at": "2026-10-25T13:39:49.213521+00:00",
       "branch": "codex/escena-004-muro",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/123",
       "approval": null,
       "reference": "20261024-174616-2db556 / d39a773a8c174176b3870d672367d05d",
-      "evidence": [],
-      "claimed_at": "2026-10-25T13:33:40.340277+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-25T13:39:49.213521+00:00",
+          "owner": "codex-atlas",
+          "detail": "004300/600 y005300; GBA identico3/3, compila y salidas0. Captura real en Atlas."
+        }
+      ],
+      "claimed_at": "2026-10-25T13:33:40.340277+00:00",
+      "sent": "8827dd92eb9c4392876f611cbf4cfcb2"
     },
     "sintesis-requisito-hd": {
       "id": "sintesis-requisito-hd",
@@ -2271,7 +2278,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:38:05.200080+00:00",
+  "updated_at": "2026-10-25T13:39:49.213521+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
