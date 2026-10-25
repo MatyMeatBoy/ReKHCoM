@@ -99,4 +99,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_revision | codex-atlas | codex/malefica-native-three-cuts | — | 2026-10-25T20:22:12.270237+00:00 |
 | atlas-menus-current-review | Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera | en_curso | codex-atlas | — | — | 2026-10-25T20:35:28.184368+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-25T20:45:42.319120+00:00)
