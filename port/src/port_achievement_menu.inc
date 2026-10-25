@@ -37,7 +37,13 @@ static void AchievementMenuBadge(const PortAchievementInfo* info, int index, int
         for (py = 0; py < 80; ++py) for (px = 0; px < 80; ++px) {
             const unsigned char* p = sAchievementAtlas +
                 (((kMenuRecomFrame / 10) * 64 + py * 64 / 80) * 640 + (kMenuRecomFrame % 10) * 64 + px * 64 / 80) * 4;
-            if (p[3] >= 128) Pixel(x - 8 + px, y - 8 + py, 0xFF000000u | p[0] << 16 | p[1] << 8 | p[2]);
+            if (p[3] < 128) continue;
+            if (sAchievementList == 2) { /* Rebel mode: the same filigree in black, its light kept as dark greys */
+                unsigned v = ((p[0] * 77 + p[1] * 150 + p[2] * 29) >> 8) / 4;
+                Pixel(x - 8 + px, y - 8 + py, 0xFF000000u | v << 16 | v << 8 | v);
+            } else {
+                Pixel(x - 8 + px, y - 8 + py, 0xFF000000u | p[0] << 16 | p[1] << 8 | p[2]);
+            }
         }
     }
 }

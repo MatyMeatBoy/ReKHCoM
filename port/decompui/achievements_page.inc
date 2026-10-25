@@ -55,7 +55,7 @@ static bool AchievementMatches(const char* title, const char* description, bool 
 
 static void AchievementRow(int id, const char* title, const char* description, bool unlocked,
                            const char* detail = nullptr, GLuint badge = 0,
-                           ImVec2 uv0 = ImVec2(0, 0), ImVec2 uv1 = ImVec2(1, 1), bool framed = false) {
+                           ImVec2 uv0 = ImVec2(0, 0), ImVec2 uv1 = ImVec2(1, 1), int framed = 0) { /* 1 gold (Re:CoM), 2 black (Rebel) */
     ImGui::PushID(id);
     ImVec2 origin = ImGui::GetCursorScreenPos();
     float width = ImGui::GetContentRegionAvail().x;
@@ -79,7 +79,8 @@ static void AchievementRow(int id, const char* title, const char* description, b
         ImVec2 f0, f1;
         GLuint frame = OfficialAchievementBadge(kRecomFrameCell, true, &f0, &f1);
         if (frame) ImGui::GetWindowDrawList()->AddImage((ImTextureID)(intptr_t)frame,
-            ImVec2(origin.x - Px(5.25f), origin.y - Px(5.25f)), ImVec2(origin.x + Px(47.25f), origin.y + Px(47.25f)), f0, f1);
+            ImVec2(origin.x - Px(5.25f), origin.y - Px(5.25f)), ImVec2(origin.x + Px(47.25f), origin.y + Px(47.25f)), f0, f1,
+            framed == 2 ? IM_COL32(48, 46, 52, 255) : IM_COL32_WHITE); /* Rebel mode: the filigree in black */
     }
     if (!badge) GameSquare(ImGui::GetWindowDrawList(), ImVec2(origin.x + Px(20), origin.y + Px(21)), Px(28), unlocked);
     ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
@@ -238,7 +239,7 @@ static void PageRecomAchievements() {
         if (table) ImGui::TableNextColumn();
         ImVec2 uv0, uv1;
         GLuint badge = OfficialAchievementBadge(kRecomBadgeCell + i, unlocked, &uv0, &uv1);
-        AchievementRow(0x52450000 + i, title, description, unlocked, nullptr, badge, uv0, uv1, true);
+        AchievementRow(0x52450000 + i, title, description, unlocked, nullptr, badge, uv0, uv1, 1);
         ++shown;
     }
     for (int i = 0; i < KhOfficialCount(); ++i) {
@@ -252,7 +253,7 @@ static void PageRecomAchievements() {
         ImVec2 uv0, uv1;
         GLuint badge = OfficialAchievementBadge(i, unlocked, &uv0, &uv1);
         if (table) ImGui::TableNextColumn();
-        AchievementRow(0x52460000 + (int)a->id, title, description, unlocked, nullptr, badge, uv0, uv1, true);
+        AchievementRow(0x52460000 + (int)a->id, title, description, unlocked, nullptr, badge, uv0, uv1, 1);
         ++shown;
     }
     if (table) ImGui::EndTable();
@@ -302,7 +303,7 @@ static void PageRebelAchievements() {
         GLuint badge = OfficialAchievementBadge(i, unlocked, &uv0, &uv1);
         if (table) ImGui::TableNextColumn();
         AchievementRow((int)a->id, title, description, unlocked, unlocked ? T("Conseguido", "Unlocked") : T("No conseguido", "Locked"),
-                       badge, uv0, uv1);
+                       badge, uv0, uv1, 2);
         ++shown;
     }
     if (table) ImGui::EndTable();
