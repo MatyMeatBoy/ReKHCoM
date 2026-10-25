@@ -1934,12 +1934,12 @@
     "issue83-jafar-recogida": {
       "id": "issue83-jafar-recogida",
       "piece": "Jafar Android #83: reproducir recogida de carta y corregir crash",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "claude-integrador",
       "created_at": "2026-10-25T05:44:39.164448+00:00",
-      "updated_at": "2026-10-25T08:43:48.296253+00:00",
+      "updated_at": "2026-10-25T13:11:03.719844+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/115",
       "approval": null,
       "reference": "Issue83 Samsung Tab S6 Lite Android13; no stack disponible",
       "evidence": [
@@ -1947,9 +1947,15 @@
           "at": "2026-10-25T08:43:48.296253+00:00",
           "owner": "claude-integrador",
           "detail": "el usuario lo asignó a Claude 25/10 tarde; sin avances desde 05:44"
+        },
+        {
+          "at": "2026-10-25T13:11:03.719844+00:00",
+          "owner": "claude-integrador",
+          "detail": "BIOS_PTR en AddPickedCardToSoraDeck/CycleSoraCardList"
         }
       ],
-      "claimed_at": "2026-10-25T05:44:44.944777+00:00"
+      "claimed_at": "2026-10-25T05:44:44.944777+00:00",
+      "sent": "pr115"
     },
     "transiciones-cargas": {
       "id": "transiciones-cargas",
@@ -2170,7 +2176,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T09:09:12.516719+00:00",
+  "updated_at": "2026-10-25T13:11:03.719844+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
