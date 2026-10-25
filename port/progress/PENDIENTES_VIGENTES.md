@@ -126,6 +126,13 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
   común (Vita ya pide 444 MHz; Switch: perfiles de reloj oficiales del sistema). Revisar cómo lo hacen otros ports
   de decomp (sm64ex, SoH, Perfect Dark port) antes de tocar nada.
 
+- **iOS (para la línea 2.0, puede salir después de las demás):** evaluar una IPA para instalar por fuera de la
+  App Store (ESign, AltStore, SideStore, Sideloadly). Referencia del usuario:
+  github.com/DevZer0D4Y/TheSimpsonsGame-iOS. Revisar también los repos con estrella del usuario que hagan lo mismo.
+  Punto de partida: el guest de 32 bits va por PORT_GBA_RELOC como en Android 64 (host arm64 + shim SDL), el host
+  iOS con SDL3 y Metal; firmar sin cuenta de pago (la firma la hace la herramienta del usuario). Usar la potencia de
+  iOS: Metal, 120 Hz (ProMotion), mandos MFi.
+
 ## 2. Arte (Atlas: GPT/Codex; Claude ayuda)
 
 - Responder en la app cada envío en turno «agente» con una versión hija (`COLA_PARA_AGENTES.md`).
