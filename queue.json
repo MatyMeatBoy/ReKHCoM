@@ -2331,13 +2331,13 @@
     "sintesis-requisito-hd": {
       "id": "sintesis-requisito-hd",
       "piece": "Síntesis: requisito HD dinámico runtime",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-sintesis",
       "created_at": "2026-10-25T13:37:36.238311+00:00",
-      "updated_at": "2026-10-25T16:08:07.022650+00:00",
+      "updated_at": "2026-10-25T20:16:30.180755+00:00",
       "branch": "codex/sintesis-requisito-hd",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/125",
-      "approval": "Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija",
+      "approval": "approved exact 823cdf38241144b1b282bcf3f2532120",
       "reference": "dbdb82b983fc4a178d46ce70edf44c6b envio20261025-011932-34d062",
       "evidence": [
         {
@@ -2364,10 +2364,15 @@
           "at": "2026-10-25T16:08:07.022650+00:00",
           "owner": "codex-sintesis",
           "detail": "Síntesis fix lista para captura: revisión20261025-125559-473c1c parentc08283ad450f4455937a3f1e1ead3302. Dos nubes a849c7d8 y23d13c7a: grupo tinta contenido, staging con10digitos locales gCardValueDigitTiles, banda neutral y centro transparente. Sólo generación assets; sin tests, compilación ni juego; esperando turno serial. Assets privados preparados build/synthesis-fix-assets; lógica dinámica/2000casos/TOTAL sin cambios. Sin push ni actualizar PR125 antes de hija real nueva. Respuestas2nubes preparadas en evidence generator; no feedback marcado respondido."
+        },
+        {
+          "at": "2026-10-25T20:16:30.180755+00:00",
+          "owner": "codex-sintesis",
+          "detail": "Actualizado conmain;405recursosPASS;PR125reabierto trasaprobacion. Comentario posteriorcontorno pendiente."
         }
       ],
       "claimed_at": "2026-10-25T13:38:05.200080+00:00",
-      "sent": "b77d47de367749538ebe7469598d3926"
+      "sent": "823cdf38241144b1b282bcf3f2532120"
     },
     "anadir-naipes-oclusion-hd": {
       "id": "anadir-naipes-oclusion-hd",
@@ -2788,7 +2793,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:57:57.314809+00:00",
+  "updated_at": "2026-10-25T20:16:30.180755+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
