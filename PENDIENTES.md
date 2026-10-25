@@ -27,7 +27,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-099 | Escena 099 | integrado | codex-099 | https://github.com/MatyMeatBoy/ReKHCoM/pull/79 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:27.053419+00:00 |
 | escena-102 | Escena 102 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/92 | — | 2026-10-25T05:07:35.056513+00:00 |
 | escena-112 | Escena 112 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T20:36:13.118522+00:00 |
-| escena-115 | Escena 115 | en_curso | codex-arte-final | — | — | 2026-10-25T05:07:40.962418+00:00 |
+| escena-115 | Escena 115 | en_curso | codex-arte-final | codex/arte-115 | — | 2026-10-25T05:11:55.974838+00:00 |
 | escena-116 | Escena 116 | pendiente | — | — | — | 2026-10-24T20:54:44.400734+00:00 |
 | escena-117 | Escena 117 | pendiente | — | — | — | 2026-10-24T20:54:50.170366+00:00 |
 | escena-118 | Escena 118 | pendiente | — | — | — | 2026-10-24T20:54:55.641853+00:00 |

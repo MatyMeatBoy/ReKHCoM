@@ -750,8 +750,8 @@
       "status": "en_curso",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T05:07:40.962418+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T05:11:55.974838+00:00",
+      "branch": "codex/arte-115",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"db8a052dda2c4b4da6bf0cd8bd67fa91\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"db8a052dda2c4b4da6bf0cd8bd67fa91\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 2, \"cloud_ids\": [\"9339b058-672f-4a82-822c-7ce25ff04c51\", \"7d5b6edc-353d-4295-951c-729eeb878545\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
@@ -770,6 +770,11 @@
           "at": "2026-10-24T20:54:39.212011+00:00",
           "owner": "r4",
           "detail": "released: Piquetes en el patron y 'algunas escotillas mal' sin cual: ambiguo, pedir al usuario que marque las escotillas."
+        },
+        {
+          "at": "2026-10-25T05:11:55.974838+00:00",
+          "owner": "codex-arte-final",
+          "detail": "Base de receta capturada. Madera: cuatro filas completas con fase diagonal. Escotillas: retícula escalonada completa y supresión de fragmentos de celdas vacías nativas. Solo preview; captura final en curso."
         }
       ],
       "claimed_at": "2026-10-25T05:07:40.962418+00:00"
@@ -1682,7 +1687,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:07:40.962418+00:00",
+  "updated_at": "2026-10-25T05:11:55.974838+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
