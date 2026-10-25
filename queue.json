@@ -1793,15 +1793,16 @@
     "transiciones-cargas": {
       "id": "transiciones-cargas",
       "piece": "Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-transiciones",
       "created_at": "2026-10-25T05:58:29.431264+00:00",
-      "updated_at": "2026-10-25T05:58:29.431264+00:00",
+      "updated_at": "2026-10-25T05:58:34.495227+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario 25/10: todas las comprobaciones en cargas o entre escenas, evaluar residencia RAM/GPU con bajo costo",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T05:58:34.495227+00:00"
     }
   },
   "integrator": {
@@ -1810,7 +1811,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T05:54:32.144206+00:00"
   },
-  "updated_at": "2026-10-25T05:58:29.431264+00:00",
+  "updated_at": "2026-10-25T05:58:34.495227+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

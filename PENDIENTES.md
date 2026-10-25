@@ -64,6 +64,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | steam-cuenta-verificacion | Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario | integrado | codex-tecnico | https://github.com/MatyMeatBoy/ReKHCoM/pull/97 | Usuario 25/10: solucionar resto y pushear soluciones; verificacion funcional sin cambios visuales | 2026-10-25T05:54:36.785918+00:00 |
 | titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | integrado | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | Usuario 25/10: solucionar resto; transiciones smooth; pushear soluciones | 2026-10-25T05:54:41.558911+00:00 |
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
-| transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | pendiente | — | — | — | 2026-10-25T05:58:29.431264+00:00 |
+| transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | en_curso | codex-transiciones | — | — | 2026-10-25T05:58:34.495227+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T05:54:32.144206+00:00)
