@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import math
+import re
 import subprocess
 import shutil
 import sqlite3
@@ -19,6 +20,7 @@ from urllib.parse import urlparse, parse_qs
 
 from PIL import Image, ImageDraw
 from runtime_version import build_id
+from tile_editor import TileEditor
 
 ROOT = Path(__file__).resolve().parents[3]
 WEB = Path(__file__).with_name('web')
@@ -448,7 +450,11 @@ class Store:
                 raise
 
 
-def handler(store):
+def handler(store, editor=None):
+    if editor is None:
+        settings_path = store.root / 'editor/settings.json'
+        settings = json.loads(settings_path.read_text(encoding='utf-8')) if settings_path.is_file() else {}
+        editor = TileEditor(store.root / 'editor', ROOT, **settings)
     class Handler(BaseHTTPRequestHandler):
         def handle(self):
             try:
@@ -475,6 +481,43 @@ def handler(store):
             if not self.local():
                 return self.reply(403, dict(error='Solo localhost'))
             route = urlparse(self.path).path
+            query = {key:values[0] for key, values in parse_qs(urlparse(self.path).query).items()}
+            if route.startswith('/api/editor/') or route.startswith('/editor-assets/'):
+                try:
+                    if route == '/api/editor/scenes':
+                        return self.reply(200, editor.scene_list())
+                    if route == '/api/editor/scene':
+                        return self.reply(200, dict(project=editor.scene(query.get('id', ''))['project']))
+                    if route == '/api/editor/catalog':
+                        return self.reply(200, editor.catalog(**{key:query[key] for key in ('scene','world','scope','category') if key in query}))
+                    if route == '/api/editor/project':
+                        return self.reply(200, dict(project=editor.load_project(query.get('id', ''))))
+                    if route == '/api/editor/projects':
+                        return self.reply(200, dict(projects=editor.projects()))
+                    if route == '/api/editor/export':
+                        archive = query.get('format') == 'zip'
+                        raw = editor.export(query.get('id', ''), archive)
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'application/zip' if archive else 'application/json; charset=utf-8')
+                        self.send_header('Content-Length', str(len(raw)))
+                        self.send_header('Content-Disposition', 'attachment; filename="map.' + ('zip' if archive else 'tmj') + '"')
+                        self.send_header('Cache-Control', 'no-store')
+                        self.end_headers()
+                        self.wfile.write(raw)
+                        return
+                    if route.startswith('/editor-assets/'):
+                        path = editor.asset_path(route)
+                        raw = path.read_bytes()
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'image/png' if path.suffix == '.png' else 'application/json; charset=utf-8')
+                        self.send_header('Content-Length', str(len(raw)))
+                        self.send_header('X-Content-Type-Options', 'nosniff')
+                        self.end_headers()
+                        self.wfile.write(raw)
+                        return
+                    return self.reply(404, dict(error='Editor endpoint not found'))
+                except (ValueError, KeyError, TypeError, OSError, StopIteration) as exc:
+                    return self.reply(400, dict(error=str(exc)))
             if route == '/api/state':
                 assets=store.all()
                 delivered=[a for a in assets if not a.get('revision_info',{}).get('catalog_key')]
@@ -497,12 +540,22 @@ def handler(store):
                         return self.reply(404, dict(error='No encontrado'))
                     break
             if path is None:
-                path = WEB / {'/':'index.html', '/app.js':'app.js', '/style.css':'style.css'}.get(route, 'not-found')
+                static = {'/':'index.html', '/app.js':'app.js', '/style.css':'style.css',
+                          '/editor':'editor.html', '/editor.html':'editor.html', '/editor.js':'editor.js',
+                          '/editor.css':'editor.css', '/editor-core.mjs':'editor-core.mjs'}
+                if route.startswith('/vendor/'):
+                    name = route[len('/vendor/'):]
+                    if re.fullmatch(r'[A-Za-z0-9_.-]+\.(?:js|mjs|md|json|txt)', name):
+                        path = WEB / 'vendor' / name
+                    else:
+                        return self.reply(404, dict(error='No encontrado'))
+                else:
+                    path = WEB / static.get(route, 'not-found')
             if not path.is_file():
                 return self.reply(404, dict(error='No encontrado'))
             raw = path.read_bytes()
             mime = {'.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8',
-                    '.css':'text/css; charset=utf-8', '.png':'image/png', '.txt':'text/plain; charset=utf-8',
+                    '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.png':'image/png', '.txt':'text/plain; charset=utf-8',
                     '.md':'text/plain; charset=utf-8', '.json':'application/json; charset=utf-8', '.jsonl':'application/x-ndjson'}.get(path.suffix, 'application/octet-stream')
             self.send_response(200)
             self.send_header('Content-Type', mime)
@@ -523,6 +576,12 @@ def handler(store):
                 if not 0 < length <= 42 * 1024 * 1024:
                     raise ValueError('Solicitud demasiado grande o vacía')
                 data = json.loads(self.rfile.read(length))
+                if self.path == '/api/editor/project/new':
+                    return self.reply(200, dict(project=editor.new_project(data['scene'])))
+                if self.path == '/api/editor/project':
+                    return self.reply(200, dict(project=editor.save_project(data['project'], data['expected_revision'])))
+                if self.path == '/api/editor/import':
+                    return self.reply(200, dict(project=editor.import_map(data['scene'], data['map'])))
                 if self.path == '/api/save':
                     return self.reply(200, store.save(data))
                 if self.path == '/api/submit':
@@ -531,7 +590,7 @@ def handler(store):
                     return self.reply(200, store.add(base64.b64decode(data['base64'], validate=True),
                         data['title'], data['version'], data.get('provenance','Importada por el usuario'), parent_id=data.get('parent_id')))
                 return self.reply(404, dict(error='No encontrado'))
-            except (ValueError, KeyError, TypeError, OSError) as exc:
+            except (ValueError, KeyError, TypeError, OSError, StopIteration) as exc:
                 return self.reply(400, dict(error=str(exc)))
     return Handler
 
@@ -541,6 +600,11 @@ def main():
     parser.add_argument('--data', type=Path, default=ROOT / 'build/art-review')
     parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--queue', action='store_true', help='write and print COLA_PARA_AGENTES.md, then exit')
+    parser.add_argument('--editor-rom', type=Path)
+    parser.add_argument('--editor-symbols', type=Path)
+    parser.add_argument('--editor-region', choices=['eu', 'us', 'jp'])
+    parser.add_argument('--editor-pieces', type=Path)
+    parser.add_argument('--editor-sprites', type=Path)
     args = parser.parse_args()
     if args.queue:
         store = Store(args.data)
@@ -548,7 +612,14 @@ def main():
         sys.stdout.reconfigure(encoding='utf-8')
         print((store.root / 'COLA_PARA_AGENTES.md').read_text(encoding='utf-8'))
         return
-    server = ThreadingHTTPServer(('127.0.0.1', args.port), handler(Store(args.data)))
+    settings_path = args.data / 'editor/settings.json'
+    settings = json.loads(settings_path.read_text(encoding='utf-8')) if settings_path.is_file() else {}
+    for key in ('rom', 'symbols', 'region', 'pieces', 'sprites'):
+        value = getattr(args, 'editor_' + key)
+        if value is not None:
+            settings[key] = value
+    editor = TileEditor(args.data / 'editor', ROOT, **settings)
+    server = ThreadingHTTPServer(('127.0.0.1', args.port), handler(Store(args.data), editor))
     print('Revisión de arte: http://127.0.0.1:%s — Datos: %s' % (args.port, args.data), flush=True)
     restart = threading.Event()
     stopped = threading.Event()
@@ -569,7 +640,7 @@ def main():
         server.server_close()
     if restart.is_set():
         # Close the only listener before replacing this process. No second port/server.
-        subprocess.Popen([sys.executable,str(Path(__file__).resolve()),'--data',str(args.data.resolve()),'--port',str(args.port)],
+        subprocess.Popen([sys.executable,str(Path(__file__).resolve()),*sys.argv[1:]],
             cwd=ROOT, stdin=subprocess.DEVNULL, stdout=sys.stdout, stderr=sys.stderr,
             creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
 
