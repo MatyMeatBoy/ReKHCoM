@@ -2465,19 +2465,20 @@
     "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3": {
       "id": "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3",
       "piece": "Escena 110 revision Atlas 179b6da22e5c4bd39181d5ab14d7b9d3",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-escenas",
       "created_at": "2026-10-25T16:05:27.620543+00:00",
-      "updated_at": "2026-10-25T16:05:27.620543+00:00",
+      "updated_at": "2026-10-25T16:05:33.163374+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "../khcom-claude-int/build/atlas-all-briefs.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:05:33.163374+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:05:27.620543+00:00",
+  "updated_at": "2026-10-25T16:05:33.163374+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
