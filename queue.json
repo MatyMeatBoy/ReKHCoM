@@ -2520,19 +2520,20 @@
     "atlas-remates-115-r20261025": {
       "id": "atlas-remates-115-r20261025",
       "piece": "Escena 115 comentarios posteriores",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-remates",
       "created_at": "2026-10-25T16:06:48.726594+00:00",
-      "updated_at": "2026-10-25T16:06:48.726594+00:00",
+      "updated_at": "2026-10-25T16:06:55.925715+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "familia db8a052dda2c4b4da6bf0cd8bd67fa91; envio 20261025-025012-8a510c; parent edd1e953dd7141ad931a43429c621a42",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:06:55.925715+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:06:48.726594+00:00",
+  "updated_at": "2026-10-25T16:06:55.925715+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
