@@ -1646,12 +1646,12 @@
     "agrabah-jafar-arena": {
       "id": "agrabah-jafar-arena",
       "piece": "Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jafar",
       "created_at": "2026-10-25T04:45:45.022710+00:00",
-      "updated_at": "2026-10-25T04:57:25.082383+00:00",
+      "updated_at": "2026-10-25T05:01:57.795447+00:00",
       "branch": "codex/jafar-blink",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/91",
       "approval": null,
       "reference": "build/user-reports/jafar-arena-20261025.png SHA256=811009864F497879DC35EA37C492F39757DA09C4E191CE2660B1E43D6C616FFE; Atlas parent 53e790683ac740ab8df504a7bb8406f3; captura aportada por el usuario 25/10/2026",
       "evidence": [
@@ -1659,13 +1659,19 @@
           "at": "2026-10-25T04:57:25.082383+00:00",
           "owner": "codex-jafar",
           "detail": "Origen de rebind en SetBgMapBlocks y desfase de búfer mutable/VRAM reproducidos. Jafar usa copia fija 768,256 en márgenes. Prueba secuencial a un hilo y prioridad baja."
+        },
+        {
+          "at": "2026-10-25T05:01:57.795447+00:00",
+          "owner": "codex-jafar",
+          "detail": "fa7be98d4. Blinkeo: 1701 frames activos 16:9 + 461 32:9, cero perdidas; GBA identica en 5 capturas; check_sources OK. Hija Atlas tecnica y copia EU independiente entregadas. Patron inferior sigue pendiente de arte, Android #83 no resuelto por este PR. Pruebas finalizadas y bajo consumo pedido por Deadlock."
         }
       ],
-      "claimed_at": "2026-10-25T04:47:50.011577+00:00"
+      "claimed_at": "2026-10-25T04:47:50.011577+00:00",
+      "sent": "e182f7052b8348b2a88b4f2e996a0ed7"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T04:57:25.082383+00:00",
+  "updated_at": "2026-10-25T05:01:57.795447+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
