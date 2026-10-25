@@ -2386,19 +2386,20 @@
     "atlas-titulo-hd": {
       "id": "atlas-titulo-hd",
       "piece": "Titulo: HD menu y fondo original PS2 1.5",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-menus",
       "created_at": "2026-10-25T16:02:36.403069+00:00",
-      "updated_at": "2026-10-25T16:02:36.403069+00:00",
+      "updated_at": "2026-10-25T16:02:47.744398+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "feedbackref:20261024-134115-f782ac;parent:c4e96953065648208e79a8484b6b0197",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:02:47.744398+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:02:42.072840+00:00",
+  "updated_at": "2026-10-25T16:02:47.745392+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
