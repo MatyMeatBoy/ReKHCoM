@@ -93,7 +93,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-120-r20261025 | Escena 120 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:55.659622+00:00 |
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
 | escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | pendiente | — | — | — | 2026-10-25T16:08:35.815510+00:00 |
-| trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | en_revision | codex-atlas | — | — | 2026-10-25T19:16:35.583126+00:00 |
+| trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/151 | approved exact c6f2bb42ff5143bf98ee674f64065f71 | 2026-10-25T19:49:41.960504+00:00 |
 | escena099-wallfinish | Escena099: patron lateral completo como la arena | en_revision | codex-atlas | — | — | 2026-10-25T19:16:42.424344+00:00 |
 | atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | en_curso | codex-atlas | — | — | 2026-10-25T19:34:52.989176+00:00 |
 | malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_curso | codex-atlas | — | — | 2026-10-25T19:45:55.340720+00:00 |
