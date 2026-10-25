@@ -3440,6 +3440,29 @@ static const char* const sConfirmTitleRows[2][LANG_COUNT] = {
     { "Yes, return to the title", "Oui, retour au titre", "Ja, zum Titel", "Sì, torna al titolo", "Sí, volver al título",
       "はい、タイトルへ" },
 };
+/* Quit the game (user 25/10): no warning unless this session played over an hour since its last save (or since the
+   game was loaded, if it has not saved yet); a save loaded and left at once says nothing. */
+static Uint64 sSavedAt, sPlayFrom;
+void PortUiSaved(void) {
+    sSavedAt = SDL_GetTicks();
+}
+static void QuitTrack(void) { /* once a frame: the moment a game starts from the title */
+    static int wasTitle = 1;
+    int title = PortDebugModeAvailable();
+    if (wasTitle && !title)
+        sPlayFrom = SDL_GetTicks();
+    if (title)
+        sPlayFrom = 0;
+    wasTitle = title;
+}
+static int QuitUnsavedMinutes(void) {
+    Uint64 from = SDL_max(sSavedAt, sPlayFrom);
+    return sPlayFrom ? (int)((SDL_GetTicks() - from) / 60000) : 0;
+}
+static const char* const sConfirmQuitLong[LANG_COUNT] = { /* %d h %02d min */
+    "You haven't saved for %d h %02d min.", "Pas de sauvegarde depuis %d h %02d min.",
+    "Seit %d h %02d min nicht gespeichert.", "Non salvi da %d h %02d min.", "No guardas desde hace %d h %02d min.",
+    "%d時間%02d分セーブしていません。" };
 static const char* const sConfirmQuitAsk[LANG_COUNT] = {
     "Quit the game?", "Quitter le jeu ?", "Spiel beenden?", "Uscire dal gioco?", "¿Salir del juego?", "ゲームを終了しますか？",
 };
@@ -3537,7 +3560,8 @@ static void ConfirmOpen(int what) {
 static void ConfirmKey(int key) {
     extern void PortMenuSoundClick(void);
     extern void PortMenuSoundDecide(int confirm);
-    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES ? 0 : 1;
+    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES ? 0
+                                   : sConfirm == CONFIRM_QUIT && QuitUnsavedMinutes() < 60 ? 0 : 1;
     if (sConfirm == CONFIRM_FONT && key >= 2) { /* one step: A takes the face under the cursor, B leaves it as it was */
         PortMenuSoundDecide(key == 2);
         if (key == 2) {
@@ -3703,6 +3727,7 @@ static void DrawConfirm(int l, int width, int height) {
         warn = sConfirmStatesWarn[l];
     } else {
         int last = sConfirmStep == (sConfirm == CONFIRM_MODE ? 2 : 1);
+        static char quitWarn[160];
         for (i = 0; i < 2; i++)
             labels[i] = sConfirm == CONFIRM_TITLE ? sConfirmTitleRows[i][l] : sConfirm == CONFIRM_QUIT ? sConfirmQuitRows[i][l]
                                                                                        : sConfirmModeRows[i][l];
@@ -3716,6 +3741,16 @@ static void DrawConfirm(int l, int width, int height) {
             SDL_snprintf(ask, sizeof(ask), sConfirmModeReset[l], sModeNames[sConfirmMode][l]);
         warn = sConfirm == CONFIRM_TITLE ? sConfirmTitleWarn[last][l] : sConfirm == CONFIRM_QUIT ? sConfirmQuitWarn[last][l]
                                                                                            : sConfirmModeWarn[sConfirmStep][l];
+        if (sConfirm == CONFIRM_QUIT) { /* one plain question; the time without saving only past an hour */
+            int m = QuitUnsavedMinutes();
+            if (!last)
+                SDL_strlcpy(ask, sConfirmQuitAsk[l], sizeof(ask));
+            if (m >= 60)
+                SDL_snprintf(quitWarn, sizeof(quitWarn), sConfirmQuitLong[l], m / 60, m % 60);
+            else
+                quitWarn[0] = 0;
+            warn = quitWarn;
+        }
     }
     /* measure; on the GBA's 160 lines a window too tall shows only the chosen row's description */
     warnH = DrawWrapped(warn, 0, 0, panelW - 32, 0, 0) * 11 + 4;
@@ -4277,6 +4312,7 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
     int l = Lang();
     int harnessShot = 0;
     ++sMenuLightDrawClock;
+    QuitTrack();
 
     sFb = frame;
     sFbW = width;

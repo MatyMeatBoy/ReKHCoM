@@ -226,6 +226,10 @@ void PortSramSyncIfDirty(void) {
     int closed = fclose(f) == 0;
     if (written && closed) {
         if (rename(tmp, PortConfigPath(BankName(sSramBank))) == 0)
+        {
+            extern void PortUiSaved(void);
             memcpy(sSramShadow, sram, GBA_SRAM_SIZE);
+            PortUiSaved(); /* Quit the game: how long since the last save */
+        }
     }
 }
