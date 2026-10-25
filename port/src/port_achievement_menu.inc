@@ -94,6 +94,13 @@ static int AchievementMenuInput(const SDL_Event* ev) {
         case SDL_GAMEPAD_BUTTON_EAST: back = 1; break;
         case SDL_GAMEPAD_BUTTON_START: case SDL_GAMEPAD_BUTTON_BACK: case SDL_GAMEPAD_BUTTON_GUIDE: Close(); return 1;
         }
+    } else if (ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && (ev->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER ||
+                                                             ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER)) {
+        /* L2 / R2 change the list too (user 25/10): once per press */
+        static int held[2];
+        int t = ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER, down = ev->gaxis.value > 16000;
+        if (down && !held[t]) list = 1;
+        held[t] = ev->gaxis.value > 8000;
     }
     if (back) { sPage = PAGE_MAIN; sCursor = ITEM_ACHIEVEMENTS_MENU; sScroll = 0; return 1; }
     if (list && PortRecomListCount() > 0) { sAchievementList = !sAchievementList; sAchievementChoice = sAchievementScroll = 0; }
@@ -122,8 +129,9 @@ static void DrawAchievementMenu(int l, int width, int height) {
     PortAchievementInfo info;
     char text[160];
     Fill(0, 0, width, height, 0xFFFFFFFFu);
-    DrawText(sAchievementList ? (es ? "Logros - Re:CoM" : "Achievements - Re:CoM")
-                              : (es ? "Logros - Oficiales" : "Achievements - Official"), x, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
+    DrawText(sAchievementList ? (es ? "Logros · Re:Chain of Memories" : "Achievements · Re:Chain of Memories")
+                              : (es ? "Logros · Chain of Memories" : "Achievements · Chain of Memories"),
+             x, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
     SDL_snprintf(text, sizeof(text), "%d/%d    L < %s > R", earned, AchievementMenuCount(), filters[es][sAchievementView]);
     AchievementMenuText(text, x, MENU_TOP + 2, right, MENU_RED_DARK);
     if (sAchievementChoice >= count) sAchievementChoice = SDL_max(0, count - 1);
@@ -166,8 +174,8 @@ static void DrawAchievementMenu(int l, int width, int height) {
 #endif
         AchievementMenuText(note, x, height - 22, right, MENU_DIM);
     }
-    AchievementMenuText(PortRecomListCount() > 0 ? (es ? "Arriba/abajo  L/R: filtro  Y: oficiales/Re:CoM  B: volver"
-                                                        : "Up/down  L/R: filter  Y: official/Re:CoM  B: back")
+    AchievementMenuText(PortRecomListCount() > 0 ? (es ? "Arriba/abajo  L/R: filtro  Y/L2/R2: CoM/Re:CoM  B: volver"
+                                                        : "Up/down  L/R: filter  Y/L2/R2: CoM/Re:CoM  B: back")
                         : es ? "Arriba/abajo: lista  L/R: filtro  B: volver" : "Up/down: list  L/R: filter  B: back",
         x, height - 11, right, MENU_DIM);
 }
