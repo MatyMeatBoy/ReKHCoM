@@ -1748,13 +1748,13 @@
     "titulo-stutter": {
       "id": "titulo-stutter",
       "piece": "Diagnosticar y corregir tirón al aparecer el título",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-titulo",
       "created_at": "2026-10-25T05:32:38.136089+00:00",
-      "updated_at": "2026-10-25T05:42:40.659780+00:00",
+      "updated_at": "2026-10-25T05:54:41.558911+00:00",
       "branch": "codex/titulo-stutter",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/98",
-      "approval": null,
+      "approval": "Usuario 25/10: solucionar resto; transiciones smooth; pushear soluciones",
       "reference": "Reporte del usuario en handoff 25/10; reproducido timeout al primer frame del título",
       "evidence": [
         {
@@ -1766,9 +1766,15 @@
           "at": "2026-10-25T05:42:40.659780+00:00",
           "owner": "codex-titulo",
           "detail": "aa3125796. Reproducido 125.247 ms con JP; transición tras corrección 16.74 ms; sin JP 17.01 ms. Check_sources OK. No añade memoria de ROM ni threads."
+        },
+        {
+          "at": "2026-10-25T05:54:41.558911+00:00",
+          "owner": "codex-titulo",
+          "detail": "Merged 487d8c423126c726e6f0006e5e691705130e3457; JP titulo 125.247ms a 16.74ms"
         }
       ],
-      "claimed_at": "2026-10-25T05:32:44.124458+00:00"
+      "claimed_at": "2026-10-25T05:32:44.124458+00:00",
+      "completed_at": "2026-10-25T05:54:41.558911+00:00"
     },
     "issue83-jafar-recogida": {
       "id": "issue83-jafar-recogida",
@@ -1791,7 +1797,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T05:54:32.144206+00:00"
   },
-  "updated_at": "2026-10-25T05:54:36.785918+00:00",
+  "updated_at": "2026-10-25T05:54:41.558911+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

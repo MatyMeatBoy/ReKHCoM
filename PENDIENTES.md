@@ -62,7 +62,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:04.558305+00:00 |
 | agrabah-jafar-arena | Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara | pr_abierto | codex-jafar | https://github.com/MatyMeatBoy/ReKHCoM/pull/91 | — | 2026-10-25T05:01:57.795447+00:00 |
 | steam-cuenta-verificacion | Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario | integrado | codex-tecnico | https://github.com/MatyMeatBoy/ReKHCoM/pull/97 | Usuario 25/10: solucionar resto y pushear soluciones; verificacion funcional sin cambios visuales | 2026-10-25T05:54:36.785918+00:00 |
-| titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | pr_abierto | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | — | 2026-10-25T05:42:40.659780+00:00 |
+| titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | integrado | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | Usuario 25/10: solucionar resto; transiciones smooth; pushear soluciones | 2026-10-25T05:54:41.558911+00:00 |
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T05:54:32.144206+00:00)
