@@ -388,8 +388,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T20:23:17.300743+00:00",
-      "branch": "codex/finish-art-queue",
+      "updated_at": "2026-10-25T20:28:37.619591+00:00",
+      "branch": "codex/atlas061-turbo-current",
       "pr": null,
       "approval": null,
       "reference": "f31927d3f7014eb3a51e52fcf7323003; envío 20261024-131809-942e10",
@@ -433,9 +433,15 @@
           "at": "2026-10-25T20:23:17.300743+00:00",
           "owner": "codex-atlas",
           "detail": "Continuacion en este mismo chat del carril delegado ya cerrado; usuario exige cola completa sinworkers. Checkout061 revisado: solofixturePSsinpatch; se conserva. Noesrecuperacionporantiguedad."
+        },
+        {
+          "at": "2026-10-25T20:28:37.619591+00:00",
+          "owner": "codex-atlas",
+          "detail": "Hija dc231096 modulo16 suelo conEU3440frames300/600. Nube2 propuesta entregada; nube1 detalle pequeno aunpendiente."
         }
       ],
-      "claimed_at": "2026-10-25T04:21:34.782875+00:00"
+      "claimed_at": "2026-10-25T04:21:34.782875+00:00",
+      "sent": "dc231096ab3e411584cb4e49bcce20ec"
     },
     "escena-074": {
       "id": "escena-074",
@@ -2808,7 +2814,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T20:23:17.300743+00:00",
+  "updated_at": "2026-10-25T20:28:37.619591+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
