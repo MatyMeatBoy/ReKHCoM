@@ -55,6 +55,7 @@ int PortCheatMaxLevel(void) {
     if (!PortCheatActionsAvailable())
         return 0;
     PortAchievementsInvalidate("Max level cheat");
+    PortAchievementsTaintSession();
     p->level = 1;
     p->nextExp = 0x19;
     for (level = 1; level < 99; level++) {
@@ -86,16 +87,38 @@ int PortCheatMaxLevel(void) {
     return 1;
 }
 
-/* Every regular map card at the most the game holds of one card (9). Past
-   99 in all the game simply stops awarding more; key cards are untouched. */
+/* Map cards up to the cartridge's own limit: 99 regular cards in all, 9 of
+   one card at most (AddMapCard). The cards already held stay; the free room
+   is shared out one card per kind in turn, each round a different value (0
+   opens any door, 9 nearly any; the event doors ask for at least, at most or
+   exactly a value), through AddMapCard itself, so the journal records them as
+   when the game awards them. Key cards are untouched. A count past 99 (left
+   by this cheat before 2.0: 9 of all 220) goes back to the shared-out 99. */
 int PortCheatMapCards(void) {
-    int i;
+    static const u8 kValues[10] = { 0, 9, 5, 1, 7, 3, 8, 2, 6, 4 };
+    int round, kind, added = 1;
 
     if (!PortCheatActionsAvailable())
         return 0;
     PortAchievementsInvalidate("Map card cheat");
-    for (i = 0; i < 220; i++)
-        gMapCardCounts[i] = 9;
+    PortAchievementsTaintSession();
+    if (CountRegularMapCards() > 99)
+        for (kind = 0; kind < 220; kind++)
+            gMapCardCounts[kind] = 0;
+    for (round = 0; added && CountRegularMapCards() < 99; round++) {
+        added = 0;
+        for (kind = 0; kind < 22 && CountRegularMapCards() < 99; kind++) {
+            int i, value = 0;
+            /* this round's value, or the next one this kind still has room for */
+            for (i = 0; i < 10; i++) {
+                value = kValues[(round + i) % 10];
+                if (gMapCardCounts[kind * 10 + value] < 9)
+                    break;
+            }
+            if (i < 10 && AddMapCard((u16)(kind * 10 + value)))
+                added = 1;
+        }
+    }
     return 1;
 }
 
@@ -111,6 +134,7 @@ int PortCheatJournal(void) {
     if (!PortCheatActionsAvailable())
         return 0;
     PortAchievementsInvalidate("Journal cheat");
+    PortAchievementsTaintSession();
     memset(seen, 0, sizeof(seen));
     for (id = 0; id < 950; id++) {
         int kind = gCardDefs[id].kind;
@@ -140,6 +164,7 @@ int PortCheatBattleCards(void) {
     if (!PortCheatActionsAvailable() || (gGameState.flags & GAME_FLAG_RIKU))
         return 0;
     PortAchievementsInvalidate("Battle card cheat");
+    PortAchievementsTaintSession();
     gCardCount = 999;
     for (pass = 0; added && !IsCardCollectionFull(); pass++) {
         added = 0;

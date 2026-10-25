@@ -517,7 +517,12 @@ u8 BosMdUpdateIdle(MdWork* work) {
 
         if (gBtlWork->flags & 0x100000) {
             work->timer = ((GetRandom() & 3) + (GetRandom() & 3)) / 2 * 20 + 60;
+#ifdef PLATFORM_PC
+        /* @bug: a frame before the maximum HP is set divides by zero (the gauges' #40 class) */
+        } else if (work->sub[0].maxHp > 0 && work->sub[0].hp * 10 / work->sub[0].maxHp > 4) {
+#else
         } else if (work->sub[0].hp * 10 / work->sub[0].maxHp > 4) {
+#endif
             work->timer = (GetRandom() % 5 + GetRandom() % 5) / 2 * 30 + 30;
         } else {
             work->timer = (GetRandom() % 6 + GetRandom() % 6) / 2 * 10 + 30;
@@ -787,7 +792,12 @@ u8 BosMdUpdateFireBreath(MdWork* work) {
                         fireArg.index = 0;
                         fireArg.flags = &work->signals;
 
+#ifdef PLATFORM_PC
+                        /* @bug: as BOS_MD_PHASE_ENTER, no division by a maximum HP still 0 (#40 class) */
+                        if (work->sub[0].maxHp > 0 && work->sub[0].hp * 10 / work->sub[0].maxHp > 4) {
+#else
                         if (work->sub[0].hp * 10 / work->sub[0].maxHp > 4) {
+#endif
                             switch (GetRandom() % 3) {
                             case 0:
                                 fireArg.pattern = BOS_MD_FIRE_PATTERN_POINTS_0;

@@ -130,6 +130,9 @@ void PortAchievementsRomLoaded(const uint8_t* rom, size_t size) {
 #endif
 }
 
+/* The session is the unit: a cheat (a toggle turned on, or an action), quick states, a rematch or an edited save
+   pause achievements until the game is restarted, even if the toggle is turned off again (a toggled run cannot be
+   told apart from a clean one afterwards). The texts in Options and in the launcher say so. */
 void PortAchievementsInvalidate(const char* reason) {
     if (sInvalidated) return;
     sInvalidated = 1;
@@ -137,6 +140,67 @@ void PortAchievementsInvalidate(const char* reason) {
 #ifdef PORT_RETROACHIEVEMENTS
     KhRaInvalidate(sRa, reason);
 #endif
+}
+
+/* ---- edited saves ---------------------------------------------------------------------------------------------
+   The launcher's save editor leaves <save>.edited beside the save it changed ("files=<mask>": bit 0 the resume
+   save, bit f + 1 save file f, Sora's 0-1 and Riku's 2-3, as save.c numbers them). Loading a marked file pauses
+   achievements, as a cheat does; a file saved from a game that came from a marked file, or where a cheat action
+   (max level, cards, journal) changed the progress, is marked too, and one saved from a clean game is cleared. */
+static int sTainted; /* the game being played: from a marked file, or changed by a cheat action */
+static Mode* sLastMode;
+
+static const char* EditedMarkPath(void) {
+    char name[96];
+    SDL_snprintf(name, sizeof(name), "%s.edited", PortSaveName());
+    return PortConfigPath(name);
+}
+
+static unsigned EditedMarkRead(void) {
+    unsigned mask = 0, v;
+    char line[96];
+    FILE* f = fopen(EditedMarkPath(), "r");
+    if (f == NULL)
+        return 0;
+    while (fgets(line, sizeof(line), f))
+        if (SDL_sscanf(line, "files=%u", &v) == 1)
+            mask = v;
+    fclose(f);
+    return mask & 31u;
+}
+
+static void EditedMarkWrite(unsigned mask) {
+    FILE* f;
+    if (mask == 0) {
+        remove(EditedMarkPath());
+        return;
+    }
+    f = fopen(EditedMarkPath(), "w");
+    if (f == NULL)
+        return;
+    fprintf(f, "; ReKHCoM: save files changed by the launcher's save editor or a cheat; achievements pause with them\n"
+               "; bit 1 the resume save, 2 Sora file 1, 4 Sora file 2, 8 Riku file 1, 16 Riku file 2\n"
+               "files=%u\n", mask);
+    fclose(f);
+}
+
+void PortAchievementsTaintSession(void) {
+    sTainted = 1;
+}
+
+/* save.c: the game loaded save file `file` (-1: the resume save) */
+void PortAchievementsFileLoaded(int file) {
+    sTainted = (EditedMarkRead() >> (file + 1)) & 1u;
+    if (sTainted)
+        PortAchievementsInvalidate("Edited save loaded");
+}
+
+/* save.c: the game wrote save file `file` (-1: the resume save) */
+void PortAchievementsFileSaved(int file) {
+    unsigned mask = EditedMarkRead(), bit = 1u << (file + 1);
+    unsigned next = sTainted ? mask | bit : mask & ~bit;
+    if (next != mask)
+        EditedMarkWrite(next);
 }
 
 #ifdef PORT_RETROACHIEVEMENTS
@@ -243,6 +307,10 @@ void PortAchievementsFrame(void) {
         gPortConfig.ps2Mode)
         PortAchievementsInvalidate("Gameplay modifiers enabled");
     if (gCurrentMode == &gModeTitle) sStarted = 0;
+    /* back at the title: the next game is a loaded file (its own mark) or a new one; only on arriving, since the
+       resume save is loaded while the title is still the mode */
+    if (gCurrentMode == &gModeTitle && sLastMode != &gModeTitle) sTainted = 0;
+    sLastMode = gCurrentMode;
     if (gCurrentMode == &gModeMapFld || gCurrentMode == &gModeBattle) sStarted = 1;
     evaluate = !sInvalidated && (gCurrentMode == &gModeMapFld || gCurrentMode == &gModeBattle ||
                                  gCurrentMode == &gModeTitle || sStarted);
