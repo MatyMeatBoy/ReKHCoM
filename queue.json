@@ -2474,10 +2474,10 @@
     "atlas-remates-102-r20261025": {
       "id": "atlas-remates-102-r20261025",
       "piece": "Escena 102 remates posteriores",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T16:05:04.288990+00:00",
-      "updated_at": "2026-10-25T19:07:00.680103+00:00",
+      "updated_at": "2026-10-25T19:16:48.569661+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -2487,9 +2487,15 @@
           "at": "2026-10-25T19:07:00.680103+00:00",
           "owner": "codex-atlas",
           "detail": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
+        },
+        {
+          "at": "2026-10-25T19:16:48.569661+00:00",
+          "owner": "codex-atlas",
+          "detail": "Pasada turbo: Tres fustes cortos prolongados en sus columnas y con su propia fase de cinco filas. Capturas en candidato local combinado, sin activar honores ni abrir PR publico pendiente de valoracion."
         }
       ],
-      "claimed_at": "2026-10-25T16:05:09.523321+00:00"
+      "claimed_at": "2026-10-25T16:05:09.523321+00:00",
+      "sent": "3bbd4c0046224adaa320c05dae1b2a4e"
     },
     "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3": {
       "id": "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3",
@@ -2698,7 +2704,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:16:42.424344+00:00",
+  "updated_at": "2026-10-25T19:16:48.569661+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
