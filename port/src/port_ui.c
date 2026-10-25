@@ -943,18 +943,17 @@ static const char* const sNeedHd[LANG_COUNT] = {
     "Importiere die HD-Mod im Launcher, um das einzuschalten", "Importa la mod HD dal launcher per attivarla",
     "Importa el mod HD desde el launcher para activarla", "ランチャーでHD MODを取りこむと使えます",
 };
-static const char* const sScenesNote[LANG_COUNT] = {
-    "Re:CoM's movies replace the scenes the game plays with its own engine. For purists: turned off, the originals "
-    "stay. Both versions can be watched again later among the scenes already unlocked.",
-    "Les vidéos de Re:CoM remplacent les scènes jouées par le moteur du jeu. Pour les puristes : désactivé, les "
-    "originales restent. Les deux versions se reverront plus tard parmi les scènes débloquées.",
-    "Die Videos von Re:CoM ersetzen die Szenen der Spiel-Engine. Für Puristen: aus, bleiben die Originale. Beide "
-    "Fassungen lassen sich später bei den freigeschalteten Szenen erneut ansehen.",
-    "I video di Re:CoM sostituiscono le scene fatte con il motore del gioco. Per i puristi: spento, restano le "
-    "originali. Entrambe si potranno rivedere più avanti tra le scene sbloccate.",
-    "Los videos de Re:CoM reemplazan las escenas que el juego hace con su motor. Para los puristas: apagado, quedan "
-    "las originales. Las dos versiones se podrán ver de nuevo luego entre las escenas ya desbloqueadas.",
-    "Re:CoMのムービーがゲームのシーンのかわりになります。オフでもとのシーンのままです。",
+static const char* const sScenesNote[LANG_COUNT] = { /* brief and plain (user 25/10) */
+    "Replaces the in-engine scenes with Re:CoM's HD movies. Off keeps the originals; both can be watched again.",
+    "Remplace les scènes du moteur du jeu par les vidéos HD de Re:CoM. Désactivé, les originales restent ; les deux "
+    "pourront être revues.",
+    "Ersetzt die Szenen der Spiel-Engine durch die HD-Videos von Re:CoM. Aus: die Originale bleiben; beide lassen "
+    "sich erneut ansehen.",
+    "Sostituisce le scene del motore di gioco con i video HD di Re:CoM. Spento: restano le originali; entrambe si "
+    "potranno rivedere.",
+    "Sustituye las escenas del motor del juego por los videos HD de Re:CoM. Desactivado, se mantienen las originales; "
+    "ambas se podrán volver a ver.",
+    "ゲームのシーンをRe:CoMのHDムービーにします。オフでもとのまま。どちらもあとでみなおせます。",
 };
 static const char* const sFontNote[LANG_COUNT] = {
     "A: choose the font (KHMenu or the system's).", "A : choisir la police (KHMenu ou système).",
@@ -2409,6 +2408,31 @@ static void MenuBar(int x, int t, int w, int selected) {
 
 /* One selected row on its own (the skip prompt, notices, hints): the bar
    under the text on a white plate, as the debug menu shows it. */
+/* The GBA's own A/B key around a letter (user 25/10): round, violet grey, lit from the top left, a dark rim and the
+   letter light. Centred on cx, cy; 13 pixels across. Other pads' keys come later. */
+static void GbaKey(int code, int cx, int cy) {
+    const int r = 6;
+    int dx, dy;
+
+    for (dy = -r; dy <= r; dy++)
+        for (dx = -r; dx <= r; dx++) {
+            int d = dx * dx + dy * dy;
+            uint32_t c;
+            if (d > r * r + r / 2)
+                continue;
+            if (d > (r - 1) * (r - 1) + r / 2)
+                c = 0xFF2A2338u; /* rim */
+            else if (dx + dy <= -5)
+                c = 0xFF9A90B6u; /* light from the top left */
+            else if (dx + dy >= 5)
+                c = 0xFF41385Au; /* its shade */
+            else
+                c = 0xFF5F5480u;
+            Pixel(cx + dx, cy + dy, c);
+        }
+    DrawGlyph(code, cx - GlyphWidth(code) / 2, cy - 6, 0xFFF4F0FCu, 0xFF2A2338u); /* its letter's 7 rows centred */
+}
+
 static void MenuButton(int x, int y, const char* text, int key) {
     int keyW = key ? GlyphWidth(key) + 4 : 0;
     int w = TextWidth(text) + 20 + keyW;
@@ -3806,7 +3830,7 @@ static void DrawMenu(int l, int width, int height) {
             /* a row that opens something: the game's A button, and its arrow nudging right (A enters; right does not) */
             int nudge = (int)((SDL_GetTicks() / 100) % 4); /* the real clock: the game is paused here */
             nudge = nudge == 3 ? 1 : nudge;
-            DrawGlyph('A', x - GlyphWidth('A') - 8, y - 2, MENU_RED_DARK, 0xFFD8D8D8u);
+            GbaKey('A', x - 11, y + 2);
             DrawText(value, x - 2 + nudge, y - 2, MENU_INK, 0xFFD8D8D8u);
             continue;
         }
