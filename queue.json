@@ -2400,19 +2400,20 @@
     "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03": {
       "id": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
       "piece": "Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-escenas",
       "created_at": "2026-10-25T16:03:24.879479+00:00",
-      "updated_at": "2026-10-25T16:03:24.879479+00:00",
+      "updated_at": "2026-10-25T16:03:30.914656+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "../khcom-claude-int/build/atlas-all-briefs.json; parent=e0779d8a9f5f4eea9eb73e9586505a03; cloud=c52f925b-a3e9-4b93-91de-0278ce105866",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:03:30.914656+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:03:24.879479+00:00",
+  "updated_at": "2026-10-25T16:03:30.914656+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
