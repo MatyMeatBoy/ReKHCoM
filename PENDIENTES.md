@@ -65,5 +65,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | integrado | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | Usuario 25/10: solucionar resto; transiciones smooth; pushear soluciones | 2026-10-25T05:54:41.558911+00:00 |
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
 | transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | en_curso | codex-transiciones | — | — | 2026-10-25T05:58:34.495227+00:00 |
+| darkside-arena-revision | Darkside arena: comentario pendiente de sprites y fadeout | pendiente | — | — | — | 2026-10-25T07:59:11.839095+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)

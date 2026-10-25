@@ -1958,6 +1958,19 @@
       "reference": "Usuario 25/10: todas las comprobaciones en cargas o entre escenas, evaluar residencia RAM/GPU con bajo costo",
       "evidence": [],
       "claimed_at": "2026-10-25T05:58:34.495227+00:00"
+    },
+    "darkside-arena-revision": {
+      "id": "darkside-arena-revision",
+      "piece": "Darkside arena: comentario pendiente de sprites y fadeout",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T07:59:11.839095+00:00",
+      "updated_at": "2026-10-25T07:59:11.839095+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "14ffdd662e9d4fde9316e74c7f1e8208",
+      "evidence": []
     }
   },
   "integrator": {
@@ -1966,7 +1979,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:58:46.613080+00:00",
+  "updated_at": "2026-10-25T07:59:11.839095+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
