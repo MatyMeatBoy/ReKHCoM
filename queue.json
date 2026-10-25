@@ -680,12 +680,12 @@
     "escena-102": {
       "id": "escena-102",
       "piece": "Escena 102",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T05:05:46.601422+00:00",
+      "updated_at": "2026-10-25T05:07:35.056513+00:00",
       "branch": "codex/arte-102",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/92",
       "approval": null,
       "reference": "{\"family_id\": \"b5ee78894f994aa684c59f38def14509\", \"submissions\": [{\"submission\": \"20261024-131106-953533\", \"created\": \"2026-10-24T16:11:06.592604+00:00\", \"image_id\": \"d3b580a4ed584e52805644def7d3f1ad\", \"version\": \"Revisión · Camino extendido en isométrica a ambos lados: su borde trasero (y la curva que sube a la izquierda), su borde delantero,\", \"clouds\": 2, \"cloud_ids\": [\"25a3fda7-a585-4933-9092-2049310ac923\", \"3d9ad7e1-0ed6-4745-b54c-7d95b53b5f97\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131106-953533\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -708,9 +708,15 @@
           "at": "2026-10-25T05:05:46.601422+00:00",
           "owner": "codex-arte-final",
           "detail": "Base automática capturada; se conserva la curva original de BG3 en unión superior y los cuatro pilares truncados continúan por su período de cinco filas hasta salir de pantalla. Captura hija en curso."
+        },
+        {
+          "at": "2026-10-25T05:07:35.056513+00:00",
+          "owner": "codex-arte-final",
+          "detail": "2c80443e6; dos nubes respondidas en Atlas; EU 3440x1440 cuadro300, GBA idéntica, check_sources OK. Valoración humana pendiente."
         }
       ],
-      "claimed_at": "2026-10-25T05:03:22.096961+00:00"
+      "claimed_at": "2026-10-25T05:03:22.096961+00:00",
+      "sent": "dd5a82c201a84ca29180026bc7cf064a"
     },
     "escena-112": {
       "id": "escena-112",
@@ -1676,7 +1682,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:05:46.601422+00:00",
+  "updated_at": "2026-10-25T05:07:35.056513+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
