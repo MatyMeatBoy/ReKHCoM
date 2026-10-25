@@ -80,5 +80,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/124 | — | 2026-10-25T13:48:35.544380+00:00 |
 | darkside-06-feedback-revision | Darkside 06 costura nueva | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:02:42.072840+00:00 |
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
+| agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | pendiente | — | — | — | 2026-10-25T16:03:24.879479+00:00 |
 
 Integrador: libre
