@@ -383,8 +383,8 @@
       "status": "en_curso",
       "owner": "codex-carril-arte",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T04:21:34.782875+00:00",
-      "branch": "codex/escena-061-comentarios",
+      "updated_at": "2026-10-25T04:30:03.773683+00:00",
+      "branch": "codex/finish-art-queue",
       "pr": null,
       "approval": null,
       "reference": "f31927d3f7014eb3a51e52fcf7323003; envío 20261024-131809-942e10",
@@ -413,6 +413,11 @@
           "at": "2026-10-24T22:13:45.575257+00:00",
           "owner": "codex-escena-061",
           "detail": "released: Diagnóstico contrastado con los estudios previos: nube 2 ya está resuelta en origin/main. La nube 1 apunta a muescas pequeñas en la base de la pared y no identifica cuál; no hay referencia para elegir sin cambiar el diseño aprobado. Liberada para seguir con otras revisiones."
+        },
+        {
+          "at": "2026-10-25T04:30:03.773683+00:00",
+          "owner": "codex-carril-arte",
+          "detail": "Retomada por Codex 25/10 para responder la revisión; checkout limpio desde origin/main 9d2e0a32d; sin cambios previos en esta rama."
         }
       ],
       "claimed_at": "2026-10-25T04:21:34.782875+00:00"
@@ -1640,7 +1645,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T04:21:34.782875+00:00",
+  "updated_at": "2026-10-25T04:30:03.774684+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
