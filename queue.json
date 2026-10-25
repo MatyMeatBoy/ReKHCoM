@@ -2008,12 +2008,12 @@
     "oogie-arena-revision": {
       "id": "oogie-arena-revision",
       "piece": "Oogie arena: cinco nubes y tres trazos pendientes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:06:55.350015+00:00",
-      "updated_at": "2026-10-25T08:09:35.681917+00:00",
+      "updated_at": "2026-10-25T08:17:21.201961+00:00",
       "branch": "codex/atlas-oogie",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/107",
       "approval": null,
       "reference": "7420dbb247c440e2b70a1285ce21dbe8",
       "evidence": [
@@ -2021,9 +2021,15 @@
           "at": "2026-10-25T08:09:35.681917+00:00",
           "owner": "codex-atlas",
           "detail": "Implementando las cinco nubes: rojo, una figura por borde, abismo y puntas inferiores en sombra. Capturas seriales EU 16:9/32:9."
+        },
+        {
+          "at": "2026-10-25T08:17:21.201961+00:00",
+          "owner": "codex-atlas",
+          "detail": "Cinco nubes y tres trazos respondidos. Mismo exe, V2 off/on y mando fisico aislado: EU 16:9/32:9 240/330 centro identico 4/4, sin reinicios, source checks ok."
         }
       ],
-      "claimed_at": "2026-10-25T08:07:01.682819+00:00"
+      "claimed_at": "2026-10-25T08:07:01.682819+00:00",
+      "sent": "aa913fe773c4446eb5412c3115e222c7"
     }
   },
   "integrator": {
@@ -2032,7 +2038,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:09:35.681917+00:00",
+  "updated_at": "2026-10-25T08:17:21.201961+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
