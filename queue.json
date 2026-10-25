@@ -2133,12 +2133,12 @@
     "trickmaster-muro-arriba": {
       "id": "trickmaster-muro-arriba",
       "piece": "Trickmaster arena: completar patron de muro hacia arriba",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:55:53.752192+00:00",
-      "updated_at": "2026-10-25T08:57:58.957504+00:00",
+      "updated_at": "2026-10-25T08:59:35.571565+00:00",
       "branch": "codex/atlas-trickmaster-top",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/114",
       "approval": null,
       "reference": "31fa9e70a2c6418697abca86f35bbae4",
       "evidence": [
@@ -2146,9 +2146,15 @@
           "at": "2026-10-25T08:57:58.957504+00:00",
           "owner": "codex-atlas",
           "detail": "Nube5f7ab868: sustituir franja superior beige por papel rosa con periodo vertical; conservar suelo y chimenea unica. Comparacion serial16:9/32:9, 240/330."
+        },
+        {
+          "at": "2026-10-25T08:59:35.571565+00:00",
+          "owner": "codex-atlas",
+          "detail": "Nube5f7ab868 respondida en Atlas: muro rosa hasta arriba, suelo conservado y chimenea unica. EU16:9/32:9 240/330 GBA identico4/4, sin resets/BIOS/crash, compila. Sourcecheck global bloqueado por glifos JP de main port_ui.c ajenos a la rama."
         }
       ],
-      "claimed_at": "2026-10-25T08:56:05.340845+00:00"
+      "claimed_at": "2026-10-25T08:56:05.340845+00:00",
+      "sent": "5a6c86fcfd4b49a19009d73f9afde97b"
     }
   },
   "integrator": {
@@ -2157,7 +2163,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:57:58.957504+00:00",
+  "updated_at": "2026-10-25T08:59:35.571565+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
