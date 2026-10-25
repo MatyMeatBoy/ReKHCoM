@@ -83,7 +83,7 @@ def corrected_source(event, layer, x, y):
         if layer=='bg2' and x>=35:
             sx=7+(x-27)%20
             repeat=(x-27)//20
-            sy=y-repeat*10-4
+            sy=y-repeat*10+1
             if repeat>=1 and sx<=14 and 18<=sy<=21:
                 return sx,sy
             if y-x/2>=1:

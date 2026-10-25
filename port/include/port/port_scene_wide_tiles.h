@@ -15,7 +15,11 @@ static inline int PortSceneWideSource(int event, int bg, int* x, int* y) {
     if (event == 74 && bg == 2 && ox >= 35) {
         int repeat = (ox - 27) / 20;
         sx = 7 + (ox - 27) % 20;
-        sy = oy - repeat * 10 - 4;
+        /* The first ornament starts at (27,17), copied from (7,18).
+         * Further complete 8x4 modules advance by (20,10).  Keep the
+         * same +1 donor Y offset as that first copy; -4 displaced every
+         * later ornament by five tiles and broke the diagonal rhythm. */
+        sy = oy - repeat * 10 + 1;
         if (repeat >= 1 && sx <= 14 && sy >= 18 && sy <= 21) {
             *x = sx; *y = sy; return 1;
         }
