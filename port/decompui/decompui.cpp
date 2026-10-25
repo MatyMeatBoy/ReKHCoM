@@ -1332,6 +1332,8 @@ static void DrawCover(float w, float h) {
 
 static void CreateDesktopShortcut();
 static void AddToSteam();
+static void RemoveFromSteam();
+static bool InSteam();
 static void InstallElsewhereRow();
 
 static void ApplyGraphicsMode(int mode);
@@ -1460,13 +1462,24 @@ static void PageHome(SDL_Window* window) {
                 ImGui::SetTooltip("%s", T("Un acceso \"ReKHCoM\" que abre el juego sin pasar por el launcher.",
                                           "A \"ReKHCoM\" shortcut that opens the game without the launcher."));
             ImGui::SameLine(0, gap);
-            if (ImGui::Button(T("Añadir a Steam", "Add to Steam"), ImVec2(third, 0)))
-                AddToSteam();
-            if (ImGui::IsItemHovered())
-                ImGui::SetTooltip("%s", T("Lo añade a tu biblioteca de Steam como juego externo, con su portada "
-                                          "(para jugar con el mando de Steam o en Steam Deck / Big Picture).",
-                                          "Adds it to your Steam library as a non-Steam game, with its cover (to play "
-                                          "with Steam Input, Big Picture or on a Steam Deck)."));
+            /* already there (this folder's entry): the same button takes it out (user 25/10) */
+            if (InSteam()) {
+                if (ImGui::Button(T("Quitar de Steam", "Remove from Steam"), ImVec2(third, 0)))
+                    RemoveFromSteam();
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("%s", T("Lo quita de tu biblioteca de Steam (con su portada). Tus partidas no "
+                                              "se tocan; puedes volver a añadirlo cuando quieras.",
+                                              "Takes it out of your Steam library (with its cover). Your saves are not "
+                                              "touched; you can add it again any time."));
+            } else {
+                if (ImGui::Button(T("Añadir a Steam", "Add to Steam"), ImVec2(third, 0)))
+                    AddToSteam();
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("%s", T("Lo añade a tu biblioteca de Steam como juego externo, con su portada "
+                                              "(para jugar con el mando de Steam o en Steam Deck / Big Picture).",
+                                              "Adds it to your Steam library as a non-Steam game, with its cover (to play "
+                                              "with Steam Input, Big Picture or on a Steam Deck)."));
+            }
         }
 #endif
     }
@@ -2837,12 +2850,7 @@ static std::vector<fs::path> SteamUserConfigs(const fs::path& steam) {
     return out;
 }
 
-/* Adds (or updates) "ReKHCoM" in Steam as a non-Steam game that starts this version's game like the desktop
-   shortcut, with the launcher's cover and logo as its Steam artwork. Steam reads the list when it starts. */
-static void AddToSteam() {
-    const VersionState& st = sState[sSelected];
-    if (!st.installed || !fs::exists(st.exe))
-        return;
+static fs::path SteamFolder() {
     fs::path steam;
     if (const char* test = SDL_getenv("DECOMPUI_STEAM")) { /* harness: a copy of Steam's folders */
         steam = fs::u8path(test);
@@ -2855,6 +2863,110 @@ static void AddToSteam() {
             steam = fs::path(buf);
 #endif
     }
+    return steam;
+}
+
+static bool SteamListRead(const fs::path& file, Vdf& root) {
+    std::error_code ec;
+    if (!fs::exists(file, ec))
+        return false;
+    std::ifstream in(file, std::ios::binary);
+    std::string d((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    size_t at = 0;
+    return VdfRead(d, at, root);
+}
+
+/* This folder's entry, whichever version it starts: the game is under this folder, or it starts here */
+static bool SteamEntryOurs(Vdf& e) {
+    Vdf* exe = e.Find("Exe");
+    Vdf* dir = e.Find("StartDir");
+    std::string root = sRoot.u8string();
+    auto lower = [](std::string t) {
+        for (char& c : t)
+            c = (char)std::tolower((unsigned char)c);
+        return t;
+    };
+    std::string r = lower(root);
+    return e.type == 0x00 && ((exe && lower(exe->text).find(r) != std::string::npos) ||
+                              (dir && lower(dir->text) == "\"" + r + "\""));
+}
+
+static int sSteamState = -1; /* -1 unknown, 0 not there, 1 there */
+static Uint64 sSteamChecked;
+static bool InSteam() {
+    Uint64 now = SDL_GetTicks();
+    if (sSteamState >= 0 && now - sSteamChecked < 3000) /* Steam may change it meanwhile: read again every 3 s */
+        return sSteamState == 1;
+    sSteamChecked = now;
+    sSteamState = 0;
+    fs::path steam = SteamFolder();
+    if (steam.empty())
+        return false;
+    for (const fs::path& config : SteamUserConfigs(steam)) {
+        Vdf root;
+        Vdf* list = SteamListRead(config / "shortcuts.vdf", root) ? root.Find("shortcuts") : nullptr;
+        if (list)
+            for (auto& kv : list->items)
+                if (SteamEntryOurs(kv.second))
+                    sSteamState = 1;
+    }
+    return sSteamState == 1;
+}
+
+/* Takes this folder's entries out of Steam's list (a backup first, like adding) and their artwork out of grid. */
+static void RemoveFromSteam() {
+    fs::path steam = SteamFolder();
+    std::vector<fs::path> configs = steam.empty() ? std::vector<fs::path>() : SteamUserConfigs(steam);
+    int removed = 0;
+    std::error_code ec;
+    for (const fs::path& config : configs) {
+        fs::path file = config / "shortcuts.vdf";
+        Vdf root;
+        if (!SteamListRead(file, root))
+            continue; /* not there or not understood: never overwritten */
+        Vdf* list = root.Find("shortcuts");
+        if (!list)
+            continue;
+        std::vector<std::pair<std::string, Vdf>> keep;
+        std::vector<uint32_t> gone;
+        for (auto& kv : list->items) {
+            if (SteamEntryOurs(kv.second)) {
+                Vdf* id = kv.second.Find("appid");
+                if (id)
+                    gone.push_back((uint32_t)id->number);
+            } else {
+                keep.push_back(kv);
+            }
+        }
+        if (gone.empty())
+            continue;
+        for (size_t i = 0; i < keep.size(); i++) /* Steam numbers the entries 0, 1, 2 ... */
+            keep[i].first = std::to_string(i);
+        list->items = keep;
+        std::string out;
+        VdfWrite(out, root);
+        fs::copy_file(file, config / "shortcuts.vdf.rekhcom-backup", fs::copy_options::overwrite_existing, ec);
+        std::ofstream(file, std::ios::binary | std::ios::trunc).write(out.data(), (std::streamsize)out.size());
+        for (uint32_t id : gone)
+            for (const char* suffix : { "p.jpg", "p.png", "_logo.png", "_hero.jpg", "_hero.png", ".jpg", ".png" })
+                fs::remove(config / "grid" / (std::to_string(id) + suffix), ec);
+        removed++;
+    }
+    sSteamState = -1;
+    Notice(removed ? T("Quitado de Steam. Si Steam está abierto, reinícialo para que desaparezca de la biblioteca.",
+                       "Removed from Steam. If Steam is open, restart it to see it gone from the library.")
+                   : T("No estaba en la lista de juegos de Steam; no se cambió nada.",
+                       "It was not in Steam's game list; nothing was changed."),
+           !removed);
+}
+
+/* Adds (or updates) "ReKHCoM" in Steam as a non-Steam game that starts this version's game like the desktop
+   shortcut, with the launcher's cover and logo as its Steam artwork. Steam reads the list when it starts. */
+static void AddToSteam() {
+    const VersionState& st = sState[sSelected];
+    if (!st.installed || !fs::exists(st.exe))
+        return;
+    fs::path steam = SteamFolder();
     std::vector<fs::path> configs = steam.empty() ? std::vector<fs::path>() : SteamUserConfigs(steam);
     if (configs.empty()) {
         Notice(T("No se encontró Steam (o ninguna cuenta ha iniciado sesión en él).",
@@ -2911,6 +3023,7 @@ static void AddToSteam() {
         fs::copy_file(sRoot / "assets" / "logo.png", config / "grid" / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
         done++;
     }
+    sSteamState = -1;
     Notice(done ? T("Añadido a Steam. Si Steam está abierto, reinícialo para verlo en la biblioteca.",
                     "Added to Steam. If Steam is open, restart it to see it in the library.")
                 : T("No se pudo leer la lista de juegos de Steam; no se cambió nada.",
@@ -3394,8 +3507,14 @@ int main(int argc, char** argv) {
         ReportProblem();
         return 0;
     }
-    if (SDL_getenv("DECOMPUI_STEAM")) { /* harness: "Add to Steam" into that folder, then exit */
-        AddToSteam();
+    if (SDL_getenv("DECOMPUI_STEAM")) { /* harness: "Add to Steam" (or with DECOMPUI_STEAM_REMOVE=1 "Remove") into
+                                            that folder, then exit; stderr says whether it is there afterwards */
+        if (SDL_getenv("DECOMPUI_STEAM_REMOVE"))
+            RemoveFromSteam();
+        else
+            AddToSteam();
+        sSteamState = -1;
+        fprintf(stderr, "steam: %s\n", InSteam() ? "in" : "out");
         return 0;
     }
 #ifndef LAUNCHER_ANDROID

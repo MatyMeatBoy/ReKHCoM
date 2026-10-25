@@ -288,6 +288,10 @@
   "es": "No se pudo copiar la partida."
  },
  {
+  "en": "Could not create the file.",
+  "es": "No se pudo crear el archivo."
+ },
+ {
   "en": "Could not install the ROM.",
   "es": "No se pudo instalar la ROM."
  },
@@ -306,6 +310,10 @@
  {
   "en": "Could not verify the destination.",
   "es": "No se pudo verificar el destino."
+ },
+ {
+  "en": "Could not write the file (disk full?).",
+  "es": "No se pudo escribir el archivo (¿disco lleno?)."
  },
  {
   "en": "Could not write the save (the backup is kept).",
@@ -366,6 +374,10 @@
  {
   "en": "Done: ",
   "es": "Listo: "
+ },
+ {
+  "en": "Done: %d files in one ReKHCoM-HD.zip. Copy it to %s and start the game: it installs itself.",
+  "es": "Listo: %d archivos en un solo ReKHCoM-HD.zip. Cópialo a %s y abre el juego: lo instala solo."
  },
  {
   "en": "Done: %d movies compressed, %.1f GB -> %.1f GB.",
@@ -536,6 +548,10 @@
   "es": "Y en el mando, D en el teclado: acumula cartas o trucos sin pulsar L y R a la vez."
  },
  {
+  "en": "Games of the Re:CoM version have their own list: the same official achievements plus the mode's own. Worlds, bosses and the story need the whole game on Proud. They are never sent to RetroAchievements.",
+  "es": "Las partidas de la versión Re:CoM tienen su propia lista: los mismos logros oficiales y los del modo. Los de mundos, jefes y la historia piden la partida entera en Experto. Nunca se suben a RetroAchievements."
+ },
+ {
   "en": "Good (suggested)",
   "es": "Buena (sugerido)"
  },
@@ -598,6 +614,10 @@
  {
   "en": "HD text",
   "es": "Texto HD"
+ },
+ {
+  "en": "HD text font",
+  "es": "Fuente del texto HD"
  },
  {
   "en": "HD-2D look",
@@ -688,12 +708,20 @@
   "es": "Tarda unos minutos y puedes seguir usando el launcher; queda todo en Mejoras."
  },
  {
+  "en": "It was not in Steam's game list; nothing was changed.",
+  "es": "No estaba en la lista de juegos de Steam; no se cambió nada."
+ },
+ {
   "en": "Just the basics: intros, music and HUD (~0.6 GB)",
   "es": "Solo lo básico: intros, música y HUD (~0,6 GB)"
  },
  {
   "en": "Just the basics: intros, music and HUD, ~0.6 GB",
   "es": "Solo lo básico: intros, música y HUD, ~0,6 GB"
+ },
+ {
+  "en": "KHMenu is the game's; System is the computer's own. Subtitles always keep theirs.",
+  "es": "KHMenu es la del juego; Sistema, la del equipo. Los subtítulos usan siempre la suya."
  },
  {
   "en": "KINGDOM HEARTS HD 1.5+2.5 is installed on this PC. Load Re:Chain of Memories' movies, music, scenes and HUD? Choose how much space to use:",
@@ -764,6 +792,14 @@
   "es": "CARTAS DE MAPA (HASTA 9 POR CARTA)"
  },
  {
+  "en": "Make ReKHCoM-HD.zip",
+  "es": "Crear ReKHCoM-HD.zip"
+ },
+ {
+  "en": "Makes one file with what is loaded here for Android or a console: copy it to the game's folder there and the game installs it by itself when it starts.",
+  "es": "Prepara un solo archivo con lo cargado aquí para Android o una consola: se copia a la carpeta del juego allí y el juego lo instala solo al abrirse."
+ },
+ {
   "en": "Map card",
   "es": "Carta de mapa"
  },
@@ -828,6 +864,10 @@
   "es": "Los mandos de Nintendo (Switch Pro, Joy-Con, 8BitDo en modo Switch) tienen A y B, X e Y al revés que los de Xbox. ReKHCoM los detecta solo; activa esta opción si el tuyo se toma por un mando de Xbox (por ejemplo con Steam o Lutris). Activada: el botón rotulado A es la A del juego, B es B, X es X e Y es Y, en el juego y en este launcher. Las asignaciones de la tabla de arriba no cambian."
  },
  {
+  "en": "No HD mod loaded yet.",
+  "es": "No hay mod HD cargado todavía."
+ },
+ {
   "en": "No ROM",
   "es": "Sin ROM"
  },
@@ -860,12 +900,20 @@
   "es": "LOGROS OFICIALES · VERSIÓN EUROPEA"
  },
  {
+  "en": "OTHER",
+  "es": "OTROS"
+ },
+ {
   "en": "Off",
   "es": "No"
  },
  {
   "en": "Off (cable)",
   "es": "Desactivado (cable)"
+ },
+ {
+  "en": "Official",
+  "es": "Oficiales"
  },
  {
   "en": "On",
@@ -904,6 +952,10 @@
   "es": "Abre un reporte en GitHub con la versión y el final del registro del juego; lo revisas y lo envías tú (necesitas una cuenta de GitHub)."
  },
  {
+  "en": "Optional account: the official achievements on retroachievements.org too.",
+  "es": "Cuenta opcional: los logros oficiales también en retroachievements.org."
+ },
+ {
   "en": "Optional: achievements are earned without an account too. With the account connected you also see its progress.",
   "es": "Opcional: los logros se consiguen igual sin cuenta. Con la cuenta conectada también ves su progreso."
  },
@@ -916,12 +968,20 @@
   "es": "Original 240x160"
  },
  {
+  "en": "PICTURE",
+  "es": "IMAGEN"
+ },
+ {
   "en": "PLAY",
   "es": "JUGAR"
  },
  {
   "en": "PREVIEW · ACHIEVEMENT",
   "es": "VISTA PREVIA · LOGRO"
+ },
+ {
+  "en": "Packing ",
+  "es": "Empaquetando "
  },
  {
   "en": "Password",
@@ -946,6 +1006,10 @@
  {
   "en": "Press...",
   "es": "Pulsa..."
+ },
+ {
+  "en": "RE:COM ACHIEVEMENTS · ON THIS COMPUTER ONLY",
+  "es": "LOGROS RE:COM · SOLO EN ESTE EQUIPO"
  },
  {
   "en": "ROM installed and verified: ",
@@ -984,6 +1048,10 @@
   "es": "Los subtítulos de Re:Chain of Memories en los videos y escenas HD, en el idioma del juego."
  },
  {
+  "en": "Re:CoM",
+  "es": "Re:CoM"
+ },
+ {
   "en": "Re:CoM mode",
   "es": "Modo Re:CoM"
  },
@@ -1002,6 +1070,14 @@
  {
   "en": "Remember this account on Windows",
   "es": "Recordar esta cuenta en Windows"
+ },
+ {
+  "en": "Remove from Steam",
+  "es": "Quitar de Steam"
+ },
+ {
+  "en": "Removed from Steam. If Steam is open, restart it to see it gone from the library.",
+  "es": "Quitado de Steam. Si Steam está abierto, reinícialo para que desaparezca de la biblioteca."
  },
  {
   "en": "Report a problem...",
@@ -1026,10 +1102,6 @@
  {
   "en": "Resuming keeps what is loaded and goes on from there next time. Removing takes away only what this import copied: what you had before and your saves stay.",
   "es": "Retomar conserva lo ya cargado y sigue desde ahí al abrir de nuevo. Borrar quita solo lo que copió esta carga: lo que ya tenías y tus partidas quedan."
- },
- {
-  "en": "RetroAchievements account (optional)",
-  "es": "Cuenta RetroAchievements (opcional)"
  },
  {
   "en": "Return stocked cards",
@@ -1204,8 +1276,20 @@
   "es": "¿Seguro? Reemplaza tus videos por los más livianos (pulsa de nuevo)"
  },
  {
+  "en": "Synchronization",
+  "es": "Sincronización"
+ },
+ {
   "en": "TOUCH BUTTONS",
   "es": "BOTONES TÁCTILES"
+ },
+ {
+  "en": "Take the HD mod to another platform",
+  "es": "Llevar el mod HD a otra plataforma"
+ },
+ {
+  "en": "Takes it out of your Steam library (with its cover). Your saves are not touched; you can add it again any time.",
+  "es": "Lo quita de tu biblioteca de Steam (con su portada). Tus partidas no se tocan; puedes volver a añadirlo cuando quieras."
  },
  {
   "en": "That file is not a 32 MiB cartridge dump.",
@@ -1334,6 +1418,14 @@
  {
   "en": "VERSIONS",
   "es": "VERSIONES"
+ },
+ {
+  "en": "VOICES AND HD",
+  "es": "VOCES Y HD"
+ },
+ {
+  "en": "VRR must be enabled in the monitor and driver; falls back to VSync if unavailable.",
+  "es": "VRR requiere activarlo en monitor y controlador; usa VSync si la ruta no está disponible."
  },
  {
   "en": "Value",
