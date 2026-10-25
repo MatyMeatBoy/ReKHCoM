@@ -2223,16 +2223,23 @@
     "escena-099-muro-superior": {
       "id": "escena-099-muro-superior",
       "piece": "Escena099: muro de Trickmaster hacia arriba",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:28:24.781669+00:00",
-      "updated_at": "2026-10-25T13:29:54.180057+00:00",
+      "updated_at": "2026-10-25T13:33:53.127680+00:00",
       "branch": "codex/escena-099-muro",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/122",
       "approval": null,
       "reference": "20261024-183353-ceb621 / ae36f45ef10e45cc809620075f0c8626",
-      "evidence": [],
-      "claimed_at": "2026-10-25T13:28:33.014306+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-25T13:33:53.127680+00:00",
+          "owner": "codex-atlas",
+          "detail": "Compila;3440x1440 zoom6 300/600, centro GBA identico2/2. Captura hija enviada antes del PR."
+        }
+      ],
+      "claimed_at": "2026-10-25T13:28:33.014306+00:00",
+      "sent": "ac568c9ae6c642beb8990ac107cd7a0c"
     },
     "escena-004-muro-derecho": {
       "id": "escena-004-muro-derecho",
@@ -2250,7 +2257,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:33:40.340277+00:00",
+  "updated_at": "2026-10-25T13:33:53.127680+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
