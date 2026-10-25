@@ -249,7 +249,8 @@ static void ControlBindingName(int binding, int l, char* out, size_t size);
 static int sNgRecom; /* new game page: the Re:CoM version chosen */
 /* WIZ_MODE and WIZ_MODE_GBA: the graphics mode on the first start; WIZ_ASSETS: something new imported since the last
    start, offered once */
-enum { WIZ_VERSION, WIZ_DIFFICULTY, WIZ_OPTIONS, WIZ_MODE, WIZ_MODE_GBA, WIZ_ASSETS };
+enum { WIZ_VERSION, WIZ_DIFFICULTY, WIZ_OPTIONS, WIZ_MODE, WIZ_MODE_GBA, WIZ_ASSETS,
+       WIZ_SCREEN /* the first start, after the mode (desktops): full screen or a window (user 25/10) */ };
 static int sWizStep, sWizCursor; /* the new game window's step and row */
 static void WizKey(int key);
 /* the section headings: red text and a thin line, never selected */
@@ -2583,7 +2584,7 @@ static void ShortValue(int item, char* out, size_t size) {
 
 /* ---- the new game window: a few steps, as modern games ask on first start - */
 
-static const char* const sWizAsk[6][LANG_COUNT] = {
+static const char* const sWizAsk[7][LANG_COUNT] = {
     { "Which version do you want to play?", "Quelle version veux-tu jouer ?", "Welche Version möchtest du spielen?",
       "Quale versione vuoi giocare?", "¿Qué versión quieres jugar?", "どのバージョンで遊びますか？" },
     { "Difficulty", "Difficulté", "Schwierigkeit", "Difficoltà", "Dificultad", "難しさ" },
@@ -2594,7 +2595,19 @@ static const char* const sWizAsk[6][LANG_COUNT] = {
     { "Which GBA?", "Quel GBA ?", "Welcher GBA?", "Quale GBA?", "¿Qué GBA?", "どちらのGBA？" },
     { "New content ready!", "Nouveau contenu prêt !", "Neue Inhalte bereit!", "Nuovi contenuti pronti!",
       "¡Contenido nuevo listo!", "新しいコンテンツの準備ができました！" },
+    { "Full screen or a window?", "Plein écran ou fenêtre ?", "Vollbild oder Fenster?", "Schermo intero o finestra?",
+      "¿Pantalla completa o ventana?", "フルスクリーンかウィンドウか？" },
 };
+static const char* const sScreenRows[2][LANG_COUNT] = {
+    { "Full screen", "Plein écran", "Vollbild", "Schermo intero", "Pantalla completa", "フルスクリーン" },
+    { "Window", "Fenêtre", "Fenster", "Finestra", "Ventana", "ウィンドウ" } };
+static const char* const sScreenDesc[2][LANG_COUNT] = {
+    { "The whole screen, at the desktop's resolution.", "Tout l'écran, à la résolution du bureau.",
+      "Der ganze Bildschirm, in der Desktop-Auflösung.", "Tutto lo schermo, alla risoluzione del desktop.",
+      "Toda la pantalla, a la resolución del escritorio.", "画面ぜんたい（デスクトップの解像度）。" },
+    { "A window you can move and resize.", "Une fenêtre que tu peux déplacer et redimensionner.",
+      "Ein Fenster, das du verschieben und vergrößern kannst.", "Una finestra da spostare e ridimensionare.",
+      "Una ventana que puedes mover y cambiar de tamaño.", "うごかせておおきさもかえられるウィンドウ。" } };
 /* the graphics mode, asked once on the first start (PortUiOpenModeChoice); Options and the launcher change it later */
 static const char* const sModeDescHd[LANG_COUNT] = {
     "Re:Chain of Memories' cards, logo, faces, music and movies (imported by the launcher from your Kingdom Hearts HD "
@@ -2870,7 +2883,12 @@ static void ModeChosen(int mode) {
     PortApplyGraphicsMode(mode);
     PortConfigSave();
     PortVideoApplyConfig();
+#if QUIT_ROW /* the desktops: then full screen or a window */
+    sWizStep = WIZ_SCREEN;
+    sWizCursor = gPortConfig.fullscreen ? 0 : 1;
+#else
     Close();
+#endif
 }
 
 static void WizFinish(void) {
@@ -2924,6 +2942,15 @@ static void WizKey(int key) {
     }
     if (sWizStep == WIZ_MODE_GBA && key == 3) {
         ModeChosen(sWizCursor == 0 ? PORT_MODE_GBA_ENHANCED : PORT_MODE_GBA_CLASSIC);
+        return;
+    }
+    if (sWizStep == WIZ_SCREEN) {
+        if (key == 3) {
+            gPortConfig.fullscreen = sWizCursor == 0;
+            PortConfigSave();
+            PortVideoApplyConfig();
+            Close();
+        }
         return;
     }
     if (sWizStep == WIZ_ASSETS) {
@@ -3084,6 +3111,9 @@ static void DrawWizard(int l, int width, int height) {
         static const char* const gbaMode[LANG_COUNT] = { "GBA mode", "Mode GBA", "GBA-Modus", "Modalità GBA",
                                                          "Modo GBA", "GBAモード" };
         labels[1] = gbaMode[l]; subs[1] = sModeDescGba[l];
+    } else if (sWizStep == WIZ_SCREEN) {
+        labels[0] = sScreenRows[0][l]; subs[0] = sScreenDesc[0][l];
+        labels[1] = sScreenRows[1][l]; subs[1] = sScreenDesc[1][l];
     } else if (sWizStep == WIZ_MODE_GBA) {
         labels[0] = sModeNames[PORT_MODE_GBA_ENHANCED][l]; subs[0] = sModeDescEnhanced[l];
         labels[1] = sModeNames[PORT_MODE_GBA_CLASSIC][l]; subs[1] = sModeDescClassic[l];
