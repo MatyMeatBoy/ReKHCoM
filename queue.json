@@ -1962,14 +1962,14 @@
     "darkside-arena-revision": {
       "id": "darkside-arena-revision",
       "piece": "Darkside arena: comentario pendiente de sprites y fadeout",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T07:59:11.839095+00:00",
-      "updated_at": "2026-10-25T08:05:41.676681+00:00",
+      "updated_at": "2026-10-25T08:17:28.331541+00:00",
       "branch": "codex/atlas-darkside",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/106",
       "approval": null,
-      "reference": "14ffdd662e9d4fde9316e74c7f1e8208",
+      "reference": "433401942ccd4f4284514144e9d77364",
       "evidence": [
         {
           "at": "2026-10-25T08:00:59.069266+00:00",
@@ -1980,6 +1980,11 @@
           "at": "2026-10-25T08:05:41.676681+00:00",
           "owner": "codex-atlas",
           "detail": "Comentario de poses/fade respondido en Atlas. Seis poses conectadas por slot, stride real. EU 16:9/32:9 240/900 centro GBA identico, sin crash; check_sources ok."
+        },
+        {
+          "at": "2026-10-25T08:17:28.331541+00:00",
+          "owner": "codex-atlas",
+          "detail": "Nuevo comentario de 25/10 05:07 Chile: mejorar fading, nube 5602cae6. Se retoma antes de piezas nuevas."
         }
       ],
       "claimed_at": "2026-10-25T07:59:17.517859+00:00",
@@ -2038,7 +2043,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:17:21.201961+00:00",
+  "updated_at": "2026-10-25T08:17:28.331541+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
