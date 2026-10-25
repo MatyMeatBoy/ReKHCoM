@@ -390,3 +390,13 @@ y=112; arriba se usa la arena entera de x=48..79, y=80..143 de la izquierda.
 La prolongación sobre el mapa usa esa misma arena, sin repetir las grietas
 recortadas. Los fustes BG2, giros y puestos originales conservan su receta.
 Pendiente de captura y prueba serial autorizada; la hija no hereda aprobación.
+
+## Propuesta Atlas 25/10: Agrabah 107/108, revisión e0779d8a9f5f4eea9eb73e9586505a03
+
+Nube `c52f925b-a3e9-4b93-91de-0278ce105866`: el bordillo inferior
+continúa con fase por píxel sobre su diagonal 2:1. Trasladar tiles enteros
+redondea medias filas y deja escalones de ocho píxeles; el donante de 32 px
+se traslada 16 px en altura, conservando toda la sección del muro. La cara inferior usa x=256..287,
+con su pie entero dentro del mapa, en lugar del donante derecho cortado por y=512. BG2 y BG3
+siguen independientes; ventana y pilares superiores conservan sus capas.
+Propuesta pendiente de captura y prueba serial autorizada; no hereda honores.

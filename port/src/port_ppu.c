@@ -1765,6 +1765,15 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                 }
                 goto scalar_world;
             }
+            if (sAgrabahLayer[bg]) {
+                int sx, sy;
+                if (PortAgrabahPixelSource(sAgrabahLayer[bg], wx, wy, &sx, &sy)) {
+                    int index = SinglePanelIndex(l, cnt, sx, sy);
+                    out[x] = index >= 0 && (index & 15) ? PLTT16[index] & 0x7fff : TRANSPARENT;
+                    sInWorld[x] = 1;
+                    continue;
+                }
+            }
             if (sAgrabah109Layer[bg] == 2) {
                 if (Agrabah109DecorPixel(l, chars, wx, wy, &out[x])) {
                     sInWorld[x] = 1;
