@@ -1646,19 +1646,20 @@
     "agrabah-jafar-arena": {
       "id": "agrabah-jafar-arena",
       "piece": "Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-jafar",
       "created_at": "2026-10-25T04:45:45.022710+00:00",
-      "updated_at": "2026-10-25T04:45:45.022710+00:00",
+      "updated_at": "2026-10-25T04:47:50.011577+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "build/user-reports/jafar-arena-20261025.png SHA256=811009864F497879DC35EA37C492F39757DA09C4E191CE2660B1E43D6C616FFE; Atlas parent 53e790683ac740ab8df504a7bb8406f3; captura aportada por el usuario 25/10/2026",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T04:47:50.011577+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T04:45:45.022710+00:00",
+  "updated_at": "2026-10-25T04:47:50.011577+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
