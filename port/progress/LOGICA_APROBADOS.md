@@ -368,3 +368,7 @@ BACKGROUND_TEST=1 y Ninja `-j1` en serie.
 ### Trickmaster: postes completos y travesaño recto (revisión25/10)
 
 Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir sus remates diagonales. Prolongar las columnas de la arista superior de los postes conservando sus x; el travesaño lateral mantiene bordes horizontales constantes y el grano original entre ellos. La chimenea única y el suelo no cambian.
+
+### Escena099: módulo lateral de la arena (25/10)
+
+Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.
