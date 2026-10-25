@@ -2950,19 +2950,20 @@
     "darkside-aprobados-runtime": {
       "id": "darkside-aprobados-runtime",
       "piece": "Activar Darkside06 r8 y cuerpo en arena aprobados",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T23:54:26.846517+00:00",
-      "updated_at": "2026-10-25T23:54:26.846517+00:00",
+      "updated_at": "2026-10-25T23:54:32.022578+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Atlas60f90456 y e7b206c9; usuario pide integrar todosaprobados",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T23:54:32.022578+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T23:54:26.846517+00:00",
+  "updated_at": "2026-10-25T23:54:32.022578+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
