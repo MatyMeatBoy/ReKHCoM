@@ -2011,12 +2011,18 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:06:55.350015+00:00",
-      "updated_at": "2026-10-25T08:07:01.682819+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T08:09:35.681917+00:00",
+      "branch": "codex/atlas-oogie",
       "pr": null,
       "approval": null,
       "reference": "7420dbb247c440e2b70a1285ce21dbe8",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T08:09:35.681917+00:00",
+          "owner": "codex-atlas",
+          "detail": "Implementando las cinco nubes: rojo, una figura por borde, abismo y puntas inferiores en sombra. Capturas seriales EU 16:9/32:9."
+        }
+      ],
       "claimed_at": "2026-10-25T08:07:01.682819+00:00"
     }
   },
@@ -2026,7 +2032,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:07:01.682819+00:00",
+  "updated_at": "2026-10-25T08:09:35.681917+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

@@ -67,6 +67,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | en_curso | codex-transiciones | — | — | 2026-10-25T05:58:34.495227+00:00 |
 | darkside-arena-revision | Darkside arena: comentario pendiente de sprites y fadeout | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/106 | — | 2026-10-25T08:05:41.676681+00:00 |
 | malefica-arena-respuesta | Malefica arena: responder aprobacion de fondo y separar sprites pendientes | en_revision | codex-atlas | — | — | 2026-10-25T08:06:29.173632+00:00 |
-| oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | en_curso | codex-atlas | — | — | 2026-10-25T08:07:01.682819+00:00 |
+| oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | en_curso | codex-atlas | codex/atlas-oogie | — | 2026-10-25T08:09:35.681917+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)
