@@ -92,5 +92,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-118-r20261025 | Escena 118 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:40.240022+00:00 |
 | atlas-remates-120-r20261025 | Escena 120 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:55.659622+00:00 |
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
+| escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | pendiente | — | — | — | 2026-10-25T16:08:35.815510+00:00 |
 
 Integrador: libre
