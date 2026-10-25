@@ -2743,15 +2743,21 @@
     "atlas-boss-sprite-workflow": {
       "id": "atlas-boss-sprite-workflow",
       "piece": "Atlas: modo interno escena o sprite y cobertura de animaciones de bosses",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T19:34:47.192699+00:00",
-      "updated_at": "2026-10-25T19:34:52.989176+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-25T19:57:51.967959+00:00",
+      "branch": "codex/atlas-boss-sprite-workflow",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/154",
       "approval": null,
       "reference": "Pedido directo del usuario: cada sprite individual antes/despues; Malefica completa, reutilizable para bosses.",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T19:57:51.967959+00:00",
+          "owner": "codex-atlas",
+          "detail": "Herramientas: extraccionEU41estados/27cuerpos/3recortes; sintaxis y seleccion interna verificadas. Concepto Atlas312570a6afda4786b2d7c80ba4c11768; arte nativo pendiente."
+        }
+      ],
       "claimed_at": "2026-10-25T19:34:52.989176+00:00"
     },
     "malefica-recortes-khcom": {
@@ -2777,7 +2783,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:55:06.849487+00:00",
+  "updated_at": "2026-10-25T19:57:51.967959+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

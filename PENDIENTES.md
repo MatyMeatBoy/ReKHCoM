@@ -95,7 +95,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | pendiente | — | — | — | 2026-10-25T16:08:35.815510+00:00 |
 | trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/151 | approved exact c6f2bb42ff5143bf98ee674f64065f71 | 2026-10-25T19:49:41.960504+00:00 |
 | escena099-wallfinish | Escena099: patron lateral completo como la arena | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/152 | approved exact f092a251c3e44a56b1b4727eb3183855 | 2026-10-25T19:50:44.090680+00:00 |
-| atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | en_curso | codex-atlas | — | — | 2026-10-25T19:34:52.989176+00:00 |
+| atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/154 | — | 2026-10-25T19:57:51.967959+00:00 |
 | malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_revision | codex-atlas | codex/atlas-boss-sprite-workflow | — | 2026-10-25T19:55:06.849487+00:00 |
 
 Integrador: libre
