@@ -2422,10 +2422,23 @@
       "reference": "../khcom-claude-int/build/atlas-all-briefs.json; parent=e0779d8a9f5f4eea9eb73e9586505a03; cloud=c52f925b-a3e9-4b93-91de-0278ce105866",
       "evidence": [],
       "claimed_at": "2026-10-25T16:03:30.914656+00:00"
+    },
+    "darkside-arena-feedback-revision": {
+      "id": "darkside-arena-feedback-revision",
+      "piece": "Darkside arena sprite faltante",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T16:04:49.067560+00:00",
+      "updated_at": "2026-10-25T16:04:49.067560+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-052135-22f4ed / 9e9bb909-75e3-44fb-93f8-3ffe8048778d",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:04:23.228699+00:00",
+  "updated_at": "2026-10-25T16:04:49.067560+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
