@@ -2004,6 +2004,19 @@
         }
       ],
       "claimed_at": "2026-10-25T08:05:54.347032+00:00"
+    },
+    "oogie-arena-revision": {
+      "id": "oogie-arena-revision",
+      "piece": "Oogie arena: cinco nubes y tres trazos pendientes",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T08:06:55.350015+00:00",
+      "updated_at": "2026-10-25T08:06:55.350015+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "7420dbb247c440e2b70a1285ce21dbe8",
+      "evidence": []
     }
   },
   "integrator": {
@@ -2012,7 +2025,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:06:29.173632+00:00",
+  "updated_at": "2026-10-25T08:06:55.350015+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
