@@ -297,7 +297,9 @@ static void PageRebelAchievements() {
         const KhOfficialAchievement* a = KhOfficialAt(i);
         bool unlocked = sRebelProgress.when[i] != 0;
         const char* title = KhOfficialText(a, sSpanish ? 4 : 0, 0);
-        const char* description = KhOfficialText(a, sSpanish ? 4 : 0, 1);
+        char description[600];
+        std::snprintf(description, sizeof(description), "%s%s", T("En modo rebelde: ", "In Rebel mode: "),
+                      KhOfficialText(a, sSpanish ? 4 : 0, 1));
         if (!AchievementMatches(title, description, unlocked)) continue;
         ImVec2 uv0, uv1;
         GLuint badge = OfficialAchievementBadge(i, unlocked, &uv0, &uv1);

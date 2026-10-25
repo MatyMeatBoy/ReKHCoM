@@ -115,8 +115,14 @@ static void RebelEvent(const rc_runtime_event_t* event) {
         sRebelState.when[index] = 1;
     PortLog("achievement: rebel %u unlocked", (unsigned)event->id);
     KhOfflineSave(&sRebelState, sRebelPath);
-    PortAchievementToast(KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 0),
-                         KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 1), "", index);
+    {
+        static const char* const kLabel[6] = { "REBEL MODE", "MODE REBELLE", "REBELLEN-MODUS", "MODALITÀ RIBELLE",
+            "MODO REBELDE", "反逆モード" };
+        int l = ACHIEVEMENT_TEXT_LANGUAGE;
+        if (l < 0 || l > 5) l = 0;
+        PortAchievementToast(KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 0),
+                             KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 1), kLabel[l], index);
+    }
 }
 #endif
 int PortRebelActive(void) {

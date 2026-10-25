@@ -167,6 +167,7 @@ static const char* const kI18n[][5] = {
     { "Import GBA save... (experimental)", "Importer une sauvegarde GBA... (expérimental)", "GBA-Spielstand importieren... (experimentell)", "Importa salvataggio GBA... (sperimentale)", "GBAのセーブを読み込み...(実験的)" },
     { "Import stopped.", "Import arrêté.", "Import gestoppt.", "Importazione interrotta.", "読み込みを中止しました。" },
     { "Importing...", "Import...", "Importiere...", "Importazione...", "読み込み中..." },
+    { "In Rebel mode: ", "En mode rebelle : ", "Im Rebellen-Modus: ", "In modalità ribelle: ", "反逆モードで: " },
     { "In the collection:", "Dans la collection :", "In der Sammlung:", "Nella collezione:", "コレクション内:" },
     { "In the roms folder: ", "Dans le dossier roms : ", "Im Ordner roms: ", "Nella cartella roms: ", "romsフォルダー内: " },
     { "Incomplete copy in", "Copie incomplète dans", "Unvollständige Kopie in", "Copia incompleta in", "不完全なコピー:" },

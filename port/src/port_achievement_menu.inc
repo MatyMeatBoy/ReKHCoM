@@ -57,7 +57,16 @@ static int AchievementMenuGet(int i, PortAchievementInfo* info, int* badge) {
     if (sAchievementList == 2) { /* the official set, as Rebel mode earned it */
         int ok = PortAchievementsListGet(i, info);
         if (badge) *badge = i;
-        if (ok) info->state = PortRebelEarned(i);
+        if (ok) {
+            static const char* const kIn[6] = { "In Rebel mode: ", "En mode rebelle : ", "Im Rebellen-Modus: ",
+                "In modalità ribelle: ", "En modo rebelde: ", "反逆モードで: " };
+            char text[sizeof(info->description)];
+            int l = Lang();
+            if (l < 0 || l > 5) l = 0;
+            SDL_snprintf(text, sizeof(text), "%s%s", kIn[l], info->description);
+            SDL_strlcpy(info->description, text, sizeof(info->description));
+            info->state = PortRebelEarned(i);
+        }
         return ok;
     }
     if (badge) *badge = i;
