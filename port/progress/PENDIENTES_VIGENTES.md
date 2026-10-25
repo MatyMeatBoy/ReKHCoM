@@ -124,6 +124,12 @@ de cámara (097/112/120): ya no se corta nada en el borde (barriles de Agrabah, 
 arena de Agrabah (frente), tienda moguri, cambiar naipes, añadir naipes (esquina), botón Opciones del menú, banner
 de Steam.
 
+**Hecho también (25/10 noche):** banco de partidas solo desde el título; modo rebelde completo (lista local, sección en
+Trucos con indicador y A para apagarlo, pestaña en el launcher, filigrana negra, descripciones «En modo rebelde:»,
+aviso en los trucos que lo activan, partidas editadas en el launcher también); «Modo de logros» bajo Logros
+(Normal/Re:CoM/Rebelde con cartel); filtro de audio en dos perfiles (GBA y HD). Pruebas para el usuario en
+`pruebas/`: escena de Aerith x6 y barriles de Agrabah x4. Falta del modo rebelde: su lista de Re:CoM.
+
 **Código (Claude):**
 - **#163 (duartepedro03, Windows pre18, mod HD base):** el final de Riku («Road to Dawn») salta del apretón de manos
   HD a los créditos HD. Pide: «Intros HD» → renombrar a **«Videos HD»** y que solo cambie los 4 videos pre-renderizados
@@ -211,7 +217,7 @@ de Steam.
 
 ## 1d. Después de la pre18 (pedido del usuario 25/10 noche)
 
-- **Modos Re:CoM basados en la versión de PS2 (siguiente trabajo grande):** dificultades, ajustes por enemigo y lo
+- **Modos Re:CoM basados en la versión de PS2 (siguiente trabajo grande):** no son modos nuevos: es **mejorar o arreglar los modos que ya tenemos** (usuario 25/10) con lo que se saque de la PS2: dificultades, ajustes por enemigo y lo
   demás que se encuentre, con sus variantes, aplicados con cuidado a nuestra versión y reimplementados donde haga
   falta (dentro de la lógica del juego, sin objetos del port). Usar los assets de 1.5 HD ReMIX donde aplique.
   Herramienta: **REA** (github.com/morluto/rea, MIT; `npx rea-agents setup`, Node 24 ya instalado) con Ghidra o
