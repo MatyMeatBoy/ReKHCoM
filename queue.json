@@ -2475,14 +2475,20 @@
       "id": "atlas-remates-102-r20261025",
       "piece": "Escena 102 remates posteriores",
       "status": "en_curso",
-      "owner": "codex-atlas-remates",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T16:05:04.288990+00:00",
-      "updated_at": "2026-10-25T16:05:09.523321+00:00",
+      "updated_at": "2026-10-25T19:07:00.680103+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "familia b5ee78894f994aa684c59f38def14509; envio 20261025-024931-482bfa; build/atlas-all-briefs.json referencia",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T19:07:00.680103+00:00",
+          "owner": "codex-atlas",
+          "detail": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
+        }
+      ],
       "claimed_at": "2026-10-25T16:05:09.523321+00:00"
     },
     "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3": {
@@ -2672,7 +2678,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:06:46.037744+00:00",
+  "updated_at": "2026-10-25T19:07:00.680103+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -3002,6 +3008,16 @@
       "from_owner": "codex-atlas-escenas",
       "to_owner": "codex-atlas",
       "expected_commit": "4a4937d7526d2e0050bc36001ac5c76c18a5612c",
+      "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
+    },
+    {
+      "at": "2026-10-25T19:07:00.680103+00:00",
+      "actor": "codex-atlas",
+      "operation": "recover-task",
+      "task": "atlas-remates-102-r20261025",
+      "from_owner": "codex-atlas-remates",
+      "to_owner": "codex-atlas",
+      "expected_commit": "f42a02885c6f93074b926ce6ae2da8a6c790a491",
       "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
     }
   ]
