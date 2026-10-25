@@ -2226,8 +2226,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:28:24.781669+00:00",
-      "updated_at": "2026-10-25T13:28:33.014306+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T13:29:54.180057+00:00",
+      "branch": "codex/escena-099-muro",
       "pr": null,
       "approval": null,
       "reference": "20261024-183353-ceb621 / ae36f45ef10e45cc809620075f0c8626",
@@ -2236,7 +2236,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:29:43.872173+00:00",
+  "updated_at": "2026-10-25T13:29:54.180057+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
