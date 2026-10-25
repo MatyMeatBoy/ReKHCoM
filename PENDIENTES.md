@@ -100,4 +100,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-menus-current-review | Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera | en_curso | codex-atlas | — | — | 2026-10-25T20:35:28.184368+00:00 |
 | pre19-clean | Pre19 ZIP limpio personal desde aprobados integrados | en_curso | codex-atlas | — | — | 2026-10-25T20:49:08.524295+00:00 |
 
-Integrador: codex-atlas (ocupado; 2026-10-25T20:50:34.216789+00:00)
+Integrador: libre
