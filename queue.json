@@ -2489,9 +2489,9 @@
       "id": "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3",
       "piece": "Escena 110 revision Atlas 179b6da22e5c4bd39181d5ab14d7b9d3",
       "status": "en_curso",
-      "owner": "codex-atlas-escenas",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T16:05:27.620543+00:00",
-      "updated_at": "2026-10-25T16:06:21.548877+00:00",
+      "updated_at": "2026-10-25T19:06:46.037744+00:00",
       "branch": "codex/atlas-escena-110-179b6da",
       "pr": null,
       "approval": null,
@@ -2501,6 +2501,11 @@
           "at": "2026-10-25T16:06:21.548877+00:00",
           "owner": "codex-atlas-escenas",
           "detail": "Codigo y LOGICA preparados offline, nube 2 referencia altura y112; pendiente captura/test serial autorizado. Sin compilar ni ejecutar."
+        },
+        {
+          "at": "2026-10-25T19:06:46.037744+00:00",
+          "owner": "codex-atlas",
+          "detail": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
         }
       ],
       "claimed_at": "2026-10-25T16:05:33.163374+00:00"
@@ -2667,7 +2672,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:06:37.822321+00:00",
+  "updated_at": "2026-10-25T19:06:46.037744+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -2987,6 +2992,16 @@
       "from_owner": "codex-atlas-escenas",
       "to_owner": "codex-atlas",
       "expected_commit": "e2b72de0a1036d4d5f00bd15e429be52730f7fcf",
+      "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
+    },
+    {
+      "at": "2026-10-25T19:06:46.037744+00:00",
+      "actor": "codex-atlas",
+      "operation": "recover-task",
+      "task": "escena-110-179b6da22e5c4bd39181d5ab14d7b9d3",
+      "from_owner": "codex-atlas-escenas",
+      "to_owner": "codex-atlas",
+      "expected_commit": "4a4937d7526d2e0050bc36001ac5c76c18a5612c",
       "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
     }
   ]
