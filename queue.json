@@ -2129,6 +2129,19 @@
       ],
       "claimed_at": "2026-10-25T08:29:56.488874+00:00",
       "sent": "9c486ae93d5244149ada3b6936d312c6"
+    },
+    "trickmaster-muro-arriba": {
+      "id": "trickmaster-muro-arriba",
+      "piece": "Trickmaster arena: completar patron de muro hacia arriba",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T08:55:53.752192+00:00",
+      "updated_at": "2026-10-25T08:55:53.752192+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "31fa9e70a2c6418697abca86f35bbae4",
+      "evidence": []
     }
   },
   "integrator": {
@@ -2137,7 +2150,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:55:35.332647+00:00",
+  "updated_at": "2026-10-25T08:55:53.752192+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

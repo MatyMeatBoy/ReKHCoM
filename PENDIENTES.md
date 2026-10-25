@@ -71,5 +71,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-097-respuesta | Escena 097: verificar y responder nube del gato fuera de camara | en_revision | codex-atlas | — | — | 2026-10-25T08:24:41.734435+00:00 |
 | escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/108 | — | 2026-10-25T08:29:44.078223+00:00 |
 | escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | — | 2026-10-25T08:55:35.332647+00:00 |
+| trickmaster-muro-arriba | Trickmaster arena: completar patron de muro hacia arriba | pendiente | — | — | — | 2026-10-25T08:55:53.752192+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)
