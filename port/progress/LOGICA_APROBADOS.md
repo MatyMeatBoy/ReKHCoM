@@ -364,3 +364,7 @@ arte activo ni hereda aprobación. Nueve frames verificados offline con cero
 píxeles ROM alterados. Captura runtime pendiente del turno de RAM del usuario;
 cuando se autorice: SDL controller `0xffff/0xffff`, vídeo/audio dummy, PPU=1,
 BACKGROUND_TEST=1 y Ninja `-j1` en serie.
+
+### Escena099: módulo lateral de la arena (25/10)
+
+Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.

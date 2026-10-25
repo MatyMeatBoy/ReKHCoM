@@ -730,8 +730,19 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             *sy=24+PortSceneTileMod(wy-24,48);
             if ((wx>=56 && wx<120) || (wx>=184 && wx<208)) *sx=wx;
             else if (wx>=144 && wx<184) *sx=72+PortSceneTileMod(wx-144,40);
+            if ((wx>=56 && wx<120) || (wx>=144 && wx<208)) *sy=24;
             if (wx>=120 && wx<144) {
                 *sx=wx; *sy=24+PortSceneTileMod(wy-24,16);
+            }
+            return 1;
+        }
+        if ((wx<0 || wx>=256) && wy>=24 && wy<176) {
+            /* Same intact wallpaper module as the arena: no mirrored prop
+             * fragment beside the room, and no flat filler farther away. */
+            *sx=PortSceneTileMod(wx,56); *sy=wy;
+            if (wy>=108 && wy<128) {
+                if (wy<112) { *sx=32; *sy=108; }
+                else if (wy<114 || wy>=126) *sx=32;
             }
             return 1;
         }
