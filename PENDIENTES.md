@@ -76,7 +76,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | trickmaster-muro-continuidad | Trickmaster arena: continuidad del muro superior en dos nubes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/121 | — | 2026-10-25T13:29:43.872173+00:00 |
 | escena-099-muro-superior | Escena099: muro de Trickmaster hacia arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/122 | — | 2026-10-25T13:33:53.127680+00:00 |
 | escena-004-muro-derecho | Escena004: completar muro derecho y revisar escena de Leon equivalente | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/123 | — | 2026-10-25T13:39:49.213521+00:00 |
-| sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | pr_abierto | codex-sintesis | https://github.com/MatyMeatBoy/ReKHCoM/pull/125 | approved exact 823cdf38241144b1b282bcf3f2532120 | 2026-10-25T20:16:30.180755+00:00 |
+| sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | integrado | codex-sintesis | https://github.com/MatyMeatBoy/ReKHCoM/pull/125 | approved exact 823cdf38241144b1b282bcf3f2532120 | 2026-10-25T20:47:59.216032+00:00 |
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/124 | — | 2026-10-25T13:48:35.544380+00:00 |
 | darkside-06-feedback-revision | Darkside 06 costura nueva | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/127 | — | 2026-10-25T16:04:23.228699+00:00 |
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
