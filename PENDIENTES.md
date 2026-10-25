@@ -79,5 +79,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | pr_abierto | codex-sintesis | https://github.com/MatyMeatBoy/ReKHCoM/pull/125 | Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija | 2026-10-25T15:54:40.819797+00:00 |
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/124 | — | 2026-10-25T13:48:35.544380+00:00 |
 | darkside-06-feedback-revision | Darkside 06 costura nueva | pendiente | — | — | — | 2026-10-25T16:02:31.124789+00:00 |
+| atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | pendiente | — | — | — | 2026-10-25T16:02:36.403069+00:00 |
 
 Integrador: libre
