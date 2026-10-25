@@ -114,6 +114,16 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 Hecho esta tanda: #140 cerrado (el jugador confirmó: la build deck1 va sin bajones), «Quitar de Steam» (#158),
 tecla A de GBA en Opciones y cartel de Cinemáticas HD más breve (#159). Codex preparó la pre19 limpia (#160).
 
+**Hecho después (25/10 noche, todo en main):** #163 «Videos HD» solo cambia los videos de la GBA con su escena HD
+entera, el camino al amanecer en todo modo, sin créditos HD (#165); galería de escenas GBA/HD con «???» y truco
+para desbloquearlas (#166; test2 enviado a duartepedro, esperando su revisión y qué escena HD va en el piso 12);
+mouse oculto tras 3 s (#167); salir del juego solo avisa tras 1 h sin guardar en la sesión (#168); logros en el
+juego como Chain of Memories / Re:Chain of Memories con Y/L2/R2 (#169); muestras de fuente nítidas a 1080p;
+EXP ganada bajo la barra de vida en la vista ancha; marco negro a la portada del launcher; actores que esperan fuera
+de cámara (097/112/120): ya no se corta nada en el borde (barriles de Agrabah, Sora al irse). A la cola de Atlas:
+arena de Agrabah (frente), tienda moguri, cambiar naipes, añadir naipes (esquina), botón Opciones del menú, banner
+de Steam.
+
 **Código (Claude):**
 - **#163 (duartepedro03, Windows pre18, mod HD base):** el final de Riku («Road to Dawn») salta del apretón de manos
   HD a los créditos HD. Pide: «Intros HD» → renombrar a **«Videos HD»** y que solo cambie los 4 videos pre-renderizados
