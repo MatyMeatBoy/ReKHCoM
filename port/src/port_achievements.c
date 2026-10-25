@@ -397,7 +397,7 @@ void PortAchievementsFrame(void) {
 #ifdef KH_OFFLINE_EVAL
     if (evaluate && !recom && sOfflineReady)
         rc_runtime_do_frame(&sOfflineRuntime, OfflineEvent, OfflinePeek, NULL, NULL);
-    if (sRebel && !recom && sRebelReady && !PortUiActive() &&
+    if (sRebel && sRebelReady && !PortUiActive() && /* Re:CoM games with cheats too: one Rebel list */
         (gCurrentMode == &gModeMapFld || gCurrentMode == &gModeBattle || sStarted))
         rc_runtime_do_frame(&sRebelRuntime, RebelEvent, OfflinePeek, NULL, NULL);
     {
