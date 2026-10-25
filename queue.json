@@ -1051,12 +1051,12 @@
     "trickmaster-arena": {
       "id": "trickmaster-arena",
       "piece": "Trickmaster · arena",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T07:46:55.027277+00:00",
+      "updated_at": "2026-10-25T07:58:46.613080+00:00",
       "branch": "codex/atlas-trickmaster",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/105",
       "approval": null,
       "reference": "bcf3aec4ee7f40748959a87960d4ed5d",
       "evidence": [
@@ -1079,9 +1079,15 @@
           "at": "2026-10-25T07:46:55.027277+00:00",
           "owner": "codex-atlas",
           "detail": "Retomada cola Atlas: corregir chimenea unica y continuidad del suelo"
+        },
+        {
+          "at": "2026-10-25T07:58:46.613080+00:00",
+          "owner": "codex-atlas",
+          "detail": "Dos nubes respondidas en Atlas. EU 16:9/32:9 cuadros 240/900: centro GBA identico, sin crash. check_sources ok. Prioridad: arenas comentadas mas antiguas primero."
         }
       ],
-      "claimed_at": "2026-10-25T07:46:33.722885+00:00"
+      "claimed_at": "2026-10-25T07:46:33.722885+00:00",
+      "sent": "31fa9e70a2c6418697abca86f35bbae4"
     },
     "integrar-darkside-01": {
       "id": "integrar-darkside-01",
@@ -1960,7 +1966,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:46:55.027277+00:00",
+  "updated_at": "2026-10-25T07:58:46.613080+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
