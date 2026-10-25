@@ -2768,11 +2768,11 @@
     "malefica-recortes-khcom": {
       "id": "malefica-recortes-khcom",
       "piece": "Malefica: dibujar recortes KHCoM y presentacion montada agrupada",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T19:45:49.201740+00:00",
-      "updated_at": "2026-10-25T20:17:45.563385+00:00",
-      "branch": "codex/atlas-boss-sprite-workflow",
+      "updated_at": "2026-10-25T20:22:12.270237+00:00",
+      "branch": "codex/malefica-native-three-cuts",
       "pr": null,
       "approval": null,
       "reference": "Instruccion humana 25/10: base aceptada; dibujar encima solo extensiones y agrupar recortes",
@@ -2791,14 +2791,19 @@
           "at": "2026-10-25T20:17:45.563385+00:00",
           "owner": "codex-atlas",
           "detail": "Adaptacion nativa del concepto dibujado para3variantes de recorte; original y brazos conservados."
+        },
+        {
+          "at": "2026-10-25T20:22:12.270237+00:00",
+          "owner": "codex-atlas",
+          "detail": "Tres hijas nativas42f2b038,608f0f55,71dbfe50 entregadas.41estados0pixelesoriginalesalterados. Anatomia/costura aun sujetasrevision."
         }
       ],
       "claimed_at": "2026-10-25T19:45:55.340720+00:00",
-      "sent": "312570a6afda4786b2d7c80ba4c11768"
+      "sent": "42f2b038ff7a4907b9b798c4ae41ffec"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T20:17:45.563385+00:00",
+  "updated_at": "2026-10-25T20:22:12.270237+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
