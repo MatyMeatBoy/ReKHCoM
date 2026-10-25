@@ -8,6 +8,7 @@ Instrucciones directas del usuario, 25/10/2026. Seleccion interna; no agregar se
 - Agrupar un recorte compartido en una propuesta; registrar las poses que lo reutilizan como cobertura interna. No crear una revision por cada estado repetido.
 - Presentar la pieza original y su mejora, ademas del personaje montado para evaluar anatomia y costura. Escena con jefe solo como contexto complementario.
 - Una silueta conceptual aceptada sirve de base: acabar la extension con contorno, paleta y sombreado coherentes con KHCoM. Una ilustracion generada no demuestra igualdad de pixeles ni integracion de juego.
+- Modo predeterminado: TURBO, hasta acabar la cola de Atlas. El modo anterior se llama DETALLE y se usa cuando el usuario lo pida. Salidas concisas y avance continuo entre entregas.
 - Turbo: una pasada y una correccion dirigida; mantener las capturas habituales, sin workers ni baterias generales. Comunicar cada entrega. Consolidar aprendizajes de aprobados/honores solo en las dos ventanas diarias pedidas.
 
 ## Malefica: recuento y anatomia
