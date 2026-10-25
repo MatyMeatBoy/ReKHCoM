@@ -70,7 +70,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/107 | — | 2026-10-25T08:17:21.201961+00:00 |
 | escena-097-respuesta | Escena 097: verificar y responder nube del gato fuera de camara | en_revision | codex-atlas | — | — | 2026-10-25T08:24:41.734435+00:00 |
 | escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/108 | — | 2026-10-25T08:29:44.078223+00:00 |
-| escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | — | 2026-10-25T08:55:35.332647+00:00 |
+| escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 9c486ae93d5244149ada3b6936d312c6 | 2026-10-25T09:07:27.290488+00:00 |
 | trickmaster-muro-arriba | Trickmaster arena: completar patron de muro hacia arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/114 | — | 2026-10-25T08:59:35.571565+00:00 |
 
 Integrador: codex-atlas-integrador (ocupado; 2026-10-25T09:06:43.205991+00:00)
