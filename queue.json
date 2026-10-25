@@ -1679,10 +1679,10 @@
     "diario-entradas": {
       "id": "diario-entradas",
       "piece": "Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-menus",
       "created_at": "2026-10-24T19:45:56.107112+00:00",
-      "updated_at": "2026-10-24T20:56:20.251705+00:00",
+      "updated_at": "2026-10-25T16:02:53.468147+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -1699,7 +1699,7 @@
           "detail": "released: Pieza de UI (menus del Diario) sin nubes medibles en la mesa; necesita revision de capturas de cada entrada y decisiones de margen, no cabe en 5 min."
         }
       ],
-      "claimed_at": "2026-10-24T20:55:26.032390+00:00"
+      "claimed_at": "2026-10-25T16:02:53.468147+00:00"
     },
     "diario-subentradas": {
       "id": "diario-subentradas",
@@ -2399,7 +2399,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:02:47.745392+00:00",
+  "updated_at": "2026-10-25T16:02:53.468147+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
