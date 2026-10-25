@@ -1988,15 +1988,21 @@
     "malefica-arena-respuesta": {
       "id": "malefica-arena-respuesta",
       "piece": "Malefica arena: responder aprobacion de fondo y separar sprites pendientes",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:05:47.679397+00:00",
-      "updated_at": "2026-10-25T08:05:54.347032+00:00",
+      "updated_at": "2026-10-25T08:06:29.173632+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "0cdb9c542d064feba47058173723a890",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T08:06:29.173632+00:00",
+          "owner": "codex-atlas",
+          "detail": "Comentario general interpretado literalmente: fondo aprobado se conserva; sprites 01-03 pendientes por separado, sin declararlos resueltos. Respuesta hija de contexto en Atlas, sin cambios de arte."
+        }
+      ],
       "claimed_at": "2026-10-25T08:05:54.347032+00:00"
     }
   },
@@ -2006,7 +2012,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:05:54.347032+00:00",
+  "updated_at": "2026-10-25T08:06:29.173632+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
