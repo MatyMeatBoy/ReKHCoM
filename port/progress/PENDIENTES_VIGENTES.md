@@ -153,9 +153,10 @@ de Steam.
 - **Muestras de fuente en la ventana de Fuente del texto HD:** se ven pixeladas a 1080p. Hacer las muestras a 4x
   (gen_font_samples.py) y dibujarlas a la resolución de la pantalla encima del menú (PortUiHdSamples + port_main, como
   los avisos de logros). En curso.
-- **Android US: batallas 123/124 de Agrabah** con timeout 6 de 6 corridas solas (`test_android_scenarios.py --regions us
-  --groups bosses --only battle-123-BATTLE_EVENT_AGRABAH_1,battle-124-BATTLE_EVENT_AGRABAH_2 --slow 6`); en PC no
-  pasa. Reproducible: buscar dónde se queda (kh_com.log del caso, `stack.txt`).
+- **Android US: batallas 123/124 de Agrabah:** el «6 de 6» del 25/10 era falso: la app de prueba no tenía la imagen US
+  («guest-us.macho is missing from the APK» en kh_com_host.log del caso). Lo real: en la batería de las 15:22 la 123
+  pasó y la 124 dio timeout. Reproducir con la app smoke completa (`build_android.py --regions eu us jp --abi x86
+  --smoke --smoke-env KHCOM_FAST=1`).
 - **Herramienta de anuncios para releases grandes** (la 2.0 sale hoy más tarde): publicar automático en X (Twitter),
   Reddit (un par de comunidades) y Patreon (si el plugin lo bloquea, lo hace Codex, que maneja la PC completa).
   Publicar siempre con el OK del usuario.
