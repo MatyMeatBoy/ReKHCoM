@@ -1051,10 +1051,10 @@
     "trickmaster-arena": {
       "id": "trickmaster-arena",
       "piece": "Trickmaster · arena",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:56:14.513799+00:00",
+      "updated_at": "2026-10-25T07:46:33.722885+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -1076,7 +1076,7 @@
           "detail": "released: Comentarios: 'mis comentarios que la escena' (incompleto) y 'solo una chimenea como en la escena preliminar': ambiguo, requiere referencia de la preliminar y decidir que chimenea."
         }
       ],
-      "claimed_at": "2026-10-24T20:55:20.012629+00:00"
+      "claimed_at": "2026-10-25T07:46:33.722885+00:00"
     },
     "integrar-darkside-01": {
       "id": "integrar-darkside-01",
@@ -1955,7 +1955,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:23:49.989255+00:00",
+  "updated_at": "2026-10-25T07:46:33.722885+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
