@@ -364,3 +364,7 @@ arte activo ni hereda aprobación. Nueve frames verificados offline con cero
 píxeles ROM alterados. Captura runtime pendiente del turno de RAM del usuario;
 cuando se autorice: SDL controller `0xffff/0xffff`, vídeo/audio dummy, PPU=1,
 BACKGROUND_TEST=1 y Ninja `-j1` en serie.
+
+### Trickmaster: postes completos y travesaño recto (revisión25/10)
+
+Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir sus remates diagonales. Prolongar las columnas de la arista superior de los postes conservando sus x; el travesaño lateral mantiene bordes horizontales constantes y el grano original entre ellos. La chimenea única y el suelo no cambian.
