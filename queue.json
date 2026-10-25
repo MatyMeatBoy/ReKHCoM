@@ -2139,13 +2139,13 @@
     "trickmaster-muro-arriba": {
       "id": "trickmaster-muro-arriba",
       "piece": "Trickmaster arena: completar patron de muro hacia arriba",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:55:53.752192+00:00",
-      "updated_at": "2026-10-25T08:59:35.571565+00:00",
+      "updated_at": "2026-10-25T09:09:06.277771+00:00",
       "branch": "codex/atlas-trickmaster-top",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/114",
-      "approval": null,
+      "approval": "Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 5a6c86fcfd4b49a19009d73f9afde97b",
       "reference": "31fa9e70a2c6418697abca86f35bbae4",
       "evidence": [
         {
@@ -2157,10 +2157,16 @@
           "at": "2026-10-25T08:59:35.571565+00:00",
           "owner": "codex-atlas",
           "detail": "Nube5f7ab868 respondida en Atlas: muro rosa hasta arriba, suelo conservado y chimenea unica. EU16:9/32:9 240/330 GBA identico4/4, sin resets/BIOS/crash, compila. Sourcecheck global bloqueado por glifos JP de main port_ui.c ajenos a la rama."
+        },
+        {
+          "at": "2026-10-25T09:09:06.277771+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 7c3709cd81a68e421ec20144ccf91acdf74b829a; Patron de muro superior y chimenea unica. Compilacion combinada correcta; GBA identico4/4 a1920 y3840."
         }
       ],
       "claimed_at": "2026-10-25T08:56:05.340845+00:00",
-      "sent": "5a6c86fcfd4b49a19009d73f9afde97b"
+      "sent": "5a6c86fcfd4b49a19009d73f9afde97b",
+      "completed_at": "2026-10-25T09:09:06.277771+00:00"
     }
   },
   "integrator": {
@@ -2169,7 +2175,7 @@
     "created_at": "2026-10-25T09:06:43.205991+00:00",
     "updated_at": "2026-10-25T09:06:43.205991+00:00"
   },
-  "updated_at": "2026-10-25T09:07:27.290488+00:00",
+  "updated_at": "2026-10-25T09:09:06.277771+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
