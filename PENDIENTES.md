@@ -76,5 +76,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | trickmaster-muro-continuidad | Trickmaster arena: continuidad del muro superior en dos nubes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/121 | — | 2026-10-25T13:29:43.872173+00:00 |
 | escena-099-muro-superior | Escena099: muro de Trickmaster hacia arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/122 | — | 2026-10-25T13:33:53.127680+00:00 |
 | escena-004-muro-derecho | Escena004: completar muro derecho y revisar escena de Leon equivalente | en_curso | codex-atlas | codex/escena-004-muro | — | 2026-10-25T13:34:04.096225+00:00 |
+| sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | pendiente | — | — | Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija | 2026-10-25T13:37:36.238311+00:00 |
 
 Integrador: libre
