@@ -2254,6 +2254,15 @@ static void HarnessFrame(void) {
     const char* saveAt = SDL_getenv("KHCOM_SAVESTATE");
 
     {
+        /* KHCOM_GALLERY_PLAY=<frame>:<event>: Options > Scenes > GBA plays that event from the title */
+        const char* gallery = SDL_getenv("KHCOM_GALLERY_PLAY");
+        if (gallery && (uint32_t)SDL_atoi(gallery) == sFrameCount && SDL_strchr(gallery, ':')) {
+            extern int PortSceneGalleryPlay(int eventId);
+            PortLog("harness: gallery play %d: %s", SDL_atoi(SDL_strchr(gallery, ':') + 1),
+                    PortSceneGalleryPlay(SDL_atoi(SDL_strchr(gallery, ':') + 1)) ? "started" : "refused");
+        }
+    }
+    {
         /* every mode change in the log (a report then tells where the game was); the tests' own wording with
            KHCOM_TRACE_MODES */
         extern const char* PortHarnessModeName(void);

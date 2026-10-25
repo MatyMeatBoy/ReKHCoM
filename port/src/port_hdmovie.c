@@ -103,10 +103,41 @@ static int IsEnding(int eventId) {
     return eventId == EVENT_073_13F_CAPSULE_ROOM_ENDING || eventId == EVENT_195_RIKU_ENDING;
 }
 
+/* The scene gallery (port_scene_gallery.c): the scenes it lists (the story's, with their Re:CoM scene), and the HD
+   one played by itself. While the gallery replays a scene in the game's engine (gPortGalleryEvent), it stays the
+   cartridge's. */
+extern int gPortGalleryEvent;
+void PortSceneSeen(int eventId);
+int PortHdSceneCount(void) {
+    return (int)(sizeof(kHdScenes) / sizeof(kHdScenes[0]));
+}
+int PortHdSceneAt(int i, const char** movie) {
+    if (i < 0 || i >= PortHdSceneCount())
+        return -1;
+    if (movie)
+        *movie = kHdScenes[i].movie;
+    return kHdScenes[i].eventId;
+}
+int PortHdSceneImported(const char* movie) {
+    char path[1024];
+    FILE* f;
+    MoviePath(movie, path, sizeof(path));
+    f = fopen(path, "rb");
+    if (f)
+        fclose(f);
+    return f != NULL;
+}
+int PortHdMoviePlayName(const char* movie) {
+    return PlayFile(movie);
+}
+
 int PortHdScenePlay(int eventId) {
     size_t i;
     eventId &= 0x7FFF; /* the debug menu's events carry 0x8000 (mode_event.c) */
     PortLog("hd scene: event %d", eventId);
+    PortSceneSeen(eventId);
+    if (gPortGalleryEvent)
+        return 0;
     if (!gPortConfig.hdScenes) /* the endings' event scenes too: HD movies are the cartridge's movies only (#163) */
         return 0;
     for (i = 0; i < sizeof(kHdScenes) / sizeof(kHdScenes[0]); i++)
@@ -1206,6 +1237,22 @@ static int PlayFile(const char* name) {
     return played != 0;
 }
 #else
+int PortHdSceneCount(void) {
+    return 0;
+}
+int PortHdSceneAt(int i, const char** movie) {
+    (void)i;
+    (void)movie;
+    return -1;
+}
+int PortHdSceneImported(const char* movie) {
+    (void)movie;
+    return 0;
+}
+int PortHdMoviePlayName(const char* movie) {
+    (void)movie;
+    return 0;
+}
 int PortHdMoviePlay(int movieId) {
     (void)movieId;
     return 0;

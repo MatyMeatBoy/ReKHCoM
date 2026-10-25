@@ -226,6 +226,18 @@ int PortDebugModeAvailable(void) {
     return strcmp(GetModeName(), "mode_title") == 0;
 }
 
+/* Options > Scenes: a scene seen before, replayed in the game's engine from the title (as the debug menu's event
+   select does, without its end message); back to the title when it ends (mode_event.c). */
+int gPortGalleryEvent;
+extern Mode gModeEventDebug;
+int PortSceneGalleryPlay(int eventId) {
+    if (!PortDebugModeAvailable())
+        return 0;
+    gPortGalleryEvent = 1;
+    ModeRequest(&gModeEventDebug, (eventId & 0x7FFF) | 0x8000);
+    return 1;
+}
+
 void PortDebugModeEnter(void) {
     if (PortDebugModeAvailable()) {
         PortAchievementsInvalidate("Debug menu entered");

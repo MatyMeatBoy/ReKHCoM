@@ -129,6 +129,7 @@ enum {
     ITEM_HEAD_MORE, /* section heading, not selectable */
     ITEM_CONTROLS_MENU,
     ITEM_ACHIEVEMENTS_MENU,
+    ITEM_SCENES_MENU,  /* the scene gallery (port_scene_gallery_menu.inc) */
     ITEM_REMATCH_MENU,
     ITEM_CHEATS_MENU,
     ITEM_CLOSE,
@@ -153,6 +154,7 @@ enum {
     ITEM_CHEAT_MAXLEVEL,
     ITEM_CHEAT_MAPCARDS,
     ITEM_CHEAT_JOURNAL,
+    ITEM_CHEAT_SCENES, /* every scene in the gallery */
     ITEM_CHEAT_DEBUG_HEADING, /* section heading, not selectable */
     ITEM_CHEAT_GBA_MAP,
     ITEM_CHEATS_BACK,
@@ -180,7 +182,8 @@ enum {
 };
 
 /* Two pages, each a run of items: the options and the Re:CoM settings. */
-enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS, PAGE_LOBBY };
+enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS, PAGE_LOBBY,
+       PAGE_SCENES };
 static int sPage;
 static int sTitleRequest; /* ITEM_TITLE: due once the menu has closed */
 /* a big window over Options that asks twice, as the scene pause asks before a skip: back to the title (ITEM_TITLE),
@@ -196,6 +199,9 @@ static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
     { "GBA classic", "GBA classique", "GBA klassisch", "GBA classico", "GBA clásico", "GBAクラシック" },
 };
 static void AchievementMenuOpen(void);
+static void SceneMenuOpen(void);
+static int SceneMenuInput(const SDL_Event* ev);
+static int sSceneHd; /* the gallery's HD tab */
 static int AchievementMenuInput(const SDL_Event* ev);
 static int sControlPad, sControlCapture;
 static void ControlBindingName(int binding, int l, char* out, size_t size);
@@ -219,7 +225,7 @@ static int IsHeading(int item) {
 /* the rows that open a page or a window: A (or a tap) does, left and right do not (25/10) */
 static int OpensSomething(int item) {
     switch (item) {
-        case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_REMATCH_MENU:
+        case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
         case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET:
             return 1;
         default:
@@ -384,6 +390,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "More", "Plus", "Mehr", "Altro", "Más", "その他" },
     { "Controls", "Commandes", "Steuerung", "Controlli", "Controles", "コントロール" },
     { "Achievements", "Succès", "Erfolge", "Obiettivi", "Logros", "じっせき" },
+    { "Scenes", "Scènes", "Szenen", "Scene", "Escenas", "シーン" },
     { "Boss rematches", "Revanches de boss", "Boss-Revanchen", "Rivincite coi boss", "Revancha de jefes", "ボス再戦" },
     { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
@@ -416,6 +423,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Tutte le carte stanza (9)", "Todas las cartas de mapa (9 c/u)", "全マップカード (9枚ずつ)" },
     { "Complete the journal", "Compléter le journal", "Tagebuch vervollständigen",
       "Completa il diario", "Completar el diario", "日記をすべてうめる" },
+    { "Unlock all scenes", "Débloquer toutes les scènes", "Alle Szenen freischalten", "Sblocca tutte le scene",
+      "Desbloquear todas las escenas", "シーンをすべてみられる" },
     { "Debug mode", "Mode debug", "Debug-Modus", "Modalità debug", "Modo debug", "デバッグモード" },
     { "[ReKHCoM] GBA map logic", "[ReKHCoM] Logique carte GBA", "[ReKHCoM] GBA-Kartenlogik",
       "[ReKHCoM] Logica mappa GBA", "[ReKHCoM] Lógica Mapa GBA", "[ReKHCoM] GBAマップロジック" },
@@ -1189,6 +1198,7 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_CHEAT_MAXLEVEL:
         case ITEM_CHEAT_MAPCARDS:
         case ITEM_CHEAT_JOURNAL:
+        case ITEM_CHEAT_SCENES:
             SDL_strlcpy(out, "→", size);
             break;
         case ITEM_CHEAT_DEBUG:
@@ -1198,6 +1208,7 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_CHEATS_MENU:
         case ITEM_REMATCH_MENU:
         case ITEM_ACHIEVEMENTS_MENU:
+        case ITEM_SCENES_MENU:
         case ITEM_CONTROLS_MENU:
         case ITEM_PS2_MENU:
         case ITEM_TOUCH_EDIT:
@@ -1442,6 +1453,16 @@ static void Change(int item, int dir) {
         case ITEM_ACHIEVEMENTS_MENU:
             if (dir > 0) AchievementMenuOpen();
             return;
+        case ITEM_SCENES_MENU:
+            if (dir > 0) SceneMenuOpen();
+            return;
+        case ITEM_CHEAT_SCENES:
+            if (dir > 0) {
+                extern void PortScenesUnlockAll(void);
+                PortScenesUnlockAll();
+                PortUiNotice(sCheatDone[Lang()]);
+            }
+            return;
         case ITEM_TOUCH_EDIT:
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
             if (dir > 0 && !gPortConfig.hideTouchControls) {
@@ -1680,6 +1701,7 @@ void PortUiOpenOptions(void) {
         sPage = PAGE_CONTROLS;
     RefreshModes();
     if (SDL_getenv("KHCOM_ACHIEVEMENTS_SHOT")) AchievementMenuOpen();
+    if (SDL_getenv("KHCOM_SCENES_SHOT")) { SceneMenuOpen(); sSceneHd = SDL_atoi(SDL_getenv("KHCOM_SCENES_SHOT")) == 2; }
 }
 
 /* map.c: a new game was confirmed. Original preselected; its options start as the graphics mode chosen on the first
@@ -1992,6 +2014,13 @@ int PortUiHandleEvent(const void* p) {
         }
         if (click) { extern void PortMenuSoundClick(void); PortMenuSoundClick(); }
         return AchievementMenuInput(ev);
+    }
+    if (sPage == PAGE_SCENES) {
+        if (ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
+            extern void PortMenuSoundClick(void);
+            PortMenuSoundClick();
+        }
+        return SceneMenuInput(ev);
     }
     if (sPage == PAGE_LOBBY && (ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN)) {
         int key = -1;
@@ -3226,6 +3255,7 @@ static void DrawNintendoNote(int l, int width, int height, int left) {
     DrawWrapped(sNintendoNote[l], x0 + 8, y0 + 21, textW, MENU_INK, 1);
 }
 #include "port_achievement_menu.inc"
+#include "port_scene_gallery_menu.inc"
 
 /* ---- the online lobby ---------------------------------------------------------------------------------------- */
 int PortLobbyBackend(void);
@@ -3747,6 +3777,7 @@ static void DrawMenu(int l, int width, int height) {
     }
 
     if (sPage == PAGE_ACHIEVEMENTS) { DrawAchievementMenu(l, width, height); return; }
+    if (sPage == PAGE_SCENES) { DrawSceneMenu(l, width, height); return; }
     if (sPage == PAGE_LOBBY) { DrawLobby(l, width, height); return; }
     if (sPage == PAGE_NEWGAME) {
         DrawWizard(l, width, height);

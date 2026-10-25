@@ -168,6 +168,16 @@ void EventDebugUpdate() {
 
     TaskPoolDraw(&sEventTaskPool);
 
+#ifdef PLATFORM_PC
+    {
+        extern int gPortGalleryEvent;
+        if (gPortGalleryEvent && !gEventState->running) { /* Options > Scenes: straight back to the title */
+            gPortGalleryEvent = 0;
+            ModeRequest(&gModeTitle, 0);
+            return;
+        }
+    }
+#endif
     if (!gEventState->running) {
         if (sEventEndStep == EVENT_END_STEP_SHOW_MESSAGE) {
             ShowEventEndMessage();
