@@ -9,7 +9,7 @@ try {
     $env:SDL_AUDIO_DRIVER = 'dummy'
     $env:KHCOM_PPU_THREADS = '1'
     $env:KHCOM_BACKGROUND_TEST = '1'
-    & '../toolchain/bin/ninja.exe' -f build/pc-atlas/build.ninja -j1
+    & '../toolchain/bin/ninja.exe' -f build/pc-atlas/build.ninja -j1 build/pc-atlas/khcom.exe
     if ($LASTEXITCODE) { throw 'Build EU fallido' }
     $eventCode = @'
 import sys
@@ -31,7 +31,10 @@ print(next('%d:%d'%(l,i) for l,i,n in event_lists() if n.split('_')[1]=='074'))
     $env:KHCOM_QUIT = '304'
     Push-Location $taskRun
     try {
-        & ./khcom.exe --rom (Join-Path $taskRoot 'roms/B8CP.gba') *> runtime.log
+        # A GUI .exe returns immediately when invoked directly in PowerShell.
+        # Python waits for the actual process before checking its screenshot.
+        $env:ATLAS074_ROM = Join-Path $taskRoot 'roms/B8CP.gba'
+        python -c "import os,subprocess; p=subprocess.run(['./khcom.exe','--rom',os.environ['ATLAS074_ROM']],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=180); raise SystemExit(p.returncode)"
         if ($LASTEXITCODE) { throw 'Captura EU fallida' }
         if (-not (Test-Path out_00300.bmp)) { throw 'Falta captura de frame 300' }
     } finally { Pop-Location }
