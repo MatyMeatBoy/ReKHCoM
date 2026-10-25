@@ -109,6 +109,56 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - **Estados rápidos en consolas/Android/web:** `port_state` excluido en consolas; en Android/web la fila de revanchas
   se oculta. Medir el tamaño del estado y escribirlo por el puente (H_fopen) antes de encenderlo.
 
+## 1f. Pedidos del usuario 25/10 noche, segunda tanda (con capturas; anotados por si no se alcanzan)
+
+Hecho esta tanda: #140 cerrado (el jugador confirmó: la build deck1 va sin bajones), «Quitar de Steam» (#158),
+tecla A de GBA en Opciones y cartel de Cinemáticas HD más breve (#159). Codex preparó la pre19 limpia (#160).
+
+**Código (Claude):**
+- **#163 (duartepedro03, Windows pre18, mod HD base):** el final de Riku («Road to Dawn») salta del apretón de manos
+  HD a los créditos HD. Pide: «Intros HD» → renombrar a **«Videos HD»** y que solo cambie los 4 videos pre-renderizados
+  de la GBA (sus 4 enlaces de YouTube en el issue); las demás escenas solo con «Cinemáticas HD»; y poder ver solo los
+  créditos de la GBA (sin los HD). Cómo: separar en port_hdmovie la lista de videos GBA de las escenas; revisar el
+  evento del final de Riku (qué escena HD falta entre el apretón y los créditos).
+- **Logros en el juego:** arriba «Logros · Chain of Memories» o «Logros · Re:Chain of Memories» (no «Oficiales»);
+  abajo «Y: CoM/Re:CoM»; las dos listas visibles para todos; cambiar con Y/Triángulo o con L2/R2
+  (port_achievement_menu.inc, líneas del título 125 y de ayuda 169; hoy la lista Re:CoM solo si hay partidas Re:CoM).
+- **Agrabah, escena con barriles (captura 3):** al entrar los barriles se ven tapados como si faltara medio sprite y la
+  escena «se desdobla». Revisar si lo causa la mejora de actores fuera de pantalla: esa mejora va **solo en las escenas
+  que pidió el usuario** (apagar el sprite si está fuera y prenderlo cuando entra); en el resto no tocar. Además Sora y
+  los amigos desaparecían al salir del cuadro en 16:9: el usuario nunca pidió la mejora para Sora; revisar el alcance.
+- **Prueba de la escena de Aerith con ese zoom** (pedido explícito de un .bat): quizás sea la solución para que esas
+  escenas se vean limpias; decir en qué otras escenas se aplicó ese zoom.
+- **Mouse:** en PC y Linux, ocultar el cursor tras unos segundos quieto sobre el juego (no usamos el mouse).
+- **Pantalla de subir de nivel / EXP ganada tras el combate:** queda al centro y no sigue la posición relativa de la
+  pantalla ancha. Ver en la GBA y el decomp dónde va (¿bajo la barra de vida?) y probar todos los ratios.
+- **Salir del juego:** el aviso no debe asustar: solo si la última partida guardada **de esta sesión** fue hace más de
+  1 hora: «No guardas desde hace xx». Si se cargó un save viejo y se sale enseguida, no avisar.
+- **Menú del juego: botón nuevo «Opciones»** (en cada idioma) con la misma textura limpia y el mismo texto pixel art
+  que los otros botones, ajustando el espaciado para que quepa uno más. Con eso se quita entrar a Opciones con
+  Start+Select: solo desde aquí y desde el título (mejora lo que queda en gris y evita bugs al cambiar de versión).
+  El arte pasa por Atlas.
+- **Launcher:** marco/contorno negro a la imagen de la portada (sección JUEGO), con el estilo del arte del juego y del
+  launcher.
+- **Muestras de fuente en la ventana de Fuente del texto HD:** se ven pixeladas a 1080p. Hacer las muestras a 4x
+  (gen_font_samples.py) y dibujarlas a la resolución de la pantalla encima del menú (PortUiHdSamples + port_main, como
+  los avisos de logros). En curso.
+- **Android US: batallas 123/124 de Agrabah** con timeout 6 de 6 corridas solas (`test_android_scenarios.py --regions us
+  --groups bosses --only battle-123-BATTLE_EVENT_AGRABAH_1,battle-124-BATTLE_EVENT_AGRABAH_2 --slow 6`); en PC no
+  pasa. Reproducible: buscar dónde se queda (kh_com.log del caso, `stack.txt`).
+- **Herramienta de anuncios para releases grandes** (la 2.0 sale hoy más tarde): publicar automático en X (Twitter),
+  Reddit (un par de comunidades) y Patreon (si el plugin lo bloquea, lo hace Codex, que maneja la PC completa).
+  Publicar siempre con el OK del usuario.
+
+**Arte (a la cola de Atlas):**
+- **Arena de Agrabah (captura 4):** quitar los barriles del frente en la extensión y seguir el arte de grietas de arena
+  hasta abajo, en perspectiva, pixel art preciso. Antes: comparar con la arena original de la GBA sin extensión, de
+  lejos, para ver si esos barriles ya estaban.
+- **Tienda moguri:** aplicar la receta de submenús.
+- **Cambiar naipes:** misma receta + la numeración del mazo con el texto HD mejorado (como en el mazo).
+- **Añadir naipes:** detalles de la esquina superior derecha (la pestaña del círculo cortada arriba a la derecha).
+- Todo en **modo turbo** (el nuevo por defecto de Atlas): aprender de cómo lo usa Codex (PRs #161/#162).
+
 ## 1e. Pedidos del usuario 25/10 noche (después del test de Steam Deck)
 
 - **Steam en el launcher:** si el juego ya está agregado a Steam, ofrecer «Quitar de Steam» ahí mismo. El arte del
