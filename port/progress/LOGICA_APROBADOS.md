@@ -402,3 +402,7 @@ Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo comple
 ### Trickmaster: postes completos y travesaño recto (revisión25/10)
 
 Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir sus remates diagonales. Prolongar las columnas de la arista superior de los postes conservando sus x; el travesaño lateral mantiene bordes horizontales constantes y el grano original entre ellos. La chimenea única y el suelo no cambian.
+
+### Actores que esperan fuera de la cámara (25/10)
+
+En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).

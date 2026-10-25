@@ -2268,6 +2268,13 @@ static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
     return occ < prio * 128 + i && !HdTextGlyph(occ & 127);
 }
 
+/* Actors that wait beyond the cartridge's camera (event 097, Preliminar 112 / 120): a sprite is hidden only while it
+   has not yet come into the 240x160 frame and lies wholly outside it. Once it has been in, it draws whole, also as it
+   walks out into the wide view; one crossing the frame's edge is never cut (user 25/10: Agrabah's barrels lost half,
+   Sora and friends vanished leaving). Reset per scene (PortPpuRender). */
+static unsigned char sActorEntered[128];
+static int sActorSceneKey = -1;
+
 static void DrawObjs(int gy, uint16_t dispcnt) {
     int i, w = gPortScreen.width;
     /* Event 097 stages characters just beyond the cartridge's
@@ -2351,6 +2358,12 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         if (ox >= objRight || ox + bw <= objLeft)
             continue;
 
+        if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text && prio > 0) {
+            if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0)
+                sActorEntered[i] = 1; /* in the frame (some of it): it stays drawn from now on */
+            else if (!sActorEntered[i])
+                continue; /* still waiting outside */
+        }
         line = gy - oy;
         /* Reject lines outside the sprite before mosaic quantisation:
            truncating a negative remainder would turn -1 into line zero. */
@@ -2378,9 +2391,6 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             if (gx < sLeft || gx >= sRight)
                 continue;
             /* the message window, its portrait and text (priority 0) stay where the game puts them (112, PR #71) */
-            if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text && prio > 0 &&
-                (gx < 0 || gx >= GBA_SCREEN_W || gy < 0 || gy >= GBA_SCREEN_H))
-                continue;
             if (sOamTag[i].clipX0 < sOamTag[i].clipX1 &&
                 (gx < sOamTag[i].clipX0 || gx >= sOamTag[i].clipX1))
                 continue;
@@ -3418,6 +3428,15 @@ void PortPpuBeginFrame(void) {
     sPreliminarV1 = getenv("KHCOM_PRELIMINAR_V1") != NULL;
     (void)PortArenasV2(); (void)PortArenasApproved(); /* its switch read here, on the main thread, before the cores draw (they ask it per row) */
     sSinglePanelBg = PortEventBackdropPanel();
+    {
+        /* a new scene: its waiting actors have not come in yet (DrawObjs) */
+        extern int PortEventId(void);
+        int key = PortEventId();
+        if (key != sActorSceneKey) {
+            memset(sActorEntered, 0, sizeof(sActorEntered));
+            sActorSceneKey = key;
+        }
+    }
 
     memset(sTitleBand, 0, sizeof(sTitleBand));
     BuildLut();
