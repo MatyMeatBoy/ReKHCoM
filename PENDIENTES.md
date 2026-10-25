@@ -104,5 +104,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-cambiar-naipes | Cambiar naipes: receta de submenus + numeracion del mazo con el texto HD mejorado (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:17.758614+00:00 |
 | submenu-anadir-naipes-esquina | Anadir naipes: esquina superior derecha, la pestana del circulo cortada (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:22.457422+00:00 |
 | menu-boton-opciones | Menu del juego: boton nuevo Opciones (6 idiomas) con la textura limpia y el texto pixel art de los demas, espaciado para que quepa (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:27.033037+00:00 |
+| steam-banner | Banner de Steam: captura de combate en arena a x3 entero + logo mejorado KH Chain of Memories del titulo HD (no el Re:CoM) (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:32.344463+00:00 |
 
 Integrador: libre
