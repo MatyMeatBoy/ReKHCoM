@@ -62,6 +62,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | video-vrr-optin | Opción VRR G-SYNC/FreeSync con fallback seguro | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/87 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:04.558305+00:00 |
 | agrabah-jafar-arena | Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara | pr_abierto | codex-jafar | https://github.com/MatyMeatBoy/ReKHCoM/pull/91 | — | 2026-10-25T05:01:57.795447+00:00 |
 | steam-cuenta-verificacion | Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario | pr_abierto | codex-tecnico | https://github.com/MatyMeatBoy/ReKHCoM/pull/97 | — | 2026-10-25T05:33:24.215279+00:00 |
-| titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | en_curso | codex-titulo | codex/titulo-stutter | — | 2026-10-25T05:41:46.025138+00:00 |
+| titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | pr_abierto | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | — | 2026-10-25T05:42:40.659780+00:00 |
 
 Integrador: libre

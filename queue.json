@@ -1742,12 +1742,12 @@
     "titulo-stutter": {
       "id": "titulo-stutter",
       "piece": "Diagnosticar y corregir tirón al aparecer el título",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-titulo",
       "created_at": "2026-10-25T05:32:38.136089+00:00",
-      "updated_at": "2026-10-25T05:41:46.025138+00:00",
+      "updated_at": "2026-10-25T05:42:40.659780+00:00",
       "branch": "codex/titulo-stutter",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/98",
       "approval": null,
       "reference": "Reporte del usuario en handoff 25/10; reproducido timeout al primer frame del título",
       "evidence": [
@@ -1755,13 +1755,18 @@
           "at": "2026-10-25T05:41:46.025138+00:00",
           "owner": "codex-titulo",
           "detail": "Reproducido con JP: 125.247 ms en frame675 al verificar CRC32 en primer title frame. CheckNewAssets movido a PortUiInit, antes del juego. GPU oculto: transición 16.74 ms con JP y 17.01 sin JP. Un hilo y background-test conserva prioridad baja."
+        },
+        {
+          "at": "2026-10-25T05:42:40.659780+00:00",
+          "owner": "codex-titulo",
+          "detail": "aa3125796. Reproducido 125.247 ms con JP; transición tras corrección 16.74 ms; sin JP 17.01 ms. Check_sources OK. No añade memoria de ROM ni threads."
         }
       ],
       "claimed_at": "2026-10-25T05:32:44.124458+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:41:46.025138+00:00",
+  "updated_at": "2026-10-25T05:42:40.659780+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
