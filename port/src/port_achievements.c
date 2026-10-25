@@ -52,6 +52,10 @@ static KhRa* sRa;
 extern Mode* gCurrentMode;
 extern Mode gModeMapFld, gModeBattle, gModeTitle;
 static int sInvalidated, sStarted;
+/* Rebel mode (user 25/10): a session paused by cheats (not by a test run) still earns the official set, in a list of
+   its own kept on this computer only (achievements_rebel_eu.dat), never sent to RetroAchievements. The first time
+   it happens rebel_mode.txt is written and a sign says what it is; from then on Cheats shows its section. */
+static int sRebel;
 static unsigned sPreviewFrame;
 #ifdef KH_OFFLINE_EVAL
 static KhOfflineState sOffline;
@@ -59,6 +63,10 @@ static char sOfflinePath[1200];
 static rc_runtime_t sOfflineRuntime;
 static int sOfflineReady;
 static uint64_t sPendingNotices[(KH_OFFLINE_MAX + 63) / 64];
+static KhOfflineState sRebelState;
+static char sRebelPath[1200];
+static rc_runtime_t sRebelRuntime;
+static int sRebelReady;
 
 static uint32_t OfflinePeek(uint32_t address, uint32_t bytes, void* ud) {
     uint8_t b[4] = { 0, 0, 0, 0 };
@@ -91,6 +99,70 @@ static void OfflineEvent(const rc_runtime_event_t* event) {
 }
 #endif
 
+#ifdef KH_OFFLINE_EVAL
+static void RebelEvent(const rc_runtime_event_t* event) {
+    int index;
+    if (event->type != RC_RUNTIME_EVENT_ACHIEVEMENT_TRIGGERED)
+        return;
+    index = KhOfficialIndex(event->id);
+    rc_runtime_deactivate_achievement(&sRebelRuntime, event->id);
+    if (index < 0 || sRebelState.when[index])
+        return;
+#ifdef KH_WALL_CLOCK
+    sRebelState.when[index] = (uint64_t)time(NULL);
+#endif
+    if (!sRebelState.when[index])
+        sRebelState.when[index] = 1;
+    PortLog("achievement: rebel %u unlocked", (unsigned)event->id);
+    KhOfflineSave(&sRebelState, sRebelPath);
+    PortAchievementToast(KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 0),
+                         KhOfficialText(KhOfficialAt(index), ACHIEVEMENT_TEXT_LANGUAGE, 1), "", index);
+}
+#endif
+int PortRebelActive(void) {
+    return sRebel;
+}
+/* rebel mode was ever reached here (Cheats shows its section) */
+int PortRebelUnlocked(void) {
+    FILE* f;
+    if (sRebel)
+        return 1;
+    f = fopen(PortConfigPath("rebel_mode.txt"), "rb");
+    if (f)
+        fclose(f);
+    return f != NULL;
+}
+int PortRebelEarned(int index) {
+#ifdef KH_OFFLINE_EVAL
+    return index >= 0 && index < KH_OFFLINE_MAX && sRebelState.when[index] != 0;
+#else
+    (void)index;
+    return 0;
+#endif
+}
+static void RebelStart(void) {
+    static const char* const kTitle[6] = { "Rebel mode", "Mode rebelle", "Rebellen-Modus", "Modalità ribelle",
+        "Modo rebelde", "反逆モード" };
+    static const char* const kText[6] = {
+        "Cheats are fine with us! These achievements stay on this computer, in their own list, not on RetroAchievements.",
+        "Les astuces, ça nous va ! Ces succès restent sur cet ordinateur, dans leur liste, hors RetroAchievements.",
+        "Cheats sind okay! Diese Erfolge bleiben auf diesem PC, in eigener Liste, nicht bei RetroAchievements.",
+        "I trucchi ci vanno bene! Questi obiettivi restano su questo PC, in una lista a parte, non su RetroAchievements.",
+        "¡Los trucos nos parecen bien! Estos logros quedan en este equipo, en su propia lista, no en RetroAchievements.",
+        "チートもOK! これらの実績はこのPCだけの別リストで、RetroAchievementsには送られません。" };
+    int l = ACHIEVEMENT_TEXT_LANGUAGE;
+    FILE* f;
+    if (sRebel)
+        return;
+    if (!PortRebelUnlocked() && (f = fopen(PortConfigPath("rebel_mode.txt"), "wb")) != NULL) {
+        fputs("unlocked\n", f);
+        fclose(f);
+        if (l < 0 || l > 5) l = 0;
+        PortAchievementToast(kTitle[l], kText[l], "", -1);
+    }
+    sRebel = 1;
+}
+
 int PortEventId(void); /* mode_event.c */
 #include "port_achievements_recom.inc"
 #include "port_achievement_list.inc"
@@ -106,6 +178,13 @@ void PortAchievementsInit(void) {
             rc_runtime_activate_achievement(&sOfflineRuntime, KhOfficialAt(i)->id, KhOfficialAt(i)->definition, NULL, 0) == RC_OK)
             sOfflineReady++;
     PortLog("achievements: %d of %d official achievements to earn", sOfflineReady, KhOfficialCount());
+    snprintf(sRebelPath, sizeof(sRebelPath), "%s", PortConfigPath("achievements_rebel_eu.dat"));
+    KhOfflineLoad(&sRebelState, sRebelPath);
+    rc_runtime_init(&sRebelRuntime);
+    for (i = 0; i < KhOfficialCount(); ++i)
+        if (!sRebelState.when[i] &&
+            rc_runtime_activate_achievement(&sRebelRuntime, KhOfficialAt(i)->id, KhOfficialAt(i)->definition, NULL, 0) == RC_OK)
+            sRebelReady++;
     RecomInit();
 #endif
 #ifdef PORT_RETROACHIEVEMENTS
@@ -273,8 +352,10 @@ void PortAchievementsFrame(void) {
         sPreviewFrame == (unsigned)SDL_atoi(SDL_getenv("KHCOM_ACHIEVEMENT_PREVIEW")))
         PortAchievementToast("Heartless Hunter", "Defeat your first Heartless in Castle Oblivion.", "VISTA PREVIA - LOGRO", SDL_atoi(SDL_getenv("KHCOM_ACHIEVEMENT_BADGE") ? SDL_getenv("KHCOM_ACHIEVEMENT_BADGE") : "0"));
     /* Invalidate before this frame can evaluate or submit an official award. */
-    if (gPortConfig.cheatOneHit || gPortConfig.cheatInfiniteHp || gPortConfig.cheatUnlockRiku || gPortConfig.cheatSaveStates)
+    if (gPortConfig.cheatOneHit || gPortConfig.cheatInfiniteHp || gPortConfig.cheatUnlockRiku || gPortConfig.cheatSaveStates) {
         PortAchievementsInvalidate("Gameplay modifiers enabled");
+        RebelStart(); /* not a test run: those never reach this (sInvalidated from the start) */
+    }
     /* a game of the Re:CoM version earns the Re:CoM list instead; the official one (and the account) waits */
     recom = gPortConfig.ps2Mode && PortRecomActive();
     if (recom && !sInvalidated && sPauseNotice == 0 && sStarted)
@@ -304,6 +385,9 @@ void PortAchievementsFrame(void) {
 #ifdef KH_OFFLINE_EVAL
     if (evaluate && !recom && sOfflineReady)
         rc_runtime_do_frame(&sOfflineRuntime, OfflineEvent, OfflinePeek, NULL, NULL);
+    if (sRebel && !recom && sRebelReady && !PortUiActive() &&
+        (gCurrentMode == &gModeMapFld || gCurrentMode == &gModeBattle || sStarted))
+        rc_runtime_do_frame(&sRebelRuntime, RebelEvent, OfflinePeek, NULL, NULL);
     {
         /* harness: KHCOM_CREDITS=frame:movie reaches a story's credits (with KHCOM_ACHIEVEMENTS_LIVE) */
         const char* c = SDL_getenv("KHCOM_CREDITS");

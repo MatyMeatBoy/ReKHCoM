@@ -155,6 +155,9 @@ enum {
     ITEM_CHEAT_MAPCARDS,
     ITEM_CHEAT_JOURNAL,
     ITEM_CHEAT_SCENES, /* every scene in the gallery */
+    ITEM_CHEAT_REBEL_HEADING, /* Rebel mode's section (port_achievements.c), once it was reached; not selectable */
+    ITEM_CHEAT_REBEL,         /* on / off: A turns it off, saying what goes off with it */
+    ITEM_CHEAT_REBEL_LIST,    /* its own achievements */
     ITEM_CHEAT_DEBUG_HEADING, /* section heading, not selectable */
     ITEM_CHEAT_GBA_MAP,
     ITEM_CHEATS_BACK,
@@ -188,7 +191,7 @@ static int sPage;
 static int sTitleRequest; /* ITEM_TITLE: due once the menu has closed */
 /* a big window over Options that asks twice, as the scene pause asks before a skip: back to the title (ITEM_TITLE),
    or which mode's presets to go back to (ITEM_MODE_RESET) */
-enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT };
+enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT, CONFIRM_REBEL };
 static int sConfirm, sConfirmStep, sConfirmCursor, sConfirmMode;
 static void ConfirmOpen(int what);
 static void ConfirmKey(int key);
@@ -199,6 +202,13 @@ static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
     { "GBA classic", "GBA classique", "GBA klassisch", "GBA classico", "GBA clásico", "GBAクラシック" },
 };
 static void AchievementMenuOpen(void);
+static void RebelMenuOpen(void);
+extern int PortRebelActive(void);
+static const char* RebelValue(int l) { /* Cheats > Rebel mode's value */
+    static const char* const kOn[] = { "On", "Activé", "An", "Attiva", "Activo", "オン" };
+    static const char* const kOff[] = { "Off", "Désactivé", "Aus", "Spenta", "Apagado", "オフ" };
+    return PortRebelActive() ? kOn[l] : kOff[l];
+}
 static void SceneMenuOpen(void);
 static int SceneMenuInput(const SDL_Event* ev);
 static int sSceneHd; /* the gallery's HD tab */
@@ -215,7 +225,7 @@ static void WizKey(int key);
 static int IsHeading(int item) {
     switch (item) {
         case ITEM_HEAD_GAME: case ITEM_HEAD_VIDEO: case ITEM_HEAD_AUDIO: case ITEM_HEAD_GENERAL: case ITEM_RECOM_EXTRAS:
-        case ITEM_EXPERIMENTAL: case ITEM_HEAD_MORE: case ITEM_CHEAT_DEBUG_HEADING: case ITEM_CONTROL_NINTENDO_HEADING:
+        case ITEM_EXPERIMENTAL: case ITEM_HEAD_MORE: case ITEM_CHEAT_DEBUG_HEADING: case ITEM_CHEAT_REBEL_HEADING: case ITEM_CONTROL_NINTENDO_HEADING:
             return 1;
         default:
             return 0;
@@ -226,6 +236,7 @@ static int IsHeading(int item) {
 static int OpensSomething(int item) {
     switch (item) {
         case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
+        case ITEM_CHEAT_REBEL_LIST: case ITEM_CHEAT_REBEL:
         case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET:
             return 1;
         default:
@@ -255,6 +266,8 @@ static int ItemVisible(int item) {
     if (IsHeading(item) && item < ITEM_CLOSE)
         return SectionShown(item);
     switch (item) {
+        case ITEM_CHEAT_REBEL:
+        case ITEM_CHEAT_REBEL_LIST: { extern int PortRebelUnlocked(void); return PortRebelUnlocked(); }
         case ITEM_QUIT: return QUIT_ROW;
         /* in HD text now (user 25/10): the subtitles always with it, the font from its row (A) */
         case ITEM_HDFONT:
@@ -425,6 +438,10 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Completa il diario", "Completar el diario", "日記をすべてうめる" },
     { "Unlock all scenes", "Débloquer toutes les scènes", "Alle Szenen freischalten", "Sblocca tutte le scene",
       "Desbloquear todas las escenas", "シーンをすべてみられる" },
+    { "Rebel mode", "Mode rebelle", "Rebellen-Modus", "Modalità ribelle", "Modo rebelde", "反逆モード" },
+    { "Rebel mode", "Mode rebelle", "Rebellen-Modus", "Modalità ribelle", "Modo rebelde", "反逆モード" },
+    { "Rebel mode achievements", "Succès du mode rebelle", "Erfolge des Rebellen-Modus", "Obiettivi modalità ribelle",
+      "Logros del modo rebelde", "反逆モードのじっせき" },
     { "Debug mode", "Mode debug", "Debug-Modus", "Modalità debug", "Modo debug", "デバッグモード" },
     { "[ReKHCoM] GBA map logic", "[ReKHCoM] Logique carte GBA", "[ReKHCoM] GBA-Kartenlogik",
       "[ReKHCoM] Logica mappa GBA", "[ReKHCoM] Lógica Mapa GBA", "[ReKHCoM] GBAマップロジック" },
@@ -1210,7 +1227,11 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_CHEAT_MAPCARDS:
         case ITEM_CHEAT_JOURNAL:
         case ITEM_CHEAT_SCENES:
+        case ITEM_CHEAT_REBEL_LIST:
             SDL_strlcpy(out, "→", size);
+            break;
+        case ITEM_CHEAT_REBEL:
+            SDL_strlcpy(out, RebelValue(l), size);
             break;
         case ITEM_CHEAT_DEBUG:
         case ITEM_CONTROL_RESET:
@@ -1468,6 +1489,13 @@ static void Change(int item, int dir) {
             return;
         case ITEM_SCENES_MENU:
             if (dir > 0) SceneMenuOpen();
+            return;
+        case ITEM_CHEAT_REBEL_LIST:
+            if (dir > 0) RebelMenuOpen();
+            return;
+        case ITEM_CHEAT_REBEL:
+            if (dir > 0 && PortRebelActive())
+                ConfirmOpen(CONFIRM_REBEL);
             return;
         case ITEM_CHEAT_SCENES:
             if (dir > 0) {
@@ -3476,6 +3504,23 @@ static const char* const sConfirmQuitLong[LANG_COUNT] = { /* %d h %02d min */
     "You haven't saved for %d h %02d min.", "Pas de sauvegarde depuis %d h %02d min.",
     "Seit %d h %02d min nicht gespeichert.", "Non salvi da %d h %02d min.", "No guardas desde hace %d h %02d min.",
     "%d時間%02d分セーブしていません。" };
+static const char* const sRebelAsk[LANG_COUNT] = {
+    "Turn rebel mode off?", "Désactiver le mode rebelle ?", "Rebellen-Modus ausschalten?", "Spegnere la modalità ribelle?",
+    "¿Apagar el modo rebelde?", "反逆モードをオフにしますか？" };
+static const char* const sRebelWarn[LANG_COUNT] = { /* %s: the cheats that go off */
+    "Turns off: %s. Official achievements count again from the next start of the game.",
+    "Désactive : %s. Les succès officiels comptent de nouveau au prochain démarrage.",
+    "Schaltet aus: %s. Offizielle Erfolge zählen ab dem nächsten Start wieder.",
+    "Spegne: %s. Gli obiettivi ufficiali tornano a contare dal prossimo avvio.",
+    "Se apagan: %s. Los logros oficiales vuelven a contar desde el próximo inicio del juego.",
+    "オフにするもの: %s。つぎの起動からこうしきのじっせきがもどります。" };
+static const char* const sRebelRows[2][LANG_COUNT] = {
+    { "No, keep it", "Non, le garder", "Nein, behalten", "No, tienila", "No, mantenerlo", "いいえ" },
+    { "Yes, turn it off", "Oui, le désactiver", "Ja, ausschalten", "Sì, spegnila", "Sí, apagarlo", "はい、オフにする" } };
+static const char* const sRebelOffDone[LANG_COUNT] = {
+    "Rebel mode off: restart the game for official achievements.", "Mode rebelle désactivé : redémarre le jeu.",
+    "Rebellen-Modus aus: Spiel neu starten.", "Modalità ribelle spenta: riavvia il gioco.",
+    "Modo rebelde apagado: reinicia el juego para los logros oficiales.", "反逆モードをオフにしました。さいきどうしてください。" };
 static const char* const sConfirmQuitAsk[LANG_COUNT] = {
     "Quit the game?", "Quitter le jeu ?", "Spiel beenden?", "Uscire dal gioco?", "¿Salir del juego?", "ゲームを終了しますか？",
 };
@@ -3573,7 +3618,7 @@ static void ConfirmOpen(int what) {
 static void ConfirmKey(int key) {
     extern void PortMenuSoundClick(void);
     extern void PortMenuSoundDecide(int confirm);
-    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES ? 0
+    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES || sConfirm == CONFIRM_REBEL ? 0
                                    : sConfirm == CONFIRM_QUIT && QuitUnsavedMinutes() < 60 ? 0 : 1;
     if (sConfirm == CONFIRM_FONT && key >= 2) { /* one step: A takes the face under the cursor, B leaves it as it was */
         PortMenuSoundDecide(key == 2);
@@ -3622,6 +3667,14 @@ static void ConfirmKey(int key) {
     if (sConfirmStep < last) {
         sConfirmStep++;
         sConfirmCursor = 0;
+        return;
+    }
+    if (sConfirm == CONFIRM_REBEL) { /* the cheats that keep it on, off; the session's achievements return on a restart */
+        sConfirm = CONFIRM_NONE;
+        gPortConfig.cheatOneHit = gPortConfig.cheatInfiniteHp = gPortConfig.cheatUnlockRiku = 0;
+        gPortConfig.cheatSaveStates = 0;
+        PortConfigSave();
+        PortUiNotice(sRebelOffDone[Lang()]);
         return;
     }
     if (sConfirm == CONFIRM_STATES) {
@@ -3785,6 +3838,25 @@ static void DrawConfirm(int l, int width, int height) {
             SDL_snprintf(ask, sizeof(ask), sConfirmModeReset[l], sModeNames[sConfirmMode][l]);
         warn = sConfirm == CONFIRM_TITLE ? sConfirmTitleWarn[last][l] : sConfirm == CONFIRM_QUIT ? sConfirmQuitWarn[last][l]
                                                                                            : sConfirmModeWarn[sConfirmStep][l];
+        if (sConfirm == CONFIRM_REBEL) {
+            static char rebelWarn[400];
+            char list[240] = "";
+            int k;
+            const int items[4] = { ITEM_CHEAT_ONEHIT, ITEM_CHEAT_INFHP, ITEM_CHEAT_RIKU, ITEM_CHEAT_STATES };
+            const int on[4] = { gPortConfig.cheatOneHit, gPortConfig.cheatInfiniteHp, gPortConfig.cheatUnlockRiku,
+                                gPortConfig.cheatSaveStates };
+            for (k = 0; k < 4; k++)
+                if (on[k]) {
+                    if (list[0])
+                        SDL_strlcat(list, ", ", sizeof(list));
+                    SDL_strlcat(list, sLabels[items[k]][l], sizeof(list));
+                }
+            labels[0] = sRebelRows[0][l];
+            labels[1] = sRebelRows[1][l];
+            SDL_strlcpy(ask, sRebelAsk[l], sizeof(ask));
+            SDL_snprintf(rebelWarn, sizeof(rebelWarn), sRebelWarn[l], list[0] ? list : "-");
+            warn = rebelWarn;
+        }
         if (sConfirm == CONFIRM_QUIT) { /* one plain question; the time without saving only past an hour */
             int m = QuitUnsavedMinutes();
             if (!last)

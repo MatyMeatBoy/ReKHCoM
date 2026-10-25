@@ -1,5 +1,6 @@
 static int sAchievementChoice, sAchievementScroll, sAchievementView;
-static int sAchievementList; /* 0 the official list, 1 the Re:CoM one */
+static int sAchievementList; /* 0 the official list, 1 the Re:CoM one, 2 Rebel mode's (opened from Cheats) */
+int PortRebelEarned(int index);
 int PortRecomActive(void);
 /* The set's badges: assets/achievements/badges.png, one atlas (10 per row in
  * set order, 64x64), decoded once when the list is first shown. */
@@ -43,10 +44,16 @@ static void AchievementMenuBadge(const PortAchievementInfo* info, int index, int
 /* Read-only, portable list inside Options. Account controls stay in launcher. */
 /* the list shown, row i: its text and badge (-1 none) */
 static int AchievementMenuCount(void) {
-    return sAchievementList ? PortRecomListCount() : PortAchievementsListCount();
+    return sAchievementList == 1 ? PortRecomListCount() : PortAchievementsListCount();
 }
 static int AchievementMenuGet(int i, PortAchievementInfo* info, int* badge) {
-    if (sAchievementList) return PortRecomListGet(i, info, badge);
+    if (sAchievementList == 1) return PortRecomListGet(i, info, badge);
+    if (sAchievementList == 2) { /* the official set, as Rebel mode earned it */
+        int ok = PortAchievementsListGet(i, info);
+        if (badge) *badge = i;
+        if (ok) info->state = PortRebelEarned(i);
+        return ok;
+    }
     if (badge) *badge = i;
     return PortAchievementsListGet(i, info);
 }
@@ -68,6 +75,10 @@ static void AchievementMenuOpen(void) {
     sAchievementChoice = sAchievementScroll = sAchievementView = 0;
     sAchievementList = PortRecomActive() && PortRecomListCount() > 0; /* a Re:CoM game opens its own list */
     sMenuLightStart = MenuLightNow();
+}
+static void RebelMenuOpen(void) {
+    AchievementMenuOpen();
+    sAchievementList = 2;
 }
 static int AchievementMenuInput(const SDL_Event* ev) {
     int move = 0, filter = 0, back = 0, list = 0, indices[256], earned, count;
@@ -102,7 +113,9 @@ static int AchievementMenuInput(const SDL_Event* ev) {
         if (down && !held[t]) list = 1;
         held[t] = ev->gaxis.value > 8000;
     }
+    if (back && sAchievementList == 2) { sPage = PAGE_CHEATS; sCursor = ITEM_CHEAT_REBEL_LIST; sScroll = 0; return 1; }
     if (back) { sPage = PAGE_MAIN; sCursor = ITEM_ACHIEVEMENTS_MENU; sScroll = 0; return 1; }
+    if (list && sAchievementList == 2) list = 0; /* Rebel mode's list stays its own */
     if (list && PortRecomListCount() > 0) { sAchievementList = !sAchievementList; sAchievementChoice = sAchievementScroll = 0; }
     if (filter) { sAchievementView = Wrap(sAchievementView + filter, 3); sAchievementChoice = sAchievementScroll = 0; }
     count = AchievementMenuRows(indices, &earned);
@@ -129,7 +142,8 @@ static void DrawAchievementMenu(int l, int width, int height) {
     PortAchievementInfo info;
     char text[160];
     Fill(0, 0, width, height, 0xFFFFFFFFu);
-    DrawText(sAchievementList ? (es ? "Logros · Re:Chain of Memories" : "Achievements · Re:Chain of Memories")
+    DrawText(sAchievementList == 2 ? (es ? "Logros · Modo rebelde" : "Achievements · Rebel mode")
+             : sAchievementList ? (es ? "Logros · Re:Chain of Memories" : "Achievements · Re:Chain of Memories")
                               : (es ? "Logros · Chain of Memories" : "Achievements · Chain of Memories"),
              x, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
     SDL_snprintf(text, sizeof(text), "%d/%d    L < %s > R", earned, AchievementMenuCount(), filters[es][sAchievementView]);
@@ -165,7 +179,9 @@ static void DrawAchievementMenu(int l, int width, int height) {
     }
     {
 #ifdef VERSION_EU
-        const char* note = sAchievementList ? (es ? "Partidas Re:CoM; solo en este equipo, nunca en línea" :
+        const char* note = sAchievementList == 2 ? (es ? "Con trucos; solo en este equipo, nunca en RetroAchievements" :
+                                                       "With cheats; on this device only, never on RetroAchievements")
+                         : sAchievementList ? (es ? "Partidas Re:CoM; solo en este equipo, nunca en línea" :
                                                     "Re:CoM games; kept on this device, never online")
                          : es ? "Se consiguen al jugar, con o sin cuenta de RetroAchievements" :
                                 "Earned as you play, with or without a RetroAchievements account";
