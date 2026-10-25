@@ -2216,19 +2216,20 @@
     "escena-099-muro-superior": {
       "id": "escena-099-muro-superior",
       "piece": "Escena099: muro de Trickmaster hacia arriba",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T13:28:24.781669+00:00",
-      "updated_at": "2026-10-25T13:28:24.781669+00:00",
+      "updated_at": "2026-10-25T13:28:33.014306+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-183353-ceb621 / ae36f45ef10e45cc809620075f0c8626",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T13:28:33.014306+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:28:24.781669+00:00",
+  "updated_at": "2026-10-25T13:28:33.014306+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
