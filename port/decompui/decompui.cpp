@@ -1301,8 +1301,15 @@ static void DrawCover(float w, float h) {
     if (sBoxArt != 0) {
         float s = std::min(w / sBoxW, h / sBoxH);
         float iw = sBoxW * s, ih = sBoxH * s;
-        ImGui::SetCursorScreenPos(ImVec2(p.x + (w - iw) * 0.5f, p.y + (h - ih) * 0.5f));
+        ImVec2 i0(p.x + (w - iw) * 0.5f, p.y + (h - ih) * 0.5f);
+        ImGui::SetCursorScreenPos(i0);
         ImGui::Image((ImTextureID)(intptr_t)sBoxArt, ImVec2(iw, ih));
+        /* a black frame round it, as the game's cards have (user 25/10), with a faint light line inside */
+        float t = std::max(2.0f, Px(4));
+        dl->AddRect(ImVec2(i0.x - t * 0.5f, i0.y - t * 0.5f), ImVec2(i0.x + iw + t * 0.5f, i0.y + ih + t * 0.5f),
+                    IM_COL32(12, 10, 18, 255), Px(3), 0, t);
+        dl->AddRect(ImVec2(i0.x + t * 0.5f, i0.y + t * 0.5f), ImVec2(i0.x + iw - t * 0.5f, i0.y + ih - t * 0.5f),
+                    IM_COL32(255, 255, 255, 70), 0, 0, 1.0f);
         ImGui::SetCursorScreenPos(ImVec2(p.x, p.y + h));
         ImGui::Dummy(ImVec2(w, 0));
         return;
