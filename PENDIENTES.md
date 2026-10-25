@@ -65,7 +65,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | integrado | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | Usuario 25/10: solucionar resto; transiciones smooth; pushear soluciones | 2026-10-25T05:54:41.558911+00:00 |
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
 | transiciones-cargas | Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU | en_curso | codex-transiciones | — | — | 2026-10-25T05:58:34.495227+00:00 |
-| darkside-arena-revision | Darkside arena: comentario pendiente de sprites y fadeout | en_curso | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/106 | — | 2026-10-25T08:17:28.331541+00:00 |
+| darkside-arena-revision | Darkside arena: comentario pendiente de sprites y fadeout | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/106 | — | 2026-10-25T08:20:39.999983+00:00 |
 | malefica-arena-respuesta | Malefica arena: responder aprobacion de fondo y separar sprites pendientes | en_revision | codex-atlas | — | — | 2026-10-25T08:06:29.173632+00:00 |
 | oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/107 | — | 2026-10-25T08:17:21.201961+00:00 |
 

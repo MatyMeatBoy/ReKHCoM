@@ -1962,10 +1962,10 @@
     "darkside-arena-revision": {
       "id": "darkside-arena-revision",
       "piece": "Darkside arena: comentario pendiente de sprites y fadeout",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T07:59:11.839095+00:00",
-      "updated_at": "2026-10-25T08:17:28.331541+00:00",
+      "updated_at": "2026-10-25T08:20:39.999983+00:00",
       "branch": "codex/atlas-darkside",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/106",
       "approval": null,
@@ -1985,10 +1985,15 @@
           "at": "2026-10-25T08:17:28.331541+00:00",
           "owner": "codex-atlas",
           "detail": "Nuevo comentario de 25/10 05:07 Chile: mejorar fading, nube 5602cae6. Se retoma antes de piezas nuevas."
+        },
+        {
+          "at": "2026-10-25T08:20:39.999983+00:00",
+          "owner": "codex-atlas",
+          "detail": "Nueva nube mejorar fading respondida. Cobertura 2D estable solo en pose reach; EU 16:9/32:9 240/330, centro identico 4/4, source checks ok."
         }
       ],
       "claimed_at": "2026-10-25T07:59:17.517859+00:00",
-      "sent": "433401942ccd4f4284514144e9d77364"
+      "sent": "9bdf48c45429486fbeb750cfd32cde3f"
     },
     "malefica-arena-respuesta": {
       "id": "malefica-arena-respuesta",
@@ -2043,7 +2048,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:17:28.331541+00:00",
+  "updated_at": "2026-10-25T08:20:39.999983+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
