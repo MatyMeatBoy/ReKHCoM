@@ -85,7 +85,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-102-r20261025 | Escena 102 remates posteriores | en_curso | codex-atlas | — | — | 2026-10-25T19:07:00.680103+00:00 |
 | escena-110-179b6da22e5c4bd39181d5ab14d7b9d3 | Escena 110 revision Atlas 179b6da22e5c4bd39181d5ab14d7b9d3 | en_curso | codex-atlas | codex/atlas-escena-110-179b6da | — | 2026-10-25T19:06:46.037744+00:00 |
 | oogie-arena-feedback-revision | Oogie fantasma sin mirror y alfombra verde abismo | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/130 | — | 2026-10-25T16:08:11.414049+00:00 |
-| atlas-remates-112-r20261025 | Escena 112 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:30.735751+00:00 |
+| atlas-remates-112-r20261025 | Escena 112 comentarios posteriores | en_curso | codex-atlas | — | — | 2026-10-25T19:07:21.743034+00:00 |
 | atlas-remates-115-r20261025 | Escena 115 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:55.925715+00:00 |
 | atlas-remates-116-r20261025 | Escena 116 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:08.317688+00:00 |
 | atlas-remates-117-r20261025 | Escena 117 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:24.405574+00:00 |
