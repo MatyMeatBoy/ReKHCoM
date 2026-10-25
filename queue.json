@@ -1718,10 +1718,23 @@
       ],
       "claimed_at": "2026-10-25T04:47:50.011577+00:00",
       "sent": "e182f7052b8348b2a88b4f2e996a0ed7"
+    },
+    "steam-cuenta-verificacion": {
+      "id": "steam-cuenta-verificacion",
+      "piece": "Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T05:32:26.432629+00:00",
+      "updated_at": "2026-10-25T05:32:26.432629+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Pedido de pendientes 25/10; hipótesis del handoff no confirmada, parser selecciona cuenta activa",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:27:00.318979+00:00",
+  "updated_at": "2026-10-25T05:32:26.432629+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
