@@ -2136,12 +2136,18 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:55:53.752192+00:00",
-      "updated_at": "2026-10-25T08:56:05.340845+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T08:57:58.957504+00:00",
+      "branch": "codex/atlas-trickmaster-top",
       "pr": null,
       "approval": null,
       "reference": "31fa9e70a2c6418697abca86f35bbae4",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T08:57:58.957504+00:00",
+          "owner": "codex-atlas",
+          "detail": "Nube5f7ab868: sustituir franja superior beige por papel rosa con periodo vertical; conservar suelo y chimenea unica. Comparacion serial16:9/32:9, 240/330."
+        }
+      ],
       "claimed_at": "2026-10-25T08:56:05.340845+00:00"
     }
   },
@@ -2151,7 +2157,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:56:05.340845+00:00",
+  "updated_at": "2026-10-25T08:57:58.957504+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
