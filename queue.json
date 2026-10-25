@@ -2436,10 +2436,23 @@
       "reference": "20261025-052135-22f4ed / 9e9bb909-75e3-44fb-93f8-3ffe8048778d",
       "evidence": [],
       "claimed_at": "2026-10-25T16:04:54.289889+00:00"
+    },
+    "atlas-remates-102-r20261025": {
+      "id": "atlas-remates-102-r20261025",
+      "piece": "Escena 102 remates posteriores",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T16:05:04.288990+00:00",
+      "updated_at": "2026-10-25T16:05:04.288990+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "familia b5ee78894f994aa684c59f38def14509; envio 20261025-024931-482bfa; build/atlas-all-briefs.json referencia",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:04:54.289889+00:00",
+  "updated_at": "2026-10-25T16:05:04.288990+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
