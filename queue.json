@@ -435,13 +435,13 @@
     "escena-074": {
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-atlas-patrones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T19:00:44.174045+00:00",
-      "branch": "codex/atlas-074-patrones",
-      "pr": null,
-      "approval": null,
+      "updated_at": "2026-10-25T19:51:36.876832+00:00",
+      "branch": "codex/atlas074-approved-r20261025",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/153",
+      "approval": "approved exact bc670454666c47f986d068eeb45e79ad",
       "reference": "{\"family_id\": \"303416c343704456aea87be42f0508bf\", \"submissions\": [{\"submission\": \"20261024-131734-82dad2\", \"created\": \"2026-10-24T16:17:34.567220+00:00\", \"image_id\": \"303416c343704456aea87be42f0508bf\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"6a54075b-093d-43d2-9fdc-26d370de15de\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131734-82dad2\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -488,6 +488,11 @@
           "at": "2026-10-25T19:00:44.174045+00:00",
           "owner": "codex-atlas-patrones",
           "detail": "Propuesta real en Atlas3840x1080 frame300, centroGBAidentico; modulo8x4 fase20,10;29b9c80e5. Sin PR hasta revision Atlas."
+        },
+        {
+          "at": "2026-10-25T19:51:36.876832+00:00",
+          "owner": "codex-atlas-patrones",
+          "detail": "Captura realEU3840 frame300 y GBAidentico previos. Nube pequena-basura pendiente"
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00",
@@ -2765,7 +2770,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:50:44.091678+00:00",
+  "updated_at": "2026-10-25T19:51:36.876832+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
