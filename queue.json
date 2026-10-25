@@ -2178,10 +2178,23 @@
       "claimed_at": "2026-10-25T08:56:05.340845+00:00",
       "sent": "5a6c86fcfd4b49a19009d73f9afde97b",
       "completed_at": "2026-10-25T09:09:06.277771+00:00"
+    },
+    "meta-v20-20261025": {
+      "id": "meta-v20-20261025",
+      "piece": "Meta v2.0: prioridades, pendientes y bugs actuales",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T13:24:06.137061+00:00",
+      "updated_at": "2026-10-25T13:24:06.137061+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Pedido directo del usuario en este chat 25/10/2026",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:11:11.982982+00:00",
+  "updated_at": "2026-10-25T13:24:06.137061+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
