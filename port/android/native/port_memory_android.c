@@ -206,6 +206,17 @@ void PortSramLoad(void) {
         fclose(f);
         PortLog("Save: loaded %u bytes from %s", (unsigned)n, BankName(sSramBank));
     }
+    {
+        /* edited in the launcher's save editor: this save plays in Rebel mode (port_achievements.c) */
+        extern void PortRebelEditedSave(void);
+        char mark[600];
+        FILE* m;
+        snprintf(mark, sizeof(mark), "%s.rebel", PortConfigPath(BankName(sSramBank)));
+        if ((m = fopen(mark, "rb")) != NULL) {
+            fclose(m);
+            PortRebelEditedSave();
+        }
+    }
     memcpy(sSramShadow, sram, GBA_SRAM_SIZE);
     sSramLoaded = 1;
 }

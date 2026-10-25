@@ -51,6 +51,7 @@
  "Cancel test": "テスト中止",
  "Card": "カード",
  "Changes saved; the previous copy is in backups.": "変更を保存しました。以前のコピーはbackupsにあります。",
+ "Changes saved; the previous copy is in backups. This save plays in Rebel mode (achievements in their own list).": "変更を保存しました。前のコピーはbackupsにあります。このセーブは反逆モードで遊びます(実績は別リスト)。",
  "Changes the level, stats and cards of a saved game. It stays off until you turn it on and accept the warning.": "セーブデータのレベル、ステータス、カードを変更します。オンにして警告を承諾するまでは無効です。",
  "Choose a folder outside this installation.": "このインストール先の外にあるフォルダーを選んでください。",
  "Choose folder...": "フォルダーを選択...",

@@ -208,8 +208,8 @@
   "es": "Carta"
  },
  {
-  "en": "Changes saved; the previous copy is in backups.",
-  "es": "Cambios guardados; la copia anterior está en backups."
+  "en": "Changes saved; the previous copy is in backups. This save plays in Rebel mode (achievements in their own list).",
+  "es": "Cambios guardados; la copia anterior está en backups. Esta partida jugará en modo rebelde (logros en su propia lista)."
  },
  {
   "en": "Changes the level, stats and cards of a saved game. It stays off until you turn it on and accept the warning.",

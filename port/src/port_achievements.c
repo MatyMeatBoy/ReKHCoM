@@ -125,6 +125,12 @@ static void RebelEvent(const rc_runtime_event_t* event) {
     }
 }
 #endif
+/* a save edited in the launcher (its .rebel mark, port_memory*.c): Rebel mode from its load on */
+static void RebelStart(void);
+void PortRebelEditedSave(void) {
+    PortAchievementsInvalidate("Save edited in the launcher");
+    RebelStart();
+}
 int PortRebelActive(void) {
     return sRebel;
 }

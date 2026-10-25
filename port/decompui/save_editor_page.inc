@@ -141,7 +141,13 @@ static void EditorApply() {
                  "Could not write the save (the backup is kept)."), true);
         return;
     }
-    Notice(T("Cambios guardados; la copia anterior está en backups.", "Changes saved; the previous copy is in backups."),
+    {
+        /* an edited save plays in Rebel mode (user 25/10): the game reads this mark beside the save */
+        std::ofstream mark(fs::path(SavePath(sEdVersion)).concat(".rebel"), std::ios::trunc);
+        mark << "edited in the launcher\n";
+    }
+    Notice(T("Cambios guardados; la copia anterior está en backups. Esta partida jugará en modo rebelde (logros en su propia lista).",
+             "Changes saved; the previous copy is in backups. This save plays in Rebel mode (achievements in their own list)."),
            false);
     EditorLoad();
 }
