@@ -30,7 +30,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-115 | Escena 115 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/93 | — | 2026-10-25T05:12:46.802676+00:00 |
 | escena-116 | Escena 116 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/94 | — | 2026-10-25T05:15:57.709597+00:00 |
 | escena-117 | Escena 117 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/95 | — | 2026-10-25T05:20:18.327283+00:00 |
-| escena-118 | Escena 118 | en_curso | codex-arte-final | — | — | 2026-10-25T05:20:23.943364+00:00 |
+| escena-118 | Escena 118 | en_curso | codex-arte-final | codex/arte-118 | — | 2026-10-25T05:25:33.010971+00:00 |
 | escena-120 | Escena 120 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T20:36:18.921958+00:00 |
 | malefica-01 | Maléfica 01 · ala recortada | en_revision | codex-malefica01 | — | — | 2026-10-24T22:25:15.044405+00:00 |
 | malefica-arena | Maléfica · arena y contexto | en_revision | codex-malefica-arena | claude/arte-w3 | — | 2026-10-24T22:25:57.769587+00:00 |

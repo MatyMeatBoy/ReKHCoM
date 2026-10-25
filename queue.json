@@ -868,8 +868,8 @@
       "status": "en_curso",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T05:20:23.943364+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T05:25:33.010971+00:00",
+      "branch": "codex/arte-118",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"813b1467-7fd3-4b61-b772-ef80bd47525f\", \"888b3be3-5e85-45db-807b-d1b69592dbde\", \"afdad54b-8187-4c8a-a07b-fbdaf1540390\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
@@ -888,6 +888,11 @@
           "at": "2026-10-24T20:54:55.641853+00:00",
           "owner": "r4",
           "detail": "released: Replicar y acabar el barco + extender viga: reconstruccion de objeto grande y decision de replica; decision visual mayor."
+        },
+        {
+          "at": "2026-10-25T05:25:33.010971+00:00",
+          "owner": "codex-arte-final",
+          "detail": "Base capturada; casco completo, dos vigas con diagonal independiente, módulos de cañón/cuerda completos. Se cierra unión en antiguo límite del mapa. Captura final en curso."
         }
       ],
       "claimed_at": "2026-10-25T05:20:23.943364+00:00"
@@ -1710,7 +1715,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:20:23.944368+00:00",
+  "updated_at": "2026-10-25T05:25:33.010971+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
