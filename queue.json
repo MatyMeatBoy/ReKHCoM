@@ -865,12 +865,12 @@
     "escena-118": {
       "id": "escena-118",
       "piece": "Escena 118",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T05:25:33.010971+00:00",
+      "updated_at": "2026-10-25T05:27:00.318979+00:00",
       "branch": "codex/arte-118",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/96",
       "approval": null,
       "reference": "{\"family_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"submissions\": [{\"submission\": \"20261024-053718-1ee415\", \"created\": \"2026-10-24T08:37:19.208476+00:00\", \"image_id\": \"3aede4dd4bd2445bb06d1743baf06529\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"813b1467-7fd3-4b61-b772-ef80bd47525f\", \"888b3be3-5e85-45db-807b-d1b69592dbde\", \"afdad54b-8187-4c8a-a07b-fbdaf1540390\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053718-1ee415\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -893,9 +893,15 @@
           "at": "2026-10-25T05:25:33.010971+00:00",
           "owner": "codex-arte-final",
           "detail": "Base capturada; casco completo, dos vigas con diagonal independiente, módulos de cañón/cuerda completos. Se cierra unión en antiguo límite del mapa. Captura final en curso."
+        },
+        {
+          "at": "2026-10-25T05:27:00.318979+00:00",
+          "owner": "codex-arte-final",
+          "detail": "de93d54ce; tres nubes respondidas con propuesta. Centro GBA idéntico, check_sources OK. Usuario 25/10 indica resolver técnicos primero y arte al final de esta sesión; entrega guardada."
         }
       ],
-      "claimed_at": "2026-10-25T05:20:23.943364+00:00"
+      "claimed_at": "2026-10-25T05:20:23.943364+00:00",
+      "sent": "09dcd37573df49b88edbd71f79e06b82"
     },
     "escena-120": {
       "id": "escena-120",
@@ -1715,7 +1721,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:25:33.010971+00:00",
+  "updated_at": "2026-10-25T05:27:00.318979+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
