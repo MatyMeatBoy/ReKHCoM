@@ -107,7 +107,10 @@ static int sUseSceneProfiles;
 static int sPreliminarV1;
 static int sPreliminarApprovedOnly; /* only the Preliminar V1 scenes approved with honours, for everyone */
 /* Preliminar V1 scenes approved with honours in the review app; KHCOM_SCENEnnn_WIDE=0 turns one off */
-static const int kPreliminarApproved[] = {4, 53, 54, 55, 102, 115, 116, 117, 121, 122};
+/* every scene accepted in Atlas (Aprobado (mejorar), Aprobado, Honores: all go into the game, user 25/10) that has a
+   recipe; KHCOM_SCENEnnn_WIDE=0 turns one off */
+static const int kPreliminarApproved[] = {4, 7, 44, 45, 53, 54, 55, 87, 90, 95, 98, 99, 102, 104, 110, 112, 115, 116, 117, 118,
+                                          120, 121, 122, 124};
 static int sPreliminarApprovedOn[sizeof(kPreliminarApproved)/sizeof(kPreliminarApproved[0])];
 /* harness switches, read once per frame on the main thread: getenv in the per-row/per-pixel drawing is slow on
    Windows (a frame a second at 32:9) and not safe to call while the cores draw */
