@@ -2602,19 +2602,20 @@
     "malefica-01-feedback-revision": {
       "id": "malefica-01-feedback-revision",
       "piece": "Malefica01 frame nativo distinto antes despues",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-jefes",
       "created_at": "2026-10-25T16:08:21.639125+00:00",
-      "updated_at": "2026-10-25T16:08:21.639125+00:00",
+      "updated_at": "2026-10-25T16:08:28.714601+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-195816-c08656 / 4d253e4072d34f03b7569a987702c511",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:08:28.714601+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:08:21.639125+00:00",
+  "updated_at": "2026-10-25T16:08:28.714601+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
