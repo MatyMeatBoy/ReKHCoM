@@ -2920,10 +2920,23 @@
       "approval": null,
       "reference": null,
       "evidence": []
+    },
+    "menu-boton-opciones": {
+      "id": "menu-boton-opciones",
+      "piece": "Menu del juego: boton nuevo Opciones (6 idiomas) con la textura limpia y el texto pixel art de los demas, espaciado para que quepa (usuario 25/10)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T23:15:27.033037+00:00",
+      "updated_at": "2026-10-25T23:15:27.033037+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T23:15:22.457422+00:00",
+  "updated_at": "2026-10-25T23:15:27.033037+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
