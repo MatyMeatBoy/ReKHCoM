@@ -2405,7 +2405,7 @@ static bool HdModCard() {
     hdexport::Section(sRoot, haveTracks > 0 || haveSprites > 0);
 #endif
     ImGui::Separator();
-    changed |= GatedToggle(T("Intros HD", "HD intros"),
+    changed |= GatedToggle(T("Videos HD", "HD movies"),
                          T("La apertura, los créditos y los finales de Sora y Riku de Re:Chain of Memories.",
                            "Re:Chain of Memories' opening, credits and Sora's and Riku's endings."), Ini("hd_movies"), !(!haveBase));
     changed |= GatedToggle(T("Música HD", "HD music"),

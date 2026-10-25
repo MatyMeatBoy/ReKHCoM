@@ -357,7 +357,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Mover botones táctiles", "タッチボタンを移動" },
     { "HD", "HD", "HD", "HD", "HD", "HD" },
     { "HD text", "Texte HD", "HD-Text", "Testo HD", "Texto HD", "HDテキスト" },
-    { "HD intros", "Intros HD", "HD-Intros", "Intro HD", "Intros HD", "HDイントロ" }, /* opening, credits, endings */
+    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" }, /* opening, credits, endings */
     { "HD music", "Musique HD", "HD-Musik", "Musica HD", "Música HD", "HDミュージック" },
     { "HD cutscenes", "Cinématiques HD", "HD-Zwischensequenzen", "Filmati HD", "Cinemáticas HD", "HDムービー" },
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
@@ -2603,7 +2603,7 @@ static const char* const sAssetTitle[PORT_ASSET_COUNT][LANG_COUNT] = {
       "HD HUDを読みこみました！" },
     { "HD music loaded!", "Musique HD chargée !", "HD-Musik geladen!", "Musica HD caricata!", "¡Música HD cargada!",
       "HDミュージックを読みこみました！" },
-    { "HD intros loaded!", "Intros HD chargées !", "HD-Intros geladen!", "Intro HD caricate!", "¡Intros HD cargadas!",
+    { "HD movies loaded!", "Vidéos HD chargées !", "HD-Videos geladen!", "Video HD caricati!", "¡Videos HD cargados!",
       "HDイントロを読みこみました！" },
     { "HD scenes loaded!", "Scènes HD chargées !", "HD-Szenen geladen!", "Scene HD caricate!", "¡Escenas HD cargadas!",
       "HDシーンを読みこみました！" },
@@ -2619,7 +2619,7 @@ static const char* const sAssetsTitleMany[LANG_COUNT] = { /* %d: how many */
 static const char* const sAssetName[PORT_ASSET_COUNT][LANG_COUNT] = {
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" },
     { "HD music", "Musique HD", "HD-Musik", "Musica HD", "Música HD", "HDミュージック" },
-    { "HD intros", "Intros HD", "HD-Intros", "Intro HD", "Intros HD", "HDイントロ" },
+    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" },
     { "HD scenes", "Scènes HD", "HD-Szenen", "Scene HD", "Escenas HD", "HDシーン" },
     { "HD subtitles", "Sous-titres HD", "HD-Untertitel", "Sottotitoli HD", "Subtítulos HD", "HDじまく" },
     { "Japanese voices (Undub)", "Voix japonaises (Undub)", "Japanische Stimmen (Undub)", "Voci giapponesi (Undub)",

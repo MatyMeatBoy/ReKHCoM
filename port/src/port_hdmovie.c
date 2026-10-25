@@ -41,12 +41,15 @@ static void MoviePath(const char* name, char* out, size_t size) {
 }
 
 /* include/evt/mode_movie.h: MOVIE_OPENING 1, MOVIE_6F_GOAL, MOVIE_12F_E2, MOVIE_ENDING, MOVIE_RIKU_ENDING */
+/* HD movies replace only the cartridge's pre-rendered movies, each with its whole Re:CoM scene; the story's other
+   scenes are HD cutscenes' (#163, duartepedro). Re:CoM's credits (RSE, RRE) are not this version's: the cartridge's
+   play. */
 static const char* MovieFile(int movieId) {
     switch (movieId) {
-        case 1: return "ROP";  /* the opening */
-        case 4: return "RSE";  /* Sora's ending */
-        case 5: return "RRE";  /* Riku's ending (Reverse/Rebirth) */
-        default: return NULL;  /* the 6th and 12th floor movies: the full mod's scenes (hd_scenes), later */
+        case 1: return "ROP";          /* the opening: the hooded man and the castle */
+        case 4: return "zz_event_151"; /* Sora's ending: his friends' memories (the scene with the promise before) */
+        case 5: return "zz_event_631"; /* Riku's ending: the road to dawn */
+        default: return NULL;          /* the 6th and 12th floor movies: their Re:CoM scene is not matched yet */
     }
 }
 
@@ -83,7 +86,6 @@ static int sEndingScenePlayed;
 static const struct { unsigned short eventId; const char* movie; unsigned char before; } kHdSceneExtras[] = {
     { EVENT_000_1F_ENTRANCE_PART1, "zz_event_001", 1 }, /* the hooded man's prologue, then the castle */
     { EVENT_193_RIKU_B1F_LAST1, "zz_event_614", 0 },
-    { EVENT_195_RIKU_ENDING, "zz_event_631", 0 },       /* the crossroads: the road to light or to darkness */
 };
 
 static void PlayExtras(int eventId, int before) {
@@ -105,7 +107,7 @@ int PortHdScenePlay(int eventId) {
     size_t i;
     eventId &= 0x7FFF; /* the debug menu's events carry 0x8000 (mode_event.c) */
     PortLog("hd scene: event %d", eventId);
-    if (!gPortConfig.hdScenes && !(gPortConfig.hdMovies && IsEnding(eventId)))
+    if (!gPortConfig.hdScenes) /* the endings' event scenes too: HD movies are the cartridge's movies only (#163) */
         return 0;
     for (i = 0; i < sizeof(kHdScenes) / sizeof(kHdScenes[0]); i++)
         if (kHdScenes[i].eventId == eventId) {
@@ -128,10 +130,9 @@ int PortHdMoviePlay(int movieId) {
     const char* name = MovieFile(movieId);
     if (!gPortConfig.hdMovies || name == NULL)
         return 0;
-    if ((movieId == 4 || movieId == 5) && !sEndingScenePlayed) {
-        PlayFile(movieId == 4 ? "zz_event_151" : "zz_event_621"); /* the capsule room / Riku's ending */
-        if (movieId == 5)
-            PlayExtras(EVENT_195_RIKU_ENDING, 0); /* the crossroads, in the Re:CoM mode */
+    if (movieId == 4 && sEndingScenePlayed) { /* HD cutscenes already played the whole capsule room scene */
+        sEndingScenePlayed = 0;
+        return 1;
     }
     sEndingScenePlayed = 0;
     return PlayFile(name);
