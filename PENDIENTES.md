@@ -47,7 +47,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-titulo60 | Catalogo actual: titulo original y barras | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:23:02.479685+00:00 |
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:12.500903+00:00 |
 | catalogo-idioma-copyright | Catalogo actual: idioma y copyright | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:21.980275+00:00 |
-| catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:46.415799+00:00 |
+| catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | listo_pr | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:26.589408+00:00 |
 | catalogo-peliculas | Catalogo actual: pelicula y subtitulos | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:51.981208+00:00 |
 | catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:57.743550+00:00 |
 | visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/61 | Pedido del usuario en chat 24/10 | 2026-10-24T17:09:15.351516+00:00 |
