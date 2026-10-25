@@ -20,7 +20,7 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 ## Estado (25/10 noche)
 
 - Traspaso activo de Codex (arte aprobado, ZIP local): TRASPASO_CARGAS_ZIP_20261025.md.
-- Propuestas Atlas abiertas: #121 (Trickmaster), #122 (099), #123 (004/005), #124 (selector HD), más #120 (esta meta). Última: **v2.0-pre18** publicada como prerelease (Windows, Linux, Steam Deck; zip limpio en KHCoMPC). #140 y #83 cerrados.
+- Propuestas Atlas abiertas: #121 (Trickmaster), #122 (099), #123 (004/005), #124 (selector HD), más #120 (esta meta). Última: **v2.0-pre18** publicada como prerelease (Windows, Linux, Steam Deck; zip limpio en KHCoMPC). #83 cerrado. #140 reabierto: la pre18 no arreglaba la build nativa; test interno deck1 (GPU sola, rama test-builds) enviado, esperando su ReKHCoM.log / kh_com.log.
 - Hoy en main: Opciones por secciones (solo A para entrar, Salir del juego, mods en gris con cartel), logros Re:CoM
   con borde e insignias, #83 (carta de Jafar: BIOS_PTR), mazo sin parpadeo en invocaciones, videos HD en Linux,
   #42 (3 pistas HD de eventos), arenas aprobadas (Maléfica, Úrsula, Marluxia, Trickmaster, Oogie, Darkside, 112, 120).
