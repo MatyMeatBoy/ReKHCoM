@@ -15,6 +15,36 @@ usuario y se revisan las escenas hermanas que la copiaron.
 
 ## Principios
 
+Síntesis de estancias, envío `20261025-011932-34d062`, propuesta
+`dbdb82b983fc4a178d46ce70edf44c6b`: «veo el assset pero no remplaznadolo bien».
+Una carta HD colocada junto a la GBA no demuestra sustitución. La hija debe
+mostrar el reemplazo en una captura real del juego, en la misma posición y
+con las mismas capas. El requisito sigue `kind/color/rule/value`; una suma
+muestra el saldo realmente preparado por `UpdateEventKeyTotal`, no el valor
+inicial ni un dígito pintado en una captura. Mantener geometría, prioridad,
+transformación y oclusión OAM; HD apagado o assets ausentes conservan el
+original completo. Una plancha del generador sólo revisa assets: no sustituye
+la captura runtime ni concede aprobación o ★. Implementación aislada
+`codex/sintesis-requisito-hd`. La puerta normal se dibuja por `MapSelect_2`
+y las llaves de evento por `SELMAP_EVKEY_2`: cubrir sólo la segunda ruta
+deja intacta la carta GBA de la captura histórica. Validación dirigida:
+puerta normal runtime, variantes de regla/color con inicialización real,
+actualización TOTAL 10→9 y HD off comparado píxel a píxel con el binario base.
+
+Síntesis, revisión nueva `20261025-125559-473c1c` sobre
+`c08283ad450f4455937a3f1e1ead3302`, corrige el modelo anterior:
+`12=` sobresalía y las distancias/fuente no demostraban equivalencia con 1.5HD
+(nube `a849c7d8-4d91-484e-ba31-1c186915558c`); el relleno interior de color
+era excesivo (nube `23d13c7a-d2c6-4911-914a-246099bbafe7`). Las cajas OAM
+pueden ser mayores que el cuerpo, pero la tinta HD de número y operador debe
+quedar dentro de la silueta con margen, como un grupo centrado. Preferir los
+`gCardValueDigitTiles` locales autorizados al preparar la captura; no llamar
+exacta a la reproducción de 1.5HD sin ver su pantalla. La comparación GBA y
+la propuesta anterior sostienen una banda inferior neutra: mantener el color
+de condición en el contorno y el interior abierto para que pase la luz,
+sin convertir la base en una masa roja/verde/azul. Corregir sólo estas dos
+nubes; conservar identidad dinámica, TOTAL y recorrido de oclusión existentes.
+
 Trickmaster, envío `20261025-052021-8546de`: «todo bien», sólo completar
 el muro hacia arriba. Prolongar el período vertical del papel rosa, no la
 franja beige del techo. Conservar suelo y objetos ya aceptados; la única

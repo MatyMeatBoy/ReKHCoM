@@ -5,6 +5,8 @@
 
 #ifdef PLATFORM_PC
 #include "engine.h"
+#include "sprite.h"
+#include "port/synthesis_requirement_hd.h"
 #endif
 #ifdef PLATFORM_PC
 /* Door menu: the panel, cards and caption sit a few lines above the bottom
@@ -73,6 +75,9 @@
 #include "card_message_data.h"
 #include "jiminy_records_index_data.h"
 #include "gba/io_reg.h"
+#if defined(PLATFORM_PC) && defined(PORT_SYNTHESIS_TEST_FIXTURE)
+#include "synthesis_requirement_fixture.inc"
+#endif
 
 #ifndef PORT_MENU_LEFT
 #define PORT_MENU_LEFT(x) (x)
@@ -329,6 +334,9 @@ u8 UpdateMapSelectSetup(MapSelectWork* work, void* task) {
 
     // @bug card can be NULL (NULL read).
     LoadMapSelectKindPalette(BIOS_PTR(work->card)->args.baseCardId, work);
+#if defined(PLATFORM_PC) && defined(PORT_SYNTHESIS_TEST_FIXTURE)
+    SynthesisFixtureBegin();
+#endif
     SetTaskUpdate(task, (TaskUpdateFunc)UpdateMapSelectSlideIn);
     return 1;
 }
@@ -894,8 +902,20 @@ void MapSelect_2(MapSelectWork* work) {
 
     MAPSEL_SHIFT(0); /* the card under the spotlight stays with the light */
     if (!work->isEventDoor && work->mosaicX != 9 && work->mosaicY != 9) {
+#if defined(PLATFORM_PC) && defined(PORT_SYNTHESIS_TEST_FIXTURE)
+        if (!SynthesisFixtureDraw()) {
+#endif
+#ifdef PLATFORM_PC
+        int synthesisFirstEntry = gSpriteWork->entryCount;
+#endif
         DrawSprite(120, 56, NULL, work->tiles4, work->palette, NULL, SPRITE_FLAG_MOSAIC, 60);
         DrawSprite(120, 56, gCardBacks[CARD_BACK_WHITE].gfx2, work->tiles2, work->palette, NULL, SPRITE_FLAG_MOSAIC, 60);
+#ifdef PLATFORM_PC
+        PortSynthesisHdTagRoom(work->tiles2, work->tiles4, work->requiredValue, synthesisFirstEntry);
+#endif
+#if defined(PLATFORM_PC) && defined(PORT_SYNTHESIS_TEST_FIXTURE)
+        }
+#endif
     }
 
     PORT_BAND(DrawSprite(128, work->topBarY >> 8, gMapSelectBarFrames[0], work->tiles7, work->palette3, NULL, SPRITE_PRIORITY(2), 80));
@@ -915,6 +935,9 @@ void MapSelect_2(MapSelectWork* work) {
 }
 
 void MapSelect_3(MapSelectWork* work) {
+#if defined(PLATFORM_PC) && defined(PORT_SYNTHESIS_TEST_FIXTURE)
+    SynthesisFixtureEnd();
+#endif
 #ifdef PLATFORM_PC
     PortScreenBg(1, FALSE);
 #endif

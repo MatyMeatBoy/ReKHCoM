@@ -37,7 +37,7 @@ def wrapped(row, text):
 def table():
     # tiles '-': a picture the game draws itself (the HP ring), not a cartridge sprite to match
     rows = [l.split('\t') for l in lines() if l.split('\t')[3] != '-']
-    out = [HEADER]
+    out = [HEADER, '#include "port/synthesis_requirement_hd.h"\n']
     for row in rows:
         syms = [row[3]] + ([row[2]] if row[2] != '-' else [])
         out += wrapped(row, ''.join(f'extern const unsigned char {s}[];\n' for s in syms))
@@ -46,6 +46,7 @@ def table():
         name, group, frame, tiles, x0, y0, w, h = row[:8]
         frame = 'NULL' if frame == '-' else frame
         out += wrapped(row, f'    {{ {tiles}, {frame}, "{name}", {x0}, {y0}, {w}, {h}, {group} }},\n')
+    out.append('#include "port/synthesis_requirement_hd_entries.inc"\n')
     out.append('};\n')
     return ''.join(out)
 
