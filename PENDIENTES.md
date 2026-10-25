@@ -72,7 +72,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/108 | — | 2026-10-25T08:29:44.078223+00:00 |
 | escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 9c486ae93d5244149ada3b6936d312c6 | 2026-10-25T09:07:27.290488+00:00 |
 | trickmaster-muro-arriba | Trickmaster arena: completar patron de muro hacia arriba | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/114 | Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 5a6c86fcfd4b49a19009d73f9afde97b | 2026-10-25T09:09:06.277771+00:00 |
-| meta-v20-20261025 | Meta v2.0: prioridades, pendientes y bugs actuales | en_curso | codex-atlas | — | — | 2026-10-25T13:24:11.380529+00:00 |
+| meta-v20-20261025 | Meta v2.0: prioridades, pendientes y bugs actuales | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/120 | — | 2026-10-25T13:25:04.047430+00:00 |
 | trickmaster-muro-continuidad | Trickmaster arena: continuidad del muro superior en dos nubes | en_curso | codex-atlas | — | — | 2026-10-25T13:24:22.622210+00:00 |
 
 Integrador: libre
