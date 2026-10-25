@@ -2298,7 +2298,7 @@
       "status": "en_revision",
       "owner": "codex-sintesis",
       "created_at": "2026-10-25T13:37:36.238311+00:00",
-      "updated_at": "2026-10-25T13:48:31.249149+00:00",
+      "updated_at": "2026-10-25T14:09:11.002731+00:00",
       "branch": "codex/sintesis-requisito-hd",
       "pr": null,
       "approval": "Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija",
@@ -2313,9 +2313,15 @@
           "at": "2026-10-25T13:48:31.249149+00:00",
           "owner": "codex-sintesis",
           "detail": "Commit 0cfab16fb9e346138987d009a29715054046e130. Código preparado en khcom-sintesis-hd; 405 assets/cajas OAM, AST Python y tablas generadas verificados; sin compilar ni ejecutar juego. Pendientes prueba serial, HDoff contra base y captura hija Atlas real antes de PR. Traspaso port/progress/SINTESIS_REQUISITO_HD.md. No feedback marcado respondido."
+        },
+        {
+          "at": "2026-10-25T14:09:11.002731+00:00",
+          "owner": "codex-sintesis",
+          "detail": "HEAD9f777763685fa0255471ceb51a5e652e350d2b10; código943f44a5b. Atlas captura real b77d47de367749538ebe7469598d3926 parentdbdb82; variantesc08283ad450f4455937a3f1e1ead3302; response_to nube13c9d20d envio20261025-011932-34d062. BuildEU propio Ninja-j1, dummy/PPU1/mandoaislado. Synthesis470 real; HDoff 4frames pixelidénticos baseline. Arnes cuerpos reales Init/GetEventKey/Pay/Update: pago10->9 y selección; 2000combinaciones+20init. Fixtures runtime rojo<=7 verde=12 azulTOTAL10->9. Build normal restaurado. Sin PR; revisión humana pendiente; ver SINTESIS_REQUISITO_HD.md."
         }
       ],
-      "claimed_at": "2026-10-25T13:38:05.200080+00:00"
+      "claimed_at": "2026-10-25T13:38:05.200080+00:00",
+      "sent": "b77d47de367749538ebe7469598d3926"
     },
     "anadir-naipes-oclusion-hd": {
       "id": "anadir-naipes-oclusion-hd",
@@ -2345,7 +2351,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:54:55.907086+00:00",
+  "updated_at": "2026-10-25T14:09:11.002731+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
