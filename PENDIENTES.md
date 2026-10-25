@@ -46,7 +46,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:22:52.512473+00:00 |
 | catalogo-titulo60 | Catalogo actual: titulo original y barras | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:23:02.479685+00:00 |
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:12.500903+00:00 |
-| catalogo-idioma-copyright | Catalogo actual: idioma y copyright | listo_pr | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:17.289291+00:00 |
+| catalogo-idioma-copyright | Catalogo actual: idioma y copyright | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:21.980275+00:00 |
 | catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:46.415799+00:00 |
 | catalogo-peliculas | Catalogo actual: pelicula y subtitulos | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:51.981208+00:00 |
 | catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:57.743550+00:00 |
