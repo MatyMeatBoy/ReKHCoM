@@ -98,5 +98,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/154 | — | 2026-10-25T19:57:51.967959+00:00 |
 | malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_revision | codex-atlas | codex/malefica-native-three-cuts | — | 2026-10-25T20:22:12.270237+00:00 |
 | atlas-menus-current-review | Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera | en_curso | codex-atlas | — | — | 2026-10-25T20:35:28.184368+00:00 |
+| pre19-clean | Pre19 ZIP limpio personal desde aprobados integrados | pendiente | — | — | — | 2026-10-25T20:49:03.214415+00:00 |
 
 Integrador: libre
