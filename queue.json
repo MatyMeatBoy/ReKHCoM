@@ -2094,12 +2094,18 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:29:50.222925+00:00",
-      "updated_at": "2026-10-25T08:29:56.488874+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T08:30:07.518559+00:00",
+      "branch": "codex/atlas-112",
       "pr": null,
       "approval": null,
       "reference": "1dafd826b81c4c8f8df99ff28bfbe4f3",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T08:30:07.518559+00:00",
+          "owner": "codex-atlas",
+          "detail": "Leer cuatro nubes: puerta recortada arriba, pilar y muro y dos actores. Regla de actores ya en main; corregir extension superior y lateral con donantes de la escena."
+        }
+      ],
       "claimed_at": "2026-10-25T08:29:56.488874+00:00"
     }
   },
@@ -2109,7 +2115,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:29:56.488874+00:00",
+  "updated_at": "2026-10-25T08:30:07.518559+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
