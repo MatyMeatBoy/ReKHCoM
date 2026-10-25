@@ -1246,9 +1246,9 @@
       "id": "editor-tiles-backend",
       "piece": "Editor avanzado: catalogo nativo tiles sprites y proyectos",
       "status": "en_curso",
-      "owner": "claude-relevo",
+      "owner": "claude-integrador",
       "created_at": "2026-10-24T16:34:21.232737+00:00",
-      "updated_at": "2026-10-24T17:03:46.792047+00:00",
+      "updated_at": "2026-10-25T07:20:12.748222+00:00",
       "branch": null,
       "pr": null,
       "approval": "pedido-usuario-20261024",
@@ -1258,6 +1258,11 @@
           "at": "2026-10-24T17:03:46.792047+00:00",
           "owner": "claude-funciones",
           "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+        },
+        {
+          "at": "2026-10-25T07:20:12.748222+00:00",
+          "owner": "claude-integrador",
+          "detail": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
         }
       ],
       "claimed_at": "2026-10-24T16:34:21.233245+00:00"
@@ -1811,7 +1816,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T06:03:55.595170+00:00",
+  "updated_at": "2026-10-25T07:20:12.748222+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -1982,6 +1987,16 @@
       "to_owner": "codex-escena-074",
       "expected_commit": "bb3789c3fe04d7510c464666a8e759deaa9e2ad8",
       "evidence": "El usuario confirma 24/10 que nadie trabaja en arte y autoriza tomar las revisiones visibles de Atlas; se retoma el diagnóstico del patrón 074 para entregar propuesta visual, sin esperar dato del usuario."
+    },
+    {
+      "at": "2026-10-25T07:20:12.748222+00:00",
+      "actor": "claude-integrador",
+      "operation": "recover-task",
+      "task": "editor-tiles-backend",
+      "from_owner": "claude-relevo",
+      "to_owner": "claude-integrador",
+      "expected_commit": "836a1fae858467adfe9863c3d7a29214b64d4539",
+      "evidence": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
     }
   ]
 }

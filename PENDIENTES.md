@@ -41,7 +41,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue-049 | Auditar issue49 Steam Deck Gaming Mode y arreglos existentes | integrado | claude-relevo | https://github.com/MatyMeatBoy/ReKHCoM/pull/58 | Pedido del usuario (cola de Codex; integrar: chat 24/10) | 2026-10-24T17:10:12.671131+00:00 |
 | logica-aprobados | LOGICA_APROBADOS: corregir reglas de 004/057/061/074 (aprobadas antes de tiempo) y mejora continua en cada PR | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/54 | Pedido del usuario en chat 24/10 (mejora continua de la lógica; 004/057/061/074 aprobadas antes de tiempo) | 2026-10-24T17:07:39.585290+00:00 |
 | entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | integrado | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:34:21.232737+00:00 |
-| editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:03:46.792047+00:00 |
+| editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:12.748222+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:03:56.813416+00:00 |
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | claude-relevo | — | — | 2026-10-24T17:04:25.848166+00:00 |
 | catalogo-titulo60 | Catalogo actual: titulo original y barras | en_curso | claude-relevo | — | — | 2026-10-24T17:04:38.070009+00:00 |
