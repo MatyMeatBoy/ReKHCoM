@@ -73,4 +73,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 9c486ae93d5244149ada3b6936d312c6 | 2026-10-25T09:07:27.290488+00:00 |
 | trickmaster-muro-arriba | Trickmaster arena: completar patron de muro hacia arriba | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/114 | Autorizacion directa del usuario 25/10 integrar y pushear; Atlas 5a6c86fcfd4b49a19009d73f9afde97b | 2026-10-25T09:09:06.277771+00:00 |
 
-Integrador: codex-atlas-integrador (ocupado; 2026-10-25T09:06:43.205991+00:00)
+Integrador: libre
