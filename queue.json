@@ -2657,16 +2657,23 @@
     "trickmaster-rail-finish": {
       "id": "trickmaster-rail-finish",
       "piece": "Trickmaster: terminar postes y alinear travesano",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T18:53:05.854532+00:00",
-      "updated_at": "2026-10-25T18:53:14.078372+00:00",
+      "updated_at": "2026-10-25T19:16:35.583126+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261025-125448-4ee67a / 7c6c539b5c264f24a9b655a8432e2cc7",
-      "evidence": [],
-      "claimed_at": "2026-10-25T18:53:14.078372+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-25T19:16:35.583126+00:00",
+          "owner": "codex-atlas",
+          "detail": "Pasada turbo: Postes completos y travesano recto; chimenea unica y suelo conservados. Capturas en candidato local combinado, sin activar honores ni abrir PR publico pendiente de valoracion."
+        }
+      ],
+      "claimed_at": "2026-10-25T18:53:14.078372+00:00",
+      "sent": "c6f2bb42ff5143bf98ee674f64065f71"
     },
     "escena099-wallfinish": {
       "id": "escena099-wallfinish",
@@ -2684,7 +2691,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:07:21.743034+00:00",
+  "updated_at": "2026-10-25T19:16:35.583126+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
