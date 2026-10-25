@@ -2205,17 +2205,17 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:24:16.956047+00:00",
-      "updated_at": "2026-10-25T13:24:22.622210+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T13:25:09.708306+00:00",
+      "branch": "codex/trickmaster-muro-continuidad",
       "pr": null,
       "approval": null,
-      "reference": "20261025-060416-21533f / 5a6c86fcfd4b49a19009d73f9afde97b",
+      "reference": "20261025-060416-21533f; dos nubes muro superior",
       "evidence": [],
       "claimed_at": "2026-10-25T13:24:22.622210+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:25:04.047430+00:00",
+  "updated_at": "2026-10-25T13:25:09.708306+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
