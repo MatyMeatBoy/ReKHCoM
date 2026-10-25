@@ -952,6 +952,14 @@ static const char* const sNeedHd[LANG_COUNT] = {
     "Importiere die HD-Mod im Launcher, um das einzuschalten", "Importa la mod HD dal launcher per attivarla",
     "Importa el mod HD desde el launcher para activarla", "ランチャーでHD MODを取りこむと使えます",
 };
+static const char* const sBankNote[LANG_COUNT] = {
+    "The save bank changes from the title screen, before loading a game.",
+    "La banque se change depuis l'écran titre, avant de charger une partie.",
+    "Die Speicherbank wechselt man im Titelbildschirm, vor dem Laden.",
+    "Il banco si cambia dalla schermata del titolo, prima di caricare.",
+    "El banco de partidas se cambia en la pantalla de título, antes de cargar una partida.",
+    "セーブバンクはタイトルがめんでかえられます。",
+};
 static const char* const sScenesNote[LANG_COUNT] = { /* brief and plain (user 25/10) */
     "Replaces the in-engine scenes with Re:CoM's HD movies. Off keeps the originals; both can be watched again.",
     "Remplace les scènes du moteur du jeu par les vidéos HD de Re:CoM. Désactivé, les originales restent ; les deux "
@@ -982,6 +990,9 @@ static int ItemEnabled(int item) {
         return 0;
     switch (item) {
         case ITEM_CHEAT_DEBUG: return PortDebugModeAvailable();
+        /* the save bank changes only from the title, before a game is loaded (user 25/10: no bugs, no achievements
+           farmed by swapping banks mid-game) */
+        case ITEM_SAVEBANK: return PortDebugModeAvailable();
         case ITEM_REMATCH_MENU: return 1;
         case ITEM_CHEAT_MAXLEVEL:
         case ITEM_CHEAT_MAPCARDS:
@@ -1406,6 +1417,8 @@ static void Change(int item, int dir) {
             gPortConfig.unstockButton = !gPortConfig.unstockButton;
             break;
         case ITEM_SAVEBANK:
+            if (!PortDebugModeAvailable())
+                break; /* only from the title (ItemEnabled) */
             gPortConfig.saveBank = Wrap(gPortConfig.saveBank - 1 + dir, PORT_SAVE_BANKS) + 1;
             PortSramSwitchBank();
             break;
@@ -3949,6 +3962,8 @@ static void DrawMenu(int l, int width, int height) {
     int zoom = sCursor == ITEM_BATTLE_ZOOM && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom;
     if (NeedsLauncher(sCursor) && ItemVisible(sCursor) && selY >= 0)
         DrawNeedNote(NeedsLauncher(sCursor) == NEED_JP ? sNeedJp[l] : sNeedHd[l], width, height, barX + barW + 8, selY);
+    else if (sPage == PAGE_MAIN && sCursor == ITEM_SAVEBANK && !ItemEnabled(ITEM_SAVEBANK) && selY >= 0)
+        DrawNeedNote(sBankNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HD_SCENES && selY >= 0)
         DrawNeedNote(sScenesNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HDTEXT && gPortConfig.hdText && selY >= 0)
