@@ -1003,6 +1003,14 @@ static const char* const sNeedHd[LANG_COUNT] = {
     "Importiere die HD-Mod im Launcher, um das einzuschalten", "Importa la mod HD dal launcher per attivarla",
     "Importa el mod HD desde el launcher para activarla", "ランチャーでHD MODを取りこむと使えます",
 };
+static const char* const sCheatRebelNote[LANG_COUNT] = {
+    "Turning it on starts Rebel mode: achievements go to a list of their own on this computer, not to RetroAchievements.",
+    "L'activer lance le mode rebelle : les succès vont dans leur liste sur cet ordinateur, pas sur RetroAchievements.",
+    "Einschalten startet den Rebellen-Modus: Erfolge gehen in eine eigene Liste auf diesem PC, nicht zu RetroAchievements.",
+    "Attivarlo avvia la modalità ribelle: gli obiettivi vanno in una lista a parte su questo PC, non su RetroAchievements.",
+    "Activarlo inicia el modo rebelde: los logros van a su propia lista en este equipo, no a RetroAchievements.",
+    "オンで反逆モード: じっせきはこのPCの別リストへ。RetroAchievementsには送られません。",
+};
 static const char* const sBankNote[LANG_COUNT] = {
     "The save bank changes from the title screen, before loading a game.",
     "La banque se change depuis l'écran titre, avant de charger une partie.",
@@ -4067,6 +4075,12 @@ static void DrawMenu(int l, int width, int height) {
         DrawControlDiagram(barX, top + rows * rowH + 2, barW, height - 15 - (top + rows * rowH + 2));
     if (sPage == PAGE_CHEATS && sCursor == ITEM_CHEAT_GBA_MAP)
         DrawGbaMapNote(l, width, height, barX + barW + 8);
+    /* a cheat that changes the achievements' mode: what turning it on means, before it is on (user 25/10) */
+    if (sPage == PAGE_CHEATS && selY >= 0 && !PortRebelActive() &&
+        ((sCursor == ITEM_CHEAT_ONEHIT && !gPortConfig.cheatOneHit) ||
+         (sCursor == ITEM_CHEAT_INFHP && !gPortConfig.cheatInfiniteHp) ||
+         (sCursor == ITEM_CHEAT_RIKU && !gPortConfig.cheatUnlockRiku)))
+        DrawNeedNote(sCheatRebelNote[l], width, height, barX + barW + 8, selY);
     if (sPage == PAGE_CONTROLS && sCursor == ITEM_PAD_LAYOUT)
         DrawNintendoNote(l, width, height, barX + barW + 8);
     int zoom = sCursor == ITEM_BATTLE_ZOOM && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom;
