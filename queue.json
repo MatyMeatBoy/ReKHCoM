@@ -2061,6 +2061,19 @@
       ],
       "claimed_at": "2026-10-25T08:21:16.727352+00:00",
       "sent": "ec8c60b820a847aeabe9778e8dce033d"
+    },
+    "escena-120-revision": {
+      "id": "escena-120-revision",
+      "piece": "Escena 120: corregir dos nubes de muro y estructura delantera",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T08:24:47.228238+00:00",
+      "updated_at": "2026-10-25T08:24:47.228238+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "e15f20f324a742eaa9b98cde42603751",
+      "evidence": []
     }
   },
   "integrator": {
@@ -2069,7 +2082,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:24:41.734435+00:00",
+  "updated_at": "2026-10-25T08:24:47.228238+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
