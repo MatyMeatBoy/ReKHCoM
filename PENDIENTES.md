@@ -70,6 +70,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/107 | — | 2026-10-25T08:17:21.201961+00:00 |
 | escena-097-respuesta | Escena 097: verificar y responder nube del gato fuera de camara | en_revision | codex-atlas | — | — | 2026-10-25T08:24:41.734435+00:00 |
 | escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/108 | — | 2026-10-25T08:29:44.078223+00:00 |
-| escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | — | 2026-10-25T08:51:31.338473+00:00 |
+| escena-112-revision | Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores | en_curso | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/111 | — | 2026-10-25T08:52:21.250577+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)

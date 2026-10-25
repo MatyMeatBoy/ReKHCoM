@@ -2097,14 +2097,14 @@
     "escena-112-revision": {
       "id": "escena-112-revision",
       "piece": "Escena 112: cuatro nubes pendientes de puerta, muro, pilar y actores",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T08:29:50.222925+00:00",
-      "updated_at": "2026-10-25T08:51:31.338473+00:00",
+      "updated_at": "2026-10-25T08:52:21.250577+00:00",
       "branch": "codex/atlas-112",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/111",
       "approval": null,
-      "reference": "1dafd826b81c4c8f8df99ff28bfbe4f3",
+      "reference": "372c61886fe244e2a8050128f193cc7e",
       "evidence": [
         {
           "at": "2026-10-25T08:30:07.518559+00:00",
@@ -2115,6 +2115,11 @@
           "at": "2026-10-25T08:51:31.338473+00:00",
           "owner": "codex-atlas",
           "detail": "Pedido directo: puerta muy alta, color prolongado hasta arriba; lado derecho naranja uniforme del panel, sin franjas moradas. Atlas actualizado. 300/600 centro GBA identico; compila. Rebase preserva120 y arenas. check_sources: dos glifos JP ausentes ya en main port_ui.c, ajenos a esta rama."
+        },
+        {
+          "at": "2026-10-25T08:52:21.250577+00:00",
+          "owner": "codex-atlas",
+          "detail": "Ultima nube: extender borde derecho de puerta hacia arriba, 424a3546. Luego Trickmaster muro superior, por orden directa."
         }
       ],
       "claimed_at": "2026-10-25T08:29:56.488874+00:00",
@@ -2127,7 +2132,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:51:31.338473+00:00",
+  "updated_at": "2026-10-25T08:52:21.250577+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
