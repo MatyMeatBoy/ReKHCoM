@@ -2372,15 +2372,16 @@
     "darkside-06-feedback-revision": {
       "id": "darkside-06-feedback-revision",
       "piece": "Darkside 06 costura nueva",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-jefes",
       "created_at": "2026-10-25T16:02:31.124789+00:00",
-      "updated_at": "2026-10-25T16:02:31.124789+00:00",
+      "updated_at": "2026-10-25T16:02:42.072840+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-162822-ea1330 / 943ba728-2009-4560-8eef-7091aefb52e7",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:02:42.072840+00:00"
     },
     "atlas-titulo-hd": {
       "id": "atlas-titulo-hd",
@@ -2397,7 +2398,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:02:36.403069+00:00",
+  "updated_at": "2026-10-25T16:02:42.072840+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
