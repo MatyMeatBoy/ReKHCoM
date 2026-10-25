@@ -109,6 +109,23 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - **Estados rápidos en consolas/Android/web:** `port_state` excluido en consolas; en Android/web la fila de revanchas
   se oculta. Medir el tamaño del estado y escribirlo por el puente (H_fopen) antes de encenderlo.
 
+## 1d. Después de la pre18 (pedido del usuario 25/10 noche)
+
+- **Modos Re:CoM basados en la versión de PS2 (siguiente trabajo grande):** dificultades, ajustes por enemigo y lo
+  demás que se encuentre, con sus variantes, aplicados con cuidado a nuestra versión y reimplementados donde haga
+  falta (dentro de la lógica del juego, sin objetos del port). Usar los assets de 1.5 HD ReMIX donde aplique.
+  Herramienta: **REA** (github.com/morluto/rea, MIT; `npx rea-agents setup`, Node 24 ya instalado) con Ghidra o
+  objdump/Rizin para el ELF de PS2 (MIPS R5900; REA no nombra PS2, probar que lo abra). Lista de referencia:
+  github.com/yibie/awesome-rea (way-of-the-samurai-decomp es el caso PS2 más parecido). Falta el material del
+  usuario: ELF/ISO de Re:CoM PS2 y la carpeta de 1.5 HD (no están en KHCoMPC/roms). Cómo empezar: sacar de REA las
+  tablas de dificultad (multiplicadores de daño/PV/experiencia por modo) y de enemigos, compararlas con las de la GBA
+  (src/), proponer al usuario qué entra en cada modo antes de tocar el juego.
+- **Potencia en cada plataforma (pedido 25/10):** Linux/Steam Deck: la build nativa es i386 y dibuja por software;
+  el camino con GPU es un host Linux de 64 bits con el guest x32/reloc (como android64_host/PS5); mientras, Proton
+  con la build de Windows (usa la GPU) y la prueba `REKHCOM_GPU=1`. Consolas: solo relojes documentados y de uso
+  común (Vita ya pide 444 MHz; Switch: perfiles de reloj oficiales del sistema). Revisar cómo lo hacen otros ports
+  de decomp (sm64ex, SoH, Perfect Dark port) antes de tocar nada.
+
 ## 2. Arte (Atlas: GPT/Codex; Claude ayuda)
 
 - Responder en la app cada envío en turno «agente» con una versión hija (`COLA_PARA_AGENTES.md`).
