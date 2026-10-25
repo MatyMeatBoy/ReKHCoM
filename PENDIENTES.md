@@ -44,7 +44,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:12.748222+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:18.232228+00:00 |
 | catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | claude-integrador | — | — | 2026-10-25T07:20:23.913529+00:00 |
-| catalogo-titulo60 | Catalogo actual: titulo original y barras | en_curso | claude-relevo | — | — | 2026-10-24T17:04:38.070009+00:00 |
+| catalogo-titulo60 | Catalogo actual: titulo original y barras | en_curso | claude-integrador | — | — | 2026-10-25T07:20:29.541437+00:00 |
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:04:50.463160+00:00 |
 | catalogo-idioma-copyright | Catalogo actual: idioma y copyright | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:05:01.322386+00:00 |
 | catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | en_curso | claude-relevo | — | pedido-usuario-20261024 | 2026-10-24T17:05:13.273173+00:00 |

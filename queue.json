@@ -1321,9 +1321,9 @@
       "id": "catalogo-titulo60",
       "piece": "Catalogo actual: titulo original y barras",
       "status": "en_curso",
-      "owner": "claude-relevo",
+      "owner": "claude-integrador",
       "created_at": "2026-10-24T16:35:09.541342+00:00",
-      "updated_at": "2026-10-24T17:04:38.070009+00:00",
+      "updated_at": "2026-10-25T07:20:29.541437+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -1333,6 +1333,11 @@
           "at": "2026-10-24T17:04:38.070009+00:00",
           "owner": "claude-funciones",
           "detail": "Usuario en chat 24/10 ~14:00: codex se apagó, seguir con sus pendientes; integrar y pushear Claude. Sin cambios en sus worktrees desde 13:37; WIP conservado."
+        },
+        {
+          "at": "2026-10-25T07:20:29.541437+00:00",
+          "owner": "claude-integrador",
+          "detail": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
         }
       ],
       "claimed_at": "2026-10-24T16:35:20.105695+00:00"
@@ -1826,7 +1831,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:20:23.913529+00:00",
+  "updated_at": "2026-10-25T07:20:29.541437+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -2026,6 +2031,16 @@
       "from_owner": "claude-relevo",
       "to_owner": "claude-integrador",
       "expected_commit": "13a1d506baefdcce2d431704d629bd402ac1eedf",
+      "evidence": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
+    },
+    {
+      "at": "2026-10-25T07:20:29.541437+00:00",
+      "actor": "claude-integrador",
+      "operation": "recover-task",
+      "task": "catalogo-titulo60",
+      "from_owner": "claude-relevo",
+      "to_owner": "claude-integrador",
+      "expected_commit": "622ab2cf82eafcc7715ac3a9c5f6aa063348a984",
       "evidence": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
     }
   ]
