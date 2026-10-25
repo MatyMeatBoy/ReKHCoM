@@ -69,6 +69,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | malefica-arena-respuesta | Malefica arena: responder aprobacion de fondo y separar sprites pendientes | en_revision | codex-atlas | — | — | 2026-10-25T08:06:29.173632+00:00 |
 | oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/107 | — | 2026-10-25T08:17:21.201961+00:00 |
 | escena-097-respuesta | Escena 097: verificar y responder nube del gato fuera de camara | en_revision | codex-atlas | — | — | 2026-10-25T08:24:41.734435+00:00 |
-| escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | pendiente | — | — | — | 2026-10-25T08:24:47.228238+00:00 |
+| escena-120-revision | Escena 120: corregir dos nubes de muro y estructura delantera | en_curso | codex-atlas | — | — | 2026-10-25T08:24:52.559502+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)
