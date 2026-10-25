@@ -82,6 +82,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
 | agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | en_curso | codex-atlas-escenas | — | — | 2026-10-25T16:03:30.914656+00:00 |
 | darkside-arena-feedback-revision | Darkside arena sprite faltante | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:04:54.289889+00:00 |
-| atlas-remates-102-r20261025 | Escena 102 remates posteriores | pendiente | — | — | — | 2026-10-25T16:05:04.288990+00:00 |
+| atlas-remates-102-r20261025 | Escena 102 remates posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:05:09.523321+00:00 |
 
 Integrador: libre
