@@ -2742,19 +2742,20 @@
     "malefica-recortes-khcom": {
       "id": "malefica-recortes-khcom",
       "piece": "Malefica: dibujar recortes KHCoM y presentacion montada agrupada",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T19:45:49.201740+00:00",
-      "updated_at": "2026-10-25T19:45:49.201740+00:00",
+      "updated_at": "2026-10-25T19:45:55.340720+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Instruccion humana 25/10: base aceptada; dibujar encima solo extensiones y agrupar recortes",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T19:45:55.340720+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:45:49.201740+00:00",
+  "updated_at": "2026-10-25T19:45:55.340720+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
