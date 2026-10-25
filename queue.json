@@ -2268,12 +2268,18 @@
       "status": "en_curso",
       "owner": "codex-sintesis",
       "created_at": "2026-10-25T13:37:36.238311+00:00",
-      "updated_at": "2026-10-25T13:38:05.200080+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T13:47:18.576790+00:00",
+      "branch": "codex/sintesis-requisito-hd",
       "pr": null,
       "approval": "Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija",
       "reference": "dbdb82b983fc4a178d46ce70edf44c6b envio20261025-011932-34d062",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T13:47:18.576790+00:00",
+          "owner": "codex-sintesis",
+          "detail": "Worktree khcom-sintesis-hd: implementación OAM local + assets 4x preparada. Sin compilar/juego por RAM; captura hija Atlas y PR pendientes de autorización serial."
+        }
+      ],
       "claimed_at": "2026-10-25T13:38:05.200080+00:00"
     },
     "anadir-naipes-oclusion-hd": {
@@ -2298,7 +2304,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:45:44.922234+00:00",
+  "updated_at": "2026-10-25T13:47:18.576790+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

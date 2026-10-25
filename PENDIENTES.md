@@ -76,7 +76,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | trickmaster-muro-continuidad | Trickmaster arena: continuidad del muro superior en dos nubes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/121 | — | 2026-10-25T13:29:43.872173+00:00 |
 | escena-099-muro-superior | Escena099: muro de Trickmaster hacia arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/122 | — | 2026-10-25T13:33:53.127680+00:00 |
 | escena-004-muro-derecho | Escena004: completar muro derecho y revisar escena de Leon equivalente | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/123 | — | 2026-10-25T13:39:49.213521+00:00 |
-| sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | en_curso | codex-sintesis | — | Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija | 2026-10-25T13:38:05.200080+00:00 |
+| sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | en_curso | codex-sintesis | codex/sintesis-requisito-hd | Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija | 2026-10-25T13:47:18.576790+00:00 |
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | en_curso | codex-atlas | codex/naipes-selector-oclusion | — | 2026-10-25T13:45:44.922234+00:00 |
 
 Integrador: libre
