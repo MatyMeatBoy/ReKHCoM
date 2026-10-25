@@ -2562,19 +2562,20 @@
     "atlas-remates-118-r20261025": {
       "id": "atlas-remates-118-r20261025",
       "piece": "Escena 118 comentarios posteriores",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-remates",
       "created_at": "2026-10-25T16:07:32.202891+00:00",
-      "updated_at": "2026-10-25T16:07:32.202891+00:00",
+      "updated_at": "2026-10-25T16:07:40.240022+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "familia 3aede4dd4bd2445bb06d1743baf06529; envio 20261025-025132-cc777b; parent 09dcd37573df49b88edbd71f79e06b82",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-25T16:07:40.240022+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:07:32.202891+00:00",
+  "updated_at": "2026-10-25T16:07:40.240022+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
