@@ -339,3 +339,13 @@ La propuesta se ve con KHCOM_PRELIMINAR_V1=1 y espera valoración propia; no her
   escalones en el muro, hueco marrón en 120) quedan en la cola de arte; nada de esto llega a jugadores sin aprobación.
 - Comprobar que `port_preliminar_v1_data.inc` lleva `ready=1` en la escena: con `ready=0` la receta no se aplica ni
   con `KHCOM_PRELIMINAR_V1` y la captura sale sin extensión.
+
+### Oogie — dibujar figuras, no reflejar (feedback 25/10)
+Padre `aa913fe773c4446eb5412c3115e222c7`, nubes
+`63ebc9c6-8491-46b9-8a60-36d33c92eb8f` y `e08c24c4-0eb3-4ea7-8e50-a9e9f3fd53ee`:
+completar cada fantasma con contorno propio en índices nativos, sin copiar ni
+reflejar su mitad. La bajada prolonga verde liso a ambos lados, se estrecha en
+perspectiva y oscurece hacia el abismo; no arrastra figuras al muro. La hija
+`e90c2d6d475447458a05db85276db6bb` responde ambas nubes y los 17 trazos.
+Propuesta offline editable en `port/art/proposals/oogie-no-mirror/`, sin activar
+ni cambiar valoraciones. Falta captura runtime cuando se asigne turno RAM.

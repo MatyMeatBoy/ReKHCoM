@@ -1,0 +1,109 @@
+{
+  "response_to": [
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "63ebc9c6-8491-46b9-8a60-36d33c92eb8f"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "e08c24c4-0eb3-4ea7-8e50-a9e9f3fd53ee"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "05c0ab82-4758-4900-af75-a180b3326e2e"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "01c049d2-591c-4f4b-83bc-4da7e0a37fb5"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "2a289555-a414-4c48-b405-547c51a814e2"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "22e4dca3-0380-4c5a-b491-c03d17a9f66f"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "2534945d-ade5-449f-b879-ad54f06c0f73"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "c4547d7e-8e1f-4548-936d-fb7a612b8729"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "6a5d9205-d387-42bf-9dd8-a074ebdcd598"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "bb79842f-3bd3-4f9c-8b2a-7ad9bfed5d7d"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "9aa8bd43-cb60-4d42-97a7-753e7129fc2b"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "f5b986e9-c553-4b82-85d2-e6ca75cb8b43"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "7db4cb7f-14a8-4803-baa1-5676882cee0e"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "6a61ad2f-d030-4101-9f0f-a2801304ff01"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "cdc8123c-06f2-49a1-a80c-fddf23016a3c"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "b50de918-2629-44aa-a451-f5bb5e08fb7a"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "b5aac630-5500-4da3-ab4e-1a8f4bbbb082"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "3a7f98ca-cd7b-474e-8e87-9f68fa2d97bf"
+    },
+    {
+      "submission": "20261025-052021-8546de",
+      "image_id": "aa913fe773c4446eb5412c3115e222c7",
+      "cloud_id": "ac2b40c8-c1d4-488f-bc17-f231333ac0a2"
+    }
+  ],
+  "change": "Dos contornos dibujados por separado en rejilla nativa; alfombra verde lisa en caída hacia sombra, sin espejo ni repetir figuras.",
+  "technique": "Parches de índices ROM dibujados por polígonos rasterizados a resolución nativa; archivo C editable por píxel.",
+  "checks": [
+    "Antes decodificado del ROM EU; dos parches distintos; cero escritura ROM; sin compilación ni juego"
+  ],
+  "limitations": [
+    "Propuesta offline; la comparación ilustra contornos y alfombra, no sustituye captura runtime completa.",
+    "Pendiente revisión humana; no se cambia arte activo ni valoraciones."
+  ],
+  "subsequent_human_verdict": null
+}
