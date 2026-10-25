@@ -2437,16 +2437,23 @@
     "darkside-arena-feedback-revision": {
       "id": "darkside-arena-feedback-revision",
       "piece": "Darkside arena sprite faltante",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-jefes",
       "created_at": "2026-10-25T16:04:49.067560+00:00",
-      "updated_at": "2026-10-25T16:04:54.289889+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-25T16:06:00.579096+00:00",
+      "branch": "codex/atlas-jefes-darkside-arena",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/129",
       "approval": null,
       "reference": "20261025-052135-22f4ed / 9e9bb909-75e3-44fb-93f8-3ffe8048778d",
-      "evidence": [],
-      "claimed_at": "2026-10-25T16:04:54.289889+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-25T16:06:00.579096+00:00",
+          "owner": "codex-atlas-jefes",
+          "detail": "Propuesta offline subida; captura runtime pendiente RAM"
+        }
+      ],
+      "claimed_at": "2026-10-25T16:04:54.289889+00:00",
+      "sent": "e7b206c9222745718ea910321d12498e"
     },
     "atlas-remates-102-r20261025": {
       "id": "atlas-remates-102-r20261025",
@@ -2478,7 +2485,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:05:33.163374+00:00",
+  "updated_at": "2026-10-25T16:06:00.579096+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
