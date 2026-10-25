@@ -702,9 +702,17 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
                     /* Above the purple corner, sample the same wall plane. */
                     if (wx>=48 && wx<112) *sy=0;
                 } else {
-                    *sx=192+PortSceneTileMod(wx-192,192);
-                    *sy=PortSceneTileMod(wy,64);
+                    /* The large cracked swatch starts below its authored
+                     * ledge. Above it use the intact quiet sand on the left,
+                     * not repeated fragments of the bottom-born pattern. */
+                    *sx=48+PortSceneTileMod(wx-48,32);
+                    *sy=80+PortSceneTileMod(wy-80,64);
                 }
+            } else if (wy<112) {
+                /* Atlas cloud 2 is the height reference, not a second flaw:
+                 * retain the cracked donor below this level only. */
+                *sx=48+PortSceneTileMod(wx-48,32);
+                *sy=80+PortSceneTileMod(wy-80,64);
             } else {
                 *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
                 *sy=wy;

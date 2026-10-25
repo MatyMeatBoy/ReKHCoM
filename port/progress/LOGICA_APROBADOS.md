@@ -380,3 +380,13 @@ Envío `20261025-024931-482bfa`, parent `dd5a82c201a84ca29180026bc7cf064a`: comp
 ## Escena 112: tono del borde de puerta (25/10)
 
 Envío `20261025-055648-89a69d`, nube `3f023a06-bf3b-43b0-ba89-6b6b384ad19d`: el borde exterior incluye las columnas 440..447 además del marco 448..455. Extender ambas con su color original de la fila 80; el panel naranja no debe tapar la franja oscura del borde. Conservar la puerta alta única y el resto del escenario. Propuesta pendiente de captura y valoración.
+
+## Propuesta Atlas 25/10: escena 110, revisión 179b6da22e5c4bd39181d5ab14d7b9d3
+
+La nube `2dbc6cea-1916-4062-8808-bb91b59df8d3` pide cambiar el donante
+superior; `32b2d5bd-3e97-42fd-a865-188cfdef7324` indica la altura de corte.
+El motivo agrietado nace abajo: en la prolongación derecha se conserva desde
+y=112; arriba se usa la arena entera de x=48..79, y=80..143 de la izquierda.
+La prolongación sobre el mapa usa esa misma arena, sin repetir las grietas
+recortadas. Los fustes BG2, giros y puestos originales conservan su receta.
+Pendiente de captura y prueba serial autorizada; la hija no hereda aprobación.
