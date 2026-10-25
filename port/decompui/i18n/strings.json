@@ -76,6 +76,10 @@
   "es": "LOGROS · KINGDOM HEARTS: CHAIN OF MEMORIES"
  },
  {
+  "en": "ACHIEVEMENTS · REBEL MODE",
+  "es": "LOGROS · MODO REBELDE"
+ },
+ {
   "en": "ALREADY LOADED",
   "es": "DATOS YA CARGADOS"
  },
@@ -1056,6 +1060,10 @@
   "es": "Modo Re:CoM"
  },
  {
+  "en": "Rebel mode",
+  "es": "Modo rebelde"
+ },
+ {
   "en": "Redrawn HD enemy HP frame. Pilot for wide views; other elements keep their original graphics.",
   "es": "Marco de vida del enemigo redibujado en HD. Piloto para vista panoramica; los demas elementos conservan sus graficos originales."
  },
@@ -1342,6 +1350,10 @@
  {
   "en": "The link battle (Title > Link battle) over the internet instead of the cable. Steam: both with Steam open; one opens a room and the other joins (a Steam friend's room first). IP: the host opens the UDP port on the router; the other types the host's IP. Relay: both type the same server and room code (Android too).",
   "es": "La batalla de enlace (Título > Batalla de enlace) por internet en vez del cable. Steam: los dos con Steam abierto; uno crea la sala y el otro se une (prefiere la sala de un amigo de Steam). IP: quien aloja abre el puerto UDP en su router; el otro escribe su IP. Relay: los dos escriben el mismo servidor y el mismo código de sala (también con Android)."
+ },
+ {
+  "en": "The official achievements earned with cheats on. They stay on this computer, in their own list, and are never sent to RetroAchievements.",
+  "es": "Los logros oficiales conseguidos con trucos. Quedan en este equipo, en su propia lista, y nunca se envían a RetroAchievements."
  },
  {
   "en": "The original Japanese voices with your version's text. Needs the Japanese ROM.",

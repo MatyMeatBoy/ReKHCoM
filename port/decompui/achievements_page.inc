@@ -260,14 +260,66 @@ static void PageRecomAchievements() {
     ImGui::EndChild();
 }
 
-/* Official / Re:CoM: two lists as tabs, drawn like Settings' (the launcher's buttons with the game's square) */
-static int sAchievementList = -1; /* 0 official, 1 Re:CoM; -1 not chosen yet */
+/* Rebel mode (the game's port_achievements.c): the official set as earned with cheats on, kept on this computer
+   only; its tab shows once the game has written its list (user 25/10). */
+static KhOfflineState sRebelProgress;
+static bool RebelListExists() {
+    std::error_code ec;
+    return fs::exists(sRoot / "achievements_rebel_eu.dat", ec);
+}
+static void PageRebelAchievements() {
+    static Uint64 readAt;
+    static bool read;
+    if (!read || SDL_GetTicks() - readAt > 1000) { /* the game may be writing it */
+        KhOfflineLoad(&sRebelProgress, (sRoot / "achievements_rebel_eu.dat").u8string().c_str());
+        read = true; readAt = SDL_GetTicks();
+    }
+    BeginCard("rebel-catalog");
+    Eyebrow(T("LOGROS · MODO REBELDE", "ACHIEVEMENTS · REBEL MODE"));
+    ImGui::PushFont(sFontSmall);
+    ImGui::TextWrapped("%s", T("Los logros oficiales conseguidos con trucos. Quedan en este equipo, en su propia lista, y nunca se envían a"
+        " RetroAchievements.", "The official achievements earned with cheats on. They stay on this computer, in their own list, and are"
+        " never sent to RetroAchievements."));
+    ImGui::PopFont();
+    unsigned earned = 0;
+    for (int i = 0; i < KhOfficialCount(); ++i) earned += sRebelProgress.when[i] != 0;
+    char progress[80];
+    std::snprintf(progress, sizeof(progress), "%u / %d", earned, KhOfficialCount());
+    ImGui::Spacing();
+    ImGui::ProgressBar((float)earned / KhOfficialCount(), ImVec2(-1, Px(24)), progress);
+    ImGui::Spacing();
+    AchievementFilters();
+    bool table = ImGui::BeginTable("rebel-achievement-grid", ImGui::GetContentRegionAvail().x >= Px(850) ? 2 : 1,
+        ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_PadOuterX);
+    int shown = 0;
+    for (int i = 0; i < KhOfficialCount(); ++i) {
+        const KhOfficialAchievement* a = KhOfficialAt(i);
+        bool unlocked = sRebelProgress.when[i] != 0;
+        const char* title = KhOfficialText(a, sSpanish ? 4 : 0, 0);
+        const char* description = KhOfficialText(a, sSpanish ? 4 : 0, 1);
+        if (!AchievementMatches(title, description, unlocked)) continue;
+        ImVec2 uv0, uv1;
+        GLuint badge = OfficialAchievementBadge(i, unlocked, &uv0, &uv1);
+        if (table) ImGui::TableNextColumn();
+        AchievementRow((int)a->id, title, description, unlocked, unlocked ? T("Conseguido", "Unlocked") : T("No conseguido", "Locked"),
+                       badge, uv0, uv1);
+        ++shown;
+    }
+    if (table) ImGui::EndTable();
+    if (!shown) ImGui::TextDisabled("%s", T("No hay logros con ese filtro.", "No achievements match this filter."));
+    ImGui::EndChild();
+}
+
+/* Official / Re:CoM (/ Rebel mode): the lists as tabs, drawn like Settings' (the launcher's buttons with the game's square) */
+static int sAchievementList = -1; /* 0 official, 1 Re:CoM, 2 Rebel mode; -1 not chosen yet */
 static void AchievementListTabs() {
-    const char* names[2] = { T("Oficiales", "Official"), T("Re:CoM", "Re:CoM") };
+    const char* names[3] = { T("Oficiales", "Official"), T("Re:CoM", "Re:CoM"), T("Modo rebelde", "Rebel mode") };
     ImDrawList* dl = ImGui::GetWindowDrawList();
+    int tabs = RebelListExists() ? 3 : 2;
     if (sAchievementList < 0)
-        sAchievementList = SDL_getenv("DECOMPUI_ACHIEVEMENT_LIST") ? SDL_atoi(SDL_getenv("DECOMPUI_ACHIEVEMENT_LIST")) != 0 : 0;
-    for (int i = 0; i < 2; i++) {
+        sAchievementList = SDL_getenv("DECOMPUI_ACHIEVEMENT_LIST") ? SDL_atoi(SDL_getenv("DECOMPUI_ACHIEVEMENT_LIST")) : 0;
+    if (sAchievementList >= tabs) sAchievementList = 0;
+    for (int i = 0; i < tabs; i++) {
         bool active = sAchievementList == i;
         if (i) ImGui::SameLine(0, Px(6));
         ImGui::PushStyleColor(ImGuiCol_Button, active ? kPanelHover : kControl);
@@ -341,6 +393,7 @@ static void PageAchievements() {
         ImGui::Spacing();
     }
     AchievementListTabs();
-    if (sAchievementList == 1) PageRecomAchievements();
+    if (sAchievementList == 2) PageRebelAchievements();
+    else if (sAchievementList == 1) PageRecomAchievements();
     else PageOfficialAchievements();
 }
