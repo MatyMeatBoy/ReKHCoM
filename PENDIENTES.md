@@ -96,7 +96,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/151 | approved exact c6f2bb42ff5143bf98ee674f64065f71 | 2026-10-25T19:49:41.960504+00:00 |
 | escena099-wallfinish | Escena099: patron lateral completo como la arena | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/152 | approved exact f092a251c3e44a56b1b4727eb3183855 | 2026-10-25T19:50:44.090680+00:00 |
 | atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/154 | — | 2026-10-25T19:57:51.967959+00:00 |
-| malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_revision | codex-atlas | codex/malefica-native-three-cuts | — | 2026-10-25T20:22:12.270237+00:00 |
+| malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_curso | codex-atlas | codex/malefica-approved-runtime | approved exact42f2b038,608f0f55,71dbfe50 | 2026-10-25T20:56:23.591049+00:00 |
 | atlas-menus-current-review | Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera | en_revision | codex-atlas | codex/atlas-pepito-nested-current | — | 2026-10-25T20:52:54.565875+00:00 |
 | pre19-clean | Pre19 ZIP limpio personal desde aprobados integrados | en_curso | codex-atlas | — | — | 2026-10-25T20:49:08.524295+00:00 |
 
