@@ -426,9 +426,9 @@
       "id": "escena-074",
       "piece": "Escena 074 · integrada",
       "status": "en_curso",
-      "owner": "codex-escena-074",
+      "owner": "codex-atlas-patrones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:15:06.951477+00:00",
+      "updated_at": "2026-10-25T16:01:26.434190+00:00",
       "branch": "codex/escena-061-comentarios",
       "pr": null,
       "approval": null,
@@ -458,6 +458,11 @@
           "at": "2026-10-24T22:15:06.951477+00:00",
           "owner": "codex-escena-074",
           "detail": "Recuperada con autorización del usuario; working tree origin/main en khcom-061"
+        },
+        {
+          "at": "2026-10-25T16:01:26.434190+00:00",
+          "owner": "codex-atlas",
+          "detail": "Relevo expreso del usuario en este chat: terminar todo Atlas rapido con la logica nueva. Reserva anterior revisada: su rama codex/escena-061-comentarios no esta checked out en ningun worktree registrado; consulta de procesos no encuentra el carril. Sesion de trabajo de esa rama detenida, WIP ajeno conservado. Se retoma la misma tarea, sin usar antiguedad como criterio."
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00"
@@ -2356,7 +2361,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T15:54:40.819797+00:00",
+  "updated_at": "2026-10-25T16:01:26.434190+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -2637,6 +2642,16 @@
       "to_owner": null,
       "expected_commit": "41253dc2d9b74b006b05667269f10fb5bedee3f8",
       "evidence": "Usuario pide integrar y pushear en este chat. Main y PR111/114 revisados; checkout khcom-jafar del integrador anterior limpio, sin procesos activos que lo usen. Relevo explicito para ejecutar el encargo, sin basarse en antiguedad."
+    },
+    {
+      "at": "2026-10-25T16:01:26.434190+00:00",
+      "actor": "codex-atlas",
+      "operation": "recover-task",
+      "task": "escena-074",
+      "from_owner": "codex-escena-074",
+      "to_owner": "codex-atlas-patrones",
+      "expected_commit": "5c8c5cb005a2f9cad7000e53c290bfecd110b6a6",
+      "evidence": "Relevo expreso del usuario en este chat: terminar todo Atlas rapido con la logica nueva. Reserva anterior revisada: su rama codex/escena-061-comentarios no esta checked out en ningun worktree registrado; consulta de procesos no encuentra el carril. Sesion de trabajo de esa rama detenida, WIP ajeno conservado. Se retoma la misma tarea, sin usar antiguedad como criterio."
     }
   ]
 }
