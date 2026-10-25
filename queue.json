@@ -1935,14 +1935,20 @@
       "id": "issue83-jafar-recogida",
       "piece": "Jafar Android #83: reproducir recogida de carta y corregir crash",
       "status": "en_curso",
-      "owner": "codex-jafar83",
+      "owner": "claude-integrador",
       "created_at": "2026-10-25T05:44:39.164448+00:00",
-      "updated_at": "2026-10-25T05:44:44.944777+00:00",
+      "updated_at": "2026-10-25T08:43:48.296253+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Issue83 Samsung Tab S6 Lite Android13; no stack disponible",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-25T08:43:48.296253+00:00",
+          "owner": "claude-integrador",
+          "detail": "el usuario lo asignó a Claude 25/10 tarde; sin avances desde 05:44"
+        }
+      ],
       "claimed_at": "2026-10-25T05:44:44.944777+00:00"
     },
     "transiciones-cargas": {
@@ -2115,7 +2121,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:30:07.518559+00:00",
+  "updated_at": "2026-10-25T08:43:48.296253+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -2376,6 +2382,16 @@
       "to_owner": "claude-integrador",
       "expected_commit": "4d86c4cf23527c2c0575cb802a21645e5c230729",
       "evidence": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
+    },
+    {
+      "at": "2026-10-25T08:43:48.296253+00:00",
+      "actor": "claude-integrador",
+      "operation": "recover-task",
+      "task": "issue83-jafar-recogida",
+      "from_owner": "codex-jafar83",
+      "to_owner": "claude-integrador",
+      "expected_commit": "2409698f7aff2759f7982ee7f943b58d41bc6a78",
+      "evidence": "el usuario lo asignó a Claude 25/10 tarde; sin avances desde 05:44"
     }
   ]
 }
