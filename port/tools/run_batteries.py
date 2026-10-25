@@ -87,6 +87,12 @@ def say(text):
         f.write(time.strftime('%d/%m %H:%M:%S ') + text + '\n')
 
 
+def running_pid(pid):
+    """Whether a process with this id is alive (Windows: tasklist)."""
+    r = subprocess.run(['tasklist', '/FI', f'PID eq {pid}', '/NH'], capture_output=True, text=True)
+    return str(pid) in r.stdout
+
+
 def emulator():
     """The Android 14 emulator (Pixel6_API34), started if it is not running, ready when it says boot completed."""
     def booted():
@@ -131,6 +137,17 @@ def main():
               f"'pid ' + $r.ProcessId + ' result ' + $r.ReturnValue")
         print(subprocess.run(['powershell', '-NoProfile', '-Command', ps], capture_output=True, text=True).stdout.strip())
         return
+    # One run at a time: two of them wrote the same suite logs at once (25/10: interleaved, unreadable results)
+    lock = LOG.with_suffix('.lock')
+    if lock.exists():
+        try:
+            other = int(lock.read_text().strip())
+        except ValueError:
+            other = 0
+        if other and other != os.getpid() and running_pid(other):
+            print(f'batteries already running (pid {other}); --status shows how far they got')
+            return
+    lock.write_text(str(os.getpid()))
     say('start')
     for name, cmd in STEPS:
         if cmd is None:
@@ -141,10 +158,13 @@ def main():
             continue
         say(f'{name}: running')
         with open(ROOT / 'build' / ('battery-' + re.sub(r'[^a-z0-9]+', '_', name) + '.log'),
-                  'a', encoding='utf-8') as out:
+                  'w', encoding='utf-8') as out:  # this run only (appending mixed old runs into the results)
             code = subprocess.run(cmd, cwd=ROOT, stdout=out, stderr=subprocess.STDOUT,
                                   creationflags=0x08000000).returncode
         say(f'{name}: exit {code}')
+    # the emulator takes 3 GB and the CPU: closed as soon as the batteries end (the user plays meanwhile)
+    subprocess.run([str(ADB), '-s', 'emulator-5554', 'emu', 'kill'], capture_output=True)
+    lock.unlink(missing_ok=True)
     say('BATTERIES-DONE')
 
 

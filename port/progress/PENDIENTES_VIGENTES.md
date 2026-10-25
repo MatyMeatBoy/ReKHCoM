@@ -134,6 +134,14 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
   pestañas nuevas de Logros, solo si hay un save en modo rebelde. Con A sobre el modo: opción de desactivarlo y volver al
   modo normal, con la lista de lo que se apagará (los trucos y funciones que lo activaron). Depurar todo con el harness
   (`KHCOM_OPTIONS_SHOT` del menú de Trucos, partida con y sin la marca).
+- **Modo de logros en Opciones generales (usuario 25/10):** debajo de Logros, un indicador: **modo normal** (el que
+  sincroniza con RetroAchievements) o **modo Re:CoM**. En modo Re:CoM, A ofrece pasar a modo normal y muestra qué
+  funciones se apagarán. Solo desde el menú principal o en partidas donde se activó el modo Re:CoM y se puede revertir:
+  evaluar los casos (partida que ya usó una mejora Re:CoM que cambia el juego: no se revierte; solo ajustes sin rastro
+  en la partida: sí). Cada vez que una opción vaya a cambiar el modo de logros, un cartel de aviso con la explicación
+  (qué se sincroniza con RetroAchievements y qué no). El modo normal es el superior y el más difícil; igual se permiten
+  mods gráficos y lo demás que no cambia el juego. Interno: lo que el port cambia por la vista ancha no toca los logros
+  y no se menciona en textos públicos.
 - **Baterías 25/10 (de la corrida de las 15:22):** Android US: batallas 123/124 de Agrabah y 4 menús US (status,
   worldselect, Deck, jiminy) con timeout (casos en khcom-claude-int/build/android-scenarios/cases/us-*). Regla: un
   timeout es un bug; reproducir solos (`test_android_scenarios.py --only`), arreglar y buscar parientes. El build de
