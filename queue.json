@@ -1245,10 +1245,10 @@
     "editor-tiles-backend": {
       "id": "editor-tiles-backend",
       "piece": "Editor avanzado: catalogo nativo tiles sprites y proyectos",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "claude-integrador",
       "created_at": "2026-10-24T16:34:21.232737+00:00",
-      "updated_at": "2026-10-25T07:21:23.228697+00:00",
+      "updated_at": "2026-10-25T07:21:28.813748+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c",
       "approval": "pedido-usuario-20261024",
@@ -1266,6 +1266,11 @@
         },
         {
           "at": "2026-10-25T07:21:23.228697+00:00",
+          "owner": "claude-integrador",
+          "detail": "editor de tiles en main (226bd523c)"
+        },
+        {
+          "at": "2026-10-25T07:21:28.813748+00:00",
           "owner": "claude-integrador",
           "detail": "editor de tiles en main (226bd523c)"
         }
@@ -1862,7 +1867,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:21:23.228697+00:00",
+  "updated_at": "2026-10-25T07:21:28.813748+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
