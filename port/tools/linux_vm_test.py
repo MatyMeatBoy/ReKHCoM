@@ -22,8 +22,6 @@ from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 QEMU = (WORK_DIR / 'toolchain/qemu/runtime')
 IMAGES = {
     'x86_64': (WORK_DIR / 'linux/vm/debian-12-nocloud-amd64.qcow2'),
-    # newer C library and Mesa than the Linux bundle (Debian 12), like SteamOS: the system-library launch (#140)
-    'x86_64-trixie': (WORK_DIR / 'linux/vm/debian-13-nocloud-amd64.qcow2'),
     'aarch64': (WORK_DIR / 'linux/vm/debian-12-nocloud-arm64.qcow2'),
 }
 
@@ -129,7 +127,7 @@ def main():
     with open(outbox, 'wb') as fh:
         fh.truncate(1 << 30)
     outdrive = ['-drive', 'file=' + str(outbox).replace(chr(92), '/') + ',format=raw,if=virtio']
-    if args.machine.startswith('x86_64'):
+    if args.machine == 'x86_64':
         cmd = [str(QEMU / 'qemu-system-x86_64.exe'), '-m', args.mem, '-smp', args.cpus, '-accel', args.accel,
                '-accel', 'tcg', '-drive', system,
                '-drive', f'file={share},format=raw,if=virtio,readonly=on', *outdrive, '-nographic', *nic]
@@ -143,11 +141,7 @@ def main():
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     con = Console(proc)
     try:
-        # Debian 13's image asks its first-boot questions (keymap, time zone, root password): Enter skips each one
-        for _ in range(20):
-            if con.expect(r'login: |Press any key to proceed|to skip|\[[^\]]*\]: ?$', 900).endswith('login: '):
-                break
-            con.send('\n')
+        con.expect(r'login: ', 900)
         con.send('root\n')
         con.expect(r'# ', 120)
         con.send('stty -echo cols 250; export PS1="# "\n')
