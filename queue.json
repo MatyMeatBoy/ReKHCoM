@@ -2320,10 +2320,10 @@
     "sintesis-requisito-hd": {
       "id": "sintesis-requisito-hd",
       "piece": "Síntesis: requisito HD dinámico runtime",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-sintesis",
       "created_at": "2026-10-25T13:37:36.238311+00:00",
-      "updated_at": "2026-10-25T15:54:40.819797+00:00",
+      "updated_at": "2026-10-25T16:08:07.022650+00:00",
       "branch": "codex/sintesis-requisito-hd",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/125",
       "approval": "Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija",
@@ -2348,6 +2348,11 @@
           "at": "2026-10-25T15:54:40.819797+00:00",
           "owner": "codex-sintesis",
           "detail": "PR125 abierto; rama pusheada, HEAD0a608a6b0f60dbf2dfbdca8bf7766d546a44d6ca tras rebase limpio sobre origin/main. Atlas principalb77d47de367749538ebe7469598d3926 y variantesc08283ad450f4455937a3f1e1ead3302 antes delPR. Incluye validación ejecutada 2000combos,20init,pagoTOTAL10->9,capturaHDoff4framesidénticos y variantesruntime; límites documentados. Sin más pruebas ni iteraciones tras instrucción de cierre."
+        },
+        {
+          "at": "2026-10-25T16:08:07.022650+00:00",
+          "owner": "codex-sintesis",
+          "detail": "Síntesis fix lista para captura: revisión20261025-125559-473c1c parentc08283ad450f4455937a3f1e1ead3302. Dos nubes a849c7d8 y23d13c7a: grupo tinta contenido, staging con10digitos locales gCardValueDigitTiles, banda neutral y centro transparente. Sólo generación assets; sin tests, compilación ni juego; esperando turno serial. Assets privados preparados build/synthesis-fix-assets; lógica dinámica/2000casos/TOTAL sin cambios. Sin push ni actualizar PR125 antes de hija real nueva. Respuestas2nubes preparadas en evidence generator; no feedback marcado respondido."
         }
       ],
       "claimed_at": "2026-10-25T13:38:05.200080+00:00",
@@ -2589,7 +2594,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:07:55.659622+00:00",
+  "updated_at": "2026-10-25T16:08:07.022650+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
