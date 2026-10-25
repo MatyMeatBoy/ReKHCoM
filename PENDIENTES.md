@@ -102,5 +102,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | arena-agrabah-frente | Arena de Agrabah: quitar los barriles del frente de la extension y seguir las grietas de arena hasta abajo en perspectiva, pixel art preciso; antes comparar con la arena GBA original de lejos (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:08.186746+00:00 |
 | submenu-tienda-moguri | Tienda moguri: receta de submenus en vista ancha (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:12.770475+00:00 |
 | submenu-cambiar-naipes | Cambiar naipes: receta de submenus + numeracion del mazo con el texto HD mejorado (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:17.758614+00:00 |
+| submenu-anadir-naipes-esquina | Anadir naipes: esquina superior derecha, la pestana del circulo cortada (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:22.457422+00:00 |
 
 Integrador: libre

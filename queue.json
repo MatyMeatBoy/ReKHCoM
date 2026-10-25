@@ -2907,10 +2907,23 @@
       "approval": null,
       "reference": null,
       "evidence": []
+    },
+    "submenu-anadir-naipes-esquina": {
+      "id": "submenu-anadir-naipes-esquina",
+      "piece": "Anadir naipes: esquina superior derecha, la pestana del circulo cortada (usuario 25/10)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T23:15:22.457422+00:00",
+      "updated_at": "2026-10-25T23:15:22.457422+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T23:15:17.758614+00:00",
+  "updated_at": "2026-10-25T23:15:22.457422+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
