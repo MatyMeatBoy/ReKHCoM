@@ -438,7 +438,7 @@
       "status": "en_curso",
       "owner": "codex-atlas-patrones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T16:03:46.495508+00:00",
+      "updated_at": "2026-10-25T16:05:22.999511+00:00",
       "branch": "codex/atlas-074-patrones",
       "pr": null,
       "approval": null,
@@ -478,6 +478,11 @@
           "at": "2026-10-25T16:03:46.495508+00:00",
           "owner": "codex-atlas-patrones",
           "detail": "Worktree propio desde origin/main; buildEU y ROM copiados, sin compilar ni ejecutar hasta turno serial."
+        },
+        {
+          "at": "2026-10-25T16:05:22.999511+00:00",
+          "owner": "codex-atlas-patrones",
+          "detail": "074 lista para prueba serial. Worktree C:/Users/MP/Documents/00 Claude/KHCoMPC/khcom-atlas-patrones-074; commit c58ebe430; offline 19 coincidencias originales, 480 tiles modulo, 3072 coordenadas nativas; sin compilar/ejecutar. Captura y subida hija antes de PR pendientes del turno."
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00"
@@ -2459,7 +2464,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:05:16.065210+00:00",
+  "updated_at": "2026-10-25T16:05:22.999511+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
