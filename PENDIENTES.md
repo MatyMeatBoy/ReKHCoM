@@ -82,7 +82,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
 | agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | en_revision | codex-atlas | codex/atlas-escenas-107-108 | — | 2026-10-25T19:17:08.799218+00:00 |
 | darkside-arena-feedback-revision | Darkside arena sprite faltante | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/129 | — | 2026-10-25T16:06:00.579096+00:00 |
-| atlas-remates-102-r20261025 | Escena 102 remates posteriores | en_revision | codex-atlas | — | — | 2026-10-25T19:16:48.569661+00:00 |
+| atlas-remates-102-r20261025 | Escena 102 remates posteriores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/150 | Atlas3bbd4c0046224adaa320c05dae1b2a4e con honores | 2026-10-25T19:21:43.191392+00:00 |
 | escena-110-179b6da22e5c4bd39181d5ab14d7b9d3 | Escena 110 revision Atlas 179b6da22e5c4bd39181d5ab14d7b9d3 | en_revision | codex-atlas | codex/atlas-escena-110-179b6da | — | 2026-10-25T19:17:01.660863+00:00 |
 | oogie-arena-feedback-revision | Oogie fantasma sin mirror y alfombra verde abismo | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/130 | — | 2026-10-25T16:08:11.414049+00:00 |
 | atlas-remates-112-r20261025 | Escena 112 comentarios posteriores | en_revision | codex-atlas | — | — | 2026-10-25T19:16:54.885135+00:00 |

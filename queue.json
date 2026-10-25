@@ -2480,13 +2480,13 @@
     "atlas-remates-102-r20261025": {
       "id": "atlas-remates-102-r20261025",
       "piece": "Escena 102 remates posteriores",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T16:05:04.288990+00:00",
-      "updated_at": "2026-10-25T19:16:48.569661+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": null,
+      "updated_at": "2026-10-25T19:21:43.191392+00:00",
+      "branch": "codex/atlas-102-honors",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/150",
+      "approval": "Atlas3bbd4c0046224adaa320c05dae1b2a4e con honores",
       "reference": "familia b5ee78894f994aa684c59f38def14509; envio 20261025-024931-482bfa; build/atlas-all-briefs.json referencia",
       "evidence": [
         {
@@ -2498,6 +2498,11 @@
           "at": "2026-10-25T19:16:48.569661+00:00",
           "owner": "codex-atlas",
           "detail": "Pasada turbo: Tres fustes cortos prolongados en sus columnas y con su propia fase de cinco filas. Capturas en candidato local combinado, sin activar honores ni abrir PR publico pendiente de valoracion."
+        },
+        {
+          "at": "2026-10-25T19:21:43.191392+00:00",
+          "owner": "codex-atlas",
+          "detail": "bf50399eb; candidato compilado y capturas300/600, pasada turbo16capturas6familias. Solo102aislada enPR150."
         }
       ],
       "claimed_at": "2026-10-25T16:05:09.523321+00:00",
@@ -2722,7 +2727,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:17:08.799218+00:00",
+  "updated_at": "2026-10-25T19:21:43.191392+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
