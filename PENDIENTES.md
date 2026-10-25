@@ -97,5 +97,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena099-wallfinish | Escena099: patron lateral completo como la arena | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/152 | approved exact f092a251c3e44a56b1b4727eb3183855 | 2026-10-25T19:50:44.090680+00:00 |
 | atlas-boss-sprite-workflow | Atlas: modo interno escena o sprite y cobertura de animaciones de bosses | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/154 | — | 2026-10-25T19:57:51.967959+00:00 |
 | malefica-recortes-khcom | Malefica: dibujar recortes KHCoM y presentacion montada agrupada | en_revision | codex-atlas | codex/malefica-native-three-cuts | — | 2026-10-25T20:22:12.270237+00:00 |
+| atlas-menus-current-review | Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera | pendiente | — | — | — | 2026-10-25T20:35:22.062254+00:00 |
 
 Integrador: libre
