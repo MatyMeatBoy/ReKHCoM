@@ -2215,9 +2215,8 @@ static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
 
 static void DrawObjs(int gy, uint16_t dispcnt) {
     int i, w = gPortScreen.width;
-    /* Event 097 stages characters just beyond the cartridge's
-       240x160 camera. Keep the extended backgrounds, but let those actors
-       enter and leave through the original frame as authored. */
+    /* Event 097 stages characters just beyond the cartridge's 240x160
+       camera. Keep those actors hidden until their whole sprite enters it. */
     int sceneActorFrame = gPortScreen.wide && sEventBackdropProfile == 97 && !sEnvActorFrameOff;
     int mapping1d = (dispcnt >> 6) & 1;
     int bitmapMode = (dispcnt & 7) >= 3;
@@ -2282,6 +2281,9 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             if (ox >= sRight)
                 ox -= 512;
         }
+        if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud &&
+            (ox < 0 || oy < 0 || ox + bw > GBA_SCREEN_W || oy + bh > GBA_SCREEN_H))
+            continue;
         if (ox >= sRight || ox + bw <= sLeft)
             continue;
 
@@ -2310,9 +2312,6 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             uint32_t off;
 
             if (gx < sLeft || gx >= sRight)
-                continue;
-            if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud &&
-                (gx < 0 || gx >= GBA_SCREEN_W || gy < 0 || gy >= GBA_SCREEN_H))
                 continue;
             if (sOamTag[i].clipX0 < sOamTag[i].clipX1 &&
                 (gx < sOamTag[i].clipX0 || gx >= sOamTag[i].clipX1))
