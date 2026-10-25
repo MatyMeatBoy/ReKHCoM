@@ -386,9 +386,9 @@
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
       "status": "en_curso",
-      "owner": "codex-atlas-patrones",
+      "owner": "codex-atlas",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T16:01:35.246718+00:00",
+      "updated_at": "2026-10-25T20:23:17.300743+00:00",
       "branch": "codex/finish-art-queue",
       "pr": null,
       "approval": null,
@@ -428,6 +428,11 @@
           "at": "2026-10-25T16:01:35.246718+00:00",
           "owner": "codex-atlas",
           "detail": "Relevo expreso del usuario en este chat: terminar todo Atlas rapido con la logica nueva. Reserva anterior revisada: su rama codex/finish-art-queue no esta checked out en ningun worktree registrado; consulta de procesos no encuentra el carril. Sesion de trabajo de esa rama detenida, WIP ajeno conservado. Se retoma la misma tarea, sin usar antiguedad como criterio."
+        },
+        {
+          "at": "2026-10-25T20:23:17.300743+00:00",
+          "owner": "codex-atlas",
+          "detail": "Continuacion en este mismo chat del carril delegado ya cerrado; usuario exige cola completa sinworkers. Checkout061 revisado: solofixturePSsinpatch; se conserva. Noesrecuperacionporantiguedad."
         }
       ],
       "claimed_at": "2026-10-25T04:21:34.782875+00:00"
@@ -2803,7 +2808,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T20:22:12.270237+00:00",
+  "updated_at": "2026-10-25T20:23:17.300743+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -3154,6 +3159,16 @@
       "to_owner": "codex-atlas",
       "expected_commit": "642ba1248ed6d4d8e01394f4209a39f05a476296",
       "evidence": "Usuario pide soloAtlas hasta terminar. Subagente de este mismo chat termino por limite de uso y fue cerrado explicitamente; se conserva su commit y worktree limpio. El coordinador retoma validacion de la misma pieza, sin borrar WIP ni usar antiguedad."
+    },
+    {
+      "at": "2026-10-25T20:23:17.300743+00:00",
+      "actor": "codex-atlas",
+      "operation": "recover-task",
+      "task": "escena-061",
+      "from_owner": "codex-atlas-patrones",
+      "to_owner": "codex-atlas",
+      "expected_commit": "993df592c4bdc275e9eb92449341c1516c79c5ac",
+      "evidence": "Continuacion en este mismo chat del carril delegado ya cerrado; usuario exige cola completa sinworkers. Checkout061 revisado: solofixturePSsinpatch; se conserva. Noesrecuperacionporantiguedad."
     }
   ]
 }
