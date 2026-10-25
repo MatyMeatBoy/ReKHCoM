@@ -2868,10 +2868,23 @@
       "reference": "Pedido humano deestechat25/10",
       "evidence": [],
       "claimed_at": "2026-10-25T20:49:08.524295+00:00"
+    },
+    "arena-agrabah-frente": {
+      "id": "arena-agrabah-frente",
+      "piece": "Arena de Agrabah: quitar los barriles del frente de la extension y seguir las grietas de arena hasta abajo en perspectiva, pixel art preciso; antes comparar con la arena GBA original de lejos (usuario 25/10)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T23:15:08.186746+00:00",
+      "updated_at": "2026-10-25T23:15:08.186746+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T20:56:23.591049+00:00",
+  "updated_at": "2026-10-25T23:15:08.186746+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
