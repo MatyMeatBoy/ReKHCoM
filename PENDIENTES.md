@@ -65,4 +65,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | pr_abierto | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | — | 2026-10-25T05:42:40.659780+00:00 |
 | issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | en_curso | codex-jafar83 | — | — | 2026-10-25T05:44:44.944777+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-25T05:51:10.061935+00:00)
+Integrador: codex-integrador (ocupado; 2026-10-25T05:54:32.144206+00:00)
