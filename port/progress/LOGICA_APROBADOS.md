@@ -372,3 +372,7 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Escena099: módulo lateral de la arena (25/10)
 
 Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.
+
+## Escena 102: tres pilares cortos, revisión posterior 25/10
+
+Envío `20261025-024931-482bfa`, parent `dd5a82c201a84ca29180026bc7cf064a`: completar también los fustes que empiezan dentro del mapa, en columnas 31..34, 40..43 y 49..52. Cada uno continúa hacia arriba con su propio período de cinco filas y fase de inicio (3, 1 y 6), usando el fuste completo de su misma columna. Una celda vacía dentro del mapa no implica que termine el pilar. Conservar las cuatro prolongaciones anteriores, la curva y el rectángulo GBA. Propuesta sin captura ni valoración todavía.
