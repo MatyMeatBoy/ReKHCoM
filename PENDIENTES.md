@@ -94,6 +94,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
 | escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | pendiente | — | — | — | 2026-10-25T16:08:35.815510+00:00 |
 | trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | en_revision | codex-atlas | — | — | 2026-10-25T19:16:35.583126+00:00 |
-| escena099-wallfinish | Escena099: patron lateral completo como la arena | en_curso | codex-atlas | — | — | 2026-10-25T19:02:43.829842+00:00 |
+| escena099-wallfinish | Escena099: patron lateral completo como la arena | en_revision | codex-atlas | — | — | 2026-10-25T19:16:42.424344+00:00 |
 
 Integrador: libre
