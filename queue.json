@@ -788,12 +788,12 @@
     "escena-116": {
       "id": "escena-116",
       "piece": "Escena 116",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T05:12:52.712615+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-25T05:15:57.709597+00:00",
+      "branch": "codex/arte-116",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/94",
       "approval": null,
       "reference": "{\"family_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"5882ccbacc0b4573b6d815725b93bf4c\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 3, \"cloud_ids\": [\"e0fa5eb6-cd8a-4917-b254-d58ca869243f\", \"3cb85cdf-ecce-4400-aff2-a18a4f49d7a3\", \"18fa5cec-0c77-4e3e-a5be-a2648882ed8d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -811,9 +811,15 @@
           "at": "2026-10-24T20:54:44.400734+00:00",
           "owner": "r4",
           "detail": "released: Patron a la derecha + completar barco por fuera en dos zonas: reconstruccion de objeto grande (barco) fuera del mapa; decision visual mayor."
+        },
+        {
+          "at": "2026-10-25T05:15:57.709597+00:00",
+          "owner": "codex-arte-final",
+          "detail": "475d5872d; tres nubes atendidas mediante propuesta en Atlas. Centro GBA idéntico y check_sources OK; preview pendiente de valoración."
         }
       ],
-      "claimed_at": "2026-10-25T05:12:52.712615+00:00"
+      "claimed_at": "2026-10-25T05:12:52.712615+00:00",
+      "sent": "4767d7d89689440084a12cf7beeab8b9"
     },
     "escena-117": {
       "id": "escena-117",
@@ -1693,7 +1699,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:12:52.712615+00:00",
+  "updated_at": "2026-10-25T05:15:57.709597+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
