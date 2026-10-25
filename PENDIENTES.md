@@ -79,4 +79,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sintesis-requisito-hd | Síntesis: requisito HD dinámico runtime | en_revision | codex-sintesis | codex/sintesis-requisito-hd | Usuario autoriza implementación aislada; sin build/juego/PR hasta prueba serial y captura hija | 2026-10-25T13:48:31.249149+00:00 |
 | anadir-naipes-oclusion-hd | Anadir naipes: oclusion HD por selector en cada frame original | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/124 | — | 2026-10-25T13:48:35.544380+00:00 |
 
-Integrador: codex-atlas-integrador (ocupado; 2026-10-25T13:54:30.693009+00:00)
+Integrador: libre
