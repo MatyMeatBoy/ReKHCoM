@@ -2182,22 +2182,28 @@
     "meta-v20-20261025": {
       "id": "meta-v20-20261025",
       "piece": "Meta v2.0: prioridades, pendientes y bugs actuales",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:24:06.137061+00:00",
-      "updated_at": "2026-10-25T13:25:04.047430+00:00",
+      "updated_at": "2026-10-25T13:51:01.799799+00:00",
       "branch": "codex/atlas-trickmaster-004",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/120",
-      "approval": null,
+      "approval": "Pedido directo del usuario: anotar esta cola y bugs como meta v2.0",
       "reference": "Pedido directo del usuario en este chat 25/10/2026",
       "evidence": [
         {
           "at": "2026-10-25T13:25:04.047430+00:00",
           "owner": "codex-atlas",
           "detail": "Meta documentada; issue83 abierto y fotografia Atlas contrastados, sin alterar aprobaciones."
+        },
+        {
+          "at": "2026-10-25T13:51:01.799799+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real c7309fc8ad1c7693a989c5d82aa1cba834370f52; estado actualizado a main d47dbeab6; propuestas121-124 separadas de aprobaciones."
         }
       ],
-      "claimed_at": "2026-10-25T13:24:11.380529+00:00"
+      "claimed_at": "2026-10-25T13:24:11.380529+00:00",
+      "completed_at": "2026-10-25T13:51:01.799799+00:00"
     },
     "trickmaster-muro-continuidad": {
       "id": "trickmaster-muro-continuidad",
@@ -2320,7 +2326,7 @@
     "created_at": "2026-10-25T13:50:51.867912+00:00",
     "updated_at": "2026-10-25T13:50:51.867912+00:00"
   },
-  "updated_at": "2026-10-25T13:50:51.867912+00:00",
+  "updated_at": "2026-10-25T13:51:01.800305+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
