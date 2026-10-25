@@ -199,6 +199,16 @@ def bundle(arch, base, versions, dest):
     # escaped absolute script, working-directory and icon paths (issue #49).
     for name in ('README.md', 'CHANGELOG.md', 'LICENSE.md'):
         shutil.copyfile(ROOT / name, dest / name)
+    # The native build is an alpha; the Windows one runs through Proton with the GPU (user 25/10).
+    (dest / 'LEEME_LINUX_ALPHA.txt').write_text(
+        'ReKHCoM nativo para Linux / Steam Deck: version ALPHA (dibujo por software, 32 bits).\n'
+        'La version de Windows tambien funciona en Linux y Steam Deck por Proton y usa la GPU:\n'
+        'en Steam, Anadir juego ajeno > ReKHCoM.exe > Propiedades > Compatibilidad > Proton.\n'
+        'Prueba nativa con la GPU: opcion de lanzamiento REKHCOM_GPU=1 %command%\n\n'
+        'Native ReKHCoM for Linux / Steam Deck: ALPHA build (software drawing, 32-bit).\n'
+        'The Windows version also runs on Linux and Steam Deck through Proton and uses the GPU:\n'
+        'in Steam, Add a Non-Steam Game > ReKHCoM.exe > Properties > Compatibility > Proton.\n'
+        'Native GPU test: launch option REKHCOM_GPU=1 %command%\n', encoding='utf-8')
     (dest / 'licenses').mkdir()
     shutil.copyfile(base / 'sdl-src-LICENSE.txt', dest / 'licenses/SDL3-LICENSE.txt')
     (dest / 'licenses/RUNTIME.md').write_text(

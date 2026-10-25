@@ -1578,6 +1578,25 @@ void PortUiInit(void) {
     Uint64 start = SDL_GetPerformanceCounter();
     extern void PortHdPackCheck(void);
     PortHdPackCheck(); /* <data folder>/ReKHCoM-HD.zip, copied as one file: into hd first */
+#ifdef PORT_LINUX
+    {
+        /* once per installation: the native Linux/Steam Deck build is an alpha; the Windows one runs through Proton
+           with the GPU (user 25/10) */
+        extern void PortAchievementToast(const char* title, const char* detail, const char* label, int badgeIndex);
+        const char* mark = PortConfigPath("linux_alpha_notice.txt");
+        FILE* f = fopen(mark, "r");
+        if (f) {
+            fclose(f);
+        } else if ((f = fopen(mark, "w")) != NULL) {
+            fputs("shown\n", f);
+            fclose(f);
+            PortAchievementToast(Lang() == LANG_ES ? "Versión nativa de Linux (alpha)" : "Native Linux build (alpha)",
+                                 Lang() == LANG_ES ? "La versión de Windows también funciona por Proton, con la GPU."
+                                                   : "The Windows version also runs through Proton, with the GPU.",
+                                 "ReKHCoM", -1);
+        }
+    }
+#endif
     /* Asset discovery also validates the optional Japanese cartridge's CRC.
        Do that before the game starts, rather than blocking the first visible
        title frame for a full 32 MB scan (even with undub switched off).
