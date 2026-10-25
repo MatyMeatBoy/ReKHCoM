@@ -827,8 +827,8 @@
       "status": "en_curso",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T05:16:03.669710+00:00",
-      "branch": null,
+      "updated_at": "2026-10-25T05:18:12.520503+00:00",
+      "branch": "codex/arte-117",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"36884a8a1d154965aac5f8955d59b753\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"36884a8a1d154965aac5f8955d59b753\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 1, \"cloud_ids\": [\"2ec4c3da-edd7-40c1-8f65-f11c159c7e0d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
@@ -847,6 +847,11 @@
           "at": "2026-10-24T20:54:50.170366+00:00",
           "owner": "r4",
           "detail": "released: 'Completar caja y muro' (una nube): requiere dibujar/continuar caja y muro; sin donante claro identificado en tiempo."
+        },
+        {
+          "at": "2026-10-25T05:18:12.520503+00:00",
+          "owner": "codex-arte-final",
+          "detail": "Base capturada. Tapa superior de caja completada desde donante del mismo fondo con fase por píxel; pared superior separada del suelo. Captura final en curso, preview."
         }
       ],
       "claimed_at": "2026-10-25T05:16:03.669710+00:00"
@@ -1699,7 +1704,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:16:03.669710+00:00",
+  "updated_at": "2026-10-25T05:18:12.520503+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
