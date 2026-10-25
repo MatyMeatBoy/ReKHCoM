@@ -93,6 +93,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-120-r20261025 | Escena 120 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:55.659622+00:00 |
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
 | escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | pendiente | — | — | — | 2026-10-25T16:08:35.815510+00:00 |
-| trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | pendiente | — | — | — | 2026-10-25T18:53:05.854532+00:00 |
+| trickmaster-rail-finish | Trickmaster: terminar postes y alinear travesano | en_curso | codex-atlas | — | — | 2026-10-25T18:53:14.078372+00:00 |
 
 Integrador: libre
