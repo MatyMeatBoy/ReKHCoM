@@ -18,7 +18,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-004 | Escena 004 · integrada | integrado | r3c | https://github.com/MatyMeatBoy/ReKHCoM/pull/75 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:10.127915+00:00 |
 | escena-057 | Escena 057 · integrada | en_curso | codex-atlas-patrones | codex/escena-057-comentarios | — | 2026-10-25T16:01:43.341923+00:00 |
 | escena-061 | Escena 061 · integrada | en_curso | codex-atlas-patrones | codex/finish-art-queue | — | 2026-10-25T16:01:35.246718+00:00 |
-| escena-074 | Escena 074 · integrada | en_curso | codex-atlas-patrones | codex/escena-061-comentarios | — | 2026-10-25T16:01:26.434190+00:00 |
+| escena-074 | Escena 074 · integrada | en_curso | codex-atlas-patrones | codex/atlas-074-patrones | — | 2026-10-25T16:03:46.495508+00:00 |
 | escena-081 | Escena 081 | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/89 | pending-human | 2026-10-25T04:20:17.798719+00:00 |
 | escena-087 | Escena 087 | integrado | r4 | https://github.com/MatyMeatBoy/ReKHCoM/pull/76 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:09:57.187038+00:00 |
 | escena-090 | Escena 090 | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/80 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:15.958964+00:00 |

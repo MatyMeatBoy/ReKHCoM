@@ -438,8 +438,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-patrones",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T16:01:26.434190+00:00",
-      "branch": "codex/escena-061-comentarios",
+      "updated_at": "2026-10-25T16:03:46.495508+00:00",
+      "branch": "codex/atlas-074-patrones",
       "pr": null,
       "approval": null,
       "reference": "{\"family_id\": \"303416c343704456aea87be42f0508bf\", \"submissions\": [{\"submission\": \"20261024-131734-82dad2\", \"created\": \"2026-10-24T16:17:34.567220+00:00\", \"image_id\": \"303416c343704456aea87be42f0508bf\", \"version\": \"Versión aprobada · evidencia de integración\", \"clouds\": 1, \"cloud_ids\": [\"6a54075b-093d-43d2-9fdc-26d370de15de\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131734-82dad2\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
@@ -473,6 +473,11 @@
           "at": "2026-10-25T16:01:26.434190+00:00",
           "owner": "codex-atlas",
           "detail": "Relevo expreso del usuario en este chat: terminar todo Atlas rapido con la logica nueva. Reserva anterior revisada: su rama codex/escena-061-comentarios no esta checked out en ningun worktree registrado; consulta de procesos no encuentra el carril. Sesion de trabajo de esa rama detenida, WIP ajeno conservado. Se retoma la misma tarea, sin usar antiguedad como criterio."
+        },
+        {
+          "at": "2026-10-25T16:03:46.495508+00:00",
+          "owner": "codex-atlas-patrones",
+          "detail": "Worktree propio desde origin/main; buildEU y ROM copiados, sin compilar ni ejecutar hasta turno serial."
         }
       ],
       "claimed_at": "2026-10-24T22:13:52.041157+00:00"
@@ -2413,7 +2418,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T16:03:30.914656+00:00",
+  "updated_at": "2026-10-25T16:03:46.495508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
