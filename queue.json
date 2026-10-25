@@ -2040,6 +2040,19 @@
       ],
       "claimed_at": "2026-10-25T08:07:01.682819+00:00",
       "sent": "aa913fe773c4446eb5412c3115e222c7"
+    },
+    "escena-097-respuesta": {
+      "id": "escena-097-respuesta",
+      "piece": "Escena 097: verificar y responder nube del gato fuera de camara",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-25T08:21:10.592466+00:00",
+      "updated_at": "2026-10-25T08:21:10.592466+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "31b66c063867439eb236a0a492a64ede",
+      "evidence": []
     }
   },
   "integrator": {
@@ -2048,7 +2061,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T08:20:39.999983+00:00",
+  "updated_at": "2026-10-25T08:21:10.592466+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

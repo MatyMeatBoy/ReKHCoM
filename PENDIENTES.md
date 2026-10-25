@@ -68,5 +68,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-arena-revision | Darkside arena: comentario pendiente de sprites y fadeout | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/106 | — | 2026-10-25T08:20:39.999983+00:00 |
 | malefica-arena-respuesta | Malefica arena: responder aprobacion de fondo y separar sprites pendientes | en_revision | codex-atlas | — | — | 2026-10-25T08:06:29.173632+00:00 |
 | oogie-arena-revision | Oogie arena: cinco nubes y tres trazos pendientes | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/107 | — | 2026-10-25T08:17:21.201961+00:00 |
+| escena-097-respuesta | Escena 097: verificar y responder nube del gato fuera de camara | pendiente | — | — | — | 2026-10-25T08:21:10.592466+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-25T06:03:55.594161+00:00)
