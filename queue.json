@@ -2766,7 +2766,7 @@
       "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T19:45:49.201740+00:00",
-      "updated_at": "2026-10-25T19:55:06.849487+00:00",
+      "updated_at": "2026-10-25T19:57:57.314809+00:00",
       "branch": "codex/atlas-boss-sprite-workflow",
       "pr": null,
       "approval": null,
@@ -2776,14 +2776,19 @@
           "at": "2026-10-25T19:55:06.849487+00:00",
           "owner": "codex-atlas",
           "detail": "Recorte1 baseconcepto lomo sin3raala subido.3grupos en41estados/27cuerpos. Falta adaptarconcepto aindicesnativos yrecortes2/3."
+        },
+        {
+          "at": "2026-10-25T19:57:57.314809+00:00",
+          "owner": "codex-atlas",
+          "detail": "Comparativa de cuerpo y montaje original junto a concepto dibujado con lomo naranja sin terceraala. Falta adaptacion nativa y2variantes."
         }
       ],
       "claimed_at": "2026-10-25T19:45:55.340720+00:00",
-      "sent": "b3e23f09087844e5bfd1207c0ab8f2a9"
+      "sent": "312570a6afda4786b2d7c80ba4c11768"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T19:57:51.967959+00:00",
+  "updated_at": "2026-10-25T19:57:57.314809+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
