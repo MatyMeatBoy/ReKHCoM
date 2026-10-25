@@ -339,3 +339,7 @@ La propuesta se ve con KHCOM_PRELIMINAR_V1=1 y espera valoraci贸n propia; no her
   escalones en el muro, hueco marr贸n en 120) quedan en la cola de arte; nada de esto llega a jugadores sin aprobaci贸n.
 - Comprobar que `port_preliminar_v1_data.inc` lleva `ready=1` en la escena: con `ready=0` la receta no se aplica ni
   con `KHCOM_PRELIMINAR_V1` y la captura sale sin extensi贸n.
+
+## Escena 112: tono del borde de puerta (25/10)
+
+Env韔 `20261025-055648-89a69d`, nube `3f023a06-bf3b-43b0-ba89-6b6b384ad19d`: el borde exterior incluye las columnas 440..447 adem醩 del marco 448..455. Extender ambas con su color original de la fila 80; el panel naranja no debe tapar la franja oscura del borde. Conservar la puerta alta 鷑ica y el resto del escenario. Propuesta pendiente de captura y valoraci髇.

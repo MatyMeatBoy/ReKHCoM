@@ -533,7 +533,7 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
     if (p && p->v[0]==112 && p->v[1]==2 && (wy<0 || wx>=512 || (wx>=416 && wx<456 && wy<24))) {
         if (wy<0 && wx>=192 && wx<208) {
             *sx=504; *sy=344; /* leave the corner shaft's gold face to BG3 */
-        } else if (wx>=448 && wx<456 && wy<24) {
+        } else if (wx>=440 && wx<456 && wy<24) {
             *sx=wx; *sy=80; /* continue the existing outer jamb up with the tall door */
         } else if (wx>=352 && wx<448 && wy<24) {
             /* User 25/10: temporarily stretch the door's colour straight
