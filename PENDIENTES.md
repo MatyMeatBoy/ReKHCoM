@@ -81,6 +81,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-06-feedback-revision | Darkside 06 costura nueva | pr_abierto | codex-atlas-jefes | https://github.com/MatyMeatBoy/ReKHCoM/pull/127 | — | 2026-10-25T16:04:23.228699+00:00 |
 | atlas-titulo-hd | Titulo: HD menu y fondo original PS2 1.5 | en_curso | codex-atlas-menus | — | — | 2026-10-25T16:02:47.744398+00:00 |
 | agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03 | Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03 | en_curso | codex-atlas-escenas | — | — | 2026-10-25T16:03:30.914656+00:00 |
-| darkside-arena-feedback-revision | Darkside arena sprite faltante | pendiente | — | — | — | 2026-10-25T16:04:49.067560+00:00 |
+| darkside-arena-feedback-revision | Darkside arena sprite faltante | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:04:54.289889+00:00 |
 
 Integrador: libre
