@@ -2290,12 +2290,12 @@
     "anadir-naipes-oclusion-hd": {
       "id": "anadir-naipes-oclusion-hd",
       "piece": "Anadir naipes: oclusion HD por selector en cada frame original",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:39:55.315628+00:00",
-      "updated_at": "2026-10-25T13:45:44.922234+00:00",
+      "updated_at": "2026-10-25T13:48:35.544380+00:00",
       "branch": "codex/naipes-selector-oclusion",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/124",
       "approval": null,
       "reference": "20261024-195741-61a4e3 / 7116d737f2284b269ee859ebaf65596f",
       "evidence": [
@@ -2303,13 +2303,19 @@
           "at": "2026-10-25T13:45:44.922234+00:00",
           "owner": "codex-atlas",
           "detail": "Mascara bidimensional por frame implementada; prueba comparativa de61 frames en curso, no se declara cerrada aun."
+        },
+        {
+          "at": "2026-10-25T13:48:35.544380+00:00",
+          "owner": "codex-atlas",
+          "detail": "61frames480..540;22271celdas ocultas identicas,378glifos parcialmente tapados; compilacion Windows correcta."
         }
       ],
-      "claimed_at": "2026-10-25T13:40:01.774921+00:00"
+      "claimed_at": "2026-10-25T13:40:01.774921+00:00",
+      "sent": "27f14d9fe9bb4428b0dccf98c1e06a8c"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T13:48:31.249149+00:00",
+  "updated_at": "2026-10-25T13:48:35.544380+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
