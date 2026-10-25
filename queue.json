@@ -824,10 +824,10 @@
     "escena-117": {
       "id": "escena-117",
       "piece": "Escena 117",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:54:50.170366+00:00",
+      "updated_at": "2026-10-25T05:16:03.669710+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -849,7 +849,7 @@
           "detail": "released: 'Completar caja y muro' (una nube): requiere dibujar/continuar caja y muro; sin donante claro identificado en tiempo."
         }
       ],
-      "claimed_at": "2026-10-24T20:54:05.979083+00:00"
+      "claimed_at": "2026-10-25T05:16:03.669710+00:00"
     },
     "escena-118": {
       "id": "escena-118",
@@ -1699,7 +1699,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-25T05:15:57.709597+00:00",
+  "updated_at": "2026-10-25T05:16:03.669710+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
