@@ -3642,7 +3642,11 @@ static void ConfirmKey(int key) {
 }
 
 /* a white window in the middle of the darkened options, as the scene pause: the question, a red warning, the rows */
-/* the two faces' samples (port/tools/gen_font_samples.py): KHMenu above, the system's below, 320x40 each */
+/* the two faces' samples (port/tools/gen_font_samples.py): KHMenu above, the system's below, 1280x160 each. Where
+   the presenter draws over the menu at the screen's resolution (PortUiHdSamples, port_main.c), the menu only keeps
+   their boxes: at 1080p the menu's own pixels made them blocky (user 25/10). */
+static int sHdSampleRect[2][4], sHdSampleOn[2], sHdSamplesShown, sFontSampleW, sFontSampleH;
+static unsigned char* sFontSampleRgba;
 static const unsigned char sFontSamplesPng[] = {
 #include "port/font_samples_png.inc"
 };
@@ -3654,12 +3658,19 @@ static void DrawFontSample(int face, int x, int y, int w, int h) {
         int channels;
         tried = 1;
         rgba = stbi_load_from_memory(sFontSamplesPng, (int)sizeof(sFontSamplesPng), &sw, &sh, &channels, 4);
+        sFontSampleRgba = rgba;
+        sFontSampleW = sw;
+        sFontSampleH = sh;
     }
     if (!rgba || sh < 80)
         return;
+    sHdSampleRect[face][0] = x; sHdSampleRect[face][1] = y; sHdSampleRect[face][2] = w; sHdSampleRect[face][3] = h;
+    sHdSampleOn[face] = 1;
+    if (sHdSamplesShown)
+        return;
     for (py = 0; py < h; py++)
         for (px = 0; px < w; px++) {
-            int sx = px * sw / w, sy = face * 40 + py * 40 / h, X = x + px, Y = y + py;
+            int sx = px * sw / w, sy = face * (sh / 2) + py * (sh / 2) / h, X = x + px, Y = y + py;
             const unsigned char* c = rgba + ((size_t)sy * sw + sx) * 4;
             uint32_t* d;
             unsigned a = c[3];
@@ -3669,6 +3680,26 @@ static void DrawFontSample(int face, int x, int y, int w, int h) {
             *d = 0xFF000000u | ((c[0] * a + ((*d >> 16) & 255) * (255 - a)) / 255) << 16 |
                  ((c[1] * a + ((*d >> 8) & 255) * (255 - a)) / 255) << 8 | ((c[2] * a + (*d & 255) * (255 - a)) / 255);
         }
+}
+
+/* The samples drawn this frame, for the presenter: their rectangles in the menu's pixels and the sheet (two rows).
+   Returns how many; the next frame's menu leaves them to the presenter. */
+int PortUiHdSamples(int rects[2][4], int faces[2], const unsigned char** rgba, int* sw, int* sh) {
+    int n = 0, i;
+    *rgba = NULL;
+    for (i = 0; i < 2; i++)
+        if (sHdSampleOn[i]) {
+            SDL_memcpy(rects[n], sHdSampleRect[i], sizeof(rects[n]));
+            faces[n++] = i;
+            sHdSampleOn[i] = 0;
+        }
+    if (n) {
+        *rgba = sFontSampleRgba;
+        *sw = sFontSampleW;
+        *sh = sFontSampleH;
+        sHdSamplesShown = *rgba != NULL;
+    }
+    return n && *rgba ? n : 0;
 }
 
 /* Options > HD text > A: the two faces side by side, as they look in the game */

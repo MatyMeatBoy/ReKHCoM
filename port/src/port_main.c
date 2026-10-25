@@ -1775,6 +1775,28 @@ static void Present(void) {
         worldScale = dst.w / gPortScreen.width;
         worldX = dst.x;
         worldY = dst.y;
+        if (menuCanvas) {
+            /* Options > HD text > A: the font samples at the screen's resolution over their boxes (port_ui.c) */
+            extern int PortUiHdSamples(int rects[2][4], int faces[2], const unsigned char** rgba, int* sw, int* sh);
+            static SDL_Texture* sSampleTex;
+            int rects[2][4], faces[2], sw = 0, sh = 0, n, i;
+            const unsigned char* rgba = NULL;
+            n = PortUiHdSamples(rects, faces, &rgba, &sw, &sh);
+            if (n && !sSampleTex) {
+                sSampleTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, sw, sh);
+                if (sSampleTex) {
+                    SDL_UpdateTexture(sSampleTex, NULL, rgba, sw * 4);
+                    SDL_SetTextureBlendMode(sSampleTex, SDL_BLENDMODE_BLEND);
+                    SDL_SetTextureScaleMode(sSampleTex, SDL_SCALEMODE_LINEAR);
+                }
+            }
+            for (i = 0; i < n && sSampleTex; i++) {
+                SDL_FRect src = { 0, (float)(faces[i] * (sh / 2)), (float)sw, (float)(sh / 2) };
+                SDL_FRect at = { worldX + rects[i][0] * worldScale, worldY + rects[i][1] * worldScale,
+                                 rects[i][2] * worldScale, rects[i][3] * worldScale };
+                SDL_RenderTexture(sRenderer, sSampleTex, &src, &at);
+            }
+        }
     }
     if (!menuCanvas) {
         /* HD sprites of the game's picture (the title's logo), with the game's fade */
