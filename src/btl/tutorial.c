@@ -165,6 +165,11 @@ void task_tutorial_0(TutorialWork* work, s32 kind) {
 }
 
 s32 task_tutorial_1(TutorialWork* work) {
+    { /* TEMPDBG */
+        extern void PortLog(const char* format, ...);
+        static u32 last = 0xFFFF;
+        if (work->state != last) { PortLog("tut state %u frame %u", (unsigned)work->state, (unsigned)gFrameCounter); last = work->state; }
+    }
     switch (work->state) {
     case TUTORIAL_STATE_WAIT:
         if (work->timer > work->count) {

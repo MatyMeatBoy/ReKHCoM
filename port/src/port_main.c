@@ -1986,6 +1986,34 @@ static void Present(void) {
             }
         }
     }
+    {
+        /* KHCOM_LUMALOG=1 (harness): the window as shown, each presented frame: "luma <frame> <mean 0..255>
+           <dark per mille>" (a grid of samples), so a sweep finds a lone black frame between two normal ones
+           (test_black_frames.py) */
+        const char* luma;
+        PORT_ENV_ONCE(luma, SDL_getenv, "KHCOM_LUMALOG");
+        if (luma) {
+            SDL_Surface* s = SDL_RenderReadPixels(sRenderer, NULL);
+            SDL_Surface* c = s ? SDL_ConvertSurface(s, SDL_PIXELFORMAT_XRGB8888) : NULL;
+            if (c) {
+                uint64_t sum = 0;
+                unsigned n = 0, dark = 0;
+                int x, y, stepX = c->w / 64 > 0 ? c->w / 64 : 1, stepY = c->h / 36 > 0 ? c->h / 36 : 1;
+                for (y = stepY / 2; y < c->h; y += stepY)
+                    for (x = stepX / 2; x < c->w; x += stepX) {
+                        uint32_t p = ((const uint32_t*)((const uint8_t*)c->pixels + (size_t)y * c->pitch))[x];
+                        unsigned l = (((p >> 16) & 255) * 77 + ((p >> 8) & 255) * 150 + (p & 255) * 29) >> 8;
+                        sum += l;
+                        dark += l < 12;
+                        n++;
+                    }
+                if (n)
+                    PortLog("luma %u %u %u", (unsigned)sFrameCount, (unsigned)(sum / n), dark * 1000 / n);
+            }
+            SDL_DestroySurface(c);
+            SDL_DestroySurface(s);
+        }
+    }
     SDL_RenderPresent(sRenderer);
 }
 
