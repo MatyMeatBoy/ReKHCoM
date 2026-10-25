@@ -1497,12 +1497,12 @@
     "catalogo-peliculas": {
       "id": "catalogo-peliculas",
       "piece": "Catalogo actual: pelicula y subtitulos",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "claude-integrador",
       "created_at": "2026-10-24T16:37:32.168773+00:00",
-      "updated_at": "2026-10-25T07:20:51.981208+00:00",
+      "updated_at": "2026-10-25T07:23:35.891291+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/101",
       "approval": "pedido-usuario-20261024",
       "reference": "capture_catalog.py; fixtures existentes",
       "evidence": [
@@ -1515,9 +1515,15 @@
           "at": "2026-10-25T07:20:51.981208+00:00",
           "owner": "claude-integrador",
           "detail": "sin movimiento desde 24/10 17:05; worktrees sin commits en 15 h; editor de tiles ya en main"
+        },
+        {
+          "at": "2026-10-25T07:23:35.891291+00:00",
+          "owner": "claude-integrador",
+          "detail": "cerrado como no recuperable (ARTE_HISTORICO, PR #101)"
         }
       ],
-      "claimed_at": "2026-10-24T16:37:32.168773+00:00"
+      "claimed_at": "2026-10-24T16:37:32.168773+00:00",
+      "sent": "pr101"
     },
     "catalogo-hollow17": {
       "id": "catalogo-hollow17",
@@ -1933,7 +1939,7 @@
     "created_at": "2026-10-25T05:51:10.061935+00:00",
     "updated_at": "2026-10-25T06:03:55.594161+00:00"
   },
-  "updated_at": "2026-10-25T07:23:31.214069+00:00",
+  "updated_at": "2026-10-25T07:23:35.891291+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

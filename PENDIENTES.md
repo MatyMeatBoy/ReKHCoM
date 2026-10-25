@@ -48,7 +48,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:12.500903+00:00 |
 | catalogo-idioma-copyright | Catalogo actual: idioma y copyright | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:21.980275+00:00 |
 | catalogo-campo-arena | Catalogo actual: mapas de campo y HUD original | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:31.214069+00:00 |
-| catalogo-peliculas | Catalogo actual: pelicula y subtitulos | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:51.981208+00:00 |
+| catalogo-peliculas | Catalogo actual: pelicula y subtitulos | listo_pr | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-25T07:23:35.891291+00:00 |
 | catalogo-hollow17 | Catalogo actual: borde superior Hollow Bastion | en_curso | claude-integrador | — | pedido-usuario-20261024 | 2026-10-25T07:20:57.743550+00:00 |
 | visor-paneo-zoom | App: paneo con zoom alejado (no se mueve; margen de vacío limitado) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/61 | Pedido del usuario en chat 24/10 | 2026-10-24T17:09:15.351516+00:00 |
 | hd-orden-calidad | Mod HD: selector de calidad ordenado por peso (Original, Buena, Ahorro) | integrado | claude-funciones | https://github.com/MatyMeatBoy/ReKHCoM/pull/63 | Pedido del usuario chat 24/10 | 2026-10-24T17:23:38.289244+00:00 |
