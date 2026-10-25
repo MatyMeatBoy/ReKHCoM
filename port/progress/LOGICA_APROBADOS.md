@@ -339,3 +339,12 @@ La propuesta se ve con KHCOM_PRELIMINAR_V1=1 y espera valoración propia; no her
   escalones en el muro, hueco marrón en 120) quedan en la cola de arte; nada de esto llega a jugadores sin aprobación.
 - Comprobar que `port_preliminar_v1_data.inc` lleva `ready=1` en la escena: con `ready=0` la receta no se aplica ni
   con `KHCOM_PRELIMINAR_V1` y la captura sale sin extensión.
+
+### Darkside arena — corte del frame dentro de cámara (25/10)
+Nube `9e9bb909-75e3-44fb-93f8-3ffe8048778d`, envío `20261025-052135-22f4ed`:
+la extensión del cuerpo se evalúa también dentro de la cámara GBA; el corte de
+256 px del frame no equivale al límite de viewport. `FramePixel` conserva la
+prioridad de todos los píxeles ROM opacos. El filtro exterior sigue aplicado a
+la playa. Hija `e7b206c9222745718ea910321d12498e`: comparación offline rotulada,
+no evidencia runtime; el brazo r8 mostrado requiere revisión separada PR #127.
+No alterar la aprobación de arena ni activar automáticamente una hija.

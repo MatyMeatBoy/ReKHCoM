@@ -1714,7 +1714,9 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                 continue;
             }
         }
-        if (sDarksideLayer[bg] && (outside || gx < 0 || gx >= GBA_SCREEN_W)) {
+        /* Body extensions follow the native frame cut even when it falls inside
+         * the GBA viewport. PortDarksideBodyPixel preserves every opaque ROM pixel. */
+        if (sDarksideLayer[bg] == 2 || (sDarksideLayer[bg] == 1 && (outside || gx < 0 || gx >= GBA_SCREEN_W))) {
             const BgLatch* l = &sBgLatch[bg];
             int wx = l->x + gx + (hofs - l->hofs), wy = l->y + gy + (vofs - l->vofs);
             if (sDarksideLayer[bg] == 1 ? PortDarksideShorePixel(wx, wy, &out[x])
