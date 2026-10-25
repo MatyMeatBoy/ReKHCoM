@@ -376,3 +376,7 @@ Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo comple
 ## Escena 102: tres pilares cortos, revisión posterior 25/10
 
 Envío `20261025-024931-482bfa`, parent `dd5a82c201a84ca29180026bc7cf064a`: completar también los fustes que empiezan dentro del mapa, en columnas 31..34, 40..43 y 49..52. Cada uno continúa hacia arriba con su propio período de cinco filas y fase de inicio (3, 1 y 6), usando el fuste completo de su misma columna. Una celda vacía dentro del mapa no implica que termine el pilar. Conservar las cuatro prolongaciones anteriores, la curva y el rectángulo GBA. Propuesta sin captura ni valoración todavía.
+
+## Escena 112: tono del borde de puerta (25/10)
+
+Envío `20261025-055648-89a69d`, nube `3f023a06-bf3b-43b0-ba89-6b6b384ad19d`: el borde exterior incluye las columnas 440..447 además del marco 448..455. Extender ambas con su color original de la fila 80; el panel naranja no debe tapar la franja oscura del borde. Conservar la puerta alta única y el resto del escenario. Propuesta pendiente de captura y valoración.
