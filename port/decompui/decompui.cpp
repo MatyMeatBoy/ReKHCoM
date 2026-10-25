@@ -691,43 +691,25 @@ static bool BackupSave(int v) {
 
 /* ---- importing a save from an emulator or a backup device ------------------- */
 
-/* Shared, ROM-free parser; raw SRAM and explicitly validated containers. */
-static int ConvertGbaSave(const std::vector<unsigned char>& in,int v,
-                          std::vector<unsigned char>& out,int& fromVersion) {
-    return RekhcomSave::Convert(in,v,out,fromVersion);
-}
+/* import_preview.inc: asks "load this save?", picks the bank and writes; ImportPreviewDraw is drawn by Frame() */
+static bool ImportPreviewBegin(const fs::path& file, int v, const std::vector<unsigned char>& out, int blocks, int from,
+                               const char* how);
 
 static bool ImportSavePath(const fs::path& file,int v) {
     std::vector<unsigned char> in,out;
-    std::error_code ec;
     int from=0,blocks;
+    const char* how="";
     if (!ReadFile(file, in, 4u << 20)) {
         Notice(T("No se pudo leer el archivo.", "Could not read the file."), true);
         return false;
     }
-    blocks = ConvertGbaSave(in, v, out, from);
+    blocks = RekhcomSave::Convert(in, v, out, from, &how);
     if (blocks <= 0) {
         Notice(T("El archivo no contiene una partida de Chain of Memories.",
                  "The file holds no Chain of Memories save."), true);
         return false;
     }
-    bool exists=fs::exists(SavePath(v),ec);
-    if(ec) { Notice(T("No se pudo verificar el destino.","Could not verify the destination."),true);return false; }
-    if(exists&&!BackupSave(v))return false;
-    if(!RekhcomSave::Replace(SavePath(v),out)) {
-        Notice(T("No se pudo escribir la partida. Original conservado.","Could not write the save. Original preserved."),true);
-        return false;
-    }
-    {
-        char msg[200];
-        bool cross = (from == 0) != (v == 0);
-        std::snprintf(msg, sizeof(msg), "%s %s (%d %s)%s",
-                      T("Partida importada en", "Save imported into"), SavePath(v).filename().string().c_str(),
-                      blocks, T("bloques", "blocks"),
-                      cross ? T(", convertida de otra regi\xC3\xB3n", ", converted from another region") : "");
-        Notice(msg, false);
-    }
-    return true;
+    return ImportPreviewBegin(file, v, out, blocks, from, how);
 }
 
 static void ImportSave(SDL_Window* window, int v) {
@@ -2355,6 +2337,7 @@ static void Header() {
 }
 
 #include "save_editor_page.inc"
+#include "import_preview.inc"
 #include "achievements_page.inc"
 
 /* Settings: Graphics, Sound and Controls as tabs inside it, drawn as the launcher's buttons with the game's square */
@@ -2436,6 +2419,7 @@ static void Frame(SDL_Window* window) {
     HdOfferPopup();
     HdQuitPopup();
     HdResumePopup();
+    ImportPreviewDraw();
     Footer();
     ImGui::End();
     AchievementPreviewDraw();

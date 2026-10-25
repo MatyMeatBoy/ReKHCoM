@@ -146,7 +146,7 @@ if args.launcher:
         env = {k: v for k, v in os.environ.items() if not k.startswith(("DECOMPUI_", "KHCOM_", "SDL_"))}
         env.update(DECOMPUI_SHOT=str(run / "shots"), DECOMPUI_IMPORT_SAVE=str(files / f"{name}.{ext}"),
                    DECOMPUI_SAVE_REGION="0", DECOMPUI_IMPORT_CONFIRM="1",
-                   SDL_VIDEO_DRIVER="offscreen", SDL_AUDIO_DRIVER="dummy")
+                   SDL_AUDIO_DRIVER="dummy")  # the shot run's window is hidden: nothing appears on screen
         subprocess.run([str(run / "ReKHCoM.exe")], cwd=run, env=env, check=True, timeout=120, creationflags=0x08000000)
         expected = base if expect == "same" else sentinel
         ok = target.read_bytes() == expected
