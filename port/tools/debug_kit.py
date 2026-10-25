@@ -344,9 +344,9 @@ def main():
         env = dict(os.environ, PATH=str(ROOT.parent / 'toolchain/bin') + os.pathsep + os.environ.get('PATH', ''))
         if args.build:
             for v in versions:
-                if not (build_dir(v) / 'build.ninja').exists():
-                    subprocess.run([sys.executable, 'port/configure_pc.py', '--version', v, '--out', f'build/pc-{v}'],
-                                   cwd=ROOT, check=True, env=env)
+                # always: a build.ninja from before a new source file links without it (25/10: PortHdGauge undefined)
+                subprocess.run([sys.executable, 'port/configure_pc.py', '--version', v, '--out', f'build/pc-{v}'],
+                               cwd=ROOT, check=True, env=env)
                 subprocess.run([shutil.which('ninja', path=env['PATH']) or 'ninja', '-f', str(build_dir(v) / 'build.ninja')], cwd=ROOT, check=True, env=env)
         OUT.mkdir(parents=True, exist_ok=True)
         for v in versions:

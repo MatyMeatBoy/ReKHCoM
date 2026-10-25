@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BH = ROOT.parent / 'toolchain/bizhawk'
 SAVE = BH / 'GBA/SaveRAM/Kingdom Hearts - Chain of Memories (USA).SaveRAM'
-BACKUP = ROOT.parent / 'respaldos/bizhawk-saveram-20261019/Kingdom Hearts - Chain of Memories (USA).SaveRAM'
+BACKUP = ROOT.parent / 'respaldos/saves/bizhawk/saveram/Kingdom Hearts - Chain of Memories (USA).SaveRAM'
 OUT = ROOT / 'build/crystal-parity'
 KEYS = '900-902:Start,1000-1002:A,1100-1102:A,1200-1202:A,1300-1302:A,1400-1402:A'
 

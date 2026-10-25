@@ -80,31 +80,68 @@ done
 exec >"$DIR/ReKHCoM.log" 2>&1
 echo "ReKHCoM.sh: $(date), native Linux, folder $DIR, region ${REGION:-auto}"
 
+
 if [ -z "$ROM" ]; then
     # No dump found: the game itself says so in its own window, which Steam's Game Mode shows (zenity is not there).
     echo "Kingdom Hearts: Chain of Memories ROM not found. Copy your cartridge dump (EU, US or JP, 32 MiB) into: $DIR/roms"
     REGION=${REGION:-eu}
-    export LD_LIBRARY_PATH="$DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    cd "$DIR" || exit 1
-    exec "./bin/khcom_$REGION" --data-dir "$DIR" "$@"
+    set -- --data-dir "$DIR" "$@"
+else
+    set -- --data-dir "$DIR" --rom "$ROM" "$@"
+fi
+cd "$DIR" || exit 1
+GAME=./bin/khcom_$REGION
+
+# With the GPU (25/10, #140): SDL draws through the system's OpenGL driver, which only loads with the system's own
+# C library. SteamOS (and Arch, Debian/Ubuntu with i386 packages) ship the 32-bit loader, C library and Mesa for
+# Steam and Proton: when they are there the game starts with them. lib/sys (SDL3) comes first, then the system's
+# folders (C library, Mesa, X11); lib/ goes last and only fills what the system lacks (SDL opens X11 and the audio
+# libraries itself, so the game's RUNPATH does not reach them; Debian's i386 packages have no libXext, libXcursor
+# ... unless asked for, nor the unversioned names SDL opens). Nothing to set: if any piece is missing, or the game
+# does not get going, it runs as before with its own loader and libraries (lib/), and SDL draws in software.
+# The log says which way it went and which renderer drew ("Renderer:"). REKHCOM_GPU=0 forces the old way.
+SYS_LD=
+SYS_DIRS=
+case "$(uname -m)" in
+    x86_64|i?86)
+        for d in /usr/lib32 /lib32 /lib/i386-linux-gnu /usr/lib/i386-linux-gnu; do
+            [ -d "$d" ] || continue
+            SYS_DIRS="$SYS_DIRS:$d"
+            [ -z "$SYS_LD" ] && [ -x "$d/ld-linux.so.2" ] && SYS_LD=$d/ld-linux.so.2
+        done
+        [ -z "$SYS_LD" ] && [ -x /lib/ld-linux.so.2 ] && SYS_LD=/lib/ld-linux.so.2
+        ;;
+esac
+GPU=
+if [ "${REKHCOM_GPU:-1}" != 0 ] && [ -n "$SYS_LD" ]; then
+    for d in $(echo "$SYS_DIRS" | tr ':' ' '); do
+        if [ -e "$d/libGL.so.1" ] || [ -e "$d/libEGL.so.1" ]; then
+            [ -e "$d/libX11.so.6" ] || [ -e "$d/libX11.so" ] && GPU=1
+        fi
+    done
+fi
+if [ -n "$GPU" ]; then
+    LIBS="$DIR/lib/sys$SYS_DIRS:$DIR/lib"
+    if "$SYS_LD" --library-path "$LIBS" --list "$GAME" >/dev/null 2>&1; then
+        echo "ReKHCoM.sh: GPU, system 32-bit libraries ($SYS_LD$SYS_DIRS)"
+        START=$(date +%s)
+        "$SYS_LD" --library-path "$LIBS" "$GAME" "$@"
+        CODE=$?
+        # a normal quit (0) or a run that got going: done. A start that failed at once: the old way below.
+        if [ "$CODE" = 0 ] || [ $(($(date +%s) - START)) -ge 8 ]; then
+            exit "$CODE"
+        fi
+        echo "ReKHCoM.sh: the GPU start ended at once (code $CODE): starting with the bundled libraries"
+    else
+        echo "ReKHCoM.sh: the system's 32-bit libraries do not cover the game: bundled libraries"
+    fi
+elif [ "${REKHCOM_GPU:-1}" = 0 ]; then
+    echo "ReKHCoM.sh: REKHCOM_GPU=0: bundled libraries"
+else
+    echo "ReKHCoM.sh: no system 32-bit OpenGL (lib32 Mesa): bundled libraries, software drawing"
 fi
 
-# X11/XWayland and PulseAudio/PipeWire are reached through the bundled client
-# libraries. The system's 64-bit GPU driver cannot be loaded into this 32-bit
-# process, so SDL draws with its software renderer.
-# The game's interpreter is lib/rekhcom (the bundled loader), a path relative
-# to this folder: run it from here.
-# Libraries that SDL opens later (ALSA, PulseAudio, X11) come from lib/ too.
-# REKHCOM_GPU=1 (test, 25/10; Steam: Launch Options "REKHCOM_GPU=1 %command%"): also offer SDL the system's 32-bit
-# GPU drivers (Steam's lib32 Mesa on SteamOS/Arch, i386 on Debian/Ubuntu). If they do not load with the bundled C
-# library, SDL goes back to its software renderer by itself; the log says which one drew ("Renderer:").
-GPU_LIBS=
-if [ "${REKHCOM_GPU:-0}" = 1 ]; then
-    for d in /usr/lib32 /usr/lib/i386-linux-gnu; do
-        [ -e "$d/libGL.so.1" ] || [ -e "$d/libvulkan.so.1" ] && GPU_LIBS="$GPU_LIBS:$d"
-    done
-    echo "ReKHCoM.sh: GPU test on, system 32-bit libraries:${GPU_LIBS:- none found}"
-fi
-export LD_LIBRARY_PATH="$DIR/lib$GPU_LIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-cd "$DIR" || exit 1
-exec "./bin/khcom_$REGION" --data-dir "$DIR" --rom "$ROM" "$@"
+# The bundled way: the game's interpreter is lib/rekhcom (the bundled loader), a path relative to this folder, and
+# the libraries SDL opens later (ALSA, PulseAudio, X11) come from lib/ too.
+export LD_LIBRARY_PATH="$DIR/lib/sys:$DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$GAME" "$@"

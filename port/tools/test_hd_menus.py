@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SAVE = ROOT.parent / 'jugar/ReKHCoM-v1.9.15-completo/kh_com.sav'
+SAVE = ROOT.parent / 'respaldos/saves/jugar/ReKHCoM-v1.9.15-completo/kh_com.sav'
 WALK = ','.join(f'{f}-{f + 3}:A' for f in range(200, 1400, 50))  # language, title, continue: into the field
 
 # the title's HD sprite per language: (Spanish, English, French, German, Italian); None where there is none

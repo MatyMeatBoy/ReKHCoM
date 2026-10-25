@@ -183,6 +183,12 @@ def bundle(arch, base, versions, dest):
         plain = name.split('.so')[0] + '.so'
         if plain != name and (dest / 'lib' / name).is_file():
             shutil.copyfile(dest / 'lib' / name, dest / 'lib' / plain)
+    # SDL3 apart in lib/sys: ReKHCoM.sh puts it ahead of the system's folders when the game runs with the system's
+    # own loader and OpenGL driver (#140), without the bundled C library that lib/ holds.
+    (dest / 'lib/sys').mkdir()
+    for name in ('libSDL3.so.0', 'libSDL3.so'):
+        if (dest / 'lib' / name).is_file():
+            (dest / 'lib' / name).rename(dest / 'lib/sys' / name)
     # The loader runs the game, so the process is named after its file.
     (dest / 'lib' / LOADER[arch]).rename(dest / 'lib' / 'rekhcom')
     (dest / 'ReKHCoM.sh').write_bytes((ROOT / 'port/linux/ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
@@ -201,14 +207,14 @@ def bundle(arch, base, versions, dest):
         shutil.copyfile(ROOT / name, dest / name)
     # The native build is an alpha; the Windows one runs through Proton with the GPU (user 25/10).
     (dest / 'LEEME_LINUX_ALPHA.txt').write_text(
-        'ReKHCoM nativo para Linux / Steam Deck: version ALPHA (dibujo por software, 32 bits).\n'
+        'ReKHCoM nativo para Linux / Steam Deck: version ALPHA (32 bits).\n'
         'La version de Windows tambien funciona en Linux y Steam Deck por Proton y usa la GPU:\n'
         'en Steam, Anadir juego ajeno > ReKHCoM.exe > Propiedades > Compatibilidad > Proton.\n'
-        'Prueba nativa con la GPU: opcion de lanzamiento REKHCOM_GPU=1 %command%\n\n'
-        'Native ReKHCoM for Linux / Steam Deck: ALPHA build (software drawing, 32-bit).\n'
+        'Usa la GPU sola cuando el sistema trae Mesa de 32 bits (SteamOS lo trae); si no, dibuja por software.\n\n'
+        'Native ReKHCoM for Linux / Steam Deck: ALPHA build (32-bit).\n'
         'The Windows version also runs on Linux and Steam Deck through Proton and uses the GPU:\n'
         'in Steam, Add a Non-Steam Game > ReKHCoM.exe > Properties > Compatibility > Proton.\n'
-        'Native GPU test: launch option REKHCOM_GPU=1 %command%\n', encoding='utf-8')
+        'It uses the GPU by itself when the system has 32-bit Mesa (SteamOS does); otherwise it draws in software.\n', encoding='utf-8')
     (dest / 'licenses').mkdir()
     shutil.copyfile(base / 'sdl-src-LICENSE.txt', dest / 'licenses/SDL3-LICENSE.txt')
     (dest / 'licenses/RUNTIME.md').write_text(

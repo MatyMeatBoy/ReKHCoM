@@ -109,6 +109,31 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 - **Estados rápidos en consolas/Android/web:** `port_state` excluido en consolas; en Android/web la fila de revanchas
   se oculta. Medir el tamaño del estado y escribirlo por el puente (H_fopen) antes de encenderlo.
 
+## 1e. Pedidos del usuario 25/10 noche (después del test de Steam Deck)
+
+- **Steam en el launcher:** si el juego ya está agregado a Steam, ofrecer «Quitar de Steam» ahí mismo. El arte del
+  acceso directo: banner con una captura de combate en arena a **x3 entero** (solo para este banner; el ejemplo de
+  siempre es **x4 1080p**, el principal) y el **logo mejorado de KH Chain of Memories del título HD** (el actual dice
+  Re:CoM, que es el de PS2). Cómo: el launcher ya escribe shortcuts.vdf y la carpeta grid; buscar la entrada por appid
+  del acceso directo, borrarla y borrar su arte de grid; el arte nuevo pasa por Atlas antes de entrar.
+- **Banco de partidas:** en la pantalla de título solo se cambia desde las Opciones principales; dentro de una partida
+  queda en gris (evita bugs y abusos para logros). Excepción: modo Re:CoM, donde las partidas se pasan entre ranuras;
+  ahí los logros que corresponden son los de Re:CoM.
+- **Regla de logros (también en REGLAS_DEL_USUARIO.md):** lo que cambia el juego (partidas, bancos, trucos, editar
+  saves) bloquea los logros oficiales o pasa a la lista de Re:CoM; gráficos, audio, escenas y controles no importan.
+- **Trucos y «logros tramposo»:** los trucos (salvo las mejoras del modo Re:CoM) apagan los logros oficiales. La
+  primera vez que se activa uno (o se detecta una partida editada) se desbloquea un modo oculto, **logros tramposo**:
+  logros locales, las dos listas (oficial y Re:CoM) pero aparte, que no se sincronizan con RetroAchievements; no se ven
+  en el launcher hasta que se activan. Aviso en el juego con un cartel amigable en pixel art del estilo del juego:
+  «somos amigables con esto», los logros son locales, no van a RetroAchievements y tienen su lista. El arte del cartel
+  pasa por Atlas. Cómo: una marca en el save de ReKHCoM (no en la SRAM del juego) + un tercer archivo de logros locales
+  (`achievements_cheat_*.dat`), y el filtro de rc_client sin enviar nada mientras la marca esté.
+- **Baterías 25/10 (de la corrida de las 15:22):** Android US: batallas 123/124 de Agrabah y 4 menús US (status,
+  worldselect, Deck, jiminy) con timeout (casos en khcom-claude-int/build/android-scenarios/cases/us-*). Regla: un
+  timeout es un bug; reproducir solos (`test_android_scenarios.py --only`), arreglar y buscar parientes. El build de
+  escritorio falló por build.ninja viejo (arreglado: `debug_kit --build` reconfigura siempre); relanzar las de
+  escritorio.
+
 ## 1d. Después de la pre18 (pedido del usuario 25/10 noche)
 
 - **Modos Re:CoM basados en la versión de PS2 (siguiente trabajo grande):** dificultades, ajustes por enemigo y lo
@@ -149,8 +174,8 @@ COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --q
 
 ## 4. v2.0 estable (solo con OK del usuario; no saltear nada)
 
-- Sin Switch (sacar el `.nro`). `test_update.py` contra `respaldos/releases-estables` y `--olds respaldos/releases-prueba`.
-- No se borra ningún release ni archivo; README con la versión; copia de la estable en `respaldos/releases-estables`.
+- Sin Switch (sacar el `.nro`). `test_update.py` (baja solo los ZIP de las estables desde GitHub).
+- No se borra ningún release ni archivo de GitHub; README con la versión. En local solo el último zip.
 - `release_check.py v2.0` antes y `--post` después; `check_sources.py`.
 - Builds desde el commit final: Windows, Linux, Android, PS4, Vita, PS5 (VM), web.
 - `build/smoke_pc.sh` con cada ejecutable de PC; `test_hd_audio.py`, `test_hd_audio_flow.py`, `test_frameskip.py`,

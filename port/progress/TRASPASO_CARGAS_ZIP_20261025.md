@@ -93,9 +93,8 @@ cuadros visibles y fases cubiertas; no sólo FPS promedio.
 
 Trabajar explícitamente en `KHCoMPC/khcom-jafar`, sin tocar WIP de otros árboles.
 El build EU incremental es `build/pc-eu`; el exe debe recompilarse al integrar.
-ROM EU local ignorada: `roms/B8CP.gba`. US/JP están en
-`../jugar/ReKHCoM-v2.0-pre12/roms`. HD privado:
-`../jugar/ReKHCoM-v2.0-pre12/hd` (junction a D:). No empaquetarlo.
+ROM EU local ignorada: `roms/B8CP.gba`. US/JP están en `../roms` (KHCoMPC/roms; las carpetas de
+`jugar/` viejas se borraron el 25/10). HD privado: `D:/01Claude/ReKHCoM-build/hd-completo`. No empaquetarlo.
 
 Atlas compartido: `../khcom-codex/build/art-review`; servidor localhost:8766,
 no detenerlo. Sus comentarios/aprobaciones se leen desde Store, no SQL directo.

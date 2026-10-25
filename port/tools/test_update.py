@@ -5,6 +5,8 @@ ZIPs with a versioned top folder, next to it), the new launcher and game run hid
 save unchanged, setting kept, ROMs found, HD scenes where the new version looks for them, the game runs.
 
     py -3 port/tools/test_update.py --new <unpacked new package> [--olds <folder with ReKHCoM-vX-windows-x86.zip>]
+
+Without the old ZIPs in --olds, the stables' Windows ZIPs are downloaded from the GitHub releases (gh).
 """
 import argparse
 import os
@@ -16,7 +18,8 @@ from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 
 ROOT = Path(__file__).resolve().parents[2]
 KHCOMPC = ROOT.parent
-OLDS = KHCOMPC / 'respaldos/releases-estables'
+OLDS = WORK_DIR / 'releases-viejas'  # the stables' Windows ZIPs (fetched from GitHub when empty)
+STABLES = ('v1.9.8', 'v1.9.9', 'v1.9.10', 'v1.9.12', 'v1.9.14')
 WORK = (WORK_DIR / 'updtest')
 HIDDEN = dict(os.environ, SDL_VIDEO_DRIVER='offscreen', SDL_AUDIO_DRIVER='dummy', KHCOM_FAST='1')
 
@@ -44,7 +47,13 @@ def main():
     ap.add_argument('--olds', default=str(OLDS))
     args = ap.parse_args()
     new = Path(args.new)
-    save = (KHCOMPC / 'jugar/ReKHCoM-v2.0-pre4/kh_com.sav').read_bytes()
+    save = (KHCOMPC / 'respaldos/saves/jugar/ReKHCoM-v2.0-pre4/kh_com.sav').read_bytes()
+    olds = Path(args.olds)
+    if not any(olds.glob('ReKHCoM-v*-windows-x86.zip')):
+        olds.mkdir(parents=True, exist_ok=True)
+        for tag in STABLES:
+            subprocess.run(['gh', 'release', 'download', tag, '-R', 'MatyMeatBoy/ReKHCoM', '-p', '*-windows-x86.zip',
+                            '-D', str(olds), '--skip-existing'], check=True)
     rom = (ROOT / 'roms/B8CP.gba').read_bytes()
     bad = 0
     for z in sorted(Path(args.olds).glob('ReKHCoM-v*-windows-x86.zip')):

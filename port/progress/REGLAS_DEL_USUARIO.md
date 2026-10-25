@@ -39,7 +39,8 @@ Sintetizadas de sus pedidos hasta el 24/10/2026. Hablarle en español, breve y d
 - Baterías largas en segundo plano y reanudables (`run_batteries.py --detach --resume`).
 - La validación en hardware real no es un pendiente: llega como reporte. Si un reporte no dice plataforma, equipo,
   sistema y versión, pedírselo al reportero en el issue.
-- No borrar las copias de prueba del usuario (`jugar/ReKHCoM-vX`): juega y guarda ahí.
+- No más `.bat` ni carpetas `jugar/` por versión (25/10): solo el zip limpio en KHCoMPC. Antes de borrar una
+  carpeta con partidas, copiar sus partidas a `respaldos/saves/`.
 
 ## Builds y publicación
 - No hacer builds de todas las plataformas ni de lanzamiento hasta que el usuario dé el OK; las de prueba
@@ -58,3 +59,6 @@ Sintetizadas de sus pedidos hasta el 24/10/2026. Hablarle en español, breve y d
 - Claude y Codex trabajan en ramas/worktrees separados. La reserva remota de la cola decide quién tomó cada
   pieza; 10 minutos sin commits no autorizan a pisar una reserva viva. Recuperar una reserva vencida con el
   protocolo de COLA_COLABORATIVA y anotar el relevo; nunca tocar el árbol sin commitear del otro.
+- Logros (25/10): lo que cambia el juego (partidas, bancos de partidas, trucos, editar saves) bloquea los logros
+  oficiales o pasa a la lista de Re:CoM; gráficos, audio, escenas y controles no importan. Los trucos
+  (salvo mejoras del modo Re:CoM) llevan a los «logros tramposo», locales y aparte.
