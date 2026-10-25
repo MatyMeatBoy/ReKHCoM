@@ -63,5 +63,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | agrabah-jafar-arena | Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara | pr_abierto | codex-jafar | https://github.com/MatyMeatBoy/ReKHCoM/pull/91 | — | 2026-10-25T05:01:57.795447+00:00 |
 | steam-cuenta-verificacion | Añadir a Steam: verificar cuenta activa y persistencia sin reiniciar Steam del usuario | pr_abierto | codex-tecnico | https://github.com/MatyMeatBoy/ReKHCoM/pull/97 | — | 2026-10-25T05:33:24.215279+00:00 |
 | titulo-stutter | Diagnosticar y corregir tirón al aparecer el título | pr_abierto | codex-titulo | https://github.com/MatyMeatBoy/ReKHCoM/pull/98 | — | 2026-10-25T05:42:40.659780+00:00 |
+| issue83-jafar-recogida | Jafar Android #83: reproducir recogida de carta y corregir crash | pendiente | — | — | — | 2026-10-25T05:44:39.164448+00:00 |
 
 Integrador: libre
