@@ -3373,10 +3373,10 @@
     "atlas-074-cleanup": {
       "id": "atlas-074-cleanup",
       "piece": "Escena 074: quitar resto de tile",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:39:09.754178+00:00",
-      "updated_at": "2026-10-26T09:44:02.045349+00:00",
+      "updated_at": "2026-10-26T09:44:13.358606+00:00",
       "branch": "codex/atlas-074-cleanup",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/212",
       "approval": "honors exact d08d6c8758ff4ca9906c89a4c4d95888",
@@ -3391,10 +3391,16 @@
           "at": "2026-10-26T09:44:02.045349+00:00",
           "owner": "codex-atlas",
           "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
+        },
+        {
+          "at": "2026-10-26T09:44:13.358606+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 853f1d1af77607bd84059548645664bb49a3bfa7. Capturas y aprobación exactas conservadas. Cambio de código integrado en main; build compuesta siguiente."
         }
       ],
       "claimed_at": "2026-10-26T07:39:14.586812+00:00",
-      "sent": "d08d6c8758ff4ca9906c89a4c4d95888"
+      "sent": "d08d6c8758ff4ca9906c89a4c4d95888",
+      "completed_at": "2026-10-26T09:44:13.358606+00:00"
     },
     "atlas-097-shadow": {
       "id": "atlas-097-shadow",
@@ -3634,7 +3640,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:43:47.516349+00:00"
   },
-  "updated_at": "2026-10-26T09:44:02.045349+00:00",
+  "updated_at": "2026-10-26T09:44:13.358606+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

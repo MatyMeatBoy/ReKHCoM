@@ -120,7 +120,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | code-android-test-validity | Android 123/124: distinguir APK inválido de timeout y comprobar retest | en_curso | codex-atlas | codex/android-test-validity | Usuario: terminar pendientes de código y pruebas vigentes | 2026-10-26T02:05:48.863195+00:00 |
 | atlas-090-wall-base | Escena 090: base del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/210 | — | 2026-10-26T07:33:14.196252+00:00 |
 | atlas-095-garden | Escena 095: árbol, fondo y flores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/211 | approved exact 47e89e1d59374be8aa04ff8e658ee3a6 | 2026-10-26T09:43:54.555333+00:00 |
-| atlas-074-cleanup | Escena 074: quitar resto de tile | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/212 | honors exact d08d6c8758ff4ca9906c89a4c4d95888 | 2026-10-26T09:44:02.045349+00:00 |
+| atlas-074-cleanup | Escena 074: quitar resto de tile | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/212 | honors exact d08d6c8758ff4ca9906c89a4c4d95888 | 2026-10-26T09:44:13.358606+00:00 |
 | atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/213 | — | 2026-10-26T07:44:33.744991+00:00 |
 | atlas-112-genie-door | Escena 112: Genio y borde de puerta | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/214 | — | 2026-10-26T07:55:57.710528+00:00 |
 | atlas-061-wall-tip | Escena 061: remate inferior del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/215 | — | 2026-10-26T07:58:58.896503+00:00 |
