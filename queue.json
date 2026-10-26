@@ -4124,10 +4124,23 @@
         }
       ],
       "claimed_at": "2026-10-26T22:35:35.646918+00:00"
+    },
+    "hd-reload-fill-decomp": {
+      "id": "hd-reload-fill-decomp",
+      "piece": "Recarga HD dinamica igual al original desde decomp",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T22:52:34.588428+00:00",
+      "updated_at": "2026-10-26T22:52:34.588428+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Pedido usuario 26/10 trailer carta roja vacia",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:52:26.825439+00:00",
+  "updated_at": "2026-10-26T22:52:34.588428+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
