@@ -2915,13 +2915,13 @@
     "submenu-tienda-moguri": {
       "id": "submenu-tienda-moguri",
       "piece": "Tienda moguri: receta de submenus en vista ancha (usuario 25/10)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T23:15:12.770475+00:00",
-      "updated_at": "2026-10-26T10:07:17.111671+00:00",
+      "updated_at": "2026-10-26T10:21:12.457340+00:00",
       "branch": "codex/atlas-moguri-submenus",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/228",
-      "approval": null,
+      "approval": "approved:ddedd01659044342acdf92331fa7fddf y bbfce11b25f34df0a2004146597afb99",
       "reference": null,
       "evidence": [
         {
@@ -2933,10 +2933,16 @@
           "at": "2026-10-26T10:07:17.111671+00:00",
           "owner": "codex-atlas",
           "detail": "PR228 draft; también Canjear bbfce11b25f34df0a2004146597afb99. Rojo limpio verificado en cuatro capturas; receta y reproducción versionadas. Pendiente valoración humana de ambos."
+        },
+        {
+          "at": "2026-10-26T10:21:12.457340+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 5b8d91148e05948acbc69c1d0bcf18da461fb5df. Comentario nuevo de Canjear se atiende como revisión hija independiente."
         }
       ],
       "claimed_at": "2026-10-26T09:51:25.713141+00:00",
-      "sent": "ddedd01659044342acdf92331fa7fddf"
+      "sent": "ddedd01659044342acdf92331fa7fddf",
+      "completed_at": "2026-10-26T10:21:12.457340+00:00"
     },
     "submenu-cambiar-naipes": {
       "id": "submenu-cambiar-naipes",
@@ -3756,7 +3762,7 @@
     "created_at": "2026-10-26T10:20:59.971129+00:00",
     "updated_at": "2026-10-26T10:20:59.971129+00:00"
   },
-  "updated_at": "2026-10-26T10:20:59.971129+00:00",
+  "updated_at": "2026-10-26T10:21:12.457857+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
