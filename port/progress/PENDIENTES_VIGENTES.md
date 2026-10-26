@@ -5,6 +5,17 @@ archivos anteriores). Método de depuración: DEBUG_WORKFLOW.md. Cola de arte: `
 list` (Atlas). Reglas del usuario: REGLAS_DEL_USUARIO.md. Última prerelease: **v2.0-pre19** (26/10, Windows, Linux,
 Steam Deck; zip limpio en KHCoMPC).
 
+## TRASPASO — Claude, 26/10 mañana
+
+- **Corriendo (desacoplado, sobrevive al cierre de sesión):** baterías en khcom-claude-int (`run_batteries.py
+  --status`; relanzadas 06:20, siguen desde «events us») y `test_hd_audio_flow.py` (salida en
+  D:/01Claude/ReKHCoM-build/v20check/). Después de las baterías: `test_frameskip.py --build build/pc-main --jobs 3`
+  (son ~400 corridas: horas, no es un cuelgue).
+- **Pruebas de la 2.0 ya pasadas (pre19 / main):** test_update (las 4 estables → ok), test_launcher 11/11,
+  test_hd_audio 0/13 con problemas, match_hd_scenes --check, primer arranque modo + ventana (fullscreen=0).
+- **Linux 64 bits** hecho (juego, GPU, videos HD con subtítulos); la fila de pantalla completa en Opciones no está
+  (F11 y fullscreen=1 sí): hace falta una entrada nueva en el puente y en todos los hosts; queda para después.
+
 ## Reglas que no se olvidan
 
 - Rama y PR por entrega; lo visual pasa por Atlas y solo entra lo aprobado (LOGICA_APROBADOS.md).
