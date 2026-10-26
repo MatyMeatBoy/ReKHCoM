@@ -337,8 +337,30 @@ int main(int argc, char** argv) {
     }
     SDL_SetRenderVSync(sRenderer, 1);
     Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));
-    if (getenv("REKHCOM_FULLSCREEN"))
-        SDL_SetWindowFullscreen(sWindow, true);
+    {
+        /* full screen as kh_com.ini says (the Steam Deck package's preset), or REKHCOM_FULLSCREEN=1 */
+        char ini[1200], line[256];
+        int full = getenv("REKHCOM_FULLSCREEN") != NULL;
+        FILE* cfg;
+        snprintf(ini, sizeof(ini), "%s/kh_com.ini", sData);
+        if (!full && (cfg = fopen(ini, "r")) != NULL) {
+            while (fgets(line, sizeof(line), cfg))
+                if (!strncmp(line, "fullscreen=", 11))
+                    full = atoi(line + 11) != 0;
+            fclose(cfg);
+        }
+        if (!full) {
+            snprintf(ini, sizeof(ini), "%s/kh_com.default.ini", sData);
+            if ((cfg = fopen(ini, "r")) != NULL) {
+                while (fgets(line, sizeof(line), cfg))
+                    if (!strncmp(line, "fullscreen=", 11))
+                        full = atoi(line + 11) != 0;
+                fclose(cfg);
+            }
+        }
+        if (full)
+            SDL_SetWindowFullscreen(sWindow, true);
+    }
 
     uint64_t* table = (uint64_t*)(uintptr_t)h.hostTable;
     uint64_t t[HF_COUNT] = {

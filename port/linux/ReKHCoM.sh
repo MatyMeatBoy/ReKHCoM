@@ -92,6 +92,22 @@ fi
 cd "$DIR" || exit 1
 GAME=./bin/khcom_$REGION
 
+# The 64-bit build (26/10, port/linux64): on x86-64 the game image runs in a native 64-bit host with the system's own
+# GPU driver, no 32-bit libraries needed. If it is missing or does not get going, the 32-bit build below runs.
+# REKHCOM_64=0 forces the 32-bit build.
+if [ "${REKHCOM_64:-1}" != 0 ] && [ "$(uname -m)" = x86_64 ] && [ -x "$DIR/bin64/rekhcom64" ] &&
+   [ -f "$DIR/bin64/guest-$REGION.bin" ]; then
+    echo "ReKHCoM.sh: 64-bit build"
+    START=$(date +%s)
+    LD_LIBRARY_PATH="$DIR/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" KHCOM_ROM="$ROM" \
+        "$DIR/bin64/rekhcom64" "$DIR/bin64/guest-$REGION.bin" --data "$DIR"
+    CODE=$?
+    if [ "$CODE" = 0 ] || [ $(($(date +%s) - START)) -ge 8 ]; then
+        exit "$CODE"
+    fi
+    echo "ReKHCoM.sh: the 64-bit build ended at once (code $CODE): the 32-bit build"
+fi
+
 # With the GPU (25/10, #140): SDL draws through the system's OpenGL driver, which only loads with the system's own
 # C library. SteamOS (and Arch, Debian/Ubuntu with i386 packages) ship the 32-bit loader, C library and Mesa for
 # Steam and Proton: when they are there the game starts with them. lib/sys (SDL3) comes first, then the system's

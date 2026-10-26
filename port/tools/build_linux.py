@@ -183,6 +183,10 @@ def bundle(arch, base, versions, dest):
         plain = name.split('.so')[0] + '.so'
         if plain != name and (dest / 'lib' / name).is_file():
             shutil.copyfile(dest / 'lib' / name, dest / 'lib' / plain)
+    # the 64-bit build (port/linux64/build_linux64.py), when made: ReKHCoM.sh runs it on x86-64
+    out64 = ROOT / 'build/linux64/out'
+    if arch == 'i386' and (out64 / 'bin64/rekhcom64').exists():
+        shutil.copytree(out64, dest, dirs_exist_ok=True)
     # SDL3 apart in lib/sys: ReKHCoM.sh puts it ahead of the system's folders when the game runs with the system's
     # own loader and OpenGL driver (#140), without the bundled C library that lib/ holds.
     (dest / 'lib/sys').mkdir()
@@ -227,7 +231,7 @@ def bundle(arch, base, versions, dest):
 
 
 def executable(name):
-    return name.endswith('.sh') or '/bin/' in name or '/lib/' in name
+    return name.endswith('.sh') or '/bin/' in name or '/lib/' in name or '/bin64/' in name or '/lib64/' in name
 
 
 def make_tar(src, archive):

@@ -45,6 +45,6 @@ Steam Deck; zip limpio en KHCoMPC).
 ## 5. Después de la v2.0
 
 - Modos de Re:CoM basados en PS2 con REA: mejorar o arreglar los modos que ya hay (no modos nuevos).
-- Linux/Steam Deck 64 bits (el arreglo de GPU ya funciona); consolas a más potencia solo con ajustes documentados.
+- Consolas a más potencia solo con ajustes documentados. (Linux/Steam Deck 64 bits: hecho el 26/10, port/linux64.)
 - iOS (IPA por fuera de la App Store; hace falta una Mac para compilar).
 - Switch (SWITCH_MOTOR.md); Vita/PS4 a la GPU; online (~70 %); rutas de Sora y Reverse/Rebirth (#39).
