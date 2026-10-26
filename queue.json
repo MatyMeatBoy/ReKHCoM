@@ -4103,12 +4103,12 @@
     "gallery-previews-black-pedro": {
       "id": "gallery-previews-black-pedro",
       "piece": "Galería HD: previews negros tras saltar y reentrar",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-gallery-preview",
       "created_at": "2026-10-26T22:35:30.093184+00:00",
-      "updated_at": "2026-10-26T22:51:24.828096+00:00",
+      "updated_at": "2026-10-26T22:52:26.825439+00:00",
       "branch": "fix/gallery-black-previews",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/275",
       "approval": "Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10",
       "reference": "Reporte Pedro y screenshot codex-clipboard-13132ca4-6e72-41ed-aac7-f24049978fc2.png",
       "evidence": [
@@ -4116,13 +4116,18 @@
           "at": "2026-10-26T22:51:24.828096+00:00",
           "owner": "codex-gallery-preview",
           "detail": "MF real RED/GREEN runtime+native importer; real movies123/121/118; Windows EU/US/JP builds and24 real skip/return cycles with repaired black cache; SDL readback limitation documented; independent review no findings"
+        },
+        {
+          "at": "2026-10-26T22:52:26.825439+00:00",
+          "owner": "codex-gallery-preview",
+          "detail": "Bugfix funcional, no pieza de arte; commit fbf82a220. 24 UI skip/return cycles EU/US/JP, MF real RED/GREEN runtime/importer, repaired PNG verified; independent review no findings; no merge/release performed"
         }
       ],
       "claimed_at": "2026-10-26T22:35:35.646918+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:51:24.828096+00:00",
+  "updated_at": "2026-10-26T22:52:26.825439+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
