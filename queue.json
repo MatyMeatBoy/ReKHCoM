@@ -2918,12 +2918,18 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T23:15:12.770475+00:00",
-      "updated_at": "2026-10-26T09:51:25.713141+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T09:55:04.208511+00:00",
+      "branch": "codex/atlas-moguri-submenus",
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T09:55:04.208511+00:00",
+          "owner": "codex-atlas",
+          "detail": "Prioridad actual: aprobados nuevos primero, después submenús moguri. Comprar/Canjear y sus estados interiores, capturas reales EU aisladas."
+        }
+      ],
       "claimed_at": "2026-10-26T09:51:25.713141+00:00"
     },
     "submenu-cambiar-naipes": {
@@ -3713,7 +3719,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T09:51:25.713141+00:00",
+  "updated_at": "2026-10-26T09:55:04.208511+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
