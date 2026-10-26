@@ -135,4 +135,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/229 | — | 2026-10-26T10:20:29.272195+00:00 |
 | atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | — | 2026-10-26T10:26:47.076243+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T10:54:40.284655+00:00)
