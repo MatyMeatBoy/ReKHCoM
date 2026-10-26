@@ -130,6 +130,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-start-values-evidence | Menú START: cifras HD actuales | pendiente | — | — | — | 2026-10-26T08:11:09.029483+00:00 |
 | atlas-maleficent-lomo-r2 | Maléfica: tres recortes, lomo y estilo KHCoM | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/222 | — | 2026-10-26T08:25:25.590946+00:00 |
 | atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/226 | — | 2026-10-26T09:36:23.884222+00:00 |
-| atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:36:29.570680+00:00 |
+| atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | en_curso | codex-atlas | — | — | 2026-10-26T09:36:34.812546+00:00 |
 
 Integrador: libre
