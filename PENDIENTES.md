@@ -142,4 +142,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | achievements-trigger-key-centre | Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/243 | — | 2026-10-26T16:43:28.997495+00:00 |
 | settings-roundtrip-20261026 | Prueba real de persistencia settings juego-launcher y reset controles | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/245 | — | 2026-10-26T16:47:47.000063+00:00 |
 
-Integrador: codex-retoma (ocupado; 2026-10-26T17:02:11.899205+00:00)
+Integrador: codex-retoma (ocupado; 2026-10-26T17:36:41.234887+00:00)
