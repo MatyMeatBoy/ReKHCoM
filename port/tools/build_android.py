@@ -180,6 +180,10 @@ android {
     shutil.copy2(ROOT/'port/assets/fonts/KHMenu.otf',launcher/'fonts/KHMenu.otf')
     for name in ('boxart.jpg','logo.png'):shutil.copy2(ROOT/'port/decompui/assets'/name,launcher/name)
     shutil.copy2(ROOT/'port/assets/achievements/badges.png',launcher/'achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import gallery_posters
+    gallery_posters()
+    shutil.copytree(ROOT/'port/assets/gallery',stage/'app/src/main/assets/gallery',dirs_exist_ok=True)
     # achievement badges: the game reads APK assets without the "assets/" prefix (PortLoadAsset)
     (stage/'app/src/main/assets/achievements').mkdir(parents=True,exist_ok=True)
     shutil.copy2(ROOT/'port/assets/achievements/badges.png',stage/'app/src/main/assets/achievements/badges.png')

@@ -20,6 +20,7 @@ int PortUiGalleryHarnessDone(void) {
 }
 
 void PortUiGalleryResume(void) {
+    if (PortScenePosterRendering()) return; /* offline capture exits instead of opening a paused menu */
     int choice = sSceneChoice, scroll = sSceneScroll, hd = sSceneHd, tick = sSceneHarnessTick;
     int eventId = SceneAt(choice, NULL), i;
     unsigned char broken[sizeof(sSceneBroken)];
@@ -152,14 +153,19 @@ static void SceneMenuOpen(void) {
         if (!checked) {
             extern int PortSceneBackgroundPreview(int eventId, uint32_t* out, int width, int height);
             uint32_t still[160 * 90];
-            int i, ok = 0;
+            extern int PortScenePosterPreview(int, uint32_t*, int*, int*);
+            uint32_t* poster = SDL_malloc(640 * 360 * sizeof(uint32_t));
+            int i, ok = 0, posterOk = 0;
             checked = 1;
             for (i = 0; i < SceneCount(); i++) {
-                int eventId = SceneRawAt(i, NULL);
+                int eventId = SceneRawAt(i, NULL), pw, ph;
+                if (poster && PortScenePosterPreview(eventId, poster, &pw, &ph)) posterOk++;
                 if (PortSceneBackgroundPreview(eventId, still, 160, 90)) ok++;
                 else PortLog("scene gallery preview: missing GBA background event %d", eventId);
             }
             PortLog("scene gallery preview check: %d/%d cartridge backgrounds", ok, SceneCount());
+            PortLog("scene gallery engine posters: %d/%d portable PNGs", posterOk, SceneCount());
+            SDL_free(poster);
         }
     }
 }
@@ -193,7 +199,7 @@ static int SceneMenuInput(const SDL_Event* ev) {
         case SDL_GAMEPAD_BUTTON_START: case SDL_GAMEPAD_BUTTON_BACK: case SDL_GAMEPAD_BUTTON_GUIDE: Close(); return 1;
         }
     }
-    if (back) { sPage = PAGE_MAIN; sCursor = ITEM_SCENES_MENU; sScroll = 0; return 1; }
+    if (back) { extern void PortSceneGalleryPreviewCancel(void); PortSceneGalleryPreviewCancel(); sPage = PAGE_MAIN; sCursor = ITEM_SCENES_MENU; sScroll = 0; return 1; }
     if (tab) {
         int oldId = SceneAt(sSceneChoice, NULL), i;
         sSceneHd = (sSceneHd + 1) % 3;
@@ -340,11 +346,22 @@ static void DrawSceneMenu(int l, int width, int height) {
             DrawText(SceneRiku(eventId) ? (SceneProviderHd(sSceneChoice) ? "Riku - HD" : "Riku - GBA") : (SceneProviderHd(sSceneChoice) ? "Sora - HD" : "Sora - GBA"),
                      cardX + 16, top, MENU_INK, 0xFFD8D8D8u);
             Fill(cardX + 6, top + 16, pw, ph, MENU_GREY);
-            if (preview)
-                for (py = 0; py < ph; py++)
-                    for (px = 0; px < pw; px++)
-                        Pixel(cardX + 6 + px, top + 16 + py, preview[(py * 90 / ph) * 160 + px * 160 / pw]);
-            else {
+            if (preview) {
+                extern void PortSceneGalleryPreviewSize(int*, int*);
+                int sourceW, sourceH, drawW, drawH, drawX, drawY;
+                PortSceneGalleryPreviewSize(&sourceW, &sourceH);
+                drawW = pw; drawH = pw * sourceH / sourceW;
+                if (drawH > ph) { drawH = ph; drawW = ph * sourceW / sourceH; }
+                drawX = cardX + 6 + (pw - drawW) / 2; drawY = top + 16 + (ph - drawH) / 2;
+                if (sHdUiFrame && sFb == sHdUiFrame && sHdUiCount < 2048) {
+                    int n = sHdUiCount++;
+                    sHdUiGlyphs[n].code = -2; sHdUiGlyphs[n].alive = 1;
+                    sHdUiGlyphs[n].x = drawX; sHdUiGlyphs[n].y = drawY;
+                    sHdUiGlyphs[n].pw = drawW; sHdUiGlyphs[n].run = drawH;
+                    sHdUiGlyphs[n].face = 0xFFFFFFFFu; sHdUiGlyphs[n].shadow = 0xFF000000u;
+                } else for (py = 0; py < drawH; py++) for (px = 0; px < drawW; px++)
+                    Pixel(drawX + px, drawY + py, preview[(py * sourceH / drawH) * sourceW + px * sourceW / drawW]);
+            } else {
                 const char* empty = l == LANG_ES ? "Sin vista previa" : "No preview available";
                 while (TextWidth(empty) > pw) { empty = l == LANG_ES ? "Sin captura" : "No still yet"; break; }
                 DrawText(empty, cardX + 7, top + 18 + ph / 2, MENU_DIM, MENU_GREY);

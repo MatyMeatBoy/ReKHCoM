@@ -140,7 +140,10 @@ def main():
                '-sEXPORTED_RUNTIME_METHODS=["FS","IDBFS","HEAPU8","callMain","ccall"]',
                # achievement badges for the in-game popup and list (PortLoadAsset)
                '--embed-file', str(ROOT / 'port/assets/achievements/badges.png') + '@/achievements/badges.png',
+               '--embed-file', str(ROOT / 'port/assets/gallery') + '@/gallery',
                '-o', str(output)]
+    from core_assets import gallery_posters
+    gallery_posters()
     # A response file avoids Windows' command-line length limit.
     response = work / 'link.rsp'
     response.write_text('\n'.join(json.dumps(str(p)) for p in objects) + '\n' +

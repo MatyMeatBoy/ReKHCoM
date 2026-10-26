@@ -276,6 +276,10 @@ def build_host(regions):
     shutil.copytree(HERE / 'assets/fonts', assets / 'fonts')
     (assets / 'achievements').mkdir()
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', assets / 'achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import gallery_posters
+    gallery_posters()
+    shutil.copytree(ROOT / 'port/assets/gallery', assets / 'gallery', dirs_exist_ok=True)
     env = dict(os.environ,
                APP_VULKAN='1', APP_SOURCE_DIR='app', APP_PARAM='sce_sys/param.json', APP_SCE_SYS='sce_sys',
                APP_ASSETS='build/assets', APP_LAPY_HELPER='1', APP_ROOT_FILES='', APP_RUNTIME_MODULES='',

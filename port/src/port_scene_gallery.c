@@ -10,7 +10,9 @@
 #include "map_api.h"
 #include "port/port_state.h"
 #include "evt/event_ids.h"
+#include "evt/evt_types.h"
 #include "port/port_scene_gallery.h"
+#include "port/port_hd_poster.h"
 
 extern void PortReplayVisitState(PortStateVisitor visit);
 extern int PortSceneGalleryBegin(int eventId);
@@ -62,100 +64,239 @@ void PortSceneGalleryAuditEnd(void) {
     }
 }
 
-/* One small still in memory, never a movie or an unbounded list of decoded frames. Disk copies survive runs. */
-#define PREVIEW_W 160
-#define PREVIEW_H 90
+/* One selected CPU poster and one GPU texture. A single cold HD job owns only
+ * its temporary decode buffer; it never touches renderer/config/global path rings. */
+#define PREVIEW_W 640
+#define PREVIEW_H 360
 static uint32_t sPreview[PREVIEW_W * PREVIEW_H];
-static int sPreviewEvent = -1, sPreviewHd = -1, sPreviewReady, sPreviewSerial, sPreviewLoadedSerial = -1;
-static int sReplayCaptured;
-static int sPreviewWait;
-static int sHdReplayEvent = -1, sHdCaptured;
-
-void PortSceneGalleryHdBegin(int eventId) { sHdReplayEvent = eventId; sHdCaptured = 0; }
-void PortSceneGalleryHdEnd(void) { sHdReplayEvent = -1; }
-
-static const char* PreviewPath(int eventId, int hd) {
-    char name[64];
-    SDL_snprintf(name, sizeof(name), "scene-preview-%s-%03d.rgb", hd ? "hd" : "gba", eventId);
-    return PortConfigPath(name);
-}
-
-void PortSceneGalleryRemember(int eventId, int hd, const uint32_t* frame, int w, int h) {
-    uint32_t still[PREVIEW_W * PREVIEW_H];
-    FILE* f;
-    int x, y;
-    if (!frame || w <= 0 || h <= 0)
-        return;
-    for (y = 0; y < PREVIEW_H; y++)
-        for (x = 0; x < PREVIEW_W; x++)
-            still[y * PREVIEW_W + x] = frame[(y * h / PREVIEW_H) * w + x * w / PREVIEW_W] | 0xFF000000u;
-    f = fopen(PreviewPath(eventId, hd), "wb");
-    if (f) {
-        fwrite(still, 1, sizeof(still), f);
-        fclose(f);
-        sPreviewSerial++;
+static int sPreviewEvent = -1, sPreviewHd = -1, sPreviewReady, sPreviewSerial, sPreviewW, sPreviewH, sPreviewAttempted;
+static Uint64 sPreviewWaitAt;
+static int sHdReplayEvent = -1;
+static SDL_Texture* sPreviewTexture;
+static SDL_Renderer* sPreviewRenderer;
+static int sTextureSerial = -1, sTextureW, sTextureH;
+#if defined(_WIN32) || defined(PORT_LINUX)
+typedef struct PreviewJob {
+    SDL_Thread* thread;
+    SDL_AtomicInt done;
+    uint32_t* pixels;
+    int event, serial, second, ok;
+    char path[1024], cache[1200];
+} PreviewJob;
+static PreviewJob sPreviewJob;
+static int PreviewDecodeJob(void* data) {
+    PreviewJob* job = data;
+    job->ok = PortHdScenePreviewFile(job->path, job->pixels, PREVIEW_W, PREVIEW_H, job->second);
+    if (job->ok) {
+        SDL_Surface* surface = SDL_CreateSurfaceFrom(PREVIEW_W, PREVIEW_H, SDL_PIXELFORMAT_ARGB8888, job->pixels, PREVIEW_W * 4);
+        if (surface) SDL_SavePNG(surface, job->cache);
+        SDL_DestroySurface(surface);
     }
+    SDL_SetAtomicInt(&job->done, 1);
+    return 0;
 }
-
-const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
-    FILE* f;
-    if (eventId != sPreviewEvent || hd != sPreviewHd || sPreviewLoadedSerial != sPreviewSerial) {
-        sPreviewEvent = eventId;
-        sPreviewHd = hd;
-        sPreviewLoadedSerial = sPreviewSerial;
-        sPreviewReady = 0;
-        sPreviewWait = 0;
-        f = fopen(PreviewPath(eventId, hd), "rb");
-        if (f) {
-            sPreviewReady = fread(sPreview, 1, sizeof(sPreview), f) == sizeof(sPreview);
-            fclose(f);
+#endif
+void PortSceneGalleryHdBegin(int eventId) { sHdReplayEvent = eventId; }
+void PortSceneGalleryHdEnd(void) { sHdReplayEvent = -1; }
+void PortSceneGalleryPreviewPoll(void) {
+#if defined(_WIN32) || defined(PORT_LINUX)
+    PreviewJob* job = &sPreviewJob;
+    if (job->thread && SDL_GetAtomicInt(&job->done)) {
+        SDL_WaitThread(job->thread, NULL);
+        job->thread = NULL;
+        if (job->ok && job->serial == sPreviewSerial && job->event == sPreviewEvent && sPreviewHd) {
+            SDL_memcpy(sPreview, job->pixels, sizeof(sPreview));
+            sPreviewW = PREVIEW_W; sPreviewH = PREVIEW_H; sPreviewReady = 1;
+            sTextureSerial = -1;
+            PortLog("scene gallery preview: HD event %d from bounded async poster", job->event);
         }
-        if (!sPreviewReady && !hd) {
-            extern int PortSceneBackgroundPreview(int eventId, uint32_t* out, int width, int height);
-            sPreviewReady = PortSceneBackgroundPreview(eventId, sPreview, PREVIEW_W, PREVIEW_H);
-            if (sPreviewReady) PortLog("scene gallery preview: GBA event %d from cartridge background", eventId);
+        SDL_free(job->pixels); job->pixels = NULL;
+    }
+#endif
+}
+void PortSceneGalleryPreviewCancel(void) {
+    ++sPreviewSerial;
+    sPreviewEvent = sPreviewHd = -1; sPreviewReady = 0;
+    SDL_DestroyTexture(sPreviewTexture); sPreviewTexture = NULL; sPreviewRenderer = NULL;
+    sTextureSerial = -1;
+    PortSceneGalleryPreviewPoll(); /* never wait for a cold decoder when closing a menu */
+}
+void PortSceneGalleryPreviewSize(int* width, int* height) { *width = sPreviewW; *height = sPreviewH; }
+const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
+    extern int PortScenePosterPreview(int, uint32_t*, int*, int*);
+    extern int PortScenePosterDecode(const void*, size_t, uint32_t*, int*, int*);
+    PortSceneGalleryPreviewPoll();
+    if (eventId != sPreviewEvent || hd != sPreviewHd) {
+        const char* movie;
+        char path[1024], sidecar[1200];
+        void* data = NULL;
+        size_t size = 0;
+        ++sPreviewSerial; sPreviewEvent = eventId; sPreviewHd = hd;
+        sPreviewReady = 0; sPreviewAttempted = 0; sPreviewWaitAt = SDL_GetTicks(); sTextureSerial = -1;
+        if (!hd) {
+            sPreviewReady = PortScenePosterPreview(eventId, sPreview, &sPreviewW, &sPreviewH);
+            if (sPreviewReady) PortLog("scene gallery preview: GBA event %d from clean engine poster", eventId);
+            else {
+                extern int PortSceneBackgroundPreview(int, uint32_t*, int, int);
+                sPreviewW = 360; sPreviewH = 240;
+                sPreviewReady = PortSceneBackgroundPreview(eventId, sPreview, sPreviewW, sPreviewH);
+            }
+        } else if ((movie = PortHdGalleryMovieName(eventId)) != NULL) {
+#if defined(_WIN32) || defined(PORT_LINUX)
+            if (!PortHdScenePreviewPath(movie, path, sizeof(path))) path[0] = 0;
+#else
+            FILE* f;
+            SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/scenes/"), movie);
+            f = fopen(path, "rb");
+            if (f) fclose(f);
+            else SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/movies/"), movie);
+#endif
+            if (PortHdPosterPath(path, PortHdGalleryMovieOffset(eventId) + 1, sidecar, sizeof(sidecar))) {
+#if defined(_WIN32) || defined(PORT_LINUX)
+                SDL_PathInfo mediaInfo, imageInfo;
+                if (SDL_GetPathInfo(path, &mediaInfo) && SDL_GetPathInfo(sidecar, &imageInfo) &&
+                    imageInfo.modify_time >= mediaInfo.modify_time && imageInfo.size <= 2u * 1024u * 1024u)
+#endif
+                    data = SDL_LoadFile(sidecar, &size);
+                sPreviewReady = PortScenePosterDecode(data, size, sPreview, &sPreviewW, &sPreviewH);
+                SDL_free(data);
+                if (sPreviewReady && (sPreviewW != PREVIEW_W || sPreviewH != PREVIEW_H)) sPreviewReady = 0;
+            }
         }
     }
 #if defined(_WIN32) || defined(PORT_LINUX)
-    /* Debounce the cursor: no decoder work while scrolling, no startup prefetch. One frame, one selected scene. */
-    if (!sPreviewReady && hd && ++sPreviewWait == 12) {
-        extern int PortHdScenePreview(const char* movie, uint32_t* out, int w, int h, int second);
+    if (!sPreviewReady && hd && !sPreviewAttempted && !sPreviewJob.thread && SDL_GetTicks() - sPreviewWaitAt >= 75) {
         const char* movie = PortHdGalleryMovieName(eventId);
-        if (movie) {
-                sPreviewReady = PortHdScenePreview(movie, sPreview, PREVIEW_W, PREVIEW_H, PortHdGalleryMovieOffset(eventId) + 1);
-                if (sPreviewReady) {
-                    PortLog("scene gallery preview: HD event %d from one decoded frame", eventId);
-                    PortSceneGalleryRemember(eventId, 1, sPreview, PREVIEW_W, PREVIEW_H);
-                }
+        PreviewJob* job = &sPreviewJob;
+        if (movie && PortHdScenePreviewPath(movie, job->path, sizeof(job->path))) {
+            job->event = eventId; job->serial = sPreviewSerial;
+            job->second = PortHdGalleryMovieOffset(eventId) + 1;
+            job->ok = 0; SDL_SetAtomicInt(&job->done, 0);
+            PortHdPosterPath(job->path, job->second, job->cache, sizeof(job->cache));
+            job->pixels = SDL_malloc(sizeof(sPreview));
+            if (job->pixels) {
+                job->thread = SDL_CreateThread(PreviewDecodeJob, "selected HD poster", job);
+                if (!job->thread) { SDL_free(job->pixels); job->pixels = NULL; }
+            }
         }
+        sPreviewAttempted = 1; /* one attempt per selection, including corrupt media */
     }
 #endif
     return sPreviewReady ? sPreview : NULL;
 }
-
-void PortSceneGalleryCapture(void) {
-    if (sReplay == GALLERY_PLAY && !sReplayCaptured && PortFrameCount() - sReplayStartFrame >= 90) {
-        PortSceneGalleryRemember(sReplayEvent, 0, gPortFrame, gPortScreen.width, gPortScreen.height);
-        sReplayCaptured = 1;
+/* Output-resolution poster rendering avoids shrinking a 360p still to the menu's
+ * ~90px logical card and enlarging those few pixels again on an HD display. */
+int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float w, float h, uint32_t face, uint32_t shadow) {
+    SDL_FRect dest = {x,y,w,h};
+    int alpha = 255 - SDL_clamp((int)(face & 255) - (int)(shadow & 255), 0, 255);
+    if (!sPreviewReady || !renderer || w <= 0 || h <= 0) return 0;
+    if (sPreviewRenderer != renderer || sTextureW != sPreviewW || sTextureH != sPreviewH) {
+        SDL_DestroyTexture(sPreviewTexture); sPreviewTexture = NULL;
     }
+    if (!sPreviewTexture) {
+        sPreviewTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, sPreviewW, sPreviewH);
+        if (!sPreviewTexture) return 0;
+        sPreviewRenderer = renderer; sTextureW = sPreviewW; sTextureH = sPreviewH; sTextureSerial = -1;
+        SDL_SetTextureBlendMode(sPreviewTexture, SDL_BLENDMODE_NONE);
+        SDL_SetTextureScaleMode(sPreviewTexture, sPreviewHd ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
+    }
+    if (sTextureSerial != sPreviewSerial) {
+        SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4);
+        sTextureSerial = sPreviewSerial;
+    }
+    SDL_RenderTexture(renderer, sPreviewTexture, NULL, &dest);
+    if (alpha > 0) {
+        int r = SDL_min(255, (int)((shadow >> 16) & 255) * 255 / alpha);
+        int g = SDL_min(255, (int)((shadow >> 8) & 255) * 255 / alpha);
+        int b = SDL_min(255, (int)(shadow & 255) * 255 / alpha);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, r,g,b,alpha);
+        SDL_RenderFillRect(renderer, &dest);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    }
+    return 1;
 }
-
-void PortSceneGalleryMovieCapture(SDL_Renderer* renderer) {
+/* Offline only: the preparation tool supplies a private --data-dir. Never launched by the gallery. */
 #if defined(_WIN32) || defined(PORT_LINUX)
-    if (sHdReplayEvent >= 0 && !sHdCaptured) {
-        SDL_Surface* raw = SDL_RenderReadPixels(renderer, NULL);
-        SDL_Surface* rgb = raw ? SDL_ConvertSurface(raw, SDL_PIXELFORMAT_XRGB8888) : NULL;
-        if (rgb && rgb->pitch == rgb->w * 4) {
-            PortSceneGalleryRemember(sHdReplayEvent, 1, rgb->pixels, rgb->w, rgb->h);
-            sHdCaptured = 1;
-        }
-        SDL_DestroySurface(rgb);
-        SDL_DestroySurface(raw);
+static int sPosterEvent = -1, sPosterDone, sPosterStable, sPosterForce, sPosterFrame = 90;
+static int sPosterBestScore = -1;
+static uint32_t sPosterPixels[360 * 240];
+static char sPosterOutput[1024];
+int PortScenePosterRendering(void) { return sPosterEvent >= 0; }
+int PortScenePosterFinished(void) { return sPosterDone; }
+int PortScenePosterConfigure(int argc, char** argv) {
+    int i, eventId = -1, isolated = 0;
+    const char* output = NULL;
+    char play[64];
+    SDL_Environment* env;
+    for (i = 1; i < argc; i++) {
+        if (!SDL_strcmp(argv[i], "--scene-poster") && i + 1 < argc) eventId = SDL_atoi(argv[++i]);
+        else if (!SDL_strcmp(argv[i], "--poster-frame") && i + 1 < argc) { int frame = SDL_atoi(argv[++i]); sPosterFrame = SDL_clamp(frame, 45, 1000); }
+        else if (!SDL_strcmp(argv[i], "--poster-output") && i + 1 < argc) output = argv[++i];
+        else if (!SDL_strcmp(argv[i], "--data-dir") && i + 1 < argc) { isolated = 1; i++; }
     }
-#else
-    (void)renderer;
-#endif
+    if (eventId < 0) return 0;
+    if (!isolated || !output || (eventId >= EVENT_COUNT && !PORT_SCENE_IS_MOVIE(eventId))) return -1;
+    sPosterEvent = eventId;
+    SDL_strlcpy(sPosterOutput, output, sizeof(sPosterOutput));
+    env = SDL_GetEnvironment();
+    SDL_snprintf(play, sizeof(play), "20:%d", eventId);
+    SDL_SetEnvironmentVariable(env, "KHCOM_GALLERY_PLAY", play, true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_MODE", "1:mode_title", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_CONFIG", "graphics_mode=3;graphics_mode_applied=3;view_mode=0;zoom=8;hd_title=0;hd_text=0;hd_hud=0;hd_scenes=0;hd_movies=0;hd_music=0;frame_skip=0;vsync=0;game_language=1", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_WINDOW", "360x240", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_FAST", "1", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_BACKGROUND_TEST", "1", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_PPU_THREADS", "1", true);
+    SDL_SetEnvironmentVariable(env, "KHCOM_HIDDEN", "1", true);
+    SDL_SetEnvironmentVariable(env, "SDL_VIDEO_DRIVER", "dummy", true);
+    SDL_SetEnvironmentVariable(env, "SDL_AUDIO_DRIVER", "dummy", true);
+    return 1;
 }
+void PortSceneGalleryCapture(void) {
+    extern EventState* gEventState;
+    unsigned age;
+    int actors = 0, i, dialogue, score, light = 0, x, y;
+    if (sPosterEvent < 0 || sPosterDone || sReplay != GALLERY_PLAY) return;
+    age = PortSceneGalleryAge();
+    dialogue = !PORT_SCENE_IS_MOVIE(sPosterEvent) && gEventState && gEventState->msgWinOpen && !gEventState->fadedOut;
+    if (gEventState && !PORT_SCENE_IS_MOVIE(sPosterEvent))
+        for (i = 0; i < 16; i++) actors += gEventState->charaObjs[i] != NULL;
+    sPosterStable = dialogue ? sPosterStable + 1 : 0;
+    for (i = 0; i < gPortScreen.width * gPortScreen.height; i += 97)
+        light += (gPortFrame[i] & 0xFFFFFFu) != 0;
+    score = light > 8 ? actors * 100 + (dialogue ? 500 : 0) + SDL_min((int)age, 100) : 0;
+    if (score > sPosterBestScore) {
+        for (y = 0; y < 240; y++) for (x = 0; x < 360; x++)
+            sPosterPixels[y * 360 + x] = gPortFrame[(y * gPortScreen.height / 240) * gPortScreen.width + x * gPortScreen.width / 360] | 0xFF000000u;
+        sPosterBestScore = score;
+    }
+    if ((actors && sPosterStable >= 8 && age >= 45) ||
+        (PORT_SCENE_IS_MOVIE(sPosterEvent) && age >= (unsigned)sPosterFrame) || age >= 1100 || sPosterForce) {
+        SDL_Surface* surface;
+        if (PORT_SCENE_IS_MOVIE(sPosterEvent))
+            for (y = 0; y < 240; y++) for (x = 0; x < 360; x++)
+                sPosterPixels[y * 360 + x] = gPortFrame[(y * gPortScreen.height / 240) * gPortScreen.width + x * gPortScreen.width / 360] | 0xFF000000u;
+        surface = SDL_CreateSurfaceFrom(360, 240, SDL_PIXELFORMAT_XRGB8888, sPosterPixels, 360 * 4);
+        if (surface && SDL_SavePNG(surface, sPosterOutput)) {
+            PortLog("scene poster: saved event=%d actors=%d dialogue=%d age=%u clean-ui=1 %s", sPosterEvent, actors, dialogue, age, sPosterOutput);
+            sPosterDone = 1;
+        }
+        SDL_DestroySurface(surface);
+    }
+}
+void PortScenePosterForceCapture(void) {
+    if (sPosterEvent >= 0 && !sPosterDone && sReplay == GALLERY_PLAY) { sPosterForce = 1; PortSceneGalleryCapture(); }
+}
+#else
+int PortScenePosterRendering(void) { return 0; }
+int PortScenePosterFinished(void) { return 0; }
+int PortScenePosterConfigure(int argc, char** argv) { (void)argc; (void)argv; return 0; }
+void PortScenePosterForceCapture(void) {}
+void PortSceneGalleryCapture(void) {}
+#endif
+/* The video's decoded poster has no subtitle/pause overlay. Do not replace it with a presented frame. */
+void PortSceneGalleryMovieCapture(SDL_Renderer* renderer) { (void)renderer; }
 
 int PortSceneGalleryActive(void) { return sReplay != GALLERY_IDLE || sHdReplayEvent >= 0; }
 int PortSceneGalleryAvailable(void) {
@@ -190,7 +331,6 @@ int PortSceneGalleryPlay(int eventId) {
         sReplayFallback = 1;
         sReplay = GALLERY_PLAY;
         sReplayFrames = 0;
-        sReplayCaptured = 0;
         sReplayEntered = 0;
         sReplayStartFrame = PortFrameCount();
         PortSceneGalleryBegin(eventId);
@@ -204,11 +344,13 @@ int PortSceneGalleryPlay(int eventId) {
 }
 
 void PortSceneGalleryReturn(void) {
+    PortScenePosterForceCapture();
     if (sReplay == GALLERY_PLAY)
         sReplay = GALLERY_RETURN;
 }
 
 void PortSceneGalleryShutdown(void) {
+    PortSceneGalleryPreviewCancel();
     SDL_free(sReplayMemory);
     sReplayMemory = NULL;
     sReplay = GALLERY_IDLE;
@@ -216,8 +358,20 @@ void PortSceneGalleryShutdown(void) {
     sReplayFallback = 0;
 }
 
+void PortSceneGalleryFinalShutdown(void) {
+    PortSceneGalleryShutdown();
+#if defined(_WIN32) || defined(PORT_LINUX)
+    if (sPreviewJob.thread) {
+        SDL_WaitThread(sPreviewJob.thread, NULL);
+        sPreviewJob.thread = NULL;
+        SDL_free(sPreviewJob.pixels); sPreviewJob.pixels = NULL;
+    }
+#endif
+}
+
 /* Same native call stack as quick states/rollback; never restore from an event task's own wait. */
 void PortSceneGalleryFrame(void) {
+    PortSceneGalleryPreviewPoll();
     extern const char* PortHarnessModeName(void);
     if (sReplayFallback) {
         if (sReplay == GALLERY_RETURN) {
@@ -248,7 +402,6 @@ void PortSceneGalleryFrame(void) {
         sReplayFrames = 0;
         sReplayEntered = 0;
         sReplayStartFrame = PortFrameCount();
-        sReplayCaptured = 0;
         sReplay = GALLERY_PLAY;
         PortLog("scene gallery: kept %u bytes from %s; playing %d", (unsigned)sReplayBytes, sReplayMode, sReplayEvent);
         PortSceneGalleryBegin(sReplayEvent);

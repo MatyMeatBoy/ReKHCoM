@@ -9,6 +9,7 @@
 #include "system_state.h"
 #include "msg_api.h"
 #ifdef PLATFORM_PC
+int PortScenePosterRendering(void);
 void PortSetBgIsoExtend(int bg, int enabled);
 int PortIsoScene(int eventId);
 #endif
@@ -6494,6 +6495,9 @@ static int MsgwinDockShift(void) {
 #endif
 
 static void msgwin_2(MsgWinWork* work) {
+#ifdef PLATFORM_PC
+    if (PortScenePosterRendering()) { DisableBg(work->bg); return; }
+#endif
     const MessageScriptEntry* entry = &work->script[work->scriptIndex];
 
 #ifdef PLATFORM_PC
@@ -6892,6 +6896,9 @@ u8 msgface_1(MsgFaceWork* work, void* task) {
 }
 
 void msgface_2(MsgFaceWork* work) {
+#ifdef PLATFORM_PC
+    if (PortScenePosterRendering()) return;
+#endif
     ObjAffine* affine;
     u8 flipX;
 
@@ -7137,6 +7144,9 @@ u8 UpdateMsgwaitClosing(MsgWaitWork* work) {
 }
 
 void msgwait_2(MsgWaitWork* work) {
+#ifdef PLATFORM_PC
+    if (PortScenePosterRendering()) return;
+#endif
     u8 centered = gEventState->msgWinCentered;
 
     if (centered) {
@@ -7261,6 +7271,9 @@ u8 msgwait_yesno_1(MsgWaitWork* work, void* task) {
 }
 
 void msgwait_yesno_2(MsgWaitWork* work) {
+#ifdef PLATFORM_PC
+    if (PortScenePosterRendering()) return;
+#endif
     switch (work->choiceShown) {
     case FALSE:
         if (gEventState->msgWinCentered) {
