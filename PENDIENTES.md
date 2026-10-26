@@ -114,5 +114,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-oogie | Oogie alfombra yfantasmas | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:39:00.726357+00:00 |
 | atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/192 | Solicitud explícita del usuario de integrar el pintor en Atlas | 2026-10-26T00:42:21.673078+00:00 |
 | core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
+| code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | pendiente | — | — | Solicitud del usuario de acabar pendientes de código | 2026-10-26T01:13:58.147660+00:00 |
 
 Integrador: libre

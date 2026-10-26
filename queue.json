@@ -3211,10 +3211,23 @@
       ],
       "claimed_at": "2026-10-26T00:51:15.352901+00:00",
       "completed_at": "2026-10-26T01:13:03.597995+00:00"
+    },
+    "code-options-missing": {
+      "id": "code-options-missing",
+      "piece": "Opciones: aviso rojo unificado de HD y ROM japonesa no instalados",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T01:13:58.147660+00:00",
+      "updated_at": "2026-10-26T01:13:58.147660+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Solicitud del usuario de acabar pendientes de código",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T01:13:09.805795+00:00",
+  "updated_at": "2026-10-26T01:13:58.147660+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
