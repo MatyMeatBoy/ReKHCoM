@@ -148,4 +148,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ending-desync-42 | Desincronizacion video audio final Sora issue 42 | pr_abierto | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/273 | Pedido directo usuario 26/10: intentar replicar y arreglar desync final reportado por Pedro | 2026-10-26T21:55:14.955753+00:00 |
 | trailer-v20-production | Producir y exportar trailer real v2.0 | en_curso | codex-trailer-production | — | Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas | 2026-10-26T21:34:06.805996+00:00 |
 
-Integrador: libre
+Integrador: codex-ending-integrador (ocupado; 2026-10-26T21:55:21.204781+00:00)
