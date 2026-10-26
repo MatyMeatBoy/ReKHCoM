@@ -3374,10 +3374,23 @@
       ],
       "claimed_at": "2026-10-26T07:39:14.586812+00:00",
       "sent": "d08d6c8758ff4ca9906c89a4c4d95888"
+    },
+    "atlas-097-shadow": {
+      "id": "atlas-097-shadow",
+      "piece": "Escena 097: sombra del actor fuera de cámara",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T07:42:08.549103+00:00",
+      "updated_at": "2026-10-26T07:42:08.549103+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-214032-de44b9",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:42:03.088079+00:00",
+  "updated_at": "2026-10-26T07:42:08.549103+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
