@@ -33,6 +33,12 @@ beta; **this release does not include a Switch package**. Features vary by platf
 - **Portable HD packs:** export your imported mod for supported Android/console hosts; updated ports retain their beta labels. [Platform downloads](#downloads).
 - **Game-wide fixes:** battle, startup and audio fixes, synchronized deck transitions and better widescreen scene borders. [Changelog](CHANGELOG.md).
 
+<p align="center"><img src="docs/screenshots/v2-title.png" width="98%" alt="HD title screen with aligned SELECT and Press Start bars"></p>
+<p align="center"><em>HD title screen: aligned SELECT and Press Start bars, with their warm menu lights.</em></p>
+
+<p align="center"><img src="docs/screenshots/v2-gallery.png" width="49%" alt="Scene gallery with a clean GBA poster showing Sora, Donald and Goofy"> <img src="docs/screenshots/v2-options.png" width="49%" alt="Options panel with HD title artwork"></p>
+<p align="center"><em>Scene gallery with a clean character poster (left); Options with HD artwork (right). Real v2.0 feature captures, shown in Spanish.</em></p>
+
 <p align="center"><img src="docs/screenshots/battle.png" width="49%"> <img src="docs/screenshots/field.png" width="49%"></p>
 
 ## Downloads
