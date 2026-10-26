@@ -12,6 +12,7 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include "port/port_hd_poster.h"
 #ifdef LAUNCHER_ANDROID
 #include "hd_android.inc"
 #else
@@ -1601,6 +1602,117 @@ static bool Mp4Ok(const fs::path& f) {
 /* One movie into dst: copied as it is (quality 0), or re-encoded from a plain copy beside it (that copy becomes the
    movie when the re-encoding fails). Written under .part names: dst appears only once whole. */
 /* quality: the compression, 0 source, 1 good, 2 saving */
+/* Optional gallery stills are prepared while importing, never on a cursor move.
+   The movie and any previous poster stay whole if decoding or PNG writing fails. */
+static bool WriteMoviePoster(const fs::path& movie, int second) {
+    char name[2048];
+    if (sJob.cancel || !PortHdPosterPath(movie.u8string().c_str(), second, name, sizeof(name))) return false;
+    fs::path poster = fs::u8path(name), part = poster;
+    part += ".part";
+    std::error_code ec;
+    bool existed = fs::exists(poster, ec);
+    if (existed && fs::file_size(poster, ec) > 24 && fs::file_size(poster, ec) < 2u * 1024u * 1024u &&
+        fs::last_write_time(poster, ec) >= fs::last_write_time(movie, ec) && !ec) {
+        unsigned char header[24] = {};
+        std::ifstream in(poster, std::ios::binary); in.read((char*)header, sizeof(header));
+        auto be = [](const unsigned char* p) { return (unsigned)p[0] << 24 | (unsigned)p[1] << 16 | (unsigned)p[2] << 8 | p[3]; };
+        if (in.gcount() == 24 && !memcmp(header, "\x89PNG\r\n\x1a\n", 8) &&
+            be(header + 16) == PORT_HD_POSTER_W && be(header + 20) == PORT_HD_POSTER_H) {
+            SDL_Surface* image = SDL_LoadPNG(poster.u8string().c_str());
+            bool valid = image && image->w == PORT_HD_POSTER_W && image->h == PORT_HD_POSTER_H;
+            SDL_DestroySurface(image);
+            if (valid) return true;
+        }
+    }
+    IMFAttributes* attrs = nullptr;
+    IMFSourceReader* reader = nullptr;
+    IMFMediaType* type = nullptr;
+    IMFSample* sample = nullptr;
+    IMFMediaBuffer* buffer = nullptr;
+    IMF2DBuffer* two = nullptr;
+    BYTE* pixels = nullptr;
+    LONG pitch = 0;
+    DWORD length = 0;
+    UINT64 dimensions = 0;
+    UINT32 w = 0, h = 0;
+    bool ok = false, locked2d = false, locked = false;
+    HRESULT format;
+    std::vector<unsigned char> rgba;
+    if (FAILED(MFCreateAttributes(&attrs, 1))) goto done;
+    attrs->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE);
+    if (FAILED(MFCreateSourceReaderFromURL(movie.c_str(), attrs, &reader))) goto done;
+    reader->SetStreamSelection((DWORD)MF_SOURCE_READER_ALL_STREAMS, FALSE);
+    reader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, TRUE);
+    if (FAILED(MFCreateMediaType(&type))) goto done;
+    type->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+    type->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32);
+    type->SetUINT64(MF_MT_FRAME_SIZE, (UINT64)PORT_HD_POSTER_W << 32 | PORT_HD_POSTER_H);
+    format = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, type);
+    if (FAILED(format)) {
+        type->DeleteItem(MF_MT_FRAME_SIZE);
+        format = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, type);
+    }
+    if (FAILED(format)) goto done;
+    type->Release(); type = nullptr;
+    if (FAILED(reader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &type)) ||
+        FAILED(type->GetUINT64(MF_MT_FRAME_SIZE, &dimensions))) goto done;
+    w = (UINT32)(dimensions >> 32); h = (UINT32)dimensions;
+    if (!w || !h || w > 4096 || h > 2160) goto done;
+    {
+        static const GUID timeFormat = {};
+        PROPVARIANT at; PropVariantInit(&at); at.vt = VT_I8; at.hVal.QuadPart = (LONGLONG)second * 10000000;
+        reader->SetCurrentPosition(timeFormat, at); PropVariantClear(&at);
+    }
+    for (int i = 0; i < 8 && !sample && !sJob.cancel; i++) {
+        DWORD flags = 0;
+        if (FAILED(reader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, nullptr, &flags, nullptr, &sample)) ||
+            flags & MF_SOURCE_READERF_ENDOFSTREAM) goto done;
+    }
+    if (!sample || FAILED(sample->ConvertToContiguousBuffer(&buffer))) goto done;
+    locked2d = SUCCEEDED(buffer->QueryInterface(IID_IMF2DBuffer, (void**)&two)) &&
+               SUCCEEDED(two->Lock2D(&pixels, &pitch));
+    if (!locked2d) {
+        locked = SUCCEEDED(buffer->Lock(&pixels, nullptr, &length));
+        if (!locked || length < (size_t)w * h * 4) goto done;
+        pitch = (LONG)w * 4;
+    }
+    rgba.resize(PORT_HD_POSTER_W * PORT_HD_POSTER_H * 4);
+    for (int y = 0; y < PORT_HD_POSTER_H; y++) for (int x = 0; x < PORT_HD_POSTER_W; x++) {
+        const BYTE* in = pixels + (LONG)(y * h / PORT_HD_POSTER_H) * pitch + (x * w / PORT_HD_POSTER_W) * 4;
+        unsigned char* out = rgba.data() + (y * PORT_HD_POSTER_W + x) * 4;
+        out[0] = in[2]; out[1] = in[1]; out[2] = in[0]; out[3] = 255;
+    }
+    ok = !sJob.cancel;
+done:
+    if (locked2d) two->Unlock2D();
+    if (locked) buffer->Unlock();
+    if (two) two->Release();
+    if (buffer) buffer->Release();
+    if (sample) sample->Release();
+    if (type) type->Release();
+    if (reader) reader->Release();
+    if (attrs) attrs->Release();
+    if (ok) {
+        SDL_Surface* surface = SDL_CreateSurfaceFrom(PORT_HD_POSTER_W, PORT_HD_POSTER_H,
+                                                    SDL_PIXELFORMAT_RGBA32, rgba.data(), PORT_HD_POSTER_W * 4);
+        ok = surface && SDL_SavePNG(surface, part.u8string().c_str());
+        SDL_DestroySurface(surface);
+        if (ok) {
+            fs::last_write_time(part, fs::last_write_time(movie, ec), ec);
+            fs::rename(part, poster, ec); ok = !ec;
+            if (ok && !existed) JournalAdd(poster.parent_path().filename().u8string() + "/" + poster.filename().u8string());
+        }
+    }
+    fs::remove(part, ec);
+    return ok;
+}
+
+static void WriteMoviePosters(const fs::path& movie) {
+    WriteMoviePoster(movie, 1);
+    if (movie.stem() == "zz_event_123") WriteMoviePoster(movie, 171);
+    if (movie.stem() == "zz_event_151") WriteMoviePoster(movie, 223);
+}
+
 static bool ImportMovie(const fs::path& src, const fs::path& dst, int quality) {
     std::error_code ec;
     Quality q = { 0, quality };
@@ -1786,10 +1898,12 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
                      (workers > 1 ? " (" + std::to_string(workers) + T(" a la vez)", " at once)") : std::string()));
             fs::path dst = (f.filename().string().rfind("zz_event_", 0) == 0 ? outScenes : outMovies) / f.filename();
             if (kept(f, dst)) { /* nothing to do for this one */
+                if (mf) WriteMoviePosters(dst);
                 movieCount++;
                 return;
             }
             if (finished(dst) || ImportMovie(f, dst, quality)) {
+                if (mf) WriteMoviePosters(dst);
                 movieCount++;
                 std::error_code ec2;
                 InstalledAdd(data, dst.parent_path().filename().u8string() + "/" + dst.filename().u8string(), quality,

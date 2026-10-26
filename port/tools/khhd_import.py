@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import khhd_pkg  # noqa: E402
 import khhd_scd  # noqa: E402
 import khhd_subs  # noqa: E402
+import khhd_posters  # noqa: E402
 
 MOVIE_KEY = bytes.fromhex('3f1ec193264258b8aa9d5375bf629a97')
 # with the movies, the endings' scenes too (Sora's capsule room, Riku's ending and crossroads): they lead into RSE / RRE
@@ -67,7 +68,10 @@ def main():
                 old.rename(hd / 'scenes' / old.name)
         for name in names:
             folder = 'scenes' if name.startswith('zz_event_') else 'movies'
-            copy_movie(movies / f'{name}.mp4', hd / folder / f'{name}.mp4')
+            imported = hd / folder / f'{name}.mp4'
+            copy_movie(movies / f'{name}.mp4', imported)
+            for second in khhd_posters.poster_seconds(imported):
+                khhd_posters.generate_poster(imported, second)
             print('movie', name)
         print(khhd_subs.extract(root, args.data), 'subtitle files')
     if not args.no_music:

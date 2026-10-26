@@ -20,6 +20,7 @@
  */
 #include "port/port.h"
 #include "port/port_scene_gallery.h"
+#include "port/port_hd_poster.h"
 
 #if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
 #include <stdio.h>
@@ -236,10 +237,56 @@ unsigned char* PortPortableHdTextCover(const char* text, int px, int pad, int* w
 
 SDL_Renderer* PortRenderer(void);
 
-#ifdef _WIN32
-/* One selected gallery still, with no audio stream, textures or background decoder retained. */
+/* Imported stills avoid opening a video decoder at all. Reject stale or
+   oversized images before loading; a poster never needs a full movie frame. */
+static int ReadImportedPoster(const char* movie, uint32_t* out, int ow, int oh, int second) {
+    char path[1200];
+    SDL_PathInfo media, image;
+    SDL_Surface *source, *target;
+    unsigned char header[24];
+    SDL_IOStream* file;
+    unsigned w, h;
+    int ok;
+    if (!PortHdPosterPath(movie, second, path, sizeof(path)) ||
+        !SDL_GetPathInfo(movie, &media) || !SDL_GetPathInfo(path, &image) ||
+        image.modify_time < media.modify_time || image.size > 2u * 1024u * 1024u) return 0;
+    file = SDL_IOFromFile(path, "rb");
+    if (!file) return 0;
+    ok = SDL_ReadIO(file, header, sizeof(header)) == sizeof(header); SDL_CloseIO(file);
+    if (!ok || memcmp(header, "\x89PNG\r\n\x1a\n", 8) || memcmp(header + 12, "IHDR", 4)) return 0;
+    w = (unsigned)header[16] << 24 | (unsigned)header[17] << 16 | (unsigned)header[18] << 8 | header[19];
+    h = (unsigned)header[20] << 24 | (unsigned)header[21] << 16 | (unsigned)header[22] << 8 | header[23];
+    if (w != PORT_HD_POSTER_W || h != PORT_HD_POSTER_H) return 0;
+    source = SDL_LoadPNG(path);
+    if (!source) return 0;
+    target = SDL_CreateSurfaceFrom(ow, oh, SDL_PIXELFORMAT_ARGB8888, out, ow * 4);
+    ok = target && SDL_BlitSurfaceScaled(source, NULL, target, NULL, SDL_SCALEMODE_LINEAR);
+    SDL_DestroySurface(target); SDL_DestroySurface(source);
+    return ok;
+}
+
+int PortHdScenePreviewPath(const char* name, char* out, size_t size) {
+    char path[1024];
+    SDL_PathInfo info;
+    int n;
+    if (!name || !*name || !out || !size) return 0;
+    /* SDL's path API uses UTF-8 on Windows too; stdio's ANSI probe would
+       miss a scene in a Unicode data directory and choose the legacy folder. */
+    SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/scenes/"), name);
+    if (strncmp(name, "zz_event_", 9) || !SDL_GetPathInfo(path, &info))
+        SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/movies/"), name);
+    n = SDL_snprintf(out, size, "%s", path);
+    return n >= 0 && (size_t)n < size;
+}
+
 int PortHdScenePreview(const char* name, uint32_t* out, int ow, int oh, int second) {
     char path[1024];
+    return PortHdScenePreviewPath(name, path, sizeof(path)) && PortHdScenePreviewFile(path, out, ow, oh, second);
+}
+
+#ifdef _WIN32
+/* One selected gallery still, with no audio stream, textures or background decoder retained. */
+int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int second) {
     WCHAR wpath[1024];
     IMFAttributes* attrs = NULL;
     IMFSourceReader* reader = NULL;
@@ -253,11 +300,17 @@ int PortHdScenePreview(const char* name, uint32_t* out, int ow, int oh, int seco
     BYTE* pixels = NULL;
     LONG pitch = 0;
     DWORD length = 0;
-    if (!name || !*name || ow <= 0 || oh <= 0) return 0;
-    MoviePath(name, path, sizeof(path));
-    if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES) return 0;
+    HRESULT com, format;
+    if (!path || !*path || !out || ow <= 0 || oh <= 0 || ow > 854 || oh > 480 || second < 0) return 0;
+    if (ReadImportedPoster(path, out, ow, oh, second)) return 1;
     if (!MultiByteToWideChar(CP_UTF8, 0, path, -1, wpath, 1024)) return 0;
-    if (FAILED(MFStartup(MF_VERSION, MFSTARTUP_LITE))) return 0;
+    if (GetFileAttributesW(wpath) == INVALID_FILE_ATTRIBUTES) return 0;
+    com = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    if (FAILED(com) && com != RPC_E_CHANGED_MODE) return 0;
+    if (FAILED(MFStartup(MF_VERSION, MFSTARTUP_LITE))) {
+        if (SUCCEEDED(com)) CoUninitialize();
+        return 0;
+    }
     if (FAILED(MFCreateAttributes(&attrs, 1))) goto done;
     IMFAttributes_SetUINT32(attrs, &MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE);
     if (FAILED(MFCreateSourceReaderFromURL(wpath, attrs, &reader))) goto done;
@@ -266,7 +319,14 @@ int PortHdScenePreview(const char* name, uint32_t* out, int ow, int oh, int seco
     if (FAILED(MFCreateMediaType(&type))) goto done;
     IMFMediaType_SetGUID(type, &MF_MT_MAJOR_TYPE, &MFMediaType_Video);
     IMFMediaType_SetGUID(type, &MF_MT_SUBTYPE, &MFVideoFormat_RGB32);
-    if (FAILED(IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type))) goto done;
+    IMFMediaType_SetUINT64(type, &MF_MT_FRAME_SIZE, (UINT64)(unsigned)ow << 32 | (unsigned)oh);
+    /* Some older video processors only accept their native output size. */
+    format = IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type);
+    if (FAILED(format)) {
+        IMFMediaType_DeleteItem(type, &MF_MT_FRAME_SIZE);
+        format = IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type);
+    }
+    if (FAILED(format)) goto done;
     IMFMediaType_Release(type); type = NULL;
     if (FAILED(IMFSourceReader_GetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &type))) goto done;
     if (FAILED(IMFMediaType_GetUINT64(type, &MF_MT_FRAME_SIZE, &size))) goto done;
@@ -307,6 +367,7 @@ done:
     if (reader) IMFSourceReader_Release(reader);
     if (attrs) IMFAttributes_Release(attrs);
     MFShutdown();
+    if (SUCCEEDED(com)) CoUninitialize();
     return ok;
 }
 #endif
@@ -1082,16 +1143,16 @@ static void ShellQuote(const char* in, char* out, size_t size) {
     out[n] = 0;
 }
 
-int PortHdScenePreview(const char* name, uint32_t* out, int ow, int oh, int second) {
-    char path[1024], quoted[2200], command[2600];
+int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int second) {
+    char quoted[2200], command[2600];
     FILE* decoder;
     int ok;
-    if (!name || !*name || ow != 160 || oh != 90) return 0;
-    MoviePath(name, path, sizeof(path));
+    if (!path || !*path || !out || ow <= 0 || oh <= 0 || ow > 854 || oh > 480 || second < 0) return 0;
+    if (ReadImportedPoster(path, out, ow, oh, second)) return 1;
     if (access(path, R_OK)) return 0;
     ShellQuote(path, quoted, sizeof(quoted));
-    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -ss %d -i %s -frames:v 1 -vf scale=160:90 "
-                 "-an -f rawvideo -pix_fmt bgra - 2>/dev/null", second, quoted);
+    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -threads 1 -ss %d -i %s -frames:v 1 -vf scale=%d:%d:flags=area "
+                 "-an -f rawvideo -pix_fmt bgra - 2>/dev/null", second, quoted, ow, oh);
     decoder = popen(command, "r");
     if (!decoder) return 0;
     ok = fread(out, 4, (size_t)ow * oh, decoder) == (size_t)ow * oh;
