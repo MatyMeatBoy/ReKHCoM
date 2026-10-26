@@ -5,6 +5,14 @@
 publicada a las 17:20 de Chile (`2026-10-26T20:20:29Z`, `isPrerelease=false`).
 El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el tráiler.
 
+## Traspaso — Codex, 26/10: desync del final HD (#42)
+
+Corrección del preroll PCM de Media Foundation en rama `fix/ending-cutscene-desync`,
+tarea remota `ending-desync-42` (owner `codex-ending`). Causa, reproducción nativa,
+vecino 123/170 y evidencia RED/GREEN: [ENDING_SYNC_42.md](ENDING_SYNC_42.md).
+No hay nueva release ni cambios al archivo importado.
+
+
 El cierre y los traspasos previos se conservan en
 [archivo/PENDIENTES_CIERRE_V20_20261026.md](archivo/PENDIENTES_CIERRE_V20_20261026.md).
 No volver a preparar ni publicar la 2.0 por esas notas. Tampoco convertir sus pruebas
