@@ -4019,10 +4019,10 @@
       "status": "pr_abierto",
       "owner": "codex-ending",
       "created_at": "2026-10-26T21:33:21.538928+00:00",
-      "updated_at": "2026-10-26T21:53:00.856579+00:00",
+      "updated_at": "2026-10-26T21:55:14.955753+00:00",
       "branch": "fix/ending-cutscene-desync",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/273",
-      "approval": null,
+      "approval": "Pedido directo usuario 26/10: intentar replicar y arreglar desync final reportado por Pedro",
       "reference": "GitHub #42 video WCxyxOOb2fI",
       "evidence": [
         {
@@ -4034,6 +4034,11 @@
           "at": "2026-10-26T21:53:00.856579+00:00",
           "owner": "codex-ending",
           "detail": "PR273 SHA5c5333d05; review independiente sin findings; clips privados build/ending-sync/{before,after}-sora-ending.mp4."
+        },
+        {
+          "at": "2026-10-26T21:55:14.955753+00:00",
+          "owner": "codex-ending",
+          "detail": "PR273 merged a3b8d78396e806a12885441b90142a774e2823da; reviewer sin findings; pendiente registro integrado con lock nuevo"
         }
       ],
       "claimed_at": "2026-10-26T21:33:28.496304+00:00"
@@ -4054,7 +4059,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:54:56.176269+00:00",
+  "updated_at": "2026-10-26T21:55:14.955753+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

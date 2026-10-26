@@ -145,7 +145,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | options-complete-matrix-20261026 | Auditoria completa opciones y bindings SDL | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/252 | Usuario autoriza depurar todas las opciones y decisiones autonomas | 2026-10-26T18:05:35.968133+00:00 |
 | hd-poster-performance-20261026 | Posters HD de galeria sin bloqueo de decoder | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/262 | Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas | 2026-10-26T19:08:02.265493+00:00 |
 | docs-v20-trailer | Limpiar pendientes tras v2.0 y registrar directrices del trailer | integrado | codex-trailer | https://github.com/MatyMeatBoy/ReKHCoM/pull/271 | Pedido directo del usuario de limpiar pendientes y registrar trailer v2.0, 26/10/2026 | 2026-10-26T21:14:47.042065+00:00 |
-| ending-desync-42 | Desincronizacion video audio final Sora issue 42 | pr_abierto | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/273 | — | 2026-10-26T21:53:00.856579+00:00 |
+| ending-desync-42 | Desincronizacion video audio final Sora issue 42 | pr_abierto | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/273 | Pedido directo usuario 26/10: intentar replicar y arreglar desync final reportado por Pedro | 2026-10-26T21:55:14.955753+00:00 |
 | trailer-v20-production | Producir y exportar trailer real v2.0 | en_curso | codex-trailer-production | — | Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas | 2026-10-26T21:34:06.805996+00:00 |
 
 Integrador: libre
