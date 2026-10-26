@@ -3950,15 +3950,21 @@
     "options-complete-matrix-20261026": {
       "id": "options-complete-matrix-20261026",
       "piece": "Auditoria completa opciones y bindings SDL",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T18:03:14.816218+00:00",
-      "updated_at": "2026-10-26T18:03:20.841465+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-26T18:05:35.968133+00:00",
+      "branch": "codex/options-complete-matrix",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/252",
       "approval": "Usuario autoriza depurar todas las opciones y decisiones autonomas",
       "reference": "Matriz 12 contextos y 13 bindings por dispositivo",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T18:05:35.968133+00:00",
+          "owner": "codex-batteries",
+          "detail": "33a168d1d; input13/13 EUmain204367; initialmatrix120/120; extendedpreset keepsBIOSDLLfailure pendingfix; check_sources pass"
+        }
+      ],
       "claimed_at": "2026-10-26T18:03:20.841465+00:00"
     }
   },
@@ -3968,7 +3974,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T17:36:41.234887+00:00"
   },
-  "updated_at": "2026-10-26T18:03:20.841465+00:00",
+  "updated_at": "2026-10-26T18:05:35.968133+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
