@@ -115,6 +115,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/192 | Solicitud explícita del usuario de integrar el pintor en Atlas | 2026-10-26T00:42:21.673078+00:00 |
 | core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
 | code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/195 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T01:19:36.461192+00:00 |
-| core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito: incluir todo lo necesario en el ejecutable | 2026-10-26T01:41:59.114730+00:00 |
+| core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito del usuario de incluir los recursos core en los ejecutables | 2026-10-26T01:42:16.304558+00:00 |
 
 Integrador: codex-atlas (ocupado; 2026-10-26T01:42:04.952503+00:00)
