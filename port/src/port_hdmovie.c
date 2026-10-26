@@ -244,15 +244,15 @@ static int ReadImportedPoster(const char* movie, uint32_t* out, int ow, int oh, 
     SDL_PathInfo media, image;
     SDL_Surface *source, *target;
     unsigned char header[24];
-    FILE* file;
+    SDL_IOStream* file;
     unsigned w, h;
     int ok;
     if (!PortHdPosterPath(movie, second, path, sizeof(path)) ||
         !SDL_GetPathInfo(movie, &media) || !SDL_GetPathInfo(path, &image) ||
         image.modify_time < media.modify_time || image.size > 2u * 1024u * 1024u) return 0;
-    file = fopen(path, "rb");
+    file = SDL_IOFromFile(path, "rb");
     if (!file) return 0;
-    ok = fread(header, 1, sizeof(header), file) == sizeof(header); fclose(file);
+    ok = SDL_ReadIO(file, header, sizeof(header)) == sizeof(header); SDL_CloseIO(file);
     if (!ok || memcmp(header, "\x89PNG\r\n\x1a\n", 8) || memcmp(header + 12, "IHDR", 4)) return 0;
     w = (unsigned)header[16] << 24 | (unsigned)header[17] << 16 | (unsigned)header[18] << 8 | header[19];
     h = (unsigned)header[20] << 24 | (unsigned)header[21] << 16 | (unsigned)header[22] << 8 | header[23];
@@ -267,9 +267,14 @@ static int ReadImportedPoster(const char* movie, uint32_t* out, int ow, int oh, 
 
 int PortHdScenePreviewPath(const char* name, char* out, size_t size) {
     char path[1024];
+    SDL_PathInfo info;
     int n;
     if (!name || !*name || !out || !size) return 0;
-    MoviePath(name, path, sizeof(path));
+    /* SDL's path API uses UTF-8 on Windows too; stdio's ANSI probe would
+       miss a scene in a Unicode data directory and choose the legacy folder. */
+    SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/scenes/"), name);
+    if (strncmp(name, "zz_event_", 9) || !SDL_GetPathInfo(path, &info))
+        SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/movies/"), name);
     n = SDL_snprintf(out, size, "%s", path);
     return n >= 0 && (size_t)n < size;
 }
@@ -298,8 +303,8 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
     HRESULT com, format;
     if (!path || !*path || !out || ow <= 0 || oh <= 0 || ow > 854 || oh > 480 || second < 0) return 0;
     if (ReadImportedPoster(path, out, ow, oh, second)) return 1;
-    if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES) return 0;
     if (!MultiByteToWideChar(CP_UTF8, 0, path, -1, wpath, 1024)) return 0;
+    if (GetFileAttributesW(wpath) == INVALID_FILE_ATTRIBUTES) return 0;
     com = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     if (FAILED(com) && com != RPC_E_CHANGED_MODE) return 0;
     if (FAILED(MFStartup(MF_VERSION, MFSTARTUP_LITE))) {

@@ -20,6 +20,7 @@ static inline int PortHdPosterPath(const char* movie, int second, char* out, siz
     return written >= 0 && (size_t)written < size;
 }
 
+#if defined(_WIN32) || defined(PORT_LINUX)
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -30,4 +31,5 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int width, int heigh
 #ifdef __cplusplus
 }
 #endif
+#endif /* decoder APIs: Windows/Linux; PNG sidecar format is portable */
 #endif

@@ -31,3 +31,9 @@ probe C++ del helper nativo sobre película real. Este último detectó en rojo 
 vigente; en verde la regenera, mantiene cancelación y preserva SHA256 de la película fuente. Los ejecutables,
 DLL y enlace temporal de película de los probes se eliminan automáticamente. Evidencia pequeña local:
 `D:/01Claude/ReKHCoM-build/poster-perf-small/` (JSON, código del probe y un PNG).
+
+Revisión: lectura UTF-8 por SDL IO y atributos Windows con UTF-16. Se reprodujo rojo y verde tanto un PNG como
+un decoder real a través de `画面-Ñ.mp4`, sin copiar el vídeo. Los callers de la API File/Path deben seguir
+condicionados a Windows/Linux; el formato PNG se puede leer de manera portable sin ese decoder.
+El fallback WMF es síncrono dentro del job: ocho samples limitan cantidad, no garantizan un deadline del codec.
+Cerrar la galería no debe esperar ese job; el cierre final coordina sus recursos antes de apagar SDL.

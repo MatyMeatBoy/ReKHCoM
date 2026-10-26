@@ -56,6 +56,16 @@ def main():
 int main(int argc,char**argv){
     uint32_t* pixels=SDL_malloc(640*360*4);assert(pixels);
 #ifdef TEST_IMPORTED_POSTER
+    if(argc>3){
+        char path[1600];WCHAR target[1600],original[1600];
+        snprintf(path,sizeof(path),"%s/\xE7\x94\xBB\xE9\x9D\xA2-\xC3\x91.mp4",argv[2]);
+        assert(MultiByteToWideChar(CP_UTF8,0,path,-1,target,1600));
+        assert(MultiByteToWideChar(CP_UTF8,0,argv[1],-1,original,1600));
+        assert(CreateHardLinkW(target,original,NULL));
+        int ok=ENTRY(path,pixels,640,360,1);assert(DeleteFileW(target));
+        if(!ok)return 78;
+        puts("{\"unicode_decoder\":true}");SDL_free(pixels);return 0;
+    }
     if(argc>2){
         char movie[1400],image[1600];
         snprintf(movie,sizeof(movie),"%s/fixture.mp4",argv[2]);
@@ -72,6 +82,14 @@ int main(int argc,char**argv){
             printf("{\"cached_call\":%d,\"ok\":1,\"ms\":%llu,\"peak_kib\":%llu}\n",i,
                 (unsigned long long)(GetTickCount64()-start),(unsigned long long)(m.PeakWorkingSetSize/1024));
         }
+        char unicode[1600],unicodePoster[1800];
+        snprintf(unicode,sizeof(unicode),"%s/\xE7\x94\xBB\xE9\x9D\xA2-\xC3\x91.mp4",argv[2]);
+        SDL_IOStream* io=SDL_IOFromFile(unicode,"wb");assert(io);SDL_WriteIO(io,"not a video",11);SDL_CloseIO(io);
+        assert(PortHdPosterPath(unicode,1,unicodePoster,sizeof(unicodePoster)));
+        s=SDL_CreateSurfaceFrom(640,360,SDL_PIXELFORMAT_ARGB8888,pixels,640*4);assert(s);
+        assert(SDL_SavePNG(s,unicodePoster));SDL_DestroySurface(s);
+        if(!ENTRY(unicode,pixels,640,360,1))return 77;
+        puts("{\"unicode_poster\":true}");
         assert(!ENTRY(movie,pixels,855,360,1));assert(!ENTRY(movie,pixels,640,481,1));
         assert(!ENTRY(movie,NULL,640,360,1));assert(!ENTRY(movie,pixels,640,360,-1));
         /* Wrong offset cannot accidentally use the still of another segment. */
@@ -114,13 +132,18 @@ int main(int argc,char**argv){
         shutil.copy2(sdl / 'bin/SDL3.dll', directory / 'SDL3.dll')
         result = subprocess.run([str(exe), str(args.movie.resolve())], capture_output=True, text=True,
             timeout=90, env=dict(os.environ, SDL_VIDEO_DRIVER='dummy', SDL_AUDIO_DRIVER='dummy'), check=True)
-        cached = None
+        cached = unicode = None
         if not args.baseline:
             cached = subprocess.run([str(exe), str(args.movie.resolve()), str(directory)], capture_output=True,
                 text=True, timeout=90, env=dict(os.environ, SDL_VIDEO_DRIVER='dummy', SDL_AUDIO_DRIVER='dummy'), check=True)
+            # Same video bytes through a transient Unicode hard link; no MP4 copy.
+            (directory / 'unicode').mkdir()
+            unicode = subprocess.run([str(exe), str(args.movie.resolve()), str(directory / 'unicode'), 'decode'],
+                capture_output=True, text=True, timeout=90, check=True)
     rows = [json.loads(line) for line in result.stdout.splitlines() if line.startswith('{')]
     if cached:
         rows += [json.loads(line) for line in cached.stdout.splitlines() if line.startswith('{')]
+        rows += [json.loads(line) for line in unicode.stdout.splitlines() if line.startswith('{')]
     (args.out / ('baseline.json' if args.baseline else 'poster.json')).write_text(json.dumps(rows, indent=2))
     print(json.dumps(rows, indent=2))
 
