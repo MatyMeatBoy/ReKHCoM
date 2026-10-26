@@ -64,7 +64,7 @@ enum { LANG_EN, LANG_FR, LANG_DE, LANG_IT, LANG_ES, LANG_JA, LANG_COUNT };
 #else
 #define HD_MOD_PLAYS 1
 #endif
-#if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX)
+#if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
 #define HD_MOVIES_PLAY 1
 #else
 #define HD_MOVIES_PLAY 0

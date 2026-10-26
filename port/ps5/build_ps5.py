@@ -26,10 +26,12 @@ CLANG = os.environ.get('CLANG', 'clang-18')
 LLD = os.environ.get('LLD', 'ld.lld-18')
 TARGET = '--target=x86_64-unknown-linux-gnux32'
 # Changes the PS5 build makes to a copy of a core file (the file itself is not touched): (anchor, replacement).
+LINUX64 = bool(os.environ.get('REKHCOM_GUEST_LINUX64'))  # port/linux64: a window that can go full screen
 PORT_PATCHES = {
     'port_ui.c': [('        case ITEM_INTZOOM:\n        case ITEM_SCALE: return 0;',
-                   '        /* the console has no window or screen mode to choose */\n'
-                   '        case ITEM_FULLSCREEN:\n        case ITEM_FS_RES:\n        case ITEM_VSYNC: return 0;\n'
+                   '        /* the console has no window or screen mode to choose */\n' +
+                   ('' if LINUX64 else '        case ITEM_FULLSCREEN:\n') +
+                   '        case ITEM_FS_RES:\n        case ITEM_VSYNC: return 0;\n'
                    '        case ITEM_INTZOOM:\n        case ITEM_SCALE: return 0;'),
                   # the Japanese cartridge's options menu is in English (no Japanese font is available here)
                   ('#elif defined(VERSION_JP)\n    return LANG_JA;', '#elif defined(VERSION_JP)\n    return LANG_EN;'),
