@@ -237,7 +237,8 @@ bool SDL_SyncWindow(SDL_Window* w) { (void)w; return true; }
 bool SDL_SetWindowFullscreen(SDL_Window* w, bool f) {
     (void)w;
 #ifdef PORT_LINUX64_GUEST
-    h_set_title(f ? "\x01fullscreen=1" : "\x01fullscreen=0"); /* the 64-bit Linux host (port/linux64) */
+    /* octal: "\x01f..." would read as the one character 0x1f */
+    h_set_title(f ? "\001fullscreen=1" : "\001fullscreen=0"); /* the 64-bit Linux host (port/linux64) */
 #else
     (void)f;
 #endif

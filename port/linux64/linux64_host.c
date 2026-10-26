@@ -274,13 +274,14 @@ static int H_pad_poll(HostPad* out, int count) {
 static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
 static int H_app_state(void) { return 0; }
 static int H_quit_requested(void) { return sQuit; }
-/* the image's full screen row arrives here as "\x01fullscreen=0/1" (port/ps5/guest/src/sdl_shim.c) */
+/* the image's full screen row arrives here as "\001fullscreen=0/1" (port/ps5/guest/src/sdl_shim.c) */
 static void H_set_title(const char* s) {
     if (!sWindow || !s)
         return;
     if (s[0] == '\x01') {
         if (!strncmp(s + 1, "fullscreen=", 11))
-            SDL_Log("[rekhcom64] fullscreen %d", SDL_SetWindowFullscreen(sWindow, s[12] == '1') ? s[12] - '0' : -1);
+            fprintf(stderr, "[rekhcom64] fullscreen %d\n",
+                    SDL_SetWindowFullscreen(sWindow, s[12] == '1') ? s[12] - '0' : -1);
         return;
     }
     SDL_SetWindowTitle(sWindow, s);
