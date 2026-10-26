@@ -1,5 +1,18 @@
 # Pendientes vigentes hacia la v2.0 (lista limpia, 25/10/2026 noche)
 
+## TRASPASO — Claude, 26/10
+
+- **#163 (duartepedro):** confirmó que el final de Riku ya va perfecto. Los videos HD de Sora y del piso 12 arrancan
+  ahora donde empieza el video de la GBA (zz_event_151 desde 3:42, zz_event_123 desde 2:50), sin tocar archivos; si
+  «Cinemáticas HD» ya pasó la escena entera, el video no la repite. Test3 enviado (rama test-builds); falta su
+  revisión de la galería (dijo que la hace hoy).
+- **Baterías:** las «hechas» del 25/10 eran marcas viejas del 23-24 (cada suite en 1 s). Arreglado (marcas de más de
+  12 h no cuentan) y relanzadas el 26/10 en khcom-claude-int (`run_batteries.py --status`); su parte Android incluye
+  Agrabah 123/124 con la app smoke completa (reconstruida desde main).
+- **Código que queda:** banco de partidas por banco (diseño en 1b, aplazado), botón Opciones y título HD (esperan
+  Atlas). Grandes: modos PS2 con REA (mejorar los que ya hay; falta el material del usuario), Linux/Deck 64 bits,
+  iOS.
+
 ## TRASPASO ACTIVO — Codex, 25/10 noche
 
 Prioridad más reciente del usuario: **integrar lo aprobado → terminar pendientes de código → ZIP clean → Atlas al final**. Claude está pausado; Codex continúa la integración. Las listas históricas de abajo no reabren funciones ya integradas.
