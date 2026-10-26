@@ -2825,8 +2825,8 @@ static void SteamArtwork(const fs::path& grid, const std::string& id) {
     std::error_code ec;
     fs::create_directories(grid, ec);
     fs::copy_file(sRoot / "assets" / "boxart.jpg", grid / (id + "p.jpg"), fs::copy_options::overwrite_existing, ec);
-    for (const char* suffix : { ".jpg", "_hero.jpg" })
-        fs::copy_file(sRoot / "assets" / "steam_header.jpg", grid / (id + suffix), fs::copy_options::overwrite_existing, ec);
+    fs::copy_file(sRoot / "assets" / "steam_header.jpg", grid / (id + ".jpg"), fs::copy_options::overwrite_existing, ec);
+    fs::copy_file(sRoot / "assets" / "steam_hero.jpg", grid / (id + "_hero.jpg"), fs::copy_options::overwrite_existing, ec);
     if (!SteamHdLogo(grid / (id + "_logo.png")))
         fs::copy_file(sRoot / "assets" / "logo.png", grid / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
 }

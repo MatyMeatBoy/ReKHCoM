@@ -66,6 +66,7 @@ def main():
         "licenses/rcheevos-LICENSE.txt": ROOT / "port/third_party/rcheevos/LICENSE",
         "assets/boxart.jpg": ROOT / "port/decompui/assets/boxart.jpg",
         "assets/steam_header.jpg": ROOT / "port/decompui/assets/steam_header.jpg",
+        "assets/steam_hero.jpg": ROOT / "port/decompui/assets/steam_hero.jpg",
         "assets/logo.png": ROOT / "port/decompui/assets/logo.png",
         "assets/NOTICE.md": ROOT / "port/decompui/assets/NOTICE.md",
         "assets/achievements/badges.png": ROOT / "port/assets/achievements/badges.png",

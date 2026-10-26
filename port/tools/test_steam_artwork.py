@@ -2,6 +2,7 @@
 from pathlib import Path
 import subprocess
 import tempfile
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -24,18 +25,30 @@ def main():
     with tempfile.TemporaryDirectory() as folder:
         root=Path(folder)/'game'; grid=Path(folder)/'grid'
         (root/'assets').mkdir(parents=True); grid.mkdir()
-        for name in ('boxart.jpg','steam_header.jpg','logo.png'):
+        for name in ('boxart.jpg','steam_header.jpg','steam_hero.jpg','logo.png'):
             (root/'assets'/name).write_bytes(name.encode())
         (grid/'unrelated.jpg').write_bytes(b'keep me')
         for hd in (False,True):
             if hd: (root/'hd-logo').write_bytes(b'HD logo')
             subprocess.run([str(out/'artwork.exe'),str(root),str(grid)],check=True)
-            for name in ('12345.jpg','12345_hero.jpg'):
-                assert (grid/name).read_bytes()==b'steam_header.jpg', name
+            assert (grid/'12345.jpg').read_bytes()==b'steam_header.jpg'
+            assert (grid/'12345_hero.jpg').read_bytes()==b'steam_hero.jpg', 'Hero must use its own wide background, not the capsule'
             assert (grid/'12345p.jpg').read_bytes()==b'boxart.jpg'
             assert (grid/'12345_logo.png').read_bytes()==(b'HD logo' if hd else b'logo.png')
             assert (grid/'unrelated.jpg').read_bytes()==b'keep me'
-            print('PASS Steam capsule and hero with '+('HD' if hd else 'default')+' logo')
+            print('PASS Steam capsule and distinct hero with '+('HD' if hd else 'default')+' logo')
+
+    hero=ROOT/'port/decompui/assets/steam_hero.jpg'
+    header=ROOT/'port/decompui/assets/steam_header.jpg'
+    with Image.open(hero) as image:
+        assert image.size==(3840,1240), 'Hero must preserve the existing wide battle capture'
+    assert hero.read_bytes()!=header.read_bytes(), 'Hero and capsule must be distinct assets'
+    for script in ('port/tools/core_assets.py','port/tools/package_release.py','port/configure_pc.py'):
+        assert 'steam_hero.jpg' in (ROOT/script).read_text(encoding='utf-8'), script
+    ui=(ROOT/'port/src/port_ui.c').read_text(encoding='utf-8')
+    block=ui.split('static const char* const sHelpNg[LANG_COUNT] = {',1)[1].split('};',1)[0]
+    assert block.count('↑↓')==6 and block.count('←→')==6, 'All six new-game help strings need valid UTF-8 arrows'
+    print('PASS hero dimensions, packaging references, and six-language help arrows')
 
 
 if __name__ == '__main__':
