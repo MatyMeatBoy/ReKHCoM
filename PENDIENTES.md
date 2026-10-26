@@ -132,6 +132,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/226 | approved exact 3cdc76d68be745b09d5c1bf4eba0c011 | 2026-10-26T09:46:34.403240+00:00 |
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:40:18.552327+00:00 |
 | atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:40:24.237908+00:00 |
-| atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | en_curso | codex-atlas | — | — | 2026-10-26T10:04:37.695557+00:00 |
+| atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | en_curso | codex-atlas | codex/atlas-maleficent-continuity | — | 2026-10-26T10:07:22.721803+00:00 |
 
 Integrador: libre
