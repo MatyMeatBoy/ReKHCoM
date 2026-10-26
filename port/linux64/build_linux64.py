@@ -38,14 +38,18 @@ def find(name):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--regions', nargs='+', choices=['eu', 'us', 'jp'], default=['eu', 'us', 'jp'])
+    ap.add_argument('--jobs', type=int, default=3)
     args = ap.parse_args()
+    if args.jobs < 1:
+        ap.error('--jobs must be positive')
     env = dict(os.environ, CLANG=str(TC / 'clang.exe'), LLD=str(TC / 'ld.lld.exe'), OBJCOPY=str(TC / 'llvm-objcopy.exe'),
                REKHCOM_GUEST_DUALSENSE='0', REKHCOM_GUEST_LINUX64='1')  # its HD movies played by the host  # SELECT, not the DualSense's touchpad, in the hints
     shutil.rmtree(OUT, ignore_errors=True)
     (OUT / 'bin64').mkdir(parents=True)
     (OUT / 'lib64').mkdir()
     for region in args.regions:
-        subprocess.check_call([sys.executable, str(ROOT / 'port/ps5/build_ps5.py'), 'guest', '--region', region],
+        subprocess.check_call([sys.executable, str(ROOT / 'port/ps5/build_ps5.py'), 'guest', '--region', region,
+                               '--jobs', str(args.jobs)],
                               cwd=ROOT, env=env)
         shutil.copyfile(ROOT / f'port/ps5/build/guest-{region}/guest.bin', OUT / f'bin64/guest-{region}.bin')
     subprocess.check_call([str(TC / 'clang.exe'), '--target=x86_64-linux-gnu', f'--sysroot={BASE / "sysroot"}',

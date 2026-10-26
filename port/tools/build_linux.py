@@ -269,6 +269,13 @@ def package(version, base_i386, base_armhf):
     """One file per Linux platform in build/releases."""
     import shutil
     import re
+    # Both desktop launchers choose this host on x86-64. A clean build must
+    # never silently produce a 32-bit-only package because this cache is absent.
+    linux64 = ROOT / 'build/linux64/out'
+    required = ['bin64/rekhcom64', 'lib64/libSDL3.so.0'] + [f'bin64/guest-{r}.bin' for r in ('eu', 'us', 'jp')]
+    missing = [name for name in required if not (linux64 / name).is_file()]
+    if missing:
+        sys.exit('Linux64 package incomplete: ' + ', '.join(missing) + '; run port/linux64/build_linux64.py first')
     out = ROOT / 'build/releases'
     out.mkdir(parents=True, exist_ok=True)
     stage = ROOT / 'build/linux-stage'
@@ -314,6 +321,8 @@ def main():
                     'build/releases/ReKHCoM-VERSION-{linux-x86.tar.gz,steamdeck.tar.gz,anbernic-alpha.zip}')
     args = ap.parse_args()
     if args.package:
+        subprocess.check_call([sys.executable, str(ROOT / 'port/linux64/build_linux64.py'), '--jobs', str(args.jobs)],
+                              cwd=ROOT)
         bases = {a: (WORK_DIR / 'linux') / a for a in ARCHES}
         for arch in ARCHES:
             for version in ('eu', 'us', 'jp'):
