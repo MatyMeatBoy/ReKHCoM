@@ -3184,12 +3184,12 @@
     "core-fonts-clean": {
       "id": "core-fonts-clean",
       "piece": "Fuentes core: KHMenu en ejecutables y paquetes clean",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:51:10.155355+00:00",
-      "updated_at": "2026-10-26T00:51:21.005311+00:00",
+      "updated_at": "2026-10-26T01:12:41.632316+00:00",
       "branch": "codex/core-fonts-clean",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/194",
       "approval": "Solicitud explícita del usuario: fuentes core en todas las builds clean",
       "reference": null,
       "evidence": [
@@ -3197,13 +3197,18 @@
           "at": "2026-10-26T00:51:21.005311+00:00",
           "owner": "codex-atlas",
           "detail": "Repro: build barriles hd_text=1/hd_font=0 sin carpeta assets/fonts."
+        },
+        {
+          "at": "2026-10-26T01:12:41.632316+00:00",
+          "owner": "codex-atlas",
+          "detail": "EU compilado; fuente embebida sin assets; paquete rechaza binario anterior; check_sources correcto."
         }
       ],
       "claimed_at": "2026-10-26T00:51:15.352901+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:51:21.005311+00:00",
+  "updated_at": "2026-10-26T01:12:41.633395+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
