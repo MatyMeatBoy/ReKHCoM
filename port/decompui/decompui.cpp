@@ -3108,6 +3108,8 @@ static void AddToSteam() {
         fs::copy_file(sRoot / "assets" / "boxart.jpg", config / "grid" / (id + "p.jpg"), fs::copy_options::overwrite_existing, ec);
         /* the wide capsule: a battle as the game shows it (x4, the cartridge's art) */
         fs::copy_file(sRoot / "assets" / "steam_header.jpg", config / "grid" / (id + ".jpg"), fs::copy_options::overwrite_existing, ec);
+        /* the background behind the logo on the game's page: the same battle, wider */
+        fs::copy_file(sRoot / "assets" / "steam_hero.jpg", config / "grid" / (id + "_hero.jpg"), fs::copy_options::overwrite_existing, ec);
         if (!SteamHdLogo(config / "grid" / (id + "_logo.png")))
             fs::copy_file(sRoot / "assets" / "logo.png", config / "grid" / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
         done++;
