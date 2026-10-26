@@ -140,6 +140,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | pr_abierto | codex-retoma | https://github.com/MatyMeatBoy/ReKHCoM/pull/244 | — | 2026-10-26T16:45:14.432797+00:00 |
 | controls-reset-triggers-20261026 | Controles: restaurar bindings y layout automático, gatillos progresivos | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/241 | — | 2026-10-26T16:35:08.180110+00:00 |
 | achievements-trigger-key-centre | Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/243 | — | 2026-10-26T16:43:28.997495+00:00 |
-| settings-roundtrip-20261026 | Prueba real de persistencia settings juego-launcher y reset controles | pendiente | — | — | — | 2026-10-26T16:46:44.593543+00:00 |
+| settings-roundtrip-20261026 | Prueba real de persistencia settings juego-launcher y reset controles | en_curso | codex-batteries | — | — | 2026-10-26T16:46:52.454140+00:00 |
 
 Integrador: codex-retoma (ocupado; 2026-10-26T16:42:06.682060+00:00)
