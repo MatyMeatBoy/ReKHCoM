@@ -205,10 +205,6 @@ def bundle(arch, base, versions, dest):
     from core_assets import gallery_posters
     gallery_posters()
     shutil.copytree(ROOT / 'port/assets/gallery', dest / 'assets/gallery', dirs_exist_ok=True)
-    # Brick Launcher: what the game shares with it, and the platinum trophy's figure
-    (dest / 'brick-link').mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(ROOT / 'port/assets/brick-link/brick-link.json', dest / 'brick-link.json')
-    shutil.copyfile(ROOT / 'port/assets/brick-link/platinum.png', dest / 'brick-link/platinum.png')
     # Window icon (set by the game) and a launcher entry for desktops/Steam Deck.
     shutil.copyfile(ROOT / 'port/assets/icon.bmp', dest / 'assets/icon.bmp')
     shutil.copyfile(ROOT / 'port/assets/icon.png', dest / 'ReKHCoM.png')
