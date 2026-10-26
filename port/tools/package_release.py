@@ -70,6 +70,9 @@ def main():
         "assets/logo.png": ROOT / "port/decompui/assets/logo.png",
         "assets/NOTICE.md": ROOT / "port/decompui/assets/NOTICE.md",
         "assets/achievements/badges.png": ROOT / "port/assets/achievements/badges.png",
+        # Brick Launcher reads these: what the game shares with it, and the platinum trophy's figure
+        "brick-link.json": ROOT / "port/assets/brick-link/brick-link.json",
+        "brick-link/platinum.png": ROOT / "port/assets/brick-link/platinum.png",
         "assets/fonts/KHMenu.otf": ROOT / "port/assets/fonts/KHMenu.otf",
         "assets/fonts/ComicHearts.otf": ROOT / "port/assets/fonts/ComicHearts.otf",
         "assets/fonts/NOTICE.md": ROOT / "port/assets/fonts/NOTICE.md",
