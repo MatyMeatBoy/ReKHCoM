@@ -116,4 +116,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
 | code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/195 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T01:19:36.461192+00:00 |
 
-Integrador: codex-atlas (ocupado; 2026-10-26T01:19:25.518964+00:00)
+Integrador: libre
