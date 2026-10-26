@@ -8,10 +8,10 @@
  *    the fight (the teeth grate in the middle, the three counters whose glow goes out with each die broken: there the
  *    ledge and panel of the gap between two counters);
  *  - above, the pillars and the two plain brick rows go on up;
- *  - in front, complete one cut green motif beside each edge, then leave an abyss. The authored half supplies
- *    its reflected missing tip; no green field is tiled across the margins;
+ *  - in front, complete the missing ghost contours independently over two
+ *    plain green carpet fields, with white outer edges and a wall into the abyss;
  *  - below, the path: its white lines go on along their slopes (measured on rows 408..470), the black teeth of the
- *    red follow their line, the carpet continues in plain red; the two green tips taper down into shadow.
+ *    red follow their line, the carpet continues in plain red, with green flanks in perspective.
  * Source tiles stay in the user's ROM; palette indices resolved live (the game's fades are kept). */
 #include <stdlib.h>
 #include "port/port.h"
@@ -85,26 +85,27 @@ static int PathIndex(int x, int y) {
     return RoomIndex(sx, ys);
 }
 
-/* Complete one motif beside each edge of the authored floor, then void.
- * Reflect the cut half only once; never tile the green field across the abyss. */
+/* Continue the two floor fields in perspective. The missing ghost contours
+ * are drawn independently; no reflected source pixels or repeated motifs. */
+static int sFloorGreen=-1, sGhostInk=-1;
 static int FloorMotifIndex(int x, int y) {
-    int sx = x, sy = y;
-    if (y >= 472) {
-        int depth = y - 472, centre = x < 376 ? 272 : 479;
-        int half = 48 - depth;
-        if (half <= 0 || abs(x - centre) >= half)
-            return 0;
-        sx = centre + (x - centre) * 48 / half;
-        sy = 471 - depth;
+    static const unsigned char leftReach[] ={0,4,9,11,16,13,18,10,6,0};
+    static const unsigned char rightReach[]={0,8,12,16,14,20,17,12,5,0};
+    int left=218, right=533, depth=y>472?y-472:0;
+    int edge, k, reach, t, white=RoomIndex(319,408);
+    left-=depth*3/4;right+=depth*3/4;
+    if(x<left-5 || x>right+5)return 0;
+    if(x<left || x>right)return RoomIndex(256,399);
+    if(x<left+3 || x>right-3)return white;
+    if(sFloorGreen<0)return 0;
+    if(y>=404 && y<476 && (x<256 || x>=496)) {
+        const unsigned char* shape=x<256?leftReach:rightReach;
+        k=(y-404)/8;t=(y-404)%8;
+        reach=(shape[k]*(8-t)+shape[k+1]*t)/8;
+        edge=x<256?256-x:x-495;
+        if(edge<=reach)return sGhostInk;
     }
-    if (sx < ROOM_X) {
-        if (sx < ROOM_X - 32) return 0;
-        sx = 2 * ROOM_X - 1 - sx;
-    } else if (sx >= ROOM_X + ROOM_COLS * 8) {
-        if (sx >= ROOM_X + ROOM_COLS * 8 + 32) return 0;
-        sx = 2 * (ROOM_X + ROOM_COLS * 8) - 1 - sx;
-    }
-    return RoomIndex(sx, sy);
+    return sFloorGreen;
 }
 
 static int HallIndex(int x, int y) {
@@ -130,8 +131,22 @@ static int HallIndex(int x, int y) {
 }
 
 int PortOogieLayer(const void* const* maps) {
-    return maps && maps[0] == gDefaultBgMap && maps[1] == gBosBoogieBgMaps + 0x400 && maps[2] == gDefaultBgMap &&
+    int active=maps && maps[0] == gDefaultBgMap && maps[1] == gBosBoogieBgMaps + 0x400 && maps[2] == gDefaultBgMap &&
            maps[3] == gBosBoogieBgMaps;
+    if(active) {
+    if(sFloorGreen<0) {
+        int count[256]={0},a,b;
+        for(b=408;b<472;b++) for(a=256;a<288;a++)count[RoomIndex(a,b)&255]++;
+        sGhostInk=1;for(a=2;a<256;a++)if(count[a]>count[sGhostInk])sGhostInk=a;
+        for(a=1;a<256;a++) {
+            unsigned c=((const uint16_t*)(uintptr_t)GBA_PLTT)[a];
+            int r=c&31,g=(c>>5)&31,b=(c>>10)&31;
+            if(g>r && g>b && (sFloorGreen<0 || count[a]>count[sFloorGreen]))sFloorGreen=a;
+        }
+        /* Selection happens before the parallel scanline jobs. */
+    }
+    }
+    return active;
 }
 
 /* x, y: the layer's world position; cx, cy: the picture's middle (its copy of the room is the one continued) */
@@ -141,15 +156,5 @@ int PortOogieHallPixel(int x, int y, int cx, int cy, uint16_t* color) {
         return 0; /* the room as the cartridge draws it */
     index = HallIndex(mx, my);
     *color = index ? ((const uint16_t*)(uintptr_t)GBA_PLTT)[index] & 0x7FFF : 0x8000;
-    if (index && my >= 472 && PathIndex(mx, my) < 0) {
-        /* The two completed tips descend into shadow, rather than exposing
-         * another band of patterned floor below the room. */
-        int light = 48 - (my - 472);
-        unsigned c = *color;
-        if (light < 0) light = 0;
-        *color = (uint16_t)(((c & 31) * light / 48) |
-            ((((c >> 5) & 31) * light / 48) << 5) |
-            ((((c >> 10) & 31) * light / 48) << 10));
-    }
     return 1;
 }

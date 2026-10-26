@@ -31,6 +31,7 @@
 #include "port/port_preliminar_v1_tiles.h"
 
 extern const void* gMsgwinMapBlocks[4];
+extern const uint16_t gCheshirePalette[], gAladdinPalette[];
 
 /* PORT_PPU_THREADS (the desktop builds, configure_pc.py): the canvas rows above and below the GBA picture are drawn
    on several cores (RenderOuterRows, below). Each core then has its own line buffers: PPU_TLS marks them. */
@@ -1753,7 +1754,7 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
             if (sPreliminarRecipe[bg] &&
                 ((bg==2 && (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) ||
-                 sPreliminarRecipe[bg]->v[0]==95 || sPreliminarRecipe[bg]->v[0]==99 || (bg==2 && sPreliminarRecipe[bg]->v[0]==104) ||
+                 sPreliminarRecipe[bg]->v[0]==81 || sPreliminarRecipe[bg]->v[0]==95 || sPreliminarRecipe[bg]->v[0]==99 || (bg==2 && sPreliminarRecipe[bg]->v[0]==104) ||
                  sPreliminarRecipe[bg]->v[0]==110 || sPreliminarRecipe[bg]->v[0]==112 || (bg==2 && sPreliminarRecipe[bg]->v[0]==117) || sPreliminarRecipe[bg]->v[0]==118 ||
                  sPreliminarRecipe[bg]->v[0]==120 || sPreliminarRecipe[bg]->v[0]==121 || sPreliminarRecipe[bg]->v[0]==122 ||
                  sPreliminarRecipe[bg]->v[0]==124)) {
@@ -1769,6 +1770,15 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     continue;
                 }
                 goto scalar_world;
+            }
+            if (sAgrabahLayer[bg]) {
+                int sx, sy;
+                if (PortAgrabahPixelSource(sAgrabahLayer[bg], wx, wy, &sx, &sy)) {
+                    int index = SinglePanelIndex(l, cnt, sx, sy);
+                    out[x] = index >= 0 && (index & 15) ? PLTT16[index] & 0x7fff : TRANSPARENT;
+                    sInWorld[x] = 1;
+                    continue;
+                }
             }
             if (sAgrabah109Layer[bg] == 2) {
                 if (Agrabah109DecorPixel(l, chars, wx, wy, &out[x])) {
@@ -2286,6 +2296,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
        240x160 camera. Keep the extended backgrounds, but let those actors
        enter and leave through the original frame as authored. */
     int sceneActorFrame = gPortScreen.wide && sEventBackdropProfile == 97 && !sEnvActorFrameOff;
+    int sceneActorId = sceneActorFrame ? 97 : 0;
     /* Jafar: a view wider than the 512-pixel sprite space showed each sprite twice, 512 apart (his attacks
        mirrored in the margin, user 24/10); his fight's sprites live in the 512 columns around the picture */
     int objLeft = sJafarFight && sLeft < GBA_SCREEN_W / 2 - 256 ? GBA_SCREEN_W / 2 - 256 : sLeft;
@@ -2294,8 +2305,10 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
     if (gPortScreen.wide && !sEnvActorFrameOff) {
         int pb;
         for (pb = 1; pb < 4; pb++)
-            if (sPreliminarRecipe[pb] && (sPreliminarRecipe[pb]->v[0] == 112 || sPreliminarRecipe[pb]->v[0] == 120))
+            if (sPreliminarRecipe[pb] && (sPreliminarRecipe[pb]->v[0] == 97 || sPreliminarRecipe[pb]->v[0] == 112 || sPreliminarRecipe[pb]->v[0] == 120)) {
                 sceneActorFrame = 1;
+                sceneActorId = sPreliminarRecipe[pb]->v[0];
+            }
     }
     int mapping1d = (dispcnt >> 6) & 1;
     int bitmapMode = (dispcnt & 7) >= 3;
@@ -2363,7 +2376,9 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         if (ox >= objRight || ox + bw <= objLeft)
             continue;
 
-        if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text && prio > 0) {
+        if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text && (sceneActorId == 97 || sceneActorId == 112 || prio > 0) &&
+            (sceneActorId != 97 || sOamHd[i].palette == gCheshirePalette) &&
+            (sceneActorId != 112 || sOamHd[i].palette == gAladdinPalette)) {
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0)
                 sActorEntered[i] = 1; /* in the frame (some of it): it stays drawn from now on */
             else if (!sActorEntered[i])

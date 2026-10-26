@@ -28,6 +28,14 @@ static inline const PortPreliminarRecipe* PortPreliminarFind(uint32_t hash, int 
 static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x, int* y) {
     const int16_t* v = p->v;
     int ox=*x, oy=*y, sx=ox, sy=oy, w=v[4], h=v[5];
+    if (v[0]==81 && (ox<0 || ox>=32 || oy<0 || oy>=32)) {
+        /* Keep the smooth corridor mask and floor on one diagonal module;
+         * the decorative props are unique, not cut donor-strip repeats. */
+        if (v[1]==2) return 0;
+        sx=16+PortSceneTileMod(ox-16,8);sy=oy+(ox-sx)/2;
+        if (sy<0 || sy>=32) return 0;
+        *x=sx;*y=sy;return 1;
+    }
     if (v[0]==116) {
         if (ox>=0 && ox<w && oy>=0 && oy<h) return 1;
         if (v[1]==2) {
@@ -548,6 +556,18 @@ static inline int PortPreliminar099Floor(int wx, int wy, int* sx, int* sy) {
 }
 
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (p && p->v[0]==81) {
+        if (p->v[1]==1 || p->v[1]==3) {
+            /* Replace the cartridge's finite left cap with the same smooth
+             * corridor module, including the native rectangle's corner. */
+            *sx=128+PortSceneTileMod(wx-128,64);*sy=wy+(wx-*sx)/2;
+            if (*sy<0 || *sy>=256) {*sx=0;*sy=0;}
+            return 1;
+        }
+        if (p->v[1]==2 && (wx<64 || wx>=256 || wy>=208 || wy<0)) {
+            *sx=504;*sy=504;return 1; /* no detached corner props */
+        }
+    }
     if (p && p->v[0]==112 && p->v[1]==2 && (wy<0 || wx>=512 || (wx>=416 && wx<456 && wy<24))) {
         if (wy<0 && wx>=192 && wx<208) {
             *sx=504; *sy=344; /* leave the corner shaft's gold face to BG3 */
@@ -702,8 +722,10 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
                     /* Above the purple corner, sample the same wall plane. */
                     if (wx>=48 && wx<112) *sy=0;
                 } else {
-                    *sx=192+PortSceneTileMod(wx-192,192);
-                    *sy=PortSceneTileMod(wy,64);
+                    /* Quiet plaster, without the repeated crack islands or
+                     * the roof texture: continue one coherent wall plane. */
+                    *sx=160+PortSceneTileMod(wx-160,32);
+                    *sy=8+PortSceneTileMod(wy,16);
                 }
             } else {
                 *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
