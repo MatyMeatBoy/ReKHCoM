@@ -4072,10 +4072,10 @@
     "popup-skip-text-pedro": {
       "id": "popup-skip-text-pedro",
       "piece": "Popup saltar cinematica HD sin letras Pedro",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ending",
       "created_at": "2026-10-26T22:34:20.220006+00:00",
-      "updated_at": "2026-10-26T22:50:05.280725+00:00",
+      "updated_at": "2026-10-26T22:51:00.986131+00:00",
       "branch": "fix/hdmovie-pause-text",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/274",
       "approval": "Pedido directo usuario: popup saltar sin letras, solucionar para todas las versiones, 26/10/2026",
@@ -4090,9 +4090,15 @@
           "at": "2026-10-26T22:49:32.561525+00:00",
           "owner": "codex-ending",
           "detail": "3f9d0289c; RED/GREEN layers30+JPCP932; EU5idiomas6sesiones12capturas;US/JP builds completos ROMspropias2sesiones4capturas cadauno. check_sourcesOK; review independienteJP sinfindings. No release."
+        },
+        {
+          "at": "2026-10-26T22:51:00.986131+00:00",
+          "owner": "codex-ending",
+          "detail": "Merge 5e617a1086d0478c2f443a064e4463dc37fc15ed; reviewer sin findings; EU/US/JP10sesiones20capturas y30regresiones, rootvioEN/FR/JPlegibles."
         }
       ],
-      "claimed_at": "2026-10-26T22:34:28.473387+00:00"
+      "claimed_at": "2026-10-26T22:34:28.473387+00:00",
+      "completed_at": "2026-10-26T22:51:00.986131+00:00"
     },
     "gallery-previews-black-pedro": {
       "id": "gallery-previews-black-pedro",
@@ -4115,7 +4121,7 @@
     "created_at": "2026-10-26T22:50:11.595507+00:00",
     "updated_at": "2026-10-26T22:50:11.595507+00:00"
   },
-  "updated_at": "2026-10-26T22:50:11.595507+00:00",
+  "updated_at": "2026-10-26T22:51:00.987130+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
