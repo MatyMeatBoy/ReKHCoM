@@ -118,4 +118,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito del usuario de incluir los recursos core en los ejecutables | 2026-10-26T01:42:16.304558+00:00 |
 | code-rebel-recom | Modo rebelde: lista local ReCoM separada en juego y launcher | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/197 | Usuario: terminar todas las mejoras y pendientes de código; pendiente vigente ReCoM rebelde | 2026-10-26T01:59:58.672762+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T02:00:04.408590+00:00)
