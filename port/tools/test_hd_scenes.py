@@ -16,6 +16,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -158,15 +159,20 @@ def main():
             problems.append(f"scene never asked (asked: {asked})")
         if movies != want:
             problems.append(f"played {movies}, wanted {want}")
-        if crash or code not in (0, "timeout"):
+        if crash or code != 0:
             problems.append(f"exit {code}{' CRASH' if crash else ''}")
         bad += bool(problems)
         lines.append(f"{ev:40s} {movie:14s} {'ok' if not problems else 'BAD ' + '; '.join(problems)}")
     lines.append(f"{len(results) - bad}/{len(results)} scenes ok, {len(scenes) - len(cases)} not testable here")
+    if not results:
+        lines.append("FAIL: no HD-scene cases ran (check --only, the debug menu and the imported movies)")
     (work / "report.txt").write_text("\n".join(lines) + "\n")
     (work / "report.json").write_text(json.dumps({f"{e}|{m}": r for (e, m), r in results.items()}, indent=1))
     print("\n".join(lines))
+    # A report containing BAD or skipped cases must not turn the release gate
+    # green merely because this Python process reached the end of its script.
+    return 1 if bad or len(cases) != len(scenes) or not results else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
