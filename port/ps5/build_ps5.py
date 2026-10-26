@@ -112,7 +112,7 @@ def game_includes(region):
 
 
 def common_flags():
-    return [TARGET, '-DPORT_PS5_GUEST', '-ffreestanding', '-nostdinc', '-isystem', resource_dir(), f'-I{HERE / "guest/include"}',
+    return [TARGET, '-DPORT_PS5_GUEST', *(['-DPORT_LINUX64_GUEST'] if os.environ.get('REKHCOM_GUEST_LINUX64') else []), '-ffreestanding', '-nostdinc', '-isystem', resource_dir(), f'-I{HERE / "guest/include"}',
             f'-I{HERE / "shared"}', '-O2', '-funsigned-char', '-fno-strict-aliasing', '-fwrapv', '-fno-pic', '-fno-pie',
             '-fno-stack-protector', '-fno-asynchronous-unwind-tables', '-fno-common', '-fno-omit-frame-pointer', '-msse4.1', '-fno-builtin-printf',
             '-fno-math-errno']

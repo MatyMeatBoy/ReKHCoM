@@ -40,7 +40,7 @@ def main():
     ap.add_argument('--regions', nargs='+', choices=['eu', 'us', 'jp'], default=['eu', 'us', 'jp'])
     args = ap.parse_args()
     env = dict(os.environ, CLANG=str(TC / 'clang.exe'), LLD=str(TC / 'ld.lld.exe'), OBJCOPY=str(TC / 'llvm-objcopy.exe'),
-               REKHCOM_GUEST_DUALSENSE='0')  # SELECT, not the DualSense's touchpad, in the hints
+               REKHCOM_GUEST_DUALSENSE='0', REKHCOM_GUEST_LINUX64='1')  # its HD movies played by the host  # SELECT, not the DualSense's touchpad, in the hints
     shutil.rmtree(OUT, ignore_errors=True)
     (OUT / 'bin64').mkdir(parents=True)
     (OUT / 'lib64').mkdir()

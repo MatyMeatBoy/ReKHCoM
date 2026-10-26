@@ -20,7 +20,7 @@
  */
 #include "port/port.h"
 
-#if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX)
+#if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
 #include <stdio.h>
 #include <string.h>
 static int PlayFile(const char* name);
@@ -1210,9 +1210,9 @@ done:
     return played;
 }
 #endif
-#elif defined(__ANDROID__) || defined(PORT_ANDROID64)
+#elif defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST) /* the image asks its host */
 #include <SDL3/SDL.h>
-#ifdef PORT_ANDROID64
+#if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
 int h_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font);
 #else
 #include <stdarg.h>
@@ -1238,7 +1238,11 @@ static int PlayFile(const char* name) {
     for (i = 0; i < 2; i++)
         SDL_snprintf(subs[i], sizeof(subs[i]), "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, order[i]);
     SDL_strlcpy(font, PortConfigPath("assets/fonts/KHMenu.otf"), sizeof(font));
-#ifdef PORT_ANDROID64
+#if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
+#ifdef PORT_LINUX64_GUEST
+    if (sStartAt > 0) /* the 64-bit Linux host reads where to start after an @ (port/linux64) */
+        SDL_snprintf(path + strlen(path), sizeof(path) - strlen(path), "@%d", sStartAt);
+#endif
     played = h_hd_movie(path, gPortConfig.hdSubtitles ? subs[0] : NULL, gPortConfig.hdSubtitles ? subs[1] : NULL, font);
 #else
     if (!SDL_GetPathInfo(path, NULL))
@@ -1249,7 +1253,7 @@ static int PlayFile(const char* name) {
     PortAudioMovieHold(0);
 #endif
     if (played == 2) { /* the app was closed during the movie: the main loop closes the game as usual */
-#ifdef PORT_ANDROID64
+#if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
         /* the host's quit_requested says so */
 #else
         SDL_Event q;

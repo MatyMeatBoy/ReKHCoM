@@ -5,7 +5,7 @@
  *   rekhcom64 guest-eu.bin [--data DIR]          (ReKHCoM.sh picks it on x86-64)
  *
  * The bridge is the PS5 host's (shared/bridge.h); files as port/ps5/test/linux_host.c, the GPU, audio and pads as
- * port/android64/host/android64_host.c. HD movies are not decoded here yet: the cartridge's play.
+ * port/android64/host/android64_host.c; HD movies with the system's ffmpeg (hdmovie_ffmpeg.inc).
  */
 #define _GNU_SOURCE
 #include <SDL3/SDL.h>
@@ -204,10 +204,7 @@ static void H_audio_ratio(double ratio) {
     if (sAudio && ratio > 0.5 && ratio < 2.0)
         SDL_SetAudioStreamFrequencyRatio(sAudio, (float)ratio);
 }
-static int H_hd_movie(const char* m, const char* a, const char* b, const char* f) {
-    (void)m; (void)a; (void)b; (void)f;
-    return 0; /* not decoded here yet: the cartridge's movie plays */
-}
+static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font); /* hdmovie_ffmpeg.inc */
 
 /* ---- input: a gamepad, or the keyboard ---- */
 static SDL_Gamepad* sPad;
@@ -272,6 +269,8 @@ static int H_pad_poll(HostPad* out, int count) {
     }
     return 1;
 }
+#include "hdmovie_ffmpeg.inc"
+
 static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
 static int H_app_state(void) { return 0; }
 static int H_quit_requested(void) { return sQuit; }
