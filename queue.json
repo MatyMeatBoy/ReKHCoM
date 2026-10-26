@@ -3002,19 +3002,20 @@
     "rev-six-097": {
       "id": "rev-six-097",
       "piece": "Escena097 gato y arboles",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:54.648080+00:00",
-      "updated_at": "2026-10-26T00:06:54.648080+00:00",
+      "updated_at": "2026-10-26T00:06:59.787614+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T00:06:59.787614+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:06:54.648080+00:00",
+  "updated_at": "2026-10-26T00:06:59.787614+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
