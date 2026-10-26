@@ -2988,10 +2988,10 @@
     "rev-six-081": {
       "id": "rev-six-081",
       "piece": "Escena081 suelo y setas",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:44.438144+00:00",
-      "updated_at": "2026-10-26T00:46:42.230978+00:00",
+      "updated_at": "2026-10-26T00:47:15.108393+00:00",
       "branch": "codex/atlas-approved-081-097-110",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/193",
       "approval": "approved exact 8072e8379e404ddd9ba2eac73de50f3c",
@@ -3006,10 +3006,16 @@
           "at": "2026-10-26T00:46:42.230978+00:00",
           "owner": "codex-atlas",
           "detail": "Versión humana aprobada; compilación nativa EU del subconjunto correcta."
+        },
+        {
+          "at": "2026-10-26T00:47:15.108393+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real bd784a0b2f7c62646a365dc5ebdc4e79dadf2646; comentarios posteriores conservados para nueva revisión."
         }
       ],
       "claimed_at": "2026-10-26T00:06:49.641285+00:00",
-      "sent": "8072e8379e404ddd9ba2eac73de50f3c"
+      "sent": "8072e8379e404ddd9ba2eac73de50f3c",
+      "completed_at": "2026-10-26T00:47:15.108393+00:00"
     },
     "rev-six-097": {
       "id": "rev-six-097",
@@ -3164,7 +3170,7 @@
     "created_at": "2026-10-26T00:47:04.526672+00:00",
     "updated_at": "2026-10-26T00:47:04.526672+00:00"
   },
-  "updated_at": "2026-10-26T00:47:04.526672+00:00",
+  "updated_at": "2026-10-26T00:47:15.108393+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
