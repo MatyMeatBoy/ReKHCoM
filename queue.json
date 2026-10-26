@@ -3480,23 +3480,29 @@
     "atlas-menu-font-evidence": {
       "id": "atlas-menu-font-evidence",
       "piece": "Ver barajas: fuente solicitada y opciones actuales",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T08:02:10.346460+00:00",
-      "updated_at": "2026-10-26T08:05:19.660938+00:00",
+      "updated_at": "2026-10-26T08:11:43.307349+00:00",
       "branch": "codex/atlas-menu-font-evidence",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/217",
-      "approval": null,
+      "approval": "Documentación y evidencia de código previamente integrado; no activa arte pendiente.",
       "reference": "20261024-134252-72061c",
       "evidence": [
         {
           "at": "2026-10-26T08:05:19.660938+00:00",
           "owner": "codex-atlas",
           "detail": "Dos capturas actuales EU en español; log selecciona KHMenu; selector vigente de PR139; código ya integrado por PR194/196."
+        },
+        {
+          "at": "2026-10-26T08:11:43.307349+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge 3c321cbca938bec17b978ead7ecfbafdbaaf3520; sólo traspaso y verificación de fuente, imágenes mantienen revisión humana."
         }
       ],
       "claimed_at": "2026-10-26T08:02:15.863061+00:00",
-      "sent": "2783c8219d0d4ca4b178db5ab711b9b2"
+      "sent": "2783c8219d0d4ca4b178db5ab711b9b2",
+      "completed_at": "2026-10-26T08:11:43.307349+00:00"
     },
     "atlas-start-values-evidence": {
       "id": "atlas-start-values-evidence",
@@ -3525,7 +3531,7 @@
     "created_at": "2026-10-26T08:11:32.559582+00:00",
     "updated_at": "2026-10-26T08:11:32.559582+00:00"
   },
-  "updated_at": "2026-10-26T08:11:32.559582+00:00",
+  "updated_at": "2026-10-26T08:11:43.307349+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
