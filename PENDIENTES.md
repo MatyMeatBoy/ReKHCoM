@@ -129,6 +129,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/217 | Documentación y evidencia de código previamente integrado; no activa arte pendiente. | 2026-10-26T08:11:43.307349+00:00 |
 | atlas-start-values-evidence | Menú START: cifras HD actuales | pendiente | — | — | — | 2026-10-26T08:11:09.029483+00:00 |
 | atlas-maleficent-lomo-r2 | Maléfica: tres recortes, lomo y estilo KHCoM | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/222 | — | 2026-10-26T08:25:25.590946+00:00 |
-| atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | pendiente | — | — | — | 2026-10-26T09:18:52.516445+00:00 |
+| atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | en_curso | codex-atlas | — | — | 2026-10-26T09:18:58.099990+00:00 |
 
 Integrador: libre
