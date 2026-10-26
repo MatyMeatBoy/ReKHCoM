@@ -3847,17 +3847,17 @@
       "status": "en_curso",
       "owner": "codex-retoma",
       "created_at": "2026-10-26T16:22:20.470860+00:00",
-      "updated_at": "2026-10-26T16:22:27.817401+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T16:23:52.459939+00:00",
+      "branch": "codex/claude-close-20261026",
       "pr": null,
       "approval": null,
-      "reference": "Usuario 26/10: retomar hasta acabar y tomar decisiones",
+      "reference": "origin/main bf09cf001; traspaso Claude 26/10; tres workers código, baterías y release",
       "evidence": [],
       "claimed_at": "2026-10-26T16:22:27.817401+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T16:22:27.817401+00:00",
+  "updated_at": "2026-10-26T16:23:52.459939+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
