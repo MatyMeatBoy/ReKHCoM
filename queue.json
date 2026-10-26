@@ -3289,10 +3289,23 @@
       ],
       "claimed_at": "2026-10-26T01:44:50.046722+00:00",
       "completed_at": "2026-10-26T02:00:15.979929+00:00"
+    },
+    "code-android-test-validity": {
+      "id": "code-android-test-validity",
+      "piece": "Android 123/124: distinguir APK inválido de timeout y comprobar retest",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T02:05:35.776224+00:00",
+      "updated_at": "2026-10-26T02:05:35.776224+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: terminar pendientes de código y pruebas vigentes",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T02:00:21.823251+00:00",
+  "updated_at": "2026-10-26T02:05:35.776224+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
