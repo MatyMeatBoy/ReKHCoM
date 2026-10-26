@@ -4106,7 +4106,7 @@
       "status": "pr_abierto",
       "owner": "codex-gallery-preview",
       "created_at": "2026-10-26T22:35:30.093184+00:00",
-      "updated_at": "2026-10-26T22:52:26.825439+00:00",
+      "updated_at": "2026-10-26T22:54:00.459392+00:00",
       "branch": "fix/gallery-black-previews",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/275",
       "approval": "Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10",
@@ -4121,6 +4121,11 @@
           "at": "2026-10-26T22:52:26.825439+00:00",
           "owner": "codex-gallery-preview",
           "detail": "Bugfix funcional, no pieza de arte; commit fbf82a220. 24 UI skip/return cycles EU/US/JP, MF real RED/GREEN runtime/importer, repaired PNG verified; independent review no findings; no merge/release performed"
+        },
+        {
+          "at": "2026-10-26T22:54:00.459392+00:00",
+          "owner": "codex-gallery-preview",
+          "detail": "Rebased cleanly on merged popup+JP fix 5e617a108; final baf8251b7643aba9c47e7971f938282abd381792. Combined check_sources, real MF preview/native importer regression, async/cache/render probes, six pause-layer region/platform probes and JP queue unit PASS; both movie fixes preserved."
         }
       ],
       "claimed_at": "2026-10-26T22:35:35.646918+00:00"
@@ -4141,7 +4146,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:52:47.757131+00:00",
+  "updated_at": "2026-10-26T22:54:00.459392+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
