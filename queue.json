@@ -3970,15 +3970,21 @@
     "hd-poster-performance-20261026": {
       "id": "hd-poster-performance-20261026",
       "piece": "Posters HD de galeria sin bloqueo de decoder",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T18:44:56.993703+00:00",
-      "updated_at": "2026-10-26T18:45:02.415336+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-26T19:08:02.265493+00:00",
+      "branch": "codex/hd-poster-performance",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/262",
       "approval": "Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas",
       "reference": "Padre delega hdmovie/import tools; gallery worker maneja cache/UI",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T19:08:02.265493+00:00",
+          "owner": "codex-batteries",
+          "detail": "b899c0475; actual Windows decoder422ms190MiB vs PNG0-16ms12MiB;4offline import cases plus actual native helper/corrupt-cache/sourceSHA tests pass; source checks pass"
+        }
+      ],
       "claimed_at": "2026-10-26T18:45:02.415336+00:00"
     }
   },
@@ -3988,7 +3994,7 @@
     "created_at": "2026-10-26T19:00:26.179594+00:00",
     "updated_at": "2026-10-26T19:00:26.179594+00:00"
   },
-  "updated_at": "2026-10-26T19:00:26.179594+00:00",
+  "updated_at": "2026-10-26T19:08:02.265493+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
