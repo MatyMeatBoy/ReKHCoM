@@ -10,8 +10,7 @@ int PortRecomActive(void);
 enum { kMenuRecomFrame = 97 }; /* the filigree's cell (recom_set.inc kRecomFrameCell) */
 static unsigned char* sAchievementAtlas;
 static int sAchievementAtlasRows, sAchievementAtlasTried;
-static void AchievementMenuBadge(const PortAchievementInfo* info, int index, int x, int y) {
-    int px, py;
+static int AchievementAtlasReady(void) {
     if (!sAchievementAtlasTried) {
         int w, h, channels;
         sAchievementAtlasTried = 1;
@@ -22,6 +21,27 @@ static void AchievementMenuBadge(const PortAchievementInfo* info, int index, int
         if (sAchievementAtlas && (w != 640 || h % 64)) { stbi_image_free(sAchievementAtlas); sAchievementAtlas = NULL; }
         sAchievementAtlasRows = sAchievementAtlas ? h / 64 : 0;
     }
+    return sAchievementAtlas != NULL;
+}
+
+/* A badge at size x size (nearest), in colour or in grey; 0 when the atlas is missing. */
+static int AchievementBadgeSmall(int index, int x, int y, int size, int grey) {
+    int px, py;
+    if (!AchievementAtlasReady() || index < 0 || index / 10 >= sAchievementAtlasRows)
+        return 0;
+    for (py = 0; py < size; ++py) for (px = 0; px < size; ++px) {
+        const unsigned char* p = sAchievementAtlas +
+            (((index / 10) * 64 + py * 64 / size) * 640 + (index % 10) * 64 + px * 64 / size) * 4;
+        unsigned r = p[0], g = p[1], b = p[2];
+        if (grey) r = g = b = ((r * 77 + g * 150 + b * 29) >> 8) / 2 + 40;
+        Pixel(x + px, y + py, 0xFF000000u | r << 16 | g << 8 | b);
+    }
+    return 1;
+}
+
+static void AchievementMenuBadge(const PortAchievementInfo* info, int index, int x, int y) {
+    int px, py;
+    AchievementAtlasReady();
     if (!sAchievementAtlas || index < 0 || index / 10 >= sAchievementAtlasRows) {
         DrawText("?", x + 28, y + 24, MENU_DIM, 0xFFFFFFFFu);
         return;

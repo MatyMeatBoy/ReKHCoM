@@ -657,12 +657,12 @@ static const char* const sHelp[LANG_COUNT] = {
     "\xE2\x86\x91\xE2\x86\x93 選択   \xE2\x86\x90\xE2\x86\x92 変更   B 戻る",
 };
 static const char* const sHelpNg[LANG_COUNT] = {
-    "ââ Select   ââ Change   A Start",
-    "ââ Choisir   ââ Modifier   A Commencer",
-    "ââ Wählen   ââ Ändern   A Beginnen",
-    "ââ Scegli   ââ Cambia   A Inizia",
-    "ââ Elegir   ââ Cambiar   A Comenzar",
-    "ââ 選択   ââ 変更   A はじめる",
+    "↑↓ Select   ←→ Change   A Start",
+    "↑↓ Choisir   ←→ Modifier   A Commencer",
+    "↑↓ Wählen   ←→ Ändern   A Beginnen",
+    "↑↓ Scegli   ←→ Cambia   A Inizia",
+    "↑↓ Elegir   ←→ Cambiar   A Comenzar",
+    "↑↓ 選択   ←→ 変更   A はじめる",
 };
 static const char* const sTitleHint[LANG_COUNT] = { "SELECT  Options", "SELECT  Options", "SELECT  Optionen",
                                                     "SELECT  Opzioni", "SELECT  Opciones",
@@ -1921,6 +1921,8 @@ void PortUiOpenOptions(void) {
         sCursor = SDL_clamp(SDL_atoi(SDL_getenv("KHCOM_OPTIONS_CURSOR")), 0, ITEM_COUNT - 1);
     if (SDL_getenv("KHCOM_OPTIONS_FONTCHOICE")) /* test harness: the HD text font window open */
         ConfirmOpen(CONFIRM_FONT);
+    if (SDL_getenv("KHCOM_OPTIONS_CONFIRM")) /* test harness: that confirmation open (CONFIRM_*) */
+        ConfirmOpen(SDL_atoi(SDL_getenv("KHCOM_OPTIONS_CONFIRM")));
     if (sCursor >= ITEM_CHEAT_DEBUG && sCursor <= ITEM_CHEATS_BACK) /* a row of the Cheats page */
         sPage = PAGE_CHEATS;
     if (sCursor >= ITEM_CONTROL_A && sCursor <= ITEM_CONTROLS_BACK) /* a row of the Controls page */
@@ -3801,12 +3803,12 @@ static const char* const sConfirmStatesAsk[LANG_COUNT] = {
     "¿Activar los estados rápidos?", "クイックステートをオンにしますか？",
 };
 static const char* const sConfirmStatesWarn[LANG_COUNT] = {
-    "Only for testing or reproducing bugs. While they are on, no achievements unlock until you turn them off.",
-    "Uniquement pour tester ou reproduire des bugs. Tant qu'ils sont actifs, aucun succès ne se débloque.",
-    "Nur zum Testen oder Nachstellen von Fehlern. Solange sie an sind, werden keine Erfolge freigeschaltet.",
-    "Solo per test o per riprodurre bug. Finché sono attivi non si sblocca nessun obiettivo.",
-    "Solo para pruebas o para replicar errores. Mientras estén activos no se desbloquean logros.",
-    "テストやバグのさいげんのためだけです。オンのあいだはじっせきがかいじょされません。",
+    "Meant for testing. While quick states are on, achievements are paused: none unlock until you turn them off.",
+    "Prévu pour les tests. Tant que les états rapides sont actifs, les succès sont en pause : aucun ne se débloque.",
+    "Zum Testen gedacht. Solange Schnellstände an sind, sind Erfolge pausiert: Es wird keiner freigeschaltet.",
+    "Pensato per i test. Finché gli stati rapidi sono attivi, gli obiettivi sono in pausa: non se ne sblocca nessuno.",
+    "Pensado para pruebas. Mientras los estados rápidos estén activos, los logros quedan en pausa: no se desbloquea ninguno.",
+    "テスト用です。クイックステートがオンのあいだ、じっせきはていしし、かいじょされません。",
 };
 static const char* const sConfirmStatesRows[2][LANG_COUNT] = {
     { "No", "Non", "Nein", "No", "No", "いいえ" },
@@ -4093,7 +4095,7 @@ static void DrawConfirm(int l, int width, int height) {
     /* measure; on the GBA's 160 lines a window too tall shows only the chosen row's description */
     warnH = DrawWrapped(warn, 0, 0, panelW - 32, 0, 0) * 11 + 4;
     for (compact = 0; compact < 2; compact++) {
-        h = 22 + warnH;
+        h = 22 + warnH + (sConfirm == CONFIRM_STATES ? 30 : 0);
         for (i = 0; i < rows; i++)
             h += 14 + (subs[i] && (!compact || i == sConfirmCursor) ? DrawWrapped(subs[i], 0, 0, textW, 0, 0) * 11 + 4 : 0);
         h += 16;
@@ -4112,6 +4114,22 @@ static void DrawConfirm(int l, int width, int height) {
     DrawGlyph('!', x0 + 10, y, MENU_RED_DARK, 0xFFD8D8D8u);
     DrawWrapped(warn, x0 + 24, y, panelW - 32, MENU_RED_DARK, 1);
     y += warnH;
+    if (sConfirm == CONFIRM_STATES) {
+        /* what it means at a glance: three achievements, then the same ones greyed out and crossed */
+        static const int kShown[3] = { 0, 12, 40 };
+        int k, size = 22, gap = 4, row = 3 * size + 2 * gap, bx = x0 + (panelW - (2 * row + 24)) / 2;
+        for (k = 0; k < 3; k++) {
+            int cx = bx + row + 24 + k * (size + gap), d;
+            AchievementBadgeSmall(kShown[k], bx + k * (size + gap), y, size, 0);
+            if (AchievementBadgeSmall(kShown[k], cx, y, size, 1))
+                for (d = 2; d < size - 2; d++) { /* the red cross */
+                    Fill(cx + d, y + d, 2, 2, MENU_RED_DARK);
+                    Fill(cx + size - 2 - d, y + d, 2, 2, MENU_RED_DARK);
+                }
+        }
+        DrawText("→", bx + row + 6, y + 5, MENU_RED_DARK, 0xFFD8D8D8u);
+        y += 30;
+    }
     for (i = 0; i < rows; i++) {
         int sel = i == sConfirmCursor, off = ConfirmRowOff(i);
         MenuBar(x0 + 8, y + 2, panelW - 16, sel);
