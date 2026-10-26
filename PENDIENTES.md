@@ -137,4 +137,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | codex-atlas | codex/hd-ui-v20-completion | — | 2026-10-26T10:59:03.354749+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
 
-Integrador: codex-atlas (ocupado; 2026-10-26T12:27:54.698890+00:00)
+Integrador: libre
