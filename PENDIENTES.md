@@ -150,4 +150,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | popup-skip-text-pedro | Popup saltar cinematica HD sin letras Pedro | pr_abierto | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/274 | Pedido directo usuario: popup saltar sin letras, solucionar para todas las versiones, 26/10/2026 | 2026-10-26T22:50:05.280725+00:00 |
 | gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | en_curso | codex-gallery-preview | — | Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10 | 2026-10-26T22:35:35.646918+00:00 |
 
-Integrador: libre
+Integrador: codex-pedro-integrador (ocupado; 2026-10-26T22:50:11.595507+00:00)
