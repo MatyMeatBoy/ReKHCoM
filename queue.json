@@ -4026,10 +4026,23 @@
       "reference": "GitHub #42 video WCxyxOOb2fI",
       "evidence": [],
       "claimed_at": "2026-10-26T21:33:28.496304+00:00"
+    },
+    "trailer-v20-production": {
+      "id": "trailer-v20-production",
+      "piece": "Producir y exportar trailer real v2.0",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T21:33:57.968735+00:00",
+      "updated_at": "2026-10-26T21:33:57.968735+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas",
+      "reference": "port/progress/TRAILER_V20.md",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:33:35.078337+00:00",
+  "updated_at": "2026-10-26T21:33:57.968735+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

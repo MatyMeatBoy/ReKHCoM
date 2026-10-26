@@ -146,5 +146,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-poster-performance-20261026 | Posters HD de galeria sin bloqueo de decoder | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/262 | Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas | 2026-10-26T19:08:02.265493+00:00 |
 | docs-v20-trailer | Limpiar pendientes tras v2.0 y registrar directrices del trailer | integrado | codex-trailer | https://github.com/MatyMeatBoy/ReKHCoM/pull/271 | Pedido directo del usuario de limpiar pendientes y registrar trailer v2.0, 26/10/2026 | 2026-10-26T21:14:47.042065+00:00 |
 | ending-desync-42 | Desincronizacion video audio final Sora issue 42 | en_curso | codex-ending | fix/ending-cutscene-desync | — | 2026-10-26T21:33:35.078337+00:00 |
+| trailer-v20-production | Producir y exportar trailer real v2.0 | pendiente | — | — | Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas | 2026-10-26T21:33:57.968735+00:00 |
 
 Integrador: libre
