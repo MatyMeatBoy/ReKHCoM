@@ -3399,20 +3399,27 @@
     "atlas-112-genie-door": {
       "id": "atlas-112-genie-door",
       "piece": "Escena 112: Genio y borde de puerta",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:44:39.072622+00:00",
-      "updated_at": "2026-10-26T07:44:58.326161+00:00",
+      "updated_at": "2026-10-26T07:53:46.865264+00:00",
       "branch": "codex/atlas-112-genie-door",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/214",
       "approval": null,
       "reference": "20261025-214433-bfb58b",
-      "evidence": [],
-      "claimed_at": "2026-10-26T07:44:43.883034+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T07:53:46.865264+00:00",
+          "owner": "codex-atlas",
+          "detail": "Borde de puerta completo; se actualiza la propuesta de actores tras corregir inicialización de cámara. Depende de PR213."
+        }
+      ],
+      "claimed_at": "2026-10-26T07:44:43.883034+00:00",
+      "sent": "fb1b0c0d3d4142979eff6dfa83f504ce"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:44:58.326161+00:00",
+  "updated_at": "2026-10-26T07:53:46.865264+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
