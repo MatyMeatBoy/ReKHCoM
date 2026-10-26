@@ -3072,16 +3072,23 @@
     "rev-six-agrabah": {
       "id": "rev-six-agrabah",
       "piece": "Agrabah107108 cornisas ytecho",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:07:27.249034+00:00",
-      "updated_at": "2026-10-26T00:07:32.435233+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T00:38:55.579066+00:00",
+      "branch": "codex/atlas-rev-six-turbo",
       "pr": null,
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
-      "evidence": [],
-      "claimed_at": "2026-10-26T00:07:32.435233+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T00:38:55.579066+00:00",
+          "owner": "codex-atlas",
+          "detail": "Primer pase con capturas reales. Remates pendientes explícitos en ficha Atlas."
+        }
+      ],
+      "claimed_at": "2026-10-26T00:07:32.435233+00:00",
+      "sent": "34f9930dc77e48dabb91cd71e453e1f2"
     },
     "rev-six-oogie": {
       "id": "rev-six-oogie",
@@ -3099,7 +3106,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:38:50.013261+00:00",
+  "updated_at": "2026-10-26T00:38:55.579066+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
