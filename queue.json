@@ -3293,19 +3293,20 @@
     "code-android-test-validity": {
       "id": "code-android-test-validity",
       "piece": "Android 123/124: distinguir APK inválido de timeout y comprobar retest",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T02:05:35.776224+00:00",
-      "updated_at": "2026-10-26T02:05:35.776224+00:00",
+      "updated_at": "2026-10-26T02:05:41.502445+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario: terminar pendientes de código y pruebas vigentes",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T02:05:41.502445+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T02:05:35.776224+00:00",
+  "updated_at": "2026-10-26T02:05:41.502445+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
