@@ -111,5 +111,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-110 | Escena110 muro superior | en_curso | codex-atlas | — | — | 2026-10-26T00:07:10.854108+00:00 |
 | rev-six-112 | Escena112 actores y detallepuerta | en_curso | codex-atlas | — | — | 2026-10-26T00:07:21.960650+00:00 |
 | rev-six-agrabah | Agrabah107108 cornisas ytecho | en_curso | codex-atlas | — | — | 2026-10-26T00:07:32.435233+00:00 |
+| rev-six-oogie | Oogie alfombra yfantasmas | pendiente | — | — | — | 2026-10-26T00:07:38.304381+00:00 |
 
 Integrador: libre
