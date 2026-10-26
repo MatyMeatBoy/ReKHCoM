@@ -114,4 +114,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-oogie | Oogie alfombra yfantasmas | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:39:00.726357+00:00 |
 | atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/192 | Solicitud explícita del usuario de integrar el pintor en Atlas | 2026-10-26T00:42:21.673078+00:00 |
 
-Integrador: codex-atlas (ocupado; 2026-10-26T00:42:11.577171+00:00)
+Integrador: libre
