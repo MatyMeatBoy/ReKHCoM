@@ -108,7 +108,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-aprobados-runtime | Activar Darkside06 r8 y cuerpo en arena aprobados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/190 | approved exact 60f90456598249ecb1e691c51dd2434e | 2026-10-26T00:05:37.909873+00:00 |
 | rev-six-081 | Escena081 suelo y setas | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/193 | approved exact 8072e8379e404ddd9ba2eac73de50f3c | 2026-10-26T00:46:42.230978+00:00 |
 | rev-six-097 | Escena097 gato y arboles | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/193 | approved exact bb97b822df0e46b1b5421f89935ad80e | 2026-10-26T00:46:48.116834+00:00 |
-| rev-six-110 | Escena110 muro superior | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:44.526005+00:00 |
+| rev-six-110 | Escena110 muro superior | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/193 | approved exact f9e35dbc32104fa68202b8eeb9fe5dc6 | 2026-10-26T00:46:53.550203+00:00 |
 | rev-six-112 | Escena112 actores y detallepuerta | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:50.013261+00:00 |
 | rev-six-agrabah | Agrabah107108 cornisas ytecho | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:55.579066+00:00 |
 | rev-six-oogie | Oogie alfombra yfantasmas | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:39:00.726357+00:00 |

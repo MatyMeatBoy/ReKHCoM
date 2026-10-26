@@ -3040,19 +3040,24 @@
     "rev-six-110": {
       "id": "rev-six-110",
       "piece": "Escena110 muro superior",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:07:05.523153+00:00",
-      "updated_at": "2026-10-26T00:38:44.526005+00:00",
-      "branch": "codex/atlas-rev-six-turbo",
-      "pr": null,
-      "approval": null,
+      "updated_at": "2026-10-26T00:46:53.550203+00:00",
+      "branch": "codex/atlas-approved-081-097-110",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/193",
+      "approval": "approved exact f9e35dbc32104fa68202b8eeb9fe5dc6",
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
       "evidence": [
         {
           "at": "2026-10-26T00:38:44.526005+00:00",
           "owner": "codex-atlas",
           "detail": "Primer pase con capturas reales. Remates pendientes explícitos en ficha Atlas."
+        },
+        {
+          "at": "2026-10-26T00:46:53.550203+00:00",
+          "owner": "codex-atlas",
+          "detail": "Versión humana aprobada; compilación nativa EU del subconjunto correcta."
         }
       ],
       "claimed_at": "2026-10-26T00:07:10.854108+00:00",
@@ -3149,7 +3154,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:46:48.116834+00:00",
+  "updated_at": "2026-10-26T00:46:53.550203+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
