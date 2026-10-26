@@ -3758,12 +3758,12 @@
     "atlas-moguri-tab-fix": {
       "id": "atlas-moguri-tab-fix",
       "piece": "Canjear naipes: impedir estiramiento en pestaña derecha durante animación",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T10:21:25.057116+00:00",
-      "updated_at": "2026-10-26T10:22:19.021398+00:00",
+      "updated_at": "2026-10-26T10:26:47.076243+00:00",
       "branch": "codex/atlas-moguri-tab-fix",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/230",
       "approval": null,
       "reference": "20261026-071224-dc7307 /69f4acf0-5614-4535-a159-2d503e7692ca",
       "evidence": [
@@ -3771,13 +3771,19 @@
           "at": "2026-10-26T10:22:19.021398+00:00",
           "owner": "codex-atlas",
           "detail": "El aprobado PR228 ya entró en main. Se atiende nueva nube69f4acf0 con cuatro fases reales1420/1433/1447/1462, fondo BG del gutter y sin duplicar pestaña."
+        },
+        {
+          "at": "2026-10-26T10:26:47.076243+00:00",
+          "owner": "codex-atlas",
+          "detail": "Hija enviada; cuatro fases1420/1433/1447/1462 sin tinta prolongada, centro GBA1420 idéntico. EU768MB/check_sources. Recetas y detención documentadas; pendiente valoración."
         }
       ],
-      "claimed_at": "2026-10-26T10:21:30.214545+00:00"
+      "claimed_at": "2026-10-26T10:21:30.214545+00:00",
+      "sent": "cdd96f3cf28f45959ff64f42543a0d61"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T10:22:19.021398+00:00",
+  "updated_at": "2026-10-26T10:26:47.076243+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
