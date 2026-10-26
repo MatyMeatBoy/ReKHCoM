@@ -126,6 +126,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-061-wall-tip | Escena 061: remate inferior del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/215 | — | 2026-10-26T07:58:58.896503+00:00 |
 | atlas-110-folded-wall | Escena 110: pared reflejada hasta arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/216 | — | 2026-10-26T08:01:58.955948+00:00 |
 | atlas-095-castle | Escena 095: recuperar un único castillo; no cerrado por árbol y flores | pendiente | — | — | — | 2026-10-26T08:02:05.044114+00:00 |
-| atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | en_curso | codex-atlas | codex/atlas-menu-font-evidence | — | 2026-10-26T08:02:32.864100+00:00 |
+| atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/217 | — | 2026-10-26T08:05:19.660938+00:00 |
 
 Integrador: libre
