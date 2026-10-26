@@ -3844,19 +3844,20 @@
     "claude-close-20261026": {
       "id": "claude-close-20261026",
       "piece": "Retoma Claude: cierre técnico v2.0 y verificación de entregas",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-retoma",
       "created_at": "2026-10-26T16:22:20.470860+00:00",
-      "updated_at": "2026-10-26T16:22:20.470860+00:00",
+      "updated_at": "2026-10-26T16:22:27.817401+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario 26/10: retomar hasta acabar y tomar decisiones",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T16:22:27.817401+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T16:22:20.470860+00:00",
+  "updated_at": "2026-10-26T16:22:27.817401+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

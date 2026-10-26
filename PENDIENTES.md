@@ -137,6 +137,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | codex-atlas | codex/hd-ui-v20-completion | — | 2026-10-26T10:59:03.354749+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
 | android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | en_curso | codex-batteries | codex/android-battery-validity | — | 2026-10-26T16:22:04.424256+00:00 |
-| claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | pendiente | — | — | — | 2026-10-26T16:22:20.470860+00:00 |
+| claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | codex-retoma | — | — | 2026-10-26T16:22:27.817401+00:00 |
 
 Integrador: libre
