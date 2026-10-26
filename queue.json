@@ -3044,19 +3044,20 @@
     "rev-six-agrabah": {
       "id": "rev-six-agrabah",
       "piece": "Agrabah107108 cornisas ytecho",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T00:07:27.249034+00:00",
-      "updated_at": "2026-10-26T00:07:27.249034+00:00",
+      "updated_at": "2026-10-26T00:07:32.435233+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T00:07:32.435233+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:07:27.249034+00:00",
+  "updated_at": "2026-10-26T00:07:32.435233+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
