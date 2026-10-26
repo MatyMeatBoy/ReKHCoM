@@ -107,4 +107,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | steam-banner | Banner de Steam: captura de combate en arena a x3 entero + logo mejorado KH Chain of Memories del titulo HD (no el Re:CoM) (usuario 25/10) | pendiente | — | — | — | 2026-10-25T23:15:32.344463+00:00 |
 | darkside-aprobados-runtime | Activar Darkside06 r8 y cuerpo en arena aprobados | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/190 | — | 2026-10-25T23:56:29.990229+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T00:05:30.899521+00:00)
