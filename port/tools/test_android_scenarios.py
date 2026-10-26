@@ -150,6 +150,7 @@ def run(region, name, frames, timeout, env):
     start = time.monotonic()
     time.sleep(6)
     status = 'timeout'
+    detail = ''
     seen = False  # a process that has not started yet is not one that finished (the first start after an install is slow)
     while time.monotonic() - start < timeout:
         crashes = adb('logcat', '-d', '-b', 'crash').stdout.decode(errors='replace')
@@ -159,6 +160,16 @@ def run(region, name, frames, timeout, env):
         host = private('cat', 'files/kh_com_host.log').stdout.decode(errors='replace')
         if 'crash: signal' in host:  # the 64-bit host's own crash report (android64_host.c, CrashSignal)
             status = 'CRASH'
+            break
+        missing = re.search(r'the game image [^\r\n]+ is missing from the APK', host)
+        if missing:
+            # A partial-region APK never entered the scenario (US Agrabah 123, 25/10).
+            # Check before process exit: dismissing its error screen is not a pass either.
+            status, detail = 'BAD-APK', missing.group(0)
+            break
+        ended = re.search(r'the game ended \((-?\d+)\)', host)
+        if ended and int(ended.group(1)) != 0:
+            status, detail = 'GAME-ERROR', ended.group(0)
             break
         alive = not adb('shell', 'pidof', PKG + ':game', check=False).returncode
         if alive:
@@ -172,7 +183,6 @@ def run(region, name, frames, timeout, env):
             break
         time.sleep(3)
     log = private('cat', 'files/kh_com.log').stdout.decode(errors='replace')
-    detail = ''
     ubsan = sorted(set(re.findall(r'ReKHCoM-UBSAN.*?: (\w[\w-]* pc=0x[0-9a-f]+)', adb('logcat', '-d', '-s', 'ReKHCoM-UBSAN:W').stdout.decode(errors='replace'))))
     if ubsan:
         print('  ubsan:', ' '.join(ubsan), flush=True)
@@ -187,8 +197,8 @@ def run(region, name, frames, timeout, env):
         status, detail = 'BAD-APK', 'rebuild with: build_android.py --smoke --smoke-env KHCOM_FAST=1'
     elif status == 'ok' and re.search(r'CRASH|FATAL', log):
         status = 'LOGGED-CRASH'
-    elif status == 'ok' and 'harness: no mode' in private('cat', 'files/kh_com.log').stdout.decode(errors='replace'):
-        status = 'BAD-SCENARIO'
+    elif status == 'ok' and (not log.strip() or 'harness: no mode' in log):
+        status, detail = 'BAD-SCENARIO', 'the game wrote no log' if not log.strip() else 'harness: no mode'
     if status != 'ok':
         keep_evidence(region, name, status, log)
     if status == 'timeout':
