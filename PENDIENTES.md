@@ -110,5 +110,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-097 | Escena097 gato y arboles | en_curso | codex-atlas | — | — | 2026-10-26T00:06:59.787614+00:00 |
 | rev-six-110 | Escena110 muro superior | en_curso | codex-atlas | — | — | 2026-10-26T00:07:10.854108+00:00 |
 | rev-six-112 | Escena112 actores y detallepuerta | en_curso | codex-atlas | — | — | 2026-10-26T00:07:21.960650+00:00 |
+| rev-six-agrabah | Agrabah107108 cornisas ytecho | pendiente | — | — | — | 2026-10-26T00:07:27.249034+00:00 |
 
 Integrador: libre
