@@ -3788,13 +3788,8 @@
       "sent": "cdd96f3cf28f45959ff64f42543a0d61"
     }
   },
-  "integrator": {
-    "owner": "codex-atlas",
-    "token": "3dbc67cf4fe7e82e5dd551864c4de3bbefce48c473814ae6",
-    "created_at": "2026-10-26T10:55:36.679197+00:00",
-    "updated_at": "2026-10-26T10:55:36.679197+00:00"
-  },
-  "updated_at": "2026-10-26T10:55:41.707986+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-26T10:55:46.795566+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
