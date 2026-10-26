@@ -2915,12 +2915,12 @@
     "submenu-tienda-moguri": {
       "id": "submenu-tienda-moguri",
       "piece": "Tienda moguri: receta de submenus en vista ancha (usuario 25/10)",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T23:15:12.770475+00:00",
-      "updated_at": "2026-10-26T09:55:04.208511+00:00",
+      "updated_at": "2026-10-26T10:07:17.111671+00:00",
       "branch": "codex/atlas-moguri-submenus",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/228",
       "approval": null,
       "reference": null,
       "evidence": [
@@ -2928,9 +2928,15 @@
           "at": "2026-10-26T09:55:04.208511+00:00",
           "owner": "codex-atlas",
           "detail": "Prioridad actual: aprobados nuevos primero, después submenús moguri. Comprar/Canjear y sus estados interiores, capturas reales EU aisladas."
+        },
+        {
+          "at": "2026-10-26T10:07:17.111671+00:00",
+          "owner": "codex-atlas",
+          "detail": "PR228 draft; también Canjear bbfce11b25f34df0a2004146597afb99. Rojo limpio verificado en cuatro capturas; receta y reproducción versionadas. Pendiente valoración humana de ambos."
         }
       ],
-      "claimed_at": "2026-10-26T09:51:25.713141+00:00"
+      "claimed_at": "2026-10-26T09:51:25.713141+00:00",
+      "sent": "ddedd01659044342acdf92331fa7fddf"
     },
     "submenu-cambiar-naipes": {
       "id": "submenu-cambiar-naipes",
@@ -3733,7 +3739,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T10:04:37.695557+00:00",
+  "updated_at": "2026-10-26T10:07:17.111671+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
