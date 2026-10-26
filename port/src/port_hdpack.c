@@ -3,7 +3,7 @@
  * Android images get it from their host, which owns the files. */
 #include "port/port.h"
 
-#if !defined(PORT_GBA_RELOC) && !defined(PORT_ANDROID64) && !defined(__EMSCRIPTEN__)
+#if !defined(PORT_GBA_RELOC) && !defined(PORT_ANDROID64) && !defined(PORT_PS5_GUEST) && !defined(__EMSCRIPTEN__)
 #include "../portable/hd_pack.c"
 #include "../ps5/third_party/miniz/miniz.c"
 #include "../ps5/third_party/miniz/miniz_tdef.c"

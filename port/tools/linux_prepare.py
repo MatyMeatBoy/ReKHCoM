@@ -17,17 +17,20 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from workdir import WORK_DIR  # noqa: E402  the heavy work folder (REKHCOM_WORK)
+
 ROOT = Path(__file__).resolve().parents[2]
 TC = ROOT.parent / 'toolchain'
 BASE = (WORK_DIR / 'linux')
 TRIPLES = {'i386': ('i686', 'i686-linux-gnu', ''),
+           'amd64': ('x86_64', 'x86_64-linux-gnu', ''),  # the 64-bit host (port/linux64, 26/10)
            'armhf': ('armv7', 'arm-linux-gnueabihf', '-march=armv7-a -mfpu=neon -mfloat-abi=hard -mthumb')}
 
 PKGCONFIG = r'''"""Minimal pkg-config for cross builds: reads .pc files under PKG_SYSROOT."""
 import os, re, sys
-from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 root = os.environ['PKG_SYSROOT']
-dirs = [os.path.join(root, d) for d in ('usr/lib/i386-linux-gnu/pkgconfig', 'usr/lib/arm-linux-gnueabihf/pkgconfig',
+dirs = [os.path.join(root, d) for d in ('usr/lib/x86_64-linux-gnu/pkgconfig', 'usr/lib/i386-linux-gnu/pkgconfig', 'usr/lib/arm-linux-gnueabihf/pkgconfig',
         'usr/share/pkgconfig', 'usr/lib/pkgconfig')]
 def load(name):
     for d in dirs:
