@@ -149,6 +149,11 @@ def main():
             return
     lock.write_text(str(os.getpid()))
     say('start')
+    # A suite's .done mark lets a run killed from outside resume; one from an older run is not this run's result
+    # (26/10: every desktop suite "passed" in a second on marks from the 23rd and 24th).
+    for mark in (ROOT / 'build/debugkit').glob('*.done'):
+        if time.time() - mark.stat().st_mtime > 12 * 3600:
+            mark.unlink()
     for name, cmd in STEPS:
         if cmd is None:
             ok = emulator()
