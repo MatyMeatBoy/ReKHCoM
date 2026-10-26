@@ -3990,10 +3990,10 @@
     "docs-v20-trailer": {
       "id": "docs-v20-trailer",
       "piece": "Limpiar pendientes tras v2.0 y registrar directrices del trailer",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-trailer",
       "created_at": "2026-10-26T21:12:01.553707+00:00",
-      "updated_at": "2026-10-26T21:14:22.676353+00:00",
+      "updated_at": "2026-10-26T21:14:47.042065+00:00",
       "branch": "codex/v20-trailer-pendientes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/271",
       "approval": "Pedido directo del usuario de limpiar pendientes y registrar trailer v2.0, 26/10/2026",
@@ -4003,9 +4003,15 @@
           "at": "2026-10-26T21:13:41.223801+00:00",
           "owner": "codex-trailer",
           "detail": "Release estable confirmada; historial íntegro y enlaces locales verificados; git diff --check limpio. Solo documentación."
+        },
+        {
+          "at": "2026-10-26T21:14:47.042065+00:00",
+          "owner": "codex-trailer",
+          "detail": "PR #271 integrado, merge 0cc56625d9014d431d6922fb059ab490ce54392d; historial íntegro, enlaces válidos y diff limpio; directrices registradas, sin montaje nuevo"
         }
       ],
-      "claimed_at": "2026-10-26T21:12:08.105931+00:00"
+      "claimed_at": "2026-10-26T21:12:08.105931+00:00",
+      "completed_at": "2026-10-26T21:14:47.042065+00:00"
     }
   },
   "integrator": {
@@ -4014,7 +4020,7 @@
     "created_at": "2026-10-26T21:14:10.376431+00:00",
     "updated_at": "2026-10-26T21:14:10.376431+00:00"
   },
-  "updated_at": "2026-10-26T21:14:22.676353+00:00",
+  "updated_at": "2026-10-26T21:14:47.043154+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
