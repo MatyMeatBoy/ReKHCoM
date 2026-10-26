@@ -4016,12 +4016,12 @@
     "ending-desync-42": {
       "id": "ending-desync-42",
       "piece": "Desincronizacion video audio final Sora issue 42",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ending",
       "created_at": "2026-10-26T21:33:21.538928+00:00",
-      "updated_at": "2026-10-26T21:50:35.567459+00:00",
+      "updated_at": "2026-10-26T21:53:00.856579+00:00",
       "branch": "fix/ending-cutscene-desync",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/273",
       "approval": null,
       "reference": "GitHub #42 video WCxyxOOb2fI",
       "evidence": [
@@ -4029,6 +4029,11 @@
           "at": "2026-10-26T21:50:35.567459+00:00",
           "owner": "codex-ending",
           "detail": "MF real151 seek222 audio221.2266666;123 seek170 audio169.4506666. Fix RED/GREEN4casos; check_sourcesOK; hd_scene_gate6/6; juego real antes/despues silencioso termina creditos; PCM despues222.0."
+        },
+        {
+          "at": "2026-10-26T21:53:00.856579+00:00",
+          "owner": "codex-ending",
+          "detail": "PR273 SHA5c5333d05; review independiente sin findings; clips privados build/ending-sync/{before,after}-sora-ending.mp4."
         }
       ],
       "claimed_at": "2026-10-26T21:33:28.496304+00:00"
@@ -4049,7 +4054,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:50:35.567459+00:00",
+  "updated_at": "2026-10-26T21:53:00.856579+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
