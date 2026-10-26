@@ -3833,17 +3833,17 @@
       "status": "en_curso",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T16:21:50.541280+00:00",
-      "updated_at": "2026-10-26T16:21:57.513361+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T16:22:04.424256+00:00",
+      "branch": "codex/android-battery-validity",
       "pr": null,
       "approval": null,
-      "reference": null,
+      "reference": "US battle-123 evidence 25/10: guest-us.macho is missing from the APK; usuario 26/10 autoriza relevo",
       "evidence": [],
       "claimed_at": "2026-10-26T16:21:57.513361+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T16:21:57.513361+00:00",
+  "updated_at": "2026-10-26T16:22:04.424256+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
