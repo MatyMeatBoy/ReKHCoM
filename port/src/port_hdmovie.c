@@ -911,8 +911,20 @@ static int PlayFile(const char* name) {
                     BYTE* data;
                     DWORD length = 0;
                     if (SUCCEEDED(IMFMediaBuffer_Lock(buffer, &data, NULL, &length))) {
-                        SDL_PutAudioStreamData(audio, data, (int)length);
-                        audioPushed += (LONGLONG)length * 10000000 / (rate * channels * 2);
+                        DWORD trim = 0;
+                        /* MF seeks to a keyframe, not necessarily the requested second. Its PCM can start
+                           earlier too (#42): never play that preroll under video already at sStartAt. */
+                        LONGLONG first = (LONGLONG)sStartAt * 10000000;
+                        if (ts < first) {
+                            LONGLONG frames = (first - ts) * rate / 10000000;
+                            trim = frames >= length / (channels * 2) ? length : (DWORD)frames * channels * 2;
+                        }
+                        if (trim < length) {
+                            SDL_PutAudioStreamData(audio, data + trim, (int)(length - trim));
+                            /* The queue's end is in the file's timeline, just like the video/subtitles.
+                               Counting bytes from the requested seek time shifts it by the preroll. */
+                            audioPushed = ts + (LONGLONG)length * 10000000 / (rate * channels * 2);
+                        }
                         IMFMediaBuffer_Unlock(buffer);
                     }
                     IMFMediaBuffer_Release(buffer);
