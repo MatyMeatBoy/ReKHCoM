@@ -3381,8 +3381,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:42:08.549103+00:00",
-      "updated_at": "2026-10-26T07:42:13.539688+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T07:42:35.791013+00:00",
+      "branch": "codex/atlas-097-shadow",
       "pr": null,
       "approval": null,
       "reference": "20261025-214032-de44b9",
@@ -3391,7 +3391,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:42:13.539688+00:00",
+  "updated_at": "2026-10-26T07:42:35.791013+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
