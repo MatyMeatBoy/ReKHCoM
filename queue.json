@@ -3986,10 +3986,23 @@
         }
       ],
       "claimed_at": "2026-10-26T18:45:02.415336+00:00"
+    },
+    "docs-v20-trailer": {
+      "id": "docs-v20-trailer",
+      "piece": "Limpiar pendientes tras v2.0 y registrar directrices del trailer",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T21:12:01.553707+00:00",
+      "updated_at": "2026-10-26T21:12:01.553707+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Pedido directo del usuario 26/10/2026",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:04:35.090570+00:00",
+  "updated_at": "2026-10-26T21:12:01.553707+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

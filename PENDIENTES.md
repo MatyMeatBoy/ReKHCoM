@@ -144,5 +144,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | options-input-audit-20261026 | Opciones: ejes A/B, tecla pegada tras overlay y auditoria lifecycle | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/248 | — | 2026-10-26T17:37:33.600219+00:00 |
 | options-complete-matrix-20261026 | Auditoria completa opciones y bindings SDL | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/252 | Usuario autoriza depurar todas las opciones y decisiones autonomas | 2026-10-26T18:05:35.968133+00:00 |
 | hd-poster-performance-20261026 | Posters HD de galeria sin bloqueo de decoder | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/262 | Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas | 2026-10-26T19:08:02.265493+00:00 |
+| docs-v20-trailer | Limpiar pendientes tras v2.0 y registrar directrices del trailer | pendiente | — | — | — | 2026-10-26T21:12:01.553707+00:00 |
 
 Integrador: libre
