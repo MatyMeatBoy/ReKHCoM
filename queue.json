@@ -3020,10 +3020,10 @@
     "rev-six-097": {
       "id": "rev-six-097",
       "piece": "Escena097 gato y arboles",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:54.648080+00:00",
-      "updated_at": "2026-10-26T00:46:48.116834+00:00",
+      "updated_at": "2026-10-26T00:47:20.595510+00:00",
       "branch": "codex/atlas-approved-081-097-110",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/193",
       "approval": "approved exact bb97b822df0e46b1b5421f89935ad80e",
@@ -3038,10 +3038,16 @@
           "at": "2026-10-26T00:46:48.116834+00:00",
           "owner": "codex-atlas",
           "detail": "Versión humana aprobada; compilación nativa EU del subconjunto correcta."
+        },
+        {
+          "at": "2026-10-26T00:47:20.595510+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real bd784a0b2f7c62646a365dc5ebdc4e79dadf2646; comentarios posteriores conservados para nueva revisión."
         }
       ],
       "claimed_at": "2026-10-26T00:06:59.787614+00:00",
-      "sent": "bb97b822df0e46b1b5421f89935ad80e"
+      "sent": "bb97b822df0e46b1b5421f89935ad80e",
+      "completed_at": "2026-10-26T00:47:20.595510+00:00"
     },
     "rev-six-110": {
       "id": "rev-six-110",
@@ -3170,7 +3176,7 @@
     "created_at": "2026-10-26T00:47:04.526672+00:00",
     "updated_at": "2026-10-26T00:47:04.526672+00:00"
   },
-  "updated_at": "2026-10-26T00:47:15.108393+00:00",
+  "updated_at": "2026-10-26T00:47:20.595510+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
