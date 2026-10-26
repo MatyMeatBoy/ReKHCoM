@@ -4144,20 +4144,26 @@
     "hd-reload-fill-decomp": {
       "id": "hd-reload-fill-decomp",
       "piece": "Recarga HD dinamica igual al original desde decomp",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ending-hud",
       "created_at": "2026-10-26T22:52:34.588428+00:00",
-      "updated_at": "2026-10-26T22:52:47.757131+00:00",
+      "updated_at": "2026-10-26T23:49:01.926744+00:00",
       "branch": "fix/hd-reload-fill",
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/276",
+      "approval": "Pedido directo usuario corregir rellenado original, pushear y cerrar 26/10",
       "reference": "Pedido usuario 26/10 trailer carta roja vacia",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T23:49:01.926744+00:00",
+          "owner": "codex-ending-hud",
+          "detail": "HEAD1b0ed6987b96b48282b2cc54e291aa09b12f962d rebaseccb81d3be; check_sources+HUDmask/decomp/order+pause_layers+JPqueuePASS. Numerofixcompositor: filleroriginalpreservado. Datos3ciclos+partial100real ycapturasHD/GBAparcial/full. Serievisual5nivelesenverificacionfinalproductor."
+        }
+      ],
       "claimed_at": "2026-10-26T22:52:40.544341+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T23:22:57.431885+00:00",
+  "updated_at": "2026-10-26T23:49:01.926744+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
