@@ -3565,10 +3565,23 @@
       ],
       "claimed_at": "2026-10-26T09:18:58.099990+00:00",
       "sent": "3cdc76d68be745b09d5c1bf4eba0c011"
+    },
+    "atlas-115-hatch-spacing": {
+      "id": "atlas-115-hatch-spacing",
+      "piece": "Escena 115: menos escotillas y limpiar borde",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T09:36:29.570680+00:00",
+      "updated_at": "2026-10-26T09:36:29.570680+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-025012-8a510c",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T09:36:23.884222+00:00",
+  "updated_at": "2026-10-26T09:36:29.570680+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
