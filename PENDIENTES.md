@@ -112,6 +112,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-112 | Escena112 actores y detallepuerta | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:50.013261+00:00 |
 | rev-six-agrabah | Agrabah107108 cornisas ytecho | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:55.579066+00:00 |
 | rev-six-oogie | Oogie alfombra yfantasmas | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:39:00.726357+00:00 |
-| atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | pendiente | — | — | Solicitud explícita del usuario: herramienta de edición nativa en Atlas e integrar mejoras de código | 2026-10-26T00:39:32.514297+00:00 |
+| atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | en_curso | codex-atlas | — | Solicitud explícita del usuario: herramienta de edición nativa en Atlas e integrar mejoras de código | 2026-10-26T00:39:38.095238+00:00 |
 
 Integrador: libre
