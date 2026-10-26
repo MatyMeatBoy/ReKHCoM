@@ -3716,10 +3716,23 @@
         }
       ],
       "claimed_at": "2026-10-26T09:36:45.104007+00:00"
+    },
+    "atlas-maleficent-continuity": {
+      "id": "atlas-maleficent-continuity",
+      "piece": "Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T10:04:32.566102+00:00",
+      "updated_at": "2026-10-26T10:04:32.566102+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Usuario 26/10; estudios PR222 aprobados con comentarios posteriores",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T09:55:04.208511+00:00",
+  "updated_at": "2026-10-26T10:04:32.566102+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
