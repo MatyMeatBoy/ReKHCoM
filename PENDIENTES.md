@@ -145,4 +145,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | options-complete-matrix-20261026 | Auditoria completa opciones y bindings SDL | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/252 | Usuario autoriza depurar todas las opciones y decisiones autonomas | 2026-10-26T18:05:35.968133+00:00 |
 | hd-poster-performance-20261026 | Posters HD de galeria sin bloqueo de decoder | en_curso | codex-batteries | — | Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas | 2026-10-26T18:45:02.415336+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma (ocupado; 2026-10-26T19:00:26.179594+00:00)
