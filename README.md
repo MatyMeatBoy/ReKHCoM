@@ -8,7 +8,7 @@ browser and PS5), with its own renderer, audio and launcher, with widescreen and
 ultrawide support at the cartridge's original speed.
 
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v1.9.14)</b></a>
+  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.0)</b></a>
   &nbsp;·&nbsp; <a href="https://matymeatboy.github.io/ReKHCoM/"><b>▶ Play in your browser · Beta</b></a>
   &nbsp;·&nbsp; <a href="CHANGELOG.md">Changelog</a>
   &nbsp;·&nbsp; <a href="https://github.com/MatyMeatBoy/ReKHCoM/tags">Previous version tags</a>
@@ -17,24 +17,42 @@ ultrawide support at the cartridge's original speed.
 Works with the **European, US and Japanese** cartridges (your own dump; no ROM is
 included), in all five European languages, English (US) and Japanese.
 
+## What's new in v2.0
+
+Windows, Linux and Steam Deck are stable. Android, browser and the other ports remain
+beta; **this release does not include a Switch package**. Features vary by platform.
+
+- **Optional HD mod:** import your own ReMIX music, movies and **97 story scenes**, with separate movie/cutscene switches. [HD mod](port/progress/HD_MOD.md).
+- **Sharper HD presentation:** cards, title and Options, smooth warm menu lights, and cached fonts/posters that reduce first-open work. [HD graphics](port/progress/HUD_HD_RECOM.md).
+- **Three graphics presets:** HD, GBA Enhanced and GBA Classic, with reset-to-preset defaults. [Options](#launcher-and-in-game-options).
+- **Scene gallery:** GBA, HD and ReKHCoM lists with **199 clean static posters**, imported-HD selection and native fallbacks. [Gallery details](port/progress/GALLERY_RECOVERY_20261026.md).
+- **CRT output:** native 320×240, horizontal-only 1920×240/2560×240, or exact 640×480, with nearest filtering. [CRT modes](https://github.com/MatyMeatBoy/ReKHCoM/issues/202).
+- **More consistent controls:** keyboard/gamepad/trigger remapping, clean binding resets and reliable press/release handling. [Control details](port/progress/CONTROLADOR_LOGICA.md).
+- **Linux 64-bit and Steam Deck:** a native 64-bit host and automatic GPU rendering on Deck. [Downloads](#downloads).
+- **Optional quick states:** off by default, with an explicit warning that achievements pause while enabled. [Achievements](#achievements).
+- **Portable HD packs:** export your imported mod for supported Android/console hosts; updated ports retain their beta labels. [Platform downloads](#downloads).
+- **Game-wide fixes:** battle, startup and audio fixes, synchronized deck transitions and better widescreen scene borders. [Changelog](CHANGELOG.md).
+
 <p align="center"><img src="docs/screenshots/battle.png" width="49%"> <img src="docs/screenshots/field.png" width="49%"></p>
 
-Every release stays available: stable versions, and test builds marked as pre-release. The
-current stable is **v1.9.14**; older stables can be picked again (for example in Quiver Launcher,
-Versions → Change Version).
+## Downloads
+
+The current stable PC release is **v2.0**. Choose the package for your platform on the
+[release page](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest); previous versions
+remain listed under [tags](https://github.com/MatyMeatBoy/ReKHCoM/tags).
 
 | Platform | Download | Status |
 |---|---|---|
-| Windows | `ReKHCoM-v1.9.14-windows-x86.zip` | Stable |
-| Linux (x86) | `ReKHCoM-v1.9.14-linux-x86.tar.gz` | Stable |
-| Steam Deck | `ReKHCoM-v1.9.14-steamdeck-i386.tar.gz` | Stable |
-| Android | `ReKHCoM-v1.9.14-android-beta.apk` | Beta |
-| Browser | [matymeatboy.github.io/ReKHCoM](https://matymeatboy.github.io/ReKHCoM/) | Beta |
-| PS5 | `PPSA98511.zip` (shown as ReKHCoM-v1.9.14-ps5-beta) | Beta |
-| PS4 (GoldHEN) | `ReKHCoM-v1.9.14-ps4-beta.pkg` | Beta |
-| Nintendo Switch (Atmosphère) | `ReKHCoM-v1.9.14-switch-beta.nro` | Beta |
-| PS Vita (HENkaku) | `ReKHCoM-v1.9.14-vita-beta.vpk` | Beta |
-| Anbernic (RG34XX and similar) | `ReKHCoM-v1.9.14-linux-armhf-anbernic-beta.zip` | Beta |
+| Windows | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Stable |
+| Linux (x86 / x86-64) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Stable |
+| Steam Deck | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Stable |
+| Android | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
+| Browser | [Play online](https://matymeatboy.github.io/ReKHCoM/) | Beta |
+| PS5 | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
+| PS4 (GoldHEN) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
+| Nintendo Switch (Atmosphère) | — | Not included in v2.0 |
+| PS Vita (HENkaku) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
+| Anbernic (RG34XX and similar) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
 
 Betas are still being debugged: reports are welcome.
 
