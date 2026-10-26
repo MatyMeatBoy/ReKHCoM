@@ -3215,22 +3215,28 @@
     "code-options-missing": {
       "id": "code-options-missing",
       "piece": "Opciones: aviso rojo unificado de HD y ROM japonesa no instalados",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T01:13:58.147660+00:00",
-      "updated_at": "2026-10-26T01:19:19.769125+00:00",
+      "updated_at": "2026-10-26T01:19:36.461192+00:00",
       "branch": "codex/options-missing-resource",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/195",
-      "approval": "Solicitud del usuario de acabar pendientes de código",
+      "approval": "Pedido explícito del usuario de cerrar pendientes de código",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-26T01:19:19.769125+00:00",
           "owner": "codex-atlas",
           "detail": "EU compilado; dos capturas de opciones HD/JP correctas; check_sources correcto."
+        },
+        {
+          "at": "2026-10-26T01:19:36.461192+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 18465ed91fa7bf04e477af5e5b185d808e5a07fe"
         }
       ],
-      "claimed_at": "2026-10-26T01:14:03.705251+00:00"
+      "claimed_at": "2026-10-26T01:14:03.705251+00:00",
+      "completed_at": "2026-10-26T01:19:36.461192+00:00"
     }
   },
   "integrator": {
@@ -3239,7 +3245,7 @@
     "created_at": "2026-10-26T01:19:25.518964+00:00",
     "updated_at": "2026-10-26T01:19:25.518964+00:00"
   },
-  "updated_at": "2026-10-26T01:19:25.518964+00:00",
+  "updated_at": "2026-10-26T01:19:36.461192+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
