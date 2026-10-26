@@ -1,12 +1,12 @@
 {
-  "version": "v1.9.14-web-alpha",
-  "source_commit": "c802a73a2d09094dc00f846420ffe86dea6c00b1",
+  "version": "v2.0-web-alpha",
+  "source_commit": "59b44df99e05e1f4245516447d5800c88be72cf1",
   "source_dirty": false,
-  "built_utc": "2026-10-21T22:25:31.219778+00:00",
+  "built_utc": "2026-10-26T20:43:23.141531+00:00",
   "files": {
     "index.html": {
-      "bytes": 16987,
-      "sha256": "51cfb14cc4eaf3ec315f67a833293e67cd595827213478cdc882f5a0b86893d0"
+      "bytes": 16981,
+      "sha256": "339009ea66598a0c9abeea3ba7838284c94bdd73f13c133df33d59447fddf34d"
     },
     "web.css": {
       "bytes": 14462,
@@ -25,8 +25,8 @@
       "sha256": "e29073c01672021b0c6e9c57d0e9c01f181ee49bf39bc2245497a928f603c2f0"
     },
     "settings.js": {
-      "bytes": 16674,
-      "sha256": "c362866fb03b000227996fcd68f2fa12e42ff907ec7234f87ea633007e7e7b61"
+      "bytes": 17947,
+      "sha256": "739892ffa883492d85ae53feaf8b9be593083d7e97910ddd091207bfaa7b46e4"
     },
     "save-editor.js": {
       "bytes": 3993,
@@ -41,8 +41,8 @@
       "sha256": "f1685a4c1e4f598d26b866e7565479b93268efb0061444fbe6c88985146f1c3b"
     },
     "achievements.js": {
-      "bytes": 2994,
-      "sha256": "3be6ee238bf38122b87cebfcf3a19d5359188974c37aca3cde30a5f5ec4a978a"
+      "bytes": 3034,
+      "sha256": "060d565ba7d57aaca71f619f73d266623cb9261e961a854b325e5e24a5bbeb23"
     },
     "cards.js": {
       "bytes": 32098,
@@ -53,8 +53,8 @@
       "sha256": "a8daabc38680527ad0bb4cc3115b9b07e157b0ea4f00aac27d1d042536b103c4"
     },
     "achievement-badges.png": {
-      "bytes": 347982,
-      "sha256": "4a8776fb578c1668283b8b6645bcd454ac6e141748016a4327cd81cee631bd4a"
+      "bytes": 380090,
+      "sha256": "abfb90a98c0e42a078d1a84d2f258b8a4283b1f0b27f94c3ab6d4482493298fe"
     },
     "favicon.png": {
       "bytes": 62166,
@@ -85,8 +85,8 @@
       "sha256": "e45739fd882607784e7ad8fc3a4c7c22f81853929bc41e099656641dcdeeae40"
     },
     "fonts/NOTICE.md": {
-      "bytes": 644,
-      "sha256": "cb8dcce80a566b77cf3ffa9704d0322c8defbf3741932493f4ab21a0dbdcb9f0"
+      "bytes": 647,
+      "sha256": "60e85b3bffa16cb7642cafd1ca21da4a373f0f06a44a375995a683d51fa6d27e"
     },
     "logo.png": {
       "bytes": 179882,
@@ -97,28 +97,28 @@
       "sha256": "eaa349ba375164b474b490c1d1e53c909508790aa5e39f9ba54336172f6503a4"
     },
     "rekhcom-eu.js": {
-      "bytes": 205662,
-      "sha256": "3151f650015721fac5067cc6b332baf575018e096d6d83581c991a8ea24a7fa2"
+      "bytes": 206850,
+      "sha256": "daf0666e9864553730fbb259919a09f92d91387d2a09a37279f8f51f1deedbdf"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 5502481,
-      "sha256": "2a395e3e975f7d414573258f4e160dc3bec6ac390ff8088fa6d436b45b26757a"
+      "bytes": 9435082,
+      "sha256": "f0f54252ab1926b10f8da8ca4dd127718596f48a1f974f8d7a5f67c794af2756"
     },
     "rekhcom-us.js": {
-      "bytes": 205541,
-      "sha256": "15a85404b4320c10d81ecfe217ba5aeb3b749d194c87b10b82260a6b83b20836"
+      "bytes": 206728,
+      "sha256": "aa4c105b04b0908aa0f6acbd2aa3a715a9933255b28b315e862ed889f8fed7aa"
     },
     "rekhcom-us.wasm": {
-      "bytes": 5605487,
-      "sha256": "de94ee94b8beffef7b81e554743b3968f1163036a5f7c20a9715da9290902199"
+      "bytes": 9495751,
+      "sha256": "635ee3cdddbadc4076475c24a5eb6dc55e567740e4266ebac9beee9d82357c97"
     },
     "rekhcom-jp.js": {
-      "bytes": 205541,
-      "sha256": "ca3b5b237a91d8822d1db6cd77e1933a3d649469f51e6eaa976d2cc6c2777804"
+      "bytes": 205636,
+      "sha256": "ef3c2db859b2eafd8bf56f4db5166117b1912e0c130e6717ebd1d6b262b61211"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 5482708,
-      "sha256": "12a3e784437bcb9bf6f694a766e35854894f4ec949fea260095b6b0416016617"
+      "bytes": 9355796,
+      "sha256": "5f7fc9290b92ff81398d769480185ebd0ef0c057f9cfb00799e8eb18e664a362"
     }
   }
 }

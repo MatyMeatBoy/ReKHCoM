@@ -3,6 +3,9 @@
 const optionWord=(en,es)=>interfaceLanguage==='es'?es:en;
 const optionLabel=(en,es)=>{const s=document.createElement('span');s.dataset.en=en;s.dataset.es=es;s.textContent=optionWord(en,es);return s;};
 const optionSpecs=[
+  /* as the PC launcher (decompui): the mode's presets apply on the next start; HD mode needs the HD mod, not on the web */
+  ['graphics','Picture','Imagen','graphics_mode','Graphics mode','Modo gráfico',0,[[0,'Choose on start','Escoger al empezar'],[2,'GBA enhanced','GBA mejorado'],[3,'GBA classic','GBA clásico']],'startup'],
+  ['graphics','Picture','Imagen','gba_border','GBA classic border','Borde del GBA clásico',0,[[0,'None','Ninguno'],[1,'Design 1','Diseño 1'],[2,'Design 2','Diseño 2'],[3,'Design 3','Diseño 3']]],
   ['graphics','Picture','Imagen','view_mode','View','Vista',4,[[0,'Original GBA','GBA original'],[1,'Widescreen','Panorámica'],[2,'Enhanced','Ampliada'],[3,'Maximum','Máxima'],[4,'Auto','Automática']]],
   ['graphics','Picture','Imagen','zoom','Pixel zoom','Zoom de píxeles',8,[[4,'×2','×2'],[6,'×3','×3'],[8,'×4','×4'],[10,'×5','×5'],[12,'×6','×6'],[14,'×7','×7'],[16,'×8','×8']]],
   ['graphics','Picture','Imagen','aspect','Aspect ratio','Proporción',0,[[0,'Fill window','Toda la ventana'],[1,'Up to 16:9','Hasta 16:9'],[2,'Up to 21:9','Hasta 21:9'],[3,'21:9','21:9'],[4,'32:9','32:9'],[5,'4:3','4:3'],[6,'GBA 3:2','GBA 3:2']]],
@@ -22,6 +25,7 @@ const optionSpecs=[
   ['sound','Extras','Extras','smooth_audio','Smooth audio (experimental)','Audio suave (experimental)',0,'check'],
   ['improvements','Battle','Combate','dodge_button','Dedicated dodge button','Botón para esquivar',1,'check'],
   ['improvements','Battle','Combate','stock_button','Dedicated stock button','Botón para acumular',1,'check'],
+  ['improvements','Battle','Combate','invert_card_scroll','Invert card scrolling','Invertir selección de cartas',0,'check'],
   ['improvements','Battle','Combate','cheat_one_hit','Defeat enemies in one hit','Derrotar enemigos de un golpe',0,'check'],
   ['improvements','Battle','Combate','cheat_infinite_hp','Infinite HP','HP infinito',0,'check'],
   ['improvements','Extras','Extras','cheat_unlock_riku','Riku on title screen','Riku en el título',0,'check'],
@@ -33,7 +37,10 @@ const optionSpecs=[
   ['improvements','Experimental','Experimental','ps2_mode','Re:CoM mode','Modo Re:CoM',0,'check','startup'],
   ['improvements','Experimental','Experimental','ps2_difficulty','Re:CoM difficulty','Dificultad Re:CoM',0,[[0,'Standard','Normal'],[1,'Beginner','Principiante'],[2,'Proud','Experto']],'startup'],
   ['improvements','Experimental','Experimental','ps2_fast_text','Fast dialogue','Diálogos rápidos',0,'check'],
-  ['improvements','Experimental','Experimental','experimental_hide_touch_controls','Hide touch panels','Ocultar paneles táctiles',0,'check']
+  ['improvements','Experimental','Experimental','experimental_hide_touch_controls','Hide touch panels','Ocultar paneles táctiles',0,'check'],
+  ['controls','Touch screen','Pantalla táctil','touch_theme','Touch button theme','Tema de botones',0,[[0,'Clear','Clear'],[1,'Dark','Dark'],[2,'Color','Color']]],
+  ['controls','Controller','Mando','pad_layout','Force Nintendo layout','Forzar diseño Nintendo',0,[[0,'Detect the pad','Detectar el mando'],[2,'On','Sí']]],
+  ['sound','Extras','Extras','game_language','Game language (Europe)','Idioma del juego (Europa)',0,[[0,'Ask on start','Preguntar al empezar'],[1,'English','English'],[2,'Français','Français'],[3,'Deutsch','Deutsch'],[4,'Italiano','Italiano'],[5,'Español','Español']],'startup']
 ];
 const bindingSpecs=[['a','A',120,0],['b','B',122,1],['l','L',97,9],['r','R',115,10],['start','START',13,6],['select','SELECT',8,4],['up','↑',1073741906,11],['down','↓',1073741905,12],['left','←',1073741904,13],['right','→',1073741903,14],['stock','Stock / Acumular',100,3],['dodge','Dodge / Esquivar',99,2],['unstock','Return / Devolver',118,8]];
 const padChoices=[[0,'A'],[1,'B'],[2,'X'],[3,'Y'],[9,'LB'],[10,'RB'],[108,'LT'],[110,'RT'],[6,'START'],[4,'BACK'],[7,'LS'],[8,'RS'],[11,'D-pad ↑'],[12,'D-pad ↓'],[13,'D-pad ←'],[14,'D-pad →'],[101,'LS ←'],[100,'LS →'],[103,'LS ↑'],[102,'LS ↓'],[105,'RS ←'],[104,'RS →'],[107,'RS ↑'],[106,'RS ↓'],[-1,'—']];
