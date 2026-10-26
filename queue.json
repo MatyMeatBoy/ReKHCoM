@@ -3014,19 +3014,24 @@
     "rev-six-097": {
       "id": "rev-six-097",
       "piece": "Escena097 gato y arboles",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:54.648080+00:00",
-      "updated_at": "2026-10-26T00:38:39.379040+00:00",
-      "branch": "codex/atlas-rev-six-turbo",
-      "pr": null,
-      "approval": null,
+      "updated_at": "2026-10-26T00:46:48.116834+00:00",
+      "branch": "codex/atlas-approved-081-097-110",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/193",
+      "approval": "approved exact bb97b822df0e46b1b5421f89935ad80e",
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
       "evidence": [
         {
           "at": "2026-10-26T00:38:39.379040+00:00",
           "owner": "codex-atlas",
           "detail": "Primer pase con capturas reales. Remates pendientes explícitos en ficha Atlas."
+        },
+        {
+          "at": "2026-10-26T00:46:48.116834+00:00",
+          "owner": "codex-atlas",
+          "detail": "Versión humana aprobada; compilación nativa EU del subconjunto correcta."
         }
       ],
       "claimed_at": "2026-10-26T00:06:59.787614+00:00",
@@ -3144,7 +3149,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:46:42.230978+00:00",
+  "updated_at": "2026-10-26T00:46:48.116834+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
