@@ -14,7 +14,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     source = (ROOT / 'port/decompui/decompui.cpp').read_text(encoding='utf-8')
     begin = source.index('static std::vector<fs::path> SteamUserConfigs(')
-    end = source.index('/* Adds (or updates)', begin)
+    end = source.index('static fs::path SteamFolder()', begin)
     unit = '#include <filesystem>\n#include <vector>\n#include <string>\n#include <fstream>\n#include <cctype>\n#include <cstdlib>\n#include <iostream>\nnamespace fs=std::filesystem;\n'
     unit += source[begin:end]
     unit += '\nint main(int argc,char** argv){for(auto& p:SteamUserConfigs(fs::u8path(argv[1]))) std::cout<<p.parent_path().filename().string()<<"\\n";}\n'

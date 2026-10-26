@@ -1202,24 +1202,31 @@ static bool CycleRow(const char* label, const char* hint, int& value, int count,
     return changed;
 }
 
-static bool ToggleRow(const char* label, const char* description, int& value);
-static bool GatedToggle(const char* label, const char* description, int& value, bool available) {
+static bool ToggleRow(const char* label, const char* description, int& value, const char* flag = nullptr);
+static bool GatedToggle(const char* label, const char* description, int& value, bool available, const char* flag = nullptr) {
     if (available)
-        return ToggleRow(label, description, value);
+        return ToggleRow(label, description, value, flag);
     int off = 0;
     ImGui::BeginDisabled();
-    ToggleRow(label, description, off);
+    ToggleRow(label, description, off, flag);
     ImGui::EndDisabled();
     return false;
 }
 
-static bool ToggleRow(const char* label, const char* description, int& value) {
+static bool ToggleRow(const char* label, const char* description, int& value, const char* flag) {
     bool changed = false;
     float w = ImGui::GetContentRegionAvail().x;
     float tw = Px(52), th = Px(28);
 
     ImGui::PushID(label);
     ImGui::BeginGroup();
+    if (flag) {
+        float h = ImGui::GetTextLineHeight() * 0.75f;
+        ImVec2 p = ImGui::GetCursorScreenPos();
+        LanguageFlag(ImGui::GetWindowDrawList(), ImVec2(p.x, p.y + (ImGui::GetTextLineHeight() - h) * 0.5f), h, flag);
+        ImGui::Dummy(ImVec2(h * 1.5f, ImGui::GetTextLineHeight()));
+        ImGui::SameLine(0, Px(6));
+    }
     ImGui::TextUnformatted(label);
     if (description != nullptr) {
         ImGui::PushFont(sFontSmall);
@@ -1366,10 +1373,12 @@ namespace romdir { static bool Busy(); }
 
 /* A switch on Home for an enhancement that needs files (the HD mod, the Japanese ROM): always shown so players
    know it exists, greyed until its files are there, with a link to where they are loaded (24/10). */
-static bool HomeFeatureRow(const char* label, const char* description, int& value, bool available, const char* link) {
+static bool HomeFeatureRow(const char* label, const char* description, int& value, bool available, const char* link,
+                           const char* flag = nullptr) {
     ImVec2 start = ImGui::GetCursorScreenPos();
     float labelW = ImGui::CalcTextSize(label).x, labelH = ImGui::GetTextLineHeight();
-    bool changed = GatedToggle(label, nullptr, value, available); /* the description as a tooltip: Home fits one screen */
+    if (flag) labelW += labelH * 0.75f * 1.5f + Px(6);
+    bool changed = GatedToggle(label, nullptr, value, available, flag); /* the description as a tooltip: Home fits one screen */
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
         ImGui::SetTooltip("%s", description);
     if (!available && link != nullptr) { /* on the label's line, after it */
@@ -1621,7 +1630,7 @@ static void PageHome(SDL_Window* window) {
                                T("Las voces japonesas originales con los textos de tu versión. Necesita la ROM japonesa.",
                                  "The original Japanese voices with your version's text. Needs the Japanese ROM."),
                                Ini("undub"), sState[2].installed,
-                               T("Instalar la ROM japonesa \xE2\x86\x92", "Install the Japanese ROM \xE2\x86\x92"))) {
+                               T("Instalar la ROM japonesa \xE2\x86\x92", "Install the Japanese ROM \xE2\x86\x92"), "jp")) {
                 if (sState[2].installed)
                     SaveIni();
                 else
@@ -1949,7 +1958,7 @@ static void PageSound() {
     NextCard("voices", T("VOCES Y HD", "VOICES AND HD"));
     changed |= GatedToggle(T("Undub (voces japonesas)", "Undub (Japanese voices)"),
                          T("Requiere la ROM japonesa original verificada en roms/B8CJ.gba. Se aplica al iniciar el juego; conserva los textos europeos o ingleses.",
-                           "Requires the verified original Japanese ROM in roms/B8CJ.gba. Applied when starting the game; keeps European or English text."), Ini("undub"), sState[2].installed);
+                           "Requires the verified original Japanese ROM in roms/B8CJ.gba. Applied when starting the game; keeps European or English text."), Ini("undub"), sState[2].installed, "jp");
     
     ImGui::Separator();
     ImGui::PushStyleColor(ImGuiCol_TextLink, kAccent);
@@ -2804,6 +2813,17 @@ static bool SteamHdLogo(const fs::path& to) {
     return ok;
 }
 
+/* The wide battle image fills both Steam's capsule and the upper background. */
+static void SteamArtwork(const fs::path& grid, const std::string& id) {
+    std::error_code ec;
+    fs::create_directories(grid, ec);
+    fs::copy_file(sRoot / "assets" / "boxart.jpg", grid / (id + "p.jpg"), fs::copy_options::overwrite_existing, ec);
+    for (const char* suffix : { ".jpg", "_hero.jpg" })
+        fs::copy_file(sRoot / "assets" / "steam_header.jpg", grid / (id + suffix), fs::copy_options::overwrite_existing, ec);
+    if (!SteamHdLogo(grid / (id + "_logo.png")))
+        fs::copy_file(sRoot / "assets" / "logo.png", grid / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
+}
+
 /* ---- "Add to Steam": a non-Steam game in Steam's shortcuts.vdf (binary KeyValues: 0x00 a map, 0x01 a string,
    0x02 an int32, 0x07 a uint64, 0x08 the map's end; names and strings end with a zero) ---- */
 struct Vdf {
@@ -3102,14 +3122,7 @@ static void AddToSteam() {
         if (fs::exists(file, ec))
             fs::copy_file(file, config / "shortcuts.vdf.rekhcom-backup", fs::copy_options::overwrite_existing, ec);
         std::ofstream(file, std::ios::binary | std::ios::trunc).write(out.data(), (std::streamsize)out.size());
-        /* the artwork: the cover as the library's capsule, the logo over the hero */
-        fs::create_directories(config / "grid", ec);
-        std::string id = std::to_string(appid);
-        fs::copy_file(sRoot / "assets" / "boxart.jpg", config / "grid" / (id + "p.jpg"), fs::copy_options::overwrite_existing, ec);
-        /* the wide capsule: a battle as the game shows it (x4, the cartridge's art) */
-        fs::copy_file(sRoot / "assets" / "steam_header.jpg", config / "grid" / (id + ".jpg"), fs::copy_options::overwrite_existing, ec);
-        if (!SteamHdLogo(config / "grid" / (id + "_logo.png")))
-            fs::copy_file(sRoot / "assets" / "logo.png", config / "grid" / (id + "_logo.png"), fs::copy_options::overwrite_existing, ec);
+        SteamArtwork(config / "grid", std::to_string(appid));
         done++;
     }
     sSteamState = -1;
