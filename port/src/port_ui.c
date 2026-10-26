@@ -2782,17 +2782,21 @@ static void MenuLight(int x, int y) {
 }
 
 /* One row: t is the top of its square, the bar runs from x to x + w. */
-static void MenuBar(int x, int t, int w, int selected) {
+static void MenuBarBase(int x, int t, int w, int selected, int height) {
     if (!selected) {
         Fill(x, t, 10, 10, MENU_GREY);
         Fill(x, t + 8, w, 2, MENU_GREY);
         return;
     }
-    Fill(x, t, 11, 10, MENU_INK);
-    Fill(x + 11, t, 1, 10, MENU_SHADE);
+    Fill(x, t, 11, height, MENU_INK);
+    Fill(x + 11, t, 1, height, MENU_SHADE);
     MenuLight(x + 3, t + 3);
-    Fill(x, t + 8, w, 2, MENU_INK);
-    Fill(x + 1, t + 10, w, 1, MENU_SHADE);
+    Fill(x, t + height - 2, w, 2, MENU_INK);
+    Fill(x + 1, t + height, w, 1, MENU_SHADE);
+}
+
+static void MenuBar(int x, int t, int w, int selected) {
+    MenuBarBase(x, t, w, selected, 10);
 }
 
 /* One selected row on its own (the skip prompt, notices, hints): the bar
@@ -2870,11 +2874,11 @@ static void DrawTitleHint(int l) {
     int x = gPortScreen.originX + GBA_SCREEN_W - 6 - w;
     int y = gPortScreen.originY + 6;
     Shade(x - 3, y - 2, w + 6, 14, 0xFFFFFFFFu, 224);
-    MenuBar(x, y, w, 1);
-    /* KHMenu's uppercase ink starts one row below its origin. Lift that
-       origin one row: the ink stays inside the plate and leaves the same
-       native row before the underline as PULSA START. */
-    DrawText(text, x + 19, y - 1, MENU_INK, 0xFFD8D8D8u);
+    /* The HD lamp is eleven rows high. Share its bottom row with the
+       underline, as Press Start does; move the ink with that baseline so
+       its existing one-row clearance stays intact. GBA keeps its geometry. */
+    MenuBarBase(x, y, w, 1, gPortConfig.hdTitle ? 11 : 10);
+    DrawText(text, x + 19, y - (gPortConfig.hdTitle ? 0 : 1), MENU_INK, 0xFFD8D8D8u);
 }
 
 /* A value without its explanation in brackets, for the narrow list. */
