@@ -2988,16 +2988,23 @@
     "rev-six-081": {
       "id": "rev-six-081",
       "piece": "Escena081 suelo y setas",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:44.438144+00:00",
-      "updated_at": "2026-10-26T00:06:49.641285+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T00:38:33.309433+00:00",
+      "branch": "codex/atlas-rev-six-turbo",
       "pr": null,
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
-      "evidence": [],
-      "claimed_at": "2026-10-26T00:06:49.641285+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T00:38:33.309433+00:00",
+          "owner": "codex-atlas",
+          "detail": "Primer pase con capturas reales. Remates pendientes explícitos en ficha Atlas."
+        }
+      ],
+      "claimed_at": "2026-10-26T00:06:49.641285+00:00",
+      "sent": "8072e8379e404ddd9ba2eac73de50f3c"
     },
     "rev-six-097": {
       "id": "rev-six-097",
@@ -3071,7 +3078,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:07:43.596948+00:00",
+  "updated_at": "2026-10-26T00:38:33.309433+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
