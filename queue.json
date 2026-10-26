@@ -3463,10 +3463,23 @@
       ],
       "claimed_at": "2026-10-26T07:58:06.234017+00:00",
       "sent": "aa5c68ac68e948deaa006b2dfec38897"
+    },
+    "atlas-095-castle": {
+      "id": "atlas-095-castle",
+      "piece": "Escena 095: recuperar un único castillo; no cerrado por árbol y flores",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T08:02:05.044114+00:00",
+      "updated_at": "2026-10-26T08:02:05.044114+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261024-183308-2313ad",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:01:58.955948+00:00",
+  "updated_at": "2026-10-26T08:02:05.044114+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
