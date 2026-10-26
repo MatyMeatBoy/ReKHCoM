@@ -3497,10 +3497,23 @@
       ],
       "claimed_at": "2026-10-26T08:02:15.863061+00:00",
       "sent": "2783c8219d0d4ca4b178db5ab711b9b2"
+    },
+    "atlas-start-values-evidence": {
+      "id": "atlas-start-values-evidence",
+      "piece": "Menú START: cifras HD actuales",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T08:07:36.682250+00:00",
+      "updated_at": "2026-10-26T08:07:36.682250+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261024-134319-10a509",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:05:19.660938+00:00",
+  "updated_at": "2026-10-26T08:07:36.682250+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
