@@ -51,6 +51,34 @@ def cases(which):
                        window='240x160', kind='extras')
 
 
+
+def equivalent_groups(jobs):
+    """Collapse only inputs that cannot reach a different production branch.
+
+    Keep graphics modes, title/game, actor, tab, logical version and both HD flags.
+    An excluded/unavailable row cannot receive playback-exit input; GBA and unmapped
+    entries never consult an HD resource. Record every grouped ID, never invent PASS.
+    """
+    groups = {}
+    for case in jobs:
+        normalized = case.copy()
+        movie, _ = movie_for(case['event'])
+        excluded = (case['tab'] == 1 and not movie or
+                    case['event'] in (515, 516) and case['tab'] in (1, 2) and case['resource'] != 'absent')
+        unavailable = case['tab'] == 1 and case['resource'] == 'absent'
+        reasons = []
+        if case['tab'] == 0 or not movie:
+            normalized['resource'] = 'not-consulted'
+            reasons.append('HD resource never consulted by this native provider')
+        if excluded or unavailable:
+            normalized['exit'] = 'not-started'
+            reasons.append('Excluded/unavailable row never starts playback')
+        signature = key(normalized)
+        group = groups.setdefault(signature, dict(case=case, equivalents=[], reasons=reasons))
+        group['equivalents'].append(key(case))
+    return list(groups.values())
+
+
 def movie_for(event):
     if event in MOVIE_FILES:
         return MOVIE_FILES[event]
@@ -180,7 +208,7 @@ def main():
     p.add_argument('--rom', required=True, type=Path)
     p.add_argument('--work', required=True, type=Path)
     p.add_argument('--save', required=True, type=Path, help='Initialized save copy; blank SRAM legitimately changes during boot')
-    p.add_argument('--suite', choices=('pilot', 'core', 'full'), default='pilot')
+    p.add_argument('--suite', choices=('pilot', 'core', 'full', 'relevant'), default='pilot')
     p.add_argument('--workers', type=int, default=2)
     p.add_argument('--resume', action='store_true')
     a = p.parse_args()
@@ -196,7 +224,7 @@ def main():
                             '-t', str(offset + 1.5), '-an', '-c:v', 'libx264', '-preset', 'ultrafast',
                             '-crf', '35', '-y', str(path)], check=True)
         fixtures[offset] = path
-    jobs = list(cases('full' if a.suite == 'full' else 'core'))
+    jobs = list(cases('full' if a.suite in ('full', 'relevant') else 'core'))
     if a.suite == 'pilot':
         wanted = []
         for mode in (1, 2, 3):
@@ -206,10 +234,13 @@ def main():
                     wanted.append(next(c for c in jobs if (c['mode'], c['actor'], c['kind'], c['tab'], c['exit'], c['resource'], c['context'], c['scenes']) ==
                                        (mode, actor, kind, tab, route, resource, 'game', 1)))
         jobs = wanted
+    grouped = equivalent_groups(jobs) if a.suite == 'relevant' else [dict(case=c, equivalents=[key(c)], reasons=[]) for c in jobs]
+    coverage = {key(g['case']): dict(equivalents=g['equivalents'], reasons=g['reasons']) for g in grouped}
+    jobs = [g['case'] for g in grouped]
     results = a.work / 'results.jsonl'
     manifest = dict(exe_sha256=sha(a.exe), rom_sha256=sha(a.rom), suite=a.suite,
                     save_sha256=sha(a.save) if a.save else None,
-                    fixtures={str(o): sha(path) for o, path in fixtures.items()})
+                    fixtures={str(o): sha(path) for o, path in fixtures.items()}, coverage=coverage)
     manifest_path = a.work / 'manifest.json'
     if results.exists():
         if not a.resume:
@@ -239,6 +270,7 @@ def main():
                 return
             result = run_case(case, pool, a.work, fixtures, a.save, screenshots=a.suite == 'pilot')
             result['exe_sha256'] = manifest['exe_sha256']
+            result['equivalent_inputs'] = coverage[result['id']]
             with lock:
                 with results.open('a', encoding='utf-8') as f:
                     f.write(json.dumps(result, ensure_ascii=False) + '\n')
