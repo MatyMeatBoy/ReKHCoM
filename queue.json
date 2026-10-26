@@ -3215,20 +3215,26 @@
     "code-options-missing": {
       "id": "code-options-missing",
       "piece": "Opciones: aviso rojo unificado de HD y ROM japonesa no instalados",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T01:13:58.147660+00:00",
-      "updated_at": "2026-10-26T01:14:11.191038+00:00",
+      "updated_at": "2026-10-26T01:19:19.769125+00:00",
       "branch": "codex/options-missing-resource",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/195",
       "approval": "Solicitud del usuario de acabar pendientes de código",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T01:19:19.769125+00:00",
+          "owner": "codex-atlas",
+          "detail": "EU compilado; dos capturas de opciones HD/JP correctas; check_sources correcto."
+        }
+      ],
       "claimed_at": "2026-10-26T01:14:03.705251+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T01:14:11.191038+00:00",
+  "updated_at": "2026-10-26T01:19:19.769125+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
