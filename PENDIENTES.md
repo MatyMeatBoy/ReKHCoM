@@ -117,4 +117,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/195 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T01:19:36.461192+00:00 |
 | core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito: incluir todo lo necesario en el ejecutable | 2026-10-26T01:41:59.114730+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T01:42:04.952503+00:00)
