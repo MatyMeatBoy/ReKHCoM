@@ -160,7 +160,8 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
                     data = SDL_LoadFile(sidecar, &size);
                 sPreviewReady = PortScenePosterDecode(data, size, sPreview, &sPreviewW, &sPreviewH);
                 SDL_free(data);
-                if (sPreviewReady && (sPreviewW != PREVIEW_W || sPreviewH != PREVIEW_H)) sPreviewReady = 0;
+                if (sPreviewReady && (sPreviewW != PREVIEW_W || sPreviewH != PREVIEW_H ||
+                    !PortHdPosterHasPicture(sPreview, sPreviewW, sPreviewH, sPreviewW * 4))) sPreviewReady = 0;
             }
         }
     }

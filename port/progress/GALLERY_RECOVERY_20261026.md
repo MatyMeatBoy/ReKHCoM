@@ -56,3 +56,35 @@ reproducción HD suspende el overlay mientras su pausa está activa y lo recuper
 - La textura del cartel HD llega a la resolución de salida, evitando 640→90 píxeles lógicos→pantalla ampliada. Sentinel -2 comparte orden, Fill/Shade y fades; se libera al cerrar o cambiar renderer. GBA mantiene proporción 3:2 y filtrado de píxel.
 - Probes: 199 PNG/SHA/dimensiones; resolver EU/US/JP; SDL preserva píxeles adyacentes y textos/markers, fades negro/blanco/mitad, modal parcial, cambio de renderer y cleanup. Worker simulado de 400 ms: cerrar tarda menos de 1 ms, reabrir descarta la imagen vieja, gana la nueva selección, worker/cache únicos y recursos recogidos.
 - La matriz 2952 se canceló por instrucción del usuario para priorizar el candidato privado; no se afirma haberla ejecutado.
+
+
+## Miniaturas negras tras volver de HD (reporte Pedro, 26/10)
+
+Causa reproducida con Media Foundation real: `SetCurrentPosition(1 s)` puede entregar el fotograma clave de
+0 s, todavía negro. Tanto el extractor de la galería como el importador aceptaban esa primera muestra sin
+comparar su timestamp. El PNG negro era válido en dimensiones/fecha y se reutilizaba al volver o reabrir.
+No fue necesario reproducir una fuga de memoria para explicar este estado persistente.
+
+- El extractor y el importador descartan y liberan muestras anteriores al segundo solicitado, con límite de
+  900 lecturas y limpieza normal del decoder. La galería mantiene su único worker asincrónico.
+- La lectura compartida de pósteres, la galería y el importador detectan PNG negros heredados. Windows/Linux
+  pueden reconstruirlos con su extractor existente; el importador regenera los pósteres antes de exportar a
+  otros hosts. Los MP4 no se alteran ni se borran. Un host sin extractor necesita importar/exportar el póster
+  reparado; no se afirma extracción de vídeo nueva en consolas, Android o web.
+- Regresión RED/GREEN: `test_hd_preview_timestamp.py --source-ref a3b8d7839` falla con cero píxeles iluminados en una
+  fixture local con negro inicial y GOP largo; producción corregida pasa ocho aperturas. El proveedor
+  `--provider importer` reproduce el mismo RED y pasa ocho llamadas, incluida una caché negra sembrada.
+- Archivos reales del reporte: `zz_event_123`, `zz_event_121`, `zz_event_118` pasan ocho aperturas cada uno
+  y la recuperación de una caché negra privada. El 123 de HEAD anterior falla con cero píxeles; las imágenes
+  `poster-123-before.png` y `poster-123-after.png` muestran negro frente a Sora en Destiny Islands.
+- Builds Windows EU/US/JP completos correctos. `test_gallery_preview_cycles.py --no-shots` pasa ocho
+  reproducciones/saltos/retornos por región (24 en total), verificando el PNG reconstruido. El binario público
+  anterior completa cuatro retornos pero falla porque conserva el PNG negro. Todo usa fixture y datos privados,
+  renderer software, vídeo/audio dummy, sin ventanas ni sonido.
+- Límite de evidencia: las capturas del presentador principal con SDL software fallaron en `SDL_RenderReadPixels`
+  tanto con el binario anterior como con el candidato (c0000005); no se cuentan como validación visual del retorno.
+  La imagen se comprueba en el PNG, y el probe SDL separado verifica pintura, fades, renderer y cleanup.
+  Un fotograma legítimamente negro en el instante solicitado no se convierte artificialmente en contenido visible.
+- Pasan cuatro pruebas de importación Python, resolver/pósteres GBA EU/US/JP (199 PNG), lifecycle asincrónico,
+  pintado SDL y `check_sources.py`. Revisión independiente del diff por el carril `ending_desync`: sin hallazgos.
+  Evidencia privada en `<work>/gallery-preview-fix`. No se probó hardware de otras plataformas.

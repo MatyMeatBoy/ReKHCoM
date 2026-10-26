@@ -20,6 +20,22 @@ static inline int PortHdPosterPath(const char* movie, int second, char* out, siz
     return written >= 0 && (size_t)written < size;
 }
 
+/* Old MF poster writers could cache a black seek keyframe as a successful still.
+ * Check decoded pixels, not PNG validity alone, so those caches can be rebuilt. */
+static inline int PortHdPosterHasPicture(const void* pixels, int width, int height, int pitch) {
+    int x, y, lit = 0;
+    if (!pixels || width <= 0 || height <= 0) return 0;
+    for (y = 0; y < height; y++) {
+        const uint32_t* row = (const uint32_t*)((const unsigned char*)pixels + y * pitch);
+        for (x = 0; x < width; x++) {
+            uint32_t rgb = row[x];
+            if (((rgb >> 16) & 255) > 8 || ((rgb >> 8) & 255) > 8 || (rgb & 255) > 8)
+                if (++lit >= 32) return 1;
+        }
+    }
+    return 0;
+}
+
 #if defined(_WIN32) || defined(PORT_LINUX)
 #ifdef __cplusplus
 extern "C" {
