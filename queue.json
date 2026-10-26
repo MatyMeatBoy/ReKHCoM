@@ -3830,19 +3830,20 @@
     "android-battery-validity-20261026": {
       "id": "android-battery-validity-20261026",
       "piece": "Android: rechazar app smoke sin imagen de región y conservar causa",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-batteries",
       "created_at": "2026-10-26T16:21:50.541280+00:00",
-      "updated_at": "2026-10-26T16:21:50.541280+00:00",
+      "updated_at": "2026-10-26T16:21:57.513361+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T16:21:57.513361+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T16:21:50.541280+00:00",
+  "updated_at": "2026-10-26T16:21:57.513361+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
