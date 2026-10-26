@@ -129,4 +129,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/217 | — | 2026-10-26T08:05:19.660938+00:00 |
 | atlas-start-values-evidence | Menú START: cifras HD actuales | pendiente | — | — | — | 2026-10-26T08:11:09.029483+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T08:11:32.559582+00:00)
