@@ -131,6 +131,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-maleficent-lomo-r2 | Maléfica: tres recortes, lomo y estilo KHCoM | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/222 | — | 2026-10-26T08:25:25.590946+00:00 |
 | atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/226 | — | 2026-10-26T09:36:23.884222+00:00 |
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | en_curso | codex-atlas | — | — | 2026-10-26T09:36:34.812546+00:00 |
-| atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:36:39.919108+00:00 |
+| atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | en_curso | codex-atlas | — | — | 2026-10-26T09:36:45.104007+00:00 |
 
 Integrador: libre
