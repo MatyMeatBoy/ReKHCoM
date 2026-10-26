@@ -3114,22 +3114,28 @@
     "atlas-pixel-painter": {
       "id": "atlas-pixel-painter",
       "piece": "Atlas: pintor de píxeles y respuestas generales conjuntas",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:39:32.514297+00:00",
-      "updated_at": "2026-10-26T00:39:49.286797+00:00",
+      "updated_at": "2026-10-26T00:42:21.673078+00:00",
       "branch": "codex/atlas-pixel-painter",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/192",
-      "approval": "Solicitud explícita del usuario: herramienta de edición nativa en Atlas e integrar mejoras de código",
+      "approval": "Solicitud explícita del usuario de integrar el pintor en Atlas",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-26T00:39:49.286797+00:00",
           "owner": "codex-atlas",
           "detail": "Prueba nativa de un píxel/undo/export/import y siete pruebas de servidor correctas."
+        },
+        {
+          "at": "2026-10-26T00:42:21.673078+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 7447ec0815389d6de92c9eaa36f0c478038ab3e4; prueba de navegador y siete de servidor correctas."
         }
       ],
-      "claimed_at": "2026-10-26T00:39:38.095238+00:00"
+      "claimed_at": "2026-10-26T00:39:38.095238+00:00",
+      "completed_at": "2026-10-26T00:42:21.673078+00:00"
     }
   },
   "integrator": {
@@ -3138,7 +3144,7 @@
     "created_at": "2026-10-26T00:42:11.577171+00:00",
     "updated_at": "2026-10-26T00:42:11.577171+00:00"
   },
-  "updated_at": "2026-10-26T00:42:11.577171+00:00",
+  "updated_at": "2026-10-26T00:42:21.673078+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
