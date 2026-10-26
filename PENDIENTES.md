@@ -140,4 +140,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | codex-retoma | codex/claude-close-20261026 | — | 2026-10-26T16:23:52.459939+00:00 |
 | controls-reset-triggers-20261026 | Controles: restaurar bindings y layout automático, gatillos progresivos | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/241 | — | 2026-10-26T16:35:08.180110+00:00 |
 
-Integrador: codex-retoma (ocupado; 2026-10-26T16:28:36.808780+00:00)
+Integrador: codex-retoma (ocupado; 2026-10-26T16:42:06.682060+00:00)
