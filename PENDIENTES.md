@@ -119,7 +119,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | code-rebel-recom | Modo rebelde: lista local ReCoM separada en juego y launcher | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/197 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T02:00:15.979929+00:00 |
 | code-android-test-validity | Android 123/124: distinguir APK inválido de timeout y comprobar retest | en_curso | codex-atlas | codex/android-test-validity | Usuario: terminar pendientes de código y pruebas vigentes | 2026-10-26T02:05:48.863195+00:00 |
 | atlas-090-wall-base | Escena 090: base del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/210 | — | 2026-10-26T07:33:14.196252+00:00 |
-| atlas-095-garden | Escena 095: árbol, fondo y flores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/211 | — | 2026-10-26T07:39:04.388206+00:00 |
+| atlas-095-garden | Escena 095: árbol, fondo y flores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/211 | approved exact 47e89e1d59374be8aa04ff8e658ee3a6 | 2026-10-26T09:43:54.555333+00:00 |
 | atlas-074-cleanup | Escena 074: quitar resto de tile | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/212 | — | 2026-10-26T07:42:03.088079+00:00 |
 | atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/213 | — | 2026-10-26T07:44:33.744991+00:00 |
 | atlas-112-genie-door | Escena 112: Genio y borde de puerta | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/214 | — | 2026-10-26T07:55:57.710528+00:00 |
