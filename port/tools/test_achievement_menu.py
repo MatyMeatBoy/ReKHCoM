@@ -61,14 +61,18 @@ for region, width, height, controls in [('eu', 240, 160, 'keyboard'), ('eu', 640
             im.save(shot.with_suffix('.png'))
     # Shot 8 (Unlocked tab) shows the earned first achievement: its badge in colour;
     # shot 7 (Locked tab) shows a locked one: its badge in grey.
-    def colour_pixels(name):
-        with Image.open(work / name) as im:
+    def colour_pixels(tick):
+        # The suffix is the main Options cursor, which changes as rows are added.
+        # The navigation tick identifies the state being checked.
+        captures = list(work.glob(f'options_{tick:04d}_*.png'))
+        assert len(captures) == 1, (region, tick, captures)
+        with Image.open(captures[0]) as im:
             im = im.convert('RGB')
             corner = im.crop((im.width * 3 // 4, im.height // 2, im.width, im.height))
             return sum(1 for p in corner.get_flattened_data() if max(p) - min(p) > 40 and p != (255, 0, 0))
-    assert colour_pixels('options_0008_00.png') > 200, (region, 'earned badge is not drawn in colour')
-    assert colour_pixels('options_0007_00.png') < 50, (region, 'locked badge is not grey')
+    assert colour_pixels(8) > 200, (region, 'earned badge is not drawn in colour')
+    assert colour_pixels(7) < 50, (region, 'locked badge is not grey')
     assert not list(work.glob('achievements_*.dat')), 'Browsing must not change awards'
     report.append(dict(region=region, output=[width, height], controls=controls, navigation='PASS', readonly='PASS'))
 (OUT / 'report.json').write_text(json.dumps(report, indent=2))
-print('PASS read-only achievement menu: six region/size/control pairs, rows, 5-row jumps, L/R tabs, badge and back')
+print(f'PASS read-only achievement menu: {len(report)} region/size/control pairs, rows, 5-row jumps, L/R tabs, badge and back')

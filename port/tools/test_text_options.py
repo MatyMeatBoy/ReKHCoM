@@ -31,9 +31,24 @@ ROUTE = [('VIEW', 1, 1, 'view_mode'), ('ASPECT', 1, 1, None), ('ZOOM', 1, 1, 'zo
 
 def item_numbers():
     src = (ROOT / 'port/src/port_ui.c').read_text(encoding='utf-8')
-    body = src[src.index('enum {\n    /* the game'):]
-    body = body[:body.index('};')]
-    return {m: i for i, m in enumerate(re.findall(r'^\s*ITEM_(\w+)\s*[,=]', body, re.M))}
+    src = re.sub(r'/\*.*?\*/|//[^\n]*', '', src, flags=re.S)
+    match = re.search(r'enum\s*\{\s*ITEM_', src)
+    if not match:
+        raise ValueError('The options ITEM_ enum was not found')
+    body = src[src.index('{', match.start()) + 1:src.index('};', match.end())]
+    numbers, value = {}, 0
+    for entry in body.split(','):
+        name, _, expression = entry.strip().partition('=')
+        if not name:
+            continue
+        name = name.strip().removeprefix('ITEM_')
+        if expression:
+            base, _, add = expression.strip().partition('+')
+            value = numbers[base.strip()[5:]] if base.strip().startswith('ITEM_') else int(base, 0)
+            value += int(add or 0)
+        numbers[name] = value
+        value += 1
+    return numbers
 
 
 def actions():
