@@ -133,4 +133,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:40:18.552327+00:00 |
 | atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:40:24.237908+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T09:43:23.706933+00:00)
