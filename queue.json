@@ -3930,15 +3930,16 @@
     "options-input-audit-20261026": {
       "id": "options-input-audit-20261026",
       "piece": "Opciones: ejes A/B, tecla pegada tras overlay y auditoria lifecycle",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-batteries",
       "created_at": "2026-10-26T17:37:20.956612+00:00",
-      "updated_at": "2026-10-26T17:37:20.956612+00:00",
+      "updated_at": "2026-10-26T17:37:26.747488+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T17:37:26.747488+00:00"
     }
   },
   "integrator": {
@@ -3947,7 +3948,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T17:36:41.234887+00:00"
   },
-  "updated_at": "2026-10-26T17:37:20.956612+00:00",
+  "updated_at": "2026-10-26T17:37:26.747488+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
