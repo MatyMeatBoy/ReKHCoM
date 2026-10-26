@@ -11,6 +11,12 @@ FINAL=Path(os.environ.get('KHCOM_TRAILER_DELIVERY',T))
 CARDS=T/'tools/cards';CARDS.mkdir(exist_ok=True,parents=True)
 FONT='C:/Windows/Fonts/pala.ttf';BOLD='C:/Windows/Fonts/palab.ttf'
 W,H=1920,1080
+VIDEO_NAME=os.environ.get('KHCOM_TRAILER_VIDEO_NAME','ReKHCoM_v2.0_trailer_final.mp4')
+def clean_text(value):
+    for old,new in [('â†’',' -> '),('Â·',' | '),('\u2192',' -> '),('\u00b7',' | '),('\u2014','-'),('\u2013','-')]:value=value.replace(old,new)
+    while '  ' in value:value=value.replace('  ',' ')
+    assert value.isascii(),repr(value)
+    return value
 def heart_expression():
     # Multiply the v4 implicit polynomial by its positive denominator d^6.
     # Same heart and border, fewer divisions/pow calls, no mutable st/ld.
@@ -20,6 +26,7 @@ def run(args):
     p=subprocess.run([FF,'-hide_banner','-loglevel','error','-y',*args],capture_output=True,text=True,creationflags=0x08000000)
     if p.returncode:raise RuntimeError(p.stderr[-7000:])
 def card(name,title,subtitle='',full=False,extra=''):
+    title,subtitle,extra=map(clean_text,(title,subtitle,extra))
     im=Image.new('RGBA',(W,H),(0,0,0,0));d=ImageDraw.Draw(im)
     if full:
         for y in range(H):
@@ -81,7 +88,7 @@ def still(name,path,d,title,sub='',tall=False,full=False):
     return encode(name,[['-loop','1','-framerate','60','-i',str(path)],['-loop','1','-framerate','60','-i',str(c)]],g,duration=d)
 
 def timeline():
-    return [
+    shots=[
       dict(name='01_title',kind='compare',a='title_gba',b='title_hd',d=9,title='ReKHCoM  v2.0',sub='The original title · A new HD presentation',chapter='HD title'),
       dict(name='02_guard',kind='compare',a='guard_gba',b='guard_modern',d=10,title='THE SAME WORLD. BEYOND THE EDGE.',sub='GBA at x4 → Extended courtyard · Artwork approved with honors',chapter='Extended arenas'),
       dict(name='03_darkside',kind='compare',a='darkside_gba',b='darkside_modern',d=10,title='DARKSIDE · THE BATTLE, WIDER',sub='Same camera · Same moment · Real movement'),
@@ -94,13 +101,23 @@ def timeline():
       dict(name='10_panorama',src='panorama_current',d=10,title='UP TO 32:9',sub='More room for every battle',chapter='Ultrawide view'),
       dict(name='10b_cinematics',src='cinematic_hd',d=12,title='HD CINEMATICS',sub='Imported footage · HD scenes and movies on Windows / Android',chapter='HD scenes and movies'),
       dict(name='11_options',src='options',d=7,title='MAKE IT YOUR OWN',sub='Every setting, in game',chapter='Options'),
-      dict(name='12_rebel',src='rebel_action_current',d=10,title='REBEL MODE · CHEATS',sub='Experiment with assists and a local achievement list of your own',chapter='Rebel mode and cheats'),
+      dict(name='12_rebel',src='rebel_jafar_current',d=10,title='REBEL MODE · CHEATS',sub='Experiment with assists and a local achievement list of your own',chapter='Rebel mode and cheats'),
       dict(name='13_editor',kind='still',path='launcher-tall/decompui_6.png',d=13,title='YOUR SAVE. YOUR WAY.',sub='Real editor view · Character · Level · HP · CP · Cards',tall=True,chapter='Save editor'),
       dict(name='14_stable',src='hud_hd_current',d=7,title='AVAILABLE NOW · v2.0',sub='Windows · Linux · Steam Deck',full=True,chapter='Platforms and consoles'),
-      dict(name='15_beta',src='room_monstro',d=12,title='BETA PLATFORMS',sub='Android · Anbernic / Linux ARMHF\nPlayStation 4 · PlayStation Vita · PlayStation 5 · Web\nNintendo Switch · Earlier beta: v2.0-pre1',full=True),
+      dict(name='15_beta',src='room_monstro',d=8,title='BETA PLATFORMS',sub='Android · Anbernic / Linux ARMHF\nPlayStation 4 · PlayStation Vita · PlayStation 5 · Web\nNintendo Switch · Earlier beta: v2.0-pre1',full=True),
       dict(name='16_end',src='title_hd',d=8,title='ReKHCoM  v2.0',sub='AVAILABLE NOW\ngithub.com/MatyMeatBoy/ReKHCoM',full=True,chapter='Download and credits'),
       dict(name='17_legal',src='title_hd',d=5,title='A FAN PROJECT',sub='Your own cartridge / ROM is required. No ROM is included.\nNot affiliated with Square Enix, Disney or Nintendo.',full=True)
     ]
+    if os.environ.get('KHCOM_TRAILER_INCLUDE_RELOAD')=='1':
+        index=next(i for i,s in enumerate(shots) if s['name']=='08_hud')+1
+        shots[index:index]=[
+          dict(name='08b_reload_first',kind='compare',a='reload_first_gba',b='reload_first_hd',d=10,title='ORIGINAL TIMING. HD RELOAD.',sub='Dynamic fill | Charge resumes | Reload counter',reveal=2.8,sweep=1),
+          dict(name='08c_reload_cycle',kind='compare',a='reload_cycle_gba',b='reload_cycle_hd',d=10,title='FILL. HOLD. COMPLETE. REPEAT.',sub='Real card use | The next reload cycle | GBA -> HD',reveal=2.8,sweep=1),
+        ]
+    for shot in shots:
+        for key in ('title','sub'):
+            if key in shot:shot[key]=clean_text(shot[key])
+    return shots
 
 def segments(only=''):
     for s in timeline():
@@ -114,7 +131,8 @@ def segments(only=''):
 def assemble(only_act=None):
     ts=timeline();starts=[];t=0
     # Transitions are short and purposefully keep each modern result visible.
-    transitions={0:('heart',0.8),1:('flash',0.45),2:('heart',0.8),5:('flash',0.5),6:('heart',0.8),8:('flash',0.5),9:('heart',0.7),10:('flash',0.5),12:('flash',0.45),13:('heart',0.8),15:('flash',0.6),16:('black',0.8)}
+    after={'01_title':('heart',0.8),'02_guard':('flash',0.45),'03_darkside':('heart',0.8),'06_scene074':('flash',0.5),'07_jafar':('heart',0.8),'09_music':('flash',0.5),'10_panorama':('heart',0.7),'10b_cinematics':('flash',0.5),'12_rebel':('flash',0.45),'13_editor':('heart',0.8),'15_beta':('flash',0.6),'16_end':('black',0.8),'08c_reload_cycle':('flash',0.5)}
+    transitions={i:after[s['name']] for i,s in enumerate(ts) if s['name'] in after}
     args=[];g=[];v='0:v';t=ts[0]['d'];starts=[0]
     heart=heart_expression()
     def fade_spec(kind,td,off):
@@ -128,17 +146,39 @@ def assemble(only_act=None):
         if only_act is not None and gi!=only_act:continue
         aa=[];gg=[];vv='0:v';tt=ts[ids[0]]['d'];p=T/'edit'/f'act_v20_{gi}.mp4'
         for i in ids:aa+=['-threads','1','-i',str(T/'edit'/(ts[i]['name']+'.mp4'))]
+        mask_input=len(ids)
         for j,i in enumerate(ids[1:],1):
             kind,td=transitions.get(i-1,('fade',0.28));off=tt-td
-            gg.append(f'[{vv}][{j}:v]{fade_spec(kind,td,off)}[x{j}]');vv=f'x{j}';tt=off+ts[i]['d']
+            total=off+ts[i]['d']
+            if kind=='heart':
+                count=round(td*60);prefix=round(off*60);pad=ts[i]['d']+1
+                for mask in ('inner','outer'):
+                    aa+=['-threads','1','-i',str(T/'heart-masks'/f'heart_{count}_{mask}_444.mkv')]
+                aa+=['-f','lavfi','-i',f'color=white:s=1920x1080:r=60:d={total},format=yuv444p,lut=y=245:u=128:v=128']
+                gg.append(f'[{vv}]fps=60,format=yuv444p,settb=1/60,setpts=N,tpad=stop_mode=clone:stop_duration={pad},trim=duration={total}[ha{j}]')
+                gg.append(f'[{j}:v]fps=60,format=yuv444p,settb=1/60,setpts=N,tpad=start_mode=clone:start_duration={off},trim=duration={total}[hb{j}]')
+                for n,label in enumerate(('hi','ho')):
+                    # tpad's legal black is Y16/U128/V128. Explicitly zero
+                    # EVERY prefix plane; otherwise it would leak B/chroma.
+                    gg.append(f'[{mask_input+n}:v]fps=60,format=yuv444p,settb=1/60,setpts=N,tpad=start_mode=add:start_duration={off}:stop_mode=clone:stop_duration={pad},lut=y=0:u=0:v=0:enable=\'lt(n,{prefix})\',trim=duration={total}[{label}{j}]')
+                gg.append(f'[ha{j}][{mask_input+2}:v][ho{j}]maskedmerge=planes=7[hw{j}]')
+                gg.append(f'[hw{j}][hb{j}][hi{j}]maskedmerge=planes=7,trim=duration={total},format=yuv420p[x{j}]')
+                mask_input+=3
+            else:
+                gg.append(f'[{vv}]settb=1/60,setpts=N[pa{j}];[{j}:v]settb=1/60,setpts=N[pb{j}]')
+                gg.append(f'[pa{j}][pb{j}]{fade_spec(kind,td,off)}[x{j}]')
+            vv=f'x{j}';tt=total
         valid=False
+        stamp=p.with_suffix('.fingerprint')
+        identity=hashlib.sha256(json.dumps([(str(T/'edit'/(ts[i]['name']+'.mp4')),(T/'edit'/(ts[i]['name']+'.mp4')).stat().st_mtime_ns) for i in ids]+[gg]).encode()).hexdigest()
         if p.exists() and p.stat().st_size>=10000:
             check=subprocess.run([str(Path(FF).with_name('ffprobe.exe')),'-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(p)],capture_output=True,text=True,creationflags=0x08000000)
-            valid=check.returncode==0 and bool(check.stdout.strip()) and abs(float(check.stdout.strip())-tt)<0.06
+            valid=check.returncode==0 and bool(check.stdout.strip()) and abs(float(check.stdout.strip())-tt)<0.06 and stamp.exists() and stamp.read_text()==identity
         if only_act is not None or not valid:
             partial=p.with_name(p.stem+'.partial.mp4')
             run(aa+['-filter_complex_threads','2','-filter_complex',';'.join(gg),'-map',f'[{vv}]','-an','-c:v','libx264','-preset','veryfast','-crf','17','-threads','2',str(partial)])
             os.replace(partial,p)
+            stamp.write_text(identity)
             print('Act',gi,'rendered',flush=True)
         acts.append(p);actdur.append(tt)
     if only_act is not None:return
@@ -169,10 +209,10 @@ def assemble(only_act=None):
     hdgain=json.loads((T/'audio/music_title_match.json').read_text())[1]['gain']
     g.append(f'[titlea]atrim=2.8:{introend},asetpts=PTS-STARTPTS,volume={hdgain},afade=t=in:d=0.25,afade=t=out:st={introend-2.8-0.8}:d=0.8,adelay=2800:all=1[mintro]')
     g.append(f'[{ni+1}:a]atrim=0:{endstart-introend},asetpts=PTS-STARTPTS,volume=0.30,afade=t=in:d=0.5,afade=t=out:st={endstart-introend-0.8}:d=0.8,adelay={round(introend*1000)}:all=1[mbattle]')
-    musicstart=starts[8]
+    musicstart=starts[next(i for i,s in enumerate(ts) if s['name']=='09_music')]
     # The dedicated feature repeats one phrase: 0..4 native then 4..10 HD.
     # Battle bed is ducked through this comparison.
-    cinestart=starts[10]
+    cinestart=starts[next(i for i,s in enumerate(ts) if s['name']=='10b_cinematics')]
     g[-1]=g[-1].replace('volume=0.30',f"volume='if(between(t,{musicstart-introend},{musicstart-introend+10})+between(t,{cinestart-introend},{cinestart-introend+12}),0,0.30)':eval=frame")
     g.append(f'[{ni+3}:a]atrim=3.9:10,asetpts=PTS-STARTPTS,afade=t=in:d=0.2,adelay={round((musicstart+3.9)*1000)}:all=1[mfeaturehd]')
     # Reuse native input via another input to avoid ambiguous fan-out.
@@ -182,10 +222,12 @@ def assemble(only_act=None):
     g.append(f'[titlec]atrim=10:{10+t-endstart},asetpts=PTS-STARTPTS,volume=0.65,afade=t=in:d=0.7,afade=t=out:st={t-endstart-2.5}:d=2.5,adelay={round(endstart*1000)}:all=1[mend]')
     labels=['mgba','mintro','mbattle','mfeaturehd','mfeaturegba','mend']+sfx
     g.append(''.join(f'[{x}]' for x in labels)+f'amix=inputs={len(labels)}:normalize=0,atrim=0:{t},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]')
-    FINAL.mkdir(exist_ok=True,parents=True);out=FINAL/'ReKHCoM_v2.0_trailer.mp4'
+    FINAL.mkdir(exist_ok=True,parents=True);out=FINAL/VIDEO_NAME
     (T/'timeline.json').write_text(json.dumps(dict(duration=t,segments=[dict(**s,start=starts[i]) for i,s in enumerate(ts)]),ensure_ascii=False,indent=2),encoding='utf-8')
     (T/'assembly_filter.txt').write_text(';'.join(g),encoding='utf-8')
-    run(args+['-filter_complex_threads','2','-filter_complex_script',str(T/'assembly_filter.txt'),'-map',f'[{v}]','-map','[a]','-c:v','libx264','-preset','fast','-crf','17','-pix_fmt','yuv420p','-r','60','-threads','2','-c:a','aac','-b:a','256k','-movflags','+faststart',str(out)])
+    partial=out.with_name(out.stem+'.partial.mp4')
+    run(args+['-filter_complex_threads','2','-filter_complex',';'.join(g),'-map',f'[{v}]','-map','[a]','-t',str(t),'-c:v','libx264','-preset','fast','-crf','17','-pix_fmt','yuv420p','-r','60','-threads','2','-c:a','aac','-b:a','256k','-movflags','+faststart',str(partial)])
+    os.replace(partial,out)
     print('EXPORTED',out,t,flush=True)
 
 if __name__=='__main__':

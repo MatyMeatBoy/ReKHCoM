@@ -1,6 +1,6 @@
 # Tráiler ReKHCoM v2.0 — directrices del usuario, 26/10/2026
 
-Estado: encargo registrado para producción; no hay todavía un vídeo v2.0 exportado.
+Estado: baseline ASCII y Rebel limpio exportado y verificado; pendiente incorporar la corrección de recarga HD solicitada después por el usuario y su demostración real. Entrega, procedencia y límites: [TRAILER_V20_ENTREGA.md](TRAILER_V20_ENTREGA.md). No se ha publicado online.
 La v2.0 del juego ya está publicada. El número v4 del tráiler anterior no es la versión del juego.
 
 ## Base que se conserva

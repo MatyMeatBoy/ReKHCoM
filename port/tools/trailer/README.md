@@ -14,6 +14,7 @@ $env:KHCOM_TRAILER_DIR='D:/ruta/intermedios-trailer-v20'
 $env:KHCOM_TRAILER_DELIVERY='D:/ruta/entrega-trailer-v20'
 py -3.12 port/tools/trailer/v20_capture.py --workers 2
 py -3.12 port/tools/trailer/v20_music.py
+py -3.12 port/tools/trailer/v20_heart_masks.py
 py -3.12 port/tools/trailer/v20_edit.py
 py -3.12 port/tools/trailer/v20_edit.py --assemble
 py -3.12 port/tools/trailer/verify_v20.py
@@ -37,11 +38,19 @@ después del inicio de la grabación para excluir el menú de depuración.
 La música compara la misma frase desde su comienzo, con RMS 0,1 en ambos
 arreglos; `v20_music.py` evita el silencio del arranque original.
 
-Las tarjetas son inglesas, Palatino con línea dorada. Separan Windows,
+Las tarjetas son inglesas y ASCII, Palatino con línea dorada. Separan Windows,
 Linux y Steam Deck estables de los paquetes beta; Switch se identifica
 como **beta anterior v2.0-pre1**, no como paquete de la estable v2.0.
 Todo el gameplay está grabado en Windows: las tarjetas no fingen capturas
 de consolas. No se publica ningún vídeo desde estos scripts.
+
+Los corazones usan máscaras FFV1 4:4:4 sin pérdida y `maskedmerge`, con el
+mismo muestreo por fotograma y blanco Y245/U128/V128 del efecto anterior.
+El prefijo invisible se pone a cero en todos los planos; después del
+barrido solo queda la toma B. Así se conserva el movimiento real sin
+evaluar el polinomio por cada píxel durante todo el montaje. Las salidas
+parciales se renombran al cerrar y los actos validan duración y huella de
+sus fuentes antes de reutilizarse.
 
 `verify_v20.py` decodifica el MP4 completo, comprueba 1080p60/audio estéreo
 48 kHz, mide la diferencia de duración A/V y el pico de audio, exporta

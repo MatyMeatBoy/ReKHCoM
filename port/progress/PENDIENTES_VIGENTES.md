@@ -22,14 +22,17 @@ sin evidencia en verificadas: se archivan como registro histórico.
 
 Directrices completas: [TRAILER_V20.md](TRAILER_V20.md).
 
-- [ ] Seleccionar material de la estable y versiones exactas **aprobadas con honores** en Atlas.
-- [ ] Grabar comparativas a x4: sprites y fondos GBA en la vista ampliada → slider → versión moderna.
-- [ ] Destacar title screen HD, arenas ampliadas, HUD HD y música HD; dedicar un tramo a Jafar.
-- [ ] Recuperar efectos, transiciones y continuidad del tráiler anterior; montar, revisar y exportar.
-- [ ] Preparar miniatura y descripción actualizadas; publicación del vídeo pendiente de indicación del usuario.
+- [x] Seleccionar material de la estable y versiones exactas **aprobadas con honores** en Atlas.
+- [x] Grabar comparativas a x4: sprites y fondos GBA en la vista ampliada → slider → versión moderna.
+- [x] Destacar title screen HD, arenas ampliadas, HUD HD y música HD; dedicar un tramo a Jafar.
+- [x] Recuperar efectos, transiciones y continuidad del tráiler anterior; montar, revisar y exportar.
+- [x] Preparar miniatura y descripción actualizadas; publicación del vídeo pendiente de indicación del usuario.
 
-Estado: directrices registradas; todavía sin nuevas capturas ni montaje v2.0.
-Carril documental: `docs-v20-trailer`, `codex-trailer`, rama `codex/v20-trailer-pendientes`.
+- [ ] Incorporar corrección de recarga HD (decompilación) y comparativa real de llenado, retención parcial y ciclos. Regrabar HUD/Jafar/Rebel con procedencia del nuevo binario.
+
+Estado: baseline local verificado y aprobado para ASCII/Rebel, 1080p60, 2:41,9; entrega definitiva pendiente de la recarga HD.
+Entrega y procedencia: [TRAILER_V20_ENTREGA.md](TRAILER_V20_ENTREGA.md). Vídeo sin publicar online.
+Carril: `trailer-v20-production`, owner `codex-trailer-production`, rama `trailer/v20-production`.
 
 ## Asuntos posteriores que conservan seguimiento
 

@@ -13,6 +13,8 @@ BUILD=Path(os.environ.get('KHCOM_TRAILER_BUILD','D:/01Claude/ReKHCoM-build/windo
 HD=Path(os.environ.get('KHCOM_TRAILER_HD','D:/01Claude/ReKHCoM-build/hd-completo'))
 ROM=Path(os.environ.get('KHCOM_TRAILER_ROM',ROOT.parent/'roms/Kingdom Hearts - Chain of Memories (Europe) (En,Fr,De,Es,It).gba'))
 FF=shutil.which('ffmpeg') or str(next((Path(os.environ['LOCALAPPDATA'])/'Microsoft/WinGet/Packages').glob('Gyan.FFmpeg_*/ffmpeg-*/bin/ffmpeg.exe')))
+PUBLIC_V20_SHA='4d154a7fca1d3bb7627cdd7deb3baf8f6b5f8e8357bfdced9c058363c472cfb2'
+PUBLIC_V20_SOURCE='59b44df99e05e1f4245516447d5800c88be72cf1'
 for d in ['clips','audio','previews','capture','edit','tools/cards']:(T/d).mkdir(parents=True,exist_ok=True)
 
 def wavdump(raw,out,start,end):
@@ -39,6 +41,11 @@ def entries():
         return f'{i}:{s}:0'
     return boss
 
+def reload_take_keys():
+    # Real attacks use cards; L selects the original reload card. Briefly
+    # release A while partially charged, then resume and repeat next cycle.
+    return ','.join(['60-63:A']+[f'{f}-{f+3}:A' for f in range(200,1000,40)]+['1100-1400:L','1460-1468:A','1501-1740:A']+[f'{f}-{f+3}:A' for f in range(1800,2600,40)]+['2700-3000:L','3020-3028:A','3060-3460:A'])
+
 def jobs():
     boss=entries();out=[]
     for hd in (False,True):
@@ -53,19 +60,31 @@ def jobs():
            dict(name='hud_hd',a=180,b=900,hd=True,keys='60-63:A',extra={'KHCOM_BATTLE':'10:4:0','KHCOM_MONKEY':'6:120'}),
            dict(name='hud_gba',a=180,b=900,hd=False,keys='60-63:A',extra={'KHCOM_BATTLE':'10:4:0','KHCOM_MONKEY':'6:120'}),
            dict(name='panorama',a=180,b=900,hd=True,size='2560x720',keys='60-63:A',extra={'KHCOM_BATTLE':'10:7:0','KHCOM_MONKEY':'11:120'}),
-           dict(name='rebel_action',a=180,b=1020,hd=True,keys='60-63:A',ini='cheat_infinite_hp=1\ncheat_one_hit=1\n',extra={'KHCOM_BATTLE':'10:6:0','KHCOM_MONKEY':'6:120'}),
+           dict(name='rebel_jafar',a=180,b=1020,hd=True,keys='60-63:A',ini='cheat_infinite_hp=1\ncheat_one_hit=0\n',extra={'KHCOM_BATTLE':boss('JAFAR'),'KHCOM_MONKEY':'7:120'}),
            dict(name='options',a=510,b=1030,hd=True,keys='',extra={'KHCOM_OPTIONS_AT':'500','KHCOM_VPAD':','.join(f'{f}-{f+3}:DOWN' for f in range(570,1020,40))}),
            dict(name='room_monstro',a=430,b=910,hd=True,keys='420-910:UP,480-486:B,540-546:B,600-606:B',extra={'KHCOM_MODE':'300:room:10301'}),
            dict(name='room_agrabah',a=430,b=910,hd=True,keys='420-910:UP',extra={'KHCOM_MODE':'300:room:10401'}),
            dict(name='room_halloween',a=430,b=910,hd=True,keys='420-910:UP',extra={'KHCOM_MODE':'300:room:10801'})]
     for job in out:
-        if job['name'] in ('jafar','hud_hd','panorama','rebel_action'):job['name']+='_current'
+        if job['name'] in ('jafar','hud_hd','panorama','rebel_jafar'):job['name']+='_current'
+    for hd in (False,True):
+        for label,a,b in [('first',1220,1820),('cycle',2820,3420)]:
+            out.append(dict(name=f'reload_{label}_'+('hd' if hd else 'gba'),a=a,b=b,hd=hd,keys=reload_take_keys(),trace_reload=True,ini='cheat_infinite_hp=1\ncheat_one_hit=0\n',extra={'KHCOM_BATTLE':boss('JAFAR')}))
     return out
 
-def capture(j,preview=False):
+def capture(j,preview=False,force=False):
     name=j['name'];d=T/'capture'/name;d.mkdir(exist_ok=True);a,b=j['a'],j['b'];out=T/'clips'/(name+'.mov');wav=T/'audio'/(name+'.wav')
-    if not preview and out.exists() and wav.exists():return name+' cached'
+    if not preview and not force and out.exists() and wav.exists():return name+' cached'
+    build_sha=hashlib.sha256((BUILD/'khcom.exe').read_bytes()).hexdigest()
+    source=os.environ.get('KHCOM_TRAILER_SOURCE') or (PUBLIC_V20_SOURCE if build_sha==PUBLIC_V20_SHA else None)
+    if not source:raise RuntimeError('Set KHCOM_TRAILER_SOURCE for a corrected/local executable')
+    if force and (out.exists() or wav.exists()):
+        archived=T/'archive'/name;archived.mkdir(parents=True,exist_ok=True);tag=str(time.time_ns())
+        for old in (out,wav,d/'capture_job.json',d/'kh_com.ini',d/'kh_com.log',d/'reload_trace.jsonl'):
+            if old.exists():old.replace(archived/f'{tag}_{old.name}')
     for n in ['khcom.exe','SDL3.dll']:shutil.copy2(BUILD/n,d/n)
+    metadata=dict(**j,executable_sha256=build_sha,source=source,build_description=os.environ.get('KHCOM_TRAILER_BUILD_DESCRIPTION','public v2.0' if build_sha==PUBLIC_V20_SHA else 'v2.0 + local correction'),preview_only=preview)
+    (d/'capture_job.json').write_text(json.dumps(metadata,indent=2),encoding='utf-8')
     # Junctions avoid copying imported, private media to the repository.
     for target,source in [('hd',HD),('assets',ROOT/'port/assets')]:
         if not (d/target).exists():
@@ -76,8 +95,13 @@ def capture(j,preview=False):
     env.update(SDL_VIDEO_DRIVER='dummy',SDL_AUDIO_DRIVER='dummy',SDL_JOYSTICK_HIDAPI='0',SDL_JOYSTICK_RAWINPUT='0',SDL_XINPUT_ENABLED='0',SDL_JOYSTICK_DIRECTINPUT='0',SDL_JOYSTICK_WGI='0',SDL_JOYSTICK_GAMEINPUT='0',SDL_JOYSTICK_GAMEINPUT_RAW='0',KHCOM_HIDDEN='1',KHCOM_FAST='1',KHCOM_WINDOW=j.get('size','1920x1080'),KHCOM_KEYS=j['keys'],KHCOM_QUIT=str(b+3),KHCOM_OUTPUT_SHOT=f'{a},{(a+b)//2},{b}')
     env.update(SDL_RENDER_DRIVER='software',KHCOM_BACKGROUND_TEST='1',KHCOM_PPU_THREADS='2')
     env.update(j['extra'])
+    if j.get('trace_reload'):env.pop('KHCOM_FAST',None)
     if not preview:env.update(KHCOM_RECORD=f'{a}-{b}:{out}',KHCOM_FFMPEG=FF,KHCOM_WAVDUMP=str(d/'audio.raw'))
     proc=subprocess.Popen([str(d/'khcom.exe'),'--rom',str(ROM),'--language','en'],cwd=d,env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,creationflags=0x08000000)
+    trace=None
+    if j.get('trace_reload'):
+        from v20_reload_trace import start_reload_trace
+        trace=start_reload_trace(proc,d/'khcom.exe',d/'reload_trace.jsonl')
     deadline=time.monotonic()+1200;ui_stopped=False
     while proc.poll() is None:
         if name=='options' and not preview and (d/'kh_com.log').exists() and 'record: done' in (d/'kh_com.log').read_text(errors='replace'):
@@ -88,6 +112,13 @@ def capture(j,preview=False):
             proc.kill();proc.wait();raise TimeoutError(name)
         time.sleep(0.25)
     if proc.returncode and not ui_stopped:raise RuntimeError(f'{name}: game exit {proc.returncode}')
+    if trace:
+        trace[0].join(timeout=3)
+        if trace[0].is_alive() or trace[1]:raise RuntimeError(f'{name}: reload trace did not close cleanly: {trace[1]}')
+        trace_file=d/'reload_trace.jsonl';rows=[json.loads(line) for line in trace_file.read_text(encoding='utf-8').splitlines()]
+        if not rows:raise RuntimeError(f'{name}: reload trace is empty')
+        metadata.update(reload_trace=str(trace_file),reload_trace_sha256=hashlib.sha256(trace_file.read_bytes()).hexdigest(),reload_trace_samples=len(rows))
+        (d/'capture_job.json').write_text(json.dumps(metadata,indent=2),encoding='utf-8')
     for frame in [a,(a+b)//2,b]:
         p=d/f'out_{frame:05d}.bmp'
         if p.exists():Image.open(p).resize((640,360)).save(T/'previews'/f'{name}_{frame}.png')
@@ -100,10 +131,11 @@ def capture(j,preview=False):
     return name+' captured'
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--preview',action='store_true');ap.add_argument('--only',default='');ap.add_argument('--workers',type=int,default=2);args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--preview',action='store_true');ap.add_argument('--only',default='');ap.add_argument('--workers',type=int,default=2);ap.add_argument('--force',action='store_true');args=ap.parse_args()
     js=[j for j in jobs() if not args.only or j['name'] in args.only.split(',')]
-    (T/'capture_manifest.json').write_text(json.dumps(dict(build=str(BUILD),sha256=hashlib.sha256((BUILD/'khcom.exe').read_bytes()).hexdigest(),source='59b44df99e05e1f4245516447d5800c88be72cf1',jobs=js),indent=2))
+    sha=hashlib.sha256((BUILD/'khcom.exe').read_bytes()).hexdigest()
+    (T/'capture_manifest.json').write_text(json.dumps(dict(build=str(BUILD),sha256=sha,source=os.environ.get('KHCOM_TRAILER_SOURCE') or (PUBLIC_V20_SOURCE if sha==PUBLIC_V20_SHA else None),jobs=js),indent=2),encoding='utf-8')
     with ThreadPoolExecutor(args.workers) as pool:
-        for result in pool.map(lambda j:capture(j,args.preview),js):print(result,flush=True)
+        for result in pool.map(lambda j:capture(j,args.preview,args.force),js):print(result,flush=True)
 
 if __name__=='__main__':main()
