@@ -1,3 +1,6 @@
+> **Encargo vigente: tráiler v2.0.** Ver [TRAILER_V20.md](TRAILER_V20.md).
+> Este documento conserva las directrices y el historial del tráiler anterior (juego v1.8.2).
+
 # Tráiler v4 retomado por Codex — v1.8.2 republicada
 
 - [x] Tomas nuevas de juego, audio y launcher con la build pública d7b95a8cd.
