@@ -3732,13 +3732,13 @@
     "atlas-maleficent-continuity": {
       "id": "atlas-maleficent-continuity",
       "piece": "Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T10:04:32.566102+00:00",
-      "updated_at": "2026-10-26T10:20:29.272195+00:00",
+      "updated_at": "2026-10-26T10:55:41.707986+00:00",
       "branch": "codex/atlas-maleficent-continuity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/229",
-      "approval": null,
+      "approval": "approved:306aea394d144032932cf1595bf4cbdd;57768c3432cb475d9e2f67887c8bbaf6;2ca1f374795c4c4f9c78ec82f553fe2d",
       "reference": "Usuario 26/10; estudios PR222 aprobados con comentarios posteriores",
       "evidence": [
         {
@@ -3750,10 +3750,16 @@
           "at": "2026-10-26T10:20:29.272195+00:00",
           "owner": "codex-atlas",
           "detail": "Atlas cuerpos01/02/03:306aea394d144032932cf1595bf4cbdd,57768c3432cb475d9e2f67887c8bbaf6,2ca1f374795c4c4f9c78ec82f553fe2d.41 estados offline intactos, unión exacta; EU768MB y dos capturas runtime240/330 pasan. Valoración nativa pendiente."
+        },
+        {
+          "at": "2026-10-26T10:55:41.707986+00:00",
+          "owner": "codex-atlas",
+          "detail": "PR229 merge real d1712a484b6eff18f89a261cd898198456d7fe0c.41 estados offline y runtime/GIF comprobados; comentarios posteriores de color conservados."
         }
       ],
       "claimed_at": "2026-10-26T10:04:37.695557+00:00",
-      "sent": "306aea394d144032932cf1595bf4cbdd"
+      "sent": "306aea394d144032932cf1595bf4cbdd",
+      "completed_at": "2026-10-26T10:55:41.707986+00:00"
     },
     "atlas-moguri-tab-fix": {
       "id": "atlas-moguri-tab-fix",
@@ -3788,7 +3794,7 @@
     "created_at": "2026-10-26T10:55:36.679197+00:00",
     "updated_at": "2026-10-26T10:55:36.679197+00:00"
   },
-  "updated_at": "2026-10-26T10:55:36.679197+00:00",
+  "updated_at": "2026-10-26T10:55:41.707986+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

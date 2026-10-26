@@ -132,7 +132,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/226 | approved exact 3cdc76d68be745b09d5c1bf4eba0c011 | 2026-10-26T09:46:34.403240+00:00 |
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:40:18.552327+00:00 |
 | atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:40:24.237908+00:00 |
-| atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/229 | — | 2026-10-26T10:20:29.272195+00:00 |
+| atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/229 | approved:306aea394d144032932cf1595bf4cbdd;57768c3432cb475d9e2f67887c8bbaf6;2ca1f374795c4c4f9c78ec82f553fe2d | 2026-10-26T10:55:41.707986+00:00 |
 | atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | — | 2026-10-26T10:26:47.076243+00:00 |
 
 Integrador: codex-atlas (ocupado; 2026-10-26T10:55:36.679197+00:00)
