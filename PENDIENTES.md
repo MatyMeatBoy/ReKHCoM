@@ -139,4 +139,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/239 | — | 2026-10-26T16:25:59.025665+00:00 |
 | claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | codex-retoma | codex/claude-close-20261026 | — | 2026-10-26T16:23:52.459939+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma (ocupado; 2026-10-26T16:26:51.693010+00:00)
