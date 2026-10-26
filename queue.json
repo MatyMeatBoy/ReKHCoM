@@ -3804,19 +3804,20 @@
     "gallery-save-progress": {
       "id": "gallery-save-progress",
       "piece": "Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T10:56:05.232289+00:00",
-      "updated_at": "2026-10-26T10:56:05.232289+00:00",
+      "updated_at": "2026-10-26T10:56:11.198439+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario26/10: partida antigua no muestra escenas; verificar progreso y desbloqueo incremental",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T10:56:11.198439+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T10:56:05.232289+00:00",
+  "updated_at": "2026-10-26T10:56:11.198439+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
