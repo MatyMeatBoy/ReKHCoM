@@ -3360,8 +3360,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:39:09.754178+00:00",
-      "updated_at": "2026-10-26T07:39:14.586812+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T07:40:25.956205+00:00",
+      "branch": "codex/atlas-074-cleanup",
       "pr": null,
       "approval": null,
       "reference": "20261025-160807-89ed79",
@@ -3370,7 +3370,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:39:14.586812+00:00",
+  "updated_at": "2026-10-26T07:40:25.956205+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
