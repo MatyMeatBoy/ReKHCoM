@@ -4019,12 +4019,18 @@
       "status": "en_curso",
       "owner": "codex-ending",
       "created_at": "2026-10-26T21:33:21.538928+00:00",
-      "updated_at": "2026-10-26T21:33:35.078337+00:00",
+      "updated_at": "2026-10-26T21:50:35.567459+00:00",
       "branch": "fix/ending-cutscene-desync",
       "pr": null,
       "approval": null,
       "reference": "GitHub #42 video WCxyxOOb2fI",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T21:50:35.567459+00:00",
+          "owner": "codex-ending",
+          "detail": "MF real151 seek222 audio221.2266666;123 seek170 audio169.4506666. Fix RED/GREEN4casos; check_sourcesOK; hd_scene_gate6/6; juego real antes/despues silencioso termina creditos; PCM despues222.0."
+        }
+      ],
       "claimed_at": "2026-10-26T21:33:28.496304+00:00"
     },
     "trailer-v20-production": {
@@ -4043,7 +4049,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:34:06.805996+00:00",
+  "updated_at": "2026-10-26T21:50:35.567459+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
