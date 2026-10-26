@@ -434,3 +434,34 @@ api('/api/state').then(state=>{
     choose(id,{follow:!historicalView,tab:true});
   }else{$('empty').hidden=false;$('paper').hidden=true;$('saved').textContent='Listo para importar';}
 }).catch(e=>toast(e.message));
+
+/* Pixel painter: edits an exact PNG copy; publishing adds an Atlas child. */
+(()=>{
+const entry=document.getElementById('pixelPaint');if(!entry)return;
+const dialog=document.createElement('dialog');dialog.id='pixelPainter';
+dialog.innerHTML=`<div class="pixel-head"><strong id="pixelTitle">Píxeles</strong><button id="pixelClose" aria-label="Cerrar pintor">Cerrar</button></div>
+<div class="pixel-controls"><label>Herramienta <select id="pixelTool"><option value="pen">Lápiz</option><option value="pick">Cuentagotas</option><option value="erase">Borrador</option></select></label><label>Color <input type="color" id="pixelColor" value="#55a544"></label><label>Cuadrícula nativa <input id="pixelStep" type="number" min="1" max="32" value="1"> px</label><label>Zoom <select id="pixelZoom"></select></label><label><input type="checkbox" id="pixelGrid" checked> Ver cuadrícula</label><button id="pixelUndo" disabled>Deshacer</button><span id="pixelPosition" role="status"></span></div>
+<div id="pixelPalette" aria-label="Colores de la imagen"></div><div id="pixelViewport"><div id="pixelSurface"><canvas id="pixelCanvas"></canvas><div id="pixelOverlay"></div></div></div>
+<div class="pixel-footer"><span>Guardar crea una versión nueva. Botón derecho: tomar color · Ctrl+Z: deshacer.</span><button id="pixelDownload">Descargar PNG</button><button class="primary" id="pixelSave">Guardar en Atlas</button></div>`;
+document.body.append(dialog);
+const q=id=>dialog.querySelector('#'+id),canvas=q('pixelCanvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+let parent=null,zoom=1,stroke=null,last=null,undo=[],dirty=false;
+for(const z of [.125,.25,.5,1,2,4,8,16]){const o=document.createElement('option');o.value=z;o.textContent=z<1?`${z*100}%`:`${z}×`;q('pixelZoom').append(o);}
+function layout(){zoom=+q('pixelZoom').value;canvas.style.width=canvas.width*zoom+'px';canvas.style.height=canvas.height*zoom+'px';q('pixelOverlay').style.backgroundSize=`${zoom*+q('pixelStep').value}px ${zoom*+q('pixelStep').value}px`;q('pixelOverlay').hidden=!q('pixelGrid').checked||zoom<4;}
+q('pixelZoom').onchange=layout;q('pixelGrid').onchange=layout;q('pixelStep').onchange=()=>{q('pixelStep').value=Math.min(32,Math.max(1,Math.round(+q('pixelStep').value||1)));layout();};
+function point(e){const r=canvas.getBoundingClientRect();return{x:Math.min(canvas.width-1,Math.max(0,Math.floor((e.clientX-r.left)/zoom))),y:Math.min(canvas.height-1,Math.max(0,Math.floor((e.clientY-r.top)/zoom)))};}
+function pick(p){const d=ctx.getImageData(p.x,p.y,1,1).data;q('pixelColor').value='#'+[...d.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function cell(x,y){const step=+q('pixelStep').value;x*=step;y*=step;if(x<0||y<0||x>=canvas.width||y>=canvas.height)return;const key=x+':'+y,w=Math.min(step,canvas.width-x),h=Math.min(step,canvas.height-y);if(!stroke.has(key))stroke.set(key,{x,y,data:ctx.getImageData(x,y,w,h)});if(q('pixelTool').value==='erase')ctx.clearRect(x,y,w,h);else{ctx.fillStyle=q('pixelColor').value;ctx.fillRect(x,y,w,h);}dirty=true;}
+function draw(p){const step=+q('pixelStep').value,b={x:Math.floor(p.x/step),y:Math.floor(p.y/step)},a=last||b;let x=a.x,y=a.y;const dx=Math.abs(b.x-x),dy=-Math.abs(b.y-y),sx=x<b.x?1:-1,sy=y<b.y?1:-1;let err=dx+dy;while(true){cell(x,y);if(x===b.x&&y===b.y)break;const e=2*err;if(e>=dy){err+=dy;x+=sx;}if(e<=dx){err+=dx;y+=sy;}}last=b;}
+canvas.oncontextmenu=e=>e.preventDefault();
+canvas.onpointerdown=e=>{if(e.button!==0&&e.button!==2)return;e.preventDefault();const p=point(e);if(e.button===2||q('pixelTool').value==='pick'){pick(p);return;}stroke=new Map();last=null;canvas.setPointerCapture(e.pointerId);draw(p);};
+canvas.onpointermove=e=>{const p=point(e);q('pixelPosition').textContent=`${p.x}, ${p.y} · ${canvas.width} × ${canvas.height}`;if(stroke)draw(p);};
+function finish(){if(stroke?.size){undo.push([...stroke.values()]);if(undo.length>32)undo.shift();q('pixelUndo').disabled=false;}stroke=null;last=null;}
+canvas.onpointerup=finish;canvas.onpointercancel=finish;
+q('pixelUndo').onclick=()=>{finish();const patches=undo.pop();if(patches)for(const p of patches)ctx.putImageData(p.data,p.x,p.y);q('pixelUndo').disabled=!undo.length;dirty=!!undo.length;};
+dialog.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();q('pixelUndo').click();}});
+q('pixelClose').onclick=()=>{finish();dialog.close();};dialog.addEventListener('cancel',finish);
+entry.onclick=async()=>{if(!current)return toast('Elige una imagen para pintar.');try{if(parent?.id!==current.id){const a=current,img=new Image();img.src=a.image_url;await img.decode();parent={id:a.id,title:a.title};canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;ctx.imageSmoothingEnabled=false;ctx.drawImage(img,0,0);undo=[];dirty=false;q('pixelUndo').disabled=true;q('pixelTitle').textContent=a.title+' · Píxeles';const data=ctx.getImageData(0,0,canvas.width,canvas.height).data,counts=new Map();for(let i=0;i<data.length;i+=4){if(!data[i+3])continue;const key=(data[i]<<16)|(data[i+1]<<8)|data[i+2];counts.set(key,(counts.get(key)||0)+1);}q('pixelPalette').replaceChildren();for(const [rgb]of [...counts].sort((a,b)=>b[1]-a[1]).slice(0,32)){const color='#'+rgb.toString(16).padStart(6,'0'),b=document.createElement('button');b.style.background=color;b.title=color;b.setAttribute('aria-label','Color '+color);b.onclick=()=>q('pixelColor').value=color;q('pixelPalette').append(b);}q('pixelZoom').value=canvas.width>1600?'.25':canvas.width>800?'.5':'2';}dialog.showModal();layout();}catch(e){toast(e.message);}};
+q('pixelDownload').onclick=()=>canvas.toBlob(blob=>{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(parent?.title||'atlas')+'-pixeles.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/png');
+q('pixelSave').onclick=async()=>{finish();if(!dirty)return toast('Pinta la mejora antes de guardar.');const b=q('pixelSave');b.disabled=true;try{const base64=canvas.toDataURL('image/png').split(',')[1];const a=await api('/api/import',{base64,title:parent.title,version:'Edición manual de píxeles',parent_id:parent.id,provenance:'Pintor de píxeles de Atlas · copia exacta con trazos manuales'});if(!assets.some(x=>x.id===a.id))assets.push(a);dirty=false;dialog.close();await choose(a.id);toast('Nueva versión de píxeles guardada en Atlas.');}catch(e){toast(e.message);}finally{b.disabled=false;}};
+})();
