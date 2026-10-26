@@ -973,7 +973,10 @@ static void SideBar(int sx, int sy, int side, float y, float scale, float x0, fl
         /* The tab strip: a line between rows of the panel's own colour is
            the end of a tab's art at the screen edge (the eye tab's stroke
            on the right), not the panel, so the margin keeps the panel plain. */
-        if (sSideStyle == 4 && side == sMenuPanelSide)
+        /* Only the right end has the eye's isolated stroke. At the left
+           end this is the first tab's real top border; during a dark fade
+           its body and the panel briefly quantize to the same black. */
+        if (sSideStyle == 4 && side == sMenuPanelSide && side > 0)
             for (xx = 0; xx < fw; xx++) {
                 uint32_t panel = strip[32 * fw + xx];
                 int above = 0;
