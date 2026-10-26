@@ -6,6 +6,7 @@
 #include "mode_chkmov.h"
 #include "registration_data.h"
 #include "system_state.h"
+#include "game_state.h"
 #include "main.h"
 #include "movie.h"
 #include "msg_api.h"
