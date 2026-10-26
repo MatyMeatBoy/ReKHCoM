@@ -3435,10 +3435,23 @@
       "reference": "20261025-173056-94703d",
       "evidence": [],
       "claimed_at": "2026-10-26T07:56:12.872834+00:00"
+    },
+    "atlas-110-folded-wall": {
+      "id": "atlas-110-folded-wall",
+      "piece": "Escena 110: pared reflejada hasta arriba",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T07:58:00.736586+00:00",
+      "updated_at": "2026-10-26T07:58:00.736586+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-214204-e508f8",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:56:45.409096+00:00",
+  "updated_at": "2026-10-26T07:58:00.737120+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
