@@ -3440,10 +3440,10 @@
       "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:44:39.072622+00:00",
-      "updated_at": "2026-10-26T07:55:57.710528+00:00",
+      "updated_at": "2026-10-26T09:44:50.823338+00:00",
       "branch": "codex/atlas-112-genie-door",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/214",
-      "approval": null,
+      "approval": "changes_requested exact 994a5761f7f042deaba72d7e716ee14e",
       "reference": "20261025-214433-bfb58b",
       "evidence": [
         {
@@ -3455,6 +3455,11 @@
           "at": "2026-10-26T07:55:57.710528+00:00",
           "owner": "codex-atlas",
           "detail": "Capturas reales finales: Genio oculto mientras espera fuera, puerta completa; dos frames, compilación y check_sources. Base PR213."
+        },
+        {
+          "at": "2026-10-26T09:44:50.823338+00:00",
+          "owner": "codex-atlas",
+          "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
         }
       ],
       "claimed_at": "2026-10-26T07:44:43.883034+00:00",
@@ -3651,7 +3656,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:44:41.655345+00:00"
   },
-  "updated_at": "2026-10-26T09:44:41.655345+00:00",
+  "updated_at": "2026-10-26T09:44:50.823338+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
