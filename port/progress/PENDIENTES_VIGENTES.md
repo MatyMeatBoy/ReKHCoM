@@ -18,6 +18,7 @@ Steam Deck; zip limpio en KHCoMPC).
 - [x] **#202 Modo CRT (26/10):** vista CRT 320x240 con salida 240p nativa, superresolución x6/x8 y 480p 2x, en juego y launcher; test enviado a itsNateDev (rama test-builds), esperando su prueba.
 - [ ] **Baterías** (khcom-claude-int, `run_batteries.py --status`): relanzadas el 26/10 con marcas frescas; su parte
   Android trae Agrabah 123/124 (app smoke completa). Revisar resultados y arreglar lo que salga.
+- [ ] **Linux 64 bits (port/linux64, 26/10):** falta que el host reproduzca los videos HD (el de 32 bits usa ffmpeg; pasarle esa reproducción al host) y una imagen x32 con los textos de PC (hoy es la de PS5: Opciones sin fila de pantalla completa, aunque F11 y fullscreen=1 funcionan).
 - [ ] **Antes de la 2.0** (sección 3): correr la lista de pruebas sobre el commit final.
 
 ## 2. Arte (Atlas — Codex)
