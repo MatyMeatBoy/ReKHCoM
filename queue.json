@@ -3012,10 +3012,23 @@
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
       "evidence": [],
       "claimed_at": "2026-10-26T00:06:59.787614+00:00"
+    },
+    "rev-six-110": {
+      "id": "rev-six-110",
+      "piece": "Escena110 muro superior",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T00:07:05.523153+00:00",
+      "updated_at": "2026-10-26T00:07:05.523153+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:06:59.787614+00:00",
+  "updated_at": "2026-10-26T00:07:05.523153+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
