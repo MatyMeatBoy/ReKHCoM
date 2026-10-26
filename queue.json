@@ -3428,8 +3428,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:56:07.465447+00:00",
-      "updated_at": "2026-10-26T07:56:12.872834+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T07:56:45.409096+00:00",
+      "branch": "codex/atlas-061-wall-tip",
       "pr": null,
       "approval": null,
       "reference": "20261025-173056-94703d",
@@ -3438,7 +3438,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:56:12.872834+00:00",
+  "updated_at": "2026-10-26T07:56:45.409096+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
