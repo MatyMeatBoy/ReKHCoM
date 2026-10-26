@@ -69,8 +69,10 @@ def main():
     assert 'bios:' not in text, 'Invalid memory access during scene playback: ' + text[-4000:]
     if a.kind != 'basic':
         assert 'scene gallery preview check: 199/199' in text, text[-4000:]
-    if a.kind == 'hd' and not list(a.work.glob('scene-preview-hd-*.rgb')):
-        raise AssertionError('No HD still was generated')
+    if a.kind != 'basic':
+        assert 'scene gallery engine posters: 199/199 portable PNGs' in text, text[-4000:]
+    # Imported/async PNG posters have dedicated cache/lifecycle probes. Immediate playback
+    # must not force a low-resolution UI/subtitle capture into the poster cache.
     assert 'Save state loaded' not in text, 'Gallery playback must preserve official achievement eligibility'
     print('gallery replay: scene returned to its list without invalidating achievements')
 

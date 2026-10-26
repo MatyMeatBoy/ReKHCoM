@@ -4972,6 +4972,8 @@ int PortUiDrawsOnFrame(void) {
 }
 
 void PortUiDraw(uint32_t* frame, int width, int height) {
+    extern void PortSceneGalleryPreviewPoll(void);
+    PortSceneGalleryPreviewPoll();
     int l = Lang();
     int harnessShot = 0;
     ++sMenuLightDrawClock;
@@ -5029,6 +5031,8 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
         Shade(0, 0, width, height, MENU_FADE_COLOR, SDL_min(256, (MENU_FADE - sClosing + 1) * 256 / MENU_FADE));
         HarnessFadeShot(width, height);
         if (--sClosing == 0) {
+            extern void PortSceneGalleryPreviewCancel(void);
+            PortSceneGalleryPreviewCancel();
             sOpen = 0;
             sReturn = MENU_FADE;
         }
