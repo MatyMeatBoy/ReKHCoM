@@ -3339,8 +3339,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:33:19.378587+00:00",
-      "updated_at": "2026-10-26T07:33:24.402094+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T07:34:16.578148+00:00",
+      "branch": "codex/atlas-095-garden",
       "pr": null,
       "approval": null,
       "reference": "20261024-183308-2313ad",
@@ -3349,7 +3349,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:33:24.403633+00:00",
+  "updated_at": "2026-10-26T07:34:16.578148+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
