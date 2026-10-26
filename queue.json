@@ -3336,19 +3336,20 @@
     "atlas-095-garden": {
       "id": "atlas-095-garden",
       "piece": "Escena 095: árbol, fondo y flores",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T07:33:19.378587+00:00",
-      "updated_at": "2026-10-26T07:33:19.378587+00:00",
+      "updated_at": "2026-10-26T07:33:24.402094+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-183308-2313ad",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T07:33:24.402094+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:33:19.378587+00:00",
+  "updated_at": "2026-10-26T07:33:24.403633+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
