@@ -2276,6 +2276,15 @@ static void HarnessFrame(void) {
     const char* saveAt = SDL_getenv("KHCOM_SAVESTATE");
 
     {
+        /* KHCOM_HDMOVIE_PLAY=<frame>:<movie>: that cartridge movie's HD replacement (port_hdmovie.c MovieFile) */
+        const char* hdPlay = SDL_getenv("KHCOM_HDMOVIE_PLAY");
+        if (hdPlay && (uint32_t)SDL_atoi(hdPlay) == sFrameCount && SDL_strchr(hdPlay, ':')) {
+            extern int PortHdMoviePlay(int movieId);
+            PortLog("harness: hd movie %d played %d", SDL_atoi(SDL_strchr(hdPlay, ':') + 1),
+                    PortHdMoviePlay(SDL_atoi(SDL_strchr(hdPlay, ':') + 1)));
+        }
+    }
+    {
         /* KHCOM_GALLERY_PLAY=<frame>:<event>: Options > Scenes > GBA plays that event from the title */
         const char* gallery = SDL_getenv("KHCOM_GALLERY_PLAY");
         if (gallery && (uint32_t)SDL_atoi(gallery) == sFrameCount && SDL_strchr(gallery, ':')) {

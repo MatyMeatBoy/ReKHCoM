@@ -24,6 +24,9 @@
 #include <stdio.h>
 #include <string.h>
 static int PlayFile(const char* name);
+/* A Re:CoM scene that holds two of the cartridge's (duartepedro, #163): its HD movie starts where the cartridge's
+   own movie begins, as the GBA's flow has the first part as an event. Seconds; the file is never cut. */
+static int sStartAt;
 
 /* Re:CoM's story scenes (zz_event_*) live in hd/scenes, the opening, credits and endings in hd/movies; a scene
    imported before 23/10 sits in hd/movies and is still found there. */
@@ -44,12 +47,14 @@ static void MoviePath(const char* name, char* out, size_t size) {
 /* HD movies replace only the cartridge's pre-rendered movies, each with its whole Re:CoM scene; the story's other
    scenes are HD cutscenes' (#163, duartepedro). Re:CoM's credits (RSE, RRE) are not this version's: the cartridge's
    play. */
-static const char* MovieFile(int movieId) {
+static const char* MovieFile(int movieId, int* startAt) {
+    *startAt = 0;
     switch (movieId) {
         case 1: return "ROP";          /* the opening: the hooded man and the castle */
-        case 4: return "zz_event_151"; /* Sora's ending: his friends' memories (the scene with the promise before) */
+        case 3: *startAt = 170; return "zz_event_123"; /* 12th floor: Namine's charm becomes Kairi's (from 2:50) */
+        case 4: *startAt = 222; return "zz_event_151"; /* Sora's ending: his friends' memories (from 3:42) */
         case 5: return "zz_event_631"; /* Riku's ending: the road to dawn */
-        default: return NULL;          /* the 6th and 12th floor movies: their Re:CoM scene is not matched yet */
+        default: return NULL;          /* the 6th floor's: no Re:CoM scene matched */
     }
 }
 
@@ -78,6 +83,7 @@ static void SubsOrder(const char* order[2]) {
 /* the endings' scene already played as its event's (only the debug menu's events 073 / 195 reach them): the credits
    do not show it again */
 static int sEndingScenePlayed;
+static const char* sLastScene; /* the event scene last played whole (a cartridge movie after it skips the same file) */
 
 /* The full mod: the story event's Re:CoM scene, if imported and hd_scenes is on (event_message.c then ends the event
    through the game's own scene skip, so the event's results stay the game's). */
@@ -145,6 +151,7 @@ int PortHdScenePlay(int eventId) {
             int played;
             PlayExtras(eventId, 1);
             played = PlayFile(kHdScenes[i].movie);
+            sLastScene = played ? kHdScenes[i].movie : NULL;
             if (played)
                 PlayExtras(eventId, 0);
             if (played && IsEnding(eventId))
@@ -158,15 +165,21 @@ int PortHdScenePlay(int eventId) {
    from the last event (072 for Sora, mode_event.c EVENT_EXIT_MOVIE_ENDING): Re:CoM's ending scene, which has no event
    of its own on that road, plays first (issue #42). */
 int PortHdMoviePlay(int movieId) {
-    const char* name = MovieFile(movieId);
+    int startAt, played;
+    const char* name = MovieFile(movieId, &startAt);
     if (!gPortConfig.hdMovies || name == NULL)
         return 0;
-    if (movieId == 4 && sEndingScenePlayed) { /* HD cutscenes already played the whole capsule room scene */
+    if ((movieId == 4 && sEndingScenePlayed) || (sLastScene && strcmp(sLastScene, name) == 0)) {
+        /* HD cutscenes just played this whole file as the event's scene (151, 123): not twice */
+        sLastScene = NULL;
         sEndingScenePlayed = 0;
         return 1;
     }
     sEndingScenePlayed = 0;
-    return PlayFile(name);
+    sStartAt = startAt;
+    played = PlayFile(name);
+    sStartAt = 0;
+    return played;
 }
 
 
@@ -667,6 +680,16 @@ static int PlayFile(const char* name) {
         goto done;
     }
     SDL_SetTextureScaleMode(texture, (SDL_ScaleMode)PortSmoothScaleMode()); /* LINEAR, but not on SDL's software renderer */
+    if (sStartAt > 0) {
+        static const GUID kTimeFormat = { 0 }; /* GUID_NULL: 100 ns units (not linked from uuid.lib here) */
+        PROPVARIANT at;
+        PropVariantInit(&at);
+        at.vt = VT_I8;
+        at.hVal.QuadPart = (LONGLONG)sStartAt * 10000000;
+        if (SUCCEEDED(IMFSourceReader_SetCurrentPosition(reader, &kTimeFormat, &at)))
+            audioPushed = at.hVal.QuadPart;
+        PropVariantClear(&at);
+    }
     /* the first picture before anything is shown: a system whose Media Foundation opens the file but cannot decode
        its H.264 (Wine/Proton without the codec) keeps the cartridge's scene instead of a black movie */
     {
@@ -1006,8 +1029,9 @@ static int PlayFile(const char* name) {
     }
     frameBytes = (size_t)width * height * 4;
     frame = SDL_malloc(frameBytes);
-    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -i %s -an -sn -vf scale=%d:%d "
-                 "-f rawvideo -pix_fmt bgr0 - 2>/dev/null", quoted, width, height);
+    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -ss %d -i %s -an -sn -vf scale=%d:%d "
+                 "-f rawvideo -pix_fmt bgr0 - 2>/dev/null", sStartAt, quoted, width, height);
+    nextVideo = audioPushed = (LONGLONG)sStartAt * 10000000;
     video = frame ? popen(command, "r") : NULL;
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
     if (!video || !texture) {
@@ -1021,8 +1045,8 @@ static int PlayFile(const char* name) {
         goto done;
     }
     havePending = 1;
-    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -i %s -vn -sn -ac 2 -ar 48000 -f s16le - 2>/dev/null",
-                 quoted);
+    SDL_snprintf(command, sizeof(command), "ffmpeg -v error -nostdin -ss %d -i %s -vn -sn -ac 2 -ar 48000 -f s16le - 2>/dev/null",
+                 sStartAt, quoted);
     sound = popen(command, "r");
     {
         SDL_AudioSpec spec = { SDL_AUDIO_S16, channels, rate };
