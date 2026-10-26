@@ -19,6 +19,8 @@ Since the last test build (pre19):
   HD illustration and its texts in HD.
 - HD menu indicators share Press Start's warm glow and smooth pulse. Original lights stay unchanged with HD menus off.
 - The title's red bar and black underline reach the window edge, and SELECT has the same underline clearance as Press Start.
+- HD menu resources are prepared before gameplay, avoiding the pause when opening Options for the first time.
+  Menu font caches stay separate from gameplay and release their resources when the game closes.
 - Brightness and its L/R shortcut appear in GBA classic or Original view; an explained experimental option can enable them elsewhere.
 - Restoring controls also clears old bindings and capture state. Trigger navigation handles slow presses and releases consistently.
 - Deck menu transitions keep their border synchronized without changing the glove or lower fade.
@@ -30,6 +32,8 @@ Since the last test build (pre19):
   scenes as gameplay and keeps the GBA engine scenes where there is no equivalent. Playback returns to the same
   gallery selection and restores the current game, settings and save; missing or broken HD files retain native fallbacks.
   Saves from before the gallery get the scenes they already went through (#163).
+- Gallery previews show the GBA's characters and scenery without dialogue or HUD. HD previews use small 360p
+  images at the display's resolution; older imports load their first preview in the background without blocking the menu.
 - Add to Steam: a wide banner and, with the HD mod, the title's HD logo as the library logo.
 
 
