@@ -118,6 +118,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito del usuario de incluir los recursos core en los ejecutables | 2026-10-26T01:42:16.304558+00:00 |
 | code-rebel-recom | Modo rebelde: lista local ReCoM separada en juego y launcher | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/197 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T02:00:15.979929+00:00 |
 | code-android-test-validity | Android 123/124: distinguir APK inválido de timeout y comprobar retest | en_curso | codex-atlas | codex/android-test-validity | Usuario: terminar pendientes de código y pruebas vigentes | 2026-10-26T02:05:48.863195+00:00 |
-| atlas-090-wall-base | Escena 090: base del muro | en_curso | codex-atlas | — | — | 2026-10-26T07:29:11.695693+00:00 |
+| atlas-090-wall-base | Escena 090: base del muro | en_curso | codex-atlas | codex/atlas-090-wall-base | — | 2026-10-26T07:29:50.466381+00:00 |
 
 Integrador: libre
