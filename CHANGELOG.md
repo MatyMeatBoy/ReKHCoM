@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.0-pre19 — 2026-10-26
+
+Test build: pre18 plus
+
+- Steam Deck / Linux: the native build uses the GPU by itself when the system has 32-bit Mesa (SteamOS does); no
+  launch option needed (#140).
+- HD movies (renamed from HD intros) follow the GBA: only the cartridge's movies are replaced, each by its HD scene
+  from the right moment; Riku's Road to Dawn plays in every mode; the GBA credits always play (#163, thanks
+  duartepedro03).
+- Options > Scenes: a gallery of the story's scenes, GBA and HD, the unseen ones as ???; Cheats > Unlock all scenes.
+- Rebel mode: with cheats on (or a save edited in the launcher) achievements keep being earned in a list of their
+  own on this computer, never sent to RetroAchievements; its section in Cheats and its tab in the launcher.
+- Options > Achievements mode: Normal, Re:CoM or Rebel, with a sign saying what each means.
+- Achievements in the game: Chain of Memories / Re:Chain of Memories, switched with Y, L2 or R2.
+- Save banks: each with its own settings and first start; changed only from the title screen.
+- First start on PC: full screen or a window.
+- Audio filter in two profiles: GBA (16-bit) and HD.
+- Quit the game warns only after an hour without saving; the mouse pointer hides when still.
+- Wide view: the EXP gained sits under the HP gauge; actors waiting off camera are never cut at the frame's edge.
+- Launcher: Remove from Steam, a framed cover, more translations; options not installed say so in red.
+
 ## v2.0-pre18 — 2026-10-25
 
 Test build: pre17 plus
