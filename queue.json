@@ -3439,19 +3439,20 @@
     "atlas-110-folded-wall": {
       "id": "atlas-110-folded-wall",
       "piece": "Escena 110: pared reflejada hasta arriba",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T07:58:00.736586+00:00",
-      "updated_at": "2026-10-26T07:58:00.736586+00:00",
+      "updated_at": "2026-10-26T07:58:06.234017+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261025-214204-e508f8",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T07:58:06.234017+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:58:00.737120+00:00",
+  "updated_at": "2026-10-26T07:58:06.234017+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
