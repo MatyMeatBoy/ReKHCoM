@@ -3501,20 +3501,26 @@
     "atlas-start-values-evidence": {
       "id": "atlas-start-values-evidence",
       "piece": "Menú START: cifras HD actuales",
-      "status": "en_curso",
-      "owner": "codex-atlas",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-26T08:07:36.682250+00:00",
-      "updated_at": "2026-10-26T08:07:41.756611+00:00",
+      "updated_at": "2026-10-26T08:11:09.029483+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-134319-10a509",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T08:11:09.029483+00:00",
+          "owner": "codex-atlas",
+          "detail": "released: Captura actual en build/atlas-menus-20261026/menu/review.png: nivel, VIT y puntos moguri siguen raster. Origen src/map/map.c MapMenuWriteDigits3/5, DMA sobre OBJ_VRAM0 y paneles compuestos. No se subió hija sin mejora ni se marcó la petición atendida. Requiere render HD de esas celdas OBJ, conservando posición, paleta, fade y oclusión."
+        }
+      ],
       "claimed_at": "2026-10-26T08:07:41.756611+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:07:41.756611+00:00",
+  "updated_at": "2026-10-26T08:11:09.029483+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
