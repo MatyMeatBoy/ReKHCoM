@@ -121,6 +121,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-090-wall-base | Escena 090: base del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/210 | — | 2026-10-26T07:33:14.196252+00:00 |
 | atlas-095-garden | Escena 095: árbol, fondo y flores | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/211 | — | 2026-10-26T07:39:04.388206+00:00 |
 | atlas-074-cleanup | Escena 074: quitar resto de tile | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/212 | — | 2026-10-26T07:42:03.088079+00:00 |
-| atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | pendiente | — | — | — | 2026-10-26T07:42:08.549103+00:00 |
+| atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | en_curso | codex-atlas | — | — | 2026-10-26T07:42:13.539688+00:00 |
 
 Integrador: libre
