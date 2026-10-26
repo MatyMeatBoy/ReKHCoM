@@ -3880,6 +3880,19 @@
         }
       ],
       "claimed_at": "2026-10-26T16:32:00.440154+00:00"
+    },
+    "achievements-trigger-key-centre": {
+      "id": "achievements-trigger-key-centre",
+      "piece": "Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T16:42:48.991972+00:00",
+      "updated_at": "2026-10-26T16:42:48.991972+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": {
@@ -3888,7 +3901,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T16:42:06.682060+00:00"
   },
-  "updated_at": "2026-10-26T16:42:06.682867+00:00",
+  "updated_at": "2026-10-26T16:42:48.991972+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
