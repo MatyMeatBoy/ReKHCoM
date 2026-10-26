@@ -260,7 +260,8 @@ static int ReadImportedPoster(const char* movie, uint32_t* out, int ow, int oh, 
     source = SDL_LoadPNG(path);
     if (!source) return 0;
     target = SDL_CreateSurfaceFrom(ow, oh, SDL_PIXELFORMAT_ARGB8888, out, ow * 4);
-    ok = target && SDL_BlitSurfaceScaled(source, NULL, target, NULL, SDL_SCALEMODE_LINEAR);
+    ok = target && SDL_BlitSurfaceScaled(source, NULL, target, NULL, SDL_SCALEMODE_LINEAR) &&
+        PortHdPosterHasPicture(out, ow, oh, ow * 4);
     SDL_DestroySurface(target); SDL_DestroySurface(source);
     return ok;
 }
@@ -339,10 +340,16 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
         IMFSourceReader_SetCurrentPosition(reader, &timeFormat, &at);
         PropVariantClear(&at);
     }
-    for (i = 0; i < 8 && !sample; i++) {
+    /* MF seeks to a preceding keyframe. Decode its preroll instead of caching
+       that often-black first frame forever as the requested gallery still. */
+    for (i = 0; i < 900 && !sample; i++) {
         DWORD flags = 0;
-        if (FAILED(IMFSourceReader_ReadSample(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, NULL, &flags, NULL, &sample))) goto done;
+        LONGLONG timestamp = 0;
+        if (FAILED(IMFSourceReader_ReadSample(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, NULL, &flags, &timestamp, &sample))) goto done;
         if (flags & MF_SOURCE_READERF_ENDOFSTREAM) goto done;
+        if (sample && timestamp < (LONGLONG)second * 10000000) {
+            IMFSample_Release(sample); sample = NULL;
+        }
     }
     if (!sample || FAILED(IMFSample_ConvertToContiguousBuffer(sample, &buffer))) goto done;
     if (SUCCEEDED(IMFMediaBuffer_QueryInterface(buffer, &IID_IMF2DBuffer, (void**)&two)) &&

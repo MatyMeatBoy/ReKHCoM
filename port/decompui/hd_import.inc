@@ -1619,8 +1619,10 @@ static bool WriteMoviePoster(const fs::path& movie, int second) {
         if (in.gcount() == 24 && !memcmp(header, "\x89PNG\r\n\x1a\n", 8) &&
             be(header + 16) == PORT_HD_POSTER_W && be(header + 20) == PORT_HD_POSTER_H) {
             SDL_Surface* image = SDL_LoadPNG(poster.u8string().c_str());
-            bool valid = image && image->w == PORT_HD_POSTER_W && image->h == PORT_HD_POSTER_H;
-            SDL_DestroySurface(image);
+            SDL_Surface* argb = image ? SDL_ConvertSurface(image, SDL_PIXELFORMAT_ARGB8888) : nullptr;
+            bool valid = argb && argb->w == PORT_HD_POSTER_W && argb->h == PORT_HD_POSTER_H &&
+                PortHdPosterHasPicture(argb->pixels, argb->w, argb->h, argb->pitch);
+            SDL_DestroySurface(argb); SDL_DestroySurface(image);
             if (valid) return true;
         }
     }
@@ -1663,10 +1665,16 @@ static bool WriteMoviePoster(const fs::path& movie, int second) {
         PROPVARIANT at; PropVariantInit(&at); at.vt = VT_I8; at.hVal.QuadPart = (LONGLONG)second * 10000000;
         reader->SetCurrentPosition(timeFormat, at); PropVariantClear(&at);
     }
-    for (int i = 0; i < 8 && !sample && !sJob.cancel; i++) {
+    /* The seek can return an earlier keyframe: discard preroll, just as the
+       runtime poster decoder does, before persisting an imported still. */
+    for (int i = 0; i < 900 && !sample && !sJob.cancel; i++) {
         DWORD flags = 0;
-        if (FAILED(reader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, nullptr, &flags, nullptr, &sample)) ||
+        LONGLONG timestamp = 0;
+        if (FAILED(reader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, nullptr, &flags, &timestamp, &sample)) ||
             flags & MF_SOURCE_READERF_ENDOFSTREAM) goto done;
+        if (sample && timestamp < (LONGLONG)second * 10000000) {
+            sample->Release(); sample = nullptr;
+        }
     }
     if (!sample || FAILED(sample->ConvertToContiguousBuffer(&buffer))) goto done;
     locked2d = SUCCEEDED(buffer->QueryInterface(IID_IMF2DBuffer, (void**)&two)) &&
