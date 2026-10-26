@@ -2796,13 +2796,13 @@
     "malefica-recortes-khcom": {
       "id": "malefica-recortes-khcom",
       "piece": "Malefica: dibujar recortes KHCoM y presentacion montada agrupada",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T19:45:49.201740+00:00",
-      "updated_at": "2026-10-25T23:56:24.846120+00:00",
+      "updated_at": "2026-10-26T00:05:43.717276+00:00",
       "branch": "codex/malefica-approved-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/187",
-      "approval": "approved exact42f2b038,608f0f55,71dbfe50",
+      "approval": "approved exact 42f2b038ff7a4907b9b798c4ae41ffec",
       "reference": "Instruccion humana 25/10: base aceptada; dibujar encima solo extensiones y agrupar recortes",
       "evidence": [
         {
@@ -2834,10 +2834,16 @@
           "at": "2026-10-25T23:56:24.846120+00:00",
           "owner": "codex-atlas",
           "detail": "PR187 ya fusionado117e4e0e2; regularizando estado de cola antes de registrar SHAfinal."
+        },
+        {
+          "at": "2026-10-26T00:05:43.717276+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 117e4e0e2a2410a1cba2ae869cafccc5b27a664d;datos aprobadosycaptura runtime verificados."
         }
       ],
       "claimed_at": "2026-10-25T19:45:55.340720+00:00",
-      "sent": "42f2b038ff7a4907b9b798c4ae41ffec"
+      "sent": "42f2b038ff7a4907b9b798c4ae41ffec",
+      "completed_at": "2026-10-26T00:05:43.717276+00:00"
     },
     "atlas-menus-current-review": {
       "id": "atlas-menus-current-review",
@@ -2986,7 +2992,7 @@
     "created_at": "2026-10-26T00:05:30.899521+00:00",
     "updated_at": "2026-10-26T00:05:30.899521+00:00"
   },
-  "updated_at": "2026-10-26T00:05:37.909873+00:00",
+  "updated_at": "2026-10-26T00:05:43.717276+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
