@@ -4,6 +4,9 @@
  */
 
 #include "bos6.h"
+#ifdef PLATFORM_PC
+void PortMarluxiaBodyMap(const void* map);
+#endif
 #include "sprites_bos6.h"
 #include "bos7_api.h"
 #include "fade.h"

@@ -17,6 +17,7 @@
 #include "sprite_palettes.h"
 
 #ifdef PLATFORM_PC
+#include "engine.h"
 /* Battle EXP notices retain their original pixel-art numbers even with HD
  * text enabled for dialogue, subtitles and menus. Restore any caller tag. */
 extern int gPortTextChar;

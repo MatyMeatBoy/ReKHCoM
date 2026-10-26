@@ -4,6 +4,9 @@
  */
 
 #include "registration_data.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 #include "system_state.h"
 #include "mode.h"
 #include "mode_staffroll.h"
