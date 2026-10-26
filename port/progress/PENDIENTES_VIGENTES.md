@@ -9,7 +9,8 @@
 - **Baterías:** las «hechas» del 25/10 eran marcas viejas del 23-24 (cada suite en 1 s). Arreglado (marcas de más de
   12 h no cuentan) y relanzadas el 26/10 en khcom-claude-int (`run_batteries.py --status`); su parte Android incluye
   Agrabah 123/124 con la app smoke completa (reconstruida desde main).
-- **Código que queda:** banco de partidas por banco (diseño en 1b, aplazado), botón Opciones y título HD (esperan
+- **Banco de partidas por banco: hecho (26/10):** kh_com.ini es siempre el del banco en uso; los demás esperan en kh_com_bankN.ini (juego y launcher); un banco nuevo hace su primer arranque. Sin logros locales por banco (la regla de logros los cuida).
+- **Código que queda:** botón Opciones y título HD (esperan
   Atlas). Grandes: modos PS2 con REA (mejorar los que ya hay; falta el material del usuario), Linux/Deck 64 bits,
   iOS.
 

@@ -1043,6 +1043,26 @@ static const char* const sNeedJp[LANG_COUNT] = {
     "No instalado: añade la ROM japonesa en el launcher.", "ないです：ランチャーで日本のROMを入れてください。",
 };
 
+/* a settings file copied whole in the data folder; 0 when the source is not there */
+static int BankCopy(const char* from, const char* to) {
+    char path[1200];
+    FILE *in, *out;
+    char buf[4096];
+    size_t n;
+    SDL_strlcpy(path, PortConfigPath(from), sizeof(path));
+    in = fopen(path, "rb");
+    if (!in)
+        return 0;
+    out = fopen(PortConfigPath(to), "wb");
+    if (out) {
+        while ((n = fread(buf, 1, sizeof(buf), in)) > 0)
+            fwrite(buf, 1, n, out);
+        fclose(out);
+    }
+    fclose(in);
+    return out != NULL;
+}
+
 static int ItemEnabled(int item) {
     if (item >= ITEM_REMATCH_0 && item <= ITEM_REMATCH_LAST)
         return PortRematchAvailable(item - ITEM_REMATCH_0);
@@ -1493,12 +1513,29 @@ static void Change(int item, int dir) {
         case ITEM_UNSTOCK:
             gPortConfig.unstockButton = !gPortConfig.unstockButton;
             break;
-        case ITEM_SAVEBANK:
+        case ITEM_SAVEBANK: {
+            /* each bank has its own settings (user 25/10): kh_com.ini is always the bank in use's, the others wait in
+               kh_com_bank<N>.ini; a bank never used starts with the first start's questions */
+            int from = gPortConfig.saveBank, to;
+            char a[64], b[64];
             if (!PortDebugModeAvailable())
                 break; /* only from the title (ItemEnabled) */
-            gPortConfig.saveBank = Wrap(gPortConfig.saveBank - 1 + dir, PORT_SAVE_BANKS) + 1;
+            to = Wrap(from - 1 + dir, PORT_SAVE_BANKS) + 1;
+            PortConfigSave();
+            SDL_snprintf(a, sizeof(a), "kh_com_bank%d.ini", from);
+            BankCopy("kh_com.ini", a);
+            SDL_snprintf(b, sizeof(b), "kh_com_bank%d.ini", to);
+            if (BankCopy(b, "kh_com.ini")) {
+                PortConfigLoad();
+            } else {
+                gPortConfig.graphicsMode = PORT_MODE_CHOOSE;
+            }
+            gPortConfig.saveBank = to;
+            PortConfigSave();
+            PortVideoApplyConfig();
             PortSramSwitchBank();
             break;
+        }
         case ITEM_UNDUB:
             gPortConfig.undub = !gPortConfig.undub;
             break;

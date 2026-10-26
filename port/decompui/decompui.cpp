@@ -1657,6 +1657,20 @@ static void SaveCard(SDL_Window* window) {
                      T("Cinco bancos de las dos ranuras del juego; el 1 es la partida de siempre.",
                        "Five banks of the game's two slots; bank 1 is the usual save."),
                      bank, 5, banks)) {
+            /* each bank has its own settings, as in the game: kh_com.ini is the bank in use's, the others wait in
+               kh_com_bank<N>.ini; a bank never used asks the first start's questions in the game */
+            std::error_code ec;
+            int from = std::clamp(Ini("save_bank"), 1, 5);
+            SaveIni();
+            fs::copy_file(sRoot / "kh_com.ini", sRoot / ("kh_com_bank" + std::to_string(from) + ".ini"),
+                          fs::copy_options::overwrite_existing, ec);
+            fs::path next = sRoot / ("kh_com_bank" + std::to_string(bank + 1) + ".ini");
+            if (fs::exists(next, ec)) {
+                fs::copy_file(next, sRoot / "kh_com.ini", fs::copy_options::overwrite_existing, ec);
+                LoadIni();
+            } else {
+                Ini("graphics_mode") = 0;
+            }
             Ini("save_bank") = bank + 1;
             SaveIni();
         }
