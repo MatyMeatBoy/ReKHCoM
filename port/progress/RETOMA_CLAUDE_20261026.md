@@ -40,9 +40,20 @@ esa autorización; no publicar mientras haya fallos sin resolver.
 - [x] Galería GBA/HD/ReKHCoM: #250 integrado (`5505dd49a`); regreso al menú y conservación de estado/partida,
   póster estático, catálogo regional, HD equivalente al gameplay y fallback GBA. Dos revisiones independientes,
   pilotos de estado/SRAM, final/salto/pausa y alias recuperado tras vídeo corrupto. Sigue pendiente la matriz final.
-- [ ] Manejador Windows: rechazar excepciones de DLL del host, preservando accesos GBA y single-step legítimos;
-  repetir el caso Riku al restablecer modos. Este fallo apareció en la matriz completa de Opciones (#252).
-- [ ] Ejecutar matriz de galería y gates sobre el commit unificado, construir y revisar los paquetes, publicar v2.0 estable.
+- [x] Manejador Windows #258: DLL del host fuera de la emulación del bus; accesos GBA y single-step conservados.
+  Cambio real de preset Riku por SDL correcto; #252 mueve las acciones del arnés al límite de entrada seguro.
+  Matriz de Opciones terminada: 218/218, sin BIOS/crash; alcance y SHA en evidencia externa.
+- [x] Ajustes de la pre-final: #261 alinea la base de SELECT y la luz; #262 prepara PNG HD360p y API de carga;
+  #264 precarga menú y conserva dos cachés UI acotadas; #265 incluye 199 pósteres GBA sin HUD, salida HD real
+  y un único trabajo de preview asíncrono. Cerrar/reabrir no espera al decodificador.
+- [x] Brick Launcher excluido por instrucción directa del usuario: #266 retira completamente #263 y su figura.
+- [x] No iniciar la matriz de galería de 2952 casos: el usuario indicó que las pruebas eran suficientes.
+  Se conservan los pilotos reales, auditorías de estado/SRAM y regresiones dirigidas; no se atribuye esa matriz como ejecutada.
+- [ ] Generar paquetes desde el SHA unificado, comprobar contenido/arranque y gates de lanzamiento, publicar v2.0 estable.
+
+El usuario reafirmó la publicación en todas las plataformas previstas, pidió responder los hilos pendientes y avisar
+a quienes recibieron pretests. Autorizó limpiar nuestras respuestas previas y cerrar los issues resueltos. Al terminar
+los lanzamientos de consola y las respuestas, detenerse; no abrir nuevas baterías ni seguimientos automáticos.
 
 No atribuir al juego el último fallo de compilación: clang informó explícitamente falta de espacio en C:.
 Se deduplicaron únicamente fixtures propios con hashes verificados; temporales de compilación pasan a D:.
@@ -54,6 +65,7 @@ Partidas y archivos del usuario se conservan.
 - El brillo simula la pantalla física de GBA: en modos modernos queda neutro y sin atajo. La opción experimental
   explica su finalidad y vuelve a habilitar botón y atajos; modo GBA original conserva ambos.
 - Previews de galería son capturas estáticas y caché acotada; no reproducir ni decodificar videos al pasar filas.
-- Las pruebas largas previas pertenecen a su SHA, no a la versión final. El runner vivo se conserva.
+- Las pruebas previas pertenecen a su SHA. El runner antiguo se detuvo por indicación del usuario, conservando
+  informes y capturas; se limpiaron binarios, objetos y copias de prueba. Las ROM y partidas originales se conservaron.
 - Un APK incompleto es error de entrada, no evidencia de un combate colgado. Repetir el caso con app completa.
 - El WIP de `v20-wt` se conserva intacto; cualquier rescate se hace como cambio explícito y probado en otra rama.
