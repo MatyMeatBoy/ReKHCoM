@@ -59,6 +59,38 @@ Revisar visualmente esos contactos antes de entregar. El inventario de
 honores distingue el patio de Guard Armor, Agrabah 109 y la versión exacta
 de la escena 074; no atribuye honores al contexto de la arena de Darkside.
 
+### Revisión posterior: recarga HD mediante decompilación
+
+El baseline ASCII/Rebel quedó aprobado; sus evidencias se conservan en
+`baseline_ascii_rebel/`. La ampliación solicitada incluye dos recargas
+reales: usar cartas, seleccionar con L, cargar parcialmente, soltar A y
+retomar, completar y repetir con el siguiente contador. Los inputs están
+en `reload_take_keys()`: no se pinta ni se modifica la barra. El conteo
+nativo tiene cap raw2, que corresponde al índice visible3.
+
+Para el binario corregido, establecer además `KHCOM_TRAILER_SOURCE` con
+el SHA exacto y `KHCOM_TRAILER_BUILD_DESCRIPTION` con `v2.0 + bugfix reload
+@SHA`. Cada toma conserva su SHA y procedencia. `--force` archiva antes
+los MOV/WAV/config/log/trace anteriores del arnés propio; no toca partidas.
+
+```powershell
+py -3.12 port/tools/trailer/v20_capture.py --force --only jafar_current,hud_gba,hud_hd_current,panorama_current,rebel_jafar_current
+py -3.12 port/tools/trailer/v20_capture.py --only reload_first_gba,reload_first_hd,reload_cycle_gba,reload_cycle_hd
+$env:KHCOM_TRAILER_INCLUDE_RELOAD='1'
+$env:KHCOM_TRAILER_VIDEO_NAME='ReKHCoM_v2.0_trailer_reload_final.mp4'
+py -3.12 port/tools/trailer/v20_edit.py
+py -3.12 port/tools/trailer/v20_edit.py --assemble
+py -3.12 port/tools/trailer/verify_v20.py
+```
+
+Las parejas GBA/HD se graban con el mismo ejecutable corregido y entradas.
+La recarga usa reloj real y un sampler de solo lectura sobre el PID que
+acaba de crear el arnés (`ReadProcessMemory`, 1ms), con símbolos de ese
+mismo PE. Guarda el último estado observado de cada frame en JSONL, sin
+guardar/cargar KHST ni mostrar notificaciones. No lee el proceso del juego
+del usuario. Es evidencia de estado nativo; la composición de píxeles HD
+se revisa además con las pruebas del fix y los contactos del vídeo.
+
 ---
 
 ## Flujo histórico: tráiler v4 de v1.8.2

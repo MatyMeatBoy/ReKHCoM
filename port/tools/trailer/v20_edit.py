@@ -139,7 +139,15 @@ def assemble(only_act=None):
         typ={'heart':'custom','flash':'fadewhite','black':'fadeblack','fade':'fade'}[kind]
         spec=f'xfade=transition={typ}:duration={td}:offset={off:.6f}'
         return spec+(f":expr='{heart}'" if kind=='heart' else '')
-    groups=[list(range(i,min(i+4,len(ts)))) for i in range(0,len(ts),4)]
+    groups=[];begin=0
+    while begin<len(ts):
+        end=min(begin+4,len(ts))
+        # Keep every heart inside an act, where native masks are used;
+        # the final join then needs only the inexpensive built-in fades.
+        while end<len(ts) and transitions.get(end-1,('fade',.28))[0]=='heart' and end>begin+2:end-=1
+        if len(ts)-end==1:end=len(ts)
+        groups.append(list(range(begin,end)));begin=end
+    assert all(transitions.get(ids[0]-1,('fade',.28))[0]!='heart' for ids in groups[1:])
     acts=[];actdur=[]
     # Keep decoder/filter buffers bounded while preserving every transition.
     for gi,ids in enumerate(groups):

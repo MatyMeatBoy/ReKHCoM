@@ -41,6 +41,7 @@ def main():
     call([FF,'-v','error','-y','-ss','6','-i',str(video),'-frames:v','1',str(FINAL/'ReKHCoM_v2.0_thumbnail_final.png')])
     chapters=[]
     chapter_groups={'01_title':'HD title and extended arenas','04_monstro':'Worlds in motion','07_jafar':'Jafar','08_hud':'HD HUD and music','10_panorama':'Ultrawide and HD cinematics','11_options':'Options and Rebel mode','13_editor':'Save editor','14_stable':'Platforms and consoles','16_end':'Download and credits'}
+    if any(s['name']=='08b_reload_first' for s in tl['segments']):chapter_groups['08_hud']='HD HUD, faithful reload and music'
     chapter_seconds=[]
     for s in tl['segments']:
         if s['name'] in chapter_groups:
