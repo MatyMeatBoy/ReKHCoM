@@ -4086,19 +4086,20 @@
     "gallery-previews-black-pedro": {
       "id": "gallery-previews-black-pedro",
       "piece": "Galería HD: previews negros tras saltar y reentrar",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-gallery-preview",
       "created_at": "2026-10-26T22:35:30.093184+00:00",
-      "updated_at": "2026-10-26T22:35:30.093184+00:00",
+      "updated_at": "2026-10-26T22:35:35.646918+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10",
       "reference": "Reporte Pedro y screenshot codex-clipboard-13132ca4-6e72-41ed-aac7-f24049978fc2.png",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T22:35:35.646918+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:35:30.093184+00:00",
+  "updated_at": "2026-10-26T22:35:35.646918+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

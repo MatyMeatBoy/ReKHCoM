@@ -148,6 +148,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ending-desync-42 | Desincronizacion video audio final Sora issue 42 | integrado | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/273 | Pedido directo usuario 26/10: intentar replicar y arreglar desync final reportado por Pedro | 2026-10-26T21:55:59.075868+00:00 |
 | trailer-v20-production | Producir y exportar trailer real v2.0 | en_revision | codex-trailer-production | trailer/v20-production | Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas | 2026-10-26T22:13:22.159333+00:00 |
 | popup-skip-text-pedro | Popup saltar cinematica HD sin letras Pedro | en_curso | codex-ending | — | — | 2026-10-26T22:34:28.473387+00:00 |
-| gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | pendiente | — | — | Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10 | 2026-10-26T22:35:30.093184+00:00 |
+| gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | en_curso | codex-gallery-preview | — | Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10 | 2026-10-26T22:35:35.646918+00:00 |
 
 Integrador: libre
