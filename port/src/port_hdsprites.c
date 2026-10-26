@@ -58,6 +58,7 @@ typedef struct HdSpriteDraw {
     float x[4], y[4]; /* HUD canvas corners: top-left, top-right, bottom-right, bottom-left of the part */
     float u0, v0, u1, v1;
     uint8_t alpha, dark, white;
+    uint8_t hudOwner; /* OAM slot + 1: reload counter above native fill, clipped by final OAM ownership */
 } HdSpriteDraw;
 /* per layer: 0 the game's picture, 1 the HUD canvas, 2 the screen layer (menus, the title's logo) */
 #define HD_LAYERS 3
@@ -503,6 +504,7 @@ int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px,
     }
     q = &sDraws[layer][sDrawCount[layer]++];
     q->id = id - 1;
+    q->hudOwner = 0;
     memcpy(q->x, x, sizeof(q->x));
     memcpy(q->y, y, sizeof(q->y));
     {
@@ -544,6 +546,15 @@ int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px,
     q->dark = (uint8_t)SDL_clamp(dark, 0, 255);
     q->white = (uint8_t)SDL_clamp(white, 0, 255);
     return 1;
+}
+
+void PortHdSpriteHudOwner(int slot) {
+    HdSpriteDraw* q;
+    static const char prefix[] = "gReloadCounterWhiteTiles_";
+    if (slot < 0 || slot >= 128 || !sDrawCount[1]) return;
+    q = &sDraws[1][sDrawCount[1] - 1];
+    /* These nineteen frame-specific records are the decomp's gauge->gfx3, not the deck's REV_COUNT. */
+    if (!SDL_strncmp(kHdSprites[q->id].name, prefix, sizeof(prefix) - 1)) q->hudOwner = slot + 1;
 }
 
 static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
@@ -877,6 +888,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
         HdSpriteState* st = &sState[q->id];
+        if (q->hudOwner) continue;
         /* the game's brightness fade (BLDY) and the part's palette fade, whichever is further */
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
         float white = SDL_max(brighten > 0 ? brighten / 16.0f : 0.0f, q->white / 255.0f);
@@ -914,6 +926,49 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
             }
         }
     }
+}
+
+/* The original draws base -> affine fill/full cap -> counter. The fill remains the game's own tiles,
+   palette, matrix and animation; drawing every HD part before the native overlay hid the counter under it. */
+void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float scale, int darken, int brighten) {
+    int i;
+    sRenderer = renderer;
+    if (scale <= 0) return;
+    for (i = 0; i < sDrawCount[1]; i++) {
+        const HdSpriteDraw* q = &sDraws[1][i];
+        HdSpriteState* st = &sState[q->id];
+        int k, x, y, left, top, right, bottom;
+        float l = q->x[0], r = l, t = q->y[0], b = t;
+        float shade, white;
+        if (!q->hudOwner || (!st->image && !Load(q->id))) continue;
+        st->lastUsed = PortFrameCount();
+        for (k = 1; k < 4; k++) {
+            l = SDL_min(l, q->x[k]); r = SDL_max(r, q->x[k]);
+            t = SDL_min(t, q->y[k]); b = SDL_max(b, q->y[k]);
+        }
+        left = SDL_max(0, (int)SDL_floorf(l)); right = SDL_min(gPortHudW, (int)SDL_ceilf(r));
+        top = SDL_max(0, (int)SDL_floorf(t)); bottom = SDL_min(gPortHudH, (int)SDL_ceilf(b));
+        shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
+        white = SDL_max(brighten > 0 ? brighten / 16.0f : 0.0f, q->white / 255.0f);
+        for (y = top; y < bottom; y++) {
+            x = left;
+            while (x < right) {
+                int start;
+                SDL_Rect clip;
+                while (x < right && !PortPpuHudSpriteVisible(q->hudOwner - 1, x, y)) x++;
+                start = x;
+                while (x < right && PortPpuHudSpriteVisible(q->hudOwner - 1, x, y)) x++;
+                if (x == start) continue;
+                clip = (SDL_Rect){(int)(ox + start * scale), (int)(oy + y * scale),
+                                  (int)((x - start) * scale), (int)scale};
+                SDL_SetRenderClipRect(renderer, &clip);
+                Quad(st->image, q, ox, oy, scale, (SDL_FColor){shade, shade, shade, q->alpha / 255.0f});
+                if (white > 0)
+                    Quad(st->white, q, ox, oy, scale, (SDL_FColor){1, 1, 1, q->alpha / 255.0f * white});
+            }
+        }
+    }
+    SDL_SetRenderClipRect(renderer, NULL);
 }
 
 /* How far a palette is faded to black (*dark) or white (*white), 0..255, from its original: the game's fades
