@@ -2915,15 +2915,16 @@
     "submenu-tienda-moguri": {
       "id": "submenu-tienda-moguri",
       "piece": "Tienda moguri: receta de submenus en vista ancha (usuario 25/10)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-25T23:15:12.770475+00:00",
-      "updated_at": "2026-10-25T23:15:12.770475+00:00",
+      "updated_at": "2026-10-26T09:51:25.713141+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T09:51:25.713141+00:00"
     },
     "submenu-cambiar-naipes": {
       "id": "submenu-cambiar-naipes",
@@ -3712,7 +3713,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T09:51:00.593981+00:00",
+  "updated_at": "2026-10-26T09:51:25.713141+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
