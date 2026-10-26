@@ -4052,20 +4052,26 @@
     "trailer-v20-production": {
       "id": "trailer-v20-production",
       "piece": "Producir y exportar trailer real v2.0",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-trailer-production",
       "created_at": "2026-10-26T21:33:57.968735+00:00",
-      "updated_at": "2026-10-26T21:34:06.805996+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T22:13:22.159333+00:00",
+      "branch": "trailer/v20-production",
       "pr": null,
       "approval": "Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas",
       "reference": "port/progress/TRAILER_V20.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T22:13:22.159333+00:00",
+          "owner": "codex-trailer-production",
+          "detail": "Capturas estables v2.0 completas, 18/18 intermedios EN full decode 0 por QA independiente; asamblea final en curso; sin publicar video."
+        }
+      ],
       "claimed_at": "2026-10-26T21:34:06.805996+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:56:06.114130+00:00",
+  "updated_at": "2026-10-26T22:13:22.159333+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
