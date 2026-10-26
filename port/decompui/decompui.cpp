@@ -458,7 +458,7 @@ static const Setting kSettings[] = {
     { "master_volume", 100 }, { "music_volume", 100 }, { "sfx_volume", 100 },
     { "dodge_button", 1 },   { "stock_button", 1 }, { "pad_layout", 0 }, { "experimental_moogle_notice", 0 }, { "hd_text", 0 }, { "hd_font", 0 },
     { "invert_card_scroll", 0 }, { "game_language", 0 }, { "experimental_battle_zoom", 0 },
-    { "card_hud_raise", 8 }, { "save_bank", 1 }, { "hd2d", 0 }, { "smooth_audio", 0 }, { "experimental_unstock", 0 },
+    { "card_hud_raise", 8 }, { "crt_output", 0 }, { "save_bank", 1 }, { "hd2d", 0 }, { "smooth_audio", 0 }, { "experimental_unstock", 0 },
     { "ps2_mode", 0 }, { "ps2_difficulty", 0 }, { "ps2_fast_text", 0 }, { "hd_hud", 0 }, { "aspect", 0 }, { "integer_zoom", 0 },
     { "kb_a", SDLK_X },         { "kb_a_2", SDLK_K },       { "pad_a", SDL_GAMEPAD_BUTTON_SOUTH },
     { "kb_b", SDLK_Z },         { "kb_b_2", SDLK_J },       { "pad_b", SDL_GAMEPAD_BUTTON_EAST },
@@ -1753,7 +1753,7 @@ static bool ZoomRow(const char* label, const char* help, int& value, bool inheri
         } else if (!Ini("fullscreen")) {
             int view = Ini("view_mode");
             int baseW = view == 0 ? 240 : view == 1 ? 284 : view == 3 ? 384 : 320;
-            int baseH = view == 0 || view == 1 ? 160 : view == 3 ? 216 : 180;
+            int baseH = view == 0 || view == 1 ? 160 : view == 3 ? 216 : view == 5 ? 240 : 180;
             W = baseW * std::clamp(Ini("window_scale"), 1, 8);
             H = baseH * std::clamp(Ini("window_scale"), 1, 8);
         }
@@ -1803,7 +1803,7 @@ static void ApplyGraphicsMode(int mode) {
 static void PageGraphics() {
     const char* views[] = { T("Original 240x160", "Original 240x160"), T("Panorámica 284x160", "Wide 284x160"),
                             T("Ampliada 320x180", "Extended 320x180"), T("Máxima 384x216", "Maximum 384x216"),
-                            T("Auto (llenar ventana)", "Auto (fill window)") };
+                            T("Auto (llenar ventana)", "Auto (fill window)"), "CRT 320x240" };
     const char* filters[] = { T("Nítido", "Sharp"), "Pixel art", T("Suave", "Smooth") };
     const char* huds[] = { T("Original", "Original"), T("Grande", "Large"), T("Más grande", "Larger") };
     const char* narrow[] = { T("Píxel exacto", "Exact pixels"), T("Llenar altura", "Fill height") };
@@ -1838,7 +1838,16 @@ static void PageGraphics() {
     }
     changed |= CycleRow(T("Vista", "View"), T("Auto adapta el encuadre a la ventana.",
                                               "Auto adapts the view to the window."),
-                        Ini("view_mode"), 5, views);
+                        Ini("view_mode"), 6, views);
+    if (Ini("view_mode") == 5) { /* the CRT view (#202): its exact output */
+        static const char* crt[] = { "240p 320x240", "240p 1920x240 (x6)", "240p 2560x240 (x8)", "480p 640x480" };
+        changed |= CycleRow(T("Salida CRT", "CRT output"),
+                            T("240p nativo para CRT y escaladores; superresolución (solo horizontal) para CRT Emudriver o "
+                              "modelines; 480p para pantallas y consolas que lo necesiten. Sin filtros ni scanlines.",
+                              "Native 240p for CRTs and scalers; super-res (horizontal only) for CRT Emudriver or custom "
+                              "modelines; 480p for displays and devices that need it. No filters or scanlines."),
+                            Ini("crt_output"), 4, crt);
+    }
     {
         const char* aspects[] = { T("Llenar ventana", "Fill window"), "16:9", "21:9", T("Forzar 21:9", "Force 21:9"),
                                   T("Forzar 32:9", "Force 32:9"), "4:3", "GBA 3:2" };

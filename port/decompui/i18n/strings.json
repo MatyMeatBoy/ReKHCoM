@@ -196,6 +196,10 @@
   "es": "COPIAR LA CARPETA HD DEL PC"
  },
  {
+  "en": "CRT output",
+  "es": "Salida CRT"
+ },
+ {
   "en": "Cancel",
   "es": "Cancelar"
  },
@@ -672,6 +676,10 @@
   "es": "En modo rebelde: "
  },
  {
+  "en": "In Rebel mode: progress is separate from the normal list and CoM.",
+  "es": "En modo rebelde: progreso separado de la lista normal y de CoM."
+ },
+ {
   "en": "In the collection:",
   "es": "En la colección:"
  },
@@ -864,6 +872,10 @@
   "es": "MANDO NINTENDO"
  },
  {
+  "en": "Native 240p for CRTs and scalers; super-res (horizontal only) for CRT Emudriver or custom modelines; 480p for displays and devices that need it. No filters or scanlines.",
+  "es": "240p nativo para CRT y escaladores; superresolución (solo horizontal) para CRT Emudriver o modelines; 480p para pantallas y consolas que lo necesiten. Sin filtros ni scanlines."
+ },
+ {
   "en": "Network link (alpha)",
   "es": "Enlace en red (alpha)"
  },
@@ -1018,6 +1030,10 @@
  {
   "en": "RE:COM ACHIEVEMENTS · ON THIS COMPUTER ONLY",
   "es": "LOGROS RE:COM · SOLO EN ESTE EQUIPO"
+ },
+ {
+  "en": "RE:COM ACHIEVEMENTS · REBEL MODE",
+  "es": "LOGROS RE:COM · MODO REBELDE"
  },
  {
   "en": "ROM installed and verified: ",
