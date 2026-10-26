@@ -3523,10 +3523,23 @@
         }
       ],
       "claimed_at": "2026-10-26T08:07:41.756611+00:00"
+    },
+    "atlas-maleficent-lomo-r2": {
+      "id": "atlas-maleficent-lomo-r2",
+      "piece": "Maléfica: tres recortes, lomo y estilo KHCoM",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T08:14:20.487171+00:00",
+      "updated_at": "2026-10-26T08:14:20.487171+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261025-172335-4d7739",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:11:48.601460+00:00",
+  "updated_at": "2026-10-26T08:14:20.487171+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
