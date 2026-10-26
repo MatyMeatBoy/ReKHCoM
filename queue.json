@@ -3263,10 +3263,23 @@
       ],
       "claimed_at": "2026-10-26T01:23:18.968603+00:00",
       "completed_at": "2026-10-26T01:42:16.304558+00:00"
+    },
+    "code-rebel-recom": {
+      "id": "code-rebel-recom",
+      "piece": "Modo rebelde: lista local ReCoM separada en juego y launcher",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T01:44:44.191032+00:00",
+      "updated_at": "2026-10-26T01:44:44.191032+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: terminar todas las mejoras y pendientes de código; pendiente vigente ReCoM rebelde",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T01:42:22.419346+00:00",
+  "updated_at": "2026-10-26T01:44:44.192343+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
