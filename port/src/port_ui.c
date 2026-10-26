@@ -679,12 +679,12 @@ static const char* const sHelp[LANG_COUNT] = {
     "\xE2\x86\x91\xE2\x86\x93 選択   \xE2\x86\x90\xE2\x86\x92 変更   B 戻る",
 };
 static const char* const sHelpNg[LANG_COUNT] = {
-    "ââ Select   ââ Change   A Start",
-    "ââ Choisir   ââ Modifier   A Commencer",
-    "ââ Wählen   ââ Ändern   A Beginnen",
-    "ââ Scegli   ââ Cambia   A Inizia",
-    "ââ Elegir   ââ Cambiar   A Comenzar",
-    "ââ 選択   ââ 変更   A はじめる",
+    "↑↓ Select   ←→ Change   A Start",
+    "↑↓ Choisir   ←→ Modifier   A Commencer",
+    "↑↓ Wählen   ←→ Ändern   A Beginnen",
+    "↑↓ Scegli   ←→ Cambia   A Inizia",
+    "↑↓ Elegir   ←→ Cambiar   A Comenzar",
+    "↑↓ 選択   ←→ 変更   A はじめる",
 };
 static const char* const sTitleHint[LANG_COUNT] = { "SELECT  OPTIONS", "SELECT  OPTIONS", "SELECT  OPTIONEN",
                                                     "SELECT  OPZIONI", "SELECT  OPCIONES",
