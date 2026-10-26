@@ -229,6 +229,7 @@ int PortSaveSlotSelectEnabled(void);
 void PortConfigView(int mode, int* w, int* h);
 /* Internal size and pixel scale that fill an outW x outH output (auto view). */
 void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* scale);
+float PortConfigMenuScaleF(int outW, int outH);
 
 int PortConfigZoomId(int level);
 int PortConfigZoomNext(int level, int dir);

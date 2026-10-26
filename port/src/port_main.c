@@ -1543,7 +1543,19 @@ static FILE* OpenRecordPipe(const char* cmdline) { return popen(cmdline, "w"); }
 static void CloseRecordPipe(FILE* f) { pclose(f); }
 #endif
 
+static int HdMenuAllocations(void) {
+#ifdef PORT_GBA_RELOC
+    return -1; /* guest renderers expose texture handles, not SDL's allocator */
+#else
+    return SDL_GetNumAllocations();
+#endif
+}
+
 static void Present(void) {
+    const char* hdProfile;
+    PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
+    uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
+    int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
     SDL_FRect dst, normal;
     uint32_t uniform = 0;
@@ -2179,6 +2191,10 @@ static void Present(void) {
         }
     }
     SDL_RenderPresent(sRenderer);
+    if (hdProfile)
+        PortLog("hd-menu-perf: frame=%u menu=%d ms=%.3f alloc_delta=%d allocations=%d", (unsigned)sFrameCount,
+                menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart) * 1000.0 / SDL_GetPerformanceFrequency(),
+                hdProfileAlloc >= 0 ? HdMenuAllocations() - hdProfileAlloc : -1, HdMenuAllocations());
 }
 
 static void Quit(void);
@@ -2555,6 +2571,8 @@ static void Quit(void) {
     PortDiscordShutdown();
     PortHdMusicShutdown();
     PortAudioShutdown();
+    extern void PortHdTextShutdown(void);
+    PortHdTextShutdown();
     PortHdHudShutdown();
     PortHdSpritesShutdown();
     PortHdLayoutShutdown();
@@ -3266,6 +3284,30 @@ int main(int argc, char** argv) {
     PortInputInit();
     PortAudioInit();
     PortUiInit();
+
+    /* The first Options frame must not decode its poster or register/rasterize
+       fonts. Do this once before the game starts, using the active output. */
+    if (gPortConfig.hdTitle) {
+        extern void PortHdTextWarmUi(SDL_Renderer*, float);
+        int w = 0, h = 0;
+        SDL_FRect at;
+        uint64_t start = SDL_GetPerformanceCounter();
+        SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
+        SDL_Rect area = AspectRect(w, h);
+        UpdateResolution();
+        OutputRect(area.w, area.h, &at);
+        float uiScale = at.w / gPortScreen.width;
+        if (gPortConfig.viewMode == PORT_VIEW_AUTO) {
+            float fit = PortConfigMenuScaleF(area.w, area.h);
+            int menuW = SDL_max((int)SDL_ceilf(area.w / fit), GBA_SCREEN_W);
+            uiScale = SDL_roundf(menuW * fit) / menuW;
+        }
+        PortHdMenuAssetsWarm(sRenderer);
+        PortHdTextWarmUi(sRenderer, uiScale);
+        PortHdTextWarmUi(sRenderer, MenuScale(area.w, area.h));
+        PortLog("HD menu: prepared before gameplay in %.1f ms",
+                (SDL_GetPerformanceCounter() - start) * 1000.0 / SDL_GetPerformanceFrequency());
+    }
 
     PortBiosAreaRefresh();
     PortGameSections(&sGameData, &sGameDataSize, &sGameBss, &sGameBssSize);

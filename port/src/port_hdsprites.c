@@ -348,6 +348,15 @@ int PortHdTitleArtReady(float* aspect) {
     return sArt != NULL;
 }
 
+/* Keep first-open decoding/upload outside a live menu frame. Only the small
+   shared menu set is prepared; imported cards keep their bounded LRU cache. */
+void PortHdMenuAssetsWarm(SDL_Renderer* renderer) {
+    if (!gPortConfig.hdTitle || !renderer) return;
+    sRenderer = renderer;
+    PortHdTitleArtReady(NULL);
+    MenuLightReady(renderer);
+}
+
 /* The illustration in a w x h box at x, y (the Options panel's picture): as tall as the box, its right side kept. */
 int PortHdTitleArtDraw(SDL_Renderer* renderer, float x, float y, float w, float h) {
     float aw;
@@ -971,4 +980,10 @@ void PortHdSpritesShutdown(void) {
         Unload(i);
         sState[i].present = 0;
     }
+    if (sArt) SDL_DestroyTexture(sArt);
+    if (sArtWhite) SDL_DestroyTexture(sArtWhite);
+    sArt = sArtWhite = NULL;
+    sArtTried = sArtW = sArtH = sArtCount = sBarCount = 0;
+    SDL_memset(sDrawCount, 0, sizeof(sDrawCount));
+    sRenderer = NULL;
 }

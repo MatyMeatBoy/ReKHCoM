@@ -92,8 +92,8 @@ typedef struct Inst {
     float xk;     /* horizontal condensing, 1 = none */
 } Inst;
 
-static HdFont sFonts[3][2]; /* [style][cache slot]; style 2: numbers, menu face */
-static int sNextFont[3];
+static HdFont sFonts[4][2]; /* [style][cache slot]; style 2: numbers, menu face */
+static int sNextFont[4];
 static int sCustomTried;
 static Face sFace[2]; /* KHMenu (menu, dialogue), Comic Hearts (movie subtitles) */
 
@@ -701,4 +701,20 @@ void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float o
    cartridge's own font. Only ASCII is known here (no code page tables). */
 int PortCodepointToSjis(unsigned cp) {
     return cp < 128 ? (int)cp : 0;
+}
+
+#define PORT_HD_TEXT_SIMPLE_DRAW
+#include "port/port_hdtext_ui.inc"
+#undef PORT_HD_TEXT_SIMPLE_DRAW
+
+void PortHdTextShutdown(void) {
+    int style, slot;
+    for (style = 0; style < 4; style++)
+        for (slot = 0; slot < 2; slot++) FontRelease(&sFonts[style][slot]);
+    for (slot = 0; slot < 2; slot++) {
+        SDL_free(sFace[slot].data);
+        SDL_memset(&sFace[slot], 0, sizeof(sFace[slot]));
+    }
+    SDL_memset(sNextFont, 0, sizeof(sNextFont));
+    sCustomTried = 0;
 }

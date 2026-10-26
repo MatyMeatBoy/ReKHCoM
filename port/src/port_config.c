@@ -324,6 +324,10 @@ int PortConfigZoomHeavy(int level) {
 
 float gPortAutoScaleF; /* the Auto view's exact pixel scale (may be fractional) */
 
+float PortConfigMenuScaleF(int outW, int outH) {
+    return SDL_max(outH / 320.0f, SDL_max(outW / (float)PORT_MAX_W, outH / (float)PORT_MAX_H));
+}
+
 void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* scale) {
     float f;
     extern int PortUiMenuCanvas(void);
@@ -332,7 +336,7 @@ void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* sca
     sZoomOutH = outH;
     /* the options menu is drawn on the canvas: while it is open the canvas
        keeps the Enhanced size, so its text stays readable at any zoom */
-    f = PortUiMenuCanvas() ? SDL_max(outH / 320.0f, SDL_max(outW / (float)PORT_MAX_W, outH / (float)PORT_MAX_H))
+    f = PortUiMenuCanvas() ? PortConfigMenuScaleF(outW, outH)
                        : PortConfigZoomScaleF(battle && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom);
     /* a screen taller than 16:9 (Android tablets 16:10 and 4:3, a foldable opened): the same rows as a 16:9 screen
        of its width at this zoom, so the floor below the fight and the HUD's distance stay as designed (less width
