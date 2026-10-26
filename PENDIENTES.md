@@ -151,4 +151,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | pr_abierto | codex-gallery-preview | https://github.com/MatyMeatBoy/ReKHCoM/pull/275 | Pedido directo usuario 26/10: previews en negro tras entrar saltar volver, solucionar | 2026-10-26T22:54:24.243050+00:00 |
 | hd-reload-fill-decomp | Recarga HD dinamica igual al original desde decomp | en_curso | codex-ending-hud | fix/hd-reload-fill | — | 2026-10-26T22:52:47.757131+00:00 |
 
-Integrador: libre
+Integrador: codex-pedro-integrador (ocupado; 2026-10-26T22:54:29.125075+00:00)
