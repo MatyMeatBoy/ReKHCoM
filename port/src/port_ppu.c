@@ -2965,7 +2965,7 @@ static void BuildTitleBands(int gy, const int* bgOn) {
         }
         if (layer < 0) continue;
         if ((layer == LAYER_OBJ && sObjSemi[edge]) ||
-            (effect == 1 && (ctrl & (1 << layer))))
+            (effect == 1 && (ctrl & (1 << layer)) && !(layer == 0 && sTitleBarHd))) /* the HD bar: as TitleBarLine */
             c = Blend(c, white, (alpha & 31) > 16 ? 16 : alpha & 31,
                       ((alpha >> 8) & 31) > 16 ? 16 : (alpha >> 8) & 31);
         else if (ctrl & (1 << layer)) {

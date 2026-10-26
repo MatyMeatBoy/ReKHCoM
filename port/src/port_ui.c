@@ -162,6 +162,7 @@ enum {
     ITEM_CHEAT_REBEL_LIST,    /* its own achievements */
     ITEM_CHEAT_DEBUG_HEADING, /* section heading, not selectable */
     ITEM_CHEAT_GBA_MAP,
+    ITEM_CHEAT_GBA_BRIGHTNESS,
     ITEM_CHEATS_BACK,
     ITEM_REMATCH_0, /* PortRematchCount() rows: the bosses, then the two tutorials */
     ITEM_REMATCH_LAST = ITEM_REMATCH_0 + 13,
@@ -483,6 +484,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Debug mode", "Mode debug", "Debug-Modus", "Modalità debug", "Modo debug", "デバッグモード" },
     { "[ReKHCoM] GBA map logic", "[ReKHCoM] Logique carte GBA", "[ReKHCoM] GBA-Kartenlogik",
       "[ReKHCoM] Logica mappa GBA", "[ReKHCoM] Lógica Mapa GBA", "[ReKHCoM] GBAマップロジック" },
+    { "[ReKHCoM] GBA title brightness", "[ReKHCoM] Luminosité du titre GBA", "[ReKHCoM] GBA-Titelhelligkeit",
+      "[ReKHCoM] Luminosità titolo GBA", "[ReKHCoM] Brillo del título GBA", "[ReKHCoM] GBAタイトルのあかるさ" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
     { "Guard Armor", "Guard Armor", "Guard Armor", "Guard Armor", "Guard Armor", "Guard Armor" },
     { "Trickmaster", "Trickmaster", "Trickmaster", "Trickmaster", "Trickmaster", "Trickmaster" },
@@ -859,6 +862,11 @@ static float Advance(SDL_Renderer* renderer, int i, float scale) {
     return a > 0 ? a : sHdUiGlyphs[i].pw * scale;
 }
 
+/* title.c: the title's L/R brightness and its banner: the GBA's, so in GBA classic, or with its debug switch */
+int PortTitleBrightness(void) {
+    return gPortConfig.graphicsMode == PORT_MODE_GBA_CLASSIC || gPortConfig.titleBrightness;
+}
+
 void PortUiHdDraw(SDL_Renderer* renderer, float x, float y, float scale) {
     extern void PortHdTextUiGlyph(SDL_Renderer*, int, float, float, float, float, uint32_t, uint32_t);
     int i, j, k;
@@ -1088,6 +1096,14 @@ static const char* const sModeDescHdMissing[LANG_COUNT] = { /* the standard line
     "Not installed: load it from the launcher (HD mod).", "Non installé : charge-le depuis le lanceur (mod HD).",
     "Nicht installiert: im Launcher laden (HD-Mod).", "Non installato: caricalo dal launcher (mod HD).",
     "No instalado: cárgalo desde el launcher (Mod HD).", "ないです：ランチャー（HD MOD）でいれてください。",
+};
+static const char* const sBrightnessNote[LANG_COUNT] = {
+    "The title's L/R brightness made up for the GBA's unlit screen. Today's screens do not need it: set the brightness on your display. On: the cartridge's switch comes back.",
+    "La luminosité L/R du titre compensait l'écran non éclairé de la GBA. Les écrans actuels n'en ont pas besoin : réglez celle de votre écran. Activé : l'option revient.",
+    "Die L/R-Helligkeit im Titel glich den unbeleuchteten GBA-Bildschirm aus. Heutige Bildschirme brauchen sie nicht: Stell die Helligkeit am Bildschirm ein. An: Sie kommt zurück.",
+    "La luminosità L/R del titolo compensava lo schermo non illuminato del GBA. Gli schermi di oggi non ne hanno bisogno: regola quella del tuo schermo. Attivo: torna l'opzione.",
+    "El brillo L/R del título compensaba la pantalla sin luz de la GBA. Las pantallas de hoy no lo necesitan: ajusta el brillo de tu pantalla. Activado: vuelve la opción del cartucho.",
+    "タイトルのL/Rのあかるさは、ひかりのないGBAのがめんのためのものです。いまのがめんではひつようありません。オンでもどります。",
 };
 static const char* const sCheatRebelNote[LANG_COUNT] = {
     "Turning it on starts Rebel mode: achievements go to a list of their own on this computer, not to RetroAchievements.",
@@ -1383,6 +1399,9 @@ static void ValueText(int item, char* out, size_t size) {
             break;
         case ITEM_CHEAT_GBA_MAP:
             SDL_strlcpy(out, sGbaMapValue[SDL_clamp(gPortConfig.gbaMapLogic, 0, 2)][l], size);
+            break;
+        case ITEM_CHEAT_GBA_BRIGHTNESS:
+            SDL_strlcpy(out, sOnOff[gPortConfig.titleBrightness != 0][l], size);
             break;
         case ITEM_CHEAT_MAXLEVEL:
         case ITEM_CHEAT_MAPCARDS:
@@ -1729,6 +1748,9 @@ static void Change(int item, int dir) {
             return;
         case ITEM_CHEAT_GBA_MAP:
             gPortConfig.gbaMapLogic = gPortConfig.gbaMapLogic == 1 ? 2 : gPortConfig.gbaMapLogic == 2 ? 0 : 1;
+            break;
+        case ITEM_CHEAT_GBA_BRIGHTNESS:
+            gPortConfig.titleBrightness = !gPortConfig.titleBrightness;
             break;
         case ITEM_CHEAT_MAXLEVEL:
         case ITEM_CHEAT_MAPCARDS:
@@ -4292,6 +4314,8 @@ static void DrawMenu(int l, int width, int height) {
         DrawControlDiagram(barX, top + rows * rowH + 2, barW, height - 15 - (top + rows * rowH + 2));
     if (sPage == PAGE_CHEATS && sCursor == ITEM_CHEAT_GBA_MAP)
         DrawGbaMapNote(l, width, height, barX + barW + 8);
+    if (sPage == PAGE_CHEATS && sCursor == ITEM_CHEAT_GBA_BRIGHTNESS && selY >= 0)
+        DrawNeedNote(sBrightnessNote[l], width, height, barX + barW + 8, selY);
     /* a cheat that changes the achievements' mode: what turning it on means, before it is on (user 25/10) */
     if (sPage == PAGE_CHEATS && selY >= 0 && !PortRebelActive() &&
         ((sCursor == ITEM_CHEAT_ONEHIT && !gPortConfig.cheatOneHit) ||

@@ -863,6 +863,19 @@ u8 task_title_lumichange_1(TitleLumiChangeWork* work) {
 
     effect = GetPaletteEffect();
     memcpy(levels, sTitleLumiLevels, sizeof(levels));
+#ifdef PLATFORM_PC
+    {
+        /* the brightness switch made up for the GBA's unlit screen: only in GBA classic or with its debug option */
+        int PortTitleBrightness(void);
+        if (!PortTitleBrightness()) {
+            if (effect != 0) {
+                SetPaletteEffect(0);
+                TitleLoadPaletteBuffer();
+            }
+            return 1;
+        }
+    }
+#endif
 
     switch (GetKeysPressed() & (L_BUTTON | R_BUTTON)) {
     case R_BUTTON:
@@ -922,6 +935,13 @@ void task_title_lumichange_2(TitleLumiChangeWork* work) {
     }
 
     x = (gGameState.flags & GAME_FLAG_RIKU_TITLE) ? DISPLAY_WIDTH : 0;
+#ifdef PLATFORM_PC
+    {
+        int PortTitleBrightness(void);
+        if (!PortTitleBrightness())
+            return; /* its banner goes with the switch */
+    }
+#endif
     DrawSprite(x, 0x8F, work->gfx, work->tiles, work->palette, NULL, SPRITE_PRIORITY(1), 100);
 }
 

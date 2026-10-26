@@ -162,6 +162,7 @@ typedef struct PortConfig {
     int cheatInfiniteHp;        /* cheat: the player loses no HP */
     int cheatSaveStates;        /* cheat: quick states (F5 save, F8 load, F6/F7 slot); off by default, no achievements while on */
     int moogleNotice;           /* experimental, off: show the moogle points picked up and the total */
+    int titleBrightness;        /* debug: the title's L/R brightness (the GBA's unlit screen) outside GBA classic too */
     int gbaMapLogic;            /* cheats > debug mode: 0 No (wide view bounds), 1 Yes (GBA bounds, pop), 2 No (Improved): GBA bounds with a fade-out */
     int gameLanguage;          /* European game: 0 asks (once), 1..5 English, French, German, Italian, Spanish */
     int invertCardScroll;      /* off by default: reverse L/R and right-stick card scrolling in battle */
