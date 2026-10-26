@@ -61,11 +61,12 @@ typedef struct Bitmap {
 } Bitmap;
 
 static HDC sDc;
-static HdFont sFonts[3][2]; /* [style][cache slot]; style 2: numbers, menu face */
-static int sNextFont[3];
+static HdFont sFonts[4][2]; /* [style][cache slot]; style 2: numbers, menu face */
+static int sNextFont[4];
 static int sCustomTried;
 static const WCHAR* sFace[2] = { L"Segoe UI", L"Segoe UI" }; /* menu / dialogue, movie subtitles */
 static HANDLE sEmbeddedFonts[2]; /* process-private resources, kept for GDI's lifetime */
+static WCHAR sFontFiles[2][1024];
 
 static int LoadEmbeddedFont(int i) {
     static const int ids[2] = { PORT_FONT_KHMENU_RESOURCE, PORT_FONT_COMIC_HEARTS_RESOURCE };
@@ -102,6 +103,7 @@ static void LoadCustomFont(void) {
         if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES && base)
             SDL_snprintf(path, sizeof(path), "%s../%s", base, files[i]);
         if (MultiByteToWideChar(CP_UTF8, 0, path, -1, wpath, 1024) > 0 && AddFontResourceExW(wpath, FR_PRIVATE, NULL) > 0) {
+            lstrcpynW(sFontFiles[i], wpath, 1024);
             sFace[i] = faces[i];
             PortLog("HD text: font %s", path);
         } else if (LoadEmbeddedFont(i)) {
@@ -203,12 +205,12 @@ static HdFont* FontForScale(float scale, int style) {
             SelectObject(sDc, f->font);
             if (GetTextFaceW(sDc, 128, selected) > 0 &&
                 WideCharToMultiByte(CP_UTF8, 0, selected, -1, actual, sizeof(actual), NULL, NULL) > 0)
-                PortLog("HD text: selected style=%d face=%s", style, actual);
+                PortLog("HD text: selected style=%d face=%s scale=%.3f key=%d", style, actual, scale, key);
         }
     }
     f->fallback = face[0] == L'S' ? f->font
-                                          : FontWithCap(style ? L"Comic Sans MS" : L"Segoe UI", f->cap, scale,
-                                                        style ? FW_NORMAL : FW_SEMIBOLD);
+                                          : FontWithCap(style && style != 3 ? L"Comic Sans MS" : L"Segoe UI", f->cap, scale,
+                                                        style && style != 3 ? FW_NORMAL : FW_SEMIBOLD);
     return f;
 }
 
@@ -446,6 +448,24 @@ static HdGlyph* Glyph(SDL_Renderer* renderer, HdFont* f, int code) {
 }
 
 #include "port/port_hdtext_layout.inc"
+
+void PortHdTextShutdown(void) {
+    int style, slot;
+    if (sDc) SelectObject(sDc, GetStockObject(SYSTEM_FONT));
+    for (style = 0; style < 4; style++)
+        for (slot = 0; slot < 2; slot++) FontRelease(&sFonts[style][slot]);
+    if (sDc) DeleteDC(sDc);
+    sDc = NULL;
+    for (slot = 0; slot < 2; slot++) {
+        if (sEmbeddedFonts[slot]) RemoveFontMemResourceEx(sEmbeddedFonts[slot]);
+        if (sFontFiles[slot][0]) RemoveFontResourceExW(sFontFiles[slot], FR_PRIVATE, NULL);
+        sEmbeddedFonts[slot] = NULL;
+        sFontFiles[slot][0] = 0;
+        sFace[slot] = L"Segoe UI";
+    }
+    SDL_memset(sNextFont, 0, sizeof(sNextFont));
+    sCustomTried = 0;
+}
 
 int PortCodepointToSjis(unsigned cp) {
     WCHAR w = (WCHAR)cp;

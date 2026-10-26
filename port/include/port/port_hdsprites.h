@@ -35,6 +35,7 @@ void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current,
 void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten);
 /* Press Start's authored light, smoothly interpolated and shared by port-owned menus. */
 int PortHdMenuLightDraw(SDL_Renderer* renderer, float x, float y, float size, uint64_t ticks, float shade, float white);
+void PortHdMenuAssetsWarm(SDL_Renderer* renderer);
 #endif
 void PortHdSpritesShutdown(void);
 /* The HD title's illustration (assets/hd/title/art/sora.png): 1 once it is loaded (its width/height in *aspect); queued

@@ -18,8 +18,8 @@ typedef struct HdFont {
     HdGlyph glyphs[256],jpGlyphs[HD_TEXT_JP_CACHE];
     uint16_t jpCodes[HD_TEXT_JP_CACHE];
 } HdFont;
-static HdFont fonts[3][2];
-static int nextFont[3];
+static HdFont fonts[4][2];
+static int nextFont[4];
 static uint8_t scratch[512*512];
 int gPortWebHdReady;
 const uint16_t* PortLatinGlyphWidths(void);
@@ -35,7 +35,7 @@ static void Release(HdFont* f) {
     SDL_memset(f,0,sizeof(*f));
 }
 void PortWebHdClear(void) {
-    int s,k;for(s=0;s<3;s++)for(k=0;k<2;k++)Release(&fonts[s][k]);
+    int s,k;for(s=0;s<4;s++)for(k=0;k<2;k++)Release(&fonts[s][k]);
 }
 static HdFont* FontForScale(float scale,int style) {
     int key=(int)(scale*16+.5f),i;
@@ -43,7 +43,7 @@ static HdFont* FontForScale(float scale,int style) {
     for(i=0;i<2;i++)if(fonts[style][i].font && fonts[style][i].key==key)return &fonts[style][i];
     f=&fonts[style][nextFont[style]];nextFont[style]^=1;Release(f);
     f->font=gPortWebHdReady ? (void*)1 : NULL;
-    f->key=key;f->style=style;f->scale=scale;f->cap=HD_TEXT_CAP*scale;
+    f->key=key;f->style=style==3?0:style;f->scale=scale;f->cap=HD_TEXT_CAP*scale;
     return f;
 }
 static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) {
@@ -78,3 +78,9 @@ static HdGlyph* GlyphJp(SDL_Renderer* renderer,HdFont* f,uint16_t code) {
     return &none;
 }
 #include "port/port_hdtext_layout.inc"
+
+void PortHdTextShutdown(void) {
+    for (int style = 0; style < 4; style++)
+        for (int slot = 0; slot < 2; slot++) Release(&fonts[style][slot]);
+    SDL_memset(nextFont, 0, sizeof(nextFont));
+}

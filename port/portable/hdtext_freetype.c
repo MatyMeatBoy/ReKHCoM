@@ -21,8 +21,8 @@ typedef struct HdFont {
 static FT_Library library;
 static unsigned char* data[2];
 static size_t sizes[2];
-static HdFont fonts[3][2];
-static int nextFont[3], tried, ready;
+static HdFont fonts[4][2];
+static int nextFont[4], tried, ready;
 static FT_Face fallback, japanese;
 static char sFallbackPath[1024]; /* the fallback face's file: Options can choose it for the menus (hd_font=2) */
 const uint16_t* PortLatinGlyphWidths(void);
@@ -144,7 +144,7 @@ static HdFont* FontForScale(float scale,int style) {
     if(style!=1 && choice==2 && sFallbackPath[0]) { if(FT_New_Face(library,sFallbackPath,0,&f->font))f->font=NULL; }
     else if(FT_New_Memory_Face(library,data[style==1 || choice==1],sizes[style==1 || choice==1],0,&f->font))f->font=NULL;
     if(!f->font)return f;
-    f->key=key;f->style=style;f->scale=scale;f->cap=HD_TEXT_CAP*scale;
+    f->key=key;f->style=style==3?0:style;f->scale=scale;f->cap=HD_TEXT_CAP*scale;
     FT_Load_Char(f->font,'H',FT_LOAD_NO_SCALE);
     top=(int)f->font->glyph->metrics.height;
     px=top>0?(int)(f->cap*f->font->units_per_EM/top+.5f):(int)(f->cap*1.5f+.5f);
@@ -197,6 +197,23 @@ static HdGlyph* GlyphJp(SDL_Renderer* r,HdFont* f,uint16_t code) {
     return &none;
 }
 #include "port/port_hdtext_layout.inc"
+
+void PortHdTextShutdown(void) {
+    int style, slot;
+    for (style = 0; style < 4; style++)
+        for (slot = 0; slot < 2; slot++) Release(&fonts[style][slot]);
+    if (japanese && japanese != fallback) FT_Done_Face(japanese);
+    if (fallback) FT_Done_Face(fallback);
+    japanese = fallback = NULL;
+    if (library) FT_Done_FreeType(library);
+    library = NULL;
+    for (slot = 0; slot < 2; slot++) {
+        SDL_free(data[slot]); data[slot] = NULL; sizes[slot] = 0;
+    }
+    SDL_memset(nextFont, 0, sizeof(nextFont));
+    tried = ready = 0;
+    sFallbackPath[0] = 0;
+}
 
 /* A movie subtitle (port_hdmovie.c, Linux): the UTF-8 text at px pixels in KHMenu (the system's face, then the
    Japanese one, for letters it lacks), its "\n" lines centred, with pad blank pixels around it. Coverage, w*h bytes;
