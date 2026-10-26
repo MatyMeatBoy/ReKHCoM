@@ -33,6 +33,7 @@
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
 #endif
+static void CrtScale(int* sx, int* sy); /* the CRT view (#202) */
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
 static int sAndroidBackground;
 #endif
@@ -251,7 +252,20 @@ static void ApplyWindowMode(void) {
     SDL_DisplayID display = SDL_GetDisplayForWindow(sWindow);
     SDL_DisplayMode mode;
 
-    if (gPortConfig.fullscreen && gPortConfig.fullscreenWidth > 0 && gPortConfig.fullscreenHeight > 0
+    if (gPortConfig.viewMode == PORT_VIEW_CRT) {
+        /* the CRT view asks the display for its own mode (320x240, 1920x240, 2560x240 or 640x480), and a window of
+           that size; without such a mode the picture stays at that size in the middle of the desktop's */
+        int sx, sy;
+        CrtScale(&sx, &sy);
+        if (gPortConfig.fullscreen &&
+            SDL_GetClosestFullscreenDisplayMode(display, 320 * sx, 240 * sy, 0.0f, false, &mode) &&
+            mode.w == 320 * sx && mode.h == 240 * sy)
+            SDL_SetWindowFullscreenMode(sWindow, &mode);
+        else
+            SDL_SetWindowFullscreenMode(sWindow, NULL);
+        if (!gPortConfig.fullscreen)
+            SDL_SetWindowSize(sWindow, 320 * sx, 240 * sy);
+    } else if (gPortConfig.fullscreen && gPortConfig.fullscreenWidth > 0 && gPortConfig.fullscreenHeight > 0
         && SDL_GetClosestFullscreenDisplayMode(display, gPortConfig.fullscreenWidth, gPortConfig.fullscreenHeight,
                                                0.0f, true, &mode)) {
         SDL_SetWindowFullscreenMode(sWindow, &mode);
@@ -574,9 +588,27 @@ static void DrawClassicBorder(const SDL_FRect* picture) {
     SDL_RenderTexture(sRenderer, sBorderTex, NULL, &r);
 }
 
+/* the CRT view's exact scale (#202): x and y pixels per canvas pixel */
+static void CrtScale(int* sx, int* sy) {
+    static const int kX[4] = { 1, 6, 8, 2 }, kY[4] = { 1, 1, 1, 2 };
+    int o = SDL_clamp(gPortConfig.crtOutput, 0, 3);
+    *sx = kX[o];
+    *sy = kY[o];
+}
+
 static void OutputRect(int outW, int outH, SDL_FRect* dst) {
     float sw = (float)gPortScreen.width, sh = (float)gPortScreen.height;
     float scale;
+
+    if (gPortConfig.viewMode == PORT_VIEW_CRT) { /* exactly that scale, centred: no fit, no zoom */
+        int sx, sy;
+        CrtScale(&sx, &sy);
+        dst->w = sw * sx;
+        dst->h = sh * sy;
+        dst->x = (float)(int)((outW - dst->w) / 2);
+        dst->y = (float)(int)((outH - dst->h) / 2);
+        return;
+    }
 
     if (ClassicBorder() && outW >= BORDER_W && outH >= BORDER_H) {
         scale = (float)(int)SDL_min(outW / (float)BORDER_W, outH / (float)BORDER_H);
@@ -1548,7 +1580,7 @@ static void Present(void) {
         outW = area.w;
         outH = area.h;
     }
-    if ((sFitScale > 0 || (!gPortScreen.wide && gPortConfig.narrowFit)) && !menuCanvas
+    if ((sFitScale > 0 || (!gPortScreen.wide && gPortConfig.narrowFit)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
         && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
         /* Scene without a wide view: show the GBA picture at full height
            (bars only at the sides), sampled with the pixel-art filter. */
@@ -1947,7 +1979,8 @@ static void Present(void) {
             SDL_RenderTexture(sRenderer, sTexture, &ps, &pd);
         }
     }
-    DrawScanlines(&dst, outW);
+    if (gPortConfig.viewMode != PORT_VIEW_CRT) /* the CRT or its shader draws them */
+        DrawScanlines(&dst, outW);
     {
         /* state / slot notices: topmost, at the window's scale */
         static uint32_t sNoticeBuf[256 * 14];

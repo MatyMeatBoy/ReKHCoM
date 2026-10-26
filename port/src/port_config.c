@@ -96,6 +96,7 @@ typedef struct Key {
 static const Key sKeys[] = {
     { "config_version", &sConfigVersion, 0, 1000 },
     { "view_mode", &gPortConfig.viewMode, 0, PORT_VIEW_COUNT - 1 },
+    { "crt_output", &gPortConfig.crtOutput, 0, 3 },
     { "zoom", &gPortConfig.zoom, 0, PORT_ZOOM_LEVELS },
     { "experimental_battle_zoom", &gPortConfig.battleZoom, 0, PORT_ZOOM_LEVELS },
     { "cheat_unlock_riku", &gPortConfig.cheatUnlockRiku, 0, 1 },
@@ -278,6 +279,10 @@ void PortConfigView(int mode, int* w, int* h) {
         case PORT_VIEW_MAXIMUM:
             *w = 384;
             *h = 216;
+            break;
+        case PORT_VIEW_CRT: /* 4:3, the 240 lines of a CRT (#202) */
+            *w = 320;
+            *h = 240;
             break;
         default:
             *w = 320;

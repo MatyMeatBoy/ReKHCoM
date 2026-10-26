@@ -78,6 +78,7 @@ enum PortViewMode {
     PORT_VIEW_EXTENDED,   /* 16:9, more of the world in both directions */
     PORT_VIEW_MAXIMUM,    /* 16:9, as far out as the engine allows */
     PORT_VIEW_AUTO,       /* fill the window at a whole-number pixel scale */
+    PORT_VIEW_CRT,        /* 320x240 at an exact scale for CRTs and their scalers (#202): 240p, super-res, 480p */
     PORT_VIEW_COUNT
 };
 
@@ -183,6 +184,8 @@ typedef struct PortConfig {
     int touchTheme;            /* touch_theme: the touch buttons' look, 0 Clear, 1 Dark, 2 Color (touch_android.c) */
     int touchPos[7][2];        /* touch_<group>_x/_y: where the player moved each touch group (d-pad, L, R, face buttons,
                                   SELECT, START, menu), thousandths of the layout from its place (touch_android.c's editor) */
+    int crtOutput;             /* PORT_VIEW_CRT: 0 native 320x240, 1 super-res 1920x240 (x6), 2 2560x240 (x8), 3 480p (2x); last: the
+                                  positional defaults stay as they are */
 } PortConfig;
 
 extern PortConfig gPortConfig;

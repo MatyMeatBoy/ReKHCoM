@@ -80,6 +80,7 @@ enum {
     ITEM_INVERT_CARD_SCROLL,
     ITEM_HEAD_VIDEO, /* section heading, not selectable */
     ITEM_VIEW,
+    ITEM_CRT_OUTPUT, /* the CRT view's output (#202), only in that view */
     ITEM_ASPECT,
     ITEM_ZOOM,
     ITEM_INTZOOM,
@@ -303,6 +304,7 @@ static int ItemVisible(int item) {
         case ITEM_CHEAT_REBEL:
         case ITEM_CHEAT_REBEL_LIST: { extern int PortRebelUnlocked(void); return PortRebelUnlocked(); }
         case ITEM_QUIT: return QUIT_ROW;
+        case ITEM_CRT_OUTPUT: return gPortConfig.viewMode == PORT_VIEW_CRT;
         /* in HD text now (user 25/10): the subtitles always with it, the font from its row (A) */
         case ITEM_HDFONT:
         case ITEM_HD_SUBTITLES: return 0;
@@ -374,6 +376,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Invertir selección de cartas", "カード送りを反転" },
     { "Video", "Vidéo", "Video", "Video", "Vídeo", "ビデオ" },
     { "View", "Vue", "Ansicht", "Visuale", "Vista", "表示" },
+    { "CRT output", "Sortie CRT", "CRT-Ausgabe", "Uscita CRT", "Salida CRT", "CRTしゅつりょく" },
     { "Aspect ratio", "Format d'image", "Seitenverhältnis", "Proporzioni", "Relación de aspecto", "画面の形" },
     { "Zoom", "Zoom", "Zoom", "Zoom", "Zoom", "ズーム" },
     { "Integer scales only", "Échelles entières seules", "Nur ganze Pixelskalen", "Solo scale intere", "Solo escalas enteras", "せいすうスケールのみ" },
@@ -685,7 +688,9 @@ static const char* const sViews[PORT_VIEW_COUNT][LANG_COUNT] = {
     { "Extended 320x180", "Étendue 320x180", "Erweitert 320x180", "Estesa 320x180", "Ampliada 320x180", "ワイド＋ 320x180" },
     { "Maximum 384x216", "Maximale 384x216", "Maximal 384x216", "Massima 384x216", "Máxima 384x216", "いちばん広い 384x216" },
     { "Auto (fill window)", "Auto (remplir)", "Auto (füllen)", "Auto (riempi)", "Auto (llenar ventana)", "自動 (画面に合わせる)" },
+    { "CRT 320x240", "CRT 320x240", "CRT 320x240", "CRT 320x240", "CRT 320x240", "CRT 320x240" },
 };
+static const char* const sCrtOutputs[4] = { "240p 320x240", "240p 1920x240 (x6)", "240p 2560x240 (x8)", "480p 640x480" };
 static const char* const sZoomHeavy[LANG_COUNT] = {
     "Demanding: needs a fast PC for 60 fps", "Exigeant : un PC rapide pour 60 i/s",
     "Anspruchsvoll: schneller PC für 60 fps", "Impegnativo: serve un PC veloce per 60 fps",
@@ -731,7 +736,7 @@ static const char* const sAutoOnly[LANG_COUNT] = { "(Auto view)", "(vue Auto)", 
 };
 
 static const int sViewOrder[PORT_VIEW_COUNT] = { PORT_VIEW_AUTO, PORT_VIEW_ORIGINAL, PORT_VIEW_WIDE,
-                                                 PORT_VIEW_EXTENDED, PORT_VIEW_MAXIMUM };
+                                                 PORT_VIEW_EXTENDED, PORT_VIEW_MAXIMUM, PORT_VIEW_CRT };
 
 static int sOpen;
 static int sTouchEdit; /* the touch layout editor is open (PortUiTouchEdit) */
@@ -1105,6 +1110,9 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_VIEW:
             SDL_strlcpy(out, sViews[gPortConfig.viewMode][l], size);
             break;
+        case ITEM_CRT_OUTPUT:
+            SDL_strlcpy(out, sCrtOutputs[SDL_clamp(gPortConfig.crtOutput, 0, 3)], size);
+            break;
         case ITEM_BATTLE_ZOOM:
         case ITEM_ZOOM: {
             int zoom = item == ITEM_BATTLE_ZOOM ? gPortConfig.battleZoom : gPortConfig.zoom;
@@ -1404,6 +1412,9 @@ static void Change(int item, int dir) {
     switch (item) {
         case ITEM_VIEW:
             gPortConfig.viewMode = sViewOrder[Wrap(ViewIndex() + dir, PORT_VIEW_COUNT)];
+            break;
+        case ITEM_CRT_OUTPUT:
+            gPortConfig.crtOutput = Wrap(gPortConfig.crtOutput + dir, 4);
             break;
         case ITEM_BATTLE_ZOOM:
             gPortConfig.battleZoom = PortConfigBattleZoomNext(gPortConfig.battleZoom, dir);
