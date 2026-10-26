@@ -3347,10 +3347,10 @@
     "atlas-095-garden": {
       "id": "atlas-095-garden",
       "piece": "Escena 095: árbol, fondo y flores",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:33:19.378587+00:00",
-      "updated_at": "2026-10-26T09:50:39.354502+00:00",
+      "updated_at": "2026-10-26T09:50:55.542660+00:00",
       "branch": "codex/atlas-095-garden",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/211",
       "approval": "approved exact 47e89e1d59374be8aa04ff8e658ee3a6",
@@ -3370,10 +3370,16 @@
           "at": "2026-10-26T09:50:39.354502+00:00",
           "owner": "codex-atlas",
           "detail": "Versión humana aprobada; compilación nativa EU del subconjunto correcta."
+        },
+        {
+          "at": "2026-10-26T09:50:55.542660+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real ed820ea11264ed9b0e26948cf486937b76124347; comentarios posteriores conservados para nueva revisión."
         }
       ],
       "claimed_at": "2026-10-26T07:33:24.402094+00:00",
-      "sent": "47e89e1d59374be8aa04ff8e658ee3a6"
+      "sent": "47e89e1d59374be8aa04ff8e658ee3a6",
+      "completed_at": "2026-10-26T09:50:55.542660+00:00"
     },
     "atlas-074-cleanup": {
       "id": "atlas-074-cleanup",
@@ -3711,7 +3717,7 @@
     "created_at": "2026-10-26T09:50:44.677566+00:00",
     "updated_at": "2026-10-26T09:50:44.677566+00:00"
   },
-  "updated_at": "2026-10-26T09:50:44.677566+00:00",
+  "updated_at": "2026-10-26T09:50:55.542660+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
