@@ -4072,19 +4072,20 @@
     "popup-skip-text-pedro": {
       "id": "popup-skip-text-pedro",
       "piece": "Popup saltar cinematica HD sin letras Pedro",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-ending",
       "created_at": "2026-10-26T22:34:20.220006+00:00",
-      "updated_at": "2026-10-26T22:34:20.220006+00:00",
+      "updated_at": "2026-10-26T22:34:28.473387+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario screenshot 2026-10-26 issue163/42",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T22:34:28.473387+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:34:20.220006+00:00",
+  "updated_at": "2026-10-26T22:34:28.473387+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
