@@ -291,16 +291,17 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
                 sx=PortSceneTileMod(ox,32);
                 sy=oy<0?PortSceneTileMod(oy,8):oy;
                 if (oy>=18 && sx>=30) { sx=0; sy=20; } /* no gate finial */
-            } else if (ox>=w && oy<29) {
+            } else if (ox>=w && oy<32) {
                 /* A horizontal railing, not the diagonal corner repeated
                  * into saw teeth. Columns 40..43 hold a complete post, clear of the moon trail.
                  * Align their tips with the authored right corner (row 22),
-                 * then use clean masonry without any grave or gate. */
+                 * then use clean masonry through its bottom three rows, before
+                 * switching to the ground (Atlas 24/10: missing wall base). */
                 if (oy<22) { sx=0; sy=20; }
                 else if (oy<25) {
                     sx=40+PortSceneTileMod(ox-64,4); sy=oy-4;
                 } else {
-                    sx=46+PortSceneTileMod(ox-64,2); sy=oy-4;
+                    sx=46+PortSceneTileMod(ox-64,2); sy=21+PortSceneTileMod(oy-25,3);
                 }
             } else if (ox>=w) {
                 sx=48+PortSceneTileMod(ox-48,16);
