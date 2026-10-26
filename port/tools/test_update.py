@@ -19,7 +19,7 @@ from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 ROOT = Path(__file__).resolve().parents[2]
 KHCOMPC = ROOT.parent
 OLDS = WORK_DIR / 'releases-viejas'  # the stables' Windows ZIPs (fetched from GitHub when empty)
-STABLES = ('v1.9.8', 'v1.9.9', 'v1.9.10', 'v1.9.12', 'v1.9.14')
+STABLES = None  # the stable releases GitHub has (gh release list --exclude-pre-releases)
 WORK = (WORK_DIR / 'updtest')
 HIDDEN = dict(os.environ, SDL_VIDEO_DRIVER='offscreen', SDL_AUDIO_DRIVER='dummy', KHCOM_FAST='1')
 
@@ -49,9 +49,11 @@ def main():
     new = Path(args.new)
     save = (KHCOMPC / 'respaldos/saves/jugar/ReKHCoM-v2.0-pre4/kh_com.sav').read_bytes()
     olds = Path(args.olds)
-    if not any(olds.glob('ReKHCoM-v*-windows-x86.zip')):
+    if args.olds == str(OLDS):  # the default folder: every stable on GitHub (the ones already there are kept)
         olds.mkdir(parents=True, exist_ok=True)
-        for tag in STABLES:
+        tags = subprocess.run(['gh', 'release', 'list', '-R', 'MatyMeatBoy/ReKHCoM', '--exclude-pre-releases', '--limit', '20',
+                               '--json', 'tagName', '-q', '.[].tagName'], capture_output=True, text=True, check=True).stdout.split()
+        for tag in tags:
             subprocess.run(['gh', 'release', 'download', tag, '-R', 'MatyMeatBoy/ReKHCoM', '-p', '*-windows-x86.zip',
                             '-D', str(olds), '--skip-existing'], check=True)
     rom = (ROOT / 'roms/B8CP.gba').read_bytes()
