@@ -139,6 +139,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/239 | — | 2026-10-26T16:25:59.025665+00:00 |
 | claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | codex-retoma | codex/claude-close-20261026 | — | 2026-10-26T16:23:52.459939+00:00 |
 | controls-reset-triggers-20261026 | Controles: restaurar bindings y layout automático, gatillos progresivos | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/241 | — | 2026-10-26T16:35:08.180110+00:00 |
-| achievements-trigger-key-centre | Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD | en_curso | codex-batteries | codex/achievement-triggers-gba-key | — | 2026-10-26T16:43:01.871303+00:00 |
+| achievements-trigger-key-centre | Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/243 | — | 2026-10-26T16:43:28.997495+00:00 |
 
 Integrador: codex-retoma (ocupado; 2026-10-26T16:42:06.682060+00:00)

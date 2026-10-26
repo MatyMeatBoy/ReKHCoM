@@ -3884,15 +3884,21 @@
     "achievements-trigger-key-centre": {
       "id": "achievements-trigger-key-centre",
       "piece": "Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T16:42:48.991972+00:00",
-      "updated_at": "2026-10-26T16:43:01.871303+00:00",
+      "updated_at": "2026-10-26T16:43:28.997495+00:00",
       "branch": "codex/achievement-triggers-gba-key",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/243",
       "approval": null,
       "reference": "Usuario: L2/R2 raros y volver a centrar botón GBA sin regresiones",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-26T16:43:28.997495+00:00",
+          "owner": "codex-batteries",
+          "detail": "933ce5eb8; actual input function slow LT/RT/jitter/release/reopen PASS; GbaKey real ROM EU/US/JP centred GBA/HD identical PASS; EU stock pixels byte-identical old/new; check_sources OK"
+        }
+      ],
       "claimed_at": "2026-10-26T16:42:55.268483+00:00"
     }
   },
@@ -3902,7 +3908,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T16:42:06.682060+00:00"
   },
-  "updated_at": "2026-10-26T16:43:01.871303+00:00",
+  "updated_at": "2026-10-26T16:43:28.997495+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
