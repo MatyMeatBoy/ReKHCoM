@@ -3315,20 +3315,27 @@
     "atlas-090-wall-base": {
       "id": "atlas-090-wall-base",
       "piece": "Escena 090: base del muro",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:29:06.376809+00:00",
-      "updated_at": "2026-10-26T07:29:50.466381+00:00",
+      "updated_at": "2026-10-26T07:33:14.196252+00:00",
       "branch": "codex/atlas-090-wall-base",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/210",
       "approval": null,
       "reference": "20261024-183313-23736c",
-      "evidence": [],
-      "claimed_at": "2026-10-26T07:29:11.695693+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T07:33:14.196252+00:00",
+          "owner": "codex-atlas",
+          "detail": "Dos capturas EU; compilación y check_sources correctos; propuesta pendiente de valoración."
+        }
+      ],
+      "claimed_at": "2026-10-26T07:29:11.695693+00:00",
+      "sent": "6458681037fd4bdc91688842b9369560"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:29:50.466381+00:00",
+  "updated_at": "2026-10-26T07:33:14.196252+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
