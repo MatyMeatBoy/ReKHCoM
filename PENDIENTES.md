@@ -134,4 +134,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:40:24.237908+00:00 |
 | atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/229 | — | 2026-10-26T10:20:29.272195+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas (ocupado; 2026-10-26T10:20:59.971129+00:00)
