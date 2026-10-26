@@ -124,7 +124,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/213 | approved exact 4bdd58353e74419d9d3f5dac83cfc82d | 2026-10-26T09:44:36.427910+00:00 |
 | atlas-112-genie-door | Escena 112: Genio y borde de puerta | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/214 | changes_requested exact 994a5761f7f042deaba72d7e716ee14e | 2026-10-26T09:45:02.936995+00:00 |
 | atlas-061-wall-tip | Escena 061: remate inferior del muro | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/215 | approved exact 6bb99e9f57af425f85de491bb77a2716 | 2026-10-26T09:45:25.579474+00:00 |
-| atlas-110-folded-wall | Escena 110: pared reflejada hasta arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/216 | — | 2026-10-26T08:01:58.955948+00:00 |
+| atlas-110-folded-wall | Escena 110: pared reflejada hasta arriba | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/216 | approved exact aa5c68ac68e948deaa006b2dfec38897 | 2026-10-26T09:45:37.753951+00:00 |
 | atlas-095-castle | Escena 095: recuperar un único castillo; no cerrado por árbol y flores | pendiente | — | — | — | 2026-10-26T08:02:05.044114+00:00 |
 | atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/217 | Documentación y evidencia de código previamente integrado; no activa arte pendiente. | 2026-10-26T08:11:43.307349+00:00 |
 | atlas-start-values-evidence | Menú START: cifras HD actuales | pendiente | — | — | — | 2026-10-26T08:11:09.029483+00:00 |

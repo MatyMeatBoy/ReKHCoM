@@ -3509,16 +3509,21 @@
       "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:58:00.736586+00:00",
-      "updated_at": "2026-10-26T08:01:58.955948+00:00",
+      "updated_at": "2026-10-26T09:45:37.753951+00:00",
       "branch": "codex/atlas-110-folded-wall",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/216",
-      "approval": null,
+      "approval": "approved exact aa5c68ac68e948deaa006b2dfec38897",
       "reference": "20261025-214204-e508f8",
       "evidence": [
         {
           "at": "2026-10-26T08:01:58.955948+00:00",
           "owner": "codex-atlas",
           "detail": "Dos capturas EU de pared reflejada alternada; compilación y check_sources correctos."
+        },
+        {
+          "at": "2026-10-26T09:45:37.753951+00:00",
+          "owner": "codex-atlas",
+          "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
         }
       ],
       "claimed_at": "2026-10-26T07:58:06.234017+00:00",
@@ -3673,7 +3678,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:45:30.726401+00:00"
   },
-  "updated_at": "2026-10-26T09:45:30.726401+00:00",
+  "updated_at": "2026-10-26T09:45:37.753951+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
