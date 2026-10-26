@@ -133,7 +133,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:40:18.552327+00:00 |
 | atlas-116-hull-edge | Escena 116: limpiar tile saliente del casco | pendiente | — | — | — | 2026-10-26T09:40:24.237908+00:00 |
 | atlas-maleficent-continuity | Maléfica: continuidad nativa, primera espina grande y bajada fina al lomo; tres cuerpos montados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/229 | approved:306aea394d144032932cf1595bf4cbdd;57768c3432cb475d9e2f67887c8bbaf6;2ca1f374795c4c4f9c78ec82f553fe2d | 2026-10-26T10:55:41.707986+00:00 |
-| atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | — | 2026-10-26T10:26:47.076243+00:00 |
+| atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | Autorización directa usuario26/10: comentarios de aprobados sin nueva revisión Atlas | 2026-10-26T12:28:07.419771+00:00 |
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | codex-atlas | codex/hd-ui-v20-completion | — | 2026-10-26T10:59:03.354749+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
 
