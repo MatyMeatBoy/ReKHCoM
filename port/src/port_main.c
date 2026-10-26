@@ -1544,7 +1544,7 @@ static void CloseRecordPipe(FILE* f) { pclose(f); }
 #endif
 
 static int HdMenuAllocations(void) {
-#ifdef PORT_GBA_RELOC
+#if defined(PORT_GBA_RELOC) || defined(PORT_GUEST_RELOC) || defined(PORT_PS5_GUEST) || defined(PORT_LINUX64_GUEST) || defined(PORT_ANDROID64)
     return -1; /* guest renderers expose texture handles, not SDL's allocator */
 #else
     return SDL_GetNumAllocations();
