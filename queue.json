@@ -3598,10 +3598,10 @@
     "atlas-maleficent-lomo-r2": {
       "id": "atlas-maleficent-lomo-r2",
       "piece": "Maléfica: tres recortes, lomo y estilo KHCoM",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T08:14:20.487171+00:00",
-      "updated_at": "2026-10-26T09:46:00.593215+00:00",
+      "updated_at": "2026-10-26T09:46:11.515404+00:00",
       "branch": "codex/atlas-maleficent-lomo-r2",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/222",
       "approval": "approved exact 2f93c47e6dad42d1b61a96ca3d8e7083; approved exact d44b24262467494cbe3fc454ed5df1f5; approved exact 47658cfa72ee4785b2469abec62eddd0",
@@ -3616,10 +3616,16 @@
           "at": "2026-10-26T09:46:00.593215+00:00",
           "owner": "codex-atlas",
           "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
+        },
+        {
+          "at": "2026-10-26T09:46:11.515404+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 361017818286d400e8053ea03dfb9de9b4fec925. Capturas y aprobación exactas conservadas. Sólo estudios de arte; falta adaptación nativa del sprite."
         }
       ],
       "claimed_at": "2026-10-26T08:14:25.980347+00:00",
-      "sent": "2f93c47e6dad42d1b61a96ca3d8e7083"
+      "sent": "2f93c47e6dad42d1b61a96ca3d8e7083",
+      "completed_at": "2026-10-26T09:46:11.515404+00:00"
     },
     "atlas-world-header-seam": {
       "id": "atlas-world-header-seam",
@@ -3689,7 +3695,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:45:53.583108+00:00"
   },
-  "updated_at": "2026-10-26T09:46:00.593215+00:00",
+  "updated_at": "2026-10-26T09:46:11.515404+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
