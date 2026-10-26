@@ -1,324 +1,52 @@
-# Pendientes vigentes hacia la v2.0 (lista limpia, 25/10/2026 noche)
+# Pendientes vigentes hacia la v2.0 (lista limpia, 26/10/2026)
 
-## TRASPASO — Claude, 26/10
+Solo lo abierto. Lo terminado y los traspasos anteriores: **archivo/PENDIENTES_ARCHIVO_20261026.md** (y los
+archivos anteriores). Método de depuración: DEBUG_WORKFLOW.md. Cola de arte: `python port/tools/art_queue.py --quiet
+list` (Atlas). Reglas del usuario: REGLAS_DEL_USUARIO.md. Última prerelease: **v2.0-pre19** (26/10, Windows, Linux,
+Steam Deck; zip limpio en KHCoMPC).
 
-- **#163 (duartepedro):** confirmó que el final de Riku ya va perfecto. Los videos HD de Sora y del piso 12 arrancan
-  ahora donde empieza el video de la GBA (zz_event_151 desde 3:42, zz_event_123 desde 2:50), sin tocar archivos; si
-  «Cinemáticas HD» ya pasó la escena entera, el video no la repite. Test3 enviado (rama test-builds); falta su
-  revisión de la galería (dijo que la hace hoy).
-- **Baterías:** las «hechas» del 25/10 eran marcas viejas del 23-24 (cada suite en 1 s). Arreglado (marcas de más de
-  12 h no cuentan) y relanzadas el 26/10 en khcom-claude-int (`run_batteries.py --status`); su parte Android incluye
-  Agrabah 123/124 con la app smoke completa (reconstruida desde main).
-- **Banco de partidas por banco: hecho (26/10):** kh_com.ini es siempre el del banco en uso; los demás esperan en kh_com_bankN.ini (juego y launcher); un banco nuevo hace su primer arranque. Sin logros locales por banco (la regla de logros los cuida).
-- **Código que queda:** botón Opciones y título HD (esperan
-  Atlas). Grandes: modos PS2 con REA (mejorar los que ya hay; falta el material del usuario), Linux/Deck 64 bits,
-  iOS.
+## Reglas que no se olvidan
 
-## TRASPASO ACTIVO — Codex, 25/10 noche
-
-Prioridad más reciente del usuario: **integrar lo aprobado → terminar pendientes de código → ZIP clean → Atlas al final**. Claude está pausado; Codex continúa la integración. Las listas históricas de abajo no reabren funciones ya integradas.
-
-- Fuentes core, rama `codex/core-fonts-clean`: reproducida la pérdida en la copia de prueba de barriles (`hd_text=1`, KHMenu elegida, carpeta de fuentes ausente). KHMenu y Comic Hearts quedan también dentro del ejecutable Windows, sin cambiar la elección Sistema ni Texto HD apagado. El ZIP conserva ambas fuentes y el empaquetador rechaza binarios sin esos recursos. Compilación EU, arranque sin assets, comprobación de payload y `check_sources.py` correctos. Recursos de versión sincronizados con pre19.
-- Integrado: PR192, pintor de píxeles Atlas y respuestas generales conjuntas; PR193, versiones aprobadas exactas de 081/097/110/112 (`bd784a0b2f7c62646a365dc5ebdc4e79dadf2646`). Sus comentarios nuevos siguen en Atlas; no equivalen a errores pendientes de integración.
-- Cerrado: PR194, fuentes core embebidas, merge `6b894a3bc48846181928434ededf315308da8195`.
-- Opciones no instaladas: mensaje HD compartido con el primer arranque y aviso de ROM japonesa con el mismo formato, ambos en rojo. Compilación EU, check_sources y capturas reales de las dos opciones correctos.
-- Cerrado: PR195, avisos rojos HD/ROM japonesa, merge `18465ed91fa7bf04e477af5e5b185d808e5a07fe`.
-- Recursos core, rama `codex/core-assets-embedded`: fuentes, insignias, imágenes del launcher y HUD distribuible dentro de los ejecutables. Se mantiene la carga externa y sólo se incorporan piezas del catálogo empaquetable, sin importaciones privadas. Ejecutable EU compilado; recursos recuperados mediante Win32 con bytes idénticos. Launcher compilado en prioridad baja con límite total de 768 MB. Cargador nativo: diez recursos válidos; validadores de paquete EU/launcher y check_sources correctos. EU/US/JP finales se reconstruyen al cerrar el código.
-- Re:CoM rebelde implementado: progreso y evaluadores separados, archivos propios, selector CoM/Re:CoM dentro del modo rebelde en juego y launcher. Compilaciones EU/launcher y cuatro ejecuciones con reinicios verifican aislamiento y requisitos de historia.
-- Código siguiente: revisar resultados pendientes de baterías y retest Android 123/124. Bancos por banco siguen aplazados según el diseño vigente. El botón Opciones y el título HD esperan su arte y van al final con Atlas.
-- ZIP pre19 existente: todavía anterior a estas integraciones; **no entregarlo como build actual**. Reconstruir EU/US/JP desde el cierre de código, verificar fuentes y limpieza antes de entregarlo. No publicar release sin autorización.
-
-
-## Meta vigente del usuario — 25/10/2026
-
-Ver [META_V2_0.md](META_V2_0.md): arena Trickmaster → escena099 →004 → Síntesis (carta HD dinámica) → Añadir naipes (cantidades detrás del selector); después el resto de piezas comentadas y verificaciones técnicas vigentes. Este orden sustituye órdenes históricos. PR111/114 integrados; propuestas nuevas121/122/123/124 en Atlas y en revisión, no cerradas por subirlas. El documento conserva las mejoras futuras fuera de bloqueantes por defecto. Publicar la estable requiere OK.
-
-
-Única cola de trabajo. Lo anterior completo (traspasos, borradores, detalle): **archivo/PENDIENTES_ARCHIVO_20261025.md**
-y archivo/PENDIENTES_ARCHIVO_20261024.md. Método de depuración: DEBUG_WORKFLOW.md. Protocolo de la cola:
-COLA_COLABORATIVA.md. Estado vivo de piezas: `python port/tools/art_queue.py --quiet list`.
-
-## Reglas del usuario (completas en REGLAS_DEL_USUARIO.md)
-
-- Rama y PR por entrega; lo visual pasa por la app de revisión (Atlas) y solo se integra lo aprobado.
-  Lógica aprobada: LOGICA_APROBADOS.md (cada PR de arte la mejora).
-- La validación en hardware real no es pendiente: llega como reporte. Publicar (releases, comentarios) solo con OK.
-- Nunca borrar carpetas ReKHCoM-vX ni ningún release. Trabajar solo en KHCoMPC (C:) y D:/01Claude/ReKHCoM-build.
-- Toda falla o timeout de batería es un bug: reproducir. Notar cada avance aquí al momento.
-
-## Estado (25/10 noche)
-
-- Traspaso activo de Codex (arte aprobado, ZIP local): TRASPASO_CARGAS_ZIP_20261025.md.
-- Propuestas Atlas abiertas: #121 (Trickmaster), #122 (099), #123 (004/005), #124 (selector HD), más #120 (esta meta). Última: **v2.0-pre18** publicada como prerelease (Windows, Linux, Steam Deck; zip limpio en KHCoMPC). #83 cerrado. #140 reabierto: la pre18 no arreglaba la build nativa; test interno deck1 (GPU sola, rama test-builds) enviado, esperando su ReKHCoM.log / kh_com.log.
-- Hoy en main: Opciones por secciones (solo A para entrar, Salir del juego, mods en gris con cartel), logros Re:CoM
-  con borde e insignias, #83 (carta de Jafar: BIOS_PTR), mazo sin parpadeo en invocaciones, videos HD en Linux,
-  #42 (3 pistas HD de eventos), arenas aprobadas (Maléfica, Úrsula, Marluxia, Trickmaster, Oogie, Darkside, 112, 120).
+- Rama y PR por entrega; lo visual pasa por Atlas y solo entra lo aprobado (LOGICA_APROBADOS.md).
+- Publicar (releases, comentarios) con OK del usuario; la estable solo con su OK.
+- Nunca borrar releases ni carpetas del usuario; trabajar en KHCoMPC (C:) y D:/01Claude/ReKHCoM-build.
+- Un timeout o fallo de batería es un bug: reproducir (antes, mirar kh_com_host.log: ¿le falta la imagen?).
+- Responder al usuario en español y breve.
 
 ## 1. Código (Claude)
 
-- **#83 sin reproducir en PC:** 24 peleas largas con Jafar (build anterior a #115, con y sin HD, recogidas forzadas):
-  0 fallos y nunca una recogida con la selección vacía. El código lo explica: todo lo que vacía `sSoraSelectedCard`
-  marca una recarga, y la recogida espera a que no haya recarga. #115 queda como protección, no como causa probada.
-  Siguiente: `test_android_scenarios.py --groups jafar83` en el emulador (build nueva y anterior) o el `kh_com.log`
-  del jugador. El issue sigue abierto.
-- **Android (con el emulador de las baterías):** repetir la batalla 123 US (timeout; en PC no se reproduce),
-  rendimiento en gama baja (línea `timing:`), tablets con el encuadre nuevo, botones táctiles (también web),
-  elección de modo al primer arranque.
-- **Baterías:** `run_batteries.py --status` en `khcom-claude-int` (relanzadas 25/10 noche): combates EU y luego
-  Android; después la pasada `--hd`.
+- [ ] **#202 Modo 240p para CRT** (itsNateDev, ofrece probarlo): vista fija 320x240 presentada a 1x exacta;
+  salida nativa (320x240, modo de pantalla con SDL_SetWindowFullscreenMode) o superresolución (1920x240 / 2560x240,
+  x6 / x8 solo en horizontal); filtro nearest, sin zoom ni ajuste; scanlines del juego apagadas. También **480p** (640x480, 2x exacto) para quien lo necesite (usuario 26/10).
+- [ ] **Baterías** (khcom-claude-int, `run_batteries.py --status`): relanzadas el 26/10 con marcas frescas; su parte
+  Android trae Agrabah 123/124 (app smoke completa). Revisar resultados y arreglar lo que salga.
+- [ ] **Antes de la 2.0** (sección 3): correr la lista de pruebas sobre el commit final.
 
-## 1b. Próximo (pedido del usuario 25/10 noche, en este orden)
+## 2. Arte (Atlas — Codex)
 
-- **Pre16 para el jugador de #83:** zip de Windows y APK listos (`build/releases` en khcom-recom-art, main 0f415d7a3).
-  Falta el OK del usuario para publicar la prerelease y comentar en #83 (la herramienta pide confirmación).
-  En el emulador Android 64 (arm64 traducido) `--groups jafar83` EU/US: 4/4 sin cierre con la build nueva.
-- **Galería de escenas (nueva función):** en Opciones > Re:CoM, repetir las escenas de historia ya vistas; pestañas
-  Normales / HD (HD solo si están cargadas); lo no desbloqueado como «???», como el diario de Pepito Grillo; el avance
-  es el de todo el save de ReKHCoM (lo más lejos que se llegó en cualquier partida).
-- **Mods y mejoras en todas las plataformas:** hecho el mod HD en un archivo (#132: launcher de PC > «Llevar el mod
-  HD a otra plataforma», el juego o su host lo instala solo; README por plataforma). Falta:
-  - Android: comprobar en el teléfono/emulador que «Instalar ROM...» con ReKHCoM-HD.zip instala el mod.
-  - Vita y PS5: confirmar sus builds con el paquete (Switch .nro y host PS4 compilan).
-  - Videos HD en consolas (decodificador en cada host, HD_MOD.md: sceAvPlayer PS4/PS5/Vita, FFmpeg nvtegra Switch).
-  - Texto HD en consolas (`port_hdtext` excluido: FreeType del lado del host por el puente).
-  - Estados rápidos/revanchas en consolas, Android y web (`port_state` excluido u oculto).
-  - Que el ZIP de cada consola traiga su README con la sección «HD mod».
+- Cola: arena de Agrabah (frente), tienda moguri, cambiar naipes, añadir naipes (esquina), botón Opciones del menú,
+  banner de Steam, escena 087, y lo que Codex tiene en curso (057, 061, 074, 097, diario, Maléfica, remates).
+- Al entregar el botón Opciones: el código lo agrega al menú y quita Start+Select para Opciones (solo menú y título).
+- Título HD hasta cargar la partida y Opciones en HD con el HUD HD: diseño en Atlas, luego código.
 
-- **Hecho 25/10 noche:** #132 mod HD en un archivo (PC, Linux, Switch .nro, Vita .vpk, host PS4 compilan; Android
-  64 probado en el emulador: el zip queda en files/hd), #134 Android «Instalar ROM...» acepta ReKHCoM-HD.zip,
-  #133 launcher: cuenta RetroAchievements siempre visible con emblema propio, #128 builds de guests reparadas.
-- **Logros ganados antes de vincular la cuenta (pedido del usuario):** no subirlos solos. Las reglas de RA solo
-  aceptan desbloqueos sin conexión guardados por un emulador con sesión iniciada; desbloquear «saltando» el código
-  puede dejar la cuenta Untracked. Propuesta: el launcher lista los logros locales ganados sin cuenta (fecha y
-  hora) y explica cómo pedir el desbloqueo manual en retroachievements.org. Confirmar con el usuario antes.
-- **Launcher:** emblema de RetroAchievements hecho (propio, no el logo oficial por ser marca registrada).
+## 3. v2.0 estable (solo con OK del usuario)
 
-## 1a. Cola del usuario 25/10 noche (en curso; hechos marcados)
-
-- [x] Atlas: «Necesita mejoras» = **Aprobado (mejorar)**; todo lo aceptado va al juego (#138). Falta reiniciar el
-  Atlas en vivo (servidor de khcom-review-app) para que lo muestre.
-- [ ] Escenas aceptadas con receta encendidas (rama `claude/scenes-approved`: 007, 044, 045, 087, 090, 095, 098, 099,
-  104, 110, 112, 118, 120, 124). Pruebas en D:/01Claude/ReKHCoM-build/prelim-old|new (pre17 contra la rama): integrar
-  si los fallos de la rama ya estaban en la pre17 (057, 107, 124 fallan igual en pre17).
-- [x] Opciones: sección HD (Texto HD con subtítulos, A = ventana de fuente con muestras, Intros, Música, Cinemáticas
-  con cartel, HUD HD; texto HD por defecto salvo GBA clásico) #141; fuente solo KHMenu/Sistema #139.
-- [x] Repo limpio (#137), baterías se podan solas (#142), C:/D: liberados (C 14 GB, D 16 GB libres).
-- [ ] **Bonus élite** no se adapta a pantallas anchas (cabecera y barras a ancho GBA, cartas salen por abajo): revisar
-  el diseño del menú en `port_hdlayout`/HD menus para todos los aspectos (16:9 a 32:9).
-- [ ] **Diario, páginas de Historia (tercer nivel):** capturarlas (KHCOM_KEYS hasta Diario > Historia > entrada con una
-  partida con historia) e importarlas a Atlas como piezas nuevas (import_image.py), para las marcas del usuario.
-- [ ] **Filtro de audio:** apagado por defecto; rehacer en dos perfiles: sonido 16 bits (juego) y música HD moderna.
-- [ ] **Logros sin conexión con cuenta:** guardar en disco los desbloqueos hechos con sesión y sin red, y subirlos al
-  volver (RA lo permite: cola segura de un cliente con sesión). Hoy rc_client los reintenta solo mientras el juego vive.
-- [ ] **Banco de partidas:** cada banco con su primer arranque (idioma, modo, pantalla completa/ventana), sus ajustes y
-  sus logros locales (avisos de nuevo aunque haya cuenta); traer de la cuenta los que falten en local. Aplazado (25/10):
-  toca cómo juego y launcher comparten kh_com.ini. Diseño: kh_com.ini guarda save_bank y es el banco 1; los bancos 2-5
-  leen encima kh_com_bankN.ini (si falta, primer arranque); los logros locales por banco
-  (achievements_official_eu_bankN.dat); el launcher debe editar el banco elegido. Hacerlo con el launcher a la vez.
-- [x] **Primer arranque:** pantalla completa o ventana tras el modo, en PC y Linux (25/10).
-- [x] **Herramienta de anuncios:** `port/tools/announce_release.py vX` escribe los textos de X, Reddit y Patreon desde
-  el CHANGELOG en build/announce/vX/ (publicar con OK del usuario; Codex donde haga falta el navegador).
-- [ ] **Título en HD** hasta cargar la partida, y Opciones en HD cuando el HUD HD está activo (diseño; ir a Atlas).
-- [ ] **Galería de escenas** (ver §1c).
-
-## 1c. Traspaso de las funciones nuevas (cómo abordarlas)
-
-- **Galería de escenas** (Opciones > Re:CoM): los eventos de historia ya llevan su piso en el nombre
-  (`include/evt/event_ids.h`: `EVENT_0XX_<n>F_ENTRANCE/GOAL`, `RIKU_B<n>F_...`) y la partida guarda el avance por piso
-  (`GameState.floors[13]`); un evento está desbloqueado si alguna partida del save (todas las ranuras y bancos,
-  `PORT_SAVE_BANKS`) pasó ese piso con ese personaje. Reproducir: el arnés ya lo hace (`gPortEventTest` →
-  `PortEventSelectPreset`, src/main.c:1014); hacer lo mismo desde Opciones y volver al juego (como «Volver al título»
-  pero restaurando el estado: guardar un estado rápido antes, `port_state`, y cargarlo al terminar). Pestaña HD: la
-  tabla `kHdScenes` (port/src/port_hdscenes.inc) da el video de cada evento; solo si `PORT_ASSET_HD_SCENES`. Lo no
-  desbloqueado: «???» con el estilo de las filas del diario.
-- **Logros ganados antes de vincular RA:** ver §1b (política); listar `achievements_official_eu.dat` con fecha contra
-  los del perfil (`ra->account_unlocks` en ra_client.c) y mostrar los que faltan con un enlace a la ayuda de RA.
-- **Sesión de RA por usuario del PC** (#135): hecha; falta verla con una cuenta real (dos copias en dos carpetas).
-- **Videos HD en consolas:** el puente ya tiene `hd_movie` (lo usa Android 64): compilar el camino `PORT_ANDROID64` de
-  port_hdmovie.c en las imágenes de consola e implementar `H_hd_movie` en cada host (HD_MOD.md: sceAvPlayer en PS4/PS5,
-  sceAvcdec en Vita con ROP a 960x544, FFmpeg nvtegra en Switch). Necesita consola real para verificar.
-- **Texto HD en consolas:** PS5 ya tiene `port/ps5/guest/src/hdtext_ps5.c`; revisar el resto (Switch/Vita/PS4) a partir de él; `port_hdtext` (GDI) está excluido; o `hdtext_freetype.c` del lado
-  del host (FreeType ya está en los hosts SDL2) con una entrada nueva del puente que devuelva la cobertura de una
-  línea (como `PortPortableHdTextCover`).
-- **Estados rápidos en consolas/Android/web:** `port_state` excluido en consolas; en Android/web la fila de revanchas
-  se oculta. Medir el tamaño del estado y escribirlo por el puente (H_fopen) antes de encenderlo.
-
-## TRASPASO (25/10 noche, última sesión de Claude)
-
-- **Hecho y en main:** todo lo de 1e/1f de código salvo lo de abajo; últimos: filtro de audio GBA/HD, primer arranque
-  con pantalla completa/ventana, modo rebelde (lista local, Trucos, launcher, filigrana negra, partidas editadas,
-  descripciones), «Modo de logros», banco de partidas solo en el título, herramienta de anuncios, opciones no
-  instaladas con una línea roja estándar «No instalado: cárgalo desde el launcher (Mod HD)» y sin clic con A.
-- **Corriendo al cerrar:** baterías de PC (`run_batteries.py --status` en khcom-claude-int) y el retest Android de
-  Agrabah 123/124 con la app smoke completa (`build/android-scenarios/cases/us-battle-12*`). Si dan timeout de verdad
-  (no por falta de imagen: mirar kh_com_host.log), reproducir y arreglar.
-- **Falta de código:** la línea roja también en Opciones (hoy esas filas usan el cartel de la derecha, sNeedHd/sNeedJp;
-  unificar el texto) y en la versión japonesa («añade la ROM japonesa en el launcher»); banco de partidas por banco
-  (diseño abajo, aplazado); quitar Start+Select cuando Atlas entregue el botón Opciones; título/Opciones en HD (Atlas).
-- **Pruebas para el usuario en pruebas/:** escena de Aerith x6 y barriles de Agrabah x4 (.bat).
-- **Esperando:** duartepedro (#163: piso 12 y revisión de la galería), Atlas (6 piezas nuevas en la cola).
-
-## 1f. Pedidos del usuario 25/10 noche, segunda tanda (con capturas; anotados por si no se alcanzan)
-
-Hecho esta tanda: #140 cerrado (el jugador confirmó: la build deck1 va sin bajones), «Quitar de Steam» (#158),
-tecla A de GBA en Opciones y cartel de Cinemáticas HD más breve (#159). Codex preparó la pre19 limpia (#160).
-
-**Hecho después (25/10 noche, todo en main):** #163 «Videos HD» solo cambia los videos de la GBA con su escena HD
-entera, el camino al amanecer en todo modo, sin créditos HD (#165); galería de escenas GBA/HD con «???» y truco
-para desbloquearlas (#166; test2 enviado a duartepedro, esperando su revisión y qué escena HD va en el piso 12);
-mouse oculto tras 3 s (#167); salir del juego solo avisa tras 1 h sin guardar en la sesión (#168); logros en el
-juego como Chain of Memories / Re:Chain of Memories con Y/L2/R2 (#169); muestras de fuente nítidas a 1080p;
-EXP ganada bajo la barra de vida en la vista ancha; marco negro a la portada del launcher; actores que esperan fuera
-de cámara (097/112/120): ya no se corta nada en el borde (barriles de Agrabah, Sora al irse). A la cola de Atlas:
-arena de Agrabah (frente), tienda moguri, cambiar naipes, añadir naipes (esquina), botón Opciones del menú, banner
-de Steam.
-
-**Hecho también (25/10 noche):** banco de partidas solo desde el título; modo rebelde completo (lista local, sección en
-Trucos con indicador y A para apagarlo, pestaña en el launcher, filigrana negra, descripciones «En modo rebelde:»,
-aviso en los trucos que lo activan, partidas editadas en el launcher también); «Modo de logros» bajo Logros
-(Normal/Re:CoM/Rebelde con cartel); filtro de audio en dos perfiles (GBA y HD). Pruebas para el usuario en
-`pruebas/`: escena de Aerith x6 y barriles de Agrabah x4. Falta del modo rebelde: su lista de Re:CoM.
-
-**Código (Claude):**
-- **#163 (duartepedro03, Windows pre18, mod HD base):** el final de Riku («Road to Dawn») salta del apretón de manos
-  HD a los créditos HD. Pide: «Intros HD» → renombrar a **«Videos HD»** y que solo cambie los 4 videos pre-renderizados
-  de la GBA (sus 4 enlaces de YouTube en el issue); las demás escenas solo con «Cinemáticas HD»; y poder ver solo los
-  créditos de la GBA (sin los HD). Cómo: separar en port_hdmovie la lista de videos GBA de las escenas; revisar el
-  evento del final de Riku (qué escena HD falta entre el apretón y los créditos).
-- **Logros en el juego:** arriba «Logros · Chain of Memories» o «Logros · Re:Chain of Memories» (no «Oficiales»);
-  abajo «Y: CoM/Re:CoM»; las dos listas visibles para todos; cambiar con Y/Triángulo o con L2/R2
-  (port_achievement_menu.inc, líneas del título 125 y de ayuda 169; hoy la lista Re:CoM solo si hay partidas Re:CoM).
-- **Agrabah, escena con barriles (captura 3):** al entrar los barriles se ven tapados como si faltara medio sprite y la
-  escena «se desdobla». Revisar si lo causa la mejora de actores fuera de pantalla: esa mejora va **solo en las escenas
-  que pidió el usuario** (apagar el sprite si está fuera y prenderlo cuando entra); en el resto no tocar. Además Sora y
-  los amigos desaparecían al salir del cuadro en 16:9: el usuario nunca pidió la mejora para Sora; revisar el alcance.
-- **Prueba de la escena de Aerith con ese zoom** (pedido explícito de un .bat): quizás sea la solución para que esas
-  escenas se vean limpias; decir en qué otras escenas se aplicó ese zoom.
-- **Mouse:** en PC y Linux, ocultar el cursor tras unos segundos quieto sobre el juego (no usamos el mouse).
-- **Pantalla de subir de nivel / EXP ganada tras el combate:** queda al centro y no sigue la posición relativa de la
-  pantalla ancha. Ver en la GBA y el decomp dónde va (¿bajo la barra de vida?) y probar todos los ratios.
-- **Salir del juego:** el aviso no debe asustar: solo si la última partida guardada **de esta sesión** fue hace más de
-  1 hora: «No guardas desde hace xx». Si se cargó un save viejo y se sale enseguida, no avisar.
-- **Menú del juego: botón nuevo «Opciones»** (en cada idioma) con la misma textura limpia y el mismo texto pixel art
-  que los otros botones, ajustando el espaciado para que quepa uno más. Con eso se quita entrar a Opciones con
-  Start+Select: solo desde aquí y desde el título (mejora lo que queda en gris y evita bugs al cambiar de versión).
-  El arte pasa por Atlas.
-- **Launcher:** marco/contorno negro a la imagen de la portada (sección JUEGO), con el estilo del arte del juego y del
-  launcher.
-- **Muestras de fuente en la ventana de Fuente del texto HD:** se ven pixeladas a 1080p. Hacer las muestras a 4x
-  (gen_font_samples.py) y dibujarlas a la resolución de la pantalla encima del menú (PortUiHdSamples + port_main, como
-  los avisos de logros). En curso.
-- **Android US: batallas 123/124 de Agrabah:** el «6 de 6» del 25/10 era falso: la app de prueba no tenía la imagen US
-  («guest-us.macho is missing from the APK» en kh_com_host.log del caso). Lo real: en la batería de las 15:22 la 123
-  pasó y la 124 dio timeout. Reproducir con la app smoke completa (`build_android.py --regions eu us jp --abi x86
-  --smoke --smoke-env KHCOM_FAST=1`).
-- **Herramienta de anuncios para releases grandes** (la 2.0 sale hoy más tarde): publicar automático en X (Twitter),
-  Reddit (un par de comunidades) y Patreon (si el plugin lo bloquea, lo hace Codex, que maneja la PC completa).
-  Publicar siempre con el OK del usuario.
-
-**Arte (a la cola de Atlas):**
-- **Arena de Agrabah (captura 4):** quitar los barriles del frente en la extensión y seguir el arte de grietas de arena
-  hasta abajo, en perspectiva, pixel art preciso. Antes: comparar con la arena original de la GBA sin extensión, de
-  lejos, para ver si esos barriles ya estaban.
-- **Tienda moguri:** aplicar la receta de submenús.
-- **Cambiar naipes:** misma receta + la numeración del mazo con el texto HD mejorado (como en el mazo).
-- **Añadir naipes:** detalles de la esquina superior derecha (la pestaña del círculo cortada arriba a la derecha).
-- Todo en **modo turbo** (el nuevo por defecto de Atlas): aprender de cómo lo usa Codex (PRs #161/#162).
-
-## 1e. Pedidos del usuario 25/10 noche (después del test de Steam Deck)
-
-- **Steam en el launcher:** si el juego ya está agregado a Steam, ofrecer «Quitar de Steam» ahí mismo. El arte del
-  acceso directo: banner con una captura de combate en arena a **x3 entero** (solo para este banner; el ejemplo de
-  siempre es **x4 1080p**, el principal) y el **logo mejorado de KH Chain of Memories del título HD** (el actual dice
-  Re:CoM, que es el de PS2). Cómo: el launcher ya escribe shortcuts.vdf y la carpeta grid; buscar la entrada por appid
-  del acceso directo, borrarla y borrar su arte de grid; el arte nuevo pasa por Atlas antes de entrar.
-- **Banco de partidas:** en la pantalla de título solo se cambia desde las Opciones principales; dentro de una partida
-  queda en gris (evita bugs y abusos para logros). Excepción: modo Re:CoM, donde las partidas se pasan entre ranuras;
-  ahí los logros que corresponden son los de Re:CoM.
-- **Regla de logros (también en REGLAS_DEL_USUARIO.md):** lo que cambia el juego (partidas, bancos, trucos, editar
-  saves) bloquea los logros oficiales o pasa a la lista de Re:CoM; gráficos, audio, escenas y controles no importan.
-- **Trucos y «Modo rebelde»** (nombre del usuario, menos agresivo que «tramposo»; EN Rebel mode, FR Mode rebelle, DE Rebellen-Modus, IT Modalità ribelle, JA 反逆モード): los trucos (salvo las mejoras del modo Re:CoM) apagan los logros oficiales. La
-  primera vez que se activa uno (o se detecta una partida editada) se desbloquea un modo oculto, el **Modo rebelde**:
-  logros locales, las dos listas (oficial y Re:CoM) pero aparte, que no se sincronizan con RetroAchievements; no se ven
-  en el launcher hasta que se activan. Aviso en el juego con un cartel amigable en pixel art del estilo del juego:
-  «somos amigables con esto», los logros son locales, no van a RetroAchievements y tienen su lista. El arte del cartel
-  pasa por Atlas. Cómo: una marca en el save de ReKHCoM (no en la SRAM del juego) + un tercer archivo de logros locales
-  (`achievements_cheat_*.dat`), y el filtro de rc_client sin enviar nada mientras la marca esté.
-- **Modo rebelde en Trucos (detalle del usuario 25/10):** en el menú de Trucos, una sección propia «Modo rebelde» con
-  las barritas separadoras como las de Opciones (y mejorar de paso las barritas de Trucos), que solo aparece con el modo
-  activado y muestra un indicador de que está activo. Sus logros se ven ahí (no en Logros normal); en el launcher, en
-  pestañas nuevas de Logros, solo si hay un save en modo rebelde. Con A sobre el modo: opción de desactivarlo y volver al
-  modo normal, con la lista de lo que se apagará (los trucos y funciones que lo activaron). Depurar todo con el harness
-  (`KHCOM_OPTIONS_SHOT` del menú de Trucos, partida con y sin la marca).
-- **Modo de logros en Opciones generales (usuario 25/10):** debajo de Logros, un indicador: **modo normal** (el que
-  sincroniza con RetroAchievements) o **modo Re:CoM**. En modo Re:CoM, A ofrece pasar a modo normal y muestra qué
-  funciones se apagarán. Solo desde el menú principal o en partidas donde se activó el modo Re:CoM y se puede revertir:
-  evaluar los casos (partida que ya usó una mejora Re:CoM que cambia el juego: no se revierte; solo ajustes sin rastro
-  en la partida: sí). Cada vez que una opción vaya a cambiar el modo de logros, un cartel de aviso con la explicación
-  (qué se sincroniza con RetroAchievements y qué no). El modo normal es el superior y el más difícil; igual se permiten
-  mods gráficos y lo demás que no cambia el juego. Interno: lo que el port cambia por la vista ancha no toca los logros
-  y no se menciona en textos públicos.
-- **Baterías 25/10 (de la corrida de las 15:22):** Android US: batallas 123/124 de Agrabah y 4 menús US (status,
-  worldselect, Deck, jiminy) con timeout (casos en khcom-claude-int/build/android-scenarios/cases/us-*). Regla: un
-  timeout es un bug; reproducir solos (`test_android_scenarios.py --only`), arreglar y buscar parientes. El build de
-  escritorio falló por build.ninja viejo (arreglado: `debug_kit --build` reconfigura siempre); relanzar las de
-  escritorio.
-
-## 1d. Después de la pre18 (pedido del usuario 25/10 noche)
-
-- **Modos Re:CoM basados en la versión de PS2 (siguiente trabajo grande):** no son modos nuevos: es **mejorar o arreglar los modos que ya tenemos** (usuario 25/10) con lo que se saque de la PS2: dificultades, ajustes por enemigo y lo
-  demás que se encuentre, con sus variantes, aplicados con cuidado a nuestra versión y reimplementados donde haga
-  falta (dentro de la lógica del juego, sin objetos del port). Usar los assets de 1.5 HD ReMIX donde aplique.
-  Herramienta: **REA** (github.com/morluto/rea, MIT; `npx rea-agents setup`, Node 24 ya instalado) con Ghidra o
-  objdump/Rizin para el ELF de PS2 (MIPS R5900; REA no nombra PS2, probar que lo abra). Lista de referencia:
-  github.com/yibie/awesome-rea (way-of-the-samurai-decomp es el caso PS2 más parecido). Falta el material del
-  usuario: ELF/ISO de Re:CoM PS2 y la carpeta de 1.5 HD (no están en KHCoMPC/roms). Cómo empezar: sacar de REA las
-  tablas de dificultad (multiplicadores de daño/PV/experiencia por modo) y de enemigos, compararlas con las de la GBA
-  (src/), proponer al usuario qué entra en cada modo antes de tocar el juego.
-- **Potencia en cada plataforma (pedido 25/10):** Linux/Steam Deck: la build nativa es i386 y dibuja por software;
-  el camino con GPU es un host Linux de 64 bits con el guest x32/reloc (como android64_host/PS5); mientras, Proton
-  con la build de Windows (usa la GPU) y la prueba `REKHCOM_GPU=1`. Consolas: solo relojes documentados y de uso
-  común (Vita ya pide 444 MHz; Switch: perfiles de reloj oficiales del sistema). Revisar cómo lo hacen otros ports
-  de decomp (sm64ex, SoH, Perfect Dark port) antes de tocar nada.
-
-- **iOS (para la línea 2.0, puede salir después de las demás):** evaluar una IPA para instalar por fuera de la
-  App Store (ESign, AltStore, SideStore, Sideloadly). Referencia del usuario:
-  github.com/DevZer0D4Y/TheSimpsonsGame-iOS. Revisar también los repos con estrella del usuario que hagan lo mismo.
-  Punto de partida: el guest de 32 bits va por PORT_GBA_RELOC como en Android 64 (host arm64 + shim SDL), el host
-  iOS con SDL3 y Metal; firmar sin cuenta de pago (la firma la hace la herramienta del usuario). Usar la potencia de
-  iOS: Metal, 120 Hz (ProMotion), mandos MFi.
-
-## 2. Arte (Atlas: GPT/Codex; Claude ayuda)
-
-- Responder en la app cada envío en turno «agente» con una versión hija (`COLA_PARA_AGENTES.md`).
-- Piezas de la cola: 057, 061, 074, 097, 081, diario (entradas y subentradas), Maléfica 01-03.
-- Jafar: la columna negra de la subida de nivel y el recuadro de la escena previa son del cartucho (también con
-  `KHCOM_JAFAR_WIDE=0`): rellenarlos es arte dentro de la imagen GBA, solo si el usuario lo pide.
-- HUD HD a lo Re:CoM: lo que no tiene equivalente 1:1 (contador CARDS, título) es decisión de diseño.
-
-## 3. Esperando reportes (no se trabaja hasta que lleguen)
-
-- #83 confirmación del jugador; Proton estable (`kh_com.log`); cara HD de Sora con el pelo cortado al recibir daño;
-  cuadro negro en Agrabah con HUD HD (falta captura); Vita: undub por cabecera y velocidad.
-- Si un issue cerrado recibe comentarios: responder y volver a cerrarlo. Sin plataforma/versión: preguntar.
-
-## 4. v2.0 estable (solo con OK del usuario; no saltear nada)
-
-- Sin Switch (sacar el `.nro`). `test_update.py` (baja solo los ZIP de las estables desde GitHub).
-- No se borra ningún release ni archivo de GitHub; README con la versión. En local solo el último zip.
 - `release_check.py v2.0` antes y `--post` después; `check_sources.py`.
-- Builds desde el commit final: Windows, Linux, Android, PS4, Vita, PS5 (VM), web.
-- `build/smoke_pc.sh` con cada ejecutable de PC; `test_hd_audio.py`, `test_hd_audio_flow.py`, `test_frameskip.py`,
-  `test_hd_scenes.py`, `match_hd_scenes.py --check`, `test_launcher.py`.
-- Copia de prueba + `.bat`; notas cortas que anuncien el mod HD; nunca decir en público que algo no se probó en
-  hardware. Al publicar, responder #83 si quedó confirmado.
+- Builds desde el commit final: Windows, Linux, Steam Deck, Android, PS4, Vita, PS5 (VM), web (sin Switch).
+- Pruebas: `test_update.py` (baja las estables de GitHub), `test_hd_audio.py`, `test_hd_audio_flow.py`,
+  `test_frameskip.py`, `test_hd_scenes.py`, `match_hd_scenes.py --check`, `test_launcher.py`, smoke de cada exe.
+- Notas cortas que anuncien el mod HD; `announce_release.py v2.0` para X, Reddit y Patreon (publicar con OK).
 
-## 5. Después de la v2.0 (mejoras, no pendientes de ahora)
+## 4. Esperando a otros (no se trabaja hasta que llegue)
 
-- Switch (SWITCH_MOTOR.md); Vita/PS4 a la GPU (RENDIMIENTO.md); PPU de GBA en varios núcleos.
-- Online (~70 %, ONLINE_ESTUDIO.md); menús Re:CoM en HD (HUD_HD_RECOM.md); rutas de Sora y Reverse/Rebirth (#39).
-- Mejoras de lo «aprobado con mejoras».
+- #163 duartepedro: revisión de la galería de escenas y del test3 (videos HD desde el segundo justo).
+- Material del usuario para los modos PS2 con REA (ISO/ELF de PS2 y carpeta 1.5 HD).
+- Reportes: cara HD de Sora con el pelo cortado al recibir daño; cuadro negro en Agrabah con HUD HD (falta captura);
+  Vita: undub por cabecera y velocidad.
 
-## Atlas: sintesis aprobada, pendiente de integracion
+## 5. Después de la v2.0
 
-Version humana aprobada `823cdf38241144b1b282bcf3f2532120`: requisito HD dinamico, tinta dentro de la silueta, banda neutra y TOTAL desplazado de10 a9. Rama codex/sintesis-requisito-hd actualizada con main; PR125 se reabre tras aprobacion. La sugerencia posterior sobre contorno/numeros queda para una hija nueva; no se declara respondida ni se elevan honores.
+- Modos de Re:CoM basados en PS2 con REA: mejorar o arreglar los modos que ya hay (no modos nuevos).
+- Linux/Steam Deck 64 bits (el arreglo de GPU ya funciona); consolas a más potencia solo con ajustes documentados.
+- iOS (IPA por fuera de la App Store; hace falta una Mac para compilar).
+- Switch (SWITCH_MOTOR.md); Vita/PS4 a la GPU; online (~70 %); rutas de Sora y Reverse/Rebirth (#39).
