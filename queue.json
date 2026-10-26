@@ -4075,10 +4075,10 @@
       "status": "pr_abierto",
       "owner": "codex-ending",
       "created_at": "2026-10-26T22:34:20.220006+00:00",
-      "updated_at": "2026-10-26T22:49:32.561525+00:00",
+      "updated_at": "2026-10-26T22:50:05.280725+00:00",
       "branch": "fix/hdmovie-pause-text",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/274",
-      "approval": "Pedido directo usuario 26/10 solucionar para todas versiones",
+      "approval": "Pedido directo usuario: popup saltar sin letras, solucionar para todas las versiones, 26/10/2026",
       "reference": "Usuario screenshot 2026-10-26 issue163/42",
       "evidence": [
         {
@@ -4110,7 +4110,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:49:32.561525+00:00",
+  "updated_at": "2026-10-26T22:50:05.280725+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
