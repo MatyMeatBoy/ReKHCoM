@@ -3950,15 +3950,16 @@
     "options-complete-matrix-20261026": {
       "id": "options-complete-matrix-20261026",
       "piece": "Auditoria completa opciones y bindings SDL",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-batteries",
       "created_at": "2026-10-26T18:03:14.816218+00:00",
-      "updated_at": "2026-10-26T18:03:14.816218+00:00",
+      "updated_at": "2026-10-26T18:03:20.841465+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza depurar todas las opciones y decisiones autonomas",
       "reference": "Matriz 12 contextos y 13 bindings por dispositivo",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T18:03:20.841465+00:00"
     }
   },
   "integrator": {
@@ -3967,7 +3968,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T17:36:41.234887+00:00"
   },
-  "updated_at": "2026-10-26T18:03:14.816218+00:00",
+  "updated_at": "2026-10-26T18:03:20.841465+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
