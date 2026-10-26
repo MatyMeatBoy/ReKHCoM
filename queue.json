@@ -3548,20 +3548,27 @@
     "atlas-world-header-seam": {
       "id": "atlas-world-header-seam",
       "piece": "Naipes mundo: unión del borde HD con el margen",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T09:18:52.516445+00:00",
-      "updated_at": "2026-10-26T09:21:35.716551+00:00",
+      "updated_at": "2026-10-26T09:36:23.884222+00:00",
       "branch": "codex/atlas-world-header-seam",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/226",
       "approval": null,
       "reference": "20261025-012022-63945e",
-      "evidence": [],
-      "claimed_at": "2026-10-26T09:18:58.099990+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T09:36:23.884222+00:00",
+          "owner": "codex-atlas",
+          "detail": "Cuatro capturas EU/es: 1920/2000 a1080p y escala x8. Filas blancas idénticas en la unión. Build serial768MB y check_sources."
+        }
+      ],
+      "claimed_at": "2026-10-26T09:18:58.099990+00:00",
+      "sent": "3cdc76d68be745b09d5c1bf4eba0c011"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T09:21:35.716551+00:00",
+  "updated_at": "2026-10-26T09:36:23.884222+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
