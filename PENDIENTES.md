@@ -123,7 +123,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-074-cleanup | Escena 074: quitar resto de tile | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/212 | — | 2026-10-26T07:42:03.088079+00:00 |
 | atlas-097-shadow | Escena 097: sombra del actor fuera de cámara | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/213 | — | 2026-10-26T07:44:33.744991+00:00 |
 | atlas-112-genie-door | Escena 112: Genio y borde de puerta | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/214 | — | 2026-10-26T07:55:57.710528+00:00 |
-| atlas-061-wall-tip | Escena 061: remate inferior del muro | en_curso | codex-atlas | codex/atlas-061-wall-tip | — | 2026-10-26T07:56:45.409096+00:00 |
+| atlas-061-wall-tip | Escena 061: remate inferior del muro | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/215 | — | 2026-10-26T07:58:58.896503+00:00 |
 | atlas-110-folded-wall | Escena 110: pared reflejada hasta arriba | en_curso | codex-atlas | — | — | 2026-10-26T07:58:06.234017+00:00 |
 
 Integrador: libre
