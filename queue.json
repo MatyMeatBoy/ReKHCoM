@@ -4019,8 +4019,8 @@
       "status": "en_curso",
       "owner": "codex-ending",
       "created_at": "2026-10-26T21:33:21.538928+00:00",
-      "updated_at": "2026-10-26T21:33:28.496304+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T21:33:35.078337+00:00",
+      "branch": "fix/ending-cutscene-desync",
       "pr": null,
       "approval": null,
       "reference": "GitHub #42 video WCxyxOOb2fI",
@@ -4029,7 +4029,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:33:28.496304+00:00",
+  "updated_at": "2026-10-26T21:33:35.078337+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
