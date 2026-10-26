@@ -43,7 +43,17 @@ class ReviewTest(unittest.TestCase):
         self.assertEqual((row['turn'], row['unanswered'], row['latest']['id']), ('humano', [], child['id']))
         child['status'] = 'approved'
         self.store.save(child)
-        self.assertIn('honores', self.store.queue()[0]['todo'])
+        self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
+
+    def test_general_reply_can_cover_an_older_sibling(self):
+        raw=io.BytesIO();Image.new('RGB',(100,80),'#335544').save(raw,'PNG')
+        old=self.store.add(raw.getvalue(),'Prueba','older',parent_id=self.a['id'])
+        old['general']='Completar el suelo';old=self.store.save(old)
+        sent=self.store.submit([old['id']],{old['id']:old['revision']})
+        other=self.store.add(raw.getvalue(),'Prueba','other',parent_id=self.a['id'])
+        self.store.add(raw.getvalue(),'Prueba','joint reply',parent_id=other['id'],
+            revision_info={'response_to':[dict(image_id=old['id'],submission=sent['id'],cloud_id=None)]})
+        self.assertEqual(self.store.queue()[0]['unanswered'],[])
 
     def test_doodles(self):
         """pen strokes are kept, validated, drawn into the delivery and count as feedback for the queue"""
@@ -134,7 +144,7 @@ class ReviewTest(unittest.TestCase):
         registry=self.store.approvals()[0]
         self.assertEqual(registry['build_version'],self.a['id'])
         new['status']='changes_requested';self.store.save(new)
-        self.assertEqual(self.store.approvals()[0]['build_version'],self.a['id'])
+        self.assertEqual(self.store.approvals()[0]['build_version'],new['id'])
         self.assertEqual(len(self.store.history(self.a['id'])),2)
         new=self.store.get(new['id']);new['status']='honors';self.store.save(new)
         self.assertEqual(self.store.approvals()[0]['build_version'],new['id'])
