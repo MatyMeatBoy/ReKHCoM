@@ -3601,16 +3601,21 @@
       "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T08:14:20.487171+00:00",
-      "updated_at": "2026-10-26T08:25:25.590946+00:00",
+      "updated_at": "2026-10-26T09:46:00.593215+00:00",
       "branch": "codex/atlas-maleficent-lomo-r2",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/222",
-      "approval": null,
+      "approval": "approved exact 2f93c47e6dad42d1b61a96ca3d8e7083; approved exact d44b24262467494cbe3fc454ed5df1f5; approved exact 47658cfa72ee4785b2469abec62eddd0",
       "reference": "Tres cuerpos únicos/41 estados; paleta nativa 16 colores y píxel 1:1; presentación montada antes/después.",
       "evidence": [
         {
           "at": "2026-10-26T08:25:25.590946+00:00",
           "owner": "codex-atlas",
           "detail": "Tres revisiones individuales: 2f93c47e6dad42d1b61a96ca3d8e7083, d44b24262467494cbe3fc454ed5df1f5, 47658cfa72ee4785b2469abec62eddd0. Estudios generados, una pasada por cuerpo, inspeccionados. No activados ni adaptados a paleta/41 animaciones. Arena/codo siguen pendientes."
+        },
+        {
+          "at": "2026-10-26T09:46:00.593215+00:00",
+          "owner": "codex-atlas",
+          "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
         }
       ],
       "claimed_at": "2026-10-26T08:14:25.980347+00:00",
@@ -3684,7 +3689,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:45:53.583108+00:00"
   },
-  "updated_at": "2026-10-26T09:45:53.583108+00:00",
+  "updated_at": "2026-10-26T09:46:00.593215+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
