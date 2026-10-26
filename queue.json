@@ -3864,15 +3864,16 @@
     "controls-reset-triggers-20261026": {
       "id": "controls-reset-triggers-20261026",
       "piece": "Controles: restaurar bindings y layout automático, gatillos progresivos",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-batteries",
       "created_at": "2026-10-26T16:31:46.640074+00:00",
-      "updated_at": "2026-10-26T16:31:46.640074+00:00",
+      "updated_at": "2026-10-26T16:32:00.440154+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T16:32:00.440154+00:00"
     }
   },
   "integrator": {
@@ -3881,7 +3882,7 @@
     "created_at": "2026-10-26T16:26:51.693010+00:00",
     "updated_at": "2026-10-26T16:28:36.808780+00:00"
   },
-  "updated_at": "2026-10-26T16:31:46.640074+00:00",
+  "updated_at": "2026-10-26T16:32:00.440154+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
