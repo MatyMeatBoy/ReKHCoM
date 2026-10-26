@@ -2955,23 +2955,29 @@
     "darkside-aprobados-runtime": {
       "id": "darkside-aprobados-runtime",
       "piece": "Activar Darkside06 r8 y cuerpo en arena aprobados",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T23:54:26.846517+00:00",
-      "updated_at": "2026-10-25T23:56:29.990229+00:00",
+      "updated_at": "2026-10-26T00:05:37.909873+00:00",
       "branch": "codex/darkside-approved-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/190",
-      "approval": null,
+      "approval": "approved exact 60f90456598249ecb1e691c51dd2434e",
       "reference": "Atlas60f90456 y e7b206c9; usuario pide integrar todosaprobados",
       "evidence": [
         {
           "at": "2026-10-25T23:56:29.990229+00:00",
           "owner": "codex-atlas",
           "detail": "Dos aprobados60f90456/e7b206c9; dato r8 instalado y sampler habilitado encamara. Captura dirigida en curso."
+        },
+        {
+          "at": "2026-10-26T00:05:37.909873+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real e729d195959a7b4d318dee001812acb4577fbd1d;datos aprobadosycaptura runtime verificados."
         }
       ],
       "claimed_at": "2026-10-25T23:54:32.022578+00:00",
-      "sent": "60f90456598249ecb1e691c51dd2434e"
+      "sent": "60f90456598249ecb1e691c51dd2434e",
+      "completed_at": "2026-10-26T00:05:37.909873+00:00"
     }
   },
   "integrator": {
@@ -2980,7 +2986,7 @@
     "created_at": "2026-10-26T00:05:30.899521+00:00",
     "updated_at": "2026-10-26T00:05:30.899521+00:00"
   },
-  "updated_at": "2026-10-26T00:05:30.899521+00:00",
+  "updated_at": "2026-10-26T00:05:37.909873+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
