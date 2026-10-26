@@ -13,6 +13,7 @@ combate/evento más adelante en la historia, las tres versiones) y correrlos.
 ## Clases de bugs encontradas y cómo se buscan sus parientes
 | Clase | Origen | Cómo buscar parientes / prueba |
 |---|---|---|
+| UI que difiere letras HD pero un presentador propio dibuja solo su panel; cola JP Unicode enviada a backend Shift-JIS | #163 pausa/confirmación de películas HD, JP además sin letras tras componer | Todos los calls a `PortUiDraw` deben componer `PortUiHdDraw`; codificar cola JP igual al camino software. `test_hd_movie_pause_layers.py`, `test_hd_movie_pause_text.py`, `test_hd_ui_japanese_queue.py`; `HD_MOVIE_PAUSE_TEXT.md` |
 | Seek de video a fotograma clave anterior, PCM preroll encolado pero reloj fijado al segundo pedido | #42 final HD de Sora (222 s), vecino piso 12 (170 s) | Descartar/recortar PCM previo; reloj según timestamp real. `test_hd_movie_seek.py`; evidencia `ENDING_SYNC_42.md` |
 | Acceso suelto que el PC recupera ("bios:") y cierra Android/web/ARM | Event_0, Bosque 100 Acres | `debug_kit.py report`, baterías `run_batteries.py` |
 | División por un valor aún 0 (vida máxima antes de iniciarse) | #40 | `grep -rnE "/ *[a-z_>.]*(maxHp|count|Count|total)" src`; guardar con `#ifdef PLATFORM_PC` (hecho: hpply, hpoth, hpenm, bos_lst, bos_pc) |

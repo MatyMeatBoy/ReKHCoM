@@ -421,6 +421,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
     extern int PortUiHdMovieSkipTaken(void);
     extern int PortUiHandleEvent(const void* event);
     extern void PortUiDraw(uint32_t* frame, int width, int height);
+    extern void PortUiHdDraw(SDL_Renderer* renderer, float x, float y, float scale);
     extern int PortUiActive(void);
     extern void PortMenuSoundBegin(void);
     extern void PortMenuSoundDecide(int confirm);
@@ -492,10 +493,22 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
         SDL_SetRenderClipRect(renderer, NULL);
         SDL_SetRenderScale(renderer, 1.0f, 1.0f);
         SDL_RenderTexture(renderer, layer, NULL, NULL);
-        if (test && tick == 5) {
-            SDL_Surface* s = SDL_CreateSurfaceFrom(cw, ch, SDL_PIXELFORMAT_ARGB8888, work, cw * 4);
+        {
+            int ow, oh;
+            SDL_GetCurrentRenderOutputSize(renderer, &ow, &oh);
+            if (ow > 0 && oh > 0) {
+                /* PortUiDraw defers HD glyphs to this renderer pass. Match the canvas stretched above,
+                   keeping the font at the output's vertical resolution even in a resized window. */
+                float scale = (float)oh / ch;
+                SDL_SetRenderScale(renderer, (float)ow / (cw * scale), 1.0f);
+                PortUiHdDraw(renderer, 0, 0, scale);
+                SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+            }
+        }
+        if (test && (tick == 5 || tick == 25)) {
+            SDL_Surface* s = SDL_RenderReadPixels(renderer, NULL); /* include the deferred text, as presented */
             if (s) {
-                SDL_SaveBMP(s, PortConfigPath("hdmovie_pause.bmp"));
+                SDL_SaveBMP(s, PortConfigPath(tick == 5 ? "hdmovie_pause.bmp" : "hdmovie_skip_confirm.bmp"));
                 SDL_DestroySurface(s);
             }
         }

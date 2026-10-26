@@ -994,7 +994,13 @@ static int TextWidth(const char* s) {
 static void DrawGlyph(int code, int x, int y, uint32_t face, uint32_t shadow) {
     if (sHdUiFrame && sFb == sHdUiFrame && code >= 32 && sHdUiCount < 2048) {
         int n = sHdUiCount++;
+#ifdef VERSION_JP
+        /* NextChar marks Unicode UI text; every Japanese HD glyph backend uses Shift-JIS,
+           just like the cartridge glyph path below. Keep the queue in that encoding too. */
+        sHdUiGlyphs[n].code = code & JP_CHAR ? PortCodepointToSjis((unsigned)(code & 0xffff)) : code & 0xffff;
+#else
         sHdUiGlyphs[n].code = code & 0xffff;
+#endif
         sHdUiGlyphs[n].x = x; sHdUiGlyphs[n].y = y;
         sHdUiGlyphs[n].face = face; sHdUiGlyphs[n].shadow = shadow;
         sHdUiGlyphs[n].alive = 1;
