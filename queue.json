@@ -4016,10 +4016,10 @@
     "ending-desync-42": {
       "id": "ending-desync-42",
       "piece": "Desincronizacion video audio final Sora issue 42",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ending",
       "created_at": "2026-10-26T21:33:21.538928+00:00",
-      "updated_at": "2026-10-26T21:55:14.955753+00:00",
+      "updated_at": "2026-10-26T21:55:59.075868+00:00",
       "branch": "fix/ending-cutscene-desync",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/273",
       "approval": "Pedido directo usuario 26/10: intentar replicar y arreglar desync final reportado por Pedro",
@@ -4039,9 +4039,15 @@
           "at": "2026-10-26T21:55:14.955753+00:00",
           "owner": "codex-ending",
           "detail": "PR273 merged a3b8d78396e806a12885441b90142a774e2823da; reviewer sin findings; pendiente registro integrado con lock nuevo"
+        },
+        {
+          "at": "2026-10-26T21:55:59.075868+00:00",
+          "owner": "codex-ending",
+          "detail": "Merge a3b8d78396e806a12885441b90142a774e2823da; reviewer independiente sin findings, regression PASS, escenas151/123 ejecución real. ZIP privado experimental EU disponible."
         }
       ],
-      "claimed_at": "2026-10-26T21:33:28.496304+00:00"
+      "claimed_at": "2026-10-26T21:33:28.496304+00:00",
+      "completed_at": "2026-10-26T21:55:59.075868+00:00"
     },
     "trailer-v20-production": {
       "id": "trailer-v20-production",
@@ -4064,7 +4070,7 @@
     "created_at": "2026-10-26T21:55:21.204781+00:00",
     "updated_at": "2026-10-26T21:55:21.204781+00:00"
   },
-  "updated_at": "2026-10-26T21:55:21.204781+00:00",
+  "updated_at": "2026-10-26T21:55:59.075868+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
