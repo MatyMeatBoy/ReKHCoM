@@ -6,6 +6,22 @@ Se reprodujo con la misma entrada de Jafar: `KHCOM_BATTLE=204:8:0`,
 view 4, zoom 8, `card_hud_raise=8`, cartas HD activadas y piloto `hd_hud=0`.
 En el cuadro 1572, el estado real tiene gauge 256 y contador interno 0 (glifo 1).
 
+## Alcance pendiente al cerrar este avance
+
+Este cambio restaura el contador, pero **no completa el pedido de limitar el rojo
+solo al interior negro del dorso HD**. El relleno conserva su rectángulo GBA y
+puede invadir el borde plateado y la corona HD. Falta una máscara derivada del
+negro opaco del asset importado, conservando matriz, progreso y oclusiones.
+No se debe presentar esta PR como solución completa del margen ni usar su
+binario para el GIF final aprobado.
+
+La serie de entrada idéntica del productor muestra cinco estados reales: cuadros
+1431/1464/1486/1511/1516, gauge 0/25/100/200/256. Confirma crecimiento desde negro
+vacío a parcial y lleno en GBA y HD; también documenta la invasión del margen
+que sigue pendiente. El progreso no estaba congelado: el primer cuadro revisado
+(1572) ya correspondía al estado lleno. El contacto se conserva en
+`arte/Trailer/v20/previews/reload_0_25_100_200_256.png` del workspace principal.
+
 ## Causa y cambio
 
 La recarga no es una sola imagen. `card_reload_2` en `src/card/card_battle.c`
