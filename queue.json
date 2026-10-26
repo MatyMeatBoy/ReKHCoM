@@ -3244,8 +3244,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T01:23:13.234362+00:00",
-      "updated_at": "2026-10-26T01:23:18.968603+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T01:23:26.659208+00:00",
+      "branch": "codex/core-assets-embedded",
       "pr": null,
       "approval": "Pedido explícito: incluir todo lo necesario en el ejecutable",
       "reference": null,
@@ -3254,7 +3254,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T01:23:18.968603+00:00",
+  "updated_at": "2026-10-26T01:23:26.659208+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
