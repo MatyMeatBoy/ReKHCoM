@@ -2988,19 +2988,20 @@
     "rev-six-081": {
       "id": "rev-six-081",
       "piece": "Escena081 suelo y setas",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas",
       "created_at": "2026-10-26T00:06:44.438144+00:00",
-      "updated_at": "2026-10-26T00:06:44.438144+00:00",
+      "updated_at": "2026-10-26T00:06:49.641285+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-26T00:06:49.641285+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T00:06:44.438144+00:00",
+  "updated_at": "2026-10-26T00:06:49.641285+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
