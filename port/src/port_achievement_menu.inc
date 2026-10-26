@@ -84,11 +84,13 @@ static int AchievementMenuRows(int* indices, int* earned) {
     }
     return count;
 }
+static int sAchievementTriggerHeld[2];
 static void AchievementMenuOpen(void) {
     PortAchievementsListRefresh();
     sPage = PAGE_ACHIEVEMENTS;
     sAchievementChoice = sAchievementScroll = sAchievementView = 0;
     sAchievementList = PortRecomActive() && PortRecomListCount() > 0; /* a Re:CoM game opens its own list */
+    sAchievementTriggerHeld[0] = sAchievementTriggerHeld[1] = 0;
     sMenuLightStart = MenuLightNow();
 }
 static void RebelMenuOpen(void) {
@@ -123,10 +125,9 @@ static int AchievementMenuInput(const SDL_Event* ev) {
     } else if (ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && (ev->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER ||
                                                              ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER)) {
         /* L2 / R2 change the list too (user 25/10): once per press */
-        static int held[2];
-        int t = ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER, down = ev->gaxis.value > 16000;
-        if (down && !held[t]) list = 1;
-        held[t] = ev->gaxis.value > 8000;
+        int t = ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER, was = sAchievementTriggerHeld[t];
+        sAchievementTriggerHeld[t] = KhPadAxisHeld(ev->gaxis.value, 0, was);
+        if (sAchievementTriggerHeld[t] && !was) list = 1;
     }
     if (back && sAchievementList >= 2) { sPage = PAGE_CHEATS; sCursor = ITEM_CHEAT_REBEL_LIST; sScroll = 0; return 1; }
     if (back) { sPage = PAGE_MAIN; sCursor = ITEM_ACHIEVEMENTS_MENU; sScroll = 0; return 1; }
@@ -159,11 +160,18 @@ static void DrawAchievementMenu(int l, int width, int height) {
     PortAchievementInfo info;
     char text[160];
     Fill(0, 0, width, height, 0xFFFFFFFFu);
-    DrawText(sAchievementList == 3 ? (es ? "Logros · Rebelde Re:CoM" : "Achievements · Rebel Re:CoM")
+    const char* title = sAchievementList == 3 ? (es ? "Logros · Rebelde Re:CoM" : "Achievements · Rebel Re:CoM")
              : sAchievementList == 2 ? (es ? "Logros · Rebelde CoM" : "Achievements · Rebel CoM")
              : sAchievementList ? (es ? "Logros · Re:Chain of Memories" : "Achievements · Re:Chain of Memories")
-                              : (es ? "Logros · Chain of Memories" : "Achievements · Chain of Memories"),
-             x, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
+                              : (es ? "Logros · Chain of Memories" : "Achievements · Chain of Memories");
+    if (PortRecomListCount() > 0) {
+        int left = DrawText("L2 < ", x, MENU_TITLE_Y, MENU_RED_DARK, 0xFFD8D8D8u);
+        int end = right - TextWidth(" > R2");
+        AchievementMenuText(title, left, MENU_TITLE_Y, end, MENU_INK);
+        DrawText(" > R2", end, MENU_TITLE_Y, MENU_RED_DARK, 0xFFD8D8D8u);
+    } else {
+        AchievementMenuText(title, x, MENU_TITLE_Y, right, MENU_INK);
+    }
     SDL_snprintf(text, sizeof(text), "%d/%d    L < %s > R", earned, AchievementMenuCount(), filters[es][sAchievementView]);
     AchievementMenuText(text, x, MENU_TOP + 2, right, MENU_RED_DARK);
     if (sAchievementChoice >= count) sAchievementChoice = SDL_max(0, count - 1);

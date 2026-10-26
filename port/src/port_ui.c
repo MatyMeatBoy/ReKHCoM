@@ -2694,7 +2694,36 @@ static void GbaKey(int code, int cx, int cy) {
                 c = 0xFF5F5480u;
             Pixel(cx + dx, cy + dy, c);
         }
-    DrawGlyph(code, cx - GlyphWidth(code) / 2 + 1, cy - 4, 0xFFF4F0FCu, 0xFF41385Au); /* its letter's 7 rows centred */
+    /* The letter belongs to this raster key, including with HD menu text.
+       Centre its visible face, rather than the font's advance/cell padding. */
+    {
+        const uint16_t* frame = gMsgLatinFontFrames[code & 255];
+        const uint8_t* tiles;
+        uint8_t glyph[10][16];
+        int left = 16, right = -1, top = 10, bottom = -1, x, y;
+        if (!frame || !frame[0]) return;
+        tiles = gMsgLatinFontTiles + (frame[3] & 1023) * 32;
+        for (dy = 0; dy < 10; dy++)
+            for (dx = 0; dx < 16; dx++) {
+                int py = dy + 3, t = (py >> 3) * 2 + (dx >> 3);
+                uint8_t b = tiles[t * 32 + (py & 7) * 4 + ((dx & 7) >> 1)];
+                int v = glyph[dy][dx] = (dx & 1) ? b >> 4 : b & 15;
+                if (v == 1) {
+                    if (dx < left) left = dx;
+                    if (dx > right) right = dx;
+                    if (dy < top) top = dy;
+                    if (dy > bottom) bottom = dy;
+                }
+            }
+        if (right < left) return;
+        x = cx - (left + right) / 2;
+        y = cy - (top + bottom) / 2;
+        for (dy = 0; dy < 10; dy++)
+            for (dx = 0; dx < 16; dx++) {
+                int v = glyph[dy][dx];
+                if (v) Pixel(x + dx, y + dy, v == 1 ? 0xFFF4F0FCu : 0xFF41385Au);
+            }
+    }
 }
 
 static void MenuButton(int x, int y, const char* text, int key) {
