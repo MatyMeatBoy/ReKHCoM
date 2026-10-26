@@ -60,6 +60,7 @@ static int sUnstockPending;
 /* After closing an overlay, ignore buttons still held until released so the
    confirming press does not reach the game. */
 void PortInputSuppressUntilRelease(void) {
+    sKeyboard = 0; /* the overlay may have consumed this key's release */
     sSuppress = 1;
     sBattleMenuKeys = sBattleMenuChord = 0;
     sZoomSelect = sZoomEat = 0;

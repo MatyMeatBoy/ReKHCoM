@@ -19,6 +19,7 @@
 #include "port/port_android.h"
 #endif
 #include "port/pad_layout.h"
+#include "port/menu_input.h"
 
 /* A pad button in the menus: whatever is bound to the game's A confirms and to B goes back
    (as the in-game controls), so the menu follows the player's mapping; the face buttons
@@ -29,6 +30,24 @@ static int UiPadButton(const SDL_Event* ev) {
     if (b == gPortConfig.pad[PORT_ACT_B]) return SDL_GAMEPAD_BUTTON_EAST;
     if (b == SDL_GAMEPAD_BUTTON_SOUTH || b == SDL_GAMEPAD_BUTTON_EAST) return -1;
     return b;
+}
+
+static unsigned char sUiAxisHeld[2];
+static void ResetMenuAxes(void) {
+    SDL_JoystickID* ids;
+    int count, i, action;
+    sUiAxisHeld[0] = sUiAxisHeld[1] = 0;
+    ids = SDL_GetGamepads(&count);
+    for (i = 0; ids && i < count; i++) {
+        SDL_Gamepad* pad = SDL_GetGamepadFromID(ids[i]);
+        if (!pad) continue;
+        for (action = 0; action < 2; action++) {
+            int encoded = gPortConfig.pad[action] - PORT_PAD_AXIS_BASE;
+            if (encoded >= 0 && encoded / 2 < SDL_GAMEPAD_AXIS_COUNT)
+                sUiAxisHeld[action] |= KhPadAxisHeld(SDL_GetGamepadAxis(pad, (SDL_GamepadAxis)(encoded / 2)), encoded & 1, 1);
+        }
+    }
+    SDL_free(ids);
 }
 
 extern void* gMsgLatinFontFrames[];
@@ -1460,6 +1479,20 @@ static int Wrap(int v, int n) {
     return ((v % n) + n) % n;
 }
 
+/* Opt-in audits distinguish a row which is hidden/disabled from one which failed.
+   No game state is changed, and ordinary sessions produce no extra logging. */
+static void AuditOptions(const char* phase) {
+    int item;
+    if (!SDL_getenv("KHCOM_OPTIONS_AUDIT")) return;
+    for (item = PageFirst(); item < PageEnd(); item++) {
+        char value[128];
+        if (IsHeading(item)) continue;
+        ValueText(item, value, sizeof(value));
+        PortLog("options-audit: phase=%s page=%d item=%d visible=%d enabled=%d value=[%s]", phase, sPage, item,
+                ItemVisible(item), ItemEnabled(item), value);
+    }
+}
+
 static void Close(void);
 
 static void ResetControlBindings(void) {
@@ -1909,6 +1942,7 @@ void PortUiOpenOptions(void) {
     if (sOpen)
         return;
     sOpen = 1;
+    ResetMenuAxes(); /* an already held trigger cannot confirm the newly opened menu */
     sOpenSerial++;
     sConfirm = CONFIRM_NONE;
     sOpenSound = !SDL_getenv("KHCOM_OPTIONS_SHOT");
@@ -1931,6 +1965,9 @@ void PortUiOpenOptions(void) {
     RefreshModes();
     if (SDL_getenv("KHCOM_ACHIEVEMENTS_SHOT")) AchievementMenuOpen();
     if (SDL_getenv("KHCOM_SCENES_SHOT")) { SceneMenuOpen(); sSceneHd = SDL_atoi(SDL_getenv("KHCOM_SCENES_SHOT")) == 2; }
+    if (SDL_getenv("KHCOM_OPTIONS_AUDIT"))
+        PortLog("options-lifecycle: open serial=%u frame=%u", sOpenSerial, PortFrameCount());
+    AuditOptions("open");
 }
 
 /* map.c: a new game was confirmed. Original preselected; its options start as the graphics mode chosen on the first
@@ -2046,6 +2083,8 @@ static void Close(void) {
     if (sClosing > 0)
         return;
     sClosing = MENU_FADE;
+    if (SDL_getenv("KHCOM_OPTIONS_AUDIT"))
+        PortLog("options-lifecycle: close serial=%u frame=%u tick=%d", sOpenSerial, PortFrameCount(), sHarnessTick);
     sCloseSound = 1;
     PortConfigSave();
     PortInputSuppressUntilRelease();
@@ -2151,8 +2190,39 @@ static void Move(int dir) {
 }
 
 static int ScenePauseEvent(const SDL_Event* ev);
+static SDL_Keycode UiMappedKey(SDL_Keycode key) {
+    int action, slot;
+    /* Navigation and the fixed enter/back shortcuts always remain usable. */
+    switch (key) {
+        case SDLK_UP: case SDLK_DOWN: case SDLK_LEFT: case SDLK_RIGHT:
+        case SDLK_W: case SDLK_A: case SDLK_S: case SDLK_D:
+        case SDLK_RETURN: case SDLK_SPACE: case SDLK_ESCAPE: case SDLK_BACKSPACE: case SDLK_F1: case SDLK_AC_BACK:
+            return key;
+    }
+    for (action = 0; action < 2; action++)
+        for (slot = 0; slot < 2; slot++)
+            if (gPortConfig.keys[action][slot] && key == (SDL_Keycode)gPortConfig.keys[action][slot])
+                return action ? SDLK_Z : SDLK_X;
+    return key;
+}
 int PortUiHandleEvent(const void* p) {
     const SDL_Event* ev = (const SDL_Event*)p;
+    SDL_Event mapped;
+
+    if ((sOpen || sScenePause) && !(sPage == PAGE_CONTROLS && sControlCapture)) {
+        /* Achievement triggers are reserved list shortcuts, as Q/E are there. */
+        int reserved = !sScenePause && sPage == PAGE_ACHIEVEMENTS && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION &&
+                       (ev->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER || ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER);
+        int axis = reserved ? 0 : KhPadMenuAxis(ev, gPortConfig.pad, sUiAxisHeld, &mapped);
+        if (axis == 1) return 1;
+        if (axis == 2) ev = &mapped;
+        if ((ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_KEY_UP) &&
+            (sScenePause || sConfirm || (sPage != PAGE_SCENES && sPage != PAGE_ACHIEVEMENTS && sPage != PAGE_LOBBY))) {
+            mapped = *ev;
+            mapped.key.key = UiMappedKey(ev->key.key);
+            ev = &mapped;
+        }
+    }
 
     if (sScenePause)
         return ScenePauseEvent(ev);
@@ -4369,6 +4439,25 @@ static void HarnessFadeShot(int width, int height) {
 static int HarnessOptionsAction(void) {
     const char* route = SDL_getenv("KHCOM_OPTIONS_ACTIONS");
     int changed = 0;
+    if (!route && SDL_getenv("KHCOM_OPTIONS_KEYS")) {
+        const char* input = SDL_getenv("KHCOM_OPTIONS_KEYS");
+        ++sHarnessTick;
+        while (input && *input) {
+            const char* colon = SDL_strchr(input, ':');
+            const char* comma = SDL_strchr(input, ',');
+            if (colon && (!comma || colon < comma) && SDL_atoi(input) == sHarnessTick) {
+                SDL_Event event = {0};
+                event.type = SDL_EVENT_KEY_DOWN;
+                event.key.key = (SDL_Keycode)SDL_atoi(colon + 1);
+                PortUiHandleEvent(&event);
+                PortLog("options-input: tick=%d key=%d page=%d cursor=%d", sHarnessTick, (int)event.key.key, sPage, sCursor);
+                AuditOptions("input");
+                changed = 1;
+            }
+            input = comma ? comma + 1 : NULL;
+        }
+        return changed;
+    }
     if (sPage == PAGE_ACHIEVEMENTS && SDL_getenv("KHCOM_ACHIEVEMENT_KEYS")) {
         const char* p = SDL_getenv("KHCOM_ACHIEVEMENT_KEYS");
         ++sHarnessTick;
@@ -4491,6 +4580,7 @@ static int HarnessOptionsAction(void) {
                 ValueText(row, after, sizeof(after));
                 PortLog("options-test: tick=%d item=%d enabled=%d before=[%s] after=[%s]",
                         sHarnessTick, row, ItemEnabled(row), before, after);
+                AuditOptions("changed");
                 if (row == ITEM_FULLSCREEN || row == ITEM_FS_RES || row == ITEM_VSYNC) {
                     int count = 0, vsync = -999, winW = 0, winH = 0;
                     SDL_Window** windows = SDL_GetWindows(&count);
@@ -4558,6 +4648,7 @@ void PortUiOpenScenePause(int skippable) {
     if (sOpen || sScenePause)
         return;
     sScenePause = 1;
+    ResetMenuAxes();
     sSceneSkippable = skippable;
     sSceneStep = 0;
     sSceneCursor = 0;

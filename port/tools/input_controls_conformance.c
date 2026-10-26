@@ -63,6 +63,12 @@ int main(void){
     key(SDLK_Q,1);assert(PortInputKeys()==KEY_A);
     key(SDLK_Q,0);assert(!PortInputKeys());
     gPortConfig.keys[PORT_ACT_A][0]=SDLK_X;
+    /* A key released while the overlay owns key-up must not keep suppression
+       latched forever after closing. A fresh press must work immediately. */
+    key(SDLK_X,1);assert(PortInputKeys()==KEY_A);
+    PortInputSuppressUntilRelease();assert(!PortInputKeys());
+    key(SDLK_Z,1);assert(PortInputKeys()==KEY_B);
+    key(SDLK_Z,0);assert(!PortInputKeys());
     SDL_VirtualJoystickDesc desc;SDL_INIT_INTERFACE(&desc);
     desc.type=SDL_JOYSTICK_TYPE_GAMEPAD;desc.naxes=SDL_GAMEPAD_AXIS_COUNT;
     desc.nbuttons=SDL_GAMEPAD_BUTTON_COUNT;desc.name="ReKHCoM controls test";
