@@ -387,6 +387,7 @@ void PortAudioShutdown(void);
 /* ---- input (port_input.c) ------------------------------------------------ */
 
 void PortInputInit(void);
+void PortInputResetBindings(void); /* clear keys from the old mapping and suppress held pad buttons */
 uint16_t PortInputKeys(void);
 /* The port's extra buttons, beyond the GBA's ten key bits. */
 #define PORT_KEY_STOCK 0x400

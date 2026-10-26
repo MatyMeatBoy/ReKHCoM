@@ -54,6 +54,15 @@ int main(void){
     assert(!PortInputKeys() && !PortTakeDodge(0,0) && !PortTakeUnstock());
     for(int i=0;i<30;i++)PortInputResolve(PORT_KEY_UNSTOCK);
     PortInputSuppressUntilRelease();assert(!PortTakeUnstock());assert(!PortInputKeys());
+    /* Rebinding while a key is down cannot leave the old action stuck: its
+       later release no longer matches the new mapping. */
+    key(SDLK_X,1);assert(PortInputKeys()==KEY_A);
+    gPortConfig.keys[PORT_ACT_A][0]=SDLK_Q;
+    key(SDLK_X,0);assert(PortInputKeys()==KEY_A);
+    PortInputResetBindings();assert(!PortInputKeys());
+    key(SDLK_Q,1);assert(PortInputKeys()==KEY_A);
+    key(SDLK_Q,0);assert(!PortInputKeys());
+    gPortConfig.keys[PORT_ACT_A][0]=SDLK_X;
     SDL_VirtualJoystickDesc desc;SDL_INIT_INTERFACE(&desc);
     desc.type=SDL_JOYSTICK_TYPE_GAMEPAD;desc.naxes=SDL_GAMEPAD_AXIS_COUNT;
     desc.nbuttons=SDL_GAMEPAD_BUTTON_COUNT;desc.name="ReKHCoM controls test";

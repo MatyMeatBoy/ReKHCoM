@@ -67,6 +67,11 @@ void PortInputSuppressUntilRelease(void) {
     sUnstockHeld = sUnstockPending = 0;
 }
 
+void PortInputResetBindings(void) {
+    sKeyboard = 0;
+    PortInputSuppressUntilRelease();
+}
+
 /* Test harness: KHCOM_VPAD="from-to:BUTTON,..." plugs in a virtual gamepad
    and holds its buttons on those frames (SOUTH, EAST, WEST, NORTH, START,
    BACK, LB, RB, LT, RT, UP, DOWN, LEFT, RIGHT, RS_LEFT, RS_RIGHT, RS_UP, RS_DOWN). */

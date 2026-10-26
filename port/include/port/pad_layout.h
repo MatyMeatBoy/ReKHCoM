@@ -7,6 +7,13 @@
    layout: 0 detect from the pad, 1 Xbox positions, 2 Nintendo. */
 #include <SDL3/SDL.h>
 
+/* Hysteresis for remapped axes and menu triggers: a slow squeeze must cross
+   the press threshold before becoming held, then fully release to rearm. */
+static inline int KhPadAxisHeld(int value, int negative, int held) {
+    if (negative) value = -value;
+    return value > (held ? 8000 : 16000);
+}
+
 static inline int KhPadIsNintendo(SDL_Gamepad* pad, int layout) {
     if (layout == 1) return 0;
     if (layout == 2) return 1;

@@ -1478,6 +1478,9 @@ static void ResetControlBindings(void) {
     };
     memcpy(gPortConfig.keys, keys, sizeof(keys));
     memcpy(gPortConfig.pad, pad, sizeof(pad));
+    gPortConfig.padLayout = 0; /* the default is automatic; force Nintendo stays opt-in */
+    sControlCapture = 0;
+    PortInputResetBindings();
     PortConfigSave();
 }
 
@@ -2296,7 +2299,7 @@ int PortUiHandleEvent(const void* p) {
         int action = sCursor - ITEM_CONTROL_A;
         if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat) {
             if (ev->key.key == SDLK_ESCAPE || ev->key.key == SDLK_AC_BACK) sControlCapture = 0;
-            else if (!sControlPad) { gPortConfig.keys[action][0] = ev->key.key == SDLK_DELETE ? 0 : (int)ev->key.key; sControlCapture = 0; PortConfigSave(); }
+            else if (!sControlPad) { gPortConfig.keys[action][0] = ev->key.key == SDLK_DELETE ? 0 : (int)ev->key.key; sControlCapture = 0; PortInputResetBindings(); PortConfigSave(); }
             else if (ev->key.key == SDLK_DELETE) { gPortConfig.pad[action] = -1; sControlCapture = 0; PortConfigSave(); }
             return 1;
         }

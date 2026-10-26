@@ -2480,6 +2480,7 @@ static void PageControls() {
     }
     ImGui::Spacing();
     if (ImGui::Button(T("Restablecer controles", "Reset controls"))) {
+        sCapture.clear(); /* a pending capture must not overwrite the defaults on the next input */
         for (const Setting& st : kSettings) {
             if (std::strncmp(st.key, "kb_", 3) == 0 || std::strncmp(st.key, "pad_", 4) == 0)
                 Ini(st.key) = st.def;
