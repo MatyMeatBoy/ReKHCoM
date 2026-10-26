@@ -2714,11 +2714,11 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T16:08:35.815510+00:00",
-      "updated_at": "2026-10-26T07:25:00.112769+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T07:25:43.085316+00:00",
+      "branch": "codex/atlas-087-turbo",
       "pr": null,
       "approval": null,
-      "reference": "../khcom-claude-int/build/atlas-all-briefs.json",
+      "reference": "20261024-175614-5a3022",
       "evidence": [],
       "claimed_at": "2026-10-26T07:25:00.112769+00:00"
     },
@@ -3307,7 +3307,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:25:00.112769+00:00",
+  "updated_at": "2026-10-26T07:25:43.085316+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
