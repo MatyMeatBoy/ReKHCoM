@@ -136,5 +136,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | Autorización directa usuario26/10: comentarios de aprobados sin nueva revisión Atlas | 2026-10-26T12:28:07.419771+00:00 |
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | codex-atlas | codex/hd-ui-v20-completion | — | 2026-10-26T10:59:03.354749+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
+| android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | pendiente | — | — | — | 2026-10-26T16:21:50.541280+00:00 |
 
 Integrador: libre
