@@ -3336,20 +3336,27 @@
     "atlas-095-garden": {
       "id": "atlas-095-garden",
       "piece": "Escena 095: árbol, fondo y flores",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:33:19.378587+00:00",
-      "updated_at": "2026-10-26T07:34:16.578148+00:00",
+      "updated_at": "2026-10-26T07:39:04.388206+00:00",
       "branch": "codex/atlas-095-garden",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/211",
       "approval": null,
       "reference": "20261024-183308-2313ad",
-      "evidence": [],
-      "claimed_at": "2026-10-26T07:33:24.402094+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T07:39:04.388206+00:00",
+          "owner": "codex-atlas",
+          "detail": "Árbol y flores completos en dos capturas EU. La nube del castillo sigue abierta y sin marcar respondida."
+        }
+      ],
+      "claimed_at": "2026-10-26T07:33:24.402094+00:00",
+      "sent": "47e89e1d59374be8aa04ff8e658ee3a6"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:34:16.578148+00:00",
+  "updated_at": "2026-10-26T07:39:04.388206+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
