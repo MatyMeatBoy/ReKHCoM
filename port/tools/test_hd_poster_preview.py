@@ -27,7 +27,7 @@ def main():
     parser.add_argument('--baseline', action='store_true')
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    source = (ROOT / 'port/src/port_hdmovie.c').read_text()
+    source = (ROOT / 'port/src/port_hdmovie.c').read_text(encoding='utf-8')
     prefix = r'''#define COBJMACROS
 #include <windows.h>
 #include <mfapi.h>

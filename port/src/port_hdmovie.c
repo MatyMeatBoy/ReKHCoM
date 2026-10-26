@@ -295,7 +295,7 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
     BYTE* pixels = NULL;
     LONG pitch = 0;
     DWORD length = 0;
-    HRESULT com;
+    HRESULT com, format;
     if (!path || !*path || !out || ow <= 0 || oh <= 0 || ow > 854 || oh > 480 || second < 0) return 0;
     if (ReadImportedPoster(path, out, ow, oh, second)) return 1;
     if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES) return 0;
@@ -316,9 +316,12 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
     IMFMediaType_SetGUID(type, &MF_MT_SUBTYPE, &MFVideoFormat_RGB32);
     IMFMediaType_SetUINT64(type, &MF_MT_FRAME_SIZE, (UINT64)(unsigned)ow << 32 | (unsigned)oh);
     /* Some older video processors only accept their native output size. */
-    if (FAILED(IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type)))
+    format = IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type);
+    if (FAILED(format)) {
         IMFMediaType_DeleteItem(type, &MF_MT_FRAME_SIZE);
-    if (FAILED(IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type))) goto done;
+        format = IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type);
+    }
+    if (FAILED(format)) goto done;
     IMFMediaType_Release(type); type = NULL;
     if (FAILED(IMFSourceReader_GetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &type))) goto done;
     if (FAILED(IMFMediaType_GetUINT64(type, &MF_MT_FRAME_SIZE, &size))) goto done;

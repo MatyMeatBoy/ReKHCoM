@@ -20,8 +20,14 @@ static inline int PortHdPosterPath(const char* movie, int second, char* out, siz
     return written >= 0 && (size_t)written < size;
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* Resolve on the main thread; the copied path is then owned by the job. */
 int PortHdScenePreviewPath(const char* name, char* out, size_t size);
 /* Worker-safe: no renderer calls and no PortConfigPath/shared temporary path. */
 int PortHdScenePreviewFile(const char* path, uint32_t* out, int width, int height, int second);
+#ifdef __cplusplus
+}
+#endif
 #endif
