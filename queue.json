@@ -2711,16 +2711,23 @@
     "escena-087-52879b0b9b9a4d578adcc36ce568601f": {
       "id": "escena-087-52879b0b9b9a4d578adcc36ce568601f",
       "piece": "Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T16:08:35.815510+00:00",
-      "updated_at": "2026-10-26T07:25:43.085316+00:00",
+      "updated_at": "2026-10-26T07:29:00.802465+00:00",
       "branch": "codex/atlas-087-turbo",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/206",
       "approval": null,
       "reference": "20261024-175614-5a3022",
-      "evidence": [],
-      "claimed_at": "2026-10-26T07:25:00.112769+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-26T07:29:00.802465+00:00",
+          "owner": "codex-atlas",
+          "detail": "Dos capturas runtime EU, check_sources y compilación correctos. Espera valoración humana de la hija."
+        }
+      ],
+      "claimed_at": "2026-10-26T07:25:00.112769+00:00",
+      "sent": "33dd78c3e05f44648d70624c52ae2cf0"
     },
     "trickmaster-rail-finish": {
       "id": "trickmaster-rail-finish",
@@ -3307,7 +3314,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T07:25:43.085316+00:00",
+  "updated_at": "2026-10-26T07:29:00.802465+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
