@@ -168,7 +168,8 @@ def build_guest(region, jobs):
         if src.stem in PORT_EXCLUDED:
             continue
         if src.name in PORT_PATCHES:
-            src = patched_source(src, out / 'patched')
+            # the 64-bit Linux image (port/linux64) has a PC pad: no DualSense patches
+            src = patched_source(src, out / 'patched', dualsense=os.environ.get('REKHCOM_GUEST_DUALSENSE', '1') != '0')
         units.append((src, out / 'port' / (src.stem + '.o'), port_flags))
     units.append((pc / 'rom_relocs.c', out / 'port/rom_relocs.o', port_flags))
     for src in sorted((HERE / 'guest/src').glob('*.c')):
