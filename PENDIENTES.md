@@ -146,4 +146,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-poster-performance-20261026 | Posters HD de galeria sin bloqueo de decoder | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/262 | Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas | 2026-10-26T19:08:02.265493+00:00 |
 | docs-v20-trailer | Limpiar pendientes tras v2.0 y registrar directrices del trailer | integrado | codex-trailer | https://github.com/MatyMeatBoy/ReKHCoM/pull/271 | Pedido directo del usuario de limpiar pendientes y registrar trailer v2.0, 26/10/2026 | 2026-10-26T21:14:47.042065+00:00 |
 
-Integrador: codex-trailer-integrador (ocupado; 2026-10-26T21:14:10.376431+00:00)
+Integrador: libre
