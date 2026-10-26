@@ -3476,10 +3476,23 @@
       "approval": null,
       "reference": "20261024-183308-2313ad",
       "evidence": []
+    },
+    "atlas-menu-font-evidence": {
+      "id": "atlas-menu-font-evidence",
+      "piece": "Ver barajas: fuente solicitada y opciones actuales",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T08:02:10.346460+00:00",
+      "updated_at": "2026-10-26T08:02:10.346460+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "20261024-134252-72061c",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:02:05.044114+00:00",
+  "updated_at": "2026-10-26T08:02:10.346460+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
