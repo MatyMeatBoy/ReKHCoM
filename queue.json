@@ -3437,10 +3437,10 @@
     "atlas-112-genie-door": {
       "id": "atlas-112-genie-door",
       "piece": "Escena 112: Genio y borde de puerta",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:44:39.072622+00:00",
-      "updated_at": "2026-10-26T09:44:50.823338+00:00",
+      "updated_at": "2026-10-26T09:45:02.936995+00:00",
       "branch": "codex/atlas-112-genie-door",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/214",
       "approval": "changes_requested exact 994a5761f7f042deaba72d7e716ee14e",
@@ -3460,10 +3460,16 @@
           "at": "2026-10-26T09:44:50.823338+00:00",
           "owner": "codex-atlas",
           "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
+        },
+        {
+          "at": "2026-10-26T09:45:02.936995+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 5984fd6566ec6b544219f4858616f3b2a73a68a5. Capturas y aprobación exactas conservadas. Cambio de código integrado en main; build compuesta siguiente."
         }
       ],
       "claimed_at": "2026-10-26T07:44:43.883034+00:00",
-      "sent": "994a5761f7f042deaba72d7e716ee14e"
+      "sent": "994a5761f7f042deaba72d7e716ee14e",
+      "completed_at": "2026-10-26T09:45:02.936995+00:00"
     },
     "atlas-061-wall-tip": {
       "id": "atlas-061-wall-tip",
@@ -3656,7 +3662,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:44:41.655345+00:00"
   },
-  "updated_at": "2026-10-26T09:44:50.823338+00:00",
+  "updated_at": "2026-10-26T09:45:02.936995+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
