@@ -2407,7 +2407,8 @@ static void HarnessFrame(void) {
     const char* saveAt = SDL_getenv("KHCOM_SAVESTATE");
     {
         extern int PortUiGalleryHarnessDone(void);
-        if (PortUiGalleryHarnessDone()) Quit();
+        extern int PortScenePosterFinished(void);
+        if (PortUiGalleryHarnessDone() || PortScenePosterFinished()) Quit();
     }
 
     {
@@ -2562,9 +2563,9 @@ static void HarnessFrame(void) {
 int gPortExitCode; /* REKHCOM_EXIT_QUIT_ALL after Options > Quit the game */
 static void Quit(void) {
     void PortHdHudShutdown(void);
-    extern void PortSceneGalleryShutdown(void);
+    extern void PortSceneGalleryFinalShutdown(void);
     PortSramSyncIfDirty();
-    PortSceneGalleryShutdown();
+    PortSceneGalleryFinalShutdown();
     PortConfigSave();
     PortAchievementsShutdown();
     PortDiscordShutdown();
@@ -3176,6 +3177,11 @@ int main(int argc, char** argv) {
         const char* colon = SDL_strchr(e, ':');
         if (colon)
             gPortEventTest = (SDL_atoi(e) << 8) | (SDL_atoi(colon + 1) & 0xFF);
+    }
+
+    {
+        extern int PortScenePosterConfigure(int argc, char** argv);
+        if (PortScenePosterConfigure(argc, argv) < 0) return 2;
     }
 
     /* Claim the GBA address range before anything else can land there. */

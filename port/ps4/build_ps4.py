@@ -128,6 +128,10 @@ def package(regions, elf):
     shutil.copytree(ROOT / 'port/ps5/assets/fonts', assets / 'fonts')
     (assets / 'achievements').mkdir()
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', assets / 'achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import gallery_posters
+    gallery_posters()
+    shutil.copytree(ROOT / 'port/assets/gallery', assets / 'gallery', dirs_exist_ok=True)
     sample = OO / 'samples/SDL2'
     shutil.copy2(sample / 'sce_sys/about/right.sprx', stage / 'sce_sys/about/right.sprx')
     for prx in ('libc.prx', 'libSceFios2.prx'):

@@ -457,6 +457,7 @@ extern u16* gPortSubGlyphCodes;
 void PortLog(const char* fmt, ...);
 unsigned PortFrameCount(void);
 void PortOamSetText(int oamIndex, int code, int style);
+int PortScenePosterRendering(void);
 static u16 sMovieSubUpperCodes[MOVIE_SUB_MAX_CHARS];
 static u16 sMovieSubLowerCodes[MOVIE_SUB_MAX_CHARS];
 #endif
@@ -617,7 +618,11 @@ void MovieVBlankIntr() {
         REG_DISPCNT = (DISPCNT_MODE_3 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG_ALL_ON);
         MovieUpdate();
 
-        if (sMovieSubs != NULL) {
+        if (sMovieSubs != NULL
+#ifdef PLATFORM_PC
+            && !PortScenePosterRendering()
+#endif
+        ) {
             if (sMovieFlags & MOVIE_FLAG_UPPER_SUB_PENDING) {
                 sMovieFlags &= ~MOVIE_FLAG_UPPER_SUB_PENDING;
                 sMovieSubUpperAlpha = 0;
@@ -819,6 +824,9 @@ void MovieVBlankIntr() {
         }
     }
 
+#ifdef PLATFORM_PC
+    if (PortScenePosterRendering()) REG_DISPCNT &= ~DISPCNT_OBJ_ON; /* only movie subtitle OAM; actors are in the bitmap */
+#endif
     gIntrCheck |= INTR_FLAG_VBLANK;
 }
 

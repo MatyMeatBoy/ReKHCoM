@@ -11,4 +11,8 @@ void PortSceneGalleryAuditEnd(void);
 void PortSceneSeen(int sceneId);
 int PortSceneIsSeen(int sceneId);
 int PortSceneGalleryActive(void);
+unsigned PortSceneGalleryAge(void);
+int PortScenePosterRendering(void);
+int PortScenePosterFinished(void);
+int PortScenePosterConfigure(int argc, char** argv);
 #endif

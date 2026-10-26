@@ -201,6 +201,10 @@ def bundle(arch, base, versions, dest):
         shutil.copyfile(ROOT / 'port/assets/fonts' / name, dest / 'assets/fonts' / name)
     (dest / 'assets/achievements').mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / 'port/assets/achievements/badges.png', dest / 'assets/achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import gallery_posters
+    gallery_posters()
+    shutil.copytree(ROOT / 'port/assets/gallery', dest / 'assets/gallery', dirs_exist_ok=True)
     # Window icon (set by the game) and a launcher entry for desktops/Steam Deck.
     shutil.copyfile(ROOT / 'port/assets/icon.bmp', dest / 'assets/icon.bmp')
     shutil.copyfile(ROOT / 'port/assets/icon.png', dest / 'ReKHCoM.png')

@@ -892,6 +892,14 @@ void PortUiHdDraw(SDL_Renderer* renderer, float x, float y, float scale) {
     for (i = 0; i < sHdUiCount; i = j) {
         float natural = 0, pen, k0;
         int box;
+        if (sHdUiGlyphs[i].code == -2) {
+            extern int PortSceneGalleryPreviewDraw(SDL_Renderer*, float, float, float, float, uint32_t, uint32_t);
+            if (sHdUiGlyphs[i].alive)
+                PortSceneGalleryPreviewDraw(renderer, x + sHdUiGlyphs[i].x * scale, y + sHdUiGlyphs[i].y * scale,
+                    sHdUiGlyphs[i].pw * scale, sHdUiGlyphs[i].run * scale, sHdUiGlyphs[i].face, sHdUiGlyphs[i].shadow);
+            j = i + 1;
+            continue;
+        }
         if (sHdUiGlyphs[i].code == -1) {
             if (sHdUiGlyphs[i].alive) {
                 float end = (sHdUiGlyphs[i].face & 255) / 255.0f;
@@ -2105,6 +2113,8 @@ void PortUiOpenLobby(void) {
 }
 
 void PortUiForceClose(void) {
+    extern void PortSceneGalleryPreviewCancel(void);
+    PortSceneGalleryPreviewCancel();
     sOpenSound = sCloseSound = 0;
     sOpen = 0;
     sClosing = 0;
@@ -2712,8 +2722,11 @@ static void Fill(int x0, int y0, int w, int h, uint32_t c) {
     int glyph;
     if (sFb == sHdUiFrame)
         for (glyph = 0; glyph < sHdUiCount; glyph++)
-            if (sHdUiGlyphs[glyph].x >= x0 && sHdUiGlyphs[glyph].x < x0 + w &&
-                sHdUiGlyphs[glyph].y >= y0 && sHdUiGlyphs[glyph].y < y0 + h)
+            if ((sHdUiGlyphs[glyph].code == -2 && sHdUiGlyphs[glyph].x < x0 + w &&
+                 sHdUiGlyphs[glyph].x + sHdUiGlyphs[glyph].pw > x0 && sHdUiGlyphs[glyph].y < y0 + h &&
+                 sHdUiGlyphs[glyph].y + sHdUiGlyphs[glyph].run > y0) ||
+                (sHdUiGlyphs[glyph].x >= x0 && sHdUiGlyphs[glyph].x < x0 + w &&
+                 sHdUiGlyphs[glyph].y >= y0 && sHdUiGlyphs[glyph].y < y0 + h))
                 sHdUiGlyphs[glyph].alive = 0;
     int x, y;
 
@@ -4959,6 +4972,8 @@ int PortUiDrawsOnFrame(void) {
 }
 
 void PortUiDraw(uint32_t* frame, int width, int height) {
+    extern void PortSceneGalleryPreviewPoll(void);
+    PortSceneGalleryPreviewPoll();
     int l = Lang();
     int harnessShot = 0;
     ++sMenuLightDrawClock;
@@ -5016,6 +5031,8 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
         Shade(0, 0, width, height, MENU_FADE_COLOR, SDL_min(256, (MENU_FADE - sClosing + 1) * 256 / MENU_FADE));
         HarnessFadeShot(width, height);
         if (--sClosing == 0) {
+            extern void PortSceneGalleryPreviewCancel(void);
+            PortSceneGalleryPreviewCancel();
             sOpen = 0;
             sReturn = MENU_FADE;
         }

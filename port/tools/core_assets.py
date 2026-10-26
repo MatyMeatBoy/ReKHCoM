@@ -1,5 +1,7 @@
 """Redistributable runtime assets shared by clean packages and Windows resources."""
 from pathlib import Path
+import hashlib
+import json
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,4 +25,29 @@ def core_assets():
         from review_hd_hud import approved_pieces
         for piece in approved_pieces(manifest):
             files['assets/hd-hud/sprites/' + piece['file']] = manifest.parent / piece['file']
+    for poster in gallery_posters():
+        files['assets/gallery/gba/' + poster.name] = poster
     return files
+
+
+def gallery_posters():
+    """Refuse partial, stale or wrong-size poster catalogues in every release packager."""
+    folder = ROOT / 'port/assets/gallery/gba'
+    manifest = json.loads((folder / 'manifest.json').read_text(encoding='utf-8'))
+    expected = (set(range(196)) - {127, 128}) | set(range(513, 518))
+    entries = manifest['posters']
+    if len(entries) != 199 or {entry['event'] for entry in entries} != expected:
+        raise ValueError('Portable GBA poster catalogue is incomplete')
+    paths = []
+    for entry in entries:
+        name = f"scene-{entry['event']:03d}.png"
+        if entry['file'] != name:
+            raise ValueError('Invalid portable poster filename')
+        path = folder / name
+        data = path.read_bytes()
+        if (len(data) < 24 or data[:8] != b'\x89PNG\r\n\x1a\n' or
+            int.from_bytes(data[16:20], 'big') != 360 or int.from_bytes(data[20:24], 'big') != 240 or
+            hashlib.sha256(data).hexdigest() != entry['sha256']):
+            raise ValueError(f'Portable GBA poster changed or has invalid dimensions: {name}')
+        paths.append(path)
+    return paths

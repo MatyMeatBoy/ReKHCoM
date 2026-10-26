@@ -7,6 +7,7 @@
 #include "evt/event_index_data.h"
 #include "evt/event_ids.h"
 #include "port/port_scene_gallery.h"
+#include "../decompui/third_party/stb_image.h"
 
 void LZ77UnCompWram(const void* src, void* dst);
 
@@ -104,5 +105,37 @@ int PortSceneBackgroundPreview(int eventId, uint32_t* out, int width, int height
 done:
     SDL_free(tiles2);
     SDL_free(tiles);
+    return ok;
+}
+
+/* Small immutable engine captures are available on every host, including old saves.
+ * Decode only the selected poster; no scene tasks, game state or video decoder run here. */
+int PortScenePosterDecode(const void* data, size_t size, uint32_t* out, int* width, int* height) {
+    int w, h, channels, i;
+    unsigned char* rgba;
+    if (!data || size > 2u * 1024u * 1024u ||
+        !stbi_info_from_memory(data, (int)size, &w, &h, &channels) ||
+        w <= 0 || h <= 0 || w > 640 || h > 360) return 0;
+    rgba = stbi_load_from_memory(data, (int)size, &w, &h, &channels, 4);
+    if (!rgba) return 0;
+    for (i = 0; i < w * h; i++)
+        out[i] = 0xFF000000u | (uint32_t)rgba[i*4] << 16 | (uint32_t)rgba[i*4+1] << 8 | rgba[i*4+2];
+    stbi_image_free(rgba);
+    *width = w; *height = h;
+    return 1;
+}
+int PortScenePosterPreview(int eventId, uint32_t* out, int* width, int* height) {
+    char name[96];
+    size_t size = 0;
+    void* data;
+    int ok;
+    if (eventId < 0 || (eventId >= EVENT_COUNT && !PORT_SCENE_IS_MOVIE(eventId))) return 0;
+#ifdef VERSION_EU
+    if (eventId >= EVENT_129_HOLLOWBASTION_E0 && eventId < EVENT_COUNT) eventId += 2;
+#endif
+    SDL_snprintf(name, sizeof(name), "assets/gallery/gba/scene-%03d.png", eventId);
+    data = PortLoadAsset(name, &size);
+    ok = PortScenePosterDecode(data, size, out, width, height);
+    SDL_free(data);
     return ok;
 }

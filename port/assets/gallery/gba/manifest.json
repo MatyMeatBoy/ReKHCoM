@@ -1,0 +1,1801 @@
+{
+  "version": 2,
+  "width": 360,
+  "height": 240,
+  "region": "eu",
+  "rom_sha256": "a28761aff292e7f7a5d6dcff1c1ba11eefdbe15836ec0deb8be275fec0519bd4",
+  "capture": "actual engine, dialogue/portrait/wait callbacks suppressed; movie subtitles only disabled in movie mode; no UI rectangles or actor OAM filtering",
+  "posters": [
+    {
+      "event": 0,
+      "file": "scene-000.png",
+      "sha256": "83176c189e42736cc668c3eba9f92959678ff719a95bb38b7128f7148d318d2f",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 571,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 1,
+      "file": "scene-001.png",
+      "sha256": "fd7facf43690b3ba053c753227af3e090d9da7279d7a0f04fa4f6701bf738a65",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 201,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 2,
+      "file": "scene-002.png",
+      "sha256": "29d435c51e8a5d070f44e1871482288ee89a0727498bd2d3dd1fceef8904fe55",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 3,
+      "file": "scene-003.png",
+      "sha256": "09c2e86dc5e2bcccfe04142941268fc1f10c6c20248f8c657bd45e6c8b893818",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 101,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 4,
+      "file": "scene-004.png",
+      "sha256": "5f66111962606aa10f8cbb27d39be22c6d732fc1e1fa7b6a0f932845cc45e58a",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 5,
+      "file": "scene-005.png",
+      "sha256": "b744fffab0bca9c4ae87d0824a46f25ad069acff02ca2d31bf3bd4d3f17fb0a7",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 6,
+      "file": "scene-006.png",
+      "sha256": "2082aa98c71dcc68f2f040a24c6ca1bdd102c0d842bbef4f498642c80d3796b8",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 481,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 7,
+      "file": "scene-007.png",
+      "sha256": "70f969da8fcfb344fc35442781b2a32d6e1fb6051f2ea7a73423020b4390db38",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 301,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 8,
+      "file": "scene-008.png",
+      "sha256": "61d56db9ccce56d696d93dbb49ad8d2ebd32303f6c6428c9e122b5ec1aab4a07",
+      "actors": 2,
+      "dialogue": false,
+      "frame": 568,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 9,
+      "file": "scene-009.png",
+      "sha256": "e0601440f71dfa0c9a6df6ddcb0b3ce7601df6dd76a53ef673d6db97cfc0b794",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 91,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 10,
+      "file": "scene-010.png",
+      "sha256": "23892d512f8025018322f256f392bf9eaf422701a553edeba485201dd9979409",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 241,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 11,
+      "file": "scene-011.png",
+      "sha256": "869cfc8f8059fa9f70e70c3ceb3b9e5ea0e2d2a369daf163b85ca131dcd90227",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 45,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 12,
+      "file": "scene-012.png",
+      "sha256": "5931ffe7e4e1b841e116131f163f830f14596965f3cc6111599a616250d03e58",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 301,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 13,
+      "file": "scene-013.png",
+      "sha256": "f2566578094d31f5b253faf0e135b17d2906e4b9955e93d687a8060d06568b2d",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 406,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 14,
+      "file": "scene-014.png",
+      "sha256": "5db0c7541bbc288fd444b247cf62473ffabcfa931f5b8c3bfd59d1512a1d4ee7",
+      "actors": 2,
+      "dialogue": false,
+      "frame": 468,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 15,
+      "file": "scene-015.png",
+      "sha256": "9dfa16626e0bb85f41045f234d0f9f42fe6cfa7323acc3c4f3bd228e9b56d86a",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 251,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 16,
+      "file": "scene-016.png",
+      "sha256": "f87298bb911690a267c06b4c51841f2599508536ba1af17443636adc4f0f0d33",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 17,
+      "file": "scene-017.png",
+      "sha256": "daa50ff41ea3335f580d4a4ecad78d78cd2cbab8147a431a0129f67c34bb185b",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 18,
+      "file": "scene-018.png",
+      "sha256": "1df4e72fe386882531a3eb0f89d2a707043f81cd7686afbf3e021bc16cde6958",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 19,
+      "file": "scene-019.png",
+      "sha256": "b1762c9f78459b19642721cffd8469a94329d294a10fd731503ddfc3571c1b48",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 20,
+      "file": "scene-020.png",
+      "sha256": "5db0c7541bbc288fd444b247cf62473ffabcfa931f5b8c3bfd59d1512a1d4ee7",
+      "actors": 2,
+      "dialogue": false,
+      "frame": 468,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 21,
+      "file": "scene-021.png",
+      "sha256": "caeb8be9625dc3ef00a8da0af14fea16772ab6c1c51e1f55f5022f5f527d7d20",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 391,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 22,
+      "file": "scene-022.png",
+      "sha256": "79c6b8582e28541a3b67f9797fdf849a05d2c9baec7d8a61dfebcf47a72e426f",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 23,
+      "file": "scene-023.png",
+      "sha256": "9f751c691e660806d71df6868ffce6a4a30406722d3688cef7ce0dddb619c0b2",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 24,
+      "file": "scene-024.png",
+      "sha256": "3da7c5467bb4a3677d16fe07a64e1dc5988883a78174fcefaf810f2f61cc6bf6",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 231,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 25,
+      "file": "scene-025.png",
+      "sha256": "6769a32f698997031d7727e294ffe7451eb0ff9da14f6962ca319c13e7908b7c",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 361,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 26,
+      "file": "scene-026.png",
+      "sha256": "57900635875eb8f56dd6ce7a3572f209d95126a051f722083aced92af617783a",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 156,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 27,
+      "file": "scene-027.png",
+      "sha256": "8dc5faecfcfef19daeb2888d1216efd384869b8d83dd00fb40a9ccf52511c1bb",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 28,
+      "file": "scene-028.png",
+      "sha256": "1449c1981ba141f856d38244bb8c27d270be032f4f84f4eec0d75aebff624069",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 171,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 29,
+      "file": "scene-029.png",
+      "sha256": "b671b6a0bd586f1c0ef2cd4e2a4e0fc48f2b86e4ee41c48ef81a922a05ed027c",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 30,
+      "file": "scene-030.png",
+      "sha256": "3a7003383d78a79846102cb7b2d37f88d01281036c76ec4d31863f27fcf0c2fe",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 31,
+      "file": "scene-031.png",
+      "sha256": "beb7a7211e4ce33bb13d3d816882e91ed21e5e417feb45b931cfda9e3640fa93",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 426,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 32,
+      "file": "scene-032.png",
+      "sha256": "135e47565781a342d1f90d366dc3820b2809835bf28c56d4c34769a57b3969a4",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 136,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 33,
+      "file": "scene-033.png",
+      "sha256": "e691ae1eccd1da89144fbb51d9df6e0614e33bc88399208bcd791aff40f7c525",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 306,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 34,
+      "file": "scene-034.png",
+      "sha256": "f4e9221debc6ec6067669d36c8302923cdae9bd8080a93fdcaccdfd549db0931",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 35,
+      "file": "scene-035.png",
+      "sha256": "906c987efaa34eb20d64ba4d5aa47ea35f4e64f4e9a3b62aa3cdc42e4a9dcedb",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 351,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 36,
+      "file": "scene-036.png",
+      "sha256": "631bfd543435bba9503191aec8fb8a3fc7f17044469c230a636ffd3b134b7ea5",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 37,
+      "file": "scene-037.png",
+      "sha256": "25a633d0f15a1e1d394744c138b0f9a8cb86be294d6cd57367d038c7ebce048c",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 38,
+      "file": "scene-038.png",
+      "sha256": "ef79e5f0bb51258de74ad67abbf8be060c8188546aa536e700ce6a6f1a787805",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 39,
+      "file": "scene-039.png",
+      "sha256": "bc2ad8dc583f1b661bd75bded90424a593e8299ad5bc95de431bc87d79c7bddb",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 316,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 40,
+      "file": "scene-040.png",
+      "sha256": "920c9cfaced72f1fddbde3ee45a18aaa0cce14c567b5065d64fa3da36e92b658",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 346,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 41,
+      "file": "scene-041.png",
+      "sha256": "e144d3fdc9163557b52e63bbe069e24e508ab8e7faafb94651f1a9339a1fec6e",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 42,
+      "file": "scene-042.png",
+      "sha256": "a086207a215b51fcd459686c057b9d4460d014e5e630740db68afd64678a0714",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 43,
+      "file": "scene-043.png",
+      "sha256": "f4146c3fdf71301ac3733e9617d170092048076e9adff9a585c189fa73141207",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 44,
+      "file": "scene-044.png",
+      "sha256": "8aa6a59d8ec3481ffa5d2272c2d8268818b695413b0a69491e83858d061c25e7",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 631,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 45,
+      "file": "scene-045.png",
+      "sha256": "2f0552ba257aed12cead70a35975fa7e36f249f3eb6922a35961ab95827c425c",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 526,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 46,
+      "file": "scene-046.png",
+      "sha256": "48e4aced1560e132072684aa7bda2574e0d5b16dc70527f3f64d28762a2675c9",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 47,
+      "file": "scene-047.png",
+      "sha256": "42ffb1e5370a937e406114511063b6ee62891c3ae0053c0b04b1827bc4274f1e",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 48,
+      "file": "scene-048.png",
+      "sha256": "6eed9401519eda7c1548ec97ed9ad1569bb26a77ee8381d0739de6bf0f639a76",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 361,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 49,
+      "file": "scene-049.png",
+      "sha256": "69fe6e1299964c3a4af7ee7b9199d64a1ce4059e251a080ae154458e92063197",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 441,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 50,
+      "file": "scene-050.png",
+      "sha256": "a0a26e0d0fc9f93bfd55d5f5a98126421bb811a3dec6da32a45340e70de314fb",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 51,
+      "file": "scene-051.png",
+      "sha256": "559b47a627e783598ff58498020fc3160034df5f3f88ce9f24ab44fc6108b130",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 291,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 52,
+      "file": "scene-052.png",
+      "sha256": "7a97d0526e83d31c07e848a71011771043f2f7a5cc67b8ef565c1164fe65ba1f",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 53,
+      "file": "scene-053.png",
+      "sha256": "eefde6031813f977aa84d11c22f18319484f7dfd893381b4ef13d39d8c15ad17",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 506,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 54,
+      "file": "scene-054.png",
+      "sha256": "2984ae22ed9b6e6cc7b8292cc141a6fc8f478900e556a3f287b7a9de17c1e80e",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 55,
+      "file": "scene-055.png",
+      "sha256": "afdd2af84326d642b3a62c5ec7ac8aa2867c18b5113bb74fa9962f8006ef2859",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 126,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 56,
+      "file": "scene-056.png",
+      "sha256": "216d787d0c91dbc7801d29313f64080f3f40b56c1baccde1b7e780713fa894f5",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 57,
+      "file": "scene-057.png",
+      "sha256": "e12c30fbf970c42f7d1d44650fa74f7469f4d20b66767379ec08ffea50bb8c32",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 58,
+      "file": "scene-058.png",
+      "sha256": "a6d9293005fde91d77d87a5728a81dc8bc8610a48bc78fecd2a316c1882e516f",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 171,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 59,
+      "file": "scene-059.png",
+      "sha256": "ea8d18eb913966e926e0c396bcc57644d219a3e7784e7dc5870e3a6306f7b684",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 60,
+      "file": "scene-060.png",
+      "sha256": "559c20a889843bfa1513e80f973cdecc9ef9d9f8441c04a2c2660ac6e4a0f479",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 61,
+      "file": "scene-061.png",
+      "sha256": "49bb966849254ad2a706251931e3554c05bc1871c39eea9a8950ec80c40fc763",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 62,
+      "file": "scene-062.png",
+      "sha256": "2b2c838c71891114bd617eeb483c68974c463698c4bcfb2c4b31e1385c3369a6",
+      "actors": 3,
+      "dialogue": false,
+      "frame": 438,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 63,
+      "file": "scene-063.png",
+      "sha256": "1ca82d31600c519579c28a29f10ea5f1ae0b51fa3261105c99223ca7f8ed88c3",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 64,
+      "file": "scene-064.png",
+      "sha256": "f74d1f082e6ec0a5ad333ea3804bb089351d585c5dd059ec102468eeeeda6742",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 65,
+      "file": "scene-065.png",
+      "sha256": "4a055bd0ca061e6396368a003a7b38790c8e059f5ca0a3e9f54db28791c6feaf",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 151,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 66,
+      "file": "scene-066.png",
+      "sha256": "8a63630cb9dec43edb5cc8a6abbe9ae48bd7b39df08943a4f737d944ded1da91",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 67,
+      "file": "scene-067.png",
+      "sha256": "94005c28d7ab27f3b339708da96f3f49ff90e3e372bd1a24b317415f842d4548",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 68,
+      "file": "scene-068.png",
+      "sha256": "da1f7739b0f9b13adb52eb54d78860b18dee9ec4cc847463be71ea2950ff32c8",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 69,
+      "file": "scene-069.png",
+      "sha256": "445007a496e5c5c791b0e92f986f8ab7481d83f6008273df7f7c3c8d53a1504d",
+      "actors": 5,
+      "dialogue": false,
+      "frame": 318,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 70,
+      "file": "scene-070.png",
+      "sha256": "573ed6ba6d1517d36bd3059d9c60c0276871a13bdcdafc88bac968c2647c4865",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 71,
+      "file": "scene-071.png",
+      "sha256": "b9e0e2972b3b7531624b170ef2f0326da1e59da47e4cdb88ec38c60d82e3677b",
+      "actors": 3,
+      "dialogue": false,
+      "frame": 653,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 72,
+      "file": "scene-072.png",
+      "sha256": "d544fdb3b05e5f5e8cd1b22c9eba61cf5154029218710259d0fb1f4b08c7c146",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 341,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 73,
+      "file": "scene-073.png",
+      "sha256": "fc37d49cff5fffee6b9a21130f4aac950d12c8bf1f064a91c00258f108fab4ed",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 281,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 74,
+      "file": "scene-074.png",
+      "sha256": "869ea1160bbc920dccef872e858123fe0540c1d1cbcfd0587879e1b063b9b90b",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 75,
+      "file": "scene-075.png",
+      "sha256": "ddc89790b9035b0c455fe6096648c4098b3d582cd45e982dc81fe1be7aa7de42",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 121,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 76,
+      "file": "scene-076.png",
+      "sha256": "bcc9196c84975eb9987b7b0254c86161f24502ab42058feaf5de6e81d5a168ef",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 77,
+      "file": "scene-077.png",
+      "sha256": "49a0dbdf00cb5f5d35de2d9b8c0d0dd5b4a266a2e567c9ebc47411260b8c4491",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 78,
+      "file": "scene-078.png",
+      "sha256": "e159d41556fd3003be61d4f5f6480d7d8e96adee3e35b7afbb595b80e6453541",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 79,
+      "file": "scene-079.png",
+      "sha256": "72e9869b91a669dafd5e791f1d7f8a4d0ee960bcf75792edf584cc10cf1725bb",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 80,
+      "file": "scene-080.png",
+      "sha256": "86ded9a417af54470933400ee38550a764581b23142f8895795adba98728f9c0",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 241,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 81,
+      "file": "scene-081.png",
+      "sha256": "e0b1311e9cd91840e094068a8606a13d7bfd67c77cb5500266082d6f45642f4c",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 82,
+      "file": "scene-082.png",
+      "sha256": "23991edaba023763fb74c3212897d813b737cf6274736a7ac6836a233c6e8e6d",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 83,
+      "file": "scene-083.png",
+      "sha256": "c9c95145c41f022c38888703c6862afcc331fca15610caa27544c81544ad942a",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 84,
+      "file": "scene-084.png",
+      "sha256": "1c4e72051d60f81d91efab7cad6e6697917c5dc5dd9195f4d6486db1b6a47929",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 85,
+      "file": "scene-085.png",
+      "sha256": "f70c1f53bbbb3e085233378bc21a14524de5f4d43ae3a84346b6e4cd6606d943",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 241,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 86,
+      "file": "scene-086.png",
+      "sha256": "49f0511b3313e34161c1f7a7af650272788a9e972394f88762c6f3226e2d20e0",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 411,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 87,
+      "file": "scene-087.png",
+      "sha256": "15b509b9273770dcb7c5d788dd89b61944514b611f6a178fe0a6d3c42698f3e6",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 88,
+      "file": "scene-088.png",
+      "sha256": "0b53d2ff6c87cbb9ddc129da165a47e90e91087dff3197fac0bc2d3d8b768392",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 89,
+      "file": "scene-089.png",
+      "sha256": "42e04391c8d5130a4c9cfb75ecba75a38575a82767e44950340f0b8dadbe67bf",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 331,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 90,
+      "file": "scene-090.png",
+      "sha256": "b6dd8beaa90cbbb6b8171aaf14754579d9fcafe8f481225f3a38200e5e26457e",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 451,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 91,
+      "file": "scene-091.png",
+      "sha256": "b166840ee8993132c873e1ca714997c7c95e9b3dcb83977650e13f9cf52a3df2",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 251,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 92,
+      "file": "scene-092.png",
+      "sha256": "f38742c8f2aeb205b87431282bd8440b58a72ce2a7b2f7f4fe1ebdc526a3618b",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 93,
+      "file": "scene-093.png",
+      "sha256": "78e1100f7983d7bc94431f7b9dd2d1b20e468ca1d9262f88b2b9233597e8088f",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 94,
+      "file": "scene-094.png",
+      "sha256": "9edacd03a93a787a7f10dd91c6dbc49ef181bc915d4b126f884448d16d56715a",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 201,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 95,
+      "file": "scene-095.png",
+      "sha256": "e5948149de15cf12a6db439a3adb27f17568e8e1d1c9c783be35cc9a298636ba",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 96,
+      "file": "scene-096.png",
+      "sha256": "bae3f9634e3a980662077f2bed881fa60c20f680c109159ee7728c8815601787",
+      "actors": 10,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 97,
+      "file": "scene-097.png",
+      "sha256": "b46592e49c1fa0d8622ae1ec40cd00fa931f07aa2b322f91965d2d646f8f50a9",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 98,
+      "file": "scene-098.png",
+      "sha256": "0aca10e876c5358e686fade8ee58a942dd6818103172d5ef24aa6393e4ebf18f",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 181,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 99,
+      "file": "scene-099.png",
+      "sha256": "313b51d3875c2edc2001859a53faab502c72d2398a0d1245149dcee4a954be55",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 100,
+      "file": "scene-100.png",
+      "sha256": "83e8fbf681a501018f0e3e6b27a47adcaf16e2eec3013912f5d22c0259b0cf67",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 101,
+      "file": "scene-101.png",
+      "sha256": "d8f4e227a285c39aff3b70595cc7577ff3c6668d67ffa7c01fa81fd3b9dbef39",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 102,
+      "file": "scene-102.png",
+      "sha256": "653e41ef808e5f223b60a33ef900839fb3eb299f183d6cd39ce333ad93c93419",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 103,
+      "file": "scene-103.png",
+      "sha256": "dbffe905a4d53d824d0ac2206d89e6dd2117dd2120438e2b9e90a37baa9d326b",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 151,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 104,
+      "file": "scene-104.png",
+      "sha256": "6754d5fa322257e1e3e3b116a307a76501ad020ed8bc91f0ab3d88e343417a8a",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 191,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 105,
+      "file": "scene-105.png",
+      "sha256": "166fbc1cc4d2b93d47112832f67b12f13b5d642711026cfc2dd29dda4370e6b3",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 106,
+      "file": "scene-106.png",
+      "sha256": "513cf3d49319ed60005980fd0373f93c8b33342e07d8d835a331af6b602ae455",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 107,
+      "file": "scene-107.png",
+      "sha256": "092bb4069b7264bee8a5c559f6dfb37774928ae335c6355d1fee7b69c64f3373",
+      "actors": 9,
+      "dialogue": true,
+      "frame": 201,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 108,
+      "file": "scene-108.png",
+      "sha256": "6d4d426b6daab99463fca786f33e81fd348dbc34b7025ef034e2b45ad8b41aa9",
+      "actors": 11,
+      "dialogue": true,
+      "frame": 251,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 109,
+      "file": "scene-109.png",
+      "sha256": "28e943778757dcf5118d9b2c455b353975335e596f08f1326c2b6d3a17b18178",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 110,
+      "file": "scene-110.png",
+      "sha256": "2869229f6fd7bd85912817b861040299e56f7eca67d1c9cb7487839ad484b8ab",
+      "actors": 12,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 111,
+      "file": "scene-111.png",
+      "sha256": "ec8ee1cd4fd65f3ce4fea606efec5610732fa7ff3033e8cb6cd2addd6f03d9eb",
+      "actors": 7,
+      "dialogue": true,
+      "frame": 171,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 112,
+      "file": "scene-112.png",
+      "sha256": "1fb92b1c87067ca89dd19ba525097911b3097a2530fb4fa4dc39eb21961bebb2",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 191,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 113,
+      "file": "scene-113.png",
+      "sha256": "4571bb71fbb9d14e76c5221f9b566d5b8dd3a763713e7a86201bbd9b762c0ca5",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 114,
+      "file": "scene-114.png",
+      "sha256": "0dd575bdd3019bf5e823bd02b4f8d3d052425a2b1efc4acd17d261d509c0897a",
+      "actors": 10,
+      "dialogue": true,
+      "frame": 101,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 115,
+      "file": "scene-115.png",
+      "sha256": "503a490857d066cefcd58790a676c1422990a80a1dc11e48e819a71564c6af4b",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 116,
+      "file": "scene-116.png",
+      "sha256": "de3195fa22c6662d834e15d2e6af9b23c45c3cb66449e1b115e703939f9f49a0",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 117,
+      "file": "scene-117.png",
+      "sha256": "539ab564676ea2519bdce0a487bf8e73ad8509646876d550a5a0d9298822cc4d",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 118,
+      "file": "scene-118.png",
+      "sha256": "f8c5a2c7bbecf1df252d1f21347d0c041280c527641feb705ef955dbcf56d539",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 131,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 119,
+      "file": "scene-119.png",
+      "sha256": "18f5bdf0cbfb6cf5dbef31a30584e3c344f78facb42b4c6720224d677dc1256d",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 120,
+      "file": "scene-120.png",
+      "sha256": "0b65d085452809bacdf5e425dca1f46e1c79c1b02b207b99bcfd9aaea7867605",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 251,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 121,
+      "file": "scene-121.png",
+      "sha256": "f559b68d115d1ad5d9937ff6eea1a54910a7eaf16b4729842841b7bc130c8a54",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 201,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 122,
+      "file": "scene-122.png",
+      "sha256": "17db8012108f7eec31490f2a5bea112b522426d0482c48b2f5819583089f4c44",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 181,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 123,
+      "file": "scene-123.png",
+      "sha256": "224322dd467472f003e914f63fd7a13589d4c450f7c3a9a56889d97c89ba9297",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 124,
+      "file": "scene-124.png",
+      "sha256": "9d6a3d6eac6fcfe2034379787ccd555177dfb623adc61a71de830ff677f1ce8b",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 125,
+      "file": "scene-125.png",
+      "sha256": "dd363b287a77d2e493a101a9a13fd7c56d899dc2e9cc140e24b4ed53a17b93f7",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 126,
+      "file": "scene-126.png",
+      "sha256": "748739c460a9edc372bf1f1a814a7104d0dbffe9a7c9bdb4b03e21887f465311",
+      "actors": 8,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 129,
+      "file": "scene-129.png",
+      "sha256": "147e8a183d701064b0a18b71ded2317e57521391a00fcd80945ea3639547fe7d",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 130,
+      "file": "scene-130.png",
+      "sha256": "c3ecd05bf8aa43890c0b85f824e57a986cea1ac1b694e786ff48bc788e701c85",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 131,
+      "file": "scene-131.png",
+      "sha256": "17474b16eea3927305ae6365666ec0c4e885a921705dcb36fb0ab0b623b6ef7c",
+      "actors": 10,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 132,
+      "file": "scene-132.png",
+      "sha256": "88714f6e01d53f910b8b279fd45898d44741c2ebd278512ee69e4dbfa33a1292",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 191,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 133,
+      "file": "scene-133.png",
+      "sha256": "b20a6b4f41a63eacd82094aa648640353f6afb175ca98777c4b94bf628668142",
+      "actors": 6,
+      "dialogue": true,
+      "frame": 911,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 134,
+      "file": "scene-134.png",
+      "sha256": "43e1be3fa8ca4a0021ee9e4b876ad18f895783563f8e183ed5135861cf161797",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 841,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 135,
+      "file": "scene-135.png",
+      "sha256": "babe8635f74d7193e35ede2ff2c8109a580bdd54d9fc1b159de6f41ba8dc330e",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 311,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 136,
+      "file": "scene-136.png",
+      "sha256": "cfb69b083a3037cfba40e72b4796dc559ab50e50f5967efce55911d2afd2189b",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 131,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 137,
+      "file": "scene-137.png",
+      "sha256": "b45a6d7494dd202079375ac153f19e64d0fd4d2dcd20894b1bc2c951fe6c7dbd",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 138,
+      "file": "scene-138.png",
+      "sha256": "945fc02ad0ce0685c0e02ee48cd1628d5232f06a60fb005814b287619faff5ab",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 139,
+      "file": "scene-139.png",
+      "sha256": "cbcccc44810ffc5f2ebb111363e94a75462f1776077bc174bce5838aeb382363",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 140,
+      "file": "scene-140.png",
+      "sha256": "071922b6b2fd8176fc4373f2af799bbc79996a02dadea46d818ded8e591d22ac",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 101,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 141,
+      "file": "scene-141.png",
+      "sha256": "c1291f979861519337e8602d8d45c81c9fe103039145b9ba9bf722f8c00b490c",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 142,
+      "file": "scene-142.png",
+      "sha256": "758660e9284c81617e78c0a82b54e17129f072eaf714593ae8564ded81457644",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 143,
+      "file": "scene-143.png",
+      "sha256": "7c676f6ce6e13df017c8694d33ee6738239685181b7890d4ac71591b647ed620",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 144,
+      "file": "scene-144.png",
+      "sha256": "7c676f6ce6e13df017c8694d33ee6738239685181b7890d4ac71591b647ed620",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 145,
+      "file": "scene-145.png",
+      "sha256": "8d28f202f81dadb42ab346d3b4b5801c8a307908df9d6e8f1247c5441d0213e2",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 411,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 146,
+      "file": "scene-146.png",
+      "sha256": "8d28f202f81dadb42ab346d3b4b5801c8a307908df9d6e8f1247c5441d0213e2",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 411,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 147,
+      "file": "scene-147.png",
+      "sha256": "8d28f202f81dadb42ab346d3b4b5801c8a307908df9d6e8f1247c5441d0213e2",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 411,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 148,
+      "file": "scene-148.png",
+      "sha256": "b33369564a0d1fa8b5e2bcf3c59a27a8b3c8ed3591641a1656a971c4845b43d9",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 149,
+      "file": "scene-149.png",
+      "sha256": "6d7d62f04819babd7084f7b1cb74a6539308bd8906a1be620d6b2c6b397ccb7c",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 150,
+      "file": "scene-150.png",
+      "sha256": "331d1446099d1a4685f4f91b3628f031adc614b2e9589ce8601ace67cf61482a",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 361,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 151,
+      "file": "scene-151.png",
+      "sha256": "11cf0886395ebac64b8e6ec653448f03ad93d7d6fccb864d652254d1c72e800a",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 226,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 152,
+      "file": "scene-152.png",
+      "sha256": "2cef47c98e80949123147f6ada4356969ae9908f6377779426b75fa28c874f54",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 416,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 153,
+      "file": "scene-153.png",
+      "sha256": "05ab218db377b9d200e83a896c6363c26bbfeff0ebae41ed951908f382b9289e",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 154,
+      "file": "scene-154.png",
+      "sha256": "d700ba21df0b1e69707f2074c84a7929651f1e3f40e2584a59f044a574043b5c",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 291,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 155,
+      "file": "scene-155.png",
+      "sha256": "27425cbdad50c395e61afbf00298c713995f45e74f427531b80daf02a09998d2",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 156,
+      "file": "scene-156.png",
+      "sha256": "f1af598269a02ea182eeb38a266bb54a6a540f098df79935065fd45641398b9c",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 131,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 157,
+      "file": "scene-157.png",
+      "sha256": "0473f9c8c0a5e73ddd516d51c5e37cbf9960fe8fc9a1bd943965ae6efebe4dd1",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 381,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 158,
+      "file": "scene-158.png",
+      "sha256": "31a347d706314e30d6a6c7b4c2bd0a42c962a5714a641b134fd295fdb677df01",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 191,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 159,
+      "file": "scene-159.png",
+      "sha256": "30ea76162adb0a484d0f0965a1f71b32066f04f681ba21cd98afc4ea5ecb0999",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 160,
+      "file": "scene-160.png",
+      "sha256": "92c9882d51e629002540f3ac169267edb04e89dd75fda304973410076d4b5538",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 161,
+      "file": "scene-161.png",
+      "sha256": "f6a7619acb5d31caae6cc19b28f22fed01770710e456b8b2721b5b5dbe7764b7",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 162,
+      "file": "scene-162.png",
+      "sha256": "a8d7de52e332f3351b8af0dd9be30d06312186b0dace8783acab271f7d1f7799",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 141,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 163,
+      "file": "scene-163.png",
+      "sha256": "5cc46c948a5366e9c8a9230c03ed9545dee46b945e6afe646387aae90865753a",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 164,
+      "file": "scene-164.png",
+      "sha256": "3e19924adfb9cf2b56cade38fc28b10bf57c2a1c62a4f93501bea740ae8a88c5",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 165,
+      "file": "scene-165.png",
+      "sha256": "2516548393e14b32f00296b794bd3bfad8326b6cc86ef1cde6d20a660e62b985",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 171,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 166,
+      "file": "scene-166.png",
+      "sha256": "52994028937480c0bac61efb1e75cd9f6f616f4b62249f9acbdc4843ed2b7d71",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 126,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 167,
+      "file": "scene-167.png",
+      "sha256": "554c64f8845e26d2a37b6adcda79fe1852ab514463bb96b15bd249b610234ecf",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 168,
+      "file": "scene-168.png",
+      "sha256": "73d6b6c1b5a42bcc078ca2b606e1e18d18805bd229f9156436e9875f09998d1a",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 169,
+      "file": "scene-169.png",
+      "sha256": "cb8e6b0da95e2fb1f933069d1bff22f67d6b08ad83dea80b5b40a1ab086d7c38",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 291,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 170,
+      "file": "scene-170.png",
+      "sha256": "4b0b3fe8f79d90bb514c8313ef01bb202b0c82cb36275736a258772892490c78",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 171,
+      "file": "scene-171.png",
+      "sha256": "9d553e76ee75ab989601245fa1f0cc021eb6465c087883ad83221af8d228c982",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 441,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 172,
+      "file": "scene-172.png",
+      "sha256": "245cc6dca9b3e54246ff6abf6b98922b6de9fa11080102260fead02cfb39f4a4",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 173,
+      "file": "scene-173.png",
+      "sha256": "381d704fc1a0c0039e04c81e431cc23c01bc4679eaa67d246ea5ebddd3a78c3b",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 361,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 174,
+      "file": "scene-174.png",
+      "sha256": "1d181acf682a3c4b63810a961c423082edb39b6e924d0f6f9c10ffef532d9b96",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 175,
+      "file": "scene-175.png",
+      "sha256": "bcf3387332e045190f9bf674f264b2740b470d060074cff3cf3036d600292e25",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 176,
+      "file": "scene-176.png",
+      "sha256": "8fc6b03bb31457ef84989210687880f32bd9831cb5e21181e03ff96a00b4f465",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 251,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 177,
+      "file": "scene-177.png",
+      "sha256": "3e7e5af4dafc4593c8311da573c77d118e57582490be0b2303cd6c38aa2b41dc",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 391,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 178,
+      "file": "scene-178.png",
+      "sha256": "092891fff4d7bcf780adc3b1181689ea9bb66d36218c475dc27b2619029df3a1",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 261,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 179,
+      "file": "scene-179.png",
+      "sha256": "2e8542fa64a6772c50ac3a457ae3f7db5a89d7c39bc8c701b04560ca95327a8b",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 366,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 180,
+      "file": "scene-180.png",
+      "sha256": "380a912b5e1dfc35c0392193f65cffff205a2c2614d6b215671ddf9784764839",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 181,
+      "file": "scene-181.png",
+      "sha256": "8219d39fa28d9198c6cce818827e6077be993686a3cff4c8a2fb0a41b19cfa03",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 182,
+      "file": "scene-182.png",
+      "sha256": "f637c0da63b869852a31d1e64bd118867b81b35c7333a15f72b62c39621968a0",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 211,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 183,
+      "file": "scene-183.png",
+      "sha256": "517a7943c70f0e8519943d3fca3f8de0b83342ce87698a478b5afb69f74058b6",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 106,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 184,
+      "file": "scene-184.png",
+      "sha256": "94e7367b6d44b09c618da381f570a8a873d73b663e0dd340bda32cf0cc3558ae",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 241,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 185,
+      "file": "scene-185.png",
+      "sha256": "aa1f2bf45b1f2e1d8cbd605559d36c94836625f682ed3b0378d4fa163531d17e",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 152,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 186,
+      "file": "scene-186.png",
+      "sha256": "cec56314db1ceafb1d66a0460dae82b078dd2fbd66162a3993454f3521a3c7ec",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 381,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 187,
+      "file": "scene-187.png",
+      "sha256": "03812917f58d0779842489f9cfcdc7bf3852d2efad36e1643a6f68575849a203",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 421,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 188,
+      "file": "scene-188.png",
+      "sha256": "961a5f4907fea33ad67da66234b5477742781adb829abc96d717077bba2ef8aa",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 271,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 189,
+      "file": "scene-189.png",
+      "sha256": "7d60554e2e1ed3d59d3af5e002c38124ebcc4cfbd261bc3f4e9a48c47645cc4b",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 201,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 190,
+      "file": "scene-190.png",
+      "sha256": "1e4cafee3cb4fe0fa4029acfcc5baefd29dda1c5a75e5e2d60a91237b0810524",
+      "actors": 4,
+      "dialogue": true,
+      "frame": 221,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 191,
+      "file": "scene-191.png",
+      "sha256": "7c157ae9ebd08be658c69a214304aa5f92ff28c93758443853f2fc8d3b70ef99",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 192,
+      "file": "scene-192.png",
+      "sha256": "f65a2efb4733cc16e0ffd8c96c5ad461c29c7194f6de8e67c67ee828a79efb46",
+      "actors": 1,
+      "dialogue": true,
+      "frame": 161,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 193,
+      "file": "scene-193.png",
+      "sha256": "0aa01dd97fc402a72031f878c41848ca7bf4f79746068ac26a07b07e4b62a81b",
+      "actors": 3,
+      "dialogue": true,
+      "frame": 341,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 194,
+      "file": "scene-194.png",
+      "sha256": "e97e6a14c1ca213ee48f4a5ff86d0b51948108bdfaa767891a4bcad8cd567cb5",
+      "actors": 5,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 195,
+      "file": "scene-195.png",
+      "sha256": "06c0b033b721440446acf27a86064a8cfb419e45b2bbb39abc9ed5a7e7ea45d5",
+      "actors": 2,
+      "dialogue": true,
+      "frame": 111,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 513,
+      "file": "scene-513.png",
+      "sha256": "352c27d7c2a90548e51fa9df50019e5c87824ee6946d4607f70b8ac49e2a0915",
+      "actors": 0,
+      "dialogue": false,
+      "frame": 90,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 514,
+      "file": "scene-514.png",
+      "sha256": "51fee5777b7fa4ac560628b2b5cb6715b42bac31efb29c1f71a3190bfa20006e",
+      "actors": 0,
+      "dialogue": false,
+      "frame": 90,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 515,
+      "file": "scene-515.png",
+      "sha256": "a9c841f5556740dbd08337491345cdc644a9410abc8d07e619e10207b0a181ef",
+      "actors": 0,
+      "dialogue": false,
+      "frame": 90,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 516,
+      "file": "scene-516.png",
+      "sha256": "e92de69370a0ebf6887d26e20f04953d80f04b3ea8b8355a90a43a72f8c664dc",
+      "actors": 0,
+      "dialogue": false,
+      "frame": 90,
+      "capture_exe_sha256": "0e35383c522b279f63c1a6729329f4f99dd3fa932992a6121b2046b7cfb3639c"
+    },
+    {
+      "event": 517,
+      "file": "scene-517.png",
+      "sha256": "d7cdae3c28d83c067f2aedc748ae3b89f65b03584f292443223513ab48568e22",
+      "actors": 0,
+      "dialogue": false,
+      "frame": 450,
+      "capture_exe_sha256": "74486edc1f60d1ab8dab1ee59d36e87223a7e04ec3d55db8d897e88c863756f7"
+    }
+  ]
+}

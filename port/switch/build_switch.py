@@ -199,6 +199,10 @@ def build_host(regions):
     shutil.copytree(PS5 / 'assets/fonts', assets / 'fonts')
     (assets / 'achievements').mkdir()
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', assets / 'achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import gallery_posters
+    gallery_posters()
+    shutil.copytree(ROOT / 'port/assets/gallery', assets / 'gallery', dirs_exist_ok=True)
     (share / 'src').mkdir()
     for src in (HERE / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/hd_pack_host.h', ROOT / 'port/portable/hd_pack.c', *sorted((PS5 / 'third_party/miniz').glob('miniz*')), PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h',
                 ROOT / 'port/third_party/stb/stb_vorbis.c'):
