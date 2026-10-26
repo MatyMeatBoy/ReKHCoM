@@ -4012,10 +4012,23 @@
       ],
       "claimed_at": "2026-10-26T21:12:08.105931+00:00",
       "completed_at": "2026-10-26T21:14:47.042065+00:00"
+    },
+    "ending-desync-42": {
+      "id": "ending-desync-42",
+      "piece": "Desincronizacion video audio final Sora issue 42",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-26T21:33:21.538928+00:00",
+      "updated_at": "2026-10-26T21:33:21.538928+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "GitHub #42 video WCxyxOOb2fI",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T21:14:53.394205+00:00",
+  "updated_at": "2026-10-26T21:33:21.538928+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
