@@ -3267,22 +3267,28 @@
     "code-rebel-recom": {
       "id": "code-rebel-recom",
       "piece": "Modo rebelde: lista local ReCoM separada en juego y launcher",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T01:44:44.191032+00:00",
-      "updated_at": "2026-10-26T01:59:58.672762+00:00",
+      "updated_at": "2026-10-26T02:00:15.979929+00:00",
       "branch": "codex/rebel-recom-list",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/197",
-      "approval": "Usuario: terminar todas las mejoras y pendientes de código; pendiente vigente ReCoM rebelde",
+      "approval": "Pedido explícito del usuario de cerrar pendientes de código",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-26T01:59:58.672762+00:00",
           "owner": "codex-atlas",
           "detail": "EU y launcher compilados; cuatro ejecuciones con reinicios verifican progreso separado normal y rebelde; check_sources correcto."
+        },
+        {
+          "at": "2026-10-26T02:00:15.979929+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 924b85610a0f4aabe43f4eecee0b07eee1285a23"
         }
       ],
-      "claimed_at": "2026-10-26T01:44:50.046722+00:00"
+      "claimed_at": "2026-10-26T01:44:50.046722+00:00",
+      "completed_at": "2026-10-26T02:00:15.979929+00:00"
     }
   },
   "integrator": {
@@ -3291,7 +3297,7 @@
     "created_at": "2026-10-26T02:00:04.408590+00:00",
     "updated_at": "2026-10-26T02:00:04.408590+00:00"
   },
-  "updated_at": "2026-10-26T02:00:04.408590+00:00",
+  "updated_at": "2026-10-26T02:00:15.979929+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

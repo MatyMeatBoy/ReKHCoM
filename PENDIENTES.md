@@ -116,6 +116,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
 | code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/195 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T01:19:36.461192+00:00 |
 | core-assets-embedded | Recursos core del juego y launcher dentro del ejecutable | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/196 | Pedido explícito del usuario de incluir los recursos core en los ejecutables | 2026-10-26T01:42:16.304558+00:00 |
-| code-rebel-recom | Modo rebelde: lista local ReCoM separada en juego y launcher | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/197 | Usuario: terminar todas las mejoras y pendientes de código; pendiente vigente ReCoM rebelde | 2026-10-26T01:59:58.672762+00:00 |
+| code-rebel-recom | Modo rebelde: lista local ReCoM separada en juego y launcher | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/197 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T02:00:15.979929+00:00 |
 
 Integrador: codex-atlas (ocupado; 2026-10-26T02:00:04.408590+00:00)
