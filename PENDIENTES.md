@@ -149,6 +149,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | trailer-v20-production | Producir y exportar trailer real v2.0 | en_revision | codex-trailer-production | trailer/v20-production | Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas | 2026-10-26T22:13:22.159333+00:00 |
 | popup-skip-text-pedro | Popup saltar cinematica HD sin letras Pedro | integrado | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/274 | Pedido directo usuario: popup saltar sin letras, solucionar para todas las versiones, 26/10/2026 | 2026-10-26T22:51:00.986131+00:00 |
 | gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | pr_abierto | codex-gallery-preview | https://github.com/MatyMeatBoy/ReKHCoM/pull/275 | Usuario autoriza corregir reporte Pedro en todas las versiones, chat 26/10 | 2026-10-26T22:52:26.825439+00:00 |
-| hd-reload-fill-decomp | Recarga HD dinamica igual al original desde decomp | en_curso | codex-ending-hud | — | — | 2026-10-26T22:52:40.544341+00:00 |
+| hd-reload-fill-decomp | Recarga HD dinamica igual al original desde decomp | en_curso | codex-ending-hud | fix/hd-reload-fill | — | 2026-10-26T22:52:47.757131+00:00 |
 
 Integrador: libre

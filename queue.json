@@ -4131,8 +4131,8 @@
       "status": "en_curso",
       "owner": "codex-ending-hud",
       "created_at": "2026-10-26T22:52:34.588428+00:00",
-      "updated_at": "2026-10-26T22:52:40.544341+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T22:52:47.757131+00:00",
+      "branch": "fix/hd-reload-fill",
       "pr": null,
       "approval": null,
       "reference": "Pedido usuario 26/10 trailer carta roja vacia",
@@ -4141,7 +4141,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T22:52:40.544341+00:00",
+  "updated_at": "2026-10-26T22:52:47.757131+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
