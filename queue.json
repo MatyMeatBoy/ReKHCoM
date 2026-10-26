@@ -3270,8 +3270,8 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T01:44:44.191032+00:00",
-      "updated_at": "2026-10-26T01:44:50.046722+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T01:44:57.340362+00:00",
+      "branch": "codex/rebel-recom-list",
       "pr": null,
       "approval": "Usuario: terminar todas las mejoras y pendientes de código; pendiente vigente ReCoM rebelde",
       "reference": null,
@@ -3280,7 +3280,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T01:44:50.046722+00:00",
+  "updated_at": "2026-10-26T01:44:57.340362+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
