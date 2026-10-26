@@ -113,6 +113,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-agrabah | Agrabah107108 cornisas ytecho | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:55.579066+00:00 |
 | rev-six-oogie | Oogie alfombra yfantasmas | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:39:00.726357+00:00 |
 | atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/192 | Solicitud explícita del usuario de integrar el pintor en Atlas | 2026-10-26T00:42:21.673078+00:00 |
-| core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | pr_abierto | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Solicitud explícita del usuario: fuentes core en todas las builds clean | 2026-10-26T01:12:41.632316+00:00 |
+| core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
 
 Integrador: codex-atlas (ocupado; 2026-10-26T01:12:51.123283+00:00)

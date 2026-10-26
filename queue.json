@@ -3184,13 +3184,13 @@
     "core-fonts-clean": {
       "id": "core-fonts-clean",
       "piece": "Fuentes core: KHMenu en ejecutables y paquetes clean",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T00:51:10.155355+00:00",
-      "updated_at": "2026-10-26T01:12:41.632316+00:00",
+      "updated_at": "2026-10-26T01:13:03.597995+00:00",
       "branch": "codex/core-fonts-clean",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/194",
-      "approval": "Solicitud explícita del usuario: fuentes core en todas las builds clean",
+      "approval": "Pedido explícito de fuentes core embebidas en todas las builds futuras",
       "reference": null,
       "evidence": [
         {
@@ -3202,9 +3202,15 @@
           "at": "2026-10-26T01:12:41.632316+00:00",
           "owner": "codex-atlas",
           "detail": "EU compilado; fuente embebida sin assets; paquete rechaza binario anterior; check_sources correcto."
+        },
+        {
+          "at": "2026-10-26T01:13:03.597995+00:00",
+          "owner": "codex-atlas",
+          "detail": "Merge real 6b894a3bc48846181928434ededf315308da8195"
         }
       ],
-      "claimed_at": "2026-10-26T00:51:15.352901+00:00"
+      "claimed_at": "2026-10-26T00:51:15.352901+00:00",
+      "completed_at": "2026-10-26T01:13:03.597995+00:00"
     }
   },
   "integrator": {
@@ -3213,7 +3219,7 @@
     "created_at": "2026-10-26T01:12:51.123283+00:00",
     "updated_at": "2026-10-26T01:12:51.123283+00:00"
   },
-  "updated_at": "2026-10-26T01:12:51.124422+00:00",
+  "updated_at": "2026-10-26T01:13:03.598994+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
