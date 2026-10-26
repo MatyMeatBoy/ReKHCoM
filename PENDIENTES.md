@@ -136,7 +136,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-moguri-tab-fix | Canjear naipes: impedir estiramiento en pestaña derecha durante animación | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/230 | Autorización directa usuario26/10: comentarios de aprobados sin nueva revisión Atlas | 2026-10-26T12:28:07.419771+00:00 |
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | codex-atlas | codex/hd-ui-v20-completion | — | 2026-10-26T10:59:03.354749+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
-| android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | en_curso | codex-batteries | codex/android-battery-validity | — | 2026-10-26T16:22:04.424256+00:00 |
+| android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/239 | — | 2026-10-26T16:25:59.025665+00:00 |
 | claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | codex-retoma | codex/claude-close-20261026 | — | 2026-10-26T16:23:52.459939+00:00 |
 
 Integrador: libre
