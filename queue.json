@@ -3408,16 +3408,21 @@
       "status": "pr_abierto",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T07:42:08.549103+00:00",
-      "updated_at": "2026-10-26T07:44:33.744991+00:00",
+      "updated_at": "2026-10-26T09:44:25.377240+00:00",
       "branch": "codex/atlas-097-shadow",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/213",
-      "approval": null,
+      "approval": "approved exact 4bdd58353e74419d9d3f5dac83cfc82d",
       "reference": "20261025-214032-de44b9",
       "evidence": [
         {
           "at": "2026-10-26T07:44:33.744991+00:00",
           "owner": "codex-atlas",
           "detail": "Sombras staged bajo filtro GBA; dos capturas EU, compilación serial y check_sources correctos."
+        },
+        {
+          "at": "2026-10-26T09:44:25.377240+00:00",
+          "owner": "codex-atlas",
+          "detail": "Valoración humana de versión exacta. Compilación/capturas ya registradas; Maléfica222 son estudios de arte sin activación runtime."
         }
       ],
       "claimed_at": "2026-10-26T07:42:13.539688+00:00",
@@ -3640,7 +3645,7 @@
     "created_at": "2026-10-26T09:43:23.706933+00:00",
     "updated_at": "2026-10-26T09:44:18.601859+00:00"
   },
-  "updated_at": "2026-10-26T09:44:18.601859+00:00",
+  "updated_at": "2026-10-26T09:44:25.377240+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
