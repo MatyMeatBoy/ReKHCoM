@@ -3530,17 +3530,17 @@
       "status": "en_curso",
       "owner": "codex-atlas",
       "created_at": "2026-10-26T08:14:20.487171+00:00",
-      "updated_at": "2026-10-26T08:14:25.980347+00:00",
-      "branch": null,
+      "updated_at": "2026-10-26T08:16:15.996645+00:00",
+      "branch": "codex/atlas-maleficent-lomo-r2",
       "pr": null,
       "approval": null,
-      "reference": "20261025-172335-4d7739",
+      "reference": "Tres cuerpos únicos/41 estados; paleta nativa 16 colores y píxel 1:1; presentación montada antes/después.",
       "evidence": [],
       "claimed_at": "2026-10-26T08:14:25.980347+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-26T08:14:25.980347+00:00",
+  "updated_at": "2026-10-26T08:16:15.996645+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
