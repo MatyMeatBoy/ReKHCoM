@@ -15,9 +15,7 @@ Steam Deck; zip limpio en KHCoMPC).
 
 ## 1. Código (Claude)
 
-- [ ] **#202 Modo 240p para CRT** (itsNateDev, ofrece probarlo): vista fija 320x240 presentada a 1x exacta;
-  salida nativa (320x240, modo de pantalla con SDL_SetWindowFullscreenMode) o superresolución (1920x240 / 2560x240,
-  x6 / x8 solo en horizontal); filtro nearest, sin zoom ni ajuste; scanlines del juego apagadas. También **480p** (640x480, 2x exacto) para quien lo necesite (usuario 26/10).
+- [x] **#202 Modo CRT (26/10):** vista CRT 320x240 con salida 240p nativa, superresolución x6/x8 y 480p 2x, en juego y launcher; test enviado a itsNateDev (rama test-builds), esperando su prueba.
 - [ ] **Baterías** (khcom-claude-int, `run_batteries.py --status`): relanzadas el 26/10 con marcas frescas; su parte
   Android trae Agrabah 123/124 (app smoke completa). Revisar resultados y arreglar lo que salga.
 - [ ] **Antes de la 2.0** (sección 3): correr la lista de pruebas sobre el commit final.
