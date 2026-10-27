@@ -25,6 +25,8 @@ preamble = r'''
 #include <string.h>
 #define HD_SPRITE_COUNT 3
 #define SDL_max(a,b) ((a)>(b)?(a):(b))
+#define PORT_STUTTER_NOW() 0
+#define PORT_STUTTER_ADD(field, start) ((void)0)
 #define SDL_snprintf snprintf
 #define SDL_free free
 #define SDL_PIXELFORMAT_RGBA32 0

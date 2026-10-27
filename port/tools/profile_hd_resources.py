@@ -226,6 +226,10 @@ def main():
                 modes=[line for line in log.splitlines() if line.startswith('harness: frame')],
                 effective_progress=[line for line in log.splitlines() if line.startswith('harness: progress ')],
                 fixture=dict(SCENARIOS[scenario]),
+                # the deep view (port_main.c, KHCOM_STUTTER): every slow frame with its stage and one-off costs,
+                # the worst first; a wound is fixed only once it repeats across runs
+                stutters=sorted((line for line in log.splitlines() if line.startswith('stutter: ')),
+                                key=lambda line: -float(re.search(r' ([\d.]+) ms:', line).group(1)))[:12],
                 evidence_sha256={p.name:sha256(p) for p in folder.iterdir() if p.is_file() and p.suffix in ('.log','.csv','.bmp','.txt')})
             report['cases'].append(case)
             (out/'report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')

@@ -24,6 +24,10 @@ backend = r'''
 #define GBA_SCREEN_H 160
 #define TRANSPARENT 0xFFFF
 #define SDL_clamp(x,l,h) ((x)<(l)?(l):(x)>(h)?(h):(x))
+#define PORT_STUTTER_NOW() 0
+#define PORT_STUTTER_ADD(field, start) ((void)0)
+static int Load(int i);
+#define LoadCounted Load /* the stutter view's counting wrapper: the production loader */
 static struct {int hdCards,hdTitle;} gPortConfig={1,1};
 static int mainThread=1;
 #if __STDC_HOSTED__

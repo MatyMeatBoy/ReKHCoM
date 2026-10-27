@@ -72,6 +72,7 @@ int main(void){
 #include <assert.h>
 #include <stdio.h>
 PortConfig gPortConfig;
+PortStutterProbe gPortStutter;
 uint32_t PortFrameCount(void){return 0;}
 int PortPpuHudDigits(PortHudDigit* out,int max){return 0;}
 int PortPpuHudDigitVisible(int digit,int x,int y){return 0;}
