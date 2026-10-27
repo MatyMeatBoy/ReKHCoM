@@ -8171,10 +8171,10 @@
     "v22-pre3-version-identity": {
       "id": "v22-pre3-version-identity",
       "piece": "Child of claimed pre3 delivery: coherent source/PE/changelog identity only",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T23:55:17.055970+00:00",
-      "updated_at": "2026-10-27T23:55:26.218267+00:00",
+      "updated_at": "2026-10-27T23:55:51.541455+00:00",
       "branch": "release/v22-pre3-version",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/413",
       "approval": "Usuario: nueva pre actualizada, conservar versiones entregadas; parent v22-pre3-current-source-delivery claimed codex-integrador before edits",
@@ -8184,9 +8184,15 @@
           "at": "2026-10-27T23:55:26.218267+00:00",
           "owner": "codex-integrador",
           "detail": "Header/PE numeric2.2.0.3/string/pre3 changelog coherent; git diff check and six Android package identity tests PASS. No binaries claimed."
+        },
+        {
+          "at": "2026-10-27T23:55:51.541455+00:00",
+          "owner": "codex-integrador",
+          "detail": "Review version-only3files: headerpre3,PE2.2.0.3/textpre3 and changelogcoherent; diff whitespace and six Android version/package testsPASS. Delivery parent remains en_curso; no package availability or device verification claimed.; merged 5f7b04efb3efe25592bc6420395895bf4e94a420"
         }
       ],
-      "claimed_at": "2026-10-27T23:55:21.627669+00:00"
+      "claimed_at": "2026-10-27T23:55:21.627669+00:00",
+      "completed_at": "2026-10-27T23:55:51.541455+00:00"
     }
   },
   "integrator": {
@@ -8195,7 +8201,7 @@
     "created_at": "2026-10-27T23:55:42.821458+00:00",
     "updated_at": "2026-10-27T23:55:42.821458+00:00"
   },
-  "updated_at": "2026-10-27T23:55:42.821458+00:00",
+  "updated_at": "2026-10-27T23:55:51.541455+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
