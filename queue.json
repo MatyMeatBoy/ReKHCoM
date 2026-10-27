@@ -7564,7 +7564,7 @@
       "status": "pr_abierto",
       "owner": "sol-low-diverse-saves",
       "created_at": "2026-10-27T20:10:39.577890+00:00",
-      "updated_at": "2026-10-27T20:17:33.085820+00:00",
+      "updated_at": "2026-10-27T20:26:35.587130+00:00",
       "branch": "divisor64-reachable-audit",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/395",
       "approval": null,
@@ -7574,6 +7574,11 @@
           "at": "2026-10-27T20:17:33.085820+00:00",
           "owner": "sol-low-diverse-saves",
           "detail": "Premire lifecycle producer/consumer RED0xC0000094 for Sora/Riku; GREEN16 cases. NonPC EU consumer unchanged. Ledger audits other denominator preconditions; continuing sibling audit after this independently reviewable fix."
+        },
+        {
+          "at": "2026-10-27T20:26:35.587130+00:00",
+          "owner": "sol-low-diverse-saves",
+          "detail": "PR395 merged9a7e9d846c6eb33d722c1259d1c1b0b715d4f993 after root review rejected early-return semantics. Final2DIV0PCsites preserveGBAquotient and allstatechecks. Root independent7724 exactcomparisonsPASS vsoriginal038dGBAzero; originalbothsidesRED C94. Broaderaudit stillinprogress; finalpackagedactivationpending. Sourcefixmerged doesnotcloseall64cases."
         }
       ],
       "claimed_at": "2026-10-27T20:10:46.733037+00:00"
@@ -7674,7 +7679,7 @@
     "created_at": "2026-10-27T20:25:59.531292+00:00",
     "updated_at": "2026-10-27T20:25:59.531292+00:00"
   },
-  "updated_at": "2026-10-27T20:25:59.531292+00:00",
+  "updated_at": "2026-10-27T20:26:35.587130+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
