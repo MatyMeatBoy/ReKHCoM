@@ -4786,13 +4786,13 @@
     "hudhd-exp-ganada": {
       "id": "hudhd-exp-ganada",
       "piece": "HUD HD: «EXP ganada» no tapada por la vida nueva",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrator",
       "created_at": "2026-10-27T06:31:09.142434+00:00",
-      "updated_at": "2026-10-27T07:02:27.687769+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
+      "updated_at": "2026-10-27T07:03:05.098810+00:00",
+      "branch": "fix/hudhd-exp",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/313",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
       "evidence": [
         {
@@ -4898,7 +4898,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:02:27.687769+00:00",
+  "updated_at": "2026-10-27T07:03:05.098810+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
