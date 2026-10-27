@@ -9,6 +9,14 @@ escenas a eventos de GBA, de DL-6-case): agradecerle al cerrar.
 
 Nada del juego viaja con ReKHCoM: se lee la instalación del jugador.
 
+Actualización EN/JP (27/10/2026): Steam declara audio completo inglés y japonés.
+Las observaciones de audio inglés de abajo corresponden a la fuente inspeccionada
+el 21/10, no a todas las instalaciones. El launcher ahora inspecciona ACF y
+archivos locales sin cambiar Steam: muestra señales EN/JP o desconocido y separa
+texto/subtítulos, Undub GBA y audio de vídeo HD. El idioma de los imports legacy
+no está verificado; la selección de variantes/imports EN/JP queda en el siguiente
+incremento. Ver [evidencia y plan](HD_MEDIA_LANGUAGE_SELECTION_V21.md).
+
 ## Lo que hay en la instalación (Steam: `steamapps/common/KINGDOM HEARTS -HD 1.5+2.5 ReMIX-`)
 
 - Videos de Re:CoM: `STEAM/dt/KHCReSource/BIN/movie/*.mp4` (también KH1 en `STEAM/dt/KH1Movie`, BBS
@@ -16,7 +24,7 @@ Nada del juego viaja con ReKHCoM: se lee la instalación del jugador.
   van con XOR de una clave fija de 16 bytes `3f1ec193264258b8aa9d5375bf629a97` (posición mod 16); el
   resto es un MP4 normal. ROP (apertura, 111 s), RSE (final de Sora, 353 s), RRE (final de Riku,
   345 s), RLP (157 s) en 1920x1080 H.264 + AAC; `zz_event_###` (100 escenas) en 1280x720.
-  Audio en inglés; no hay pistas de otros idiomas.
+  La muestra inspeccionada tiene audio inglés; esto no descarta la variante JP.
 - Música de Re:CoM: `Image/dt/Recom.hed/.pkg`, archivos `STREAM/0001/*.win32.scd` (45 pistas con
   nombre descriptivo, p. ej. `01F_Town_F`, `19_Alice_Field`). Paquetes: formato de OpenKh (OpenKh.Egs,
   Apache-2.0): `.hed` de entradas MD5(nombre)/offset/tamaños; en el `.pkg` una cabecera de 16 bytes
@@ -44,7 +52,7 @@ escenas del 1.5 según #25 (por confirmar mirando). RLP: bucle del menú de tít
    con stb_vorbis, opción aparte.
 3. **Mod completo:** al empezar un evento con escena del 1.5 (mapa de #25), reproducir esa escena en
    lugar del evento, con los subtítulos de Re:CoM en el idioma del juego
-   (el audio es inglés). Opción aparte, apagada por defecto.
+   (audio según la fuente importada; la muestra inicial era inglesa). Opción aparte, apagada por defecto.
 4. **Opciones (juego + launcher + ini):** `hd_movies`, `hd_music`, `hd_scenes`, independientes.
 
 ## Estado
@@ -60,7 +68,7 @@ escenas del 1.5 según #25 (por confirmar mirando). RLP: bucle del menú de tít
   cinco idiomas del cartucho contra los subtítulos de cada escena, más el orden de las escenas y los pares mudos);
   fuera: zz_event_001 (prólogo, dentro de la apertura que reemplaza ROP), 614 y 631 (solo Re:CoM). Antes: 72 eventos → escenas (filas confiables de #25,
   `port/src/port_hdscenes.inc`); al terminar, el evento se cierra con el salto de escena del juego.
-  Audio en inglés (el PC no trae otras pistas).
+  Audio inglés en la muestra inicial; el producto Steam también declara audio JP.
 - [x] Subtítulos (`hd_subtitles`, encendido): sí vienen, en `Recom.pkg` como `FORM/5xxx/FO5xxx.BIN`
   (tabla MVS en inglés US + remasterizadas UK/FR/GR/IT/SP). `khhd_subs.py` y el launcher escriben
   `hd/subs/<video>.<idioma>.txt` (581 archivos, idénticos byte a byte); el juego los dibuja bajo la

@@ -1,6 +1,6 @@
 # OptiPort — batería ReKHCoM 2.1
 
-Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` identifica el método aplicado en esta revisión; los tickets y resultados del juego se mantienen aquí, no en la skill general.
+Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` corresponde al commit público `0b6edd3`; incluye sus referencias locales para funcionar sin consultar otros repositorios. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
 
 ## Avance comprobable
 
@@ -15,7 +15,7 @@ ese 71 % en avance de todo el proyecto.
 | Bloque original | Estado y evidencia |
 | --- | --- |
 | Logs y diagnóstico | Integrado #282/#298: actual + cinco anteriores y fecha UTC; conservar evidencia de fallos de rotación. |
-| Portabilidad/alineación | Integrado #286. Seguimiento adicional #318: primera puerta con SRAM real expuso lectura BIOS GBA/NULL en Windows64; corrección validada por coordinador y PR todavía pendiente de integración en este snapshot. |
+| Portabilidad/alineación | Integrados #286/#318/#319: alineación ROM y lecturas BIOS en puerta/carga guardada. El caso privado real sigue siendo regresión obligatoria del artefacto final. |
 | Pools/paletas | Integrado #285/#286: agotamiento inyectado, mensajes, elecciones y cartas. |
 | Imágenes y presupuesto | Integrado #284/#296: cabeceras antes de decode, límites/pin/LRU y presupuesto de targets HUD. |
 | Readiness del HUD | Integrado #283/#287/#297: bounds, grupos requeridos e invalidación explícita del HUD. |
@@ -33,21 +33,56 @@ No se exige completar una campaña entera: usar fixtures deterministas por patr�
 y soak dirigido que cubran los riesgos de cada cambio. Mantener el caso real
 que descubrió el fallo junto a las pruebas sintéticas.
 
-## Snapshot de builds y entrega privada — 27/10
+## Snapshot vigente de artefactos — 27/10, fuentes e71c9692c
 
-- El coordinador informa build Windows `017676`: EU/US/JP en 32 y 64 bits
-  compiladas correctamente; compilación no equivale a regresión jugable.
-- El preview nativo 64 falló con la SRAM real en la primera puerta (AV WER
+- El preview anterior falló con la SRAM real en la primera puerta (AV WER
   `0x100f7bd6`, `MapWallFaceIsUnreserved`, fila superior NULL/lectura BIOS GBA).
-  La corrección alcanzó `field=520`, salida 0; #318 sigue pendiente de integrar.
-- Paquete privado con fixture: primera puerta guardada PASS en 32+64. El paquete
-  inicial pasó además ocho salas y puerta de evento en ambos runtimes. El ZIP
-  final pasó la regresión del guardado en ambos. No extender la evidencia de
-  ocho salas a un artefacto distinto sin repetirla o justificar equivalencia.
-- ZIP limpio personal copiado por coordinador a la raíz del proyecto solicitada
-  por el usuario. SHA-256:
-  `be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
-  No hay prerelease pública publicada en este snapshot.
+  La corrección integrada #318 alcanzó `field=520`, salida 0.
+- Windows e71: ZIP extraído, seis regresiones PASS (guardado privado, ocho salas
+  Sora/Riku y puerta de evento, cada una en 32 y 64). Reporte privado
+  `build/pre1-package-regressions-e71/report.json` en el checkout de diagnóstico.
+  El ZIP limpio está en la raíz KHCoMPC, SHA-256
+  `3645fe9013125be6722e28beb39e991ab27d874725044aa739a9dee2bdfb82a4`.
+- Linux e71: paquete desktop/Deck x86+x64 compilado y probado en VM Debian;
+  ambos runtimes llegan al campo del guardado y a la batalla de Traverse Town.
+  La primera corrida de puerta de evento tuvo un error de preparación del
+  harness, conservado y repetido correctamente; no fue un fallo del juego.
+- Android e71: APK universal construido; payload nativo del APK jugable idéntico
+  al smoke en las bibliotecas/imágenes del juego, salvo launcher de prueba.
+  El launcher jugable arranca en emulador API34 con traducción ARM64. La primera
+  prueba del guardado terminó con salida0 sin alcanzar postcondición: logcat
+  muestra recreación de Activity por CONFIG_ASSETS_PATHS tras instalar. Se
+  repitió tras estabilizar el entorno: probe de tres checkpoints y guardado real
+  PASS; también puerta de evento y evento74 USA de Monstruo hasta batalla. El intento anterior no
+  cuenta como PASS ni como crash nativo. No representa el Samsung Android13 del reportero.
+- GPU Windows e71: marcos de stocks reales 1/2/3 de Sora y Axel visibles;
+  bordes Moguri/Estado iguales al fondo al entrar en frío y volver. Evidencia
+  privada `build/pre1-stock-e71` y `build/pre1-visual-e71`. La equivalencia de
+  vida/capacidad HD y el AA portable siguen pendientes.
+- No hay prerelease pública nueva en este snapshot. Un defecto de vida útil de
+  valores `getenv` en el runtime portable se reprodujo durante la revisión;
+  #343 integrado `34132bd71`. Reconstruir y repetir artefactos afectados antes
+  de publicar; no atribuirle el cierre previo de Activity sin evidencia causal.
+
+## Integración y siguientes pruebas mínimas
+
+| Trabajo | Estado verificable / siguiente paso |
+| --- | --- |
+| Marcos de stocks, HP enemigo, entrada de submenús | #320/#323/#324/#325/#328/#326 integrados; capturas GPU anteriores, no prometer paridad visual total. |
+| Cartas pequeñas centradas | #315 integrado `15f84f425`; hoja real de 105 revisada y 448 recetas válidas. Falta comparación en runtime actualizado. |
+| Harness de acordes | #333 integrado `4452d0a23`; el parser anterior sólo pulsaba el primer botón de L+R. No reutilizar pruebas de acordes antiguas como cobertura efectiva de stocks. |
+| Fuente Steam EN/JP | #327 integrado `7297351f1`; señal de procedencia acotada y sólo lectura. No certifica audio ni cambia importaciones legacy. |
+| Deck Gaming Mode | #337 integrado `c8109de7d`; asistente de registro/guía, 10 pruebas wrapper +3 paquete. Falta Deck real; #330 no demuestra fallo de Gamescope. |
+| Targets GPU portable | #331 en borrador, dos P1 reproducidos/corregidos y revisión independiente; faltan GPU Windows/Linux/Android. |
+| Controles | #332/#334/#338/#340 en revisión. Faltan QA visual, activar Original→sí en diálogo abierto y casos de texto variable. |
+| Biblioteca EN/JP | #335 `5acf2cb04` y #342 `c6c7ad615` en revisión. P1 de manifiesto mixto y P2 de importación incompleta corregidos con regresiones y revisión independiente; faltan integración y QA real. |
+| Retorno de galería | #339 en revisión; productor/consumidor RED→GREEN, matriz de capturas título/partida × normal/skip pendiente. |
+| Dígitos azul/dorado | #341 en borrador: conserva GBA multicolor si falta el dígito HD; fuente real EU/US/JP pasa, comparación GPU pendiente. |
+| Linux ARM64 | Factibilidad local `9300d2992` identificada; revisar/actualizar y construir, no confundir con armhf ni con Deck x86-64. |
+
+La tabla registra el estado de esta fotografía, no reemplaza claims ni estados
+remotos. El 71% anterior sigue limitado a los catorce bloques originales;
+profiling, asíncrono, pacing y resistencia continúan parciales.
 
 ## Reportes y límites
 

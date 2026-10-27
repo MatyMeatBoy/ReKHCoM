@@ -168,6 +168,24 @@ class LauncherTest(unittest.TestCase):
         self.assertIn('moved', entry.read_text())
         self.assertEqual(len(list(entry.parent.glob('*.desktop'))), 1)
 
+    def test_setup_registers_without_starting_game_or_touching_steam(self):
+        helper = self.game / 'Setup Steam Deck.sh'
+        helper.write_bytes((ROOT / 'port/linux/Setup Steam Deck.sh').read_bytes().replace(b'\r\n', b'\n'))
+        # No dialog dependency: silent mode prints complete instructions.
+        result = subprocess.run([SHELL, str(helper), '--no-dialog'], cwd=self.root,
+                                env=self.env, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.xdg / 'applications/rekhcom.desktop').exists())
+        self.assertIn('Non-Steam', result.stdout)
+        self.assertIn('Start + Select', result.stdout)
+        self.assertIn('Gaming Mode', result.stdout)
+        self.assertFalse((self.game / 'args.txt').exists())
+        self.assertFalse((self.game / 'ReKHCoM.log').exists())
+        self.assertFalse((self.root / '.steam').exists())
+        bad = subprocess.run([SHELL, str(helper), '--bad'], cwd=self.root,
+                             env=self.env, text=True, capture_output=True)
+        self.assertEqual(bad.returncode, 2)
+
     def test_manual_steam_command(self):
         result = self.run_script('--steam-help')
         self.assertEqual(result.returncode, 0)

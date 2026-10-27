@@ -91,15 +91,20 @@ int PortMoogleMenu(void) {
            gCurrentMode == &gModeMsCharge ? 2 : 0;
 }
 
-/* Derive this from the live mode so loading a state needs no extra flag. */
-int PortMenuBackgroundOnly(void) {
+/* Entry styling and live edge composition must classify the same modes. */
+static int ModeUsesMenuBackground(Mode* mode) {
     /* menus whose own BG panels reach the edge: sprites there (NEW badges,
        the pointing glove) must never be carried into the margin */
-    return gCurrentMode == &gModeStatus || gCurrentMode == &gModeMapinspect || gCurrentMode == &gModeDeck
+    return mode == &gModeStatus || mode == &gModeMapinspect || mode == &gModeDeck
         /* The entrance already draws its BG bands while the title slides in.
            Classify it like the shop: foreground/fade differences at the edge
            must not hide those bands until the generic sliding timer expires. */
-        || gCurrentMode == &gModeMsTop || gCurrentMode == &gModeMsShop || gCurrentMode == &gModeMsCharge;
+        || mode == &gModeMsTop || mode == &gModeMsShop || mode == &gModeMsCharge;
+}
+
+/* Derive this from the live mode so loading a state needs no extra flag. */
+int PortMenuBackgroundOnly(void) {
+    return ModeUsesMenuBackground(gCurrentMode);
 }
 
 /* The menu screens drawn over the whole GBA picture: their backgrounds end
@@ -132,8 +137,7 @@ void ModeStart(Mode* mode, s32 arg) {
     PortMenuPanelSide(-1);
     PortMenuHeaderSource(NULL, NULL, NULL);
     PortSideStyle(mode == &gModeAllmap ? PORT_SIDE_PATTERN :
-                  (mode == &gModeDeck || mode == &gModeStatus || mode == &gModeMapinspect ||
-                   mode == &gModeMsShop || mode == &gModeMsCharge)
+                  ModeUsesMenuBackground(mode)
                       ? PORT_SIDE_MENU :
                   /* live backgrounds: the blurred reflection, with the bars carried on */
                   (mode == &gModeWORLDSELECT || mode == &gModeWorldwarp) ? PORT_SIDE_BLUR_BANDS
