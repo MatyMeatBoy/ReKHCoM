@@ -50,6 +50,7 @@
 
 #define PORT_PAD_AXIS_BASE 100
 #include "../include/port/port_zoom.h"
+#include "runtime_selection.h"
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl3.h"
@@ -671,12 +672,17 @@ static void ApplyUiLanguage() {
                 sUiTable.emplace(row[0], row[sUiColumn]);
 }
 
+static int sRuntimeMode;
 static bool sHdOfferDeclined; /* "Don't ask again" on the HD mod's offer (rom_folder.inc) */
 static void LoadLauncherState() {
     std::ifstream f(sRoot / "decompui.ini");
     std::string line;
     while (std::getline(f, line)) {
-        if (line == "hd_offer=0") {
+        if (line.rfind("force_32=", 0) == 0) {
+            sRuntimeMode = ReKHCoMForce32(line.substr(9)) ? 1 : 0;
+        } else if (line.rfind("runtime_mode=", 0) == 0) {
+            sRuntimeMode = ReKHCoMRuntimeMode(line.substr(13));
+        } else if (line == "hd_offer=0") {
             sHdOfferDeclined = true;
         } else if (line.rfind("version=", 0) == 0) {
             for (int v = 0; v < kVersionCount; v++)
@@ -699,6 +705,7 @@ static void LoadLauncherState() {
 
 static void SaveLauncherState() {
     std::ofstream f(sRoot / "decompui.ini", std::ios::trunc);
+    f << "runtime_mode=" << sRuntimeMode << "\n";
     f << "version=" << kVersions[sSelected].id << "\n";
     f << "ui_language=" << sUiLanguage << "\n";
     if (sHdOfferDeclined)
@@ -1940,6 +1947,14 @@ static void PageGraphics() {
                         T("Con Discord abierto, tu perfil muestra el mundo, el piso, el personaje y el nivel.",
                           "With Discord open, your profile shows the world, floor, character and level."),
                         Ini("discord_presence"), 2, onoff);
+#endif
+#ifndef LAUNCHER_ANDROID
+    if (ImGui::CollapsingHeader(T("Avanzado", "Advanced"))) {
+        const char* modes[] = { T("Automático", "Automatic"), T("Forzar 32 bits", "Force 32-bit"), T("Forzar 64 bits", "Force 64-bit") };
+        if (CycleRow(T("Modo 32/64 bits", "32/64-bit mode"),
+                     T("Se aplica al próximo inicio.", "Applies on the next launch."), sRuntimeMode, 3, modes))
+            SaveLauncherState();
+    }
 #endif
     ImGui::EndChild();
     if (changed)
@@ -3377,29 +3392,72 @@ static void Launch(SDL_Window* window) {
     return;
 #else
     const VersionState& st = sState[sSelected];
-    std::wstring cmd = Quote(st.exe.wstring()) + L" --data-dir " + Quote(sRoot.wstring()) + L" --rom " +
-                       Quote(RomPath(sSelected).wstring());
-    STARTUPINFOW si = {};
-    PROCESS_INFORMATION pi = {};
-
-    si.cb = sizeof(si);
     SaveIni();
     SaveLauncherState();
-    if (!CreateProcessW(st.exe.c_str(), cmd.data(), nullptr, nullptr, FALSE, 0, nullptr,
-                        st.exe.parent_path().c_str(), &si, &pi)) {
-        Notice(T("No se pudo iniciar el juego.", "Could not start the game."), true);
+    SYSTEM_INFO system = {};
+    GetNativeSystemInfo(&system); // works from this 32-bit launcher under WOW64
+    const bool os64 = system.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64;
+    const fs::path host = sRoot / "bin64" / "rekhcom64.exe";
+    const fs::path guest = sRoot / "bin64" / (std::string("guest-") + kVersions[sSelected].id + ".bin");
+    const fs::path boot = sRoot / (".rekhcom-boot-" + std::to_string(GetCurrentProcessId()));
+    std::error_code ec;
+    bool use64 = ReKHCoMSelect64(os64, sRuntimeMode == 1, fs::is_regular_file(host),
+                                fs::is_regular_file(guest), fs::is_regular_file(sRoot / "bin64" / "SDL3.dll"));
+    if (sRuntimeMode == 2 && !use64) {
+        Notice(T("No se puede iniciar en 64 bits: requiere Windows x64 y los archivos completos de bin64.",
+                 "Cannot start in 64-bit mode: Windows x64 and the complete bin64 files are required."), true);
         return;
     }
-    CloseHandle(pi.hThread);
-    SDL_HideWindow(window);
-    while (WaitForSingleObject(pi.hProcess, 100) == WAIT_TIMEOUT) {
-        SDL_Event ev;
-        while (SDL_PollEvent(&ev)) {
-        }
-    }
     DWORD code = 0;
-    GetExitCodeProcess(pi.hProcess, &code);
-    CloseHandle(pi.hProcess);
+    bool started = false;
+    for (;;) {
+        fs::remove(boot, ec); // no stale ready marker may authorize or suppress a retry
+        const fs::path exe = use64 ? host : st.exe;
+        std::wstring cmd = Quote(exe.wstring());
+        if (use64) {
+            cmd += L" " + Quote(guest.wstring()) + L" --data " + Quote(sRoot.wstring()) +
+                   L" --boot-status " + Quote(boot.wstring());
+        } else {
+            cmd += L" --data-dir " + Quote(sRoot.wstring()) + L" --rom " + Quote(RomPath(sSelected).wstring());
+        }
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        // CreateProcess inherits a copy; restore the launcher's environment immediately.
+        const wchar_t* old = _wgetenv(L"KHCOM_ROM");
+        const bool hadRom = old != nullptr;
+        std::wstring oldRom = old ? old : L"";
+        SetEnvironmentVariableW(L"KHCOM_ROM", RomPath(sSelected).c_str());
+        BOOL created = CreateProcessW(exe.c_str(), cmd.data(), nullptr, nullptr, FALSE, 0, nullptr,
+                                      sRoot.c_str(), &si, &pi);
+        SetEnvironmentVariableW(L"KHCOM_ROM", hadRom ? oldRom.c_str() : nullptr);
+        if (!created) {
+            if (use64 && sRuntimeMode == 0) { use64 = false; continue; }
+            Notice(T("No se pudo iniciar el juego.", "Could not start the game."), true);
+            if (started) SDL_ShowWindow(window);
+            return;
+        }
+        started = true;
+        CloseHandle(pi.hThread);
+        SDL_HideWindow(window);
+        while (WaitForSingleObject(pi.hProcess, 100) == WAIT_TIMEOUT) {
+            SDL_Event ev;
+            while (SDL_PollEvent(&ev)) {}
+        }
+        GetExitCodeProcess(pi.hProcess, &code);
+        CloseHandle(pi.hProcess);
+        bool enteredGame = fs::is_regular_file(boot);
+        fs::remove(boot, ec);
+        if (use64 && ReKHCoMRetry32(code, enteredGame)) {
+            if (sRuntimeMode == 0) { use64 = false; continue; }
+            SDL_ShowWindow(window);
+            SDL_RaiseWindow(window);
+            Notice(T("No se pudo iniciar en 64 bits. Revisa kh_com.log o elige Automático en Avanzado.",
+                     "Could not start in 64-bit mode. See kh_com.log or choose Automatic under Advanced."), true);
+            return;
+        }
+        break;
+    }
     if (code == REKHCOM_EXIT_QUIT_ALL) { /* Options > Quit the game: the launcher goes too */
         sQuitNow = true;
         return;
