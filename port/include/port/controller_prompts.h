@@ -63,9 +63,10 @@ static inline int KhPromptTokenAction(const char* text, size_t length) {
 static inline int KhPromptTokenActions(const char* text,size_t length,int actions[2]) {
     int action=KhPromptTokenAction(text,length);
     if(action>=0) { actions[0]=action;return 1; }
-    static const char* const pairs[]={"L and R Buttons","L- und R-Tasten","L + R","L+R"};
+    static const char* const pairs[]={"L and R Buttons","L- und R-Tasten","L + R","L+R",
+                                     "R and L Buttons","R- und L-Tasten","R + L","R+L"};
     for(unsigned i=0;i<sizeof(pairs)/sizeof(pairs[0]);i++)
-        if(strlen(pairs[i])==length && !memcmp(text,pairs[i],length)) { actions[0]=2;actions[1]=3;return 2; }
+        if(strlen(pairs[i])==length && !memcmp(text,pairs[i],length)) { actions[0]=i<4?2:3;actions[1]=i<4?3:2;return 2; }
     return 0;
 }
 /* Shift-JIS full-width key names immediately followed by the authored

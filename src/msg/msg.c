@@ -6529,6 +6529,9 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
                 sCardMsgGlyphSprites[sTextEntryCount].tiles = LoadObjTiles(&gMsgLatinFontTiles[glyph * 32], 128);
             }
 
+#ifdef PLATFORM_PC
+            RememberControllerOriginalGlyph(sTextEntryCount,text,0);
+#endif
             sTextEntryCount++;
 
             if (cx > 0x9B00) {
@@ -6776,6 +6779,9 @@ u8 LayoutCardMsgGlyphsPageSjis(s32 x, s32 y, u8* text, u8** nextText) {
                 break;
             }
 
+#ifdef PLATFORM_PC
+            RememberControllerOriginalGlyph(sTextEntryCount,text-2,1);
+#endif
             sTextEntryCount++;
         }
 
@@ -6832,6 +6838,9 @@ void DrawCardMsgGlyphs(u8 n) {
 
 void FreeCardMsgGlyphSprites() {
     u8 i;
+#ifdef PLATFORM_PC
+    ResetControllerPromptGlyphs(); /* restore backups before releasing the owned sprites */
+#endif
 
     for (i = 0; i < 128; i++) {
         if (sCardMsgGlyphSprites[i].tiles != NULL) {

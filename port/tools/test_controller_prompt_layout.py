@@ -1,6 +1,7 @@
 """Real Latin/SJIS message-layout consumers and immutable symbol-tile producer."""
 from pathlib import Path
 import os
+import re
 import subprocess
 import tempfile
 ROOT=Path(__file__).resolve().parents[2]
@@ -14,24 +15,31 @@ def function(source,name):
 
 def main():
     msg=(ROOT/'src/msg/msg.c').read_text(encoding='utf8')
+    widths=msg[msg.index('static const GlyphWidthTable sLatinGlyphWidths'):msg.index('#ifdef VERSION_EU',msg.index('static const GlyphWidthTable sLatinGlyphWidths'))]
+    widths=[int(n) for n in re.findall(r'\b\d+\b',widths)]
+    assert all(widths[ord(c)]>=5 for c in 'ABLRSELECT')
     inp=(ROOT/'port/src/port_input.c').read_text(encoding='utf8')
     activity=inp[inp.index('/* Activity is event-driven:'):inp.index('/* After closing an overlay')]
+    tutorials=inp[inp.index('/* Keep the original localized instructions'):inp.index('/* Select + Up/Down:')]
+    card=(ROOT/'include/card/card_message_data.h').read_text(encoding='utf8');card=card[card.index('enum CardMessageId {'):card.index('};',card.index('enum CardMessageId {'))+2]
     runtime=(ROOT/'port/include/port/controller_prompt_runtime.inc').read_text(encoding='utf8')
-    core=activity+'\n'+runtime+'\n'+function(msg,'LayoutCardMsgGlyphsPage')+'\n'+function(msg,'LayoutCardMsgGlyphsPageSjis')+'\n'+function(msg,'DrawCardMsgGlyphs')
+    core=activity+'\n'+tutorials+'\n'+runtime+'\n'+function(msg,'LayoutCardMsgGlyphsPage')+'\n'+function(msg,'LayoutCardMsgGlyphsPageSjis')+'\n'+function(msg,'DrawCardMsgGlyphs')+'\n'+function(msg,'FreeCardMsgGlyphSprites')
     cc=next((ROOT.parent/'toolchain').glob('llvm-mingw-*/bin/i686-w64-mingw32-clang.exe'))
     sdl=next((ROOT.parent/'toolchain').glob('SDL3-*'))/'i686-w64-mingw32'
     with tempfile.TemporaryDirectory(prefix='rekhcom-prompt-layout-') as d:
         d=Path(d)
-        for version in ('EU','US'):
-            src=d/'layout.c';exe=d/'layout.exe';src.write_text(PRE+core+MAIN,encoding='utf8')
+        for version in ('EU','US','JP'):
+            src=d/'layout.c';exe=d/'layout.exe';src.write_text(PRE+card+'\n'+core+MAIN,encoding='utf8')
             subprocess.run([str(cc),'-std=gnu11','-Wall','-Wextra','-Werror','-DPLATFORM_PC','-DVERSION_'+version,'-I'+str(ROOT/'port/include'),'-I'+str(sdl/'include'),str(src),'-L'+str(sdl/'lib'),'-lSDL3','-o',str(exe)],check=True)
             import shutil
             shutil.copy2(sdl/'bin/SDL3.dll',d/'SDL3.dll')
-            subprocess.run([str(exe)],check=True,timeout=10,creationflags=0x08004000,env=dict(os.environ,SDL_VIDEO_DRIVER='dummy',SDL_AUDIO_DRIVER='dummy'))
-    print('PASS: actual input + Latin/SJIS live symbols; 1000 draws without loads, family/binding/hotplug swaps, reveal/state and source preserved')
+            run=subprocess.run([str(exe)],capture_output=True,text=True,timeout=10,creationflags=0x08004000,env=dict(os.environ,SDL_VIDEO_DRIVER='dummy',SDL_AUDIO_DRIVER='dummy'))
+            assert run.returncode==0,run.stdout+run.stderr
+    print('PASS: actual tutorial producer + EU/US/JP layout/draw/free; Original toggle, Return hotplug, SELECT continuation, OOM, balanced tile references and 1000 stable draws')
 
 PRE=r'''
 #include <assert.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stddef.h>
@@ -41,6 +49,8 @@ PRE=r'''
 #include "port/controller_prompts.h"
 #include "port/pad_layout.h"
 #include "port/controller_prompt_glyphs.h"
+#undef assert
+#define assert(x) do {if(!(x)){fprintf(stderr,"%s:%d %s\n",__FILE__,__LINE__,#x);exit(1);}}while(0)
 PortConfig gPortConfig;
 void PortInputResetBindings(void){}
 typedef uint8_t u8;
@@ -58,6 +68,11 @@ typedef u16 MsgLatinChar;
 #define MSG_CODE_PLAIN 0x4000
 #define MSG_CODE_NL 10
 #endif
+#ifdef VERSION_JP
+typedef u8 TextChar;
+#else
+typedef MsgLatinChar TextChar;
+#endif
 #define MSG_CODE_END 0
 #define MSG_CODE_JP_NL 0x6e6e
 #define TRUE 1
@@ -71,8 +86,13 @@ static const u16* gMsgLatinFontFrames[256];
 static const u16 *gMsgFontBank0Frames[256],*gMsgFontBank1Frames[256],*gMsgFontBank2Frames[256],*gMsgFontBank3Frames[256];
 static u8 gMsgLatinFontTiles[128],gMsgFontBank0Tiles[128],gMsgFontBank1Tiles[128],gMsgFontBank2Tiles[128],gMsgFontBank3Tiles[128];
 static int loads,releases,failLoads;
-static void* LoadObjTiles(const void*p,int bytes){assert(p && bytes==128);loads++;return failLoads?NULL:(void*)p;}
-static void ReleaseObjTiles(void*p){assert(p);releases++;}
+static struct {const void*source;int references;} refs[1024];static int refCount;
+static void* Hold(const void*p){for(int i=0;i<refCount;i++)if(refs[i].source==p){refs[i].references++;return (void*)p;}assert(refCount<1024);refs[refCount].source=p;refs[refCount++].references=1;return (void*)p;}
+static void ReleaseObjPalette(void*p){(void)p;}
+static void EwramFree(void*p){assert(p==storage);}
+
+static void* LoadObjTiles(const void*p,int bytes){assert(p && bytes==128);loads++;return failLoads?NULL:Hold(p);}
+static void ReleaseObjTiles(void*p){assert(p);releases++;for(int i=0;i<refCount;i++)if(refs[i].source==p){assert(refs[i].references>0);refs[i].references--;return;}assert(0);}
 static void GetSjisGlyph(u16 c,u16*g,u8*b){(void)c;*g=0;*b=0;}
 static int gPortTextChar,drawn;
 #define MSG_FONT_FRAMES gMsgFontBank0Frames
@@ -90,6 +110,9 @@ int main(void){
  assert(sCardMsgGlyphCodes[0]==26 && sCardMsgGlyphCodes[1]==26);
  assert(!memcmp(copy,latin,sizeof(latin)));
  const unsigned char*p=PortControllerGlyphTiles(2);assert(p==PortControllerGlyphTiles(2));
+ const unsigned char* compact=PortControllerGlyphTiles(258);assert(compact==PortControllerGlyphTiles(258));
+ for(int y=0;y<16;y++)for(int x=0;x<16;x++)if(x>=5||y>=10){int at=((y/8)*2+x/8)*32+(y%8)*4+(x%8)/2;assert(!((compact[at]>>((x&1)*4))&15));}
+
  assert(storage[0].tiles==p && !PortControllerGlyphTiles(255));
  u8 sjis[]={26,2,26,1,0},sjisCopy[5],*jpNext=NULL;memcpy(sjisCopy,sjis,sizeof(sjis));
  loads=0;assert(LayoutCardMsgGlyphsPageSjis(100,200,sjis,&jpNext)==2 && !jpNext && loads==2 && releases==2);
@@ -145,6 +168,75 @@ int main(void){
  assert(LayoutCardMsgGlyphsPageSjis(123,456,liveJp,&jpNext)==1 && !jpNext);
  gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_SOUTH;DrawCardMsgGlyphs(1);
  assert(storage[0].tiles==PortControllerGlyphTiles(1) && storage[0].x==123 && storage[0].y==456 && !jpNext);
+
+ static u16 frame[4]={0,0,0,0};for(int i=0;i<256;i++){gMsgLatinFontFrames[i]=frame;gMsgFontBank0Frames[i]=frame;sLatinGlyphWidths.widths[i]=6;}
+ gPortConfig.controllerPrompts=0;gPortConfig.invertCardScroll=0;
+#ifndef VERSION_JP
+ const TextChar original[]={MSG_CODE_HIGHLIGHT,'A',' ','B','u','t','t','o','n',MSG_CODE_PLAIN,'.',0};
+ MsgLatinChar* source=(MsgLatinChar*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,original);
+ assert(source==(MsgLatinChar*)original);
+ assert(LayoutCardMsgGlyphsPage(123,456,source,&next)==9&&!next);
+ void* originalTile=storage[0].tiles;int originalCode=sCardMsgGlyphCodes[0];TextGlyphSprite originalSprite=storage[0];
+ gPortConfig.controllerPrompts=4;gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_SOUTH;DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==PortControllerGlyphTiles(257));
+ assert(storage[0].x==originalSprite.x&&storage[0].y==originalSprite.y&&storage[0].visible==originalSprite.visible);
+ gPortConfig.controllerPrompts=0;DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==originalTile&&sCardMsgGlyphCodes[0]==originalCode);
+ gPortConfig.controllerPrompts=4;failLoads=1;DrawCardMsgGlyphs(1);assert(!storage[0].tiles);
+ int failedLoads=loads;for(int i=0;i<1000;i++)DrawCardMsgGlyphs(1);assert(loads==failedLoads);
+ gPortConfig.controllerPrompts=0;DrawCardMsgGlyphs(1);assert(storage[0].tiles==originalTile&&loads==failedLoads);failLoads=0;
+
+ int defaultLoads=loads;uint64_t defaultRevision=sCardPromptRevision;
+ for(int i=0;i<1000;i++)DrawCardMsgGlyphs(1);
+ assert(loads==defaultLoads&&sCardPromptRevision==defaultRevision);
+ const TextChar select[]={MSG_CODE_HIGHLIGHT,'S','E','L','E','C','T',MSG_CODE_PLAIN,'.',0};
+ source=(MsgLatinChar*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,select);
+ assert(LayoutCardMsgGlyphsPage(123,456,source,&next)==7&&!next);
+ void* backups[6];for(int i=0;i<6;i++)backups[i]=storage[i].tiles;
+ gPortConfig.pad[PORT_ACT_SELECT]=SDL_GAMEPAD_BUTTON_BACK;gPortConfig.controllerPrompts=4;DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==PortControllerGlyphTiles(399));
+ for(int i=1;i<6;i++)assert(!storage[i].tiles&&storage[i].visible);
+ gPortConfig.controllerPrompts=0;DrawCardMsgGlyphs(1);for(int i=0;i<6;i++)assert(storage[i].tiles==backups[i]);
+
+ /* Continuation offset of SELECT, without recomposing source or advancing VM. */
+ assert(LayoutCardMsgGlyphsPage(123,456,source+2,&next)==6);
+ gPortConfig.controllerPrompts=4;DrawCardMsgGlyphs(1);assert(storage[0].tiles==PortControllerGlyphTiles(399));
+ gPortConfig.controllerPrompts=4;DrawCardMsgGlyphs(1);
+ /* New page while overlay owns original references must restore/release correctly. */
+ assert(LayoutCardMsgGlyphsPage(0,0,live,&next)==1);
+ /* Initial unsupported keyboard binding retains a semantic cell before hotplug. */
+ gPortConfig.keys[PORT_ACT_A][0]=SDLK_RETURN;event.type=SDL_EVENT_KEY_DOWN;event.key.key=SDLK_RETURN;PortPromptHandleEvent(&event);
+ source=(MsgLatinChar*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,original);
+ assert(LayoutCardMsgGlyphsPage(123,456,source,&next)==2&&!next);
+ assert(storage[0].tiles==PortControllerGlyphTiles('?'));
+ event.type=SDL_EVENT_GAMEPAD_BUTTON_DOWN;event.gbutton.which=id;PortPromptHandleEvent(&event);DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==PortControllerGlyphTiles(1));
+#else
+ const TextChar original[]={0x82,0x60,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
+ u8*source=(u8*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,original);
+ assert(source==original&&LayoutCardMsgGlyphsPageSjis(123,456,source,&jpNext)==4&&!jpNext);
+ void* originalTile=storage[0].tiles;int originalCode=sCardMsgGlyphCodes[0];
+ gPortConfig.controllerPrompts=4;gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_SOUTH;DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==PortControllerGlyphTiles(257)&&storage[0].x==123&&storage[0].y==456);
+ gPortConfig.controllerPrompts=0;DrawCardMsgGlyphs(1);assert(storage[0].tiles==originalTile&&sCardMsgGlyphCodes[0]==originalCode);
+ const TextChar select[]={0x82,0x72,0x82,0x64,0x82,0x6b,0x82,0x64,0x82,0x62,0x82,0x73,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
+ source=(u8*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,select);assert(LayoutCardMsgGlyphsPageSjis(123,456,source,&jpNext)==9);
+ void* backups[6];for(int i=0;i<6;i++)backups[i]=storage[i].tiles;
+ gPortConfig.pad[PORT_ACT_SELECT]=SDL_GAMEPAD_BUTTON_BACK;gPortConfig.controllerPrompts=4;DrawCardMsgGlyphs(1);
+ for(int i=1;i<6;i++)assert(!storage[i].tiles&&storage[i].visible);
+ gPortConfig.controllerPrompts=0;DrawCardMsgGlyphs(1);for(int i=0;i<6;i++)assert(storage[i].tiles==backups[i]);
+ gPortConfig.controllerPrompts=4;DrawCardMsgGlyphs(1);
+
+ gPortConfig.keys[PORT_ACT_A][0]=SDLK_RETURN;event.type=SDL_EVENT_KEY_DOWN;event.key.key=SDLK_RETURN;PortPromptHandleEvent(&event);
+ source=(u8*)PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,original);assert(LayoutCardMsgGlyphsPageSjis(123,456,source,&jpNext)==4);
+ assert(storage[0].tiles==PortControllerGlyphTiles('?'));
+ event.type=SDL_EVENT_GAMEPAD_BUTTON_DOWN;event.gbutton.which=id;PortPromptHandleEvent(&event);DrawCardMsgGlyphs(1);
+ assert(storage[0].tiles==PortControllerGlyphTiles(1));
+#endif
+ FreeCardMsgGlyphSprites();assert(!sCardMsgGlyphSprites);
+ for(int i=0;i<refCount;i++)assert(!refs[i].references);
+ sCardMsgGlyphSprites=storage;memset(storage,0,sizeof(storage));
+
  SDL_CloseGamepad(SDL_GetGamepadFromID(id));SDL_DetachVirtualJoystick(id);SDL_Quit();
  return 0;
 }

@@ -43,6 +43,11 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   intermedio de título/gameplay. Claude regular UI, dependencia de pacing
   OptiPort si aplica. Probar título/partida × normal/skip × GBA/ReKHCoM,
   capturando cuadros, restaurando UI/renderer/input/audio sin avanzar historia.
+- [ ] **Prompts live Original/fallback:** implementación acotada y prueba real
+  EU/US/JP en `feature/controller-original-live-spans`, hija de #338. Metadata
+  de fuente y backups reversibles; `?` honesto en inputs no representables.
+  [Evidencia y límites](CONTROLLER_PROMPT_ORIGINAL_LIVE_SPANS.md). Pendiente QA
+  visual/paletas, hotplug físico y cobertura tutorial; no se declara cierre total.
 - [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
   Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
   convención Nintendo A/PS círculo elegible, assets existentes, todos los
