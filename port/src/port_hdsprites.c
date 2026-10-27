@@ -268,7 +268,18 @@ static void Unload(int i) {
     sState[i].bytes = 0;
 }
 
+static int LoadNow(int i);
+/* a decode and upload, counted for OptiPort's stutter view (gPortStutter) */
 static int Load(int i) {
+    uint64_t t0 = SDL_GetPerformanceCounter();
+    int ok = LoadNow(i);
+    gPortStutter.hdLoads++;
+    gPortStutter.hdLoadTicks += SDL_GetPerformanceCounter() - t0;
+    gPortStutter.lastLoad = kHdSprites[i].name;
+    return ok;
+}
+
+static int LoadNow(int i) {
     char file[160];
     int w = 0, h = 0, n, k, decodedW, decodedH;
     unsigned char* px;
@@ -285,8 +296,13 @@ static int Load(int i) {
         SDL_snprintf(file, sizeof(file), "%s", kHdSprites[i].name);
         if (!data || size > 0x7FFFFFFF || !stbi_info_from_memory(data, (int)size, &w, &h, &n))
             goto invalid;
-    } else if (!stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n))
-        goto invalid;
+    } else {
+        uint64_t t0 = SDL_GetPerformanceCounter();
+        int ok = stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n);
+        gPortStutter.hdHeaderTicks += SDL_GetPerformanceCounter() - t0;
+        if (!ok)
+            goto invalid;
+    }
     /* Reject unsafe dimensions, old recipes and oversized texture pairs before decoding. */
     if (w < 1 || h < 1 || w > 4096 || h > 4096)
         goto invalid;
@@ -313,9 +329,13 @@ static int Load(int i) {
         }
         Unload(victim);
     }
-    px = kHdSprites[i].group == 7
-        ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
-        : stbi_load(file, &decodedW, &decodedH, &n, 4);
+    {
+        uint64_t t0 = SDL_GetPerformanceCounter();
+        px = kHdSprites[i].group == 7
+            ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
+            : stbi_load(file, &decodedW, &decodedH, &n, 4);
+        gPortStutter.hdDecodeTicks += SDL_GetPerformanceCounter() - t0;
+    }
     SDL_free(data);
     data = NULL;
     /* A file may change between the header read and decode. Never upload a different size. */
@@ -335,11 +355,13 @@ static int Load(int i) {
     sState[i].textureH = h;
     s = SDL_CreateSurfaceFrom(w, h, SDL_PIXELFORMAT_RGBA32, px, w * 4);
     if (s) {
+        uint64_t t0 = SDL_GetPerformanceCounter();
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
         /* the white copy for the game's brightening fades */
         for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
         sState[i].white = SDL_CreateTextureFromSurface(sRenderer, s);
         SDL_DestroySurface(s);
+        gPortStutter.hdUploadTicks += SDL_GetPerformanceCounter() - t0;
     }
     stbi_image_free(px);
     if (!sState[i].image || !sState[i].white) {

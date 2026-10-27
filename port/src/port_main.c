@@ -2963,6 +2963,7 @@ static void ResimCycle(void) {
    presentation, the port's other per-frame work, and the frames skipped. Always on the consoles and Android 64
    (PORT_GBA_RELOC: the logs players send are how their speed is measured, SWITCH_MOTOR.md); KHCOM_TIMING elsewhere. */
 static uint64_t sCycleEnd, sTimeLogic, sTimeWork, sTimePresent, sTimePpu;
+PortStutterProbe gPortStutter;
 static int sTimeFrames, sTimeSkipped;
 static uint64_t sPresentTicks;
 
@@ -3149,13 +3150,33 @@ static void VBlankCycle(void) {
         if (!attempted) {
             attempted = 1;
             frameLog = fopen(frameLogPath, "w");
-            if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit\n");
+            if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
+                                            "hd_loads,hd_load_ms,glyphs,glyph_ms\n");
         }
-        if (frameLog && previous)
-            fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d\n", (unsigned)sFrameCount,
-                    1000.0 * (end - previous) / sPerfFreq,
-                    1000.0 * (frameLogWork - frameLogStart) / sPerfFreq,
-                    (unsigned)gFrameCounter, gPortScreenLayer, (int)sFit);
+        {
+            /* the deep view of each frame: the game's logic since the last cycle, the PPU, the present (HD layers
+               included) and the one-off costs (gPortStutter); a frame past KHCOM_STUTTER ms (default 25) also
+               leaves a line in kh_com.log naming them (OptiPort: find the wound before changing anything) */
+            static uint64_t logicStart;
+            double ms = 1000.0 / sPerfFreq, interval = previous ? (end - previous) * ms : 0;
+            double logic = logicStart && cycleStart > logicStart ? (cycleStart - logicStart) * ms : 0;
+            double ppu = skip ? 0 : sPpuTicks * ms, present = skip ? 0 : sPresentTicks * ms;
+            const char* limit = SDL_getenv("KHCOM_STUTTER");
+            if (frameLog && previous)
+                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f\n", (unsigned)sFrameCount,
+                        interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
+                        (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
+                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
+            if (previous && interval > (limit ? SDL_atof(limit) : 25.0))
+                PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
+                        "decode %.1f, upload %.1f; last %s), glyphs %u (%.1f ms)", (unsigned)sFrameCount, interval, logic,
+                        ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
+                        gPortStutter.hdHeaderTicks * ms, gPortStutter.hdDecodeTicks * ms, gPortStutter.hdUploadTicks * ms,
+                        gPortStutter.lastLoad ? gPortStutter.lastLoad : "-", (unsigned)gPortStutter.glyphs,
+                        gPortStutter.glyphTicks * ms);
+            SDL_memset(&gPortStutter, 0, sizeof(gPortStutter));
+            logicStart = sCycleEnd;
+        }
         previous = end;
     }
     if (SDL_getenv("KHCOM_TIMING") && sFrameCount % 300 == 0) {

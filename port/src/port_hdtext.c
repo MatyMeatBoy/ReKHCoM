@@ -424,7 +424,21 @@ static HdGlyph* GlyphJp(SDL_Renderer* renderer, HdFont* f, uint16_t code) {
     return &f->jpGlyphs[slot];
 }
 
+static HdGlyph* GlyphNow(SDL_Renderer* renderer, HdFont* f, int code);
+/* a glyph rendered the first time, counted for OptiPort's stutter view (gPortStutter) */
 static HdGlyph* Glyph(SDL_Renderer* renderer, HdFont* f, int code) {
+    uint64_t t0;
+    HdGlyph* g = &f->glyphs[code & 255];
+    if (g->ready)
+        return g;
+    t0 = SDL_GetPerformanceCounter();
+    g = GlyphNow(renderer, f, code);
+    gPortStutter.glyphs++;
+    gPortStutter.glyphTicks += SDL_GetPerformanceCounter() - t0;
+    return g;
+}
+
+static HdGlyph* GlyphNow(SDL_Renderer* renderer, HdFont* f, int code) {
     HdGlyph* g = &f->glyphs[code & 255];
     char c = (char)code;
     WCHAR wc;

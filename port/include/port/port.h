@@ -403,6 +403,15 @@ typedef struct PortTextGlyph {
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud);
 /* Frames presented since start (port_main.c). */
 uint32_t PortFrameCount(void);
+/* OptiPort's deep view of a slow frame (KHCOM_FRAMELOG): the one-off costs each frame paid besides its usual work,
+   reset by the frame log every frame. HD sprite decodes/uploads (port_hdsprites.c Load) and HD glyph renders. */
+typedef struct PortStutterProbe {
+    uint32_t hdLoads, glyphs;
+    uint64_t hdLoadTicks, glyphTicks;
+    uint64_t hdHeaderTicks, hdDecodeTicks, hdUploadTicks; /* the loads' three parts */
+    const char* lastLoad;
+} PortStutterProbe;
+extern PortStutterProbe gPortStutter;
 
 /* ---- audio (port_audio.c) ------------------------------------------------ */
 
