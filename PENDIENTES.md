@@ -294,4 +294,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-overlap-accepted-parts | Correccion integrador PR404: registrar cobertura HD solo tras queueaceptada, contemplarcontainment y variantesfade; conservar fallback antepieza rechazada. Franja requisito sintesis yabrirnaipemundo. | en_curso | codex-hd-overlap | — | Usuario pidecorregirfranja ypreservarresto; rootreviewhallofalloverificado | 2026-10-27T22:28:46.256973+00:00 |
 | game-cursor-idle-four-seconds | Ocultar cursor inmovil sobreventana juego tras max4seg; reaparecer almoverraton. SDL multiplataforma, foco/salida/reentrada/menu segunflujo, preservar mandoy controles. Implementar trasprioridadespixeles/audio/HP. | pendiente | — | — | Usuario27/10 reitera mejora cursor4seg | 2026-10-27T22:33:22.971761+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T22:35:16.377489+00:00)
