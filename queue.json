@@ -4457,13 +4457,13 @@
     "host-music-progress": {
       "id": "host-music-progress",
       "piece": "Bound host music loop decoding and propagate terminal failure",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-host-music",
       "created_at": "2026-10-27T05:17:55.834945+00:00",
-      "updated_at": "2026-10-27T05:20:28.621810+00:00",
+      "updated_at": "2026-10-27T05:28:15.206101+00:00",
       "branch": "fix/host-music-progress",
-      "pr": null,
-      "approval": "User authorized OptiPort indispensable fallback improvements before test builds",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/291",
+      "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
       "reference": null,
       "evidence": [
         {
@@ -4529,7 +4529,7 @@
     "created_at": "2026-10-27T05:27:32.730069+00:00",
     "updated_at": "2026-10-27T05:27:32.730069+00:00"
   },
-  "updated_at": "2026-10-27T05:28:08.862321+00:00",
+  "updated_at": "2026-10-27T05:28:15.206101+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
