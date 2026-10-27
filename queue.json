@@ -4334,10 +4334,10 @@
     "hd-layout-readiness": {
       "id": "hd-layout-readiness",
       "piece": "Code: acquire HD gauge textures before native suppression",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-hd-readiness",
       "created_at": "2026-10-27T05:05:16.033376+00:00",
-      "updated_at": "2026-10-27T05:17:47.718052+00:00",
+      "updated_at": "2026-10-27T05:18:10.540850+00:00",
       "branch": "fix/hd-layout-ready",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/287",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4347,9 +4347,15 @@
           "at": "2026-10-27T05:09:39.124445+00:00",
           "owner": "codex-hd-readiness",
           "detail": "Local commit; TDD baseline failed unprepared and missing animation cases; 6 layout tests pass with ASan/UBSan, including 12 readiness cases. No game, heavy build, push or PR. Renderer Present services requests; native retained until uploads complete. Parent root integrates after review."
+        },
+        {
+          "at": "2026-10-27T05:18:10.540850+00:00",
+          "owner": "codex-hd-readiness",
+          "detail": "Merged 043d0cfb4be7670c9b7a349699e62652ed7202cf"
         }
       ],
-      "claimed_at": "2026-10-27T05:05:21.867134+00:00"
+      "claimed_at": "2026-10-27T05:05:21.867134+00:00",
+      "completed_at": "2026-10-27T05:18:10.540850+00:00"
     },
     "media-readiness-fallbacks": {
       "id": "media-readiness-fallbacks",
@@ -4439,7 +4445,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:18:02.871630+00:00",
+  "updated_at": "2026-10-27T05:18:10.540850+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
