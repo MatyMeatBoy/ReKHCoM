@@ -380,6 +380,15 @@ void PortHdHudShutdown(void) {
     sWhiteLabel = NULL;
     SDL_free(sExportPixels); sExportPixels = NULL;
     SDL_free(sExportHashes); sExportHashes = NULL;
+    sExportCount = 0;
+}
+
+/* Explicit renderer-generation/re-import boundary, outside drawing. Shutdown is
+   also used by failed uploads: keep its negative cache until this API is called. */
+void PortHdHudInvalidate(void) {
+    PortHdHudShutdown();
+    sAttempted = 0;
+    sLabelLanguage = -1;
 }
 
 void PortHdHudPrepare(SDL_Renderer* renderer) {
