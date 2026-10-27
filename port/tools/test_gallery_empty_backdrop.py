@@ -1,6 +1,6 @@
 """Render the production empty-poster backdrop; guard card bounds and tiny sizes."""
 from pathlib import Path
-import os,subprocess
+import subprocess
 ROOT=Path(__file__).resolve().parents[2]
 source=(ROOT/'port/src/port_scene_gallery_menu.inc').read_text(encoding='utf8')
 name='static void ScenePreviewBackdrop('
