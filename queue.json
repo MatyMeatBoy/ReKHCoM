@@ -7851,19 +7851,20 @@
     "card-olympia-seam-source": {
       "id": "card-olympia-seam-source",
       "piece": "Olympia/Heroica native underlay white cell14,19 visible through fractional HD edge: minimal HD-only native cell correction, preserve HD illustration and fallbacks",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-olympia-seam",
       "created_at": "2026-10-27T22:11:26.193679+00:00",
-      "updated_at": "2026-10-27T22:11:26.193679+00:00",
+      "updated_at": "2026-10-27T22:11:30.742608+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27octprioridad1pixelescartas; rootdelegacionworker20261027",
       "reference": "pruebas/key-hilt-black-pixels/olympia-layer-probe/result.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T22:11:30.742608+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:11:26.193679+00:00",
+  "updated_at": "2026-10-27T22:11:30.742608+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
