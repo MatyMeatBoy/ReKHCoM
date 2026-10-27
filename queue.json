@@ -4794,10 +4794,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-hudhd3",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T06:37:42.922496+00:00",
+      "updated_at": "2026-10-27T06:38:59.077679+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4814,7 +4814,7 @@
           "detail": "released: Código: gráficos gStockNameBoss* (card_catalog.c:7198/7268), tareas tipo gTaskDescStockNameSora (card_friend_card.c:1556); posición relativa a la carta activa del jefe. Para HUD HD: offset propio (solo gPortConfig.hdHud) que suba etiqueta y pila del jefe sobre la carta HD; capturar 179:4:0 a 1536x864 y subir propuesta con port/tools/art_review/import_image.py --data khcom-codex/build/art-review."
         }
       ],
-      "claimed_at": "2026-10-27T06:37:38.634541+00:00"
+      "claimed_at": "2026-10-27T06:38:59.077679+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -4849,7 +4849,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:38:18.675608+00:00",
+  "updated_at": "2026-10-27T06:38:59.077679+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
