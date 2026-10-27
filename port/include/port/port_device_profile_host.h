@@ -21,10 +21,13 @@ typedef LSTATUS (WINAPI *PortDeviceRegGetValue)(HKEY, LPCWSTR, LPCWSTR, DWORD, L
 static void PortDeviceReadBiosValue(PortDeviceRegGetValue readValue, const WCHAR* name, char* out, size_t size) {
     WCHAR value[128];
     DWORD bytes = sizeof(value), type = 0;
+    /* RRF_SUBKEY_WOW6464KEY: older SDK target defaults hide its name even
+       though the dynamically loaded API accepts the documented flag value. */
+    const DWORD registry64View = 0x00010000u;
     size_t i, count;
     out[0] = 0;
     if (!readValue || readValue(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\BIOS", name,
-                              RRF_RT_REG_SZ | RRF_ZEROONFAILURE | RRF_SUBKEY_WOW6464KEY,
+                              RRF_RT_REG_SZ | RRF_ZEROONFAILURE | registry64View,
                               &type, value, &bytes) != ERROR_SUCCESS || type != REG_SZ ||
         bytes < sizeof(WCHAR) || bytes > sizeof(value) || bytes % sizeof(WCHAR)) return;
     count = bytes / sizeof(WCHAR);
