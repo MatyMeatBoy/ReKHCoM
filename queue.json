@@ -4431,10 +4431,10 @@
     "save-bank-flush": {
       "id": "save-bank-flush",
       "piece": "Code: retain dirty SRAM and selected bank when persistence fails",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-save-bank",
       "created_at": "2026-10-27T05:17:35.135889+00:00",
-      "updated_at": "2026-10-27T05:27:56.477964+00:00",
+      "updated_at": "2026-10-27T05:28:08.862321+00:00",
       "branch": "fix/save-bank-flush",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/290",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4444,9 +4444,15 @@
           "at": "2026-10-27T05:21:43.685923+00:00",
           "owner": "codex-save-bank",
           "detail": "Local commit: pending SRAM retained if bank flush fails; UI restores selected bank and does not load target settings; clear log and localized notice. RED 32 expected baseline failure cases; GREEN 40 real-file cases across Windows/POSIX/guest/web with ASan/UBSan, including retry and normal switching. No game/build/installed save access; parent root to integrate."
+        },
+        {
+          "at": "2026-10-27T05:28:08.862321+00:00",
+          "owner": "codex-save-bank",
+          "detail": "Merged e9fe49382e484a9cb8224081f15c19a2e34ecad0"
         }
       ],
-      "claimed_at": "2026-10-27T05:17:41.943768+00:00"
+      "claimed_at": "2026-10-27T05:17:41.943768+00:00",
+      "completed_at": "2026-10-27T05:28:08.862321+00:00"
     },
     "host-music-progress": {
       "id": "host-music-progress",
@@ -4523,7 +4529,7 @@
     "created_at": "2026-10-27T05:27:32.730069+00:00",
     "updated_at": "2026-10-27T05:27:32.730069+00:00"
   },
-  "updated_at": "2026-10-27T05:27:56.477964+00:00",
+  "updated_at": "2026-10-27T05:28:08.862321+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
