@@ -302,9 +302,12 @@ static int MapFixed(uint32_t base, size_t size) {
 
 int main(int argc, char** argv) {
     const char* image = argc > 1 ? argv[1] : "guest-eu.bin";
+    const char* bootStatus = NULL;
     for (int i = 2; i < argc; i++)
         if (!strcmp(argv[i], "--data") && i + 1 < argc)
             snprintf(sData, sizeof(sData), "%s", argv[++i]);
+        else if (!strcmp(argv[i], "--boot-status") && i + 1 < argc)
+            bootStatus = argv[++i];
     setenv("KHCOM_DATA", sData, 1);
     {
         /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
@@ -393,6 +396,12 @@ int main(int argc, char** argv) {
     _Static_assert(sizeof(t) / sizeof(t[0]) == HF_COUNT, "bridge table out of step with bridge_list.h");
     memcpy(table, t, sizeof(t));
     int (*boot)(uint32_t) = (int (*)(uint32_t))(uintptr_t)h.boot;
+    if (bootStatus) {
+        FILE* ready = fopen(bootStatus, "w");
+        if (!ready) { SDL_Quit(); return 4; }
+        fputs("ready\n", ready);
+        fclose(ready);
+    }
     int rc = boot(h.stackTop);
     SDL_Quit();
     return rc;

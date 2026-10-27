@@ -48,6 +48,15 @@ case "$1" in
         steam_help
         exit 0 ;;
 esac
+# Shared launcher preference: 0 automatic (default), 1 force 32, 2 force 64.
+MODE=$(sed -n 's/^runtime_mode=//p' "$DIR/decompui.ini" 2>/dev/null | tail -n 1)
+case "$MODE" in 1|2) ;; *) MODE=0 ;; esac
+case "$1" in
+    --force32) MODE=1; shift ;;
+    --force64) MODE=2; shift ;;
+    --auto) MODE=0; shift ;;
+esac
+[ "${REKHCOM_64:-1}" = 0 ] && MODE=1
 REGION=
 ROM=
 if [ "$1" = "--region" ]; then
@@ -111,17 +120,28 @@ GAME=./bin/khcom_$REGION
 # The 64-bit build (26/10, port/linux64): on x86-64 the game image runs in a native 64-bit host with the system's own
 # GPU driver, no 32-bit libraries needed. If it is missing or does not get going, the 32-bit build below runs.
 # REKHCOM_64=0 forces the 32-bit build.
-if [ "${REKHCOM_64:-1}" != 0 ] && [ "$(uname -m)" = x86_64 ] && [ -x "$DIR/bin64/rekhcom64" ] &&
-   [ -f "$DIR/bin64/guest-$REGION.bin" ]; then
+AVAILABLE64=0
+if [ "$(uname -m)" = x86_64 ] && [ -x "$DIR/bin64/rekhcom64" ] &&
+   [ -f "$DIR/bin64/guest-$REGION.bin" ]; then AVAILABLE64=1; fi
+if [ "$MODE" = 2 ] && [ "$AVAILABLE64" = 0 ]; then
+    echo 'Cannot start in 64-bit mode: x86-64 Linux and complete bin64 files are required.' >&2
+    exit 2
+fi
+if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
     echo "ReKHCoM.sh: 64-bit build"
-    START=$(date +%s)
+    BOOT=$(mktemp "$DIR/.rekhcom-boot-XXXXXX") || exit 1
+    rm -f "$BOOT"
     LD_LIBRARY_PATH="$DIR/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" KHCOM_ROM="$ROM" \
-        "$DIR/bin64/rekhcom64" "$DIR/bin64/guest-$REGION.bin" --data "$DIR"
+        "$DIR/bin64/rekhcom64" "$DIR/bin64/guest-$REGION.bin" --data "$DIR" --boot-status "$BOOT"
     CODE=$?
-    if [ "$CODE" = 0 ] || [ $(($(date +%s) - START)) -ge 8 ]; then
-        exit "$CODE"
-    fi
-    echo "ReKHCoM.sh: the 64-bit build ended at once (code $CODE): the 32-bit build"
+    ENTERED=0
+    [ -f "$BOOT" ] && ENTERED=1
+    rm -f "$BOOT"
+    if [ "$MODE" = 2 ] || [ "$ENTERED" = 1 ]; then exit "$CODE"; fi
+    case "$CODE" in
+        2|3|4|126|127) echo "ReKHCoM.sh: 64-bit bootstrap failed ($CODE): starting 32-bit" ;;
+        *) exit "$CODE" ;;
+    esac
 fi
 
 # With the GPU (25/10, #140): SDL draws through the system's OpenGL driver, which only loads with the system's own
@@ -156,14 +176,9 @@ if [ -n "$GPU" ]; then
     LIBS="$DIR/lib/sys$SYS_DIRS:$DIR/lib"
     if "$SYS_LD" --library-path "$LIBS" --list "$GAME" >/dev/null 2>&1; then
         echo "ReKHCoM.sh: GPU, system 32-bit libraries ($SYS_LD$SYS_DIRS)"
-        START=$(date +%s)
-        "$SYS_LD" --library-path "$LIBS" "$GAME" "$@"
-        CODE=$?
-        # a normal quit (0) or a run that got going: done. A start that failed at once: the old way below.
-        if [ "$CODE" = 0 ] || [ $(($(date +%s) - START)) -ge 8 ]; then
-            exit "$CODE"
-        fi
-        echo "ReKHCoM.sh: the GPU start ended at once (code $CODE): starting with the bundled libraries"
+        # The loader preflight above is the only safe retry boundary. Once the
+        # game starts, a quit/crash must never open a second session.
+        exec "$SYS_LD" --library-path "$LIBS" "$GAME" "$@"
     else
         echo "ReKHCoM.sh: the system's 32-bit libraries do not cover the game: bundled libraries"
     fi

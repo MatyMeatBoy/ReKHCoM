@@ -57,6 +57,40 @@ class LauncherTest(unittest.TestCase):
                                    '--data-dir', self.directory, *args])
         self.assertEqual((self.game / 'region.txt').read_text().strip(), region)
 
+    def fake64(self, code, entered=False):
+        folder = self.game / 'bin64'
+        folder.mkdir(exist_ok=True)
+        (folder / 'guest-eu.bin').write_bytes(b'guest')
+        host = folder / 'rekhcom64'
+        host.write_text('#!/bin/sh\nprintf "64\\n" > ran64.txt\n' +
+                        ('while [ "$#" -gt 0 ]; do if [ "$1" = --boot-status ]; then shift; printf ready > "$1"; fi; shift; done\n' if entered else '') +
+                        f'exit {code}\n')
+        host.chmod(0o755)
+
+    def test_automatic_boot_failure_retries_32(self):
+        self.fake64(4)
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertTrue((self.game / 'ran64.txt').exists())
+        self.assertTrue((self.game / 'region.txt').exists())
+
+    def test_guest_failure_and_quit_never_retry(self):
+        for code, entered in ((4, True), (81, False), (0, False), (139, False)):
+            self.fake64(code, entered)
+            self.assertEqual(self.run_script().returncode, code)
+            self.assertFalse((self.game / 'region.txt').exists())
+
+    def test_forced_modes_and_persistent_preference(self):
+        self.fake64(4)
+        (self.game / 'decompui.ini').write_text('runtime_mode=1\n')
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        (self.game / 'region.txt').unlink()
+        self.assertEqual(self.run_script('--force64').returncode, 4)
+        self.assertFalse((self.game / 'region.txt').exists())
+        (self.game / 'bin64/rekhcom64').unlink()
+        self.assertEqual(self.run_script('--force64').returncode, 2)
+        self.assertFalse((self.game / 'region.txt').exists())
+
     def test_no_rom_and_foreign_cwd(self):
         result = self.run_script('--language', 'es', 'argument with spaces', '$literal')
         self.assertEqual(result.returncode, 17)

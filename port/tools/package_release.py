@@ -48,6 +48,7 @@ def main():
     parser.add_argument("--out", type=Path, default=ROOT / "build/releases")
     parser.add_argument("--nightly-notice", type=Path,
                         help="include a test-build notice as NIGHTLY-TESTING.md")
+    parser.add_argument("--windows64", type=Path, help="include the checked x64 host and all three game images")
     args = parser.parse_args()
     if not re.fullmatch(r"v\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9.-]+)?", args.version):
         parser.error("version must look like v0.1 or v0.1.1")
@@ -80,6 +81,11 @@ def main():
         "assets/hd-hud/pilot/label-pv-v3.png": ROOT / "port/assets/hd-hud/pilot/label-pv-v3.png",
     }
     files.update(core_assets())
+    if args.windows64:
+        files["bin64/rekhcom64.exe"] = args.windows64 / "rekhcom64.exe"
+        files["bin64/SDL3.dll"] = args.windows64 / "SDL3.dll"
+        for region in ("eu", "us", "jp"):
+            files[f"bin64/guest-{region}.bin"] = args.windows64 / f"guest-{region}.bin"
     for source in files.values():
         if not source.is_file():
             parser.error(f"missing package input: {source}")
@@ -93,7 +99,8 @@ def main():
             parser.error(f"missing nightly notice: {args.nightly_notice}")
         files["NIGHTLY-TESTING.md"] = args.nightly_notice
     args.out.mkdir(parents=True, exist_ok=True)
-    archive = args.out / f"ReKHCoM-{args.version}-windows-x86.zip"
+    arches = "x86-x64" if args.windows64 else "x86"
+    archive = args.out / f"ReKHCoM-{args.version}-windows-{arches}.zip"
     # No versioned top folder: an update is extracted over the old install
     # (saves and kh_com.ini are not in the package, so they are kept).
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:

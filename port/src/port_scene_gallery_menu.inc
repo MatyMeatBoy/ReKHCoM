@@ -285,6 +285,9 @@ static void SceneHarness(void) {
 static void DrawSceneMenu(int l, int width, int height) {
     SceneHarness();
     static const char* const kTitle[LANG_COUNT] = { "Scenes", "Scènes", "Szenen", "Scene", "Escenas", "シーン" };
+    static const char* const kUnlocked[LANG_COUNT] = {
+        "Unlocked scenes: %d/%d", "Scènes débloquées : %d/%d", "Freigeschaltete Szenen: %d/%d",
+        "Scene sbloccate: %d/%d", "Escenas desbloqueadas: %d/%d", "かいほうしたシーン: %d/%d" };
     static const char* const kLocked[LANG_COUNT] = { "???", "???", "???", "???", "???", "???" };
     static const char* const kTabs[3][LANG_COUNT] = {
         { "GBA", "GBA", "GBA", "GBA", "GBA", "GBA" }, { "HD", "HD", "HD", "HD", "HD", "HD" },
@@ -312,7 +315,7 @@ static void DrawSceneMenu(int l, int width, int height) {
     Fill(0, 0, width, height, 0xFFFFFFFFu);
     SDL_snprintf(text, sizeof(text), "%s - %s", kTitle[l], kTabs[sSceneHd][l]);
     DrawText(text, x, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
-    SDL_snprintf(text, sizeof(text), "%d/%d", seen, count);
+    SDL_snprintf(text, sizeof(text), kUnlocked[l], seen, count);
     DrawText(text, x, MENU_TOP + 2, MENU_RED_DARK, 0xFFD8D8D8u);
     if (sSceneChoice >= count) sSceneChoice = SDL_max(0, count - 1);
     if (sSceneChoice < sSceneScroll) sSceneScroll = sSceneChoice;
@@ -345,7 +348,7 @@ static void DrawSceneMenu(int l, int width, int height) {
             MenuBar(cardX + 4, top + 2, cardW - 8, 1);
             DrawText(SceneRiku(eventId) ? (SceneProviderHd(sSceneChoice) ? "Riku - HD" : "Riku - GBA") : (SceneProviderHd(sSceneChoice) ? "Sora - HD" : "Sora - GBA"),
                      cardX + 16, top, MENU_INK, 0xFFD8D8D8u);
-            Fill(cardX + 6, top + 16, pw, ph, MENU_GREY);
+            Fill(cardX + 6, top + 16, pw, ph, 0xFFFFFFFFu);
             if (preview) {
                 extern void PortSceneGalleryPreviewSize(int*, int*);
                 int sourceW, sourceH, drawW, drawH, drawX, drawY;
