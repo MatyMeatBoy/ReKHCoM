@@ -36,6 +36,12 @@ class DeviceProfiles(unittest.TestCase):
             source.write_text(BIOS_PREAMBLE + helper + BIOS_HARNESS)
             subprocess.run([cc, '-std=c99', '-fshort-wchar', '-Wall', '-Wextra', '-Werror', str(source), '-o', str(exe)], env=env, check=True)
             subprocess.run([str(exe)], cwd=d, env=env, check=True)
+            linux = (ROOT / 'port/linux64/linux64_host.c').read_text()
+            relay = linux[linux.index('static int H_getenv('):linux.index('static int H_fopen(')]
+            source.write_text(RELAY_PREAMBLE + relay + RELAY_HARNESS)
+            subprocess.run([cc, '-std=c99', '-Wall', '-Wextra', '-Werror', str(source), '-o', str(exe)], env=env, check=True)
+            subprocess.run([str(exe)], cwd=d, env=env, check=True)
+
 
 
 PREAMBLE = r'''
@@ -162,6 +168,30 @@ int main(void) {
     mode = 0;
     PortDeviceReadBiosValue(Provider,L"SystemManufacturer",out,3);
     assert(out[0] == 0);
+    return 0;
+}
+"""
+
+
+RELAY_PREAMBLE = r"""
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+static const char* PortDeviceHostQuery(const char* name) {
+    return strcmp(name,"KHCOM_HOST_DEVICE_PROFILE") == 0 ? "steam-deck:valve-dmi" : NULL;
+}
+static const char* getenv(const char* name) {
+    if (!strcmp(name,"KHCOM_HOST_DEVICE_PROFILE")) return "spoofed";
+    return !strcmp(name,"ordinary") ? "value" : NULL;
+}
+"""
+RELAY_HARNESS = r"""
+int main(void) {
+    char out[128];
+    assert(H_getenv("KHCOM_HOST_DEVICE_PROFILE",out,sizeof(out)) > 0);
+    assert(!strcmp(out,"steam-deck:valve-dmi"));
+    assert(H_getenv("ordinary",out,sizeof(out)) == 5 && !strcmp(out,"value"));
+    assert(H_getenv("absent",out,sizeof(out)) == -1);
     return 0;
 }
 """
