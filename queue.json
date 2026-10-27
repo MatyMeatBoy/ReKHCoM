@@ -7776,6 +7776,19 @@
         }
       ],
       "claimed_at": "2026-10-27T20:53:49.915219+00:00"
+    },
+    "android22-pre2-diagnostic-build": {
+      "id": "android22-pre2-diagnostic-build",
+      "piece": "Android v2.2-pre2 diagnostic: monotonic official versionCode, preserved signer, private two-ABI build",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T21:37:00.134814+00:00",
+      "updated_at": "2026-10-27T21:37:00.134814+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/374",
+      "evidence": []
     }
   },
   "integrator": {
@@ -7784,7 +7797,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:34:04.077086+00:00",
+  "updated_at": "2026-10-27T21:37:00.134814+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
