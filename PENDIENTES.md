@@ -201,4 +201,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-moogle-visible-band-style-zero | Moogle transition native border reaches edge while margin remains late in style zero | en_curso | codex-moogle-band | — | User requests coherent submenu borders and root visual review for 2.1 | 2026-10-27T08:56:52.067993+00:00 |
 | android-stale-sprites-desktop-guard | Android launcher excludes desktop-only stale sprite reimport callbacks | en_curso | codex-android-guard | — | User authorizes cross-platform prerelease and compatibility fixes | 2026-10-27T09:01:52.354235+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T09:03:03.438450+00:00)
