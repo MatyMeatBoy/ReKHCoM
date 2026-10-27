@@ -5378,19 +5378,20 @@
     "controller-prompt-inline-symbols": {
       "id": "controller-prompt-inline-symbols",
       "piece": "Experimental inline symbols, Japanese tutorial tokens and explicit confirm preset",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-control-prompts",
       "created_at": "2026-10-27T09:24:47.056945+00:00",
-      "updated_at": "2026-10-27T09:24:47.056945+00:00",
+      "updated_at": "2026-10-27T09:24:52.616953+00:00",
       "branch": null,
       "pr": null,
       "approval": "User full2.1 prompt scope; parent explicitly authorizes continuation after332",
       "reference": "PR332 first textual increment; current parent delegation",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T09:24:52.616953+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T09:24:47.056945+00:00",
+  "updated_at": "2026-10-27T09:24:52.616953+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
