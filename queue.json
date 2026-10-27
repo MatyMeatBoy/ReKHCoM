@@ -6096,10 +6096,10 @@
       "status": "pr_abierto",
       "owner": "codex-gallery-backdrop",
       "created_at": "2026-10-27T13:27:47.282580+00:00",
-      "updated_at": "2026-10-27T13:34:51.040566+00:00",
+      "updated_at": "2026-10-27T13:35:12.964234+00:00",
       "branch": "fix/gallery-empty-preview-backdrop",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/356",
-      "approval": "Usuario autoriza fondos distintos GBA/HD y verificación directa2.1",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": null,
       "evidence": [
         {
@@ -6118,7 +6118,7 @@
     "created_at": "2026-10-27T13:34:55.786508+00:00",
     "updated_at": "2026-10-27T13:34:55.786508+00:00"
   },
-  "updated_at": "2026-10-27T13:34:55.787510+00:00",
+  "updated_at": "2026-10-27T13:35:12.964234+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
