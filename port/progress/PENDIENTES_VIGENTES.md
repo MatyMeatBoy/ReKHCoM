@@ -5,6 +5,23 @@
 Método de depuración: DEBUG_WORKFLOW.md. Protocolo de la cola: COLA_COLABORATIVA.md. Estado vivo de piezas:
 `python port/tools/art_queue.py --quiet list`.
 
+## Actualización de estado — 25/10/2026
+
+El usuario autorizó preparar y publicar una pre-release `v2.0-pre13`, y escribir a los reporteros de los issues
+abiertos para pedirles que prueben; cerrar solo si confirman que quedó resuelto. El estado y los pasos de relevo
+están en [HANDOFF_20261025.md](HANDOFF_20261025.md). Esta actualización reemplaza la nota anterior de esperar
+a la v2.0 para responder issues.
+
+- PR #90, `codex/release-v2.0-pre13`, prepara la versión y el changelog. Sigue abierto; no se ha compilado ni
+  publicado la release. Issues #49, #77, #78 y #83 siguen abiertos y sin comentarios de sus autores.
+- El usuario reporta tartamudeo al entrar por primera vez a la pantalla de título, además de blinkeo del Genio
+  y espejo al alejar la cámara en la arena de Agrabah. La captura está preservada localmente en
+  `build/user-reports/jafar-arena-20261025.png`; nueva tarea de cola pendiente `agrabah-jafar-arena`.
+- El patrón inferior de la arena de Agrabah también requiere mejora. No integrar cambios visuales hasta subir
+  una propuesta a Atlas y recibir aprobación de la versión exacta.
+- “Añadir a Steam” escribió una entrada válida para la cuenta activa, pero el lanzador tiene un posible fallo al
+  leer la cuenta desde `loginusers.vdf`. Steam y el juego siguen abiertos; no reiniciarlos durante las pruebas.
+
 ## Reglas del usuario (completas en REGLAS_DEL_USUARIO.md)
 
 - Un solo integrador con token; rama y PR por entrega; nada de push directo de arte a main.
