@@ -8005,15 +8005,21 @@
     "hd-overlap-accepted-parts": {
       "id": "hd-overlap-accepted-parts",
       "piece": "Correccion integrador PR404: registrar cobertura HD solo tras queueaceptada, contemplarcontainment y variantesfade; conservar fallback antepieza rechazada. Franja requisito sintesis yabrirnaipemundo.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-hd-overlap",
       "created_at": "2026-10-27T22:28:41.739471+00:00",
-      "updated_at": "2026-10-27T22:28:46.256973+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T23:15:20.799233+00:00",
+      "branch": "fix/hd-part-overlap-once",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/404",
       "approval": "Usuario pidecorregirfranja ypreservarresto; rootreviewhallofalloverificado",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T23:15:20.799233+00:00",
+          "owner": "codex-hd-overlap",
+          "detail": "Rootmergedcurrent037+original404 in b61460cfc, fixedcoveragecommitAFTERqueueacceptance and fullrenderstate keys. ActualproductionconsumerREDold404GREENnew inclbounds/decode/upload/capacity/recovery/style/geometry/64recordbound. Existingcards23cells/corners/fallback PASS. FreshNinja/GPU pending whileaudioQAusesRAM/GPU; no worldcardresolutionclaim."
+        }
+      ],
       "claimed_at": "2026-10-27T22:28:46.256973+00:00"
     },
     "game-cursor-idle-four-seconds": {
@@ -8057,7 +8063,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:57:51.813609+00:00",
+  "updated_at": "2026-10-27T23:15:20.799233+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
