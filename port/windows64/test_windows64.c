@@ -43,6 +43,34 @@ int main(void) {
         B_dir_next(d, value, sizeof(value));
         B_dir_close(d);
     }
+    {
+        uint32_t pixels[4] = { 0xffffffff, 0xff000000, 0xff000000, 0xffffffff };
+        char generation[64];
+        _putenv_s("SDL_VIDEO_DRIVER", "dummy");
+        assert(SDL_Init(SDL_INIT_VIDEO));
+        sWindow = SDL_CreateWindow("ABI texture regression", 16, 16, SDL_WINDOW_HIDDEN);
+        assert(sWindow);
+        sRenderer = SDL_CreateRenderer(sWindow, NULL);
+        assert(sRenderer);
+        int old = B_tex_create(pixels, 2, 2, 0);
+        assert(old >= 0 && HostTextureSlot(old) >= 0);
+        SDL_Event reset = {0};
+        reset.type = SDL_EVENT_RENDER_DEVICE_RESET;
+        assert(SDL_PushEvent(&reset));
+        Pump();
+        assert(HostTextureSlot(old) == -1);
+        int fresh = B_tex_create(pixels, 2, 2, 0);
+        assert(fresh >= 0 && fresh != old);
+        B_tex_update(old, pixels); /* stale updates and frees cannot touch the new allocation */
+        B_tex_free(old);
+        assert(HostTextureSlot(fresh) >= 0);
+        B_tex_free(fresh);
+        assert(B_getenv("KHCOM_RENDERER_GENERATION", generation, sizeof(generation)) > 0);
+        assert(!strcmp(generation, "bridge-textures-v1:1"));
+        SDL_DestroyRenderer(sRenderer); sRenderer = NULL;
+        SDL_DestroyWindow(sWindow); sWindow = NULL;
+        SDL_Quit();
+    }
     assert(MapFixed(0x02000000, 0x10000));
     *(volatile uint32_t*)(uintptr_t)0x02000000 = 0x12345678;
     assert(!MapFixed(0x02000000, 0x10000));
