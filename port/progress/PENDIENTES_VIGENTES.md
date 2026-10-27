@@ -66,8 +66,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   - «EXP ganada» tapada por la vida nueva.
 - [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
   visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
-- [ ] **Cortanaipes HD** (sleight/romper carta) que se veía antes ya no aparece: revisar que se muestre **todo** el HD
-  que tenemos (barrido de todas las piezas HD importadas vs. las que realmente se dibujan).
+- [ ] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10)**: el commit 428aac55b (26/10, pad= en avisos
+  de combate) cambió la proporción de sus recetas; las imágenes importadas antes quedan con la proporción vieja y
+  `Load` (port_hdsprites.c) las rechaza a propósito («rejected … recipe»: no estirar). Comprobado con el import de
+  `D:/01Claude/ReKHCoM-build/hd-completo/sprites`: `gBtlPop{CardBreak,Guard,Recover}SpanishTiles` rechazados → se
+  ve el aviso GBA. Solución inmediata del usuario: reimportar HD en el launcher. Solución de fondo = punto siguiente.
 - [ ] `HD sprites: gWorldselectTitleSpanishBanner is 960x128, its recipe wants 8.688`: aviso repetido en selección de
   mundo (VM 27/10). Revisar receta o el importador.
 - [ ] VM Linux 64 con **todo HD activado** (texto, HUD, música, escenas, cartas, título, subtítulos): partida nueva
@@ -92,7 +95,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   recarga enemiga (m4aSongNumStart en la IA de enemigos/jefes), grabar con `KHCOM_WAVDUMP` un combate de jefe
   (p. ej. Hades) con y sin `undub=1`, y comparar; arreglar en el mapa sin tocar las voces.
 - [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
-- [ ] **Launcher 2.1: comprobación rápida de assets del mod** al instalar/verificar: la primera vez revisa todo;
+- [ ] **Launcher 2.1: comprobación rápida de assets del mod**
+  Plan concreto (27/10): al importar, escribir `hd/sprites/recipes.txt` con «nombre<TAB>hash de su fila de
+  kHdSpriteRecipe»; al arrancar el launcher, comparar con las filas actuales (barato: sin abrir PNG) y, si alguna
+  cambió o falta, ofrecer/hacer reimportación solo de esas filas desde la instalación de Re:CoM recordada. El juego
+  ya rechaza la imagen vieja (no se estira), así que el usuario hoy ve el GBA sin aviso: añadir aviso en log/launcher. al instalar/verificar: la primera vez revisa todo;
   después solo detecta cambios o faltantes (marcas de tamaño/fecha/hash guardadas), sin demorar cada arranque.
   Si falta algo, ofrecer importar lo faltante (ver punto de importación desde Steam).
 - Prueba 27/10 (hipótesis import incompleto): VM 64 bits con `zz_event_001.mp4` de 0 bytes y `zz_event_011.mp4`
