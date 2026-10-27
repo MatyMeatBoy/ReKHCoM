@@ -5209,7 +5209,7 @@
       "status": "pr_abierto",
       "owner": "codex-hd-media-language",
       "created_at": "2026-10-27T08:37:21.317859+00:00",
-      "updated_at": "2026-10-27T08:55:08.324631+00:00",
+      "updated_at": "2026-10-27T09:32:43.605450+00:00",
       "branch": "feat/hd-media-language-provenance",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/327",
       "approval": "Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora",
@@ -5229,6 +5229,11 @@
           "at": "2026-10-27T08:55:08.324631+00:00",
           "owner": "codex-hd-media-language",
           "detail": "Primer incremento implementado SHA 07d6f1e021645981717b74e816e58ac896e28c02, preserva investigacion e178 mediante cherry/rebase 6e8f1003d. Parser ACF/VDF bounded readonly, custominstalldir/multilib, knownrevision mapping signals EN/JP unknownsafe, fingerprint/refresco, UI disponibilidad+guiaHTTPS y Undub separado. Legacy import language sigue desconocido; import/playback intactos. RED-GREEN test C++ produccion incluye invalidUTF8/duplicates/truncation/deep/huge/downloadpartial/mixeddepots/Unicode/multilib/cacheENthenJP/same-sizemtimecontent; syntax launcher i686 realSDL y diffcheck PASS trasrebase. No heavybuild/Steamwrites/download/Quiverwrite. Variants/importcache/playback siguiente tarea launcher-hd-media-language-variants-v21 pending sinowner. WorktreeNeeded si PR abierto; no merge."
+        },
+        {
+          "at": "2026-10-27T09:32:43.605450+00:00",
+          "owner": "codex-hd-media-language",
+          "detail": "Rebase autorizado por coordinador a main e71c9692c con guard desktop-only #329. Nuevo head 607671a75; original 07d6f1e021645981717b74e816e58ac896e28c02 preservado en branch local archive/hd-media-provenance-pre-rebase. Force-with-lease exacto solo propia327. Sin cambios logicos de327. Variants siguiente PR apilado sobre327; no gate de pre1 congelada e71."
         }
       ],
       "claimed_at": "2026-10-27T08:40:54.158105+00:00"
@@ -5404,7 +5409,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T09:31:01.572825+00:00",
+  "updated_at": "2026-10-27T09:32:43.605450+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
