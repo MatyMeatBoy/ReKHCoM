@@ -274,5 +274,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-pre2-version | Windows v2.2-pre2 source/docs and PE version 2.2.0.2 | pr_abierto | sol-low-diverse-saves | https://github.com/MatyMeatBoy/ReKHCoM/pull/392 | — | 2026-10-27T20:09:46.733024+00:00 |
 | sol-scd-parser-safety | Bound SCD auxiliary chunks and empty Ogg import failure | en_curso | sol-low-linux-import | — | User focus bugs crashes root delegated import followup | 2026-10-27T20:08:13.129351+00:00 |
 | android-launcher-gl-startup-guard | Guard launcher OpenGL startup failures with actual consumer regression | en_curso | sol-low-scenes-states | — | — | 2026-10-27T20:09:13.767252+00:00 |
+| divisor64-reachable-audit | Audit reachable native64 zero divisors beyond MapInspect/Moogle | pendiente | — | — | — | 2026-10-27T20:10:39.577890+00:00 |
 
 Integrador: codex-integrador (ocupado; 2026-10-27T20:10:32.756623+00:00)
