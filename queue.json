@@ -6427,15 +6427,21 @@
     "hud-green-border-quality": {
       "id": "hud-green-border-quality",
       "piece": "cartas prioridad 1 (PENDIENTES)",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:27.178285+00:00",
-      "updated_at": "2026-10-27T17:31:01.908465+00:00",
+      "updated_at": "2026-10-27T17:31:08.507586+00:00",
       "branch": null,
       "pr": null,
-      "approval": null,
+      "approval": "usuario-27/10-chat",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T17:31:08.507586+00:00",
+          "owner": "claude-v22",
+          "detail": "antialias GPU (pre-2.1); clean ring/bar at 1280x720 W64 and 1920x1080 2.1 x86; PENDIENTES #366"
+        }
+      ],
       "claimed_at": "2026-10-27T17:31:01.908465+00:00"
     },
     "sintesis-requisito-hd-fix": {
@@ -6623,7 +6629,7 @@
     "created_at": "2026-10-27T17:30:56.298416+00:00",
     "updated_at": "2026-10-27T17:30:56.298416+00:00"
   },
-  "updated_at": "2026-10-27T17:31:01.908465+00:00",
+  "updated_at": "2026-10-27T17:31:08.507586+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
