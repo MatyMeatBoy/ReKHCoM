@@ -5176,10 +5176,10 @@
       "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T08:29:25.832294+00:00",
-      "updated_at": "2026-10-27T08:33:56.625192+00:00",
+      "updated_at": "2026-10-27T08:36:21.771050+00:00",
       "branch": "task/submenu-hd-transition-coherence",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/324",
-      "approval": null,
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": null,
       "evidence": [
         {
@@ -5197,7 +5197,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:36:10.415280+00:00",
+  "updated_at": "2026-10-27T08:36:21.771050+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
