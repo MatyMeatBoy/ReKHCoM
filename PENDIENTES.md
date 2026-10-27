@@ -154,7 +154,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-sprite-budget-guard | HD sprite header and cache budget guard | en_revision | codex-hd-sprite-guard | fix/hd-sprite-guard | — | 2026-10-27T04:43:03.520578+00:00 |
 | session-logs-history-20261027 | Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/282 | Usuario 27/10: conservar al menos cinco logs y rotarlos; revision log_review | 2026-10-27T04:47:41.417219+00:00 |
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | en_revision | codex-sysmsg-null | fix/sysmsg-palette-null | Parent authorized implementation and local commit; review before push | 2026-10-27T04:51:40.686966+00:00 |
-| hd-layout-bounds | LAD SEQD parser bounds | en_revision | codex-layout-bounds | fix/hd-layout-bounds | Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests | 2026-10-27T04:51:44.493845+00:00 |
+| hd-layout-bounds | LAD SEQD parser bounds | pr_abierto | codex-layout-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/283 | Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort | 2026-10-27T05:08:46.462744+00:00 |
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_curso | codex-hd-readiness | — | — | 2026-10-27T05:05:21.867134+00:00 |
 | media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
 

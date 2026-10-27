@@ -4275,19 +4275,24 @@
     "hd-layout-bounds": {
       "id": "hd-layout-bounds",
       "piece": "LAD SEQD parser bounds",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-layout-bounds",
       "created_at": "2026-10-27T04:47:46.706306+00:00",
-      "updated_at": "2026-10-27T04:51:44.493845+00:00",
+      "updated_at": "2026-10-27T05:08:46.462744+00:00",
       "branch": "fix/hd-layout-bounds",
-      "pr": null,
-      "approval": "Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/283",
+      "approval": "Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort",
       "reference": "build/hd-audit-worker.md",
       "evidence": [
         {
           "at": "2026-10-27T04:51:44.493845+00:00",
           "owner": "codex-layout-bounds",
           "detail": "Parser LAD/SEQD validado; TDD red 20 fallos, green 5 tests ASan+UBSan, 31 casos +30 mutaciones tablas +380 truncaciones; syntax-only TU OK. Commit local para revision padre; readiness separado, no garantia HUD original. Sin push/PR."
+        },
+        {
+          "at": "2026-10-27T05:08:46.462744+00:00",
+          "owner": "codex-layout-bounds",
+          "detail": "Verified tests and independent review"
         }
       ],
       "claimed_at": "2026-10-27T04:47:59.824406+00:00"
@@ -4327,7 +4332,7 @@
     "created_at": "2026-10-27T05:08:08.674562+00:00",
     "updated_at": "2026-10-27T05:08:08.674562+00:00"
   },
-  "updated_at": "2026-10-27T05:08:32.062584+00:00",
+  "updated_at": "2026-10-27T05:08:46.462744+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
