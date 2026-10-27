@@ -7785,15 +7785,21 @@
     "android22-pre2-diagnostic-build": {
       "id": "android22-pre2-diagnostic-build",
       "piece": "Android v2.2-pre2 diagnostic: monotonic official versionCode, preserved signer, private two-ABI build",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "sol-android-pre2",
       "created_at": "2026-10-27T21:37:00.134814+00:00",
-      "updated_at": "2026-10-27T21:37:05.127786+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T21:38:30.431235+00:00",
+      "branch": "codex/android22-pre2-version-code",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/403",
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/374",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T21:38:30.431235+00:00",
+          "owner": "sol-android-pre2",
+          "detail": "Builder-only PR403 d38cb6b10: RED9 failures with old official collisions then GREEN6 package tests and check_sources; public2010099/pre1=2020099 preserved, new pre2=102020002, bounded official epoch. Await root review/merge before APK."
+        }
+      ],
       "claimed_at": "2026-10-27T21:37:05.127786+00:00"
     }
   },
@@ -7803,7 +7809,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:38:05.719257+00:00",
+  "updated_at": "2026-10-27T21:38:30.431235+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
