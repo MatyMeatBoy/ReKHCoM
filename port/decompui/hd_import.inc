@@ -1921,7 +1921,6 @@ static void ImportFailed(const char* reason) noexcept {
         sJob.Say(std::string(T("Importación fallida: ", "Import failed: ")) + reason +
                  T(". Se conserva el progreso recuperable.", ". Recoverable progress is preserved."));
     } catch (...) {}
-    sJob.running = false;
 }
 template <class Fn>
 static void GuardImport(const Fn& fn) noexcept {
@@ -1930,6 +1929,8 @@ static void GuardImport(const Fn& fn) noexcept {
     catch (const std::system_error&) { ImportFailed(T("error del sistema o trabajador", "system or worker error")); }
     catch (const std::exception&) { ImportFailed(T("archivo u operación inválida", "invalid file or operation")); }
     catch (...) { ImportFailed(T("error inesperado del trabajador", "unexpected worker error")); }
+    // The only publication for a started job: fn has returned/unwound and
+    // all producer-owned RAII cleanup and error reporting are finished.
     sJob.running = false;
 }
 struct StartImportThread {
@@ -1938,7 +1939,10 @@ struct StartImportThread {
 template <class Fn, class Starter = StartImportThread>
 static void LaunchImport(const Fn& fn, const Starter& start = Starter{}) noexcept {
     try { start([fn] { GuardImport(fn); }); }
-    catch (...) { ImportFailed(T("no se pudo iniciar el trabajador", "could not start worker")); }
+    catch (...) {
+        ImportFailed(T("no se pudo iniciar el trabajador", "could not start worker"));
+        sJob.running = false; // No thread was started, so there is no GuardImport owner.
+    }
 }
 
 /* fn(item) for every item, n at once (each thread with its own progress slot and COM) */
@@ -2035,12 +2039,12 @@ static bool ImportMediaVariant(const fs::path& source, const fs::path& data, int
 }
 
 static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool music, bool sprites, int quality,
-                bool resume = false, int mediaLanguage = 0, bool ownJob = true) {
+                bool resume = false, int mediaLanguage = 0) {
     if (mediaLanguage && (movies || scenes)) {
         const std::string expectedSource = hdmedia::Inspect(source).fingerprint;
         // Finish independent legacy music/art first. A cancel there must not
         // publish a new movie index; its own existing journal remains usable.
-        if (music || sprites) Run(source, data, false, false, music, sprites, quality, false, 0, false);
+        if (music || sprites) Run(source, data, false, false, music, sprites, quality, false, 0);
         int count = 0;
         bool ok = false;
         if (!sJob.cancel && hdmedia::Inspect(source).fingerprint == expectedSource) {
@@ -2052,7 +2056,6 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
         sJob.Say(ok ? std::string(T("Variante lista: ", "Variant ready: ")) + PortHdMediaLabel(mediaLanguage) + " (" + std::to_string(count) + ")"
                     : T("No se publicó la variante: fuente incompleta, cambiada, cancelada o archivo inválido. Se conserva la copia anterior.",
                         "Variant not published: source incomplete, changed, cancelled or invalid. The previous copy is preserved."));
-        sJob.running = false;
         return;
     }
     std::error_code ec;
@@ -2225,7 +2228,6 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
              : imported ? std::string(T("Listo: ", "Done: ")) + std::to_string(imported) + T(" archivos importados.", " files imported.")
                         : std::string(T("No se encontró nada para importar en esa carpeta.", "Nothing to import was found in that folder.")));
 
-    if (ownJob) sJob.running = false;
 }
 
 /* The movie's height and bits a second (its own figure, or its size over its length); false when unreadable. */
@@ -2335,7 +2337,6 @@ static void Compress(fs::path data, int quality) {
     sJob.Say(mf ? std::string(msg) : std::string(T("Media Foundation no está disponible: no se comprimió nada.",
                                                      "Media Foundation is not available: nothing was compressed.")));
 
-    sJob.running = false;
 }
 
 static void StartCompress(const fs::path& data, int quality) {
@@ -2345,7 +2346,10 @@ static void StartCompress(const fs::path& data, int quality) {
     sJob.Reset();
     sJob.Say(T("Comprimiendo...", "Compressing..."));
     try { LaunchImport([=] { Compress(data, quality); }); }
-    catch (...) { ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker")); }
+    catch (...) {
+        ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker"));
+        sJob.running = false; // Closure construction failed before LaunchImport.
+    }
 }
 
 /* The size of the installed movies and scenes, in bytes. */
@@ -2371,8 +2375,11 @@ static void Start(const fs::path& source, const fs::path& data, bool movies, boo
     sJob.running = true;
     sJob.Reset();
     sJob.Say(T("Importando...", "Importing..."));
-    try { LaunchImport([=] { Run(source, data, movies, scenes, music, sprites, quality, resume, mediaLanguage, true); }); }
-    catch (...) { ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker")); }
+    try { LaunchImport([=] { Run(source, data, movies, scenes, music, sprites, quality, resume, mediaLanguage); }); }
+    catch (...) {
+        ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker"));
+        sJob.running = false; // Closure construction failed before LaunchImport.
+    }
 }
 
 static int Count(const fs::path& folder, const char* ext) {
