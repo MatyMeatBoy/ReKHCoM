@@ -4950,7 +4950,7 @@
       "status": "pr_abierto",
       "owner": "codex-gallery-previews",
       "created_at": "2026-10-27T07:05:30.008628+00:00",
-      "updated_at": "2026-10-27T10:35:01.343146+00:00",
+      "updated_at": "2026-10-27T10:49:33.313483+00:00",
       "branch": "feat/gallery-preview-cache",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/342",
       "approval": "Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64",
@@ -4960,6 +4960,11 @@
           "at": "2026-10-27T10:35:01.343146+00:00",
           "owner": "codex-gallery-previews",
           "detail": "Head db51d782d stacked335. Firstboundedincrement only; immediateGBAposter/ROMfallback,LRU3slots1MiB,noHDlanguagecachemix;actualproducer cache/cancel/fail/stale/generation testsPASS and ENJPimport/packPASS,Windows+guestsyntaxPASS. Profilingrealp95GPU/coldwarm/memory remainsPARTIAL, noheavybuild/runtime. WorktreeNeededyesPRrepro."
+        },
+        {
+          "at": "2026-10-27T10:49:33.313483+00:00",
+          "owner": "codex-gallery-previews",
+          "detail": "Independent re-review confirmed P1 mixed-NULL and P2 incomplete pack return/log corrected.335head5acf2cb04;342headc6c7ad615. Production mixed LoadEverything import/coreavailability and real miniz partialrestore RED->GREEN. No new blocker found; hardwareSAF/GPU and realp95 remain pending."
         }
       ],
       "claimed_at": "2026-10-27T10:27:15.443933+00:00"
@@ -5654,7 +5659,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:49:28.278636+00:00",
+  "updated_at": "2026-10-27T10:49:33.313483+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
