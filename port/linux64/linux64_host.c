@@ -305,6 +305,9 @@ static void H_set_title(const char* s) {
 }
 
 /* ---- the image ---- */
+#ifdef PORT_LINUXARM64
+#include "../linuxarm64/macho_loader.inc"
+#else
 static int MapFixed(uint32_t base, size_t size) {
     void* p = mmap((void*)(uintptr_t)base, size, PROT_READ | PROT_WRITE | PROT_EXEC,
                    MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
@@ -315,11 +318,17 @@ static int MapFixed(uint32_t base, size_t size) {
     return 1;
 }
 
+#endif
+
 #define HF(name) [HF_##name] = (uint64_t)(uintptr_t)H_##name
 #define HM(name, fn) [HF_##name] = (uint64_t)(uintptr_t)fn
 
 int main(int argc, char** argv) {
+#ifdef PORT_LINUXARM64
+    const char* image = argc > 1 ? argv[1] : "guest-eu.macho";
+#else
     const char* image = argc > 1 ? argv[1] : "guest-eu.bin";
+#endif
     const char* bootStatus = NULL;
     for (int i = 2; i < argc; i++)
         if (!strcmp(argv[i], "--data") && i + 1 < argc)
@@ -334,6 +343,10 @@ int main(int argc, char** argv) {
         snprintf(assets, sizeof(assets), "%s/assets", sData);
         setenv("KHCOM_ASSETS", assets, 0);
     }
+#ifdef PORT_LINUXARM64
+    Ps5GuestHeader h;
+    if (!LoadArm64Image(image, &h)) return 3;
+#else
     FILE* f = fopen(image, "rb");
     if (!f) {
         Log("%s: %s", image, strerror(errno));
@@ -360,6 +373,8 @@ int main(int argc, char** argv) {
         return 3;
     memcpy((void*)(uintptr_t)PS5G_BASE, tmp, (size_t)size);
     free(tmp);
+
+#endif
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
         Log("SDL_Init: %s", SDL_GetError());

@@ -26,7 +26,9 @@ launcher on Linux). F11 or Alt+Enter toggles fullscreen.
 It runs under X11 or XWayland and plays sound through PulseAudio/PipeWire or
 ALSA. The x64 host uses the system's GPU driver; the x86 fallback needs a
 compatible 32-bit driver or uses SDL's software renderer. No ARM64 Linux
-runtime is included in this archive.
+runtime is included in this archive. An opt-in experimental source builder is
+documented in `port/linuxarm64/README.md` in the repository; it still requires
+complete link/runtime and device QA and does not change this package.
 
 ## Steam Deck setup (same archive)
 
