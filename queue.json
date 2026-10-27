@@ -5103,10 +5103,10 @@
       "status": "pr_abierto",
       "owner": "codex-linux-unified-package",
       "created_at": "2026-10-27T08:21:24.008616+00:00",
-      "updated_at": "2026-10-27T08:34:10.377201+00:00",
+      "updated_at": "2026-10-27T08:34:15.855985+00:00",
       "branch": "fix/linux-unified-desktop-deck-package",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/321",
-      "approval": "Usuario 27/10: un solo artefacto Linux x86/x64 desktop Deck; Anbernic beta",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "port/tools/build_linux.py",
       "evidence": [
         {
@@ -5184,7 +5184,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:34:10.377201+00:00",
+  "updated_at": "2026-10-27T08:34:15.855985+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
