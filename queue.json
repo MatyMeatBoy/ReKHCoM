@@ -6089,10 +6089,23 @@
       ],
       "claimed_at": "2026-10-27T13:10:22.341672+00:00",
       "completed_at": "2026-10-27T13:25:45.575663+00:00"
+    },
+    "gallery-empty-preview-backdrop": {
+      "id": "gallery-empty-preview-backdrop",
+      "piece": "Render lightweight distinct GBA/HD gallery backdrop when no poster exists, no IO or allocation; preserve actual previews",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T13:27:47.282580+00:00",
+      "updated_at": "2026-10-27T13:27:47.282580+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario autoriza fondos distintos GBA/HD y verificación directa2.1",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:25:57.095893+00:00",
+  "updated_at": "2026-10-27T13:27:47.282580+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
