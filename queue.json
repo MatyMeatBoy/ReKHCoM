@@ -6769,12 +6769,18 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:34.299497+00:00",
-      "updated_at": "2026-10-27T19:52:41.585889+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T19:54:42.133133+00:00",
+      "branch": "perf/v22-mapcards-entry",
       "pr": null,
       "approval": null,
       "reference": "PLAN_V22.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T19:54:42.133133+00:00",
+          "owner": "claude-v22",
+          "detail": "PHASE: GPU profiling window START (W32 EU traverse-door x3, ~3 min), please hold other GPU runs"
+        }
+      ],
       "claimed_at": "2026-10-27T19:52:41.585889+00:00"
     },
     "optiport-v22-soak": {
@@ -7398,7 +7404,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:52:41.585889+00:00",
+  "updated_at": "2026-10-27T19:54:42.133133+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
