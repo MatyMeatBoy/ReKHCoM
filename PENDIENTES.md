@@ -204,5 +204,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | harness-multikey-combos | Harness chord parsing must exercise all requested buttons, not only first token | integrado | codex-harness-chords | https://github.com/MatyMeatBoy/ReKHCoM/pull/333 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T10:22:14.571425+00:00 |
 | controller-prompt-live-page | Bounded semantic controller symbols refresh on binding/family revision | pr_abierto | codex-control-prompts | https://github.com/MatyMeatBoy/ReKHCoM/pull/338 | Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope | 2026-10-27T10:25:30.759032+00:00 |
 | steamdeck-gaming-mode-330 | Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide | pr_abierto | codex-deck-gaming330 | https://github.com/MatyMeatBoy/ReKHCoM/pull/337 | Usuario autoriza resolver330 sin comentario externo ni heavybuild | 2026-10-27T10:21:34.738356+00:00 |
+| controller-bridge-metadata | Optional versioned actual controller metadata for 64-bit SDL hosts without bridge ABI changes | pendiente | — | — | Parent authorizes producer and consumer metadata implementation for truthful Auto prompts | 2026-10-27T10:26:45.203781+00:00 |
 
 Integrador: libre
