@@ -157,5 +157,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-layout-bounds | LAD SEQD parser bounds | integrado | codex-layout-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/283 | Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort | 2026-10-27T05:08:51.724397+00:00 |
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_revision | codex-hd-readiness | fix/hd-layout-ready | — | 2026-10-27T05:09:39.124445+00:00 |
 | media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
+| optiport-skill-20261027 | OptiPort skill and evidence-based progress board | pendiente | — | — | — | 2026-10-27T05:09:50.905050+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:08:08.674562+00:00)
