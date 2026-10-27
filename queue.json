@@ -1788,10 +1788,10 @@
     "diario-entradas": {
       "id": "diario-entradas",
       "piece": "Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado)",
-      "status": "en_curso",
-      "owner": "codex-diary-audit",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T19:45:56.107112+00:00",
-      "updated_at": "2026-10-27T18:53:34.360251+00:00",
+      "updated_at": "2026-10-27T18:53:39.026815+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
@@ -1816,6 +1816,11 @@
           "at": "2026-10-27T18:53:34.360251+00:00",
           "owner": "codex-diary-audit",
           "detail": "Priority-high visible UI; check actual internal Naipes page002/004, titles, page bar, right leaf contour and nested modes; preserve original layout and active approved assets."
+        },
+        {
+          "at": "2026-10-27T18:53:39.026815+00:00",
+          "owner": "codex-diary-audit",
+          "detail": "released: Returned to current pending queue with explicit user priority and no-Atlas instruction. No source work represented as completed; old claims and proposal evidence preserved."
         }
       ],
       "claimed_at": "2026-10-25T16:02:53.468147+00:00"
@@ -7073,7 +7078,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:53:34.360251+00:00",
+  "updated_at": "2026-10-27T18:53:39.027319+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
