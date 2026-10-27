@@ -6378,12 +6378,13 @@ u16 InitCardMsgGlyphSprites(s32 mode, s32 flag) {
             sCardMsgGlyphSprites[i].alternatePalette = LoadTextPalette(5);
         }
 
-        FadeSetPaletteExcluded(sCardMsgGlyphSprites[i].palette->index + 0x10, TRUE);
-        FadeSetPaletteExcluded(sCardMsgGlyphSprites[i].alternatePalette->index + 0x10, TRUE);
+        // @bug Palette allocation can fail; the original GBA reads the BIOS area.
+        FadeSetPaletteExcluded(BIOS_PTR(sCardMsgGlyphSprites[i].palette)->index + 0x10, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sCardMsgGlyphSprites[i].alternatePalette)->index + 0x10, TRUE);
     }
 
     sTextEntryCount = 0;
-    return sCardMsgGlyphSprites[0].palette->index;
+    return BIOS_PTR(sCardMsgGlyphSprites[0].palette)->index;
 }
 
 u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** nextText) {
