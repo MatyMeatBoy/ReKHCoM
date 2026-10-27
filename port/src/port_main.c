@@ -3167,7 +3167,7 @@ static void VBlankCycle(void) {
                         interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
                         (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
                         (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
-            if (previous && interval > (limit ? SDL_atof(limit) : 25.0))
+            if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
                         "decode %.1f, upload %.1f; last %s), glyphs %u (%.1f ms)", (unsigned)sFrameCount, interval, logic,
                         ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
