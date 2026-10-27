@@ -93,11 +93,22 @@ def android(s):
 WIN_FILTER = json.loads((ROOT / 'docs/quiver/submission-draft.json').read_text(encoding='utf-8'))     .get('launcher', {}).get('releaseAssetFilter') if (ROOT / 'docs/quiver/submission-draft.json').is_file() else None
 
 
+def asset_matches_filter(name, asset_filter):
+    """Quiver RepositorySourceHelper: substring, or anchored * / ? glob."""
+    asset_filter = (asset_filter or '').strip()
+    if not asset_filter:
+        return True
+    if '*' not in asset_filter and '?' not in asset_filter:
+        return asset_filter.lower() in name.lower()
+    pattern = re.escape(asset_filter).replace(r'\*', '.*').replace(r'\?', '.')
+    return re.fullmatch(pattern, name, re.I | re.S) is not None
+
+
 def quiver(names):
     for platform, rule in (('Windows', windows), ('Linux-X64', linux_x64), ('Android', android)):
         hits = [n for n in names if rule(n.lower())]
         if platform == 'Windows' and WIN_FILTER:
-            hits = [n for n in hits if WIN_FILTER.lower() in n.lower()]
+            hits = [n for n in hits if asset_matches_filter(n, WIN_FILTER)]
         check(len(hits) == 1, f'Quiver {platform}: exactly one automatic download ({", ".join(hits) or "none"})')
 
 
@@ -120,13 +131,13 @@ if not args.post:
     dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True)
     check(not dirty.strip(), 'working tree committed (packages come from HEAD)')
     main = sorted(p.name for p in (STAGE / 'main').glob('*'))
-    for kind in ('windows-x86.zip', 'linux-x86.tar.gz', 'steamdeck-i386.tar.gz', 'anbernic-beta.zip', 'android-beta.apk'):
+    for kind in ('windows-x86-x64.zip', 'linux-x86-x64-desktop-steamdeck.tar.gz', 'anbernic-beta.zip', 'android-beta.apk'):
         hit = [n for n in main if n.endswith(kind)]
         check(bool(hit) and all((STAGE / 'main' / n).stat().st_mtime >= head - 60 for n in hit),
               f'staged {kind} built after HEAD')
     if not args.no_ps5:
         check((STAGE / 'main/PPSA98511.zip').is_file(), 'staged PS5 PPSA98511.zip (same release)')
-    win = next((STAGE / 'main' / n for n in main if n.endswith('windows-x86.zip')), None)
+    win = next((STAGE / 'main' / n for n in main if n.endswith('windows-x86-x64.zip')), None)
     if win:
         with zipfile.ZipFile(win) as z:
             names = z.namelist()

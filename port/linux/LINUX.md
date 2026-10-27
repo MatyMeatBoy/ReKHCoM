@@ -1,8 +1,9 @@
 # ReKHCoM on Linux
 
-The game core needs 32-bit pointers, so the Linux builds are 32-bit programs
-(x86 for PCs and the Steam Deck, armhf for ARM handhelds). Each package brings
-its own loader and libraries in `lib/`: no 32-bit system packages are needed.
+The desktop/Steam Deck archive contains both x86 (32-bit) and x64 runtimes.
+The wrapper chooses x64 on x86-64 systems when available, with x86 as fallback;
+the game images retain their 32-bit pointer layout. Anbernic uses armhf (32-bit
+ARM), not ARM64. Bundled libraries support portable extraction.
 
 You need your own cartridge dump (EU, US or JP, 32 MiB, unpatched). No ROM is
 included. Copy it into `roms/` with any file name: the version is read from
@@ -11,10 +12,10 @@ the ROM header. Saves (`kh_com.sav`), settings (`kh_com.ini`) and quick states
 update, extract the new one over the old install; saves, settings and the ROM
 stay.
 
-## Linux PC (`linux-x86`)
+## Linux desktop and Steam Deck (`linux-x86-x64-desktop-steamdeck`)
 
     mkdir ReKHCoM && cd ReKHCoM
-    tar xf /path/to/ReKHCoM-*-linux-x86.tar.gz
+    tar xf /path/to/ReKHCoM-*-linux-x86-x64-desktop-steamdeck.tar.gz
     cp /path/to/your/rom.gba roms/
     ./ReKHCoM.sh
 
@@ -23,13 +24,15 @@ With several ROMs in `roms/`, pick one with `./ReKHCoM.sh --region us` (`eu`,
 launcher on Linux). F11 or Alt+Enter toggles fullscreen.
 
 It runs under X11 or XWayland and plays sound through PulseAudio/PipeWire or
-ALSA. A 64-bit system's GPU driver cannot be loaded into a 32-bit program, so
-the picture is drawn with SDL's software renderer; that is light at the
-game's own resolution.
+ALSA. The x64 host uses the system's GPU driver; the x86 fallback needs a
+compatible 32-bit driver or uses SDL's software renderer. No ARM64 Linux
+runtime is included in this archive.
 
-## Steam Deck (`steamdeck`)
+## Steam Deck setup (same archive)
 
-Same program, set to fullscreen from the first launch.
+Use the same desktop/Deck archive. Device detection defaults to fullscreen on
+Steam Deck before reading saved settings, so an existing choice remains valid.
+No separate Deck archive or forced configuration preset is needed.
 
 1. In Desktop Mode, extract the archive into a folder of its own (for example
    `~/Games/ReKHCoM`) and copy your ROM into its `roms/` folder.
@@ -92,9 +95,9 @@ with Proton Experimental remains unverified without those runtime details.
 
 Not reviewed by Valve: there is no Deck Verified status.
 
-## ARM handhelds (`anbernic-alpha`)
+## ARM handhelds (`anbernic-beta`)
 
-**Alpha, not yet tested on a real handheld.** Aimed at the Anbernic RG34XX
+**Beta, not yet tested on a real handheld.** Aimed at the Anbernic RG34XX
 (H700) and similar devices with Knulli, muOS or ROCKNIX, in the PortMaster
 layout.
 
