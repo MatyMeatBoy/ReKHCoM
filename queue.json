@@ -6452,17 +6452,23 @@
       "status": "en_curso",
       "owner": "codex-windows64-cpu-gate",
       "created_at": "2026-10-27T16:56:57.396089+00:00",
-      "updated_at": "2026-10-27T16:57:09.995705+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T16:59:15.440952+00:00",
+      "branch": "fix/windows64-cpu-requirement",
       "pr": null,
       "approval": "Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro",
       "reference": "port/progress/PLAN_V22.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T16:59:15.440952+00:00",
+          "owner": "codex-windows64-cpu-gate",
+          "detail": "Claimok71f8cd1, base freshmain aef6b5309; contrato SSE4.1 sin gate, no causa atribuida a Pedro (Win11x64 declarado). Pruebas consumidores antes de implementar; host/launcher únicamente, sin guest."
+        }
+      ],
       "claimed_at": "2026-10-27T16:57:09.995705+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:57:09.995705+00:00",
+  "updated_at": "2026-10-27T16:59:15.440952+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
