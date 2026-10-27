@@ -5259,10 +5259,23 @@
       "approval": "User explicitly requests new prerelease for Windows Linux Android and send to reporters; preserve previous releases",
       "reference": "Frozen source 0022c58f1ff1ce40ec079c1dd51d5574a706df26; public release after packaged regressions",
       "evidence": []
+    },
+    "hd-gauge-visible-bounds": {
+      "id": "hd-gauge-visible-bounds",
+      "piece": "Measured HD gauge crop preserves supersampling within budgets",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:46:15.972296+00:00",
+      "updated_at": "2026-10-27T08:46:15.972296+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requests smoother inner HUD edges; coordinator authorizes measured crop implementation",
+      "reference": "Actual C layout geometry measurement 2026-10-27",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:44:04.056087+00:00",
+  "updated_at": "2026-10-27T08:46:15.972296+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
