@@ -12,6 +12,15 @@ import org.libsdl.app.SDLActivity;
  *  pickers (a dump, a save in or out, the PC's hd folder), copied in the background with a status line it reads, and
  *  starting the game in its own process (GameActivity, :game). SAF copies are bounded, hashed (dumps) and atomic. */
 public class LauncherActivity extends SDLActivity {
+    private LifecycleTrace lifecycle;
+    private void lifecycle(String event){if(lifecycle!=null)lifecycle.record(this,event,"launcher");}
+    @Override protected void onCreate(android.os.Bundle state){
+        try{lifecycle=LifecycleTrace.attach(this,"launcher",state!=null);}catch(Throwable ignored){}
+        lifecycle("onCreate");super.onCreate(state);
+    }
+    @Override protected void onPause(){lifecycle("onPause");super.onPause();}
+    @Override protected void onStop(){lifecycle("onStop");super.onStop();}
+    @Override protected void onDestroy(){lifecycle("onDestroy");super.onDestroy();}
     private static final String[] CODES={"B8CP","B8CE","B8CJ"};
     private static final String[] HASHES={"8db73586cdb11b3795907edebf43228dbcd3e6b2",
         "10729bd884f8fdca7a310b6d606c52e46657aa48","59ec0a0a4ccd1e6acb3bbd7bfb21d63988958cfa"};
