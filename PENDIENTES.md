@@ -266,5 +266,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue386-moogle-charge-scroll | Hijo audit64-menu-scroll-boundaries: corregir división0 alcanzable en scrollbar MsCharge con10..12tipos | pr_abierto | codex-moogle-charge-scroll | https://github.com/MatyMeatBoy/ReKHCoM/pull/388 | Usuario pide arreglar todos los fallos64 por patrones; coordinador aprueba fix local MsCharge y prueba consumidor real sin GPU | 2026-10-27T19:23:33.811999+00:00 |
 | qa-sol-low-diverse-saves | QA: saves distintos y menus reales 32/64 | en_curso | sol-low-diverse-saves | — | — | 2026-10-27T19:24:12.921539+00:00 |
 | qa-sol-low-scenes-states | QA diversa galeria escenas y compatibilidad estados | en_curso | sol-low-scenes-states | — | — | 2026-10-27T19:24:40.210348+00:00 |
+| sol-low-linux-import | QA Linux SteamMachine HD importer fixtures | pendiente | — | — | User delegated 3 Sol bajo workers | 2026-10-27T19:25:44.435091+00:00 |
 
 Integrador: libre

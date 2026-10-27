@@ -7315,10 +7315,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T19:24:40.210348+00:00"
+    },
+    "sol-low-linux-import": {
+      "id": "sol-low-linux-import",
+      "piece": "QA Linux SteamMachine HD importer fixtures",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T19:25:44.435091+00:00",
+      "updated_at": "2026-10-27T19:25:44.435091+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User delegated 3 Sol bajo workers",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:24:40.210348+00:00",
+  "updated_at": "2026-10-27T19:25:44.435091+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
