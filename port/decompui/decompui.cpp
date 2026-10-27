@@ -3757,9 +3757,13 @@ int main(int argc, char** argv) {
                 if (strcmp(argv[j], "--quality") == 0 && j + 1 < argc)
                     quality = atoi(argv[j + 1]);
             hd::sJob.running = true;
+#ifdef LAUNCHER_ANDROID
             hd::Compress(sRoot, quality);
+#else
+            hd::GuardImport([&] { hd::Compress(sRoot, quality); });
+#endif
             fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
-            return 0;
+            return hd::sJob.cancel ? 1 : 0;
         }
 #ifndef LAUNCHER_ANDROID
     for (int i = 1; i < argc; i++)
@@ -3785,9 +3789,13 @@ int main(int argc, char** argv) {
                 return 1;
             }
             hd::sJob.running = true;
+#ifdef LAUNCHER_ANDROID
             hd::Run(source, sRoot, !spritesOnly, scenes && !spritesOnly, !spritesOnly, true, quality, resume);
+#else
+            hd::GuardImport([&] { hd::Run(source, sRoot, !spritesOnly, scenes && !spritesOnly, !spritesOnly, true, quality, resume); });
+#endif
             fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
-            return 0;
+            return hd::sJob.cancel ? 1 : 0;
         }
     AdoptPreviousInstall();
     hd::MoveScenes(sRoot / "hd"); /* the layout of older versions, moved on every start (not only on the HD page) */
