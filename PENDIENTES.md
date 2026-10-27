@@ -209,4 +209,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-arm64-experimental-v21 | Integrar9300d2992 experimental LinuxARM64 conmain actual, ABI/loader/builder/routing tests, sinheavybuild ni hardwareclaim | en_curso | codex-linux-arm64 | — | Usuario autoriza LinuxARM64 scope; root delega nueva branch preservando vieja | 2026-10-27T10:36:26.495128+00:00 |
 | v21-verified-board | Reconcile 2.1 verified source artifact QA and current pending PRs without erasing remaining work | en_curso | codex-v21-board | — | Usuario 27/10: mantener pendientes precisos, integrar mejoras y seguir hasta2.1 | 2026-10-27T10:37:15.997287+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T10:39:38.482239+00:00)
+Integrador: libre
