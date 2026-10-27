@@ -252,4 +252,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android22-pre1-diagnostic-build | APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto | en_curso | codex-android22-build | — | — | 2026-10-27T18:29:06.260644+00:00 |
 | audio-intro-title-underrun | Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego | en_curso | codex-audio-skip | — | Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback | 2026-10-27T18:41:27.803327+00:00 |
 
-Integrador: codex-windows-pre1 (ocupado; 2026-10-27T18:40:53.474124+00:00)
+Integrador: libre
