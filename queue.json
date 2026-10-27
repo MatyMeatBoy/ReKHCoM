@@ -4360,10 +4360,10 @@
     "media-readiness-fallbacks": {
       "id": "media-readiness-fallbacks",
       "piece": "Video readiness and cleanup fallbacks Android and Windows MF",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-media-fallbacks",
       "created_at": "2026-10-27T05:08:26.698519+00:00",
-      "updated_at": "2026-10-27T05:18:17.119767+00:00",
+      "updated_at": "2026-10-27T05:18:49.269375+00:00",
       "branch": "fix/media-readiness-fallbacks",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/289",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4378,9 +4378,15 @@
           "at": "2026-10-27T05:13:22.548751+00:00",
           "owner": "codex-media-fallbacks",
           "detail": "Review follow-up: removed unmeasured 5s wall-clock watchdog (background pause must not invalidate video); early explicit skip now returns success before upload, close remains 2. Production dispatch/return harness with simulated 120s pause passes, Android full syntax passes."
+        },
+        {
+          "at": "2026-10-27T05:18:49.269375+00:00",
+          "owner": "codex-media-fallbacks",
+          "detail": "Merged 3fecf73977a5480203ac082cb274c462c1ee5b85"
         }
       ],
-      "claimed_at": "2026-10-27T05:08:32.062584+00:00"
+      "claimed_at": "2026-10-27T05:08:32.062584+00:00",
+      "completed_at": "2026-10-27T05:18:49.269375+00:00"
     },
     "optiport-skill-20261027": {
       "id": "optiport-skill-20261027",
@@ -4465,7 +4471,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:18:41.547143+00:00",
+  "updated_at": "2026-10-27T05:18:49.269375+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
