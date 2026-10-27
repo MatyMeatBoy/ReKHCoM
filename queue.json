@@ -5409,10 +5409,10 @@
     "harness-multikey-combos": {
       "id": "harness-multikey-combos",
       "piece": "Harness chord parsing must exercise all requested buttons, not only first token",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-harness-chords",
       "created_at": "2026-10-27T09:31:01.572825+00:00",
-      "updated_at": "2026-10-27T10:22:04.564572+00:00",
+      "updated_at": "2026-10-27T10:22:14.571425+00:00",
       "branch": "fix/harness-multikey-combos",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/333",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5422,9 +5422,15 @@
           "at": "2026-10-27T10:08:06.991816+00:00",
           "owner": "codex-harness-chords",
           "detail": "Actual HarnessKeys RED assertion -> GREEN complete chords; current stock QA uses single STOCK alias to verify actual 1/2/3 queues with memory-count postconditions"
+        },
+        {
+          "at": "2026-10-27T10:22:14.571425+00:00",
+          "owner": "codex-harness-chords",
+          "detail": "Verified and reviewed; merged 4452d0a230eed1f34d423e54c53e8010a7171883"
         }
       ],
-      "claimed_at": "2026-10-27T09:32:53.684631+00:00"
+      "claimed_at": "2026-10-27T09:32:53.684631+00:00",
+      "completed_at": "2026-10-27T10:22:14.571425+00:00"
     },
     "controller-prompt-live-page": {
       "id": "controller-prompt-live-page",
@@ -5472,7 +5478,7 @@
     "created_at": "2026-10-27T10:21:49.428537+00:00",
     "updated_at": "2026-10-27T10:21:49.428537+00:00"
   },
-  "updated_at": "2026-10-27T10:22:04.564572+00:00",
+  "updated_at": "2026-10-27T10:22:14.585122+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
