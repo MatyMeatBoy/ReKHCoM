@@ -280,6 +280,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-pre2-windows-crash-delivery | Compilar Windows32/64 EU US JP desde source main fijado con fixes386/scroll/reporter/importador, versionpre2; verificar paquete exacto y SAVusuario, manifiesto/hash, publicar solo plataformas compiladas. Pre1 inmutable; no afirmar confirmaciones de hardware pendientes. | en_curso | codex-pre2-crash-delivery | — | Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild. | 2026-10-27T20:12:53.479868+00:00 |
 | guest64-divzero-parity | Restore scoped cartridge zero-divisor semantics in x32 guest hosts | en_curso | sol-low-scenes-states | — | — | 2026-10-27T20:16:57.923696+00:00 |
 | sol-guest64-abi-audit | Bounded guest64 savedata callback and ABI audit | en_revision | sol-low-linux-import | — | User requested32to64 parity root scoped audit | 2026-10-27T20:19:45.416959+00:00 |
-| sol-remastered-parser-safety | Bound remastered package allocations and preserve expanded language tables | en_curso | sol-low-linux-import | — | User all bugs scoped CPU parsers root delegated | 2026-10-27T20:20:33.689306+00:00 |
+| sol-remastered-parser-safety | Bound remastered package allocations and preserve expanded language tables | en_curso | codex-remastered-parser-review | — | User all bugs scoped CPU parsers root delegated | 2026-10-27T20:27:14.381005+00:00 |
 
 Integrador: libre
