@@ -194,4 +194,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-hd-transition-coherence | Coherent HD edge extensions during submenu transitions | integrado | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/324 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:36:31.665055+00:00 |
 | launcher-hd-media-language-selection-v21 | Launcher 2.1: disponibilidad e import EN/JP voces/peliculas HD desde Steam propio; guia oficial y deteccion por evidencia, texto/audio separados | en_curso | codex-hd-media-language-research | — | Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora | 2026-10-27T08:37:26.800184+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T08:30:24.057898+00:00)
+Integrador: libre
