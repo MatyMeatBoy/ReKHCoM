@@ -220,4 +220,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-native-launcher-336 | Native Linux helper336: Play,preparedHDtransaction,ownedsourcePythonimport,noWine; KDE/Zenity/CLI, packagingonly | integrado | codex-linux-native-launcher | https://github.com/MatyMeatBoy/ReKHCoM/pull/353 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T13:00:47.389385+00:00 |
 | linux-native-launcher-package-v21 | Package the native Linux launcher and portable import references for issue336; no engine rebuild | integrado | codex-linux-launcher-package | https://github.com/MatyMeatBoy/ReKHCoM/pull/353 | Usuario 27/10 pide incluir launcher/importador nativo para resolver336 en2.1; PR353 y QA Linux revisados | 2026-10-27T13:03:30.081781+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T13:02:57.202115+00:00)
+Integrador: libre
