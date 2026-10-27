@@ -237,4 +237,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-steamdeck-330-entry-diagnostic | Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos | en_revision | codex-deck-entry-diagnostic | — | Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes | 2026-10-27T16:52:43.712474+00:00 |
 | v22-linux64-language-args | Preservar --language en wrapper/host Linux64 con parser consumidor C dirigido, sin ABI/guest ni atribuir #330 | en_curso | codex-linux64-args | fix/linux64-language-args | Coordinador autoriza PR acotado 27/10 | 2026-10-27T16:55:21.218556+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T16:55:15.209191+00:00)
+Integrador: libre
