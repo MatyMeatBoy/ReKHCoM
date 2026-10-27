@@ -282,4 +282,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sol-guest64-abi-audit | Bounded guest64 savedata callback and ABI audit | en_revision | sol-low-linux-import | — | User requested32to64 parity root scoped audit | 2026-10-27T20:19:45.416959+00:00 |
 | sol-remastered-parser-safety | Bound remastered package allocations and preserve expanded language tables | en_curso | sol-low-linux-import | — | User all bugs scoped CPU parsers root delegated | 2026-10-27T20:20:33.689306+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T20:25:59.531292+00:00)
+Integrador: libre
