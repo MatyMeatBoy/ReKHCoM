@@ -52,11 +52,27 @@ Verification so far:
   controlled 0.6-to-silence F32 signal, the maximum adjacent step is 0.0025001;
   the S16 case stays within 69/32768. These are synthetic signal measurements,
   not an assertion about every game's naturally changing waveform.
+  A rejected consumer enqueue discards its old tail so a later callback cannot
+  resurrect a nonzero sample after the device has fallen back to silence.
 - Existing hosted HD decoder/output-failure and loader tests pass. The updated
   flow analyzer distinguishes queued PCM from recorded smooth-recovery events.
 - Complete Linux64 and Android64 host translation units and x32/AArch64 guest
   audio/music/shim units pass syntax checks. Windows64 host builds and its
-  ABI/boot contracts pass. Full game/title testing follows this source freeze.
+  ABI/boot contracts pass.
+- Frozen private Windows EU builds at `f0e33ea6c` pass ten D3D11 game runs:
+  two published-pre2 controls and eight fixed 32/64-bit cases spanning GBA/HD
+  title music, normal playback and a controlled 250 ms stall of only the test
+  game's main thread. All reach the title and produce nonzero PCM. Both GBA
+  producer PCM and sample-rate/frame-count records remain byte-identical to
+  the corresponding controls, including the stalled cases. Normal cases record
+  no fallback interventions; deliberate stalls record one to three recoveries.
+  Hosted HD music actually plays track6 and the host opens the imported Title
+  track; a filename appearing in an asset log alone is not counted as playback.
+  These disk-driver recordings are silent local tests, not physical listening
+  confirmation. An earlier ten-run lifecycle probe was rejected as audio
+  evidence because it stopped before `TitleFinishIntro` and produced zero PCM;
+  the corrected scenario presses A again after entering the title mode and
+  requires a nonzero-signal gate.
 
 These results establish concrete lifecycle and fallback defects. They do not
 prove that the original user's audible hitch has only one cause, or certify

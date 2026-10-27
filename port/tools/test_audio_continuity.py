@@ -91,7 +91,8 @@ static void boundary_cases(void){
  assert(PortAudioContinuityPut(&state,s,in,sizeof(in)));
  assert(SDL_GetAudioStreamData(s,out,sizeof(in))==sizeof(in));
  failPut=1;assert(SDL_GetAudioStreamData(s,out,512*8)==0); /* failed callback enqueue returns without spinning */
- assert(SDL_GetAudioStreamData(s,out,512*8)==512*8);assert(out[0]>.59f);
+ assert(SDL_GetAudioStreamData(s,out,512*8)==512*8);
+ for(int i=0;i<1024;i++)assert(out[i]==0); /* failed consumer request must not replay its old tail later */
  assert(PortAudioContinuityClear(&state,s));
  assert(PortAudioContinuityPut(&state,s,in,sizeof(in)));
  assert(SDL_GetAudioStreamData(s,out,sizeof(in))==sizeof(in));

@@ -59,6 +59,12 @@ static void SDLCALL PortAudioContinuityGet(void* userdata, SDL_AudioStream* stre
     PortAudioContinuityRamp(state, spec.format, count, state->fadeOutFrames);
     if (SDL_PutAudioStreamData(stream, &state->scratch, count * frameBytes))
         state->fadeOutAt = SDL_min(state->fadeOutFrames, state->fadeOutAt + count);
+    else {
+        /* SDL could not supply this request: the device falls back to silence.
+         * Never bring its previous nonzero tail back on a later callback. */
+        state->fadeOutAt = state->fadeOutFrames;
+        state->tail[0] = state->tail[1] = 0.0f;
+    }
 }
 
 static bool PortAudioContinuityInit(PortAudioContinuity* state, SDL_AudioStream* stream) {
