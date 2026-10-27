@@ -7922,10 +7922,23 @@
       "approval": "Usuarioreportecapturageppetto235? imagen8d397e8c",
       "reference": null,
       "evidence": []
+    },
+    "mapinspect-grid-hd-original-frame": {
+      "id": "mapinspect-grid-hd-original-frame",
+      "piece": "Miniaturas menu naipesmapa siguen nativas: aplicar ilustracionesHD actuales preservando marcoGBA y esquinas cierre. Separar mappingBG de OAM e importfaltante; no retocar resto aprobado.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T22:21:41.806505+00:00",
+      "updated_at": "2026-10-27T22:21:41.806505+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27/10 captura04d2324f/a5050ab1 exigeHDyconservarmarco",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:20:10.816648+00:00",
+  "updated_at": "2026-10-27T22:21:41.806505+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
