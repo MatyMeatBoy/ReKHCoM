@@ -7,20 +7,32 @@ usuario: «una vista profunda a las heridas donde haya stutters».
 
 Con `KHCOM_FRAMELOG` (el perfilador ya lo activa):
 
-- `frames.csv` suma columnas por cuadro: `logic_ms` (lógica GBA desde el
-  ciclo anterior), `ppu_ms`, `present_ms` (capas HD incluidas) y los costes
+- `frames.csv` suma columnas por cuadro: `logic_ms` (intervalo entre el final
+  del log anterior y el inicio del ciclo), `ppu_ms`, `present_ms` (capas HD incluidas) y los costes
   puntuales de ese cuadro: `hd_loads`/`hd_load_ms` (decodificación y subida
   de sprites HD) y `glyphs`/`glyph_ms` (glifos HD renderizados por primera vez).
 - Cada cuadro de más de `KHCOM_STUTTER` ms (25 por defecto) deja en
   `kh_com.log` una línea `stutter:` con su etapa y sus costes; las cargas HD
-  se separan en cabecera, decodificación y subida, con el último sprite.
+  se separan en cabecera, decodificación y subida, con la carga más lenta.
 - `profile_hd_resources.py` guarda las 12 peores en `report.json` (`stutters`).
 
-Es un diagnóstico, no una mejora de velocidad. Sin `KHCOM_FRAMELOG` no se
-lee ningún reloj ni se cuenta nada (`gPortStutter.on`). `logic_ms` va del
+Es un diagnóstico, no una mejora de velocidad. Sin `KHCOM_FRAMELOG` las sondas
+nuevas no consultan el reloj ni acumulan contadores (`gPortStutter.on`). `logic_ms` va del
 final del log del cuadro anterior al inicio de este ciclo: la lógica del juego
 y lo que corra entre ciclos, sin el autoguardado ni el propio log. Las cargas
 se suman por partes y se nombra la más lenta del cuadro, no la última.
+
+Los costes de glifos aquí instrumentados corresponden al productor latino
+`port_hdtext.c`; la ruta japonesa y el proveedor stb del guest de 64 bits no
+quedan cubiertos por ese contador. Cero no significa coste de texto nulo en
+esas rutas. La compilación de ambas arquitecturas no es una medición de ambas.
+
+`test_stutter_probe_contract.py --cc CLANG` ejecuta los wrappers/macros reales
+con reloj determinista: sin sondas no hay consultas nuevas; con sondas se
+conservan totales, fallos y el recurso más caro, y el caché no se recuenta.
+Comprueba también el límite de `logic_ms`. Dos controles negativos rechazan
+consultas con la sonda apagada y la atribución anterior que incluía el logger.
+No enlaza SDL ni acredita rendimiento o GPU.
 
 Revisión de Codex (27/10) atendida: fixtures de `test_hd_sprite_budget`,
 `test_hd_sprite_fallback`, `test_hd_menu_warmup` y `test_hd_reload_mask`
