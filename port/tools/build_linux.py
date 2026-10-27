@@ -274,6 +274,24 @@ def make_zip(src, archive):
             z.writestr(info, f.read_bytes())
 
 
+def install_native_launcher(dest):
+    """Ship the native desktop/import entry separately from the Gaming Mode game."""
+    pairs = [(ROOT / 'port/linux/ReKHCoM Launcher.sh', dest / 'ReKHCoM Launcher.sh'),
+             (ROOT / 'port/linux/launcher/rekhcom_launcher.py', dest / 'launcher/rekhcom_launcher.py'),
+             (ROOT / 'port/data/hd_sprites.tsv', dest / 'launcher/port/data/hd_sprites.tsv')]
+    pairs += [(p, dest / 'launcher/port/tools' / p.name)
+              for p in sorted((ROOT / 'port/tools').glob('khhd_*.py'))]
+    missing = [str(src) for src, _ in pairs if not src.is_file()]
+    if missing:
+        sys.exit('Native Linux launcher incomplete: ' + ', '.join(missing))
+    for src, target in pairs:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if src.suffix == '.sh':
+            target.write_bytes(src.read_bytes().replace(b'\r\n', b'\n'))
+        else:
+            shutil.copyfile(src, target)
+
+
 def package(version, base_i386, base_armhf):
     """One desktop/Deck x86+x64 archive and one armhf beta in build/releases."""
     import shutil
@@ -294,6 +312,7 @@ def package(version, base_i386, base_armhf):
     # default (before reading the user's ini), not an archive-specific preset.
     pc = stage / 'pc'
     bundle('i386', base_i386, ['eu', 'us', 'jp'], pc)
+    install_native_launcher(pc)
     shutil.copyfile(ROOT / 'port/linux/LINUX.md', pc / 'LINUX.md')
     (pc / 'Setup Steam Deck.sh').write_bytes((ROOT / 'port/linux/Setup Steam Deck.sh').read_bytes().replace(b'\r\n', b'\n'))
     archive = out / f'ReKHCoM-{version}-linux-x86-x64-desktop-steamdeck.tar.gz'
