@@ -906,13 +906,13 @@
     "escena-117": {
       "id": "escena-117",
       "piece": "Escena 117",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-25T05:20:18.327283+00:00",
+      "updated_at": "2026-10-27T17:09:54.399807+00:00",
       "branch": "codex/arte-117",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/95",
-      "approval": null,
+      "approval": "Atlas exact ff9f8d6e16a149708fb8a08c5c80d431; approved; revision 4; sha256 de409ca170d745080953903539c70e13c406df2e5e170b642dbaf10ffb0fa9a6; decision 2026-10-25T05:50:44.838509+00:00",
       "reference": "{\"family_id\": \"36884a8a1d154965aac5f8955d59b753\", \"submissions\": [{\"submission\": \"20261024-053858-e6498d\", \"created\": \"2026-10-24T08:38:58.920545+00:00\", \"image_id\": \"36884a8a1d154965aac5f8955d59b753\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 1, \"cloud_ids\": [\"2ec4c3da-edd7-40c1-8f65-f11c159c7e0d\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053858-e6498d\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -939,10 +939,16 @@
           "at": "2026-10-25T05:20:18.327283+00:00",
           "owner": "codex-arte-final",
           "detail": "6dbdbde80; caja y muro completados en propuesta. EU frame300 GBA idéntica, check_sources OK. Valoración pendiente."
+        },
+        {
+          "at": "2026-10-27T17:09:54.399807+00:00",
+          "owner": "codex-arte-final",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/95 MERGED 2026-10-25T06:28:01Z; merge 0d5543f79a38145a438c794042ca85c3d33cfb73 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact ff9f8d6e16a149708fb8a08c5c80d431, approved, revision 4, SHA256 de409ca170d745080953903539c70e13c406df2e5e170b642dbaf10ffb0fa9a6; no se hereda aprobacion de otra version.\nRevalidado 2026-10-27T17:09:54.354645+00:00; main f1b51b9c21663aeacdbacd7184b2b2b6baa104e2; merge real 0d5543f79a38145a438c794042ca85c3d33cfb73; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T05:16:03.669710+00:00",
-      "sent": "ff9f8d6e16a149708fb8a08c5c80d431"
+      "sent": "ff9f8d6e16a149708fb8a08c5c80d431",
+      "completed_at": "2026-10-27T17:09:54.399807+00:00"
     },
     "escena-118": {
       "id": "escena-118",
@@ -6509,7 +6515,7 @@
     "created_at": "2026-10-27T17:09:17.768635+00:00",
     "updated_at": "2026-10-27T17:09:17.768635+00:00"
   },
-  "updated_at": "2026-10-27T17:09:47.225751+00:00",
+  "updated_at": "2026-10-27T17:09:54.399807+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
