@@ -381,6 +381,10 @@ void PortHdMusicFrame(void) {
     }
     song = CurrentSong();
     playing = song > 0 && (bgm->status & MUSICPLAYER_STATUS_TRACK) && !(bgm->status & MUSICPLAYER_STATUS_PAUSE);
+    /* a movie switches the cartridge's sound engine off (m4aSoundVSyncOff: ident + 10) and leaves the song's
+       status as it was: it is silent, so is the HD track (#163: the gallery's GBA movies under Dearly Beloved) */
+    if (gSoundInfoPtr && (gSoundInfoPtr->ident == ID_NUMBER + 10 || gSoundInfoPtr->ident == ID_NUMBER + 11))
+        playing = 0;
     /* our Options overlay does not stop the song (the cartridge's keeps playing under it, so does the HD track) */
     if (!playing) {
         Pause(); /* stopped or paused: the track resumes from where it was */
