@@ -155,4 +155,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | session-logs-history-20261027 | Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar | pr_abierto | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/282 | — | 2026-10-27T04:44:03.189093+00:00 |
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | en_revision | codex-sysmsg-null | fix/sysmsg-palette-null | Parent authorized implementation and local commit; review before push | 2026-10-27T04:40:19.813043+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T04:45:31.195753+00:00)
+Integrador: libre
