@@ -4713,7 +4713,7 @@
       "status": "en_revision",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T06:20:05.165818+00:00",
-      "updated_at": "2026-10-27T06:23:56.860237+00:00",
+      "updated_at": "2026-10-27T06:31:33.959261+00:00",
       "branch": "task/device-profiles",
       "pr": null,
       "approval": null,
@@ -4723,6 +4723,11 @@
           "at": "2026-10-27T06:23:56.860237+00:00",
           "owner": "device_profiles_sol",
           "detail": "Local commit 1c725ef47; test_device_profiles.py passed matrix and real defaults/parser ini precedence; pending host relay and root review; no heavy build"
+        },
+        {
+          "at": "2026-10-27T06:31:33.959261+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "Windows BIOS c14af00aa, Linux relay b46e7f045, relay test 74ed339a8; test_device_profiles.py green after red classifier assertion; UTF16 provider failure matrix and ini precedence passed; Windows gcc header syntax -Werror passed; Win host hook root applies separately"
         }
       ],
       "claimed_at": "2026-10-27T06:20:11.264824+00:00"
@@ -4812,7 +4817,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:31:28.522283+00:00",
+  "updated_at": "2026-10-27T06:31:33.959261+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
