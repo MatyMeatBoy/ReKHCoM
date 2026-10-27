@@ -1576,6 +1576,7 @@ static void Present(void) {
     EnsureTexture();
     GrowPixelBuffer(&sCompositeBuf, &sCompositeCapacity, (size_t)gPortScreen.width * gPortScreen.height);
     PortHdHudPrepare(sRenderer);
+    PortHdLayoutPrepare(sRenderer);
     /* movies shown cropped: the skip prompt is drawn after the movie, on its
        own, so it neither grows with the video nor shifts the crop */
     moviePrompt = sSideStyle == 10 && sFitScale <= 0 && !menuCanvas && !gPortScreen.wide
