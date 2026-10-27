@@ -7283,10 +7283,10 @@
     "issue386-moogle-charge-scroll": {
       "id": "issue386-moogle-charge-scroll",
       "piece": "Hijo audit64-menu-scroll-boundaries: corregir división0 alcanzable en scrollbar MsCharge con10..12tipos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-moogle-charge-scroll",
       "created_at": "2026-10-27T19:20:49.301337+00:00",
-      "updated_at": "2026-10-27T19:32:53.944922+00:00",
+      "updated_at": "2026-10-27T19:38:18.400399+00:00",
       "branch": "fix/moogle-charge-scroll",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/388",
       "approval": "Usuario pide arreglar todos los fallos64 por patrones; coordinador aprueba fix local MsCharge y prueba consumidor real sin GPU",
@@ -7301,9 +7301,15 @@
           "at": "2026-10-27T19:32:53.944922+00:00",
           "owner": "codex-moogle-charge-scroll",
           "detail": "Review adjustment head80f59bf0d: guard only PLATFORM_PC, original non-PC condition intact. Actual fullconsumer now explicitly-DPLATFORM_PC: REDbaseline0xC0000094 hb3fbkd9, GREEN146243cases bwch73nm rc0. NonPC preprocessed MsChargeDraw tokens equal8d, proof nonpc-equivalence.json; no GBA binary rebuild. Same scope3files, noGPU/fullgameclaim."
+        },
+        {
+          "at": "2026-10-27T19:38:18.400399+00:00",
+          "owner": "codex-moogle-charge-scroll",
+          "detail": "PR388 mergeda714b0d2d6865c48a4302733f6436a5db8b7220c. Rootindependent146243productionDrawcasesPASS andSolreviewx86/x64pass; nonPCtoken-equivalence verified; noall64completionclaim."
         }
       ],
-      "claimed_at": "2026-10-27T19:21:06.536178+00:00"
+      "claimed_at": "2026-10-27T19:21:06.536178+00:00",
+      "completed_at": "2026-10-27T19:38:18.400399+00:00"
     },
     "qa-sol-low-diverse-saves": {
       "id": "qa-sol-low-diverse-saves",
@@ -7386,7 +7392,7 @@
     "created_at": "2026-10-27T19:37:02.959925+00:00",
     "updated_at": "2026-10-27T19:37:02.959925+00:00"
   },
-  "updated_at": "2026-10-27T19:37:07.535095+00:00",
+  "updated_at": "2026-10-27T19:38:18.400399+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
