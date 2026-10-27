@@ -5413,10 +5413,23 @@
       "reference": "Actual Stock QA observed zero player stock; HarnessKeys only compares colon+1 and ignores tokens after plus",
       "evidence": [],
       "claimed_at": "2026-10-27T09:32:53.684631+00:00"
+    },
+    "controller-prompt-live-page": {
+      "id": "controller-prompt-live-page",
+      "piece": "Bounded semantic controller symbols refresh on binding/family revision",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T09:58:13.699280+00:00",
+      "updated_at": "2026-10-27T09:58:13.699280+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope",
+      "reference": "PR332 labels +334 symbols; preserve reveal/window/VM; variable fallback remains gated",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T09:50:24.618906+00:00",
+  "updated_at": "2026-10-27T09:58:13.699280+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

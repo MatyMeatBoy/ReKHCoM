@@ -202,5 +202,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-stale-sprites-desktop-guard | Android launcher excludes desktop-only stale sprite reimport callbacks | integrado | codex-android-guard | https://github.com/MatyMeatBoy/ReKHCoM/pull/329 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T09:04:23.908388+00:00 |
 | controller-prompt-inline-symbols | Experimental inline symbols, Japanese tutorial tokens and explicit confirm preset | pr_abierto | codex-control-prompts | https://github.com/MatyMeatBoy/ReKHCoM/pull/334 | User full2.1 prompt scope; parent explicitly authorizes continuation after332 | 2026-10-27T09:50:24.618906+00:00 |
 | harness-multikey-combos | Harness chord parsing must exercise all requested buttons, not only first token | en_curso | codex-harness-chords | — | User requests reliable pattern-based regression scenarios for 2.1 | 2026-10-27T09:32:53.684631+00:00 |
+| controller-prompt-live-page | Bounded semantic controller symbols refresh on binding/family revision | pendiente | — | — | Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope | 2026-10-27T09:58:13.699280+00:00 |
 
 Integrador: libre
