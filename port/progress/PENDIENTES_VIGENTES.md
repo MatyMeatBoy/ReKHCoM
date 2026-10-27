@@ -43,6 +43,11 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   intermedio de título/gameplay. Claude regular UI, dependencia de pacing
   OptiPort si aplica. Probar título/partida × normal/skip × GBA/ReKHCoM,
   capturando cuadros, restaurando UI/renderer/input/audio sin avanzar historia.
+- [ ] **Metadatos reales del mando en 64 bits:** implementación y regresión CPU
+  en `feature/controller-bridge-metadata`, claim `controller-bridge-metadata`.
+  Consulta opcional versionada sin cambiar ABI, caché por evento, fallback
+  genérico en hosts antiguos. QA física/hotplug y unión con prompts aún pendientes;
+  [contrato y evidencia](CONTROLLER_BRIDGE_METADATA.md).
 - [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
   Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
   convención Nintendo A/PS círculo elegible, assets existentes, todos los

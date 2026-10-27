@@ -682,7 +682,7 @@ int SDL_GetAudioStreamQueued(SDL_AudioStream* s) {
 
 /* ---- events, gamepads ---- */
 
-typedef struct Pad { SDL_JoystickID id; HostPad now, prev; bool present; } Pad;
+typedef struct Pad { SDL_JoystickID id; HostPad now, prev; bool present, physical; SDL_GamepadType type; } Pad;
 struct SDL_Gamepad { Pad* pad; };
 static Pad sPads[HOSTPAD_MAX];
 static struct SDL_Gamepad sPadHandles[HOSTPAD_MAX];
@@ -801,17 +801,46 @@ static void RefreshHostKeys(void) {
     }
 }
 
+/* One bounded query per event refresh; render-time getters never cross the bridge.
+ * Old/console hosts return no metadata and retain the original pad-only path. */
+static bool RefreshPadMetadata(bool* connected, SDL_GamepadType* type) {
+    static const char prefix[] = "bridge-pad-v1:1:";
+    char text[48];
+    int n = h_getenv("KHCOM_GAMEPAD_INFO_V1", text, sizeof(text)), value = 0, i;
+    if (n <= 0 || n >= (int)sizeof(text)) return false;
+    text[n] = 0;
+    if ((int)strlen(text) != n || strncmp(text, prefix, sizeof(prefix) - 1)) return false;
+    i = sizeof(prefix) - 1;
+    if ((text[i] != '0' && text[i] != '1') || text[i + 1] != ':') return false;
+    *connected = text[i] == '1';
+    i += 2;
+    if (!text[i]) return false;
+    for (; text[i]; i++) {
+        if (text[i] < '0' || text[i] > '9' || value > 10) return false;
+        value = value * 10 + text[i] - '0';
+    }
+    if (value >= SDL_GAMEPAD_TYPE_COUNT) return false;
+    *type = *connected ? (SDL_GamepadType)value : SDL_GAMEPAD_TYPE_UNKNOWN;
+    return true;
+}
+
 static void Refresh(void) {
     HostPad now[HOSTPAD_MAX];
+    bool physical = false;
+    SDL_GamepadType type = SDL_GAMEPAD_TYPE_UNKNOWN;
+    bool metadata;
     int i, b;
     memset(now, 0, sizeof(now));
     RefreshHostKeys(); /* capability before pad poll disables duplicate keyboard-to-pad emulation */
     h_pad_poll(now, HOSTPAD_MAX);
+    metadata = RefreshPadMetadata(&physical, &type);
     RefreshHostKeys();
     TouchpadHold(now);
     for (i = 0; i < HOSTPAD_MAX; i++) {
         Pad* p = &sPads[i];
         p->id = (SDL_JoystickID)(i + 1);
+        p->physical = metadata ? i == 0 && physical : now[i].connected != 0;
+        p->type = metadata ? (i == 0 ? type : SDL_GAMEPAD_TYPE_UNKNOWN) : SDL_GAMEPAD_TYPE_STANDARD;
         p->prev = p->now;
         p->now = now[i];
         StateKeys(&p->prev, &p->now);
@@ -922,20 +951,24 @@ SDL_JoystickID* SDL_GetGamepads(int* count) {
     int i, n = 0;
     if (!ids) { if (count) *count = 0; return NULL; }
     for (i = 0; i < HOSTPAD_MAX; i++)
-        if (sPads[i].present) ids[n++] = sPads[i].id;
+        if (sPads[i].present && sPads[i].physical) ids[n++] = sPads[i].id;
     ids[n] = 0;
     if (count) *count = n;
     return ids;
 }
 
 SDL_Gamepad* SDL_GetGamepadFromID(SDL_JoystickID id) {
-    if (id < 1 || id > HOSTPAD_MAX || !sPads[id - 1].present) return NULL;
+    if (id < 1 || id > HOSTPAD_MAX || !sPads[id - 1].present || !sPads[id - 1].physical) return NULL;
     sPadHandles[id - 1].pad = &sPads[id - 1];
     return &sPadHandles[id - 1];
 }
 SDL_Gamepad* SDL_OpenGamepad(SDL_JoystickID id) { return SDL_GetGamepadFromID(id); }
-/* the console's own controllers: never a Nintendo layout */
-SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad) { (void)gamepad; return SDL_GAMEPAD_TYPE_STANDARD; }
+bool SDL_GamepadConnected(SDL_Gamepad* gamepad) {
+    return gamepad && gamepad->pad && gamepad->pad->present && gamepad->pad->physical;
+}
+SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad) {
+    return SDL_GamepadConnected(gamepad) ? gamepad->pad->type : SDL_GAMEPAD_TYPE_UNKNOWN;
+}
 const char* SDL_GetGamepadStringForButton(SDL_GamepadButton button) {
     static const char* const names[SDL_GAMEPAD_BUTTON_COUNT] = {
         "South", "East", "West", "North", "Back", "Guide", "Start", "L3", "R3",
