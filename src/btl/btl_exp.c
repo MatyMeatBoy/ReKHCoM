@@ -368,6 +368,13 @@ void task_btl_exp_2(BtlExpWork* work) {
 
     if (work->state != BTL_EXP_STATE_HIDDEN) {
         y = 40;
+#ifdef PLATFORM_PC
+        {
+            /* the HD HUD's player ring reaches lower than the cartridge's gauge: the EXP line goes under it */
+            int PortHdHudExpDrop(void);
+            y += PortHdHudExpDrop();
+        }
+#endif
         x = 0;
         DrawSprite(0, y, work->gfx, work->tiles, work->palette, NULL, SPRITE_PRIORITY(1) | SPRITE_FLAG_NO_MOSAIC, x);
 
