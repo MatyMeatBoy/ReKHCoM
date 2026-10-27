@@ -22,6 +22,7 @@
 #include <mferror.h>
 #include <d3d11.h>
 #include <d3d10.h>
+#include "hd_media_source.h"
 
 namespace hd {
 
@@ -478,6 +479,10 @@ static fs::path FindInstall() {
                 add(fs::u8path(path));
     }
     std::vector<fs::path> found;
+    /* ACF handles custom installdir names as well as every configured library.
+       Discovery is read-only; language evidence is inspected separately below. */
+    for (const fs::path& install : hdmedia::FindSteamInstalls(steams))
+        found.push_back(install);
     for (const fs::path& root : candidates)
         for (const char* name : kInstallNames)
             found.push_back(root / "steamapps" / "common" / name);
@@ -2542,13 +2547,68 @@ static bool HdModCard() {
                                       : source.u8string().c_str());
     ImGui::PopStyleColor();
     ImGui::BeginDisabled(hd::sJob.running);
-    if (ImGui::Button(T("Buscar el juego", "Find the game")))
+    bool rescanSource = false;
+    if (ImGui::Button(T("Buscar el juego", "Find the game"))) {
         source = hd::FindInstall();
+        rescanSource = true;
+    }
     ImGui::SameLine();
     if (ImGui::Button(T("Elegir carpeta...", "Choose folder..."))) {
         fs::path p = hd::PickFolder();
-        if (!p.empty())
+        if (!p.empty()) {
             source = p;
+            rescanSource = true;
+        }
+    }
+    ImGui::SameLine();
+    if (ImGui::Button(T("Volver a comprobar", "Check again"))) rescanSource = true;
+    if (ImGui::IsItemHovered())
+        ImGui::SetTooltip("%s", T("Después de cambiar el idioma del juego en Steam y terminar la descarga, comprueba otra vez los archivos disponibles.",
+                                  "After changing the game's language in Steam and finishing the download, check the available files again."));
+    static hdmedia::Cache mediaSource;
+    static fs::path mediaSourcePath;
+    if (source != mediaSourcePath) {
+        mediaSourcePath = source;
+        mediaSource = hdmedia::Cache();
+    }
+    if (!mediaSource.initialized || rescanSource) mediaSource.Refresh(source);
+    const auto& evidence = mediaSource.probe;
+    const char* audioSignal = evidence.signal == hdmedia::EnglishSignal
+        ? T("señal EN; audio sin verificar", "EN signal; audio unverified")
+        : evidence.signal == hdmedia::JapaneseSignal
+        ? T("señal JP; audio sin verificar", "JP signal; audio unverified")
+        : T("idioma desconocido", "unknown language");
+    ImGui::Spacing();
+    ImGui::TextWrapped("%s %s", T("Audio HD de origen:", "Source HD audio:"), audioSignal);
+    if (ImGui::CollapsingHeader(T("Disponibilidad e idioma de los vídeos HD", "HD movie availability and language"))) {
+        const char* absent = T("sin archivos detectados", "no source files detected");
+        ImGui::TextWrapped("%s %s", T("Vídeos:", "Movies:"), evidence.movies ? audioSignal : absent);
+        ImGui::TextWrapped("%s %s", T("Escenas:", "Scenes:"), evidence.scenes ? audioSignal : absent);
+        ImGui::TextWrapped("%s %s", T("Música:", "Music:"), evidence.music
+            ? T("archivos detectados; no indica el idioma de las voces", "files detected; no voice language implied") : absent);
+        if (evidence.steam) {
+            ImGui::TextWrapped("%s %s", T("Idioma declarado en Steam (no verifica el audio):", "Steam language setting (does not verify audio):"), evidence.declaredLanguage.c_str());
+            if (!evidence.complete)
+                ImGui::TextWrapped("%s", T("Instalación sin confirmar o actualización pendiente: espera a Steam y comprueba otra vez.",
+                                          "Installation not confirmed or update pending: wait for Steam and check again."));
+            ImGui::TextWrapped("Steam build: %s | depots: %s", evidence.build.c_str(), evidence.depotSummary.c_str());
+        }
+        if (haveMovies > 0)
+            ImGui::TextWrapped("%s", T("Vídeos ya importados: idioma del audio sin verificar. Cambiar Steam no cambia esa copia.",
+                                      "Already imported movies: audio language unverified. Changing Steam does not change that copy."));
+        if (mediaSource.changed)
+            ImGui::TextWrapped("%s", T("Los archivos o ajustes de origen cambiaron. La información anterior se descartó; se conserva tu importación existente.",
+                                      "Source files or settings changed. Previous source information was discarded; your existing import is preserved."));
+        ImGui::TextWrapped("%s", T("El texto y los subtítulos siguen el idioma del juego. Undub usa las voces de la ROM GBA japonesa y es independiente del audio de los vídeos HD.",
+                                  "Text and subtitles follow the game language. Undub uses the Japanese GBA ROM voices and is separate from HD movie audio."));
+        if (ImGui::Button(T("Guía de idiomas de Steam", "Steam language guide")))
+            SDL_OpenURL("https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("%s", T("Abre la ayuda oficial: Biblioteca > Propiedades > Idioma. Usa tu propia copia; Steam gestiona la descarga.",
+                                      "Opens official help: Library > Properties > Language. Use your own copy; Steam manages the download."));
+        ImGui::SameLine();
+        if (ImGui::TextLink(T("Página oficial del juego", "Official game page")))
+            SDL_OpenURL("https://store.steampowered.com/app/2552430/");
     }
     /* everything loaded (movies, scenes, music and HUD, no import cut short): no big load button to press by mistake
        (the user, 24/10), only "already loaded" and a small button that opens the load again, to change the quality

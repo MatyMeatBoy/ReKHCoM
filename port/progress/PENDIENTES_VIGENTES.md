@@ -2,6 +2,16 @@
 
 ## Mandato vigente de coordinación — 27/10/2026
 
+- [ ] **Launcher: audio/vídeos HD EN/JP y disponibilidad clara**, tarea remota
+  `launcher-hd-media-language-selection-v21`. Primer incremento de detección ACF,
+  señales de fuente/huella y guía/reescaneo implementado para revisión; selección
+  e imports/playback por idioma pendientes; [fuentes y traspaso](HD_MEDIA_LANGUAGE_SELECTION_V21.md). Steam
+  permite elegir idioma del juego y descargar archivos mediante su cliente;
+  no hay automatización de depots/cambio de idioma verificada para ofrecer.
+  Separar idioma de texto/subtítulos, Undub GBA y audio HD; el import actual no
+  guarda idioma de origen y puede conservar una variante previa al reimportar.
+  Guía con enlaces oficiales + reescaneo, sin cambiar Steam ni descargar ahora.
+
 Consultar [COORDINACION_OPTIPORT_V21.md](COORDINACION_OPTIPORT_V21.md) antes de
 tomar trabajo: **Codex termina OptiPort al 100 %, prerelease Windows 64 y ZIP
 personal limpio; Claude puede tomar todos los pendientes regulares** (HUD,

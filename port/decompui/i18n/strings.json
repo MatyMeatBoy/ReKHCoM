@@ -52,6 +52,10 @@
   "es": "Modo 1.5 HD"
  },
  {
+  "en": "32/64-bit mode",
+  "es": "Modo 32/64 bits"
+ },
+ {
   "en": "; %d leftovers to the Recycle Bin",
   "es": "; %d sobrantes a la papelera"
  },
@@ -108,8 +112,24 @@
   "es": "Lo añade a tu biblioteca de Steam como juego externo, con su portada (para jugar con el mando de Steam o en Steam Deck / Big Picture)."
  },
  {
+  "en": "Advanced",
+  "es": "Avanzado"
+ },
+ {
+  "en": "After changing the game's language in Steam and finishing the download, check the available files again.",
+  "es": "Después de cambiar el idioma del juego en Steam y terminar la descarga, comprueba otra vez los archivos disponibles."
+ },
+ {
   "en": "All",
   "es": "Todos"
+ },
+ {
+  "en": "Already imported movies: audio language unverified. Changing Steam does not change that copy.",
+  "es": "Vídeos ya importados: idioma del audio sin verificar. Cambiar Steam no cambia esa copia."
+ },
+ {
+  "en": "Applies on the next launch.",
+  "es": "Se aplica al próximo inicio."
  },
  {
   "en": "Ask at start",
@@ -138,6 +158,10 @@
  {
   "en": "Auto view only. Leaving battle restores the main zoom.",
   "es": "Solo en vista Auto. Al salir del combate vuelve al zoom principal."
+ },
+ {
+  "en": "Automatic",
+  "es": "Automático"
  },
  {
   "en": "BATTLE CARDS (99 EACH, 999 IN ALL)",
@@ -208,6 +232,10 @@
   "es": "Cancelar prueba"
  },
  {
+  "en": "Cannot start in 64-bit mode: Windows x64 and the complete bin64 files are required.",
+  "es": "No se puede iniciar en 64 bits: requiere Windows x64 y los archivos completos de bin64."
+ },
+ {
   "en": "Card",
   "es": "Carta"
  },
@@ -218,6 +246,10 @@
  {
   "en": "Changes the level, stats and cards of a saved game. It stays off until you turn it on and accept the warning.",
   "es": "Cambia nivel, estadísticas y cartas de una partida guardada. Está desactivado hasta que lo actives y confirmes el aviso."
+ },
+ {
+  "en": "Check again",
+  "es": "Volver a comprobar"
  },
  {
   "en": "Choose a folder outside this installation.",
@@ -312,6 +344,10 @@
   "es": "No se pudo guardar el informe."
  },
  {
+  "en": "Could not start in 64-bit mode. See kh_com.log or choose Automatic under Advanced.",
+  "es": "No se pudo iniciar en 64 bits. Revisa kh_com.log o elige Automático en Avanzado."
+ },
+ {
   "en": "Could not start the game.",
   "es": "No se pudo iniciar el juego."
  },
@@ -386,6 +422,10 @@
  {
   "en": "Done: %d movies compressed, %.1f GB -> %.1f GB.",
   "es": "Listo: %d videos comprimidos, %.1f GB -> %.1f GB."
+ },
+ {
+  "en": "EN signal; audio unverified",
+  "es": "señal EN; audio sin verificar"
  },
  {
   "en": "ENHANCEMENTS",
@@ -476,8 +516,16 @@
   "es": "Forzar 21:9"
  },
  {
+  "en": "Force 32-bit",
+  "es": "Forzar 32 bits"
+ },
+ {
   "en": "Force 32:9",
   "es": "Forzar 32:9"
+ },
+ {
+  "en": "Force 64-bit",
+  "es": "Forzar 64 bits"
  },
  {
   "en": "Force Nintendo layout",
@@ -526,6 +574,10 @@
  {
   "en": "GBA enhanced",
   "es": "GBA mejorado"
+ },
+ {
+  "en": "GBA title brightness",
+  "es": "Brillo del título GBA"
  },
  {
   "en": "GBA-size scenes",
@@ -602,6 +654,10 @@
  {
   "en": "HD mode",
   "es": "Modo HD"
+ },
+ {
+  "en": "HD movie availability and language",
+  "es": "Disponibilidad e idioma de los vídeos HD"
  },
  {
   "en": "HD movies",
@@ -712,6 +768,10 @@
   "es": "Instala la ROM de esta versión para jugar."
  },
  {
+  "en": "Installation not confirmed or update pending: wait for Steam and check again.",
+  "es": "Instalación sin confirmar o actualización pendiente: espera a Steam y comprueba otra vez."
+ },
+ {
   "en": "Installed in",
   "es": "Instalado en"
  },
@@ -726,6 +786,10 @@
  {
   "en": "It was not in Steam's game list; nothing was changed.",
   "es": "No estaba en la lista de juegos de Steam; no se cambió nada."
+ },
+ {
+  "en": "JP signal; audio unverified",
+  "es": "señal JP; audio sin verificar"
  },
  {
   "en": "Just the basics: intros, music and HUD (~0.6 GB)",
@@ -856,12 +920,20 @@
   "es": "Videos"
  },
  {
+  "en": "Movies:",
+  "es": "Vídeos:"
+ },
+ {
   "en": "Music",
   "es": "Música"
  },
  {
   "en": "Music volume",
   "es": "Volumen música"
+ },
+ {
+  "en": "Music:",
+  "es": "Música:"
  },
  {
   "en": "Music: ",
@@ -936,6 +1008,10 @@
   "es": "Oficiales"
  },
  {
+  "en": "Official game page",
+  "es": "Página oficial del juego"
+ },
+ {
   "en": "On",
   "es": "Sí"
  },
@@ -970,6 +1046,10 @@
  {
   "en": "Opens a GitHub report with the version and the end of the game's log; you review and submit it (needs a GitHub account).",
   "es": "Abre un reporte en GitHub con la versión y el final del registro del juego; lo revisas y lo envías tú (necesitas una cuenta de GitHub)."
+ },
+ {
+  "en": "Opens official help: Library > Properties > Language. Use your own copy; Steam manages the download.",
+  "es": "Abre la ayuda oficial: Biblioteca > Propiedades > Idioma. Usa tu propia copia; Steam gestiona la descarga."
  },
  {
   "en": "Optional account: the official achievements on retroachievements.org too.",
@@ -1124,6 +1204,10 @@
   "es": "Restablecer controles"
  },
  {
+  "en": "Restores the title's Brightness button and L/R shortcuts. They compensated for the original GBA screen and are unnecessary on modern displays. Always available in GBA Original.",
+  "es": "Restaura el botón Brillo y los atajos L/R del título. Compensaban la pantalla de la GBA original; no hacen falta en pantallas modernas. Siempre disponibles en GBA original."
+ },
+ {
   "en": "Resume",
   "es": "Retomar"
  },
@@ -1208,6 +1292,10 @@
   "es": "Escenas"
  },
  {
+  "en": "Scenes:",
+  "es": "Escenas:"
+ },
+ {
   "en": "Server",
   "es": "Servidor"
  },
@@ -1260,6 +1348,14 @@
   "es": "Fuente"
  },
  {
+  "en": "Source HD audio:",
+  "es": "Audio HD de origen:"
+ },
+ {
+  "en": "Source files or settings changed. Previous source information was discarded; your existing import is preserved.",
+  "es": "Los archivos o ajustes de origen cambiaron. La información anterior se descartó; se conserva tu importación existente."
+ },
+ {
   "en": "Source takes the most space (the full mod, about 6.7 GB); Good, about 3.7 GB.",
   "es": "Fuente ocupa el máximo (el mod completo, unos 6,7 GB); Buena, unos 3,7 GB."
  },
@@ -1270,6 +1366,14 @@
  {
   "en": "Start button and trigger test",
   "es": "Iniciar prueba de botones y gatillos"
+ },
+ {
+  "en": "Steam language guide",
+  "es": "Guía de idiomas de Steam"
+ },
+ {
+  "en": "Steam language setting (does not verify audio):",
+  "es": "Idioma declarado en Steam (no verifica el audio):"
  },
  {
   "en": "Steam was not found (or no account has signed in to it).",
@@ -1318,6 +1422,10 @@
  {
   "en": "Takes it out of your Steam library (with its cover). Your saves are not touched; you can add it again any time.",
   "es": "Lo quita de tu biblioteca de Steam (con su portada). Tus partidas no se tocan; puedes volver a añadirlo cuando quieras."
+ },
+ {
+  "en": "Text and subtitles follow the game language. Undub uses the Japanese GBA ROM voices and is separate from HD movie audio.",
+  "es": "El texto y los subtítulos siguen el idioma del juego. Undub usa las voces de la ROM GBA japonesa y es independiente del audio de los vídeos HD."
  },
  {
   "en": "That file is not a 32 MiB cartridge dump.",
@@ -1436,6 +1544,10 @@
   "es": "Conseguido"
  },
  {
+  "en": "Updating HD graphics this version changed: ",
+  "es": "Actualizando gráficos HD cambiados en esta versión: "
+ },
+ {
   "en": "Username",
   "es": "Usuario"
  },
@@ -1544,12 +1656,20 @@
   "es": "comprobado"
  },
  {
+  "en": "files detected; no voice language implied",
+  "es": "archivos detectados; no indica el idioma de las voces"
+ },
+ {
   "en": "graphics",
   "es": "gráficos"
  },
  {
   "en": "movies",
   "es": "videos"
+ },
+ {
+  "en": "no source files detected",
+  "es": "sin archivos detectados"
  },
  {
   "en": "now",
@@ -1570,5 +1690,9 @@
  {
   "en": "tracks",
   "es": "pistas"
+ },
+ {
+  "en": "unknown language",
+  "es": "idioma desconocido"
  }
 ]
