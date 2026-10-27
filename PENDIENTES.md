@@ -215,6 +215,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-canvas-preflight | Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/349 | — | 2026-10-27T11:35:20.265899+00:00 |
 | android-lifecycle-diagnostics-v21 | InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate | pr_abierto | codex-android-lifecycle | https://github.com/MatyMeatBoy/ReKHCoM/pull/350 | Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia | 2026-10-27T11:29:16.652202+00:00 |
 | player-hp-capacity-equivalence | Auditoría HP jugador: reglas GBA, capacidad visual y evidencia ReCoM1.5 | en_revision | device_profiles_sol | audit/player-hp-capacity | — | 2026-10-27T11:36:12.521524+00:00 |
-| v21-final-integration-qa | Compose reviewed2.1 candidates for final GPU and platform QA; preserve drafts until verified, publish stable2.1 when ready | en_curso | codex-v21-final | — | Usuario27/10: cierra todo y PRs y sal con2.1 | 2026-10-27T11:28:49.971428+00:00 |
+| v21-final-integration-qa | Compose reviewed2.1 candidates for final GPU and platform QA; preserve drafts until verified, publish stable2.1 when ready | pr_abierto | codex-v21-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/351 | Usuario27/10: cierra todo y PRs y sal con2.1 | 2026-10-27T11:48:23.267332+00:00 |
 
 Integrador: libre
