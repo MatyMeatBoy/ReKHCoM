@@ -239,5 +239,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | windows64-cpu-sse41-gate | Validar requisito SSE4.1 antes del guest Windows64 | integrado | codex-windows64-cpu-gate | https://github.com/MatyMeatBoy/ReKHCoM/pull/377 | Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro | 2026-10-27T17:14:44.406247+00:00 |
 | optiport-v22-profiling | OptiPort 2.2: profiling puerta/carga y previews, igual calidad (PLAN_V22) | pendiente | — | — | — | 2026-10-27T17:32:21.478708+00:00 |
 | optiport-v22-async | OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar | pendiente | — | — | — | 2026-10-27T17:32:28.086015+00:00 |
+| optiport-v22-pacing | OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA | pendiente | — | — | — | 2026-10-27T17:32:34.299497+00:00 |
 
 Integrador: libre
