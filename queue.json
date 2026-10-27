@@ -6988,13 +6988,13 @@
     "issue378-hd-audio-subtitle-independence": {
       "id": "issue378-hd-audio-subtitle-independence",
       "piece": "Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-issue378-subtitles",
       "created_at": "2026-10-27T18:27:56.322518+00:00",
-      "updated_at": "2026-10-27T18:51:17.810962+00:00",
+      "updated_at": "2026-10-27T20:16:40.316692+00:00",
       "branch": "fix/issue378-subtitles",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/385",
-      "approval": "Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados",
+      "approval": "usuario-integrar-bugs-pr",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/378",
       "evidence": [
         {
@@ -7006,9 +7006,15 @@
           "at": "2026-10-27T18:51:17.810962+00:00",
           "owner": "codex-issue378-subtitles",
           "detail": "PR385 head7ef323611, rebased main8d495811e; 14 native and guest-to-host consumer cases passed, exact-source results pruebas/issue378-subtitles/subtitle-consumer-t88vju9w/results.json; existing variants and Win32/x32 syntax pass. Only compatible complete cue vectors reuse real ES; missing/incompatible ES retains existing fallback. No real Japanese source/audio playback verified; no GPU/build/perf claim. Minimal scope, immutable pre1 unchanged."
+        },
+        {
+          "at": "2026-10-27T20:16:40.316692+00:00",
+          "owner": "codex-issue378-subtitles",
+          "detail": "PR385 merged6be0406983905c6be4b758c40ac0af6aa9abece9. Root reviewedhelper/consumer and independent14native+guest-hostcasesPASS, ENJPmedia variantPASS. Cuecross-sourcefallbackonlymatchingcompleteintervals keepsmovievoiceunchanged. No ownJPdevice fullmovieverification/report378 confirmation; packagepending."
         }
       ],
-      "claimed_at": "2026-10-27T18:28:02.374425+00:00"
+      "claimed_at": "2026-10-27T18:28:02.374425+00:00",
+      "completed_at": "2026-10-27T20:16:40.316692+00:00"
     },
     "android22-pre1-diagnostic-build": {
       "id": "android22-pre1-diagnostic-build",
@@ -7608,7 +7614,7 @@
     "created_at": "2026-10-27T20:16:07.490608+00:00",
     "updated_at": "2026-10-27T20:16:07.490608+00:00"
   },
-  "updated_at": "2026-10-27T20:16:07.490608+00:00",
+  "updated_at": "2026-10-27T20:16:40.316692+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
