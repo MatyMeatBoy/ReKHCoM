@@ -2,6 +2,7 @@
  * All edges, labels and highlights share the framebuffer's integer pixel grid.
  * No texture filtering, device-specific remapping, or input side effects. */
 static void ControlBindingName(int binding, int l, char* out, size_t size) {
+    if (PortControllerBindingLabel(binding,out,size)) return;
     static const char* const names[] = {
         "A", "B", "X", "Y", "Back", "Guide", "Start", "LS", "RS", "LB", "RB"
     };

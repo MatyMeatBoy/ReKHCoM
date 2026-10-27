@@ -280,6 +280,13 @@ Carril documental: `docs-v20-trailer`, `codex-trailer`, rama `codex/v20-trailer-
 
 ## Asuntos posteriores que conservan seguimiento
 
+- **Indicaciones de mando experimentales 2.1:** primera integración textual,
+  opt-in y fiel al binding efectivo; quedan símbolos pequeños GBA/Nintendo/
+  Xbox/PlayStation, tutoriales JP/compuestos, preset explícito Nintendo A / PS
+  Circle y actualización de páginas abiertas. Detalle y pruebas en
+  [CONTROLLER_PROMPTS_EXPERIMENTAL.md](CONTROLLER_PROMPTS_EXPERIMENTAL.md).
+  No dar por completo el alcance del usuario con la entrega textual.
+
 - **HUD HD, reporte 27/10:** estabilizar borde/contador del medidor enemigo;
   conservar aparte la equivalencia de capacidad HP del jugador (evidencia
   155/155 frente a anillo fallback normalizado), longitud por máximo del

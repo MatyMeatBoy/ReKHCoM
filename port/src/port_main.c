@@ -2700,6 +2700,7 @@ static void PumpEvents(void) {
         }
 #endif
         if (PortRendererHandleReset(ev.type)) continue;
+        PortPromptHandleEvent(&ev);
         KhPadNormalizeEvent(&ev, gPortConfig.padLayout);
 #ifdef __EMSCRIPTEN__
         if(ev.type==SDL_EVENT_RENDER_DEVICE_RESET) {

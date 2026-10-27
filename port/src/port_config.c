@@ -144,6 +144,7 @@ static const Key sKeys[] = {
     { "dodge_button", &gPortConfig.dodgeButton, 0, 1 },
     { "stock_button", &gPortConfig.stockButton, 0, 1 },
     { "pad_layout", &gPortConfig.padLayout, 0, 2 },
+    { "controller_prompts", &gPortConfig.controllerPrompts, 0, 4 },
     { "discord_presence", &gPortConfig.discordPresence, 0, 1 },
     { "net_stats", &gPortConfig.netStats, 0, 1 },
     { "net_delay", &gPortConfig.netDelay, 0, 8 },
