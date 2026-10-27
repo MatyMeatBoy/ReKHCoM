@@ -24,6 +24,7 @@
 
 #include "bridge.h"
 #include "linux64_args.h"
+#include "guest_divzero_linux.h"
 #include "../include/port/port_device_profile_host.h"
 
 static char sData[1024] = ".";
@@ -368,6 +369,12 @@ int main(int argc, char** argv) {
         !MapFixed(PS5G_BASE, h.regionEnd - PS5G_BASE))
         return 3;
     memcpy((void*)(uintptr_t)PS5G_BASE, tmp, (size_t)size);
+    sGuestDivision = PortGuestDivisionImage(tmp, (size_t)size, PS5G_BASE, h.imageEnd, h.boot);
+    if (sGuestDivision.begin && GuestDivisionInstall())
+        Log("guest DIV0 compatibility: register32, text %08llx..%08llx", (unsigned long long)sGuestDivision.begin,
+            (unsigned long long)sGuestDivision.end);
+    else
+        Log("guest DIV0 compatibility unavailable: missing text metadata or handler");
     free(tmp);
 
 #endif
