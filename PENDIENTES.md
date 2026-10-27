@@ -166,5 +166,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-optiport-package | Playable isolated Android OptiPort test package | integrado | codex-android-test | https://github.com/MatyMeatBoy/ReKHCoM/pull/294 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:37:32.310463+00:00 |
 | optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | en_revision | codex-hud-invalidation | fix/hud-renderer-invalidation | Coordinador delega A invalidacion HUD y tests; usuario OptiPort | 2026-10-27T05:36:29.328637+00:00 |
 | hd-music-loader-bounds | Bound async music file reads and retain original music during load | integrado | codex-music-loader | https://github.com/MatyMeatBoy/ReKHCoM/pull/295 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:37:50.136948+00:00 |
+| optiport-native-renderer-reset | Complete native renderer reset resource invalidation and generation fault tests | pendiente | — | — | Coordinador delega nativo32 tras PR297; usuario OptiPort | 2026-10-27T05:39:53.345857+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:36:15.146946+00:00)
