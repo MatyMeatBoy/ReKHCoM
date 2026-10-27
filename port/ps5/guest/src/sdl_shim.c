@@ -2,6 +2,7 @@
  * rectangles on the host's GPU layer, audio and pads go to the host. */
 #include <SDL3/SDL.h>
 #include "bridge_calls.h"
+#include "../../shared/bridge_gpu_targets.h"
 
 static char sError[128] = "";
 static Uint32 sInit;
@@ -196,6 +197,17 @@ bool SDL_SaveBMP(SDL_Surface* s, const char* file) {
 /* ---- window ---- */
 
 struct SDL_Window { int w, h; };
+typedef struct TargetState {
+    SDL_Rect view, clip;
+    bool hasView, hasClip;
+    float sx, sy;
+} TargetState;
+static TargetState sWindowTargetState = { .sx = 1, .sy = 1 };
+static bool GpuTargets(void) {
+    static int available = -1;
+    if (available < 0) available = h_thread(BRIDGE_GPU_PROBE, 0, 0, 0, 0) == BRIDGE_GPU_MAGIC;
+    return available != 0;
+}
 struct SDL_Renderer {
     SDL_Window* window;
     Uint8 r, g, b, a;
@@ -207,6 +219,7 @@ struct SDL_Renderer {
     float sx, sy;
     int hostBlend;
     int vsync;
+    SDL_Texture* target;
 };
 static SDL_Window sWindow;
 static SDL_Renderer sRenderer;
@@ -223,10 +236,34 @@ SDL_Renderer* SDL_CreateRenderer(SDL_Window* w, const char* n) {
     sRenderer.hostBlend = 1;
     sRenderer.vsync = 1;
     h_gfx_blend(1);
+    {
+        char message[192];
+        int available = GpuTargets();
+        snprintf(message, sizeof(message), "bridge GPU: renderer=%s targets=%d budget=%d%s",
+                 SDL_GetRendererName(&sRenderer), available,
+                 available ? h_thread(BRIDGE_GPU_BUDGET, 0, 0, 0, 0) : 0,
+                 available ? "" : " gauge-aa=direct (optional host targets unavailable)");
+        h_log(message);
+    }
     return &sRenderer;
 }
 SDL_Renderer* SDL_GetRenderer(SDL_Window* w) { (void)w; return &sRenderer; }
-const char* SDL_GetRendererName(SDL_Renderer* r) { (void)r; return "vulkan"; }
+const char* SDL_GetRendererName(SDL_Renderer* r) {
+    static char name[96];
+    (void)r;
+    if (h_thread(BRIDGE_GPU_PROTOCOL, 0, 0, 0, 0) != BRIDGE_GPU_MAGIC ||
+        h_getenv("KHCOM_GPU_RENDERER", name, sizeof(name)) <= 0) return "bridge-unknown";
+    name[sizeof(name)-1] = 0;
+    return name;
+}
+SDL_PropertiesID SDL_GetRendererProperties(SDL_Renderer* r) { (void)r; return GpuTargets() ? 1 : 0; }
+Sint64 SDL_GetNumberProperty(SDL_PropertiesID props, const char* name, Sint64 fallback) {
+    if (props == 1 && !strcmp(name, SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER)) {
+        int limit = h_thread(BRIDGE_GPU_MAX_SIZE, 0, 0, 0, 0);
+        if (limit > 0) return limit;
+    }
+    return fallback;
+}
 SDL_Window** SDL_GetWindows(int* count) {
     SDL_Window** list = malloc(2 * sizeof(*list)); /* freed by the caller */
     if (list) { list[0] = sWindows[0]; list[1] = NULL; }
@@ -278,12 +315,14 @@ bool SDL_SetRenderScale(SDL_Renderer* r, float x, float y) { r->sx = x; r->sy = 
 bool SDL_GetRenderScale(SDL_Renderer* r, float* x, float* y) { *x = r->sx; *y = r->sy; return true; }
 
 static bool sFrameOpen;
+static void ApplyClip(SDL_Renderer* r);
 
 /* The host frame opens with the first draw after a present. */
 static void Open(void) {
     if (!sFrameOpen) {
         h_gfx_begin(0);
         sFrameOpen = true;
+        ApplyClip(&sRenderer);
     }
 }
 
@@ -322,9 +361,10 @@ bool SDL_SetRenderClipRect(SDL_Renderer* r, const SDL_Rect* rect) {
 }
 
 static void SetBlend(SDL_Renderer* r, SDL_BlendMode m) {
-    int on = m != SDL_BLENDMODE_NONE;
+    int on = GpuTargets() ? (int)m : m != SDL_BLENDMODE_NONE;
     if (on != r->hostBlend) {
-        h_gfx_blend(on);
+        if (GpuTargets()) h_thread(BRIDGE_GPU_BLEND, (uint32_t)on, 0, 0, 0);
+        else h_gfx_blend(on);
         r->hostBlend = on;
     }
 }
@@ -355,6 +395,10 @@ static void Quad(SDL_Renderer* r, int tex, float x0, float y0, float x1, float y
 }
 
 bool SDL_RenderClear(SDL_Renderer* r) {
+    if (GpuTargets()) {
+        Open();
+        return h_thread(BRIDGE_GPU_CLEAR, Argb(r->a, r->r, r->g, r->b), 0, 0, 0) != 0;
+    }
     int w, h;
     SDL_Rect v = r->view;
     bool hv = r->hasView;
@@ -398,6 +442,7 @@ bool SDL_RenderPresent(SDL_Renderer* r) {
         h_notify("toast-states");
     }
     Open();
+    if (r->target && !SDL_SetRenderTarget(r, NULL)) return false;
     h_gfx_end();
     sFrameOpen = false;
     return true;
@@ -462,6 +507,8 @@ typedef struct Tex {
     SDL_ScaleMode scale;
     SDL_BlendMode blend;
     Uint8 cr, cg, cb, ca;
+    bool target;
+    TargetState renderState;
     bool picture;         /* a streaming texture: the game's picture, as opposed to glyphs and icons */
 } Tex;
 
@@ -496,12 +543,18 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
     t->format = format;
     t->id[0] = t->id[1] = -1;
     t->epoch = sTextureEpoch;
-    t->rgba = calloc((size_t)w * h, 4);
+    t->target = access == SDL_TEXTUREACCESS_TARGET;
+    t->renderState.sx = t->renderState.sy = 1;
+    if (t->target) {
+        if (!GpuTargets()) { free(t); SetError("GPU render targets unavailable on this host"); return NULL; }
+        t->id[0] = h_thread(BRIDGE_GPU_CREATE, (uint32_t)w, (uint32_t)h, 0, 0);
+        if (t->id[0] < 0) { free(t); SetError("GPU render target allocation failed"); return NULL; }
+    } else t->rgba = calloc((size_t)w * h, 4);
     t->blend = SDL_BLENDMODE_NONE;
     t->scale = SDL_SCALEMODE_LINEAR;
     t->cr = t->cg = t->cb = t->ca = 255;
     t->picture = access == SDL_TEXTUREACCESS_STREAMING;
-    if (!t->rgba) { free(t); SetError("out of memory"); return NULL; }
+    if (!t->target && !t->rgba) { free(t); SetError("out of memory"); return NULL; }
     return &t->pub;
 }
 
@@ -511,9 +564,13 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* r, SDL_Surface* s) {
     return t;
 }
 
+static void UnbindTexture(SDL_Texture* p) {
+    if (sRenderer.target == p) SDL_SetRenderTarget(&sRenderer, NULL);
+}
 void SDL_DestroyTexture(SDL_Texture* p) {
     Tex* t = (Tex*)p;
     if (!t) return;
+    UnbindTexture(p);
     TextureEpoch(t);
     if (t->id[0] >= 0) h_tex_free(t->id[0]);
     if (t->id[1] >= 0) h_tex_free(t->id[1]);
@@ -526,6 +583,7 @@ bool SDL_UpdateTexture(SDL_Texture* p, const SDL_Rect* rect, const void* pixels,
     SDL_Rect r = { 0, 0, t->pub.w, t->pub.h };
     int k;
     TextureEpoch(t);
+    if (t->target) { SetError("Cannot update render target pixels"); return false; }
     if (rect) r = *rect;
     ToRgba(t->format, pixels, pitch, t->rgba + ((size_t)r.y * t->pub.w + r.x) * 4, t->pub.w * 4, r.w, r.h);
     for (k = 0; k < 2; k++)
@@ -540,11 +598,54 @@ bool SDL_SetTextureAlphaMod(SDL_Texture* p, Uint8 a) { ((Tex*)p)->ca = a; return
 
 /* The host texture for the filter this draw wants: nearest, or smooth (also used by pixel art). */
 static int HostTex(Tex* t, bool smooth) {
-    int k = smooth ? 1 : 0;
+    int k = t->target ? 0 : smooth ? 1 : 0;
     TextureEpoch(t);
+    if (t->target) {
+        if (t->id[0] < 0) t->id[0] = h_thread(BRIDGE_GPU_CREATE, t->pub.w, t->pub.h, 0, 0);
+        if (t->id[0] >= 0) h_thread(BRIDGE_GPU_SMOOTH, t->id[0], smooth, 0, 0);
+        return t->id[0];
+    }
     if (t->id[k] < 0) t->id[k] = h_tex_create(t->rgba, t->pub.w, t->pub.h, smooth);
     return t->id[k];
 }
+
+static void SaveTargetState(SDL_Renderer* r, TargetState* state) {
+    state->view = r->view; state->clip = r->clip;
+    state->hasView = r->hasView; state->hasClip = r->hasClip;
+    state->sx = r->sx; state->sy = r->sy;
+}
+SDL_Texture* SDL_GetRenderTarget(SDL_Renderer* r) { return r->target; }
+bool SDL_SetRenderTarget(SDL_Renderer* r, SDL_Texture* texture) {
+    Tex* t = (Tex*)texture;
+    TargetState* state;
+    int id = -1;
+    if (!GpuTargets()) return texture == NULL;
+    if (t) {
+        if (!t->target) { SetError("Texture is not a render target"); return false; }
+        id = HostTex(t, t->scale != SDL_SCALEMODE_NEAREST);
+        if (id < 0) return false;
+    }
+    Open();
+    if (!h_thread(BRIDGE_GPU_BIND, (uint32_t)id, 0, 0, 0)) return false;
+    SaveTargetState(r, r->target ? &((Tex*)r->target)->renderState : &sWindowTargetState);
+    r->target = texture;
+    state = t ? &t->renderState : &sWindowTargetState;
+    r->view = state->view; r->clip = state->clip;
+    r->hasView = state->hasView; r->hasClip = state->hasClip;
+    r->sx = state->sx; r->sy = state->sy;
+    r->hostBlend = -1;
+    ApplyClip(r);
+    return true;
+}
+bool SDL_GetRenderViewport(SDL_Renderer* r, SDL_Rect* rect) {
+    if (r->hasView) *rect = r->view;
+    else { rect->x = rect->y = 0; h_gfx_size(&rect->w, &rect->h); }
+    return true;
+}
+bool SDL_GetRenderClipRect(SDL_Renderer* r, SDL_Rect* rect) {
+    *rect = r->hasClip ? r->clip : (SDL_Rect){0,0,0,0}; return true;
+}
+bool SDL_RenderClipEnabled(SDL_Renderer* r) { return r->hasClip; }
 
 /* Pixel art is sampled by the host's shader (crisp texels, blended seams) on a smooth texture; u + 2 asks for it,
  * u + 4 for the MMPX 3.2 filter (Options). */

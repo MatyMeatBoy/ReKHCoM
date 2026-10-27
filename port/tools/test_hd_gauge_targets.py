@@ -27,7 +27,7 @@ class GaugeTargetTests(unittest.TestCase):
                 define = ['-D__ANDROID__=1'] if mobile else []
                 subprocess.run([os.environ.get('CC', 'clang'), *flags, *define, str(file), '-o', str(exe)], check=True)
                 for case in ['valid', 'budget', 'highdpi', 'maxsize', 'smallmax', 'unknownmax',
-                             'overflow', 'intoverflow', 'nan', 'infinity', 'partial', 'cached_failure', 'allfail', 'resize', 'shutdown']:
+                             'overflow', 'intoverflow', 'nan', 'infinity', 'partial', 'cached_failure', 'allfail', 'resize', 'shutdown', 'bindfail']:
                     with self.subTest(mobile=mobile, case=case):
                         run = subprocess.run([str(exe), case], capture_output=True, text=True, timeout=10)
                         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
@@ -57,7 +57,7 @@ typedef int SDL_ScaleMode;
 #define SDL_getenv(name) ((void)(name),(const char*)NULL)
 static int64_t maxSize=16384;
 static uint64_t liveBytes, peakBytes;
-static int created, destroyed, attempts, failAt, failAll, failAbove, parts, direct;
+static int created, destroyed, attempts, failAt, failAll, failAbove, parts, direct, failBind;
 static SDL_Texture* bound;
 static SDL_Renderer renderer;
 static struct {int active,frame,hp,maxHp,trail,stateAnim,faceAnim;} sGauge={1,1,50,100,50,15,3};
@@ -94,7 +94,7 @@ static SDL_Texture* SDL_GetRenderTarget(SDL_Renderer*r){(void)r;return bound;}
 static int SDL_RenderClipEnabled(SDL_Renderer*r){(void)r;return 0;}
 static int SDL_GetRenderViewport(SDL_Renderer*r,SDL_Rect*v){(void)r;memset(v,0,sizeof(*v));return 1;}
 static int SDL_GetRenderClipRect(SDL_Renderer*r,SDL_Rect*v){(void)r;memset(v,0,sizeof(*v));return 1;}
-static int SDL_SetRenderTarget(SDL_Renderer*r,SDL_Texture*t){(void)r;bound=t;return 1;}
+static int SDL_SetRenderTarget(SDL_Renderer*r,SDL_Texture*t){(void)r;if(failBind&&t)return 0;bound=t;return 1;}
 static int SDL_SetRenderDrawColor(SDL_Renderer*r,int a,int b,int c,int d){(void)r;(void)a;(void)b;(void)c;(void)d;return 1;}
 static int SDL_RenderClear(SDL_Renderer*r){(void)r;return 1;}
 static int SDL_SetTextureBlendMode(SDL_Texture*t,int m){(void)t;(void)m;return 1;}
@@ -110,6 +110,7 @@ int main(int argc,char**argv){
  const char*c=argc>1?argv[1]:"valid";
  int expected=0;
  (void)SDL_GetRendererProperties;(void)SDL_GetNumberProperty;
+ if(!strcmp(c,"bindfail")){failBind=1;draw(1);check(direct==1&&!liveBytes,"failed bind must never clear or draw into the original target");}
  if(!strcmp(c,"valid")){draw(1);expected=GAUGE_SS==4?3:2;check(created==expected&&!direct,"valid supersampling remains enabled");draw(1);check(created==expected,"same-size targets are reused");}
  if(!strcmp(c,"budget")){draw(7);check(created==2||direct==1,"large output reduces supersampling or draws directly");}
  if(!strcmp(c,"highdpi")){draw(13.5f);check(!created&&direct==1,"4K-sized HUD bypasses offscreen targets");}

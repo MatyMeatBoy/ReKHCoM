@@ -45,7 +45,10 @@ static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
+static int HostGpuQuery(const char*, char*, int);
 static int H_getenv(const char* name, char* out, int cap) {
+    int gpuQuery = HostGpuQuery(name, out, cap);
+    if (gpuQuery != -2) return gpuQuery;
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -108,7 +111,9 @@ static void H_gfx_begin(uint32_t clear) {
     if (clear >> 24)
         SDL_RenderClear(sRenderer);
 }
+#define HOST_GPU_TARGETS 1
 #include "host_texture_slots.h"
+#include "host_gpu_targets.h"
 static void RendererDeviceReset(void);
 static void H_gfx_clip(int x, int y, int w, int h) {
     SDL_Rect r = { x, y, w, h };
@@ -129,7 +134,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
     if (count > 0 && t) {
         shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
         SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
-        SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(t, (SDL_BlendMode)sBlend);
     }
     for (int i = 0; i < count; i++) {
         out[i].position.x = v[i].x;
@@ -141,7 +146,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         out[i].color.b = (v[i].argb & 255) / 255.0f;
         out[i].color.a = (v[i].argb >> 24) / 255.0f;
     }
-    SDL_SetRenderDrawBlendMode(sRenderer, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(sRenderer, (SDL_BlendMode)sBlend);
     SDL_RenderGeometry(sRenderer, t, out, count, NULL, 0);
 }
 static void H_notify(const char* name) { (void)name; }
@@ -190,7 +195,14 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #include "hd_music_host.h"
 #define UDP_HOST_POSIX
 #include "udp_host.h"
+#define H_thread H_thread_legacy
 #include "thread_host.h"
+#undef H_thread
+static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    int result = HostGpuCommand(op, a, b, c, d);
+    return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
+}
+
 static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
 static uint32_t H_audio_queued(void) { return sAudio ? (uint32_t)SDL_GetAudioStreamQueued(sAudio) / 4 : 0; }
 static void H_audio_clear(void) { if (sAudio) SDL_ClearAudioStream(sAudio); }

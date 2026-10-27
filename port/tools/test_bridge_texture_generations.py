@@ -88,7 +88,17 @@ static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,cons
   movie_bridge+=function(movie,'static int PlayFile(')
   create=function(guest,'SDL_Texture* SDL_CreateTexture(').replace('SDL_CreateTexture(', 'GuestCreateTexture(',1)
   create_stubs='typedef void SDL_Renderer;typedef int SDL_TextureAccess;\n#define SDL_TEXTUREACCESS_STREAMING 1\n#define SetError(...) ((void)0)\n'
-  code=common+host+drawing+bridge+epoch+tex+create_stubs+create+movie_bridge+function(guest,'static int HostTex(')+function(guest,'void SDL_DestroyTexture(').replace('SDL_DestroyTexture(', 'GuestDestroyTexture(',1)+r'''
+  # The epoch-only fixture models an old host without optional target support;
+  # the full target producer/consumer fixture covers target unbinding separately.
+  target_stubs=r'''
+#include "bridge_gpu_targets.h"
+typedef struct {float sx,sy;} TargetState;
+static int GpuTargets(void){return 0;}
+static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -1;}
+#define SDL_TEXTUREACCESS_TARGET 2
+static void UnbindTexture(SDL_Texture*p){(void)p;}
+'''
+  code=common+host+drawing+bridge+epoch+target_stubs+tex+create_stubs+create+movie_bridge+function(guest,'static int HostTex(')+function(guest,'void SDL_DestroyTexture(').replace('SDL_DestroyTexture(', 'GuestDestroyTexture(',1)+r'''
 static Tex* make(unsigned char pixel){Tex*t=calloc(1,sizeof(*t));t->pub.w=t->pub.h=1;t->id[0]=t->id[1]=-1;t->epoch=sTextureEpoch;t->rgba=malloc(4);memset(t->rgba,pixel,4);return t;}
 int main(void){
  Tex*t=make(11);int old=HostTex(t,false),oldSmooth=HostTex(t,true);assert(old>=0&&oldSmooth>=0);
@@ -125,6 +135,6 @@ int main(void){
  with tempfile.TemporaryDirectory(prefix='rekhcom-bridge-epoch-') as td:
   src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(code,encoding='utf-8')
   for target in (['PORT_ANDROID64'] if args.baseline else ['PORT_ANDROID64','PORT_LINUX64_GUEST']):
-   subprocess.run([str(cc),'-D'+target,str(src),'-o',str(exe)],check=True)
+   subprocess.run([str(cc),'-D'+target,'-I'+str(ROOT/'port/ps5/shared'),str(src),'-o',str(exe)],check=True)
    subprocess.run([str(exe)],check=True)
 if __name__=='__main__':main()
