@@ -4835,15 +4835,16 @@
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
       "piece": "Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-cartas",
       "created_at": "2026-10-27T06:31:18.114890+00:00",
-      "updated_at": "2026-10-27T06:31:18.114890+00:00",
+      "updated_at": "2026-10-27T06:43:05.260906+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T06:43:05.260906+00:00"
     },
     "escenas-retrato-x4": {
       "id": "escenas-retrato-x4",
@@ -4865,7 +4866,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:41:21.640846+00:00",
+  "updated_at": "2026-10-27T06:43:05.260906+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
