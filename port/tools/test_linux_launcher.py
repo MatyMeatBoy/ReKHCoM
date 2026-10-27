@@ -144,6 +144,22 @@ class LauncherTest(unittest.TestCase):
         self.assertEqual(self.run_script('--force64').returncode, 2)
         self.assertFalse((self.game / 'region.txt').exists())
 
+    def test_native_language_arguments_are_quoted_and_separated_from_host_options(self):
+        self.fake_machine('x86_64')
+        self.fake64(0)
+        host = self.game / 'bin64/rekhcom64'
+        host.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > native-args.txt\nexit 0\n')
+        host.chmod(0o755)
+        self.assertEqual(self.run_script('--force64', '--language', 'es',
+                                         'argument with spaces', '$literal').returncode, 0)
+        captured = (self.game / 'native-args.txt').read_text().splitlines()
+        self.assertEqual(captured[:4], [self.directory + '/bin64/guest-eu.bin',
+                                       '--data', self.directory, '--boot-status'])
+        self.assertTrue(captured[4].startswith(self.directory + '/.rekhcom-boot-'))
+        self.assertEqual(captured[5:], ['--', '--data-dir', self.directory,
+                                       '--language', 'es', 'argument with spaces', '$literal'])
+        self.assertFalse((self.game / 'region.txt').exists())
+
     def test_no_rom_and_foreign_cwd(self):
         result = self.run_script('--language', 'es', 'argument with spaces', '$literal')
         self.assertEqual(result.returncode, 17)

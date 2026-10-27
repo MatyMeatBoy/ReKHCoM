@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include "bridge.h"
+#include "linux64_args.h"
 #include "../include/port/port_device_profile_host.h"
 
 static char sData[1024] = ".";
@@ -329,12 +330,7 @@ int main(int argc, char** argv) {
 #else
     const char* image = argc > 1 ? argv[1] : "guest-eu.bin";
 #endif
-    const char* bootStatus = NULL;
-    for (int i = 2; i < argc; i++)
-        if (!strcmp(argv[i], "--data") && i + 1 < argc)
-            snprintf(sData, sizeof(sData), "%s", argv[++i]);
-        else if (!strcmp(argv[i], "--boot-status") && i + 1 < argc)
-            bootStatus = argv[++i];
+    const char* bootStatus = Linux64ApplyArguments(argc, argv, sData, sizeof(sData));
     setenv("KHCOM_DATA", sData, 1);
     {
         /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
