@@ -4490,10 +4490,10 @@
     "optiport-linux64-streaming": {
       "id": "optiport-linux64-streaming",
       "piece": "Linux64 movie EOF clock and cancelable decoder pipes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux64-streaming",
       "created_at": "2026-10-27T05:18:27.307042+00:00",
-      "updated_at": "2026-10-27T05:30:47.788238+00:00",
+      "updated_at": "2026-10-27T05:31:00.040373+00:00",
       "branch": "fix/linux64-movie-streaming",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/293",
       "approval": "Usuario 27/10 integrar y enviar test builds OptiPort",
@@ -4503,9 +4503,15 @@
           "at": "2026-10-27T05:23:08.305222+00:00",
           "owner": "codex-linux64-streaming",
           "detail": "EOF clock regression red baseline then green; nonblocking PID-owned process pipes; actual Linux64 host syntax pass; POSIX helper harness crosscompiled for coordinator serial VM execution"
+        },
+        {
+          "at": "2026-10-27T05:31:00.040373+00:00",
+          "owner": "codex-linux64-streaming",
+          "detail": "LinuxVM red134 green0; merged 8c6c1a96b8f50fd1050967f7d71f3522dde63eff"
         }
       ],
-      "claimed_at": "2026-10-27T05:18:41.547143+00:00"
+      "claimed_at": "2026-10-27T05:18:41.547143+00:00",
+      "completed_at": "2026-10-27T05:31:00.040373+00:00"
     },
     "hud-target-budget": {
       "id": "hud-target-budget",
@@ -4548,7 +4554,7 @@
     "created_at": "2026-10-27T05:27:32.730069+00:00",
     "updated_at": "2026-10-27T05:27:32.730069+00:00"
   },
-  "updated_at": "2026-10-27T05:30:47.788238+00:00",
+  "updated_at": "2026-10-27T05:31:00.040373+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
