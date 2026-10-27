@@ -32,3 +32,11 @@ Cuando el usuario diga «ponte al día y procesa la cola pendiente», empieza po
 
 Los comandos completos, recuperación explícita y pruebas están en
 [ART_QUEUE.md](port/tools/ART_QUEUE.md). No iniciar otra cola local vacía.
+
+## Revisión visual de v2.1 (instrucción del usuario, 27/10/2026)
+
+Para todo el trabajo visual pendiente de v2.1, no se exige pasar por Atlas:
+el agente coordinador revisa directamente capturas reales y corrige hasta
+verificar el resultado. Esta instrucción expresa sustituye el requisito de
+aprobación en Atlas para ese alcance; conserva los recursos existentes y
+las partidas. No autoriza publicar releases ni editar la instalación del jugador.

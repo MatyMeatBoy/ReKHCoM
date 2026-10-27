@@ -87,7 +87,8 @@ extern Mode gModeDeck, gModeStatus, gModeJiminy, gModeAllmap, gModeMapinspect, g
 
 int PortMoogleMenu(void) {
     /* Distinct profiles: the charge screen has tabs reaching its right edge. */
-    return gCurrentMode == &gModeMsShop ? 1 : gCurrentMode == &gModeMsCharge ? 2 : 0;
+    return gCurrentMode == &gModeMsTop || gCurrentMode == &gModeMsShop ? 1 :
+           gCurrentMode == &gModeMsCharge ? 2 : 0;
 }
 
 /* Derive this from the live mode so loading a state needs no extra flag. */
@@ -95,7 +96,10 @@ int PortMenuBackgroundOnly(void) {
     /* menus whose own BG panels reach the edge: sprites there (NEW badges,
        the pointing glove) must never be carried into the margin */
     return gCurrentMode == &gModeStatus || gCurrentMode == &gModeMapinspect || gCurrentMode == &gModeDeck
-        || gCurrentMode == &gModeMsShop || gCurrentMode == &gModeMsCharge;
+        /* The entrance already draws its BG bands while the title slides in.
+           Classify it like the shop: foreground/fade differences at the edge
+           must not hide those bands until the generic sliding timer expires. */
+        || gCurrentMode == &gModeMsTop || gCurrentMode == &gModeMsShop || gCurrentMode == &gModeMsCharge;
 }
 
 /* The menu screens drawn over the whole GBA picture: their backgrounds end
