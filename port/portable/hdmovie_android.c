@@ -452,7 +452,6 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
     int32_t width = 0, height = 0, rate = 0, channels = 0;
     int texW = 0, texH = 0, texNv12 = -1; /* the texture's size and kind (NV12 or planar) */
     int64_t audioPushed = 0, pendingPts = 0, start = 0; /* microseconds */
-    Uint64 firstPictureStart = 0; /* fixed wall clock: audio EOS may move start */
     Uint64 lastShown = 0; /* when a frame last went to the screen */
     ssize_t pending = -1;
     int fd, quit = 0, played = 0, shown = 0, dropped = 0, audioOn, rgb = SDL_getenv("KHCOM_HDMOVIE_YUV") == NULL;
@@ -513,8 +512,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
     HdMovieLog("hd movie: %s (%dx%d, %d Hz)", path, (int)width, (int)height, (int)rate);
     LoadSubs(&subs, subs1, subs2, fontPath);
     /* Success requires a frame uploaded to a usable texture. */
-    firstPictureStart = SDL_GetTicksNS();
-    start = (int64_t)(firstPictureStart / 1000);
+    start = (int64_t)(SDL_GetTicksNS() / 1000);
     /* the presses that started the movie (the dialogue's A or tap) are not the movie's */
     SDL_PumpEvents();
     SDL_FlushEvents(SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP);
@@ -527,15 +525,16 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
         Uint64 frameStart = SDL_GetTicksNS();
         int64_t clock;
         AImage* image = NULL;
-        /* A decoder may start successfully but never produce a usable image. */
-        if (!played && SDL_GetTicksNS() - firstPictureStart >= 5000000000ULL) {
-            HdMovieLog("hd movie: no usable picture within 5 seconds: cartridge instead");
-            goto done;
-        }
         {
             int pressed = SkipPressed(audio);
             if (pressed == 2) {
                 quit = 2;
+                break;
+            }
+            if (pressed == 1 && !played) {
+                /* The user skipped before the first upload: do not start the
+                   cartridge movie as if HD initialization had failed. */
+                quit = 1;
                 break;
             }
             if (pressed == 1 && skipEnd < 0)
@@ -772,5 +771,5 @@ done:
     if (audio)
         SDL_DestroyAudioStream(audio);
     close(fd);
-    return quit == 2 ? 2 : played ? 1 : 0;
+    return quit == 2 ? 2 : (quit == 1 || played) ? 1 : 0;
 }

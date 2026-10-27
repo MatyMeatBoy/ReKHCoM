@@ -108,22 +108,35 @@ with tempfile.TemporaryDirectory(prefix='rekhcom-mf-failures-') as td:
 setup = source[source.index('int HdMovieAndroidPlay('):start]
 assert 'played = 1;' not in setup
 assert 'if (played)\n        FreeSubs(&subs);' not in source
-watch_start = source.index('        if (!played && SDL_GetTicksNS() - firstPictureStart')
-watch_end = source.index('\n        {', watch_start)
-watch = source[watch_start:watch_end]
-watch_src = r"""
+
+# Exercise actual input handling and return classification, including a background
+# wait which advances the fake wall clock by two minutes before foreground.
+input_start = source.index('        {\n            int pressed = SkipPressed(audio);', source.index('int HdMovieAndroidPlay('))
+input_end = source.index('        /* keep about half a second', input_start)
+input_block = source[input_start:input_end]
+return_line = next(line.strip() for line in source.splitlines() if line.strip().startswith('return quit == 2 ?'))
+input_src = r"""
 #include <stdint.h>
-#define HdMovieLog(...) ((void)0)
+static int pressed;
 static uint64_t now;
-static uint64_t SDL_GetTicksNS(void){return now;}
-static int expired(int played){uint64_t firstPictureStart=100;
-""" + watch + r"""
- return 0; done:return 1;}
-int main(void){now=5000000099ULL;if(expired(0))return 1;
-now++;if(!expired(0)||expired(1))return 2;return 0;}
+static int SkipPressed(void*audio){now+=120000000000ULL;return pressed;}
+static int run(int played){
+ void*audio=0;int quit=0;int64_t skipEnd=-1,lastClock=0;
+ for(int i=0;i<1;i++){
+""" + input_block + r"""
+ }
+""" + return_line + r"""
+}
+int main(void){
+ pressed=1;if(run(0)!=1)return 1;
+ pressed=2;if(run(0)!=2||run(1)!=2)return 2;
+ pressed=0;if(run(0)!=0||run(1)!=1)return 3;
+ return 0;
+}
 """
-with tempfile.TemporaryDirectory(prefix='rekhcom-frame-deadline-') as td:
+assert 'firstPictureStart' not in source, 'unmeasured first-frame deadline must not include app background waits'
+with tempfile.TemporaryDirectory(prefix='rekhcom-frame-input-') as td:
     src=Path(td)/'test.c';exe=Path(td)/'test.exe'
-    src.write_text(watch_src,encoding='utf-8')
+    src.write_text(input_src,encoding='utf-8')
     subprocess.run([str(compiler),str(src),'-o',str(exe)],check=True,capture_output=True)
     subprocess.run([str(exe)],check=True,capture_output=True)

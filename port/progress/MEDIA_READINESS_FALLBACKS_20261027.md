@@ -7,9 +7,14 @@ frame upload succeeded. Texture creation and upload errors could consequently
 consume the HD scene as a black replacement instead of allowing cartridge video.
 It now accepts the replacement after a successful first upload, returns failure
 on texture/upload error, always frees subtitle resources, and preserves app close
-as return value 2 even before the first frame. A fixed five second wall clock
-limits a decoder which starts but never supplies a usable first frame. The limit
-is an initial conservative bound, not a measured decoder startup guarantee.
+as return value 2 even before the first frame. Explicit skip before the first
+upload completes the movie successfully instead of falling back to cartridge.
+
+Review follow-up: removed the initial five second wall-clock watchdog. Background
+waits and slow startup have no measured timeout contract, so elapsed wall time
+must not reject an otherwise usable decoder. A decoder that never produces any
+output remains skippable; detecting a permanent stall is deferred until an active
+time/progress policy can be measured and tested on devices.
 
 Windows checks the three playback MF attribute/media-type creation calls before
 using their COM pointers and leaves their cleanup at the existing done label.
@@ -18,7 +23,8 @@ Verification (silent, passed):
 - `python port/tools/test_hd_movie_failures.py`: extracted production Android
   block, all four upload formats, allocation and upload failure, successful
   readiness, image/texture cleanup; extracted MF guards, failure and success;
-  extracted first-frame watchdog, just before/at deadline and after readiness.
+  extracted input dispatch and return classification for early skip, app close,
+  readiness and no picture, with a simulated two minute background wait.
   The Android allocation-failure test failed against the previous implementation.
 - `python port/tools/test_hd_movie_seek.py`: existing Windows PCM seek regression.
 - Full modified Android source syntax check with NDK r30 clang,
