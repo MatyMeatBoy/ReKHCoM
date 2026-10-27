@@ -5443,19 +5443,20 @@
     "steamdeck-gaming-mode-330": {
       "id": "steamdeck-gaming-mode-330",
       "piece": "Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-deck-gaming330",
       "created_at": "2026-10-27T10:16:08.351988+00:00",
-      "updated_at": "2026-10-27T10:16:08.351988+00:00",
+      "updated_at": "2026-10-27T10:16:13.616974+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza resolver330 sin comentario externo ni heavybuild",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T10:16:13.616974+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:16:08.351988+00:00",
+  "updated_at": "2026-10-27T10:16:13.616974+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
