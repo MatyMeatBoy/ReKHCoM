@@ -291,4 +291,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | mapinspect-grid-hd-original-frame | Miniaturas menu naipesmapa siguen nativas: aplicar ilustracionesHD actuales preservando marcoGBA y esquinas cierre. Separar mappingBG de OAM e importfaltante; no retocar resto aprobado. | pendiente | — | — | Usuario27/10 captura04d2324f/a5050ab1 exigeHDyconservarmarco | 2026-10-27T22:21:41.806505+00:00 |
 | monstro-story-atlas-coverage | Cobertura Atlas por tramosMonstro: Geppetto barco dialogos y Pinocho plataformas shot e7bb35a0/266fcaa4 no vistosporusuario; identificar eventos/estadoscamara y completar bordes respetando zoom/HUD, no marcarcapturainicial comoescenacompleta. | pendiente | — | — | Usuario27/10 reportaescenasfaltantesAtlas | 2026-10-27T22:24:52.168606+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T22:24:56.777492+00:00)
+Integrador: libre
