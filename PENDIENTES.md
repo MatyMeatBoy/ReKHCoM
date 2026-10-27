@@ -233,6 +233,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:40.246238+00:00 |
 | bonus-elite-cabecera | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:49.081835+00:00 |
 | v22-board-reconcile-integrated-state | Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude | pr_abierto | codex-v22-board-reconcile | https://github.com/MatyMeatBoy/ReKHCoM/pull/370 | Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente | 2026-10-27T16:18:49.989872+00:00 |
-| v22-gallery-return-evidence | P1 verificación acotada de retorno de galería sin flash | pendiente | — | — | Usuario pidió seguir cerrando pendientes; PLAN_V22 P1; plan de 8 casos y 3 controles aprobado por coordinador | 2026-10-27T16:32:18.290651+00:00 |
+| v22-gallery-return-evidence | P1 verificación acotada de retorno de galería sin flash | en_curso | codex-gallery-return-evidence | — | Usuario pidió seguir cerrando pendientes; PLAN_V22 P1; plan de 8 casos y 3 controles aprobado por coordinador | 2026-10-27T16:32:30.541371+00:00 |
 
 Integrador: libre
