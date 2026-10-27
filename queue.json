@@ -6912,12 +6912,18 @@
       "status": "en_curso",
       "owner": "codex-issue378-subtitles",
       "created_at": "2026-10-27T18:27:56.322518+00:00",
-      "updated_at": "2026-10-27T18:28:02.374425+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T18:30:26.966968+00:00",
+      "branch": "fix/issue378-subtitles",
       "pr": null,
       "approval": "Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/378",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T18:30:26.966968+00:00",
+          "owner": "codex-issue378-subtitles",
+          "detail": "Freshmain55b730619, worktree undub-subtitles-es; consumidor pide ES luegoUS, subtítulos de variantes quedan asociados a generación de audio. Primero reproducir con LoadSubs/MovieSubtitlePath reales; aceptar ES de otra biblioteca sólo si tiempos de cues coinciden exactamente con referencia de voz seleccionada; si faltan ES no inventar. No toca380 ni builds grandes."
+        }
+      ],
       "claimed_at": "2026-10-27T18:28:02.374425+00:00"
     },
     "android22-pre1-diagnostic-build": {
@@ -6936,7 +6942,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:29:06.260644+00:00",
+  "updated_at": "2026-10-27T18:30:26.966968+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
