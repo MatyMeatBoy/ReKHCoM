@@ -4,8 +4,8 @@
 
 - [ ] **Launcher: audio/vídeos HD EN/JP y disponibilidad clara**, tarea remota
   `launcher-hd-media-language-selection-v21`. Primer incremento de detección ACF,
-  señales de fuente/huella y guía/reescaneo implementado para revisión; selección
-  e imports/playback por idioma pendientes; [fuentes y traspaso](HD_MEDIA_LANGUAGE_SELECTION_V21.md). Steam
+  señales de fuente/huella y guía/reescaneo integrado #327. Selección/imports/playback
+  por idioma en #335/#342, todavía en revisión; [fuentes y traspaso](HD_MEDIA_LANGUAGE_SELECTION_V21.md). Steam
   permite elegir idioma del juego y descargar archivos mediante su cliente;
   no hay automatización de depots/cambio de idioma verificada para ofrecer.
   Separar idioma de texto/subtítulos, Undub GBA y audio HD; el import actual no
@@ -18,8 +18,9 @@ personal limpio; Claude puede tomar todos los pendientes regulares** (HUD,
 jefes, recetas, Atlas, galería, etc.), reservando en `coordination/art-queue`,
 preservando WIP y abriendo PR. **Última actualización del usuario:** Codex recoge
 e integra los PR regulares ya listos antes del ZIP Windows, con revisión y lock;
-entrega el ZIP prioritario y después completa el resto de OptiPort. Los demás PR
-regulares se integran después de OptiPort. Los claims activos de core/guardas, arquitectura y QA se respetan;
+entrega el ZIP prioritario y continúa hasta 2.1, incluyendo los pendientes
+regulares y los PR verificados. No esperar a cerrar el método entero para
+resolver un bug. Los claims activos de core/guardas, arquitectura y QA se respetan;
 el trabajo de Claude ya integrado sigue vigente.
 
 Esta lista es un snapshot, no autoridad de reservas. Registrar por ID owner,
@@ -37,11 +38,13 @@ Verificar SRAM manual/config entre runtimes y namespaces/compatibilidad de
 quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
 
 - [ ] **Vista/previews en ambos modos:** identificar primero los dos modos en
-  el UI actual, sin asumir cuáles son. Pendiente posterior al ZIP prioritario:
+  el UI actual. Identificados GBA, ReKHCoM y variante híbrida: #342 en revisión,
+  apilado sobre #335. Continúa pendiente medir en los modos solicitados:
   OptiPort mide entrada, p95, memoria, caché, precarga/cancelación y calidad;
   Claude toma el fallback visual y presentación como tarea regular bajo claim.
   Objetivo: carga casi instantánea, poca pérdida de calidad y evitar esperas
-  largas al entrar a escenas. Sin implementación ni garantía medida aún; ver
+  largas al entrar a escenas. El PR implementa caché/fallback, no prueba aún
+  latencia p95 real ni calidad visual final; ver
   [coordinación](COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos).
 
 - [ ] **Cierre posterior a 2.1: ordenar worktrees** según el documento de
@@ -53,26 +56,28 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   intermedio de título/gameplay. Claude regular UI, dependencia de pacing
   OptiPort si aplica. Probar título/partida × normal/skip × GBA/ReKHCoM,
   capturando cuadros, restaurando UI/renderer/input/audio sin avanzar historia.
-- [ ] **Caché getenv estable del guest:** RED por rollover de 128 claves,
-  corrección acotada y pruebas CPU en `fix/guest-getenv-stable-values`, claim
+- [x] **Caché getenv estable del guest:** RED por rollover de 128 claves,
+  corrección acotada y pruebas CPU integradas #343, claim
   `guest-getenv-stable-values`. [Contrato](GUEST_GETENV_STABLE_VALUES.md).
-  No demuestra causalidad del cierre temprano Android; QA del coordinador aparte.
+  No demuestra causalidad del cierre temprano Android; reconstrucción y QA
+  del artefacto del coordinador siguen pendientes.
 - [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
   Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
   convención Nintendo A/PS círculo elegible, assets existentes, todos los
-  botones GBA de Opciones, overrides, hotplug y localización. Solo pendiente.
+  botones GBA de Opciones, overrides, hotplug y localización. #332/#334/#338/#340
+  en revisión; quedan QA y activación desde Original en diálogo ya abierto.
 - [ ] **Gate real del ZIP Windows 64:** primera puerta con guardado del usuario
   confirmada RED por coordinador, WER `0x100f7bd6`,
   `MapWallFaceIsUnreserved`, fila superior NULL/lectura BIOS GBA. Coordinador
   corrige fuente compartida; exigir GREEN del mismo repro en build final antes
   de entregar ZIP. Las ampliaciones UI anteriores no retrasan esa entrega.
 
-  Actualización del coordinador: repro corregido GREEN, paquete privado y ZIP
-  final pasan el guardado en 32+64; #318 pendiente de integración. ZIP personal
+  Actualización: #318 integrado; paquete e71 pasa seis regresiones (guardado,
+  ocho salas y puerta de evento, cada una en 32/64). ZIP personal
   limpio debe entregarse siempre visible en la raíz
   `C:/Users/MP/Documents/00 Claude/KHCoMPC`, no solo bajo `build/releases`.
   Copia corregida allí, SHA-256
-  `be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
+  `3645fe9013125be6722e28beb39e991ab27d874725044aa739a9dee2bdfb82a4`.
   Aún sin prerelease pública. [Tablero actualizado](OPTIPORT_V21.md): 10/14
   originales (~71 % de trabajo de primera batería); migración/plataformas y UI
   añadidas se siguen aparte. No es un porcentaje de estabilidad.
@@ -88,13 +93,13 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 
 ## Retoma Codex — 27/10, robustez 2.1 y cierres (prioridad actual)
 
-- [ ] **Prioridad: #277 Deck / #272 Android.** Investigar por separado: foto #277 = puerta de evento de Ciudad de Paso con spotlight; NO puerta del castillo. Log #272 = evento 74 Monstruo, ROM USA, Galaxy Tab S6 Lite / Android 13. Las pruebas anteriores hasta selección de mundo/tutorial no cubren la puerta fotografiada. Tres comentarios en cada issue al volver a consultar; sin log nuevo.
+- [ ] **Prioridad: #277 Deck / #272 Android.** Mantener separados: #277 es puerta de evento de Ciudad de Paso, #272 evento74 Monstruo USA/Samsung Android13. La puerta correcta y el guardado pasan Windows/Linux32/64 y Android64 de prueba; faltan entrega nueva y confirmación en los dispositivos originales. Última consulta:5 comentarios en277,3 en272, sin respuesta nueva. Ver artefactos/resultados vigentes en [OptiPort](OPTIPORT_V21.md).
 - [ ] **Cierre del usuario en Monstruo**, primer/segundo combate al volver a la ventana. Quiver v2.0 EU, Undub, HUD HD. Instalación principal `C:/Users/MP/Documents/Apps/QuiverLauncher/Apps/KingdomHeartsChainOfMemories-ReKHCoM`: **SOLO LECTURA, nunca ejecutar, modificar ni actualizar allí**. Copia del log/config/save en `khcom-hd-reload/build/codex-evidence/quiver-crash-20261027`. Log previo ya reemplazado al reabrir, sin dump/evento de crash reciente encontrado; RAM no confirmada como causa.
 - [ ] **Repaso completo 2.1**, autorizado con decisiones técnicas delegadas: fallbacks, profiling, gestión de recursos, asíncrono/precarga, streaming y frame pacing. Algo más de peso en assets HD nuevos. Primero depurar defectos; luego alternativas recuperables, sin ralentizar lógica GBA. Alcance y orden en [PLAN_FALLBACKS_V21.md](PLAN_FALLBACKS_V21.md). No declarar ausencia global de bugs.
 - [x] **Logs actual + cinco anteriores**, rotación y sesión fechada: integrado PR #282, SHA `5a523c61e`. Harness productor real, errores de rotación, shell y builds Windows/guest pasan. Guest freestanding no usa reloj libc; host conserva fecha.
-- [ ] **Bucle de música HD sin progreso**: reproducción de bloqueo y corrección local RED→GREEN (decodificador vacío, dispositivo rechaza datos, reproducción normal, loop corto, loop vacío). Vuelve a música GBA sin silenciarla. Faltan integración/PR y regresión de audio completa; no atribuirlo aún a #277/#272.
+- [x] **Bucle de música HD sin progreso**: integrado #288/#291/#295 con RED→GREEN (vacío, output rechazado, loop corto/vacío). Vuelve a música GBA. Mantener QA de audio/soak y no atribuirlo a #277/#272 sin evidencia.
 - [ ] **Rendimiento HD**: nuevo arnés serial `profile_hd_resources.py` guarda frame times, cold/warm, RSS/private y hashes. Primera corrida quedó en selector de modo oculto (config de fixture=Choose); corregido a modo explícito, no tomarla por medición válida. Retomar tras atender cierres. GPU oculta y audio dummy; memoria de proceso no equivale a VRAM.
-- [ ] **Protección del progreso ante fallos**: auditar guardado atómico y recuperación separada de slots manuales; no intentar continuar memoria corrupta ni afirmar que existe recuperación automática aún.
+- [x] **Protección del progreso ante fallos**: #290/#314 integrados, SRAM preservada ante flush fallido y quickstates atómicos/namespaces. Falta QA de interoperabilidad del artefacto final; no promete recuperar memoria corrupta.
 
 Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma remota `crash-diagnostics-20261027` / `codex-crash`. Se conserva `fix/v21-bugs` de Claude y su lista detallada. Workers autorizados por usuario, esfuerzo bajo, tareas acotadas; builds seriales/silenciosos y ninguna release nueva.
 
@@ -109,11 +114,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   Falta: confirmación del reportero; #277 quedó cerrado por el merge de #282 (reabrir requiere OK del usuario).
 - [ ] **#272 Android**: probablemente otra causa (AArch64 tolera cargas desalineadas; armv7 sin NEON ahí).
   Esperar datos del reportero; build de prueba igual.
-- [ ] (histórico) **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
+- Histórico sustituido: **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
   Windows EU pasa el punto (llega al combate tutorial con A repetida). Sospecha: camino portable (host 64 bits /
   Android). Reproducir en VM Linux 64 y arreglar; luego barrer el juego entero en 64 bits.
-- [ ] **#42 desync del final HD de Sora**: rama `fix/ending-cutscene-desync` (Codex), sin integrar.
-- [ ] **#163 galería**: vídeo del reportero (youtube qkZSuuTsrio) sin revisar todavía.
+- [x] **#42 desync del final HD de Sora**: #273 integrado `a3b8d7839`; conservar regresión seek/reloj/audio final.
+- [x] **#163 galería**: vídeo revisado; pausa sin texto correspondía al fallo de cinemáticas ya corregido. #274/#275/#305 integrados. El nuevo destello al regresar es otro pendiente (#339).
 - [x] Tests lentos con `KHCOM_FAST` + vsync=1 (el present esperaba al refresco): FAST fuerza vsync 0.
 - [ ] Batería: arneses que piden builds viejos (`build/rel-eu`, `codex-gameplay-*`…) y fallos reales a separar:
   `test_hud_crop` (3840x1080 mapa), `test_ppu` 7/12, `test_door_views` (falso positivo con «VRR-path=unavailable»).
@@ -121,7 +126,7 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   antes de devolver el control al juego.
 - [x] **Carta de recarga HD**: número bajo el relleno = v2.0; arreglado en main por #276 (Codex). Verificado 27/10
   con `test_hd_reload_order.py --hd-hud 0|1` (contador visible, 1383 px blancos, también con HUD HD).
-- [ ] **HUD HD: «EXP ganada»** no se reubica y queda tapada por la vida nueva.
+- [x] **HUD HD: «EXP ganada»**: #313 integrado `434d6b8e2`; comprobar captura final con anillo HD, no duplicar implementación.
 - [ ] Linux 64 VM: partida nueva → puerta del castillo → selección de mundo → combate tutorial **sin fallo**
   (sin música HD). Repetir con música HD (`.ogg`), que el reportero sí tiene.
 
@@ -130,17 +135,18 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   frecuencia; el 2 tiene más tinta que fondo → colores invertidos. Arreglo: todos los dígitos usan los colores del 0
   de su juego (gris o blanco). `test_moogle_charge_digits.py` (RED 71/71 → GREEN 40/39; ceros grises intactos).
   Mismo render: «Naipes activos 021/062» y total Moguri correctos.
-- [ ] **Cartas HD pequeñas (lista de naipes): encaje de la imagen** como se ajustaron las de llave. Marcadas por el
+- [x] **Cartas HD pequeñas (lista de naipes): encaje de la imagen**, #315 integrado `15f84f425`. Marcadas por el
   usuario: Simba (retrato desborda/cortado), Genio (asoma por la derecha), carta verde de objeto (cubo azul
-  descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
+  descentrado), carta gris de enemigo (sombra/Soldado). Hoja real de las105 revisada; recetas448 válidas. Pendiente captura en runtime final.
 - [x] Tienda Moguri en vista de tienda (fila de 5 cartas con número): números HD se ven bien (captura usuario 27/10).
 - [ ] **HUD HD (solo modo HUD HD; el HUD normal no se toca):** — tareas en la cola de arte (`hudhd-*`,
   `cartas-hd-encaje`, `escenas-retrato-x4`), registradas 27/10 para revisión en Atlas.
   Captura base 27/10: `build/hudshot` en khcom-hd-reload, ini del usuario (copia de `build/codex-evidence/
   quiver-crash-20261027`) con `hd_hud=1`, `fullscreen=0`, `KHCOM_WINDOW=1536x864`, `KHCOM_BATTLE=204:8:0`,
   `KHCOM_MONKEY=19:120`. Los números bajo el retrato y la pila del jefe solo salen al apilar/elegir: usar
-  secuencia de combate con stock (`KHCOM_KEYS` con L/R de apilar). Son cambios visuales grandes: proponer en Atlas
-  (regla «visuales a la app») antes de integrar; solo modo HUD HD.
+  secuencia de combate con `STOCK`. Para 2.1 el usuario sustituyó Atlas por
+  verificación directa del coordinador (AGENTS.md): capturar y corregir hasta
+  comprobar, sólo modo HUD HD. #320 restauró los marcos; #341 revisa dígitos.
   - Pila de cartas: reubicarla según la vida nueva y dibujarla **encima** de ella; también se les pierde el **borde**.
   - Igual para enemigos/jefes si aplica.
   - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
