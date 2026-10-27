@@ -420,6 +420,10 @@ int PortHdLayoutDraw(SDL_Renderer* renderer, int layout, int texture, int sequen
     return 1;
 }
 
+#if __STDC_HOSTED__
+static void GaugeTargetsRelease(void);
+#endif
+
 void PortHdLayoutShutdown(void) {
     int i;
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
@@ -427,6 +431,9 @@ void PortHdLayoutShutdown(void) {
             SDL_DestroyTexture(sTextures[i].tex);
         memset(&sTextures[i], 0, sizeof(sTextures[i]));
     }
+#if __STDC_HOSTED__
+    GaugeTargetsRelease();
+#endif
 }
 
 /* ---- the player's HP gauge (Gauge::CPlayerGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ---------------
@@ -524,15 +531,31 @@ static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const 
 /* The gauge drawn supersampled (23/10, the player: its face's and its bar's cut edges were jagged): its pieces go on
    a texture at GAUGE_SS times the output, which comes down to the output in halves with linear filtering (each half a
    2x2 box), premultiplied all the way; then the masks' hard cuts and the ring's edges are smooth. The consoles and
-   Android, with less memory and fill rate, use 2. */
+   Android, with less memory and fill rate, use at most 2. Optional RGBA targets
+   are capped at 32 MiB on desktop and 12 MiB on constrained hosted builds:
+   SS4 holds 21 base-resolution surfaces' worth of pixels, SS2 holds 5. These
+   are scratch-cache limits, not total GPU-memory estimates or an OOM claim. */
 #if defined(PORT_GBA_RELOC) || defined(PORT_ANDROID64) || defined(__ANDROID__)
 #define GAUGE_SS 2
+#define GAUGE_TARGET_BUDGET (12ull * 1024 * 1024)
 #else
 #define GAUGE_SS 4
+#define GAUGE_TARGET_BUDGET (32ull * 1024 * 1024)
 #endif
 #if __STDC_HOSTED__ /* the consoles' SDL shim has no render targets: there the gauge draws as before */
 static SDL_Texture* sGaugeTarget[3];
 static int sGaugeTargetW[3], sGaugeTargetH[3];
+static int sGaugeTargetScale;
+
+static void GaugeTargetsRelease(void) {
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (sGaugeTarget[i]) SDL_DestroyTexture(sGaugeTarget[i]);
+        sGaugeTarget[i] = NULL;
+        sGaugeTargetW[i] = sGaugeTargetH[i] = 0;
+    }
+    sGaugeTargetScale = 0;
+}
 
 static SDL_Texture* GaugeTarget(SDL_Renderer* renderer, int i, int w, int h) {
     if (sGaugeTarget[i] && (sGaugeTargetW[i] != w || sGaugeTargetH[i] != h)) {
@@ -548,6 +571,63 @@ static SDL_Texture* GaugeTarget(SDL_Renderer* renderer, int i, int w, int h) {
         SDL_SetTextureScaleMode(sGaugeTarget[i], (SDL_ScaleMode)PortSmoothScaleMode());
     }
     return sGaugeTarget[i];
+}
+
+/* Reserve the complete downsample chain before drawing. Release the old chain
+   before resize so old and new allocations cannot overlap above the budget. */
+static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height, int* w0, int* h0) {
+    double w = (double)SDL_ceilf(width), h = (double)SDL_ceilf(height);
+    int64_t maxSize = SDL_GetNumberProperty(SDL_GetRendererProperties(renderer),
+                                          SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
+    int k, first = GAUGE_SS;
+    if (!(w > 0 && h > 0 && w <= INT_MAX && h <= INT_MAX) || maxSize <= 0) {
+        GaugeTargetsRelease();
+        return 0;
+    }
+    *w0 = (int)w;
+    *h0 = (int)h;
+    /* Once an allocation fell back to SS2, retain that usable chain for the
+       same geometry instead of retrying the rejected larger allocation. */
+    if (sGaugeTargetScale && sGaugeTarget[0] &&
+        sGaugeTargetW[0] / sGaugeTargetScale == *w0 && sGaugeTargetH[0] / sGaugeTargetScale == *h0)
+        first = sGaugeTargetScale;
+    for (k = first; k >= 2; k /= 2) {
+        int tw[3], th[3], count = k == 4 ? 3 : 2, i, fits = 1, cached = 1;
+        uint64_t bytes = 0;
+        if (*w0 > INT_MAX / k || *h0 > INT_MAX / k)
+            continue;
+        for (i = 0; i < count; i++) {
+            uint64_t size;
+            tw[i] = *w0 * (k >> i);
+            th[i] = *h0 * (k >> i);
+            size = (uint64_t)tw[i] * (uint64_t)th[i] * 4;
+            if (tw[i] > maxSize || th[i] > maxSize || size > GAUGE_TARGET_BUDGET - bytes) {
+                fits = 0;
+                break;
+            }
+            bytes += size;
+        }
+        if (!fits)
+            continue;
+        for (i = 0; i < 3; i++) {
+            if (i < count) {
+                if (!sGaugeTarget[i] || sGaugeTargetW[i] != tw[i] || sGaugeTargetH[i] != th[i]) cached = 0;
+            } else if (sGaugeTarget[i]) cached = 0;
+        }
+        if (cached)
+            return k;
+        GaugeTargetsRelease();
+        for (i = 0; i < count; i++)
+            if (!GaugeTarget(renderer, i, tw[i], th[i]))
+                break;
+        if (i == count) {
+            sGaugeTargetScale = k;
+            return k;
+        }
+        GaugeTargetsRelease();
+    }
+    GaugeTargetsRelease();
+    return 0; /* Direct HD geometry needs no scratch textures. */
 }
 
 #endif
@@ -569,8 +649,8 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
         /* the gauge's area in Re:CoM's units around its origin (ring, face, the bar at its longest, the alarm's glow) */
         const float ux0 = -60.0f, uy0 = -60.0f, ux1 = 620.0f, uy1 = 220.0f;
         float rx = x + ux0 * s, ry = y + uy0 * s, rw = (ux1 - ux0) * s, rh = (uy1 - uy0) * s;
-        int w0 = (int)SDL_ceilf(rw), h0 = (int)SDL_ceilf(rh), k = GAUGE_SS, level = 0;
-        SDL_Texture* big = w0 > 0 && h0 > 0 ? GaugeTarget(renderer, 0, w0 * k, h0 * k) : NULL;
+        int w0 = 0, h0 = 0, level = 0, k = GaugeTargetsPrepare(renderer, rw, rh, &w0, &h0);
+        SDL_Texture* big = k ? sGaugeTarget[0] : NULL;
         if (big) {
             SDL_Texture* prev = SDL_GetRenderTarget(renderer);
             SDL_Rect viewport, clip;
@@ -620,6 +700,8 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
             SDL_RenderTexture(renderer, cur, &src, &dst);
             return;
         }
+    } else {
+        GaugeTargetsRelease();
     }
 #endif
     GaugeParts(renderer, x, y, s, tint);
