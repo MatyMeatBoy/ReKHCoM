@@ -170,4 +170,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | bridge-texture-generations | Generation-safe bridge textures and complete Linux64 Android64 renderer recovery | en_curso | codex-bridge-reset | — | User authorized OptiPort renderer lifecycle recovery with tested guest host compatibility | 2026-10-27T05:41:57.490790+00:00 |
 | logs-utc-20261027 | Make session timestamps ASCII UTC and readable as UTF-8 | integrado | codex-logs-utc | https://github.com/MatyMeatBoy/ReKHCoM/pull/298 | Usuario 27/10 integrar OptiPort para builds de test | 2026-10-27T05:46:35.940604+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T05:45:49.939182+00:00)
+Integrador: libre
