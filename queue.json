@@ -7274,7 +7274,7 @@
       "status": "pr_abierto",
       "owner": "codex-moogle-charge-scroll",
       "created_at": "2026-10-27T19:20:49.301337+00:00",
-      "updated_at": "2026-10-27T19:23:33.811999+00:00",
+      "updated_at": "2026-10-27T19:32:53.944922+00:00",
       "branch": "fix/moogle-charge-scroll",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/388",
       "approval": "Usuario pide arreglar todos los fallos64 por patrones; coordinador aprueba fix local MsCharge y prueba consumidor real sin GPU",
@@ -7284,6 +7284,11 @@
           "at": "2026-10-27T19:23:33.811999+00:00",
           "owner": "codex-moogle-charge-scroll",
           "detail": "PR388 head55759a121, freshmain8d. Full unchanged production MsChargeDraw+GetTabCount RED0xC0000094 count10, GREEN146243 CPUcases counts0..286,tabs0..4,scroll-1..98. Local positive-range and valid-scroll guard; no global DIV0/ABI/save changes. Evidence pruebas/64bit-crash-ledger/ms-charge, document MOOGLE_CHARGE_SCROLL_386.md. NoGPU/fullmenu claim; root combinedbuild. Child audit64-menu-scroll-boundaries."
+        },
+        {
+          "at": "2026-10-27T19:32:53.944922+00:00",
+          "owner": "codex-moogle-charge-scroll",
+          "detail": "Review adjustment head80f59bf0d: guard only PLATFORM_PC, original non-PC condition intact. Actual fullconsumer now explicitly-DPLATFORM_PC: REDbaseline0xC0000094 hb3fbkd9, GREEN146243cases bwch73nm rc0. NonPC preprocessed MsChargeDraw tokens equal8d, proof nonpc-equivalence.json; no GBA binary rebuild. Same scope3files, noGPU/fullgameclaim."
         }
       ],
       "claimed_at": "2026-10-27T19:21:06.536178+00:00"
@@ -7358,7 +7363,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:29:46.673547+00:00",
+  "updated_at": "2026-10-27T19:32:53.944922+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
