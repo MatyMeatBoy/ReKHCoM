@@ -40,6 +40,7 @@ static HdSpriteState sState[2];static HdSpriteDraw sDraws[3][128];static int sDr
 static struct {const char*name;}kHdSprites[2]={{"gReloadCounterWhiteTiles_0"},{"gRevCountRedTiles"}};
 static SDL_Renderer*sRenderer;static SDL_Rect clip;static int clipped,draws,ink[64*64];static float lastAlpha,lastShade;
 static int Load(int id){(void)id;return 0;}
+#define LoadCounted Load /* the stutter view's counting wrapper */
 static uint32_t PortFrameCount(void){return 123;}
 static void SDL_SetRenderClipRect(SDL_Renderer*r,const SDL_Rect*c){(void)r;clipped=c!=0;if(c)clip=*c;}
 static void Quad(SDL_Texture*t,const HdSpriteDraw*q,float ox,float oy,float scale,SDL_FColor color){

@@ -167,6 +167,7 @@ static int MenuLightName(const char* name) {
 }
 
 static int Load(int i);
+static int LoadCounted(int i);
 
 /* Find runs in game/OAM setup and Queue runs outside the PPU row workers.
    Only promise a replacement after both textures exist, on SDL's main thread.
@@ -180,7 +181,7 @@ static int SpriteReady(int i) {
 #endif
     /* Freestanding guests use the SDL shim without thread introspection.
        Their game/OAM setup and Queue callers run outside the PPU row workers. */
-    if (!sState[i].image && !Load(i))
+    if (!sState[i].image && !LoadCounted(i))
         return 0;
     sState[i].present = 2;
     sState[i].lastUsed = PortFrameCount();
@@ -268,18 +269,25 @@ static void Unload(int i) {
     sState[i].bytes = 0;
 }
 
-static int LoadNow(int i);
-/* a decode and upload, counted for OptiPort's stutter view (gPortStutter) */
-static int Load(int i) {
-    uint64_t t0 = SDL_GetPerformanceCounter();
-    int ok = LoadNow(i);
+/* a decode and upload, counted for OptiPort's stutter view while the frame log is on (gPortStutter) */
+static int LoadCounted(int i) {
+    uint64_t t0, spent;
+    int ok;
+    if (!gPortStutter.on)
+        return Load(i);
+    t0 = SDL_GetPerformanceCounter();
+    ok = Load(i);
+    spent = SDL_GetPerformanceCounter() - t0;
     gPortStutter.hdLoads++;
-    gPortStutter.hdLoadTicks += SDL_GetPerformanceCounter() - t0;
-    gPortStutter.lastLoad = kHdSprites[i].name;
+    gPortStutter.hdLoadTicks += spent;
+    if (spent >= gPortStutter.worstLoadTicks) {
+        gPortStutter.worstLoadTicks = spent;
+        gPortStutter.worstLoad = kHdSprites[i].name;
+    }
     return ok;
 }
 
-static int LoadNow(int i) {
+static int Load(int i) {
     char file[160];
     int w = 0, h = 0, n, k, decodedW, decodedH;
     unsigned char* px;
@@ -297,9 +305,9 @@ static int LoadNow(int i) {
         if (!data || size > 0x7FFFFFFF || !stbi_info_from_memory(data, (int)size, &w, &h, &n))
             goto invalid;
     } else {
-        uint64_t t0 = SDL_GetPerformanceCounter();
+        uint64_t t0 = PORT_STUTTER_NOW();
         int ok = stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n);
-        gPortStutter.hdHeaderTicks += SDL_GetPerformanceCounter() - t0;
+        PORT_STUTTER_ADD(hdHeaderTicks, t0);
         if (!ok)
             goto invalid;
     }
@@ -330,11 +338,11 @@ static int LoadNow(int i) {
         Unload(victim);
     }
     {
-        uint64_t t0 = SDL_GetPerformanceCounter();
+        uint64_t t0 = PORT_STUTTER_NOW();
         px = kHdSprites[i].group == 7
             ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
             : stbi_load(file, &decodedW, &decodedH, &n, 4);
-        gPortStutter.hdDecodeTicks += SDL_GetPerformanceCounter() - t0;
+        PORT_STUTTER_ADD(hdDecodeTicks, t0);
     }
     SDL_free(data);
     data = NULL;
@@ -355,13 +363,13 @@ static int LoadNow(int i) {
     sState[i].textureH = h;
     s = SDL_CreateSurfaceFrom(w, h, SDL_PIXELFORMAT_RGBA32, px, w * 4);
     if (s) {
-        uint64_t t0 = SDL_GetPerformanceCounter();
+        uint64_t t0 = PORT_STUTTER_NOW();
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
         /* the white copy for the game's brightening fades */
         for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
         sState[i].white = SDL_CreateTextureFromSurface(sRenderer, s);
         SDL_DestroySurface(s);
-        gPortStutter.hdUploadTicks += SDL_GetPerformanceCounter() - t0;
+        PORT_STUTTER_ADD(hdUploadTicks, t0);
     }
     stbi_image_free(px);
     if (!sState[i].image || !sState[i].white) {
@@ -997,7 +1005,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         /* the game's brightness fade (BLDY) and the part's palette fade, whichever is further */
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
         float white = SDL_max(brighten > 0 ? brighten / 16.0f : 0.0f, q->white / 255.0f);
-        if (!st->image && !Load(q->id))
+        if (!st->image && !LoadCounted(q->id))
             continue;
         st->lastUsed = PortFrameCount();
         if (layer == 1 && sRingRatio >= 0 && SDL_strstr(kHdSprites[q->id].name, "FaceTiles") && RingLoad()) {
@@ -1045,7 +1053,7 @@ void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float sca
         int k, x, y, left, top, right, bottom;
         float l = q->x[0], r = l, t = q->y[0], b = t;
         float shade, white;
-        if (!q->hudOwner || (!st->image && !Load(q->id))) continue;
+        if (!q->hudOwner || (!st->image && !LoadCounted(q->id))) continue;
         st->lastUsed = PortFrameCount();
         for (k = 1; k < 4; k++) {
             l = SDL_min(l, q->x[k]); r = SDL_max(r, q->x[k]);

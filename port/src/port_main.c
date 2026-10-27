@@ -3150,13 +3150,16 @@ static void VBlankCycle(void) {
         if (!attempted) {
             attempted = 1;
             frameLog = fopen(frameLogPath, "w");
+            gPortStutter.on = 1;
             if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
                                             "hd_loads,hd_load_ms,glyphs,glyph_ms\n");
         }
         {
-            /* the deep view of each frame: the game's logic since the last cycle, the PPU, the present (HD layers
-               included) and the one-off costs (gPortStutter); a frame past KHCOM_STUTTER ms (default 25) also
-               leaves a line in kh_com.log naming them (OptiPort: find the wound before changing anything) */
+            /* the deep view of each frame: logic_ms is the time from the end of the previous frame's log to this
+               cycle's start (the game's logic and whatever runs between cycles, not the autosave or this log),
+               then the PPU, the present (HD layers included) and the one-off costs (gPortStutter); a frame past
+               KHCOM_STUTTER ms (default 25) also leaves a line in kh_com.log naming them, with its slowest load.
+               A diagnosis aid: it measures, it changes nothing. */
             static uint64_t logicStart;
             double ms = 1000.0 / sPerfFreq, interval = previous ? (end - previous) * ms : 0;
             double logic = logicStart && cycleStart > logicStart ? (cycleStart - logicStart) * ms : 0;
@@ -3169,13 +3172,14 @@ static void VBlankCycle(void) {
                         (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
             if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
-                        "decode %.1f, upload %.1f; last %s), glyphs %u (%.1f ms)", (unsigned)sFrameCount, interval, logic,
-                        ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
+                        "decode %.1f, upload %.1f; slowest %s %.1f ms), glyphs %u (%.1f ms)", (unsigned)sFrameCount,
+                        interval, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
                         gPortStutter.hdHeaderTicks * ms, gPortStutter.hdDecodeTicks * ms, gPortStutter.hdUploadTicks * ms,
-                        gPortStutter.lastLoad ? gPortStutter.lastLoad : "-", (unsigned)gPortStutter.glyphs,
-                        gPortStutter.glyphTicks * ms);
+                        gPortStutter.worstLoad ? gPortStutter.worstLoad : "-", gPortStutter.worstLoadTicks * ms,
+                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
             SDL_memset(&gPortStutter, 0, sizeof(gPortStutter));
-            logicStart = sCycleEnd;
+            gPortStutter.on = frameLog != NULL;
+            logicStart = SDL_GetPerformanceCounter();
         }
         previous = end;
     }

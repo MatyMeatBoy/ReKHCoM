@@ -403,15 +403,21 @@ typedef struct PortTextGlyph {
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud);
 /* Frames presented since start (port_main.c). */
 uint32_t PortFrameCount(void);
-/* OptiPort's deep view of a slow frame (KHCOM_FRAMELOG): the one-off costs each frame paid besides its usual work,
-   reset by the frame log every frame. HD sprite decodes/uploads (port_hdsprites.c Load) and HD glyph renders. */
+/* OptiPort's deep view of a slow frame: the one-off costs each frame paid besides its usual work, reset by the
+   frame log every frame. HD sprite decodes/uploads (port_hdsprites.c) and HD glyph renders. Only counted while
+   KHCOM_FRAMELOG is on (on); otherwise no clock is read. */
 typedef struct PortStutterProbe {
+    int on;
     uint32_t hdLoads, glyphs;
     uint64_t hdLoadTicks, glyphTicks;
-    uint64_t hdHeaderTicks, hdDecodeTicks, hdUploadTicks; /* the loads' three parts */
-    const char* lastLoad;
+    uint64_t hdHeaderTicks, hdDecodeTicks, hdUploadTicks; /* the loads' three parts, summed */
+    uint64_t worstLoadTicks;
+    const char* worstLoad; /* the frame's slowest load, not the last one */
 } PortStutterProbe;
 extern PortStutterProbe gPortStutter;
+#define PORT_STUTTER_NOW() (gPortStutter.on ? SDL_GetPerformanceCounter() : 0)
+#define PORT_STUTTER_ADD(field, start) \
+    do { if (gPortStutter.on) gPortStutter.field += SDL_GetPerformanceCounter() - (start); } while (0)
 
 /* ---- audio (port_audio.c) ------------------------------------------------ */
 
