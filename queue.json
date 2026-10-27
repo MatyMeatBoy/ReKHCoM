@@ -6557,12 +6557,12 @@
     "windows64-cpu-sse41-gate": {
       "id": "windows64-cpu-sse41-gate",
       "piece": "Validar requisito SSE4.1 antes del guest Windows64",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-windows64-cpu-gate",
       "created_at": "2026-10-27T16:56:57.396089+00:00",
-      "updated_at": "2026-10-27T16:59:15.440952+00:00",
+      "updated_at": "2026-10-27T17:12:36.959283+00:00",
       "branch": "fix/windows64-cpu-requirement",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/377",
       "approval": "Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro",
       "reference": "port/progress/PLAN_V22.md",
       "evidence": [
@@ -6570,6 +6570,11 @@
           "at": "2026-10-27T16:59:15.440952+00:00",
           "owner": "codex-windows64-cpu-gate",
           "detail": "Claimok71f8cd1, base freshmain aef6b5309; contrato SSE4.1 sin gate, no causa atribuida a Pedro (Win11x64 declarado). Pruebas consumidores antes de implementar; host/launcher únicamente, sin guest."
+        },
+        {
+          "at": "2026-10-27T17:12:36.959283+00:00",
+          "owner": "codex-windows64-cpu-gate",
+          "detail": "PRdraft377 head17011d5f5. GuardCPU Windows host/selector conSSE4.1baseline intacta; consumidoresRED→GREEN, hostCPUIDmasked5/sinmarker y native81, selector/boot/ABI yfrontend32syntaxOK. Preflighttests6negativos conservan archivosajenos antescualquierwrite; no rebuildhost porguardfixture. Sin atribuciónPedroWin11; sinmerge/release. QAcheckoutanterior retirado despuésbackupúnico+hardlinksSHA/refsevidencia."
         }
       ],
       "claimed_at": "2026-10-27T16:57:09.995705+00:00"
@@ -6581,7 +6586,7 @@
     "created_at": "2026-10-27T17:11:02.822041+00:00",
     "updated_at": "2026-10-27T17:11:02.822041+00:00"
   },
-  "updated_at": "2026-10-27T17:12:27.795391+00:00",
+  "updated_at": "2026-10-27T17:12:36.959283+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
