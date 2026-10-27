@@ -20,9 +20,8 @@ def prepare(root, out):
     old = '    if (GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES)\n        return 0;\n    MultiByteToWideChar(CP_UTF8, 0, path, -1, wpath, 1024);'
     assert decoder.count(old) == 1, 'native movie path contract changed'
     decoder = decoder.replace(old, '    if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, wpath, 1024) ||\n        GetFileAttributesW(wpath) == INVALID_FILE_ATTRIBUTES) return 0;')
-    # The native decoder uses its normal pause flow; the host supplies an equivalent UI adapter.
-    decoder = decoder.replace('        if (quit)\n            break;', '        if (quit || sMovieDeviceLost)\n            break;')
-    decoder = decoder.replace('                if (quit)\n                    break;', '                if (quit || sMovieDeviceLost)\n                    break;')
+    # Reset cancellation and its false result remain the native decoder's policy.
+    assert 'return played && !sMovieDeviceReset;' in decoder, 'native reset outcome contract changed'
     out.mkdir(parents=True, exist_ok=True)
     (out / 'windows_movie_subtitles.inc').write_text(subtitles, encoding='utf-8')
     (out / 'windows_movie_decoder.inc').write_text(decoder, encoding='utf-8')

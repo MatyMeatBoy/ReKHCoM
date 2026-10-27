@@ -2,7 +2,8 @@
  * 32-bit game pointers). Every bridge entry has a typed SysV wrapper: SDL,
  * Windows and libc keep the native Microsoft x64 ABI. Game layouts stay x32.
  * Usage: rekhcom64.exe guest-eu.bin --data DIR
- * Initial milestone: HD music is shared; HD movies and UDP use guest fallbacks.
+ * HD music and Media Foundation movie decoding are shared with the desktop port.
+ * UDP currently uses the guest fallback.
  */
 #define _GNU_SOURCE
 #include <SDL3/SDL.h>

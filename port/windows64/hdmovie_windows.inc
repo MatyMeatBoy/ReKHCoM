@@ -7,7 +7,7 @@
 #include <mferror.h>
 typedef WCHAR SubChar;
 #define SDL_getenv SDL_getenv_unsafe
-static int sStartAt, sMovieDeviceLost;
+static int sStartAt, sMovieDeviceReset;
 static const char *sMovieSubs[2], *sMovieFont;
 static SDL_Keycode sMovieStartKeys[2] = { SDLK_RETURN, 0 };
 static struct { int hdSubtitles; } gPortConfig;
@@ -41,7 +41,7 @@ static int PauseWanted(int* quit) {
     SDL_Event event; int pause = 0;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_EVENT_RENDER_DEVICE_RESET) {
-            RendererDeviceReset(); sMovieDeviceLost = 1;
+            RendererDeviceReset(); sMovieDeviceReset = 1;
         } else if (event.type == SDL_EVENT_QUIT) { *quit = 1; return 0; }
         else if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat)
             pause |= event.key.key == SDLK_ESCAPE || event.key.key == sMovieStartKeys[0] ||
@@ -72,7 +72,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
     if (!frozen) return 0;
     Subs text[3]; memset(text, 0, sizeof(text));
     if (audio) SDL_PauseAudioStreamDevice(audio);
-    while (!done && !*quit && !sMovieDeviceLost) {
+    while (!done && !*quit && !sMovieDeviceReset) {
         SDL_Event event;
         if (getenv("KHCOM_HDMOVIE_PAUSETEST") && ++tick % 10 == 0 && step < 4) {
             static const SDL_Keycode walk[] = { SDLK_DOWN, SDLK_RETURN, SDLK_UP, SDLK_RETURN };
@@ -84,7 +84,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
         }
         while (SDL_PollEvent(&event)) {
             int key = 0;
-            if (event.type == SDL_EVENT_RENDER_DEVICE_RESET) { RendererDeviceReset(); sMovieDeviceLost = 1; break; }
+            if (event.type == SDL_EVENT_RENDER_DEVICE_RESET) { RendererDeviceReset(); sMovieDeviceReset = 1; break; }
             if (event.type == SDL_EVENT_QUIT) { *quit = 1; break; }
             if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) key = event.key.key;
             else if (event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
@@ -106,7 +106,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
                 else { confirm = 1; selected = 1; }
             }
         }
-        if (*quit || sMovieDeviceLost) break;
+        if (*quit || sMovieDeviceReset) break;
         int ow = 0, oh = 0; SDL_GetCurrentRenderOutputSize(renderer, &ow, &oh);
         if (ow <= 0 || oh <= 0) { SDL_Delay(16); continue; }
         if (previous != confirm || text[0].height != oh) {
@@ -148,7 +148,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
     SDL_DestroyTexture(frozen);
     if (audio) SDL_ResumeAudioStreamDevice(audio);
     DropPendingInput();
-    Log("hd movie pause: %s", *quit ? "quit" : sMovieDeviceLost ? "device reset" : result ? "skip confirmed" : "continue");
+    Log("hd movie pause: %s", *quit ? "quit" : sMovieDeviceReset ? "device reset" : result ? "skip confirmed" : "continue");
     return result;
 }
 #include "windows_movie_decoder.inc"
@@ -157,7 +157,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
     char path[2048];
     if (!movie || snprintf(path, sizeof(path), "%s", movie) >= (int)sizeof(path)) return 0;
-    sStartAt = 0; sMovieDeviceLost = 0;
+    sStartAt = 0; sMovieDeviceReset = 0;
     char* at = strrchr(path, '@');
     if (at) { char* end; long second = strtol(at + 1, &end, 10); if (end != at + 1 && !*end && second >= 0 && second <= 86400) { sStartAt = (int)second; *at = 0; } }
     sMovieSubs[0] = subs1; sMovieSubs[1] = subs2; sMovieFont = font;
@@ -184,7 +184,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     SDL_SetRenderViewport(sRenderer, &viewport);
     SDL_SetRenderScale(sRenderer, scaleX, scaleY);
     SDL_SetRenderClipRect(sRenderer, clipped ? &clip : NULL);
-    if (sMovieDeviceLost) Log("hd movie: renderer reset; returning to guest generation %u", sRendererGeneration);
+    if (sMovieDeviceReset) Log("hd movie: renderer reset; returning to guest generation %u", sRendererGeneration);
     DropPendingInput();
     if (SUCCEEDED(com)) CoUninitialize();
     return played;

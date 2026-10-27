@@ -83,7 +83,8 @@ Continue or Skip -> Yes/No is implemented in the host without calling guest code
 The host pause UI is a separate implementation, localized in five languages.
 It has keyboard/gamepad navigation. No guest pointers or unsafe guest reentry.
 Viewport, clip and scale are restored on exit. Real renderer resets invalidate
-host texture handles and publish an epoch; normal movies retain guest textures.
+host texture handles and publish an epoch, then return 0 so the guest preserves
+the normal ROM scene fallback; normal movies retain guest textures.
 
 ```powershell
 python port/windows64/test_movies.py --font PATH_TO_KHMenu.otf

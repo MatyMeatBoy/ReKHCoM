@@ -32,7 +32,7 @@ cases = [
     ('offset', str(fixture) + '@2', {}, 1, 'frames decoded'),
     ('skip', str(fixture), {'KHCOM_HDMOVIE_PAUSETEST': '0'}, 1, 'skip confirmed'),
     ('cancel', str(fixture), {'KHCOM_HDMOVIE_PAUSETEST': '0', 'KHCOM_HDMOVIE_PAUSE_ACTION': 'cancel'}, 1, '90 frames decoded'),
-    ('reset', str(fixture), {'TEST_MOVIE_RESET': '1'}, 1, 'generation=1'),
+    ('reset', str(fixture), {'TEST_MOVIE_RESET': '1'}, 0, 'generation=1'),
     ('unicode', str(unicode_movie), {}, 1, '90 frames decoded'),
     ('software', str(fixture), {'SDL_VIDEO_DRIVER': 'dummy'}, 1, ' RGB,'),
     ('corrupt', str(corrupt), {}, 0, 'does not open'),
