@@ -6903,15 +6903,16 @@
     "issue378-hd-audio-subtitle-independence": {
       "id": "issue378-hd-audio-subtitle-independence",
       "piece": "Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-issue378-subtitles",
       "created_at": "2026-10-27T18:27:56.322518+00:00",
-      "updated_at": "2026-10-27T18:27:56.322518+00:00",
+      "updated_at": "2026-10-27T18:28:02.374425+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/378",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T18:28:02.374425+00:00"
     }
   },
   "integrator": {
@@ -6920,7 +6921,7 @@
     "created_at": "2026-10-27T18:27:49.096458+00:00",
     "updated_at": "2026-10-27T18:27:49.096458+00:00"
   },
-  "updated_at": "2026-10-27T18:27:56.322518+00:00",
+  "updated_at": "2026-10-27T18:28:02.374425+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
