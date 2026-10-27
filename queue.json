@@ -6162,12 +6162,12 @@
     "v22-scenes-character-triggers": {
       "id": "v22-scenes-character-triggers",
       "piece": "Menú de escenas: L2/R2 alterna Sora/Riku y su catálogo; tooltip según mando activo; preservar selección y desbloqueos",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-scenes-triggers",
       "created_at": "2026-10-27T14:50:27.170115+00:00",
-      "updated_at": "2026-10-27T15:36:06.178997+00:00",
+      "updated_at": "2026-10-27T15:56:00.728107+00:00",
       "branch": "feat/gallery-character-triggers",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/367",
       "approval": "Pedido directo del usuario 27/10/2026 en chat Codex: menú de escenas L2/R2 y tooltip",
       "reference": "port/progress/PENDIENTES_VIGENTES.md",
       "evidence": [
@@ -6175,6 +6175,11 @@
           "at": "2026-10-27T15:36:06.178997+00:00",
           "owner": "codex-scenes-triggers",
           "detail": "ClaimCAS confirmado; implementación acotada gatillos y tooltip sin tocar partidas ni gameplay"
+        },
+        {
+          "at": "2026-10-27T15:56:00.728107+00:00",
+          "owner": "codex-scenes-triggers",
+          "detail": "Commit e16c87d50. Probes consumidorC EU/US/JP PASS: separaciónSora/Riku, umbral/rearme, selección/scroll/resume, aliases/fallbackHD, locked/configintacta y labelsPS/Xbox/Nintendo. Capturasreales UIactual sobrecoreEUcacheado (no fullbuild), rootrevisóSora151,Riku48,F2,L2/R2/ZL/ZRsin solapes. Evidencia local pruebas/gallery-character-triggers/build-metadata.json y PNG."
         }
       ],
       "claimed_at": "2026-10-27T15:35:49.604861+00:00"
@@ -6341,7 +6346,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T15:50:35.213103+00:00",
+  "updated_at": "2026-10-27T15:56:00.728107+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
