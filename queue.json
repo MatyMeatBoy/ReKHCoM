@@ -7245,15 +7245,21 @@
     "child386-safe-crash-reporting": {
       "id": "child386-safe-crash-reporting",
       "piece": "Windows64: conservar primera excepción desde stack guest",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-crash-reporter",
       "created_at": "2026-10-27T19:17:47.169523+00:00",
-      "updated_at": "2026-10-27T19:17:54.126227+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T19:22:44.336544+00:00",
+      "branch": "fix/windows64-crash-report-stack",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/387",
       "approval": "Coordinador autoriza fix acotado reporter P0 #386 y fixture CPU foreign stack",
       "reference": "issue386 debugger original integer-divzero masked by secondary stack overflow",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T19:22:44.336544+00:00",
+          "owner": "codex-crash-reporter",
+          "detail": "5e50f4d5656b740b5dcdee44b967a2a4d2bba9ac: real foreign low-stack RED baseline FD; 7 CPU regressions GREEN original094; host-only build PASS d87fd564. Root owns core MapInspect fix and game QA. No ROM/save/GPU in this PR."
+        }
+      ],
       "claimed_at": "2026-10-27T19:17:54.126227+00:00"
     },
     "issue386-moogle-charge-scroll": {
@@ -7272,7 +7278,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:21:06.536178+00:00",
+  "updated_at": "2026-10-27T19:22:44.336544+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
