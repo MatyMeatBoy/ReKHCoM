@@ -283,4 +283,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sol-remastered-parser-safety | Bound remastered package allocations and preserve expanded language tables | integrado | codex-remastered-parser-review | https://github.com/MatyMeatBoy/ReKHCoM/pull/397 | usuario-bugs-prebuild | 2026-10-27T20:27:59.303702+00:00 |
 | claude-guest64-compat-independent-review | Claude: revision independiente de fallback GBA32 a hosts64 (#396 y extensiones); contrastar cero/resto, widths, operands register/memory, contexto y rendimiento normal con pruebas CPU. Coordinar sin editar archivos reclamados por Sol. Reportar limites y discrepancias a Codex para PR; no vender primerbloque como paridadtotal. | pendiente | — | — | Usuario: prioridadtotal fallback64, conservarlogicaGBA, Claude puede tomar trabajoindependiente | 2026-10-27T20:37:37.144425+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T20:47:23.999752+00:00)
