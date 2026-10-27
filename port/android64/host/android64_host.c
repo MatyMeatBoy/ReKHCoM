@@ -131,9 +131,12 @@ static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
 static int HostGpuQuery(const char*, char*, int);
+static int HostGamepadInfoQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
     int gpuQuery = HostGpuQuery(name, out, cap);
     if (gpuQuery != -2) return gpuQuery;
+    int padInfo = HostGamepadInfoQuery(name, out, cap);
+    if (padInfo != -2) return padInfo;
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -426,6 +429,7 @@ static void H_audio_ratio(double ratio) {
 /* ---- input ---------------------------------------------------------------------------------------------------- */
 
 static SDL_Gamepad* sPad;
+#include "host_gamepad_info.h"
 static HostTouch sFingers[HOSTTOUCH_MAX];
 static int sFingerCount;
 

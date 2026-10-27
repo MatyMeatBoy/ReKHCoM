@@ -81,9 +81,12 @@ static void QueueKey(const SDL_Event* event) {
 }
 static uint32_t sRendererGeneration;
 static int HostGpuQuery(const char*, char*, int);
+static int HostGamepadInfoQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
     int gpuQuery = HostGpuQuery(name, out, cap);
     if (gpuQuery != -2) return gpuQuery;
+    int padInfo = HostGamepadInfoQuery(name, out, cap);
+    if (padInfo != -2) return padInfo;
     if (!strcmp(name, "KHCOM_HOST_KEY_EVENT")) {
         if (cap < 64) return -1;
         sKeyboardEventsActive = 1;
@@ -283,6 +286,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
 
 /* ---- input: a gamepad, or the keyboard ---- */
 static SDL_Gamepad* sPad;
+#include "host_gamepad_info.h"
 static void RendererDeviceReset(void) {
     HostTextureReset();
     Log("renderer reset: bridge texture generation %u", sRendererGeneration);

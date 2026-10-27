@@ -342,6 +342,7 @@ typedef enum SDL_GamepadType {
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR, SDL_GAMEPAD_TYPE_COUNT
 } SDL_GamepadType;
 SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad);
+bool SDL_GamepadConnected(SDL_Gamepad* gamepad);
 typedef struct SDL_Joystick SDL_Joystick;
 typedef enum SDL_GamepadButton {
     SDL_GAMEPAD_BUTTON_INVALID = -1,

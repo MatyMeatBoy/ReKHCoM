@@ -66,6 +66,11 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   de fuente y backups reversibles; `?` honesto en inputs no representables.
   [Evidencia y límites](CONTROLLER_PROMPT_ORIGINAL_LIVE_SPANS.md). Pendiente QA
   visual/paletas, hotplug físico y cobertura tutorial; no se declara cierre total.
+- [ ] **Metadatos reales del mando en 64 bits:** implementación y regresión CPU
+  en `feature/controller-bridge-metadata`, claim `controller-bridge-metadata`.
+  Consulta opcional versionada sin cambiar ABI, caché por evento, fallback
+  genérico en hosts antiguos. QA física/hotplug y unión con prompts aún pendientes;
+  [contrato y evidencia](CONTROLLER_BRIDGE_METADATA.md).
 - [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
   Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
   convención Nintendo A/PS círculo elegible, assets existentes, todos los
