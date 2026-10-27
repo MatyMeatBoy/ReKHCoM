@@ -1,5 +1,32 @@
 # Pendientes después de v2.0 — 26/10/2026
 
+## Estado publicado y limpieza — 27/10, después de la entrega
+
+**[2.1 estable publicada](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.1)**
+el27/10 a13:02:10UTC, tag `8c613ae5d`. PR351/353 integrados; Windows, Linux/Deck,
+Android beta y Anbernic beta entregados con manifiesto/hashes. Los motores
+corresponden a `cd144335e`; launcher/empaquetado Linux a `de434db7c`.
+El helper nativo Linux pasa7/7 transacciones y empaquetado en Debian12VM;
+75 archivos nativos permanecen idénticos tras reempaquetar. Android final
+compilado; no se repitió el gameplay del conjunto final Linux/Android tras
+la baseline35b57818c. No confundirlo con confirmación física de reporteros.
+Respondidos #42/#163/#277/#272/#330/#336 con la release. #330 y #336 cerrados:
+setupGamingMode y vía nativa de importación entregados; no se afirma haber
+diagnosticado el crash Wine. #272 sigue abierto esperando resultado Samsung.
+Las notas anteriores de «sin release nueva» quedan como historia.
+
+Primera limpieza de dummies/temporales: retiradas4 copias de ejecutable,
+biblioteca o guest de runtimes de QA tras comprobar SHA256 idéntico a una
+copia conservada del paquete; liberados15.645.146bytes. Dos binarios distintos
+se conservaron como evidencia histórica. Registro local:
+`khcom-crash-diagnostics/build/v21-dummy-cleanup.json`.
+
+- [ ] Continuar limpieza por tarea terminada: comprobar referencias/uso antes
+  de retirar placeholders o fixtures. Los backends SDL `dummy`, espaciadores
+  ImGui, debug original y stubs de ABI no son basura por su nombre.
+  Conservar logs/capturas de regresión, ROMs, partidas, WIP y archivos ignorados
+  necesarios antes de archivar cualquier worktree.
+
 ## Cierre de entrega 2.1 — mandato más reciente, 27/10
 
 El usuario pidió integrar todos los PR listos y publicar **2.1 estable** ahora,
