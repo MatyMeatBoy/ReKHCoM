@@ -7684,10 +7684,10 @@
     "gallery-sora-order-descriptions-163": {
       "id": "gallery-sora-order-descriptions-163",
       "piece": "Feedback #163: Monstro y Hundred Acre Wood aparecen despues del final de Sora; descripciones de pisos repetidas End of floor1/2. Revisar orden y textos de la lista real. Aplazado frente a cuelgues, sin duplicar fixes HD ya confirmados por Pedro.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-27T20:11:48.215524+00:00",
-      "updated_at": "2026-10-27T21:10:42.200036+00:00",
+      "updated_at": "2026-10-27T23:53:11.993577+00:00",
       "branch": "fix/gallery-sora-order-163",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/399",
       "approval": "Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild.",
@@ -7697,9 +7697,15 @@
           "at": "2026-10-27T21:10:42.200036+00:00",
           "owner": "claude-v22",
           "detail": "worlds 74-148 between 10F and 11F; generic scenes named by script characters; CPU order check PASS"
+        },
+        {
+          "at": "2026-10-27T23:53:11.993577+00:00",
+          "owner": "claude-v22",
+          "detail": "Root and independent worker review: generator byte-exact;199 unique IDs/orders and6 languages;all IDs preserved;73 world events before11F/Sora ending and ending beforeRiku. CPU regression pass; source order range fitsint16. New package gallery execution remains separate.; merged 53af9278aec03f57d8a4b1e00e86c223b02d5636"
         }
       ],
-      "claimed_at": "2026-10-27T20:57:04.529867+00:00"
+      "claimed_at": "2026-10-27T20:57:04.529867+00:00",
+      "completed_at": "2026-10-27T23:53:11.993577+00:00"
     },
     "v22-pre2-windows-crash-delivery": {
       "id": "v22-pre2-windows-crash-delivery",
@@ -8137,7 +8143,7 @@
     "created_at": "2026-10-27T23:53:03.519533+00:00",
     "updated_at": "2026-10-27T23:53:03.519533+00:00"
   },
-  "updated_at": "2026-10-27T23:53:03.519533+00:00",
+  "updated_at": "2026-10-27T23:53:11.993577+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
