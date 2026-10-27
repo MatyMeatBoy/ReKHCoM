@@ -351,11 +351,11 @@ static int Load(int i) {
         if (px) stbi_image_free(px);
         goto invalid;
     }
-    /* Kingdom Key seam checkpoint, not a common border colour:
+    /* Kingdom Key's one-cell seam correction:
        Kingdom Key's native white dot lies outside the HD window; cover just
        that GBA cell with its neighbouring native near-black.
-       Cure's black and Simba's blue
-       native top lines, every other illustration and all value digits stay. */
+       Cure's black and Simba's blue native top lines, every other illustration
+       and all separately rendered value digits stay unchanged. */
     if (kHdSprites[i].group == 6 && w == 128 && h == 256) {
         if (!strcmp(kHdSprites[i].name, "gKingdomKeySmallCardHD")) {
             for (int y = 120; y < 128; y++)
