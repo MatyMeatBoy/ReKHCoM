@@ -6776,13 +6776,8 @@
       "completed_at": "2026-10-27T17:55:08.584769+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "cc9b8bd14485d59c0ca500bb5a9fd4e2a3ce3cfd05307b71",
-    "created_at": "2026-10-27T17:54:54.947930+00:00",
-    "updated_at": "2026-10-27T17:54:54.947930+00:00"
-  },
-  "updated_at": "2026-10-27T17:55:08.584769+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-27T17:55:13.646302+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
