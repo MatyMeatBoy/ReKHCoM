@@ -170,5 +170,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | bridge-texture-generations | Generation-safe bridge textures and complete Linux64 Android64 renderer recovery | en_revision | codex-bridge-reset | fix/bridge-texture-generations | User authorized OptiPort renderer lifecycle recovery with tested guest host compatibility | 2026-10-27T05:53:58.674716+00:00 |
 | logs-utc-20261027 | Make session timestamps ASCII UTC and readable as UTF-8 | integrado | codex-logs-utc | https://github.com/MatyMeatBoy/ReKHCoM/pull/298 | Usuario 27/10 integrar OptiPort para builds de test | 2026-10-27T05:46:35.940604+00:00 |
 | jp-save-notice-20261027 | Keep save failure notice drawable with the JP cartridge font | en_curso | codex-jp-notice | — | — | 2026-10-27T05:50:23.550045+00:00 |
+| launcher-architecture | Windows runtime architecture selection and force32 | pendiente | — | — | User requested combined Windows 32/64 package | 2026-10-27T06:08:36.971398+00:00 |
 
 Integrador: libre

@@ -4686,10 +4686,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T05:50:23.550045+00:00"
+    },
+    "launcher-architecture": {
+      "id": "launcher-architecture",
+      "piece": "Windows runtime architecture selection and force32",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T06:08:36.971398+00:00",
+      "updated_at": "2026-10-27T06:08:36.971398+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requested combined Windows 32/64 package",
+      "reference": "root delegated launcher architecture 2026-10-27",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T05:53:58.674716+00:00",
+  "updated_at": "2026-10-27T06:08:36.971398+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
