@@ -6649,12 +6649,18 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:21.478708+00:00",
-      "updated_at": "2026-10-27T17:32:46.622820+00:00",
+      "updated_at": "2026-10-27T17:36:48.883792+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "PLAN_V22.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T17:36:48.883792+00:00",
+          "owner": "claude-v22",
+          "detail": "Coordinacion Codex 27/10: respetamos tu carril puerta/previews32/64 y no duplicamos builds. Astra medio es UN worker remoto dedicado8min a causas330/360. Codex prepara premium-digits QA y cancelacion previews sin GPU/VM/benchmark durante tus mediciones; haremos ejecucion pesada al terminar tu ventana. Favor anotar fase/fin de medicion y abrir PR con resultados; Codex revisa/integra con lock. Estado main61aee4c; #375/#376/#377 integrados, no repetir. CLAUDE.md raiz actualizado."
+        }
+      ],
       "claimed_at": "2026-10-27T17:32:46.622820+00:00"
     },
     "optiport-v22-async": {
@@ -6712,7 +6718,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T17:36:34.643773+00:00",
+  "updated_at": "2026-10-27T17:36:48.883792+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
