@@ -4861,13 +4861,13 @@
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
       "piece": "Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "claude-cartas",
       "created_at": "2026-10-27T06:31:18.114890+00:00",
-      "updated_at": "2026-10-27T06:43:09.912613+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
+      "updated_at": "2026-10-27T10:29:11.109346+00:00",
+      "branch": "art/small-cards-centred",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/315",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
       "evidence": [
         {
@@ -5519,7 +5519,7 @@
     "created_at": "2026-10-27T10:28:25.637236+00:00",
     "updated_at": "2026-10-27T10:28:25.637236+00:00"
   },
-  "updated_at": "2026-10-27T10:28:45.735859+00:00",
+  "updated_at": "2026-10-27T10:29:11.109346+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
