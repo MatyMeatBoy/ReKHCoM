@@ -25,6 +25,8 @@ PCM is forwarded byte-for-byte. The consumer uses fixed 16 KiB scratch storage
 per stream, bounds each demand to 2048 frames and performs no game calls,
 decoder work or I/O. Stream locks serialize producer, consumer and reset state.
 SDL's own stream queue operations retain SDL's internal allocation behavior.
+Recovery handles stereo F32/S16; other valid SDL formats are forwarded natively
+without recovery, rather than rejected by the optional helper's format limits.
 
 This consumer is used by hosted game audio and hosted HD music, and by the
 three SDL bridge hosts after host-side HD mixing. Hosted HD music fills its

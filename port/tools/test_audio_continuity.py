@@ -105,7 +105,15 @@ static void boundary_cases(void){
  assert(SDL_GetAudioStreamQueued(s)==2048*8); /* huge demand is bounded by fixed scratch */
  SDL_DestroyAudioStream(s);puts("PASS: failed producer/callback/recovery, rate-change ramp and bounded demand");
 }
-int main(void){f32_case(0);f32_case(1);s16_case();boundary_cases();return 0;}
+static void unhandled_format(void){
+ SDL_AudioSpec spec={SDL_AUDIO_S32,1,48000};Sint32 input[100],output[100];
+ for(int i=0;i<100;i++)input[i]=i*127;
+ SDL_AudioStream*s=SDL_CreateAudioStream(&spec,&spec);assert(s);assert(PortAudioContinuityInit(&state,s));
+ assert(PortAudioContinuityPut(&state,s,input,sizeof(input)));
+ assert(SDL_GetAudioStreamData(s,output,sizeof(output))==sizeof(output));assert(!memcmp(input,output,sizeof(input)));
+ SDL_DestroyAudioStream(s);puts("PASS: unsupported recovery format still forwards valid native PCM unchanged");
+}
+int main(void){f32_case(0);f32_case(1);s16_case();boundary_cases();unhandled_format();return 0;}
 '''
 (OUT/'test.c').write_text(c)
 cc=next((ROOT.parent/'toolchain').glob('llvm-mingw-*/bin/clang.exe'))

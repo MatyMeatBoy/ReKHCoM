@@ -106,7 +106,15 @@ static bool PortAudioContinuityPut(PortAudioContinuity* state, SDL_AudioStream* 
     if (!state->attached || bytes == 0) return SDL_PutAudioStreamData(stream, data, bytes);
     if (!SDL_LockAudioStream(stream)) return false;
     frameBytes = PortAudioContinuitySpec(stream, &spec, &frames);
-    if (!frameBytes || bytes < 0 || bytes % frameBytes || !data) goto done;
+    if (!frameBytes) {
+        /* Recovery supports the game's stereo F32/S16 streams. A different
+         * valid SDL format must retain native output, not become a rejection. */
+        ok = SDL_PutAudioStreamData(stream, data, bytes);
+        state->starved = state->fadeOutAt = state->fadeOutFrames = state->fadeInAt = state->fadeInFrames = 0;
+        state->tail[0] = state->tail[1] = 0.0f;
+        goto done;
+    }
+    if (bytes < 0 || bytes % frameBytes || !data) goto done;
     count = bytes / frameBytes;
     if (state->starved) {
         /* A producer can return midway through a short consumer ramp. Finish
