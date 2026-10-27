@@ -5541,10 +5541,10 @@
     "controller-prompt-live-page": {
       "id": "controller-prompt-live-page",
       "piece": "Bounded semantic controller symbols refresh on binding/family revision",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T09:58:13.699280+00:00",
-      "updated_at": "2026-10-27T10:25:30.759032+00:00",
+      "updated_at": "2026-10-27T12:36:47.578633+00:00",
       "branch": "feature/controller-live-symbols",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/338",
       "approval": "Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope",
@@ -5554,9 +5554,15 @@
           "at": "2026-10-27T10:25:30.759032+00:00",
           "owner": "codex-control-prompts",
           "detail": "Actual input and Latin/SJIS layout CPU regression: 1000 stable draws, family/binding/hotplug/reveal preservation; Original enable and initial text fallback remain pending"
+        },
+        {
+          "at": "2026-10-27T12:36:47.578633+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "GitHub PR#338 state MERGED verified; mergeCommit fb885d9f38687f741152b339e943a968e79820cd; included in bundle PR351 merged 771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; runtime QA limits remain in project evidence."
         }
       ],
-      "claimed_at": "2026-10-27T09:58:18.898783+00:00"
+      "claimed_at": "2026-10-27T09:58:18.898783+00:00",
+      "completed_at": "2026-10-27T12:36:47.578633+00:00"
     },
     "steamdeck-gaming-mode-330": {
       "id": "steamdeck-gaming-mode-330",
@@ -5938,7 +5944,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:41.151478+00:00",
+  "updated_at": "2026-10-27T12:36:47.578633+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
