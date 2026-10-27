@@ -4187,7 +4187,7 @@
       "status": "en_revision",
       "owner": "codex-hd-sprite-guard",
       "created_at": "2026-10-27T04:24:56.848876+00:00",
-      "updated_at": "2026-10-27T04:27:54.453617+00:00",
+      "updated_at": "2026-10-27T04:35:53.116568+00:00",
       "branch": "fix/hd-sprite-guard",
       "pr": null,
       "approval": null,
@@ -4197,6 +4197,11 @@
           "at": "2026-10-27T04:27:54.453617+00:00",
           "owner": "codex-hd-sprite-guard",
           "detail": "TDD RED invalid-header assertion; GREEN production Load injected harness native32MiB and guest12MiB; no renderer/game run. Find/Queue late fallback remains outside bounded scope."
+        },
+        {
+          "at": "2026-10-27T04:35:53.116568+00:00",
+          "owner": "codex-hd-sprite-guard",
+          "detail": "Separate fallback commit: first-frame real QueueHdPart+DrawObjs native pixel RED then GREEN; Find/Queue require successful main-thread texture acquisition and frame pin. Budget 12/32MiB, reload_mask and menu_warmup pass. No game/GPU run."
         }
       ],
       "claimed_at": "2026-10-27T04:25:04.512763+00:00"
@@ -4216,7 +4221,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T04:35:24.576312+00:00",
+  "updated_at": "2026-10-27T04:35:53.118089+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
