@@ -68,7 +68,7 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
 - [x] **#42** desync final HD: ya integrado en main (PR #273); sale en 2.1.
 - [x] **#163 video galería** (qkZSuuTsrio, grabado con v2.0): pausa de película HD en la galería **sin texto** =
   bug #274, arreglado después de v2.0 (PR #274, 22:50Z). Mismo `MoviePause` en ambos bucles de `PlayFile`.
-  Test nuevo `port/tools/test_hd_gallery_pause_text.py` (WIP, sin commit verificado): la galería no encuentra el
+  Test de galería WIP (borrador fuera del repo, no integrado): la galería no encuentra el
   evento (`found=0`) con 516 ni 513 → ajustar selección (ver `test_gallery_matrix.py`: 515/516 son alias en
   pestañas HD; usar escena con `KHCOM_GALLERY_EVENT` como lo arma esa matriz).
 - [ ] **Atlas: escenas de diálogo con retrato en x4 1080p** (ej. Hades «¡Regla n.º 6!» en Coliseo: el retrato
