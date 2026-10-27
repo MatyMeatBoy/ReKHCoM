@@ -118,49 +118,117 @@ static SDL_Texture* SubTexture(stbtt_fontinfo* font, const char* text, float px,
     return t;
 }
 
-static void Quote(const char* s, char* out, size_t cap) {
-    size_t n = 0;
-    out[n++] = '\'';
-    for (; *s && n + 5 < cap; s++) {
-        if (*s == '\'') { memcpy(out + n, "'\\''", 4); n += 4; }
-        else out[n++] = *s;
+/* Each decoder is our direct child: no shell, inherited pipe writers or pclose wait. */
+#include <fcntl.h>
+#include <signal.h>
+#include <spawn.h>
+#include <sys/wait.h>
+typedef struct { int fd; pid_t pid; } MoviePipe;
+static MoviePipe MovieSpawn(char* const argv[]) {
+    MoviePipe p = { -1, -1 };
+    int fds[2];
+    posix_spawn_file_actions_t actions;
+    if (pipe2(fds, O_CLOEXEC) < 0) return p;
+    if (posix_spawn_file_actions_init(&actions) != 0) {
+        close(fds[0]); close(fds[1]); return p;
     }
-    out[n++] = '\'';
-    out[n] = 0;
+    int error = posix_spawn_file_actions_adddup2(&actions, fds[1], STDOUT_FILENO);
+    if (!error) error = posix_spawn_file_actions_addopen(&actions, STDIN_FILENO, "/dev/null", O_RDONLY, 0);
+    if (!error) error = posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
+    if (!error) error = posix_spawn_file_actions_addclose(&actions, fds[0]);
+    if (!error) error = posix_spawn_file_actions_addclose(&actions, fds[1]);
+    if (!error) error = posix_spawnp(&p.pid, argv[0], &actions, NULL, argv, environ);
+    posix_spawn_file_actions_destroy(&actions);
+    close(fds[1]);
+    if (error) { close(fds[0]); p.pid = -1; return p; }
+    p.fd = fds[0];
+    if (fcntl(p.fd, F_SETFL, O_NONBLOCK) < 0) {
+        close(p.fd); p.fd = -1;
+        kill(p.pid, SIGKILL);
+        while (waitpid(p.pid, NULL, 0) < 0 && errno == EINTR) {}
+        p.pid = -1;
+    }
+    return p;
+}
+static void MovieClose(MoviePipe* p) {
+    if (p->fd >= 0) close(p->fd);
+    p->fd = -1;
+    if (p->pid > 0) {
+        /* Cancel even a stopped/stalled decoder. Reap only our PID, exactly once. */
+        kill(p->pid, SIGKILL);
+        while (waitpid(p->pid, NULL, 0) < 0 && errno == EINTR) {}
+        p->pid = -1;
+    }
+}
+/* Positive: bytes; zero: temporarily empty; -1: EOF; -2: read error. */
+static ssize_t MovieRead(MoviePipe* p, void* bytes, size_t size) {
+    ssize_t n;
+    do n = read(p->fd, bytes, size); while (n < 0 && errno == EINTR);
+    if (n > 0) return n;
+    if (!n) return -1;
+    return errno == EAGAIN || errno == EWOULDBLOCK ? 0 : -2;
+}
+static double MovieClock(int audio, int eof, long long bytes, int queued, double now, double* began) {
+    double pcm = (bytes - queued) / 192000.0;
+    if (audio && !eof) {
+        *began = now - pcm; /* retain the last PCM position when switching clocks */
+        return pcm;
+    }
+    return now - *began;
+}
+static void MovieEvents(int* skip) {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_EVENT_QUIT) sQuit = 1;
+        if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat &&
+            (e.key.scancode == SDL_SCANCODE_X || e.key.scancode == SDL_SCANCODE_Z || e.key.scancode == SDL_SCANCODE_RETURN))
+            *skip = 1;
+        if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN &&
+            (e.gbutton.button == SDL_GAMEPAD_BUTTON_SOUTH || e.gbutton.button == SDL_GAMEPAD_BUTTON_EAST ||
+             e.gbutton.button == SDL_GAMEPAD_BUTTON_START))
+            *skip = 1;
+        if (e.type == SDL_EVENT_GAMEPAD_ADDED && !sPad) sPad = SDL_OpenGamepad(e.gdevice.which);
+    }
 }
 
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* fontPath) {
-    char path[1024], quoted[2200], cmd[2600], line[256];
+    char path[1024], line[256], seek[32];
     int start = 0, w = 0, h = 0, played = 0, skip = 0;
     double fps = 30;
     snprintf(path, sizeof(path), "%s", movie);
     char* at = strrchr(path, '@');
     if (at && strchr(at, '/') == NULL) { start = atoi(at + 1); *at = 0; }
-    if (access(path, R_OK) != 0 || system("command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1"))
-        return 0; /* nothing to play, or no ffmpeg: the cartridge's movie */
-    Quote(path, quoted, sizeof(quoted));
-    snprintf(cmd, sizeof(cmd), "ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate "
-             "-of csv=p=0 %s", quoted);
-    FILE* probe = popen(cmd, "r");
-    if (probe) {
-        unsigned num = 30, den = 1;
-        if (fgets(line, sizeof(line), probe) && sscanf(line, "%d,%d,%u/%u", &w, &h, &num, &den) >= 2 && den)
-            fps = (double)num / den;
-        pclose(probe);
+    if (access(path, R_OK) != 0) return 0;
+    char* probeArgs[] = { "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+        "stream=width,height,r_frame_rate", "-of", "csv=p=0", "-i", path, NULL };
+    MoviePipe probe = MovieSpawn(probeArgs);
+    size_t lineBytes = 0;
+    while (probe.fd >= 0 && !sQuit && !skip && lineBytes < sizeof(line) - 1) {
+        MovieEvents(&skip);
+        ssize_t n = MovieRead(&probe, line + lineBytes, sizeof(line) - 1 - lineBytes);
+        if (n < 0) break;
+        lineBytes += (size_t)n;
+        if (memchr(line, '\n', lineBytes)) break;
+        if (!n) SDL_Delay(10); /* pump events while metadata is unavailable */
     }
-    if (w <= 0 || h <= 0)
-        return 0;
-    snprintf(cmd, sizeof(cmd), "ffmpeg -v error -nostdin -ss %d -i %s -an -sn -f rawvideo -pix_fmt rgba - 2>/dev/null",
-             start, quoted);
-    FILE* video = popen(cmd, "r");
-    snprintf(cmd, sizeof(cmd), "ffmpeg -v error -nostdin -ss %d -i %s -vn -sn -ac 2 -ar 48000 -f s16le - 2>/dev/null",
-             start, quoted);
-    FILE* sound = popen(cmd, "r");
+    line[lineBytes] = 0;
+    MovieClose(&probe);
+    unsigned num = 30, den = 1;
+    if (sscanf(line, "%d,%d,%u/%u", &w, &h, &num, &den) >= 2 && num && den)
+        fps = (double)num / den;
+    if (sQuit || skip) return 1; /* explicit cancellation consumes the scene */
+    if (w <= 0 || h <= 0 || (size_t)w > SIZE_MAX / 4 / (size_t)h) return 0;
+    snprintf(seek, sizeof(seek), "%d", start);
+    char* videoArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-i", path,
+        "-an", "-sn", "-f", "rawvideo", "-pix_fmt", "rgba", "-", NULL };
+    char* audioArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-i", path,
+        "-vn", "-sn", "-ac", "2", "-ar", "48000", "-f", "s16le", "-", NULL };
+    MoviePipe video = MovieSpawn(videoArgs), sound = MovieSpawn(audioArgs);
     SDL_Texture* tex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, w, h);
     size_t frameBytes = (size_t)w * h * 4;
     uint8_t* frame = malloc(frameBytes);
     SDL_AudioSpec spec = { SDL_AUDIO_S16, 2, 48000 };
-    SDL_AudioStream* audio = sound ? SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL) : NULL;
+    SDL_AudioStream* audio = sound.fd >= 0 ? SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL) : NULL;
     stbtt_fontinfo font;
     unsigned char* fontData = NULL;
     int haveFont = 0;
@@ -174,30 +242,52 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         SDL_ResumeAudioStreamDevice(audio);
     if (sAudio)
         SDL_PauseAudioStreamDevice(sAudio); /* the game's own sound waits */
-    Uint64 began = SDL_GetTicksNS();
+    double began = SDL_GetTicksNS() / 1e9;
+    int audioEof = !audio;
+    size_t frameUsed = 0;
     long long frames = 0, audioBytes = 0;
     int shown = -1, subW = 0, subH = 0;
     SDL_Texture* subTex = NULL;
-    static uint8_t abuf[19200];
-    while (video && tex && frame && !sQuit && !skip) {
-        /* audio: about half a second queued ahead */
-        while (audio && SDL_GetAudioStreamQueued(audio) < 48000 * 4 / 2) {
-            size_t n = fread(abuf, 1, sizeof(abuf), sound);
+    uint8_t abuf[19200];
+    size_t audioUsed = 0;
+    while (video.fd >= 0 && tex && frame && !sQuit && !skip) {
+        MovieEvents(&skip);
+        if (sQuit || skip) break;
+        /* Nonblocking producer work is bounded; video and events keep progressing without PCM. */
+        for (int reads = 0; audio && !audioEof && reads < 8 &&
+             SDL_GetAudioStreamQueued(audio) < 48000 * 4 / 2; reads++) {
+            ssize_t n = MovieRead(&sound, abuf + audioUsed, sizeof(abuf) - audioUsed);
+            if (n < 0) {
+                MovieClock(1, 0, audioBytes, SDL_GetAudioStreamQueued(audio), SDL_GetTicksNS() / 1e9, &began);
+                audioEof = 1;
+                break;
+            }
             if (!n) break;
-            SDL_PutAudioStreamData(audio, abuf, (int)n);
-            audioBytes += (long long)n;
+            size_t total = audioUsed + (size_t)n;
+            size_t aligned = total & ~(size_t)3; /* stereo s16: preserve a fragmented sample frame */
+            if (aligned && !SDL_PutAudioStreamData(audio, abuf, (int)aligned)) {
+                MovieClock(1, 0, audioBytes, SDL_GetAudioStreamQueued(audio), SDL_GetTicksNS() / 1e9, &began);
+                audioEof = 1;
+                break;
+            }
+            audioBytes += (long long)aligned;
+            audioUsed = total - aligned;
+            memmove(abuf, abuf + aligned, audioUsed);
         }
-        if (fread(frame, 1, frameBytes, video) != frameBytes)
-            break;
-        played = 1;
-        SDL_UpdateTexture(tex, NULL, frame, w * 4);
-        /* the clock: the audio played, or the wall clock */
-        double clock = audio ? (audioBytes - SDL_GetAudioStreamQueued(audio)) / (48000.0 * 4)
-                             : (SDL_GetTicksNS() - began) / 1e9;
+        if (frameUsed < frameBytes) {
+            ssize_t n = MovieRead(&video, frame + frameUsed, frameBytes - frameUsed);
+            if (n < 0) break;
+            frameUsed += (size_t)n;
+            if (frameUsed < frameBytes) { SDL_Delay(1); continue; }
+        }
+        double clock = MovieClock(audio != NULL, audioEof, audioBytes,
+            audio ? SDL_GetAudioStreamQueued(audio) : 0, SDL_GetTicksNS() / 1e9, &began);
         double due = frames / fps;
+        if (due > clock) { SDL_Delay(1); continue; }
+        if (!SDL_UpdateTexture(tex, NULL, frame, w * 4)) { played = 0; break; }
+        played = 1;
+        frameUsed = 0;
         frames++;
-        if (due > clock)
-            SDL_DelayNS((Uint64)((due - clock) * 1e9));
         int ow, oh;
         SDL_GetCurrentRenderOutputSize(sRenderer, &ow, &oh);
         float k = SDL_min(ow / (float)w, oh / (float)h);
@@ -232,19 +322,6 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
             }
         }
         SDL_RenderPresent(sRenderer);
-        /* A, B or START skip it */
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_EVENT_QUIT) sQuit = 1;
-            if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat &&
-                (e.key.scancode == SDL_SCANCODE_X || e.key.scancode == SDL_SCANCODE_Z || e.key.scancode == SDL_SCANCODE_RETURN))
-                skip = 1;
-            if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN &&
-                (e.gbutton.button == SDL_GAMEPAD_BUTTON_SOUTH || e.gbutton.button == SDL_GAMEPAD_BUTTON_EAST ||
-                 e.gbutton.button == SDL_GAMEPAD_BUTTON_START))
-                skip = 1;
-            if (e.type == SDL_EVENT_GAMEPAD_ADDED && !sPad) sPad = SDL_OpenGamepad(e.gdevice.which);
-        }
         {
             const char* limit = getenv("KHCOM_HDMOVIE_SECONDS"); /* test harness: stop after that many seconds */
             if (limit && due >= atof(limit)) break;
@@ -253,8 +330,8 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     if (subTex) SDL_DestroyTexture(subTex);
     if (tex) SDL_DestroyTexture(tex);
     if (audio) SDL_DestroyAudioStream(audio);
-    if (video) pclose(video);
-    if (sound) pclose(sound);
+    MovieClose(&video);
+    MovieClose(&sound);
     free(frame);
     SDL_free(fontData);
     if (sAudio) {
@@ -262,5 +339,5 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         SDL_ResumeAudioStreamDevice(sAudio);
     }
     Log("hd movie: %s from %d s, %lld frames%s", path, start, frames, skip ? " (skipped)" : "");
-    return played;
+    return played || skip || sQuit;
 }
