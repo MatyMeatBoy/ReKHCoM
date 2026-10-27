@@ -240,5 +240,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v22-profiling | OptiPort 2.2: profiling puerta/carga y previews, igual calidad (PLAN_V22) | pendiente | — | — | — | 2026-10-27T17:32:21.478708+00:00 |
 | optiport-v22-async | OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar | pendiente | — | — | — | 2026-10-27T17:32:28.086015+00:00 |
 | optiport-v22-pacing | OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA | pendiente | — | — | — | 2026-10-27T17:32:34.299497+00:00 |
+| optiport-v22-soak | OptiPort 2.2: soak acotado de recursos modificados y gameplay paquetes Linux/Android | pendiente | — | — | — | 2026-10-27T17:32:40.926521+00:00 |
 
 Integrador: libre
