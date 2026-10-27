@@ -4800,10 +4800,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-hudhd4",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T06:39:03.428860+00:00",
+      "updated_at": "2026-10-27T06:41:16.959150+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4825,7 +4825,7 @@
           "detail": "released: Corrección: gStockNameSprites/StockNameSora_2 (card_friend_card.c) son los nombres de combo de Sora/Riku ARRIBA (64,14/120,14), no la etiqueta del jefe. La del jefe (valor + nombre, p.ej. 'OIR Llamarada') sigue sin ubicar: sacar KHCOM_OAMDUMP en el cuadro con la etiqueta (179:4:0, bot, ~frame 1500-1600) para identificar su sprite y el código que la dibuja."
         }
       ],
-      "claimed_at": "2026-10-27T06:38:59.077679+00:00"
+      "claimed_at": "2026-10-27T06:41:16.959150+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -4860,7 +4860,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:40:05.388953+00:00",
+  "updated_at": "2026-10-27T06:41:16.959150+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
