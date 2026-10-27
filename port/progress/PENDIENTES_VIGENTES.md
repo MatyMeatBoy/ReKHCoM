@@ -38,7 +38,8 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   `test_hud_crop` (3840x1080 mapa), `test_ppu` 7/12, `test_door_views` (falso positivo con «VRR-path=unavailable»).
 - [ ] **HUD HD activado en pleno combate**: tirones como de carga al volver de Opciones. Precargar el HUD HD
   antes de devolver el control al juego.
-- [ ] **Carta de recarga HD**: el número queda debajo del relleno; debe ir encima.
+- [x] **Carta de recarga HD**: número bajo el relleno = v2.0; arreglado en main por #276 (Codex). Verificado 27/10
+  con `test_hd_reload_order.py --hd-hud 0|1` (contador visible, 1383 px blancos, también con HUD HD).
 - [ ] **HUD HD: «EXP ganada»** no se reubica y queda tapada por la vida nueva.
 - [ ] Linux 64 VM: partida nueva → puerta del castillo → selección de mundo → combate tutorial **sin fallo**
   (sin música HD). Repetir con música HD (`.ogg`), que el reportero sí tiene.
