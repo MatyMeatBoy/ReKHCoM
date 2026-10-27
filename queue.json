@@ -7177,15 +7177,21 @@
     "gallery64-repeat-title-restore": {
       "id": "gallery64-repeat-title-restore",
       "piece": "Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-gallery64",
       "created_at": "2026-10-27T19:01:46.452296+00:00",
-      "updated_at": "2026-10-27T19:01:53.090704+00:00",
+      "updated_at": "2026-10-27T19:22:54.820356+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "user-screenshot-fb1ad35b-7aaa-4edf-92e5-33cd8e9054e6",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T19:22:54.820356+00:00",
+          "owner": "codex-gallery64",
+          "detail": "pruebas/gallery64-repeat-title-restore/REPORT.md;exactpre1;32natural0gallerypinkbaseline;6list+3HD32+1HD64complete/SRAMsame/pinkROI0difference;nativeevent0firstrestorePASSsecondboundedcutPARTIAL;noProductfix;futurevisualTITLEbugNOTclosed"
+        }
+      ],
       "claimed_at": "2026-10-27T19:01:53.090704+00:00"
     },
     "issue386-mapcards-stack": {
@@ -7278,7 +7284,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:22:44.336544+00:00",
+  "updated_at": "2026-10-27T19:22:54.820356+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
