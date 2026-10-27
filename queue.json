@@ -6766,10 +6766,10 @@
     "optiport-v22-pacing": {
       "id": "optiport-v22-pacing",
       "piece": "OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA",
-      "status": "en_curso",
-      "owner": "claude-v22",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T17:32:34.299497+00:00",
-      "updated_at": "2026-10-27T20:00:18.926081+00:00",
+      "updated_at": "2026-10-27T20:22:20.610215+00:00",
       "branch": "perf/v22-mapcards-entry",
       "pr": null,
       "approval": null,
@@ -6784,6 +6784,11 @@
           "at": "2026-10-27T20:00:18.926081+00:00",
           "owner": "claude-v22",
           "detail": "PHASE: GPU profiling window END. Glyph warmup PR opened (glyphs at map-cards entry 12->0 x3); remaining HD loads next"
+        },
+        {
+          "at": "2026-10-27T20:22:20.610215+00:00",
+          "owner": "claude-v22",
+          "detail": "released: PR391 open (glyph warmup, map-cards entry glyphs 12->0 x3). Remaining: 6 HD loads at entry (decode ~10, upload ~12 ms): lazy white copy or preload. Released for bug priority."
         }
       ],
       "claimed_at": "2026-10-27T19:52:41.585889+00:00"
@@ -7663,7 +7668,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:20:33.689306+00:00",
+  "updated_at": "2026-10-27T20:22:20.610215+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
