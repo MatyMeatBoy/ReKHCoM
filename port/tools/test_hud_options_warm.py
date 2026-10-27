@@ -51,9 +51,11 @@ static void Close(void){sClosing=8;}
 #define SDL_atoi atoi
 static uint32_t PortFrameCount(void){return 10;}
 static int PortPpuHudActive(void){return activeHud;}
-static void GrowPixelBuffer(uint32_t**p,size_t*n,size_t need){if(need>*n){*p=realloc(*p,need*4);*n=need;}}
+static int reallocCalls;
+static void* SDL_realloc(void*p,size_t n){(void)p;(void)n;reallocCalls++;return NULL;}
+static void PortFatal(const char*m){fprintf(stderr,"unexpected optional fatal: %s",m);exit(88);}
 '''
-core=fn(ui,"PortUiActive")+"\n"+hud[hud.index("typedef struct HudAsset {"):hud.index("void PortHdHudDrawSprites(")]
+core=fn(main,"GrowPixelBuffer")+"\n"+fn(ui,"PortUiActive")+"\n"+hud[hud.index("typedef struct HudAsset {"):hud.index("void PortHdHudDrawSprites(")]
 core+=r'''
 static uint32_t piece[16]={0,0,0,0,0,0xffffffff,0,0,0,0,0,0,0,0,0,0};
 static void PortPpuRenderHud(uint32_t*buf){(void)buf;renderCalls++;PortHdHudSpriteBegin();PortHdHudSpriteRegister(piece,4,4,0,0,0,0,255);}
@@ -67,6 +69,8 @@ test=r'''
 #define CHECK(c) do{if(!(c)){fprintf(stderr,"FAIL line %d: %s\n",__LINE__,#c);return 77;}}while(0)
 int main(void){
  sAssetRenderer=&renderer;
+ sHudBuf=calloc((size_t)gPortHudW*gPortHudH,sizeof(*sHudBuf));sHudCapacity=(size_t)gPortHudW*gPortHudH;
+ CHECK(sHudBuf);
  /* The real loader refuses work during Options. Toggle exactly as Change does. */
  TOGGLE_ACTUAL;
  CHECK(!PortHdHudSpriteRegister(piece,4,4,0,0,0,0,255)&&decodes==0);
@@ -81,7 +85,16 @@ int main(void){
   PresentBoundary();int at=decodes;CHECK(!sAssets[sAssetCount-1].image&&!sAssets[sAssetCount-1].white);
   CHECK(!PortHdHudSpriteRegister(piece,4,4,0,0,0,0,255)&&decodes==at);
  }
- missing=failUpload=0;d=decodes;gPortConfig.hdHud=0;sOpen=1;sClosing=1;PresentBoundary();CHECK(decodes==d);
+ missing=failUpload=0;d=decodes;
+ /* Failed allocator stays armed. Optional warming never calls the real grow
+    function or mutates the old pointer/capacity when dimensions no longer fit. */
+ uint32_t* retained=sHudBuf;size_t capacity=sHudCapacity;sHudBuf[0]=0x12345678;
+ sHudCapacity=1;sOpen=1;sClosing=1;int beforeRender=renderCalls;
+ PresentBoundary();CHECK(!sOpen&&renderCalls==beforeRender&&reallocCalls==0&&decodes==d);
+ CHECK(sHudBuf==retained&&sHudCapacity==1&&sHudBuf[0]==0x12345678);
+ sHudCapacity=capacity;sHudBuf=NULL;sOpen=1;sClosing=1;PresentBoundary();
+ CHECK(renderCalls==beforeRender&&reallocCalls==0);sHudBuf=retained;
+ gPortConfig.hdHud=0;sOpen=1;sClosing=1;PresentBoundary();CHECK(decodes==d);
  gPortConfig.hdHud=1;activeHud=0;sOpen=1;sClosing=1;PresentBoundary();CHECK(decodes==d);
  puts("PASS actual Options close + HUD register/loader: before resume, cache reuse, missing/upload failure, off/non-HUD");return 0;
 }

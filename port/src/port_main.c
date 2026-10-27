@@ -1645,7 +1645,11 @@ static void NativeMovieRendererReset(void) {
 static void PrepareHudAfterOptions(int menuCanvas) {
     if (!menuCanvas || PortUiActive() || !gPortConfig.hdHud || !PortPpuHudActive())
         return;
-    GrowPixelBuffer(&sHudBuf, &sHudCapacity, (size_t)gPortHudW * gPortHudH);
+    /* Optional preparation must not grow an essential presentation buffer.
+     * A changed HUD size may defer it until normal rendering has capacity. */
+    if (!sHudBuf || gPortHudW <= 0 || gPortHudH <= 0 ||
+        (size_t)gPortHudW > sHudCapacity / (size_t)gPortHudH)
+        return;
     uint64_t started = SDL_GetPerformanceCounter();
     PortPpuRenderHud(sHudBuf);
     if (SDL_getenv("KHCOM_HD_MENU_PROFILE"))

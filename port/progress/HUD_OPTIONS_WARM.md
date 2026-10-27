@@ -31,6 +31,14 @@ DespuÃ©s: PASS 1 decode/2 uploads antes de reanudar, 0 adicionales al primer
 render siguiente y reapertura; cierre aÃºn animando no carga; controles
 missing/upload-failure/off/non-HUD conservan fallback sin IO repetido.
 `test_hd_hud_invalidation.py` PASS y `test_options_route.py` 3/3 PASS.
+La regresión OOM extrae `GrowPixelBuffer` real y mantiene `SDL_realloc`
+fallando: la versión inicial del helper terminó en PortFatal (exit88).
+Con la guarda de capacidad, cero llamadas al allocator/fatal, se cierra UI y
+se preservan puntero, capacidad y contenido previo; buffer ausente también
+omite preparación. Esto NO resuelve el OOM del render normal: ese consumidor
+histórico aún exige crecimiento fatal; `hdHud=0` no evita su canvas HUD.
+Requiere preflight transaccional antes de suprimir el HUD nativo en PPU y
+fallback de composición separado. No afirmar recuperación de OOM esencial.
 Syntax-only x32 freestanding de `port_main.c` PASS. No build completo ni juego.
 
 ## Fixture GPU para coordinador (pendiente)
