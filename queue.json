@@ -2527,23 +2527,29 @@
     "darkside-06-feedback-revision": {
       "id": "darkside-06-feedback-revision",
       "piece": "Darkside 06 costura nueva",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-jefes",
       "created_at": "2026-10-25T16:02:31.124789+00:00",
-      "updated_at": "2026-10-25T16:04:23.228699+00:00",
+      "updated_at": "2026-10-27T17:15:34.767168+00:00",
       "branch": "codex/atlas-jefes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/127",
-      "approval": null,
+      "approval": "Atlas exact 60f90456598249ecb1e691c51dd2434e; approved; revision 2; sha256 686a6576e4ee1cc085f4fffb10fc09c36954f90fcebefb739a6696e99a26a3ad; decision 2026-10-25T16:06:34.338237+00:00",
       "reference": "20261024-162822-ea1330 / 943ba728-2009-4560-8eef-7091aefb52e7",
       "evidence": [
         {
           "at": "2026-10-25T16:04:23.228699+00:00",
           "owner": "codex-atlas-jefes",
           "detail": "Offline listo captura; cero pixels ROM alterados en nueve frames; sin compilar"
+        },
+        {
+          "at": "2026-10-27T17:15:34.767168+00:00",
+          "owner": "codex-atlas-jefes",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/127 MERGED 2026-10-25T16:17:49Z; merge 2d1259acf3c2b8d9b66e32b87322ac8246ae5d12 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact 60f90456598249ecb1e691c51dd2434e, approved, revision 2, SHA256 686a6576e4ee1cc085f4fffb10fc09c36954f90fcebefb739a6696e99a26a3ad; no se hereda aprobacion de otra version. {\"by_pr\": 190, \"by_task\": \"darkside-aprobados-runtime\", \"evidence\": \"Merged replacement explicitly activates the exact approved r8 and records runtime captures; no claim of all-animation coverage.\", \"exact_artifact\": \"60f90456598249ecb1e691c51dd2434e\"}\nRevalidado 2026-10-27T17:15:34.674175+00:00; main 61aee4c40fbfded53ba94ad4de978f16907b4939; merge real 2d1259acf3c2b8d9b66e32b87322ac8246ae5d12; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T16:02:42.072840+00:00",
-      "sent": "60f90456598249ecb1e691c51dd2434e"
+      "sent": "60f90456598249ecb1e691c51dd2434e",
+      "completed_at": "2026-10-27T17:15:34.767168+00:00"
     },
     "atlas-titulo-hd": {
       "id": "atlas-titulo-hd",
@@ -6592,7 +6598,7 @@
     "created_at": "2026-10-27T17:15:27.834094+00:00",
     "updated_at": "2026-10-27T17:15:27.834094+00:00"
   },
-  "updated_at": "2026-10-27T17:15:27.834094+00:00",
+  "updated_at": "2026-10-27T17:15:34.767168+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
