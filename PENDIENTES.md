@@ -237,5 +237,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-steamdeck-330-entry-diagnostic | Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos | en_revision | codex-deck-entry-diagnostic | — | Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes | 2026-10-27T16:52:43.712474+00:00 |
 | v22-linux64-language-args | Preservar --language en wrapper/host Linux64 con parser consumidor C dirigido, sin ABI/guest ni atribuir #330 | integrado | codex-linux64-args | https://github.com/MatyMeatBoy/ReKHCoM/pull/376 | Coordinador autoriza PR acotado 27/10 | 2026-10-27T17:03:50.105053+00:00 |
 | windows64-cpu-sse41-gate | Validar requisito SSE4.1 antes del guest Windows64 | integrado | codex-windows64-cpu-gate | https://github.com/MatyMeatBoy/ReKHCoM/pull/377 | Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro | 2026-10-27T17:14:44.406247+00:00 |
+| optiport-v22-profiling | OptiPort 2.2: profiling puerta/carga y previews, igual calidad (PLAN_V22) | pendiente | — | — | — | 2026-10-27T17:32:21.478708+00:00 |
 
 Integrador: libre
