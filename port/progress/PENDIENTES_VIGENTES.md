@@ -61,6 +61,11 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   `guest-getenv-stable-values`. [Contrato](GUEST_GETENV_STABLE_VALUES.md).
   No demuestra causalidad del cierre temprano Android; reconstrucción y QA
   del artefacto del coordinador siguen pendientes.
+- [ ] **Prompts live Original/fallback:** implementación acotada y prueba real
+  EU/US/JP en `feature/controller-original-live-spans`, hija de #338. Metadata
+  de fuente y backups reversibles; `?` honesto en inputs no representables.
+  [Evidencia y límites](CONTROLLER_PROMPT_ORIGINAL_LIVE_SPANS.md). Pendiente QA
+  visual/paletas, hotplug físico y cobertura tutorial; no se declara cierre total.
 - [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
   Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
   convención Nintendo A/PS círculo elegible, assets existentes, todos los

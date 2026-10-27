@@ -45,6 +45,7 @@ int main(void){
  assert(KhPromptPresetBindings(KH_PROMPT_NINTENDO,1,&confirm,&cancel) && confirm==0 && cancel==1);
  assert(!KhPromptPresetBindings(KH_PROMPT_GENERIC,0,&confirm,&cancel) && confirm==0 && cancel==1);
  assert(KhPromptTokenActions("L and R Buttons",15,actions)==2 && actions[0]==2 && actions[1]==3);
+ assert(KhPromptTokenActions("R+L",3,actions)==2 && actions[0]==3 && actions[1]==2);
  const unsigned char jp[]={0x82,0x6b,0x81,0x45,0x82,0x71,0x83,0x7b,0x83,0x5e,0x83,0x93};
  assert(KhPromptSjisActions(jp,sizeof(jp),actions,&bytes)==2 && bytes==6 && actions[0]==2 && actions[1]==3);
  assert(!KhPromptSjisActions(jp,5,actions,&bytes));

@@ -48,16 +48,12 @@ semántica, con los flags de inversión correspondientes. No necesita ROM,
 GPU ni partida. La presentación GPU y el tipo real de mando en guests tienen
 validación aparte.
 
-## Subcasos todavía abiertos
+## Incremento Original y fallback inicial
 
-- **Original→activar con una página ya compuesta en modo Original:** no hay
-  token semántico previo. Requiere metadatos de spans tutoriales aun estando
-  apagado, sin alterar su render predeterminado. No reiniciar diálogo/VM.
-- **Página inicialmente textual por input no representable:** conserva su
-  etiqueta hasta volver a componer la página. El `?` en un símbolo que cambió
-  a input no representable es degradación honesta; no cierra el requisito de
-  refresco preciso de todo fallback textual.
-- Para resolver esos casos, conservar posiciones/ownership/revelado mediante
-  offsets de la fuente lógica o spans originales comprobados; nunca usar
-  longitud de la cadena transformada para avanzar la historia.
-- QA GPU, hotplug real y metadata ABI opcional de hosts 64 siguen pendientes.
+[CONTROLLER_PROMPT_ORIGINAL_LIVE_SPANS.md](CONTROLLER_PROMPT_ORIGINAL_LIVE_SPANS.md)
+añade tags de spans aun con Original apagado y backups reversibles sobre slots
+ya compuestos. El productor deja de emitir fallback textual variable en tokens
+reconocidos: mantiene una celda semántica, con `?` para inputs no representables.
+Esto evita etiquetas obsoletas al conectar/reasignar. No significa precisión de
+nombres arbitrarios ni reflow. QA GPU, paletas/HD text, cobertura del whitelist
+y hotplug físico con la metadata ABI opcional siguen pendientes.

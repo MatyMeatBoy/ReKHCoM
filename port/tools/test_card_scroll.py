@@ -267,6 +267,7 @@ static void device_test(void) {
     event.type=SDL_EVENT_KEY_DOWN;event.key.key=SDLK_Q;event.key.repeat=0;PortPromptHandleEvent(&event);
     assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
     assert(PortControllerActionGlyph(PORT_ACT_A)==0);
+    assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
     event.type=SDL_EVENT_GAMEPAD_AXIS_MOTION;event.gaxis.which=id;event.gaxis.value=1000;PortPromptHandleEvent(&event);
     assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
     event.gaxis.value=20000;PortPromptHandleEvent(&event);

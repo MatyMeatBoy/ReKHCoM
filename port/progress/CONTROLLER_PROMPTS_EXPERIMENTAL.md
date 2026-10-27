@@ -80,7 +80,8 @@ una build completa o revisión visual GPU.
   las familias en pixel/HD y paletas EU/US/JP, sin afirmar cobertura total sólo
   porque un parser reconoce un nombre.
 - Símbolos ya semánticos ahora se actualizan en páginas abiertas sin relayout;
-  quedan Original→activar y páginas de fallback textual no representable.
+  el incremento de spans cubre Original→activar y reemplaza el fallback inicial
+  variable por una celda semántica (`?` si no representable), sin reflow.
   Contrato y límites: [CONTROLLER_PROMPT_LIVE_SYMBOLS.md](CONTROLLER_PROMPT_LIVE_SYMBOLS.md).
   Revisar HD/pixel text, ancho, recorte,
   fuentes de símbolos, fallback accesible y mandos múltiples en pruebas GPU.

@@ -131,10 +131,24 @@ int PortControllerActionGlyph(int action) {
 }
 
 const unsigned char* PortControllerGlyphTiles(int glyph) {
-    static unsigned char tiles[144][128],ready[144];
+    static unsigned char tiles[2][144][128],ready[2][144];
+    int compact=glyph>=256; if(compact)glyph-=256;
     if(glyph<=0 || glyph>=144 || !(glyph<=8 || glyph>=128 || strchr(PORT_PROMPT_LETTERS,glyph)))return NULL;
-    if(!ready[glyph]) { KhPromptGlyphPixels(glyph,tiles[glyph]);ready[glyph]=1; }
-    return tiles[glyph];
+    if(!ready[compact][glyph]) {
+        unsigned char full[128];KhPromptGlyphPixels(glyph,full);
+        if(!compact)memcpy(tiles[0][glyph],full,128);
+        else for(int y=0;y<10;y++)for(int x=0;x<5;x++) {
+            int color=0;
+            for(int px=x*12/5;px<(x+1)*12/5;px++) {
+                int at=((y/8)*2+px/8)*32+(y%8)*4+(px%8)/2;
+                int sample=(full[at]>>((px&1)*4))&15;
+                if(sample>color)color=sample;
+            }
+            KhPromptGlyphDot(tiles[1][glyph],x,y,color);
+        }
+        ready[compact][glyph]=1;
+    }
+    return tiles[compact][glyph];
 }
 
 int PortControllerPresetFamily(void) {
@@ -432,8 +446,70 @@ static int ControllerTutorialSemanticToken(int message,int action) {
     if(flag && gPortConfig.invertCardScroll)action=action==PORT_ACT_L?PORT_ACT_R:PORT_ACT_L;
     return (action+1) | (flag?64:0);
 }
+/* Metadata only while Original is displayed. Offsets refer to the returned
+   source, never a transformed string length or VM/reveal offset. */
+static const TextChar* sPromptOriginalSource;
+static size_t sPromptOriginalLength;
+static unsigned char sPromptOriginalTokens[512],sPromptOriginalFollowers[512];
+static void ControllerTutorialOriginal(int message,const TextChar* text) {
+    sPromptOriginalSource=NULL;sPromptOriginalLength=0;
+    memset(sPromptOriginalTokens,0,sizeof(sPromptOriginalTokens));
+    memset(sPromptOriginalFollowers,0,sizeof(sPromptOriginalFollowers));
+    if(!text || gPortConfig.controllerPrompts || !ControllerTutorialMessage(message))return;
+    size_t length=0;
+    while(length<512 && text[length])length++;
+    if(length==512)return;
+    sPromptOriginalSource=text;sPromptOriginalLength=length;
+#ifndef VERSION_JP
+    for(size_t i=0;i<length;i++)if(text[i]==MSG_CODE_HIGHLIGHT) {
+        size_t end=i+1;char token[48];int actions[2];
+        while(end<length && end-i<sizeof(token) && text[end]!=MSG_CODE_PLAIN)end++;
+        if(end>=length || text[end]!=MSG_CODE_PLAIN)continue;
+        size_t n=end-i-1;
+        for(size_t k=0;k<n;k++)token[k]=(char)text[i+1+k];
+        int count=KhPromptTokenActions(token,n,actions);
+        static const char* const names[]={"A","B","L","R","START","SELECT"};
+        for(int j=0;j<count;j++) {
+            const char* name=names[actions[j]];size_t keyLength=strlen(name),offset=n;
+            for(size_t k=0;k+keyLength<=n;k++)if(!memcmp(token+k,name,keyLength))offset=k;
+            if(offset==n)continue;
+            size_t at=i+1+offset;
+            sPromptOriginalTokens[at]=(unsigned char)ControllerTutorialSemanticToken(message,actions[j]);
+            for(size_t k=1;k<keyLength;k++) { sPromptOriginalFollowers[at+k]=1;sPromptOriginalTokens[at+k]=sPromptOriginalTokens[at]; }
+        }
+        i=end;
+    }
+#else
+    if(length&1) { sPromptOriginalSource=NULL;return; }
+    for(size_t i=0;i<length;i+=2) {
+        int actions[2];size_t bytes=0;
+        int count=KhPromptSjisActions(text+i,length-i,actions,&bytes);
+        for(int j=0;j<count;j++) {
+            size_t at=i+(j?4:0);
+            sPromptOriginalTokens[at]=(unsigned char)ControllerTutorialSemanticToken(message,actions[j]);
+            if(count==1)for(size_t k=2;k<bytes;k+=2) { sPromptOriginalFollowers[at+k]=1;sPromptOriginalTokens[at+k]=sPromptOriginalTokens[at]; }
+        }
+        if(count)i+=bytes-2;
+    }
+#endif
+}
+int PortControllerOriginalPromptAt(const void* position,int sjis,int* follower) {
+    uintptr_t base=(uintptr_t)sPromptOriginalSource,at=(uintptr_t)position;
+#ifdef VERSION_JP
+    const int expectedSjis=1;
+#else
+    const int expectedSjis=0;
+#endif
+    *follower=0;
+    if(!base || sjis!=expectedSjis || at<base || (at-base)%sizeof(TextChar))return 0;
+    size_t offset=(at-base)/sizeof(TextChar);
+    if(offset>=sPromptOriginalLength)return 0;
+    *follower=sPromptOriginalFollowers[offset];
+    return sPromptOriginalTokens[offset];
+}
 const void* PortCardScrollTutorialText(int message, const void* source) {
     const TextChar* text=CardScrollTutorialText(message,source);
+    ControllerTutorialOriginal(message,text);
 #ifndef VERSION_JP
     static TextChar resolved[768];
     size_t i=0,n=0;
@@ -442,7 +518,7 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
     while (text[i] && i<512) {
         if (text[i]==MSG_CODE_HIGHLIGHT) {
             size_t end=i+1;
-            char token[48],label[32];
+            char token[48];
             while(end<i+sizeof(token) && text[end] && text[end]!=MSG_CODE_PLAIN)end++;
             if(text[end]==MSG_CODE_PLAIN && end-i-1<sizeof(token)) {
                 size_t length=end-i-1;
@@ -451,17 +527,10 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
                 if(countActions) {
                     resolved[n++]=MSG_CODE_HIGHLIGHT;
                     for(int a=0;a<countActions;a++) {
-                        if(!PortControllerActionLabel(actions[a],label,sizeof(label)))return text;
-                        int glyph=PortControllerActionGlyph(actions[a]);
-                        size_t count=SDL_strlen(label);
-                        if(n+count+6>=SDL_arraysize(resolved))return text;
+                        if(n+4>=SDL_arraysize(resolved))return text;
                         if(a)resolved[n++]='+';
-                        if(glyph) { resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;resolved[n++]=(TextChar)ControllerTutorialSemanticToken(message,actions[a]); }
-                        else {
-                            resolved[n++]='[';
-                            for(size_t k=0;k<count;k++)resolved[n++]=(unsigned char)label[k];
-                            resolved[n++]=']';
-                        }
+                        resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;
+                        resolved[n++]=(TextChar)ControllerTutorialSemanticToken(message,actions[a]);
                     }
                     resolved[n++]=MSG_CODE_PLAIN;
                     i=end+1;changed=1;continue;
@@ -486,18 +555,10 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
         int count=KhPromptSjisActions(text+i,length-i,actions,&bytes);
         if(count) {
             for(int a=0;a<count;a++) {
-                char label[32];
-                if(!PortControllerActionLabel(actions[a],label,sizeof(label)))return text;
-                int glyph=PortControllerActionGlyph(actions[a]);
-                if(n+2*SDL_strlen(label)+6>=sizeof(resolved))return text;
+                if(n+6>=sizeof(resolved))return text;
                 if(a) { resolved[n++]=0x81;resolved[n++]=0x7b; }
-                if(glyph) { resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;resolved[n++]=(unsigned char)ControllerTutorialSemanticToken(message,actions[a]); }
-                else for(const unsigned char* c=(const unsigned char*)label;*c;c++) {
-                    unsigned code=*c>='A' && *c<='Z' ? 0x8260+*c-'A' :
-                                  *c>='a' && *c<='z' ? 0x8281+*c-'a' :
-                                  *c>='0' && *c<='9' ? 0x824f+*c-'0' : *c==' ' ? 0x8140 : *c=='-' ? 0x817c : 0x8148;
-                    resolved[n++]=(unsigned char)(code>>8);resolved[n++]=(unsigned char)code;
-                }
+                resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;
+                resolved[n++]=(unsigned char)ControllerTutorialSemanticToken(message,actions[a]);
             }
             i+=bytes;changed=1;
         } else {
