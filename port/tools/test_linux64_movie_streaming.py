@@ -66,6 +66,21 @@ int main(int argc,char**argv){
     p=MovieSpawn(complete);MoviePipe other=MovieSpawn(stalled);used=0;int eof=0;start=seconds();
     while(seconds()-start<2){ssize_t n=MovieRead(&p,out+used,sizeof(out)-used);if(n==-1){eof=1;break;}assert(n>=0);used+=(size_t)n;usleep(1000);}
     assert(eof && used==5);MovieClose(&p);MovieClose(&other);
+    /* Closed standard descriptors must not alias spawn actions or pipe cleanup. */
+    for(int mask=1;mask<8;mask++) {
+        int saved[3]={-1,-1,-1};
+        for(int fd=0;fd<3;fd++) if(mask&(1<<fd)) {
+            saved[fd]=fcntl(fd,F_DUPFD_CLOEXEC,3);assert(saved[fd]>=3);assert(close(fd)==0);
+        }
+        p=MovieSpawn(complete);
+        for(int fd=0;fd<3;fd++) if(saved[fd]>=0) {
+            assert(dup2(saved[fd],fd)==fd);close(saved[fd]);
+        }
+        assert(p.fd>=3 && p.pid>0);
+        used=0;eof=0;start=seconds();
+        while(seconds()-start<2){ssize_t n=MovieRead(&p,out+used,sizeof(out)-used);if(n==-1){eof=1;break;}assert(n>=0);used+=(size_t)n;usleep(1000);}
+        assert(eof && used==5 && !memcmp(out,"abcde",5));MovieClose(&p);
+    }
     char* absent[]={"/no-such-rekhcom-decoder",NULL};p=MovieSpawn(absent);assert(p.pid==-1 && p.fd==-1);MovieClose(&p);
     puts("PASS production Linux64: EOF clock, absent PCM, stalled/partial/EOF pipes, cancellation/reaping, exec failure");
     return 0;

@@ -41,3 +41,14 @@ The POSIX harness covers stalled/partial/EOF producer pipes, no-data event ticks
 cancellation, idempotent cleanup, exact child reaping, inherited writer isolation
 and exec failure. No real-device audiovisual playback, package rebuild, installed
 main modification, push or release is claimed.
+
+Follow-up review: both pipe descriptors are normalized to >=3 with
+`F_DUPFD_CLOEXEC` before creating spawn actions. This prevents closing the new
+stdout when the host started with a closed standard descriptor. The POSIX harness
+now covers all seven nonempty combinations of closed stdin/stdout/stderr,
+restoring the host descriptors before checking the child's full output. A binary
+without the normalization but with this regression is retained as
+`build/linux64-streaming/streaming-stdio-red`; updated binary is `streaming`.
+The coordinator's first VM run of the original harness passed exit 0; the updated
+stdio regression is awaiting the serial repeat. Clock and host syntax checks
+were repeated successfully after this narrowly scoped follow-up.

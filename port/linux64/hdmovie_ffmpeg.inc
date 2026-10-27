@@ -129,6 +129,17 @@ static MoviePipe MovieSpawn(char* const argv[]) {
     int fds[2];
     posix_spawn_file_actions_t actions;
     if (pipe2(fds, O_CLOEXEC) < 0) return p;
+    /* Spawn actions address 0/1/2. A host with closed stdio can otherwise get
+       a pipe there, then close the freshly duplicated decoder stdout. */
+    for (int i = 0; i < 2; i++) {
+        if (fds[i] >= 3) continue;
+        int moved = fcntl(fds[i], F_DUPFD_CLOEXEC, 3);
+        if (moved < 0) {
+            close(fds[0]); close(fds[1]); return p;
+        }
+        close(fds[i]);
+        fds[i] = moved;
+    }
     if (posix_spawn_file_actions_init(&actions) != 0) {
         close(fds[0]); close(fds[1]); return p;
     }
