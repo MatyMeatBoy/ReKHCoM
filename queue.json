@@ -5269,10 +5269,10 @@
     "hd-gauge-visible-bounds": {
       "id": "hd-gauge-visible-bounds",
       "piece": "Measured HD gauge crop preserves supersampling within budgets",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-gauge-bounds",
       "created_at": "2026-10-27T08:46:15.972296+00:00",
-      "updated_at": "2026-10-27T09:05:56.605933+00:00",
+      "updated_at": "2026-10-27T09:06:04.889327+00:00",
       "branch": "fix/hd-gauge-visible-bounds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/326",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5282,9 +5282,15 @@
           "at": "2026-10-27T08:50:27.311893+00:00",
           "owner": "codex-gauge-bounds",
           "detail": "3dc7fb081: measured actual-C HD/legacy LAD vertex containment RED/GREEN; native SS budget/cache targets pass at1080/1440/2160, 1000 statechanges no allocations; readiness/enemy/check_sources PASS. CPU-only no GPU claims. Windows64 guest SS compiled out: separate pending documented. No heavy builds/user installation access."
+        },
+        {
+          "at": "2026-10-27T09:06:04.889327+00:00",
+          "owner": "codex-gauge-bounds",
+          "detail": "Verified and reviewed; merged e71c9692cb9b951e82cec6f02ab37af9f47fe456"
         }
       ],
-      "claimed_at": "2026-10-27T08:46:21.266004+00:00"
+      "claimed_at": "2026-10-27T08:46:21.266004+00:00",
+      "completed_at": "2026-10-27T09:06:04.889327+00:00"
     },
     "bridge-gpu-targets-aa": {
       "id": "bridge-gpu-targets-aa",
@@ -5363,7 +5369,7 @@
     "created_at": "2026-10-27T09:03:03.438450+00:00",
     "updated_at": "2026-10-27T09:03:03.438450+00:00"
   },
-  "updated_at": "2026-10-27T09:05:56.605933+00:00",
+  "updated_at": "2026-10-27T09:06:04.889327+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
