@@ -285,4 +285,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android22-pre2-diagnostic-build | Android v2.2-pre2 diagnostic: monotonic official versionCode, preserved signer, private two-ABI build | integrado | sol-android-pre2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/403 | Usuario autoriza APK prerelease y respuestas a reporteros | 2026-10-27T22:06:16.810395+00:00 |
 | v22-pre2-linux-crash-delivery | Compilar pre2 Linux x86/x64 nativo, launcher separado e importador actual; verificar tar exacto y VM, issue330 GamingMode queda sin hardware confirmado | en_curso | codex-linux-pre2 | — | Usuario autoriza prebuilds y responder reporteros Linux/SteamDeck | 2026-10-27T22:04:29.108684+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T22:06:04.540122+00:00)
+Integrador: libre
