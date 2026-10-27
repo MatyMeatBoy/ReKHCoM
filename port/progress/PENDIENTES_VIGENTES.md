@@ -7,6 +7,31 @@
 posterior, no en el ZIP 2.1 existente. El resto de este documento conserva
 los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1.
 
+## PRIORIDAD 1 — Cartas (usuario 27/10, pasan directo por Claude, NO por Atlas)
+
+Sacadas de los preliminares de Atlas (9 piezas; respaldo de la base en
+`respaldos/revisiones-antes-cartas-20261027.sqlite3`, evento `moved_to_pendientes`).
+Claude captura en juego (offscreen), corrige, verifica y abre PR; muestra
+antes/después al usuario en el chat. Comentarios del usuario entre comillas.
+
+- [ ] **Cartas pequeñas HD: encaje (lista de naipes, 105).** r1: 8 nubes «mal
+  encuadrado» + «hay muchos sin centrar, hazlo pro». r2 (recorte de la carta
+  grande) y #359 (ventana completa centrada) ya integrados: verificar en runtime
+  las 105, re-import incluido, y corregir las que sigan descentradas.
+- [ ] **HUD HD: largo de la barra del enemigo** (WIP `fix/hd-enemy-gauge-length`,
+  worktree `kh-worktrees/hd-small-card-top`): frames por HP absoluto como Re:CoM.
+- [ ] **HUD HD: nombre del hechizo del jefe** («Muro de fuego» de Axel sobre sus
+  cartas, «15A Locura»): reubicar con su pila. Claim `hudhd-hechizo-jefe`.
+- [ ] **HUD de combate HD: borde verde interior granulado** — «mejorar y
+  verificar funcionamiento al 100 % del HUD mostrado».
+- [ ] **Síntesis de estancias: carta de requisito HD** — «veo el asset pero no
+  reemplazándolo bien»; «¿es así en el original? sobresale, distancias/fuentes»;
+  «color rellenado raro por dentro». Rama `codex/sintesis-requisito-hd` `943f44a5b`.
+- [ ] **Añadir naipes: cantidad HD y selector** — «mismo comportamiento en los
+  frames exactos que el número original, taparse y aparecer».
+- [ ] **Bonus élite: cartas y cabecera** — «falta completar header»; guante HD;
+  «ver si está el botón en HD».
+
 - [ ] **Noticias en la ficha de Steam para ReKHCoM** (usuario 27/10): la zona de actividad queda vacía porque es un acceso directo no Steam. Sin vía oficial; alternativas a investigar en [PLAN_V22](PLAN_V22.md) (P3).
 
 ## Estado publicado y limpieza — 27/10, después de la entrega
