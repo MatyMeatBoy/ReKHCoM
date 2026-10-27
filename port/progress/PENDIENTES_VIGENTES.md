@@ -66,7 +66,7 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   - «EXP ganada» tapada por la vida nueva.
 - [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
   visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
-- [ ] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10)**: el commit 428aac55b (26/10, pad= en avisos
+- [x] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10, ARREGLADO con el punto del launcher)**: el commit 428aac55b (26/10, pad= en avisos
   de combate) cambió la proporción de sus recetas; las imágenes importadas antes quedan con la proporción vieja y
   `Load` (port_hdsprites.c) las rechaza a propósito («rejected … recipe»: no estirar). Comprobado con el import de
   `D:/01Claude/ReKHCoM-build/hd-completo/sprites`: `gBtlPop{CardBreak,Guard,Recover}SpanishTiles` rechazados → se
@@ -95,7 +95,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   recarga enemiga (m4aSongNumStart en la IA de enemigos/jefes), grabar con `KHCOM_WAVDUMP` un combate de jefe
   (p. ej. Hades) con y sin `undub=1`, y comparar; arreglar en el mapa sin tocar las voces.
 - [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
-- [ ] **Launcher 2.1: comprobación rápida de assets del mod**
+- [x] **Launcher 2.1: comprobación rápida de assets del mod** — sprites HD hecho 27/10: `recipes.txt` con huella por
+  fila al importar; al arrancar `HdStaleSprites` cuenta lo desfasado (huella distinta, o en imports viejos proporción
+  del PNG leyendo solo su cabecera) y reimporta solo gráficos desde la instalación. `--hd-stale` para pruebas;
+  `test_launcher_stale_sprites.py` PASS. Import real de hd-completo: 36 desfasados → reimport → 0; Cortanaipe HD
+  vuelve (0 rechazos). Falta: lo mismo para vídeos/música si algún día cambian.
   Plan concreto (27/10): al importar, escribir `hd/sprites/recipes.txt` con «nombre<TAB>hash de su fila de
   kHdSpriteRecipe»; al arrancar el launcher, comparar con las filas actuales (barato: sin abrir PNG) y, si alguna
   cambió o falta, ofrecer/hacer reimportación solo de esas filas desde la instalación de Re:CoM recordada. El juego
