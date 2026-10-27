@@ -7027,12 +7027,18 @@
       "status": "en_curso",
       "owner": "codex-hud-contours",
       "created_at": "2026-10-27T18:50:40.347337+00:00",
-      "updated_at": "2026-10-27T18:50:46.217640+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T18:53:13.260591+00:00",
+      "branch": "fix/hud-visibility-contours",
       "pr": null,
       "approval": "Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T18:53:13.260591+00:00",
+          "owner": "codex-hud-contours",
+          "detail": "Reused own prebuild checkout with Git move to kh-worktrees/hud-visibility-contours, clean source8d4958; release ZIP/extracted/public manifests unchanged; investigating actual user captures96d.../5c7..., no product edits before causal proposal"
+        }
+      ],
       "claimed_at": "2026-10-27T18:50:46.217640+00:00"
     },
     "synthesis-hd-gray-digits-coverage": {
@@ -7051,7 +7057,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:52:45.704786+00:00",
+  "updated_at": "2026-10-27T18:53:13.260591+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
