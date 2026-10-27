@@ -195,4 +195,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | launcher-hd-media-language-selection-v21 | Launcher 2.1: disponibilidad e import EN/JP voces/peliculas HD desde Steam propio; guia oficial y deteccion por evidencia, texto/audio separados | en_curso | codex-hd-media-language | docs/hd-media-language-selection-v21 | Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora | 2026-10-27T08:40:54.158105+00:00 |
 | submenu-visible-band-coherence | Match submenu margin bands to currently visible native edge | integrado | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/325 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:42:01.347055+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T08:41:35.715603+00:00)
+Integrador: libre
