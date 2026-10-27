@@ -25,7 +25,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-095 | Escena 095 | integrado | codex-095 | https://github.com/MatyMeatBoy/ReKHCoM/pull/81 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:21.537366+00:00 |
 | escena-097 | Escena 097 | en_curso | codex-arte | — | — | 2026-10-24T22:45:22.168654+00:00 |
 | escena-099 | Escena 099 | integrado | codex-099 | https://github.com/MatyMeatBoy/ReKHCoM/pull/79 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:27.053419+00:00 |
-| escena-102 | Escena 102 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/92 | — | 2026-10-25T05:07:35.056513+00:00 |
+| escena-102 | Escena 102 | integrado | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/92 | Atlas exact dd5a82c201a84ca29180026bc7cf064a; approved; revision 4; sha256 395b4022ded920dd2fe1cdf5b3046012bf2bc8ac570abb95cdde1f0e9ebded4e; decision 2026-10-25T05:49:08.522941+00:00 | 2026-10-27T17:09:32.394378+00:00 |
 | escena-112 | Escena 112 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T20:36:13.118522+00:00 |
 | escena-115 | Escena 115 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/93 | — | 2026-10-25T05:12:46.802676+00:00 |
 | escena-116 | Escena 116 | pr_abierto | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/94 | — | 2026-10-25T05:15:57.709597+00:00 |

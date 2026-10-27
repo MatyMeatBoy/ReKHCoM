@@ -744,13 +744,13 @@
     "escena-102": {
       "id": "escena-102",
       "piece": "Escena 102",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arte-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T05:07:35.056513+00:00",
+      "updated_at": "2026-10-27T17:09:32.394378+00:00",
       "branch": "codex/arte-102",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/92",
-      "approval": null,
+      "approval": "Atlas exact dd5a82c201a84ca29180026bc7cf064a; approved; revision 4; sha256 395b4022ded920dd2fe1cdf5b3046012bf2bc8ac570abb95cdde1f0e9ebded4e; decision 2026-10-25T05:49:08.522941+00:00",
       "reference": "{\"family_id\": \"b5ee78894f994aa684c59f38def14509\", \"submissions\": [{\"submission\": \"20261024-131106-953533\", \"created\": \"2026-10-24T16:11:06.592604+00:00\", \"image_id\": \"d3b580a4ed584e52805644def7d3f1ad\", \"version\": \"Revisión · Camino extendido en isométrica a ambos lados: su borde trasero (y la curva que sube a la izquierda), su borde delantero,\", \"clouds\": 2, \"cloud_ids\": [\"25a3fda7-a585-4933-9092-2049310ac923\", \"3d9ad7e1-0ed6-4745-b54c-7d95b53b5f97\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-131106-953533\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -777,10 +777,16 @@
           "at": "2026-10-25T05:07:35.056513+00:00",
           "owner": "codex-arte-final",
           "detail": "2c80443e6; dos nubes respondidas en Atlas; EU 3440x1440 cuadro300, GBA idéntica, check_sources OK. Valoración humana pendiente."
+        },
+        {
+          "at": "2026-10-27T17:09:32.394378+00:00",
+          "owner": "codex-arte-final",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/92 MERGED 2026-10-25T05:58:01Z; merge 75d3c6224c54cca08b27d8825d606996f7482bff ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact dd5a82c201a84ca29180026bc7cf064a, approved, revision 4, SHA256 395b4022ded920dd2fe1cdf5b3046012bf2bc8ac570abb95cdde1f0e9ebded4e; no se hereda aprobacion de otra version.\nRevalidado 2026-10-27T17:09:32.341444+00:00; main f1b51b9c21663aeacdbacd7184b2b2b6baa104e2; merge real 75d3c6224c54cca08b27d8825d606996f7482bff; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T05:03:22.096961+00:00",
-      "sent": "dd5a82c201a84ca29180026bc7cf064a"
+      "sent": "dd5a82c201a84ca29180026bc7cf064a",
+      "completed_at": "2026-10-27T17:09:32.394378+00:00"
     },
     "escena-112": {
       "id": "escena-112",
@@ -6491,7 +6497,7 @@
     "created_at": "2026-10-27T17:09:17.768635+00:00",
     "updated_at": "2026-10-27T17:09:17.768635+00:00"
   },
-  "updated_at": "2026-10-27T17:09:25.057524+00:00",
+  "updated_at": "2026-10-27T17:09:32.394378+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
