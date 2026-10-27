@@ -11,6 +11,7 @@ def fn(s,name):
  return s[a:e]
 hud=(ROOT/"port/src/port_hdhud.c").read_text(encoding="utf8")
 ui=(ROOT/"port/src/port_ui.c").read_text(encoding="utf8")
+ppu=(ROOT/"port/src/port_ppu.c").read_text(encoding="utf8")
 main=(ROOT/"port/src/port_main.c").read_text(encoding="utf8")
 reset=ast.parse((ROOT/"port/tools/test_hd_hud_invalidation.py").read_text())
 pre=next(ast.literal_eval(n.value) for n in reset.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=="PREAMBLE" for t in n.targets))
@@ -24,7 +25,7 @@ static int sOpen=1,sScenePause,sTouchEdit,sReturn,sClosing=1,sFade=16,sSkipPromp
 static int sMenuLightDrawClock,sHdUiCount,sHdArt[3],sFbW,sFbH;
 static uint32_t *sHdUiFrame,*sFb;
 static struct{int originX,originY,width,height;}gPortScreen={0,0,240,160};
-static int gPortHudScale=1,gPortHudW=240,gPortHudH=160,activeHud=1,renderCalls,cancels;
+static int gPortHudScale=1,gPortHudW=240,gPortHudH=160,gPortWorldScale=2,activeHud=1,renderCalls,cancels;
 static SDL_Renderer renderer=1,*sRenderer=&renderer;
 static uint32_t *sHudBuf;static size_t sHudCapacity;
 #define MENU_FADE 8
@@ -33,6 +34,7 @@ static uint32_t *sHudBuf;static size_t sHudCapacity;
 #define GBA_SCREEN_W 240
 static uint64_t SDL_GetPerformanceCounter(void){return 1;}
 static uint64_t SDL_GetPerformanceFrequency(void){return 1000;}
+static int sHudFrameW=240,sHudFrameH=160,sHudFrameScale=1,sHudFrameWorldScale=2;
 static int Lang(void){return 0;}
 static void QuitTrack(void){}
 static void PortSceneGalleryPreviewPoll(void){}
@@ -55,7 +57,7 @@ static int reallocCalls;
 static void* SDL_realloc(void*p,size_t n){(void)p;(void)n;reallocCalls++;return NULL;}
 static void PortFatal(const char*m){fprintf(stderr,"unexpected optional fatal: %s",m);exit(88);}
 '''
-core=fn(main,"GrowPixelBuffer")+"\n"+fn(ui,"PortUiActive")+"\n"+hud[hud.index("typedef struct HudAsset {"):hud.index("void PortHdHudDrawSprites(")]
+core=fn(ppu,"PortPpuHudFrameBegin")+"\n"+fn(ppu,"PortPpuHudFrameEnd")+"\n"+fn(main,"GrowPixelBuffer")+"\n"+fn(ui,"PortUiActive")+"\n"+hud[hud.index("typedef struct HudAsset {"):hud.index("void PortHdHudDrawSprites(")]
 core+=r'''
 static uint32_t piece[16]={0,0,0,0,0,0xffffffff,0,0,0,0,0,0,0,0,0,0};
 static void PortPpuRenderHud(uint32_t*buf){(void)buf;renderCalls++;PortHdHudSpriteBegin();PortHdHudSpriteRegister(piece,4,4,0,0,0,0,255);}
@@ -92,8 +94,13 @@ int main(void){
  sHudCapacity=1;sOpen=1;sClosing=1;int beforeRender=renderCalls;
  PresentBoundary();CHECK(!sOpen&&renderCalls==beforeRender&&reallocCalls==0&&decodes==d);
  CHECK(sHudBuf==retained&&sHudCapacity==1&&sHudBuf[0]==0x12345678);
- sHudCapacity=capacity;sHudBuf=NULL;sOpen=1;sClosing=1;PresentBoundary();
- CHECK(renderCalls==beforeRender&&reallocCalls==0);sHudBuf=retained;
+ sHudCapacity=capacity;
+ /* New desired geometry may shrink/grow during frozen menu; scope restores it. */
+ gPortHudW=241;gPortWorldScale=3;sOpen=1;sClosing=1;beforeRender=renderCalls;
+ PresentBoundary();CHECK(renderCalls==beforeRender+1&&gPortHudW==241&&gPortWorldScale==3);
+ CHECK(reallocCalls==0);gPortHudW=240;gPortWorldScale=2;
+ sHudBuf=NULL;sOpen=1;sClosing=1;PresentBoundary();
+ CHECK(renderCalls==beforeRender+1&&reallocCalls==0);sHudBuf=retained;
  gPortConfig.hdHud=0;sOpen=1;sClosing=1;PresentBoundary();CHECK(decodes==d);
  gPortConfig.hdHud=1;activeHud=0;sOpen=1;sClosing=1;PresentBoundary();CHECK(decodes==d);
  puts("PASS actual Options close + HUD register/loader: before resume, cache reuse, missing/upload failure, off/non-HUD");return 0;

@@ -18,6 +18,9 @@ int PortEventTiledBackdrop(void) { return sFixtureTiledBackdrop; }
 const void* gMsgwinMapBlocks[4];
 static int hblank;
 /* Optional HD artwork is disabled in this pixel-renderer oracle. */
+static int sFixtureCanvasReady = 1;
+int PortHudCanvasReady(int w, int h) { (void)w; (void)h; return sFixtureCanvasReady; }
+void PortHudCanvasRetry(void) {}
 uint32_t* PortHdHudExportBuffer(void) { return NULL; }
 void PortHdHudExportSprite(int w, int h, int part, int ax, int ay) {}
 int PortHdHudLettersReady(void) { return 0; }

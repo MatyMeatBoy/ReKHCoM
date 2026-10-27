@@ -1637,6 +1637,41 @@ static void NativeMovieRendererReset(void) {
 }
 #endif
 
+/* HUD canvas transaction: reserve CPU memory before the PPU removes native
+ * HUD sprites. Keep the old buffer on failure and cache that size until an
+ * explicit resource invalidation or size change. GPU ownership stays in Present. */
+static int sHudCanvasFailed, sHudCanvasFailedW, sHudCanvasFailedH;
+static uint64_t sHudCanvasFailedGeneration;
+
+void PortHudCanvasRetry(void) { sHudCanvasFailed = 0; }
+
+int PortHudCanvasReady(int width, int height) {
+    uint32_t* candidate;
+    size_t pixels;
+    if (width <= 0 || height <= 0 ||
+        (size_t)width > SIZE_MAX / sizeof(uint32_t) / (size_t)height)
+        return 0;
+    pixels = (size_t)width * height;
+    if (sHudBuf && sHudCapacity >= pixels) return 1;
+    if (sHudCanvasFailed && sHudCanvasFailedW == width && sHudCanvasFailedH == height &&
+        sHudCanvasFailedGeneration == sRendererGeneration)
+        return 0;
+    candidate = SDL_malloc(pixels * sizeof(*candidate));
+    if (!candidate) {
+        sHudCanvasFailed = 1;
+        sHudCanvasFailedW = width;
+        sHudCanvasFailedH = height;
+        sHudCanvasFailedGeneration = sRendererGeneration;
+        PortLog("HUD canvas: %dx%d CPU buffer unavailable; cartridge HUD retained until size/resource change", width, height);
+        return 0;
+    }
+    SDL_free(sHudBuf);
+    sHudBuf = candidate;
+    sHudCapacity = pixels;
+    sHudCanvasFailed = 0;
+    return 1;
+}
+
 /* The closing Options frame is still black and game logic is paused. Walk
  * only the current HUD's OAM through the normal consumer so content-keyed
  * replacements decode/upload here, rather than on the first resumed frame.
@@ -1645,17 +1680,21 @@ static void NativeMovieRendererReset(void) {
 static void PrepareHudAfterOptions(int menuCanvas) {
     if (!menuCanvas || PortUiActive() || !gPortConfig.hdHud || !PortPpuHudActive())
         return;
-    /* Optional preparation must not grow an essential presentation buffer.
-     * A changed HUD size may defer it until normal rendering has capacity. */
-    if (!sHudBuf || gPortHudW <= 0 || gPortHudH <= 0 ||
-        (size_t)gPortHudW > sHudCapacity / (size_t)gPortHudH)
-        return;
-    uint64_t started = SDL_GetPerformanceCounter();
-    PortPpuRenderHud(sHudBuf);
-    if (SDL_getenv("KHCOM_HD_MENU_PROFILE"))
-        PortLog("HD HUD: prepared current HUD before gameplay in %.1f ms",
-                (SDL_GetPerformanceCounter() - started) * 1000.0 / SDL_GetPerformanceFrequency());
+    int savedHud[4];
+    PortPpuHudFrameBegin(savedHud);
+    /* Use the frozen PPU geometry, never the new desired menu dimensions.
+     * Optional preparation does not reserve or grow its canvas. */
+    if (sHudBuf && gPortHudW > 0 && gPortHudH > 0 &&
+        (size_t)gPortHudW <= sHudCapacity / (size_t)gPortHudH) {
+        uint64_t started = SDL_GetPerformanceCounter();
+        PortPpuRenderHud(sHudBuf);
+        if (SDL_getenv("KHCOM_HD_MENU_PROFILE"))
+            PortLog("HD HUD: prepared current HUD before gameplay in %.1f ms",
+                    (SDL_GetPerformanceCounter() - started) * 1000.0 / SDL_GetPerformanceFrequency());
+    }
+    PortPpuHudFrameEnd(savedHud);
 }
+
 
 static void Present(void) {
     if (!RendererResetService()) return;
@@ -2079,6 +2118,8 @@ static void Present(void) {
             PortHdTextDraw(sRenderer, 2, od.x, od.y, sOverlayScale);
     }
     if (PortPpuHudActive() && !menuCanvas) {
+        int savedHud[4];
+        PortPpuHudFrameBegin(savedHud);
         SDL_FRect hd;
         if (sHudTexture == NULL || sHudTexW != gPortHudW || sHudTexH != gPortHudH) {
             if (sHudTexture != NULL)
@@ -2090,7 +2131,6 @@ static void Present(void) {
             SDL_SetTextureBlendMode(sHudTexture, SDL_BLENDMODE_BLEND);
             SDL_SetTextureScaleMode(sHudTexture, SDL_SCALEMODE_NEAREST);
         }
-        GrowPixelBuffer(&sHudBuf, &sHudCapacity, (size_t)gPortHudW * gPortHudH);
         PortPpuRenderHud(sHudBuf);
         /* The field HUD can be just a small floor badge on a window-sized
          * transparent texture. Blending the empty area cost a whole frame on
@@ -2156,6 +2196,7 @@ static void Present(void) {
         PortHdHudDrawLabel(sRenderer, outW, outH);
         if (!menuCanvas) PortHdTextHudDigits(sRenderer, hd.x, hd.y, (float)gPortHudScale);
         PortHdTextDraw(sRenderer, 1, hd.x, hd.y, (float)gPortHudScale);
+        PortPpuHudFrameEnd(savedHud);
     }
     {
         /* the scene pause's panel above every HD layer (it is drawn on the picture, under them) */
