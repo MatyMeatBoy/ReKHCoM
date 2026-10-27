@@ -174,5 +174,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | device-profiles | Shared Generic and Steam Deck device defaults | en_revision | device_profiles_sol | task/device-profiles | — | 2026-10-27T06:23:56.860237+00:00 |
 | hudhd-pila-cartas | HUD HD: pila de cartas sobre la vida nueva, con borde (también enemigos/jefes) | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:00.162364+00:00 |
 | hudhd-numeros-cartas | HUD HD: números de carta dorado/azul visibles arriba y abajo | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:04.669290+00:00 |
+| hudhd-exp-ganada | HUD HD: «EXP ganada» no tapada por la vida nueva | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:09.142434+00:00 |
 
 Integrador: libre
