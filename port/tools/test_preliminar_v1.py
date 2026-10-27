@@ -40,6 +40,10 @@ def fixtures():
  list_id,index=events[119]
  result.append(dict(name='evento-119-escena-118',scene=118,
                     start=('KHCOM_EVENT',f'{list_id}:{index}')))
+ # The Coliseum golden platforms are reused by the E3 ending event.
+ list_id,index=events[126]
+ result.append(dict(name='evento-126-escena-124',scene=124,
+                    start=('KHCOM_EVENT',f'{list_id}:{index}')))
  # gEventBg122 is also used by the Coliseum E2 follow-up event.
  list_id,index=events[123]
  result.append(dict(name='evento-123-escena-122',scene=122,

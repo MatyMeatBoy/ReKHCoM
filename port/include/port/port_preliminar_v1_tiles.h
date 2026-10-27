@@ -363,6 +363,49 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
 }
 
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (p && p->v[0]==124 && (wx<0 || wx>=480 || wy<0 || wy>=440)) {
+        int L=2*wy+wx, R=2*wy-wx;
+        if (p->v[1]==3) {
+            /* The golden field surrounds finite platforms. The two arms
+             * which cross the source edges keep their own borders; the
+             * upper-left point is an authored corner, not a repeated bay. */
+            *sx=320+PortSceneTileMod(wx-320,64);
+            *sy=400+PortSceneTileMod(wy-400,32);
+            if (L<496) {
+                *sx=PortSceneTileMod(wx,64);
+                *sy=wy+(wx-*sx)/2;
+                if (*sy<0) *sy=PortSceneTileMod(*sy,32);
+            } else if (wx<0 && L>=600 && L<880) {
+                *sx=8+PortSceneTileMod(wx-8,16);
+                *sy=wy+(wx-*sx)/2;
+            } else if (wx>=480 && L>=600 && L<880) {
+                *sx=448+PortSceneTileMod(wx-448,16);
+                *sy=wy+(wx-*sx)/2;
+            } else if (wx>=480 && wx<520 && R>=16 && L<=1054) {
+                *sx=448+PortSceneTileMod(wx-448,16);
+                *sy=wy+(wx-*sx)/2;
+            }
+        } else if (p->v[1]==2) {
+            *sx=504; *sy=504; /* no extra columns */
+            if (wx<0 && L>=608 && L<656) {
+                *sx=8+PortSceneTileMod(wx-8,16);
+                *sy=wy+(wx-*sx)/2;
+            } else if (wx<0 && L>=816 && L<896) {
+                *sx=64+PortSceneTileMod(wx-64,16);
+                *sy=wy+(wx-*sx)/2;
+            } else if (wx>=480 && ((L>=608 && L<656) || (L>=816 && L<896))) {
+                *sx=448+PortSceneTileMod(wx-448,16);
+                *sy=wy+(wx-*sx)/2;
+            } else if (wx>=480 && wx<520 && R>=0 && R<48 && L<=1054) {
+                *sx=448+PortSceneTileMod(wx-448,16);
+                *sy=wy-(wx-*sx)/2;
+            } else if (wx>=480 && wx<520 && L>=1040 && L<1120 && R>=16) {
+                *sx=448+PortSceneTileMod(wx-448,16);
+                *sy=wy+(wx-*sx)/2;
+            }
+        } else return 0;
+        return 1;
+    }
     if (p && p->v[0]==121 && (wx<0 || wx>=384 || wy<0 || wy>=256)) {
         if (p->v[1]==2) {
             *sx=504; *sy=248; /* empty map cell, not the emblem */
