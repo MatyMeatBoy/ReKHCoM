@@ -5835,10 +5835,10 @@
     "v21-final-integration-qa": {
       "id": "v21-final-integration-qa",
       "piece": "Compose reviewed2.1 candidates for final GPU and platform QA; preserve drafts until verified, publish stable2.1 when ready",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v21-final",
       "created_at": "2026-10-27T11:28:19.440067+00:00",
-      "updated_at": "2026-10-27T12:34:53.576071+00:00",
+      "updated_at": "2026-10-27T12:35:07.537464+00:00",
       "branch": "qa/v21-integrated",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5848,9 +5848,15 @@
           "at": "2026-10-27T11:48:23.267332+00:00",
           "owner": "codex-v21-final",
           "detail": "Combined reviewed heads; production/fault tests pass including fixed349, runtime/GPU and final packaging in progress; user explicitly requests stable2.1"
+        },
+        {
+          "at": "2026-10-27T12:35:07.537464+00:00",
+          "owner": "codex-v21-final",
+          "detail": "Verified and reviewed; merged 771aed8cc243d8c84afb7b0c79a47831f4304629"
         }
       ],
-      "claimed_at": "2026-10-27T11:28:49.971428+00:00"
+      "claimed_at": "2026-10-27T11:28:49.971428+00:00",
+      "completed_at": "2026-10-27T12:35:07.537464+00:00"
     },
     "hd-stock-counter-fit": {
       "id": "hd-stock-counter-fit",
@@ -5884,7 +5890,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:34:53.576071+00:00",
+  "updated_at": "2026-10-27T12:35:07.537464+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
