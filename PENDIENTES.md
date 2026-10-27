@@ -207,5 +207,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | controller-bridge-metadata | Optional versioned actual controller metadata for 64-bit SDL hosts without bridge ABI changes | pr_abierto | codex-control-prompts | https://github.com/MatyMeatBoy/ReKHCoM/pull/340 | Parent authorizes producer and consumer metadata implementation for truthful Auto prompts | 2026-10-27T10:31:21.815350+00:00 |
 | guest-getenv-stable-values | Keep bounded guest getenv values alive across cache saturation and allocation failures | en_curso | codex-control-prompts | — | Parent requests actual rollover RED and bounded stable producer fix | 2026-10-27T10:35:18.629401+00:00 |
 | linux-arm64-experimental-v21 | Integrar9300d2992 experimental LinuxARM64 conmain actual, ABI/loader/builder/routing tests, sinheavybuild ni hardwareclaim | en_curso | codex-linux-arm64 | — | Usuario autoriza LinuxARM64 scope; root delega nueva branch preservando vieja | 2026-10-27T10:36:26.495128+00:00 |
+| v21-verified-board | Reconcile 2.1 verified source artifact QA and current pending PRs without erasing remaining work | pendiente | — | — | Usuario 27/10: mantener pendientes precisos, integrar mejoras y seguir hasta2.1 | 2026-10-27T10:36:45.102023+00:00 |
 
 Integrador: libre
