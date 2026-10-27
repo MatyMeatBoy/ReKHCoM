@@ -92,9 +92,33 @@ static void* sLoaderData;
 static size_t sLoaderSize;
 static char sLoaderPath[512];
 
+/* At most one completed load and one playing compressed track overlap: 128 MiB
+   total at this 64 MiB per-file budget (plus decoder/output buffers). Imported
+   tracks normally use about 7 MiB. This also keeps stb_vorbis's int length safe. */
+#define HD_MUSIC_MAX_FILE_BYTES (64 * 1024 * 1024)
+
 static int SDLCALL LoaderMain(void* unused) {
+    SDL_IOStream* io;
+    Sint64 length;
     (void)unused;
-    sLoaderData = SDL_LoadFile(sLoaderPath, &sLoaderSize);
+    sLoaderData = NULL;
+    sLoaderSize = 0;
+    io = SDL_IOFromFile(sLoaderPath, "rb");
+    if (io != NULL) {
+        length = SDL_GetIOSize(io);
+        if (length > 0 && length <= HD_MUSIC_MAX_FILE_BYTES) {
+            void* data = SDL_malloc((size_t)length);
+            if (data != NULL) {
+                if (SDL_ReadIO(io, data, (size_t)length) == (size_t)length) {
+                    sLoaderData = data;
+                    sLoaderSize = (size_t)length;
+                } else {
+                    SDL_free(data);
+                }
+            }
+        }
+        SDL_CloseIO(io);
+    }
     SDL_SetAtomicInt(&sLoaderDone, 1);
     return 0;
 }
@@ -125,9 +149,9 @@ static void* TakeLoaded(int song, size_t* size, int* pending) {
     SDL_SetAtomicInt(&sLoaderDone, 0);
     sLoaderSong = song;
     sLoader = SDL_CreateThread(LoaderMain, "hd music", NULL);
-    if (sLoader == NULL) { /* no thread: read it here */
+    if (sLoader == NULL) { /* keep cartridge music; never read on the game thread */
         sLoaderSong = -1;
-        return SDL_LoadFile(sLoaderPath, size);
+        return NULL;
     }
     *pending = 1;
     return NULL;
