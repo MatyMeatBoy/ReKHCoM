@@ -5086,13 +5086,8 @@
       "completed_at": "2026-10-27T08:19:20.255596+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-crash",
-    "token": "9b23c4e0cb2a6c5fa43ddcc3bb2aa560c1a8533bb5c4ae02",
-    "created_at": "2026-10-27T06:31:28.522283+00:00",
-    "updated_at": "2026-10-27T08:18:18.474518+00:00"
-  },
-  "updated_at": "2026-10-27T08:21:06.746389+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-27T08:21:15.712429+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
