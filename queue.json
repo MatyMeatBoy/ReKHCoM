@@ -8025,13 +8025,8 @@
       "evidence": []
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "fb389b221fe100064168773a2eb0d955c5ae5981fcaf96c5",
-    "created_at": "2026-10-27T22:35:16.377489+00:00",
-    "updated_at": "2026-10-27T22:35:16.377489+00:00"
-  },
-  "updated_at": "2026-10-27T22:35:25.151329+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-27T22:35:29.720534+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
