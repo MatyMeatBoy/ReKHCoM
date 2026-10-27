@@ -132,6 +132,21 @@ superior NULL por lectura BIOS GBA. El coordinador corrige la fuente compartida;
 el ZIP debe esperar GREEN del mismo guardado/repro en la build exacta. No
 presentar los tests sintéticos previos como sustituto de esa verificación.
 
+Actualización posterior del coordinador, 27/10: corrección de #318 aún pendiente
+de integración; repro guardado GREEN (`field=520`, exit 0), paquete privado
+32+64 PASS y regresión del ZIP final PASS en ambos runtimes. El paquete inicial
+también pasó ocho salas y puerta de evento en ambos. No hay prerelease pública
+publicada todavía. El corpus local es una SRAM única; GameFAQs solo figura como
+catálogo candidato no descargado/validado y bloqueado. La batería usa patrones,
+fixtures deterministas y soak dirigido; no requiere campaña completa.
+
+Requisito persistente de entrega personal de este proyecto: colocar los ZIP
+limpios en `C:/Users/MP/Documents/00 Claude/KHCoMPC`, visibles en esa raíz;
+`build/releases` puede conservar salidas de trabajo pero no sustituye la entrega.
+El coordinador ya copió allí el ZIP corregido, SHA-256
+`be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
+Esta ruta personal pertenece a las notas ReKHCoM, no a la skill pública OptiPort.
+
 ## Orden del espacio de trabajo después de 2.1
 
 Pendiente de cierre: inventariar worktrees, agrupar los útiles bajo

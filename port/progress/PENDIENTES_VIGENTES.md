@@ -53,6 +53,16 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   corrige fuente compartida; exigir GREEN del mismo repro en build final antes
   de entregar ZIP. Las ampliaciones UI anteriores no retrasan esa entrega.
 
+  Actualización del coordinador: repro corregido GREEN, paquete privado y ZIP
+  final pasan el guardado en 32+64; #318 pendiente de integración. ZIP personal
+  limpio debe entregarse siempre visible en la raíz
+  `C:/Users/MP/Documents/00 Claude/KHCoMPC`, no solo bajo `build/releases`.
+  Copia corregida allí, SHA-256
+  `be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
+  Aún sin prerelease pública. [Tablero actualizado](OPTIPORT_V21.md): 10/14
+  originales (~71 % de trabajo de primera batería); migración/plataformas y UI
+  añadidas se siguen aparte. No es un porcentaje de estabilidad.
+
 Las notas fechadas anteriores que dicen «ninguna release nueva» o describen
 otro orden de integración se conservan como historia y quedan sustituidas por
 este mandato del 27/10.
