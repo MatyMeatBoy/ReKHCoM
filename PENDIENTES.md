@@ -150,6 +150,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | popup-skip-text-pedro | Popup saltar cinematica HD sin letras Pedro | integrado | codex-ending | https://github.com/MatyMeatBoy/ReKHCoM/pull/274 | Pedido directo usuario: popup saltar sin letras, solucionar para todas las versiones, 26/10/2026 | 2026-10-26T22:51:00.986131+00:00 |
 | gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | integrado | codex-gallery-preview | https://github.com/MatyMeatBoy/ReKHCoM/pull/275 | Pedido directo usuario 26/10: previews en negro tras entrar saltar volver, solucionar | 2026-10-26T22:54:50.856278+00:00 |
 | hd-reload-fill-decomp | Recarga HD dinamica igual al original desde decomp | pr_abierto | codex-ending-hud | https://github.com/MatyMeatBoy/ReKHCoM/pull/276 | Pedido directo usuario corregir rellenado original, pushear y cerrar 26/10 | 2026-10-26T23:49:01.926744+00:00 |
-| crash-diagnostics-20261027 | Logs persistentes y diagnostico #277/#272; crash Monstruo Quiver (instalacion solo lectura) | pendiente | — | — | — | 2026-10-27T04:06:58.856695+00:00 |
+| crash-diagnostics-20261027 | Logs persistentes y diagnostico #277/#272; crash Monstruo Quiver (instalacion solo lectura) | en_curso | codex-crash | — | — | 2026-10-27T04:07:09.563763+00:00 |
 
 Integrador: libre
