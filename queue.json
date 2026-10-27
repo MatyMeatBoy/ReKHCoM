@@ -6752,10 +6752,10 @@
     "v22-preview-cancellation-contract": {
       "id": "v22-preview-cancellation-contract",
       "piece": "Contrato C determinista de cancelación y resultados obsoletos de previews",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v22-preview-cancellation",
       "created_at": "2026-10-27T17:53:07.760873+00:00",
-      "updated_at": "2026-10-27T17:53:19.919912+00:00",
+      "updated_at": "2026-10-27T17:55:08.584769+00:00",
       "branch": "test/preview-cancel-contracts",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Coordinador autorizó separar y revisar PR381 como contrato acotado; no cerrar el bloque async/perf completo",
@@ -6765,9 +6765,15 @@
           "at": "2026-10-27T17:53:19.919912+00:00",
           "owner": "codex-v22-preview-cancellation",
           "detail": "Hijo específico del padre optiport-v22-async. PR381 head15d3a9bf5: 8 escenarios deterministas C PASS y 2 controles negativos exit97; sólo test/doc. Fuente61aee4c40, evidencia pruebas/v22-async-contracts/contract-q44w8n1t. No SDL/GPU/hilos reales ni cronometraje; no cierra latencia/cierre real, frío/caliente, I/O ni dispositivos."
+        },
+        {
+          "at": "2026-10-27T17:55:08.584769+00:00",
+          "owner": "codex-v22-preview-cancellation",
+          "detail": "PR381 merged 8953b0d35e44832c6dd3a4950765581c4b62fdce. Coordinator reviewed actual C consumer extraction, preserved negative controls and independently passed 8 lifecycle scenarios plus 2 rejected mutants. Only test/docs; no production bug found or timing/device claim. Parent optiport-v22-async remains pendiente for real latency, cold/warm and shutdown evidence."
         }
       ],
-      "claimed_at": "2026-10-27T17:53:13.860325+00:00"
+      "claimed_at": "2026-10-27T17:53:13.860325+00:00",
+      "completed_at": "2026-10-27T17:55:08.584769+00:00"
     }
   },
   "integrator": {
@@ -6776,7 +6782,7 @@
     "created_at": "2026-10-27T17:54:54.947930+00:00",
     "updated_at": "2026-10-27T17:54:54.947930+00:00"
   },
-  "updated_at": "2026-10-27T17:54:54.947930+00:00",
+  "updated_at": "2026-10-27T17:55:08.584769+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
