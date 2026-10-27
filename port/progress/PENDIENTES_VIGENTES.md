@@ -2,6 +2,15 @@
 
 ## Estado publicado y limpieza — 27/10, después de la entrega
 
+Repaso posterior acotado: [OptiPort actualizado](OPTIPORT_V21.md) y doce
+mediciones del paquete final registradas; sin crash nuevo. La variación de
+pacing no justifica un cambio especulativo. Próximos checks concretos aún sin
+cierre: nombre de ataque del jefe frente a barra/pila; retorno de galería sin
+flash título/partida×GBA/HD×normal/skip y fondo mínimo sinposter; dígitos
+premium/modificados presentes/ausentes. No repetir primero la matriz de
+submenús ya capturada. El usuario pidió cortar la ampliación de pruebas al
+comunicar la release; los paquetes publicados permanecen intactos.
+
 **[2.1 estable publicada](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.1)**
 el27/10 a13:02:10UTC, tag `8c613ae5d`. PR351/353 integrados; Windows, Linux/Deck,
 Android beta y Anbernic beta entregados con manifiesto/hashes. Los motores

@@ -1,8 +1,45 @@
 # OptiPort — batería ReKHCoM 2.1
 
-Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` corresponde al commit público `0b6edd3`; incluye sus referencias locales para funcionar sin consultar otros repositorios. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
+Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` corresponde al commit público `17f0ffa`; incluye sus referencias locales para funcionar sin consultar otros repositorios. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
 
-## Avance comprobable
+## Estado vigente después de publicar2.1 — 27/10
+
+2.1 está publicada estable; [entrega y pendientes vigentes](PENDIENTES_VIGENTES.md).
+Los textos anteriores de no publicar/sinrelease, porcentajes y PR en revisión
+que siguen abajo son historia, no instrucciones ni estado actual. No se vuelve
+a abrir una release ni se modifican sus paquetes para completar esta revisión.
+
+Mediciones iniciales sobre ejecutables del ZIP publicado: doce corridas
+seriales Windows32/64, título y combate Monstruo, HD apagado/encendido;
+600cuadros por caso inicial y repetición de combate900 en orden inverso.
+[Datos saneados](data/v21-initial-profile.json) contienen hashes, muestras,
+backend, p95/p99 y memoria. El prefijo común compara cuadros300..600;
+los picos de memoria corresponden al recorrido completo de cada caso.
+
+La primera entrada HD tenía un aviso de combate desfasado y se excluye de
+paridad HD. Reimportación aislada con launcher publicado:446PNG, cero stale.
+El indicador `progress.world` pertenece a `gMapFloorState`; no demuestra el
+mundo activo del combate. Lecturas del child propio usando símbolos exactos
+confirmaron `gGameState.world=5`, stage5 y floor0 en ambas arquitecturas.
+No se necesitó modificar el motor por esa discrepancia de observación.
+
+P99 de trabajo del combate HD en la ventana común:32bits20,49/8,48ms en las
+dos corridas;64bits7,93/6,24ms. La variación no identifica por sí sola un bug.
+64bits muestra más memoria privada pese a menor RSS; no afirmar menor consumo
+total ni una mejora global por arquitectura. No se verificó paridad visual
+entre arquitecturas, por lo que estos datos no prueban una ganancia equivalente.
+No hay crash nuevo reproducido. La inspección se cierra aquí por petición del
+usuario de evitar ampliar las pruebas y retrasar la entrega.
+
+La skill pública incorpora dos lecciones verificadas: observar el subsistema
+activo y repetir con entradas válidas, conservando la corrida degradada aparte.
+Sigue sin existir evidencia para declarar100% de toda la batería: quedan
+profiling/caché de previews, matriz visual de galería, nombres de ataques de
+jefes y dígitos premium/modificados con import completo/parcial; hardware y
+crash de foco Monstruo sin reproducción siguen separados. Elegir el próximo
+check por defecto concreto, no reiniciar indiscriminadamente la batería.
+
+## Histórico previo a la publicación — contexto conservado
 
 **Cierre 27/10:** el usuario prioriza ahora la entrega estable2.1 con todos los
 PR listos integrados y la evidencia existente, sin ampliar la batería.
