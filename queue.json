@@ -6353,12 +6353,12 @@
     "v22-board-reconcile-integrated-state": {
       "id": "v22-board-reconcile-integrated-state",
       "piece": "Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v22-board-reconcile",
       "created_at": "2026-10-27T16:14:42.349652+00:00",
-      "updated_at": "2026-10-27T16:15:00.297331+00:00",
+      "updated_at": "2026-10-27T16:18:49.989872+00:00",
       "branch": "docs/v22-board-reconcile",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/370",
       "approval": "Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente",
       "reference": "port/progress/PLAN_V22.md",
       "evidence": [
@@ -6366,13 +6366,18 @@
           "at": "2026-10-27T16:15:00.297331+00:00",
           "owner": "codex-v22-board-reconcile",
           "detail": "Scopeaprobado porcoordinador: SOLO PLAN_V22, cambiosbasadosenPRmerged yregistrolimpieza; ClaudeconservafallbackP0"
+        },
+        {
+          "at": "2026-10-27T16:18:49.989872+00:00",
+          "owner": "codex-v22-board-reconcile",
+          "detail": "85e8c5bc0: SOLO PLAN_V22. #363/#364/#365/#367/#368 verificadosmerged; issue360abierto. 6links+ZIP2.1SHAvalidos; test_runtime_selection C++17WallWextraWerrorstatic PASS. Sin launcher/juegoni matrices. DistingueAuto2/3/4,excepcionesaviso,Force64elecciónexplicita,nocausaReportero."
         }
       ],
       "claimed_at": "2026-10-27T16:14:48.736720+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:15:00.297331+00:00",
+  "updated_at": "2026-10-27T16:18:49.989872+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
