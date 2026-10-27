@@ -75,6 +75,10 @@ antes/después al usuario en el chat. Comentarios del usuario entre comillas.
   apunta en diagonal abajo-izquierda con 8 cuadros (0-3 sube/baja, 4-7 se
   desplaza). Falta: operación de rotación libre + espejo en ambos importadores,
   recetas por cuadro (`frame`) y captura en Bonus élite, barajas y diálogos.
+  **WIP 27/10** en rama `art/hand-glove-wip` (sin PR): ops `flip`/`turn` en ambos importadores y 8 recetas;
+  orientación ya corregida por el usuario (sin espejo, apunta abajo-derecha como el GBA, `turn=-30`).
+  Falta: el guante HD queda recortado detrás del recuadro amarillo y la carta y se ve translúcido; el
+  cartucho lo dibuja opaco y delante (revisar orden/oclusión de la capa HD del grupo 5 y su alpha).
 - [ ] **Botón «A» de los avisos en HD** — usar el sistema de prompts de mando
   (Original/Nintendo/Xbox/PS) para el icono de Bonus élite; comprobar en captura.
 
