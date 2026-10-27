@@ -7961,10 +7961,23 @@
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
       "reference": null,
       "evidence": []
+    },
+    "scene-background-coverage-x3-integer2": {
+      "id": "scene-background-coverage-x3-integer2",
+      "piece": "Para mas tarde: auditar TODOSfondos de escenas hasta x3Integer2 con criterio nuevo, por tramo/zoom/camara/entrada/salida; añadir todoscasosreconocidos a colaAtlas conIDs+capturas, preservarzoomespeciallegitimo yHUDsegunzoomusuario. MonstroGeppetto/Pinocho ya reportados, no duplicartrabajo.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T22:26:03.779081+00:00",
+      "updated_at": "2026-10-27T22:26:03.779081+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27/10 dejaauditoriafondosparamastarde y pide enviar todosreconocidos a colaAtlas",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:25:34.870837+00:00",
+  "updated_at": "2026-10-27T22:26:03.779081+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
