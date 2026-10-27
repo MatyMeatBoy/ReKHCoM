@@ -10,7 +10,7 @@ every top line black.
 | Kingdom Key values0..9 | Actual card catalog maps all ten values to the same small-card artwork; the loader correction therefore applies to each. | This is source mapping, not ten gameplay captures. Digits remain separately rendered. |
 | Heroica / Olympia5 right-edge white points | PR405 corrects native cell14,19 only when HD queues successfully; the legitimate HD highlight stays unchanged. Layered SDL reproduces it; native32 EU D3D11 with the user's copied L18 save shows values4/6/5 and five corrected residue pixels beside the separate Kingdom Key fixes. | Additional platform gameplay checks. |
 | Frame-closing corners | PR408 keeps the original cells1,16 and14,16 above the HD illustration, in each card's own palette. Includes front-card ownership so a lower corner cannot cover a higher HD card. | World/screen game capture and software/HUD branch tests passed; other devices remain separate. |
-| Attack-card horizontal seam | The audit of18 attack illustrations found23 old-art cells in row15 across nine cards; see list below. Only accepted HD replaces those cells with their original neighbouring black. | Actual game comparison of this scoped extension is pending. |
+| Attack-card horizontal seam | The audit of18 attack illustrations found23 old-art cells in row15 across nine cards; see list below. Only accepted HD replaces those cells with their original neighbouring black. Native32 EU D3D11 A/B checks cover all nine actual HD illustrations with values0/5/9 and three fixed frames each:545 changed output pixels per frame, all confined to the target seam regions. | Other platform gameplay checks remain separate. |
 | Cure top line | Decoded GBA palette is black RGB0,0,0; preserved. | No blanket recolouring. |
 | Simba / Potion top line | GBA Simba is blue RGB0,57,189; Potion is green RGB0,139,0; preserved. | Their own closing corners retain these colours. |
 
@@ -27,6 +27,11 @@ the rest of these nine illustrations. The helper runs after transparent-pixel
 rejection and before the existing blend/fade processing, in both native routes.
 Coordinates are authored frame coordinates, so partial/flipped/affine OAM pieces
 continue to follow the same cell. Missing/rejected/disabled HD stays native.
+The game comparisons use explicitly synthetic private deck fixtures derived
+from a copied save. They test rendering, not real player progression. Kingdom
+Key, Potion and Simba are unchanged control cards in the fourth row; no other
+frame, illustration, value digit or UI area changes in any of the nine captures.
+The original user SRAM and log hashes remain unchanged.
 
 The production-loader regression captures the uploaded pixels and checks every
 texel, including unchanged Olympia/Cure/Simba and an unrelated group. It uses a
