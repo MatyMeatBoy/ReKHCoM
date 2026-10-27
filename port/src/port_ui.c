@@ -203,6 +203,7 @@ enum {
     ITEM_CONTROL_NINTENDO_HEADING, /* section heading, not selectable */
     ITEM_PAD_LAYOUT,               /* force the Nintendo layout */
     ITEM_CONTROLLER_PROMPTS,       /* experimental display family, never remaps inputs */
+    ITEM_CONTROLLER_CONFIRM_PRESET, /* explicit, confirmed replacement of pad A/B only */
     ITEM_CONTROLS_BACK,
     ITEM_COUNT
 };
@@ -214,8 +215,9 @@ static int sPage;
 static int sTitleRequest; /* ITEM_TITLE: due once the menu has closed */
 /* a big window over Options that asks twice, as the scene pause asks before a skip: back to the title (ITEM_TITLE),
    or which mode's presets to go back to (ITEM_MODE_RESET) */
-enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT, CONFIRM_REBEL };
+enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT, CONFIRM_REBEL, CONFIRM_PAD_PRESET };
 static int sConfirm, sConfirmStep, sConfirmCursor, sConfirmMode;
+static int sPadPresetFamily;
 static void ConfirmOpen(int what);
 static void ConfirmKey(int key);
 static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
@@ -293,7 +295,7 @@ static int OpensSomething(int item) {
     switch (item) {
         case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
         case ITEM_CHEAT_REBEL_LIST: case ITEM_CHEAT_REBEL:
-        case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET:
+        case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET: case ITEM_CONTROLLER_CONFIRM_PRESET:
             return 1;
         default:
             return 0;
@@ -541,6 +543,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Forzar mando Nintendo", "ニンテンドーの配置にこてい" },
     { "Prompts (experimental)", "Boutons (expérimental)", "Tasten (experimentell)", "Pulsanti (sperimentale)",
       "Indicaciones (experimental)", "ボタン表示（実験）" },
+    { "Confirm/cancel preset...", "Préréglage valider/retour...", "Bestätigen/Zurück-Vorgabe...", "Conferma/annulla...",
+      "Preset confirmar/cancelar...", "決定・キャンセルのプリセット..." },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
@@ -1391,6 +1395,10 @@ static void ValueText(int item, char* out, size_t size) {
             SDL_strlcpy(out,names[SDL_clamp(gPortConfig.controllerPrompts,0,4)],size);
             break;
         }
+        case ITEM_CONTROLLER_CONFIRM_PRESET:
+            SDL_strlcpy(out,PortControllerPresetFamily()==2?"Nintendo A/B":PortControllerPresetFamily()==4?"PS Circle/Cross":
+                             PortControllerPresetFamily()==3?"Xbox A/B":"-",size);
+            break;
         case ITEM_INVERT_CARD_SCROLL:
             SDL_strlcpy(out, sOnOff[gPortConfig.invertCardScroll != 0][l], size);
             break;
@@ -1689,6 +1697,12 @@ static void Change(int item, int dir) {
         case ITEM_CONTROLLER_PROMPTS:
             gPortConfig.controllerPrompts=Wrap(gPortConfig.controllerPrompts+(dir ? dir : 1),5);
             break;
+        case ITEM_CONTROLLER_CONFIRM_PRESET:
+            if(dir>=0 && PortControllerPresetFamily()) {
+                sPadPresetFamily=PortControllerPresetFamily();
+                ConfirmOpen(CONFIRM_PAD_PRESET);
+            }
+            return;
         case ITEM_INVERT_CARD_SCROLL:
             gPortConfig.invertCardScroll = !gPortConfig.invertCardScroll;
             break;
@@ -2847,9 +2861,27 @@ static void MenuBar(int x, int t, int w, int selected) {
    under the text on a white plate, as the debug menu shows it. */
 /* The GBA's own A/B key around a letter (user 25/10): round, violet grey, lit from the top left, a dark rim and the
    letter light. Centred on cx, cy; 13 pixels across. Other pads' keys come later. */
+static int DrawPromptGlyph(int glyph,int x,int y) {
+    const unsigned char* tiles=PortControllerGlyphTiles(glyph);
+    if(!tiles)return 0;
+    for(int yy=0;yy<10;yy++)for(int xx=0;xx<12;xx++) {
+        int at=((yy/8)*2+xx/8)*32+(yy%8)*4+(xx%8)/2;
+        int color=(tiles[at]>>((xx&1)*4))&15;
+        if(color)Pixel(x+xx,y+yy,color==1?0xFFF4F0FCu:MENU_RED_DARK);
+    }
+    return 1;
+}
+
 static void GbaKey(int code, int cx, int cy) {
     const int r = 6;
     int dx, dy;
+    int action=code=='A'?PORT_ACT_A:code=='B'?PORT_ACT_B:code=='L'?PORT_ACT_L:code=='R'?PORT_ACT_R:-1;
+    char label[32];
+    if(action>=0 && PortControllerActionLabel(action,label,sizeof(label))) {
+        if(!DrawPromptGlyph(PortControllerActionGlyph(action),cx-6,cy-5))
+            DrawText(label,cx-TextWidth(label)/2,cy-5,MENU_RED_DARK,0xFFD8D8D8u);
+        return;
+    }
 
     for (dy = -r; dy <= r; dy++)
         for (dx = -r; dx <= r; dx++) {
@@ -2903,12 +2935,16 @@ static void MenuButton(int x, int y, const char* text, int key) {
     char prompt[32];
     int mapped = (key=='A' || key=='B') && PortControllerActionLabel(key=='A' ? PORT_ACT_A : PORT_ACT_B,prompt,sizeof(prompt));
     int keyW = key ? GlyphWidth(key) + 4 : 0;
+    int glyph=mapped?PortControllerActionGlyph(key=='A'?PORT_ACT_A:PORT_ACT_B):0;
     if (mapped) keyW=TextWidth(prompt)+4;
+    if (glyph) keyW=16;
     int w = TextWidth(text) + 20 + keyW;
 
     Shade(x - 3, y - 2, w + 6, 14, 0xFFFFFFFFu, 224);
     MenuBar(x, y, w, 1);
-    if (mapped)
+    if (glyph)
+        DrawPromptGlyph(glyph,x+15,y);
+    else if (mapped)
         DrawText(prompt,x+15,y,MENU_RED_DARK,0xFFD8D8D8u);
     else if (key)
         DrawGlyph(key, x + 15, y, MENU_RED_DARK, 0xFFD8D8D8u);
@@ -4057,6 +4093,21 @@ static const char* const sConfirmStatesRows[2][LANG_COUNT] = {
 };
 static const char* const sConfirmCancel[LANG_COUNT] = { "Cancel", "Annuler", "Abbrechen", "Annulla", "Cancelar",
                                                         "やめる" };
+static const char* const sPadPresetAsk[LANG_COUNT]={
+    "Replace only the controller's confirm/cancel bindings?", "Remplacer seulement les boutons valider/retour ?",
+    "Nur die Controller-Tasten für Bestätigen/Zurück ersetzen?", "Sostituire solo conferma/annulla del controller?",
+    "¿Reemplazar sólo confirmar/cancelar del mando?", "コントローラーの決定・キャンセルだけ変更しますか？"
+};
+static const char* const sPadPresetWarn[LANG_COUNT]={
+    "Nintendo: A/B. PlayStation: Circle/Cross. Xbox: A/B. This replaces custom A/B pad bindings; keyboard and all other bindings stay unchanged. Choosing a prompt family alone never applies it.",
+    "Nintendo : A/B. PlayStation : Cercle/Croix. Xbox : A/B. Remplace les boutons A/B personnalisés ; clavier et autres commandes conservés. Choisir la famille seule ne change rien.",
+    "Nintendo: A/B. PlayStation: Kreis/Kreuz. Xbox: A/B. Ersetzt eigene A/B-Padbelegungen; Tastatur und andere Belegungen bleiben. Die Symbolfamilie allein ändert nichts.",
+    "Nintendo: A/B. PlayStation: Cerchio/Croce. Xbox: A/B. Sostituisce A/B personalizzati del pad; tastiera e altri tasti restano. La sola famiglia visiva non cambia i comandi.",
+    "Nintendo: A/B. PlayStation: Círculo/Cruz. Xbox: A/B. Reemplaza A/B personalizados del mando; conserva teclado y demás controles. Elegir la familia visual no aplica el preset.",
+    "NintendoはA/B、PlayStationは○/×、XboxはA/B。カスタムのA/Bわりあてを置き換えます。キーボードと他のボタンは変更しません。表示だけの選択では変更しません。"
+};
+static const char* const sPadPresetApply[LANG_COUNT]={"Yes, replace pad A/B","Oui, remplacer A/B","Ja, Pad A/B ersetzen",
+    "Sì, sostituisci A/B","Sí, reemplazar A/B del mando","はい、A/Bを変更する"};
 
 /* the mode list: the three modes and Cancel; the yes/no steps: "No" first, a reset is never one press away */
 static int ConfirmRows(void) {
@@ -4083,7 +4134,7 @@ static void ConfirmOpen(int what) {
 static void ConfirmKey(int key) {
     extern void PortMenuSoundClick(void);
     extern void PortMenuSoundDecide(int confirm);
-    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES || sConfirm == CONFIRM_REBEL ? 0
+    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES || sConfirm == CONFIRM_REBEL || sConfirm == CONFIRM_PAD_PRESET ? 0
                                    : sConfirm == CONFIRM_QUIT && QuitUnsavedMinutes() < 60 ? 0 : 1;
     if (sConfirm == CONFIRM_FONT && key >= 2) { /* one step: A takes the face under the cursor, B leaves it as it was */
         PortMenuSoundDecide(key == 2);
@@ -4146,6 +4197,11 @@ static void ConfirmKey(int key) {
         sConfirm = CONFIRM_NONE;
         gPortConfig.cheatSaveStates = 1;
         PortConfigSave();
+        return;
+    }
+    if(sConfirm==CONFIRM_PAD_PRESET) {
+        sConfirm=CONFIRM_NONE;
+        if(PortApplyControllerConfirmPreset(sPadPresetFamily)) { ResetMenuAxes();PortConfigSave(); }
         return;
     }
     if (sConfirm == CONFIRM_TITLE) {
@@ -4283,6 +4339,10 @@ static void DrawConfirm(int l, int width, int height) {
         labels[3] = sConfirmCancel[l];
         SDL_strlcpy(ask, sConfirmModeAsk[l], sizeof(ask));
         warn = sConfirmModeWarn[0][l];
+    } else if (sConfirm == CONFIRM_PAD_PRESET) {
+        labels[0]=sConfirmStatesRows[0][l];labels[1]=sPadPresetApply[l];
+        SDL_snprintf(ask,sizeof(ask),"%s\n%s",sPadPresetAsk[l],sPadPresetFamily==2?"Nintendo A/B":sPadPresetFamily==4?"PlayStation Circle/Cross":"Xbox A/B");
+        warn=sPadPresetWarn[l];
     } else if (sConfirm == CONFIRM_STATES) {
         labels[0] = sConfirmStatesRows[0][l];
         labels[1] = sConfirmStatesRows[1][l];

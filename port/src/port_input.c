@@ -6,6 +6,7 @@
 #include "port/port.h"
 #include "port/pad_layout.h"
 #include "port/controller_prompts.h"
+#include "port/controller_prompt_glyphs.h"
 #include "port/port_ui.h"
 #include "mode.h"
 #include "text_types.h"
@@ -117,6 +118,32 @@ int PortControllerActionLabel(int action, char* out, size_t size) {
         return 1;
     }
     return PortControllerBindingLabel(gPortConfig.pad[action],out,size);
+}
+
+int PortControllerActionGlyph(int action) {
+    char label[32];
+    if(sPromptKeyboard || !PromptPad() || !PortControllerActionLabel(action,label,sizeof(label)))return 0;
+    return KhPromptGlyphId(label);
+}
+
+const unsigned char* PortControllerGlyphTiles(int glyph) {
+    static unsigned char tiles[144][128],ready[144];
+    if(glyph<=0 || glyph>=144 || !(glyph<=8 || glyph>=128 || strchr("ABXYLR+-",glyph)))return NULL;
+    if(!ready[glyph]) { KhPromptGlyphPixels(glyph,tiles[glyph]);ready[glyph]=1; }
+    return tiles[glyph];
+}
+
+int PortControllerPresetFamily(void) {
+    int family=PromptFamily(PromptPad());
+    return family>=KH_PROMPT_NINTENDO && family<=KH_PROMPT_PLAYSTATION?family:0;
+}
+
+int PortApplyControllerConfirmPreset(int family) {
+    int confirm,cancel;
+    if(!KhPromptPresetBindings(family,KhPadIsNintendo(PromptPad(),gPortConfig.padLayout),&confirm,&cancel))return 0;
+    gPortConfig.pad[PORT_ACT_A]=confirm;gPortConfig.pad[PORT_ACT_B]=cancel;
+    PortInputResetBindings();
+    return 1;
 }
 
 /* After closing an overlay, ignore buttons still held until released so the
@@ -356,14 +383,21 @@ static const void* CardScrollTutorialText(int message, const void* source) {
 /* Only authored, highlighted button tokens in the tutorial range are
    resolved. Prose, names, ordinary A/B letters and unrelated messages stay
    untouched. This buffer is independent from the card-scroll inversion. */
+static int ControllerTutorialMessage(int message) {
+    return (message>=CARD_MSG_WORLDSELECT_TUTORIAL_0 && message<=CARD_MSG_LEON_TUTORIAL_14) ||
+           message==CARD_MSG_WARP_POINT_TUTORIAL || message==CARD_MSG_MAP_STAIR_TUTORIAL || message==CARD_MSG_RIKU_DECK_TUTORIAL
+#ifndef VERSION_EU
+           || message==CARD_MSG_RIKU_BATTLE_TUTORIAL
+#endif
+           ;
+}
 const void* PortCardScrollTutorialText(int message, const void* source) {
     const TextChar* text=CardScrollTutorialText(message,source);
 #ifndef VERSION_JP
     static TextChar resolved[768];
     size_t i=0,n=0;
     int changed=0;
-    if (!text || !gPortConfig.controllerPrompts || message<CARD_MSG_WORLDSELECT_TUTORIAL_0 ||
-        message>CARD_MSG_LEON_TUTORIAL_14) return text;
+    if (!text || !gPortConfig.controllerPrompts || !ControllerTutorialMessage(message)) return text;
     while (text[i] && i<512) {
         if (text[i]==MSG_CODE_HIGHLIGHT) {
             size_t end=i+1;
@@ -372,14 +406,23 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
             if(text[end]==MSG_CODE_PLAIN && end-i-1<sizeof(token)) {
                 size_t length=end-i-1;
                 for(size_t k=0;k<length;k++)token[k]=(char)text[i+1+k];
-                int action=KhPromptTokenAction(token,length);
-                if(action>=0 && PortControllerActionLabel(action,label,sizeof(label))) {
-                    size_t count=SDL_strlen(label);
-                    if(n+count+4>=SDL_arraysize(resolved))return text;
+                int actions[2],countActions=KhPromptTokenActions(token,length,actions);
+                if(countActions) {
                     resolved[n++]=MSG_CODE_HIGHLIGHT;
-                    resolved[n++]='[';
-                    for(size_t k=0;k<count;k++)resolved[n++]=(unsigned char)label[k];
-                    resolved[n++]=']';resolved[n++]=MSG_CODE_PLAIN;
+                    for(int a=0;a<countActions;a++) {
+                        if(!PortControllerActionLabel(actions[a],label,sizeof(label)))return text;
+                        int glyph=PortControllerActionGlyph(actions[a]);
+                        size_t count=SDL_strlen(label);
+                        if(n+count+6>=SDL_arraysize(resolved))return text;
+                        if(a)resolved[n++]='+';
+                        if(glyph) { resolved[n++]=PORT_PROMPT_TOKEN;resolved[n++]=(TextChar)glyph; }
+                        else {
+                            resolved[n++]='[';
+                            for(size_t k=0;k<count;k++)resolved[n++]=(unsigned char)label[k];
+                            resolved[n++]=']';
+                        }
+                    }
+                    resolved[n++]=MSG_CODE_PLAIN;
                     i=end+1;changed=1;continue;
                 }
             }
@@ -391,9 +434,38 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
     resolved[n]=0;
     return changed ? resolved : text;
 #else
-    /* Shift-JIS has a different control/text encoding. Keep it intact until
-       explicit semantic tokens and the Japanese inline-glyph path are tested. */
-    return text;
+    static unsigned char resolved[1536];
+    size_t length=0,i=0,n=0;
+    int changed=0;
+    if(!text || !gPortConfig.controllerPrompts || !ControllerTutorialMessage(message))return text;
+    while(length<512 && text[length])length++;
+    if(length==512 || (length&1))return text;
+    while(i<length) {
+        int actions[2];size_t bytes=0;
+        int count=KhPromptSjisActions(text+i,length-i,actions,&bytes);
+        if(count) {
+            for(int a=0;a<count;a++) {
+                char label[32];
+                if(!PortControllerActionLabel(actions[a],label,sizeof(label)))return text;
+                int glyph=PortControllerActionGlyph(actions[a]);
+                if(n+2*SDL_strlen(label)+6>=sizeof(resolved))return text;
+                if(a) { resolved[n++]=0x81;resolved[n++]=0x7b; }
+                if(glyph) { resolved[n++]=PORT_PROMPT_TOKEN;resolved[n++]=(unsigned char)glyph; }
+                else for(const unsigned char* c=(const unsigned char*)label;*c;c++) {
+                    unsigned code=*c>='A' && *c<='Z' ? 0x8260+*c-'A' :
+                                  *c>='a' && *c<='z' ? 0x8281+*c-'a' :
+                                  *c>='0' && *c<='9' ? 0x824f+*c-'0' : *c==' ' ? 0x8140 : *c=='-' ? 0x817c : 0x8148;
+                    resolved[n++]=(unsigned char)(code>>8);resolved[n++]=(unsigned char)code;
+                }
+            }
+            i+=bytes;changed=1;
+        } else {
+            if(n+3>=sizeof(resolved))return text;
+            resolved[n++]=text[i++];resolved[n++]=text[i++];
+        }
+    }
+    resolved[n]=0;
+    return changed ? resolved : text;
 #endif
 }
 
