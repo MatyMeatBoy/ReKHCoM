@@ -70,5 +70,22 @@ int main(int argc, char** argv) {
     assert(!ImportMediaVariant(source, data, 2, false, true, 0, false, count));
     assert(PortHdMediaResolve(data.u8string().c_str(), 2, "ROP", path, sizeof(path)) && jp == path);
     assert(PortHdMediaResolve(data.u8string().c_str(), 0, "ROP", path, sizeof(path)));
+    // Load Everything calls this real coordinator with both component flags.
+    // Mixed generation metadata must be safe when Inspect checks either part.
+    for (const char* name : kBaseMovies) Put(source / (std::string(name) + ".mp4"), Movie('B'));
+    for (const char* name : kMediaSceneNames) Put(source / (std::string(name) + ".mp4"), Movie('B'));
+    calls = 0;
+    assert(ImportMediaVariant(source, data, 1, true, true, 0, false, count));
+    auto combined = hdvariants::Inspect(data, 1);
+    assert(combined.movies && combined.scenes);
+    assert(PortHdMediaAvailable(data.u8string().c_str(), 1, 0));
+    assert(PortHdMediaAvailable(data.u8string().c_str(), 1, 1));
+    assert(PortHdMediaResolve(data.u8string().c_str(), 1, "zz_event_001", path, sizeof(path)));
+    const std::string story = path;
+    // Partial damage to a non-ending story file leaves movies available.
+    Put(fs::u8path(story), "partial transferred scene");
+    combined = hdvariants::Inspect(data, 1);
+    assert(combined.movies && !combined.scenes);
+    assert(!PortHdMediaAvailable(data.u8string().c_str(), 1, 1));
     std::cout << "PASS production import coordinator: EN->JP, persistent cache, cancel/copy/corrupt preservation, incomplete coverage\n";
 }

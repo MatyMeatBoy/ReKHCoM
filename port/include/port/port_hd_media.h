@@ -167,7 +167,7 @@ static inline int PortHdMediaCheck(const char* base, int mode, int component, Po
                                !strcmp(member, "scenes/zz_event_621.mp4") || !strcmp(member, "scenes/zz_event_631.mp4"))))) {
             snprintf(path, sizeof(path), "%s/%s", base, member);
             ok = PortHdMediaMp4(path, bytes);
-        } else if (!strcmp(wanted, member)) { found = 1; *wantedSize = bytes; }
+        } else if (wanted && !strcmp(wanted, member)) { found = 1; *wantedSize = bytes; }
     }
     ok = ok && fgetc(f) == EOF && found && (component < 0 || (component ? info->scenes : info->movies));
     fclose(f); return ok;
