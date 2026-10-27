@@ -4838,10 +4838,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-retoma",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T13:41:17.630694+00:00",
+      "updated_at": "2026-10-27T13:49:03.375620+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4873,7 +4873,7 @@
           "detail": "released: Usuario difiere pendientes a2.2. Repro real publicado64 EU Axel186:12:0 con hd_hud1/hd_cards1: frame464 nombre85 Muro de fuego shown1 cruza cartas. StockNameRiku_2 usa anclaje central PortHudBegin(0,-1), DrawSprite(120,14); no corrección implementada. Evidencia local khcom-crash-diagnostics/build/boss-label-before/axel/host_shot_464.bmp yreport.json"
         }
       ],
-      "claimed_at": "2026-10-27T13:36:23.899078+00:00"
+      "claimed_at": "2026-10-27T13:49:03.375620+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -6150,7 +6150,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:48:57.302237+00:00",
+  "updated_at": "2026-10-27T13:49:03.375620+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
