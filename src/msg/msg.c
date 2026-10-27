@@ -6433,6 +6433,9 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
             sCardMsgGlyphCodes[sTextEntryCount++] = PORT_PROMPT_TOKEN;
             cx += 12 << 8;
             text += 2;
+            /* The generated token closes its highlight. Consume that control
+               here so a terminal PLAIN does not become a blank NUL glyph. */
+            if (*text == MSG_CODE_PLAIN) { alternate = FALSE; text++; }
             if (cx > 0x9B00) { cx = 0; cy += 0xC00; }
             if (cy > 0x1800) { *nextText = text; return sTextEntryCount; }
             continue;

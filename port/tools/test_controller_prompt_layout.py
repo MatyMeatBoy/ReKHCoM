@@ -80,6 +80,8 @@ int main(void){
  assert(!memcmp(sjisCopy,sjis,sizeof(sjis)));
  MsgLatinChar many[201];for(int i=0;i<200;i++)many[i]=32;many[200]=0;
  assert(LayoutCardMsgGlyphsPage(0,0,many,&next)==128 && next==many+128);
+ MsgLatinChar highlighted[]={MSG_CODE_HIGHLIGHT,26,2,MSG_CODE_PLAIN,0};
+ assert(LayoutCardMsgGlyphsPage(100,200,highlighted,&next)==1 && !next && storage[0].useAlternatePalette);
  return 0;
 }
 '''
