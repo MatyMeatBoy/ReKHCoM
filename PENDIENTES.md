@@ -229,7 +229,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | cartas-pequenas-encaje-runtime | cartas prioridad 1 (PENDIENTES) | en_revision | claude-cartas | — | — | 2026-10-27T15:33:35.736085+00:00 |
 | hud-enemy-gauge-length | cartas prioridad 1 (PENDIENTES) | integrado | claude-cartas | https://github.com/MatyMeatBoy/ReKHCoM/pull/365 | usuario-27/10-chat | 2026-10-27T15:47:47.562730+00:00 |
 | hud-green-border-quality | cartas prioridad 1 (PENDIENTES) | en_revision | claude-v22 | — | usuario-27/10-chat | 2026-10-27T17:31:08.507586+00:00 |
-| sintesis-requisito-hd-fix | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:33.407751+00:00 |
+| sintesis-requisito-hd-fix | cartas prioridad 1 (PENDIENTES) | en_curso | claude-v22 | — | — | 2026-10-27T17:31:17.019635+00:00 |
 | anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:40.246238+00:00 |
 | bonus-elite-cabecera | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:49.081835+00:00 |
 | v22-board-reconcile-integrated-state | Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude | integrado | codex-v22-board-reconcile | https://github.com/MatyMeatBoy/ReKHCoM/pull/370 | Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente | 2026-10-27T16:43:18.893196+00:00 |

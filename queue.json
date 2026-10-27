@@ -6447,15 +6447,16 @@
     "sintesis-requisito-hd-fix": {
       "id": "sintesis-requisito-hd-fix",
       "piece": "cartas prioridad 1 (PENDIENTES)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:33.407751+00:00",
-      "updated_at": "2026-10-27T14:56:33.407751+00:00",
+      "updated_at": "2026-10-27T17:31:17.019635+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T17:31:17.019635+00:00"
     },
     "anadir-naipes-cantidad-sync": {
       "id": "anadir-naipes-cantidad-sync",
@@ -6629,7 +6630,7 @@
     "created_at": "2026-10-27T17:30:56.298416+00:00",
     "updated_at": "2026-10-27T17:30:56.298416+00:00"
   },
-  "updated_at": "2026-10-27T17:31:08.507586+00:00",
+  "updated_at": "2026-10-27T17:31:17.019635+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
