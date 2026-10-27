@@ -1672,6 +1672,30 @@ int PortHudCanvasReady(int width, int height) {
     return 1;
 }
 
+/* The closing Options frame is still black and game logic is paused. Walk
+ * only the current HUD's OAM through the normal consumer so content-keyed
+ * replacements decode/upload here, rather than on the first resumed frame.
+ * This runs on the same renderer thread as Present; missing pieces retain
+ * their normal cached miss and cartridge fallback. */
+static void PrepareHudAfterOptions(int menuCanvas) {
+    if (!menuCanvas || PortUiActive() || !gPortConfig.hdHud || !PortPpuHudActive())
+        return;
+    int savedHud[4];
+    PortPpuHudFrameBegin(savedHud);
+    /* Use the frozen PPU geometry, never the new desired menu dimensions.
+     * Optional preparation does not reserve or grow its canvas. */
+    if (sHudBuf && gPortHudW > 0 && gPortHudH > 0 &&
+        (size_t)gPortHudW <= sHudCapacity / (size_t)gPortHudH) {
+        uint64_t started = SDL_GetPerformanceCounter();
+        PortPpuRenderHud(sHudBuf);
+        if (SDL_getenv("KHCOM_HD_MENU_PROFILE"))
+            PortLog("HD HUD: prepared current HUD before gameplay in %.1f ms",
+                    (SDL_GetPerformanceCounter() - started) * 1000.0 / SDL_GetPerformanceFrequency());
+    }
+    PortPpuHudFrameEnd(savedHud);
+}
+
+
 static void Present(void) {
     if (!RendererResetService()) return;
     const char* hdProfile;
@@ -1715,6 +1739,7 @@ static void Present(void) {
         }
     }
     PortUiDraw(sComposite, gPortScreen.width, gPortScreen.height);
+    PrepareHudAfterOptions(menuCanvas);
     {
         extern void PortPpuOverKeepDrawn(const uint32_t* composite);
         PortPpuOverKeepDrawn(sComposite); /* the title's hint over its HD illustration */

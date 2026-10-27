@@ -14,8 +14,8 @@ start=ppu.index('    sHudLayer = gPortScreen.wide')
 select=ppu[start:ppu.index('    sHdText =',start)]
 core=''
 if 'int PortHudCanvasReady(' in main:
- a=main.index('/* HUD canvas transaction:');b=main.index('static void Present(',a)
- core=main[a:b]
+ a=main.index('/* HUD canvas transaction:');b=main.index('void PortHudCanvasRetry(',a)
+ core=main[a:b]+fn(main,'PortHudCanvasRetry')+'\n'+fn(main,'PortHudCanvasReady')+'\n'
 else:core='static int PortHudCanvasReady(int w,int h){(void)w;(void)h;return 0;}\n'
 core+=fn(ppu,'ObjColor')+'\n'
 a=ppu.index('        if (!sOamHd[i].id ||',ppu.index('static void QueueMainHdParts('));b=ppu.index('continue;',a)+len('continue;')
