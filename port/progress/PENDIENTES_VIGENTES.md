@@ -9,6 +9,12 @@ los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1
 
 ## P0 — #360: 64 bits cierra el launcher (Windows 11 x64, Pedro)
 
+- [x] **Caída a 32 bits + registro detallado (PR #368):** cualquier crash de 64
+  bits abre un aviso del lanzador (jugar en 32 / reportar / cerrar); Automático
+  recuerda el crash por versión. `kh_com.log` lleva equipo, excepción, módulo u
+  offset del guest, registros y pila; el reporte junta la sesión y las 5
+  anteriores en `ReKHCoM-reporte.txt`. Build de prueba enviada a Pedro:
+  prerelease `v2.1-test360` (instalación limpia). Esperando su resultado/log.
 - [ ] Falla en Automático y en Forzar 64; Forzar 32 funciona. Pedidos datos
   (CPU/GPU/RAM, ruta, región, HD, logs, Visor de eventos) en el issue, 27/10.
   **No reproduce aquí** con el ZIP 2.1 (lanzado como el launcher: guest,
