@@ -153,8 +153,7 @@ def compile_all(jobs, units):
 def build_guest(region, jobs):
     upper = region.upper()
     pc = ROOT / 'build' / region / 'pc'
-    if not (pc / 'rom_symbols.s').is_file():
-        run([sys.executable, ROOT / 'port/tools/gen_pc_assets.py', '--version', region], cwd=ROOT)
+    run([sys.executable, '-X', 'utf8', ROOT / 'port/tools/gen_pc_assets.py', '--version', region, '--ensure'], cwd=ROOT)
     out = BUILD / f'guest-{region}'
     out.mkdir(parents=True, exist_ok=True)
     includes = game_includes(region)

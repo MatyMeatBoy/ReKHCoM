@@ -69,10 +69,9 @@ def main():
         sys.exit(f"error: {cc} does not exist")
 
     # Asset glue (headers, text fragments, ROM symbol table).
-    if not (PC_GEN / "rom_symbols.s").exists() or not (PC_GEN / "rom_symbols_reloc.s").exists():
-        env = dict(os.environ, PYTHONUTF8="1")
-        subprocess.check_call([sys.executable, str(ROOT / "port" / "tools" / "gen_pc_assets.py"),
-                               "--version", VERSION], env=env)
+    env = dict(os.environ, PYTHONUTF8="1")
+    subprocess.check_call([sys.executable, str(ROOT / "port" / "tools" / "gen_pc_assets.py"),
+                           "--version", VERSION, "--ensure"], env=env)
 
     include_dirs = ["include"] + sorted(rel(p) for p in (ROOT / "include").iterdir()
                                         if p.is_dir() and p.name != "gba")
