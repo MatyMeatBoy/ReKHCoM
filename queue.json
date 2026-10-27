@@ -4445,15 +4445,21 @@
     "host-music-progress": {
       "id": "host-music-progress",
       "piece": "Bound host music loop decoding and propagate terminal failure",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-host-music",
       "created_at": "2026-10-27T05:17:55.834945+00:00",
-      "updated_at": "2026-10-27T05:18:02.871630+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T05:20:28.621810+00:00",
+      "branch": "fix/host-music-progress",
       "pr": null,
       "approval": "User authorized OptiPort indispensable fallback improvements before test builds",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T05:20:28.621810+00:00",
+          "owner": "codex-host-music",
+          "detail": "RED/GREEN production host harness: loop[100,200) x1000 samples;96000failed requests max2decode/1seek;PLAYfailure;safe deferred cleanup;Open prefill failure and valid control. Complete header with real stb_vorbis syntax passes. Depends PR288 guest fallback. Linux64 ffmpeg stalls documented separately as pending."
+        }
+      ],
       "claimed_at": "2026-10-27T05:18:02.871630+00:00"
     },
     "optiport-linux64-streaming": {
@@ -4472,7 +4478,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T05:19:09.808173+00:00",
+  "updated_at": "2026-10-27T05:20:28.621810+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
