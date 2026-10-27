@@ -7978,19 +7978,20 @@
     "hd-overlap-accepted-parts": {
       "id": "hd-overlap-accepted-parts",
       "piece": "Correccion integrador PR404: registrar cobertura HD solo tras queueaceptada, contemplarcontainment y variantesfade; conservar fallback antepieza rechazada. Franja requisito sintesis yabrirnaipemundo.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-hd-overlap",
       "created_at": "2026-10-27T22:28:41.739471+00:00",
-      "updated_at": "2026-10-27T22:28:41.739471+00:00",
+      "updated_at": "2026-10-27T22:28:46.256973+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario pidecorregirfranja ypreservarresto; rootreviewhallofalloverificado",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T22:28:46.256973+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:28:41.739471+00:00",
+  "updated_at": "2026-10-27T22:28:46.256973+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
