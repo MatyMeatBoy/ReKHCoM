@@ -179,5 +179,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | cartas-hd-encaje | Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas | en_revision | claude-cartas | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:43:09.912613+00:00 |
 | escenas-retrato-x4 | Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:22.665133+00:00 |
 | docs-optiport-v21-coordination-20261027 | Coordinacion documental OptiPort v2.1 y pendientes regulares | en_revision | codex-docs-v21-coordination | docs/optiport-v21-coordination | Usuario 27/10/2026: documentar reparto Codex/Claude y autorizacion prerelease | 2026-10-27T06:56:28.196689+00:00 |
+| optiport-previews-both-modes-perf | Pendiente posterior al ZIP: identificar dos modos UI y perf previews por fases (entrada/p95/memoria/cache/precarga/cancelacion/calidad) | pendiente | — | — | Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64 | 2026-10-27T07:05:30.008628+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)

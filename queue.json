@@ -4896,6 +4896,19 @@
         }
       ],
       "claimed_at": "2026-10-27T06:54:43.283350+00:00"
+    },
+    "optiport-previews-both-modes-perf": {
+      "id": "optiport-previews-both-modes-perf",
+      "piece": "Pendiente posterior al ZIP: identificar dos modos UI y perf previews por fases (entrada/p95/memoria/cache/precarga/cancelacion/calidad)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T07:05:30.008628+00:00",
+      "updated_at": "2026-10-27T07:05:30.008628+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64",
+      "reference": "port/progress/COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos",
+      "evidence": []
     }
   },
   "integrator": {
@@ -4904,7 +4917,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:03:14.103146+00:00",
+  "updated_at": "2026-10-27T07:05:30.008628+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
