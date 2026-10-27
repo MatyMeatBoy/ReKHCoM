@@ -27,6 +27,12 @@ void PortUiGalleryResume(void) {
     memcpy(broken, sSceneBroken, sizeof(broken));
     sScenePause = 0;
     PortUiOpenOptions();
+    /* Resume an existing gallery, not a new Options opening. The generic
+       opening fades the restored title/field for eight frames before drawing
+       the menu. Keep its initialization, then make the first output the list. */
+    sFade = MENU_FADE * 2;
+    sClosing = sReturn = 0;
+    PortInputSuppressUntilRelease(); /* a held skip/confirm cannot start another replay */
     sPage = PAGE_SCENES;
     sSceneChoice = choice; sSceneScroll = scroll; sSceneHd = hd; sSceneHarnessTick = tick;
     memcpy(sSceneBroken, broken, sizeof(broken));
