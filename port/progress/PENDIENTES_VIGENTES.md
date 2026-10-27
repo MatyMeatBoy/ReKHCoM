@@ -35,19 +35,24 @@ antes/después al usuario en el chat. Comentarios del usuario entre comillas.
   con la receta de main y hoja de las 105 revisada: todas con el encuadre de su
   carta grande, centradas; lista de naipes en juego correcta. Falta que el
   usuario lo confirme en su instalación (re-importar HD).
-- [ ] **HUD HD: largo de la barra del enemigo** (WIP commiteado en
-  `fix/hd-enemy-gauge-length`, sin verificar). Captura 27/10: en el cartucho un
-  enemigo débil tiene **toda** la barra corta; con el WIP sólo el verde es corto
-  y el fondo oscuro sigue largo. Falta decidir/acortar marco y fondo.
+- [x] **HUD HD: largo de la barra del enemigo** — PR #365: barra entera según
+  vida máxima como Re:CoM (`FUN_14020d270`: cuerpo = máximo de la barra superior,
+  superposición sólo en la superior de varias). 560 HP por barra = escala de
+  Sora; ambos crecen con su máximo (pedido del usuario). `test_hd_enemy_gauge.py` PASS.
 - [x] **HUD HD: nombre del hechizo del jefe** («Muro de fuego» de Axel sobre
   sus cartas): con cartas HD y lienzo amplio, el nombre termina antes de la pila
   (ancho real del sprite; pila en x del total + margen completo del lienzo).
   GBA intacto. PR `fix/hd-boss-sleight-name`, capturas Axel 1280x720 antes/después.
-- [ ] **HUD de combate HD: borde verde interior granulado** — «mejorar y
-  verificar funcionamiento al 100 % del HUD mostrado».
+- [x] **HUD de combate HD: borde verde interior granulado** — era la captura
+  histórica v2.0. Con el antialias de texturas GPU (antes de 2.1) el anillo y
+  la barra de Sora salen limpios a 1280x720 (64 bits) y 1920x1080 (32 bits 2.1).
 - [ ] **Síntesis de estancias: carta de requisito HD** — «veo el asset pero no
   reemplazándolo bien»; «¿es así en el original? sobresale, distancias/fuentes»;
-  «color rellenado raro por dentro». Rama `codex/sintesis-requisito-hd` `943f44a5b`.
+  «color rellenado raro por dentro». Los 405 PNG generados
+  (`port/assets/synthesis-requirement`) nunca se empaquetan: en juego sale la
+  carta GBA. Plan: rehacerla con las piezas reales de Re:CoM (`0102_room01_tex0`:
+  cartas con corona en gris para teñir, dígitos cursiva, muesca negra), propuesta
+  al usuario en el chat.
 - [ ] **Añadir naipes: cantidad HD y selector** — «mismo comportamiento en los
   frames exactos que el número original, taparse y aparecer».
 - [ ] **Bonus élite: cartas y cabecera** — «falta completar header»; guante HD;
