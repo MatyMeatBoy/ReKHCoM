@@ -4781,15 +4781,16 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-hudhd",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T06:31:13.675353+00:00",
+      "updated_at": "2026-10-27T06:36:18.060996+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T06:36:18.060996+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -4824,7 +4825,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:33:32.240816+00:00",
+  "updated_at": "2026-10-27T06:36:18.060996+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
