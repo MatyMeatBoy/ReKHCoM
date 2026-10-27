@@ -6,7 +6,7 @@
       "repository": "MatyMeatBoy/ReKHCoM",
       "repositorySource": "github",
       "folderName": "KingdomHeartsChainOfMemories-ReKHCoM",
-      "releaseAssetFilter": "windows-x86.zip",
+      "releaseAssetFilter": "*windows-x86*.zip",
       "tags": [
         "decomp",
         "gba",

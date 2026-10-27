@@ -58,7 +58,12 @@ Stable release: **v1.8.3**, Windows x86 ZIP, 21,078,082 bytes.
 SHA256: `b3abf8685532393b0f0b4ab090dbc30757cd835b840e5398ecbd7f1dc5f83b51`.
 
 - Repository: `MatyMeatBoy/ReKHCoM`.
-- Asset filter: `windows-x86.zip` (excludes Web Alpha downloads).
+- Asset filter for future imports: `*windows-x86*.zip`, matching both the
+  historical `windows-x86.zip` and current combined `windows-x86-x64.zip`.
+  Quiver supports substring or `*` / `?` wildcard filters, not arbitrary regex.
+  See upstream [RepositorySourceHelper.AssetNameMatchesFilter](https://github.com/tgeorgiadis/quiver-launcher/blob/main/lib/QuiverLauncher.Core/Services/RepositorySourceHelper.cs).
+  New staging requires only the combined ZIP; do not stage both. This draft
+  change does not update the external catalog or alter pinned historical assets.
 - Preferred Windows executable: `ReKHCoM.exe`.
 - Archive has a single top-level `ReKHCoM-v1.8.3-windows-x86` directory.
 - Keep the entire directory structure and DLLs; the regional engines are under

@@ -13,7 +13,7 @@ From v1.9.14 (user, 21/10) PC files keep their plain names and every other platf
 (still being debugged). Linux desktop/Deck share one x86+x64 archive; Android
 and Anbernic build outputs already use -beta. Older published files stay unchanged.
 Quiver's catalog entry picks the Windows file by its releaseAssetFilter
-"windows-x86.zip" (docs/quiver/submission-draft.json), so the second .zip does not
+"*windows-x86*.zip" (docs/quiver/submission-draft.json), so the second .zip does not
 compete with it. Never edit a published stable's existing files: Quiver pins them.
 
     python port/tools/stage_release.py v1.9.12    # -> build/publish/v1.9.12/main
@@ -28,7 +28,7 @@ V = sys.argv[1]
 SRC = ROOT / 'build/releases'
 OUT = ROOT / 'build/publish' / V
 MAIN = {
-    f'ReKHCoM-{V}-windows-x86.zip': f'ReKHCoM-{V}-windows-x86.zip',
+    f'ReKHCoM-{V}-windows-x86-x64.zip': f'ReKHCoM-{V}-windows-x86-x64.zip',
     f'ReKHCoM-{V}-linux-x86-x64-desktop-steamdeck.tar.gz': f'ReKHCoM-{V}-linux-x86-x64-desktop-steamdeck.tar.gz',
     f'ReKHCoM-{V}-anbernic-beta.zip': f'ReKHCoM-{V}-linux-armhf-anbernic-beta.zip',
     f'ReKHCoM-{V}-android-beta.apk': f'ReKHCoM-{V}-android-beta.apk',

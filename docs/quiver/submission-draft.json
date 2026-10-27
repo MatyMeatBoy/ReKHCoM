@@ -21,7 +21,7 @@
   ],
   "launcher": {
     "folderName": "KingdomHeartsChainOfMemories-ReKHCoM",
-    "releaseAssetFilter": "windows-x86.zip",
+    "releaseAssetFilter": "*windows-x86*.zip",
     "preferredExecutables": {
       "windows": [
         "ReKHCoM.exe"

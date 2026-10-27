@@ -8,6 +8,7 @@ import zipfile
 import runpy
 import ast
 import re
+import json
 import unittest
 from unittest.mock import patch
 
@@ -69,23 +70,37 @@ class Linux64PackageTests(unittest.TestCase):
             # Run the production release stager against this fixture repository.
             write('port/tools/stage_release.py', (TOOLS / 'stage_release.py').read_bytes())
             write('build/releases/ReKHCoM-v2.1-android-beta.apk')
+            write('build/releases/ReKHCoM-v2.1-windows-x86-x64.zip', b'combined Windows fixture')
+            write('build/releases/ReKHCoM-v2.1-windows-x86.zip', b'legacy Windows fixture')
+            write('build/releases/PPSA98511.zip')
             with patch.object(sys, 'argv', ['stage_release.py', 'v2.1']):
                 runpy.run_path(str(root / 'port/tools/stage_release.py'), run_name='__main__')
             staged = {p.name for p in (root / 'build/publish/v2.1/main').iterdir()}
             self.assertIn('ReKHCoM-v2.1-linux-x86-x64-desktop-steamdeck.tar.gz', staged)
             self.assertIn('ReKHCoM-v2.1-linux-armhf-anbernic-beta.zip', staged)
             self.assertIn('ReKHCoM-v2.1-android-beta.apk', staged)
+            self.assertIn('ReKHCoM-v2.1-windows-x86-x64.zip', staged)
+            self.assertNotIn('ReKHCoM-v2.1-windows-x86.zip', staged)
             self.assertFalse(any(n.endswith('-steamdeck-i386.tar.gz') for n in staged))
             # The published names must still give Quiver exactly one Linux pick.
             source = ast.parse((TOOLS / 'release_check.py').read_text(encoding='utf-8'))
-            functions = {'any_of', 'auxiliary', 'excluded', 'windows', 'linux_x64'}
+            functions = {'any_of', 'auxiliary', 'excluded', 'windows', 'linux_x64',
+                         'android', 'asset_matches_filter', 'quiver'}
             statements = [node for node in source.body if
                           isinstance(node, ast.FunctionDef) and node.name in functions or
                           isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'NON_WIN' for t in node.targets)]
-            namespace = {'re': re}
+            checks = []
+            namespace = {'re': re, 'WIN_FILTER': json.loads((TOOLS.parents[1] / 'docs/quiver/submission-draft.json').read_text(encoding='utf-8'))['launcher']['releaseAssetFilter'],
+                         'check': lambda ok, text: checks.append((ok, text))}
             exec(compile(ast.Module(body=statements, type_ignores=[]), 'release_check.py', 'exec'), namespace)
             picks = [n for n in staged if namespace['linux_x64'](n.lower())]
             self.assertEqual(picks, ['ReKHCoM-v2.1-linux-x86-x64-desktop-steamdeck.tar.gz'])
+            namespace['quiver'](staged)
+            self.assertTrue(all(ok for ok, text in checks), checks)
+            for name in ('ReKHCoM-v2.0-windows-x86.zip', 'ReKHCoM-v2.1-windows-x86-x64.zip'):
+                self.assertTrue(namespace['asset_matches_filter'](name, namespace['WIN_FILTER']))
+            for name in ('PPSA98511.zip', 'ReKHCoM-v2.1-windows-x86-x64.zip.sha256', 'ReKHCoM-v2.1-linux-x86-x64-desktop-steamdeck.tar.gz'):
+                self.assertFalse(namespace['asset_matches_filter'](name, namespace['WIN_FILTER']))
 
     def test_package_builds_linux64_before_packaging_with_requested_jobs(self):
         with patch.object(sys, 'argv', ['build_linux.py', '--package', 'v2.0', '--jobs', '2']), \
