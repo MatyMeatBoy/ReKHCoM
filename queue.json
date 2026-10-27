@@ -4064,10 +4064,10 @@
     "options-complete-matrix-20261026": {
       "id": "options-complete-matrix-20261026",
       "piece": "Auditoria completa opciones y bindings SDL",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T18:03:14.816218+00:00",
-      "updated_at": "2026-10-26T18:05:35.968133+00:00",
+      "updated_at": "2026-10-27T17:16:01.104466+00:00",
       "branch": "codex/options-complete-matrix",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/252",
       "approval": "Usuario autoriza depurar todas las opciones y decisiones autonomas",
@@ -4077,9 +4077,15 @@
           "at": "2026-10-26T18:05:35.968133+00:00",
           "owner": "codex-batteries",
           "detail": "33a168d1d; input13/13 EUmain204367; initialmatrix120/120; extendedpreset keepsBIOSDLLfailure pendingfix; check_sources pass"
+        },
+        {
+          "at": "2026-10-27T17:16:01.104466+00:00",
+          "owner": "codex-batteries",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/252 MERGED 2026-10-26T18:20:51Z; merge c0e26d857fb6828fe2f88d087f7f071ac9fb7492 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. {\"by_pr\": 258, \"evidence\": \"Current handoff records Windows handler fix and completed 218/218 matrix. The old draft note must not automatically trigger the entire old battery again.\", \"repository_record\": \"port/progress/RETOMA_CLAUDE_20261026.md:43-46\"}\nRevalidado 2026-10-27T17:16:01.040026+00:00; main 61aee4c40fbfded53ba94ad4de978f16907b4939; merge real c0e26d857fb6828fe2f88d087f7f071ac9fb7492; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
-      "claimed_at": "2026-10-26T18:03:20.841465+00:00"
+      "claimed_at": "2026-10-26T18:03:20.841465+00:00",
+      "completed_at": "2026-10-27T17:16:01.104466+00:00"
     },
     "hd-poster-performance-20261026": {
       "id": "hd-poster-performance-20261026",
@@ -6610,7 +6616,7 @@
     "created_at": "2026-10-27T17:15:27.834094+00:00",
     "updated_at": "2026-10-27T17:15:27.834094+00:00"
   },
-  "updated_at": "2026-10-27T17:15:51.841550+00:00",
+  "updated_at": "2026-10-27T17:16:01.104466+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
