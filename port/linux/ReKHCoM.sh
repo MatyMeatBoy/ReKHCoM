@@ -139,7 +139,7 @@ if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
     BOOT=$(mktemp "$DIR/.rekhcom-boot-XXXXXX") || exit 1
     rm -f "$BOOT"
     LD_LIBRARY_PATH="$LIB64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" KHCOM_ROM="$ROM" \
-        "$HOST64" "$IMAGE64" --data "$DIR" --boot-status "$BOOT"
+        "$HOST64" "$IMAGE64" --data "$DIR" --boot-status "$BOOT" -- "$@"
     CODE=$?
     ENTERED=0
     [ -f "$BOOT" ] && ENTERED=1

@@ -69,6 +69,14 @@ For the example folder above:
 
 Keep the quotes, including when the install path contains spaces. Optional
 arguments go **after** the quoted script path, for example `--region us`.
+
+The native 64-bit runtime also accepts `--language en|es|fr|de|it` after the
+script path (the last value wins). This is a limited game-option contract:
+other 32-bit game arguments are not generally supported by the 64-bit host.
+ROM/region selection still uses the wrapper's ROM scan and `--region`; a game
+`--rom` argument does not override that selection in 64-bit mode. Host data
+paths and bootstrap markers cannot be overridden by appended game arguments.
+
 Keep using the wrapper: `bin/khcom_eu` alone needs the bundled loader and
 libraries and is not the Steam target. The wrapper enters the game folder
 and passes `--data-dir`, so saves and settings stay there even if Steam starts
