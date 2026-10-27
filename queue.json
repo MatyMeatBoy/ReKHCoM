@@ -4690,20 +4690,26 @@
     "launcher-architecture": {
       "id": "launcher-architecture",
       "piece": "Windows runtime architecture selection and force32",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "launcher-architecture-sol",
       "created_at": "2026-10-27T06:08:36.971398+00:00",
-      "updated_at": "2026-10-27T06:08:46.900377+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T06:12:43.483266+00:00",
+      "branch": "work/launcher-architecture",
       "pr": null,
       "approval": "User requested combined Windows 32/64 package",
       "reference": "root delegated launcher architecture 2026-10-27",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T06:12:43.483266+00:00",
+          "owner": "launcher-architecture-sol",
+          "detail": "Local commit; Windows launcher i686 syntax check passed, C++ pure selector passed, 9 Linux wrapper tests passed, settings roundtrip suite passed. Await platform host and combined package validation."
+        }
+      ],
       "claimed_at": "2026-10-27T06:08:46.900377+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T06:08:46.900377+00:00",
+  "updated_at": "2026-10-27T06:12:43.483266+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
