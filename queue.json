@@ -4536,10 +4536,10 @@
     "android-optiport-package": {
       "id": "android-optiport-package",
       "piece": "Playable isolated Android OptiPort test package",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-android-test",
       "created_at": "2026-10-27T05:27:07.210539+00:00",
-      "updated_at": "2026-10-27T05:37:21.272714+00:00",
+      "updated_at": "2026-10-27T05:37:32.310463+00:00",
       "branch": "build/android-optiport-package",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/294",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4549,9 +4549,15 @@
           "at": "2026-10-27T05:29:17.892180+00:00",
           "owner": "codex-android-test",
           "detail": "Playable .optiport package config RED/GREEN tests pass; stable/smoke unaffected; no SDL_ENV autoplay; activities/JNI binding audited; Java manual SRAM importer48checks pass. No native/Gradlebuild or deviceinstall. Explicit nightlyAPK version distinct from recorded source_version."
+        },
+        {
+          "at": "2026-10-27T05:37:32.310463+00:00",
+          "owner": "codex-android-test",
+          "detail": "Merged 1d297c026d803cd3200eb4cbdfc3d180ffcebf26"
         }
       ],
-      "claimed_at": "2026-10-27T05:27:13.637989+00:00"
+      "claimed_at": "2026-10-27T05:27:13.637989+00:00",
+      "completed_at": "2026-10-27T05:37:32.310463+00:00"
     },
     "optiport-hud-invalidation": {
       "id": "optiport-hud-invalidation",
@@ -4594,7 +4600,7 @@
     "created_at": "2026-10-27T05:36:15.146946+00:00",
     "updated_at": "2026-10-27T05:36:15.146946+00:00"
   },
-  "updated_at": "2026-10-27T05:37:21.272714+00:00",
+  "updated_at": "2026-10-27T05:37:32.311459+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
