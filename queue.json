@@ -4883,7 +4883,7 @@
       "status": "en_revision",
       "owner": "codex-docs-v21-coordination",
       "created_at": "2026-10-27T06:54:36.951994+00:00",
-      "updated_at": "2026-10-27T06:56:28.196689+00:00",
+      "updated_at": "2026-10-27T07:05:46.579278+00:00",
       "branch": "docs/optiport-v21-coordination",
       "pr": null,
       "approval": "Usuario 27/10/2026: documentar reparto Codex/Claude y autorizacion prerelease",
@@ -4893,6 +4893,11 @@
           "at": "2026-10-27T06:56:28.196689+00:00",
           "owner": "codex-docs-v21-coordination",
           "detail": "Scope solo docs: PENDIENTES_VIGENTES.md, COORDINACION_OPTIPORT_V21.md, PLAN_FALLBACKS_V21.md. Base origin/main 53c959f45; commit local 8ddb4bd7ada4671cdb695821634cb507fb02fc9e. git diff --check PASS; checkout limpio; sin build, sin push de codigo ni release/comentarios. Dependencia: integrador abre PR despues de revisar. Artefacto docs locales; siguiente prueba minima revisar mandato y enlaces, abrir PR/merge con lock. WorktreeNeeded: si, revision/PR pendiente; no mover ni borrar activos."
+        },
+        {
+          "at": "2026-10-27T07:05:46.579278+00:00",
+          "owner": "codex-docs-v21-coordination",
+          "detail": "Nuevo commit local encima de 8ddb4bd7a: 4c342d045d93a0a0de71b4e0b9c4918a8d415dd9. Actualiza ultima prioridad PR regulares listos antes ZIP, despues resto OptiPort; previews ambos modos pending only fases perf + UI Claude; enlace OptiPort publico. git diff --check PASS; checkout limpio; sin push codigo ni implementacion. WorktreeNeeded si revision/PR."
         }
       ],
       "claimed_at": "2026-10-27T06:54:43.283350+00:00"
@@ -4930,7 +4935,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:05:35.374969+00:00",
+  "updated_at": "2026-10-27T07:05:46.579278+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
