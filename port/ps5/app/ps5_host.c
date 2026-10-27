@@ -13,6 +13,7 @@
 #include <ucontext.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "../../include/port/port_logfile.h"
 
 #include "platform/platform.h"
 #include "platform/ps5_crash.h"
@@ -990,8 +991,7 @@ int main(void)
     mkdir(DATA_ROOT, 0777);
     mkdir(DATA_ROOT "/logs", 0777);
     char log_path[256] = DATA_ROOT "/logs/ReKHCoM.log";
-    rename(log_path, DATA_ROOT "/logs/ReKHCoM.old.log"); /* the log of the run before: a crash is still there after a restart */
-    sLog = fopen(log_path, "w");
+    sLog = PortOpenSessionLog(log_path);
     ps5_crash_install(log_path);
     ps5_klog_capture_stderr("");
     Log("ReKHCoM starting; /data %s (%s)", unlocked ? "unlocked" : "sandboxed", error);

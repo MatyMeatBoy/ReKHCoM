@@ -10,6 +10,7 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "port/port.h"
 #include "port/port_hdlayout.h"
@@ -21,11 +22,12 @@ const char* PortHdSpritePath(char* file, size_t size, const char* name);
 typedef struct HdLayout {
     unsigned char* data;
     int size;
+    int validated; /* immutable bytes: full SEQD validation is done once at load */
 } HdLayout;
 
 typedef struct HdLayoutTexture {
     SDL_Texture* tex;
-    int w, h, tried;
+    int w, h, tried, requested;
 } HdLayoutTexture;
 
 static HdLayout sLayouts[HD_LAYOUT_COUNT];
@@ -41,6 +43,8 @@ static int32_t I32(const unsigned char* p) { return (int32_t)(p[0] | p[1] << 8 |
 static int16_t I16(const unsigned char* p) { return (int16_t)(p[0] | p[1] << 8); }
 static float F32(const unsigned char* p) { float f; uint32_t v = (uint32_t)I32(p); memcpy(&f, &v, 4); return f; }
 
+static int ValidateLayout(const HdLayout* l);
+
 static const HdLayout* Layout(int which) {
     if ((unsigned)which >= HD_LAYOUT_COUNT)
         return NULL;
@@ -55,11 +59,19 @@ static const HdLayout* Layout(int which) {
         if (strlen(file) > 4 && SDL_strcmp(file + strlen(file) - 4, ".png") == 0)
             memcpy(file + strlen(file) - 4, ".lad", 4);
         data = SDL_LoadFile(file, &size);
-        if (data && size >= 32 && I32((const unsigned char*)data) == 0x4459414C) {
-            sLayouts[which].data = data;
-            sLayouts[which].size = (int)size;
-        } else if (data) {
-            SDL_free(data);
+        if (data) {
+            HdLayout candidate = { data, 0, 0 };
+            if (size <= INT_MAX) {
+                candidate.size = (int)size;
+                if (ValidateLayout(&candidate)) {
+                    candidate.validated = 1;
+                    sLayouts[which] = candidate;
+                } else {
+                    SDL_free(data);
+                }
+            } else {
+                SDL_free(data);
+            }
         }
     }
     return sLayouts[which].data ? &sLayouts[which] : NULL;
@@ -91,32 +103,100 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
 }
 
 int PortHdLayoutReady(int layout, int texture) {
-    char file[160];
-    FILE* f;
-    if (!Layout(layout))
+    if ((unsigned)texture >= HD_LAYOUT_TEXTURE_COUNT || !Layout(layout))
         return 0;
-    if (sTextures[texture].tex)
-        return 1;
-    if (sTextures[texture].tried)
-        return 0;
-    f = fopen(PortHdSpritePath(file, sizeof(file), kTextureFiles[texture]), "rb");
-    if (f)
-        fclose(f);
-    return f != NULL;
+    /* Game logic may request a replacement, but only the renderer uploads it.
+       Keep native drawing until decode, surface creation and upload succeeded. */
+    sTextures[texture].requested = 1;
+    return sTextures[texture].tex != NULL;
 }
 
-/* The layout's sequence n: its bytes and size. */
+void PortHdLayoutPrepare(SDL_Renderer* renderer) {
+    int i;
+    if (!gPortConfig.hdCards)
+        return;
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++)
+        if (sTextures[i].requested)
+            Texture(renderer, i);
+}
+
+/* The layout's sequence n: its bytes and size. Validate ranges before forming
+   pointers, using division/subtraction so file-controlled products cannot wrap. */
+static int TableRange(int size, int offset, int count, int stride) {
+    return size >= 0 && offset >= 0 && offset <= size && count >= 0 &&
+           count <= (size - offset) / stride;
+}
+
+static int IndexRange(int total, int first, int count) {
+    return first >= 0 && first <= total && count >= 0 && count <= total - first;
+}
+
+static int ValidateSequence(const unsigned char* s, int size) {
+    static const int stride[5] = { 44, 20, 4, 144, 36 };
+    int counts[5], offsets[5], i;
+    if (size < 48 || I32(s) != 0x44514553)
+        return 0;
+    for (i = 0; i < 5; i++) {
+        counts[i] = I32(s + 8 + i * 8);
+        offsets[i] = I32(s + 12 + i * 8);
+        if (!TableRange(size, offsets[i], counts[i], stride[i]))
+            return 0;
+    }
+    for (i = 0; i < counts[1]; i++) {
+        int sprite = I32(s + offsets[1] + i * 20 + 16);
+        if (sprite < 0 || sprite >= counts[0])
+            return 0;
+    }
+    for (i = 0; i < counts[2]; i++) {
+        const unsigned char* g = s + offsets[2] + i * 4;
+        if (!IndexRange(counts[1], I16(g), I16(g + 2)))
+            return 0;
+    }
+    for (i = 0; i < counts[3]; i++) {
+        int group = I32(s + offsets[3] + i * 144 + 4);
+        if (group < 0 || group >= counts[2])
+            return 0;
+    }
+    for (i = 0; i < counts[4]; i++) {
+        const unsigned char* g = s + offsets[4] + i * 36;
+        if (!IndexRange(counts[3], I16(g), I16(g + 2)))
+            return 0;
+    }
+    return 1;
+}
+
 static const unsigned char* Sequence(const HdLayout* l, int n, int* size) {
-    const unsigned char* b = l->data;
-    int count = I32(b + 24), table = I32(b + 28), start, end;
-    if (n < 0 || n >= count || table + 4 * count > l->size)
+    const unsigned char* b;
+    int count, table, start, end;
+    if (!l || !l->data || l->size < 32)
+        return NULL;
+    b = l->data;
+    count = I32(b + 24);
+    table = I32(b + 28);
+    if (n < 0 || n >= count || !TableRange(l->size, table, count, 4))
         return NULL;
     start = I32(b + table + 4 * n);
     end = n + 1 < count ? I32(b + table + 4 * (n + 1)) : l->size;
-    if (start < 0 || end > l->size || end - start < 48 || I32(b + start) != 0x44514553)
+    if (start < 0 || end < start || end > l->size || end - start < 48 ||
+        I32(b + start) != 0x44514553)
+        return NULL;
+    if (!l->validated && !ValidateSequence(b + start, end - start))
         return NULL;
     *size = end - start;
     return b + start;
+}
+
+static int ValidateLayout(const HdLayout* l) {
+    int count, i, size;
+    if (!l || !l->data || l->size < 32 || I32(l->data) != 0x4459414C)
+        return 0;
+    count = I32(l->data + 24);
+    if (!TableRange(l->size, I32(l->data + 28), count, 4))
+        return 0;
+    for (i = 0; i < count; i++)
+        if (!Sequence(l, i, &size))
+            return 0;
+    return 1;
 }
 
 int PortHdLayoutGroupFrames(int layout, int sequence, int group) {
@@ -340,6 +420,10 @@ int PortHdLayoutDraw(SDL_Renderer* renderer, int layout, int texture, int sequen
     return 1;
 }
 
+#if __STDC_HOSTED__
+static void GaugeTargetsRelease(void);
+#endif
+
 void PortHdLayoutShutdown(void) {
     int i;
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
@@ -347,6 +431,9 @@ void PortHdLayoutShutdown(void) {
             SDL_DestroyTexture(sTextures[i].tex);
         memset(&sTextures[i], 0, sizeof(sTextures[i]));
     }
+#if __STDC_HOSTED__
+    GaugeTargetsRelease();
+#endif
 }
 
 /* ---- the player's HP gauge (Gauge::CPlayerGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ---------------
@@ -370,8 +457,20 @@ static void GaugeSet(int* anim, int* frame, int value) {
 
 int PortHdGauge(int hp, int maxHp, int riku) {
     int msPerFrame = 17;
-    if (!gPortConfig.hdCards || !PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE) ||
-        !PortHdLayoutReady(HD_LAYOUT_GAUGE, riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES))
+    int i, bodyReady, faceReady;
+    static const int groups[] = { 7, 8, 9, 10, 13, 14, 15 };
+    if (!gPortConfig.hdCards)
+        return 0;
+    /* Structurally valid imports may still lack this gauge's animations. */
+    for (i = 0; i < (int)(sizeof(groups) / sizeof(groups[0])); i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, groups[i]))
+            return 0;
+    for (i = 0; i < 4; i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 0, i))
+            return 0;
+    bodyReady = PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE);
+    faceReady = PortHdLayoutReady(HD_LAYOUT_GAUGE, riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES);
+    if (!bodyReady || !faceReady)
         return 0;
     hp = SDL_clamp(hp, 0, 560);
     maxHp = SDL_clamp(maxHp, 1, 560);
@@ -432,15 +531,31 @@ static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const 
 /* The gauge drawn supersampled (23/10, the player: its face's and its bar's cut edges were jagged): its pieces go on
    a texture at GAUGE_SS times the output, which comes down to the output in halves with linear filtering (each half a
    2x2 box), premultiplied all the way; then the masks' hard cuts and the ring's edges are smooth. The consoles and
-   Android, with less memory and fill rate, use 2. */
+   Android, with less memory and fill rate, use at most 2. Optional RGBA targets
+   are capped at 32 MiB on desktop and 12 MiB on constrained hosted builds:
+   SS4 holds 21 base-resolution surfaces' worth of pixels, SS2 holds 5. These
+   are scratch-cache limits, not total GPU-memory estimates or an OOM claim. */
 #if defined(PORT_GBA_RELOC) || defined(PORT_ANDROID64) || defined(__ANDROID__)
 #define GAUGE_SS 2
+#define GAUGE_TARGET_BUDGET (12ull * 1024 * 1024)
 #else
 #define GAUGE_SS 4
+#define GAUGE_TARGET_BUDGET (32ull * 1024 * 1024)
 #endif
 #if __STDC_HOSTED__ /* the consoles' SDL shim has no render targets: there the gauge draws as before */
 static SDL_Texture* sGaugeTarget[3];
 static int sGaugeTargetW[3], sGaugeTargetH[3];
+static int sGaugeTargetScale;
+
+static void GaugeTargetsRelease(void) {
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (sGaugeTarget[i]) SDL_DestroyTexture(sGaugeTarget[i]);
+        sGaugeTarget[i] = NULL;
+        sGaugeTargetW[i] = sGaugeTargetH[i] = 0;
+    }
+    sGaugeTargetScale = 0;
+}
 
 static SDL_Texture* GaugeTarget(SDL_Renderer* renderer, int i, int w, int h) {
     if (sGaugeTarget[i] && (sGaugeTargetW[i] != w || sGaugeTargetH[i] != h)) {
@@ -456,6 +571,63 @@ static SDL_Texture* GaugeTarget(SDL_Renderer* renderer, int i, int w, int h) {
         SDL_SetTextureScaleMode(sGaugeTarget[i], (SDL_ScaleMode)PortSmoothScaleMode());
     }
     return sGaugeTarget[i];
+}
+
+/* Reserve the complete downsample chain before drawing. Release the old chain
+   before resize so old and new allocations cannot overlap above the budget. */
+static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height, int* w0, int* h0) {
+    double w = (double)SDL_ceilf(width), h = (double)SDL_ceilf(height);
+    int64_t maxSize = SDL_GetNumberProperty(SDL_GetRendererProperties(renderer),
+                                          SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
+    int k, first = GAUGE_SS;
+    if (!(w > 0 && h > 0 && w <= INT_MAX && h <= INT_MAX) || maxSize <= 0) {
+        GaugeTargetsRelease();
+        return 0;
+    }
+    *w0 = (int)w;
+    *h0 = (int)h;
+    /* Once an allocation fell back to SS2, retain that usable chain for the
+       same geometry instead of retrying the rejected larger allocation. */
+    if (sGaugeTargetScale && sGaugeTarget[0] &&
+        sGaugeTargetW[0] / sGaugeTargetScale == *w0 && sGaugeTargetH[0] / sGaugeTargetScale == *h0)
+        first = sGaugeTargetScale;
+    for (k = first; k >= 2; k /= 2) {
+        int tw[3], th[3], count = k == 4 ? 3 : 2, i, fits = 1, cached = 1;
+        uint64_t bytes = 0;
+        if (*w0 > INT_MAX / k || *h0 > INT_MAX / k)
+            continue;
+        for (i = 0; i < count; i++) {
+            uint64_t size;
+            tw[i] = *w0 * (k >> i);
+            th[i] = *h0 * (k >> i);
+            size = (uint64_t)tw[i] * (uint64_t)th[i] * 4;
+            if (tw[i] > maxSize || th[i] > maxSize || size > GAUGE_TARGET_BUDGET - bytes) {
+                fits = 0;
+                break;
+            }
+            bytes += size;
+        }
+        if (!fits)
+            continue;
+        for (i = 0; i < 3; i++) {
+            if (i < count) {
+                if (!sGaugeTarget[i] || sGaugeTargetW[i] != tw[i] || sGaugeTargetH[i] != th[i]) cached = 0;
+            } else if (sGaugeTarget[i]) cached = 0;
+        }
+        if (cached)
+            return k;
+        GaugeTargetsRelease();
+        for (i = 0; i < count; i++)
+            if (!GaugeTarget(renderer, i, tw[i], th[i]))
+                break;
+        if (i == count) {
+            sGaugeTargetScale = k;
+            return k;
+        }
+        GaugeTargetsRelease();
+    }
+    GaugeTargetsRelease();
+    return 0; /* Direct HD geometry needs no scratch textures. */
 }
 
 #endif
@@ -477,8 +649,8 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
         /* the gauge's area in Re:CoM's units around its origin (ring, face, the bar at its longest, the alarm's glow) */
         const float ux0 = -60.0f, uy0 = -60.0f, ux1 = 620.0f, uy1 = 220.0f;
         float rx = x + ux0 * s, ry = y + uy0 * s, rw = (ux1 - ux0) * s, rh = (uy1 - uy0) * s;
-        int w0 = (int)SDL_ceilf(rw), h0 = (int)SDL_ceilf(rh), k = GAUGE_SS, level = 0;
-        SDL_Texture* big = w0 > 0 && h0 > 0 ? GaugeTarget(renderer, 0, w0 * k, h0 * k) : NULL;
+        int w0 = 0, h0 = 0, level = 0, k = GaugeTargetsPrepare(renderer, rw, rh, &w0, &h0);
+        SDL_Texture* big = k ? sGaugeTarget[0] : NULL;
         if (big) {
             SDL_Texture* prev = SDL_GetRenderTarget(renderer);
             SDL_Rect viewport, clip;
@@ -528,6 +700,8 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
             SDL_RenderTexture(renderer, cur, &src, &dst);
             return;
         }
+    } else {
+        GaugeTargetsRelease();
     }
 #endif
     GaugeParts(renderer, x, y, s, tint);
@@ -559,7 +733,13 @@ static struct {
 } sEnemy;
 
 int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
-    if (!gPortConfig.hdCards || !PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE))
+    int i;
+    if (!gPortConfig.hdCards)
+        return 0;
+    for (i = 0; i < 7; i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, kEnemyPlaceGroup[i]))
+            return 0;
+    if (!PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE))
         return 0;
     if (!visible || !who) {
         sEnemy.active = 0;

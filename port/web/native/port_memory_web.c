@@ -65,11 +65,18 @@ const char* PortSaveName(void) {
     return BankName(sSramBank);
 }
 
-void PortSramSwitchBank(void) {
+static int SramSyncCurrent(void);
+
+int PortSramSwitchBank(void) {
     if (gPortConfig.saveBank == sSramBank)
-        return;
-    PortSramSyncIfDirty();
+        return 1;
+    if (!SramSyncCurrent()) {
+        PortLog("Save: cannot switch bank %d to %d: current SRAM could not be persisted; pending save retained",
+                sSramBank, gPortConfig.saveBank);
+        return 0;
+    }
     PortSramLoad();
+    return 1;
 }
 
 void PortSramLoad(void) {
@@ -88,26 +95,32 @@ void PortSramLoad(void) {
     sSramLoaded = 1;
 }
 
-void PortSramSyncIfDirty(void) {
+static int SramSyncCurrent(void) {
     extern int PortSceneGalleryActive(void);
-    if (PortSceneGalleryActive()) return; /* replay restores SRAM before normal syncing resumes */
+    if (PortSceneGalleryActive()) return 0; /* replay restores SRAM before normal syncing resumes */
     const uint8_t* sram = (const uint8_t*)(uintptr_t)GBA_SRAM;
     char tmp[MAX_PATH];
     FILE* f;
 
     if (!sSramLoaded || memcmp(sSramShadow, sram, GBA_SRAM_SIZE) == 0)
-        return;
+        return 1;
     snprintf(tmp, sizeof(tmp), "%s.tmp", PortConfigPath(BankName(sSramBank)));
     f = fopen(tmp, "wb");
     if (f == NULL)
-        return;
+        return 0;
     /* Always close exactly once, including failed writes / failed close. */
     int written = fwrite(sram, 1, GBA_SRAM_SIZE, f) == GBA_SRAM_SIZE;
     int closed = fclose(f) == 0;
     if (written && closed) {
-        if (rename(tmp, PortConfigPath(BankName(sSramBank))) == 0)
-            { memcpy(sSramShadow,sram,GBA_SRAM_SIZE);
-              EM_ASM({if(Module.persistSoon)Module.persistSoon();}); }
-
+        if (rename(tmp, PortConfigPath(BankName(sSramBank))) == 0) {
+            memcpy(sSramShadow, sram, GBA_SRAM_SIZE);
+            EM_ASM({if(Module.persistSoon)Module.persistSoon();});
+            return 1;
+        }
     }
+    return 0;
+}
+
+void PortSramSyncIfDirty(void) {
+    (void)SramSyncCurrent();
 }

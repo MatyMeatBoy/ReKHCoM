@@ -21,6 +21,7 @@
 
 #include "port/port.h"
 #include "port/port_netlink.h"
+#include "port/port_logfile.h"
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
@@ -114,7 +115,7 @@ void PortLog(const char* fmt, ...) {
     va_list ap;
 
     if (sLog == NULL)
-        sLog = fopen(PortConfigPath("kh_com.log"), "w");
+        sLog = PortOpenSessionLog(PortConfigPath("kh_com.log"));
     va_start(ap, fmt);
     vfprintf(stderr, fmt, ap);
     fputc('\n', stderr);
@@ -1576,6 +1577,7 @@ static void Present(void) {
     EnsureTexture();
     GrowPixelBuffer(&sCompositeBuf, &sCompositeCapacity, (size_t)gPortScreen.width * gPortScreen.height);
     PortHdHudPrepare(sRenderer);
+    PortHdLayoutPrepare(sRenderer);
     /* movies shown cropped: the skip prompt is drawn after the movie, on its
        own, so it neither grows with the video nor shifts the crop */
     moviePrompt = sSideStyle == 10 && sFitScale <= 0 && !menuCanvas && !gPortScreen.wide

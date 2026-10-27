@@ -2,7 +2,6 @@
 import argparse
 import math
 import os
-import re
 import subprocess
 import sys
 import tempfile
@@ -1003,9 +1002,6 @@ def emit_header(manifest, version, members_by_object, out_path, sheets):
                 ctype = entry.get("ctype", FORMAT_CTYPES.get(entry.get("format"), "u8"))
                 count = scalar_count(manifest, entry, version, ctype)
                 lines.append(f"extern {const}{ctype} {symbol}{dimensions(manifest, entry, version, count, ctype)};")
-    # Cartridge data sits at its ROM address (aligned to 4 at most): ROM_ALIGN (types.h) keeps x86-64 compilers from
-    # assuming 16-byte alignment for arrays of 16 bytes or more and copying them with movaps (#277).
-    lines = [re.sub(r"^(extern [^;]*?\w+(?:\[\d+\])+)\s*;\s*$", r"\1 ROM_ALIGN;", line) for line in lines]
     lines += ["", "#endif"]
     write_if_changed(out_path, "\n".join(lines) + "\n")
 

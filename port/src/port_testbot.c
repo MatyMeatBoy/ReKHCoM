@@ -22,6 +22,7 @@
 #include "game_state.h"
 #include "card_msgwin.h"
 #include "card_api.h"
+#include "card_ids.h"
 
 extern void PortLog(const char* format, ...);
 u16 CountMapCards(void); /* card_worldselect.c */
@@ -144,7 +145,18 @@ int PortHarnessDoorPose(int eventDoor) {
         gFieldState->actor.fieldPosition.y += dy[side] * 256;
         gFieldState->actor.angle = angle[side];
         MapSetCameraTarget(gFieldState->actor.fieldPosition.x, gFieldState->actor.fieldPosition.y);
-        for (card = 0; card < 270; card += 10) AddMapCard(card);
+        if (eventDoor == 3) {
+            extern void ClearMapCardInventory(void);
+            ClearMapCardInventory(); /* minimal red card + keys, separate from palette pressure */
+            AddMapCard(MAP_CARD_ID(MAP_CARD_GROUP_TRANQUIL_DARKNESS, 0));
+        } else {
+            for (card = 0; card < 270; card += 10) AddMapCard(card);
+        }
+        /* doorpose:2 adds story keys to the pressure case; :3 uses minimal cards.
+           Both can exercise payment/entry instead of stopping at the selector. */
+        if (eventDoor >= 2)
+            for (card = MAP_CARD_GROUP_KEY_OF_BEGINNINGS; card <= MAP_CARD_GROUP_KEY_TO_REWARDS; card++)
+                AddMapCard(MAP_CARD_ID(card, 1));
         PortLog("harness: door pose side=%d event=%d room=%d", side, eventDoor, door->room);
         return 1;
     }

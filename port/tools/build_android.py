@@ -48,6 +48,35 @@ def verify_fixed_symbols(path):
     if bad:raise ValueError('Rebased GBA absolute symbols: '+', '.join(sorted(set(bad))[:12]))
 
 
+def package_identity(release, *, smoke=False, test_build=False, test_version=None):
+    """Keep install identity separate from Java/JNI namespace and native version."""
+    if smoke and test_build:
+        raise ValueError('--smoke and --test-build are mutually exclusive')
+    if test_version and not test_build:
+        raise ValueError('--test-version requires --test-build')
+    if test_build:
+        if not test_version or not re.fullmatch(r'v?\d+\.\d+(?:\.\d+)?-nightly\.\d{8}\.\d{1,2}', test_version):
+            raise ValueError('--test-build requires --test-version MAJOR.MINOR-nightly.YYYYMMDD.N (N <= 99)')
+        base=test_version.removeprefix('v')
+    else:
+        base=release.removeprefix('v')
+    parts=re.match(r'(\d+)\.(\d+)(?:\.(\d+))?',base)
+    major,minor,patch=(int(g or 0) for g in parts.groups())
+    nightly=re.search(r'nightly\.(\d{8})\.(\d+)$',base)
+    version_code=major*1000000+minor*10000+patch*100+(int(nightly[2]) if nightly else 99)
+    suffix='-optiport' if test_build else '-smoke' if smoke else ''
+    return {'application_id':'com.rekhcom.android'+('.optiport' if test_build else '.smoke' if smoke else ''),
+            'suffix':suffix,'version_name':base+('-optiport' if test_build else '-android-beta'),
+            'version_code':version_code,'release_tag':'v'+base,
+            'label':'ReKHCoM OptiPort '+base if test_build else None}
+
+
+def playable_test_manifest(text, identity):
+    if 'SDL_ENV.' in text:
+        raise ValueError('Playable test packages must not contain SDL_ENV fixtures')
+    return text.replace('android:label="ReKHCoM Alpha"', 'android:label="'+identity['label']+'"',1)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--regions',nargs='+',choices=['eu','us','jp'],default=['eu','us','jp'])
@@ -56,18 +85,22 @@ def main():
     p.add_argument('--no-arm64',action='store_true',help='Leave out the 64-bit build (arm64-v8a host + game images, ANDROID_64.md)')
     p.add_argument('--native-only',action='store_true')
     p.add_argument('--ubsan',action='store_true',help='Test build: log shifts by 32+, divisions by zero, NULL and misaligned accesses to logcat (tag ReKHCoM-UBSAN)')
-    p.add_argument('--smoke',action='store_true',help='Separate test app: starts a debug battle, captures frame 600 and exits at 900')
+    mode=p.add_mutually_exclusive_group()
+    mode.add_argument('--test-build',action='store_true',help='Separate playable OptiPort app, no autoplay fixture; requires --test-version')
+    p.add_argument('--test-version',help='OptiPort APK identity, e.g. 2.1-nightly.20261027.1 (native source version unchanged)')
+    mode.add_argument('--smoke',action='store_true',help='Separate test app: starts a debug battle, captures frame 600 and exits at 900')
     p.add_argument('--smoke-env',default='',help='Smoke app only: KEY=VALUE;KEY=VALUE harness settings replacing the debug battle')
     args=p.parse_args()
     # seconds instead of a failed guest or Gradle build minutes later (check_sources.py)
     subprocess.run([sys.executable,str(ROOT/'port/tools/check_sources.py')],check=True)
     release=re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"',
                       (ROOT/'port/include/port/port_version.h').read_text(encoding='utf-8'))[1]
-    version_name=release.removeprefix('v')+'-android-beta'
-    parts=re.match(r'v(\d+)\.(\d+)(?:\.(\d+))?',release)  # v2.0 = v2.0.0
-    major,minor,patch=(int(g or 0) for g in parts.groups())
-    nightly=re.search(r'nightly\.(\d{8})\.(\d+)$',release)
-    version_code=major*1000000+minor*10000+patch*100+(int(nightly[2]) if nightly else 99)
+    try:
+        identity=package_identity(release,smoke=args.smoke,test_build=args.test_build,test_version=args.test_version)
+    except ValueError as error:
+        p.error(str(error))
+    if args.smoke_env and not args.smoke:p.error('--smoke-env requires --smoke')
+    version_name=identity['version_name'];version_code=identity['version_code']
     if args.jobs<1:p.error('--jobs must be positive')
     tools=ROOT.parent/'toolchain/android';sdk=tools/'sdk'
     ndk=next((tools/'native').glob('android-ndk-*'))
@@ -77,14 +110,13 @@ def main():
     cmake=sdk/'cmake/3.22.1/bin/cmake.exe'
     ninja=ROOT.parent/'toolchain/bin/ninja.exe'
     native_suffix='' if args.abi=='armeabi-v7a' else '-'+args.abi
-    suffix=native_suffix+('-smoke' if args.smoke else '')
+    suffix=native_suffix+identity['suffix']
     native=ROOT/('build/android-native'+native_suffix)
     env=dict(os.environ,JAVA_HOME=str(java),ANDROID_HOME=str(sdk),ANDROID_SDK_ROOT=str(sdk),
              GRADLE_USER_HOME=str(tools/'gradle-cache'),CMAKE_BUILD_PARALLEL_LEVEL=str(args.jobs))
     def run(cmd,cwd=ROOT):subprocess.run([str(x) for x in cmd],cwd=cwd,env=env,check=True)
     for region in args.regions:
-        if not (ROOT/f'build/{region}/pc/rom_symbols.s').is_file():
-            run([sys.executable,'port/tools/gen_pc_assets.py','--version',region])
+        run([sys.executable,'-X','utf8','port/tools/gen_pc_assets.py','--version',region,'--ensure'])
     run([cmake,'-S',ROOT/'port/android','-B',native,'-G','Ninja',f'-DCMAKE_MAKE_PROGRAM={ninja}',
          f'-DCMAKE_TOOLCHAIN_FILE={ndk}/build/cmake/android.toolchain.cmake','-DANDROID_ABI='+args.abi,
          '-DANDROID_PLATFORM=android-21',f'-DSDL_SOURCE_DIR={sdl}','-DCMAKE_BUILD_TYPE=Release',
@@ -107,6 +139,8 @@ def main():
     stage=ROOT/('build/android-app'+suffix);stage.mkdir(exist_ok=True)
     shutil.copytree(ROOT/'port/android/app',stage/'app',dirs_exist_ok=True)
     manifest=stage/'app/src/main/AndroidManifest.xml'
+    if args.test_build:
+        manifest.write_text(playable_test_manifest(manifest.read_text(encoding='utf-8'),identity),encoding='utf-8')
     if args.smoke:
         text=manifest.read_text(encoding='utf-8')
         settings={'KHCOM_BATTLE':'10:4:0','KHCOM_KEYS':'60-63:A','KHCOM_OUTPUT_SHOT':'600',
@@ -146,9 +180,8 @@ android {
  packaging { jniLibs { useLegacyPackaging true } }
 }
 """.replace('__NDK_VERSION__',ndk_version).replace('__VERSION_CODE__',str(version_code)).replace('__VERSION_NAME__',version_name))
-    if args.smoke:
-        gradle=stage/'app/build.gradle'
-        gradle.write_text(gradle.read_text().replace("applicationId 'com.rekhcom.android'","applicationId 'com.rekhcom.android.smoke'"))
+    gradle=stage/'app/build.gradle'
+    gradle.write_text(gradle.read_text().replace("applicationId 'com.rekhcom.android'","applicationId '"+identity['application_id']+"'"))
     libs=stage/'app/src/main/jniLibs'/args.abi;libs.mkdir(parents=True,exist_ok=True)
     desired={'libSDL3.so','liblauncher.so',*(f'librekhcom_{r}.so' for r in args.regions)} # liblauncher: the first screen (LauncherActivity)
     # Remove only stale native binaries from this generated staging folder.
@@ -204,12 +237,13 @@ android {
             assert member in z.namelist()
             assert hashlib.sha256(z.read(member)).digest()==hashlib.sha256((libs/name).read_bytes()).digest(), ('stale APK library',name)
     out=ROOT/'build/releases';out.mkdir(exist_ok=True)
-    target=out/f"ReKHCoM-{release}-android-alpha{'-smoke' if args.smoke else ''}.apk"
+    target=out/f"ReKHCoM-{identity['release_tag']}-android-alpha{identity['suffix']}.apk"
     shutil.copy2(apk,target)
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.apk.sha256').write_text(f'{digest}  {target.name}\n')
     (out/('android-build-manifest'+suffix+'.json')).write_text(json.dumps({'apk':target.name,'sha256':digest,'regions':args.regions,
-        'abi':args.abi,'version':version_name,'version_code':version_code,'debug_signed':True,'test_only':args.smoke,'runtime_tested':False},indent=2))
+        'abi':args.abi,'version':version_name,'version_code':version_code,'debug_signed':True,'test_only':args.smoke or args.test_build,'autoplay':args.smoke,
+        'application_id':identity['application_id'],'source_version':release,'runtime_tested':False},indent=2))
     print('Built (runtime verification still required):',target,digest)
 
 

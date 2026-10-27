@@ -77,7 +77,23 @@ for f in "$DIR"/roms/*.gba "$DIR"/*.gba; do
 done
 
 # Everything this script and the game print goes to ReKHCoM.log next to it (Steam's Game Mode shows no terminal).
-exec >"$DIR/ReKHCoM.log" 2>&1
+rotate_session_log() {
+    log=$1
+    [ -f "$log" ] || return 0
+    rm -f "$log.5" || return 1
+    previous=4
+    while [ "$previous" -ge 1 ]; do
+        if [ -f "$log.$previous" ]; then
+            [ ! -d "$log.$((previous + 1))" ] || return 1
+            mv "$log.$previous" "$log.$((previous + 1))" || return 1
+        fi
+        previous=$((previous - 1))
+    done
+    [ ! -d "$log.1" ] || return 1
+    mv "$log" "$log.1"
+}
+rotate_session_log "$DIR/ReKHCoM.log" || echo "Log rotation failed; retaining previous evidence" >&2
+exec >>"$DIR/ReKHCoM.log" 2>&1
 echo "ReKHCoM.sh: $(date), native Linux, folder $DIR, region ${REGION:-auto}"
 
 

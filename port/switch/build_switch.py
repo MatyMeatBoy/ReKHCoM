@@ -105,9 +105,8 @@ def compile_all(jobs, units):
 def build_guest(region, jobs):
     upper = region.upper()
     pc = ROOT / 'build' / region / 'pc'
-    if not (pc / 'rom_symbols_reloc.s').is_file():
-        run([sys.executable, ROOT / 'port/tools/gen_pc_assets.py', '--version', region], cwd=ROOT,
-            env=dict(os.environ, PYTHONUTF8='1'))
+    run([sys.executable, ROOT / 'port/tools/gen_pc_assets.py', '--version', region, '--ensure'], cwd=ROOT,
+        env=dict(os.environ, PYTHONUTF8='1'))
     out = BUILD / f'guest-{region}'
     out.mkdir(parents=True, exist_ok=True)
     includes = build_ps5.game_includes(region)
@@ -204,7 +203,7 @@ def build_host(regions):
     gallery_posters()
     shutil.copytree(ROOT / 'port/assets/gallery', assets / 'gallery', dirs_exist_ok=True)
     (share / 'src').mkdir()
-    for src in (HERE / 'host/switch_host.c', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/hd_pack_host.h', ROOT / 'port/portable/hd_pack.c', *sorted((PS5 / 'third_party/miniz').glob('miniz*')), PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h',
+    for src in (HERE / 'host/switch_host.c', ROOT / 'port/include/port/port_logfile.h', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/hd_pack_host.h', ROOT / 'port/portable/hd_pack.c', *sorted((PS5 / 'third_party/miniz').glob('miniz*')), PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h',
                 ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     Image.open(PS5 / 'sce_sys/icon0.png').convert('RGB').resize((256, 256), Image.LANCZOS).save(share / 'icon.jpg', quality=92)

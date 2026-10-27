@@ -33,6 +33,7 @@
 #include <unistd.h>
 
 #include "bridge.h"
+#include "../../include/port/port_logfile.h"
 
 #define IMAGE_BASE 0x01000000u
 #define IMAGE_LIMIT 0x0C000000u /* the reservation: the image (about 150 MB) ends well before ART's heap */
@@ -848,7 +849,7 @@ int main(int argc, char** argv) {
             rom = argv[++i];
     }
     SDL_snprintf(logPath, sizeof(logPath), "%s/kh_com_host.log", sData);
-    sLog = fopen(logPath, "w");
+    sLog = PortOpenSessionLog(logPath);
     Log("ReKHCoM (Android 64-bit) starting");
     HdPackInstall(sData, Log);
     LogDevice();

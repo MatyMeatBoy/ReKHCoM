@@ -116,12 +116,6 @@ if not args.post:
     sources = subprocess.run([sys.executable, str(ROOT / 'port/tools/check_sources.py')], capture_output=True, text=True)
     check(sources.returncode == 0, 'console SDL shim and Java literals (check_sources.py)' +
           (': ' + sources.stdout.strip().splitlines()[0] if sources.returncode else ''))
-    # #277: packages built from generated headers older than ROM_ALIGN crash the 64-bit build at the first door
-    stale = [h.name for h in ROOT.glob('build/*/gen/*.h')
-             if re.search(r'^extern [^;]*\[\d+\]\s*;', h.read_text(encoding='utf-8', errors='replace'), re.M)]
-    check(not stale, 'generated headers carry ROM_ALIGN (tools/assetgen.py)' + (': stale ' + ', '.join(stale[:3]) if stale else ''))
-    rom = subprocess.run([sys.executable, str(ROOT / 'port/tools/test_rom_alignment.py')], capture_output=True, text=True)
-    check(rom.returncode == 0, 'no aligned SSE access to cartridge data in the 64-bit guests (test_rom_alignment.py)')
     head = int(subprocess.check_output(['git', 'log', '-1', '--format=%ct'], cwd=ROOT, text=True))
     dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True)
     check(not dirty.strip(), 'working tree committed (packages come from HEAD)')

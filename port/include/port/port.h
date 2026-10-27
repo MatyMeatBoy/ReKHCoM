@@ -252,8 +252,9 @@ void PortSramSyncIfDirty(void);
 /* Save banks: bank 1 is PORT_SAVE_NAME, bank n kh_com[_us|_jp]_bank<n>.sav. */
 #define PORT_SAVE_BANKS 5
 const char* PortSaveName(void);
-/* Writes the current bank, then loads gPortConfig.saveBank. */
-void PortSramSwitchBank(void);
+/* Writes the current bank, then loads gPortConfig.saveBank. Failure retains SRAM
+   and the loaded bank; callers must restore the previous saveBank selection. */
+int PortSramSwitchBank(void);
 void PortBiosAreaRefresh(void);
 /* RetroAchievements flattened GBA RAM/SRAM map (not hardware bus addresses).
  * Returns 1 on success; invalid ranges are zero-filled and return 0. */
@@ -290,6 +291,10 @@ int PortSmoothScaleMode(void);
 int PortRecomActive(void);
 void PortRecomSetActive(int active);
 int PortRecomRunRank(void); /* the lowest difficulty this game was played on: 0 Beginner, 1 Standard, 2 Proud */
+/* Drop the HUD's GPU resources and re-arm lookup after an explicit renderer
+   generation change or asset re-import. Call on the renderer thread, outside a draw.
+   Upload failure remains cached until this boundary; this does not reset other caches. */
+void PortHdHudInvalidate(void);
 int PortHdHudEnemy(int visible, int ratio, int layer);
 extern int gPortHdHudPart;
 int PortPpuEnemyHudRect(int* rect);

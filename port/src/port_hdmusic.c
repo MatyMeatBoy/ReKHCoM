@@ -92,9 +92,33 @@ static void* sLoaderData;
 static size_t sLoaderSize;
 static char sLoaderPath[512];
 
+/* At most one completed load and one playing compressed track overlap: 128 MiB
+   total at this 64 MiB per-file budget (plus decoder/output buffers). Imported
+   tracks normally use about 7 MiB. This also keeps stb_vorbis's int length safe. */
+#define HD_MUSIC_MAX_FILE_BYTES (64 * 1024 * 1024)
+
 static int SDLCALL LoaderMain(void* unused) {
+    SDL_IOStream* io;
+    Sint64 length;
     (void)unused;
-    sLoaderData = SDL_LoadFile(sLoaderPath, &sLoaderSize);
+    sLoaderData = NULL;
+    sLoaderSize = 0;
+    io = SDL_IOFromFile(sLoaderPath, "rb");
+    if (io != NULL) {
+        length = SDL_GetIOSize(io);
+        if (length > 0 && length <= HD_MUSIC_MAX_FILE_BYTES) {
+            void* data = SDL_malloc((size_t)length);
+            if (data != NULL) {
+                if (SDL_ReadIO(io, data, (size_t)length) == (size_t)length) {
+                    sLoaderData = data;
+                    sLoaderSize = (size_t)length;
+                } else {
+                    SDL_free(data);
+                }
+            }
+        }
+        SDL_CloseIO(io);
+    }
     SDL_SetAtomicInt(&sLoaderDone, 1);
     return 0;
 }
@@ -125,9 +149,9 @@ static void* TakeLoaded(int song, size_t* size, int* pending) {
     SDL_SetAtomicInt(&sLoaderDone, 0);
     sLoaderSong = song;
     sLoader = SDL_CreateThread(LoaderMain, "hd music", NULL);
-    if (sLoader == NULL) { /* no thread: read it here */
+    if (sLoader == NULL) { /* keep cartridge music; never read on the game thread */
         sLoaderSong = -1;
-        return SDL_LoadFile(sLoaderPath, size);
+        return NULL;
     }
     *pending = 1;
     return NULL;
@@ -215,32 +239,47 @@ static void Resume(void) {
 static float sHold = 1.0f, sLevel = 1.0f;
 
 /* Decodes until about a fifth of a second is queued, looping at the track's loop points. */
-static void Feed(float gain) {
+static int Feed(float gain) {
     float pcm[2048 * 2];
+    int blocks = 0, rewound = 0;
+    if (!sStream || !sVorbis || sRate <= 0 || sLoopEnd <= sLoopStart)
+        return 0;
     sLevel = gain;
     SDL_SetAudioStreamGain(sStream, sLevel * sHold);
     gain = 1.0f;
     Resume();
     while (SDL_GetAudioStreamQueued(sStream) < (int)(sRate / 5 * 2 * sizeof(float))) {
         int want = 2048, got, i;
+        /* Bound frame work, not valid track length: very short loops can need
+           more iterations. Keep accepted PCM and fill the remainder next frame.
+           Decoder/seek/output failures below still fail immediately. */
+        if (++blocks > 32)
+            return 1;
         if (sPosition + (unsigned)want > sLoopEnd)
             want = (int)(sLoopEnd - sPosition);
         if (want <= 0) {
-            stb_vorbis_seek(sVorbis, sLoopStart);
+            if (rewound || !stb_vorbis_seek(sVorbis, sLoopStart))
+                return 0;
             sPosition = sLoopStart;
+            rewound = 1;
             continue;
         }
         got = stb_vorbis_get_samples_float_interleaved(sVorbis, 2, pcm, want * 2);
         if (got <= 0) {
-            stb_vorbis_seek(sVorbis, sLoopStart);
+            if (rewound || !stb_vorbis_seek(sVorbis, sLoopStart))
+                return 0;
             sPosition = sLoopStart;
+            rewound = 1;
             continue;
         }
         for (i = 0; i < got * 2; i++)
             pcm[i] *= gain;
-        SDL_PutAudioStreamData(sStream, pcm, got * 2 * (int)sizeof(float));
+        if (!SDL_PutAudioStreamData(sStream, pcm, got * 2 * (int)sizeof(float)))
+            return 0;
         sPosition += (unsigned)got;
+        rewound = 0;
     }
+    return 1;
 }
 
 static int QueuedMs(void) {
@@ -287,8 +326,8 @@ static int Open(int song) {
     return 1;
 }
 
-static void Feed(float gain) {
-    h_hd_music(HD_MUSIC_PLAY, "", (int)(gain * 1000.0f));
+static int Feed(float gain) {
+    return h_hd_music(HD_MUSIC_PLAY, "", (int)(gain * 1000.0f));
 }
 
 static void Pause(void) {
@@ -358,8 +397,7 @@ void PortHdMusicFrame(void) {
         }
         opened = Open(song);
         if (opened < 0) {
-            /* loading (a few frames): silence, not a moment of the cartridge's song before the HD track */
-            gPortMix.musicGain = 0.0f;
+            /* Keep cartridge music audible until the loaded HD output is usable. */
             HdLog(song, 3);
             return;
         }
@@ -376,8 +414,14 @@ void PortHdMusicFrame(void) {
     gain = HD_MUSIC_LEVEL * gPortMix.musicGain * gPortConfig.masterVolume / 100.0f;
     if (bgm->fadeOI)
         gain *= (float)(bgm->fadeOV >> FADE_VOL_SHIFT) / FADE_VOL_MAX;
-    gPortMix.musicGain = 0.0f; /* the cartridge's song keeps playing, silent */
-    Feed(gain);
+    if (!Feed(gain)) {
+        PortLog("fallback: HD music song %d stalled or output failed; cartridge music retained", song);
+        sMissing = song;
+        Close();
+        HdLog(song, 0);
+        return;
+    }
+    gPortMix.musicGain = 0.0f; /* mute only after the HD output accepted samples */
     HdLog(song, 1);
 }
 
