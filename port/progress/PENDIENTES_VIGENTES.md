@@ -54,6 +54,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
 - [x] Tienda Moguri en vista de tienda (fila de 5 cartas con número): números HD se ven bien (captura usuario 27/10).
 - [ ] **HUD HD (solo modo HUD HD; el HUD normal no se toca):**
+  Captura base 27/10: `build/hudshot` en khcom-hd-reload, ini del usuario (copia de `build/codex-evidence/
+  quiver-crash-20261027`) con `hd_hud=1`, `fullscreen=0`, `KHCOM_WINDOW=1536x864`, `KHCOM_BATTLE=204:8:0`,
+  `KHCOM_MONKEY=19:120`. Los números bajo el retrato y la pila del jefe solo salen al apilar/elegir: usar
+  secuencia de combate con stock (`KHCOM_KEYS` con L/R de apilar). Son cambios visuales grandes: proponer en Atlas
+  (regla «visuales a la app») antes de integrar; solo modo HUD HD.
   - Pila de cartas: reubicarla según la vida nueva y dibujarla **encima** de ella; también se les pierde el **borde**.
   - Igual para enemigos/jefes si aplica.
   - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
