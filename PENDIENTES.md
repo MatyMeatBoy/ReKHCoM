@@ -214,5 +214,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-serial-profile-contract | Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow | pr_abierto | codex-profile-contract | https://github.com/MatyMeatBoy/ReKHCoM/pull/348 | Root delega plan serial ycorregir postcondicionesreales sinrewriteharness | 2026-10-27T11:06:08.855384+00:00 |
 | hud-canvas-preflight | Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/349 | — | 2026-10-27T11:18:53.043896+00:00 |
 | android-lifecycle-diagnostics-v21 | InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate | en_curso | codex-android-lifecycle | — | Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia | 2026-10-27T11:16:44.896715+00:00 |
+| player-hp-capacity-equivalence | Auditoría HP jugador: reglas GBA, capacidad visual y evidencia ReCoM1.5 | pendiente | — | — | — | 2026-10-27T11:22:34.844415+00:00 |
 
 Integrador: libre
