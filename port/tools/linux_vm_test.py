@@ -91,7 +91,8 @@ def main():
     ap.add_argument('--out', type=Path, default=Path('.'))
     ap.add_argument('--accel', default='whpx,kernel-irqchip=off')
     ap.add_argument('--disk', type=Path, help='persistent qcow2 overlay (created from the image, kept between runs)')
-    ap.add_argument('--disk-size', default='40G')
+    ap.add_argument('--disk-size', default='16G',
+                    help='capacity for a new persistent disk; existing images keep their size (default: 16G)')
     ap.add_argument('--net', action='store_true', help='user-mode network (apt, downloads)')
     ap.add_argument('--run-timeout', type=int, default=1800, help='seconds allowed for each --run command')
     ap.add_argument('--fresh-share', action='store_true', help='empty /root/share first (a persistent --disk keeps it)')
@@ -122,11 +123,15 @@ def main():
         # discard: what the guest frees (fstrim below) leaves the overlay instead of staying allocated
         system = f'file={args.disk},if=virtio,discard=unmap,detect-zeroes=unmap'
     nic = ['-nic', 'user,model=virtio-net-pci'] if args.net else ['-nic', 'none']
-    # Outbox for --fetch: a raw disk (/dev/vdc) the guest writes a tar archive to.
-    outbox = image.with_name(image.stem + '-outbox.img')
-    with open(outbox, 'wb') as fh:
-        fh.truncate(1 << 30)
-    outdrive = ['-drive', 'file=' + str(outbox).replace(chr(92), '/') + ',format=raw,if=virtio']
+    # Only --fetch needs /dev/vdc. A no-fetch run must not allocate a GiB
+    # or overwrite transfer evidence left by an earlier failed run.
+    outbox = None
+    outdrive = []
+    if args.fetch:
+        outbox = image.with_name(image.stem + '-outbox.img')
+        with open(outbox, 'wb') as fh:
+            fh.truncate(1 << 30)
+        outdrive = ['-drive', 'file=' + str(outbox).replace(chr(92), '/') + ',format=raw,if=virtio']
     if args.machine == 'x86_64':
         cmd = [str(QEMU / 'qemu-system-x86_64.exe'), '-m', args.mem, '-smp', args.cpus, '-accel', args.accel,
                '-accel', 'tcg', '-drive', system,
@@ -194,7 +199,8 @@ def main():
                         continue
                     (args.out / Path(f).name).write_bytes(data)
                     print('fetched', f, len(data), 'bytes')
-        outbox.unlink(missing_ok=True)
+        if outbox is not None:
+            outbox.unlink(missing_ok=True)
     finally:
         if proc.poll() is None:
             proc.kill()
