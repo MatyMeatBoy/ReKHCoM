@@ -646,8 +646,13 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
     /* not on SDL's software renderer (the tests' offscreen window): restoring the window as the target crashed
        inside it */
     if (!SDL_getenv("KHCOM_GAUGE_NO_SS") && SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) != 0) {
-        /* the gauge's area in Re:CoM's units around its origin (ring, face, the bar at its longest, the alarm's glow) */
-        const float ux0 = -60.0f, uy0 = -60.0f, ux1 = 620.0f, uy1 = 220.0f;
+        /* Conservative emitted geometry of the imported HD gauge, measured
+           with the real layout drawer across every HP/state/face frame:
+           x[-89.521,202.010], y[-89.521,89.521] (legacy x reaches203.010).
+           Keep padding and one stable crop: no HP-driven cache resizing.
+           The old -60 lower bound also cut off the low-HP alarm's glow.
+           test_hd_gauge_visible_bounds.py checks private LAD imports. */
+        const float ux0 = -92.0f, uy0 = -92.0f, ux1 = 206.0f, uy1 = 92.0f;
         float rx = x + ux0 * s, ry = y + uy0 * s, rw = (ux1 - ux0) * s, rh = (uy1 - uy0) * s;
         int w0 = 0, h0 = 0, level = 0, k = GaugeTargetsPrepare(renderer, rw, rh, &w0, &h0);
         SDL_Texture* big = k ? sGaugeTarget[0] : NULL;
