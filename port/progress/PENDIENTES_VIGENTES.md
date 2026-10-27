@@ -7,7 +7,17 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 
 ## Bugs a resolver antes de v2.1 estable — 27/10 (Claude)
 
-- [ ] **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
+- [x] **#277 Deck: cierre al abrir la primera puerta — CAUSA Y ARREGLO (27/10).** Causa: los headers generados
+  declaran los datos del cartucho como `extern u8 X[192]`; en x86-64 clang supone alineación 16 en arrays de 16+
+  bytes (regla SysV) y copió `gMapSelectGridPalettes` con `movaps` desde 0x954bfa4 (ROM, alineada a 4) → SIGSEGV en
+  `LoadMapSelectKindPalette`/`LoadMapSelectGridPalette` (paleta de la puerta). Windows es de 32 bits: no le pasa.
+  Arreglo: `ROM_ALIGN` (`include/types.h`, `aligned(1)` en PC) en toda declaración con tamaño que emite
+  `tools/assetgen.py` → ninguna suposición de alineación en ningún dato de ROM. Por qué no vuelve: el escáner
+  `port/tools/test_rom_alignment.py` revisa los 3 guests (sin el arreglo halla 3 accesos; con él 0) y
+  `release_check.py` exige headers con ROM_ALIGN y ese escáner. VM 64 bits: entra a la sala y al combate.
+- [ ] **#272 Android**: probablemente otra causa (AArch64 tolera cargas desalineadas; armv7 sin NEON ahí).
+  Esperar datos del reportero; build de prueba igual.
+- [ ] (histórico) **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
   Windows EU pasa el punto (llega al combate tutorial con A repetida). Sospecha: camino portable (host 64 bits /
   Android). Reproducir en VM Linux 64 y arreglar; luego barrer el juego entero en 64 bits.
 - [ ] **#42 desync del final HD de Sora**: rama `fix/ending-cutscene-desync` (Codex), sin integrar.

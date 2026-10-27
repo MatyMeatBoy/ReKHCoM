@@ -62,6 +62,18 @@ void* PortBusPtr(__UINTPTR_TYPE__ p);
 #define MOD0(a, b) ((a) % (b))
 #endif
 
+/*
+ * Cartridge data declared by the generated headers lives at its ROM address, aligned to 4 bytes at most. x86-64
+ * compilers would otherwise give every array of 16 bytes or more a 16-byte alignment (SysV large-array rule) and
+ * copy it with movaps, which faults there: the 64-bit Linux / Steam Deck build crashed opening the first door
+ * (#277). An explicit alignment on the declaration replaces that assumption.
+ */
+#ifdef PLATFORM_PC
+#define ROM_ALIGN __attribute__((aligned(1)))
+#else
+#define ROM_ALIGN
+#endif
+
 #define TRUE 1
 #define FALSE 0
 
