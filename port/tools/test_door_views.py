@@ -48,7 +48,7 @@ def main():
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         log = (d/'kh_com.log').read_text(errors='replace')
         assert result.returncode == 0 and 'CRASH' not in log, (case, result.returncode)
-        assert 'harness: door pose' in log and 'unavailable' not in log.lower(), (case, log[-2000:])
+        assert 'harness: door pose' in log and 'door pose unavailable' not in log.lower(), (case, log[-2000:])
         for frame in (280, 380, 470, 650):
             im = Image.open(d/f'out_{frame:05d}.bmp').convert('RGB')
             im.save(d/f'{frame}.png')

@@ -213,7 +213,8 @@ static void ApplyVideoSync(int force) {
     static int cachedRequested=-1,cachedCapability=-1,cachedApplied=0;
     int requested=gPortConfig.vsync;
     int eligible=requested==2 && VrrPresentEligible();
-    int interval=requested==0 || eligible?0:1;
+    /* KHCOM_FAST runs unpaced: vsync would hold it to the display rate. */
+    int interval=requested==0 || eligible || SDL_getenv("KHCOM_FAST")?0:1;
     int capability=eligible;
     if (!force && cachedRequested==requested && cachedCapability==capability && cachedApplied) return;
     int applied=SDL_SetRenderVSync(sRenderer,interval);
