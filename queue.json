@@ -5131,16 +5131,23 @@
     "hud-enemy-gauge-static-track": {
       "id": "hud-enemy-gauge-static-track",
       "piece": "Enemy HD gauge track stable at constant maximum HP",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-enemy-gauge",
       "created_at": "2026-10-27T08:25:47.778897+00:00",
-      "updated_at": "2026-10-27T08:36:00.271317+00:00",
+      "updated_at": "2026-10-27T08:36:10.415280+00:00",
       "branch": "fix/hud-enemy-static-track",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/323",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "Codex HUD audit 2026-10-27",
-      "evidence": [],
-      "claimed_at": "2026-10-27T08:25:52.965693+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-27T08:36:10.415280+00:00",
+          "owner": "codex-enemy-gauge",
+          "detail": "Verified and reviewed; merged 9e19c10b0ec097451b8e683952718e67204d1d51"
+        }
+      ],
+      "claimed_at": "2026-10-27T08:25:52.965693+00:00",
+      "completed_at": "2026-10-27T08:36:10.415280+00:00"
     },
     "shim-render-target-reset-constant": {
       "id": "shim-render-target-reset-constant",
@@ -5190,7 +5197,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:36:00.271317+00:00",
+  "updated_at": "2026-10-27T08:36:10.415280+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
