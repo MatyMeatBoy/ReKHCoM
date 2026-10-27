@@ -23,6 +23,8 @@ def main():
     tc = sorted((ROOT.parent / 'toolchain').glob('llvm-mingw-*'))[-1] / 'bin'
     sdl = sorted((ROOT.parent / 'toolchain').glob('SDL3-*'))[-1] / 'x86_64-w64-mingw32'
     OUT.mkdir(parents=True, exist_ok=True)
+    from prepare_movie_core import prepare
+    prepare(ROOT, OUT.parent)
     env = dict(os.environ, CLANG=str(tc / 'clang.exe'), LLD=str(tc / 'ld.lld.exe'),
                OBJCOPY=str(tc / 'llvm-objcopy.exe'), REKHCOM_GUEST_DUALSENSE='0', REKHCOM_GUEST_LINUX64='1')
     if not args.host_only:
@@ -32,10 +34,12 @@ def main():
             shutil.copyfile(ROOT / f'port/ps5/build/guest-{region}/guest.bin', OUT / f'guest-{region}.bin')
     flags = [str(tc / 'clang.exe'), '--target=x86_64-w64-mingw32', '-O2',
              f'-I{ROOT / "port/ps5/shared"}', f'-I{ROOT / "port/ps5/third_party/stb"}',
-             f'-I{sdl / "include"}', f'-L{sdl / "lib"}']
+             f'-I{sdl / "include"}', f'-I{OUT.parent}', f'-L{sdl / "lib"}',
+             '-lmfplat', '-lmfreadwrite', '-lmfuuid', '-lole32', '-lpropsys', '-lgdi32']
     subprocess.check_call(flags + [str(HERE / 'windows64_host.c'), '-lSDL3', '-lm', '-o', str(OUT / 'rekhcom64.exe')])
     shutil.copyfile(sdl / 'bin/SDL3.dll', OUT / 'SDL3.dll')
     if args.test:
+        subprocess.check_call(flags + [str(HERE / 'test_movie.c'), '-lSDL3', '-lm', '-o', str(OUT / 'test_movie.exe')])
         test = OUT / 'test_windows64.exe'
         subprocess.check_call(flags + [str(HERE / 'test_windows64.c'), str(HERE / 'test_preserved.S'), '-lSDL3', '-lm', '-o', str(test)])
         subprocess.check_call([str(test)], cwd=OUT)

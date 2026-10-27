@@ -22,6 +22,12 @@
 #include <unistd.h>
 
 #include "bridge.h"
+/* SDK headers gate this read-only registry flag on Win10; older RegGetValue
+   may reject the flag, which the profile provider safely treats as unknown. */
+#ifndef RRF_SUBKEY_WOW6464KEY
+#define RRF_SUBKEY_WOW6464KEY 0x00010000
+#endif
+#include "../include/port/port_device_profile_host.h"
 
 static char sData[1024] = ".";
 static int sQuit;
@@ -88,7 +94,8 @@ static int H_getenv(const char* name, char* out, int cap) {
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
         return (int)strlen(out);
     }
-    const char* v = getenv(name);
+    const char* v = PortDeviceHostQuery(name);
+    if (!v) v = getenv(name);
     if (!v) return -1;
     snprintf(out, (size_t)cap, "%s", v);
     return (int)strlen(out);
@@ -330,7 +337,7 @@ static int H_pad_poll(HostPad* out, int count) {
     }
     return 1;
 }
-static int H_hd_movie(const char* a, const char* b, const char* c, const char* d) { (void)a; (void)b; (void)c; (void)d; return 0; }
+#include "hdmovie_windows.inc"
 
 static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max; return 0; }
 static int H_app_state(void) { return 0; }
