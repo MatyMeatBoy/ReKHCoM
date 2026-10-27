@@ -44,9 +44,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
 - [ ] Linux 64 VM: partida nueva → puerta del castillo → selección de mundo → combate tutorial **sin fallo**
   (sin música HD). Repetir con música HD (`.ogg`), que el reportero sí tiene.
 
-- [ ] **Tienda Moguri (Cambiar naipes), números HD**: en la columna derecha el «2» de «02» sale deformado
-  (como una Z con cola); en 3×04 y 4×01 la «x» y los dígitos se ven desalineados frente al resto. Arreglar
-  directo (sin Atlas); revisar los 10 dígitos y la «x» en ambas columnas.
+- [x] **Tienda Moguri (Cambiar naipes), números HD** (27/10): el «2» salía sobre un bloque gris. Causa:
+  `LoadDecimalDigitTiles` (mode_ms_top.c) dejaba que port_ppu dedujera fondo/tinta/sombra de cada tile por
+  frecuencia; el 2 tiene más tinta que fondo → colores invertidos. Arreglo: todos los dígitos usan los colores del 0
+  de su juego (gris o blanco). `test_moogle_charge_digits.py` (RED 71/71 → GREEN 40/39; ceros grises intactos).
+  Mismo render: «Naipes activos 021/062» y total Moguri correctos.
 - [ ] **Cartas HD pequeñas (lista de naipes): encaje de la imagen** como se ajustaron las de llave. Marcadas por el
   usuario: Simba (retrato desborda/cortado), Genio (asoma por la derecha), carta verde de objeto (cubo azul
   descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
