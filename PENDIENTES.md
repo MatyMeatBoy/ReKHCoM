@@ -196,5 +196,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-visible-band-coherence | Match submenu margin bands to currently visible native edge | integrado | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/325 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:42:01.347055+00:00 |
 | v21-pre1-crossplatform | Verified Windows Linux Android prerelease v2.1-pre1, ROM-free artifacts and reporter links | en_curso | codex-release-pre1 | — | User explicitly requests new prerelease for Windows Linux Android and send to reporters; preserve previous releases | 2026-10-27T08:48:04.710416+00:00 |
 | hd-gauge-visible-bounds | Measured HD gauge crop preserves supersampling within budgets | pr_abierto | codex-gauge-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/326 | User requests smoother inner HUD edges; coordinator authorizes measured crop implementation | 2026-10-27T08:50:27.311893+00:00 |
+| bridge-gpu-targets-aa | Negotiated portable GPU targets and gauge AA | pendiente | — | — | — | 2026-10-27T08:51:00.033272+00:00 |
 
 Integrador: libre
