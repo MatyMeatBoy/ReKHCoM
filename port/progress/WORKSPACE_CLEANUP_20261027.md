@@ -89,3 +89,17 @@ siguiente tarea independiente. Los checkouts temporales se retiran al integrar,
 conservando ramas y evidencia. OptiPort incorpora estas decisiones también para
 proyectos de ingeniería, con conservación de unidades, coordenadas, modelos,
 undo/exportación y resultados autoritativos.
+
+## Foto del espacio ocupado al cierre
+
+Medición del 27/10 a las 12:39, America/Santiago: **28,72 GiB en C:** y
+**39,13 GiB en D:**, 67,85 GiB en conjunto. Recuento sin seguir 102 reparse
+points, con cada hardlink contado una sola vez; cero errores de lectura.
+`GetCompressedFileSizeW` mide datos almacenados y no todo el slack/metadatos
+del filesystem. La actividad concurrente puede modificar esta fotografía.
+
+No se alcanzaron 30 GiB para el proyecto completo. Entre los bloques que
+permanecen en D: están los originales del tráiler (~9,82 GiB), la importación
+HD (~6,63 GiB), Linux (~6,31 GiB), los AVD (~4,75 GiB) y PS5 (~4,73 GiB).
+Se conservaron entradas y producción originales, SDK y evidencias necesarias;
+el cierre de esta pasada no autoriza descartarlos para cumplir una cifra.
