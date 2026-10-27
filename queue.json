@@ -7114,10 +7114,10 @@
     "hud-polish-visibility-contours": {
       "id": "hud-polish-visibility-contours",
       "piece": "Prioridad usuario: calidadHUDvisible enemigoapagado/Soraagujeros+AA local contorno y bosses1+bars por maxHP real; diagnóstico causal32/64/Sora/Riku/map/battle/boss sinblur global",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:50:40.347337+00:00",
-      "updated_at": "2026-10-27T19:17:40.234273+00:00",
+      "updated_at": "2026-10-27T21:26:24.108280+00:00",
       "branch": "fix/hud-visibility-contours",
       "pr": null,
       "approval": "Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas",
@@ -7134,7 +7134,7 @@
           "detail": "released: P1 pausado por coordinador ante P0 #386. Checkout limpio 8d4958; solo evidencia privada pruebas/hud-visibility-contours; ninguna edición de producto."
         }
       ],
-      "claimed_at": "2026-10-27T18:50:46.217640+00:00"
+      "claimed_at": "2026-10-27T21:26:24.108280+00:00"
     },
     "synthesis-hd-gray-digits-coverage": {
       "id": "synthesis-hd-gray-digits-coverage",
@@ -7768,7 +7768,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T21:26:07.194375+00:00",
+  "updated_at": "2026-10-27T21:26:24.108280+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
