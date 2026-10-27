@@ -159,4 +159,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
 | optiport-skill-20261027 | OptiPort skill and evidence-based progress board | en_curso | codex-optiport | — | — | 2026-10-27T05:09:56.453746+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T05:08:08.674562+00:00)
+Integrador: libre
