@@ -5375,7 +5375,7 @@
       "status": "pr_abierto",
       "owner": "codex-hd-media-variants",
       "created_at": "2026-10-27T08:52:24.794876+00:00",
-      "updated_at": "2026-10-27T10:05:32.164267+00:00",
+      "updated_at": "2026-10-27T10:39:29.576165+00:00",
       "branch": "feat/hd-media-language-variants",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/335",
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
@@ -5385,6 +5385,11 @@
           "at": "2026-10-27T10:05:32.164267+00:00",
           "owner": "codex-hd-media-variants",
           "detail": "Head bddb9139e; stacked on PR327 head607671a75. Production import EN-JP/cancel/corrupt/cache, resolver/UI, INI, miniz pack, ACF, preview async and bridge tests PASS; Windows launcher/game and NDK ARMv7/ARM64 syntax PASS; Java app+SDL compile PASS. No heavy builds/device playback. Owned EN/JP audio and SAF/device QA pending; JP two offset clips retain GBA pending verified timings. Immutable generations and atomic index preserve prior import on cancel/failure. Queue owner codex-hd-media-variants. Worktree needed yes PR/repro."
+        },
+        {
+          "at": "2026-10-27T10:39:29.576165+00:00",
+          "owner": "codex-hd-media-variants",
+          "detail": "IndependentreviewP1FIX head6f5b4db86: mixed movies/scenes fullimportproducer REDAV0xc0000005->GREENInspect/coreavailability; wantedNULLguard;storypartialdamage preservesmovies; minizmixedcomplete/partialrestore preservesoldactive. import/variants/packPASS.342mergefix2016de92a preview/generationPASS."
         }
       ],
       "claimed_at": "2026-10-27T08:56:58.558622+00:00"
@@ -5598,7 +5603,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:38:11.300266+00:00",
+  "updated_at": "2026-10-27T10:39:29.576165+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
