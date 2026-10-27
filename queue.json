@@ -5303,15 +5303,16 @@
     "launcher-hd-media-language-variants-v21": {
       "id": "launcher-hd-media-language-variants-v21",
       "piece": "Siguiente PR EN/JP: imports namespaces por idioma, metadata/cache/journal/posters con procedencia, playback y UI seleccion independiente de texto/Undub; atomic y preservarold",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-hd-media-variants",
       "created_at": "2026-10-27T08:52:24.794876+00:00",
-      "updated_at": "2026-10-27T08:52:24.794876+00:00",
+      "updated_at": "2026-10-27T08:56:58.558622+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T08:56:58.558622+00:00"
     },
     "submenu-moogle-visible-band-style-zero": {
       "id": "submenu-moogle-visible-band-style-zero",
@@ -5329,7 +5330,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:56:52.067993+00:00",
+  "updated_at": "2026-10-27T08:56:58.558622+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
