@@ -69,6 +69,9 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
     Sin anillo, igual que el cartucho. Captura del usuario 27/10 (combate en Monstruo).
   - Pila de cartas apiladas junto al retrato (p. ej. «7 4 6», total 17 encima): en HUD HD salen SIN marcos HD y con
     el número dorado (premium) en GBA; deben llevar marcos/dígitos HD como las cartas en mano (captura 27/10).
+    Pista: las cartas pequeñas HD son grupo 6 (`SmallCardHD`), que conservan el marco del cartucho
+    (`PortHdSpriteKeepsCartridge`, port_ppu.c:2366/4915); en la pila del HUD el marco no se ve. Capturar con
+    secuencia de apilar (L+R / stock) en HUD HD y revisar si `bandOnly`/capa HUD descarta el marco.
 - [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
   visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
 - [x] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10, ARREGLADO con el punto del launcher)**: el commit 428aac55b (26/10, pad= en avisos
