@@ -5957,13 +5957,13 @@
     "hd-stock-counter-fit": {
       "id": "hd-stock-counter-fit",
       "piece": "Encaje mínimo contador stocks Sora/enemigo con barra HD superior",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T12:07:03.875015+00:00",
-      "updated_at": "2026-10-27T12:15:45.261097+00:00",
+      "updated_at": "2026-10-27T12:37:31.477936+00:00",
       "branch": "fix/hd-stock-counter-fit",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/352",
-      "approval": null,
+      "approval": "AGENTS.md visual v2.1 user exception 27/10: direct coordinator review supersedes Atlas; root final candidate QA and explicit integration reconciliation authorization.",
       "reference": "build/v21-final-stock",
       "evidence": [
         {
@@ -5975,9 +5975,15 @@
           "at": "2026-10-27T12:15:45.261097+00:00",
           "owner": "device_profiles_sol",
           "detail": "c3c8dbec9 child qa/v21-integrated170002a66; exactsum source1..27 top4->9 only active imported gauge. ROM bbox ink5..11 gives70..100 atscale5 belowbar60. RED77->GREEN actualcoordinate/policy, x32syntax, fullPPU/preflightPASS. Root GPU immediate recapture pending."
+        },
+        {
+          "at": "2026-10-27T12:37:31.477936+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "GitHub MERGED PR#352, merge SHA cd144335e8193479c59300468bfeb011dc46280c; main bundle PR351 merge SHA 771aed8cc243d8c84afb7b0c79a47831f4304629. Coordinator final serial QA recorded; no new tests or changes in reconciliation."
         }
       ],
-      "claimed_at": "2026-10-27T12:07:09.318089+00:00"
+      "claimed_at": "2026-10-27T12:07:09.318089+00:00",
+      "completed_at": "2026-10-27T12:37:31.477936+00:00"
     }
   },
   "integrator": {
@@ -5986,7 +5992,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:37:26.085012+00:00",
+  "updated_at": "2026-10-27T12:37:31.477936+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
