@@ -732,12 +732,31 @@ typedef struct OamHdPart {
 } OamHdPart;
 static OamHdPart sOamHd[128];
 extern const unsigned char gOlympiaSmallCardTiles[];
+extern const unsigned char gCrabclawSmallCardTiles[], gDivineRoseSmallCardTiles[], gFairyHarpSmallCardTiles[];
+extern const unsigned char gMetalChocoboSmallCardTiles[], gOathkeeperSmallCardTiles[], gPumpkinheadSmallCardTiles[];
+extern const unsigned char gSpellbinderSmallCardTiles[], gUltimaWeaponSmallCardTiles[], gWishingStarSmallCardTiles[];
 
 /* Only the native underlay changes: at fractional output scales its white
  * Olympia cell can escape the HD window's filtered right edge. Coordinates
  * are in the authored frame (-8,-20 origin), after the OAM flip/affine map.
  * Call only for an accepted HD replacement; missing/off HD stays untouched. */
 static int SmallCardNativeColor(int i, int tx, int ty, int color) {
+    /* Old illustration tips outside the HD window, not a recoloured frame:
+     * only these 23 audited native cells in the horizontal seam change.
+     * The two closing corners and the artwork below stay untouched. */
+    static const struct { const void* tiles; unsigned cells; } top[] = {
+        { gCrabclawSmallCardTiles, 0x0600u }, { gDivineRoseSmallCardTiles, 0x0700u },
+        { gFairyHarpSmallCardTiles, 0x1800u }, { gMetalChocoboSmallCardTiles, 0x0800u },
+        { gOathkeeperSmallCardTiles, 0x2400u }, { gPumpkinheadSmallCardTiles, 0x0F00u },
+        { gSpellbinderSmallCardTiles, 0x0F00u }, { gUltimaWeaponSmallCardTiles, 0x0400u },
+        { gWishingStarSmallCardTiles, 0x0F00u }
+    };
+    int x = sOamHd[i].x + tx + 8;
+    if (sOamHd[i].y + ty == -5 && x >= 2 && x <= 13) {
+        for (unsigned k = 0; k < sizeof(top) / sizeof(top[0]); k++)
+            if (sOamHd[i].tiles == top[k].tiles && (top[k].cells & (1u << x)))
+                return 0;
+    }
     if (sOamHd[i].tiles == gOlympiaSmallCardTiles &&
         sOamHd[i].x + tx == 6 && sOamHd[i].y + ty == -1)
         return 0;

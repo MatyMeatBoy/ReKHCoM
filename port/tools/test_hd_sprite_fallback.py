@@ -5,6 +5,7 @@ Synthetic OAM/VRAM and injected decoder/texture failures; no SDL, ROM or GPU.
 from pathlib import Path
 import subprocess
 import tempfile
+import re
 from test_hd_sprite_budget import ROOT, function, preamble, source
 
 ppu = (ROOT / 'port/src/port_ppu.c').read_text(encoding='utf-8')
@@ -113,7 +114,9 @@ if 'static int SpriteReady(' in source:
 unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
 unit += '\nstatic int sSpotlight; static unsigned sScreenBgMask;\n'
 unit += ppu_function('static int SpriteOnScreen(')
-unit += ppu_function('static int SmallCardNativeColor(')
+native_color=ppu_function('static int SmallCardNativeColor(')
+unit += '\n'.join('static const unsigned char '+n+'[1]={0};' for n in sorted(set(re.findall(r'\bg\w+SmallCardTiles\b',native_color))-{'gOlympiaSmallCardTiles'}))
+unit += native_color
 unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
