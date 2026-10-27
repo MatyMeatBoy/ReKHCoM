@@ -4090,10 +4090,10 @@
     "hd-poster-performance-20261026": {
       "id": "hd-poster-performance-20261026",
       "piece": "Posters HD de galeria sin bloqueo de decoder",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-batteries",
       "created_at": "2026-10-26T18:44:56.993703+00:00",
-      "updated_at": "2026-10-26T19:08:02.265493+00:00",
+      "updated_at": "2026-10-27T17:16:08.500504+00:00",
       "branch": "codex/hd-poster-performance",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/262",
       "approval": "Usuario pide mejorar rapidez y nitidez previews HD, max480p; decisiones delegadas",
@@ -4103,9 +4103,15 @@
           "at": "2026-10-26T19:08:02.265493+00:00",
           "owner": "codex-batteries",
           "detail": "b899c0475; actual Windows decoder422ms190MiB vs PNG0-16ms12MiB;4offline import cases plus actual native helper/corrupt-cache/sourceSHA tests pass; source checks pass"
+        },
+        {
+          "at": "2026-10-27T17:16:08.500504+00:00",
+          "owner": "codex-batteries",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/262 MERGED 2026-10-26T19:16:50Z; merge 741993b52271bb4019f3644ea9af8575f2549acb ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion.\nRevalidado 2026-10-27T17:16:08.404459+00:00; main 61aee4c40fbfded53ba94ad4de978f16907b4939; merge real 741993b52271bb4019f3644ea9af8575f2549acb; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
-      "claimed_at": "2026-10-26T18:45:02.415336+00:00"
+      "claimed_at": "2026-10-26T18:45:02.415336+00:00",
+      "completed_at": "2026-10-27T17:16:08.500504+00:00"
     },
     "docs-v20-trailer": {
       "id": "docs-v20-trailer",
@@ -6616,7 +6622,7 @@
     "created_at": "2026-10-27T17:15:27.834094+00:00",
     "updated_at": "2026-10-27T17:15:27.834094+00:00"
   },
-  "updated_at": "2026-10-27T17:16:01.104466+00:00",
+  "updated_at": "2026-10-27T17:16:08.500504+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
