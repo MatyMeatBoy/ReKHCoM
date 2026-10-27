@@ -78,7 +78,8 @@ def package_filename(identity):
 def playable_test_manifest(text, identity):
     if 'SDL_ENV.' in text:
         raise ValueError('Playable test packages must not contain SDL_ENV fixtures')
-    return text.replace('android:label="ReKHCoM Alpha"', 'android:label="'+identity['label']+'"',1)
+    return re.sub(r'android:label="ReKHCoM (?:Alpha|Beta)"',
+                  lambda _: 'android:label="'+identity['label']+'"', text, count=1)
 
 
 def main():
