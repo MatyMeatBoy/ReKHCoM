@@ -221,4 +221,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-native-launcher-package-v21 | Package the native Linux launcher and portable import references for issue336; no engine rebuild | integrado | codex-linux-launcher-package | https://github.com/MatyMeatBoy/ReKHCoM/pull/353 | Usuario 27/10 pide incluir launcher/importador nativo para resolver336 en2.1; PR353 y QA Linux revisados | 2026-10-27T13:03:30.081781+00:00 |
 | v21-dummy-cleanup | Remove only redundant generated test runtime copies proven identical to retained release; keep evidence and required dummies | en_curso | codex-workspace-cleanup | — | Usuario pide ir limpiando dummys tras2.1 | 2026-10-27T13:05:59.474485+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T13:07:33.340807+00:00)
