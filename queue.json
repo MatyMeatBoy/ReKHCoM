@@ -7498,22 +7498,28 @@
     "sol-scd-parser-safety": {
       "id": "sol-scd-parser-safety",
       "piece": "Bound SCD auxiliary chunks and empty Ogg import failure",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "sol-low-linux-import",
       "created_at": "2026-10-27T20:08:08.349422+00:00",
-      "updated_at": "2026-10-27T20:12:43.904003+00:00",
+      "updated_at": "2026-10-27T20:14:40.084615+00:00",
       "branch": "fix/scd-parser-safety",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/394",
-      "approval": "User focus bugs crashes root delegated import followup",
+      "approval": "usuario-cuelgues-prioridad",
       "reference": "port/progress/HD_SCD_SAFETY.md",
       "evidence": [
         {
           "at": "2026-10-27T20:12:43.904003+00:00",
           "owner": "sol-low-linux-import",
           "detail": "Head a5a34321 rebasedmain038d926. BeforeauxINTMAX+zerochunk hungactualCpp/Python;14scenariospass afterstructuralbounds. Fullnative transaction+realproducer subprocess invalidpreservesHD/save cleansstage/lock;validcommits. Prior16reader/workerlifecycle/media/native6pass1skip andx86x64syntaxpass. NoGH336causeclaim."
+        },
+        {
+          "at": "2026-10-27T20:14:40.084615+00:00",
+          "owner": "sol-low-linux-import",
+          "detail": "PR394 merged a20c0a11a47e28eee7a3766e33ed624e306375c6. Root reviewed allsource independently; actualC++/Python14casesPASS, native transaction throughrealproducer/package/SCD badinput rejection+preservation andvalidcommitPASS. Root package16regressionPASS. Sourceblockingbug fixed; report336 hardware causality unverified."
         }
       ],
-      "claimed_at": "2026-10-27T20:08:13.129351+00:00"
+      "claimed_at": "2026-10-27T20:08:13.129351+00:00",
+      "completed_at": "2026-10-27T20:14:40.084615+00:00"
     },
     "android-launcher-gl-startup-guard": {
       "id": "android-launcher-gl-startup-guard",
@@ -7602,7 +7608,7 @@
     "created_at": "2026-10-27T20:13:58.731269+00:00",
     "updated_at": "2026-10-27T20:13:58.731269+00:00"
   },
-  "updated_at": "2026-10-27T20:13:58.731269+00:00",
+  "updated_at": "2026-10-27T20:14:40.084615+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
