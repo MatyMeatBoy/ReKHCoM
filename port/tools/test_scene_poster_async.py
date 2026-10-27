@@ -34,7 +34,7 @@ ticks=300;assert(!PortSceneGalleryPreview(11,1));SDL_Delay(450);PortSceneGallery
 generation=1;ticks=400;assert(!PortSceneGalleryPreview(11,1));assert(!sPreviewReady);ticks=500;assert(!PortSceneGalleryPreview(11,1));SDL_Delay(450);PortSceneGalleryPreviewPoll();assert(sPreviewReady&&SDL_GetAtomicInt(&calls)==3);assert(SDL_strstr(sPreviewMediaPath,"-g1"));
 PortSceneGalleryPreviewCancel();assert(!sPreviewReady&&!sPreviewTexture);SDL_Quit();printf("PASS Close %.3f ms while 400ms decoder pending; stale selection/generation discarded, one worker/cache, all jobs reaped\n",ms);}
 '''
-(OUT/'probe.c').write_text(unit,encoding='utf-8');tc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/i686-w64-mingw32-clang.exe';sdl=ROOT.parent/'toolchain/SDL3-3.4.18/i686-w64-mingw32'
+(OUT/'probe.c').write_text(unit,encoding='utf-8');base=next(p for p in ROOT.parents if (p/'toolchain').is_dir());tc=base/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/i686-w64-mingw32-clang.exe';sdl=base/'toolchain/SDL3-3.4.18/i686-w64-mingw32'
 subprocess.run([str(tc),'-std=gnu11','-O1','-I'+str(sdl/'include'),'-I'+str(ROOT/'port/include'),str(OUT/'probe.c'),'-L'+str(sdl/'lib'),'-lSDL3','-o',str(OUT/'probe.exe')],check=True)
 subprocess.run([str(OUT/'probe.exe')],env=dict(os.environ,PATH=str(sdl/'bin')+';'+os.environ['PATH']),check=True)
 temporary.cleanup()
