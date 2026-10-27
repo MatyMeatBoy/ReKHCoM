@@ -110,6 +110,11 @@ unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteReady(')
 unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
+if 'static int TrimHdPiece(' in ppu:  # each texel of an overlapping picture drawn once
+    unit += ppu[ppu.index('static struct { int layer, id, ox, oy'):ppu.index('static int TrimHdPiece(')]
+    unit += ppu_function('static int TrimHdPiece(')
+if 'static int SpriteOnScreen(' in ppu:  # the synthesis screen layer: off in these frames
+    unit += 'static int SpriteOnScreen(int taggedScreen){(void)taggedScreen;return 0;}\n'
 unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:

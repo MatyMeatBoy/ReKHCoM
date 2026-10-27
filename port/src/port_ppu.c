@@ -4654,12 +4654,47 @@ const uint32_t* PortPpuHudOver(void) {
     return sHudOverUsed ? sHudOver : NULL;
 }
 
+/* One frame of a sprite drawn by several OAM pieces that overlap (the room synthesis card: 32x32 at y -20 and 32x8 at
+   y 11 share row 11) gave its HD picture twice there: a translucent picture showed a band (user, 27/10). Each texel of
+   an HD picture at one place is drawn once: a later piece loses the full-width (or full-height) strip an earlier piece
+   of the same picture and place already drew. Opaque pictures look the same either way. */
+static struct { int layer, id, ox, oy, x0, y0, x1, y1; } sHdPieces[64];
+static int sHdPieceCount; /* emptied as each queueing pass starts (QueueMainHdParts, PortPpuRenderHud): a pause
+                             redraws the same frame, and its pieces must not count as drawn already */
+
+static int TrimHdPiece(int layer, int id, int ox, int oy, int* px, int* py, int* pw, int* ph) {
+    int k;
+    for (k = 0; k < sHdPieceCount; k++) {
+        const int x0 = sHdPieces[k].x0, y0 = sHdPieces[k].y0, x1 = sHdPieces[k].x1, y1 = sHdPieces[k].y1;
+        if (sHdPieces[k].layer != layer || sHdPieces[k].id != id || sHdPieces[k].ox != ox || sHdPieces[k].oy != oy)
+            continue;
+        if (x0 <= *px && x1 >= *px + *pw) {           /* covers the piece's whole width: trim its top or bottom */
+            if (y0 <= *py && y1 > *py && y1 < *py + *ph) { *ph -= y1 - *py; *py = y1; }
+            else if (y0 > *py && y0 < *py + *ph && y1 >= *py + *ph) *ph = y0 - *py;
+        } else if (y0 <= *py && y1 >= *py + *ph) {    /* its whole height: trim a side */
+            if (x0 <= *px && x1 > *px && x1 < *px + *pw) { *pw -= x1 - *px; *px = x1; }
+            else if (x0 > *px && x0 < *px + *pw && x1 >= *px + *pw) *pw = x0 - *px;
+        }
+    }
+    if (*pw <= 0 || *ph <= 0)
+        return 0;
+    if (sHdPieceCount < (int)(sizeof(sHdPieces) / sizeof(sHdPieces[0]))) {
+        sHdPieces[sHdPieceCount].layer = layer;
+        sHdPieces[sHdPieceCount].id = id; sHdPieces[sHdPieceCount].ox = ox; sHdPieces[sHdPieceCount].oy = oy;
+        sHdPieces[sHdPieceCount].x0 = *px; sHdPieces[sHdPieceCount].y0 = *py;
+        sHdPieces[sHdPieceCount].x1 = *px + *pw; sHdPieces[sHdPieceCount].y1 = *py + *ph;
+        sHdPieceCount++;
+    }
+    return 1;
+}
+
 /* Queue OAM slot i (shown at hx, hy on the HUD canvas, bounding box bw x bh) as an HD part. */
 static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw, int bh, int affine,
                        int16_t pa, int16_t pb, int16_t pc, int16_t pd, int alpha) {
     const OamHdPart* part = &sOamHd[i];
     float x[4], y[4];
     int dark = 0, white = 0;
+    int px = part->x, py = part->y, pw = part->w, ph = part->h;
     /* the game fades by rewriting palettes (the title, menus): the HD picture follows its part's palette */
     if (part->palette && !((OAM16[i * 4] >> 13) & 1))
         PortPaletteFade(part->palette + part->bank * 16, PLTT16 + 256 + (OAM16[i * 4 + 2] >> 12) * 16, 16, &dark, &white);
@@ -4678,13 +4713,20 @@ static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw,
             y[k] = cy + 256.0f * (-pc * tx + pa * ty) / det;
         }
     } else {
-        float l = (float)hx, r = (float)(hx + ow), t = (float)hy, b = (float)(hy + oh);
+        float l, r, t, b;
+        if (!(part->flags & 3)) {
+            if (!TrimHdPiece(layer, part->id, hx - part->x, hy - part->y, &px, &py, &pw, &ph))
+                return 1; /* wholly drawn by an earlier piece of this picture: nothing of the cartridge's shows either */
+            hx += px - part->x;
+            hy += py - part->y;
+        }
+        l = (float)hx; r = (float)(hx + pw); t = (float)hy; b = (float)(hy + ph);
         if (part->flags & 1) { float v = l; l = r; r = v; }
         if (part->flags & 2) { float v = t; t = b; b = v; }
         x[0] = l; y[0] = t; x[1] = r; y[1] = t; x[2] = r; y[2] = b; x[3] = l; y[3] = b;
     }
     {
-        int queued = PortHdSpriteQueue(layer, part->id, x, y, part->x, part->y, part->w, part->h, alpha, dark, white);
+        int queued = PortHdSpriteQueue(layer, part->id, x, y, px, py, pw, ph, alpha, dark, white);
         if (queued && layer == 1) PortHdSpriteHudOwner(i);
         return queued;
     }
@@ -4798,6 +4840,8 @@ static void TitleArtQueue(void) {
 }
 
 static void QueueMainHdParts(void) {
+    for (int k = 0; k < sHdPieceCount; k++) /* this pass's pieces start anew (TrimHdPiece) */
+        if (sHdPieces[k].layer != 1) sHdPieces[k--] = sHdPieces[--sHdPieceCount];
     uint16_t bldcnt = IO16(0x50);
     int i, eva = IO16(0x52) & 31;
     PortHdSpritesBegin(0);
@@ -5032,6 +5076,8 @@ static int HudDigitKeepsPalette(const void* tiles) {
 const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h);
 
 void PortPpuRenderHud(uint32_t* buf) {
+    for (int k = 0; k < sHdPieceCount; k++) /* the HUD pass's pieces start anew (TrimHdPiece) */
+        if (sHdPieces[k].layer == 1) sHdPieces[k--] = sHdPieces[--sHdPieceCount];
     const uint8_t* reloadMask; /* the reload card's HD back, this frame: its dark cells and where they lie */
     int reloadBox[4], reloadAt[2];
     uint16_t dispcnt = IO16(0x00);
