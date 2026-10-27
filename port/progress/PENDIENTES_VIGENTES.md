@@ -5,6 +5,18 @@
 publicada a las 17:20 de Chile (`2026-10-26T20:20:29Z`, `isPrerelease=false`).
 El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el tráiler.
 
+## Bugs a resolver antes de v2.1 estable — 27/10 (Claude)
+
+- [ ] **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
+  Windows EU pasa el punto (llega al combate tutorial con A repetida). Sospecha: camino portable (host 64 bits /
+  Android). Reproducir en VM Linux 64 y arreglar; luego barrer el juego entero en 64 bits.
+- [ ] **#42 desync del final HD de Sora**: rama `fix/ending-cutscene-desync` (Codex), sin integrar.
+- [ ] **#163 galería**: vídeo del reportero (youtube qkZSuuTsrio) sin revisar todavía.
+- [x] Tests lentos con `KHCOM_FAST` + vsync=1 (el present esperaba al refresco): FAST fuerza vsync 0.
+- [ ] Batería: arneses que piden builds viejos (`build/rel-eu`, `codex-gameplay-*`…) y fallos reales a separar:
+  `test_hud_crop` (3840x1080 mapa), `test_ppu` 7/12, `test_door_views` (falso positivo con «VRR-path=unavailable»).
+- [ ] Tests nunca deben sonar: algo sonó el 27/10 en la batería; localizar qué test no usa audio dummy.
+
 ## Relevo — Claude, 26/10 noche (Codex durmiendo)
 
 - **Limpieza:** worktrees viejos respaldados en GitHub (`backup/*-20261026`) y quitados; quedan `khcom` (base),
