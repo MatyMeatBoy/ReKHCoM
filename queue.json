@@ -6147,10 +6147,23 @@
       ],
       "claimed_at": "2026-10-27T13:41:28.666525+00:00",
       "completed_at": "2026-10-27T13:44:10.305336+00:00"
+    },
+    "v22-scenes-character-triggers": {
+      "id": "v22-scenes-character-triggers",
+      "piece": "Menú de escenas: L2/R2 alterna Sora/Riku y su catálogo; tooltip según mando activo; preservar selección y desbloqueos",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T14:50:27.170115+00:00",
+      "updated_at": "2026-10-27T14:50:27.170115+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Pedido directo del usuario 27/10/2026 en chat Codex: menú de escenas L2/R2 y tooltip",
+      "reference": "port/progress/PENDIENTES_VIGENTES.md",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T14:02:47.787118+00:00",
+  "updated_at": "2026-10-27T14:50:27.170115+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
