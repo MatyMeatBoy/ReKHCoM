@@ -1,0 +1,329 @@
+{
+  "build": {
+    "source_commit": "1c0b6c7e4166b2a25364cda1b2ac9a776989b4db",
+    "region": "eu",
+    "architecture": "i686",
+    "scope": "instrumented QA, no performance evidence",
+    "exe_sha256": "738a236c1e2b30b0ff54231dcd369e95b93d3c15a5cba9ed8646a2a4707f1528",
+    "sdl_sha256": "28061ec6fa13060675bee34bc29e1b25e488b47ee82f614d71cf781f07a54c93",
+    "rom_sha256": "a28761aff292e7f7a5d6dcff1c1ba11eefdbe15836ec0deb8be275fec0519bd4",
+    "compiler_sha256": "ee85bef2c733e24a26c22be3df94bd631cf9528a048fce91241c182a936737fe",
+    "hooked_sources": [
+      "port/src/port_hdmovie.c",
+      "port/src/port_main.c"
+    ],
+    "recorder_sha256": "243ea7470dbc8776750070547ef5031d363b8bfe190a2faae3ced7818e428268",
+    "header_sha256": "00ded4b8a680000927ef1f8880b1b5519ac87a7dfabae007f7954c78636f376c",
+    "ninja_sha256": "4e433dcbfb26dca5bfabaaa517ebdf75522c694e14ac6bb66837615b89dd22ab",
+    "ui_probe_sha256": "27679aa1b29a74801fadae9c454781d025192578aec3404094324a65250f6e63"
+  },
+  "visual_review": "All 40 retained consecutive return frames per case reviewed; no unrelated title/field frame between scene and gallery. Hidden D3D11 backbuffer readback, not physical display or performance verification.",
+  "cases": [
+    {
+      "id": "title-tab0-finish-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 2381,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "a72bef9fee3173b9c012cde4d47f0e08d56744ac11ef4b1ccdfcca10b0faa44f",
+      "contact_sha256": "3f2427860606cf2ab47d0649141e270b72329b44d7d9f44b65fc2290eb19ece5",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab0-skip-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 345,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "65da98875f632f728a5d4e96d33581e5870af6036dacca6f186812c6e0c0a8b4",
+      "contact_sha256": "36ef1a24a01f20beccac0d0b5592bfa91df914eeec62ce46f930aef786d99576",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab2-finish-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 277,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 120,
+      "hd_present_sites": [
+        "1178"
+      ],
+      "captured_frames": 41,
+      "trace_sha256": "378c4cdf7045419492a06a8af095d0c333669cba4d42079a527d7232f135ca9a",
+      "contact_sha256": "9a651a1517ed7dbb8f1b3600f508b5e516fe56a74fadfabff65632a8d8843337",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab2-skip-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 215,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 57,
+      "hd_present_sites": [
+        "1178",
+        "565"
+      ],
+      "captured_frames": 41,
+      "trace_sha256": "79748e127f3e5c3724ae6bdc5329fde197f50dba4635998d6bdf162d7b646515",
+      "contact_sha256": "16a63f485eb10f47064c14972021b7c7fa8f1dc5f8b95bfaaf2f14cad80921a0",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "game-tab0-finish-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 2377,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "783262693c88634e48a33cb32021c1aff5ef199f78b860e153b3c857d98dade4",
+      "contact_sha256": "7890a651ca726fbbf038a4ccef1147f934de85945d7019f3ea7d26a4fe14227f",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "game-tab0-skip-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 346,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "22e788bd8ff2bd436ed6429beab2a7ffe857d329c28bd2b68de44b55d75a885f",
+      "contact_sha256": "44a78ef3a38debf23c74893fc8100a784ffa1283b29865475e248033e9a5add3",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "game-tab2-finish-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 278,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 120,
+      "hd_present_sites": [
+        "1178"
+      ],
+      "captured_frames": 41,
+      "trace_sha256": "48ffa52c258fa92287c2d963a5f867c36732ad50395fc20d7371b9f82f4b422d",
+      "contact_sha256": "1ab352f1b948aa0dbb757a4e0439d26aed08eb3186690455c1194ee4cc836803",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "game-tab2-skip-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 215,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 57,
+      "hd_present_sites": [
+        "1178",
+        "565"
+      ],
+      "captured_frames": 41,
+      "trace_sha256": "79748e127f3e5c3724ae6bdc5329fde197f50dba4635998d6bdf162d7b646515",
+      "contact_sha256": "6d3543df47e63227e3cd0f77937cc126031c5c977ff0104bec46837905e2a030",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab1-finish-valid",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 278,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 120,
+      "hd_present_sites": [
+        "1178"
+      ],
+      "captured_frames": 41,
+      "trace_sha256": "42e9f083202806eddfa69e80e66b7914881947e11e45fd5a3f4f6720639ed773",
+      "contact_sha256": "bb256102436f7d0cdd541955f9c1803d7c3a16855e4c2604339e0ae39ef457ec",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab2-skip-absent",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 346,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "580563cf8b49be3967eac7e8153095fe2fc41044c2e9e900ee42ab9f34798c7c",
+      "contact_sha256": "fed8857b2287230595b7e90bd9cc7d069ac29a9a513202f359175b319384adab",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    },
+    {
+      "id": "title-tab2-skip-corrupt",
+      "status": "PASS-bounded-hidden-renderer",
+      "first_return": 346,
+      "first_return_canvas": 1,
+      "first_return_fade": 0,
+      "audits": [
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "persistent_files_unchanged": true,
+      "selection_tab_scroll_character_event_unchanged": true,
+      "hd_present_count": 0,
+      "hd_present_sites": [],
+      "captured_frames": 41,
+      "trace_sha256": "580563cf8b49be3967eac7e8153095fe2fc41044c2e9e900ee42ab9f34798c7c",
+      "contact_sha256": "c5d06308c75588b7de98d78c2e5df6e583aaa5d63e34c1eb39217a4784400a8c",
+      "sram_sha256": "c4d77932b99d0e1e19f9d68a3b4e62018334ff6a9213bd751e3d55b7b937097f",
+      "config_sha256": "a0b32c363e4b576f6f8941c2610e01a0fd182b43ae5721696a1b27a3f1486190"
+    }
+  ]
+}

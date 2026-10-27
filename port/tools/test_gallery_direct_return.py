@@ -23,12 +23,14 @@ def main():
 #define MENU_FADE 8
 #define PAGE_SCENES 3
 static int sSceneChoice,sSceneScroll,sSceneHd,sSceneHarnessTick,sScenePause,sPage,sSceneViewTab,sMenuLightStart;
+static int sSceneCharacter,sSceneSavedEvent[2][3],sSceneSavedScroll[2][3],triggerResets;
 static int sOpen,sFade,sClosing,sReturn,suppressed,offline;
 static unsigned char sSceneBroken[8];
 static int PortScenePosterRendering(void){return offline;}
 static int SceneAt(int i,void*p){(void)p;return i+100;}
 static int SceneViewCount(void){return 8;}
 static int MenuLightNow(void){return 19;}
+static void SceneResetTriggers(void){triggerResets++;}
 void PortInputSuppressUntilRelease(void){suppressed++;}
 static void PortUiOpenOptions(void){sOpen=1;sFade=0;sClosing=sReturn=0;}
 '''
@@ -40,11 +42,14 @@ int main(void){
  for(int origin=0;origin<2;origin++)for(int hd=0;hd<3;hd++)for(int skip=0;skip<2;skip++){
   (void)origin;(void)skip;
   sOpen=0;sFade=0;sClosing=5;sReturn=8;sScenePause=1;
-  sSceneChoice=4;sSceneScroll=2;sSceneHd=hd;sSceneHarnessTick=77;
+  sSceneChoice=4;sSceneScroll=2;sSceneHd=hd;sSceneHarnessTick=77;sSceneCharacter=1;
+  sSceneSavedEvent[1][hd]=104;sSceneSavedScroll[1][hd]=2;
   memset(sSceneBroken,0,sizeof(sSceneBroken));sSceneBroken[3]=1;
   int prior=suppressed;PortUiGalleryResume();
   assert(sOpen && sPage==PAGE_SCENES && !sScenePause);
   assert(sSceneChoice==4 && sSceneScroll==2 && sSceneHd==hd && sSceneHarnessTick==77);
+  assert(sSceneCharacter==1 && sSceneSavedEvent[1][hd]==104 && sSceneSavedScroll[1][hd]==2);
+  assert(triggerResets==suppressed);
   assert(sSceneBroken[3] && sSceneViewTab==-1 && sMenuLightStart==19);
   assert(PortUiMenuCanvas() && "first return frame must be gallery canvas, never restored title/field");
   assert(!PortUiSceneFade() && !sClosing && !sReturn);
