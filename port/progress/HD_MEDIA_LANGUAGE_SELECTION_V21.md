@@ -228,3 +228,14 @@ desconocido/faltante, off/on y fallback al cartucho sin saltar historia.
 La afirmación histórica «PC solo trae audio inglés» en `HD_MOD.md` se corrigió
 para describir solo la fuente inspeccionada entonces; no generalizarla al producto
 actual con audio JP. No modificar esas copias antiguas para acomodar la señal.
+
+### Revisión independiente: manifiesto mixto — 27/10
+
+P1 de `device_profiles_sol`: `PortHdMediaCheck` comparaba `wanted=NULL`
+cuando una inspección completa encontraba un miembro del otro componente.
+Repro con el productor real `ImportMediaVariant(movies=true, scenes=true)`
+(cargar todo), seguido de Inspect/core availability: RED AV0xc0000005.
+Se exige wanted no nulo antes de comparar un miembro específico. GREEN con
+manifest mixto movies/scenes, disponibilidad independiente tras truncar una
+escena, y restauración miniz real completa/mixta o incompleta preservando
+ambos índices activos. No atribuir esta regresión a QA de fuente/dispositivo.

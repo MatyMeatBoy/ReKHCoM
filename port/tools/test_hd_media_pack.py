@@ -26,17 +26,19 @@ def main():
                         '-o', str(exe)], check=True)
         data = root / 'data'
         data.mkdir()
-        def package(generation, marker, incomplete=False):
+        def package(generation, marker, incomplete=False, mixed=False):
             movie = struct.pack('>I4sI4s', 8, b'moov', 16, b'mdat') + marker * 8
             records = ['movies/ROP.mp4 24']
-            if incomplete:
-                records.append('scenes/zz_event_151.mp4 24')
-            meta = f'REKHCOM_MEDIA_V1 en user aabb 1 1 0 {len(records)}\n' + '\n'.join(records) + '\n'
+            if incomplete or mixed:
+                records.append(('scenes/zz_event_001.mp4' if mixed else 'scenes/zz_event_151.mp4') + ' 24')
+            meta = f'REKHCOM_MEDIA_V1 en user aabb 1 1 {int(mixed)} {len(records)}\n' + '\n'.join(records) + '\n'
             with zipfile.ZipFile(data / 'ReKHCoM-HD.zip', 'w', zipfile.ZIP_STORED) as z:
                 # Deliberately first: the installer must defer publication.
-                z.writestr('hd/media/en/active.txt', f'REKHCOM_MEDIA_ACTIVE_V1\nmovies {generation}\nscenes -\n')
+                z.writestr('hd/media/en/active.txt', f'REKHCOM_MEDIA_ACTIVE_V1\nmovies {generation}\nscenes {generation if mixed else chr(45)}\n')
                 z.writestr(f'hd/media/en/{generation}/media.meta', meta)
                 z.writestr(f'hd/media/en/{generation}/movies/ROP.mp4', movie)
+                if mixed and not incomplete:
+                    z.writestr(f'hd/media/en/{generation}/scenes/zz_event_001.mp4', movie)
                 z.writestr('hd/media/en/.stage-private/movies/ROP.mp4', b'must not copy')
                 z.writestr('hd/media/en/g-nope/../../user.sav', b'must not copy')
             return (data / 'ReKHCoM-HD.zip').stat().st_size
@@ -58,6 +60,14 @@ def main():
         assert 'g-new' in active.read_text()
         assert (data / 'hd/media/en/g-old/movies/ROP.mp4').read_bytes().endswith(b'O' * 8)
         assert (data / 'hd/media/en/g-new/movies/ROP.mp4').read_bytes().endswith(b'N' * 8)
+        package('g-both', b'M', mixed=True)
+        assert run() == '1', 'mixed movie/story manifest must validate both components without NULL comparison'
+        assert active.read_text().count('g-both') == 2
+        before_partial = active.read_bytes()
+        package('g-partial', b'P', incomplete=True, mixed=True)
+        run()
+        assert active.read_bytes() == before_partial, 'partial mixed restore must preserve active movies AND scenes'
+        assert (data / 'hd/media/en/g-both/scenes/zz_event_001.mp4').exists()
     print('PASS production pack: deferred activation, incomplete preservation, strict paths and same-size update')
 
 
