@@ -22,10 +22,10 @@ static PortDeviceResult PortDeviceClassify(PortDevicePlatform platform, const ch
     if (steamDeck && strcmp(steamDeck, "1") == 0) {
         result.profile = PORT_DEVICE_STEAM_DECK;
         result.reason = "steam-env";
-    } else if (platform == PORT_DEVICE_LINUX && vendor && product && strcmp(vendor, "Valve") == 0 &&
+    } else if (vendor && product && strcmp(vendor, "Valve") == 0 &&
                (strcmp(product, "Jupiter") == 0 || strcmp(product, "Galileo") == 0)) {
         result.profile = PORT_DEVICE_STEAM_DECK;
-        result.reason = "valve-dmi";
+        result.reason = platform == PORT_DEVICE_WINDOWS ? "valve-bios" : "valve-dmi";
     }
     return result;
 }

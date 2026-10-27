@@ -5,7 +5,11 @@
 entorno Steam; Linux tambiÃ©n reconoce DMI `sys_vendor=Valve` junto con
 `product_name=Jupiter` o `Galileo`. Ausencia, valores parciales y otros fabricantes
 con esos nombres no identifican Deck. Android y plataformas desconocidas conservan
-Generic. Windows no realiza consultas WMI ni sondeos BIOS.
+Generic. Windows consulta exclusivamente `SystemManufacturer` y `SystemProductName`
+en `HKLM HARDWARE\DESCRIPTION\System\BIOS` mediante `RegGetValueW` cargado de
+advapi32 dinámicamente: sin WMI ni nueva dependencia de enlace. Valida tipo REG_SZ,
+longitud UTF-16, terminación y ASCII exacto antes de clasificar Valve+Jupiter/Galileo.
+Error, valor ausente o malformado conserva Generic. La señal Steam tiene prioridad.
 
 El adaptador nativo `PortDeviceHostQuery` responde la consulta reservada
 `KHCOM_HOST_DEVICE_PROFILE`. Los hosts de bridge deben interceptarla antes de leer

@@ -31,6 +31,12 @@ class DeviceProfiles(unittest.TestCase):
             subprocess.run([cc, '-std=c99', '-Wall', '-Wextra', '-Werror', '-I', str(ROOT / 'port/include'), str(source), '-o', str(exe)], env=env, check=True)
             for case in ['matrix', 'generic', 'deck', 'user', 'default', 'partial', 'unknown']:
                 subprocess.run([str(exe), case], cwd=d, env=env, check=True)
+            host = (ROOT / 'port/include/port/port_device_profile_host.h').read_text()
+            helper = host[host.index('static void PortDeviceReadBiosValue('):host.index('static void PortDeviceReadWindowsBios(')]
+            source.write_text(BIOS_PREAMBLE + helper + BIOS_HARNESS)
+            subprocess.run([cc, '-std=c99', '-fshort-wchar', '-Wall', '-Wextra', '-Werror', str(source), '-o', str(exe)], env=env, check=True)
+            subprocess.run([str(exe)], cwd=d, env=env, check=True)
+
 
 PREAMBLE = r'''
 #include <assert.h>
@@ -73,7 +79,9 @@ int main(int argc, char** argv) {
         check(PORT_DEVICE_LINUX,"1",NULL,NULL,1);
         check(PORT_DEVICE_WINDOWS,"1",NULL,NULL,1);
         check(PORT_DEVICE_OTHER,"1","Valve","Jupiter",0);
-        check(PORT_DEVICE_WINDOWS,NULL,"Valve","Jupiter",0);
+        check(PORT_DEVICE_WINDOWS,NULL,"Valve","Jupiter",1);
+        check(PORT_DEVICE_WINDOWS,NULL,"Valve","Galileo",1);
+        check(PORT_DEVICE_WINDOWS,NULL,"Other","Jupiter",0);
         check(PORT_DEVICE_LINUX,NULL,"Other","Jupiter",0);
         check(PORT_DEVICE_LINUX,NULL,"Valve","Other",0);
         check(PORT_DEVICE_LINUX,NULL,NULL,NULL,0);
@@ -106,6 +114,57 @@ int main(int argc, char** argv) {
     return 0;
 }
 '''
+
+
+BIOS_PREAMBLE = r"""
+#include <assert.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+typedef wchar_t WCHAR;
+typedef uint32_t DWORD;
+typedef int (*PortDeviceRegGetValue)(void*,const WCHAR*,const WCHAR*,DWORD,DWORD*,void*,DWORD*);
+#define HKEY_LOCAL_MACHINE NULL
+#define RRF_RT_REG_SZ 2
+#define RRF_ZEROONFAILURE 0x20000000
+#define RRF_SUBKEY_WOW6464KEY 0x10000
+#define ERROR_SUCCESS 0
+#define REG_SZ 1
+static int mode;
+static int Provider(void* key,const WCHAR* path,const WCHAR* name,DWORD flags,DWORD* type,void* data,DWORD* bytes) {
+    static const WCHAR value[] = L"Valve";
+    (void)key; (void)path; (void)name;
+    assert(flags == (RRF_RT_REG_SZ | RRF_ZEROONFAILURE | RRF_SUBKEY_WOW6464KEY));
+    memcpy(data,value,sizeof(value)); *bytes = sizeof(value); *type = REG_SZ;
+    if (mode == 1) return 2; /* absent value/access denied */
+    if (mode == 2) *type = 4;
+    if (mode == 3) *bytes = 3;
+    if (mode == 4) *bytes = 260;
+    if (mode == 5) ((WCHAR*)data)[5] = L'x';
+    if (mode == 6) ((WCHAR*)data)[1] = 0;
+    if (mode == 7) ((WCHAR*)data)[1] = 0x100;
+    if (mode == 8) *bytes = 0;
+    return ERROR_SUCCESS;
+}
+"""
+BIOS_HARNESS = r"""
+int main(void) {
+    char out[128];
+    PortDeviceReadBiosValue(Provider,L"SystemManufacturer",out,sizeof(out));
+    assert(strcmp(out,"Valve") == 0);
+    for (mode = 1; mode <= 8; mode++) {
+        strcpy(out,"previous");
+        PortDeviceReadBiosValue(Provider,L"SystemManufacturer",out,sizeof(out));
+        assert(out[0] == 0);
+    }
+    PortDeviceReadBiosValue(NULL,L"SystemManufacturer",out,sizeof(out));
+    assert(out[0] == 0);
+    mode = 0;
+    PortDeviceReadBiosValue(Provider,L"SystemManufacturer",out,3);
+    assert(out[0] == 0);
+    return 0;
+}
+"""
 
 if __name__ == '__main__':
     unittest.main()

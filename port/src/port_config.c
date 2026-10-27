@@ -399,7 +399,8 @@ static void PortConfigDeviceDefaults(void) {
 #else
     profile = PortDeviceHostQuery("KHCOM_HOST_DEVICE_PROFILE");
 #endif
-    if (strcmp(profile, "steam-deck:steam-env") == 0 || strcmp(profile, "steam-deck:valve-dmi") == 0)
+    if (strcmp(profile, "steam-deck:steam-env") == 0 || strcmp(profile, "steam-deck:valve-dmi") == 0 ||
+        strcmp(profile, "steam-deck:valve-bios") == 0)
         gPortConfig.fullscreen = 1;
     PortLog("Device profile: %s", profile);
 }
