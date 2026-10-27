@@ -99,7 +99,10 @@ def read_asset(pkg, offset, with_remastered=False):
             packed = decrypt_head(key, packed)
         # Grow with actual decoded output, not an untrusted header allocation.
         data = zlib.decompress(packed[2:], -15) if compressed >= 0 else packed
-        if len(data) != real:
+        # Remastered language tables historically use real as a lower-bound
+        # size hint; keep their complete decoded output. Ordinary music assets
+        # retain the exact-size contract of the native ReadAsset consumer.
+        if len(data) < real or (not with_remastered and len(data) != real):
             raise ValueError('Package asset decoded length mismatch')
         return data
 
