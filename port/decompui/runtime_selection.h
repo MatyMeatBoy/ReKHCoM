@@ -13,3 +13,6 @@ inline bool ReKHCoMRetry32(uint32_t code, bool enteredGame) {
     return code == 2 || code == 3 || code == 4 || code == 0xc0000135u ||
            code == 0xc000007bu || code == 0xc0000142u;
 }
+// The 64-bit game ended by a Windows exception (access violation, illegal instruction, stack overflow...), before or
+// after the game started; a closed console (0xc000013a) is not a crash. The launcher then offers 32 bits (#360).
+inline bool ReKHCoMCrashed64(uint32_t code) { return code >= 0xc0000000u && code != 0xc000013au; }

@@ -674,6 +674,9 @@ static void ApplyUiLanguage() {
 }
 
 static int sRuntimeMode;
+static uint32_t sRuntime64Problem; /* the exit code of a failed 64-bit run, for its notice (Runtime64Popup) */
+static bool sRuntime64Entered, sLaunch32Once;
+static std::string s64FailedVersion; /* Automatic: the version whose 64-bit game crashed here; it starts in 32 bits */
 static bool sHdOfferDeclined; /* "Don't ask again" on the HD mod's offer (rom_folder.inc) */
 static void LoadLauncherState() {
     std::ifstream f(sRoot / "decompui.ini");
@@ -683,6 +686,8 @@ static void LoadLauncherState() {
             sRuntimeMode = ReKHCoMForce32(line.substr(9)) ? 1 : 0;
         } else if (line.rfind("runtime_mode=", 0) == 0) {
             sRuntimeMode = ReKHCoMRuntimeMode(line.substr(13));
+        } else if (line.rfind("auto64_failed=", 0) == 0) {
+            s64FailedVersion = line.substr(14);
         } else if (line == "hd_offer=0") {
             sHdOfferDeclined = true;
         } else if (line.rfind("version=", 0) == 0) {
@@ -711,6 +716,8 @@ static void SaveLauncherState() {
     f << "ui_language=" << sUiLanguage << "\n";
     if (sHdOfferDeclined)
         f << "hd_offer=0\n"; /* "Don't ask again" on the HD mod's offer */
+    if (!s64FailedVersion.empty())
+        f << "auto64_failed=" << s64FailedVersion << "\n";
 }
 
 /* The version chosen (the user, 24/10): the European one the first time, then always the last one chosen, saved at
@@ -1965,6 +1972,98 @@ static void PageGraphics() {
         SaveIni();
 }
 
+static void ReportProblem(const char* title, const std::string& extra);
+static void Launch(SDL_Window* window);
+
+/* One file for a report (#360): what the launcher knows, then this session's kh_com.log and the five before it
+   (kh_com.log.1..5, port_logfile.h), newest first. Written beside them; returns its path, empty if it could not. */
+static fs::path WriteReportFile(const std::string& about) {
+    const fs::path out = sRoot / "ReKHCoM-reporte.txt";
+    std::ofstream f(out, std::ios::trunc | std::ios::binary);
+    if (!f)
+        return {};
+    f << "ReKHCoM " << REKHCOM_VERSION << " report, " << kVersions[sSelected].regionEn << "\n" << about
+      << "runtime_mode=" << sRuntimeMode << (s64FailedVersion.empty() ? "" : " auto64_failed=" + s64FailedVersion) << "\n";
+    for (int i = 0; i <= 5; i++) {
+        const std::string name = i ? "kh_com.log." + std::to_string(i) : std::string("kh_com.log");
+        std::ifstream log(sRoot / name, std::ios::binary);
+        if (!log)
+            continue;
+        f << "\n========== " << name << (i ? " (earlier session)" : " (latest session)") << " ==========\n"
+          << log.rdbuf();
+    }
+    return f ? out : fs::path();
+}
+
+/* The file selected in Explorer, ready to drag into the GitHub report */
+static void RevealFile(const fs::path& file) {
+#ifndef LAUNCHER_ANDROID
+    std::wstring args = L"/select,\"" + file.wstring() + L"\"";
+    ShellExecuteW(nullptr, L"open", L"explorer.exe", args.c_str(), nullptr, SW_SHOWNORMAL);
+#else
+    (void)file;
+#endif
+}
+
+/* The 64-bit game crashed, or Force 64-bit could not start (#360): it says so in the launcher's look, offers the
+   32-bit game (the same saves and settings) and a report with one file to attach. */
+static void Runtime64Popup(SDL_Window* window) {
+    static bool asked;
+    if (sRuntime64Problem && !asked) {
+        ImGui::OpenPopup("rt64");
+        asked = true;
+    }
+    ImGui::SetNextWindowSize(ImVec2(Px(600), 0));
+    if (!ImGui::BeginPopupModal("rt64", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
+        return;
+    char code[32];
+    snprintf(code, sizeof(code), "0x%08X", (unsigned)sRuntime64Problem);
+    Eyebrow(T("MODO 64 BITS · HUBO UN PROBLEMA", "64-BIT MODE · SOMETHING WENT WRONG"));
+    ImGui::TextWrapped(T("El juego en 64 bits se cerró por un error (código %s). Puedes seguir jugando en 32 bits: tus "
+                         "partidas y ajustes son los mismos.",
+                         "The 64-bit game closed with an error (code %s). You can keep playing in 32 bits: your saves "
+                         "and settings are the same."), code);
+    if (sRuntimeMode == 0)
+        ImGui::TextWrapped("%s", T("En Automático, esta versión arrancará en 32 bits desde ahora. Para volver a probar 64 "
+                                   "bits, elige Forzar 64 bits en Avanzado.",
+                                   "On Automatic, this version will start in 32 bits from now on. To try 64 bits again, "
+                                   "choose Force 64-bit under Advanced."));
+    ImGui::Spacing();
+    if (ImGui::Button(T("Jugar en 32 bits", "Play in 32 bits"), ImVec2(-FLT_MIN, Px(40)))) {
+        sRuntime64Problem = 0;
+        asked = false;
+        sLaunch32Once = true;
+        ImGui::CloseCurrentPopup();
+        ImGui::EndPopup();
+        Launch(window);
+        return;
+    }
+    if (ImGui::Button(T("Reportar el problema", "Report the problem"), ImVec2(-FLT_MIN, Px(40)))) {
+        std::string about = std::string("64-bit problem: exit code ") + code +
+                            (sRuntime64Entered ? " (after the game started)" : " (before the game started)") + "\n";
+        fs::path file = WriteReportFile(about);
+        ReportProblem("[Bug] 64-bit mode closed ", "**64-bit mode**: closed with " + std::string(code) +
+                      (sRuntime64Entered ? " after starting" : " before starting") +
+                      "\n**Attached**: please drag `ReKHCoM-reporte.txt` (just opened in its folder) into this report\n");
+        if (!file.empty())
+            RevealFile(file);
+    }
+    if (ImGui::Button(T("Cerrar", "Close"), ImVec2(-FLT_MIN, Px(40)))) {
+        sRuntime64Problem = 0;
+        asked = false;
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::PushStyleColor(ImGuiCol_Text, kMuted);
+    ImGui::TextWrapped("%s", T("Reportar abre GitHub con la versión y el final del registro ya escritos (necesitas una "
+                               "cuenta de GitHub) y te muestra el archivo ReKHCoM-reporte.txt, con el registro completo "
+                               "de esta sesión y las 5 anteriores: arrástralo al reporte y cuéntanos qué estabas haciendo.",
+                               "Report opens GitHub with the version and the end of the log already written (you need a "
+                               "GitHub account) and shows you the file ReKHCoM-reporte.txt, with the full log of this "
+                               "session and the 5 before: drag it into the report and tell us what you were doing."));
+    ImGui::PopStyleColor();
+    ImGui::EndPopup();
+}
+
 #include "hd_import.inc"
 #include "rom_folder.inc"
 
@@ -2725,6 +2824,7 @@ static void Frame(SDL_Window* window) {
     ImGui::EndChild();
     RomFolderPoll(window);
     HdOfferPopup();
+    Runtime64Popup(window);
     HdQuitPopup();
     HdResumePopup();
     HdStaleSprites();
@@ -3310,7 +3410,7 @@ static std::string UrlEncode(const std::string& s) {
     return out;
 }
 
-static void ReportProblem();
+static void ReportProblem(const char* title = "[Bug] ", const std::string& extra = "");
 
 /* The header's button: drawn as the language picker beside it (HeaderChip) */
 static void ReportProblemChip(ImVec2 size) {
@@ -3341,7 +3441,7 @@ static void ReportProblemChip(ImVec2 size) {
                                   "review and submit it (needs a GitHub account)."));
 }
 
-static void ReportProblem() {
+static void ReportProblem(const char* title, const std::string& extra) {
     std::vector<std::string> lines;
     {
         std::ifstream f(sRoot / "kh_com.log");
@@ -3375,8 +3475,8 @@ static void ReportProblem() {
 #endif
     std::string body = std::string("**What happened** (and what you were doing):\n\n\n**Platform / device**: ") + kPlatform +
                        "\n**Version**: " + REKHCOM_VERSION + " " + kVersions[sSelected].regionEn +
-                       "\n\n**Log** (kh_com.log):\n```\n" + (log.empty() ? std::string("(no log yet)\n") : log) + "```\n";
-    std::string url = "https://github.com/MatyMeatBoy/ReKHCoM/issues/new?title=" + UrlEncode("[Bug] ") +
+                       "\n" + extra + "\n**Log** (kh_com.log):\n```\n" + (log.empty() ? std::string("(no log yet)\n") : log) + "```\n";
+    std::string url = "https://github.com/MatyMeatBoy/ReKHCoM/issues/new?title=" + UrlEncode(title) +
                       "&body=" + UrlEncode(body);
     if (const char* test = SDL_getenv("DECOMPUI_REPORT_URL")) /* harness: the address written there, no browser */
         std::ofstream(fs::u8path(test)) << url;
@@ -3407,7 +3507,11 @@ static void Launch(SDL_Window* window) {
     std::error_code ec;
     bool use64 = ReKHCoMSelect64(os64, sRuntimeMode == 1, fs::is_regular_file(host),
                                 fs::is_regular_file(guest), fs::is_regular_file(sRoot / "bin64" / "SDL3.dll"));
-    if (sRuntimeMode == 2 && !use64) {
+    /* "Play in 32 bits" from the 64-bit problem notice, or Automatic after this version's 64-bit game crashed here */
+    if (sLaunch32Once || (sRuntimeMode == 0 && s64FailedVersion == REKHCOM_VERSION)) {
+        sLaunch32Once = false;
+        use64 = false;
+    } else if (sRuntimeMode == 2 && !use64) {
         Notice(T("No se puede iniciar en 64 bits: requiere Windows x64 y los archivos completos de bin64.",
                  "Cannot start in 64-bit mode: Windows x64 and the complete bin64 files are required."), true);
         return;
@@ -3452,12 +3556,22 @@ static void Launch(SDL_Window* window) {
         CloseHandle(pi.hProcess);
         bool enteredGame = fs::is_regular_file(boot);
         fs::remove(boot, ec);
-        if (use64 && ReKHCoMRetry32(code, enteredGame)) {
-            if (sRuntimeMode == 0) { use64 = false; continue; }
+        /* Windows could not load the 64-bit files: Automatic goes on in 32 bits at once */
+        if (use64 && sRuntimeMode == 0 && !ReKHCoMCrashed64(code) && ReKHCoMRetry32(code, enteredGame)) {
+            use64 = false;
+            continue;
+        }
+        /* the 64-bit game crashed, or Force 64-bit could not start: the notice offers 32 bits and a report (#360) */
+        if (use64 && (ReKHCoMCrashed64(code) || ReKHCoMRetry32(code, enteredGame))) {
+            if (sRuntimeMode == 0) {
+                s64FailedVersion = REKHCOM_VERSION;
+                SaveLauncherState();
+            }
+            sRuntime64Problem = code;
+            sRuntime64Entered = enteredGame;
             SDL_ShowWindow(window);
             SDL_RaiseWindow(window);
-            Notice(T("No se pudo iniciar en 64 bits. Revisa kh_com.log o elige Automático en Avanzado.",
-                     "Could not start in 64-bit mode. See kh_com.log or choose Automatic under Advanced."), true);
+            LoadIni();
             return;
         }
         break;
@@ -3480,6 +3594,7 @@ static void Launch(SDL_Window* window) {
  *                    dir/decompui_<page>.bmp, then exit.
  * DECOMPUI_INSTALL=path  install that ROM before the first frame.
  * DECOMPUI_HD_EXPORT=n   make the HD mod's ReKHCoM-HD.zip for platform n (hd_import.inc kTargets), then exit.
+ * DECOMPUI_RT64=code     with DECOMPUI_SHOT: the 64-bit problem notice (Runtime64Popup) open, for that exit code.
  */
 typedef void(APIENTRY* GenFn)(GLsizei, GLuint*);
 typedef void(APIENTRY* BindFn)(GLenum, GLuint);
@@ -3775,6 +3890,8 @@ int main(int argc, char** argv) {
     if (const char* rom = SDL_getenv("DECOMPUI_INSTALL")) {
         InstallRom(fs::u8path(rom));
     }
+    if (shotDir && SDL_getenv("DECOMPUI_RT64")) /* harness: the 64-bit problem notice, with that exit code */
+        sRuntime64Problem = (uint32_t)std::strtoul(SDL_getenv("DECOMPUI_RT64"), nullptr, 0);
 
     if(shotDir)if(const char* save=SDL_getenv("DECOMPUI_IMPORT_SAVE"))
         ImportSavePath(fs::u8path(save),std::clamp(SDL_atoi(SDL_getenv("DECOMPUI_SAVE_REGION")?SDL_getenv("DECOMPUI_SAVE_REGION"):"0"),0,2));

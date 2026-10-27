@@ -99,7 +99,28 @@ static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* info) {
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
+/* The machine, at start (#360): with the crash lines below, kh_com.log is the one file a report needs. */
+static void LogMachine(void) {
+    OSVERSIONINFOW v = { sizeof(v) };
+    typedef LONG(WINAPI * RtlGetVersionFn)(OSVERSIONINFOW*);
+    RtlGetVersionFn get = (RtlGetVersionFn)(void*)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlGetVersion");
+    MEMORYSTATUSEX m = { sizeof(m) };
+    char cpu[64] = "";
+    DWORD size = sizeof(cpu);
+    SYSTEM_INFO si;
+    if (get) get(&v);
+    GlobalMemoryStatusEx(&m);
+    GetNativeSystemInfo(&si);
+    RegGetValueA(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", "ProcessorNameString",
+                 RRF_RT_REG_SZ, NULL, cpu, &size);
+    PortLog("System: Windows %lu.%lu build %lu %s, CPU %s, %lu cores, RAM %llu MB (free %llu MB), 32-bit game",
+            v.dwMajorVersion, v.dwMinorVersion, v.dwBuildNumber,
+            si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 ? "x64" : "x86", cpu,
+            (unsigned long)si.dwNumberOfProcessors, m.ullTotalPhys >> 20, m.ullAvailPhys >> 20);
+}
+
 void PortCrashHandlerInstall(void) {
+    LogMachine();
     SetUnhandledExceptionFilter(CrashHandler);
 }
 
