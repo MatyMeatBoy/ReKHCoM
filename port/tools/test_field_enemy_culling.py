@@ -62,6 +62,7 @@ static int gPortViewLeft, gPortViewTop, gPortViewRight, gPortViewBottom;
 #define VIEW_TOP gPortViewTop
 #define VIEW_RIGHT gPortViewRight
 #define VIEW_BOTTOM gPortViewBottom
+#define MAP_ENM_VIEW(view, gba) (view)
 static void ColliderSetDisabled(Collider* c, int disabled) { c->disabled = disabled; }
 static void keep_updating(void) {}
 
