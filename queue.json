@@ -4883,7 +4883,7 @@
       "status": "pr_abierto",
       "owner": "codex-docs-v21-coordination",
       "created_at": "2026-10-27T06:54:36.951994+00:00",
-      "updated_at": "2026-10-27T08:04:09.214745+00:00",
+      "updated_at": "2026-10-27T08:18:08.140714+00:00",
       "branch": "docs/optiport-v21-coordination",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/317",
       "approval": "Usuario 27/10/2026: documentar reparto Codex/Claude y autorizacion prerelease",
@@ -4903,6 +4903,11 @@
           "at": "2026-10-27T08:04:09.214745+00:00",
           "owner": "codex-docs-v21-coordination",
           "detail": "SHA 1bb2a96b0f6c65892320c1ed60be25f8bf2e9798; solo tres docs sin imagen, sin core/AGENTS ni instalacion principal. git diff --check y git show --check PASS; limpio; push+PR autorizados, no merge. Pendientes unicos remotos previews perf/UI, gallery-direct-return-no-flash, controller-prompt-layouts-v21-experimental sin owner. Gate ZIP repro guardado puerta Win64 RED hasta GREEN real. WorktreeNeeded si PR abierto; siguiente prueba revision/merge integrador con lock."
+        },
+        {
+          "at": "2026-10-27T08:18:08.140714+00:00",
+          "owner": "codex-docs-v21-coordination",
+          "detail": "Actualizacion SHA 1ddac8c81de9e7f2692cffd2ed7294a5eb6847ed: tablero 10/14 original ~71 trabajo no estabilidad; 64/plataformas/UI scope aparte. Estado reportado por coordinador: repro guardado y ZIP32+64 PASS, hash personal be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81, ruta raiz requerida, sin prerelease publica. Corpus una SRAM; GameFAQs candidato bloqueado/no descargado. Cuatro docs solamente; diff/show check PASS; limpio; push y PR actualizados, no merge. WorktreeNeeded si PR abierto."
         }
       ],
       "claimed_at": "2026-10-27T06:54:43.283350+00:00"
@@ -5068,7 +5073,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T08:10:10.550151+00:00"
   },
-  "updated_at": "2026-10-27T08:14:37.978186+00:00",
+  "updated_at": "2026-10-27T08:18:08.140714+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
