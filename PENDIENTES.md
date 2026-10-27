@@ -168,4 +168,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-music-loader-bounds | Bound async music file reads and retain original music during load | integrado | codex-music-loader | https://github.com/MatyMeatBoy/ReKHCoM/pull/295 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:37:50.136948+00:00 |
 | optiport-native-renderer-reset | Complete native renderer reset resource invalidation and generation fault tests | en_curso | codex-native-renderer-reset | — | Coordinador delega nativo32 tras PR297; usuario OptiPort | 2026-10-27T05:40:11.993431+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T05:36:15.146946+00:00)
+Integrador: codex-crash (ocupado; 2026-10-27T05:40:21.838980+00:00)
