@@ -4967,15 +4967,21 @@
     "previews-both-modes-visual-fallback": {
       "id": "previews-both-modes-visual-fallback",
       "piece": "Regular UI para Claude: vista/previews ambos modos y fallback visual cuidado; identificar modos y coordinar rutas con perf antes de implementar",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-gallery-previews",
       "created_at": "2026-10-27T07:05:35.374969+00:00",
-      "updated_at": "2026-10-27T10:27:20.731891+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T10:35:07.123733+00:00",
+      "branch": "feat/gallery-preview-cache",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/342",
       "approval": "Usuario 27/10/2026: Claude puede tomar pendientes regulares; previews pendientes posteriores ZIP",
       "reference": "port/progress/COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T10:35:07.123733+00:00",
+          "owner": "codex-gallery-previews",
+          "detail": "Head db51d782d. ExistingGBAposterorROMbackground fallback+whitecardwithoutoutergrayframe;GBAshownsource label;noexternalart. UIvisualproposal requiresrootGPUcaptures;noqualityapprovalclaimed. SameboundedPR342stack335. WorktreeNeededyesPRrepro."
+        }
+      ],
       "claimed_at": "2026-10-27T10:27:20.731891+00:00"
     },
     "gallery-counter-wording": {
@@ -5544,7 +5550,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:35:01.343146+00:00",
+  "updated_at": "2026-10-27T10:35:07.123733+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
