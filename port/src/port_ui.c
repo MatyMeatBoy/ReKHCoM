@@ -1705,7 +1705,7 @@ static void Change(int item, int dir) {
                     "Speichern fehlgeschlagen. Aktuelle Bank beibehalten.",
                     "Salvataggio fallito. Banco attuale mantenuto.",
                     "No se pudo guardar. Se mantiene el banco actual.",
-                    "セーブできませんでした。現在のバンクを維持します。"
+                    "セーブできませんでした。バンクはそのままです。"
                 };
                 gPortConfig.saveBank = from;
                 PortUiNotice(failed[Lang()]);
