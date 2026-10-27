@@ -7457,10 +7457,23 @@
       "approval": "Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total.",
       "reference": "CLAUDE_COLA_ACTUAL.md; autoridad coordination/art-queue; no Atlas para UI vigente",
       "evidence": []
+    },
+    "v22-pre2-version": {
+      "id": "v22-pre2-version",
+      "piece": "Windows v2.2-pre2 source/docs and PE version 2.2.0.2",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:06:48.996576+00:00",
+      "updated_at": "2026-10-27T20:06:48.996576+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:05:56.855338+00:00",
+  "updated_at": "2026-10-27T20:06:48.996576+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
