@@ -4635,10 +4635,10 @@
     "bridge-texture-generations": {
       "id": "bridge-texture-generations",
       "piece": "Generation-safe bridge textures and complete Linux64 Android64 renderer recovery",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-bridge-reset",
       "created_at": "2026-10-27T05:41:51.356192+00:00",
-      "updated_at": "2026-10-27T06:38:06.757073+00:00",
+      "updated_at": "2026-10-27T06:38:18.675608+00:00",
       "branch": "fix/bridge-texture-generations",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/309",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -4648,9 +4648,15 @@
           "at": "2026-10-27T05:53:58.674716+00:00",
           "owner": "codex-bridge-reset",
           "detail": "Production baseline stale-slot alias red; generation host/guest harness green including stale update/free/draw, CPU reupload bothfilters, oldquerycompat, uploadfail, no perdrawquery, exhausted serial/epoch. Movie reset dispatch and actual Android32/64 wrappers map loss to0; Linux reset priority tested. Four source syntax checks passed. Depends native32 worker callback registration for full32 recovery; no port_main changes."
+        },
+        {
+          "at": "2026-10-27T06:38:18.675608+00:00",
+          "owner": "codex-bridge-reset",
+          "detail": "Verified and reviewed; merged 77230f5ce47e0759a30b9c06938fce71b997e2d7"
         }
       ],
-      "claimed_at": "2026-10-27T05:41:57.490790+00:00"
+      "claimed_at": "2026-10-27T05:41:57.490790+00:00",
+      "completed_at": "2026-10-27T06:38:18.675608+00:00"
     },
     "logs-utc-20261027": {
       "id": "logs-utc-20261027",
@@ -4843,7 +4849,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:38:06.757073+00:00",
+  "updated_at": "2026-10-27T06:38:18.675608+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
