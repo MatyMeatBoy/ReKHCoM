@@ -156,6 +156,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | en_revision | codex-sysmsg-null | fix/sysmsg-palette-null | Parent authorized implementation and local commit; review before push | 2026-10-27T04:51:40.686966+00:00 |
 | hd-layout-bounds | LAD SEQD parser bounds | en_revision | codex-layout-bounds | fix/hd-layout-bounds | Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests | 2026-10-27T04:51:44.493845+00:00 |
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_curso | codex-hd-readiness | — | — | 2026-10-27T05:05:21.867134+00:00 |
-| media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | pendiente | — | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:26.698519+00:00 |
+| media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:08:08.674562+00:00)
