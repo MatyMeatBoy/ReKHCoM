@@ -263,36 +263,58 @@ static void Unload(int i) {
 
 static int Load(int i) {
     char file[160];
-    int w, h, n, k;
+    int w = 0, h = 0, n, k, decodedW, decodedH;
     unsigned char* px;
+    void* data = NULL;
+    size_t size = 0, need;
     SDL_Surface* s;
-    size_t need;
+#ifdef PORT_GBA_RELOC
+    const size_t budget = 12u * 1024 * 1024;
+#else
+    const size_t budget = 32u * 1024 * 1024;
+#endif
     if (kHdSprites[i].group == 7) {
-        size_t size = 0;
-        void* data = TitleWordAsset(kHdSprites[i].name, &size);
+        data = TitleWordAsset(kHdSprites[i].name, &size);
         SDL_snprintf(file, sizeof(file), "%s", kHdSprites[i].name);
-        px = data && size <= 0x7FFFFFFF ? stbi_load_from_memory(data, (int)size, &w, &h, &n, 4) : NULL;
-        SDL_free(data);
-    } else
-        px = stbi_load(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n, 4);
-    if (!px || w < 1 || h < 1 || w > 4096 || h > 4096) {
-        if (px) stbi_image_free(px);
-        sState[i].present = 1;
-        PortLog("HD sprites: %s unreadable, the cartridge's sprite stays", file);
-        return 0;
-    }
+        if (!data || size > 0x7FFFFFFF || !stbi_info_from_memory(data, (int)size, &w, &h, &n))
+            goto invalid;
+    } else if (!stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n))
+        goto invalid;
+    /* Reject unsafe dimensions, old recipes and oversized texture pairs before decoding. */
+    if (w < 1 || h < 1 || w > 4096 || h > 4096)
+        goto invalid;
     {
-        /* a picture imported for an older recipe (another width: before pad=): left out until the HD import is run
-           again, not drawn stretched */
         const HdSpriteDef* d = &kHdSprites[i];
-        float want = (float)(d->padL + d->w + d->padR) / (d->padT + d->h + d->padB), got = (float)w / h;
-        if (got > want * 1.03f || got < want * 0.97f) {
-            stbi_image_free(px);
-            sState[i].present = 1;
-            PortLog("HD sprites: %s is %dx%d, its recipe wants %.3f wide per high: import the HD mod again",
-                    kHdSprites[i].name, w, h, want);
-            return 0;
+        float want = (float)(d->padL + d->w + d->padR) / (d->padT + d->h + d->padB);
+        float got = (float)w / h;
+        if (got > want * 1.03f || got < want * 0.97f)
+            goto invalid;
+    }
+    need = (size_t)w * h * 8;
+    if (need > budget)
+        goto invalid;
+    /* Never evict this frame's textures or exceed the texture-pair budget. */
+    while (sBytes > budget - need) {
+        int victim = -1;
+        for (k = 0; k < HD_SPRITE_COUNT; k++)
+            if (sState[k].image && sState[k].lastUsed != PortFrameCount() &&
+                (victim < 0 || sState[k].lastUsed < sState[victim].lastUsed))
+                victim = k;
+        if (victim < 0) {
+            SDL_free(data);
+            return 0; /* transient pressure: allow another attempt next frame */
         }
+        Unload(victim);
+    }
+    px = kHdSprites[i].group == 7
+        ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
+        : stbi_load(file, &decodedW, &decodedH, &n, 4);
+    SDL_free(data);
+    data = NULL;
+    /* A file may change between the header read and decode. Never upload a different size. */
+    if (!px || decodedW != w || decodedH != h) {
+        if (px) stbi_image_free(px);
+        goto invalid;
     }
     if (kHdSprites[i].group == 7 && MenuLightName(kHdSprites[i].name) && MenuLightReady(sRenderer)) {
         /* Remove only this light's box, not its words, bar or underline.
@@ -304,23 +326,6 @@ static int Load(int i) {
             for (int x = left; x < right; x++) px[(y * w + x) * 4 + 3] = 0;
     }
     sState[i].textureH = h;
-    need = (size_t)w * h * 8;
-    /* the cards on screen stay; the oldest others make room (32 MB; 12 MB on Switch and PS Vita, whose memory is
-       shared with the game's image and the host's own copy of each texture) */
-#ifdef PORT_GBA_RELOC
-    const size_t budget = 12u * 1024 * 1024;
-#else
-    const size_t budget = 32u * 1024 * 1024;
-#endif
-    while (sBytes + need > budget) {
-        int victim = -1;
-        for (k = 0; k < HD_SPRITE_COUNT; k++)
-            if (sState[k].image && sState[k].lastUsed != PortFrameCount() &&
-                (victim < 0 || sState[k].lastUsed < sState[victim].lastUsed))
-                victim = k;
-        if (victim < 0) break;
-        Unload(victim);
-    }
     s = SDL_CreateSurfaceFrom(w, h, SDL_PIXELFORMAT_RGBA32, px, w * 4);
     if (s) {
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
@@ -342,6 +347,11 @@ static int Load(int i) {
     sState[i].bytes = need;
     sBytes += need;
     return 1;
+invalid:
+    SDL_free(data);
+    sState[i].present = 1;
+    PortLog("HD sprites: %s rejected (header, dimensions, recipe, budget or decode)", file);
+    return 0;
 }
 
 /* The HD title's illustration (assets/hd/title/art/sora.png: the CoM poster, a mod, port/assets/hd/title/art/LEEME.md), drawn
