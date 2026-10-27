@@ -22,6 +22,7 @@
 #include "port/port_scene_gallery.h"
 #include "port/port_hd_poster.h"
 #include "port/port_hd_media.h"
+#include "port/port_hd_subtitles.h"
 #include <SDL3/SDL.h>
 
 #if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
@@ -60,15 +61,8 @@ static void MoviePath(const char* name, char* out, size_t size) {
 static void MovieSubtitlePath(const char* name, const char* language, char* out, size_t size) {
     char movie[1600];
     if (gPortConfig.hdMediaLanguage && PortHdMovieResolvePath(name, movie, sizeof(movie))) {
-        char* slash = strrchr(movie, '/');
-        if (slash) { *slash = 0; slash = strrchr(movie, '/'); }
-        if (slash) {
-            FILE* f;
-            *slash = 0;
-            snprintf(out, size, "%s/subs/%s.%s.txt", movie, name, language);
-            f = PortHdMediaOpenFile(out);
-            if (f) { fclose(f); return; }
-        }
+        PortHdSubtitleResolve(PortConfigPath("."), gPortConfig.hdMediaLanguage, name, language, movie, out, size);
+        return;
     }
     snprintf(out, size, "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, language);
 }
