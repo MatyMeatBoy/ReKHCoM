@@ -205,4 +205,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | controller-prompt-live-page | Bounded semantic controller symbols refresh on binding/family revision | en_curso | codex-control-prompts | — | Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope | 2026-10-27T09:58:18.898783+00:00 |
 | steamdeck-gaming-mode-330 | Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide | pr_abierto | codex-deck-gaming330 | https://github.com/MatyMeatBoy/ReKHCoM/pull/337 | Usuario autoriza resolver330 sin comentario externo ni heavybuild | 2026-10-27T10:21:34.738356+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T10:21:49.428537+00:00)
