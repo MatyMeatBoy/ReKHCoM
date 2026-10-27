@@ -241,6 +241,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v22-async | OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar | pendiente | — | — | — | 2026-10-27T17:32:28.086015+00:00 |
 | optiport-v22-pacing | OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA | pendiente | — | — | — | 2026-10-27T17:32:34.299497+00:00 |
 | optiport-v22-soak | OptiPort 2.2: soak acotado de recursos modificados y gameplay paquetes Linux/Android | pendiente | — | — | — | 2026-10-27T17:32:40.926521+00:00 |
-| v22-premium-digit-gpu-qa | P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude | pendiente | — | — | Coordinador autoriza 27/10; primero preparación sin GPU | 2026-10-27T17:36:27.340479+00:00 |
+| v22-premium-digit-gpu-qa | P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude | en_curso | codex-premium-digit-qa | — | Coordinador autoriza 27/10; primero preparación sin GPU | 2026-10-27T17:36:34.643773+00:00 |
 
 Integrador: libre
