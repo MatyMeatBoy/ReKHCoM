@@ -4981,6 +4981,13 @@ static void MainHdOver(void) {
 }
 
 extern const unsigned char gReloadCardGreenTiles[], gRiCardF0RedTiles[];
+extern const unsigned char gCardPremiumValueDigitTiles[], gCardModifiedValueDigitTiles[];
+
+/* Imported digit art owns its full color treatment. If it is missing, retain
+   the cartridge's multicolor glyph instead of flattening it to one font tint. */
+static int HudDigitKeepsPalette(const void* tiles) {
+    return tiles == gCardPremiumValueDigitTiles || tiles == gCardModifiedValueDigitTiles;
+}
 const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h);
 
 void PortPpuRenderHud(uint32_t* buf) {
@@ -5077,6 +5084,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
         if (gPortConfig.hdHud && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize &&
+            !HudDigitKeepsPalette(sOamHd[i].tiles) &&
             tag->digit && tag->digit <= 10 && sHudDigitCount < 128) {
             if (!sHudDigits) sHudDigits = calloc(128, sizeof(*sHudDigits));
             if (sHudDigits) {
