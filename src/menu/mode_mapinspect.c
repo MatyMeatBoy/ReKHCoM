@@ -1012,7 +1012,11 @@ void MapInspectDraw() {
 
     maxScroll = (GetMapInspectTabCount(sMapInspectTab) + 2) / 3 - 4;
 
-    if (sMapInspectGridScroll <= maxScroll) {
+    if (
+#ifdef PLATFORM_PC
+        maxScroll > 0 && sMapInspectGridScroll >= 0 &&
+#endif
+        sMapInspectGridScroll <= maxScroll) {
         barOffset = 84 * sMapInspectGridScroll / maxScroll;
     } else {
         barOffset = 0;
