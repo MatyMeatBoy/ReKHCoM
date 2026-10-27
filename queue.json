@@ -6793,13 +6793,13 @@
     "v22-startup-cause-ledger": {
       "id": "v22-startup-cause-ledger",
       "piece": "Ledger documental de causas verificables para Deck330 y Windows360; recuperar fuentes Astra y discriminar fases de arranque sin GPU",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-startup-ledger",
       "created_at": "2026-10-27T17:57:06.035632+00:00",
-      "updated_at": "2026-10-27T18:23:14.439168+00:00",
+      "updated_at": "2026-10-27T18:28:10.538490+00:00",
       "branch": "codex/startup-cause-ledger",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/382",
-      "approval": null,
+      "approval": "Usuario27/10 pide aprenderAstraactualizarOptiPortintegrarpendientes; coordinadorrevisodoc0a6d33f4yconfirmacionPedroexacta",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330 https://github.com/MatyMeatBoy/ReKHCoM/issues/360",
       "evidence": [
         {
@@ -6816,9 +6816,15 @@
           "at": "2026-10-27T18:23:14.439168+00:00",
           "owner": "codex-startup-ledger",
           "detail": "0a6d33f40 actualiza PR382 con observación pública Pedro 2026-10-27T17:56:16Z: test360 funciona Automatic+Force64. Causa sigue no confirmada; no atribuye a368/377 ni extiende aDeck/Android. Delegación previa owner original y CAS6c302652 documentados; sólo Markdown, UTF8/diffcheck. Root prioriza después únicamente lectura de378; sin builds ni publicaciones a reporteros."
+        },
+        {
+          "at": "2026-10-27T18:28:10.538490+00:00",
+          "owner": "codex-startup-ledger",
+          "detail": "PR382 merged55b730619c73c227afb18c1bba7c72a6e7c25ef8; sources42verified,14predicatereleaseassertionsPASS; Pedro17:56test360successAutoForce64nooriginalcausality."
         }
       ],
-      "claimed_at": "2026-10-27T17:57:10.864202+00:00"
+      "claimed_at": "2026-10-27T17:57:10.864202+00:00",
+      "completed_at": "2026-10-27T18:28:10.538490+00:00"
     },
     "v22-stutter-attribution-probes": {
       "id": "v22-stutter-attribution-probes",
@@ -6921,7 +6927,7 @@
     "created_at": "2026-10-27T18:27:49.096458+00:00",
     "updated_at": "2026-10-27T18:27:49.096458+00:00"
   },
-  "updated_at": "2026-10-27T18:28:02.374425+00:00",
+  "updated_at": "2026-10-27T18:28:10.538490+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
