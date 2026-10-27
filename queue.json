@@ -1789,9 +1789,9 @@
       "id": "diario-entradas",
       "piece": "Diario: entradas internas (Naipes etc.), márgenes de vista ancha: pestaña izquierda, borde de hoja derecho, barra PÁGINA a la derecha (regresión de submenú ya superado)",
       "status": "en_curso",
-      "owner": "codex-atlas-menus",
+      "owner": "codex-diary-audit",
       "created_at": "2026-10-24T19:45:56.107112+00:00",
-      "updated_at": "2026-10-25T16:02:53.468147+00:00",
+      "updated_at": "2026-10-27T18:53:29.713701+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -1806,6 +1806,11 @@
           "at": "2026-10-24T20:56:20.251705+00:00",
           "owner": "r4",
           "detail": "released: Pieza de UI (menus del Diario) sin nubes medibles en la mesa; necesita revision de capturas de cada entrada y decisiones de margen, no cabe en 5 min."
+        },
+        {
+          "at": "2026-10-27T18:53:29.713701+00:00",
+          "owner": "codex-integrador",
+          "detail": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
         }
       ],
       "claimed_at": "2026-10-25T16:02:53.468147+00:00"
@@ -7063,7 +7068,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:53:20.240398+00:00",
+  "updated_at": "2026-10-27T18:53:29.713701+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -7444,6 +7449,16 @@
       "to_owner": "codex-profile-integration",
       "expected_commit": "c8417c18ef06c710a584a5dd3a8663dbf7ab7673",
       "evidence": "User explicitly requests takeover after Claude sleep/quota. Session8638d140 final authentication quota error17:55UTC confirmed idle; tracked checkout clean at479bd970, only build.log/build64.log preserved in original. PR379 reviewed; root continues remaining fixes and integration, no age-based takeover."
+    },
+    {
+      "at": "2026-10-27T18:53:29.713701+00:00",
+      "actor": "codex-integrador",
+      "operation": "recover-task",
+      "task": "diario-entradas",
+      "from_owner": "codex-atlas-menus",
+      "to_owner": "codex-diary-audit",
+      "expected_commit": "7f0337459f71c1cb4ccb4949a3d18cddaed88cb7",
+      "evidence": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
     }
   ]
 }
