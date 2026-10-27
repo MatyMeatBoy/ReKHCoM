@@ -5820,22 +5820,28 @@
     "android-lifecycle-diagnostics-v21": {
       "id": "android-lifecycle-diagnostics-v21",
       "piece": "InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-android-lifecycle",
       "created_at": "2026-10-27T11:16:39.163268+00:00",
-      "updated_at": "2026-10-27T11:29:16.652202+00:00",
+      "updated_at": "2026-10-27T12:36:28.192082+00:00",
       "branch": "feat/android-lifecycle-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/350",
       "approval": "Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia",
-      "reference": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "evidence": [
         {
           "at": "2026-10-27T11:29:16.652202+00:00",
           "owner": "codex-android-lifecycle",
           "detail": "Head2461fcb32. Javajournaltests session/instance/runtime/mask/processisolated actual+5,16KiB/queue32/6KiBsummary/64Kcharshare bounds,blockedloggingfailure PASS. App+SDLJava SDK35 compilePASS, noAPK/nativebuild/runtime. NoSDK/hint/checkpoint change. Best-effortwriterlostatprocesskill possible; normalexitlauncher noexistingShareLogpath explicitlydocumented. WorktreeNeededyesPR/repro."
+        },
+        {
+          "at": "2026-10-27T12:36:28.192082+00:00",
+          "owner": "codex-android-lifecycle",
+          "detail": "GitHub verified MERGED PR350, real merge SHA 9d374a432a639026a1daf5b25180a739dbaca0ea. Included in bundle PR351, real merge771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; integrated is not released or device-confirmed. Existing evidence/WIP/branches preserved; worktree needed review/repro until coordinator archives."
         }
       ],
-      "claimed_at": "2026-10-27T11:16:44.896715+00:00"
+      "claimed_at": "2026-10-27T11:16:44.896715+00:00",
+      "completed_at": "2026-10-27T12:36:28.192082+00:00"
     },
     "player-hp-capacity-equivalence": {
       "id": "player-hp-capacity-equivalence",
@@ -5920,7 +5926,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:22.812576+00:00",
+  "updated_at": "2026-10-27T12:36:28.192082+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
