@@ -43,6 +43,9 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
   mundo (VM 27/10). Revisar receta o el importador.
 - [ ] VM Linux 64 con **todo HD activado** (texto, HUD, música, escenas, cartas, título, subtítulos): partida nueva
   hasta combate tutorial **sin fallo**. Falta: datos de los reporteros (ajustes exactos, vista, log, modo).
+- [ ] **Importación de assets a prueba de updates**: importar siempre todo lo que podamos necesitar desde la
+  instalación de Steam (Re:CoM/HD); si una versión nueva pide un asset que falta, que el launcher lo detecte y
+  ofrezca re-importar solo lo faltante desde Steam.
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
