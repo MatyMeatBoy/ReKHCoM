@@ -789,6 +789,15 @@ void PortOamSetHdPart(int oamIndex, const void* tiles, const void* frame, int x,
 static void ExportSprites(void);
 int PortHdSpriteKeepsCartridge(int id);
 
+/* The native frame closes over the picture at these two authored cells.
+ * Keep their own palette colours above the HD window, not a generic black
+ * patch or an alpha cutout whose filtering spills into adjacent artwork. */
+static int SmallCardNativeCorner(int i, int tx, int ty) {
+    int x = sOamHd[i].x + tx;
+    return sOamHd[i].y + ty == -4 && (x == -7 || x == 6) &&
+           PortHdSpriteKeepsCartridge(sOamHd[i].id);
+}
+
 /* Characters the outline font draws: printable Windows-1252 codes. The codes
    below 0x20 are icons (arrows, button shapes) and stay pixel art. */
 static int HdTextGlyph(int oamIndex) {
@@ -4948,6 +4957,23 @@ const uint32_t* PortPpuScreenOver(void) {
 }
 
 /* One layer's parts: where the cartridge has something in front, its final pixel goes on `over`. */
+static int SmallCardCornerAt(int i, int x, int y) {
+    const OamHdPart* part = &sOamHd[i];
+    uint16_t a0 = OAM16[i * 4], a1 = OAM16[i * 4 + 1];
+    int sx = x - sMainHdBox[i][0], sy = y - sMainHdBox[i][1], tx, ty;
+    if (a0 & 0x100) {
+        const uint16_t* p = OAM16 + ((a1 >> 9) & 31) * 16;
+        int cx = sx - sMainHdBox[i][2] / 2, cy = sy - sMainHdBox[i][3] / 2;
+        tx = (((int16_t)p[3] * cx + (int16_t)p[7] * cy) >> 8) + part->w / 2;
+        ty = (((int16_t)p[11] * cx + (int16_t)p[15] * cy) >> 8) + part->h / 2;
+    } else {
+        tx = (a1 & 0x1000) ? part->w - 1 - sx : sx;
+        ty = (a1 & 0x2000) ? part->h - 1 - sy : sy;
+    }
+    return tx >= 0 && ty >= 0 && tx < part->w && ty < part->h &&
+           SmallCardNativeCorner(i, tx, ty);
+}
+
 static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const uint16_t* occObj, const uint32_t* picture,
                         uint32_t* over, int* used) {
     int i;
@@ -4966,7 +4992,8 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
                 /* 0 / 0: a window hides the sprites here; a BG of a higher priority; a sprite before this one (not
                    one that keeps its cartridge pixels under its own HD part: that part is drawn over this one anyway,
                    and copying its pixels put the small card above's bottom over the cards below, 23/10) */
-                if ((occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
+                if ((obj == prio * 128 + i && SmallCardCornerAt(i, x, y)) ||
+                    (occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
                     (obj != 0xFFFFu && obj < prio * 128 + i &&
                      !(sMainHdPart[obj & 127] && PortHdSpriteKeepsCartridge(sOamHd[obj & 127].id)))) {
                     if (!*used) {
@@ -5352,7 +5379,8 @@ void PortPpuRenderHud(uint32_t* buf) {
                 }
                 if (mode == 1)
                     argb = (argb & 0x00FFFFFFu) | 0xA0000000u;
-                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px] && !hdPart) {
+                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px] &&
+                    (!hdPart || SmallCardNativeCorner(i, tx, ty))) {
                     /* in front of an HD part: drawn over it */
                     if (!sHudOverUsed) {
                         memset(sHudOver, 0, (size_t)w * h * 4);

@@ -19,8 +19,9 @@ def main():
     over=block(hud,'if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px]')
     sprites=(ROOT/'port/src/port_hdsprites.c').read_text(encoding='utf8')
     keeps=block(sprites,'int PortHdSpriteKeepsCartridge(')
-    code=PREAMBLE+keeps+'\nstatic void Pixel(int id,int queued,int foreground) {\n'
-    code+='int i=0,hdPart=queued,px=0,py=0,w=1,h=1; uint32_t argb=0xFF123456u; sOamHd[0].id=id;\n'
+    corner=block(source,'static int SmallCardNativeCorner(')
+    code=PREAMBLE+keeps+corner+'\nstatic void Pixel(int id,int queued,int foreground) {\n'
+    code+='int i=0,hdPart=queued,px=0,py=0,w=1,h=1,tx=0,ty=0; uint32_t argb=0xFF123456u; sOamHd[0].id=id;\n'
     code+='for(int once=0;once<1;once++) {\n'+hide+'\n'+over+'\nbuf[0]=argb;\n}\n(void)foreground;(void)i;\n}\n'+HARNESS
     cc=next((ROOT.parent/'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
     with tempfile.TemporaryDirectory(prefix='rekhcom-stock-frame-') as d:
@@ -36,7 +37,7 @@ PREAMBLE=r'''
 #include <string.h>
 #define HD_SPRITE_COUNT 2
 static const struct {int group;} kHdSprites[2]={{6},{1}};
-static struct {int id;} sOamHd[1];
+static struct {int id,x,y;} sOamHd[1];
 static uint8_t cover[1],*sHdCover=cover;
 static size_t sHdCoverSize=1;
 static uint32_t buf[1],sHudOver[1];
