@@ -158,5 +158,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_revision | codex-hd-readiness | fix/hd-layout-ready | — | 2026-10-27T05:09:39.124445+00:00 |
 | media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
 | optiport-skill-20261027 | OptiPort skill and evidence-based progress board | en_curso | codex-optiport | — | — | 2026-10-27T05:09:56.453746+00:00 |
+| hd-music-progress-20261027 | Bound HD music decoder progress and preserve original audio on failure | pendiente | — | — | — | 2026-10-27T05:11:21.181016+00:00 |
 
 Integrador: libre
