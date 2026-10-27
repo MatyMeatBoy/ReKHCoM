@@ -5733,10 +5733,10 @@
     "controller-prompt-original-live-spans": {
       "id": "controller-prompt-original-live-spans",
       "piece": "Scoped original tutorial spans with reversible live button overlays and bounded unsupported-key fallback",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T10:48:12.916407+00:00",
-      "updated_at": "2026-10-27T11:01:11.271597+00:00",
+      "updated_at": "2026-10-27T12:36:59.091254+00:00",
       "branch": "feature/controller-original-live-spans",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/347",
       "approval": "Parent authorizes Original enable live-page and fallback increment atop338, preserving VM/reveal/geometry",
@@ -5746,9 +5746,15 @@
           "at": "2026-10-27T11:01:11.271597+00:00",
           "owner": "codex-control-prompts",
           "detail": "Actual tutorial producer + input + EU/US/JP layout/draw/free, counted ownership: Original toggles, initial Return hotplug, SELECT continuation, OOM restore, zero final references; syntax/check_sources"
+        },
+        {
+          "at": "2026-10-27T12:36:59.091254+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "GitHub PR#347 state MERGED verified; mergeCommit 19cfd3773764d38804cdf293e7bdbf17be65631e; included in bundle PR351 merged 771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; runtime QA limits remain in project evidence."
         }
       ],
-      "claimed_at": "2026-10-27T10:48:18.877070+00:00"
+      "claimed_at": "2026-10-27T10:48:18.877070+00:00",
+      "completed_at": "2026-10-27T12:36:59.091254+00:00"
     },
     "hud-toggle-battle-warm": {
       "id": "hud-toggle-battle-warm",
@@ -5950,7 +5956,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:53.286158+00:00",
+  "updated_at": "2026-10-27T12:36:59.091254+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
