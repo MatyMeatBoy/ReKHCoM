@@ -4838,10 +4838,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-retoma",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T15:34:06.418953+00:00",
+      "updated_at": "2026-10-27T15:34:28.223858+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/363",
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4876,9 +4876,15 @@
           "at": "2026-10-27T15:34:06.418953+00:00",
           "owner": "claude-retoma",
           "detail": "PR363 merged; Axel W64 EU before/after verified; user: cards go direct, no Atlas"
+        },
+        {
+          "at": "2026-10-27T15:34:28.223858+00:00",
+          "owner": "claude-retoma",
+          "detail": "PR363 merged"
         }
       ],
-      "claimed_at": "2026-10-27T13:49:03.375620+00:00"
+      "claimed_at": "2026-10-27T13:49:03.375620+00:00",
+      "completed_at": "2026-10-27T15:34:28.223858+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -6310,7 +6316,7 @@
     "created_at": "2026-10-27T15:34:22.711619+00:00",
     "updated_at": "2026-10-27T15:34:22.711619+00:00"
   },
-  "updated_at": "2026-10-27T15:34:22.711619+00:00",
+  "updated_at": "2026-10-27T15:34:28.223858+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
