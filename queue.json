@@ -4786,10 +4786,10 @@
     "hudhd-exp-ganada": {
       "id": "hudhd-exp-ganada",
       "piece": "HUD HD: «EXP ganada» no tapada por la vida nueva",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrator",
       "created_at": "2026-10-27T06:31:09.142434+00:00",
-      "updated_at": "2026-10-27T07:03:05.098810+00:00",
+      "updated_at": "2026-10-27T07:03:14.103146+00:00",
       "branch": "fix/hudhd-exp",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/313",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -4799,9 +4799,15 @@
           "at": "2026-10-27T06:33:32.240816+00:00",
           "owner": "claude-hudhd",
           "detail": "released: 27/10: no reproducido en 1536x864, hud_size=1, KHCOM_BATTLE=1:0:0 + bot: EXP+n y SIG. NIVEL bajo el círculo sin taparse (build/hudhd_exp_1536x864.png). Falta captura del usuario del caso exacto."
+        },
+        {
+          "at": "2026-10-27T07:03:14.103146+00:00",
+          "owner": "codex-integrator",
+          "detail": "Verified and reviewed; merged 434d6b8e21a2c0bed6938bf45285ef919a858026"
         }
       ],
-      "claimed_at": "2026-10-27T07:02:27.687769+00:00"
+      "claimed_at": "2026-10-27T07:02:27.687769+00:00",
+      "completed_at": "2026-10-27T07:03:14.103146+00:00"
     },
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
@@ -4898,7 +4904,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:03:05.098810+00:00",
+  "updated_at": "2026-10-27T07:03:14.103146+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
