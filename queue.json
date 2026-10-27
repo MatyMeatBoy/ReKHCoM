@@ -7624,19 +7624,20 @@
     "sol-guest64-abi-audit": {
       "id": "sol-guest64-abi-audit",
       "piece": "Bounded guest64 savedata callback and ABI audit",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "sol-low-linux-import",
       "created_at": "2026-10-27T20:17:07.805135+00:00",
-      "updated_at": "2026-10-27T20:17:07.805135+00:00",
+      "updated_at": "2026-10-27T20:17:14.532848+00:00",
       "branch": null,
       "pr": null,
       "approval": "User requested32to64 parity root scoped audit",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T20:17:14.532848+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:17:07.805135+00:00",
+  "updated_at": "2026-10-27T20:17:14.532848+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
