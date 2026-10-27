@@ -59,6 +59,13 @@ static void config_test(void) {
     assert(f); fputs("stock_button=1\n", f); fclose(f);
     PortConfigLoad(); /* old settings have no inversion key */
     assert(gPortConfig.invertCardScroll == 0);
+    assert(gPortConfig.controllerPrompts == 0);
+    for(int family=0;family<5;family++) {
+        gPortConfig.controllerPrompts=family;PortConfigSave();
+        gPortConfig.controllerPrompts=-1;PortConfigLoad();
+        assert(gPortConfig.controllerPrompts==family);
+    }
+    gPortConfig.controllerPrompts=0;
 }
 
 static void key_test(void) {
@@ -221,6 +228,48 @@ static void device_test(void) {
     event.type = SDL_EVENT_KEY_UP;
     PortInputHandleEvent(&event);
     assert(PortInputKeys() == 0);
+    /* Real input/config/tutorial integration, independent from visual-family
+       conventions: Cross stays Cross until the actual A binding changes. */
+    int padCount=0;
+    SDL_JoystickID* ids=SDL_GetGamepads(&padCount);
+    assert(ids && padCount>0);
+    SDL_JoystickID id=ids[0];SDL_free(ids);
+    char label[32];
+    int oldA=gPortConfig.pad[PORT_ACT_A],oldKey=gPortConfig.keys[PORT_ACT_A][0];
+    gPortConfig.controllerPrompts=4;
+    gPortConfig.padLayout=0;gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_SOUTH;
+    event.type=SDL_EVENT_GAMEPAD_BUTTON_DOWN;event.gbutton.which=id;
+    event.gbutton.button=SDL_GAMEPAD_BUTTON_SOUTH;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Cross"));
+    gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_EAST;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Circle"));
+    gPortConfig.padLayout=2;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Cross"));
+    gPortConfig.padLayout=0;gPortConfig.controllerPrompts=1;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"East"));
+    gPortConfig.controllerPrompts=4;gPortConfig.invertCardScroll=0;
+#ifndef VERSION_JP
+    const TextChar tutorial[]={'A',':',MSG_CODE_HIGHLIGHT,'A',' ','B','u','t','t','o','n',MSG_CODE_PLAIN,0};
+    const TextChar mapped[]={'A',':',MSG_CODE_HIGHLIGHT,'[','C','i','r','c','l','e',']',MSG_CODE_PLAIN,0};
+    assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
+    assert(PortCardScrollTutorialText(CARD_MSG_OBTAINED_ELIXIR,tutorial)==tutorial);
+#else
+    const TextChar tutorial[]={0x82,0x60,0};
+    assert(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial)==tutorial);
+#endif
+    gPortConfig.keys[PORT_ACT_A][0]=SDLK_Q;
+    event.type=SDL_EVENT_KEY_DOWN;event.key.key=SDLK_Q;event.key.repeat=0;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    event.type=SDL_EVENT_GAMEPAD_AXIS_MOTION;event.gaxis.which=id;event.gaxis.value=1000;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    event.gaxis.value=20000;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Circle"));
+    SDL_CloseGamepad(SDL_GetGamepadFromID(id));
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    assert(SDL_OpenGamepad(id));
+    gPortConfig.controllerPrompts=0;
+    assert(!PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)));
+    gPortConfig.pad[PORT_ACT_A]=oldA;gPortConfig.keys[PORT_ACT_A][0]=oldKey;
     SDL_Quit();
 }
 

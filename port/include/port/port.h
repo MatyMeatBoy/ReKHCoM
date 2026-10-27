@@ -187,6 +187,7 @@ typedef struct PortConfig {
                                   SELECT, START, menu), thousandths of the layout from its place (touch_android.c's editor) */
     int crtOutput;             /* PORT_VIEW_CRT: 0 native 320x240, 1 super-res 1920x240 (x6), 2 2560x240 (x8), 3 480p (2x); last: the
                                   positional defaults stay as they are */
+    int controllerPrompts;     /* experimental display only: 0 Original, 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation */
 } PortConfig;
 
 extern PortConfig gPortConfig;
@@ -412,5 +413,8 @@ uint16_t PortInputKeys(void);
 uint16_t PortInputResolve(uint16_t keys);
 int PortInputKeyBound(int key); /* the keyboard key is bound to a game action */
 void PortInputHandleEvent(const void* sdlEvent);
+void PortPromptHandleEvent(const void* sdlEvent); /* raw, before Nintendo normalization and menu consumption */
+int PortControllerBindingLabel(int binding, char* out, size_t size);
+int PortControllerActionLabel(int action, char* out, size_t size);
 
 #endif

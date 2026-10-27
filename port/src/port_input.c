@@ -5,6 +5,7 @@
 
 #include "port/port.h"
 #include "port/pad_layout.h"
+#include "port/controller_prompts.h"
 #include "port/port_ui.h"
 #include "mode.h"
 #include "text_types.h"
@@ -56,6 +57,67 @@ static int sDodgeHeld;
 static int sDodgePending;
 static int sUnstockHeld;
 static int sUnstockPending;
+/* Activity is event-driven: axis noise must not switch away from keyboard.
+   Keep only an ID, never a gamepad pointer across hotplug. */
+static SDL_JoystickID sPromptPad;
+static int sPromptKeyboard = 1;
+
+void PortPromptHandleEvent(const void* p) {
+    const SDL_Event* ev=p;
+    if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat) sPromptKeyboard=1;
+    else if (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
+        sPromptKeyboard=0; sPromptPad=ev->gbutton.which;
+    } else if (ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value)>16000) {
+        sPromptKeyboard=0; sPromptPad=ev->gaxis.which;
+    }
+}
+
+static SDL_Gamepad* PromptPad(void) {
+    return sPromptPad ? SDL_GetGamepadFromID(sPromptPad) : NULL;
+}
+
+static int PromptFamily(SDL_Gamepad* pad) {
+    int selected=gPortConfig.controllerPrompts;
+    if (selected != KH_PROMPT_AUTO) return selected;
+    switch (pad ? SDL_GetGamepadType(pad) : SDL_GAMEPAD_TYPE_UNKNOWN) {
+        case SDL_GAMEPAD_TYPE_PS3: case SDL_GAMEPAD_TYPE_PS4: case SDL_GAMEPAD_TYPE_PS5: return KH_PROMPT_PLAYSTATION;
+        case SDL_GAMEPAD_TYPE_XBOX360: case SDL_GAMEPAD_TYPE_XBOXONE: return KH_PROMPT_XBOX;
+        case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO: case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+        case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT: case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
+            return KH_PROMPT_NINTENDO;
+        default: return KH_PROMPT_GENERIC;
+    }
+}
+
+int PortControllerBindingLabel(int binding, char* out, size_t size) {
+    SDL_Gamepad* pad=PromptPad();
+    const char* label;
+    if (!gPortConfig.controllerPrompts) return 0;
+    label=KhPromptButtonLabel(binding,PromptFamily(pad),KhPadIsNintendo(pad,gPortConfig.padLayout));
+    if (label[0]=='?' && binding>=0 && binding<SDL_GAMEPAD_BUTTON_COUNT) {
+        const char* generic=SDL_GetGamepadStringForButton((SDL_GamepadButton)binding);
+        if(generic)label=generic;
+    }
+    SDL_strlcpy(out,label,size);
+    return 1;
+}
+
+int PortControllerActionLabel(int action, char* out, size_t size) {
+    SDL_Gamepad* pad=PromptPad();
+    if (!gPortConfig.controllerPrompts || action<0 || action>=PORT_ACT_COUNT) return 0;
+    if (sPromptKeyboard || !pad) {
+        int key=gPortConfig.keys[action][0];
+        if (!key) key=gPortConfig.keys[action][1];
+        const char* label=key ? SDL_GetKeyName((SDL_Keycode)key) : "-";
+        /* Tutorial buffers are game encoding, not UTF-8. Never insert a
+           multi-byte host key name as independent Latin/Shift-JIS bytes. */
+        for(const unsigned char* c=(const unsigned char*)label;*c;c++)
+            if(*c>=128) { SDL_snprintf(out,size,"Key %u",(unsigned)key);return 1; }
+        SDL_strlcpy(out,label,size);
+        return 1;
+    }
+    return PortControllerBindingLabel(gPortConfig.pad[action],out,size);
+}
 
 /* After closing an overlay, ignore buttons still held until released so the
    confirming press does not reach the game. */
@@ -262,7 +324,7 @@ uint16_t PortInputKeys(void) {
 }
 
 /* Keep the original localized instructions, swapping only this tutorial's button labels. */
-const void* PortCardScrollTutorialText(int message, const void* source) {
+static const void* CardScrollTutorialText(int message, const void* source) {
     static TextChar inverted[256];
     const TextChar* text = source;
     size_t length, i;
@@ -289,6 +351,50 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
     }
 #endif
     return inverted;
+}
+
+/* Only authored, highlighted button tokens in the tutorial range are
+   resolved. Prose, names, ordinary A/B letters and unrelated messages stay
+   untouched. This buffer is independent from the card-scroll inversion. */
+const void* PortCardScrollTutorialText(int message, const void* source) {
+    const TextChar* text=CardScrollTutorialText(message,source);
+#ifndef VERSION_JP
+    static TextChar resolved[768];
+    size_t i=0,n=0;
+    int changed=0;
+    if (!text || !gPortConfig.controllerPrompts || message<CARD_MSG_WORLDSELECT_TUTORIAL_0 ||
+        message>CARD_MSG_LEON_TUTORIAL_14) return text;
+    while (text[i] && i<512) {
+        if (text[i]==MSG_CODE_HIGHLIGHT) {
+            size_t end=i+1;
+            char token[48],label[32];
+            while(end<i+sizeof(token) && text[end] && text[end]!=MSG_CODE_PLAIN)end++;
+            if(text[end]==MSG_CODE_PLAIN && end-i-1<sizeof(token)) {
+                size_t length=end-i-1;
+                for(size_t k=0;k<length;k++)token[k]=(char)text[i+1+k];
+                int action=KhPromptTokenAction(token,length);
+                if(action>=0 && PortControllerActionLabel(action,label,sizeof(label))) {
+                    size_t count=SDL_strlen(label);
+                    if(n+count+4>=SDL_arraysize(resolved))return text;
+                    resolved[n++]=MSG_CODE_HIGHLIGHT;
+                    resolved[n++]='[';
+                    for(size_t k=0;k<count;k++)resolved[n++]=(unsigned char)label[k];
+                    resolved[n++]=']';resolved[n++]=MSG_CODE_PLAIN;
+                    i=end+1;changed=1;continue;
+                }
+            }
+        }
+        if(n+1>=SDL_arraysize(resolved))return text;
+        resolved[n++]=text[i++];
+    }
+    if(text[i])return text;
+    resolved[n]=0;
+    return changed ? resolved : text;
+#else
+    /* Shift-JIS has a different control/text encoding. Keep it intact until
+       explicit semantic tokens and the Japanese inline-glyph path are tested. */
+    return text;
+#endif
 }
 
 /* Select + Up/Down: the main zoom, at any moment (Auto view). Select alone reaches the game when it is released,

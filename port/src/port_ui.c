@@ -202,6 +202,7 @@ enum {
     ITEM_CONTROL_RESET,
     ITEM_CONTROL_NINTENDO_HEADING, /* section heading, not selectable */
     ITEM_PAD_LAYOUT,               /* force the Nintendo layout */
+    ITEM_CONTROLLER_PROMPTS,       /* experimental display family, never remaps inputs */
     ITEM_CONTROLS_BACK,
     ITEM_COUNT
 };
@@ -538,6 +539,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Nintendo controller", "Manette Nintendo", "Nintendo-Controller", "Controller Nintendo", "Mando Nintendo", "ニンテンドーのコントローラー" },
     { "Force Nintendo layout", "Forcer la disposition Nintendo", "Nintendo-Belegung erzwingen", "Forza disposizione Nintendo",
       "Forzar mando Nintendo", "ニンテンドーの配置にこてい" },
+    { "Prompts (experimental)", "Boutons (expérimental)", "Tasten (experimentell)", "Pulsanti (sperimentale)",
+      "Indicaciones (experimental)", "ボタン表示（実験）" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
@@ -1383,6 +1386,11 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_PAD_LAYOUT:
             SDL_strlcpy(out, sOnOff[gPortConfig.padLayout == 2][l], size);
             break;
+        case ITEM_CONTROLLER_PROMPTS: {
+            static const char* const names[]={"Original / GBA","Auto","Nintendo","Xbox","PlayStation"};
+            SDL_strlcpy(out,names[SDL_clamp(gPortConfig.controllerPrompts,0,4)],size);
+            break;
+        }
         case ITEM_INVERT_CARD_SCROLL:
             SDL_strlcpy(out, sOnOff[gPortConfig.invertCardScroll != 0][l], size);
             break;
@@ -1558,6 +1566,7 @@ static void ResetControlBindings(void) {
     memcpy(gPortConfig.keys, keys, sizeof(keys));
     memcpy(gPortConfig.pad, pad, sizeof(pad));
     gPortConfig.padLayout = 0; /* the default is automatic; force Nintendo stays opt-in */
+    gPortConfig.controllerPrompts = 0;
     sControlCapture = 0;
     PortInputResetBindings();
     PortConfigSave();
@@ -1676,6 +1685,9 @@ static void Change(int item, int dir) {
             break;
         case ITEM_PAD_LAYOUT:
             gPortConfig.padLayout = gPortConfig.padLayout == 2 ? 0 : 2; /* off: detect the pad */
+            break;
+        case ITEM_CONTROLLER_PROMPTS:
+            gPortConfig.controllerPrompts=Wrap(gPortConfig.controllerPrompts+(dir ? dir : 1),5);
             break;
         case ITEM_INVERT_CARD_SCROLL:
             gPortConfig.invertCardScroll = !gPortConfig.invertCardScroll;
@@ -2888,12 +2900,17 @@ static void GbaKey(int code, int cx, int cy) {
 }
 
 static void MenuButton(int x, int y, const char* text, int key) {
+    char prompt[32];
+    int mapped = (key=='A' || key=='B') && PortControllerActionLabel(key=='A' ? PORT_ACT_A : PORT_ACT_B,prompt,sizeof(prompt));
     int keyW = key ? GlyphWidth(key) + 4 : 0;
+    if (mapped) keyW=TextWidth(prompt)+4;
     int w = TextWidth(text) + 20 + keyW;
 
     Shade(x - 3, y - 2, w + 6, 14, 0xFFFFFFFFu, 224);
     MenuBar(x, y, w, 1);
-    if (key)
+    if (mapped)
+        DrawText(prompt,x+15,y,MENU_RED_DARK,0xFFD8D8D8u);
+    else if (key)
         DrawGlyph(key, x + 15, y, MENU_RED_DARK, 0xFFD8D8D8u);
     DrawText(text, x + 16 + keyW, y, MENU_INK, 0xFFD8D8D8u);
 }
