@@ -28,6 +28,12 @@ class ReportContract(unittest.TestCase):
         with self.assertRaises(ValueError):profile.validate_case_log('harness: frame 242 mode mode_battle\nHD sprites: rejected x recipe', 'monstro-battle', True)
         profile.validate_case_log('harness: frame 242 mode mode_battle', 'monstro-battle', False)
 
+    def test_guest_real_unusable_font_is_strict_failure_but_labelled_fallback_allowed(self):
+        text='harness: frame 242 mode mode_battle\nHD text: apk:/fonts/KHMenu.otf is not a usable font'
+        with self.assertRaises(ValueError):profile.validate_case_log(text,'monstro-battle',True)
+        profile.validate_case_log(text,'monstro-battle',False)
+        with self.assertRaises(ValueError):profile.validate_case_log('harness: frame 242 mode mode_battle','monstro-battle',True)
+
     def test_pacing_never_passes_skipped_or_paused_logic(self):
         for steps in ([0],[2],[0,1],[]):
             with self.subTest(steps=steps),self.assertRaises(ValueError):profile.validate_pacing({'logic_steps':steps})

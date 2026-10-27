@@ -103,8 +103,10 @@ def validate_case_log(log, scenario, strict_hd, require_progress=False):
     expected_world = {'monstro-opening':5, 'traverse-door':10}.get(scenario)
     if require_progress and expected_world is not None and any(int(world) != expected_world for world in progress):
         raise ValueError('effective WorldId differs from workload: '+scenario)
-    if strict_hd and re.search(r'HD sprites:.*reject|HD text:.*(?:missing|failed|unavailable)', log, re.I):
+    if strict_hd and re.search(r'HD sprites:.*reject|HD text:.*(?:missing|failed|unavailable|not a usable font)', log, re.I):
         raise ValueError('HD resources degraded; use --allow-degraded only for an explicitly labelled fallback run')
+    if strict_hd and 'HD text: font ' not in log:
+        raise ValueError('HD text requested but no loaded font evidence')
 
 
 def sha256(path):
@@ -209,8 +211,6 @@ def main():
             log=(folder/'kh_com.log').read_text(errors='replace')
             assert process.returncode==0 and 'CRASH' not in log, (scenario,process.returncode,folder)
             validate_case_log(log, scenario, bool(hd and not args.allow_degraded), require_progress=True)
-            if hd and 'HD text: font ' not in log:
-                raise ValueError('HD text requested but no loaded font evidence: '+str(folder))
             if args.quality_capture and not (folder/f'present_{args.frames-1:05d}.bmp').is_file():
                 raise ValueError('quality capture unavailable: '+str(folder))
             with (folder/'frames.csv').open() as stream:
