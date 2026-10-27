@@ -2400,6 +2400,9 @@ static void HdQuitPopup() {
 /* An update that changed HD sprite recipes: at the first start after it, the sprites alone are imported again from
    the installation (about a minute), so no picture is left behind showing the cartridge's instead. */
 static void HdStaleSprites() {
+#ifndef LAUNCHER_ANDROID
+    /* The phone receives imported files; extraction and recipe repair belong
+       to the desktop importer, not hd_android.inc's receiver API. */
     static bool checked;
     if (checked || hd::sJob.running || SDL_getenv("DECOMPUI_SHOT"))
         return;
@@ -2413,6 +2416,7 @@ static void HdStaleSprites() {
     hd::Start(source, sRoot, false, false, false, true, 0);
     hd::sJob.Say(std::string(T("Actualizando gráficos HD cambiados en esta versión: ", "Updating HD graphics this version changed: ")) +
                  std::to_string(stale));
+#endif
 }
 
 static void HdResumePopup() {

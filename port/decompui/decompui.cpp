@@ -3636,11 +3636,13 @@ int main(int argc, char** argv) {
             fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
             return 0;
         }
+#ifndef LAUNCHER_ANDROID
     for (int i = 1; i < argc; i++)
-        if (strcmp(argv[i], "--hd-stale") == 0) { /* sprites an updated recipe left behind (tests) */
+        if (strcmp(argv[i], "--hd-stale") == 0) { /* desktop recipe repair diagnostic */
             fprintf(stderr, "%d stale HD sprites\n", hd::StaleSprites(sRoot));
             return 0;
         }
+#endif
     for (int i = 1; i < argc; i++)
         if (strcmp(argv[i], "--hd-import") == 0) {
             fs::path source = i + 1 < argc && argv[i + 1][0] != '-' ? fs::u8path(argv[i + 1]) : hd::FindInstall();
