@@ -4556,15 +4556,21 @@
     "optiport-hud-invalidation": {
       "id": "optiport-hud-invalidation",
       "piece": "Explicit HUD GPU invalidation and recovery contract inventory",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-hud-invalidation",
       "created_at": "2026-10-27T05:33:53.837897+00:00",
-      "updated_at": "2026-10-27T05:34:01.079199+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T05:36:29.328637+00:00",
+      "branch": "fix/hud-renderer-invalidation",
       "pr": null,
       "approval": "Coordinador delega A invalidacion HUD y tests; usuario OptiPort",
       "reference": "port/src/port_hdhud.c",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T05:36:29.328637+00:00",
+          "owner": "codex-hud-invalidation",
+          "detail": "Production HUD invalidation harness red baseline export count then green: explicit generation recovery, assets/export cleanup, repeat failure no retry30frames; full HUD source Linux SDL syntax PASS; native32/guest64 recovery inventory documented. No partial reset handler."
+        }
+      ],
       "claimed_at": "2026-10-27T05:34:01.079199+00:00"
     }
   },
@@ -4574,7 +4580,7 @@
     "created_at": "2026-10-27T05:36:15.146946+00:00",
     "updated_at": "2026-10-27T05:36:15.146946+00:00"
   },
-  "updated_at": "2026-10-27T05:36:15.146946+00:00",
+  "updated_at": "2026-10-27T05:36:29.328637+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
