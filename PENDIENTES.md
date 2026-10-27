@@ -184,5 +184,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-counter-wording | Localized unlocked scenes counter and preview side fill | en_revision | device_profiles_sol | task/gallery-wording | — | 2026-10-27T07:10:33.879675+00:00 |
 | windows-runtime-preview-20261027 | Integrate verified Windows x64 runtime, launcher modes and protected states for preview ZIP | integrado | codex-windows-preview | https://github.com/MatyMeatBoy/ReKHCoM/pull/314 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T07:20:59.584301+00:00 |
 | windows64-saved-door-null | Windows64 saved-game first door: GBA BIOS cell read | en_curso | codex-crash | — | User 2026-10-27 requests fix across builds, protect Quiver install | 2026-10-27T07:58:59.484889+00:00 |
+| gallery-direct-return-no-flash | Claude regular UI: retorno galeria directo normal/skip desde title/field GBA/ReKHCoM; capturar transicion, restaurar UI renderer input audio sin avanzar historia; dependencia pacing OptiPort si aplica | pendiente | — | — | Usuario 27/10: registrar pendiente, no implementar ni bloquear ZIP | 2026-10-27T08:03:09.318648+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)
