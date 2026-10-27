@@ -267,6 +267,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | qa-sol-low-diverse-saves | QA: saves distintos y menus reales 32/64 | en_curso | sol-low-diverse-saves | — | — | 2026-10-27T19:24:12.921539+00:00 |
 | qa-sol-low-scenes-states | QA diversa galeria escenas y compatibilidad estados | en_revision | sol-low-scenes-states | — | — | 2026-10-27T19:27:43.672201+00:00 |
 | sol-low-linux-import | QA Linux SteamMachine HD importer fixtures | en_revision | sol-low-linux-import | — | User delegated 3 Sol bajo workers | 2026-10-27T19:27:58.786435+00:00 |
-| sol-linux-import-safety | ReadAsset bounds and import worker failure safety | pendiente | — | — | root user authorized scoped fix | 2026-10-27T19:29:42.223460+00:00 |
+| sol-linux-import-safety | ReadAsset bounds and import worker failure safety | en_curso | sol-low-linux-import | — | root user authorized scoped fix | 2026-10-27T19:29:46.673547+00:00 |
 
 Integrador: libre
