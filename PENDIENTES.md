@@ -157,4 +157,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-layout-bounds | LAD SEQD parser bounds | en_revision | codex-layout-bounds | fix/hd-layout-bounds | Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests | 2026-10-27T04:51:44.493845+00:00 |
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_curso | codex-hd-readiness | — | — | 2026-10-27T05:05:21.867134+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T05:08:08.674562+00:00)
