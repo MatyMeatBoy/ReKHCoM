@@ -156,7 +156,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | integrado | codex-sysmsg-null | https://github.com/MatyMeatBoy/ReKHCoM/pull/285 | Usuario 27/10: integrar bloques verificados para test builds OptiPort | 2026-10-27T05:09:27.207478+00:00 |
 | hd-layout-bounds | LAD SEQD parser bounds | integrado | codex-layout-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/283 | Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort | 2026-10-27T05:08:51.724397+00:00 |
 | hd-layout-readiness | Code: acquire HD gauge textures before native suppression | en_revision | codex-hd-readiness | fix/hd-layout-ready | — | 2026-10-27T05:09:39.124445+00:00 |
-| media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_curso | codex-media-fallbacks | — | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:08:32.062584+00:00 |
+| media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_revision | codex-media-fallbacks | fix/media-readiness-fallbacks | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:11:33.521790+00:00 |
 | optiport-skill-20261027 | OptiPort skill and evidence-based progress board | en_curso | codex-optiport | — | — | 2026-10-27T05:09:56.453746+00:00 |
 | hd-music-progress-20261027 | Bound HD music decoder progress and preserve original audio on failure | en_curso | codex-music | — | — | 2026-10-27T05:11:27.430158+00:00 |
 

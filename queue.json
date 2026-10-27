@@ -4354,15 +4354,21 @@
     "media-readiness-fallbacks": {
       "id": "media-readiness-fallbacks",
       "piece": "Video readiness and cleanup fallbacks Android and Windows MF",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-media-fallbacks",
       "created_at": "2026-10-27T05:08:26.698519+00:00",
-      "updated_at": "2026-10-27T05:08:32.062584+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T05:11:33.521790+00:00",
+      "branch": "fix/media-readiness-fallbacks",
       "pr": null,
       "approval": "User authorized indispensable fallbacks before Deck Android test builds",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T05:11:33.521790+00:00",
+          "owner": "codex-media-fallbacks",
+          "detail": "Android fault injection creation/upload 4 formats and watchdog passed; MF 3 allocation guards passed; full Windows i686 and Android64 syntax and existing seek regression passed. Local commit for integration, no push/PR."
+        }
+      ],
       "claimed_at": "2026-10-27T05:08:32.062584+00:00"
     },
     "optiport-skill-20261027": {
@@ -4395,7 +4401,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T05:11:27.431166+00:00",
+  "updated_at": "2026-10-27T05:11:33.521790+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
