@@ -5219,10 +5219,10 @@
       "status": "pr_abierto",
       "owner": "codex-hd-media-language",
       "created_at": "2026-10-27T08:37:21.317859+00:00",
-      "updated_at": "2026-10-27T09:32:43.605450+00:00",
+      "updated_at": "2026-10-27T10:28:37.582106+00:00",
       "branch": "feat/hd-media-language-provenance",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/327",
-      "approval": "Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
       "evidence": [
         {
@@ -5513,7 +5513,7 @@
     "created_at": "2026-10-27T10:28:25.637236+00:00",
     "updated_at": "2026-10-27T10:28:25.637236+00:00"
   },
-  "updated_at": "2026-10-27T10:28:25.637236+00:00",
+  "updated_at": "2026-10-27T10:28:37.582106+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
