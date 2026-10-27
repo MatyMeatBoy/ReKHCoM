@@ -23,7 +23,9 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
 - [x] **#277 Deck: cierre al abrir la puerta** — arreglado por Codex en PR #286 (`DOOR_PORTABILITY_277.md`):
   alineación real de símbolos ROM en cabeceras (`gen_pc_assets.py --ensure`) + paletas de cartas agotadas. Claude
   llegó a la misma causa (`movaps` en `LoadMapSelectKindPalette`) y retiró su versión duplicada (ROM_ALIGN).
-  Build de prueba `test277b` publicado 27/10 SIN el arreglo de paletas → rehacer desde main y avisar.
+  `test277b` (sin arreglo de paletas) reemplazado por **`test277c`** (main con #286, `build_linux.py --package`),
+  SHA `c6125f70…309c`; VM 64 bits con la ruta de Codex (`doorpose:3`) llega a `world=10`. Avisado en #277.
+  Falta: confirmación del reportero; #277 quedó cerrado por el merge de #282 (reabrir requiere OK del usuario).
 - [ ] **#272 Android**: probablemente otra causa (AArch64 tolera cargas desalineadas; armv7 sin NEON ahí).
   Esperar datos del reportero; build de prueba igual.
 - [ ] (histórico) **#277 Deck / #272 Android: cierre tras la Llave del Inicio** (puerta del castillo → selección de mundo).
