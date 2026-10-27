@@ -1828,10 +1828,10 @@
     "diario-subentradas": {
       "id": "diario-subentradas",
       "piece": "Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal",
-      "status": "en_curso",
-      "owner": "claude-v22",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T19:47:09.121895+00:00",
-      "updated_at": "2026-10-27T21:10:59.123782+00:00",
+      "updated_at": "2026-10-27T21:18:00.834621+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
@@ -1861,6 +1861,11 @@
           "at": "2026-10-27T19:02:32.207036+00:00",
           "owner": "codex-diary-priority",
           "detail": "released: User criticalcrash386 supersedes visualwork. Diary remains highpriority explicitnoAtlas, branchhistoricalancestor andoldclaimsreconciled, no sourceedit or falsecompletion; nextfreededicatedlane."
+        },
+        {
+          "at": "2026-10-27T21:18:00.834621+00:00",
+          "owner": "claude-v22",
+          "detail": "released: Diagnosed: wide-view defects come from BG0/BG1 256px map wrap in the overlay (screen layer); PortBgClip ignored there. Needs render decision (overlay clip + side ground, or authored margin columns). pruebas/diario/DIAGNOSTICO.md + captures; no source change."
         }
       ],
       "claimed_at": "2026-10-27T21:10:59.123782+00:00"
@@ -7746,7 +7751,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T21:10:59.123782+00:00",
+  "updated_at": "2026-10-27T21:18:00.834621+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
