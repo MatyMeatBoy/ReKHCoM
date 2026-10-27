@@ -1981,13 +1981,13 @@
     "agrabah-jafar-arena": {
       "id": "agrabah-jafar-arena",
       "piece": "Agrabah · arena de Jafar: patrón inferior, blinkeo y espejo al alejar la cámara",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-jafar",
       "created_at": "2026-10-25T04:45:45.022710+00:00",
-      "updated_at": "2026-10-25T05:01:57.795447+00:00",
+      "updated_at": "2026-10-27T17:11:54.917240+00:00",
       "branch": "codex/jafar-blink",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/91",
-      "approval": null,
+      "approval": "Atlas exact e182f7052b8348b2a88b4f2e996a0ed7; approved; revision 1; sha256 6768af096eca26b15f160d5ed4097c9e0fa784802f293b18ea904c366cadfdea; decision 2026-10-25T05:51:38.407454+00:00",
       "reference": "build/user-reports/jafar-arena-20261025.png SHA256=811009864F497879DC35EA37C492F39757DA09C4E191CE2660B1E43D6C616FFE; Atlas parent 53e790683ac740ab8df504a7bb8406f3; captura aportada por el usuario 25/10/2026",
       "evidence": [
         {
@@ -1999,10 +1999,16 @@
           "at": "2026-10-25T05:01:57.795447+00:00",
           "owner": "codex-jafar",
           "detail": "fa7be98d4. Blinkeo: 1701 frames activos 16:9 + 461 32:9, cero perdidas; GBA identica en 5 capturas; check_sources OK. Hija Atlas tecnica y copia EU independiente entregadas. Patron inferior sigue pendiente de arte, Android #83 no resuelto por este PR. Pruebas finalizadas y bajo consumo pedido por Deadlock."
+        },
+        {
+          "at": "2026-10-27T17:11:54.917240+00:00",
+          "owner": "codex-jafar",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/91 MERGED 2026-10-25T05:51:41Z; merge e4a96978010d113c07fc78832a1594bf870d2594 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact e182f7052b8348b2a88b4f2e996a0ed7, approved, revision 1, SHA256 6768af096eca26b15f160d5ed4097c9e0fa784802f293b18ea904c366cadfdea; no se hereda aprobacion de otra version.\nRevalidado 2026-10-27T17:11:54.785769+00:00; main f1b51b9c21663aeacdbacd7184b2b2b6baa104e2; merge real e4a96978010d113c07fc78832a1594bf870d2594; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T04:47:50.011577+00:00",
-      "sent": "e182f7052b8348b2a88b4f2e996a0ed7"
+      "sent": "e182f7052b8348b2a88b4f2e996a0ed7",
+      "completed_at": "2026-10-27T17:11:54.917240+00:00"
     },
     "steam-cuenta-verificacion": {
       "id": "steam-cuenta-verificacion",
@@ -6551,7 +6557,7 @@
     "created_at": "2026-10-27T17:11:02.822041+00:00",
     "updated_at": "2026-10-27T17:11:02.822041+00:00"
   },
-  "updated_at": "2026-10-27T17:11:46.772303+00:00",
+  "updated_at": "2026-10-27T17:11:54.917240+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
