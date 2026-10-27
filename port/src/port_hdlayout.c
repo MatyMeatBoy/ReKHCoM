@@ -27,7 +27,7 @@ typedef struct HdLayout {
 
 typedef struct HdLayoutTexture {
     SDL_Texture* tex;
-    int w, h, tried;
+    int w, h, tried, requested;
 } HdLayoutTexture;
 
 static HdLayout sLayouts[HD_LAYOUT_COUNT];
@@ -103,18 +103,21 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
 }
 
 int PortHdLayoutReady(int layout, int texture) {
-    char file[160];
-    FILE* f;
-    if (!Layout(layout))
+    if ((unsigned)texture >= HD_LAYOUT_TEXTURE_COUNT || !Layout(layout))
         return 0;
-    if (sTextures[texture].tex)
-        return 1;
-    if (sTextures[texture].tried)
-        return 0;
-    f = fopen(PortHdSpritePath(file, sizeof(file), kTextureFiles[texture]), "rb");
-    if (f)
-        fclose(f);
-    return f != NULL;
+    /* Game logic may request a replacement, but only the renderer uploads it.
+       Keep native drawing until decode, surface creation and upload succeeded. */
+    sTextures[texture].requested = 1;
+    return sTextures[texture].tex != NULL;
+}
+
+void PortHdLayoutPrepare(SDL_Renderer* renderer) {
+    int i;
+    if (!gPortConfig.hdCards)
+        return;
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++)
+        if (sTextures[i].requested)
+            Texture(renderer, i);
 }
 
 /* The layout's sequence n: its bytes and size. Validate ranges before forming
@@ -447,8 +450,20 @@ static void GaugeSet(int* anim, int* frame, int value) {
 
 int PortHdGauge(int hp, int maxHp, int riku) {
     int msPerFrame = 17;
-    if (!gPortConfig.hdCards || !PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE) ||
-        !PortHdLayoutReady(HD_LAYOUT_GAUGE, riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES))
+    int i, bodyReady, faceReady;
+    static const int groups[] = { 7, 8, 9, 10, 13, 14, 15 };
+    if (!gPortConfig.hdCards)
+        return 0;
+    /* Structurally valid imports may still lack this gauge's animations. */
+    for (i = 0; i < (int)(sizeof(groups) / sizeof(groups[0])); i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, groups[i]))
+            return 0;
+    for (i = 0; i < 4; i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 0, i))
+            return 0;
+    bodyReady = PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE);
+    faceReady = PortHdLayoutReady(HD_LAYOUT_GAUGE, riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES);
+    if (!bodyReady || !faceReady)
         return 0;
     hp = SDL_clamp(hp, 0, 560);
     maxHp = SDL_clamp(maxHp, 1, 560);
@@ -636,7 +651,13 @@ static struct {
 } sEnemy;
 
 int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
-    if (!gPortConfig.hdCards || !PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE))
+    int i;
+    if (!gPortConfig.hdCards)
+        return 0;
+    for (i = 0; i < 7; i++)
+        if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, kEnemyPlaceGroup[i]))
+            return 0;
+    if (!PortHdLayoutReady(HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE))
         return 0;
     if (!visible || !who) {
         sEnemy.active = 0;
