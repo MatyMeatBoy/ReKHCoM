@@ -5606,7 +5606,7 @@
       "status": "pr_abierto",
       "owner": "codex-linux-arm64",
       "created_at": "2026-10-27T10:36:20.825294+00:00",
-      "updated_at": "2026-10-27T10:49:04.577782+00:00",
+      "updated_at": "2026-10-27T11:14:05.005381+00:00",
       "branch": "feat/linux-arm64-experimental",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/345",
       "approval": "Usuario autoriza LinuxARM64 scope; root delega nueva branch preservando vieja",
@@ -5616,6 +5616,11 @@
           "at": "2026-10-27T10:49:04.577782+00:00",
           "owner": "codex-linux-arm64",
           "detail": "Head9977a6ae0 base34132bd71 preserved9300oldbranch.15wrapper4builder loaderPASS,realLP64/ILP32ABIobjects,hostAArch64syntax+guestUI/gallery/moviePASS. RebaseoffsetwrapRED->GREEN. Noheavybuild/download/device/ARMgameexecution. Optinonly unchangedreleasestaging. FullSDLhost+EUUSJPguestlink/mmap/runtime/GPUQA pending. WorktreeNeededyes PR/repro khcom-worktrees/linux-arm64-experimental."
+        },
+        {
+          "at": "2026-10-27T11:14:05.005381+00:00",
+          "owner": "codex-linux-arm64",
+          "detail": "Head38de8b4d1 preserved independentwholeLoadArm64Imagefixture. Bothportable+wholeloaderprobesPASS:preferred/forcedmove/header/table/stack/protectionrequests/bounds/rollback. WindowsVirtualAllocRWadapterNOTLinuxmmap/mprotect/ARMexec. Fullsourcebuild/runtime/hardwarependingunchanged. WorktreeNeededyesPRrepro."
         }
       ],
       "claimed_at": "2026-10-27T10:36:26.495128+00:00"
@@ -5764,7 +5769,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:06:49.809644+00:00",
+  "updated_at": "2026-10-27T11:14:05.005381+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
