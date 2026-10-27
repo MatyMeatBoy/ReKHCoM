@@ -236,4 +236,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-gallery-return-evidence | P1 verificación acotada de retorno de galería sin flash | en_curso | codex-gallery-return-evidence | qa/v22-gallery-return-evidence | Usuario pidió seguir cerrando pendientes; PLAN_V22 P1; plan de 8 casos y 3 controles aprobado por coordinador | 2026-10-27T16:34:05.954924+00:00 |
 | v22-steamdeck-330-entry-diagnostic | Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos | en_curso | codex-deck-entry-diagnostic | — | Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes | 2026-10-27T16:42:20.354644+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T16:42:38.132822+00:00)
+Integrador: libre
