@@ -1,7 +1,9 @@
 # Startup cause ledger: Deck #330 and Windows #360
 
 Diagnostic plan, 2026-10-27. Neither reporter's cause is established. This is a
-source review and a CPU-only fallback predicate check, not device confirmation.
+source review and a CPU-only fallback predicate check, not independent device
+validation. The reporter's later successful test-build observation is recorded
+separately below; it does not establish the cause of the original failure.
 Owner: `codex-startup-ledger`; queue task `v22-startup-cause-ledger`.
 The separate `codex-deck-entry-diagnostic` claim remains untouched.
 
@@ -17,6 +19,30 @@ for this native shortcut; the Desktop importer is a separate entry point.
 Automatic and Force 64-bit fail while Force 32-bit works on Windows 11 x64.
 It supplies no exception, GPU, process-lifetime trace or exact installed hashes.
 The unrelated Android comment cannot identify Pedro's Windows failure.
+
+### Reporter observation added 2026-10-27, 17:56:16 UTC
+
+Pedro [confirms that v2.1-test360 works in both Automatic and Force 64-bit](https://github.com/MatyMeatBoy/ReKHCoM/issues/360#issuecomment-6449622090).
+This is a successful startup observation on the diagnostic build, not a
+reproduction or diagnosis of the original 2.1 failure. The comment supplies no
+exception, host/guest hashes, CPU/GPU or failing-phase trace. It does not show
+which change, installation difference or environment made that attempt work;
+do not credit #368's recovery, #377's CPU guard, an ABI fix or a GPU workaround
+as the established cause. Do not describe test360 as currently failing for him.
+
+The original-failure rows below remain conditional investigation paths. This
+new success weakens a universal inability to run the 64-bit path on that device,
+without proving equivalence of the original and diagnostic artifacts/configs.
+The user has separately authorized a newer Windows 2.2 test build: the next
+bounded check is its clearly identified artifact in Automatic and Force64,
+keeping this successful test360 result as the prior observation. No new build
+or reporter message was produced by this documentation update.
+
+Deck #330 still has no supplied follow-up log after its terminal-success versus
+Gaming-Mode-failure report. Pedro's Windows result does not confirm a Deck fix.
+The Moto Android report is tracked separately in [#374](https://github.com/MatyMeatBoy/ReKHCoM/issues/374);
+neither Windows test360 nor a Windows 2.2 ZIP validates that Android startup or
+post-Jafar failure.
 
 Recovered 42 primary source files from the timed-out investigation. Independently
 compared every cached file against `git show ref:path`: all match after CRLF/LF
@@ -102,7 +128,7 @@ assert(!ReKHCoMRetry32(0xc0000005u, false));
 assert(!ReKHCoMRetry32(0, false));
 ```
 
-The first useful device observation is a single isolated attempt per context,
+For a still-unresolved failing context, the useful device observation is a single isolated attempt per context,
 with process lifetime and ordered phases. Preserve original logs and bounded
 history, artifact hashes and configuration fingerprint; keep private absolute
 paths/environment values out of public evidence. If instrumentation is needed,
