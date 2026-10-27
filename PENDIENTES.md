@@ -162,7 +162,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | save-bank-flush | Code: retain dirty SRAM and selected bank when persistence fails | integrado | codex-save-bank | https://github.com/MatyMeatBoy/ReKHCoM/pull/290 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:28:08.862321+00:00 |
 | host-music-progress | Bound host music loop decoding and propagate terminal failure | integrado | codex-host-music | https://github.com/MatyMeatBoy/ReKHCoM/pull/291 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:28:26.106174+00:00 |
 | optiport-linux64-streaming | Linux64 movie EOF clock and cancelable decoder pipes | integrado | codex-linux64-streaming | https://github.com/MatyMeatBoy/ReKHCoM/pull/293 | Usuario 27/10 integrar y enviar test builds OptiPort | 2026-10-27T05:31:00.040373+00:00 |
-| hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_curso | codex-hud-budget | — | — | 2026-10-27T05:26:06.094829+00:00 |
+| hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_revision | codex-hud-budget | fix/hud-target-budget | — | 2026-10-27T05:32:42.412795+00:00 |
 | android-optiport-package | Playable isolated Android OptiPort test package | en_revision | codex-android-test | build/android-optiport-package | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:29:17.892180+00:00 |
 
 Integrador: libre
