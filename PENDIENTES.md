@@ -151,6 +151,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-previews-black-pedro | Galería HD: previews negros tras saltar y reentrar | integrado | codex-gallery-preview | https://github.com/MatyMeatBoy/ReKHCoM/pull/275 | Pedido directo usuario 26/10: previews en negro tras entrar saltar volver, solucionar | 2026-10-26T22:54:50.856278+00:00 |
 | hd-reload-fill-decomp | Recarga HD dinamica igual al original desde decomp | pr_abierto | codex-ending-hud | https://github.com/MatyMeatBoy/ReKHCoM/pull/276 | Pedido directo usuario corregir rellenado original, pushear y cerrar 26/10 | 2026-10-26T23:49:01.926744+00:00 |
 | crash-diagnostics-20261027 | Logs persistentes y diagnostico #277/#272; crash Monstruo Quiver (instalacion solo lectura) | en_curso | codex-crash | fix/crash-diagnostics | — | 2026-10-27T04:07:45.126813+00:00 |
-| hd-sprite-budget-guard | HD sprite header and cache budget guard | pendiente | — | — | — | 2026-10-27T04:24:56.848876+00:00 |
+| hd-sprite-budget-guard | HD sprite header and cache budget guard | en_curso | codex-hd-sprite-guard | — | — | 2026-10-27T04:25:04.512763+00:00 |
 
 Integrador: libre

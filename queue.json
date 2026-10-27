@@ -4184,19 +4184,20 @@
     "hd-sprite-budget-guard": {
       "id": "hd-sprite-budget-guard",
       "piece": "HD sprite header and cache budget guard",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-hd-sprite-guard",
       "created_at": "2026-10-27T04:24:56.848876+00:00",
-      "updated_at": "2026-10-27T04:24:56.848876+00:00",
+      "updated_at": "2026-10-27T04:25:04.512763+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Auditoria build/hd-audit-worker.md; tarea usuario 2026-10-27",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T04:25:04.512763+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T04:24:56.848876+00:00",
+  "updated_at": "2026-10-27T04:25:04.512763+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
