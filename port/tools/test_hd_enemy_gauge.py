@@ -80,6 +80,7 @@ int main(void){
     for(unsigned i=0;i<sizeof(hp)/sizeof(hp[0]);i++){
         int layer=hp[i]>0?(hp[i]-1)/560:0;
         int green=(hp[i]-layer*560)*200/560;
+        update(0,0,0,NULL);
         update(1,hp[i],2240,i%2?&actorA:&actorB);controls(green,green,layer);
     }
     update(1,40,80,&actorA);controls(100,100,0);
