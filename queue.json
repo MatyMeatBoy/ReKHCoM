@@ -6875,10 +6875,10 @@
     "issue380-door-spotlight": {
       "id": "issue380-door-spotlight",
       "piece": "Issue380: reproducir y corregir Sora y puerta invisibles en menu naipes mapa; antes/despues visual32/64",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-door380",
       "created_at": "2026-10-27T18:21:21.907014+00:00",
-      "updated_at": "2026-10-27T18:31:52.487604+00:00",
+      "updated_at": "2026-10-27T18:33:55.176593+00:00",
       "branch": "fix/issue380-door",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/384",
       "approval": "Usuario prioriza Sora con puerta27/10 y pide resolver issues",
@@ -6888,9 +6888,15 @@
           "at": "2026-10-27T18:31:52.487604+00:00",
           "owner": "codex-door380",
           "detail": "REDauto0actorpixels normalHD/fixedpositive;GREENfourrealD3D1132/64normalHD380470SoraanddoorseparateroisPASS;return650four32casesbyteidentical;sourcee66df9983"
+        },
+        {
+          "at": "2026-10-27T18:33:55.176593+00:00",
+          "owner": "codex-door380",
+          "detail": "PR384 merged8d495811e90c98b425c05c742483a810030d6c99; RED0actorpixels/fixedpositive; realD3D11EU32/64normalHD4runs each380470Sora>2700door>24000 PASS; visualinspected;648returnoldunchanged; nophysicalreporterLinuxAndroidconfirmationyet."
         }
       ],
-      "claimed_at": "2026-10-27T18:21:28.131243+00:00"
+      "claimed_at": "2026-10-27T18:21:28.131243+00:00",
+      "completed_at": "2026-10-27T18:33:55.176593+00:00"
     },
     "android374-startup-jafar": {
       "id": "android374-startup-jafar",
@@ -6953,7 +6959,7 @@
     "created_at": "2026-10-27T18:31:59.860311+00:00",
     "updated_at": "2026-10-27T18:31:59.860311+00:00"
   },
-  "updated_at": "2026-10-27T18:31:59.860311+00:00",
+  "updated_at": "2026-10-27T18:33:55.176593+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
