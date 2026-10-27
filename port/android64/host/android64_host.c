@@ -130,7 +130,10 @@ static void H_exit(int code) {
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
+static int HostGpuQuery(const char*, char*, int);
 static int H_getenv(const char* name, char* out, int cap) {
+    int gpuQuery = HostGpuQuery(name, out, cap);
+    if (gpuQuery != -2) return gpuQuery;
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -228,7 +231,9 @@ static void H_gfx_begin(uint32_t clear) {
     if (clear >> 24)
         SDL_RenderClear(sRenderer);
 }
+#define HOST_GPU_TARGETS 1
 #include "host_texture_slots.h"
+#include "host_gpu_targets.h"
 static void RendererDeviceReset(void);
 static void H_gfx_clip(int x, int y, int w, int h) {
     SDL_Rect r = { x, y, w, h };
@@ -239,6 +244,7 @@ static void H_gfx_blend(int on) { sBlend = on; }
 /* HostVertex triangles; the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters (port/ps5/guest/src/sdl_shim.c):
    those are drawn crisp (nearest), as the software hosts read them */
 static void H_gfx_draw(int id, const void* verts, int count) {
+    if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
     int slot = HostTextureSlot(id);
     SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
@@ -253,7 +259,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
         crisp = shift > 0;
         SDL_SetTextureScaleMode(t, crisp || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
-        SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(t, (SDL_BlendMode)sBlend);
     }
     for (int i = 0; i < count; i++) {
         out[i].position.x = v[i].x;
@@ -265,7 +271,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         out[i].color.b = (v[i].argb & 255) / 255.0f;
         out[i].color.a = (v[i].argb >> 24) / 255.0f;
     }
-    SDL_SetRenderDrawBlendMode(sRenderer, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(sRenderer, (SDL_BlendMode)sBlend);
     SDL_RenderGeometry(sRenderer, t, out, count, NULL, 0);
 }
 
@@ -310,6 +316,7 @@ static void DrawBox(SDL_Texture* t, int w, int h, float y0, float alpha) {
     SDL_RenderTexture(sRenderer, t, NULL, &r);
 }
 static void H_gfx_end(void) {
+    if (sGpuOutputBlocked) return;
     if (sToast) {
         Uint64 now = SDL_GetTicks();
         if (now >= sToastUntil) {
@@ -377,7 +384,14 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 /* the network link's socket (shared/udp_host.h): BSD sockets */
 #define UDP_HOST_POSIX
 #include "udp_host.h"
+#define H_thread H_thread_legacy
 #include "thread_host.h" /* the image's other threads: none here (bridge entry thread answers one core) */
+#undef H_thread
+static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    int result = HostGpuCommand(op, a, b, c, d);
+    return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
+}
+
 static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
 
 /* HD movies: played here to the end with the NDK's decoders (port/portable/hdmovie_android.c, as on 32-bit Android) */
