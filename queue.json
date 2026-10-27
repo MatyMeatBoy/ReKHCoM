@@ -6671,10 +6671,10 @@
     "optiport-v22-async": {
       "id": "optiport-v22-async",
       "piece": "OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-v22-preview-cancellation",
       "created_at": "2026-10-27T17:32:28.086015+00:00",
-      "updated_at": "2026-10-27T17:50:59.360352+00:00",
+      "updated_at": "2026-10-27T17:53:45.695690+00:00",
       "branch": "test/preview-cancel-contracts",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Usuario autorizó continuar pendientes; coordinador asignó exclusivamente cancelación/obsolescencia sin medición ni UI",
@@ -6689,6 +6689,11 @@
           "at": "2026-10-27T17:50:59.360352+00:00",
           "owner": "codex-v22-preview-cancellation",
           "detail": "PRdraft381 head15d3a9bf5: sólo test/documento nuevos. 8 escenarios C productivos deterministas PASS y 2 controles negativos rechazados exit97. Sin SDL/GPU/hilos reales/sleeps/cronometraje; no defecto productivo hallado ni cambios UI/worker. Fuente61aee4c40, evidencia pruebas/v22-async-contracts/contract-q44w8n1t. Alcance parcial: no cerrar bloque async/perf; latencia/scheduling/I/O/dispositivos pendientes. Se esperó señal tras medición de Claude."
+        },
+        {
+          "at": "2026-10-27T17:53:45.695690+00:00",
+          "owner": "codex-v22-preview-cancellation",
+          "detail": "Separación autorizada: PR381 cubre sólo contrato determinista y está en el hijo v22-preview-cancellation-contract. Vuelvo de pr_abierto a en_curso para release (transición directa a en_revision no permitida). Conservar PR/evidencias históricas; frío/caliente, latencia, cierre real, scheduling e I/O siguen pendientes. No integrar el padre por PR381."
         }
       ],
       "claimed_at": "2026-10-27T17:38:43.410168+00:00"
@@ -6761,7 +6766,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T17:53:19.919912+00:00",
+  "updated_at": "2026-10-27T17:53:45.695690+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
