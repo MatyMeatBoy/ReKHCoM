@@ -198,5 +198,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-gauge-visible-bounds | Measured HD gauge crop preserves supersampling within budgets | pr_abierto | codex-gauge-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/326 | User requests smoother inner HUD edges; coordinator authorizes measured crop implementation | 2026-10-27T08:50:27.311893+00:00 |
 | bridge-gpu-targets-aa | Negotiated portable GPU targets and gauge AA | en_curso | device_profiles_sol | — | — | 2026-10-27T08:51:05.342086+00:00 |
 | launcher-hd-media-language-variants-v21 | Siguiente PR EN/JP: imports namespaces por idioma, metadata/cache/journal/posters con procedencia, playback y UI seleccion independiente de texto/Undub; atomic y preservarold | pendiente | — | — | Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente | 2026-10-27T08:52:24.794876+00:00 |
+| submenu-moogle-visible-band-style-zero | Moogle transition native border reaches edge while margin remains late in style zero | pendiente | — | — | User requests coherent submenu borders and root visual review for 2.1 | 2026-10-27T08:55:20.425267+00:00 |
 
 Integrador: libre

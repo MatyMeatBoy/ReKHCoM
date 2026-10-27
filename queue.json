@@ -5312,10 +5312,23 @@
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
       "evidence": []
+    },
+    "submenu-moogle-visible-band-style-zero": {
+      "id": "submenu-moogle-visible-band-style-zero",
+      "piece": "Moogle transition native border reaches edge while margin remains late in style zero",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:55:20.425267+00:00",
+      "updated_at": "2026-10-27T08:55:20.425267+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requests coherent submenu borders and root visual review for 2.1",
+      "reference": "Actual D3D 0022 host_shot524: margin dark red core bright red before and after324/325",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:55:08.324631+00:00",
+  "updated_at": "2026-10-27T08:55:20.425267+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
