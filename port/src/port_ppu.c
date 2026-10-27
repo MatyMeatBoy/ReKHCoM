@@ -731,6 +731,19 @@ typedef struct OamHdPart {
     const uint16_t* palette;   /* the part's original palette (ROM), for its fade */
 } OamHdPart;
 static OamHdPart sOamHd[128];
+extern const unsigned char gOlympiaSmallCardTiles[];
+
+/* Only the native underlay changes: at fractional output scales its white
+ * Olympia cell can escape the HD window's filtered right edge. Coordinates
+ * are in the authored frame (-8,-20 origin), after the OAM flip/affine map.
+ * Call only for an accepted HD replacement; missing/off HD stays untouched. */
+static int SmallCardNativeColor(int i, int tx, int ty, int color) {
+    if (sOamHd[i].tiles == gOlympiaSmallCardTiles &&
+        sOamHd[i].x + tx == 6 && sOamHd[i].y + ty == -1)
+        return 0;
+    return color;
+}
+
 static uint8_t sMainHdPart[128]; /* slot queued as an HD part of the game's picture (QueueMainHdParts) */
 static int16_t sMainHdBox[128][4]; /* its box on the canvas: x, y, w, h */
 static uint8_t sMainHdScreen[128];  /* ... on the screen layer (menus), its box in the screen layer's coordinates */
@@ -2522,6 +2535,8 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             }
             if (col < 0)
                 continue;
+            if (sMainHdPart[i])
+                col = SmallCardNativeColor(i, tx, ty, col);
             if (bandOnly) {
                 if (sTitleSampleLine[x] == TRANSPARENT || prio < sTitleSamplePrio[x]) {
                     sTitleSampleLine[x] = (uint16_t)col;
@@ -5210,6 +5225,8 @@ void PortPpuRenderHud(uint32_t* buf) {
                 col = ObjColor(a0, a2, tx, ty, ow, mapping1d);
                 if (col < 0)
                     continue;
+                if (hdPart)
+                    col = SmallCardNativeColor(i, tx, ty, col);
                 if (reloadMask && sOamHd[i].tiles == gRiCardF0RedTiles) {
                     /* the gauge's fill and flash only inside the HD back's black, not over its silver edge or crown */
                     int u = px - reloadAt[0] - reloadBox[0], v = py - reloadAt[1] - reloadBox[1];
