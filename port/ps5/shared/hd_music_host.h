@@ -31,6 +31,7 @@ enum { HD_MUSIC_OPEN, HD_MUSIC_PLAY, HD_MUSIC_PAUSE, HD_MUSIC_CLOSE };
 static struct {
     stb_vorbis* vorbis;
     unsigned char* file;
+    int failed; /* terminal decoder failure: reported by PLAY, freed only by Close/Open */
     int playing, gain;                      /* gain: thousandths */
     unsigned rate, loopStart, loopEnd, pos; /* samples of the track */
     float buf[1024 * 2];
@@ -64,22 +65,30 @@ static void HdMusicClose(void) {
     memset(&sHd, 0, sizeof(sHd));
 }
 
-/* Next frame of the track, looping at its loop points. */
-static void HdNext(float* out) {
+/* Next frame of the track, looping at its loop points. Decoder calls are
+ * synchronous in the host's game-thread H_audio_push bridge, not an SDL audio
+ * callback. Mark failures here; never close/free from the producer. The next
+ * game-thread PLAY reports failure so the guest restores its cartridge BGM. */
+static int HdNext(float* out) {
+    if (sHd.failed)
+        goto failed;
     if (sHd.bufAt >= sHd.bufLen) {
-        int want = 1024, got = 0;
-        if (sHd.pos + (unsigned)want > sHd.loopEnd)
-            want = (int)(sHd.loopEnd - sHd.pos);
-        if (want > 0)
-            got = stb_vorbis_get_samples_float_interleaved(sHd.vorbis, 2, sHd.buf, want * 2);
+        int want, got;
+        if (sHd.pos >= sHd.loopEnd)
+            goto rewind;
+        want = (int)(sHd.loopEnd - sHd.pos < 1024 ? sHd.loopEnd - sHd.pos : 1024);
+        got = stb_vorbis_get_samples_float_interleaved(sHd.vorbis, 2, sHd.buf, want * 2);
         if (got <= 0) {
-            stb_vorbis_seek(sHd.vorbis, sHd.loopStart);
+rewind:
+            if (!stb_vorbis_seek(sHd.vorbis, sHd.loopStart))
+                goto failed;
             sHd.pos = sHd.loopStart;
-            got = stb_vorbis_get_samples_float_interleaved(sHd.vorbis, 2, sHd.buf, 2048);
-            if (got <= 0) {
-                out[0] = out[1] = 0.0f;
-                return;
-            }
+            if (sHd.loopEnd <= sHd.loopStart)
+                goto failed;
+            want = (int)(sHd.loopEnd - sHd.loopStart < 1024 ? sHd.loopEnd - sHd.loopStart : 1024);
+            got = stb_vorbis_get_samples_float_interleaved(sHd.vorbis, 2, sHd.buf, want * 2);
+            if (got <= 0)
+                goto failed;
         }
         sHd.pos += (unsigned)got;
         sHd.bufLen = got;
@@ -88,6 +97,14 @@ static void HdNext(float* out) {
     out[0] = sHd.buf[sHd.bufAt * 2];
     out[1] = sHd.buf[sHd.bufAt * 2 + 1];
     sHd.bufAt++;
+    return 1;
+failed:
+    if (!sHd.failed)
+        HD_MUSIC_LOG("hd music: decoder made no progress or loop seek failed; cartridge BGM instead");
+    sHd.failed = 1;
+    sHd.playing = 0;
+    out[0] = out[1] = 0.0f;
+    return 0;
 }
 
 static int HdMusicOpen(const char* path) {
@@ -121,8 +138,11 @@ static int HdMusicOpen(const char* path) {
         }
         free(loop);
     }
-    HdNext(sHd.a);
-    HdNext(sHd.b);
+    if (!sHd.rate || !sHd.loopEnd || !HdNext(sHd.a) || !HdNext(sHd.b)) {
+        HD_MUSIC_LOG("hd music: %s has no usable PCM", path);
+        HdMusicClose(); /* Open runs on the game thread; no mix call is active. */
+        return 0;
+    }
     return 1;
 }
 
@@ -130,7 +150,7 @@ static int H_hd_music(int op, const char* path, int gain) {
     switch (op) {
         case HD_MUSIC_OPEN: return HdMusicOpen(path);
         case HD_MUSIC_PLAY:
-            sHd.playing = sHd.vorbis != NULL;
+            sHd.playing = sHd.vorbis != NULL && !sHd.failed;
             sHd.gain = gain;
             return sHd.playing;
         case HD_MUSIC_PAUSE: sHd.playing = 0; return 1;
@@ -158,7 +178,8 @@ static void HdMusicMix(int16_t* frames, uint32_t count, int rate) {
         while (sHd.frac >= 1.0) {
             sHd.a[0] = sHd.b[0];
             sHd.a[1] = sHd.b[1];
-            HdNext(sHd.b);
+            if (!HdNext(sHd.b))
+                return;
             sHd.frac -= 1.0;
         }
     }
