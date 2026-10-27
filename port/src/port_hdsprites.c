@@ -853,7 +853,9 @@ static int RingLoad(void) {
         SDL_memcpy(dark, px, (size_t)w * h * 4);
         for (k = 0; k < w * h; k++) {
             unsigned char* c = dark + k * 4;
-            if (c[1] > c[0] + 30 && c[1] > c[2] + 30) /* the green: the empty track's dark grey */
+            /* the green: the empty track's dark grey; its antialiased rim too (yellow-green where it meets the black
+               outline), which a stricter test left as a bright line along the grey (user report 27/10) */
+            if (c[1] >= c[0] && c[1] > c[2] + 8)
                 c[0] = c[1] = c[2] = (unsigned char)(28 + c[1] / 16);
         }
     }

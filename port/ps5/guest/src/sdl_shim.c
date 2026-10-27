@@ -553,7 +553,10 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
         t->id[0] = h_thread(BRIDGE_GPU_CREATE, (uint32_t)w, (uint32_t)h, 0, 0);
         if (t->id[0] < 0) { free(t); SetError("GPU render target allocation failed"); return NULL; }
     } else t->rgba = calloc((size_t)w * h, 4);
-    t->blend = SDL_BLENDMODE_NONE;
+    /* as SDL3: a format with alpha starts blended (SDL_CreateTextureWithProperties); NONE drew the HP ring's
+       transparent corners as a white/black box on 64-bit hosts without the gauge layouts */
+    t->blend = format == SDL_PIXELFORMAT_ARGB8888 || format == SDL_PIXELFORMAT_RGBA32 ||
+               format == SDL_PIXELFORMAT_BGRA32 ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE;
     t->scale = SDL_SCALEMODE_LINEAR;
     t->cr = t->cg = t->cb = t->ca = 255;
     t->picture = access == SDL_TEXTUREACCESS_STREAMING;
