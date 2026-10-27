@@ -99,7 +99,8 @@ void sysmsgwin_0(SysMsgWinWork* work, CardMessageArgs* args) {
     case CARD_MESSAGE_MODE_BG_WINDOW:
         work->tiles3 = AllocObjTiles(0x40, NULL);
         work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        // @bug Palette allocation can fail; preserve the original GBA BIOS read.
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
         SetObjTileSource(work->tiles3, gFEventTiles);
         AnimInit(&work->anim2, gFEventAnims, gFEventFrames);
         AnimStart(&work->anim2, 2, ANIM_FLAG_LOOP);
@@ -112,7 +113,7 @@ void sysmsgwin_0(SysMsgWinWork* work, CardMessageArgs* args) {
     case CARD_MESSAGE_MODE_SPRITE_WINDOW:
         work->tiles3 = AllocObjTiles(0x40, NULL);
         work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
         SetObjTileSource(work->tiles3, gFEventTiles);
         AnimInit(&work->anim2, gFEventAnims, gFEventFrames);
         AnimStart(&work->anim2, 2, ANIM_FLAG_LOOP);
@@ -227,12 +228,12 @@ u8 UpdateSysmsgwinWaitInput(SysMsgWinWork* work, void* task) {
             pal = gDialogBoxPalette;
             work->palette2 = LoadObjPalette(pal, 32);
 #ifdef VERSION_EU
-            FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 #else
             // @bug palette4 can be NULL (NULL read).
             FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
 #endif
-            LoadObjPaletteBank(work->palette2->index, pal);
+            LoadObjPaletteBank(BIOS_PTR(work->palette2)->index, pal);
             SetObjTileSource(work->tiles4, gHandCursorTiles);
             AnimInit(&work->anim3, gHandCursorAnims, gHandCursorFrames);
             AnimStart(&work->anim3, 2, ANIM_FLAG_LOOP);
@@ -247,7 +248,7 @@ u8 UpdateSysmsgwinWaitInput(SysMsgWinWork* work, void* task) {
             work->tiles = LoadObjTiles(gMsgBoxTiles, sizeof(gMsgBoxTiles));
             work->palette3 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
 #ifdef VERSION_EU
-            FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
 #else
             // @bug palette4 can be NULL (NULL read).
             FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
@@ -618,12 +619,12 @@ u8 UpdateSysmsgwinChoiceSetup(SysMsgWinWork* work, void* task) {
     pal = gDialogBoxPalette;
     work->palette2 = LoadObjPalette(pal, 32);
 #ifdef VERSION_EU
-    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 #else
     // @bug palette4 can be NULL (NULL read).
     FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
 #endif
-    LoadObjPaletteBank(work->palette2->index, pal);
+    LoadObjPaletteBank(BIOS_PTR(work->palette2)->index, pal);
     SetObjTileSource(work->tiles4, gHandCursorTiles);
     AnimInit(&work->anim3, gHandCursorAnims, gHandCursorFrames);
     AnimStart(&work->anim3, 2, ANIM_FLAG_LOOP);
@@ -638,7 +639,7 @@ u8 UpdateSysmsgwinChoiceSetup(SysMsgWinWork* work, void* task) {
     work->tiles = LoadObjTiles(gMsgBoxTiles, sizeof(gMsgBoxTiles));
     work->palette3 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
 #ifdef VERSION_EU
-    FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
 #else
     // @bug palette4 can be NULL (NULL read).
     FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
