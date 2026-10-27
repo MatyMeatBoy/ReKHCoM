@@ -53,7 +53,7 @@ que descubrió el fallo junto a las pruebas sintéticas.
   prueba del guardado terminó con salida0 sin alcanzar postcondición: logcat
   muestra recreación de Activity por CONFIG_ASSETS_PATHS tras instalar. Se
   repitió tras estabilizar el entorno: probe de tres checkpoints y guardado real
-  PASS. La puerta de evento y Monstruo siguen en curso. El intento anterior no
+  PASS; también puerta de evento y evento74 USA de Monstruo hasta batalla. El intento anterior no
   cuenta como PASS ni como crash nativo. No representa el Samsung Android13 del reportero.
 - GPU Windows e71: marcos de stocks reales 1/2/3 de Sora y Axel visibles;
   bordes Moguri/Estado iguales al fondo al entrar en frío y volver. Evidencia
@@ -75,7 +75,7 @@ que descubrió el fallo junto a las pruebas sintéticas.
 | Deck Gaming Mode | #337 integrado `c8109de7d`; asistente de registro/guía, 10 pruebas wrapper +3 paquete. Falta Deck real; #330 no demuestra fallo de Gamescope. |
 | Targets GPU portable | #331 en borrador, dos P1 reproducidos/corregidos y revisión independiente; faltan GPU Windows/Linux/Android. |
 | Controles | #332/#334/#338/#340 en revisión. Faltan QA visual, activar Original→sí en diálogo abierto y casos de texto variable. |
-| Biblioteca EN/JP | #335 y #342 apilado en revisión; P1 de manifiesto mixto reproducido por revisor, no integrar hasta corrección/regresión. |
+| Biblioteca EN/JP | #335 `5acf2cb04` y #342 `c6c7ad615` en revisión. P1 de manifiesto mixto y P2 de importación incompleta corregidos con regresiones y revisión independiente; faltan integración y QA real. |
 | Retorno de galería | #339 en revisión; productor/consumidor RED→GREEN, matriz de capturas título/partida × normal/skip pendiente. |
 | Dígitos azul/dorado | #341 en borrador: conserva GBA multicolor si falta el dígito HD; fuente real EU/US/JP pasa, comparación GPU pendiente. |
 | Linux ARM64 | Factibilidad local `9300d2992` identificada; revisar/actualizar y construir, no confundir con armhf ni con Deck x86-64. |
