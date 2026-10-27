@@ -5855,12 +5855,12 @@
     "hd-stock-counter-fit": {
       "id": "hd-stock-counter-fit",
       "piece": "Encaje mínimo contador stocks Sora/enemigo con barra HD superior",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T12:07:03.875015+00:00",
-      "updated_at": "2026-10-27T12:11:21.156598+00:00",
+      "updated_at": "2026-10-27T12:15:45.261097+00:00",
       "branch": "fix/hd-stock-counter-fit",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/352",
       "approval": null,
       "reference": "build/v21-final-stock",
       "evidence": [
@@ -5868,13 +5868,18 @@
           "at": "2026-10-27T12:11:21.156598+00:00",
           "owner": "device_profiles_sol",
           "detail": "GPU1280x720 player/axel white sum covered by importedHPbar. Exactcaller card_battle/card_battle_riku cardbattle_2 DrawSprite(x,4,gStockValueFrames[0]); source gStockValueTiles+(value-1)*128, legal1..27. Core-render-only placement under active readyHD gauge; GBA unchanged."
+        },
+        {
+          "at": "2026-10-27T12:15:45.261097+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "c3c8dbec9 child qa/v21-integrated170002a66; exactsum source1..27 top4->9 only active imported gauge. ROM bbox ink5..11 gives70..100 atscale5 belowbar60. RED77->GREEN actualcoordinate/policy, x32syntax, fullPPU/preflightPASS. Root GPU immediate recapture pending."
         }
       ],
       "claimed_at": "2026-10-27T12:07:09.318089+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T12:11:21.156598+00:00",
+  "updated_at": "2026-10-27T12:15:45.261097+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
