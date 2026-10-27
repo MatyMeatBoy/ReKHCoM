@@ -114,6 +114,14 @@ void PortSceneGalleryPreviewPoll(void) {
     }
 #endif
 }
+void PortSceneGalleryPreviewInvalidate(void) {
+    SDL_DestroyTexture(sPreviewTexture);
+    sPreviewTexture = NULL;
+    sPreviewRenderer = NULL;
+    sTextureSerial = -1;
+    sTextureW = sTextureH = 0;
+}
+
 void PortSceneGalleryPreviewCancel(void) {
     ++sPreviewSerial;
     sPreviewEvent = sPreviewHd = -1; sPreviewReady = 0;

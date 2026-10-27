@@ -277,6 +277,11 @@ int PortHdScenePlay(int eventId);  /* port_hdmovie.c: 1 if the event's imported 
 void PortAchievementToast(const char* title, const char* detail, const char* label, int badgeIndex);
 void PortAchievementToastDraw(void* renderer, int width, int height);
 void PortAchievementToastShutdown(void);
+/* Renderer-thread invalidation preserves queued notifications and CPU previews. */
+void PortAchievementToastInvalidate(void);
+void PortSceneGalleryPreviewInvalidate(void);
+/* Consume native SDL reset events between draws; guest bridge recovery is separate. */
+int PortRendererHandleReset(uint32_t eventType);
 /* The game's globals: initialised data and zero-initialised data. */
 void PortGameSections(char** data, size_t* dataSize, char** bss, size_t* bssSize);
 
