@@ -78,9 +78,8 @@ def elf_symbols(source, out):
 def build_guest(region, jobs):
     upper = region.upper()
     pc = ROOT / 'build' / region / 'pc'
-    if not (pc / 'rom_symbols_reloc.s').is_file():
-        build_switch.run([sys.executable, ROOT / 'port/tools/gen_pc_assets.py', '--version', region], cwd=ROOT,
-                         env=dict(os.environ, PYTHONUTF8='1'))
+    build_switch.run([sys.executable, ROOT / 'port/tools/gen_pc_assets.py', '--version', region, '--ensure'], cwd=ROOT,
+                     env=dict(os.environ, PYTHONUTF8='1'))
     out = BUILD / f'guest-{region}'
     out.mkdir(parents=True, exist_ok=True)
     includes = build_ps5.game_includes(region)

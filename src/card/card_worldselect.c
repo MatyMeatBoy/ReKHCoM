@@ -2287,8 +2287,10 @@ void UpdateMapcardGfx(MapcardWork* work) {
             work->tiles3 = LoadObjTiles(back->tiles, back->tilesSize);
             work->palette2 = LoadObjPalette(back->palette, 32);
             work->tiles = LoadObjTiles(gCardValueDigitTiles, sizeof(gCardValueDigitTiles));
-            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-            FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+            /* @bug The native palette pool can be full. On GBA a NULL+6
+               read hits BIOS/open bus; portable hosts must emulate it too. */
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
             flags = work->flags | MAPCARD_FLAG_GFX_LOADED;
             work->flags = flags;
         }

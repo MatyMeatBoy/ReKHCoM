@@ -83,8 +83,7 @@ def main():
              GRADLE_USER_HOME=str(tools/'gradle-cache'),CMAKE_BUILD_PARALLEL_LEVEL=str(args.jobs))
     def run(cmd,cwd=ROOT):subprocess.run([str(x) for x in cmd],cwd=cwd,env=env,check=True)
     for region in args.regions:
-        if not (ROOT/f'build/{region}/pc/rom_symbols.s').is_file():
-            run([sys.executable,'port/tools/gen_pc_assets.py','--version',region])
+        run([sys.executable,'-X','utf8','port/tools/gen_pc_assets.py','--version',region,'--ensure'])
     run([cmake,'-S',ROOT/'port/android','-B',native,'-G','Ninja',f'-DCMAKE_MAKE_PROGRAM={ninja}',
          f'-DCMAKE_TOOLCHAIN_FILE={ndk}/build/cmake/android.toolchain.cmake','-DANDROID_ABI='+args.abi,
          '-DANDROID_PLATFORM=android-21',f'-DSDL_SOURCE_DIR={sdl}','-DCMAKE_BUILD_TYPE=Release',

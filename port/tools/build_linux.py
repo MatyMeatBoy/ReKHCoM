@@ -72,9 +72,8 @@ def configure(version, arch, base, out):
     ft = base / 'ft'
     gen = ROOT / 'build' / version / 'gen'
     glue = ROOT / 'build' / version / 'pc'
-    if not (glue / 'rom_symbols.s').exists():
-        subprocess.check_call([sys.executable, str(ROOT / 'port/tools/gen_pc_assets.py'), '--version', version],
-                              env=dict(os.environ, PYTHONUTF8='1'))
+    subprocess.check_call([sys.executable, str(ROOT / 'port/tools/gen_pc_assets.py'), '--version', version, '--ensure'],
+                          env=dict(os.environ, PYTHONUTF8='1'))
     out.mkdir(parents=True, exist_ok=True)
     symbols(glue / 'rom_symbols.s', out / 'rom_symbols.s')
     symbols(ROOT / 'port/src/port_symbols.s', out / 'port_symbols.s')
