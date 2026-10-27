@@ -32,7 +32,9 @@ def main():
         guest = folder/'guest.c'
         guest.write_text('#include "port/port_logfile.h"\nvoid probe(void) { PortOpenSessionLog("guest.log"); }\n')
         clang = cc.with_name('clang.exe')
+        resource = subprocess.check_output([str(clang), '-print-resource-dir'], text=True).strip()
         subprocess.run([str(clang), '--target=x86_64-linux-gnux32', '-ffreestanding', '-nostdinc',
+                        '-isystem', str(Path(resource)/'include'),
                         '-I', str(R/'port/ps5/guest/include'), '-I', str(R/'port/include'),
                         '-fsyntax-only', str(guest)], check=True)
         for n in range(8):
