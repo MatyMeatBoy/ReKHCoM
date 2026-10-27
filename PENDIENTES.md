@@ -273,4 +273,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-crash-import-diverse-lessons | Después de integrar y verificar fixes, promover a OptiPort lecciones reutilizables: excepción primaria frente a fallo secundario del reporte, rango de scroll cero, validación de metadatos antes de reservar, dueño del worker publica fin sólo tras cleanup, y QA con saves/escenas distintos y estados compatibles. PR pequeño con evidencia y límites; sincronizar copias instaladas tras merge. No asignar causas de Steam Deck/Proton al reportero sin reproducir su caso. | pendiente | — | — | Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total. | 2026-10-27T20:04:49.320764+00:00 |
 | v22-pre2-version | Windows v2.2-pre2 source/docs and PE version 2.2.0.2 | en_curso | sol-low-diverse-saves | — | — | 2026-10-27T20:06:54.957243+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T20:07:01.679844+00:00)
+Integrador: libre
