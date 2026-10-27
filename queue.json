@@ -7049,10 +7049,10 @@
     "audio-intro-title-underrun": {
       "id": "audio-intro-title-underrun",
       "piece": "Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-audio-continuity",
       "created_at": "2026-10-27T18:41:22.472261+00:00",
-      "updated_at": "2026-10-27T23:24:39.201830+00:00",
+      "updated_at": "2026-10-27T23:51:26.509193+00:00",
       "branch": "fix/audio-underrun-smooth",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/411",
       "approval": "Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback",
@@ -7077,9 +7077,15 @@
           "at": "2026-10-27T23:24:39.201830+00:00",
           "owner": "codex-audio-continuity",
           "detail": "Latest8cf5a39a5: optionalrecoveryunsupportedformat(ratebounds/nonstereo/nonF32S16) nativetransparentlyforwarded, notsilentlyrejected. ActualSDLmonoS32REDbefore->GREENbyteexact. ConsumerfailedPut nowclearstail(Red->Green)avoidsreplayingoldaudioaftersilence. Bothfollowupsoutsideactualgamestereo-normalpathf0eQA; PRbody/docsstateexactscope. Rootreview404b614independentexactproductionacceptance+fallbackPASS; no blockerssent."
+        },
+        {
+          "at": "2026-10-27T23:51:26.509193+00:00",
+          "owner": "codex-audio-continuity",
+          "detail": "Root independent exact-head audio_continuity, guest_audio_bridge and hd_music_failures all PASS; normal PCM exact, bounded starvation ramps, SDL host input-unit/pause/gain contracts, legacy ring controls. Private full-game signal-gated 32/64 normal/stall QA f0e33ea6 with unchanged GBA producer; newest error-format branches CPU covered. Physical listening and final new package QA remain pending; not claiming all audible hitches resolved.; merged c458ff71109ce06825446e032bbe810bd075d8e3"
         }
       ],
-      "claimed_at": "2026-10-27T21:48:55.174572+00:00"
+      "claimed_at": "2026-10-27T21:48:55.174572+00:00",
+      "completed_at": "2026-10-27T23:51:26.509193+00:00"
     },
     "optiport-artifact-freshness": {
       "id": "optiport-artifact-freshness",
@@ -8117,7 +8123,7 @@
     "created_at": "2026-10-27T23:51:17.466564+00:00",
     "updated_at": "2026-10-27T23:51:17.466564+00:00"
   },
-  "updated_at": "2026-10-27T23:51:17.466564+00:00",
+  "updated_at": "2026-10-27T23:51:26.510211+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
