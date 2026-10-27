@@ -4248,7 +4248,7 @@
       "status": "en_revision",
       "owner": "codex-sysmsg-null",
       "created_at": "2026-10-27T04:37:19.806954+00:00",
-      "updated_at": "2026-10-27T04:40:19.813043+00:00",
+      "updated_at": "2026-10-27T04:51:40.686966+00:00",
       "branch": "fix/sysmsg-palette-null",
       "pr": null,
       "approval": "Parent authorized implementation and local commit; review before push",
@@ -4258,6 +4258,11 @@
           "at": "2026-10-27T04:40:19.813043+00:00",
           "owner": "codex-sysmsg-null",
           "detail": "TDD real InitCardMsgGlyphSprites/sysmsgwin_0: baseline AV3221225477; eight valid/NULL mixes and four window modes pass; check_sources ok; local review before any push/PR"
+        },
+        {
+          "at": "2026-10-27T04:51:40.686966+00:00",
+          "owner": "codex-sysmsg-null",
+          "detail": "Parent review addressed in separate commit: real choice setup/wait functions tested at BIOS.index0xe3a0; unallocated bank upload fails before guard and passes after PC-only skip. Valid bank7 uploads preserved. SetObjTileSource already BIOS_PTR; no allocator edits."
         }
       ],
       "claimed_at": "2026-10-27T04:37:25.821487+00:00"
@@ -4278,7 +4283,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T04:51:21.252312+00:00",
+  "updated_at": "2026-10-27T04:51:40.686966+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
