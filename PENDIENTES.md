@@ -227,5 +227,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-workspace-storage-cleanup | Codex: consolidar todos los worktrees en kh-worktrees, limpiar duplicados y VM, conservar WIP/saves/Atlas y medir espacio físico C/D | en_curso | codex-workspace-cleanup | — | Pedido directo usuario 27/10/2026: prioridad absoluta limpieza ReKHCoM en C y D | 2026-10-27T14:50:40.573035+00:00 |
 | v22-harness-storage-budget | Claude: PR acotado del arnés: evitar copia completa por caso, separar evidencia de temporales, base/overlay reutilizables, outbox según fetch y límites razonados; conservar fallos, WIP y saves. Cambiar default 40G solo con criterio y regresión. Codex modifica archivos de VM fuera del repo. | pendiente | — | — | Usuario 27/10/2026: optimizar copias por test, tamaño VM con margen, delegar a Claude PR pequeños y tomar siguiente | 2026-10-27T14:53:59.220433+00:00 |
 | cartas-pequenas-encaje-runtime | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:10.600293+00:00 |
+| hud-enemy-gauge-length | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:19.077162+00:00 |
 
 Integrador: libre
