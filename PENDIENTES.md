@@ -163,4 +163,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | host-music-progress | Bound host music loop decoding and propagate terminal failure | en_curso | codex-host-music | — | User authorized OptiPort indispensable fallback improvements before test builds | 2026-10-27T05:18:02.871630+00:00 |
 | optiport-linux64-streaming | Linux64 movie EOF clock and cancelable decoder pipes | en_curso | codex-linux64-streaming | — | Usuario autoriza OptiPort y workers; coordinador delega correccion P1 | 2026-10-27T05:18:41.547143+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T05:15:45.154320+00:00)
+Integrador: libre
