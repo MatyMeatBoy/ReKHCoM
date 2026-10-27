@@ -1,10 +1,10 @@
 """One-time preparation of the Linux cross builds on Windows.
 
-For each architecture (i386, armhf): Debian sysroot, a pkg-config stand-in,
+For each architecture (i386, amd64, armhf, arm64): Debian sysroot, a pkg-config stand-in,
 a CMake toolchain file, then SDL3 (shared, X11/KMSDRM/ALSA/PulseAudio/
 PipeWire loaded at run time, no Wayland) and FreeType (static).
 
-    python port/tools/linux_prepare.py              both architectures
+    python port/tools/linux_prepare.py --arch arm64 --jobs 1
     python port/tools/linux_prepare.py --arch i386
 
 Needs ../toolchain (llvm-mingw, ninja, SDL3 and FreeType sources) and the
@@ -25,12 +25,13 @@ TC = ROOT.parent / 'toolchain'
 BASE = (WORK_DIR / 'linux')
 TRIPLES = {'i386': ('i686', 'i686-linux-gnu', ''),
            'amd64': ('x86_64', 'x86_64-linux-gnu', ''),  # the 64-bit host (port/linux64, 26/10)
+           'arm64': ('aarch64', 'aarch64-linux-gnu', ''),
            'armhf': ('armv7', 'arm-linux-gnueabihf', '-march=armv7-a -mfpu=neon -mfloat-abi=hard -mthumb')}
 
 PKGCONFIG = r'''"""Minimal pkg-config for cross builds: reads .pc files under PKG_SYSROOT."""
 import os, re, sys
 root = os.environ['PKG_SYSROOT']
-dirs = [os.path.join(root, d) for d in ('usr/lib/x86_64-linux-gnu/pkgconfig', 'usr/lib/i386-linux-gnu/pkgconfig', 'usr/lib/arm-linux-gnueabihf/pkgconfig',
+dirs = [os.path.join(root, d) for d in ('usr/lib/aarch64-linux-gnu/pkgconfig', 'usr/lib/x86_64-linux-gnu/pkgconfig', 'usr/lib/i386-linux-gnu/pkgconfig', 'usr/lib/arm-linux-gnueabihf/pkgconfig',
         'usr/share/pkgconfig', 'usr/lib/pkgconfig')]
 def load(name):
     for d in dirs:
@@ -95,12 +96,13 @@ def cmake():
     return str(hits[-1])
 
 
-def prepare(arch, env):
+def prepare(arch, env, jobs=None):
     proc, triple, flags = TRIPLES[arch]
     base = BASE / arch
     tools = BASE / 'tools'
     tools.mkdir(parents=True, exist_ok=True)
-    if not (base / 'sysroot').exists():
+    # An ABI-only sysroot may already exist without the SDL development packages.
+    if not (base / 'sysroot/usr/include/X11/Xlib.h').exists():
         subprocess.check_call([sys.executable, str(ROOT / 'port/tools/linux_sysroot.py'), '--arch', arch, '--out', str(base)])
     (tools / 'pkgconfig.py').write_text(PKGCONFIG)
     (tools / 'pkg-config.bat').write_text('@echo off\r\npython -I "%~dp0pkgconfig.py" %*\r\n')
@@ -143,7 +145,7 @@ set(PKG_CONFIG_EXECUTABLE {(tools / "pkg-config.bat").as_posix()} CACHE FILEPATH
         subprocess.check_call([cmake(), '-G', 'Ninja', '-S', str(src), '-B', str(build),
                                f'-DCMAKE_TOOLCHAIN_FILE={toolchain.as_posix()}', '-DCMAKE_BUILD_TYPE=Release',
                                f'-DCMAKE_INSTALL_PREFIX={(base / name).as_posix()}', *opts], env=env)
-        subprocess.check_call([cmake(), '--build', str(build), '-j', str(os.cpu_count())], env=env)
+        subprocess.check_call([cmake(), '--build', str(build), '-j', str(jobs or os.cpu_count() or 1)], env=env)
         subprocess.check_call([cmake(), '--install', str(build)], env=env)
     shutil.copyfile(sdl_src / 'LICENSE.txt', base / 'sdl-src-LICENSE.txt')
     print('prepared', base)
@@ -152,12 +154,15 @@ set(PKG_CONFIG_EXECUTABLE {(tools / "pkg-config.bat").as_posix()} CACHE FILEPATH
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--arch', choices=TRIPLES, action='append')
+    ap.add_argument('--jobs', type=int, default=None, help='maximum parallel compilation jobs')
     args = ap.parse_args()
+    if args.jobs is not None and args.jobs < 1:
+        ap.error('--jobs must be positive')
     env = dict(os.environ)
     env['PATH'] = os.pathsep.join([str(p / 'bin') for p in sorted(TC.glob('llvm-mingw-*'))[-1:]]
                                   + [str(TC / 'bin'), env.get('PATH', '')])
     for arch in args.arch or list(TRIPLES):
-        prepare(arch, env)
+        prepare(arch, env, args.jobs)
 
 
 if __name__ == '__main__':

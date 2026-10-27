@@ -44,6 +44,7 @@ GUEST_SKIP = {'crt0', 'stubs'}  # x86-64 assembly: port/switch/guest has the AAr
 # the PPU on several cores (port_ppu.c, SWITCH_MOTOR.md): the host's threads and the image's own thread-local blocks
 # (switch/guest/stubs_a64.c); the Android 64-bit build, which reuses this guest, turns it off
 PPU_THREADS = True
+TOUCH_CONTROLS = True  # Linux ARM64 reuses the guest without mobile touch controls
 
 
 def run(cmd, **kw):
@@ -114,7 +115,7 @@ def build_guest(region, jobs):
                   f'-DVERSION_{upper}', *includes]
     port_flags = [*common_flags(), '-w', '-std=gnu11', '-DSTBI_NO_THREAD_LOCALS', f'-I{PS5 / "third_party/stb"}',
                   f'-I{ROOT / "port/src"}', f'-I{ROOT / "port/android/native"}', '-DPLATFORM_PC', f'-DVERSION_{upper}',
-                  '-DPORT_TOUCH', *(['-DPORT_PPU_THREADS'] if PPU_THREADS else []), *includes]
+                  *(['-DPORT_TOUCH'] if TOUCH_CONTROLS else []), *(['-DPORT_PPU_THREADS'] if PPU_THREADS else []), *includes]
     units = []
     for src in sorted((ROOT / 'src').rglob('*.c')):
         units.append((src, out / 'game' / src.relative_to(ROOT / 'src').with_suffix('.o'), game_flags))
