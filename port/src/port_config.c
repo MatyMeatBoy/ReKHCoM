@@ -11,6 +11,9 @@
 #include "port/port.h"
 #include "port/port_embedded_assets.h"
 #include "port/port_aspect.h"
+#ifndef PORT_PS5_GUEST
+#include "port/port_device_profile_host.h"
+#endif
 
 PortConfig gPortConfig = {
     PORT_VIEW_AUTO,     /* viewMode */
@@ -382,7 +385,27 @@ static void ApplyEnvConfig(void) {
 
 static void PortConfigLoadFile(void);
 
+/* Device defaults are applied before either ini file; saved settings always win.
+   Auto pad layout already detects SDL's Deck controller correctly, so keep it Auto.
+   No graphics/HD preference belongs to a hardware profile. */
+static void PortConfigDeviceDefaults(void) {
+    static int applied;
+    const char* profile;
+    if (applied) return;
+    applied = 1;
+#ifdef PORT_PS5_GUEST
+    profile = SDL_getenv("KHCOM_HOST_DEVICE_PROFILE");
+    if (!profile) profile = "generic:host-context-unavailable";
+#else
+    profile = PortDeviceHostQuery("KHCOM_HOST_DEVICE_PROFILE");
+#endif
+    if (strcmp(profile, "steam-deck:steam-env") == 0 || strcmp(profile, "steam-deck:valve-dmi") == 0)
+        gPortConfig.fullscreen = 1;
+    PortLog("Device profile: %s", profile);
+}
+
 void PortConfigLoad(void) {
+    PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
 }
