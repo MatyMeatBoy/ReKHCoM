@@ -15,6 +15,13 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 - [x] Tests lentos con `KHCOM_FAST` + vsync=1 (el present esperaba al refresco): FAST fuerza vsync 0.
 - [ ] Batería: arneses que piden builds viejos (`build/rel-eu`, `codex-gameplay-*`…) y fallos reales a separar:
   `test_hud_crop` (3840x1080 mapa), `test_ppu` 7/12, `test_door_views` (falso positivo con «VRR-path=unavailable»).
+- [ ] **HUD HD activado en pleno combate**: tirones como de carga al volver de Opciones. Precargar el HUD HD
+  antes de devolver el control al juego.
+- [ ] **Carta de recarga HD**: el número queda debajo del relleno; debe ir encima.
+- [ ] **HUD HD: «EXP ganada»** no se reubica y queda tapada por la vida nueva.
+- [ ] Linux 64 VM: partida nueva → puerta del castillo → selección de mundo → combate tutorial **sin fallo**
+  (sin música HD). Repetir con música HD (`.ogg`), que el reportero sí tiene.
+
 - [ ] Tests nunca deben sonar: algo sonó el 27/10 en la batería; localizar qué test no usa audio dummy.
 
 ## Relevo — Claude, 26/10 noche (Codex durmiendo)
