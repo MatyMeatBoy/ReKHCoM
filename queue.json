@@ -4729,10 +4729,10 @@
     "device-profiles": {
       "id": "device-profiles",
       "piece": "Shared Generic and Steam Deck device defaults",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T06:20:05.165818+00:00",
-      "updated_at": "2026-10-27T06:44:50.295860+00:00",
+      "updated_at": "2026-10-27T06:44:59.101571+00:00",
       "branch": "task/device-profiles",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/312",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -4747,9 +4747,15 @@
           "at": "2026-10-27T06:31:33.959261+00:00",
           "owner": "device_profiles_sol",
           "detail": "Windows BIOS c14af00aa, Linux relay b46e7f045, relay test 74ed339a8; test_device_profiles.py green after red classifier assertion; UTF16 provider failure matrix and ini precedence passed; Windows gcc header syntax -Werror passed; Win host hook root applies separately"
+        },
+        {
+          "at": "2026-10-27T06:44:59.101571+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "Verified and reviewed; merged 53c959f458f43655f10d7861d9c4fd4d5e47e78b"
         }
       ],
-      "claimed_at": "2026-10-27T06:20:11.264824+00:00"
+      "claimed_at": "2026-10-27T06:20:11.264824+00:00",
+      "completed_at": "2026-10-27T06:44:59.101571+00:00"
     },
     "hudhd-pila-cartas": {
       "id": "hudhd-pila-cartas",
@@ -4872,7 +4878,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:44:50.295860+00:00",
+  "updated_at": "2026-10-27T06:44:59.101571+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
