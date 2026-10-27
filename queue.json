@@ -4524,15 +4524,21 @@
     "android-optiport-package": {
       "id": "android-optiport-package",
       "piece": "Playable isolated Android OptiPort test package",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-android-test",
       "created_at": "2026-10-27T05:27:07.210539+00:00",
-      "updated_at": "2026-10-27T05:27:13.637989+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T05:29:17.892180+00:00",
+      "branch": "build/android-optiport-package",
       "pr": null,
       "approval": "User authorized separate test builds for issue272 without replacing stable app data",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T05:29:17.892180+00:00",
+          "owner": "codex-android-test",
+          "detail": "Playable .optiport package config RED/GREEN tests pass; stable/smoke unaffected; no SDL_ENV autoplay; activities/JNI binding audited; Java manual SRAM importer48checks pass. No native/Gradlebuild or deviceinstall. Explicit nightlyAPK version distinct from recorded source_version."
+        }
+      ],
       "claimed_at": "2026-10-27T05:27:13.637989+00:00"
     }
   },
@@ -4542,7 +4548,7 @@
     "created_at": "2026-10-27T05:27:32.730069+00:00",
     "updated_at": "2026-10-27T05:27:32.730069+00:00"
   },
-  "updated_at": "2026-10-27T05:28:44.044712+00:00",
+  "updated_at": "2026-10-27T05:29:17.892180+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
