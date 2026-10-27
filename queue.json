@@ -7457,15 +7457,16 @@
     "hd-gameplay-lossless-load-budget": {
       "id": "hd-gameplay-lossless-load-budget",
       "piece": "Optimizar carga de recursos HD de gameplay sin pérdida de calidad: medir lectura, decode, upload, memoria y pausas en frío/caliente con mismos assets; conservar fallback original hasta reemplazo válido y verificar equivalencia visual. No vender profiling como mejora ni usar assets parciales como cobertura completa.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T20:04:44.755292+00:00",
-      "updated_at": "2026-10-27T20:04:44.755292+00:00",
+      "updated_at": "2026-10-27T21:18:28.264267+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total.",
       "reference": "CLAUDE_COLA_ACTUAL.md; autoridad coordination/art-queue; no Atlas para UI vigente",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T21:18:28.264267+00:00"
     },
     "optiport-crash-import-diverse-lessons": {
       "id": "optiport-crash-import-diverse-lessons",
@@ -7751,7 +7752,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T21:18:00.834621+00:00",
+  "updated_at": "2026-10-27T21:18:28.264267+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
