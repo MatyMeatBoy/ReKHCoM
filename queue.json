@@ -6813,10 +6813,10 @@
     "v22-stutter-attribution-probes": {
       "id": "v22-stutter-attribution-probes",
       "piece": "Diagnostico de tirones por etapas y regresiones de sondas; hijo de profiling, sin cerrar comparacion completa32/64",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-stutter-integration",
       "created_at": "2026-10-27T18:10:42.647082+00:00",
-      "updated_at": "2026-10-27T18:18:40.663982+00:00",
+      "updated_at": "2026-10-27T18:19:31.721092+00:00",
       "branch": "perf/optiport-v22-profiling",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/379",
       "approval": "Usuario pide continuar e integrar lo de Claude; coordinador reviso productores y regresiones CPU reales",
@@ -6826,9 +6826,15 @@
           "at": "2026-10-27T18:18:40.663982+00:00",
           "owner": "codex-stutter-integration",
           "detail": "Root verification current head42966f7f0e010db22fc31d3045e1e876f410f4c2: four existing CPU suites + deterministic actual producer stutter contract and two negative controls PASS; diagnostic attribution only."
+        },
+        {
+          "at": "2026-10-27T18:19:31.721092+00:00",
+          "owner": "codex-stutter-integration",
+          "detail": "PR379 merged93749b597f1f94f5596de248f74f02fb92d518fc; reviewed current42966f7; four existing CPU suites + actual stutter producer contract with2negative controlsPASS; diagnostic only, parentprofiling remains pending."
         }
       ],
-      "claimed_at": "2026-10-27T18:10:47.884368+00:00"
+      "claimed_at": "2026-10-27T18:10:47.884368+00:00",
+      "completed_at": "2026-10-27T18:19:31.721092+00:00"
     },
     "v22-windows-pre1-test360": {
       "id": "v22-windows-pre1-test360",
@@ -6851,7 +6857,7 @@
     "created_at": "2026-10-27T18:19:14.740516+00:00",
     "updated_at": "2026-10-27T18:19:14.740516+00:00"
   },
-  "updated_at": "2026-10-27T18:19:14.740516+00:00",
+  "updated_at": "2026-10-27T18:19:31.721092+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
