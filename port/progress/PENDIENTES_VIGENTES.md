@@ -1,5 +1,72 @@
 # Pendientes después de v2.0 — 26/10/2026
 
+## Mandato vigente de coordinación — 27/10/2026
+
+Consultar [COORDINACION_OPTIPORT_V21.md](COORDINACION_OPTIPORT_V21.md) antes de
+tomar trabajo: **Codex termina OptiPort al 100 %, prerelease Windows 64 y ZIP
+personal limpio; Claude puede tomar todos los pendientes regulares** (HUD,
+jefes, recetas, Atlas, galería, etc.), reservando en `coordination/art-queue`,
+preservando WIP y abriendo PR. **Última actualización del usuario:** Codex recoge
+e integra los PR regulares ya listos antes del ZIP Windows, con revisión y lock;
+entrega el ZIP prioritario y después completa el resto de OptiPort. Los demás PR
+regulares se integran después de OptiPort. Los claims activos de core/guardas, arquitectura y QA se respetan;
+el trabajo de Claude ya integrado sigue vigente.
+
+Esta lista es un snapshot, no autoridad de reservas. Registrar por ID owner,
+rama, scope/rutas, dependencias, reproducción/evidencia, SHA/tests, PR/merge,
+artefacto y siguiente prueba mínima. Integrado ≠ publicado ≠ confirmado en el
+dispositivo. La primera pasada original 9/14 (~64 %, aviso del usuario) es
+histórica; migración 32→64 es alcance añadido con seguimiento separado y no
+un porcentaje de estabilidad.
+
+**Autorización actual:** prerelease y envío de builds a #277/#272, más ZIP
+personal normal de Windows sin etiqueta alpha. La final 2.1 requiere completar
+OptiPort; no se promete cero bugs. Windows: Auto/Forzar 32/Forzar 64; Linux
+desktop/Deck: un paquete 64/32; Android: APK universal 32+64; consolas beta.
+Verificar SRAM manual/config entre runtimes y namespaces/compatibilidad de
+quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
+
+- [ ] **Vista/previews en ambos modos:** identificar primero los dos modos en
+  el UI actual, sin asumir cuáles son. Pendiente posterior al ZIP prioritario:
+  OptiPort mide entrada, p95, memoria, caché, precarga/cancelación y calidad;
+  Claude toma el fallback visual y presentación como tarea regular bajo claim.
+  Objetivo: carga casi instantánea, poca pérdida de calidad y evitar esperas
+  largas al entrar a escenas. Sin implementación ni garantía medida aún; ver
+  [coordinación](COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos).
+
+- [ ] **Cierre posterior a 2.1: ordenar worktrees** según el documento de
+  coordinación, conservando WIP, partidas, ROMs, evidencia y commits. Ahora
+  solo inventario/registro; no mover activos ni borrar. Nuevos worktrees:
+  preferir `KHCoMPC/khcom-worktrees` según la raíz del repositorio.
+
+- [ ] **Galería: retorno directo al terminar/saltar escena**, sin destello
+  intermedio de título/gameplay. Claude regular UI, dependencia de pacing
+  OptiPort si aplica. Probar título/partida × normal/skip × GBA/ReKHCoM,
+  capturando cuadros, restaurando UI/renderer/input/audio sin avanzar historia.
+- [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
+  Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
+  convención Nintendo A/PS círculo elegible, assets existentes, todos los
+  botones GBA de Opciones, overrides, hotplug y localización. Solo pendiente.
+- [ ] **Gate real del ZIP Windows 64:** primera puerta con guardado del usuario
+  confirmada RED por coordinador, WER `0x100f7bd6`,
+  `MapWallFaceIsUnreserved`, fila superior NULL/lectura BIOS GBA. Coordinador
+  corrige fuente compartida; exigir GREEN del mismo repro en build final antes
+  de entregar ZIP. Las ampliaciones UI anteriores no retrasan esa entrega.
+
+  Actualización del coordinador: repro corregido GREEN, paquete privado y ZIP
+  final pasan el guardado en 32+64; #318 pendiente de integración. ZIP personal
+  limpio debe entregarse siempre visible en la raíz
+  `C:/Users/MP/Documents/00 Claude/KHCoMPC`, no solo bajo `build/releases`.
+  Copia corregida allí, SHA-256
+  `be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
+  Aún sin prerelease pública. [Tablero actualizado](OPTIPORT_V21.md): 10/14
+  originales (~71 % de trabajo de primera batería); migración/plataformas y UI
+  añadidas se siguen aparte. No es un porcentaje de estabilidad.
+
+Las notas fechadas anteriores que dicen «ninguna release nueva» o describen
+otro orden de integración se conservan como historia y quedan sustituidas por
+este mandato del 27/10.
+
 **v2.0 estable publicada.** Confirmado en GitHub el 26/10/2026:
 [release v2.0](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.0),
 publicada a las 17:20 de Chile (`2026-10-26T20:20:29Z`, `isPrerelease=false`).

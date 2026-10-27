@@ -1,6 +1,19 @@
 # Robustez y rendimiento 2.1 — 27/10/2026
 
-Mandato: revisar fallbacks, profiling, recursos, precarga/asíncrono, streaming y frame pacing; algo más de peso en assets HD nuevos. Decisiones técnicas delegadas. Primero depurar defectos, luego añadir recuperación. No escribir ni ejecutar nada en la instalación Quiver del usuario. Sin automatizaciones ni compilación paralela. Una mejora comprobada por PR; no publicar una release.
+Mandato: revisar fallbacks, profiling, recursos, precarga/asíncrono, streaming y frame pacing; algo más de peso en assets HD nuevos. Decisiones técnicas delegadas. Primero depurar defectos, luego añadir recuperación. No escribir ni ejecutar nada en la instalación Quiver del usuario. Sin automatizaciones ni compilación paralela. Una mejora comprobada por PR.
+
+Actualización del usuario, 27/10: autorizadas prerelease, builds para #277/#272
+y ZIP personal normal de Windows limpio, sin etiqueta alpha. Final 2.1 después
+de completar OptiPort y su evidencia. Reparto Codex/Claude, matriz de runtimes y
+cola única en [COORDINACION_OPTIPORT_V21.md](COORDINACION_OPTIPORT_V21.md).
+
+Prioridad actualizada: recoger/integrar los PR regulares ya listos antes del ZIP
+Windows 64, entregar ese ZIP sin esperar nuevas mejoras y luego completar el
+resto de OptiPort. Pendiente posterior: vista/previews en ambos modos (identificar
+primero los modos en el UI); fases de profiling de entrada/p95/memoria,
+caché/precarga/cancelación y calidad. Fallback visual regular a cargo de Claude,
+con claim y coordinación de rutas. No implementar esta ampliación ni retrasar
+el ZIP en esta fase; detalle en el documento de coordinación.
 
 ## Criterios
 
