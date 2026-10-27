@@ -206,4 +206,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | steamdeck-gaming-mode-330 | Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide | pr_abierto | codex-deck-gaming330 | https://github.com/MatyMeatBoy/ReKHCoM/pull/337 | Usuario autoriza resolver330 sin comentario externo ni heavybuild | 2026-10-27T10:21:34.738356+00:00 |
 | controller-bridge-metadata | Optional versioned actual controller metadata for 64-bit SDL hosts without bridge ABI changes | en_curso | codex-control-prompts | — | Parent authorizes producer and consumer metadata implementation for truthful Auto prompts | 2026-10-27T10:26:50.310729+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T10:28:25.637236+00:00)
