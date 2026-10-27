@@ -843,17 +843,18 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
     float s = unit * scale, tint[4] = { shade, shade, shade, 1.0f };
     /* Re:CoM's bar ends at x 495 of its 640; the cartridge's at 236 of its 240, which the HUD keeps from its right */
     float x = ox + ((float)(gPortHudW - GBA_SCREEN_W) + 236.0f - 495.0f * unit) * scale, y = oy;
-    int layer, layers, hpFrame, trailFrame, trailLayer, i;
+    int layer, layers, hpFrame, trailFrame, trailLayer, backFrame, top, i;
     if (!sEnemy.active || sEnemy.frame != (int)PortFrameCount())
         return;
     layer = sEnemy.hp > 0 ? (sEnemy.hp - 1) / ENEMY_LAYER : 0;
     trailLayer = sEnemy.trail > 0 ? (sEnemy.trail - 1) / ENEMY_LAYER : 0;
-    {
-        /* one bar at most: it is the enemy's whole HP, as the cartridge's gauge (its length by the maximum) */
-        int full = sEnemy.maxHp > 0 && sEnemy.maxHp < ENEMY_LAYER ? sEnemy.maxHp : ENEMY_LAYER;
-        hpFrame = (sEnemy.hp - layer * ENEMY_LAYER) * 200 / full;
-        trailFrame = trailLayer > layer ? 200 : (sEnemy.trail - layer * ENEMY_LAYER) * 200 / full;
-    }
+    /* Re:CoM's frames are absolute HP (CEnemyGauge: 200 a whole bar; its background is the maximum, or what of it is
+       left in the top bar), never HP over the maximum. A bar holds 560 HP, the scale of Sora's gauge, so a weak
+       enemy gets a short whole bar and both grow with their maximum HP (user 27/10). */
+    hpFrame = (sEnemy.hp - layer * ENEMY_LAYER) * 200 / ENEMY_LAYER;
+    trailFrame = trailLayer > layer ? 200 : (sEnemy.trail - layer * ENEMY_LAYER) * 200 / ENEMY_LAYER;
+    top = sEnemy.maxHp > 0 ? (sEnemy.maxHp - 1) / ENEMY_LAYER : 0;
+    backFrame = layer >= top ? (sEnemy.maxHp - top * ENEMY_LAYER) * 200 / ENEMY_LAYER : 200;
     layers = layer;
     if (PortHdDrawLogged())
         PortLog("hd enemy gauge %u hp %d trail %d layer %d", (unsigned)PortFrameCount(), sEnemy.hp, sEnemy.trail, layer);
@@ -861,11 +862,13 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
         int frame;
         if (i >= 4 && layers <= 0)
             continue; /* the bars' counter: only with bars left */
+        if (i == 0 && (top <= 0 || layer < top))
+            continue; /* place 0 (the full-length overlay): Re:CoM plays it only on the top of several bars (FUN_14020d270) */
         /* Green/red already normalize the current layer to 0..200. Hold the
            matching full-length border; playing group 0 grows and wraps it.
            Every counter piece must use the layer count, never a frame clock. */
         frame = i == 0 ? HD_LAYOUT_HOLD(0)
-              : i == 1 ? HD_LAYOUT_HOLD(200)
+              : i == 1 ? HD_LAYOUT_HOLD(SDL_clamp(backFrame, 0, 200))
               : i == 2 ? HD_LAYOUT_HOLD(SDL_clamp(trailFrame, 0, 200))
               : i == 3 ? HD_LAYOUT_HOLD(SDL_clamp(hpFrame, 0, 200))
               : HD_LAYOUT_HOLD(layers);
