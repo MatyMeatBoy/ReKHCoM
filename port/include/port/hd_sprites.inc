@@ -953,6 +953,22 @@ extern const unsigned char gDeckMenuTextItalianTiles[];
 extern const unsigned char gDeckAddGridMap[];
 #endif
 extern const unsigned char gTitleMenuSelectedBarTiles[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame0[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame1[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame2[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame3[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame4[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame5[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame6[];
+extern const unsigned char gSmallHandCursorTiles[];
+extern const unsigned char gSmallHandCursorFrame7[];
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1599,6 +1615,14 @@ static const HdSpriteDef kHdSprites[] = {
     { gDeckMenuTextItalianTiles, gDeckAddGridMap, "gDeckAddGridItalianBanner", 0, 0, 104, 16, 5, 0, 18 },
 #endif
     { gTitleMenuSelectedBarTiles, NULL, "gTitleMenuSelectedBar", 0, 8, 128, 8, 2 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame0, "gSmallHandCursorHD0", 0, 0, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame1, "gSmallHandCursorHD1", 0, 1, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame2, "gSmallHandCursorHD2", 0, 2, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame3, "gSmallHandCursorHD3", 0, 3, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame4, "gSmallHandCursorHD4", 0, 0, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame5, "gSmallHandCursorHD5", -1, 0, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame6, "gSmallHandCursorHD6", -2, 0, 24, 24, 5 },
+    { gSmallHandCursorTiles, gSmallHandCursorFrame7, "gSmallHandCursorHD7", -3, 0, 24, 24, 5 },
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"
 };

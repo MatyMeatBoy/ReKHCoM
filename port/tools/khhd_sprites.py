@@ -256,6 +256,33 @@ def duo(img, colours):
     return out
 
 
+def turn(img, degrees):
+    """img turned counter-clockwise by degrees about its centre, same size, bilinear on premultiplied colour,
+    transparent outside (the launcher's turn: the same formula)."""
+    h, w = img.shape[:2]
+    a = np.radians(degrees)
+    c, s = np.cos(a), np.sin(a)
+    src = img.astype(np.float64)
+    src[:, :, :3] *= src[:, :, 3:4] / 255.0
+    ys, xs = np.mgrid[0:h, 0:w]
+    dx, dy = xs + 0.5 - w / 2.0, ys + 0.5 - h / 2.0
+    # inverse of a counter-clockwise turn on screen (y down)
+    sx = c * dx - s * dy + w / 2.0 - 0.5
+    sy = s * dx + c * dy + h / 2.0 - 0.5
+    x0, y0 = np.floor(sx).astype(int), np.floor(sy).astype(int)
+    fx, fy = (sx - x0)[..., None], (sy - y0)[..., None]
+
+    def at(yy, xx):
+        ok = (xx >= 0) & (xx < w) & (yy >= 0) & (yy < h)
+        out = np.zeros((h, w, 4))
+        out[ok] = src[yy[ok], xx[ok]]
+        return out
+    p = (at(y0, x0) * (1 - fx) + at(y0, x0 + 1) * fx) * (1 - fy) + (at(y0 + 1, x0) * (1 - fx) + at(y0 + 1, x0 + 1) * fx) * fy
+    alpha = p[:, :, 3:4]
+    rgb = np.where(alpha > 0, p[:, :, :3] * 255.0 / np.maximum(alpha, 1e-9), 0)
+    return np.clip(np.concatenate([rgb, alpha], axis=2) + 0.5, 0, 255).astype(np.uint8)
+
+
 def apply(img, ops, box, load=None):
     place = None
     source = own = img
@@ -291,6 +318,10 @@ def apply(img, ops, box, load=None):
             img = over(img, part, v[4], v[5])
         elif key == 'fade':
             fade = v[0]  # the next blits' opacity, in percent (the launcher's Fade)
+        elif key == 'flip':
+            img = img[:, ::-1].copy()  # mirrored left to right
+        elif key == 'turn':
+            img = turn(img, v[0])
         elif key == 'src':
             source = load(val) if val else own
             if source is None:

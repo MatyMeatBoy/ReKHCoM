@@ -922,6 +922,40 @@ static bool ApplyRecipe(Rgba img, const std::string& ops, int boxW, int boxH, Rg
                 for (size_t i = 3; i < sized.px.size(); i += 4)
                     sized.px[i] = (unsigned char)(sized.px[i] * (unsigned)fade / 100);
             BlitOver(img, sized, v[4], v[5]);
+        } else if (key == "flip") { /* mirrored left to right (khhd_sprites: img[:, ::-1]) */
+            for (int y = 0; y < img.h; y++)
+                for (int x = 0; x < img.w / 2; x++)
+                    for (int k = 0; k < 4; k++)
+                        std::swap(img.at(x, y)[k], img.at(img.w - 1 - x, y)[k]);
+        } else if (key == "turn" && v.size() == 1) {
+            /* counter-clockwise about the centre, same size, bilinear on premultiplied colour (khhd_sprites.turn) */
+            const double a = v[0] * 3.14159265358979323846 / 180.0, c = cos(a), s = sin(a);
+            const int w = img.w, h = img.h;
+            std::vector<double> pm((size_t)w * h * 4);
+            for (size_t i = 0; i < (size_t)w * h; i++) {
+                double al = img.px[i * 4 + 3];
+                for (int k = 0; k < 3; k++) pm[i * 4 + k] = img.px[i * 4 + k] * (al / 255.0);
+                pm[i * 4 + 3] = al;
+            }
+            Rgba t;
+            t.Resize(w, h);
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++) {
+                    double dx = x + 0.5 - w / 2.0, dy = y + 0.5 - h / 2.0;
+                    double sx = c * dx - s * dy + w / 2.0 - 0.5, sy = s * dx + c * dy + h / 2.0 - 0.5;
+                    int x0 = (int)floor(sx), y0 = (int)floor(sy);
+                    double fx = sx - x0, fy = sy - y0, p[4] = { 0, 0, 0, 0 };
+                    const int xs[4] = { x0, x0 + 1, x0, x0 + 1 }, ys[4] = { y0, y0, y0 + 1, y0 + 1 };
+                    const double ws[4] = { (1 - fx) * (1 - fy), fx * (1 - fy), (1 - fx) * fy, fx * fy };
+                    for (int q = 0; q < 4; q++)
+                        if (xs[q] >= 0 && xs[q] < w && ys[q] >= 0 && ys[q] < h)
+                            for (int k = 0; k < 4; k++) p[k] += pm[((size_t)ys[q] * w + xs[q]) * 4 + k] * ws[q];
+                    unsigned char* o = t.at(x, y);
+                    for (int k = 0; k < 3; k++)
+                        o[k] = (unsigned char)std::clamp(floor((p[3] > 0 ? p[k] * 255.0 / p[3] : 0) + 0.5), 0.0, 255.0);
+                    o[3] = (unsigned char)std::clamp(floor(p[3] + 0.5), 0.0, 255.0);
+                }
+            img = std::move(t);
         } else if (key == "fade" && v.size() == 1) {
             if (v[0] < 0 || v[0] > 100)
                 return false;
