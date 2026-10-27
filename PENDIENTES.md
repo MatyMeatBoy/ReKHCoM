@@ -201,6 +201,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-moogle-visible-band-style-zero | Moogle transition native border reaches edge while margin remains late in style zero | integrado | codex-moogle-band | https://github.com/MatyMeatBoy/ReKHCoM/pull/328 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T09:05:18.100856+00:00 |
 | android-stale-sprites-desktop-guard | Android launcher excludes desktop-only stale sprite reimport callbacks | integrado | codex-android-guard | https://github.com/MatyMeatBoy/ReKHCoM/pull/329 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T09:04:23.908388+00:00 |
 | controller-prompt-inline-symbols | Experimental inline symbols, Japanese tutorial tokens and explicit confirm preset | en_curso | codex-control-prompts | — | User full2.1 prompt scope; parent explicitly authorizes continuation after332 | 2026-10-27T09:24:52.616953+00:00 |
-| harness-multikey-combos | Harness chord parsing must exercise all requested buttons, not only first token | pendiente | — | — | User requests reliable pattern-based regression scenarios for 2.1 | 2026-10-27T09:31:01.572825+00:00 |
+| harness-multikey-combos | Harness chord parsing must exercise all requested buttons, not only first token | en_curso | codex-harness-chords | — | User requests reliable pattern-based regression scenarios for 2.1 | 2026-10-27T09:32:53.684631+00:00 |
 
 Integrador: libre
