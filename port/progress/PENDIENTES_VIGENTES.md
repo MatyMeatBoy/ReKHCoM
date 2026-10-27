@@ -28,6 +28,13 @@ los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1
   Carpetas de prueba: `pruebas/issue360*` (la `-upg` tiene junction `hd`:
   deshacerla antes de borrar).
 
+## TRASPASO (Claude, 27/10 tarde)
+
+Prioridad 1 cerrada salvo guante y botón A (abajo). #360: esperando el log de Pedro con la build
+`v2.1-test360`. Arnés de capturas usado: `kh-worktrees/hd-small-card-top/build/cards-qa/run_cases.py` (64 bits,
+HUD HD con `KHCOM_HD_HUD_DEV=1`, `KHCOM_HOST_SHOT`) y `blink.py`/`premire.py` (32 bits offscreen).
+El usuario pide seguir hasta vaciar pendientes sin preguntar.
+
 ## PRIORIDAD 1 — Cartas (usuario 27/10, pasan directo por Claude, NO por Atlas)
 
 Sacadas de los preliminares de Atlas (9 piezas; respaldo de la base en
@@ -52,17 +59,24 @@ antes/después al usuario en el chat. Comentarios del usuario entre comillas.
 - [x] **HUD de combate HD: borde verde interior granulado** — era la captura
   histórica v2.0. Con el antialias de texturas GPU (antes de 2.1) el anillo y
   la barra de Sora salen limpios a 1280x720 (64 bits) y 1920x1080 (32 bits 2.1).
-- [ ] **Síntesis de estancias: carta de requisito HD** — «veo el asset pero no
-  reemplazándolo bien»; «¿es así en el original? sobresale, distancias/fuentes»;
-  «color rellenado raro por dentro». Los 405 PNG generados
-  (`port/assets/synthesis-requirement`) nunca se empaquetan: en juego sale la
-  carta GBA. Plan: rehacerla con las piezas reales de Re:CoM (`0102_room01_tex0`:
-  cartas con corona en gris para teñir, dígitos cursiva, muesca negra), propuesta
-  al usuario en el chat.
-- [ ] **Añadir naipes: cantidad HD y selector** — «mismo comportamiento en los
-  frames exactos que el número original, taparse y aparecer».
-- [ ] **Bonus élite: cartas y cabecera** — «falta completar header»; guante HD;
-  «ver si está el botón en HD».
+- [x] **Síntesis de estancias: carta de requisito HD** — arte aprobado por el
+  usuario 27/10. El import compone las 405 piezas desde `FO0102 UK_room01.imz`
+  (carta con corona teñida como cristal, bisel blanco, dígitos cursiva con
+  sombra, flecha/igual a juego); nueva operación de receta `fade` en ambos
+  importadores; nada de Re:CoM en el repo. Verificado en juego (W64 EU). Los
+  usuarios ya importados las reciben por la reimportación de sprites desfasados.
+- [x] **Añadir naipes: cantidad HD y selector** — ya resuelto en main por la
+  máscara de cobertura por cuadro (#124): medido 27/10 cuadro a cuadro 480..540,
+  la tinta GBA y la HD suben y bajan en los mismos cuadros; el borde del
+  selector recorta las mismas filas.
+- [x] **Bonus élite: cabecera** — la cabecera HD sale completa (captura 27/10).
+- [ ] **Guante HD (cursor de mano) en todos los menús** — Re:CoM lo trae en
+  `room01`/`pause` (apunta horizontal a la derecha); el GBA `gSmallHandCursor`
+  apunta en diagonal abajo-izquierda con 8 cuadros (0-3 sube/baja, 4-7 se
+  desplaza). Falta: operación de rotación libre + espejo en ambos importadores,
+  recetas por cuadro (`frame`) y captura en Bonus élite, barajas y diálogos.
+- [ ] **Botón «A» de los avisos en HD** — usar el sistema de prompts de mando
+  (Original/Nintendo/Xbox/PS) para el icono de Bonus élite; comprobar en captura.
 
 - [ ] **Noticias en la ficha de Steam para ReKHCoM** (usuario 27/10): la zona de actividad queda vacía porque es un acceso directo no Steam. Sin vía oficial; alternativas a investigar en [PLAN_V22](PLAN_V22.md) (P3).
 
