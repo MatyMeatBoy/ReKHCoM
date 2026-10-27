@@ -176,7 +176,7 @@ int main(void){
     base = next(p for p in ROOT.parents if (p / 'toolchain').is_dir())
     compiler = next((base / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
     exe = out / 'consumer.exe'
-    subprocess.run([str(compiler), '-std=gnu11', '-O0', '-DPLATFORM_PC', '-DVERSION_EU', '-I', str(ROOT / 'include'),
+    subprocess.run([str(compiler), '-std=gnu11', '-O0', '-DPLATFORM_PC', '-DVERSION_EU', '-iquote', str(ROOT / 'include'),
                     str(unit), '-o', str(exe)], check=True)
     result = subprocess.run([str(exe)], capture_output=True, timeout=10, creationflags=0x08000000)
     report = dict(source=str(args.source.resolve()), source_sha256=hashlib.sha256(args.source.read_bytes()).hexdigest(),
