@@ -5375,7 +5375,7 @@
       "status": "pr_abierto",
       "owner": "codex-hd-media-variants",
       "created_at": "2026-10-27T08:52:24.794876+00:00",
-      "updated_at": "2026-10-27T10:39:29.576165+00:00",
+      "updated_at": "2026-10-27T10:49:28.278636+00:00",
       "branch": "feat/hd-media-language-variants",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/335",
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
@@ -5390,6 +5390,11 @@
           "at": "2026-10-27T10:39:29.576165+00:00",
           "owner": "codex-hd-media-variants",
           "detail": "IndependentreviewP1FIX head6f5b4db86: mixed movies/scenes fullimportproducer REDAV0xc0000005->GREENInspect/coreavailability; wantedNULLguard;storypartialdamage preservesmovies; minizmixedcomplete/partialrestore preservesoldactive. import/variants/packPASS.342mergefix2016de92a preview/generationPASS."
+        },
+        {
+          "at": "2026-10-27T10:49:28.278636+00:00",
+          "owner": "codex-hd-media-variants",
+          "detail": "Independent re-review confirmed P1 mixed-NULL and P2 incomplete pack return/log corrected.335head5acf2cb04;342headc6c7ad615. Production mixed LoadEverything import/coreavailability and real miniz partialrestore RED->GREEN. No new blocker found; hardwareSAF/GPU and realp95 remain pending."
         }
       ],
       "claimed_at": "2026-10-27T08:56:58.558622+00:00"
@@ -5649,7 +5654,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:49:04.577782+00:00",
+  "updated_at": "2026-10-27T10:49:28.278636+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
