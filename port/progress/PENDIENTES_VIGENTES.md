@@ -82,6 +82,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   cortado/mal ubicado; ajustar posición con su pila y subir la pila del jefe para calzar con el HUD HD (arriba
   derecha) y mejorarla en HD. Solo en modo HUD HD.
 - [ ] **Sonido de recarga del mazo enemigo**: casi no se oye o no suena (usuario con undub). Revisar con/sin undub.
+  Pista 27/10: `PortUndubApply` (port_undub.c) **silencia** (`memset 0`) las muestras con `source=0` del mapa
+  (`port_undub_map.h`, «voz solo en inglés») y reemplaza pistas de voz por las japonesas. Si el efecto de la recarga
+  enemiga comparte una de esas muestras o pistas, con undub queda mudo. Siguiente paso: localizar el song/SE de la
+  recarga enemiga (m4aSongNumStart en la IA de enemigos/jefes), grabar con `KHCOM_WAVDUMP` un combate de jefe
+  (p. ej. Hades) con y sin `undub=1`, y comparar; arreglar en el mapa sin tocar las voces.
 - [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
 - [ ] **Launcher 2.1: comprobación rápida de assets del mod** al instalar/verificar: la primera vez revisa todo;
   después solo detecta cambios o faltantes (marcas de tamaño/fecha/hash guardadas), sin demorar cada arranque.
