@@ -291,23 +291,46 @@ static void DrawSubs(Subs* s, SDL_Renderer* renderer, int64_t clock, const SDL_F
 
 /* ---- the player --------------------------------------------------------------------------------------------- */
 
-/* 1 skip, 2 quit; while the app is in the background the movie waits (audio paused) */
+/* Host bridge callback is optional: native Android32 has no bridge-owned IDs.
+ * Called synchronously on the renderer thread before movie-local teardown. */
+static void (*sRendererResetCallback)(void);
+void HdMovieAndroidSetRendererResetCallback(void (*callback)(void)) {
+    sRendererResetCallback = callback;
+}
+static int MovieDeviceReset(const SDL_Event* event) {
+    if (event->type != SDL_EVENT_RENDER_DEVICE_RESET) return 0;
+    if (sRendererResetCallback) sRendererResetCallback();
+    HdMovieLog("hd movie: renderer reset; cartridge movie instead");
+    return 1;
+}
+
+/* 1 skip, 2 quit, 3 renderer loss; while the app is in the background the movie waits (audio paused) */
 static int SkipPressed(SDL_AudioStream* audio) {
     SDL_Event e;
     int skip = 0;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
+            case SDL_EVENT_RENDER_DEVICE_RESET:
+                MovieDeviceReset(&e);
+                return 3;
             case SDL_EVENT_QUIT:
             case SDL_EVENT_TERMINATING: return 2;
-            case SDL_EVENT_DID_ENTER_BACKGROUND:
+            case SDL_EVENT_DID_ENTER_BACKGROUND: {
+                int rendererLost = 0;
                 if (audio)
                     SDL_PauseAudioStreamDevice(audio);
-                while (SDL_WaitEvent(&e) && e.type != SDL_EVENT_DID_ENTER_FOREGROUND)
+                while (SDL_WaitEvent(&e) && e.type != SDL_EVENT_DID_ENTER_FOREGROUND) {
+                    if (MovieDeviceReset(&e)) rendererLost = 1;
                     if (e.type == SDL_EVENT_QUIT || e.type == SDL_EVENT_TERMINATING)
                         return 2;
+                }
+                /* Keep the game blocked until foreground even after loss;
+                   the host never saw these background events in its Pump. */
+                if (rendererLost) return 3;
                 if (audio)
                     SDL_ResumeAudioStreamDevice(audio);
                 break;
+            }
             /* only Back, Escape or the pad's Start: taps and A advance the dialogue, so they reached the movie at once
                and ended the HD scenes as they began (22/10) */
             case SDL_EVENT_KEY_DOWN:
@@ -527,6 +550,10 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
         AImage* image = NULL;
         {
             int pressed = SkipPressed(audio);
+            if (pressed == 3) {
+                played = 0;
+                goto done; /* renderer loss consumes no scene: cartridge fallback */
+            }
             if (pressed == 2) {
                 quit = 2;
                 break;
@@ -752,6 +779,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
     /* the last of the audio */
     while (!quit && audio && SDL_GetAudioStreamQueued(audio) > 0 && !(quit = SkipPressed(audio)))
         SDL_Delay(10);
+    if (quit == 3) { played = 0; quit = 0; }
 
 done:
     HdMovieLog("hd movie: %d frames shown, %d late ones dropped%s", shown, dropped, quit == 2 ? ", app closed" : "");

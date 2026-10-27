@@ -125,12 +125,14 @@ static int run(int played){
  for(int i=0;i<1;i++){
 """ + input_block + r"""
  }
+ done:
 """ + return_line + r"""
 }
 int main(void){
  pressed=1;if(run(0)!=1)return 1;
  pressed=2;if(run(0)!=2||run(1)!=2)return 2;
  pressed=0;if(run(0)!=0||run(1)!=1)return 3;
+ pressed=3;if(run(0)!=0||run(1)!=0)return 4;
  return 0;
 }
 """

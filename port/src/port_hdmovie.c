@@ -1478,6 +1478,10 @@ static int PlayFile(const char* name) {
         SDL_snprintf(path + strlen(path), sizeof(path) - strlen(path), "@%d", sStartAt);
 #endif
     played = h_hd_movie(path, gPortConfig.hdSubtitles ? subs[0] : NULL, gPortConfig.hdSubtitles ? subs[1] : NULL, font);
+    {
+        extern void PortBridgeRefreshTextureEpoch(void);
+        PortBridgeRefreshTextureEpoch();
+    }
 #else
     if (!SDL_GetPathInfo(path, NULL))
         return 0;
