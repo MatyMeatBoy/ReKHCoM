@@ -6125,10 +6125,10 @@
     "v22-handoff-optiport": {
       "id": "v22-handoff-optiport",
       "piece": "Document 2.2 roadmap, conservative10/14 OptiPort baseline and published versus main-only changes; no new runtime work",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v22-handoff",
       "created_at": "2026-10-27T13:41:23.394705+00:00",
-      "updated_at": "2026-10-27T13:43:30.702968+00:00",
+      "updated_at": "2026-10-27T13:44:10.305336+00:00",
       "branch": "docs/v22-handoff",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/357",
       "approval": "Usuario pide anotar pendientes porcentaje OptiPort y demás para2.2",
@@ -6138,9 +6138,15 @@
           "at": "2026-10-27T13:43:30.702968+00:00",
           "owner": "codex-v22-handoff",
           "detail": "Documentation only: local links verified, original10/14 denominator retained, current published and main-only work separated"
+        },
+        {
+          "at": "2026-10-27T13:44:10.305336+00:00",
+          "owner": "codex-v22-handoff",
+          "detail": "Merged PR357 5b0cb0b5cb2da6dd38332a33453ba8a1d7b83cfa; 2.2 handoff, conservative10/14 progress, local links verified; no runtime changes"
         }
       ],
-      "claimed_at": "2026-10-27T13:41:28.666525+00:00"
+      "claimed_at": "2026-10-27T13:41:28.666525+00:00",
+      "completed_at": "2026-10-27T13:44:10.305336+00:00"
     }
   },
   "integrator": {
@@ -6149,7 +6155,7 @@
     "created_at": "2026-10-27T13:43:36.390510+00:00",
     "updated_at": "2026-10-27T13:43:36.390510+00:00"
   },
-  "updated_at": "2026-10-27T13:43:36.390510+00:00",
+  "updated_at": "2026-10-27T13:44:10.306495+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
