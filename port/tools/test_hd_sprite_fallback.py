@@ -110,6 +110,8 @@ unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteReady(')
 unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
+unit += '\nstatic int sSpotlight; static unsigned sScreenBgMask;\n'
+unit += ppu_function('static int SpriteOnScreen(')
 unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
