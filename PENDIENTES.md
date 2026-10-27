@@ -175,7 +175,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hudhd-pila-cartas | HUD HD: pila de cartas sobre la vida nueva, con borde (también enemigos/jefes) | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:00.162364+00:00 |
 | hudhd-numeros-cartas | HUD HD: números de carta dorado/azul visibles arriba y abajo | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:04.669290+00:00 |
 | hudhd-exp-ganada | HUD HD: «EXP ganada» no tapada por la vida nueva | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:33:32.240816+00:00 |
-| hudhd-hechizo-jefe | HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse | en_curso | claude-hudhd | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:36:18.060996+00:00 |
+| hudhd-hechizo-jefe | HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:36:22.575455+00:00 |
 | cartas-hd-encaje | Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:18.114890+00:00 |
 | escenas-retrato-x4 | Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:22.665133+00:00 |
 
