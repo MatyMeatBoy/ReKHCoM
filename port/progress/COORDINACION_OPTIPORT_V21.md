@@ -1,5 +1,10 @@
 # Coordinación OptiPort y v2.1 — mandato del usuario, 27/10/2026
 
+**Actualización más reciente:** 2.1 publicada y restos trasladados a
+[2.2](PLAN_V22.md) por el usuario. El reparto histórico inferior no exige
+seguir trabajando hasta declarar 100% de 2.1; no reiniciar builds o pruebas
+generales. Consultar ese traspaso y la cola para tomar el próximo pendiente.
+
 Este documento fija el reparto autorizado desde el 27/10. Complementa
 [OPTIPORT_V21.md](OPTIPORT_V21.md) y [PLAN_FALLBACKS_V21.md](PLAN_FALLBACKS_V21.md).
 Es una fotografía fechada y una guía de trabajo; la autoridad de reservas y

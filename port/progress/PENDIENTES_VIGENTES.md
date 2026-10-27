@@ -1,4 +1,11 @@
-# Pendientes después de v2.0 — 26/10/2026
+# Pendientes vigentes — preparación de 2.2
+
+**Mandato actual, 27/10/2026:** el usuario traslada lo restante a **2.2**.
+[Plan y traspaso](PLAN_V22.md): OptiPort conserva una base provisional de
+**10/14 bloques (~71%)**, con cuatro parciales; no es porcentaje de estabilidad.
+2.1 ya está publicada. #356 está sólo en main y se entregará en una build
+posterior, no en el ZIP 2.1 existente. El resto de este documento conserva
+los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1.
 
 ## Estado publicado y limpieza — 27/10, después de la entrega
 
