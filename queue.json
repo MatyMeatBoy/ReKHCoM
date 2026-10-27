@@ -5128,13 +5128,13 @@
     "shim-render-target-reset-constant": {
       "id": "shim-render-target-reset-constant",
       "piece": "SDL shim target-reset enum matches SDL3 and passes source gate",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-crash",
       "created_at": "2026-10-27T08:26:31.127499+00:00",
-      "updated_at": "2026-10-27T08:26:44.349179+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "User authorizes verified release fixes",
+      "updated_at": "2026-10-27T08:31:10.942933+00:00",
+      "branch": "fix/shim-render-target-reset",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/322",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "Android source gate missing SDL_EVENT_RENDER_TARGETS_RESET after native reset PR311",
       "evidence": [],
       "claimed_at": "2026-10-27T08:26:44.349179+00:00"
@@ -5160,7 +5160,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:30:24.057898+00:00",
+  "updated_at": "2026-10-27T08:31:10.942933+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
