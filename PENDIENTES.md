@@ -155,5 +155,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | session-logs-history-20261027 | Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/282 | Usuario 27/10: conservar al menos cinco logs y rotarlos; revision log_review | 2026-10-27T04:47:41.417219+00:00 |
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | en_revision | codex-sysmsg-null | fix/sysmsg-palette-null | Parent authorized implementation and local commit; review before push | 2026-10-27T04:51:40.686966+00:00 |
 | hd-layout-bounds | LAD SEQD parser bounds | en_revision | codex-layout-bounds | fix/hd-layout-bounds | Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests | 2026-10-27T04:51:44.493845+00:00 |
+| hd-layout-readiness | Code: acquire HD gauge textures before native suppression | pendiente | — | — | — | 2026-10-27T05:05:16.033376+00:00 |
 
 Integrador: libre
