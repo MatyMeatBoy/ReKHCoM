@@ -5,6 +5,7 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mferror.h>
+#include "../include/port/port_hd_media.h"
 typedef WCHAR SubChar;
 #define SDL_getenv SDL_getenv_unsafe
 static int sStartAt, sMovieDeviceReset;
