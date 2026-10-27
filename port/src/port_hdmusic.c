@@ -226,10 +226,11 @@ static int Feed(float gain) {
     Resume();
     while (SDL_GetAudioStreamQueued(sStream) < (int)(sRate / 5 * 2 * sizeof(float))) {
         int want = 2048, got, i;
-        /* A corrupt stream or a rejected device write must never hold a game
-           frame forever. Normal playback needs at most five 2048-frame blocks. */
+        /* Bound frame work, not valid track length: very short loops can need
+           more iterations. Keep accepted PCM and fill the remainder next frame.
+           Decoder/seek/output failures below still fail immediately. */
         if (++blocks > 32)
-            return 0;
+            return 1;
         if (sPosition + (unsigned)want > sLoopEnd)
             want = (int)(sLoopEnd - sPosition);
         if (want <= 0) {

@@ -56,7 +56,14 @@ int main(int argc,char** argv) {
     mode=atoi(argv[1]);
     if(mode==3)sLoopEnd=1024;
     if(mode==4)sLoopEnd=0;
+    if(mode==5)sLoopEnd=480;
     PortHdMusicFrame();
+    if(mode==5) {
+        if(closed || queued<=0 || calls>32)return 4;
+        /* Partial queued audio is valid progress; fill the rest next frame. */
+        gPortMix.musicGain=0.75f;
+        PortHdMusicFrame();
+    }
     if(mode==0 || mode==1 || mode==4) {
         if(!closed || sMissing!=1 || gPortMix.musicGain!=0.75f) return 1;
         if(calls>32)return 2;
@@ -71,7 +78,7 @@ int main(int argc,char** argv) {
         folder=Path(name); src=folder/'test.c'; exe=folder/'test.exe'
         src.write_text(code,encoding='utf-8')
         subprocess.run([str(cc),str(src),'-o',str(exe)],check=True)
-        for mode, label in enumerate(('decoder stalls','device rejects data','normal track','short valid loop','empty loop')):
+        for mode, label in enumerate(('decoder stalls','device rejects data','normal track','short valid loop','empty loop','480-sample valid loop')):
             try:
                 result = subprocess.run([str(exe),str(mode)],timeout=2)
             except subprocess.TimeoutExpired:
