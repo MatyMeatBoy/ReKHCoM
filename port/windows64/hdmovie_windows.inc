@@ -36,6 +36,10 @@ static void DropPendingInput(void) {
     SDL_FlushEvents(SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP);
     SDL_FlushEvents(SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP);
     SDL_FlushEvents(SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP);
+    /* The movie may consume the release of a key already held by the guest.
+       Queue a logical focus loss after clearing input so all guest actions reset. */
+    SDL_Event clear = {0}; clear.type = SDL_EVENT_WINDOW_FOCUS_LOST;
+    QueueKey(&clear);
 }
 static int PauseWanted(int* quit) {
     SDL_Event event; int pause = 0;

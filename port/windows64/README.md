@@ -39,6 +39,8 @@ including F5 save, F8 load and F6/F7 slot selection when enabled in Cheats.
 Unsupported hosts return -1 and keep the existing gamepad-only path.
 Keyboard-to-pad emulation is disabled after negotiation so remapping does not
 produce duplicate actions; queue overflow releases held actions via focus-lost.
+Movie/scene pause input cleanup also queues a focus-lost event after flushing:
+a release consumed during a movie cannot leave a pre-movie guest key held.
 
 ## ABI and renderer
 
@@ -57,6 +59,8 @@ Host compiled with LLVM MinGW and SDL3 x64. --test checks:
 - Low address allocation collision preserves existing contents.
 - SDL renderer reset invalidates old handles without freeing a new allocation.
 - UTF-8 save path and replacement of an existing save with new contents.
+- Movie input cleanup: real PortInputHandleEvent consumes X/Enter down, movie
+  consumes their releases, then the queued focus-lost clears held actions.
 - Process contract: stale marker cleanup, error2/error4 without marker,
   and synthetic guest return81 with a durable marker (no ROM needed).
 

@@ -5,6 +5,20 @@
 #undef main
 #include <assert.h>
 
+/* The exact production consumer, with its small state/config surface isolated. */
+#define PORT_ACT_COUNT 2
+static struct { int keys[PORT_ACT_COUNT][2]; } testInputConfig;
+static const uint16_t sActionBits[PORT_ACT_COUNT] = { 1, 8 };
+static uint16_t sKeyboard;
+static int sBattleMenuKeys, sBattleMenuChord, sZoomSelect, sZoomEat;
+static int sDodgeHeld, sDodgePending, sUnstockHeld, sUnstockPending;
+#define gPortConfig testInputConfig
+/* Guest SDL subset defines this canonical event value used on the wire. */
+#define SDL_EVENT_WINDOW_FOCUS_LOST 0x20c
+#include "windows_input_event_test.inc"
+#undef SDL_EVENT_WINDOW_FOCUS_LOST
+#undef gPortConfig
+
 static double __attribute__((sysv_abi, noinline)) GuestProbe(int a, double b, int c, float d, int e) {
     /* SysV permits these registers to change; MS64 callers require their preservation. */
     __asm__ volatile("pxor %%xmm6, %%xmm6; pxor %%xmm15, %%xmm15" ::: "xmm6", "xmm15", "rdi", "rsi");
@@ -66,6 +80,29 @@ int main(void) {
         assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0);
         assert(!strncmp(eventText, "524,", 4)); /* focus lost clears held keys after queue overflow */
         while (B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0) {}
+        /* Guest saw held X + Enter before the movie; movie consumes their releases. */
+        testInputConfig.keys[0][0] = SDLK_X;
+        testInputConfig.keys[1][0] = SDLK_RETURN;
+        SDL_Event held = {0}; held.type = SDL_EVENT_KEY_DOWN;
+        held.key.key = SDLK_X; PortInputHandleEvent(&held);
+        held.key.key = SDLK_RETURN; PortInputHandleEvent(&held);
+        assert(sKeyboard == 9);
+        sDodgeHeld = sDodgePending = sUnstockHeld = sUnstockPending = 1;
+        DropPendingInput(); /* movie entry: guest is blocked until movie return */
+        held.type = SDL_EVENT_KEY_UP;
+        held.key.key = SDLK_X; assert(SDL_PushEvent(&held));
+        held.key.key = SDLK_RETURN; assert(SDL_PushEvent(&held));
+        int quit = 0; assert(!PauseWanted(&quit));
+        assert(!quit && sKeyboard == 9); /* native releases never reached the guest */
+        DropPendingInput(); /* movie exit must deliver exactly one reset */
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0);
+        unsigned eventType, eventKey, eventMod, eventRepeat;
+        assert(sscanf(eventText, "%u,%u,%u,%u", &eventType, &eventKey, &eventMod, &eventRepeat) == 4);
+        assert(eventType == 0x20c);
+        SDL_Event guestReset = {0}; guestReset.type = eventType;
+        PortInputHandleEvent(&guestReset);
+        assert(!sKeyboard && !sDodgeHeld && !sDodgePending && !sUnstockHeld && !sUnstockPending);
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) == 0);
         int old = B_tex_create(pixels, 2, 2, 0);
         assert(old >= 0 && HostTextureSlot(old) >= 0);
         SDL_Event reset = {0};

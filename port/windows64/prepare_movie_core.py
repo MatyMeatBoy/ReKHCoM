@@ -25,3 +25,8 @@ def prepare(root, out):
     out.mkdir(parents=True, exist_ok=True)
     (out / 'windows_movie_subtitles.inc').write_text(subtitles, encoding='utf-8')
     (out / 'windows_movie_decoder.inc').write_text(decoder, encoding='utf-8')
+    # Compile the production event consumer in the host regression, not a mirrored implementation.
+    input_source = (root / 'port/src/port_input.c').read_text(encoding='utf-8')
+    start = input_source.index('void PortInputHandleEvent(const void* p) {')
+    stop = input_source.index('\nint PortInputKeyBound(', start)
+    (out / 'windows_input_event_test.inc').write_text(input_source[start:stop], encoding='utf-8')
