@@ -37,6 +37,22 @@ class PackageTests(unittest.TestCase):
   self.assertEqual(stable['version_name'],'2.0-android-beta')
   self.assertEqual(smoke['application_id'],'com.rekhcom.android.smoke')
   self.assertEqual(smoke['suffix'],'-smoke')
+ def test_official_upgrade_order_preserves_published_codes(self):
+  self.assertEqual(build.package_identity('v2.1')['version_code'],2010099)
+  self.assertEqual(build.package_identity('v2.2-pre1')['version_code'],2020099)
+  releases=['v2.2-pre1','v2.2-pre2','v2.2-pre98','v2.2','v2.2.1-pre1',
+            'v2.2.1-pre98','v2.2.1','v2.3-pre1','v2.3','v3.0-pre1','v3.0']
+  codes=[build.package_identity(r)['version_code'] for r in releases]
+  self.assertTrue(all(a<b for a,b in zip(codes,codes[1:])),codes)
+  for release in releases:
+   self.assertEqual(build.package_identity(release)['application_id'],'com.rekhcom.android')
+  self.assertEqual(build.package_identity('v2.2-pre2')['version_code'],102020002)
+ def test_official_code_capacity_and_android_bound(self):
+  self.assertLessEqual(build.package_identity('v1999.99.99')['version_code'],2100000000)
+  for release in ['v2.2-pre0','v2.2-pre99','v2.2-pre100','v2.100','v2.2.100',
+                  'v2000.0','v2.2-garbage','v2.2.1-pre2-extra']:
+   with self.subTest(release=release),self.assertRaises(ValueError):
+    build.package_identity(release)
  def test_reject_conflicting_or_unsafe_identity(self):
   for args in [dict(test_build=True,smoke=True),dict(test_version='2.1'),dict(test_build=True),
                dict(test_build=True,test_version="2.1-nightly.'bad"),dict(test_build=True,test_version='2.1-nightly.20261027.100')]:
