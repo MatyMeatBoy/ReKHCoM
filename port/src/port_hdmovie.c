@@ -775,10 +775,13 @@ static int PlayFile(const char* name) {
 
     if (FAILED(MFStartup(MF_VERSION, MFSTARTUP_LITE)))
         return 0;
-    MFCreateAttributes(&attrs, 1);
+    hr = MFCreateAttributes(&attrs, 1);
+    if (FAILED(hr))
+        goto done;
     IMFAttributes_SetUINT32(attrs, &MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE);
     hr = MFCreateSourceReaderFromURL(wpath, attrs, &reader);
     IMFAttributes_Release(attrs);
+    attrs = NULL;
     if (FAILED(hr)) {
         PortLog("hd movie: %s does not open (0x%08lx)", path, (unsigned long)hr);
         MFShutdown();
@@ -787,11 +790,14 @@ static int PlayFile(const char* name) {
     /* video as the decoder's NV12 (32-bit BGRX if it cannot, or for SDL's software renderer: its NV12 textures with
        the BT.709 colour space crashed the game), audio as 16-bit PCM */
     for (nv12 = SDL_strcmp(SDL_GetRendererName(renderer), "software") != 0; nv12 >= 0; nv12--) {
-        MFCreateMediaType(&type);
+        hr = MFCreateMediaType(&type);
+        if (FAILED(hr))
+            goto done;
         IMFMediaType_SetGUID(type, &MF_MT_MAJOR_TYPE, &MFMediaType_Video);
         IMFMediaType_SetGUID(type, &MF_MT_SUBTYPE, nv12 ? &MFVideoFormat_NV12 : &MFVideoFormat_RGB32);
         hr = IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, type);
         IMFMediaType_Release(type);
+        type = NULL;
         if (SUCCEEDED(hr))
             break;
     }
@@ -822,13 +828,16 @@ static int PlayFile(const char* name) {
             duration = (LONGLONG)var.uhVal.QuadPart;
         PropVariantClear(&var);
     }
-    MFCreateMediaType(&type);
+    hr = MFCreateMediaType(&type);
+    if (FAILED(hr))
+        goto done;
     IMFMediaType_SetGUID(type, &MF_MT_MAJOR_TYPE, &MFMediaType_Audio);
     IMFMediaType_SetGUID(type, &MF_MT_SUBTYPE, &MFAudioFormat_PCM);
     IMFMediaType_SetUINT32(type, &MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
     if (FAILED(IMFSourceReader_SetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, NULL, type)))
         audioDone = 1;
     IMFMediaType_Release(type);
+    type = NULL;
     if (!audioDone) {
         IMFMediaType* actual = NULL;
         if (SUCCEEDED(IMFSourceReader_GetCurrentMediaType(reader, (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &actual))) {
@@ -1135,6 +1144,10 @@ static int PlayFile(const char* name) {
 
 done:
     PortLog("hd movie: %d frames decoded, %d late ones not shown%s", shown, dropped, quit ? ", window closed" : "");
+    if (attrs)
+        IMFAttributes_Release(attrs);
+    if (type)
+        IMFMediaType_Release(type);
     if (pending)
         IMFSample_Release(pending);
     if (played) {

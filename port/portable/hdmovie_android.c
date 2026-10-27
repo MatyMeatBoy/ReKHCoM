@@ -395,7 +395,7 @@ static void Feed(Track* t) {
 
 /* The frame is converted to RGB here (BT.709, studio range) and uploaded as a plain texture, the default: SDL's YUV
    textures (KHCOM_HDMOVIE_YUV=1) hang some GPUs while their shader is built (the Android 14 emulator, 21/10) */
-static void YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy, const uint8_t* u, const uint8_t* v,
+static int YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy, const uint8_t* u, const uint8_t* v,
                      int su, int sv, int pu) {
     /* the same integer formula per pixel, from tables built once; chroma once per pixel pair; one 32-bit store
        (ABGR8888: bytes R, G, B, A) */
@@ -417,7 +417,7 @@ static void YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int s
     }
 #define CLAMP8(x) clampTab[((x) >> 8) + 384]
     if (!SDL_LockTexture(texture, NULL, (void**)&out, &pitch))
-        return;
+        return 0;
     for (int j = 0; j < h; j++) {
         const uint8_t* ly = y + (size_t)j * sy;
         const uint8_t* lu = u + (size_t)(j / 2) * su;
@@ -436,6 +436,7 @@ static void YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int s
     }
 #undef CLAMP8
     SDL_UnlockTexture(texture);
+    return 1;
 }
 
 /* Plays the movie at path to the end (or until skipped). subs, subs2: the subtitle file to show and the one to try
@@ -510,7 +511,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
         audioTrack.outputDone = 1;
     HdMovieLog("hd movie: %s (%dx%d, %d Hz)", path, (int)width, (int)height, (int)rate);
     LoadSubs(&subs, subs1, subs2, fontPath);
-    played = 1;
+    /* Success requires a frame uploaded to a usable texture. */
     start = (int64_t)(SDL_GetTicksNS() / 1000);
     /* the presses that started the movie (the dialogue's A or tap) are not the movie's */
     SDL_PumpEvents();
@@ -528,6 +529,12 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
             int pressed = SkipPressed(audio);
             if (pressed == 2) {
                 quit = 2;
+                break;
+            }
+            if (pressed == 1 && !played) {
+                /* The user skipped before the first upload: do not start the
+                   cartridge movie as if HD initialization had failed. */
+                quit = 1;
                 break;
             }
             if (pressed == 1 && skipEnd < 0)
@@ -646,8 +653,12 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
                         SDL_DestroyProperties(props);
                         if (texture)
                             SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_LINEAR);
-                        else
+                        else {
                             HdMovieLog("hd movie: no video texture (%s)", SDL_GetError());
+                            M.imageDelete(image);
+                            played = 0;
+                            goto done;
+                        }
                         texW = w;
                         texH = h;
                         texNv12 = nv;
@@ -655,14 +666,22 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
                     if (texture) {
                         const uint8_t* yy = y + crop.top * sy + crop.left;
                         size_t c = (size_t)(crop.top / 2) * su + (size_t)(crop.left / 2) * pu;
+                        int uploaded;
                         if (nv == 3)
-                            YuvToRgb(texture, w, h, yy, sy, u + c, v + (size_t)(crop.top / 2) * sv + (size_t)(crop.left / 2) * pu, su, sv, pu);
+                            uploaded = YuvToRgb(texture, w, h, yy, sy, u + c, v + (size_t)(crop.top / 2) * sv + (size_t)(crop.left / 2) * pu, su, sv, pu);
                         else if (nv == 1)
-                            SDL_UpdateNVTexture(texture, NULL, yy, sy, u + c, su);
+                            uploaded = SDL_UpdateNVTexture(texture, NULL, yy, sy, u + c, su);
                         else if (nv == 2)
-                            SDL_UpdateNVTexture(texture, NULL, yy, sy, v + c, sv);
+                            uploaded = SDL_UpdateNVTexture(texture, NULL, yy, sy, v + c, sv);
                         else
-                            SDL_UpdateYUVTexture(texture, NULL, yy, sy, u + c, su, v + (size_t)(crop.top / 2) * sv + crop.left / 2, sv);
+                            uploaded = SDL_UpdateYUVTexture(texture, NULL, yy, sy, u + c, su, v + (size_t)(crop.top / 2) * sv + crop.left / 2, sv);
+                        if (!uploaded) {
+                            HdMovieLog("hd movie: video upload failed (%s)", SDL_GetError());
+                            M.imageDelete(image);
+                            played = 0;
+                            goto done;
+                        }
+                        played = 1;
                     }
                 }
             }
@@ -736,8 +755,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
 
 done:
     HdMovieLog("hd movie: %d frames shown, %d late ones dropped%s", shown, dropped, quit == 2 ? ", app closed" : "");
-    if (played)
-        FreeSubs(&subs);
+    FreeSubs(&subs);
     if (pending >= 0)
         M.codecRelease(video.codec, (size_t)pending, false);
     CloseTrack(&video);
@@ -753,5 +771,5 @@ done:
     if (audio)
         SDL_DestroyAudioStream(audio);
     close(fd);
-    return played ? (quit == 2 ? 2 : 1) : 0;
+    return quit == 2 ? 2 : (quit == 1 || played) ? 1 : 0;
 }
