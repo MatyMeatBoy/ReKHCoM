@@ -10,6 +10,7 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "port/port.h"
 #include "port/port_hdlayout.h"
@@ -21,6 +22,7 @@ const char* PortHdSpritePath(char* file, size_t size, const char* name);
 typedef struct HdLayout {
     unsigned char* data;
     int size;
+    int validated; /* immutable bytes: full SEQD validation is done once at load */
 } HdLayout;
 
 typedef struct HdLayoutTexture {
@@ -41,6 +43,8 @@ static int32_t I32(const unsigned char* p) { return (int32_t)(p[0] | p[1] << 8 |
 static int16_t I16(const unsigned char* p) { return (int16_t)(p[0] | p[1] << 8); }
 static float F32(const unsigned char* p) { float f; uint32_t v = (uint32_t)I32(p); memcpy(&f, &v, 4); return f; }
 
+static int ValidateLayout(const HdLayout* l);
+
 static const HdLayout* Layout(int which) {
     if ((unsigned)which >= HD_LAYOUT_COUNT)
         return NULL;
@@ -55,11 +59,19 @@ static const HdLayout* Layout(int which) {
         if (strlen(file) > 4 && SDL_strcmp(file + strlen(file) - 4, ".png") == 0)
             memcpy(file + strlen(file) - 4, ".lad", 4);
         data = SDL_LoadFile(file, &size);
-        if (data && size >= 32 && I32((const unsigned char*)data) == 0x4459414C) {
-            sLayouts[which].data = data;
-            sLayouts[which].size = (int)size;
-        } else if (data) {
-            SDL_free(data);
+        if (data) {
+            HdLayout candidate = { data, 0, 0 };
+            if (size <= INT_MAX) {
+                candidate.size = (int)size;
+                if (ValidateLayout(&candidate)) {
+                    candidate.validated = 1;
+                    sLayouts[which] = candidate;
+                } else {
+                    SDL_free(data);
+                }
+            } else {
+                SDL_free(data);
+            }
         }
     }
     return sLayouts[which].data ? &sLayouts[which] : NULL;
@@ -105,18 +117,83 @@ int PortHdLayoutReady(int layout, int texture) {
     return f != NULL;
 }
 
-/* The layout's sequence n: its bytes and size. */
+/* The layout's sequence n: its bytes and size. Validate ranges before forming
+   pointers, using division/subtraction so file-controlled products cannot wrap. */
+static int TableRange(int size, int offset, int count, int stride) {
+    return size >= 0 && offset >= 0 && offset <= size && count >= 0 &&
+           count <= (size - offset) / stride;
+}
+
+static int IndexRange(int total, int first, int count) {
+    return first >= 0 && first <= total && count >= 0 && count <= total - first;
+}
+
+static int ValidateSequence(const unsigned char* s, int size) {
+    static const int stride[5] = { 44, 20, 4, 144, 36 };
+    int counts[5], offsets[5], i;
+    if (size < 48 || I32(s) != 0x44514553)
+        return 0;
+    for (i = 0; i < 5; i++) {
+        counts[i] = I32(s + 8 + i * 8);
+        offsets[i] = I32(s + 12 + i * 8);
+        if (!TableRange(size, offsets[i], counts[i], stride[i]))
+            return 0;
+    }
+    for (i = 0; i < counts[1]; i++) {
+        int sprite = I32(s + offsets[1] + i * 20 + 16);
+        if (sprite < 0 || sprite >= counts[0])
+            return 0;
+    }
+    for (i = 0; i < counts[2]; i++) {
+        const unsigned char* g = s + offsets[2] + i * 4;
+        if (!IndexRange(counts[1], I16(g), I16(g + 2)))
+            return 0;
+    }
+    for (i = 0; i < counts[3]; i++) {
+        int group = I32(s + offsets[3] + i * 144 + 4);
+        if (group < 0 || group >= counts[2])
+            return 0;
+    }
+    for (i = 0; i < counts[4]; i++) {
+        const unsigned char* g = s + offsets[4] + i * 36;
+        if (!IndexRange(counts[3], I16(g), I16(g + 2)))
+            return 0;
+    }
+    return 1;
+}
+
 static const unsigned char* Sequence(const HdLayout* l, int n, int* size) {
-    const unsigned char* b = l->data;
-    int count = I32(b + 24), table = I32(b + 28), start, end;
-    if (n < 0 || n >= count || table + 4 * count > l->size)
+    const unsigned char* b;
+    int count, table, start, end;
+    if (!l || !l->data || l->size < 32)
+        return NULL;
+    b = l->data;
+    count = I32(b + 24);
+    table = I32(b + 28);
+    if (n < 0 || n >= count || !TableRange(l->size, table, count, 4))
         return NULL;
     start = I32(b + table + 4 * n);
     end = n + 1 < count ? I32(b + table + 4 * (n + 1)) : l->size;
-    if (start < 0 || end > l->size || end - start < 48 || I32(b + start) != 0x44514553)
+    if (start < 0 || end < start || end > l->size || end - start < 48 ||
+        I32(b + start) != 0x44514553)
+        return NULL;
+    if (!l->validated && !ValidateSequence(b + start, end - start))
         return NULL;
     *size = end - start;
     return b + start;
+}
+
+static int ValidateLayout(const HdLayout* l) {
+    int count, i, size;
+    if (!l || !l->data || l->size < 32 || I32(l->data) != 0x4459414C)
+        return 0;
+    count = I32(l->data + 24);
+    if (!TableRange(l->size, I32(l->data + 28), count, 4))
+        return 0;
+    for (i = 0; i < count; i++)
+        if (!Sequence(l, i, &size))
+            return 0;
+    return 1;
 }
 
 int PortHdLayoutGroupFrames(int layout, int sequence, int group) {
