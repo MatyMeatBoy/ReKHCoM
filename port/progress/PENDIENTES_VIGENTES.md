@@ -264,6 +264,10 @@ Carril documental: `docs-v20-trailer`, `codex-trailer`, rama `codex/v20-trailer-
   [HUD_ENEMY_STATIC_TRACK.md](HUD_ENEMY_STATIC_TRACK.md). Paridad exacta con
   Re:CoM 1.5 y revisión visual GPU todavía pendientes; no darlo por cerrado
   únicamente por la prueba CPU ni trasladar un porcentaje optimista.
+  Recorte nativo medido y límite pendiente de Windows 64/guest detallados en
+  [HD_GAUGE_VISIBLE_BOUNDS.md](HD_GAUGE_VISIBLE_BOUNDS.md): el guest no compila
+  la cadena SS actual; requiere trabajo de host/bridge separado. No presentar
+  el menor rectángulo como arreglo ya confirmado de su captura dentada.
 
 No son bloqueos del lanzamiento ya realizado. Confirmar su estado actual antes de actuar;
 no iniciar nuevas baterías ni seguimientos automáticos por esta limpieza.

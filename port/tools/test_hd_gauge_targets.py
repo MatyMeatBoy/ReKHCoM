@@ -26,7 +26,7 @@ class GaugeTargetTests(unittest.TestCase):
                 exe = file.with_suffix('.exe')
                 define = ['-D__ANDROID__=1'] if mobile else []
                 subprocess.run([os.environ.get('CC', 'clang'), *flags, *define, str(file), '-o', str(exe)], check=True)
-                for case in ['valid', 'budget', 'highdpi', 'maxsize', 'smallmax', 'unknownmax',
+                for case in ['valid', 'fullhd', 'budget', 'highdpi', 'steady_states', 'maxsize', 'smallmax', 'unknownmax',
                              'overflow', 'intoverflow', 'nan', 'infinity', 'partial', 'cached_failure', 'allfail', 'resize', 'shutdown']:
                     with self.subTest(mobile=mobile, case=case):
                         run = subprocess.run([str(exe), case], capture_output=True, text=True, timeout=10)
@@ -111,10 +111,12 @@ int main(int argc,char**argv){
  int expected=0;
  (void)SDL_GetRendererProperties;(void)SDL_GetNumberProperty;
  if(!strcmp(c,"valid")){draw(1);expected=GAUGE_SS==4?3:2;check(created==expected&&!direct,"valid supersampling remains enabled");draw(1);check(created==expected,"same-size targets are reused");}
- if(!strcmp(c,"budget")){draw(7);check(created==2||direct==1,"large output reduces supersampling or draws directly");}
- if(!strcmp(c,"highdpi")){draw(13.5f);check(!created&&direct==1,"4K-sized HUD bypasses offscreen targets");}
- if(!strcmp(c,"maxsize")){maxSize=512;draw(1);check(created==2&&!direct,"renderer cap degrades SS4 to usable SS2");}
- if(!strcmp(c,"smallmax")){maxSize=400;draw(1);check(!created&&direct==1,"renderer cap permits direct fallback");}
+ if(!strcmp(c,"fullhd")){draw(6.75f);check(created==(GAUGE_SS==4?3:2)&&!direct,"1080p-sized desktop keeps SS4 and constrained target keeps SS2");}
+ if(!strcmp(c,"budget")){draw(9);check(created==2&&!direct,"1440p-sized gauge retains SS2 within existing budgets");}
+ if(!strcmp(c,"highdpi")){draw(13.5f);check(GAUGE_SS==4?(created==2&&!direct):(!created&&direct==1),"4K desktop retains SS2; constrained target preserves its lower budget");}
+ if(!strcmp(c,"steady_states")){draw(9);int before=attempts;for(int i=0;i<1000;i++){sGauge.hp=i%561;sGauge.maxHp=560;sGauge.stateAnim=10+i%6;sGauge.faceAnim=i%4;draw(9);}check(attempts==before&&!direct,"HP/state/face changes reuse a stable crop without allocations");}
+ if(!strcmp(c,"maxsize")){maxSize=300;draw(1);check(created==2&&!direct,"renderer cap degrades SS4 to usable SS2");}
+ if(!strcmp(c,"smallmax")){maxSize=200;draw(1);check(!created&&direct==1,"renderer cap permits direct fallback");}
  if(!strcmp(c,"unknownmax")){maxSize=0;draw(1);check(!created&&direct==1,"unknown renderer limit is handled conservatively");}
  if(!strcmp(c,"overflow")){draw(1e30f);check(!attempts,"huge geometry must not be cast or allocated");}
  if(!strcmp(c,"intoverflow")){draw(8e6f);check(!attempts,"integer-scaled target dimensions must not overflow");}
@@ -122,9 +124,9 @@ int main(int argc,char**argv){
  if(!strcmp(c,"infinity")){draw(INFINITY);check(!attempts,"infinite geometry must not allocate");}
  if(!strcmp(c,"partial")){failAt=2;draw(1);check(parts==1,"partial allocation failure still draws gauge once");
      check(GAUGE_SS==4?(created==3&&destroyed==1&&!direct):(created==1&&destroyed==1&&direct==1),"partial chain is released before a lower-quality fallback");}
- if(!strcmp(c,"cached_failure")){failAbove=600;draw(1);int before=attempts;draw(1);check(attempts==before,"reuse lower-quality chain instead of retrying rejected larger targets every frame");}
+ if(!strcmp(c,"cached_failure")){failAbove=300;draw(1);int before=attempts;draw(1);check(attempts==before,"reuse lower-quality chain instead of retrying rejected larger targets every frame");}
  if(!strcmp(c,"allfail")){failAll=1;draw(1);check(parts==1&&direct==1&&!liveBytes,"all allocation failures draw directly without partial cache");}
- if(!strcmp(c,"resize")){draw(1);draw(7);draw(14);check(!liveBytes&&direct>=1&&parts==3,"fallback releases supersampling cache");}
+ if(!strcmp(c,"resize")){draw(1);draw(9);draw(20);check(!liveBytes&&direct>=1&&parts==3,"fallback releases supersampling cache");}
  if(!strcmp(c,"shutdown")){draw(1);PortHdLayoutShutdown();check(!liveBytes&&destroyed==created,"shutdown releases every gauge target");}
  PortHdLayoutShutdown();check(!liveBytes&&destroyed==created,"all cached allocations have one owner and are released");
  return 0;
