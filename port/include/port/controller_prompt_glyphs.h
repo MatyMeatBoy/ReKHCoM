@@ -8,8 +8,9 @@
 static inline int KhPromptGlyphId(const char* label) {
     static const char* const names[]={"Cross","Circle","Square","Triangle","Up","Down","Left","Right"};
     static const char* const pairs[]={"LB","RB","LT","RT","L1","R1","L2","R2","ZL","ZR","LS","RS","Menu","View","Options","Share"};
-    for(int i=0;i<8;i++)if(!strcmp(label,names[i]))return i+1;
-    for(int i=0;i<16;i++)if(!strcmp(label,pairs[i]))return 128+i;
+    int i;
+    for(i=0;i<8;i++)if(!strcmp(label,names[i]))return i+1;
+    for(i=0;i<16;i++)if(!strcmp(label,pairs[i]))return 128+i;
     if(label[0] && !label[1] && strchr(PORT_PROMPT_LETTERS,label[0]))return (unsigned char)label[0];
     return 0;
 }
