@@ -1,7 +1,8 @@
 # HD EN/JP: investigación y traspaso 2.1 — 27/10/2026
 
 Tarea única: `launcher-hd-media-language-selection-v21`, cola autoritativa
-`coordination/art-queue`. Investigación acotada; implementación pendiente. No
+`coordination/art-queue`. Investigación y primer incremento de detección/guía;
+selección e imports por idioma pendientes. No
 descargar contenido, cambiar idioma de Steam ni ejecutar el juego fuente en
 esta fase. La entrega Windows/QA activa sigue su propio carril.
 
@@ -37,9 +38,9 @@ de un ACF ni una carpeta demuestra por sí sola licencia. No solicitar claves,
 credenciales o tokens; no añadir descargas de terceros, eludir controles de
 acceso ni redistribuir material del juego con ReKHCoM.
 
-## Importador actual y evidencia local de solo lectura
+## Importador de partida y evidencia local de solo lectura
 
-Código revisado: `port/decompui/hd_import.inc`, `decompui.cpp`,
+Código de partida revisado antes del incremento: `port/decompui/hd_import.inc`, `decompui.cpp`,
 `port/tools/khhd_import.py`, `khhd_subs.py`, `port/src/port_hdmovie.c`.
 
 - `FindInstall` descubre Steam mediante registro, `libraryfolders.vdf` y nombres
@@ -73,7 +74,62 @@ compartidos; no asumir un directorio `jp` ni coexistencia de ambas versiones.
 SteamDB no es Valve: estos IDs tienen confianza orientativa y deben contrastarse
 con una instalación autorizada y su manifest; no fijarlos para descargar contenido.
 
-## Alcance de implementación propuesto
+## Primer incremento implementado
+
+`hd_media_source.h` añade parser VDF/ACF independiente de Win32: límite 1 MiB,
+16 niveles, 8192 nodos y 4096 bytes por token; claves duplicadas, rutas de
+instalación con traversal y sintaxis incompleta se rechazan. Descubre hasta 64
+bibliotecas configuradas desde hasta 16 raíces y respeta `installdir` personalizado.
+No escribe ACF ni Steam. La UI reusa el probe hasta cambiar carpeta o pulsar
+«Volver a comprobar», sin lecturas por cada frame.
+
+El mapping explícito se limita a app build `15194255` y exactamente estos pares
+de manifests: general `2552433=2946731077053901934` /
+`2552435=3908821002986173448`; JP `2552432=8878064114965627002` /
+`2552434=7005798054209199771`. El general se observó localmente y JP se contrastó
+con los listados secundarios enlazados; **son señales, no verificación de audio**.
+Requiere instalación completa sin descarga/target build pendientes y configuración
+coherente. Mezclas, revisión futura, estado incompleto y fuentes no Steam quedan
+en desconocido. No se usa `spanish` para anunciar audio español.
+
+Inventario de hasta 512 entradas, sin recursión; cada MP4 reconocido lee como
+máximo 512 bytes de muestra. Se comprueban también HED/PKG sin descomprimir.
+Huella FNV de rutas, revisión, idioma declarado, depots, tamaños, mtimes y muestras:
+detecta cambios para refrescar evidencia, **no certifica integridad ni idioma**.
+La disponibilidad es presencia legible por componente, no cobertura completa o
+decodificación probada. Epic/carpetas sueltas mantienen idioma desconocido.
+
+La UI usa `T(es,en)` y catálogo de strings; otros idiomas conservan el fallback
+inglés existente hasta traducir esos textos. Ofrece enlaces HTTPS oficiales y
+reescaneo. Las copias HD previas se muestran siempre con audio no verificado,
+sin heredarlo de la fuente elegida. No modifica playback/import.list ni elimina
+imports: la invalidación persistente y selección real van en el próximo PR.
+
+Verificación: `python port/tools/test_hd_media_source.py` compila y ejecuta el
+header de producción con fixtures ACF malformados/duplicados/profundos/grandes,
+varias bibliotecas y nombre personalizado, download incompleto, revisiones/depots
+mezclados, caché EN→JP y cambio de contenido con igual tamaño/mtime. Conserva el
+import EN previo y prueba Epic/suelto desconocidos. Syntax-only del launcher
+Windows i686 con SDL3 real pasa. No se hizo build pesado, ejecución de Steam,
+descarga ni verificación auditiva/hardware/UI renderizada.
+
+## Siguiente PR: imports y playback EN/JP
+
+Seguimiento separado: `launcher-hd-media-language-variants-v21`, dependiente de
+este primer incremento. Propuesta concreta para revisar antes de implementarlo:
+`hd/media/en/{movies,scenes}` y `hd/media/ja/{movies,scenes}`, catálogo de
+procedencia por archivo y ajuste independiente `hd_media_language=auto|en|ja`.
+`auto` conserva el comportamiento legacy; EN/JP explícito exige esa variante
+disponible y no sustituye silenciosamente por la otra voz. Si falta, UI informa
+y el juego conserva el fallback del cartucho. No cambiar `game_language` ni Undub.
+
+Publicar cada archivo/metadata con temporales y reemplazo atómico dentro de su
+variante; conservar el import anterior si hay error/cancelación. Claves de cache,
+posters, journal e import.list incluyen idioma, huella de fuente y calidad. Una
+fuente diferente invalida el resume de ese trabajo, sin borrar material bueno.
+Legacy permanece sin atribución automática de idioma. Auditar exportación HD,
+packs y rutas guest/host para no perder variantes al copiar a otras plataformas.
+La UI ofrecerá selección a partir del catálogo importado, no solo de la señal ACF.
 
 1. Descubrimiento local robusto: ACF del AppID en cada biblioteca, `installdir`,
    `UserConfig/language`, depots instalados y estado de actualización como señales
@@ -100,6 +156,6 @@ una película hablada y una escena en ambos idiomas con subtítulos independient
 sin requerir campaña completa ni tocar partidas. Probar también UI localizada,
 desconocido/faltante, off/on y fallback al cartucho sin saltar historia.
 
-La afirmación histórica «PC solo trae audio inglés» en `HD_MOD.md` describe la
-fuente inspeccionada entonces; no generalizarla al producto actual con audio JP.
-Corregir esa presentación al implementar, manteniendo la evidencia histórica.
+La afirmación histórica «PC solo trae audio inglés» en `HD_MOD.md` se corrigió
+para describir solo la fuente inspeccionada entonces; no generalizarla al producto
+actual con audio JP. No modificar esas copias antiguas para acomodar la señal.

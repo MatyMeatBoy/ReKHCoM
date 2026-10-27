@@ -3,8 +3,9 @@
 ## Mandato vigente de coordinación — 27/10/2026
 
 - [ ] **Launcher: audio/vídeos HD EN/JP y disponibilidad clara**, tarea remota
-  `launcher-hd-media-language-selection-v21`. Investigación lista, implementación
-  pendiente; [fuentes y traspaso](HD_MEDIA_LANGUAGE_SELECTION_V21.md). Steam
+  `launcher-hd-media-language-selection-v21`. Primer incremento de detección ACF,
+  señales de fuente/huella y guía/reescaneo implementado para revisión; selección
+  e imports/playback por idioma pendientes; [fuentes y traspaso](HD_MEDIA_LANGUAGE_SELECTION_V21.md). Steam
   permite elegir idioma del juego y descargar archivos mediante su cliente;
   no hay automatización de depots/cambio de idioma verificada para ofrecer.
   Separar idioma de texto/subtítulos, Undub GBA y audio HD; el import actual no
