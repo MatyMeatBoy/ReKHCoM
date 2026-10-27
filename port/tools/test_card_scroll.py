@@ -30,6 +30,8 @@ static uint32_t sFrame;
 uint32_t PortFrameCount(void) { return sFrame; }
 void PortLog(const char* fmt, ...) { (void)fmt; }
 int PortUiMenuCanvas(void) { return 0; }
+int PortUndubAvailable(void) { return 0; }
+void PortSetQolButtons(int on) { (void)on; }
 static int sZoomSteps[2];
 void PortUiZoomStep(int dir) { sZoomSteps[dir > 0]++; }
 
