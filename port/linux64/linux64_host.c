@@ -307,6 +307,13 @@ int main(int argc, char** argv) {
         if (!strcmp(argv[i], "--data") && i + 1 < argc)
             snprintf(sData, sizeof(sData), "%s", argv[++i]);
     setenv("KHCOM_DATA", sData, 1);
+    {
+        /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
+           Steam Deck's HD text found no font and the dialogue showed none) */
+        char assets[1100];
+        snprintf(assets, sizeof(assets), "%s/assets", sData);
+        setenv("KHCOM_ASSETS", assets, 0);
+    }
     FILE* f = fopen(image, "rb");
     if (!f) {
         Log("%s: %s", image, strerror(errno));

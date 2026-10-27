@@ -3529,7 +3529,7 @@ void PortPpuBeginFrame(void) {
         memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
         sTitlePaletteValid = 1;
     }
-#if defined(__ANDROID__) || defined(PORT_LINUX) /* FreeType HD text (#77) */
+#if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST) /* FreeType / stb_truetype HD text (#77, #277) */
     extern int PortPortableHdReady(void);
 #endif
     sBgTextCount = 0;
@@ -3702,8 +3702,11 @@ void PortPpuBeginFrame(void) {
                 IO16(0x0C), IO16(0x0E), gPortScreen.wide, sSceneNarrow);
     sHudLayer = gPortScreen.wide && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
     sHdText = gPortConfig.hdText;
-#if defined(__ANDROID__) || defined(PORT_LINUX)
-    sHdText = sHdText && PortPortableHdReady();
+#if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
+    {
+        extern int PortPortableHdReady(void);
+        sHdText = sHdText && PortPortableHdReady();
+    } /* no HD face: the cartridge's text, never none (#277) */
 #endif
     WorldNameFrame();
     RegisterBgSlashes(dispcnt);
