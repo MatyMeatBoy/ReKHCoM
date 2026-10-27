@@ -4883,10 +4883,10 @@
       "status": "pr_abierto",
       "owner": "codex-docs-v21-coordination",
       "created_at": "2026-10-27T06:54:36.951994+00:00",
-      "updated_at": "2026-10-27T08:18:08.140714+00:00",
+      "updated_at": "2026-10-27T08:20:34.529618+00:00",
       "branch": "docs/optiport-v21-coordination",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/317",
-      "approval": "Usuario 27/10/2026: documentar reparto Codex/Claude y autorizacion prerelease",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "port/progress/COORDINACION_OPTIPORT_V21.md",
       "evidence": [
         {
@@ -5085,7 +5085,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T08:18:18.474518+00:00"
   },
-  "updated_at": "2026-10-27T08:19:20.255596+00:00",
+  "updated_at": "2026-10-27T08:20:34.529618+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
