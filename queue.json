@@ -4357,7 +4357,7 @@
       "status": "en_revision",
       "owner": "codex-media-fallbacks",
       "created_at": "2026-10-27T05:08:26.698519+00:00",
-      "updated_at": "2026-10-27T05:11:33.521790+00:00",
+      "updated_at": "2026-10-27T05:13:22.548751+00:00",
       "branch": "fix/media-readiness-fallbacks",
       "pr": null,
       "approval": "User authorized indispensable fallbacks before Deck Android test builds",
@@ -4367,6 +4367,11 @@
           "at": "2026-10-27T05:11:33.521790+00:00",
           "owner": "codex-media-fallbacks",
           "detail": "Android fault injection creation/upload 4 formats and watchdog passed; MF 3 allocation guards passed; full Windows i686 and Android64 syntax and existing seek regression passed. Local commit for integration, no push/PR."
+        },
+        {
+          "at": "2026-10-27T05:13:22.548751+00:00",
+          "owner": "codex-media-fallbacks",
+          "detail": "Review follow-up: removed unmeasured 5s wall-clock watchdog (background pause must not invalidate video); early explicit skip now returns success before upload, close remains 2. Production dispatch/return harness with simulated 120s pause passes, Android full syntax passes."
         }
       ],
       "claimed_at": "2026-10-27T05:08:32.062584+00:00"
@@ -4401,7 +4406,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T05:11:33.521790+00:00",
+  "updated_at": "2026-10-27T05:13:22.548751+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
