@@ -5110,10 +5110,23 @@
         }
       ],
       "claimed_at": "2026-10-27T08:21:29.253133+00:00"
+    },
+    "hud-enemy-gauge-static-track": {
+      "id": "hud-enemy-gauge-static-track",
+      "piece": "Enemy HD gauge track stable at constant maximum HP",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:25:47.778897+00:00",
+      "updated_at": "2026-10-27T08:25:47.778897+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User reports enemy HD HP gauge repeatedly grows and resets; parent delegated bounded fix",
+      "reference": "Codex HUD audit 2026-10-27",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:25:41.332284+00:00",
+  "updated_at": "2026-10-27T08:25:47.778897+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

@@ -189,5 +189,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | guest-songlog-env | Portable guest optional song logging link fix | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/316 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:12:09.245569+00:00 |
 | save-panel-palette-exhaustion | Save panel palette exhaustion BIOS semantics | integrado | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/319 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:19:20.255596+00:00 |
 | linux-unified-desktop-deck-package | Unificar paquete Linux x86/x64 desktop+SteamDeck; Anbernic beta; docs y contratos de packaging sin heavy build | pr_abierto | codex-linux-unified-package | https://github.com/MatyMeatBoy/ReKHCoM/pull/321 | Usuario 27/10: un solo artefacto Linux x86/x64 desktop Deck; Anbernic beta | 2026-10-27T08:25:41.332284+00:00 |
+| hud-enemy-gauge-static-track | Enemy HD gauge track stable at constant maximum HP | pendiente | — | — | User reports enemy HD HP gauge repeatedly grows and resets; parent delegated bounded fix | 2026-10-27T08:25:47.778897+00:00 |
 
 Integrador: libre
