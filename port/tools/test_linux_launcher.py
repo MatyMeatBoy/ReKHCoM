@@ -53,7 +53,7 @@ class LauncherTest(unittest.TestCase):
 
     def assert_game(self, region, args):
         captured = (self.game / 'args.txt').read_text(encoding='utf-8').splitlines()
-        self.assertEqual(captured, [self.directory, self.directory + '/lib:/inherited/libs',
+        self.assertEqual(captured, [self.directory, self.directory + '/lib/sys:' + self.directory + '/lib:/inherited/libs',
                                    '--data-dir', self.directory, *args])
         self.assertEqual((self.game / 'region.txt').read_text().strip(), region)
 
@@ -63,6 +63,28 @@ class LauncherTest(unittest.TestCase):
         self.assert_game('eu', ['--language', 'es', 'argument with spaces', '$literal'])
         self.assertIn('ROM not found', (self.game / 'ReKHCoM.log').read_text())
         self.assertFalse((self.root / 'ReKHCoM.log').exists())
+
+    def test_previous_five_logs_survive_restarts(self):
+        for n in range(8):
+            self.assertEqual(self.run_script().returncode, 17)
+            with (self.game / 'ReKHCoM.log').open('a') as log:
+                log.write(f'run-marker-{n}\n')
+        for previous in range(1, 6):
+            path = self.game / f'ReKHCoM.log.{previous}'
+            self.assertTrue(path.exists(), f'previous log missing: {path.name}')
+            self.assertIn(f'run-marker-{7-previous}\n', path.read_text())
+        self.assertFalse((self.game / 'ReKHCoM.log.6').exists())
+
+    def test_rotation_directory_keeps_existing_evidence(self):
+        log = self.game / 'ReKHCoM.log'
+        log.write_text('previous-crash-evidence\n')
+        blocked = self.game / 'ReKHCoM.log.1'
+        blocked.mkdir()
+        (blocked/'keep').write_text('user data')
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertTrue(log.read_text().startswith('previous-crash-evidence\n'))
+        self.assertIn('ReKHCoM.sh:', log.read_text())
+        self.assertEqual(list(p.name for p in blocked.iterdir()), ['keep'])
 
     def test_header_selection_and_region_option(self):
         # Header-only fixtures are not cartridge dumps; they test dispatch only.
