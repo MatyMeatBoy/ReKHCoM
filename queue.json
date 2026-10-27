@@ -7895,10 +7895,23 @@
       "approval": "Usuario27/10 solicita ERRA HD despuesprioridades1pixeles2audio3HP",
       "reference": null,
       "evidence": []
+    },
+    "card-native-crown-corners": {
+      "id": "card-native-crown-corners",
+      "piece": "Preserve native small-card crown/window closure corner cells under HD, per-card colours unchanged; verify layered renderer and recipe families",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T22:19:47.262893+00:00",
+      "updated_at": "2026-10-27T22:19:47.262893+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27octliteralfranja+2cornerpixels; rootdelegacion20261027",
+      "reference": "pruebas/key-hilt-black-pixels/all-card-seams/inventory.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:19:25.628833+00:00",
+  "updated_at": "2026-10-27T22:19:47.262893+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
