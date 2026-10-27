@@ -232,6 +232,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sintesis-requisito-hd-fix | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:33.407751+00:00 |
 | anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:40.246238+00:00 |
 | bonus-elite-cabecera | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:49.081835+00:00 |
-| v22-board-reconcile-integrated-state | Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude | en_curso | codex-v22-board-reconcile | — | Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente | 2026-10-27T16:14:48.736720+00:00 |
+| v22-board-reconcile-integrated-state | Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude | en_curso | codex-v22-board-reconcile | docs/v22-board-reconcile | Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente | 2026-10-27T16:15:00.297331+00:00 |
 
 Integrador: libre

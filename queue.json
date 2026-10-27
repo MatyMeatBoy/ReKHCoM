@@ -6356,17 +6356,23 @@
       "status": "en_curso",
       "owner": "codex-v22-board-reconcile",
       "created_at": "2026-10-27T16:14:42.349652+00:00",
-      "updated_at": "2026-10-27T16:14:48.736720+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T16:15:00.297331+00:00",
+      "branch": "docs/v22-board-reconcile",
       "pr": null,
       "approval": "Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente",
       "reference": "port/progress/PLAN_V22.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T16:15:00.297331+00:00",
+          "owner": "codex-v22-board-reconcile",
+          "detail": "Scopeaprobado porcoordinador: SOLO PLAN_V22, cambiosbasadosenPRmerged yregistrolimpieza; ClaudeconservafallbackP0"
+        }
+      ],
       "claimed_at": "2026-10-27T16:14:48.736720+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:14:48.736720+00:00",
+  "updated_at": "2026-10-27T16:15:00.297331+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
