@@ -6047,10 +6047,23 @@
       ],
       "claimed_at": "2026-10-27T12:48:29.317870+00:00",
       "completed_at": "2026-10-27T13:03:30.081781+00:00"
+    },
+    "v21-dummy-cleanup": {
+      "id": "v21-dummy-cleanup",
+      "piece": "Remove only redundant generated test runtime copies proven identical to retained release; keep evidence and required dummies",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T13:05:54.436749+00:00",
+      "updated_at": "2026-10-27T13:05:54.436749+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario pide ir limpiando dummys tras2.1",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:03:35.301020+00:00",
+  "updated_at": "2026-10-27T13:05:54.436749+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
