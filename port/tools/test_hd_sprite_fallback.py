@@ -52,6 +52,7 @@ static unsigned char vram[0x20000];
 #define PLTT16 palette
 #define VRAM8 vram
 #define IO16(n) regs[(n)/2]
+static unsigned sScreenBgMask; static int sSpotlight; /* SpriteOnScreen's inputs: no menu, no spotlight */
 static int sEventBackdropProfile,sEnvActorFrameOff,sJafarFight,sLeft,sRight=16,sBottom=16,sHudLayer,sTitleBarHd,sOverlay,sLineHasObjects;
 static struct {int v[1];}*sPreliminarRecipe[4];
 static uint8_t sStagedActorEntered[3],sActorEntered[128];
@@ -80,7 +81,7 @@ int main(void){
  FILE*f=fopen("test","wb");assert(f);fputs("exists",f);fclose(f);
  reset();infoOK=0;native_frame();
  reset();decodeOK=0;native_frame();
- reset();failTexture=2;native_frame();assert(destroys==1);
+ reset();failTexture=1;native_frame();assert(!destroys); /* the picture's upload fails: nothing to release */
  reset();width=height=4096;native_frame();assert(!decodes);
  reset();sBytes=32u*1024*1024;sState[1].image=(void*)1;sState[1].bytes=sBytes;sState[1].lastUsed=9;native_frame();assert(!creates);
  reset();sRenderer=NULL;native_frame();assert(!decodes);
@@ -91,12 +92,12 @@ int main(void){
 #if __STDC_HOSTED__
  reset();mainThread=0;assert(!PortHdSpriteFind((void*)42,NULL)&&!decodes);
 #endif
- reset();assert(queue());assert(sState[0].image&&sState[0].white&&sState[0].lastUsed==9);
+ reset();assert(queue());assert(sState[0].image&&sState[0].alpha&&!sState[0].white&&sState[0].lastUsed==9);
  reset();infoOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
  reset();decodeOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
- reset();failTexture=2;assert(!PortHdSpriteFind((void*)42,NULL));
- reset();assert(PortHdSpriteFind((void*)42,NULL)==1);assert(sState[0].image&&sState[0].white&&sState[0].lastUsed==9);
- sMainHdPart[0]=queue();DrawObjs(0,0x1000);assert(sObjLine[0]==TRANSPARENT&&sDrawCount[0]==1&&creates==2);
+ reset();failTexture=1;assert(!PortHdSpriteFind((void*)42,NULL));
+ reset();assert(PortHdSpriteFind((void*)42,NULL)==1);assert(sState[0].image&&sState[0].alpha&&sState[0].lastUsed==9);
+ sMainHdPart[0]=queue();DrawObjs(0,0x1000);assert(sObjLine[0]==TRANSPARENT&&sDrawCount[0]==1&&creates==1); /* no fade: no white copy */
  /* Subsequent loads cannot evict a replacement whose native pixels have been omitted. */
  sBytes=32u*1024*1024;sState[0].bytes=sBytes;assert(!Load(2));assert(sState[0].image);
  puts("PASS first-frame native pixel: invalid header/decode/upload, oversize/pinned budget, no renderer/off-main-thread; valid replacement acquired/pinned before omission");
@@ -110,7 +111,10 @@ unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteReady(')
 unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
-unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
+unit += ppu_function('static int QueueHdPart(')
+if 'static int SpriteOnScreen(' in ppu:  # DrawObjs' own visibility helper (main 27/10)
+    unit += ppu_function('static int SpriteOnScreen(')
+unit += ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
     folder = Path(folder)

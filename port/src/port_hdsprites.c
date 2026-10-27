@@ -43,6 +43,8 @@ typedef struct HdSpriteDef {
 
 typedef struct HdSpriteState {
     SDL_Texture *image, *white;
+    uint8_t* alpha; /* the picture's alpha, kept so its white copy is made only when a fade first asks (WhiteOf) */
+    int w, h;
     uint32_t lastUsed;
     size_t bytes;
     int textureH;
@@ -265,8 +267,40 @@ static void Unload(int i) {
     if (sState[i].image) SDL_DestroyTexture(sState[i].image);
     if (sState[i].white) SDL_DestroyTexture(sState[i].white);
     sState[i].image = sState[i].white = NULL;
+    SDL_free(sState[i].alpha);
+    sState[i].alpha = NULL;
     sBytes -= sState[i].bytes;
     sState[i].bytes = 0;
+}
+
+/* The white copy for a brightening fade, made from the kept alpha the first time a fade asks for it (Load);
+   NULL when it cannot be made, the fade then shows the picture alone. */
+static SDL_Texture* WhiteOf(int i) {
+    HdSpriteState* st = &sState[i];
+    if (!st->white && st->alpha && sRenderer) {
+        uint64_t t0 = PORT_STUTTER_NOW();
+        uint8_t* px = (uint8_t*)SDL_malloc((size_t)st->w * st->h * 4);
+        SDL_Surface* s;
+        int k;
+        if (!px) return NULL;
+        for (k = 0; k < st->w * st->h; k++) {
+            px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
+            px[k * 4 + 3] = st->alpha[k];
+        }
+        if ((s = SDL_CreateSurfaceFrom(st->w, st->h, SDL_PIXELFORMAT_RGBA32, px, st->w * 4)) != NULL) {
+            st->white = SDL_CreateTextureFromSurface(sRenderer, s);
+            SDL_DestroySurface(s);
+        }
+        SDL_free(px);
+        if (st->white) {
+            SDL_SetTextureBlendMode(st->white, SDL_BLENDMODE_BLEND);
+            SDL_SetTextureScaleMode(st->white, (SDL_ScaleMode)PortSmoothScaleMode());
+            SDL_free(st->alpha);
+            st->alpha = NULL;
+        }
+        PORT_STUTTER_ADD(hdUploadTicks, t0);
+    }
+    return st->white;
 }
 
 /* a decode and upload, counted for OptiPort's stutter view while the frame log is on (gPortStutter) */
@@ -365,22 +399,30 @@ static int Load(int i) {
     if (s) {
         uint64_t t0 = PORT_STUTTER_NOW();
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
-        /* the white copy for the game's brightening fades */
-        for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
-        sState[i].white = SDL_CreateTextureFromSurface(sRenderer, s);
+        /* the white copy for the game's brightening fades: its alpha is kept and the copy made when a fade first
+           needs it (WhiteOf; OptiPort 2.2: two uploads per picture entering a menu); without memory for the alpha,
+           made now as before. The budget still counts the copy, so eviction is unchanged. */
+        sState[i].w = w;
+        sState[i].h = h;
+        if ((sState[i].alpha = (uint8_t*)SDL_malloc((size_t)w * h)) != NULL) {
+            for (k = 0; k < w * h; k++) sState[i].alpha[k] = px[k * 4 + 3];
+        } else {
+            for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
+            sState[i].white = SDL_CreateTextureFromSurface(sRenderer, s);
+        }
         SDL_DestroySurface(s);
         PORT_STUTTER_ADD(hdUploadTicks, t0);
     }
     stbi_image_free(px);
-    if (!sState[i].image || !sState[i].white) {
+    if (!sState[i].image || (!sState[i].white && !sState[i].alpha)) {
         Unload(i);
         sState[i].present = 1;
         return 0;
     }
     SDL_SetTextureBlendMode(sState[i].image, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureBlendMode(sState[i].white, SDL_BLENDMODE_BLEND);
+    if (sState[i].white) SDL_SetTextureBlendMode(sState[i].white, SDL_BLENDMODE_BLEND);
     SDL_SetTextureScaleMode(sState[i].image, (SDL_ScaleMode)PortSmoothScaleMode()); /* LINEAR, but not on SDL's software renderer */
-    SDL_SetTextureScaleMode(sState[i].white, (SDL_ScaleMode)PortSmoothScaleMode());
+    if (sState[i].white) SDL_SetTextureScaleMode(sState[i].white, (SDL_ScaleMode)PortSmoothScaleMode());
     sState[i].bytes = need;
     sBytes += need;
     return 1;
@@ -648,6 +690,7 @@ static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, floa
     static const int kIndex[6] = { 0, 1, 2, 0, 2, 3 };
     float area;
     int k;
+    if (!t) return; /* a white copy that could not be made (WhiteOf): never an untextured quad */
     for (k = 0; k < 4; k++) {
         v[k].position.x = ox + q->x[k] * scale;
         v[k].position.y = oy + q->y[k] * scale;
@@ -1019,7 +1062,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         }
         Quad(st->image, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
         if (white > 0)
-            Quad(st->white, q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
+            Quad(WhiteOf(q->id), q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
         if (kHdSprites[q->id].group == 7 && MenuLightName(kHdSprites[q->id].name))
             SpriteMenuLight(renderer, q, ox, oy, scale, shade, white);
         if (q->u0 <= 0.0f && SDL_strstr(kHdSprites[q->id].name, "PremireChanceTitle")) {
@@ -1035,7 +1078,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
                 edge.u1 = edge.u0 + 0.25f / kHdSprites[q->id].w; /* a quarter of a cartridge pixel */
                 Quad(st->image, &edge, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
                 if (white > 0)
-                    Quad(st->white, &edge, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
+                    Quad(WhiteOf(q->id), &edge, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
             }
         }
     }
@@ -1077,7 +1120,7 @@ void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float sca
                 SDL_SetRenderClipRect(renderer, &clip);
                 Quad(st->image, q, ox, oy, scale, (SDL_FColor){shade, shade, shade, q->alpha / 255.0f});
                 if (white > 0)
-                    Quad(st->white, q, ox, oy, scale, (SDL_FColor){1, 1, 1, q->alpha / 255.0f * white});
+                    Quad(WhiteOf(q->id), q, ox, oy, scale, (SDL_FColor){1, 1, 1, q->alpha / 255.0f * white});
             }
         }
     }
