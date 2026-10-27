@@ -5439,10 +5439,23 @@
       "reference": "PR332 labels +334 symbols; preserve reveal/window/VM; variable fallback remains gated",
       "evidence": [],
       "claimed_at": "2026-10-27T09:58:18.898783+00:00"
+    },
+    "steamdeck-gaming-mode-330": {
+      "id": "steamdeck-gaming-mode-330",
+      "piece": "Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T10:16:08.351988+00:00",
+      "updated_at": "2026-10-27T10:16:08.351988+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario autoriza resolver330 sin comentario externo ni heavybuild",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:08:06.991816+00:00",
+  "updated_at": "2026-10-27T10:16:08.351988+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
