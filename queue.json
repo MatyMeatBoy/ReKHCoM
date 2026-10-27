@@ -4760,15 +4760,21 @@
     "hudhd-pila-cartas": {
       "id": "hudhd-pila-cartas",
       "piece": "HUD HD: pila de cartas sobre la vida nueva, con borde (también enemigos/jefes)",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T06:31:00.162364+00:00",
-      "updated_at": "2026-10-27T08:21:06.746389+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T08:25:34.213349+00:00",
+      "branch": "task/stock-card-frames",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/320",
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T08:25:34.213349+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "Draft PR320 real HUD cover snippets RED assertion then GREEN; guest syntax and diffcheck pass. Runtime screenshots 1/2/3 player/enemy/boss and visual review pending root serial build. No art changes; restores existing native group6 frame contract"
+        }
+      ],
       "claimed_at": "2026-10-27T08:21:06.746389+00:00"
     },
     "hudhd-numeros-cartas": {
@@ -5101,7 +5107,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:21:29.253133+00:00",
+  "updated_at": "2026-10-27T08:25:34.213349+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
