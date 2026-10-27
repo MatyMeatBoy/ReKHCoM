@@ -7200,7 +7200,7 @@
       "status": "pr_abierto",
       "owner": "codex-crash386",
       "created_at": "2026-10-27T19:02:37.145264+00:00",
-      "updated_at": "2026-10-27T19:35:24.898145+00:00",
+      "updated_at": "2026-10-27T19:40:06.225269+00:00",
       "branch": "fix/mapcards-zero-scroll",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/389",
       "approval": "Usuario27/10 bugsprioridadtotal; confirma alabrirsubmenuNaipesMapa",
@@ -7210,6 +7210,11 @@
           "at": "2026-10-27T19:35:24.898145+00:00",
           "owner": "codex-crash386",
           "detail": "ActualuserSAVE12typesSHA1e34 firstchance094at101314b9MapInspectDraw,secondaryFDinCrashWhere. CPU812rangechecksPASSx86/x64; interimguardguestactualD3D11loadedslot0toMapInspect1900exit0,sourceoriginalpreserved. PR389e864186."
+        },
+        {
+          "at": "2026-10-27T19:40:06.225269+00:00",
+          "owner": "codex-crash386",
+          "detail": "CorePR389actuallyMERGED64da671f1107b2235514d23164f79130ae1a773d underpriorintegratorlock; parentretainsworkflowstateuntilcombinedartifactQA thenintegrado allowed. 812x86/x64independentPASS, userSRAMrootrepro original094vsinterimguardexit0; noall64closure."
         }
       ],
       "claimed_at": "2026-10-27T19:02:42.404866+00:00"
@@ -7387,7 +7392,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:39:41.082274+00:00",
+  "updated_at": "2026-10-27T19:40:06.225269+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
