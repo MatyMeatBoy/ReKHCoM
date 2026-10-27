@@ -5616,19 +5616,20 @@
     "optiport-v21-skill-snapshot": {
       "id": "optiport-v21-skill-snapshot",
       "piece": "Sync reviewed public OptiPort0b6edd3 method into project snapshot, retaining project-specific results only in board",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v21-board",
       "created_at": "2026-10-27T10:47:07.897855+00:00",
-      "updated_at": "2026-10-27T10:47:07.897855+00:00",
+      "updated_at": "2026-10-27T10:47:48.301977+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario: mejorar OptiPort público y aplicarlo a ReKHCoM2.1",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T10:47:48.301977+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:47:07.897855+00:00",
+  "updated_at": "2026-10-27T10:47:48.303485+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
