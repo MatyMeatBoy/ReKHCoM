@@ -5673,6 +5673,19 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T10:48:18.877070+00:00"
+    },
+    "hud-toggle-battle-warm": {
+      "id": "hud-toggle-battle-warm",
+      "piece": "Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T10:53:22.535979+00:00",
+      "updated_at": "2026-10-27T10:53:22.535979+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "port/progress/PENDIENTES_VIGENTES.md",
+      "evidence": []
     }
   },
   "integrator": {
@@ -5681,7 +5694,7 @@
     "created_at": "2026-10-27T10:51:21.601244+00:00",
     "updated_at": "2026-10-27T10:51:21.601244+00:00"
   },
-  "updated_at": "2026-10-27T10:51:44.486838+00:00",
+  "updated_at": "2026-10-27T10:53:22.535979+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
