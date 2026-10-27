@@ -5758,7 +5758,7 @@
       "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T11:04:53.035390+00:00",
-      "updated_at": "2026-10-27T11:18:53.043896+00:00",
+      "updated_at": "2026-10-27T11:35:20.265899+00:00",
       "branch": "task/hud-canvas-preflight",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/349",
       "approval": null,
@@ -5773,6 +5773,11 @@
           "at": "2026-10-27T11:18:53.043896+00:00",
           "owner": "device_profiles_sol",
           "detail": "bdb8b129b CPU-only preflight antes PPU suppress, noGPUmove; RED77→GREEN actualselection/Present/guards+fullproductionPPU320x180 pixel-identicalcartridgefallback. Sticky1000frames, bufferpreserved, lowerdims/explicitinvalidate/epochrecovery. native32/x32syntax+invalidationPASS. GPU/rootfaultQA pending; textureOOM separate."
+        },
+        {
+          "at": "2026-10-27T11:35:20.265899+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "74adfbd4d P1 paused resize RED90->GREEN exactconsumer + fullPPU canary. Snapshot W/H/HS/WS, wholeHUD scope restored, noHBlank/reallocconsumer. Independent reviewer confirms both ownRED GREEN. CPU-only; textureOOM/resetGPU separate."
         }
       ],
       "claimed_at": "2026-10-27T11:04:58.188147+00:00"
@@ -5833,7 +5838,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:35:05.149100+00:00",
+  "updated_at": "2026-10-27T11:35:20.265899+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
