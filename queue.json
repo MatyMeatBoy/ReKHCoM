@@ -7627,10 +7627,10 @@
     "guest64-divzero-parity": {
       "id": "guest64-divzero-parity",
       "piece": "Restore scoped cartridge zero-divisor semantics in x32 guest hosts",
-      "status": "pr_abierto",
-      "owner": "sol-low-scenes-states",
+      "status": "en_curso",
+      "owner": "codex-guest64-parity",
       "created_at": "2026-10-27T20:16:52.147660+00:00",
-      "updated_at": "2026-10-27T20:27:28.040982+00:00",
+      "updated_at": "2026-10-27T20:46:31.368106+00:00",
       "branch": "fix/guest-divzero-parity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/396",
       "approval": null,
@@ -7640,6 +7640,11 @@
           "at": "2026-10-27T20:27:28.040982+00:00",
           "owner": "sol-low-scenes-states",
           "detail": "First block e02b5da35 register32 DIV0 real operand, exact guest text metadata. Original Thumb192 controls; Windows realfault5cases +14336contexts +linker metadata PASS; Linux realSIGFPE sixchecks VM existing1GiB PASS. Memory/16bit next block pending; bus parity and ARM64 modulo separately unknown. No full-parity claim."
+        },
+        {
+          "at": "2026-10-27T20:46:31.368106+00:00",
+          "owner": "codex-integrador",
+          "detail": "Root explicitly stopped pending_init worker via interrupt_agent before taking writer role. Preserve e02b5da35 and2file review fix. Root independently executed Windows14336/realfault/linker, originalROM192 and LinuxVMrealSIGFPE including workingpriorflags tests PASS. Taking checkpoint through push/integration and extension."
         }
       ],
       "claimed_at": "2026-10-27T20:16:57.923696+00:00"
@@ -7710,7 +7715,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:37:37.144931+00:00",
+  "updated_at": "2026-10-27T20:46:31.368106+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -8131,6 +8136,16 @@
       "to_owner": "codex-remastered-parser-review",
       "expected_commit": "347409a8d66c18cee49fdaaee23e761b904da38f",
       "evidence": "Worker turn terminal failure confirmed; committed clean checkpoint dc99f24eb preserved and pushed, no active writer. Root independently read diff and passed13remastered consumers+actualsubtitleextractor and16ordinary fixtures. Taking review and PR delivery; existing evidence preserved."
+    },
+    {
+      "at": "2026-10-27T20:46:31.368106+00:00",
+      "actor": "codex-integrador",
+      "operation": "recover-task",
+      "task": "guest64-divzero-parity",
+      "from_owner": "sol-low-scenes-states",
+      "to_owner": "codex-guest64-parity",
+      "expected_commit": "f73e6d0c190199208ea9c0a0d8d916e562125906",
+      "evidence": "Root explicitly stopped pending_init worker via interrupt_agent before taking writer role. Preserve e02b5da35 and2file review fix. Root independently executed Windows14336/realfault/linker, originalROM192 and LinuxVMrealSIGFPE including workingpriorflags tests PASS. Taking checkpoint through push/integration and extension."
     }
   ]
 }
