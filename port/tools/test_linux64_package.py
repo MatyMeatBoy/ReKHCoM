@@ -32,6 +32,7 @@ class Linux64PackageTests(unittest.TestCase):
                 write('build/linux64/out/' + name)
             write('port/include/port/port_zoom.h', b'#define PORT_ZOOM_CONFIG_VERSION 2\n')
             write('port/linux/LINUX.md')
+            write('port/linux/Setup Steam Deck.sh', b'#!/bin/sh\n')
             write('port/linux/anbernic/ReKHCoM.sh', b'#!/bin/sh\n')
             # Old outputs are retained; generating a new version must not delete them.
             write('build/releases/ReKHCoM-v2.0-steamdeck.tar.gz', b'old release')
@@ -61,6 +62,7 @@ class Linux64PackageTests(unittest.TestCase):
                 for name in ['ReKHCoM.sh', 'lib/rekhcom', 'bin64/rekhcom64', 'lib64/libSDL3.so.0'] + [f'bin/khcom_{r}' for r in ('eu', 'us', 'jp')]:
                     self.assertEqual(members[name].mode, 0o755, name)
                 self.assertEqual(members['LINUX.md'].mode, 0o644)
+                self.assertEqual(members['Setup Steam Deck.sh'].mode, 0o755)
                 self.assertEqual(members['roms'].mode, 0o755)
                 self.assertNotIn('kh_com.default.ini', members, 'Deck detection must not ship a forced preset')
                 self.assertFalse(any(Path(n).suffix in ('.gba', '.sav', '.ini', '.khst') for n in members))

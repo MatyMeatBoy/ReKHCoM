@@ -36,7 +36,9 @@ No separate Deck archive or forced configuration preset is needed.
 
 1. In Desktop Mode, extract the archive into a folder of its own (for example
    `~/Games/ReKHCoM`) and copy your ROM into its `roms/` folder.
-2. Open a terminal in that folder and run:
+2. Open **Setup Steam Deck.sh** in Dolphin and choose **Execute** if asked.
+   It registers the application and shows the remaining Steam steps, using
+   KDE's dialog when available. Alternatively open a terminal in that folder:
 
        sh ./ReKHCoM.sh --install-desktop
 
@@ -75,6 +77,25 @@ After moving the game folder, run `--install-desktop` again and update the
 Steam shortcut from `--steam-help`; Steam's existing shortcuts are not changed
 automatically. Older packages' root-level `ReKHCoM.desktop` used relative
 paths; use the newly installed application entry instead.
+
+### Where are the launcher settings? (issue #330)
+
+Native Linux starts the game directly; the separate Windows launcher is not
+included. Open **Options** with the bound GBA **Start + Select** buttons
+together (the two small menu/view buttons in the default Gamepad layout), or
+**F1 / Escape** on a keyboard. The Steam button belongs to Steam. Choose a
+**Gamepad** Steam Input layout so those buttons reach the game. Display, HD
+components and controls are configured in that menu; HD extraction/import is
+still performed with the Windows launcher and copied to the Linux folder.
+
+The setup helper does not launch the game or edit Steam's shortcuts. If you
+move the folder, register again and repair the existing Steam shortcut with
+`--steam-help`. A successful desktop launch or shell test is not confirmation
+of Gamescope/hardware compatibility.
+
+Valve documents adding installed applications in Desktop Mode, then finding
+them under Non-Steam in Gaming Mode:
+https://help.steampowered.com/en/faqs/view/671A-4453-E8D2-323C/
 
 ### Native Linux and Windows through Proton
 
