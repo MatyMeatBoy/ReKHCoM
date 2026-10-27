@@ -4516,10 +4516,10 @@
     "hud-target-budget": {
       "id": "hud-target-budget",
       "piece": "Code: bound HD gauge render target memory and renderer dimensions",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-hud-budget",
       "created_at": "2026-10-27T05:25:58.630970+00:00",
-      "updated_at": "2026-10-27T05:37:56.246112+00:00",
+      "updated_at": "2026-10-27T05:38:08.430572+00:00",
       "branch": "fix/hud-target-budget",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/296",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4529,9 +4529,15 @@
           "at": "2026-10-27T05:32:42.412795+00:00",
           "owner": "codex-hud-budget",
           "detail": "Local commit: 32MiB desktop/12MiB constrained hosted RGBA scratch chain; renderer maxsize checked; SS4 to SS2 to direct; resize old-cache overlap prevented and partial/shutdown cleanup. TDD RED18 baseline + RED1 repeated rejected allocation; GREEN30 draw/cache fault cases plus6 layout tests ASan/UBSan. No game/heavy build/GPU timing/reset changes. Parent root integrates after review."
+        },
+        {
+          "at": "2026-10-27T05:38:08.430572+00:00",
+          "owner": "codex-hud-budget",
+          "detail": "Merged 8a6c9016c6e6f715424f2df1e87e88ec39826227"
         }
       ],
-      "claimed_at": "2026-10-27T05:26:06.094829+00:00"
+      "claimed_at": "2026-10-27T05:26:06.094829+00:00",
+      "completed_at": "2026-10-27T05:38:08.430572+00:00"
     },
     "android-optiport-package": {
       "id": "android-optiport-package",
@@ -4607,7 +4613,7 @@
     "created_at": "2026-10-27T05:36:15.146946+00:00",
     "updated_at": "2026-10-27T05:36:15.146946+00:00"
   },
-  "updated_at": "2026-10-27T05:37:56.246112+00:00",
+  "updated_at": "2026-10-27T05:38:08.430572+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
