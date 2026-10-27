@@ -7129,19 +7129,20 @@
     "harness-menus-architecture": {
       "id": "harness-menus-architecture",
       "piece": "Validar arquitectura real y hashes en arnés de menús 32/64",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-harness64",
       "created_at": "2026-10-27T18:55:54.503567+00:00",
-      "updated_at": "2026-10-27T18:55:54.503567+00:00",
+      "updated_at": "2026-10-27T18:56:00.770854+00:00",
       "branch": null,
       "pr": null,
       "approval": "Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T18:56:00.770854+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:55:54.503567+00:00",
+  "updated_at": "2026-10-27T18:56:00.770854+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

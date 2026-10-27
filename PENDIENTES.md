@@ -256,6 +256,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-polish-visibility-contours | Prioridad usuario: calidadHUDvisible enemigoapagado/Soraagujeros+AA local contorno y bosses1+bars por maxHP real; diagnóstico causal32/64/Sora/Riku/map/battle/boss sinblur global | en_curso | codex-hud-contours | fix/hud-visibility-contours | Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas | 2026-10-27T18:53:13.260591+00:00 |
 | synthesis-hd-gray-digits-coverage | Síntesis HD aprobada: pulir terminación gris y verificar0..99 por reglas/colores | en_curso | codex-synthesis-gray-digits | refine/synthesis-gray-digits | Usuario27/10 aprueba base actual y pide microacabado gris inferior y todos los dígitos; coordinador asigna sin Atlas | 2026-10-27T18:53:20.240398+00:00 |
 | issue386-stackoverflow | Crash Windows64 al entrar mode_mapinspect, issue386 | en_curso | codex-crash386 | — | — | 2026-10-27T18:54:36.970484+00:00 |
-| harness-menus-architecture | Validar arquitectura real y hashes en arnés de menús 32/64 | pendiente | — | — | Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón | 2026-10-27T18:55:54.503567+00:00 |
+| harness-menus-architecture | Validar arquitectura real y hashes en arnés de menús 32/64 | en_curso | codex-harness64 | — | Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón | 2026-10-27T18:56:00.770854+00:00 |
 
 Integrador: libre
