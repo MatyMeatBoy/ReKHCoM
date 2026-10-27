@@ -6112,8 +6112,13 @@
       "sent": "https://raw.githubusercontent.com/MatyMeatBoy/ReKHCoM/fix/gallery-empty-preview-backdrop/port/progress/images/gallery-empty-hd.png"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-27T13:34:51.040566+00:00",
+  "integrator": {
+    "owner": "codex-crash",
+    "token": "ca8f00567c95614d3d41acbceea485b8c35ec73962f1e159",
+    "created_at": "2026-10-27T13:34:55.786508+00:00",
+    "updated_at": "2026-10-27T13:34:55.786508+00:00"
+  },
+  "updated_at": "2026-10-27T13:34:55.787510+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
