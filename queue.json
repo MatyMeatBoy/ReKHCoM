@@ -5040,15 +5040,21 @@
     "controller-prompt-layouts-v21-experimental": {
       "id": "controller-prompt-layouts-v21-experimental",
       "piece": "Regular UI experimental 2.1: Auto OriginalGBA Nintendo Xbox PlayStation; bindings tutorial efectivos, convencion NintendoA/PScirculo elegible, glyphs existentes, botones GBA opciones, overrides hotplug localizacion",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T08:03:15.526548+00:00",
-      "updated_at": "2026-10-27T09:11:43.403960+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T09:22:31.497962+00:00",
+      "branch": "feature/experimental-controller-prompts",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/332",
       "approval": "Usuario 27/10: registrar pendiente experimental; sin implementacion actual",
       "reference": "port/progress/COORDINACION_OPTIPORT_V21.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T09:22:31.497962+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "aa140955e first textual increment only; pure resolver and actual SDL/input/config EU US JP tests PASS, UI syntax/check_sources PASS. Full glyph/JP/preset scope remains open; subsequent increment continuing."
+        }
+      ],
       "claimed_at": "2026-10-27T09:11:43.403960+00:00"
     },
     "guest-songlog-env": {
@@ -5371,7 +5377,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T09:11:43.403960+00:00",
+  "updated_at": "2026-10-27T09:22:31.497962+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
