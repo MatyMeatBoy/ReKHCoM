@@ -244,5 +244,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-premium-digit-gpu-qa | P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude | en_revision | codex-premium-digit-qa | — | Coordinador autoriza 27/10; primero preparación sin GPU | 2026-10-27T18:03:27.087530+00:00 |
 | v22-preview-cancellation-contract | Contrato C determinista de cancelación y resultados obsoletos de previews | integrado | codex-v22-preview-cancellation | https://github.com/MatyMeatBoy/ReKHCoM/pull/381 | Coordinador autorizó separar y revisar PR381 como contrato acotado; no cerrar el bloque async/perf completo | 2026-10-27T17:55:08.584769+00:00 |
 | v22-startup-cause-ledger | Ledger documental de causas verificables para Deck330 y Windows360; recuperar fuentes Astra y discriminar fases de arranque sin GPU | pr_abierto | codex-startup-ledger | https://github.com/MatyMeatBoy/ReKHCoM/pull/382 | — | 2026-10-27T18:00:57.791226+00:00 |
+| v22-stutter-attribution-probes | Diagnostico de tirones por etapas y regresiones de sondas; hijo de profiling, sin cerrar comparacion completa32/64 | pendiente | — | — | Usuario pide continuar e integrar lo de Claude; coordinador reviso productores y regresiones CPU reales | 2026-10-27T18:10:42.647082+00:00 |
 
 Integrador: libre
