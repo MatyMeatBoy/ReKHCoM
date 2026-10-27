@@ -4457,10 +4457,10 @@
     "host-music-progress": {
       "id": "host-music-progress",
       "piece": "Bound host music loop decoding and propagate terminal failure",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-host-music",
       "created_at": "2026-10-27T05:17:55.834945+00:00",
-      "updated_at": "2026-10-27T05:28:15.206101+00:00",
+      "updated_at": "2026-10-27T05:28:26.106174+00:00",
       "branch": "fix/host-music-progress",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/291",
       "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
@@ -4470,9 +4470,15 @@
           "at": "2026-10-27T05:20:28.621810+00:00",
           "owner": "codex-host-music",
           "detail": "RED/GREEN production host harness: loop[100,200) x1000 samples;96000failed requests max2decode/1seek;PLAYfailure;safe deferred cleanup;Open prefill failure and valid control. Complete header with real stb_vorbis syntax passes. Depends PR288 guest fallback. Linux64 ffmpeg stalls documented separately as pending."
+        },
+        {
+          "at": "2026-10-27T05:28:26.106174+00:00",
+          "owner": "codex-host-music",
+          "detail": "Merged 42416672f64b40c157f4f61e0122ddce65fe84a6"
         }
       ],
-      "claimed_at": "2026-10-27T05:18:02.871630+00:00"
+      "claimed_at": "2026-10-27T05:18:02.871630+00:00",
+      "completed_at": "2026-10-27T05:28:26.106174+00:00"
     },
     "optiport-linux64-streaming": {
       "id": "optiport-linux64-streaming",
@@ -4529,7 +4535,7 @@
     "created_at": "2026-10-27T05:27:32.730069+00:00",
     "updated_at": "2026-10-27T05:27:32.730069+00:00"
   },
-  "updated_at": "2026-10-27T05:28:15.206101+00:00",
+  "updated_at": "2026-10-27T05:28:26.106174+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
