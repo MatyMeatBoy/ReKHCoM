@@ -5327,15 +5327,21 @@
     "launcher-hd-media-language-variants-v21": {
       "id": "launcher-hd-media-language-variants-v21",
       "piece": "Siguiente PR EN/JP: imports namespaces por idioma, metadata/cache/journal/posters con procedencia, playback y UI seleccion independiente de texto/Undub; atomic y preservarold",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-hd-media-variants",
       "created_at": "2026-10-27T08:52:24.794876+00:00",
-      "updated_at": "2026-10-27T08:56:58.558622+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T10:05:32.164267+00:00",
+      "branch": "feat/hd-media-language-variants",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/335",
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T10:05:32.164267+00:00",
+          "owner": "codex-hd-media-variants",
+          "detail": "Head bddb9139e; stacked on PR327 head607671a75. Production import EN-JP/cancel/corrupt/cache, resolver/UI, INI, miniz pack, ACF, preview async and bridge tests PASS; Windows launcher/game and NDK ARMv7/ARM64 syntax PASS; Java app+SDL compile PASS. No heavy builds/device playback. Owned EN/JP audio and SAF/device QA pending; JP two offset clips retain GBA pending verified timings. Immutable generations and atomic index preserve prior import on cancel/failure. Queue owner codex-hd-media-variants. Worktree needed yes PR/repro."
+        }
+      ],
       "claimed_at": "2026-10-27T08:56:58.558622+00:00"
     },
     "submenu-moogle-visible-band-style-zero": {
@@ -5430,7 +5436,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T09:58:18.898783+00:00",
+  "updated_at": "2026-10-27T10:05:32.164267+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
