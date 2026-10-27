@@ -7910,13 +7910,13 @@
     "card-native-crown-corners": {
       "id": "card-native-crown-corners",
       "piece": "Preserve native small-card crown/window closure corner cells under HD, per-card colours unchanged; verify layered renderer and recipe families",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-card-corners",
       "created_at": "2026-10-27T22:19:47.262893+00:00",
-      "updated_at": "2026-10-27T22:34:08.953986+00:00",
+      "updated_at": "2026-10-27T22:35:25.151329+00:00",
       "branch": "fix/small-card-native-corners",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/408",
-      "approval": "Usuario27octliteralfranja+2cornerpixels; rootdelegacion20261027",
+      "approval": "Usuario exige mantenermarcoGBA ydoscornerpixels, sin tocarresto",
       "reference": "pruebas/key-hilt-black-pixels/all-card-seams/inventory.json",
       "evidence": [
         {
@@ -7928,9 +7928,15 @@
           "at": "2026-10-27T22:34:08.953986+00:00",
           "owner": "codex-card-corners",
           "detail": "Followup24837c10a: parentreviewfound lowerHUDcorner couldpersistoverfrontHDcard. Addedreal2OAMback-to-frontREDthenGREEN tests(frontHDnoncorner/owncorner/nativefallback/otherHDsprite), clearpriorovercontributiononlyafternewvisibleHDpixelaccepted; actualcornercopiedaftereffects. Stockframe+firstframefallbackPASS. Earlier08eaGPUbuildnotlatestoverlapfix; rootnotifiedexacthead24837."
+        },
+        {
+          "at": "2026-10-27T22:35:25.151329+00:00",
+          "owner": "codex-card-corners",
+          "detail": "PR408 head24837c10 rootreview+5productionregressions+native32EUlinkPASS. Reviewer foundHUDlowercardcorner coveringfrontHD; author RED/GREEN2sprite ownership fix included androotretstPASS. 93realHDx30SDL transforms zeroout-of-corner-footprintchanges; original99nativecolourpairs. D3D11native32EU realL18SAV before/after initial408 world/screen path432changedpx only12cards; laterHUDonlyfix verifiedproductionfixture; multiactorGPU/hardwareplatforms notclaimed. Broadertoprow15 remainsparentpending."
         }
       ],
-      "claimed_at": "2026-10-27T22:19:52.139295+00:00"
+      "claimed_at": "2026-10-27T22:19:52.139295+00:00",
+      "completed_at": "2026-10-27T22:35:25.151329+00:00"
     },
     "geppetto-scene-zoom-x4": {
       "id": "geppetto-scene-zoom-x4",
@@ -8025,7 +8031,7 @@
     "created_at": "2026-10-27T22:35:16.377489+00:00",
     "updated_at": "2026-10-27T22:35:16.377489+00:00"
   },
-  "updated_at": "2026-10-27T22:35:16.377489+00:00",
+  "updated_at": "2026-10-27T22:35:25.151329+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
