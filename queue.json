@@ -8027,19 +8027,20 @@
     "attack-card-native-top-seam": {
       "id": "attack-card-native-top-seam",
       "piece": "SOLO23restosceldasfila15 de9ATK(Crabclaw/DivineRose/FairyHarp/MetalChocobo/Oathkeeper/Pumpkinhead/Spellbinder/Ultima/WishingStar)nativeunderlaynegro conHDaceptado; conservarframecorners/dibujoHD/KKactual/DiamondDustOneWingedgrisPocionSimba.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-attack-seam",
       "created_at": "2026-10-27T22:35:38.164058+00:00",
-      "updated_at": "2026-10-27T22:35:38.164058+00:00",
+      "updated_at": "2026-10-27T22:35:42.660533+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuarioprioridad1: corregirsololineapixeles manteniendorestoperfecto",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T22:35:42.660533+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:35:38.165065+00:00",
+  "updated_at": "2026-10-27T22:35:42.660533+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
