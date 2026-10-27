@@ -5311,7 +5311,7 @@
       "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T08:51:00.033272+00:00",
-      "updated_at": "2026-10-27T09:06:18.599695+00:00",
+      "updated_at": "2026-10-27T10:25:40.867405+00:00",
       "branch": "task/bridge-gpu-targets-aa",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/331",
       "approval": null,
@@ -5321,6 +5321,11 @@
           "at": "2026-10-27T09:06:18.599695+00:00",
           "owner": "device_profiles_sol",
           "detail": "04f9dab6e rebased fa4d48993. Full production shim/shared host target slots/actual Windows H_gfx_draw mock passes legacy/new traffic, software fallback,12/32MiB, failed binds, transparent clear,premultblend,state,generations,partialchain. Existing epoch and gauge tests pass, gauge bindfail red then green. x32+arm64_32 shim/gauge syntax and Win64host syntax pass. Runtime D3D/Linux/Android visual pending root; draft, no AA parity claimed"
+        },
+        {
+          "at": "2026-10-27T10:25:40.867405+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "a93ca7a4e fixes independently reproduced destroy/unbind UAF and gauge failed-restore selfsampling. RED actual destroy abort and gauge feedback assertion; GREEN deferred ownership/budget, blocked output, resetfree failure, persistent shutdown, all bind ordinals/recovery. Existing epoch+gauge tests and x32/arm64_32/Windows syntax pass. Draft re-review and physicalGPUQA pending"
         }
       ],
       "claimed_at": "2026-10-27T08:51:05.342086+00:00"
@@ -5480,7 +5485,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:25:30.759032+00:00",
+  "updated_at": "2026-10-27T10:25:40.867405+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
