@@ -28,6 +28,13 @@ def main():
         src, exe = folder / 'log.c', folder / 'log.exe'
         src.write_text(code, encoding='utf-8')
         subprocess.run([str(cc), '-I', str(R/'port/include'), str(src), '-o', str(exe)], check=True)
+        # Guest builds have no wall-clock libc. Their native host records time.
+        guest = folder/'guest.c'
+        guest.write_text('#include "port/port_logfile.h"\nvoid probe(void) { PortOpenSessionLog("guest.log"); }\n')
+        clang = cc.with_name('clang.exe')
+        subprocess.run([str(clang), '--target=x86_64-linux-gnux32', '-ffreestanding', '-nostdinc',
+                        '-I', str(R/'port/ps5/guest/include'), '-I', str(R/'port/include'),
+                        '-fsyntax-only', str(guest)], check=True)
         for n in range(8):
             subprocess.run([str(exe), str(n)], cwd=folder, check=True, stderr=subprocess.DEVNULL)
         assert contents(folder/'kh_com.log') == 'session 7\nend 7\n'

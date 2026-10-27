@@ -2,7 +2,7 @@
 #define GUARD_PORT_LOGFILE_H
 
 #include <stdio.h>
-#if !defined(PORT_GBA_RELOC)
+#if __STDC_HOSTED__ && !defined(PORT_GBA_RELOC)
 #include <time.h>
 #endif
 
@@ -45,7 +45,7 @@ static FILE* PortRotateSessionLog(const char* path) {
 static FILE* PortOpenSessionLog(const char* path) {
     FILE* file = PortRotateSessionLog(path);
     if (file) {
-#if !defined(PORT_GBA_RELOC)
+#if __STDC_HOSTED__ && !defined(PORT_GBA_RELOC)
         time_t now = time(NULL);
         struct tm* stamp = localtime(&now);
         char date[64];
