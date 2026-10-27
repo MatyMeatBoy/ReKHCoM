@@ -8167,10 +8167,23 @@
       "reference": "Pre2 immutable; PR405/406/408/409/401/411/398/399; new last-pixel child pending",
       "evidence": [],
       "claimed_at": "2026-10-27T23:54:36.683312+00:00"
+    },
+    "v22-pre3-version-identity": {
+      "id": "v22-pre3-version-identity",
+      "piece": "Child of claimed pre3 delivery: coherent source/PE/changelog identity only",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T23:55:17.055970+00:00",
+      "updated_at": "2026-10-27T23:55:17.055970+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: nueva pre actualizada, conservar versiones entregadas; parent v22-pre3-current-source-delivery claimed codex-integrador before edits",
+      "reference": "PR413; parent delivery remains open through exact ZIP verification",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:54:36.683312+00:00",
+  "updated_at": "2026-10-27T23:55:17.055970+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
