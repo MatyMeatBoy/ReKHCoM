@@ -387,6 +387,7 @@ void PortHdHudShutdown(void) {
    also used by failed uploads: keep its negative cache until this API is called. */
 void PortHdHudInvalidate(void) {
     PortHdHudShutdown();
+    PortHudCanvasRetry();
     sAttempted = 0;
     sLabelLanguage = -1;
 }

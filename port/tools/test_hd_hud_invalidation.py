@@ -42,6 +42,8 @@ static void stbi_image_free(void*p){free(p);}
 static int HudLanguage(void){return 2;}
 static void LoadLabel(SDL_Renderer*r){(void)r;sLabel=texture();sWhiteLabel=texture();sLabelLanguage=HudLanguage();}
 static void LoadPlayerFrame(SDL_Renderer*r){(void)r;}
+static int canvasRetries;
+static void PortHudCanvasRetry(void){canvasRetries++;}
 static void PortLog(const char*f,...){(void)f;}
 static SDL_Surface*SDL_CreateSurfaceFrom(int w,int h,int f,void*px,int pitch){(void)f;SDL_Surface*s=calloc(1,sizeof(*s));s->w=w;s->h=h;s->pitch=pitch;s->pixels=px;return s;}
 static SDL_Surface*SDL_CreateSurface(int w,int h,int f){(void)f;SDL_Surface*s=calloc(1,sizeof(*s));s->w=w;s->h=h;s->pitch=w*4;s->pixels=calloc((size_t)w*h,4);s->owned=1;return s;}
@@ -63,7 +65,7 @@ int main(void){
  sExportHashes=malloc(8*sizeof(*sExportHashes));sExportCount=8;sExportPixels=malloc(16);
  PortHdHudShutdown();assert(!sFrame&&!sLabel&&!sExportHashes&&!sExportPixels);assert(!sExportCount && !sAssetBytes && !sAssets && !sAssetDraws && !sAssetCount && !sAssetDrawCount);
  int released=destroys;PortHdHudShutdown();assert(destroys==released);
- generation=2;PortHdHudInvalidate();assert(!sAttempted&&sLabelLanguage==-1);
+ generation=2;PortHdHudInvalidate();assert(canvasRetries==1);assert(!sAttempted&&sLabelLanguage==-1);
  PortHdHudPrepare(&renderer);assert(decodes==2&&sFrame&&sFrame->generation==2&&sLabel->generation==2);
  released=destroys;PortHdHudInvalidate();assert(destroys==released+4&&!sAssetRenderer);
  failUpload=1;int before=decodes;PortHdHudPrepare(&renderer);assert(decodes==before+1&&!sFrame&&!sWhiteFrame);

@@ -534,6 +534,7 @@ static int TagHudY(const SpriteTag* t, int yg, int h, int raise) {
 }
 
 static int sHudLayer;
+static int sHudCanvasFallback;
 static int sHdText;
 static int sJafarFight; /* this frame shows Jafar's room (port_jafar.c) */
 int gPortHdHudPart;
@@ -758,7 +759,7 @@ int PortHdSpriteKeepsCartridge(int id);
 static int HdTextGlyph(int oamIndex) {
     int c = sOamTag[oamIndex].text;
 
-    if (!sHdText || c <= 0x20 || c == 0x7F)
+    if ((sHudCanvasFallback && sOamTag[oamIndex].hud) || !sHdText || c <= 0x20 || c == 0x7F)
         return 0;
     if (c > 0xFF) /* Shift-JIS (Japanese version); 0x8140 is the wide space */
         return c >= 0x8141;
@@ -3701,6 +3702,8 @@ void PortPpuBeginFrame(void) {
                 sBgWorldLatched[1].valid, sBgWorldLatched[2].valid, sBgWorldLatched[3].valid, IO16(0x08), IO16(0x0A),
                 IO16(0x0C), IO16(0x0E), gPortScreen.wide, sSceneNarrow);
     sHudLayer = gPortScreen.wide && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
+    sHudCanvasFallback = sHudLayer && !PortHudCanvasReady(gPortHudW, gPortHudH);
+    if (sHudCanvasFallback) sHudLayer = 0;
     sHdText = gPortConfig.hdText;
 #if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
     {
@@ -4813,7 +4816,7 @@ static void QueueMainHdParts(void) {
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
         int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3, ow, oh, bw, bh, ox, oy, alpha = 255;
         int16_t pa = 0x100, pb = 0, pc = 0, pd = 0x100;
-        if (!sOamHd[i].id || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
+        if (!sOamHd[i].id || (sHudCanvasFallback && sOamTag[i].hud) || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
             (((a0 >> 12) & 1) && (IO16(0x4C) & 0xFF00)))
             continue; /* a sprite under a real mosaic (size > 1) keeps the cartridge's pixels */
         ow = sObjSize[shape][size][0];

@@ -1637,6 +1637,41 @@ static void NativeMovieRendererReset(void) {
 }
 #endif
 
+/* HUD canvas transaction: reserve CPU memory before the PPU removes native
+ * HUD sprites. Keep the old buffer on failure and cache that size until an
+ * explicit resource invalidation or size change. GPU ownership stays in Present. */
+static int sHudCanvasFailed, sHudCanvasFailedW, sHudCanvasFailedH;
+static uint64_t sHudCanvasFailedGeneration;
+
+void PortHudCanvasRetry(void) { sHudCanvasFailed = 0; }
+
+int PortHudCanvasReady(int width, int height) {
+    uint32_t* candidate;
+    size_t pixels;
+    if (width <= 0 || height <= 0 ||
+        (size_t)width > SIZE_MAX / sizeof(uint32_t) / (size_t)height)
+        return 0;
+    pixels = (size_t)width * height;
+    if (sHudBuf && sHudCapacity >= pixels) return 1;
+    if (sHudCanvasFailed && sHudCanvasFailedW == width && sHudCanvasFailedH == height &&
+        sHudCanvasFailedGeneration == sRendererGeneration)
+        return 0;
+    candidate = SDL_malloc(pixels * sizeof(*candidate));
+    if (!candidate) {
+        sHudCanvasFailed = 1;
+        sHudCanvasFailedW = width;
+        sHudCanvasFailedH = height;
+        sHudCanvasFailedGeneration = sRendererGeneration;
+        PortLog("HUD canvas: %dx%d CPU buffer unavailable; cartridge HUD retained until size/resource change", width, height);
+        return 0;
+    }
+    SDL_free(sHudBuf);
+    sHudBuf = candidate;
+    sHudCapacity = pixels;
+    sHudCanvasFailed = 0;
+    return 1;
+}
+
 static void Present(void) {
     if (!RendererResetService()) return;
     const char* hdProfile;
@@ -2069,7 +2104,6 @@ static void Present(void) {
             SDL_SetTextureBlendMode(sHudTexture, SDL_BLENDMODE_BLEND);
             SDL_SetTextureScaleMode(sHudTexture, SDL_SCALEMODE_NEAREST);
         }
-        GrowPixelBuffer(&sHudBuf, &sHudCapacity, (size_t)gPortHudW * gPortHudH);
         PortPpuRenderHud(sHudBuf);
         /* The field HUD can be just a small floor badge on a window-sized
          * transparent texture. Blending the empty area cost a whole frame on
