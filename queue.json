@@ -4421,15 +4421,16 @@
     "host-music-progress": {
       "id": "host-music-progress",
       "piece": "Bound host music loop decoding and propagate terminal failure",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-host-music",
       "created_at": "2026-10-27T05:17:55.834945+00:00",
-      "updated_at": "2026-10-27T05:17:55.834945+00:00",
+      "updated_at": "2026-10-27T05:18:02.871630+00:00",
       "branch": null,
       "pr": null,
       "approval": "User authorized OptiPort indispensable fallback improvements before test builds",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T05:18:02.871630+00:00"
     }
   },
   "integrator": {
@@ -4438,7 +4439,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:17:55.834945+00:00",
+  "updated_at": "2026-10-27T05:18:02.871630+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
