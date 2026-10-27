@@ -4275,10 +4275,10 @@
     "hd-layout-bounds": {
       "id": "hd-layout-bounds",
       "piece": "LAD SEQD parser bounds",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-layout-bounds",
       "created_at": "2026-10-27T04:47:46.706306+00:00",
-      "updated_at": "2026-10-27T05:08:46.462744+00:00",
+      "updated_at": "2026-10-27T05:08:51.724397+00:00",
       "branch": "fix/hd-layout-bounds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/283",
       "approval": "Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort",
@@ -4293,9 +4293,15 @@
           "at": "2026-10-27T05:08:46.462744+00:00",
           "owner": "codex-layout-bounds",
           "detail": "Verified tests and independent review"
+        },
+        {
+          "at": "2026-10-27T05:08:51.724397+00:00",
+          "owner": "codex-layout-bounds",
+          "detail": "Merged cc53a2860664baf10d7b5437e0d7057d3861094b"
         }
       ],
-      "claimed_at": "2026-10-27T04:47:59.824406+00:00"
+      "claimed_at": "2026-10-27T04:47:59.824406+00:00",
+      "completed_at": "2026-10-27T05:08:51.724397+00:00"
     },
     "hd-layout-readiness": {
       "id": "hd-layout-readiness",
@@ -4332,7 +4338,7 @@
     "created_at": "2026-10-27T05:08:08.674562+00:00",
     "updated_at": "2026-10-27T05:08:08.674562+00:00"
   },
-  "updated_at": "2026-10-27T05:08:46.462744+00:00",
+  "updated_at": "2026-10-27T05:08:51.725390+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
