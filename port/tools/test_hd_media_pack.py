@@ -17,7 +17,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='khcom-media-pack-') as folder:
         root = Path(folder)
         harness = root / 'test.c'
-        harness.write_text('#include <stdio.h>\nint HdPackInstall(const char*,void*);\nint main(int n,char**v){if(n!=2)return 2;printf("%d\\n",HdPackInstall(v[1],0));return 0;}\n')
+        harness.write_text('#include <stdio.h>\n#include <stdarg.h>\nvoid Log(const char*f,...){va_list a;va_start(a,f);vfprintf(stderr,f,a);fputc(10,stderr);va_end(a);}\nint HdPackInstall(const char*,void(*)(const char*,...));\nint main(int n,char**v){if(n!=2)return 2;printf("%d\\n",HdPackInstall(v[1],Log));return 0;}\n')
         exe = root / ('test.exe' if os.name == 'nt' else 'test')
         miniz = ROOT / 'port/ps5/third_party/miniz'
         subprocess.run([compiler, '-std=gnu11', '-O0', '-static', '-I' + str(miniz),
@@ -42,8 +42,12 @@ def main():
                 z.writestr('hd/media/en/.stage-private/movies/ROP.mp4', b'must not copy')
                 z.writestr('hd/media/en/g-nope/../../user.sav', b'must not copy')
             return (data / 'ReKHCoM-HD.zip').stat().st_size
+        last_log = ''
         def run():
-            return subprocess.check_output([str(exe), str(data)], text=True).strip()
+            nonlocal last_log
+            result = subprocess.run([str(exe), str(data)], text=True, capture_output=True, check=True)
+            last_log = result.stderr
+            return result.stdout.strip()
         old_size = package('g-old', b'O')
         assert run() == '1'
         active = data / 'hd/media/en/active.txt'
@@ -52,8 +56,9 @@ def main():
         assert not (data / 'hd/media/user.sav').exists()
         assert run() == '0', 'unchanged central-directory fingerprint must skip'
         package('g-bad', b'B', incomplete=True)
-        run()
+        assert run() == '-1', 'incomplete media transfer must report failure, not permit deleting its pack'
         assert active.read_bytes() == old, 'incomplete transferred generation replaced old active'
+        assert 'zip can be deleted now' not in last_log and 'keep ' in last_log
         new_size = package('g-new', b'N')
         assert old_size == new_size, 'fixture must prove same-size package replacement'
         assert run() == '1'
@@ -65,8 +70,9 @@ def main():
         assert active.read_text().count('g-both') == 2
         before_partial = active.read_bytes()
         package('g-partial', b'P', incomplete=True, mixed=True)
-        run()
+        assert run() == '-1', 'incomplete mixed transfer must not report success'
         assert active.read_bytes() == before_partial, 'partial mixed restore must preserve active movies AND scenes'
+        assert 'zip can be deleted now' not in last_log and 'keep ' in last_log
         assert (data / 'hd/media/en/g-both/scenes/zz_event_001.mp4').exists()
     print('PASS production pack: deferred activation, incomplete preservation, strict paths and same-size update')
 
