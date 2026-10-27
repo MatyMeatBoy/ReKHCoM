@@ -6394,10 +6394,23 @@
         }
       ],
       "claimed_at": "2026-10-27T16:32:30.541371+00:00"
+    },
+    "v22-steamdeck-330-entry-diagnostic": {
+      "id": "v22-steamdeck-330-entry-diagnostic",
+      "piece": "Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T16:42:13.584546+00:00",
+      "updated_at": "2026-10-27T16:42:13.584546+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330#issuecomment-6446302893",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:34:05.954924+00:00",
+  "updated_at": "2026-10-27T16:42:13.584546+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
