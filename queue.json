@@ -8131,10 +8131,10 @@
     "hd-music-movie-test-fixture": {
       "id": "hd-music-movie-test-fixture",
       "piece": "Keep HD decoder failure fixture compatible with actual movie engine ident and assert movie pause/resume",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T23:52:01.559713+00:00",
-      "updated_at": "2026-10-27T23:53:51.074875+00:00",
+      "updated_at": "2026-10-27T23:54:14.149635+00:00",
       "branch": "fix/gallery-gba-movie-hd-music",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/398",
       "approval": "Usuario: integrar todo Claude y preservar comprobaciones de audio y escenas",
@@ -8144,9 +8144,15 @@
           "at": "2026-10-27T23:53:51.074875+00:00",
           "owner": "codex-integrador",
           "detail": "Root retained main411 in PR398; actual Frame9casesPASS including movie10/11 pause/resume; preserve configured gain0.75, no forced gain."
+        },
+        {
+          "at": "2026-10-27T23:54:14.149635+00:00",
+          "owner": "codex-integrador",
+          "detail": "Independent worker and root actual Frame REDwithoutmovieguard exit2 to GREEN0 combined411; nine decoder/lifecycle failure cases PASS including ident10/11 pause, unchanged song/cursor and configuredGBAgain, resume same position. Source product delta4lines; new package gameplay and physical audio confirmation remain separate.; merged 22ef8d6c56c397915c7de43ac3d3761193344c9b"
         }
       ],
-      "claimed_at": "2026-10-27T23:52:06.222605+00:00"
+      "claimed_at": "2026-10-27T23:52:06.222605+00:00",
+      "completed_at": "2026-10-27T23:54:14.149635+00:00"
     }
   },
   "integrator": {
@@ -8155,7 +8161,7 @@
     "created_at": "2026-10-27T23:53:59.487515+00:00",
     "updated_at": "2026-10-27T23:53:59.487515+00:00"
   },
-  "updated_at": "2026-10-27T23:54:09.237126+00:00",
+  "updated_at": "2026-10-27T23:54:14.149635+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
