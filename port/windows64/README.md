@@ -124,6 +124,28 @@ need end-to-end quickstate/input validation after rebuilding.
 
 ## Remaining limitations
 
+Windows64 crash reporting snapshots the first exception and delegates file,
+CRT and module lookups to a native Windows thread created before guest boot.
+The guest uses a foreign stack outside the Windows thread's stack bounds:
+running the old CRT reporter there could mask an integer division fault
+(`c0000094`) with a secondary stack overflow (`c00000fd`, #386). The handler
+uses cached module ranges and waits at most two seconds for the report; it
+always continues exception search, never resumes the fault. Initialization,
+file or worker failure can leave no report, while preserving termination.
+
+The isolated CPU regression uses real divide faults on native and low-address
+foreign stacks, including a guest-address instruction. No game, ROM or SDL
+runtime is required:
+
+```powershell
+python port/windows64/test_crash_report.py --cc PATH_TO_LLVM_MINGW/bin/clang.exe -v
+```
+
+Seven checks also cover first-exception ownership, unavailable worker,
+unwritable long path and a blocked worker's bounded wait. To reproduce the
+original masked fault, run `test_foreign_stack_fault` with `--baseline 8d495811e`.
+This reporter fix is separate from the map-card scrolling denominator fix.
+
 UDP currently reports no socket. PPU uses one core. No Windows32 fault-recovery
 handler is installed: invalid guest accesses remain observable crashes.
 Do not silently prefer this runtime when these missing features are required.
