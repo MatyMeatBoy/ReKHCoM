@@ -118,7 +118,7 @@ subtítulos visibles, salida 0. Steam Deck sigue con la versión de Windows por 
   habituales (Noto CJK, Takao, IPA, Droid, WenQuanYi) y con `fc-match :lang=ja`;
   sin ninguna, el HD japonés sigue desactivado. Falta confirmarlo en una
   distro/Steam Deck real.
-- No hay launcher gráfico en Linux (el de Windows usa APIs de Windows); los
+- El helper nativo ReKHCoM Launcher.sh permite Play/import HD con KDE/Zenity o CLI; no ofrece la GUI Windows completa. Los
   ajustes están en el menú de opciones del juego.
 
 ## Steam Deck, issue 49 (24/10/2026)

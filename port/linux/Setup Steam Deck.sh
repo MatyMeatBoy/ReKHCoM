@@ -12,14 +12,15 @@ if [ "$STATUS" -eq 0 ]; then
 3. Leave forced compatibility OFF for this native Linux shortcut.
 4. Return to Gaming Mode > Library > Non-Steam > ReKHCoM.
 
-Linux starts the game directly. Open Options with Start + Select together
+Gaming Mode starts the game directly. For native HD import in Desktop Mode,
+open ReKHCoM Launcher.sh (Python3.9+, KDE/Zenity or CLI). Open Options with Start + Select together
 (the bound GBA buttons), or F1 / Escape on a keyboard.
 Steam Input: choose a Gamepad layout. Steam's own button opens Steam.
 
 ES: En Steam de escritorio: Juegos > Anadir un juego que no es de Steam >
 ReKHCoM. No fuerces Proton. Vuelve al modo Juego > Biblioteca > No Steam.
 Opciones: Start + Select juntos (botones GBA asignados), o F1 / Escape.
-No hay launcher separado en Linux. Lee LINUX.md para reparar un acceso viejo.
+Importador nativo Desktop: ReKHCoM Launcher.sh; no es la GUI Windows completa. Lee LINUX.md para reparar un acceso viejo.
 
 $RESULT"
 else
