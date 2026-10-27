@@ -187,6 +187,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-direct-return-no-flash | Claude regular UI: retorno galeria directo normal/skip desde title/field GBA/ReKHCoM; capturar transicion, restaurar UI renderer input audio sin avanzar historia; dependencia pacing OptiPort si aplica | pendiente | — | — | Usuario 27/10: registrar pendiente, no implementar ni bloquear ZIP | 2026-10-27T08:03:09.318648+00:00 |
 | controller-prompt-layouts-v21-experimental | Regular UI experimental 2.1: Auto OriginalGBA Nintendo Xbox PlayStation; bindings tutorial efectivos, convencion NintendoA/PScirculo elegible, glyphs existentes, botones GBA opciones, overrides hotplug localizacion | pendiente | — | — | Usuario 27/10: registrar pendiente experimental; sin implementacion actual | 2026-10-27T08:03:15.526548+00:00 |
 | guest-songlog-env | Portable guest optional song logging link fix | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/316 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:12:09.245569+00:00 |
-| save-panel-palette-exhaustion | Save panel palette exhaustion BIOS semantics | pendiente | — | — | — | 2026-10-27T08:12:15.815024+00:00 |
+| save-panel-palette-exhaustion | Save panel palette exhaustion BIOS semantics | en_curso | device_profiles_sol | — | — | 2026-10-27T08:12:21.453721+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T08:10:10.550151+00:00)
