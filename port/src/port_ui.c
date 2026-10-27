@@ -565,7 +565,7 @@ static const char* const sHdMediaHelp[LANG_COUNT] = {
     "Audio vom Benutzer zugeordnet, unabhängig von Text und GBA-Undub. Grau: vollständiger Import fehlt. Steam: Eigenschaften > Sprache; HD importieren/kopieren und erneut prüfen. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
     "Audio dichiarato dall'utente, separato da testo e Undub GBA. Grigio: import completo assente. Steam: Proprietà > Lingua, poi importa/copia HD e ricontrolla. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
     "Audio declarado por el usuario, independiente del texto/subtítulos y Undub GBA. Gris: falta importación completa. En tu Steam: Propiedades > Idioma, importa/copia HD y revisa. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "音声ラベルはユーザー指定です。文字・字幕・GBA Undubとは別です。灰色はデータ不足。Steamのプロパティで言語を選び、HDをコピーして再確認してください。help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2"
+    "音声ラベルはユーザー指定です。文字・じまく・GBA Undubとは別です。グレーはデータ不足。Steamのプロパティで言語を選び、HDをコピーして再確認してください。help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2"
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
 static const char* const sCheatsHelp[LANG_COUNT] = {
