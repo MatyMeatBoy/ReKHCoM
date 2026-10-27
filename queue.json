@@ -4838,10 +4838,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-boss-label",
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T06:41:21.640846+00:00",
+      "updated_at": "2026-10-27T13:36:23.899078+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4868,7 +4868,7 @@
           "detail": "released: Precisión: «Llamarada»/«Locura» son nombres de EFECTO DE CARTA DE ENEMIGO (texto gEnemyCardEffectName*, p.ej. FireBoost=Llamarada), con su contador (15A); en batalla se dibuja como sprite (OAM frame 1540 de 179:4:0, prio 1, hud 1). Falta ubicar la tarea que lo dibuja (buscar quién carga esos tiles pre-renderizados en card_battle/btl) y darle offset HUD HD sobre la carta HD del jefe."
         }
       ],
-      "claimed_at": "2026-10-27T06:41:16.959150+00:00"
+      "claimed_at": "2026-10-27T13:36:23.899078+00:00"
     },
     "cartas-hd-encaje": {
       "id": "cartas-hd-encaje",
@@ -6119,7 +6119,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:35:35.062466+00:00",
+  "updated_at": "2026-10-27T13:36:23.899078+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
