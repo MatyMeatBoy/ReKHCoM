@@ -829,6 +829,15 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
     return 1;
 }
 
+/* Stock sums use a 16px GBA sprite with ink beginning at local y5.
+ * With an imported HP bar active, anchor9 puts the full plate below its
+ * y12 lower edge; otherwise preserve the cartridge's authored anchor4. */
+int PortHdStockValueTop(int opponent) {
+    if (!gPortConfig.hdCards) return 0;
+    return opponent ? (sEnemy.active && sEnemy.frame == (int)PortFrameCount() ? 9 : 0)
+                    : (sGauge.active && sGauge.frame == (int)PortFrameCount() ? 9 : 0);
+}
+
 void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, float shade) {
     const float unit = 240.0f / 640.0f;
     float s = unit * scale, tint[4] = { shade, shade, shade, 1.0f };

@@ -7,6 +7,8 @@ enum { HD_LAYOUT_GAUGE, HD_LAYOUT_COCKPIT, HD_LAYOUT_COUNT };
 enum { HD_LAYOUT_TEX_GAUGE_FACES, HD_LAYOUT_TEX_GAUGE, HD_LAYOUT_TEX_RIKU_FACES, HD_LAYOUT_TEX_COCKPIT,
        HD_LAYOUT_TEXTURE_COUNT };
 
+/* Minimum stock-sum anchor under an active imported HP bar (0: native). */
+int PortHdStockValueTop(int opponent);
 /* Request the imported texture; true only after a successful renderer upload. */
 int PortHdLayoutReady(int layout, int texture);
 /* The last frame of an animation group (0: none). */

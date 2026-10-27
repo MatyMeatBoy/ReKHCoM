@@ -23,6 +23,7 @@
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
+#include "port/port_hdlayout.h"
 #include "engine.h"
 #include "sprite.h"
 #include "port/port_state.h"
@@ -35,6 +36,7 @@
 #include "port/port_preliminar_v1_tiles.h"
 
 extern const void* gMsgwinMapBlocks[4];
+extern const unsigned char gStockValueTiles[];
 extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
@@ -999,6 +1001,18 @@ static int ArenaBandPixel(int distance, int start, int width, int right) {
 
 /* Battle: the card hand sits partly below the GBA screen; the sprites are
    whole, so the bottom HUD can be lifted to show more of them. */
+/* Only the legal sum1..27 sources used by both cardbattle_2 callers.
+ * Keep the native counter untouched unless that side's imported gauge is
+ * actually drawing this frame. Card artwork and value digits are unrelated. */
+static int HudStockValueY(const void* source, int y, int opponent) {
+    uintptr_t value = (uintptr_t)source, first = (uintptr_t)gStockValueTiles;
+    int top;
+    if (!source || value < first || value - first >= 27u * 128u || (value - first) % 128u)
+        return y;
+    top = PortHdStockValueTop(opponent);
+    return y < top ? top : y;
+}
+
 static int HudRaise(void) {
     int r = gPortConfig.cardHudRaise;
 
@@ -5141,6 +5155,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         hx = tag->ax == 2 ? HudWorldX(xg, bw, w)
              : tag->ax < 0 ? xg : (tag->ax > 0 ? w - (GBA_SCREEN_W - xg) : xg + (w - GBA_SCREEN_W) / 2);
         hy = TagHudY(tag, yg, h, HudRaise());
+        hy = HudStockValueY(sOamHd[i].tiles, hy, tag->ax > 0);
         if (!affine && !tag->hdHudPart && !tag->digit && sHudDigitOwners &&
             (size_t)w*h <= sHudDigitOwnerSize)
             hdSprite = PortHdHudSpriteRegister(rawHud, ow, oh, i, hx, hy,
