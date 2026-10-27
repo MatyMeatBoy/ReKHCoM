@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "port_logfile.h"
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -1107,8 +1108,7 @@ int main(int argc, char** argv) {
     mkdir("sdmc:/switch", 0777);
     mkdir(DATA_ROOT, 0777);
     mkdir(DATA_ROOT "/logs", 0777);
-    rename(DATA_ROOT "/logs/ReKHCoM.log", DATA_ROOT "/logs/ReKHCoM.old.log");
-    sLog = fopen(DATA_ROOT "/logs/ReKHCoM.log", "w");
+    sLog = PortOpenSessionLog(DATA_ROOT "/logs/ReKHCoM.log");
     setenv("KHCOM_ASSETS", sAssetRoot, 1);
     setenv("KHCOM_DATA", DATA_ROOT, 1);
 #elif defined(__vita__)
@@ -1120,8 +1120,7 @@ int main(int argc, char** argv) {
     sAssetRoot = "app0:assets";
     mkdir(DATA_ROOT, 0777);
     mkdir(DATA_ROOT "/logs", 0777);
-    rename(DATA_ROOT "/logs/ReKHCoM.log", DATA_ROOT "/logs/ReKHCoM.old.log");
-    sLog = fopen(DATA_ROOT "/logs/ReKHCoM.log", "w");
+    sLog = PortOpenSessionLog(DATA_ROOT "/logs/ReKHCoM.log");
     setenv("KHCOM_ASSETS", sAssetRoot, 1);
     setenv("KHCOM_DATA", DATA_ROOT, 1);
 #else

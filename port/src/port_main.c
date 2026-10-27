@@ -21,6 +21,7 @@
 
 #include "port/port.h"
 #include "port/port_netlink.h"
+#include "port/port_logfile.h"
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
@@ -114,7 +115,7 @@ void PortLog(const char* fmt, ...) {
     va_list ap;
 
     if (sLog == NULL)
-        sLog = fopen(PortConfigPath("kh_com.log"), "w");
+        sLog = PortOpenSessionLog(PortConfigPath("kh_com.log"));
     va_start(ap, fmt);
     vfprintf(stderr, fmt, ap);
     fputc('\n', stderr);

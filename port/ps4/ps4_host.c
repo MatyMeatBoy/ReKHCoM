@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "../include/port/port_logfile.h"
 
 #ifdef REKHCOM_PS4
 #include <SDL2/SDL.h>
@@ -1180,8 +1181,7 @@ int main(int argc, char** argv) {
     setenv("KHCOM_DATA", DATA_ROOT, 1);
     mkdir(DATA_ROOT, 0777);
     mkdir(DATA_ROOT "/logs", 0777);
-    rename(DATA_ROOT "/logs/ReKHCoM.log", DATA_ROOT "/logs/ReKHCoM.old.log");
-    sLog = fopen(DATA_ROOT "/logs/ReKHCoM.log", "w");
+    sLog = PortOpenSessionLog(DATA_ROOT "/logs/ReKHCoM.log");
 #else
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--data") && i + 1 < argc)
