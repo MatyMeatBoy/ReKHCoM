@@ -188,4 +188,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | controller-prompt-layouts-v21-experimental | Regular UI experimental 2.1: Auto OriginalGBA Nintendo Xbox PlayStation; bindings tutorial efectivos, convencion NintendoA/PScirculo elegible, glyphs existentes, botones GBA opciones, overrides hotplug localizacion | pendiente | — | — | Usuario 27/10: registrar pendiente experimental; sin implementacion actual | 2026-10-27T08:03:15.526548+00:00 |
 | guest-songlog-env | Portable guest optional song logging link fix | en_curso | codex-crash | — | User authorizes verified fixes and Windows prerelease | 2026-10-27T08:07:28.084989+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)
+Integrador: codex-crash (ocupado; 2026-10-27T08:10:10.550151+00:00)
