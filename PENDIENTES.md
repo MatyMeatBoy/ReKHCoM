@@ -258,6 +258,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue386-stackoverflow | Crash Windows64 al entrar mode_mapinspect, issue386 | en_curso | codex-crash386 | — | — | 2026-10-27T18:54:36.970484+00:00 |
 | harness-menus-architecture | Validar arquitectura real y hashes en arnés de menús 32/64 | en_curso | codex-harness64 | — | Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón | 2026-10-27T18:56:00.770854+00:00 |
 | menus-fade-transitions | Fundidos breves coherentes en todos los menús propios y previews listas, prioridad después de cuelgues | pendiente | — | — | Usuario 2026-10-27: agregar fading a todos menús nuestros, controles, logros, escenas; cuelgues y bugs primero | 2026-10-27T18:56:17.299483+00:00 |
-| gallery64-repeat-title-restore | Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso | pendiente | — | — | — | 2026-10-27T19:01:46.452296+00:00 |
+| gallery64-repeat-title-restore | Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso | en_curso | codex-gallery64 | — | — | 2026-10-27T19:01:53.090704+00:00 |
 
 Integrador: libre
