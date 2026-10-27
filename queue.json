@@ -7467,13 +7467,13 @@
     "v22-pre2-version": {
       "id": "v22-pre2-version",
       "piece": "Windows v2.2-pre2 source/docs and PE version 2.2.0.2",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "sol-low-diverse-saves",
       "created_at": "2026-10-27T20:06:48.996576+00:00",
-      "updated_at": "2026-10-27T20:09:46.733024+00:00",
+      "updated_at": "2026-10-27T20:10:55.970421+00:00",
       "branch": "windows-v22-pre2-version",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/392",
-      "approval": null,
+      "approval": "usuario-prebuild22",
       "reference": "8b8ca9c4056aa3906a0a1c69a0b418f0db555d95",
       "evidence": [
         {
@@ -7485,9 +7485,15 @@
           "at": "2026-10-27T20:09:46.733024+00:00",
           "owner": "sol-low-diverse-saves",
           "detail": "Three files only: source v2.2-pre2, Windows PE2.2.0.2, changelog preparation. Static coherence check and diff-check pass. Base main db4c0a8 #390. No builds, packages, Android build claims or release publication."
+        },
+        {
+          "at": "2026-10-27T20:10:55.970421+00:00",
+          "owner": "sol-low-diverse-saves",
+          "detail": "PR392 merged038d92627bf2792465dd7eb143b7da6e0c856638; root reviewed all3files versionpre2+PE2.2.0.2+explicit pending-build changelog. Build/package runtime separate gate, noAndroidclaim."
         }
       ],
-      "claimed_at": "2026-10-27T20:08:22.655460+00:00"
+      "claimed_at": "2026-10-27T20:08:22.655460+00:00",
+      "completed_at": "2026-10-27T20:10:55.970421+00:00"
     },
     "sol-scd-parser-safety": {
       "id": "sol-scd-parser-safety",
@@ -7538,7 +7544,7 @@
     "created_at": "2026-10-27T20:10:32.756623+00:00",
     "updated_at": "2026-10-27T20:10:32.756623+00:00"
   },
-  "updated_at": "2026-10-27T20:10:46.733037+00:00",
+  "updated_at": "2026-10-27T20:10:55.971421+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
