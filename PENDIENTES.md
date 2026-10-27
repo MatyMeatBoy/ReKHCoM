@@ -167,5 +167,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | integrado | codex-hud-invalidation | https://github.com/MatyMeatBoy/ReKHCoM/pull/297 | Usuario 27/10 integrar OptiPort y enviar test builds | 2026-10-27T05:41:01.682084+00:00 |
 | hd-music-loader-bounds | Bound async music file reads and retain original music during load | integrado | codex-music-loader | https://github.com/MatyMeatBoy/ReKHCoM/pull/295 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:37:50.136948+00:00 |
 | optiport-native-renderer-reset | Complete native renderer reset resource invalidation and generation fault tests | en_curso | codex-native-renderer-reset | — | Coordinador delega nativo32 tras PR297; usuario OptiPort | 2026-10-27T05:40:11.993431+00:00 |
+| bridge-texture-generations | Generation-safe bridge textures and complete Linux64 Android64 renderer recovery | pendiente | — | — | User authorized OptiPort renderer lifecycle recovery with tested guest host compatibility | 2026-10-27T05:41:51.356192+00:00 |
 
 Integrador: libre
