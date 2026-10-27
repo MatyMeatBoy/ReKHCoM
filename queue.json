@@ -5844,13 +5844,13 @@
     "hud-canvas-preflight": {
       "id": "hud-canvas-preflight",
       "piece": "Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T11:04:53.035390+00:00",
-      "updated_at": "2026-10-27T11:35:20.265899+00:00",
+      "updated_at": "2026-10-27T12:37:26.085012+00:00",
       "branch": "task/hud-canvas-preflight",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/349",
-      "approval": null,
+      "approval": "AGENTS.md visual v2.1 user exception 27/10: direct coordinator review supersedes Atlas; root final candidate QA and explicit integration reconciliation authorization.",
       "reference": "port/progress/HUD_OPTIONS_WARM.md",
       "evidence": [
         {
@@ -5867,9 +5867,15 @@
           "at": "2026-10-27T11:35:20.265899+00:00",
           "owner": "device_profiles_sol",
           "detail": "74adfbd4d P1 paused resize RED90->GREEN exactconsumer + fullPPU canary. Snapshot W/H/HS/WS, wholeHUD scope restored, noHBlank/reallocconsumer. Independent reviewer confirms both ownRED GREEN. CPU-only; textureOOM/resetGPU separate."
+        },
+        {
+          "at": "2026-10-27T12:37:26.085012+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "GitHub MERGED PR#349, merge SHA 7c3c4366bb4102ee3bd853c99b7c7f493eee5039; main bundle PR351 merge SHA 771aed8cc243d8c84afb7b0c79a47831f4304629. Coordinator final serial QA recorded; no new tests or changes in reconciliation."
         }
       ],
-      "claimed_at": "2026-10-27T11:04:58.188147+00:00"
+      "claimed_at": "2026-10-27T11:04:58.188147+00:00",
+      "completed_at": "2026-10-27T12:37:26.085012+00:00"
     },
     "android-lifecycle-diagnostics-v21": {
       "id": "android-lifecycle-diagnostics-v21",
@@ -5980,7 +5986,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:37:21.232347+00:00",
+  "updated_at": "2026-10-27T12:37:26.085012+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
