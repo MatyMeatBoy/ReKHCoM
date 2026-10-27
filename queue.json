@@ -7908,7 +7908,7 @@
       "status": "pr_abierto",
       "owner": "codex-card-corners",
       "created_at": "2026-10-27T22:19:47.262893+00:00",
-      "updated_at": "2026-10-27T22:29:33.969976+00:00",
+      "updated_at": "2026-10-27T22:34:08.953986+00:00",
       "branch": "fix/small-card-native-corners",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/408",
       "approval": "Usuario27octliteralfranja+2cornerpixels; rootdelegacion20261027",
@@ -7918,6 +7918,11 @@
           "at": "2026-10-27T22:29:33.969976+00:00",
           "owner": "codex-card-corners",
           "detail": "Head08ea3ac228 codeonlyforeground2cells; noHDtexture/row15/valueedits. REDproductionbranches then105layoutsynthetic+99originalcolourpairsPASS, flips/affine/partialpiece/ownership; allpreviousKK/Olympia/frame/firstframefallbackPASS. SDLproductionQuad+cornerhelper93actualHDx30transformations93093cornerpixelsbefore->0mismatchafter,0outsidechanges. Alpha-maskcandidateREJECTEDfilterspill. FullgameGPUcapturependingintegrator. SharedPPUnative32/x32EUUSJPsyntaxPASS. OriginalSV/installsuntouched; noAtlasrequiredperuserdirectinspection."
+        },
+        {
+          "at": "2026-10-27T22:34:08.953986+00:00",
+          "owner": "codex-card-corners",
+          "detail": "Followup24837c10a: parentreviewfound lowerHUDcorner couldpersistoverfrontHDcard. Addedreal2OAMback-to-frontREDthenGREEN tests(frontHDnoncorner/owncorner/nativefallback/otherHDsprite), clearpriorovercontributiononlyafternewvisibleHDpixelaccepted; actualcornercopiedaftereffects. Stockframe+firstframefallbackPASS. Earlier08eaGPUbuildnotlatestoverlapfix; rootnotifiedexacthead24837."
         }
       ],
       "claimed_at": "2026-10-27T22:19:52.139295+00:00"
@@ -8010,7 +8015,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:33:22.971761+00:00",
+  "updated_at": "2026-10-27T22:34:08.953986+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
