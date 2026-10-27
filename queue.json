@@ -7047,17 +7047,23 @@
       "status": "en_curso",
       "owner": "codex-synthesis-gray-digits",
       "created_at": "2026-10-27T18:52:34.089674+00:00",
-      "updated_at": "2026-10-27T18:52:45.704786+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T18:53:20.240398+00:00",
+      "branch": "refine/synthesis-gray-digits",
       "pr": null,
       "approval": "Usuario27/10 aprueba base actual y pide microacabado gris inferior y todos los dígitos; coordinador asigna sin Atlas",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/371",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T18:53:20.240398+00:00",
+          "owner": "codex-synthesis-gray-digits",
+          "detail": "Claim d871160, own checkout freshmain8d495811e. Base #371 ReCoM room01 recipes and405 current PNG256x312; legacy Pillow128x156 excluded. Read-only diagnosis before microrefinement; protect Claude glove/UI and PR385."
+        }
+      ],
       "claimed_at": "2026-10-27T18:52:45.704786+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:53:13.260591+00:00",
+  "updated_at": "2026-10-27T18:53:20.240398+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
