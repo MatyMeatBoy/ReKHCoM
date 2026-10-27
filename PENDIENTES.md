@@ -171,6 +171,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | logs-utc-20261027 | Make session timestamps ASCII UTC and readable as UTF-8 | integrado | codex-logs-utc | https://github.com/MatyMeatBoy/ReKHCoM/pull/298 | Usuario 27/10 integrar OptiPort para builds de test | 2026-10-27T05:46:35.940604+00:00 |
 | jp-save-notice-20261027 | Keep save failure notice drawable with the JP cartridge font | en_curso | codex-jp-notice | — | — | 2026-10-27T05:50:23.550045+00:00 |
 | launcher-architecture | Windows runtime architecture selection and force32 | en_revision | launcher-architecture-sol | work/launcher-architecture | User requested combined Windows 32/64 package | 2026-10-27T06:12:43.483266+00:00 |
-| device-profiles | Shared Generic and Steam Deck device defaults | en_curso | device_profiles_sol | — | — | 2026-10-27T06:20:11.264824+00:00 |
+| device-profiles | Shared Generic and Steam Deck device defaults | en_revision | device_profiles_sol | task/device-profiles | — | 2026-10-27T06:23:56.860237+00:00 |
 
 Integrador: libre
