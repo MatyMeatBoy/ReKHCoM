@@ -47,9 +47,10 @@ static FILE* PortOpenSessionLog(const char* path) {
     if (file) {
 #if __STDC_HOSTED__ && !defined(PORT_GBA_RELOC)
         time_t now = time(NULL);
-        struct tm* stamp = localtime(&now);
+        struct tm* stamp = gmtime(&now);
         char date[64];
-        if (stamp && strftime(date, sizeof(date), "%Y-%m-%d %H:%M:%S %Z", stamp))
+        /* Numeric UTC avoids localized timezone names in a different encoding. */
+        if (stamp && strftime(date, sizeof(date), "%Y-%m-%dT%H:%M:%SZ", stamp))
             fprintf(file, "# session: %s\n", date);
         else
 #endif

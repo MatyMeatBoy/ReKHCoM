@@ -1,5 +1,6 @@
 """Run the real PortLog producer across restarts; never use a player's data folder."""
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 
@@ -7,7 +8,7 @@ R = Path(__file__).resolve().parents[2]
 
 
 def contents(path):
-    return ''.join(line for line in path.read_text().splitlines(keepends=True)
+    return ''.join(line for line in path.read_text(encoding='utf-8').splitlines(keepends=True)
                    if not line.startswith('# session:'))
 
 
@@ -39,6 +40,8 @@ def main():
                         '-fsyntax-only', str(guest)], check=True)
         for n in range(8):
             subprocess.run([str(exe), str(n)], cwd=folder, check=True, stderr=subprocess.DEVNULL)
+        stamp = (folder/'kh_com.log').read_text(encoding='utf-8').splitlines()[0]
+        assert re.fullmatch(r'# session: \d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ', stamp), stamp
         assert contents(folder/'kh_com.log') == 'session 7\nend 7\n'
         for previous in range(1, 6):
             path = folder / f'kh_com.log.{previous}'
