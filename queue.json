@@ -5643,10 +5643,10 @@
     "optiport-v21-skill-snapshot": {
       "id": "optiport-v21-skill-snapshot",
       "piece": "Sync reviewed public OptiPort0b6edd3 method into project snapshot, retaining project-specific results only in board",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v21-board",
       "created_at": "2026-10-27T10:47:07.897855+00:00",
-      "updated_at": "2026-10-27T10:53:34.487310+00:00",
+      "updated_at": "2026-10-27T10:53:39.582164+00:00",
       "branch": "docs/v21-verified-board",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/344",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5656,9 +5656,15 @@
           "at": "2026-10-27T10:49:44.988843+00:00",
           "owner": "codex-v21-board",
           "detail": "Public0b6edd3:19 self-contained method files, frontmatter and local links validated; project evidence kept in progress docs"
+        },
+        {
+          "at": "2026-10-27T10:53:39.582164+00:00",
+          "owner": "codex-v21-board",
+          "detail": "Verified and reviewed; merged 35b57818c336ee273555c84b9dbbe0b8e9afc03c"
         }
       ],
-      "claimed_at": "2026-10-27T10:47:48.301977+00:00"
+      "claimed_at": "2026-10-27T10:47:48.301977+00:00",
+      "completed_at": "2026-10-27T10:53:39.582164+00:00"
     },
     "controller-prompt-original-live-spans": {
       "id": "controller-prompt-original-live-spans",
@@ -5695,7 +5701,7 @@
     "created_at": "2026-10-27T10:51:21.601244+00:00",
     "updated_at": "2026-10-27T10:51:21.601244+00:00"
   },
-  "updated_at": "2026-10-27T10:53:34.487310+00:00",
+  "updated_at": "2026-10-27T10:53:39.582164+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
