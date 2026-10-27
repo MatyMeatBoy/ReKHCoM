@@ -4760,10 +4760,10 @@
     "hudhd-pila-cartas": {
       "id": "hudhd-pila-cartas",
       "piece": "HUD HD: pila de cartas sobre la vida nueva, con borde (también enemigos/jefes)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T06:31:00.162364+00:00",
-      "updated_at": "2026-10-27T08:33:49.320603+00:00",
+      "updated_at": "2026-10-27T08:34:03.512038+00:00",
       "branch": "task/stock-card-frames",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/320",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -4773,9 +4773,15 @@
           "at": "2026-10-27T08:25:34.213349+00:00",
           "owner": "device_profiles_sol",
           "detail": "Draft PR320 real HUD cover snippets RED assertion then GREEN; guest syntax and diffcheck pass. Runtime screenshots 1/2/3 player/enemy/boss and visual review pending root serial build. No art changes; restores existing native group6 frame contract"
+        },
+        {
+          "at": "2026-10-27T08:34:03.512038+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "Verified and reviewed; merged 72b55195cc9836443df47adc8adf6efe0b702db9"
         }
       ],
-      "claimed_at": "2026-10-27T08:21:06.746389+00:00"
+      "claimed_at": "2026-10-27T08:21:06.746389+00:00",
+      "completed_at": "2026-10-27T08:34:03.512038+00:00"
     },
     "hudhd-numeros-cartas": {
       "id": "hudhd-numeros-cartas",
@@ -5173,7 +5179,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:33:56.625192+00:00",
+  "updated_at": "2026-10-27T08:34:03.512038+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
