@@ -1,4 +1,4 @@
-# Cartridge division and x32 hosts: first bounded compatibility block
+# Cartridge division compatibility in x32 hosts
 
 This change restores one verified cartridge contract: signed and unsigned
 integer quotient/remainder are zero when the divisor is zero. It does not
@@ -39,10 +39,22 @@ Text metadata must fit the file and initialized image, and contain boot. Heap,
 stack, data and host/DLL instructions are never eligible just because their
 pages are executable.
 
-`guest_divzero.h` recognizes only unprefixed or canonical REX40/41 `F7 /6,/7`
-register32 DIV/IDIV. The actual32-bit operand must be zero. Windows additionally
-requires the correct exception kind/address; Linux requires SIGFPE/FPE_INTDIV.
-OnlyRAX/RDX become0 and RIP advances by the complete bounded instruction.
+`guest_divzero.h` decodes signed/unsigned DIV/IDIV, register and mapped-memory
+operands, at8/16/32/64-bit widths. It handles high-byte registers, REX extensions,
+SIB base/index/scale, signed displacements, RIP/EIP-relative and address-size32.
+The actual operand at that width must be zero. Memory is readable only inside
+the exact GBA/guest regions successfully mapped by the host; host/DLL memory
+is excluded. Every instruction byte must fit the initialized guest text and
+the architectural15-byte limit. FS/GS host TLS segments are outside the flat
+GBA contract and rejected, as are unrelated/invalid opcodes.
+
+Windows requires a matching exception address and division/overflow exception.
+The latter is needed because Windows classifies the real zero AH operand as
+C0000095 in the runtime test; decoding still rejects every nonzero divisor.
+Linux requires SIGFPE/FPE_INTDIV. Quotient/remainder are zeroed at the correct
+width: AL/AH for byte, AX/DX for word, EAX/EDX for dword and RAX/RDX for qword.
+Unaffected high register bits and flags are preserved. RIP advances by the
+complete bounded instruction.
 INT_MIN/-1, nonzero unsigned quotient overflow, unsupported instructions and
 host faults pass through unchanged. There is no per-frame check or arithmetic
 hot-path instrumentation, no disabling64-bit execution, and no general AV
@@ -57,7 +69,7 @@ previous action for rejected signals.
   exitsC0000094. GREEN: DIV and IDIV zero return quotient/remainder0; division
   by2 returns61/remainder1; signed overflow remainsC0000095 and outside-text
   zero remainsC0000094.
-- 14336 exhaustive prefix/opcode/ModRM/divisor context cases exercise the real
+- 20480 prefix/opcode/ModRM/divisor context cases exercise the real
   adapter and decoder. Rejections preserve the complete CONTEXT, including
   wrong exception address/kind, truncated bytes and invalid text ranges.
   Header tests reject legacy/missing metadata and file/image/boot violations.
@@ -66,16 +78,26 @@ previous action for rejected signals.
   Real SIGFPE signed/unsigned zero and nonzero controls pass; overflow and
   outside-text remain fatal SIGFPE. A wrong si_code forwards without context
   mutation. SA_ONSTACK and the actual alternate stack are checked.
+- `test_guest_divzero_operands.py`:250 real Windows execution cases cover all
+  four widths, DIV/IDIV, byte/high-byte/REX registers, memory base/SIB/index-only,
+  positive and negative8/32-bit displacement, R13 base, RIP-relative and
+  address-size32. Each valid mode has zero and nonzero controls; unapproved
+  divisor memory retains the original fatal exception. The emitted equivalent
+  Linux fork runner passes the same250 cases in the existing Debian runtime.
+  The earlier register32-only block failed this probe with C0000094 on byte
+  division; it is not presented as general fallback coverage.
 - Full Windows/Linux host translation units pass cross-target syntax checks
-  with existing SDL headers. No new SDK or VM was created.
+  with existing SDL headers. Linux AArch64 syntax also passes: the shared Linux
+  source excludes the x86 signal adapter for that architecture. This uses the
+  existing AArch64 sysroot and platform-neutral SDL declarations, not a linked
+  AArch64 SDL runtime. No new SDK or VM was created.
 
 ## Explicit remaining work
 
 Disassembly of the read-only existing EU x32 ELF finds526 DIV/IDIV instructions,
-including69 memory operands and16-bit divisions. This first block deliberately
-rejects memory operands and8/16/64-bit widths. Those sites require a subsequent
-bounded effective-address reader and width-specific controls before coverage
-can be claimed. There is no claim that all526 are naturally reachable or ever
+including69 memory operands and16-bit divisions. The general decoder now covers
+those flat register/memory instruction forms; it does not require enumerating
+each source-level division. There is no claim that all526 are naturally reachable or ever
 have divisor0. The exact scan is a code inventory, not526 runtime successes.
 
 General GBA bus/open-bus/NULL parity is still absent from Windows/Linux64 hosts

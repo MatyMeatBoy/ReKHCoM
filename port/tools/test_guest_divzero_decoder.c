@@ -11,7 +11,7 @@ static void Registers(CONTEXT* c, const uint64_t r[16]) {
 }
 int main(void) {
     unsigned cases=0;
-    const int prefixes[]={-1,0x40,0x41,0x48,0x66,0x67,0xf3};
+    const int prefixes[]={-1,0x40,0x41,0x48,0x66,0x67,0xf3,0x64,0x65,0xf0};
     const uint64_t divisors[]={0,1,0xffffffffu,0x100000000ull};
     for(unsigned p=0;p<sizeof(prefixes)/sizeof(prefixes[0]);p++)
     for(unsigned opcode=0xf6;opcode<=0xf7;opcode++)
@@ -21,17 +21,28 @@ int main(void) {
         if(prefixes[p]>=0)code[length++]=(unsigned char)prefixes[p];
         code[length++]=(unsigned char)opcode;code[length++]=(unsigned char)modrm;
         uint64_t regs[16];for(int i=0;i<16;i++)regs[i]=0x1111111111111111ull+i;
-        unsigned operand=(modrm&7)+(prefixes[p]==0x41?8:0);
-        regs[operand]=divisors[value];
+        unsigned width=opcode==0xf6?1:prefixes[p]==0x48?8:prefixes[p]==0x66?2:4;
+        int rex=prefixes[p]>=0x40 && prefixes[p]<=0x4f;
+        int highByte=width==1 && !rex && (modrm&7)>=4;
+        unsigned operand=highByte?(modrm&7)-4:(modrm&7)+(prefixes[p]==0x41?8:0);
+        if(highByte)regs[operand]=(regs[operand]&~0xff00ull)|((divisors[value]&255)<<8);
+        else regs[operand]=divisors[value];
         CONTEXT context,expected;
         memset(&context,0xa5,sizeof(context));Registers(&context,regs);context.Rip=(uintptr_t)code;
         expected=context;
         EXCEPTION_RECORD record={0};record.ExceptionCode=EXCEPTION_INT_DIVIDE_BY_ZERO;record.ExceptionAddress=code;
         EXCEPTION_POINTERS ep={&record,&context};
         sGuestDivision.begin=(uintptr_t)code;sGuestDivision.end=(uintptr_t)code+length;
-        int accepts=(prefixes[p]==-1 || prefixes[p]==0x40 || prefixes[p]==0x41) && opcode==0xf7 &&
-                    (modrm&0xc0)==0xc0 && ((modrm>>3)&7)>=6 && (uint32_t)divisors[value]==0;
-        if(accepts){expected.Rax=0;expected.Rdx=0;expected.Rip+=length;}
+        uint64_t divisor=divisors[value];
+        if(width<8)divisor &= ((uint64_t)1<<(width*8))-1;
+        int accepts=prefixes[p]!=0x64 && prefixes[p]!=0x65 && prefixes[p]!=0xf0 &&
+                    (modrm&0xc0)==0xc0 && ((modrm>>3)&7)>=6 && divisor==0;
+        if(accepts){
+            if(width==1)expected.Rax&=~0xffffull;
+            else if(width==2){expected.Rax&=~0xffffull;expected.Rdx&=~0xffffull;}
+            else{expected.Rax=0;expected.Rdx=0;}
+            expected.Rip+=length;
+        }
         LONG result=GuestDivisionHandler(&ep);
         if(result!=(accepts?EXCEPTION_CONTINUE_EXECUTION:EXCEPTION_CONTINUE_SEARCH) || memcmp(&context,&expected,sizeof(context)))return 10;
         /* Truncated instruction, guest data/heap, and unrelated exception stay untouched. */

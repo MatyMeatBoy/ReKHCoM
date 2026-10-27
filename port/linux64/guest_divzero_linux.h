@@ -3,18 +3,22 @@
 #include <ucontext.h>
 #include "../ps5/shared/guest_divzero.h"
 static PortGuestDivisionBounds sGuestDivision;
+static PortGuestDivisionMemory sGuestDivisionMemory;
 static struct sigaction sGuestDivisionPrevious;
 static unsigned char sGuestDivisionStack[65536];
 static void GuestDivisionSignal(int sig, siginfo_t* info, void* opaque) {
     ucontext_t* context = (ucontext_t*)opaque;
     greg_t* g = context->uc_mcontext.gregs;
-    unsigned length = 0;
+    PortGuestDivisionInstruction instruction={0,0};
     if (sig == SIGFPE && info->si_code == FPE_INTDIV) {
         uint64_t regs[16] = {g[REG_RAX],g[REG_RCX],g[REG_RDX],g[REG_RBX],g[REG_RSP],g[REG_RBP],g[REG_RSI],g[REG_RDI],
                              g[REG_R8],g[REG_R9],g[REG_R10],g[REG_R11],g[REG_R12],g[REG_R13],g[REG_R14],g[REG_R15]};
-        length = PortGuestDivisionLength((uintptr_t)g[REG_RIP], sGuestDivision, regs);
+        instruction = PortGuestDivisionDecode((uintptr_t)g[REG_RIP], sGuestDivision, regs, &sGuestDivisionMemory);
+        if (instruction.length) {
+            PortGuestDivisionResult(instruction.bytes,&regs[0],&regs[2]);
+            g[REG_RAX]=regs[0];g[REG_RDX]=regs[2];g[REG_RIP]+=instruction.length;return;
+        }
     }
-    if (length) { g[REG_RAX]=0; g[REG_RDX]=0; g[REG_RIP]+=length; return; }
     /* sa_handler/sa_sigaction share storage: SIG_DFL/IGN remain sentinels
      * even if an earlier action retained SA_SIGINFO. Never call either. */
     if (sGuestDivisionPrevious.sa_handler == SIG_DFL || sGuestDivisionPrevious.sa_handler == SIG_IGN) {
