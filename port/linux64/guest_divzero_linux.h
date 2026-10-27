@@ -15,11 +15,14 @@ static void GuestDivisionSignal(int sig, siginfo_t* info, void* opaque) {
         length = PortGuestDivisionLength((uintptr_t)g[REG_RIP], sGuestDivision, regs);
     }
     if (length) { g[REG_RAX]=0; g[REG_RDX]=0; g[REG_RIP]+=length; return; }
-    if (sGuestDivisionPrevious.sa_flags & SA_SIGINFO)
+    /* sa_handler/sa_sigaction share storage: SIG_DFL/IGN remain sentinels
+     * even if an earlier action retained SA_SIGINFO. Never call either. */
+    if (sGuestDivisionPrevious.sa_handler == SIG_DFL || sGuestDivisionPrevious.sa_handler == SIG_IGN) {
+        signal(sig, SIG_DFL); raise(sig);
+    } else if (sGuestDivisionPrevious.sa_flags & SA_SIGINFO)
         sGuestDivisionPrevious.sa_sigaction(sig, info, opaque);
-    else if (sGuestDivisionPrevious.sa_handler != SIG_DFL && sGuestDivisionPrevious.sa_handler != SIG_IGN)
+    else
         sGuestDivisionPrevious.sa_handler(sig);
-    else { signal(sig, SIG_DFL); raise(sig); }
 }
 static int GuestDivisionInstall(void) {
     stack_t stack = {0}, previous;

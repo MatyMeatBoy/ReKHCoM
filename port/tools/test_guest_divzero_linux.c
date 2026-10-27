@@ -10,6 +10,9 @@
 
 static int forwarded;
 static void Prior(int sig) { if(sig==SIGFPE)forwarded++; }
+static void PriorInfo(int sig,siginfo_t* info,void* context) {
+    if(sig==SIGFPE && info->si_code==SI_USER && context)forwarded++;
+}
 static int Child(int mode) {
     unsigned char* p=mmap((void*)0x10000000,4096,PROT_READ|PROT_WRITE|PROT_EXEC,
                          MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
@@ -43,5 +46,17 @@ int main(void) {
     memset(&sGuestDivisionPrevious,0,sizeof(sGuestDivisionPrevious));sGuestDivisionPrevious.sa_handler=Prior;
     GuestDivisionSignal(SIGFPE,&info,&context);
     if(forwarded!=1 || memcmp(&context,&original,sizeof(context)))return 10;
-    puts("PASS Linux wrong si_code forwarded without context mutation");return 0;
+    sGuestDivisionPrevious.sa_sigaction=PriorInfo;sGuestDivisionPrevious.sa_flags=SA_SIGINFO;
+    GuestDivisionSignal(SIGFPE,&info,&context);
+    if(forwarded!=2 || memcmp(&context,&original,sizeof(context)))return 11;
+    for(int ignore=0;ignore<2;ignore++) {
+        pid_t pid=fork();if(pid<0)return 12;
+        if(!pid){
+            sGuestDivisionPrevious.sa_handler=ignore?SIG_IGN:SIG_DFL;
+            sGuestDivisionPrevious.sa_flags=SA_SIGINFO;
+            GuestDivisionSignal(SIGFPE,&info,&context);_exit(97);
+        }
+        int status;if(waitpid(pid,&status,0)!=pid || !WIFSIGNALED(status) || WTERMSIG(status)!=SIGFPE)return 13;
+    }
+    puts("PASS Linux wrong si_code/custom prior actions preserve context; default/ignore sentinels with SA_SIGINFO remain fatal");return 0;
 }
