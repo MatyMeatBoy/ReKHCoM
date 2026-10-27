@@ -164,6 +164,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-linux64-streaming | Linux64 movie EOF clock and cancelable decoder pipes | integrado | codex-linux64-streaming | https://github.com/MatyMeatBoy/ReKHCoM/pull/293 | Usuario 27/10 integrar y enviar test builds OptiPort | 2026-10-27T05:31:00.040373+00:00 |
 | hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_revision | codex-hud-budget | fix/hud-target-budget | — | 2026-10-27T05:32:42.412795+00:00 |
 | android-optiport-package | Playable isolated Android OptiPort test package | en_revision | codex-android-test | build/android-optiport-package | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:29:17.892180+00:00 |
-| optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | pendiente | — | — | Coordinador delega A invalidacion HUD y tests; usuario OptiPort | 2026-10-27T05:33:53.837897+00:00 |
+| optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | en_curso | codex-hud-invalidation | — | Coordinador delega A invalidacion HUD y tests; usuario OptiPort | 2026-10-27T05:34:01.079199+00:00 |
 
 Integrador: libre
