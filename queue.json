@@ -7913,15 +7913,16 @@
     "geppetto-scene-zoom-x4": {
       "id": "geppetto-scene-zoom-x4",
       "piece": "Reporte27/10 escenaGeppetto entra zoomincorrecto conx4 activo; reproducir entrada/galeria vs historia, respetar configuracion y restaurar encuadre al salir",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-scene-zoom",
       "created_at": "2026-10-27T22:20:10.816648+00:00",
-      "updated_at": "2026-10-27T22:20:10.816648+00:00",
+      "updated_at": "2026-10-27T22:22:04.472794+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuarioreportecapturageppetto235? imagen8d397e8c",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T22:22:04.472794+00:00"
     },
     "mapinspect-grid-hd-original-frame": {
       "id": "mapinspect-grid-hd-original-frame",
@@ -7938,7 +7939,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:21:41.806505+00:00",
+  "updated_at": "2026-10-27T22:22:04.472794+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
