@@ -7667,12 +7667,12 @@
     "sol-remastered-parser-safety": {
       "id": "sol-remastered-parser-safety",
       "piece": "Bound remastered package allocations and preserve expanded language tables",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-remastered-parser-review",
       "created_at": "2026-10-27T20:20:28.874454+00:00",
-      "updated_at": "2026-10-27T20:27:14.381005+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T20:27:32.733069+00:00",
+      "branch": "fix/remastered-parser-safety",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/397",
       "approval": "User all bugs scoped CPU parsers root delegated",
       "reference": null,
       "evidence": [
@@ -7680,13 +7680,18 @@
           "at": "2026-10-27T20:27:14.381005+00:00",
           "owner": "codex-integrador",
           "detail": "Worker turn terminal failure confirmed; committed clean checkpoint dc99f24eb preserved and pushed, no active writer. Root independently read diff and passed13remastered consumers+actualsubtitleextractor and16ordinary fixtures. Taking review and PR delivery; existing evidence preserved."
+        },
+        {
+          "at": "2026-10-27T20:27:32.733069+00:00",
+          "owner": "codex-remastered-parser-review",
+          "detail": "Checkpoint dc99f24eb reviewed and13remastered+16normal actualconsumer tests independently rerunPASS; C++ReadAssetLanguages/Python subtitle extractor validexpandedMVS retained99/35bytes. Restore390 regression >=hint onlyremastered; partialoutputsatomic. PR openedbyroot after documentedownerrecovery."
         }
       ],
       "claimed_at": "2026-10-27T20:20:33.689306+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:27:28.040982+00:00",
+  "updated_at": "2026-10-27T20:27:32.733069+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
