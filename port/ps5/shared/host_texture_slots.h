@@ -9,9 +9,9 @@ static SDL_Texture* sTex[HOST_TEXTURE_SLOTS];
 static int sTexW[HOST_TEXTURE_SLOTS], sTexSmooth[HOST_TEXTURE_SLOTS];
 static unsigned sTexSerial[HOST_TEXTURE_SLOTS];
 #ifdef HOST_GPU_TARGETS
-static uint8_t sTexTarget[HOST_TEXTURE_SLOTS];
+static uint8_t sTexTarget[HOST_TEXTURE_SLOTS], sTexPendingFree[HOST_TEXTURE_SLOTS];
 static size_t sTexTargetBytes[HOST_TEXTURE_SLOTS];
-static void HostGpuBeforeFree(int slot);
+static int HostGpuBeforeFree(int slot);
 #endif
 static int HostTextureSlot(int id) {
     if (id < 0) return -1;
@@ -49,7 +49,7 @@ static void H_tex_free(int id) {
     int slot = HostTextureSlot(id);
     if (slot < 0) return;
 #ifdef HOST_GPU_TARGETS
-    HostGpuBeforeFree(slot);
+    if (!HostGpuBeforeFree(slot)) return;
 #endif
     SDL_DestroyTexture(sTex[slot]);
     sTex[slot] = NULL;
@@ -58,7 +58,7 @@ static void HostTextureReset(void) {
     for (int i = 0; i < HOST_TEXTURE_SLOTS; i++) {
         if (sTex[i]) {
 #ifdef HOST_GPU_TARGETS
-            HostGpuBeforeFree(i);
+            if (!HostGpuBeforeFree(i)) continue;
 #endif
             SDL_DestroyTexture(sTex[i]);
         }

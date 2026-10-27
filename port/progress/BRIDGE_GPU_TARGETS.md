@@ -44,3 +44,18 @@ premultiplied draw state and viewport/clip/scale. Existing texture generation an
 gauge fault-injection tests remain applicable. This does not validate physical
 GPU filtering or pixels: root must compare the gauge on Windows D3D, Linux GPU
 and Android emulator/device before claiming visual parity.
+
+## Failed unbind and restoration ownership
+
+Destroying an active target is deferred if restoring the window fails. The guest
+keeps its Tex object and renderer alias alive; the host retains the texture slot
+and charged bytes. A later successful bind drains deferred destruction. Failed
+binds block clear/draw/present until an explicit bind recovers the output. Reset
+also retains a still-bound target when unbinding fails, rather than invalidating
+a live renderer pointer or silently releasing its budget.
+
+The gauge does not composite after a failed destination restore. It retains a
+reference to its original destination, retries restoration before more gauge
+work, and preserves the scratch cache if shutdown cannot yet restore safely.
+The failure paths are covered by active-destroy, host-free, reset, persistent
+shutdown, every bind ordinal and recovery tests. Physical GPU QA is still pending.

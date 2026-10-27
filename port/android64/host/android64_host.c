@@ -244,6 +244,7 @@ static void H_gfx_blend(int on) { sBlend = on; }
 /* HostVertex triangles; the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters (port/ps5/guest/src/sdl_shim.c):
    those are drawn crisp (nearest), as the software hosts read them */
 static void H_gfx_draw(int id, const void* verts, int count) {
+    if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
     int slot = HostTextureSlot(id);
     SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
@@ -315,6 +316,7 @@ static void DrawBox(SDL_Texture* t, int w, int h, float y0, float alpha) {
     SDL_RenderTexture(sRenderer, t, NULL, &r);
 }
 static void H_gfx_end(void) {
+    if (sGpuOutputBlocked) return;
     if (sToast) {
         Uint64 now = SDL_GetTicks();
         if (now >= sToastUntil) {

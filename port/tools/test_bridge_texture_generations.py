@@ -20,7 +20,7 @@ def main():
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
-typedef struct {int w,h,alive,pixel;} SDL_Texture;
+typedef struct {int w,h,alive,pixel,refcount;} SDL_Texture;
 typedef unsigned char Uint8;
 typedef int SDL_PixelFormat;
 typedef int SDL_ScaleMode;
@@ -55,7 +55,7 @@ typedef struct {struct{float x,y;}position,tex_coord;struct{float r,g,b,a;}color
 #define SDL_SCALEMODE_NEAREST 0
 #define SDL_SCALEMODE_LINEAR 1
 #define SDL_BLENDMODE_NONE 0
-static int sBlend=1;
+static int sBlend=1,sGpuOutputBlocked;
 static void SDL_SetTextureScaleMode(SDL_Texture*t,int m){}
 static void SDL_SetRenderDrawBlendMode(void*r,int m){}
 static void SDL_RenderGeometry(void*r,SDL_Texture*t,const SDL_Vertex*v,int n,const int*i,int ni){assert(!t||t->alive);draws++;}
@@ -96,7 +96,7 @@ typedef struct {float sx,sy;} TargetState;
 static int GpuTargets(void){return 0;}
 static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -1;}
 #define SDL_TEXTUREACCESS_TARGET 2
-static void UnbindTexture(SDL_Texture*p){(void)p;}
+static bool UnbindTexture(SDL_Texture*p){(void)p;return true;}
 '''
   code=common+host+drawing+bridge+epoch+target_stubs+tex+create_stubs+create+movie_bridge+function(guest,'static int HostTex(')+function(guest,'void SDL_DestroyTexture(').replace('SDL_DestroyTexture(', 'GuestDestroyTexture(',1)+r'''
 static Tex* make(unsigned char pixel){Tex*t=calloc(1,sizeof(*t));t->pub.w=t->pub.h=1;t->id[0]=t->id[1]=-1;t->epoch=sTextureEpoch;t->rgba=malloc(4);memset(t->rgba,pixel,4);return t;}

@@ -122,6 +122,7 @@ static void H_gfx_clip(int x, int y, int w, int h) {
 static void H_gfx_blend(int on) { sBlend = on; }
 /* the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters: those are drawn crisp (android64_host.c) */
 static void H_gfx_draw(int id, const void* verts, int count) {
+    if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
     int slot = HostTextureSlot(id);
     SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
@@ -151,6 +152,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
 }
 static void H_notify(const char* name) { (void)name; }
 static void H_gfx_end(void) {
+    if (sGpuOutputBlocked) return;
     /* test harness: KHCOM_HOST_SHOT=frame[,frame...] saves those frames as host_shot_<frame>.bmp in the data folder */
     static unsigned frame;
     const char* shots = getenv("KHCOM_HOST_SHOT");

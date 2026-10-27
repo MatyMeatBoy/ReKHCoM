@@ -220,6 +220,7 @@ struct SDL_Renderer {
     int hostBlend;
     int vsync;
     SDL_Texture* target;
+    bool outputBlocked;
 };
 static SDL_Window sWindow;
 static SDL_Renderer sRenderer;
@@ -384,6 +385,7 @@ static void Corner(HostVertex* v, SDL_Renderer* r, float x, float y, float u, fl
 static void Quad(SDL_Renderer* r, int tex, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1,
                  uint32_t c) {
     HostVertex q[6];
+    if (r->outputBlocked) return;
     Open();
     Corner(&q[0], r, x0, y0, u0, v0, c);
     Corner(&q[1], r, x1, y0, u1, v0, c);
@@ -395,6 +397,7 @@ static void Quad(SDL_Renderer* r, int tex, float x0, float y0, float x1, float y
 }
 
 bool SDL_RenderClear(SDL_Renderer* r) {
+    if (r->outputBlocked) return false;
     if (GpuTargets()) {
         Open();
         return h_thread(BRIDGE_GPU_CLEAR, Argb(r->a, r->r, r->g, r->b), 0, 0, 0) != 0;
@@ -442,7 +445,7 @@ bool SDL_RenderPresent(SDL_Renderer* r) {
         h_notify("toast-states");
     }
     Open();
-    if (r->target && !SDL_SetRenderTarget(r, NULL)) return false;
+    if ((r->target || r->outputBlocked) && !SDL_SetRenderTarget(r, NULL)) return false;
     h_gfx_end();
     sFrameOpen = false;
     return true;
@@ -507,7 +510,7 @@ typedef struct Tex {
     SDL_ScaleMode scale;
     SDL_BlendMode blend;
     Uint8 cr, cg, cb, ca;
-    bool target;
+    bool target, destroyPending;
     TargetState renderState;
     bool picture;         /* a streaming texture: the game's picture, as opposed to glyphs and icons */
 } Tex;
@@ -539,7 +542,7 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
     if (w <= 0 || h <= 0) { SetError("bad texture size"); return NULL; }
     t = calloc(1, sizeof(*t));
     if (!t) return NULL;
-    t->pub.w = w; t->pub.h = h;
+    t->pub.w = w; t->pub.h = h; t->pub.refcount = 1;
     t->format = format;
     t->id[0] = t->id[1] = -1;
     t->epoch = sTextureEpoch;
@@ -564,13 +567,14 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* r, SDL_Surface* s) {
     return t;
 }
 
-static void UnbindTexture(SDL_Texture* p) {
-    if (sRenderer.target == p) SDL_SetRenderTarget(&sRenderer, NULL);
+static bool UnbindTexture(SDL_Texture* p) {
+    return sRenderer.target != p || SDL_SetRenderTarget(&sRenderer, NULL);
 }
 void SDL_DestroyTexture(SDL_Texture* p) {
     Tex* t = (Tex*)p;
     if (!t) return;
-    UnbindTexture(p);
+    if (t->pub.refcount > 1) { t->pub.refcount--; return; }
+    if (!UnbindTexture(p)) { t->destroyPending = true; return; }
     TextureEpoch(t);
     if (t->id[0] >= 0) h_tex_free(t->id[0]);
     if (t->id[1] >= 0) h_tex_free(t->id[1]);
@@ -617,16 +621,19 @@ static void SaveTargetState(SDL_Renderer* r, TargetState* state) {
 SDL_Texture* SDL_GetRenderTarget(SDL_Renderer* r) { return r->target; }
 bool SDL_SetRenderTarget(SDL_Renderer* r, SDL_Texture* texture) {
     Tex* t = (Tex*)texture;
+    SDL_Texture* previous = r->target;
     TargetState* state;
     int id = -1;
     if (!GpuTargets()) return texture == NULL;
     if (t) {
+        if (t->destroyPending) { SetError("Render target is pending destruction"); return false; }
         if (!t->target) { SetError("Texture is not a render target"); return false; }
         id = HostTex(t, t->scale != SDL_SCALEMODE_NEAREST);
         if (id < 0) return false;
     }
     Open();
-    if (!h_thread(BRIDGE_GPU_BIND, (uint32_t)id, 0, 0, 0)) return false;
+    if (!h_thread(BRIDGE_GPU_BIND, (uint32_t)id, 0, 0, 0)) { r->outputBlocked = true; return false; }
+    r->outputBlocked = false;
     SaveTargetState(r, r->target ? &((Tex*)r->target)->renderState : &sWindowTargetState);
     r->target = texture;
     state = t ? &t->renderState : &sWindowTargetState;
@@ -635,6 +642,8 @@ bool SDL_SetRenderTarget(SDL_Renderer* r, SDL_Texture* texture) {
     r->sx = state->sx; r->sy = state->sy;
     r->hostBlend = -1;
     ApplyClip(r);
+    if (previous && previous != texture && ((Tex*)previous)->destroyPending)
+        SDL_DestroyTexture(previous);
     return true;
 }
 bool SDL_GetRenderViewport(SDL_Renderer* r, SDL_Rect* rect) {
@@ -664,6 +673,7 @@ bool SDL_RenderTextureRotated(SDL_Renderer* r, SDL_Texture* p, const SDL_FRect* 
     if (src) s = *src;
     if (dst) d = *dst;
     else { h_gfx_size(&ow, &oh); d.x = 0; d.y = 0; d.w = (float)ow; d.h = (float)oh; }
+    if (r->outputBlocked) return false;
     if (t->ca == 0 || d.w <= 0 || d.h <= 0 || s.w <= 0 || s.h <= 0) return true;
     id = HostTex(t, t->scale != SDL_SCALEMODE_NEAREST);
     if (id < 0) return false;
@@ -690,6 +700,7 @@ bool SDL_RenderTexture(SDL_Renderer* r, SDL_Texture* p, const SDL_FRect* src, co
 }
 
 bool SDL_RenderGeometry(SDL_Renderer* r, SDL_Texture* p, const SDL_Vertex* v, int nv, const int* idx, int ni) {
+    if (r->outputBlocked) return false;
     HostVertex out[300];
     Tex* t = (Tex*)p;
     int id = -1, n = 0, i, count = idx ? ni : nv;

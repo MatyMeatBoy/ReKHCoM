@@ -10,6 +10,7 @@
 #endif
 #endif
 static size_t sTargetBytes;
+static int sGpuOutputBlocked;
 static int HostGpuMaxSize(void) {
     Sint64 size = SDL_GetNumberProperty(SDL_GetRendererProperties(sRenderer), SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
     return size > 0 && size <= 0x7fffffff ? (int)size : 0;
@@ -30,12 +31,22 @@ static int HostGpuAvailable(void) {
     }
     return available;
 }
-static void HostGpuBeforeFree(int slot) {
-    if (!sTexTarget[slot]) return;
-    if (SDL_GetRenderTarget(sRenderer) == sTex[slot]) SDL_SetRenderTarget(sRenderer, NULL);
+static int HostGpuBeforeFree(int slot) {
+    if (!sTexTarget[slot]) return 1;
+    if (SDL_GetRenderTarget(sRenderer) == sTex[slot] && !SDL_SetRenderTarget(sRenderer, NULL)) {
+        sTexPendingFree[slot] = 1;
+        sGpuOutputBlocked = 1;
+        return 0; /* The still-bound texture and its budget remain owned. */
+    }
     sTargetBytes -= sTexTargetBytes[slot];
     sTexTargetBytes[slot] = 0;
-    sTexTarget[slot] = 0;
+    sTexTarget[slot] = sTexPendingFree[slot] = 0;
+    return 1;
+}
+static void HostGpuDrainPending(void) {
+    for (int i = 0; i < HOST_TEXTURE_SLOTS; i++)
+        if (sTexPendingFree[i] && sTex[i] && SDL_GetRenderTarget(sRenderer) != sTex[i])
+            H_tex_free((int)((sTexSerial[i] << 12) | (unsigned)i));
 }
 static int HostGpuCreate(int w, int h) {
     uint64_t bytes;
@@ -76,9 +87,16 @@ static int HostGpuCommand(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d
     case BRIDGE_GPU_CREATE: return HostGpuCreate((int)a, (int)b);
     case BRIDGE_GPU_BIND:
         slot = HostTextureSlot((int)a);
-        if ((int)a != -1 && (slot < 0 || !sTexTarget[slot])) return 0;
-        return SDL_SetRenderTarget(sRenderer, (int)a == -1 ? NULL : sTex[slot]);
+        if ((int)a != -1 && (slot < 0 || !sTexTarget[slot] || sTexPendingFree[slot])) return 0;
+        if (!SDL_SetRenderTarget(sRenderer, (int)a == -1 ? NULL : sTex[slot])) {
+            sGpuOutputBlocked = 1;
+            return 0;
+        }
+        sGpuOutputBlocked = 0;
+        HostGpuDrainPending();
+        return 1;
     case BRIDGE_GPU_CLEAR:
+        if (sGpuOutputBlocked) return 0;
         SDL_SetRenderDrawColor(sRenderer, (a >> 16) & 255, (a >> 8) & 255, a & 255, a >> 24);
         return SDL_RenderClear(sRenderer);
     case BRIDGE_GPU_BLEND:
