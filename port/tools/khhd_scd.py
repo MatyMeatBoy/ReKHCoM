@@ -18,18 +18,36 @@ from pathlib import Path
 def convert(scd):
     if scd[:8] != b'SEDBSSCF':
         raise ValueError('not an SCD file')
-    # the sound entry table: header offset 0x30 holds the table counts, the entry offsets follow at 0x60+
-    table_off = struct.unpack_from('<I', scd, 0x3C)[0]  # sound entry offset table
+    def require(at, length):
+        if at < 0 or length < 0 or at > len(scd) or length > len(scd) - at:
+            raise ValueError('Truncated/out-of-range SCD record')
+
+    require(0, 0x40)
+    table_off = struct.unpack_from('<I', scd, 0x3C)[0]
+    require(table_off, 4)
     entry = struct.unpack_from('<I', scd, table_off)[0]
+    require(entry, 0x20)
     size, channels, rate, codec, loop_start, loop_end, extra, aux = struct.unpack_from('<8i', scd, entry)
     if codec != 6:
         raise ValueError(f'codec {codec}: only Ogg Vorbis (6) is handled')
     pos = entry + 0x20
-    for _ in range(aux):  # auxiliary chunks (markers): skip by their own size
-        pos += struct.unpack_from('<I', scd, pos + 4)[0]
+    if size < 0 or aux < 0 or aux > (len(scd) - pos) // 8:
+        raise ValueError('Invalid SCD stream size/auxiliary count')
+    for _ in range(aux):
+        require(pos, 8)
+        chunk = struct.unpack_from('<I', scd, pos + 4)[0]
+        if chunk < 8:
+            raise ValueError('SCD auxiliary record makes no forward progress')
+        require(pos, chunk)
+        pos += chunk
+    require(pos, 0x20)
     version, header_size, xor = scd[pos], scd[pos + 1], scd[pos + 2]
+    if header_size < 0x20:
+        raise ValueError('Invalid SCD Vorbis header size')
     seek_size, vorbis_size = struct.unpack_from('<II', scd, pos + 0x10)
+    require(pos, header_size + seek_size)
     head_at = pos + header_size + seek_size
+    require(head_at, vorbis_size + size)
     vorbis = bytearray(scd[head_at:head_at + vorbis_size])
     if version == 2 and xor:
         for i in range(len(vorbis)):
@@ -46,9 +64,11 @@ def convert(scd):
         while p + 27 <= len(ogg) and ogg[p:p + 4] == b'OggS':
             granule = struct.unpack_from('<q', ogg, p + 6)[0]
             segs = ogg[p + 26]
+            if p + 27 + segs > len(ogg):
+                break
             body = sum(ogg[p + 27:p + 27 + segs])
             end = p + 27 + segs + body
-            if end > target:
+            if end > len(ogg) or end > target:
                 break
             if granule > 0:
                 best = granule
