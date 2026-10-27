@@ -233,4 +233,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:40.246238+00:00 |
 | bonus-elite-cabecera | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:49.081835+00:00 |
 
-Integrador: libre
+Integrador: claude-cartas (ocupado; 2026-10-27T15:47:15.421998+00:00)

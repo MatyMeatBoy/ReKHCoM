@@ -6328,8 +6328,13 @@
       "evidence": []
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-27T15:47:09.446336+00:00",
+  "integrator": {
+    "owner": "claude-cartas",
+    "token": "1cfd2c3c4475f9da80b80202032a5b97dfeaeb523ae0c7a2",
+    "created_at": "2026-10-27T15:47:15.421998+00:00",
+    "updated_at": "2026-10-27T15:47:15.421998+00:00"
+  },
+  "updated_at": "2026-10-27T15:47:15.421998+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
