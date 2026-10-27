@@ -5777,13 +5777,13 @@
     "hud-toggle-battle-warm": {
       "id": "hud-toggle-battle-warm",
       "piece": "Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T10:53:22.535979+00:00",
-      "updated_at": "2026-10-27T11:35:26.715677+00:00",
+      "updated_at": "2026-10-27T12:37:21.232347+00:00",
       "branch": "task/hud-toggle-warm",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/346",
-      "approval": null,
+      "approval": "AGENTS.md visual v2.1 user exception 27/10: direct coordinator review supersedes Atlas; root final candidate QA and explicit integration reconciliation authorization.",
       "reference": "port/progress/PENDIENTES_VIGENTES.md",
       "evidence": [
         {
@@ -5805,9 +5805,15 @@
           "at": "2026-10-27T11:35:26.715677+00:00",
           "owner": "device_profiles_sol",
           "detail": "372604513 stacked on34974ad; helper frozen4dimscope zeroallocation, callerbounds, allpathsrestore. ActualOptionsclose+loaderPASS and independentreviewGREEN. GPU root pending."
+        },
+        {
+          "at": "2026-10-27T12:37:21.232347+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "GitHub MERGED PR#346, merge SHA c3d04a2f10054344f07b8d0085be9a6d14e31c85; main bundle PR351 merge SHA 771aed8cc243d8c84afb7b0c79a47831f4304629. Coordinator final serial QA recorded; no new tests or changes in reconciliation."
         }
       ],
-      "claimed_at": "2026-10-27T10:53:27.726490+00:00"
+      "claimed_at": "2026-10-27T10:53:27.726490+00:00",
+      "completed_at": "2026-10-27T12:37:21.232347+00:00"
     },
     "optiport-serial-profile-contract": {
       "id": "optiport-serial-profile-contract",
@@ -5974,7 +5980,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:37:15.611652+00:00",
+  "updated_at": "2026-10-27T12:37:21.232347+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
