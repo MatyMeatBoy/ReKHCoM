@@ -7826,19 +7826,20 @@
     "v22-pre2-linux-crash-delivery": {
       "id": "v22-pre2-linux-crash-delivery",
       "piece": "Compilar pre2 Linux x86/x64 nativo, launcher separado e importador actual; verificar tar exacto y VM, issue330 GamingMode queda sin hardware confirmado",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux-pre2",
       "created_at": "2026-10-27T22:04:24.244598+00:00",
-      "updated_at": "2026-10-27T22:04:24.244598+00:00",
+      "updated_at": "2026-10-27T22:04:29.108684+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza prebuilds y responder reporteros Linux/SteamDeck",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T22:04:29.108684+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:04:24.245599+00:00",
+  "updated_at": "2026-10-27T22:04:29.108684+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
