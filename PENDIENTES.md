@@ -250,4 +250,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android374-startup-jafar | Investigar Moto Edge60 inicio y postJafar374, separar versión APK y mecanismos83/272; reproducir sólo checks CPU pertinentes | en_revision | codex-moto374 | codex/android374-investigation | — | 2026-10-27T18:25:13.221444+00:00 |
 | issue378-hd-audio-subtitle-independence | Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado | en_curso | codex-issue378-subtitles | — | Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados | 2026-10-27T18:28:02.374425+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T18:27:49.096458+00:00)
+Integrador: libre
