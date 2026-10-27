@@ -7694,10 +7694,23 @@
       ],
       "claimed_at": "2026-10-27T20:20:33.689306+00:00",
       "completed_at": "2026-10-27T20:27:59.303702+00:00"
+    },
+    "claude-guest64-compat-independent-review": {
+      "id": "claude-guest64-compat-independent-review",
+      "piece": "Claude: revision independiente de fallback GBA32 a hosts64 (#396 y extensiones); contrastar cero/resto, widths, operands register/memory, contexto y rendimiento normal con pruebas CPU. Coordinar sin editar archivos reclamados por Sol. Reportar limites y discrepancias a Codex para PR; no vender primerbloque como paridadtotal.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:37:37.144425+00:00",
+      "updated_at": "2026-10-27T20:37:37.144425+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: prioridadtotal fallback64, conservarlogicaGBA, Claude puede tomar trabajoindependiente",
+      "reference": "CLAUDE_COLA_ACTUAL.md; pruebas/64bit-crash-ledger/REPORT-CURRENT.md; PR396",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:28:04.550509+00:00",
+  "updated_at": "2026-10-27T20:37:37.144931+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
