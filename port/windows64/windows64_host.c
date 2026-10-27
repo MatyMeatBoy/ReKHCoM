@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <intrin.h>
 #include <direct.h>
 #include <io.h>
 #include <sys/stat.h>
@@ -33,13 +34,21 @@
 static char sData[1024] = ".";
 static int sQuit;
 
+static char sCrashPath[1100]; /* kh_com.log (CrashReportBegin): the host's own start-up messages and a crash */
+static int sGuestRunning; /* the guest writes kh_com.log from then on; the host only appends a crash */
+static FILE* Utf8Open(const char* path, const char* mode);
 static void Log(const char* fmt, ...) {
     char text[1024];
     va_list ap;
+    FILE* f;
     va_start(ap, fmt);
     vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
     fprintf(stderr, "[rekhcom64] %s\n", text);
+    if (sCrashPath[0] && !sGuestRunning && (f = Utf8Open(sCrashPath, "a")) != NULL) {
+        fprintf(f, "%s\n", text);
+        fclose(f);
+    }
 }
 
 /* Windows filesystem APIs consume UTF-16; the guest and SDL pass UTF-8. */
@@ -52,6 +61,126 @@ static FILE* Utf8Open(const char* path, const char* mode) {
     return _wfopen(wp, wm);
 }
 #define fopen Utf8Open
+
+/* ---- the crash report (#360), in kh_com.log like everything else: one file to send ------------------------------
+   Kept at start: the machine (Windows build, CPU, cores, RAM, folder, renderer). On an unhandled exception it is
+   appended with the exception code and address, the module or guest offset it fell in (guest offsets map to
+   port/ps5/build/guest-<r>/guest.map), the registers and the code addresses found on the stack. */
+static char sMachine[1024];
+static uint32_t sGuestEnd;
+static void CrashLine(FILE* f, const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(f, fmt, ap);
+    va_end(ap);
+    fputc('\n', f);
+}
+static void CrashWhere(FILE* f, const char* what, uint64_t a) {
+    HMODULE mod = NULL;
+    char name[MAX_PATH] = "";
+    if (a >= PS5G_BASE && a < sGuestEnd) {
+        CrashLine(f, "%s %016llx  guest+%08llx", what, (unsigned long long)a, (unsigned long long)(a - PS5G_BASE));
+    } else if (a >= 0x02000000u && a < 0x10000000u) {
+        CrashLine(f, "%s %016llx  GBA memory", what, (unsigned long long)a);
+    } else if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                                  (LPCSTR)(uintptr_t)a, &mod) && mod && GetModuleFileNameA(mod, name, sizeof(name))) {
+        const char* base = strrchr(name, '\\');
+        CrashLine(f, "%s %016llx  %s+%llx", what, (unsigned long long)a, base ? base + 1 : name,
+                  (unsigned long long)(a - (uintptr_t)mod));
+    } else {
+        CrashLine(f, "%s %016llx", what, (unsigned long long)a);
+    }
+}
+static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep) {
+    static LONG written;
+    FILE* f = sCrashPath[0] && !InterlockedExchange(&written, 1) ? fopen(sCrashPath, "a") : NULL;
+    if (f) {
+        const EXCEPTION_RECORD* r = ep->ExceptionRecord;
+        const CONTEXT* c = ep->ContextRecord;
+        SYSTEMTIME t;
+        GetLocalTime(&t);
+        CrashLine(f, "== CRASH (64-bit host) %04u-%02u-%02u %02u:%02u:%02u, %.1f s after start", t.wYear, t.wMonth, t.wDay, t.wHour,
+                  t.wMinute, t.wSecond, SDL_GetTicks() / 1000.0);
+        fputs(sMachine, f);
+        CrashLine(f, "exception %08lx", (unsigned long)r->ExceptionCode);
+        CrashWhere(f, "at", (uint64_t)(uintptr_t)r->ExceptionAddress);
+        if (r->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && r->NumberParameters >= 2)
+            CrashLine(f, "%s %016llx", r->ExceptionInformation[0] == 8 ? "executing" : r->ExceptionInformation[0] ? "writing" : "reading",
+                      (unsigned long long)r->ExceptionInformation[1]);
+        CrashLine(f, "rax %016llx rbx %016llx rcx %016llx rdx %016llx", c->Rax, c->Rbx, c->Rcx, c->Rdx);
+        CrashLine(f, "rsi %016llx rdi %016llx rbp %016llx rsp %016llx", c->Rsi, c->Rdi, c->Rbp, c->Rsp);
+        CrashLine(f, "r8  %016llx r9  %016llx r10 %016llx r11 %016llx", c->R8, c->R9, c->R10, c->R11);
+        CrashLine(f, "r12 %016llx r13 %016llx r14 %016llx r15 %016llx", c->R12, c->R13, c->R14, c->R15);
+        {
+            /* code addresses on the stack (no unwind data for the guest): guest offsets and modules only */
+            const uint64_t* sp = (const uint64_t*)(uintptr_t)c->Rsp;
+            MEMORY_BASIC_INFORMATION mi;
+            int found = 0;
+            if (VirtualQuery(sp, &mi, sizeof(mi)) && mi.State == MEM_COMMIT) {
+                const uint64_t* end = (const uint64_t*)((const char*)mi.BaseAddress + mi.RegionSize);
+                for (int i = 0; sp + i < end && i < 2048 && found < 24; i++) {
+                    uint64_t v = sp[i];
+                    HMODULE mod = NULL;
+                    if ((v >= PS5G_BASE && v < sGuestEnd) ||
+                        (v > 0x10000000u && GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                                                               GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                                                               (LPCSTR)(uintptr_t)v, &mod) && mod)) {
+                        CrashWhere(f, "stack", v);
+                        found++;
+                    }
+                }
+            }
+        }
+        fclose(f);
+    }
+    return EXCEPTION_CONTINUE_SEARCH; /* Windows ends the process with the same code: the launcher sees it */
+}
+/* Windows may end the process without calling the unhandled-exception filter (the game's threads and stacks), so a
+   vectored handler writes the report first for a fault in our own code: this host, the guest image or SDL, none of
+   which handles a fault and goes on. A driver's own handled probe elsewhere never reaches it. */
+static LONG WINAPI CrashVectored(EXCEPTION_POINTERS* ep) {
+    uintptr_t at = (uintptr_t)ep->ExceptionRecord->ExceptionAddress;
+    HMODULE mod = NULL;
+    if ((ep->ExceptionRecord->ExceptionCode & 0xF0000000u) != 0xC0000000u)
+        return EXCEPTION_CONTINUE_SEARCH;
+    if ((at >= PS5G_BASE && at < sGuestEnd) ||
+        (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                            (LPCSTR)at, &mod) && (mod == GetModuleHandleA(NULL) || mod == GetModuleHandleA("SDL3.dll"))))
+        CrashFilter(ep);
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+static void CrashReportBegin(void) {
+    OSVERSIONINFOW v = { sizeof(v) };
+    typedef LONG(WINAPI * RtlGetVersionFn)(OSVERSIONINFOW*);
+    RtlGetVersionFn get = (RtlGetVersionFn)(void*)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlGetVersion");
+    MEMORYSTATUSEX m = { sizeof(m) };
+    char cpu[64] = "";
+    DWORD size = sizeof(cpu);
+    int regs[4];
+    snprintf(sCrashPath, sizeof(sCrashPath), "%s/kh_com.log", sData);
+    if (get) get(&v);
+    GlobalMemoryStatusEx(&m);
+    RegGetValueA(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", "ProcessorNameString",
+                 RRF_RT_REG_SZ, NULL, cpu, &size);
+    __cpuid(regs, 1);
+    snprintf(sMachine, sizeof(sMachine),
+             "host built " __DATE__ ", Windows %lu.%lu build %lu\nCPU %s, %d logical cores, SSE4.1 %s, AVX %s\n"
+             "RAM %llu MB, free %llu MB\nfolder %s\n",
+             v.dwMajorVersion, v.dwMinorVersion, v.dwBuildNumber, cpu, SDL_GetNumLogicalCPUCores(),
+             (regs[2] >> 19) & 1 ? "yes" : "no", (regs[2] >> 28) & 1 ? "yes" : "no", m.ullTotalPhys >> 20,
+             m.ullAvailPhys >> 20, sData);
+    SetUnhandledExceptionFilter(CrashFilter);
+    AddVectoredExceptionHandler(0, CrashVectored);
+}
+static void CrashReportNote(const char* fmt, ...) {
+    size_t n = strlen(sMachine);
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(sMachine + n, sizeof(sMachine) - n, fmt, ap);
+    va_end(ap);
+    n = strlen(sMachine);
+    if (n + 1 < sizeof(sMachine)) { sMachine[n] = '\n'; sMachine[n + 1] = 0; }
+}
 
 /* ---- the basics and files ---- */
 static FILE* sFiles[64];
@@ -227,6 +356,12 @@ static void H_gfx_end(void) {
     static unsigned frame;
     const char* shots = getenv("KHCOM_HOST_SHOT");
     frame++;
+    {
+        /* test harness: KHCOM_TEST_CRASH=frame crashes the host there (the crash report and the launcher's 32-bit offer) */
+        const char* crash = getenv("KHCOM_TEST_CRASH");
+        if (crash && (unsigned)atoi(crash) == frame)
+            *(volatile int*)(uintptr_t)16 = 1;
+    }
     for (const char* p = shots; p && *p;) {
         if ((unsigned)atoi(p) == frame) {
             SDL_Surface* s = SDL_RenderReadPixels(sRenderer, NULL);
@@ -463,6 +598,7 @@ int main(int argc, char** argv) {
     /* The launcher supplies a unique marker path. Remove a stale marker before any boot checks. */
     if (bootStatus) H_remove(bootStatus);
     _putenv_s("KHCOM_DATA", sData);
+    CrashReportBegin();
     {
         /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
            Steam Deck's HD text found no font and the dialogue showed none) */
@@ -500,6 +636,8 @@ int main(int argc, char** argv) {
         !MapFixed(PS5G_BASE, h.regionEnd - PS5G_BASE))
         return 3;
     memcpy((void*)(uintptr_t)PS5G_BASE, tmp, (size_t)size);
+    sGuestEnd = h.regionEnd;
+    CrashReportNote("guest %s, %ld bytes", image, size);
     free(tmp);
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
@@ -516,6 +654,7 @@ int main(int argc, char** argv) {
     }
     SDL_SetRenderVSync(sRenderer, 1);
     Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));
+    CrashReportNote("renderer %s, video %s", SDL_GetRendererName(sRenderer), SDL_GetCurrentVideoDriver());
     {
         /* full screen as kh_com.ini says (the Steam Deck package's preset), or REKHCOM_FULLSCREEN=1 */
         char ini[1200], line[256];
@@ -567,6 +706,7 @@ int main(int argc, char** argv) {
             H_remove(bootStatus); SDL_Quit(); return 4;
         }
     }
+    sGuestRunning = 1;
     int rc = boot(h.stackTop);
     SDL_Quit();
     return rc;
