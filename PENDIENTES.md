@@ -201,4 +201,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | submenu-moogle-visible-band-style-zero | Moogle transition native border reaches edge while margin remains late in style zero | integrado | codex-moogle-band | https://github.com/MatyMeatBoy/ReKHCoM/pull/328 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T09:05:18.100856+00:00 |
 | android-stale-sprites-desktop-guard | Android launcher excludes desktop-only stale sprite reimport callbacks | integrado | codex-android-guard | https://github.com/MatyMeatBoy/ReKHCoM/pull/329 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T09:04:23.908388+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T09:03:03.438450+00:00)
+Integrador: libre
