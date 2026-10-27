@@ -856,6 +856,7 @@ static bool ApplyRecipe(Rgba img, const std::string& ops, int boxW, int boxH, Rg
     Rgba other;
     const Rgba* src = &own;
     std::vector<unsigned> ink;
+    int fade = 100; /* the next blits' opacity, in percent (khhd_sprites.apply's fade) */
     size_t start = 0;
     while (start <= ops.size()) {
         size_t end = ops.find(';', start);
@@ -917,7 +918,14 @@ static bool ApplyRecipe(Rgba img, const std::string& ops, int boxW, int boxH, Rg
                 Middle(part);
             Rgba sized = Resample(part, v[6] - v[4], v[7] - v[5]);
             Ink(sized, ink);
+            if (fade != 100)
+                for (size_t i = 3; i < sized.px.size(); i += 4)
+                    sized.px[i] = (unsigned char)(sized.px[i] * (unsigned)fade / 100);
             BlitOver(img, sized, v[4], v[5]);
+        } else if (key == "fade" && v.size() == 1) {
+            if (v[0] < 0 || v[0] > 100)
+                return false;
+            fade = v[0];
         } else if (key == "src") {
             if (val.empty())
                 src = &own;

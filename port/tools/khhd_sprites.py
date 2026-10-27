@@ -260,6 +260,7 @@ def apply(img, ops, box, load=None):
     place = None
     source = own = img
     ink = []
+    fade = 100
     for op in ops.split(';'):
         key, _, val = op.partition('=')
         v = [int(x) if key not in ('tint', 'ink', 'poly', 'duo') else x for x in val.split(',')] if val and key != 'src' else []
@@ -284,7 +285,12 @@ def apply(img, ops, box, load=None):
         elif key in ('blit', 'sblit'):
             part = source[v[1]:v[3], v[0]:v[2]]
             part = inked(resample(middle(part) if key == 'sblit' else part, v[6] - v[4], v[7] - v[5]), ink)
+            if fade != 100:
+                part = part.copy()
+                part[:, :, 3] = (part[:, :, 3].astype(np.uint32) * fade // 100).astype(np.uint8)
             img = over(img, part, v[4], v[5])
+        elif key == 'fade':
+            fade = v[0]  # the next blits' opacity, in percent (the launcher's Fade)
         elif key == 'src':
             source = load(val) if val else own
             if source is None:
