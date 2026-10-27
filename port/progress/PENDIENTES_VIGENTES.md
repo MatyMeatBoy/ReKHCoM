@@ -69,7 +69,12 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
-**Prioridad 1: el cierre de #277 (Deck) / #272 (Android) tras la Llave del Inicio.** Crítico; aún NO reproducido.
+**Prioridad 1: el cierre de #277 (Deck) / #272 (Android) tras la Llave del Inicio.** Crítico.
+**REPRODUCIDO 27/10** en VM Linux 64 (guest EU): `KHCOM_MODE=60:room:10901,120:fieldfreeze,200:doorpose:0`,
+`KHCOM_KEYS=240-242:A` + A cada 40 frames desde 420 → `Segmentation fault` del host al abrir la puerta
+(Windows con las mismas teclas entra a la sala y al combate en frame 1424). El recorrido completo antes paraba
+en el combate tutorial y por eso no llegaba. #277 lo cerró por error el merge del PR #282 (logs): reabrirlo
+necesita OK del usuario.
 - Hecho: Windows EU (texto HD) y VM Linux 64 (build de prueba #277, `D:/01Claude/ReKHCoM-build/linux/vmshare277`)
   con todo HD activado (música, escenas: solo ROP/zz_event_001/011 copiados, sprites, subs), en **español e
   inglés** EU: partida nueva → puerta castillo → selección de mundo → eventos 1,2 → combate tutorial, sin fallo.
