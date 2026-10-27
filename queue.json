@@ -6187,10 +6187,23 @@
       "approval": "Usuario 27/10/2026: optimizar copias por test, tamaño VM con margen, delegar a Claude PR pequeños y tomar siguiente",
       "reference": "CLAUDE.md; port/tools/linux_vm_test.py; port/tools/test_hd_movie_pause_text.py",
       "evidence": []
+    },
+    "cartas-pequenas-encaje-runtime": {
+      "id": "cartas-pequenas-encaje-runtime",
+      "piece": "cartas prioridad 1 (PENDIENTES)",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T14:56:10.600293+00:00",
+      "updated_at": "2026-10-27T14:56:10.600293+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T14:53:59.220433+00:00",
+  "updated_at": "2026-10-27T14:56:10.600293+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
