@@ -20,8 +20,8 @@ stay.
     ./ReKHCoM.sh
 
 With several ROMs in `roms/`, pick one with `./ReKHCoM.sh --region us` (`eu`,
-`us` or `jp`). Settings are in the in-game options menu (there is no separate
-launcher on Linux). F11 or Alt+Enter toggles fullscreen.
+`us` or `jp`). Settings remain in the in-game Options menu. For native HD import, open
+`ReKHCoM Launcher.sh` in Desktop Mode (KDE/kdialog, Zenity fallback or CLI). F11 or Alt+Enter toggles fullscreen.
 
 It runs under X11 or XWayland and plays sound through PulseAudio/PipeWire or
 ALSA. The x64 host uses the system's GPU driver; the x86 fallback needs a
@@ -82,8 +82,8 @@ paths; use the newly installed application entry instead.
 
 ### Where are the launcher settings? (issue #330)
 
-Native Linux starts the game directly; the separate Windows launcher is not
-included. Open **Options** with the bound GBA **Start + Select** buttons
+Gaming Mode keeps the direct game shortcut. The separate **ReKHCoM Launcher.sh**
+is a basic native Desktop helper for Play and HD import; it is not the Windows GUI. Open **Options** with the bound GBA **Start + Select** buttons
 together (the two small menu/view buttons in the default Gamepad layout), or
 **F1 / Escape** on a keyboard. The Steam button belongs to Steam. Choose a
 **Gamepad** Steam Input layout so those buttons reach the game. Display, HD
@@ -137,3 +137,36 @@ it does not use the GPU). The log is written to `rekhcom/log.txt`.
 ## Building
 
 See `port/progress/LINUX.md` in the source repository.
+
+## Native HD import (issue336)
+
+Open **ReKHCoM Launcher.sh** in Desktop Mode. KDE/kdialog is preferred, then
+Zenity; without either dialog the CLI help remains available. Imports open a
+visible konsole/xterm/gnome-terminal for progress and Ctrl+C cancellation. If
+none is installed, the GUI refuses to start a hidden import and explains the CLI.
+No dependency or Wine install is performed. Close the game before importing.
+
+```sh
+sh './ReKHCoM Launcher.sh' --import-hd /path/to/prepared/hd
+sh './ReKHCoM Launcher.sh' --import-source '/path/to/owned/HD 1.5+2.5 ReMIX'
+sh './ReKHCoM Launcher.sh' --import-sprites '/path/to/owned/HD 1.5+2.5 ReMIX'
+```
+
+Python3.9+ is needed. Media extraction uses the bundled Python references;
+posters use ffmpeg if already present (optional). Sprite extraction additionally
+needs numpy/Pillow already installed; missing dependencies produce a clear error,
+never automatic installation. Source extraction is legacy language-unknown,
+without video recompression or Windows-GUI/settings parity. Prepared EN/JP
+imports retain their existing user-declared provenance; no voice is certified.
+
+Import stages a merged HD copy beside the installation, validates it, preserves
+the previous complete hd as hd.previous-<id>, then publishes. Failed/canceled
+preparation leaves old hd intact. A cut between directory renames may require
+manually restoring that retained backup; no crash-proof filesystem guarantee.
+Existing ROM/SRAM/config are never imported or removed. Symlink/overlapping
+sources and unfinished journals are rejected. Enough space for staging and
+retained previous HD is required. Keep backups until you verify playback.
+
+This supplies a native route for336; it does not establish or fix the unexplained
+Windows/Wine crash. A Wine/Proton log/version is still needed for that separate
+failure. No separate full graphical launcher or automatic Steam downloads.
