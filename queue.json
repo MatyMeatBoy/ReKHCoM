@@ -4256,6 +4256,19 @@
         }
       ],
       "claimed_at": "2026-10-27T04:37:25.821487+00:00"
+    },
+    "hd-layout-bounds": {
+      "id": "hd-layout-bounds",
+      "piece": "LAD SEQD parser bounds",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T04:47:46.706306+00:00",
+      "updated_at": "2026-10-27T04:47:46.706306+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests",
+      "reference": "build/hd-audit-worker.md",
+      "evidence": []
     }
   },
   "integrator": {
@@ -4264,7 +4277,7 @@
     "created_at": "2026-10-27T04:47:34.666353+00:00",
     "updated_at": "2026-10-27T04:47:34.666353+00:00"
   },
-  "updated_at": "2026-10-27T04:47:41.417219+00:00",
+  "updated_at": "2026-10-27T04:47:46.706306+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
