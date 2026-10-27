@@ -6121,10 +6121,23 @@
       "claimed_at": "2026-10-27T13:27:51.938960+00:00",
       "sent": "https://raw.githubusercontent.com/MatyMeatBoy/ReKHCoM/fix/gallery-empty-preview-backdrop/port/progress/images/gallery-empty-hd.png",
       "completed_at": "2026-10-27T13:35:22.321808+00:00"
+    },
+    "v22-handoff-optiport": {
+      "id": "v22-handoff-optiport",
+      "piece": "Document 2.2 roadmap, conservative10/14 OptiPort baseline and published versus main-only changes; no new runtime work",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T13:41:23.394705+00:00",
+      "updated_at": "2026-10-27T13:41:23.394705+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario pide anotar pendientes porcentaje OptiPort y demás para2.2",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:41:17.630694+00:00",
+  "updated_at": "2026-10-27T13:41:23.394705+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
