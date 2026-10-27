@@ -279,4 +279,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-sora-order-descriptions-163 | Feedback #163: Monstro y Hundred Acre Wood aparecen despues del final de Sora; descripciones de pisos repetidas End of floor1/2. Revisar orden y textos de la lista real. Aplazado frente a cuelgues, sin duplicar fixes HD ya confirmados por Pedro. | pendiente | — | — | Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild. | 2026-10-27T20:11:48.215524+00:00 |
 | v22-pre2-windows-crash-delivery | Compilar Windows32/64 EU US JP desde source main fijado con fixes386/scroll/reporter/importador, versionpre2; verificar paquete exacto y SAVusuario, manifiesto/hash, publicar solo plataformas compiladas. Pre1 inmutable; no afirmar confirmaciones de hardware pendientes. | en_curso | codex-pre2-crash-delivery | — | Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild. | 2026-10-27T20:12:53.479868+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T20:13:09.938998+00:00)
+Integrador: libre
