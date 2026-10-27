@@ -2042,6 +2042,12 @@ static void Present(void) {
             }
         }
         PortHdHudDrawSprites(sRenderer, outW, outH);
+        {
+            uint16_t bld = *(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x50);
+            int effect = (bld >> 6) & 3, amount = SDL_min(*(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x54) & 31, 16);
+            PortHdSpritesHudFront(sRenderer, hd.x, hd.y, (float)gPortHudScale,
+                                  (bld & 0x10) && effect == 3 ? amount : 0, (bld & 0x10) && effect == 2 ? amount : 0);
+        }
         PortHdHudDrawBar(sRenderer, outW, outH);
         PortHdHudDrawLabel(sRenderer, outW, outH);
         if (!menuCanvas) PortHdTextHudDigits(sRenderer, hd.x, hd.y, (float)gPortHudScale);

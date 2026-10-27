@@ -595,10 +595,15 @@ int PortPpuHudDigitVisible(int digit, int x, int y) {
     return front == 0 || front >= sHudDigits[digit].slot + 1;
 }
 int PortPpuHudSpriteVisible(int slot, int x, int y) {
-    int front;
-    if (!sHudDigitOwners || x<0 || y<0 || x>=gPortHudW || y>=gPortHudH) return 0;
+    int front, frontKey, key;
+    if (!sHudDigitOwners || slot<0 || slot>=128 || x<0 || y<0 || x>=gPortHudW || y>=gPortHudH) return 0;
     front=sHudDigitOwners[y*gPortHudW+x];
-    return front != 0 && front >= slot+1;
+    if (!front) return 0;
+    /* Native priority precedes OAM order. A foreground object can have a larger
+       slot than this counter (e.g. a battle effect with OBJ priority zero). */
+    frontKey = ((PPU_OAM_BASE[(front-1)*4+2] >> 10) & 3) * 128 + front-1;
+    key = ((PPU_OAM_BASE[slot*4+2] >> 10) & 3) * 128 + slot;
+    return frontKey >= key;
 }
 static int sEnemyHudRect[4]; /* left, top, right, bottom in HUD pixels */
 static int sEnemyLabelRect[4];
@@ -4634,7 +4639,11 @@ static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw,
         if (part->flags & 2) { float v = t; t = b; b = v; }
         x[0] = l; y[0] = t; x[1] = r; y[1] = t; x[2] = r; y[2] = b; x[3] = l; y[3] = b;
     }
-    return PortHdSpriteQueue(layer, part->id, x, y, part->x, part->y, part->w, part->h, alpha, dark, white);
+    {
+        int queued = PortHdSpriteQueue(layer, part->id, x, y, part->x, part->y, part->w, part->h, alpha, dark, white);
+        if (queued && layer == 1) PortHdSpriteHudOwner(i);
+        return queued;
+    }
 }
 
 /* HD parts on the game's picture (the title's logo): queued once a frame, before the lines are drawn, and left out
@@ -4968,7 +4977,12 @@ static void MainHdOver(void) {
     }
 }
 
+extern const unsigned char gReloadCardGreenTiles[], gRiCardF0RedTiles[];
+const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h);
+
 void PortPpuRenderHud(uint32_t* buf) {
+    const uint8_t* reloadMask; /* the reload card's HD back, this frame: its dark cells and where they lie */
+    int reloadBox[4], reloadAt[2];
     uint16_t dispcnt = IO16(0x00);
     uint16_t bldcnt = IO16(0x50);
     int effect = (bldcnt >> 6) & 3, evy = IO16(0x54) & 31;
@@ -5008,7 +5022,7 @@ void PortPpuRenderHud(uint32_t* buf) {
     sEnemyBarRect[2] = sEnemyBarRect[3] = -1;
     memset(sEnemyBarRows, 0, sizeof(sEnemyBarRows));
     sHudDigitCount = 0;
-    if (gPortConfig.hdHud && (size_t)w * h > sHudDigitOwnerSize) {
+    if ((gPortConfig.hdHud || gPortConfig.hdCards) && (size_t)w * h > sHudDigitOwnerSize) {
         uint8_t* owners = realloc(sHudDigitOwners, (size_t)w * h);
         if (owners) { sHudDigitOwners = owners; sHudDigitOwnerSize = (size_t)w * h; }
     }
@@ -5042,6 +5056,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         }
     }
 
+    reloadMask = NULL;
     for (i = 127; i >= 0; i--) {
         uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
@@ -5111,6 +5126,12 @@ void PortPpuRenderHud(uint32_t* buf) {
             pc = (int16_t)p[11];
             pd = (int16_t)p[15];
         }
+        if (sOamHd[i].id && sOamHd[i].tiles == gReloadCardGreenTiles && !affine) {
+            /* the reload card's HD back: its dark inside, placed where its frame is (the gauge below keeps to it) */
+            reloadMask = PortHdSpriteDarkCells(sOamHd[i].id, &reloadBox[0], &reloadBox[1], &reloadBox[2], &reloadBox[3]);
+            reloadAt[0] = hx - sOamHd[i].x;
+            reloadAt[1] = hy - sOamHd[i].y;
+        }
         if (sOamHd[i].id && !hdSprite && sHdCover && (size_t)w * h <= sHdCoverSize &&
             sHudOver && (size_t)w * h <= sHudOverSize && mode != 2)
             hdPart = QueueHdPart(1, i, hx, hy, ow, oh, bw, bh, affine, pa, pb, pc, pd, mode == 1 ? 0xA0 : 255);
@@ -5136,6 +5157,12 @@ void PortPpuRenderHud(uint32_t* buf) {
                 col = ObjColor(a0, a2, tx, ty, ow, mapping1d);
                 if (col < 0)
                     continue;
+                if (reloadMask && sOamHd[i].tiles == gRiCardF0RedTiles) {
+                    /* the gauge's fill and flash only inside the HD back's black, not over its silver edge or crown */
+                    int u = px - reloadAt[0] - reloadBox[0], v = py - reloadAt[1] - reloadBox[1];
+                    if (u < 0 || v < 0 || u >= reloadBox[2] || v >= reloadBox[3] || !reloadMask[v * reloadBox[2] + u])
+                        continue;
+                }
                 digitInk = digit && ((col & 31) >= 22 || ((col >> 5) & 31) >= 22 || ((col >> 10) & 31) >= 22);
                 if (gPortConfig.hdHud && (tag->hdHudPart == 4 || tag->hdHudPart == 6) && py < 32 && sPlayerBarMask &&
                     (size_t)w * 32 <= sPlayerBarMaskSize && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize) {
@@ -5167,7 +5194,7 @@ void PortPpuRenderHud(uint32_t* buf) {
                             continue;
                     }
                 }
-                if (gPortConfig.hdHud && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
+                if ((gPortConfig.hdHud || gPortConfig.hdCards) && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
                     sHudDigitOwners[py * w + px] = i + 1;
                 if (hdSprite) continue;
                 if (hdPart) {
@@ -5240,7 +5267,7 @@ void PortPpuRenderHud(uint32_t* buf) {
                     sEnemyBarRows[py] = argb;
                     continue;
                 }
-                if (gPortConfig.hdHud && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
+                if ((gPortConfig.hdHud || gPortConfig.hdCards) && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
                     sHudDigitOwners[py * w + px] = i + 1;
                 if (digitInk) {
                     if (px < digit->x) digit->x = px;

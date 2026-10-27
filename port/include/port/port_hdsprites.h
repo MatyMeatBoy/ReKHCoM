@@ -26,6 +26,8 @@ void PortHdSpritesBegin(int layer);
    black, white: to white, 0..255; PortPaletteFade). */
 int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px, int py, int pw, int ph, int alpha,
                       int dark, int white);
+/* Preserve the native fill -> reload counter ordering across the HUD overlay pass. */
+void PortHdSpriteHudOwner(int slot);
 /* How far a palette's current colours have faded from its original ones, to black or to white (0..255 each; both 0
    when they are not a fade of it, e.g. another palette). */
 void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current, int count, int* dark, int* white);
@@ -33,6 +35,7 @@ void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current,
 /* Draw a layer's queued parts, back to front, over its canvas placed at (ox, oy) with this scale; darken/brighten
    0..16 follow the game's fade. */
 void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten);
+void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float scale, int darken, int brighten);
 /* Press Start's authored light, smoothly interpolated and shared by port-owned menus. */
 int PortHdMenuLightDraw(SDL_Renderer* renderer, float x, float y, float size, uint64_t ticks, float shade, float white);
 void PortHdMenuAssetsWarm(SDL_Renderer* renderer);
