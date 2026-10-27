@@ -5317,13 +5317,13 @@
     "submenu-moogle-visible-band-style-zero": {
       "id": "submenu-moogle-visible-band-style-zero",
       "piece": "Moogle transition native border reaches edge while margin remains late in style zero",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-moogle-band",
       "created_at": "2026-10-27T08:55:20.425267+00:00",
-      "updated_at": "2026-10-27T08:56:52.067993+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "User requests coherent submenu borders and root visual review for 2.1",
+      "updated_at": "2026-10-27T09:05:08.971589+00:00",
+      "branch": "fix/moogle-visible-band-style-zero",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/328",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "Actual D3D 0022 host_shot524: margin dark red core bright red before and after324/325",
       "evidence": [],
       "claimed_at": "2026-10-27T08:56:52.067993+00:00"
@@ -5356,7 +5356,7 @@
     "created_at": "2026-10-27T09:03:03.438450+00:00",
     "updated_at": "2026-10-27T09:03:03.438450+00:00"
   },
-  "updated_at": "2026-10-27T09:04:23.908388+00:00",
+  "updated_at": "2026-10-27T09:05:08.971589+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
