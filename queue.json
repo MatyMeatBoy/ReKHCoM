@@ -4670,19 +4670,20 @@
     "jp-save-notice-20261027": {
       "id": "jp-save-notice-20261027",
       "piece": "Keep save failure notice drawable with the JP cartridge font",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-jp-notice",
       "created_at": "2026-10-27T05:50:16.407848+00:00",
-      "updated_at": "2026-10-27T05:50:16.407848+00:00",
+      "updated_at": "2026-10-27T05:50:23.550045+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T05:50:23.550045+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T05:50:16.407848+00:00",
+  "updated_at": "2026-10-27T05:50:23.550045+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
