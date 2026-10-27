@@ -2421,16 +2421,24 @@ static uint16_t HarnessKeys(uint32_t frame) {
         const char* comma = SDL_strchr(p, ',');
         size_t i;
 
-        if (colon == NULL)
-            break;
+        if (colon == NULL || (comma && colon > comma)) {
+            p = comma ? comma + 1 : NULL;
+            continue;
+        }
         if (dash && dash < colon)
             b = SDL_atoi(dash + 1);
         if (frame >= (uint32_t)a && frame <= (uint32_t)b) {
-            for (i = 0; i < SDL_arraysize(names); i++) {
-                size_t len = SDL_strlen(names[i].name);
-                if (SDL_strncmp(colon + 1, names[i].name, len) == 0
-                    && (colon[1 + len] == ',' || colon[1 + len] == '+' || colon[1 + len] == 0))
-                    keys |= names[i].bit;
+            const char* key = colon + 1;
+            const char* end = comma ? comma : p + SDL_strlen(p);
+            while (key < end) {
+                const char* next = key;
+                while (next < end && *next != '+') next++;
+                for (i = 0; i < SDL_arraysize(names); i++) {
+                    size_t len = SDL_strlen(names[i].name);
+                    if ((size_t)(next - key) == len && SDL_strncmp(key, names[i].name, len) == 0)
+                        keys |= names[i].bit;
+                }
+                key = next < end ? next + 1 : end;
             }
         }
         p = comma ? comma + 1 : NULL;
