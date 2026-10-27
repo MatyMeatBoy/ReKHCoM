@@ -7518,22 +7518,28 @@
     "android-launcher-gl-startup-guard": {
       "id": "android-launcher-gl-startup-guard",
       "piece": "Guard launcher OpenGL startup failures with actual consumer regression",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "sol-low-scenes-states",
       "created_at": "2026-10-27T20:09:08.929277+00:00",
-      "updated_at": "2026-10-27T20:12:34.159728+00:00",
+      "updated_at": "2026-10-27T20:13:26.833233+00:00",
       "branch": "fix/android-startup-guard",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/393",
-      "approval": null,
+      "approval": "usuario-cuelgues-prioridad",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-27T20:12:34.159728+00:00",
           "owner": "sol-low-scenes-states",
           "detail": "RED main production GLbootstrap nullcontext downstream; GREEN actual consumer x86/x64 context/current failures and success. Complete Windowsx86 Androidarm64 syntax-only PASS. Commit4e9922804. MotoAndroid16 new comment6451357179 startupcause unconfirmed; Jafar separate; arm64pre1 PT_LOAD16KiB okay."
+        },
+        {
+          "at": "2026-10-27T20:13:26.833233+00:00",
+          "owner": "sol-low-scenes-states",
+          "detail": "PR393 merged; root independently reviewed allsource and ran actual GL bootstrap3casesPASS on head4e9922804. PreservesSDLerror and stops beforeImGui if create/activation fails; cleans RA/GL/window/SDL. No confirmedMoto causal fix, device test pending."
         }
       ],
-      "claimed_at": "2026-10-27T20:09:13.767252+00:00"
+      "claimed_at": "2026-10-27T20:09:13.767252+00:00",
+      "completed_at": "2026-10-27T20:13:26.833233+00:00"
     },
     "divisor64-reachable-audit": {
       "id": "divisor64-reachable-audit",
@@ -7596,7 +7602,7 @@
     "created_at": "2026-10-27T20:13:09.938998+00:00",
     "updated_at": "2026-10-27T20:13:09.938998+00:00"
   },
-  "updated_at": "2026-10-27T20:13:09.938998+00:00",
+  "updated_at": "2026-10-27T20:13:26.833233+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
