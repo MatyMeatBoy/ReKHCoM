@@ -6855,10 +6855,10 @@
     "v22-windows-pre1-test360": {
       "id": "v22-windows-pre1-test360",
       "piece": "Prebuild local v2.2-pre1 Windows32+64 EU/US/JP y nueva test360 desde SHA main fijo del coordinador; staging aislado releases, sin publicar/enviar",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-windows-pre1",
       "created_at": "2026-10-27T18:18:52.879235+00:00",
-      "updated_at": "2026-10-27T18:23:30.790203+00:00",
+      "updated_at": "2026-10-27T18:41:44.086865+00:00",
       "branch": "build/v2.2-pre1-windows",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/383",
       "approval": "Usuario/coordinador autoriza27/10; no compilar hasta SHA fijado",
@@ -6868,6 +6868,11 @@
           "at": "2026-10-27T18:23:30.790203+00:00",
           "owner": "codex-windows-pre1",
           "detail": "Base93749b5 + version-only commit47eb49f; currently EU32+EUguest64 QA/cache only; issue380 gate OPEN: no packaging/delivery nor US/JP until coordinator fix SHA and Normal+HD regression; pruebas/v22-pre1-build"
+        },
+        {
+          "at": "2026-10-27T18:41:44.086865+00:00",
+          "owner": "codex-windows-pre1",
+          "detail": "Delivered and published https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2-pre1; immutableZIPe48938d68e80f4a356cc7035e1271648bc3f79a13298b9c10b061fcb5220dfbd; 358entriesCRCOK11compiledinputsidenticalnoROM/save/auth/importedHD; productequivmain8d4958; startup6/6PASS; exactextracted32+64saveddoor2/2PASS; rootD3D1132/64NormalHD4casegatePASS; POST-RELEASE-VALIDATION is new supplement, published ZIP/manifest unchanged"
         }
       ],
       "claimed_at": "2026-10-27T18:18:59.655190+00:00"
@@ -6968,7 +6973,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:41:36.279112+00:00",
+  "updated_at": "2026-10-27T18:41:44.086865+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
