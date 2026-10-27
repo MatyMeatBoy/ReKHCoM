@@ -4615,10 +4615,10 @@
     "optiport-native-renderer-reset": {
       "id": "optiport-native-renderer-reset",
       "piece": "Complete native renderer reset resource invalidation and generation fault tests",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-native-renderer-reset",
       "created_at": "2026-10-27T05:39:53.345857+00:00",
-      "updated_at": "2026-10-27T06:39:56.112836+00:00",
+      "updated_at": "2026-10-27T06:40:05.388953+00:00",
       "branch": "fix/native-renderer-reset",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/311",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -4628,9 +4628,15 @@
           "at": "2026-10-27T05:50:05.992305+00:00",
           "owner": "codex-native-renderer-reset",
           "detail": "Production reset generation harness RED baseline then GREEN17mainhandles, targetdetach guard, modulehooks; actualtoast/gallery/movie/UI owner tests PASS; nativeWindows/Linuxi686 fullmodifiedC syntax PASS; readiness/seek/failure regressions PASS. Android32callback dependency parallelmedia lane; no guest64contractchange."
+        },
+        {
+          "at": "2026-10-27T06:40:05.388953+00:00",
+          "owner": "codex-native-renderer-reset",
+          "detail": "Verified and reviewed; merged 2448875e636fc02b2340e1f8b4d4514e5a74ae12"
         }
       ],
-      "claimed_at": "2026-10-27T05:40:11.993431+00:00"
+      "claimed_at": "2026-10-27T05:40:11.993431+00:00",
+      "completed_at": "2026-10-27T06:40:05.388953+00:00"
     },
     "bridge-texture-generations": {
       "id": "bridge-texture-generations",
@@ -4854,7 +4860,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:39:56.112836+00:00",
+  "updated_at": "2026-10-27T06:40:05.388953+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
