@@ -7114,12 +7114,12 @@
     "hud-polish-visibility-contours": {
       "id": "hud-polish-visibility-contours",
       "piece": "Prioridad usuario: calidadHUDvisible enemigoapagado/Soraagujeros+AA local contorno y bosses1+bars por maxHP real; diagnóstico causal32/64/Sora/Riku/map/battle/boss sinblur global",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:50:40.347337+00:00",
-      "updated_at": "2026-10-27T21:34:04.077086+00:00",
-      "branch": "fix/hd-layout-color-over-one",
-      "pr": null,
+      "updated_at": "2026-10-27T21:38:05.719257+00:00",
+      "branch": "fix/hd-ring-fallback-blend",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/402",
       "approval": "Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas",
       "reference": null,
       "evidence": [
@@ -7137,6 +7137,11 @@
           "at": "2026-10-27T21:34:04.077086+00:00",
           "owner": "claude-v22",
           "detail": "PR401: enemy HP dull = PS2 vertex colour >1 clamped; additive excess pass, (121,128,7)->(139,228,7) vs Re:CoM (148,231,7). Next: Sora fallback ring (gBtlHpRing, no-LAD import) seams/black box; pruebas/hud-visibility-contours/claude/"
+        },
+        {
+          "at": "2026-10-27T21:38:05.719257+00:00",
+          "owner": "claude-v22",
+          "detail": "PR401 enemy HP colour (PS2 >1 vertex colours) + PR402 fallback ring: shim blend default (box on 64-bit) and empty-track rim; boss bars by max HP already in #365 (test_hd_enemy_gauge). Evidence pruebas/hud-visibility-contours/claude/"
         }
       ],
       "claimed_at": "2026-10-27T21:26:24.108280+00:00"
@@ -7798,7 +7803,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:37:05.127786+00:00",
+  "updated_at": "2026-10-27T21:38:05.719257+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
