@@ -250,6 +250,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android374-startup-jafar | Investigar Moto Edge60 inicio y postJafar374, separar versión APK y mecanismos83/272; reproducir sólo checks CPU pertinentes | en_revision | codex-moto374 | codex/android374-investigation | — | 2026-10-27T18:25:13.221444+00:00 |
 | issue378-hd-audio-subtitle-independence | Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado | en_curso | codex-issue378-subtitles | fix/issue378-subtitles | Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados | 2026-10-27T18:30:26.966968+00:00 |
 | android22-pre1-diagnostic-build | APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto | en_curso | codex-android22-build | — | — | 2026-10-27T18:29:06.260644+00:00 |
-| audio-intro-title-underrun | Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego | pendiente | — | — | Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback | 2026-10-27T18:41:22.472261+00:00 |
+| audio-intro-title-underrun | Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego | en_curso | codex-audio-skip | — | Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback | 2026-10-27T18:41:27.803327+00:00 |
 
 Integrador: codex-windows-pre1 (ocupado; 2026-10-27T18:40:53.474124+00:00)

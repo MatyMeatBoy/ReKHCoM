@@ -6955,15 +6955,16 @@
     "audio-intro-title-underrun": {
       "id": "audio-intro-title-underrun",
       "piece": "Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-audio-skip",
       "created_at": "2026-10-27T18:41:22.472261+00:00",
-      "updated_at": "2026-10-27T18:41:22.472261+00:00",
+      "updated_at": "2026-10-27T18:41:27.803327+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T18:41:27.803327+00:00"
     }
   },
   "integrator": {
@@ -6972,7 +6973,7 @@
     "created_at": "2026-10-27T18:40:53.474124+00:00",
     "updated_at": "2026-10-27T18:40:53.474124+00:00"
   },
-  "updated_at": "2026-10-27T18:41:22.472261+00:00",
+  "updated_at": "2026-10-27T18:41:27.803327+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
