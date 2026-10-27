@@ -113,10 +113,10 @@ void m4aSongNumStart(u16 n) {
 #ifdef PLATFORM_PC
     {
         /* test harness: KHCOM_SONGLOG=1 logs every song/sound effect started, with its frame (audio regressions) */
-        extern const char* SDL_getenv(const char*);
+        extern char* getenv(const char*);
         extern unsigned PortFrameCount(void);
         void PortLog(const char* format, ...);
-        if (SDL_getenv("KHCOM_SONGLOG"))
+        if (getenv("KHCOM_SONGLOG"))
             PortLog("song: %u frame %u header %p", (unsigned)n, PortFrameCount(), (const void*)song->header);
     }
 #endif
