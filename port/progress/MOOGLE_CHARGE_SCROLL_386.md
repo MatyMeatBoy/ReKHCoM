@@ -8,10 +8,11 @@ Es un estado válido, también alcanzable después de vender cartas o cambiar
 de pestaña. No se afirma que el reportero de #386 entrara a este menú:
 su fallo original está en MapInspect, atendido en otro carril.
 
-La guarda local exige rango positivo y scroll dentro de0..range. Una sola
+La guarda local bajo `PLATFORM_PC` exige rango positivo y scroll dentro de0..range. Una sola
 página, lista vacía o estado transitorio fuera de rango conserva el indicador
 en y40. Las posiciones válidas de listas desplazables conservan su fórmula.
 No cambia cartas, cantidades, venta, guardados, ABI ni el helper global DIV0.
+La condición original se conserva sin `PLATFORM_PC` para la versión GBA.
 
 ## Regresión dirigida
 
@@ -19,7 +20,7 @@ No cambia cartas, cantidades, venta, guardados, ABI ni el helper global DIV0.
 python port/tools/test_ms_charge_scroll.py --work <directorio privado de evidencia>
 ```
 
-El arnés extrae completos y sin reescribir `MsChargeDraw`,
+El arnés compila explícitamente con `-DPLATFORM_PC` y extrae completos y sin reescribir `MsChargeDraw`,
 `GetMsChargeTabCount` y las declaraciones locales de producción. Usa el tipo
 real MsCard; dibujo, animación y texto son dobles controlados. Observa la
 posición y el número de envíos del indicador real. No enlaza SDL ni inicia
@@ -29,8 +30,10 @@ juego, GPU o audio; cada ejecución crea un subdirectorio nuevo.
 - GREEN:146.243 casos, cantidades0..286, cinco pestañas y scroll-1..98,
   incluyendo extremos válidos y una posición posterior al final; salida0.
 - Evidencia privada: `pruebas/64bit-crash-ledger/ms-charge/`
-  `ms-charge-geqnnckr/result.json` (RED) y
-  `ms-charge-gqk360cl/result.json` (GREEN), con hashes del código y funciones.
+  `ms-charge-hb3fbkd9/result.json` (RED PC) y
+  `ms-charge-bwch73nm/result.json` (GREEN PC), con hashes del código y funciones.
+- Sin `PLATFORM_PC`, los tokens de `MsChargeDraw` preprocesados coinciden con
+  main8d495811e (`nonpc-equivalence.json`). No se recompila el binario GBA.
 
 286 es la capacidad de la lista: se exploran también combinaciones sintéticas
 de límite, sin afirmar que todas ocurran en una partida natural. El recorrido

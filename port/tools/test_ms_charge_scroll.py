@@ -86,7 +86,7 @@ int main(void){
     unit.write_text(pre + declarations + '\n' + count + '\n' + draw + '\n' + main_c, encoding='utf-8')
     compiler = ROOT.parents[1] / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
     exe = out / 'consumer.exe'
-    subprocess.run([str(compiler), '--target=x86_64-w64-mingw32', '-std=gnu11', '-O1',
+    subprocess.run([str(compiler), '--target=x86_64-w64-mingw32', '-std=gnu11', '-O1', '-DPLATFORM_PC',
                     '-iquote', str(ROOT / 'include'), '-iquote', str(ROOT / 'include/menu'),
                     str(unit), '-o', str(exe)], check=True)
     result = subprocess.run([str(exe)], capture_output=True, timeout=15)
@@ -95,7 +95,7 @@ int main(void){
                   draw_sha256=hashlib.sha256(draw.encode()).hexdigest(),
                   count_sha256=hashlib.sha256(count.encode()).hexdigest(),
                   source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-                  exit=result.returncode, exit_hex=f'0x{result.returncode & 0xffffffff:08X}',
+                  defines=['PLATFORM_PC'], exit=result.returncode, exit_hex=f'0x{result.returncode & 0xffffffff:08X}',
                   stdout=result.stdout.decode('utf-8', errors='replace'), stderr=result.stderr.decode('utf-8', errors='replace'))
     (out / 'result.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(out)

@@ -1013,9 +1013,12 @@ void MsChargeDraw() {
 
     maxScroll = (GetMsChargeTabCount(sMsChargeTab) + 2) / 3 - 4;
 
-    /* Ten to twelve entries fill exactly one page: there is no scroll range.
-     * Keep its marker at the top, also during an out-of-range transition. */
-    if (maxScroll > 0 && sMsChargeGridScroll >= 0 && sMsChargeGridScroll <= maxScroll) {
+    if (sMsChargeGridScroll <= maxScroll
+#ifdef PLATFORM_PC
+        /* Ten to twelve entries fill one page, with no scroll range. */
+        && maxScroll > 0 && sMsChargeGridScroll >= 0
+#endif
+    ) {
         barOffset = 84 * sMsChargeGridScroll / maxScroll;
     } else {
         barOffset = 0;
