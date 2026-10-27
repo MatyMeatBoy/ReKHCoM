@@ -28,10 +28,24 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 - [ ] **Cartas HD pequeñas (lista de naipes): encaje de la imagen** como se ajustaron las de llave. Marcadas por el
   usuario: Simba (retrato desborda/cortado), Genio (asoma por la derecha), carta verde de objeto (cubo azul
   descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
+- [x] Tienda Moguri en vista de tienda (fila de 5 cartas con número): números HD se ven bien (captura usuario 27/10).
+- [ ] **HUD HD (solo modo HUD HD; el HUD normal no se toca):**
+  - Pila de cartas: reubicarla según la vida nueva y dibujarla **encima** de ella; también se les pierde el **borde**.
+  - Igual para enemigos/jefes si aplica.
+  - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
+    Parece HUD mal posicionado o vista incompleta. Arreglar limpio.
+  - «EXP ganada» tapada por la vida nueva.
+- [ ] **Cortanaipes HD** (sleight/romper carta) que se veía antes ya no aparece: revisar que se muestre **todo** el HD
+  que tenemos (barrido de todas las piezas HD importadas vs. las que realmente se dibujan).
+- [ ] `HD sprites: gWorldselectTitleSpanishBanner is 960x128, its recipe wants 8.688`: aviso repetido en selección de
+  mundo (VM 27/10). Revisar receta o el importador.
+- [ ] VM Linux 64 con **todo HD activado** (texto, HUD, música, escenas, cartas, título, subtítulos): partida nueva
+  hasta combate tutorial **sin fallo**. Falta: datos de los reporteros (ajustes exactos, vista, log, modo).
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
-Rama `fix/v21-bugs` (sin PR todavía). Lista de arriba = alcance de v2.1 estable; el usuario quiere causa
+Rama `fix/v21-bugs` (sin PR todavía). Orden pedido: reproducir #277/#272, arreglar, dar build de prueba con
+todo lo arreglado a los reporteros con gracias y disculpas; luego cerrar el resto 1 por 1. Lista de arriba = alcance de v2.1 estable; el usuario quiere causa
 y por qué el arreglo cubre todos los casos para cada bug. VM: `port/tools/linux_vm_test.py --share
 D:/01Claude/ReKHCoM-build/linux/vmshare277` (build de prueba de #277; añadir `hd/music` de
 `D:/01Claude/ReKHCoM-build/hd-completo/music`). Ruta de partida nueva: `keys.txt` en ese share (A cada 50 frames).
