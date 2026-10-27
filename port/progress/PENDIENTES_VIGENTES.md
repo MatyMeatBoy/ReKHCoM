@@ -7,6 +7,8 @@
 posterior, no en el ZIP 2.1 existente. El resto de este documento conserva
 los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1.
 
+- [ ] **Noticias en la ficha de Steam para ReKHCoM** (usuario 27/10): la zona de actividad queda vacía porque es un acceso directo no Steam. Sin vía oficial; alternativas a investigar en [PLAN_V22](PLAN_V22.md) (P3).
+
 ## Estado publicado y limpieza — 27/10, después de la entrega
 
 Repaso posterior acotado: [OptiPort actualizado](OPTIPORT_V21.md) y doce
