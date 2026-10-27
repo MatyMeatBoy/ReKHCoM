@@ -5149,15 +5149,21 @@
     "submenu-hd-transition-coherence": {
       "id": "submenu-hd-transition-coherence",
       "piece": "Coherent HD edge extensions during submenu transitions",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T08:29:25.832294+00:00",
-      "updated_at": "2026-10-27T08:29:31.007920+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T08:33:56.625192+00:00",
+      "branch": "task/submenu-hd-transition-coherence",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/324",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T08:33:56.625192+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "43365d0b5; actual hidden Direct3D copied64 runtime before frames524 cropped/544complete; source profile test red0xc0000409 green; mode.c guest syntax and diffcheck pass; after runtime and full relevant submenu cold/warm coverage pending root serial build. User directly authorizes coordinator visual verification for v2.1 without Atlas recorded AGENTS"
+        }
+      ],
       "claimed_at": "2026-10-27T08:29:31.007920+00:00"
     }
   },
@@ -5167,7 +5173,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:33:49.320603+00:00",
+  "updated_at": "2026-10-27T08:33:56.625192+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

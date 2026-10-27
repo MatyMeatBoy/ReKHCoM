@@ -191,6 +191,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-unified-desktop-deck-package | Unificar paquete Linux x86/x64 desktop+SteamDeck; Anbernic beta; docs y contratos de packaging sin heavy build | pr_abierto | codex-linux-unified-package | https://github.com/MatyMeatBoy/ReKHCoM/pull/321 | Usuario 27/10: un solo artefacto Linux x86/x64 desktop Deck; Anbernic beta | 2026-10-27T08:25:41.332284+00:00 |
 | hud-enemy-gauge-static-track | Enemy HD gauge track stable at constant maximum HP | en_curso | codex-enemy-gauge | — | User reports enemy HD HP gauge repeatedly grows and resets; parent delegated bounded fix | 2026-10-27T08:25:52.965693+00:00 |
 | shim-render-target-reset-constant | SDL shim target-reset enum matches SDL3 and passes source gate | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/322 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:31:19.548089+00:00 |
-| submenu-hd-transition-coherence | Coherent HD edge extensions during submenu transitions | en_curso | device_profiles_sol | — | — | 2026-10-27T08:29:31.007920+00:00 |
+| submenu-hd-transition-coherence | Coherent HD edge extensions during submenu transitions | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/324 | — | 2026-10-27T08:33:56.625192+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T08:30:24.057898+00:00)
