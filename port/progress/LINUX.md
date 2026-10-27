@@ -1,5 +1,9 @@
 # Linux: PC x86, Steam Deck y Anbernic (18/10/2026)
 
+Actualización de empaquetado 27/10/2026: un archivo Linux desktop/Steam Deck
+incluye x86 y host x64; Anbernic sigue siendo armhf beta, sin runtime ARM64.
+Las notas originales de implementación i386 se conservan abajo como historia.
+
 ## Por qué 32 bits
 
 El núcleo necesita punteros de 32 bits (las estructuras de la ROM los llevan
@@ -46,9 +50,17 @@ Después:
     python port/tools/build_linux.py --package v1.9.3
     python port/tools/build_all.py --platform all --package --release-version v1.9.3
 
-`--package` deja en `build/releases`: `ReKHCoM-vX-linux-x86.tar.gz`,
-`ReKHCoM-vX-steamdeck.tar.gz` (mismo programa con `kh_com.ini` en pantalla
-completa) y `ReKHCoM-vX-anbernic-alpha.zip`.
+`--package` deja en `build/releases`:
+`ReKHCoM-vX-linux-x86-x64-desktop-steamdeck.tar.gz` y
+`ReKHCoM-vX-anbernic-beta.zip`. Compila primero el host x64 y sus imágenes de
+juego EU/US/JP; el paquete exige esos archivos y contiene también i386.
+El wrapper selecciona el runtime disponible. El juego detecta Deck y aplica
+fullscreen antes de leer el ini del usuario; no se distribuye un preset Deck
+que fuerce ajustes. Staging conserva el nombre Linux unificado y publica
+Anbernic como `linux-armhf-anbernic-beta.zip`. Android genera ya `android-beta.apk`
+(los paquetes de pruebas conservan sufijos `-optiport` / `-smoke`).
+Esto cambia solo nuevas salidas: no eliminar ni reemplazar archivos de releases
+antiguas en GitHub.
 
 ## Pruebas
 

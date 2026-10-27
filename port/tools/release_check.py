@@ -120,7 +120,7 @@ if not args.post:
     dirty = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True)
     check(not dirty.strip(), 'working tree committed (packages come from HEAD)')
     main = sorted(p.name for p in (STAGE / 'main').glob('*'))
-    for kind in ('windows-x86.zip', 'linux-x86.tar.gz', 'steamdeck-i386.tar.gz', 'anbernic-beta.zip', 'android-beta.apk'):
+    for kind in ('windows-x86.zip', 'linux-x86-x64-desktop-steamdeck.tar.gz', 'anbernic-beta.zip', 'android-beta.apk'):
         hit = [n for n in main if n.endswith(kind)]
         check(bool(hit) and all((STAGE / 'main' / n).stat().st_mtime >= head - 60 for n in hit),
               f'staged {kind} built after HEAD')

@@ -9,6 +9,12 @@ spec=importlib.util.spec_from_file_location('build_android',ROOT/'port/tools/bui
 build=importlib.util.module_from_spec(spec);spec.loader.exec_module(build)
 ANDROID='{http://schemas.android.com/apk/res/android}'
 class PackageTests(unittest.TestCase):
+ def test_beta_archive_names_preserve_test_isolation(self):
+  identities=[build.package_identity('v2.1'),build.package_identity('v2.1',smoke=True),
+              build.package_identity('v2.1',test_build=True,test_version='2.1-nightly.20261027.1')]
+  self.assertEqual([build.package_filename(i) for i in identities],
+                   ['ReKHCoM-v2.1-android-beta.apk','ReKHCoM-v2.1-android-beta-smoke.apk',
+                    'ReKHCoM-v2.1-nightly.20261027.1-android-beta-optiport.apk'])
  def test_isolated_playable_identity(self):
   identity=build.package_identity('v2.0',test_build=True,test_version='2.1-nightly.20261027.1')
   self.assertEqual(identity['application_id'],'com.rekhcom.android.optiport')

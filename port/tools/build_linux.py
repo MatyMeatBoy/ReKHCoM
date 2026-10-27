@@ -1,7 +1,7 @@
 """Cross-compile the Linux port from Windows (clang + lld, Debian sysroot).
 
-The game core needs 32-bit pointers (ROM structures embed them), so Linux
-builds are i386 (PCs, Steam Deck) or armhf. Prepare once:
+The game core uses 32-bit pointers. Desktop/Steam Deck packages include i386
+and the x86-64 host with 32-bit game images; Anbernic uses armhf. Prepare once:
 
     python port/tools/linux_sysroot.py --arch i386 --out <work>/linux/i386
     (then SDL3 and FreeType, see port/progress/LINUX.md)
@@ -212,16 +212,20 @@ def bundle(arch, base, versions, dest):
     # escaped absolute script, working-directory and icon paths (issue #49).
     for name in ('README.md', 'CHANGELOG.md', 'LICENSE.md'):
         shutil.copyfile(ROOT / name, dest / name)
-    # The native build is an alpha; the Windows one runs through Proton with the GPU (user 25/10).
-    (dest / 'LEEME_LINUX_ALPHA.txt').write_text(
-        'ReKHCoM nativo para Linux / Steam Deck: version ALPHA (32 bits).\n'
+    # One desktop/Deck bundle selects its runtime; armhf remains a beta port.
+    (dest / 'LEEME_LINUX.txt').write_text(
+        ('ReKHCoM Linux desktop / Steam Deck: runtimes x86 y x64 en un paquete.\n'
+         'El juego detecta Steam Deck y usa pantalla completa antes de leer tus ajustes.\n'
+         if arch == 'i386' else 'ReKHCoM Anbernic: BETA armhf, sin verificacion en hardware real.\n') +
         'La version de Windows tambien funciona en Linux y Steam Deck por Proton y usa la GPU:\n'
         'en Steam, Anadir juego ajeno > ReKHCoM.exe > Propiedades > Compatibilidad > Proton.\n'
-        'Usa la GPU sola cuando el sistema trae Mesa de 32 bits (SteamOS lo trae); si no, dibuja por software.\n\n'
-        'Native ReKHCoM for Linux / Steam Deck: ALPHA build (32-bit).\n'
+        'El wrapper selecciona el runtime disponible; ver LINUX.md.\n\n' +
+        ('Native Linux desktop / Steam Deck: x86 and x64 runtimes in one package.\n'
+         'Steam Deck detection defaults to fullscreen; saved settings take precedence.\n'
+         if arch == 'i386' else 'Native Anbernic: armhf BETA, not verified on real hardware.\n') +
         'The Windows version also runs on Linux and Steam Deck through Proton and uses the GPU:\n'
         'in Steam, Add a Non-Steam Game > ReKHCoM.exe > Properties > Compatibility > Proton.\n'
-        'It uses the GPU by itself when the system has 32-bit Mesa (SteamOS does); otherwise it draws in software.\n', encoding='utf-8')
+        'The wrapper selects an available runtime; see LINUX.md.\n', encoding='utf-8')
     (dest / 'licenses').mkdir()
     shutil.copyfile(base / 'sdl-src-LICENSE.txt', dest / 'licenses/SDL3-LICENSE.txt')
     (dest / 'licenses/RUNTIME.md').write_text(
@@ -269,9 +273,8 @@ def make_zip(src, archive):
 
 
 def package(version, base_i386, base_armhf):
-    """One file per Linux platform in build/releases."""
+    """One desktop/Deck x86+x64 archive and one armhf beta in build/releases."""
     import shutil
-    import re
     # Both desktop launchers choose this host on x86-64. A clean build must
     # never silently produce a 32-bit-only package because this cache is absent.
     linux64 = ROOT / 'build/linux64/out'
@@ -284,28 +287,21 @@ def package(version, base_i386, base_armhf):
     stage = ROOT / 'build/linux-stage'
     if stage.exists():
         shutil.rmtree(stage)
-    cfg = re.search(r'PORT_ZOOM_CONFIG_VERSION\s+(\d+)', (ROOT / 'port/include/port/port_zoom.h').read_text()).group(1)
     made = []
-    # Linux PC: self-contained x86 folder.
+    # Desktop and Steam Deck share runtimes. Deck fullscreen is a detected game
+    # default (before reading the user's ini), not an archive-specific preset.
     pc = stage / 'pc'
     bundle('i386', base_i386, ['eu', 'us', 'jp'], pc)
     shutil.copyfile(ROOT / 'port/linux/LINUX.md', pc / 'LINUX.md')
-    archive = out / f'ReKHCoM-{version}-linux-x86.tar.gz'
+    archive = out / f'ReKHCoM-{version}-linux-x86-x64-desktop-steamdeck.tar.gz'
     make_tar(pc, archive)
-    made.append(archive)
-    # Steam Deck: the same build, fullscreen from the first launch.
-    deck = stage / 'deck'
-    shutil.copytree(pc, deck)
-    (deck / 'kh_com.default.ini').write_text(f'# Steam Deck preset\nconfig_version={cfg}\nfullscreen=1\n')
-    archive = out / f'ReKHCoM-{version}-steamdeck.tar.gz'
-    make_tar(deck, archive)
     made.append(archive)
     # Anbernic (PortMaster layout): launcher + rekhcom/ with the armhf build.
     arm = stage / 'anbernic'
     bundle('armhf', base_armhf, ['eu', 'us', 'jp'], arm / 'rekhcom')
     shutil.copyfile(ROOT / 'port/linux/LINUX.md', arm / 'rekhcom' / 'LINUX.md')
     (arm / 'ReKHCoM.sh').write_bytes((ROOT / 'port/linux/anbernic/ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
-    archive = out / f'ReKHCoM-{version}-anbernic-alpha.zip'
+    archive = out / f'ReKHCoM-{version}-anbernic-beta.zip'
     make_zip(arm, archive)
     made.append(archive)
     for a in made:
@@ -321,7 +317,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=os.cpu_count())
     ap.add_argument('--bundle', type=Path, help='also assemble a self-contained folder here')
     ap.add_argument('--package', metavar='VERSION', help='build i386 and armhf, all regions, and write '
-                    'build/releases/ReKHCoM-VERSION-{linux-x86.tar.gz,steamdeck.tar.gz,anbernic-alpha.zip}')
+                    'build/releases/ReKHCoM-VERSION-{linux-x86-x64-desktop-steamdeck.tar.gz,anbernic-beta.zip}')
     args = ap.parse_args()
     if args.package:
         subprocess.check_call([sys.executable, str(ROOT / 'port/linux64/build_linux64.py'), '--jobs', str(args.jobs)],

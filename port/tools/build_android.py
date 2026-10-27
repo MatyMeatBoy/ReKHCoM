@@ -71,6 +71,10 @@ def package_identity(release, *, smoke=False, test_build=False, test_version=Non
             'label':'ReKHCoM OptiPort '+base if test_build else None}
 
 
+def package_filename(identity):
+    return f"ReKHCoM-{identity['release_tag']}-android-beta{identity['suffix']}.apk"
+
+
 def playable_test_manifest(text, identity):
     if 'SDL_ENV.' in text:
         raise ValueError('Playable test packages must not contain SDL_ENV fixtures')
@@ -237,7 +241,7 @@ android {
             assert member in z.namelist()
             assert hashlib.sha256(z.read(member)).digest()==hashlib.sha256((libs/name).read_bytes()).digest(), ('stale APK library',name)
     out=ROOT/'build/releases';out.mkdir(exist_ok=True)
-    target=out/f"ReKHCoM-{identity['release_tag']}-android-alpha{identity['suffix']}.apk"
+    target=out/package_filename(identity)
     shutil.copy2(apk,target)
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.apk.sha256').write_text(f'{digest}  {target.name}\n')
