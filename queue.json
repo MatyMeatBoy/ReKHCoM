@@ -6467,15 +6467,21 @@
     "anadir-naipes-cantidad-sync": {
       "id": "anadir-naipes-cantidad-sync",
       "piece": "cartas prioridad 1 (PENDIENTES)",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:40.246238+00:00",
-      "updated_at": "2026-10-27T17:31:32.316040+00:00",
+      "updated_at": "2026-10-27T17:31:38.595813+00:00",
       "branch": null,
       "pr": null,
-      "approval": null,
+      "approval": "usuario-27/10-chat",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T17:31:38.595813+00:00",
+          "owner": "claude-v22",
+          "detail": "already in main via #124 coverage mask; measured frames 480-540 GBA/HD ink in lockstep; PENDIENTES #372"
+        }
+      ],
       "claimed_at": "2026-10-27T17:31:32.316040+00:00"
     },
     "bonus-elite-cabecera": {
@@ -6637,7 +6643,7 @@
     "created_at": "2026-10-27T17:30:56.298416+00:00",
     "updated_at": "2026-10-27T17:30:56.298416+00:00"
   },
-  "updated_at": "2026-10-27T17:31:32.316040+00:00",
+  "updated_at": "2026-10-27T17:31:38.595813+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
