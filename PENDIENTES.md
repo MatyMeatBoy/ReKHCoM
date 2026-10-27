@@ -297,4 +297,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | synthesis-gray-residual-band | Reproduce remaining horizontal gray-card band after accepted-overlap fix404; isolate body/glyph/native/background layers, fix compositor only with actual A/B | en_revision | codex-synthesis-band | fix/synthesis-residual-band | Usuario27octpulirgraycardline; rootdelegacionresidual20261027 | 2026-10-27T23:38:07.098424+00:00 |
 | attack-card-last-horizontal-pixel | Isolate literal remaining horizontal pixel below Olympia crown from user b91e screenshot; preserve all other art; current production D3D11 A/B | en_curso | codex-card-final-line | — | Usuario27oct literal1pixel; root delegated worker no Atlas for visual port corrections | 2026-10-27T23:50:53.221359+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T23:51:17.466564+00:00)
