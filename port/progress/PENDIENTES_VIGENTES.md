@@ -59,6 +59,13 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
   derecha) y mejorarla en HD. Solo en modo HUD HD.
 - [ ] **Sonido de recarga del mazo enemigo**: casi no se oye o no suena (usuario con undub). Revisar con/sin undub.
 - [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
+- [ ] **Launcher 2.1: comprobación rápida de assets del mod** al instalar/verificar: la primera vez revisa todo;
+  después solo detecta cambios o faltantes (marcas de tamaño/fecha/hash guardadas), sin demorar cada arranque.
+  Si falta algo, ofrecer importar lo faltante (ver punto de importación desde Steam).
+- Prueba 27/10 (hipótesis import incompleto): VM 64 bits con `zz_event_001.mp4` de 0 bytes y `zz_event_011.mp4`
+  truncado (100 KB) en `hd/movies` y `hd/scenes`: **sin fallo** hasta el combate. Siguiente: import antiguo
+  completo (otra estructura de carpetas), sprites HD viejos, música ausente a mitad, ROM US/JP en 64 bits.
+- Issues 27/10 03:00+: sin respuestas nuevas de los reporteros todavía (#277, #272).
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
