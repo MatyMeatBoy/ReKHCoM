@@ -210,6 +210,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v21-verified-board | Reconcile 2.1 verified source artifact QA and current pending PRs without erasing remaining work | integrado | codex-v21-board | https://github.com/MatyMeatBoy/ReKHCoM/pull/344 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T10:51:44.486838+00:00 |
 | optiport-v21-skill-snapshot | Sync reviewed public OptiPort0b6edd3 method into project snapshot, retaining project-specific results only in board | pr_abierto | codex-v21-board | https://github.com/MatyMeatBoy/ReKHCoM/pull/344 | Usuario: mejorar OptiPort público y aplicarlo a ReKHCoM2.1 | 2026-10-27T10:49:44.988843+00:00 |
 | controller-prompt-original-live-spans | Scoped original tutorial spans with reversible live button overlays and bounded unsupported-key fallback | en_curso | codex-control-prompts | — | Parent authorizes Original enable live-page and fallback increment atop338, preserving VM/reveal/geometry | 2026-10-27T10:48:18.877070+00:00 |
-| hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | pendiente | — | — | — | 2026-10-27T10:53:22.535979+00:00 |
+| hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | en_curso | device_profiles_sol | — | — | 2026-10-27T10:53:27.726490+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T10:51:21.601244+00:00)
