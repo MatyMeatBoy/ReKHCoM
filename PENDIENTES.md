@@ -163,6 +163,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | host-music-progress | Bound host music loop decoding and propagate terminal failure | en_revision | codex-host-music | fix/host-music-progress | User authorized OptiPort indispensable fallback improvements before test builds | 2026-10-27T05:20:28.621810+00:00 |
 | optiport-linux64-streaming | Linux64 movie EOF clock and cancelable decoder pipes | en_revision | codex-linux64-streaming | fix/linux64-movie-streaming | Usuario autoriza OptiPort y workers; coordinador delega correccion P1 | 2026-10-27T05:23:08.305222+00:00 |
 | hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_curso | codex-hud-budget | — | — | 2026-10-27T05:26:06.094829+00:00 |
-| android-optiport-package | Playable isolated Android OptiPort test package | pendiente | — | — | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:27:07.210539+00:00 |
+| android-optiport-package | Playable isolated Android OptiPort test package | en_curso | codex-android-test | — | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:27:13.637989+00:00 |
 
 Integrador: libre
