@@ -5764,22 +5764,28 @@
     "optiport-serial-profile-contract": {
       "id": "optiport-serial-profile-contract",
       "piece": "Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-profile-contract",
       "created_at": "2026-10-27T10:54:19.196552+00:00",
-      "updated_at": "2026-10-27T11:06:08.855384+00:00",
+      "updated_at": "2026-10-27T12:36:22.812576+00:00",
       "branch": "test/optiport-profile-contract",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/348",
       "approval": "Root delega plan serial ycorregir postcondicionesreales sinrewriteharness",
-      "reference": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "evidence": [
         {
           "at": "2026-10-27T11:06:08.855384+00:00",
           "owner": "codex-profile-contract",
           "detail": "Head3d33b019b.7purelogic testsPASS pluspycompile/diffcheck; no game/build/benchmark. Fixempty/truncated/NaN/reportVmData falseprivate/missingcommonassets/screenshotIO. p50p95p99+artifact/effectiveprogress;event74room10303World5;Windows64hostguestadapter. GeneratorJSON+PS1 serialonly emits8runs, detailedclosureplan UI/media/soak knownmeasurementgaps. Original4blocksremainPARTIAL tillrootexecutes/reviews. WorktreeNeededyesPR/evidence khcom-worktrees/optiport-profile-contract."
+        },
+        {
+          "at": "2026-10-27T12:36:22.812576+00:00",
+          "owner": "codex-profile-contract",
+          "detail": "GitHub verified MERGED PR348, real merge SHA 46ce269b5e166ecd9f1a1aaf41aeb9c845c660a7. Included in bundle PR351, real merge771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; integrated is not released or device-confirmed. Existing evidence/WIP/branches preserved; worktree needed review/repro until coordinator archives."
         }
       ],
-      "claimed_at": "2026-10-27T10:54:25.159040+00:00"
+      "claimed_at": "2026-10-27T10:54:25.159040+00:00",
+      "completed_at": "2026-10-27T12:36:22.812576+00:00"
     },
     "hud-canvas-preflight": {
       "id": "hud-canvas-preflight",
@@ -5914,7 +5920,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:17.198153+00:00",
+  "updated_at": "2026-10-27T12:36:22.812576+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
