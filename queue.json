@@ -6125,20 +6125,26 @@
     "v22-handoff-optiport": {
       "id": "v22-handoff-optiport",
       "piece": "Document 2.2 roadmap, conservative10/14 OptiPort baseline and published versus main-only changes; no new runtime work",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v22-handoff",
       "created_at": "2026-10-27T13:41:23.394705+00:00",
-      "updated_at": "2026-10-27T13:41:28.666525+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T13:43:30.702968+00:00",
+      "branch": "docs/v22-handoff",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/357",
       "approval": "Usuario pide anotar pendientes porcentaje OptiPort y demás para2.2",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T13:43:30.702968+00:00",
+          "owner": "codex-v22-handoff",
+          "detail": "Documentation only: local links verified, original10/14 denominator retained, current published and main-only work separated"
+        }
+      ],
       "claimed_at": "2026-10-27T13:41:28.666525+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:41:28.666525+00:00",
+  "updated_at": "2026-10-27T13:43:30.702968+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
