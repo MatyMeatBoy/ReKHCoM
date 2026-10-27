@@ -7606,10 +7606,23 @@
       "reference": "PR387/388/389/390/392; releases/v2.2-pre1 immutable",
       "evidence": [],
       "claimed_at": "2026-10-27T20:12:53.479868+00:00"
+    },
+    "guest64-divzero-parity": {
+      "id": "guest64-divzero-parity",
+      "piece": "Restore scoped cartridge zero-divisor semantics in x32 guest hosts",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:16:52.147660+00:00",
+      "updated_at": "2026-10-27T20:16:52.147660+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:16:45.273926+00:00",
+  "updated_at": "2026-10-27T20:16:52.147660+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
