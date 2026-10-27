@@ -252,8 +252,9 @@ void PortSramSyncIfDirty(void);
 /* Save banks: bank 1 is PORT_SAVE_NAME, bank n kh_com[_us|_jp]_bank<n>.sav. */
 #define PORT_SAVE_BANKS 5
 const char* PortSaveName(void);
-/* Writes the current bank, then loads gPortConfig.saveBank. */
-void PortSramSwitchBank(void);
+/* Writes the current bank, then loads gPortConfig.saveBank. Failure retains SRAM
+   and the loaded bank; callers must restore the previous saveBank selection. */
+int PortSramSwitchBank(void);
 void PortBiosAreaRefresh(void);
 /* RetroAchievements flattened GBA RAM/SRAM map (not hardware bus addresses).
  * Returns 1 on success; invalid ranges are zero-filled and return 0. */

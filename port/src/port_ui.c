@@ -1697,6 +1697,20 @@ static void Change(int item, int dir) {
             PortConfigSave();
             SDL_snprintf(a, sizeof(a), "kh_com_bank%d.ini", from);
             BankCopy("kh_com.ini", a);
+            gPortConfig.saveBank = to;
+            if (!PortSramSwitchBank()) {
+                static const char* const failed[LANG_COUNT] = {
+                    "Save failed. Current bank retained.",
+                    "Échec de sauvegarde. Banque actuelle conservée.",
+                    "Speichern fehlgeschlagen. Aktuelle Bank beibehalten.",
+                    "Salvataggio fallito. Banco attuale mantenuto.",
+                    "No se pudo guardar. Se mantiene el banco actual.",
+                    "セーブできませんでした。現在のバンクを維持します。"
+                };
+                gPortConfig.saveBank = from;
+                PortUiNotice(failed[Lang()]);
+                break;
+            }
             SDL_snprintf(b, sizeof(b), "kh_com_bank%d.ini", to);
             if (BankCopy(b, "kh_com.ini")) {
                 PortConfigLoad();
@@ -1706,7 +1720,6 @@ static void Change(int item, int dir) {
             gPortConfig.saveBank = to;
             PortConfigSave();
             PortVideoApplyConfig();
-            PortSramSwitchBank();
             break;
         }
         case ITEM_UNDUB:
