@@ -53,6 +53,20 @@ int main(int argc, char** argv) {
     sFailThread = !strcmp(argv[2], "no-worker");
     sSuspendThread = !strcmp(argv[2], "blocked-worker");
     CrashReportBegin();
+    if (!strncmp(argv[2], "guard", 5)) {
+        SYSTEM_INFO si; DWORD old;
+        EXCEPTION_RECORD r = {0}; CONTEXT c = {0}; EXCEPTION_POINTERS ep = {&r, &c};
+        GetSystemInfo(&si);
+        char* pages = VirtualAlloc(NULL, 2*si.dwPageSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+        if (!pages || !VirtualProtect(pages + si.dwPageSize, si.dwPageSize, PAGE_READWRITE | PAGE_GUARD, &old))
+            return 13;
+        r.ExceptionCode = EXCEPTION_INT_DIVIDE_BY_ZERO;
+        r.ExceptionAddress = (void*)FaultNative;
+        c.Rip = (uintptr_t)FaultNative;
+        c.Rsp = (uintptr_t)(pages + si.dwPageSize - atoi(argv[2] + 5));
+        CrashFilter(&ep);
+        FaultNative(); /* real original-code termination after the manual damaged-context snapshot */
+    }
     if (!strcmp(argv[2], "foreign") || !strcmp(argv[2], "guest") || sFailThread || sSuspendThread) {
         char* stack = VirtualAlloc((void*)0x1d026000, 4*1024*1024, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
         if (!stack) return 10;
@@ -119,7 +133,7 @@ class CrashReporterTests(unittest.TestCase):
         cls.tmp.cleanup()
 
     def run_case(self, mode, missing=False):
-        folder = self.root / self.id().split('.')[-1]
+        folder = self.root / (self.id().split('.')[-1] + '-' + mode)
         folder.mkdir()
         if missing:
             folder = folder / ('x' * 200) / ('y' * 200) / 'absent'
@@ -153,6 +167,15 @@ class CrashReporterTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(log.read_text().count('exception '), 1)
         self.assertIn('exception c0000094', log.read_text())
+
+    def test_unaligned_stack_tail_before_guard_page(self):
+        for remaining in range(1, 8):
+            with self.subTest(readable_bytes=remaining):
+                code, log = self.run_case(f'guard{remaining}')
+                self.assertEqual(code, 0xc0000094)
+                text = log.read_text()
+                self.assertEqual(text.count('exception '), 1)
+                self.assertIn('exception c0000094', text)
 
     def test_unwritable_long_path_preserves_exit(self):
         code, log = self.run_case('foreign', missing=True)

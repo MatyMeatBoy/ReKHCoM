@@ -50,9 +50,14 @@ static void CrashWriteSnapshot(EXCEPTION_POINTERS* ep) {
             MEMORY_BASIC_INFORMATION mi;
             int found = 0;
             if (VirtualQuery(sp, &mi, sizeof(mi)) && mi.State == MEM_COMMIT && !(mi.Protect & (PAGE_NOACCESS | PAGE_GUARD))) {
-                const uint64_t* end = (const uint64_t*)((const char*)mi.BaseAddress + mi.RegionSize);
-                for (int i = 0; sp + i < end && i < 2048 && found < 24; i++) {
-                    uint64_t v = sp[i];
+                uintptr_t end = (uintptr_t)mi.BaseAddress + mi.RegionSize;
+                for (uintptr_t at = (uintptr_t)sp, i = 0;
+                     at <= end && end - at >= sizeof(uint64_t) && i < 2048 && found < 24;
+                     at += sizeof(uint64_t), i++) {
+                    uint64_t v;
+                    /* A damaged/unaligned stack pointer may leave fewer than
+                     * eight readable bytes before the next protected page. */
+                    memcpy(&v, (const void*)at, sizeof(v));
                     HMODULE mod = NULL;
                     if ((v >= PS5G_BASE && v < sGuestEnd) ||
                         (v > 0x10000000u && GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
