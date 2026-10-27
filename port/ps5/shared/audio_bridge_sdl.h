@@ -5,6 +5,18 @@
 #define AUDIO_BRIDGE_SDL_H
 #include "audio_bridge.h"
 static int sAudioBridgeControls;
+static void HostAudioLogUnderruns(void) {
+    static int enabled = -1;
+    static uint32_t previous;
+    if (enabled < 0) enabled = getenv("KHCOM_AUDIOLOG") != NULL;
+    if (enabled && sAudio) {
+        uint32_t count = PortAudioContinuityUnderruns(&sAudioContinuity, sAudio);
+        if (count != previous) {
+            Log("audio continuity: consumer underruns %u", (unsigned)count);
+            previous = count;
+        }
+    }
+}
 static int HostAudioCommand(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     (void)b; (void)c; (void)d;
     switch (op) {

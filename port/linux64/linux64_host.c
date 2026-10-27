@@ -201,8 +201,10 @@ static int H_audio_open(int rate) {
     return 0;
 }
 static void GamePush(const int16_t* frames, uint32_t count) {
-    if (sAudio && count)
+    if (sAudio && count) {
         PortAudioContinuityPut(&sAudioContinuity, sAudio, frames, (int)count * 4);
+        HostAudioLogUnderruns();
+    }
 }
 #define HD_MUSIC_LOG Log
 #include "hd_music_host.h"

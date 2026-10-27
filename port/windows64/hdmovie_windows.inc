@@ -29,7 +29,7 @@ static void PortAudioMovieHold(int on) {
     if (!sAudio) return;
     H_audio_clear();
     if (on || sAudioBridgeControls) SDL_PauseAudioStreamDevice(sAudio);
-    else SDL_ResumeAudioStreamDevice(sAudio); /* legacy guests start the device themselves */
+    else SDL_ResumeAudioStreamDevice(sAudio); /* preserve legacy automatic start */
 }
 static void PortSceneGalleryMovieCapture(SDL_Renderer* renderer) { (void)renderer; }
 static void DropPendingInput(void) {

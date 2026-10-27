@@ -550,6 +550,9 @@ static void Queue(int n, int rate) {
                 SDL_GetAudioStreamFormat(sStream, &src, &dst);
                 PortLog("audio: queued %.0f (avg %.0f, target %.0f) ratio %.4f in %d Hz out %d Hz", queued, sQueuedAvg,
                         target, ratio, src.freq, dst.freq);
+#ifdef PORT_AUDIO_CONTINUITY
+                PortLog("audio continuity: consumer underruns %u", (unsigned)PortAudioContinuityUnderruns(&sContinuity, sStream));
+#endif
             }
         }
     }
