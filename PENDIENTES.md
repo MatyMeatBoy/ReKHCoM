@@ -284,4 +284,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | claude-guest64-compat-independent-review | Claude: revision independiente de fallback GBA32 a hosts64 (#396 y extensiones); contrastar cero/resto, widths, operands register/memory, contexto y rendimiento normal con pruebas CPU. Coordinar sin editar archivos reclamados por Sol. Reportar limites y discrepancias a Codex para PR; no vender primerbloque como paridadtotal. | en_revision | claude-v22 | — | Usuario: prioridadtotal fallback64, conservarlogicaGBA, Claude puede tomar trabajoindependiente | 2026-10-27T20:56:29.406338+00:00 |
 | android22-pre2-diagnostic-build | Android v2.2-pre2 diagnostic: monotonic official versionCode, preserved signer, private two-ABI build | pr_abierto | sol-android-pre2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/403 | — | 2026-10-27T21:38:30.431235+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T21:40:28.523894+00:00)
+Integrador: libre
