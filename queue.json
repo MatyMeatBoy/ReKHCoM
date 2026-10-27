@@ -7257,22 +7257,28 @@
     "child386-safe-crash-reporting": {
       "id": "child386-safe-crash-reporting",
       "piece": "Windows64: conservar primera excepción desde stack guest",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-crash-reporter",
       "created_at": "2026-10-27T19:17:47.169523+00:00",
-      "updated_at": "2026-10-27T19:22:44.336544+00:00",
+      "updated_at": "2026-10-27T19:36:52.716355+00:00",
       "branch": "fix/windows64-crash-report-stack",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/387",
-      "approval": "Coordinador autoriza fix acotado reporter P0 #386 y fixture CPU foreign stack",
+      "approval": "Usuario27/10fix64sharedcauses; rootreviewedheaderand8CPUfaulttestsoriginalcodepreserved",
       "reference": "issue386 debugger original integer-divzero masked by secondary stack overflow",
       "evidence": [
         {
           "at": "2026-10-27T19:22:44.336544+00:00",
           "owner": "codex-crash-reporter",
           "detail": "5e50f4d5656b740b5dcdee44b967a2a4d2bba9ac: real foreign low-stack RED baseline FD; 7 CPU regressions GREEN original094; host-only build PASS d87fd564. Root owns core MapInspect fix and game QA. No ROM/save/GPU in this PR."
+        },
+        {
+          "at": "2026-10-27T19:36:52.716355+00:00",
+          "owner": "codex-crash-reporter",
+          "detail": "PR387 merged1b3ff52f8ca1e5c3e7d5e9fbe24f4012d357931c head4e4202559. Rootindependent8testsPASSincludingforeignstackprimary094, boundedscanwordtail, initialization/write/blockfailsafe. Codepreservesoriginalexception, doesnotrecoverarbitraryfaults."
         }
       ],
-      "claimed_at": "2026-10-27T19:17:54.126227+00:00"
+      "claimed_at": "2026-10-27T19:17:54.126227+00:00",
+      "completed_at": "2026-10-27T19:36:52.716355+00:00"
     },
     "issue386-moogle-charge-scroll": {
       "id": "issue386-moogle-charge-scroll",
@@ -7374,7 +7380,7 @@
     "created_at": "2026-10-27T19:35:30.020473+00:00",
     "updated_at": "2026-10-27T19:35:30.020473+00:00"
   },
-  "updated_at": "2026-10-27T19:35:30.020473+00:00",
+  "updated_at": "2026-10-27T19:36:52.716355+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
