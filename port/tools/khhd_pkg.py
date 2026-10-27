@@ -68,29 +68,48 @@ def entries(hed):
 
 
 def read_asset(pkg, offset, with_remastered=False):
+    pkg.seek(0, 2)
+    end = pkg.tell()
+    if offset < 0 or offset > end or end - offset < 0x10:
+        raise ValueError('Invalid/truncated package asset header')
     pkg.seek(offset)
     seed = pkg.read(0x10)
     dlen, rcount, clen, _date = struct.unpack('<iiii', seed)
+    if dlen < 0 or rcount < 0 or clen < -2 or rcount * 0x30 > end - offset - 0x10:
+        raise ValueError('Invalid package asset lengths')
     key = make_key(seed)
     remastered = []
     for _ in range(rcount):
         name, roff, orig_off, rdlen, rclen = struct.unpack('<32siiii', pkg.read(0x30))
+        if rdlen < 0 or rclen < -2:
+            raise ValueError('Invalid remastered asset lengths')
         remastered.append((name.split(b'\0')[0].decode('latin1'), rdlen, rclen))
-    size = clen if clen >= 0 else dlen
-    packed = pkg.read(size)
-    if clen > -2:
-        packed = decrypt_head(key, packed)
-    data = zlib.decompress(packed[2:], -15, dlen) if clen > -1 else packed
+
+    def unpack(real, compressed, padded=False):
+        size = compressed if compressed >= 0 else real
+        remaining = end - pkg.tell()
+        if size > remaining or (compressed >= 0 and size < 2):
+            raise ValueError('Truncated package asset body')
+        stored = min(remaining, size + (-size % 16)) if padded else size
+        packed = pkg.read(stored)
+        if len(packed) < size:
+            raise ValueError('Truncated package asset body')
+        packed = packed[:size]
+        if compressed > -2:
+            packed = decrypt_head(key, packed)
+        # Grow with actual decoded output, not an untrusted header allocation.
+        data = zlib.decompress(packed[2:], -15) if compressed >= 0 else packed
+        if len(data) != real:
+            raise ValueError('Package asset decoded length mismatch')
+        return data
+
+    data = unpack(dlen, clen)
     extra = {}
     if with_remastered:
         for name, rdlen, rclen in remastered:
-            n = rclen if rclen >= 0 else rdlen
             pos = pkg.tell()
             pkg.seek((pos + 15) & ~15)
-            blob = pkg.read(n + (-n % 16))
-            if rclen > -2:
-                blob = decrypt_head(key, blob)
-            extra[name] = zlib.decompress(blob[2:], -15, rdlen) if rclen > -1 else blob[:rdlen]
+            extra[name] = unpack(rdlen, rclen, padded=True)
     return data, remastered, extra
 
 

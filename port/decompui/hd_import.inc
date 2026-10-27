@@ -12,6 +12,8 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include <memory>
+#include <exception>
 #include "port/port_hd_poster.h"
 #ifdef LAUNCHER_ANDROID
 #include "hd_android.inc"
@@ -110,18 +112,29 @@ static std::string Md5Hex(const std::string& text) {
 
 /* One asset of a .pkg (its original data; the remastered extras are not needed here). */
 static bool ReadAsset(std::ifstream& pkg, long long offset, std::vector<unsigned char>& out) {
-    unsigned char seed[16];
-    pkg.seekg(offset);
-    if (!pkg.read((char*)seed, 16))
+    // A package can be several GB; bound this asset by its actual stream, not
+    // by a guessed container budget or unchecked signed header lengths.
+    pkg.clear();
+    pkg.seekg(0, std::ios::end);
+    const auto end = pkg.tellg();
+    if (offset < 0 || end < 0 || offset > (long long)end || (long long)end - offset < 16)
         return false;
+    pkg.seekg(offset);
+    unsigned char seed[16];
+    if (!pkg.read((char*)seed, 16)) return false;
     int32_t dlen, rcount, clen;
     memcpy(&dlen, seed, 4);
     memcpy(&rcount, seed + 4, 4);
     memcpy(&clen, seed + 8, 4);
-    pkg.seekg(offset + 16 + (long long)rcount * 0x30);
-    std::vector<unsigned char> packed((size_t)(clen >= 0 ? clen : dlen));
-    if (!pkg.read((char*)packed.data(), (std::streamsize)packed.size()))
+    if (dlen < 0 || rcount < 0 || clen < -2) return false;
+    const long long remaining = (long long)end - offset - 16;
+    const long long headers = (long long)rcount * 0x30;
+    const long long stored = clen >= 0 ? clen : dlen;
+    if (headers > remaining || stored > remaining - headers || (clen >= 0 && clen < 2))
         return false;
+    pkg.seekg(offset + 16 + headers);
+    std::vector<unsigned char> packed((size_t)stored);
+    if (stored && !pkg.read((char*)packed.data(), (std::streamsize)stored)) return false;
     if (clen > -2) {
         unsigned char key[0xB0];
         MakeKey(seed, key);
@@ -131,9 +144,16 @@ static bool ReadAsset(std::ifstream& pkg, long long offset, std::vector<unsigned
         out.swap(packed);
         return true;
     }
-    out.resize((size_t)dlen);
-    int got = stbi_zlib_decode_noheader_buffer((char*)out.data(), dlen, (const char*)packed.data() + 2, (int)packed.size() - 2);
-    return got == dlen;
+    // Grow from decoded bytes, never allocate the untrusted declared dlen.
+    // stb's allocator returns null on failure; its result owns its buffer even
+    // if the final vector allocation throws. Reject size mismatches atomically.
+    int got = 0;
+    std::unique_ptr<char, decltype(&stbi_image_free)> decoded(
+        stbi_zlib_decode_noheader_malloc((const char*)packed.data() + 2, clen - 2, &got), stbi_image_free);
+    if (!decoded || got != dlen) return false;
+    std::vector<unsigned char> unpacked(decoded.get(), decoded.get() + got);
+    out.swap(unpacked);
+    return true;
 }
 
 /* ---- SCD → Ogg Vorbis ----------------------------------------------------------------------------------------- */
@@ -1884,29 +1904,76 @@ static int Workers(int quality) {
     return n;
 }
 
+struct ImportRuntime {
+    HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+    ~ImportRuntime() {
+        if (mf) MFShutdown();
+        if (SUCCEEDED(com)) CoUninitialize();
+    }
+};
+
+// The journal remains available for resume/discard; never report success after
+// an exception. A secondary status-allocation failure must not kill the process.
+static void ImportFailed(const char* reason) noexcept {
+    sJob.cancel = true;
+    try {
+        sJob.Say(std::string(T("Importación fallida: ", "Import failed: ")) + reason +
+                 T(". Se conserva el progreso recuperable.", ". Recoverable progress is preserved."));
+    } catch (...) {}
+    sJob.running = false;
+}
+template <class Fn>
+static void GuardImport(const Fn& fn) noexcept {
+    try { fn(); }
+    catch (const std::bad_alloc&) { ImportFailed(T("memoria insuficiente", "insufficient memory")); }
+    catch (const std::system_error&) { ImportFailed(T("error del sistema o trabajador", "system or worker error")); }
+    catch (const std::exception&) { ImportFailed(T("archivo u operación inválida", "invalid file or operation")); }
+    catch (...) { ImportFailed(T("error inesperado del trabajador", "unexpected worker error")); }
+    sJob.running = false;
+}
+struct StartImportThread {
+    template <class Fn> void operator()(const Fn& fn) const { std::thread(fn).detach(); }
+};
+template <class Fn, class Starter = StartImportThread>
+static void LaunchImport(const Fn& fn, const Starter& start = Starter{}) noexcept {
+    try { start([fn] { GuardImport(fn); }); }
+    catch (...) { ImportFailed(T("no se pudo iniciar el trabajador", "could not start worker")); }
+}
+
 /* fn(item) for every item, n at once (each thread with its own progress slot and COM) */
 static void Parallel(const std::vector<fs::path>& list, int n, const std::function<void(const fs::path&)>& fn) {
     std::atomic<size_t> next{ 0 };
+    std::exception_ptr failure;
+    std::mutex failureLock;
+    auto failed = [&] {
+        sJob.cancel = true;
+        std::lock_guard<std::mutex> lock(failureLock);
+        if (!failure) failure = std::current_exception();
+    };
     auto work = [&](int slot) {
         HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        tSlot = slot;
-        for (size_t i; !sJob.cancel && (i = next++) < list.size();) {
-            tUnits = Units(list[i]);
-            int units = tUnits, part = MoviePart(list[i]); /* the file may change size while it is worked on */
-            sJob.slotPart[slot] = part;
-            fn(list[i]);
-            sJob.partial[slot] = 0;
-            sJob.Done(part, units);
-        }
-        if (SUCCEEDED(com))
-            CoUninitialize();
+        try {
+            tSlot = slot;
+            for (size_t i; !sJob.cancel && (i = next++) < list.size();) {
+                tUnits = Units(list[i]);
+                int units = tUnits, part = MoviePart(list[i]);
+                sJob.slotPart[slot] = part;
+                fn(list[i]);
+                sJob.partial[slot] = 0;
+                sJob.Done(part, units);
+            }
+        } catch (...) { failed(); }
+        if (SUCCEEDED(com)) CoUninitialize();
     };
     std::vector<std::thread> threads;
-    for (int i = 1; i < n && i < (int)list.size(); i++)
-        threads.emplace_back(work, i);
-    work(0);
-    for (auto& t : threads)
-        t.join();
+    try {
+        for (int i = 1; i < n && i < (int)list.size(); i++)
+            threads.emplace_back(work, i);
+        work(0);
+    } catch (...) { failed(); } // Includes inability to start a worker.
+    for (auto& t : threads) t.join();
+    if (failure) std::rethrow_exception(failure); // Owning job reports once.
 }
 
 #include "hd_media_scenes.inc"
@@ -1977,11 +2044,10 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
         int count = 0;
         bool ok = false;
         if (!sJob.cancel && hdmedia::Inspect(source).fingerprint == expectedSource) {
-            HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-            bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+            ImportRuntime runtime;
+            bool mf = runtime.mf;
             ok = ImportMediaVariant(source, data, mediaLanguage, movies, scenes, mf ? Compression(quality) : 0, mf, count);
-            if (mf) MFShutdown();
-            if (SUCCEEDED(com)) CoUninitialize();
+
         }
         sJob.Say(ok ? std::string(T("Variante lista: ", "Variant ready: ")) + PortHdMediaLabel(mediaLanguage) + " (" + std::to_string(count) + ")"
                     : T("No se publicó la variante: fuente incompleta, cambiada, cancelada o archivo inválido. Se conserva la copia anterior.",
@@ -2032,8 +2098,8 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
             InstalledAdd(data, rel, quality, have); /* recorded now, so the next time knows it */
         return keep;
     };
-    HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-    bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+    ImportRuntime runtime;
+    bool mf = runtime.mf;
     if (!mf)
         quality = 0;
     fs::path outMovies = data / "hd" / "movies", outScenes = data / "hd" / "scenes", outMusic = data / "hd" / "music";
@@ -2158,10 +2224,7 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
     sJob.Say(sJob.cancel ? std::string(T("Carga detenida.", "Import stopped."))
              : imported ? std::string(T("Listo: ", "Done: ")) + std::to_string(imported) + T(" archivos importados.", " files imported.")
                         : std::string(T("No se encontró nada para importar en esa carpeta.", "Nothing to import was found in that folder.")));
-    if (mf)
-        MFShutdown();
-    if (SUCCEEDED(com))
-        CoUninitialize();
+
     if (ownJob) sJob.running = false;
 }
 
@@ -2218,8 +2281,8 @@ static void RestoreLeftovers(const fs::path& folder) {
    source quality, without the game's installation. Each file is kept as it was when its re-encoding fails. */
 static void Compress(fs::path data, int quality) {
     std::error_code ec;
-    HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-    bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+    ImportRuntime runtime;
+    bool mf = runtime.mf;
     std::vector<fs::path> list;
     uintmax_t before = 0, after = 0;
     int changed = 0;
@@ -2271,10 +2334,7 @@ static void Compress(fs::path data, int quality) {
              changed, before / 1073741824.0, after / 1073741824.0);
     sJob.Say(mf ? std::string(msg) : std::string(T("Media Foundation no está disponible: no se comprimió nada.",
                                                      "Media Foundation is not available: nothing was compressed.")));
-    if (mf)
-        MFShutdown();
-    if (SUCCEEDED(com))
-        CoUninitialize();
+
     sJob.running = false;
 }
 
@@ -2284,7 +2344,8 @@ static void StartCompress(const fs::path& data, int quality) {
     sJob.running = true;
     sJob.Reset();
     sJob.Say(T("Comprimiendo...", "Compressing..."));
-    std::thread(Compress, data, quality).detach();
+    try { LaunchImport([=] { Compress(data, quality); }); }
+    catch (...) { ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker")); }
 }
 
 /* The size of the installed movies and scenes, in bytes. */
@@ -2310,7 +2371,8 @@ static void Start(const fs::path& source, const fs::path& data, bool movies, boo
     sJob.running = true;
     sJob.Reset();
     sJob.Say(T("Importando...", "Importing..."));
-    std::thread(Run, source, data, movies, scenes, music, sprites, quality, resume, mediaLanguage, true).detach();
+    try { LaunchImport([=] { Run(source, data, movies, scenes, music, sprites, quality, resume, mediaLanguage, true); }); }
+    catch (...) { ImportFailed(T("no se pudo preparar el trabajador", "could not prepare worker")); }
 }
 
 static int Count(const fs::path& folder, const char* ext) {
