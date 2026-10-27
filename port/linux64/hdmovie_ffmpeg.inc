@@ -349,8 +349,8 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     free(frame);
     SDL_free(fontData);
     if (sAudio) {
-        SDL_ClearAudioStream(sAudio);
-        SDL_ResumeAudioStreamDevice(sAudio);
+        H_audio_clear();
+        if (!sAudioBridgeControls) SDL_ResumeAudioStreamDevice(sAudio);
     }
     Log("hd movie: %s from %d s, %lld frames%s", path, start, frames, skip ? " (skipped)" : "");
     return rendererLost ? 0 : played || skip || sQuit;
