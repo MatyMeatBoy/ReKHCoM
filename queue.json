@@ -4947,14 +4947,14 @@
     "optiport-previews-both-modes-perf": {
       "id": "optiport-previews-both-modes-perf",
       "piece": "Pendiente posterior al ZIP: identificar dos modos UI y perf previews por fases (entrada/p95/memoria/cache/precarga/cancelacion/calidad)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-gallery-previews",
       "created_at": "2026-10-27T07:05:30.008628+00:00",
-      "updated_at": "2026-10-27T10:49:33.313483+00:00",
+      "updated_at": "2026-10-27T12:36:06.585689+00:00",
       "branch": "feat/gallery-preview-cache",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/342",
       "approval": "Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64",
-      "reference": "port/progress/COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "evidence": [
         {
           "at": "2026-10-27T10:35:01.343146+00:00",
@@ -4965,9 +4965,15 @@
           "at": "2026-10-27T10:49:33.313483+00:00",
           "owner": "codex-gallery-previews",
           "detail": "Independent re-review confirmed P1 mixed-NULL and P2 incomplete pack return/log corrected.335head5acf2cb04;342headc6c7ad615. Production mixed LoadEverything import/coreavailability and real miniz partialrestore RED->GREEN. No new blocker found; hardwareSAF/GPU and realp95 remain pending."
+        },
+        {
+          "at": "2026-10-27T12:36:06.585689+00:00",
+          "owner": "codex-gallery-previews",
+          "detail": "GitHub verified MERGED PR342, real merge SHA 9a363580f3a21bd0181522029a09bd363b691e94. Included in bundle PR351, real merge771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; integrated is not released or device-confirmed. Existing evidence/WIP/branches preserved; worktree needed review/repro until coordinator archives."
         }
       ],
-      "claimed_at": "2026-10-27T10:27:15.443933+00:00"
+      "claimed_at": "2026-10-27T10:27:15.443933+00:00",
+      "completed_at": "2026-10-27T12:36:06.585689+00:00"
     },
     "previews-both-modes-visual-fallback": {
       "id": "previews-both-modes-visual-fallback",
@@ -5896,7 +5902,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:00.942232+00:00",
+  "updated_at": "2026-10-27T12:36:06.585689+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
