@@ -7015,10 +7015,23 @@
       "reference": "user-screenshots0981ff05+5f6da3a7",
       "evidence": [],
       "claimed_at": "2026-10-27T18:48:05.984482+00:00"
+    },
+    "hud-polish-visibility-contours": {
+      "id": "hud-polish-visibility-contours",
+      "piece": "Prioridad usuario: calidadHUDvisible enemigoapagado/Soraagujeros+AA local contorno y bosses1+bars por maxHP real; diagnóstico causal32/64/Sora/Riku/map/battle/boss sinblur global",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T18:50:40.347337+00:00",
+      "updated_at": "2026-10-27T18:50:40.347337+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:48:38.020902+00:00",
+  "updated_at": "2026-10-27T18:50:40.347337+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
