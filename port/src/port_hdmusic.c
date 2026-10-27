@@ -215,32 +215,46 @@ static void Resume(void) {
 static float sHold = 1.0f, sLevel = 1.0f;
 
 /* Decodes until about a fifth of a second is queued, looping at the track's loop points. */
-static void Feed(float gain) {
+static int Feed(float gain) {
     float pcm[2048 * 2];
+    int blocks = 0, rewound = 0;
+    if (!sStream || !sVorbis || sRate <= 0 || sLoopEnd <= sLoopStart)
+        return 0;
     sLevel = gain;
     SDL_SetAudioStreamGain(sStream, sLevel * sHold);
     gain = 1.0f;
     Resume();
     while (SDL_GetAudioStreamQueued(sStream) < (int)(sRate / 5 * 2 * sizeof(float))) {
         int want = 2048, got, i;
+        /* A corrupt stream or a rejected device write must never hold a game
+           frame forever. Normal playback needs at most five 2048-frame blocks. */
+        if (++blocks > 32)
+            return 0;
         if (sPosition + (unsigned)want > sLoopEnd)
             want = (int)(sLoopEnd - sPosition);
         if (want <= 0) {
-            stb_vorbis_seek(sVorbis, sLoopStart);
+            if (rewound || !stb_vorbis_seek(sVorbis, sLoopStart))
+                return 0;
             sPosition = sLoopStart;
+            rewound = 1;
             continue;
         }
         got = stb_vorbis_get_samples_float_interleaved(sVorbis, 2, pcm, want * 2);
         if (got <= 0) {
-            stb_vorbis_seek(sVorbis, sLoopStart);
+            if (rewound || !stb_vorbis_seek(sVorbis, sLoopStart))
+                return 0;
             sPosition = sLoopStart;
+            rewound = 1;
             continue;
         }
         for (i = 0; i < got * 2; i++)
             pcm[i] *= gain;
-        SDL_PutAudioStreamData(sStream, pcm, got * 2 * (int)sizeof(float));
+        if (!SDL_PutAudioStreamData(sStream, pcm, got * 2 * (int)sizeof(float)))
+            return 0;
         sPosition += (unsigned)got;
+        rewound = 0;
     }
+    return 1;
 }
 
 static int QueuedMs(void) {
@@ -287,8 +301,8 @@ static int Open(int song) {
     return 1;
 }
 
-static void Feed(float gain) {
-    h_hd_music(HD_MUSIC_PLAY, "", (int)(gain * 1000.0f));
+static int Feed(float gain) {
+    return h_hd_music(HD_MUSIC_PLAY, "", (int)(gain * 1000.0f));
 }
 
 static void Pause(void) {
@@ -376,8 +390,14 @@ void PortHdMusicFrame(void) {
     gain = HD_MUSIC_LEVEL * gPortMix.musicGain * gPortConfig.masterVolume / 100.0f;
     if (bgm->fadeOI)
         gain *= (float)(bgm->fadeOV >> FADE_VOL_SHIFT) / FADE_VOL_MAX;
-    gPortMix.musicGain = 0.0f; /* the cartridge's song keeps playing, silent */
-    Feed(gain);
+    if (!Feed(gain)) {
+        PortLog("fallback: HD music song %d stalled or output failed; cartridge music retained", song);
+        sMissing = song;
+        Close();
+        HdLog(song, 0);
+        return;
+    }
+    gPortMix.musicGain = 0.0f; /* mute only after the HD output accepted samples */
     HdLog(song, 1);
 }
 
