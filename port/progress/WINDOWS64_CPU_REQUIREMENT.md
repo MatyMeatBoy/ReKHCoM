@@ -57,3 +57,11 @@ el guest publicado bajo una CPU emulada sin esa instrucción.
 No cambian el ABI del bridge, la baseline del guest, arte, guardados, ajustes,
 otros hosts ni releases. El host/launcher corregidos aún deben incorporarse a
 un futuro paquete autorizado; el paquete2.1 publicado sigue siendo el mismo.
+
+## Rebase antes del PR
+
+La rama se rebasó sobre `f1b51b9c21663aeacdbacd7184b2b2b6baa104e2`
+(#376, argumentos de idioma Linux). La comparación de blobs Windows entre el
+commit probado `537510fcd` y la rama rebasada no muestra cambios en host,
+launcher, helper CPU ni tests. No se reconstruyó ningún guest ni se repitió
+la compilación del host por ese cambio documental/de Linux.
