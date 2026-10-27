@@ -46,14 +46,45 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 - [ ] **Importación de assets a prueba de updates**: importar siempre todo lo que podamos necesitar desde la
   instalación de Steam (Re:CoM/HD); si una versión nueva pide un asset que falta, que el launcher lo detecte y
   ofrezca re-importar solo lo faltante desde Steam.
+- [x] **#42** desync final HD: ya integrado en main (PR #273); sale en 2.1.
+- [x] **#163 video galería** (qkZSuuTsrio, grabado con v2.0): pausa de película HD en la galería **sin texto** =
+  bug #274, arreglado después de v2.0 (PR #274, 22:50Z). Mismo `MoviePause` en ambos bucles de `PlayFile`.
+  Test nuevo `port/tools/test_hd_gallery_pause_text.py` (WIP, sin commit verificado): la galería no encuentra el
+  evento (`found=0`) con 516 ni 513 → ajustar selección (ver `test_gallery_matrix.py`: 515/516 son alias en
+  pestañas HD; usar escena con `KHCOM_GALLERY_EVENT` como lo arma esa matriz).
+- [ ] **Atlas: escenas de diálogo con retrato en x4 1080p** (ej. Hades «¡Regla n.º 6!» en Coliseo: el retrato
+  sobresale del cuadro y la caja no ocupa la vista amplia) nunca entraron al Atlas. Buscar las similares y enviarlas.
+- [ ] **HUD HD vs jefes**: el nombre del hechizo que castea el jefe (p. ej. «15A Locura» junto a su carta) sale
+  cortado/mal ubicado; ajustar posición con su pila y subir la pila del jefe para calzar con el HUD HD (arriba
+  derecha) y mejorarla en HD. Solo en modo HUD HD.
+- [ ] **Sonido de recarga del mazo enemigo**: casi no se oye o no suena (usuario con undub). Revisar con/sin undub.
+- [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
-Rama `fix/v21-bugs` (sin PR todavía). Orden pedido: reproducir #277/#272, arreglar, dar build de prueba con
-todo lo arreglado a los reporteros con gracias y disculpas; luego cerrar el resto 1 por 1. Lista de arriba = alcance de v2.1 estable; el usuario quiere causa
-y por qué el arreglo cubre todos los casos para cada bug. VM: `port/tools/linux_vm_test.py --share
-D:/01Claude/ReKHCoM-build/linux/vmshare277` (build de prueba de #277; añadir `hd/music` de
-`D:/01Claude/ReKHCoM-build/hd-completo/music`). Ruta de partida nueva: `keys.txt` en ese share (A cada 50 frames).
+**Prioridad 1: el cierre de #277 (Deck) / #272 (Android) tras la Llave del Inicio.** Crítico; aún NO reproducido.
+- Hecho: Windows EU (texto HD) y VM Linux 64 (build de prueba #277, `D:/01Claude/ReKHCoM-build/linux/vmshare277`)
+  con todo HD activado (música, escenas: solo ROP/zz_event_001/011 copiados, sprites, subs), en **español e
+  inglés** EU: partida nueva → puerta castillo → selección de mundo → eventos 1,2 → combate tutorial, sin fallo.
+- Hipótesis del usuario (probar primero): **import HD antiguo/incompleto**: el juego busca un vídeo/escena o
+  asset que no está y no tiene ruta de respaldo → crash. Probar en VM: share con `hd/` de un import viejo
+  (p. ej. carpetas en `D:/01Claude/ReKHCoM-build/_para_borrar_20261026/` o jugar/pre17), `hd/scenes` con mp4
+  ausentes/corruptos/0 bytes (zz_event_002/012…), `hd_scenes=1` con escenas faltantes. Si es eso, arreglar en
+  todos los caminos (vídeo, música, sprites): ausente o ilegible → seguir con lo GBA, nunca cerrar.
+- Rastrear si esos reporteros ya jugaron bien antes (comentarios previos en #277, #140, #49, #77 de Gameboy121;
+  #272 de uxshade) y qué cambió entre esa versión y la que falla.
+- Ya pedidos en los issues: ajustes, modo Juego/Escritorio, logs, packs HD, región, y si con HD apagado falla.
+- Cuando se reproduzca: arreglar, test de regresión, build de prueba a ambos (rama orphan `test-builds`, nunca
+  release) con gracias y disculpas; en Deck mencionar que la build Windows va bien con Proton.
+
+Rama `fix/v21-bugs` (sin PR). Lista de arriba = alcance de v2.1 estable; para cada bug, causa y por qué el arreglo
+cubre todos los casos. VM: `MSYS_NO_PATHCONV=1 PYTHONUTF8=1 python port/tools/linux_vm_test.py --share
+D:/01Claude/ReKHCoM-build/linux/vmshare277 --fresh-share --disk-size 4G --run-timeout 1400 --run "cd
+/root/share/ReKHCoM && rm -f kh_com.sav && SDL_VIDEO_DRIVER=offscreen SDL_AUDIO_DRIVER=dummy KHCOM_FAST=1
+KHCOM_TRACE_MODES=1 KHCOM_KEYS=$(cat keys.txt) KHCOM_QUIT=16000 ./ReKHCoM.sh"`. `keys.txt` en el share = A cada 50
+frames (ahora ruta inglés: A en 200). El paquete solo trae guest EU. Builds locales: `build/pc` (EU),
+`build/pc-us`, `build/pc-jp` en khcom-hd-reload; ninja en `../toolchain/bin/ninja.exe`.
+Tests: siempre `SDL_AUDIO_DRIVER=dummy`; el 27/10 algo sonó en la batería → localizar.
 
 - [ ] Tests nunca deben sonar: algo sonó el 27/10 en la batería; localizar qué test no usa audio dummy.
 
