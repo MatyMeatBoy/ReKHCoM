@@ -242,6 +242,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v22-pacing | OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA | pendiente | — | — | — | 2026-10-27T17:32:34.299497+00:00 |
 | optiport-v22-soak | OptiPort 2.2: soak acotado de recursos modificados y gameplay paquetes Linux/Android | pendiente | — | — | — | 2026-10-27T17:32:40.926521+00:00 |
 | v22-premium-digit-gpu-qa | P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude | en_curso | codex-premium-digit-qa | — | Coordinador autoriza 27/10; primero preparación sin GPU | 2026-10-27T17:47:05.041873+00:00 |
-| v22-preview-cancellation-contract | Contrato C determinista de cancelación y resultados obsoletos de previews | en_curso | codex-v22-preview-cancellation | — | Coordinador autorizó separar y revisar PR381 como contrato acotado; no cerrar el bloque async/perf completo | 2026-10-27T17:53:13.860325+00:00 |
+| v22-preview-cancellation-contract | Contrato C determinista de cancelación y resultados obsoletos de previews | pr_abierto | codex-v22-preview-cancellation | https://github.com/MatyMeatBoy/ReKHCoM/pull/381 | Coordinador autorizó separar y revisar PR381 como contrato acotado; no cerrar el bloque async/perf completo | 2026-10-27T17:53:19.919912+00:00 |
 
 Integrador: libre
