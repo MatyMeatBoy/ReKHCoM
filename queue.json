@@ -7149,10 +7149,10 @@
     "synthesis-hd-gray-digits-coverage": {
       "id": "synthesis-hd-gray-digits-coverage",
       "piece": "Síntesis HD aprobada: pulir terminación gris y verificar0..99 por reglas/colores",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:52:34.089674+00:00",
-      "updated_at": "2026-10-27T19:02:02.161462+00:00",
+      "updated_at": "2026-10-27T21:38:36.342248+00:00",
       "branch": "refine/synthesis-gray-digits",
       "pr": null,
       "approval": "Usuario27/10 aprueba base actual y pide microacabado gris inferior y todos los dígitos; coordinador asigna sin Atlas",
@@ -7169,7 +7169,7 @@
           "detail": "released: Checkpoint8c776a5bc pushed refine/synthesis-gray-digits, no PR. CPU405import+2000combinations and CInit2000 pass; evidence pruebas/synthesis-gray-digits. Recipe proposal withdrawn to private patch, canonical recipes unchanged. RealGPU shows band~y302 coincides 2OAM body draws y162..306 / y302..338 overlapping4px: possible doublealpha; asset-only bottomfade did not fix it. User prioritizes critical386. Remaining visual polish pending; no approval claim."
         }
       ],
-      "claimed_at": "2026-10-27T18:52:45.704786+00:00"
+      "claimed_at": "2026-10-27T21:38:36.342248+00:00"
     },
     "issue386-stackoverflow": {
       "id": "issue386-stackoverflow",
@@ -7809,7 +7809,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:38:30.431235+00:00",
+  "updated_at": "2026-10-27T21:38:36.342248+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
