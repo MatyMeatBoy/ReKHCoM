@@ -13,6 +13,7 @@
  */
 #include <SDL3/SDL.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "port/port.h"
@@ -75,9 +76,19 @@ static void VisitWrite(void* p, size_t n) {
         sOk = 0;
 }
 
-static void VisitRead(void* p, size_t n) {
-    if (sOk && fread(p, 1, n, sFile) != n)
-        sOk = 0;
+/* A bounded staging allocation keeps damaged files away from live state.
+   64 MiB exceeds the current GBA/platform snapshot and is an explicit budget. */
+#define STATE_MAX_PAYLOAD (64u * 1024u * 1024u)
+static size_t sPayloadSize, sPayloadOffset;
+static unsigned char* sPayload;
+static void VisitCount(void* p, size_t n) {
+    (void)p;
+    if (n > STATE_MAX_PAYLOAD - sPayloadSize) sOk = 0;
+    else sPayloadSize += n;
+}
+static void VisitApply(void* p, size_t n) {
+    memcpy(p, sPayload + sPayloadOffset, n);
+    sPayloadOffset += n;
 }
 
 static void VisitAll(PortStateVisitor visit) {
@@ -101,7 +112,8 @@ const char* PortStatePath(int slot) {
     static char path[MAX_PATH];
 
     h_mkdir(PortConfigPath("states"));
-    SDL_snprintf(path, sizeof(path), "%s", PortConfigPath("states/slot0.khst"));
+    h_mkdir(PortConfigPath("states/guest"));
+    SDL_snprintf(path, sizeof(path), "%s", PortConfigPath("states/guest/slot0.khst"));
     path[strlen(path) - 6] = (char)('0' + slot % 10);
     return path;
 }
@@ -122,36 +134,52 @@ static void MakeParentDir(const char* path) {
 
 static int Save(const char* path) {
     uint32_t header[3] = { STATE_MAGIC, STATE_VERSION, BuildId() };
-
-    MakeParentDir(path);
-    sFile = fopen(path, "wb");
-    if (sFile == NULL)
+    char temporary[MAX_PATH];
+    if (SDL_snprintf(temporary, sizeof(temporary), "%s.tmp", path) >= (int)sizeof(temporary))
         return 0;
+    MakeParentDir(path);
+    sFile = fopen(temporary, "wb");
+    if (sFile == NULL) return 0;
     sOk = 1;
     VisitWrite(header, sizeof(header));
     VisitAll(VisitWrite);
-    if (fclose(sFile) != 0)
-        sOk = 0;
+    if (fclose(sFile) != 0) sOk = 0;
+    if (sOk && h_rename(temporary, path) != 0) sOk = 0;
+    if (!sOk) h_remove(temporary);
     return sOk;
 }
 
 static int Load(const char* path) {
     uint32_t header[3];
-
     sFile = fopen(path, "rb");
-    if (sFile == NULL)
+    if (sFile == NULL) return 0;
+    if (fread(header, 1, sizeof(header), sFile) != sizeof(header)) {
+        fclose(sFile);
         return 0;
-    sOk = 1;
-    VisitRead(header, sizeof(header));
-    if (!sOk || header[0] != STATE_MAGIC || header[1] != STATE_VERSION || header[2] != BuildId()) {
+    }
+    if (header[0] != STATE_MAGIC || header[1] != STATE_VERSION || header[2] != BuildId()) {
         fclose(sFile);
         PortLog("state: %s is from another build", path);
         return -1;
     }
-    VisitAll(VisitRead);
-    fclose(sFile);
+    sOk = 1;
+    sPayloadSize = 0;
+    VisitAll(VisitCount);
+    sPayload = sOk ? malloc(sPayloadSize ? sPayloadSize : 1) : NULL;
+    if (sPayload == NULL) { fclose(sFile); return 0; }
+    sOk = fread(sPayload, 1, sPayloadSize, sFile) == sPayloadSize;
+    if (sOk && fgetc(sFile) != EOF) sOk = 0;
+    if (ferror(sFile)) sOk = 0;
+    if (fclose(sFile) != 0) sOk = 0;
+    if (!sOk) { free(sPayload); sPayload = NULL; return 0; }
+    /* VisitAll describes fixed regions; no live values are changed until the
+       complete exact-size payload and stream have been validated. */
+    sPayloadOffset = 0;
+    VisitAll(VisitApply);
+    free(sPayload);
+    sPayload = NULL;
     PortAudioReset();
-    return sOk;
+    return 1;
 }
 
 void PortStateRequestSave(const char* path) {
@@ -161,6 +189,14 @@ void PortStateRequestSave(const char* path) {
 
 void PortStateRequestLoad(const char* path) {
     SDL_strlcpy(sPendingPath, path ? path : PortStatePath(gPortStateSlot), sizeof(sPendingPath));
+    if (!path) {
+        FILE* current = fopen(sPendingPath, "rb");
+        if (current) fclose(current);
+        else {
+            SDL_snprintf(sPendingPath, sizeof(sPendingPath), "%s", PortConfigPath("states/slot0.khst"));
+            sPendingPath[strlen(sPendingPath) - 6] = (char)('0' + gPortStateSlot % 10);
+        }
+    }
     sPendingLoad = 1;
 }
 
