@@ -6853,19 +6853,20 @@
     "issue380-door-spotlight": {
       "id": "issue380-door-spotlight",
       "piece": "Issue380: reproducir y corregir Sora y puerta invisibles en menu naipes mapa; antes/despues visual32/64",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-door380",
       "created_at": "2026-10-27T18:21:21.907014+00:00",
-      "updated_at": "2026-10-27T18:21:21.907014+00:00",
+      "updated_at": "2026-10-27T18:21:28.131243+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario prioriza Sora con puerta27/10 y pide resolver issues",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T18:21:28.131243+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:21:21.908014+00:00",
+  "updated_at": "2026-10-27T18:21:28.131243+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
