@@ -276,4 +276,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-launcher-gl-startup-guard | Guard launcher OpenGL startup failures with actual consumer regression | en_curso | sol-low-scenes-states | — | — | 2026-10-27T20:09:13.767252+00:00 |
 | divisor64-reachable-audit | Audit reachable native64 zero divisors beyond MapInspect/Moogle | en_curso | sol-low-diverse-saves | — | — | 2026-10-27T20:10:46.733037+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T20:10:32.756623+00:00)
+Integrador: libre
