@@ -6435,10 +6435,10 @@
     "v22-linux64-language-args": {
       "id": "v22-linux64-language-args",
       "piece": "Preservar --language en wrapper/host Linux64 con parser consumidor C dirigido, sin ABI/guest ni atribuir #330",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux64-args",
       "created_at": "2026-10-27T16:54:47.746692+00:00",
-      "updated_at": "2026-10-27T17:01:18.137066+00:00",
+      "updated_at": "2026-10-27T17:03:50.105053+00:00",
       "branch": "fix/linux64-language-args",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/376",
       "approval": "Coordinador autoriza PR acotado 27/10",
@@ -6448,9 +6448,15 @@
           "at": "2026-10-27T17:01:18.137066+00:00",
           "owner": "codex-linux64-args",
           "detail": "eb148e7ee685e31837211c4a21e87b859f1df37a; 3 C production host+guest consumer PASS; 16 wrapper tests PASS after rebase; baseline red verified; full Linux host syntax PASS with existing stb warning; pruebas/linux64-language-args; language only, no #330 causal claim"
+        },
+        {
+          "at": "2026-10-27T17:03:50.105053+00:00",
+          "owner": "codex-linux64-args",
+          "detail": "PR376 merged f1b51b9c21663aeacdbacd7184b2b2b6baa104e2. Coordinator reviewed host/parser/wrapper and independently reran 3 production C consumer tests plus 16 wrapper fixtures with Git POSIX utilities in PATH, all PASS. Preserves host data/boot/ROM boundaries; language-only parity. No reproduced Steam330 cause or physical Deck validation; guest unchanged."
         }
       ],
-      "claimed_at": "2026-10-27T16:54:53.851589+00:00"
+      "claimed_at": "2026-10-27T16:54:53.851589+00:00",
+      "completed_at": "2026-10-27T17:03:50.105053+00:00"
     },
     "windows64-cpu-sse41-gate": {
       "id": "windows64-cpu-sse41-gate",
@@ -6479,7 +6485,7 @@
     "created_at": "2026-10-27T17:03:36.432293+00:00",
     "updated_at": "2026-10-27T17:03:36.432293+00:00"
   },
-  "updated_at": "2026-10-27T17:03:36.432293+00:00",
+  "updated_at": "2026-10-27T17:03:50.105053+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
