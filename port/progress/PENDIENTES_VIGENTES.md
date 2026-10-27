@@ -1,5 +1,38 @@
 # Pendientes después de v2.0 — 26/10/2026
 
+## Mandato vigente de coordinación — 27/10/2026
+
+Consultar [COORDINACION_OPTIPORT_V21.md](COORDINACION_OPTIPORT_V21.md) antes de
+tomar trabajo: **Codex termina OptiPort al 100 %, prerelease Windows 64 y ZIP
+personal limpio; Claude puede tomar todos los pendientes regulares** (HUD,
+jefes, recetas, Atlas, galería, etc.), reservando en `coordination/art-queue`,
+preservando WIP y abriendo PR. Codex integra esos PR regulares después de
+OptiPort. Los claims activos de core/guardas, arquitectura y QA se respetan;
+el trabajo de Claude ya integrado sigue vigente.
+
+Esta lista es un snapshot, no autoridad de reservas. Registrar por ID owner,
+rama, scope/rutas, dependencias, reproducción/evidencia, SHA/tests, PR/merge,
+artefacto y siguiente prueba mínima. Integrado ≠ publicado ≠ confirmado en el
+dispositivo. La primera pasada original 9/14 (~64 %, aviso del usuario) es
+histórica; migración 32→64 es alcance añadido con seguimiento separado y no
+un porcentaje de estabilidad.
+
+**Autorización actual:** prerelease y envío de builds a #277/#272, más ZIP
+personal normal de Windows sin etiqueta alpha. La final 2.1 requiere completar
+OptiPort; no se promete cero bugs. Windows: Auto/Forzar 32/Forzar 64; Linux
+desktop/Deck: un paquete 64/32; Android: APK universal 32+64; consolas beta.
+Verificar SRAM manual/config entre runtimes y namespaces/compatibilidad de
+quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
+
+- [ ] **Cierre posterior a 2.1: ordenar worktrees** según el documento de
+  coordinación, conservando WIP, partidas, ROMs, evidencia y commits. Ahora
+  solo inventario/registro; no mover activos ni borrar. Nuevos worktrees:
+  preferir `KHCoMPC/khcom-worktrees` según la raíz del repositorio.
+
+Las notas fechadas anteriores que dicen «ninguna release nueva» o describen
+otro orden de integración se conservan como historia y quedan sustituidas por
+este mandato del 27/10.
+
 **v2.0 estable publicada.** Confirmado en GitHub el 26/10/2026:
 [release v2.0](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.0),
 publicada a las 17:20 de Chile (`2026-10-26T20:20:29Z`, `isPrerelease=false`).
