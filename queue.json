@@ -7646,10 +7646,23 @@
         }
       ],
       "claimed_at": "2026-10-27T20:17:14.532848+00:00"
+    },
+    "sol-remastered-parser-safety": {
+      "id": "sol-remastered-parser-safety",
+      "piece": "Bound remastered package allocations and preserve expanded language tables",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:20:28.874454+00:00",
+      "updated_at": "2026-10-27T20:20:28.874454+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User all bugs scoped CPU parsers root delegated",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:19:45.416959+00:00",
+  "updated_at": "2026-10-27T20:20:28.874454+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
