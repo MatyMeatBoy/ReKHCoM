@@ -88,12 +88,10 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
 - [ ] **HUD HD vs jefes**: el nombre del hechizo que castea el jefe (p. ej. «15A Locura» junto a su carta) sale
   cortado/mal ubicado; ajustar posición con su pila y subir la pila del jefe para calzar con el HUD HD (arriba
   derecha) y mejorarla en HD. Solo en modo HUD HD.
-- [ ] **Sonido de recarga del mazo enemigo**: casi no se oye o no suena (usuario con undub). Revisar con/sin undub.
-  Pista 27/10: `PortUndubApply` (port_undub.c) **silencia** (`memset 0`) las muestras con `source=0` del mapa
-  (`port_undub_map.h`, «voz solo en inglés») y reemplaza pistas de voz por las japonesas. Si el efecto de la recarga
-  enemiga comparte una de esas muestras o pistas, con undub queda mudo. Siguiente paso: localizar el song/SE de la
-  recarga enemiga (m4aSongNumStart en la IA de enemigos/jefes), grabar con `KHCOM_WAVDUMP` un combate de jefe
-  (p. ej. Hades) con y sin `undub=1`, y comparar; arreglar en el mapa sin tocar las voces.
+- [x] **Sonido de recarga del mazo enemigo con undub** (27/10): NO se reproduce. Combate Jafar 9000 cuadros, mismas
+  entradas, `KHCOM_SONGLOG=1` + `KHCOM_WAVDUMP` con `undub=0/1`: los mismos 491 sonidos en el mismo cuadro; solo las voces
+  (`SONG_VO_*`) cambian; `SONG_SYS_CHAGE` (carga/recarga, 112 veces) igual RMS (0,0587 / 0,0590); nada queda mudo.
+  Si el usuario vuelve a notarlo: pedir el combate/jefe exacto para repetir la medición allí.
 - [x] HD de «nivel plus», match de contranaipe y bloqueo: el usuario confirma que se ven bien.
 - [x] **Launcher 2.1: comprobación rápida de assets del mod** — sprites HD hecho 27/10: `recipes.txt` con huella por
   fila al importar; al arrancar `HdStaleSprites` cuenta lo desfasado (huella distinta, o en imports viejos proporción
