@@ -7117,8 +7117,8 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:50:40.347337+00:00",
-      "updated_at": "2026-10-27T21:26:24.108280+00:00",
-      "branch": "fix/hud-visibility-contours",
+      "updated_at": "2026-10-27T21:34:04.077086+00:00",
+      "branch": "fix/hd-layout-color-over-one",
       "pr": null,
       "approval": "Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas",
       "reference": null,
@@ -7132,6 +7132,11 @@
           "at": "2026-10-27T19:17:40.234273+00:00",
           "owner": "codex-hud-contours",
           "detail": "released: P1 pausado por coordinador ante P0 #386. Checkout limpio 8d4958; solo evidencia privada pruebas/hud-visibility-contours; ninguna edición de producto."
+        },
+        {
+          "at": "2026-10-27T21:34:04.077086+00:00",
+          "owner": "claude-v22",
+          "detail": "PR401: enemy HP dull = PS2 vertex colour >1 clamped; additive excess pass, (121,128,7)->(139,228,7) vs Re:CoM (148,231,7). Next: Sora fallback ring (gBtlHpRing, no-LAD import) seams/black box; pruebas/hud-visibility-contours/claude/"
         }
       ],
       "claimed_at": "2026-10-27T21:26:24.108280+00:00"
@@ -7779,7 +7784,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:33:44.287250+00:00",
+  "updated_at": "2026-10-27T21:34:04.077086+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
