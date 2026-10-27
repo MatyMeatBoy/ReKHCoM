@@ -268,5 +268,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | qa-sol-low-scenes-states | QA diversa galeria escenas y compatibilidad estados | en_revision | sol-low-scenes-states | — | — | 2026-10-27T19:27:43.672201+00:00 |
 | sol-low-linux-import | QA Linux SteamMachine HD importer fixtures | en_revision | sol-low-linux-import | — | User delegated 3 Sol bajo workers | 2026-10-27T19:27:58.786435+00:00 |
 | sol-linux-import-safety | ReadAsset bounds and import worker failure safety | pr_abierto | sol-low-linux-import | https://github.com/MatyMeatBoy/ReKHCoM/pull/390 | root user authorized scoped fix | 2026-10-27T19:51:35.879318+00:00 |
+| claude-retoma-prioridades-20261027 | Reparto para Claude: tomar primero diario-subentradas; después diario-entradas, hud-polish-visibility-contours, synthesis-hd-gray-digits-coverage, audio-intro-title-underrun, menus-fade-transitions y optimización HD medida. Es un traspaso, no una reserva: reclamar cada tarea libre individualmente. Crashes nuevos desplazan cosmética. Codex conserva revisión/integración PR385/390, cierre combinado386 y pre2; no duplicar builds ni tocar checkouts activos. | pendiente | — | — | Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total. | 2026-10-27T20:04:39.914172+00:00 |
 
 Integrador: libre

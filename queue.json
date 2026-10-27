@@ -7412,10 +7412,23 @@
         }
       ],
       "claimed_at": "2026-10-27T19:29:46.673547+00:00"
+    },
+    "claude-retoma-prioridades-20261027": {
+      "id": "claude-retoma-prioridades-20261027",
+      "piece": "Reparto para Claude: tomar primero diario-subentradas; después diario-entradas, hud-polish-visibility-contours, synthesis-hd-gray-digits-coverage, audio-intro-title-underrun, menus-fade-transitions y optimización HD medida. Es un traspaso, no una reserva: reclamar cada tarea libre individualmente. Crashes nuevos desplazan cosmética. Codex conserva revisión/integración PR385/390, cierre combinado386 y pre2; no duplicar builds ni tocar checkouts activos.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:04:39.914172+00:00",
+      "updated_at": "2026-10-27T20:04:39.914172+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total.",
+      "reference": "CLAUDE_COLA_ACTUAL.md; autoridad coordination/art-queue; no Atlas para UI vigente",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:00:18.926081+00:00",
+  "updated_at": "2026-10-27T20:04:39.914172+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
