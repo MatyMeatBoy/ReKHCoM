@@ -5489,10 +5489,10 @@
     "controller-prompt-inline-symbols": {
       "id": "controller-prompt-inline-symbols",
       "piece": "Experimental inline symbols, Japanese tutorial tokens and explicit confirm preset",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T09:24:47.056945+00:00",
-      "updated_at": "2026-10-27T09:50:24.618906+00:00",
+      "updated_at": "2026-10-27T12:36:41.151478+00:00",
       "branch": "feature/controller-prompt-glyphs",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/334",
       "approval": "User full2.1 prompt scope; parent explicitly authorizes continuation after332",
@@ -5502,9 +5502,15 @@
           "at": "2026-10-27T09:50:24.618906+00:00",
           "owner": "codex-control-prompts",
           "detail": "d61a80bfd stacked on332: immutable bounded symbol cache; actual Latin/SJIS layout+producer tests, EU/US/JP SDL/config tests, UI/message syntax, check_sources PASS. Explicit No-first pinned-family preset onlychangespadA/B. Noheavybuild/GPU claim; open-page refresh and64metadata remain pending. Rootvalidatesvisual underauthorizedAtlasbypass."
+        },
+        {
+          "at": "2026-10-27T12:36:41.151478+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "GitHub PR#334 state MERGED verified; mergeCommit 4d78d328850cb08dedb0e7965095de9809ba99e3; included in bundle PR351 merged 771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; runtime QA limits remain in project evidence."
         }
       ],
-      "claimed_at": "2026-10-27T09:24:52.616953+00:00"
+      "claimed_at": "2026-10-27T09:24:52.616953+00:00",
+      "completed_at": "2026-10-27T12:36:41.151478+00:00"
     },
     "harness-multikey-combos": {
       "id": "harness-multikey-combos",
@@ -5932,7 +5938,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:35.270620+00:00",
+  "updated_at": "2026-10-27T12:36:41.151478+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
