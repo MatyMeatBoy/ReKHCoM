@@ -4786,15 +4786,21 @@
     "hudhd-numeros-cartas": {
       "id": "hudhd-numeros-cartas",
       "piece": "HUD HD: números de carta dorado/azul visibles arriba y abajo",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T06:31:04.669290+00:00",
-      "updated_at": "2026-10-27T10:27:53.172625+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T10:34:27.051235+00:00",
+      "branch": "task/hud-card-digit-colors",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/341",
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T10:34:27.051235+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "3eb8f4398. Actual original ROM BStates palette+premium/modified tiles through production ObjColor/registration/HDcover/ink reducer RED lost ink then GREEN EU/US/JP digits0..9 hdHud0/1 HDpresent/missing. PPU x32+arm64_32 syntax pass. Valid HD art untouched; partial-import colored fallback stays native multicolor. No runtime/build; GPU present/missing plan documented. User2.1 direct coordinator visual review supersedes Atlas; draft physical visual pending"
+        }
+      ],
       "claimed_at": "2026-10-27T10:27:53.172625+00:00"
     },
     "hudhd-exp-ganada": {
@@ -5532,7 +5538,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:31:21.815350+00:00",
+  "updated_at": "2026-10-27T10:34:27.051235+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
