@@ -9,6 +9,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#if __has_include("port_hd_media.h")
+#include "port_hd_media.h"
+#else
+#include "../include/port/port_hd_media.h"
+#endif
 #ifdef _WIN32
 #include <direct.h>
 #define HdMkdir(p) _mkdir(p)
@@ -41,6 +46,7 @@ static const char* HdRelative(const char* name) {
         name += 3;
     if (strstr(name, "..") || name[0] == '/' || name[0] == '\\')
         return NULL;
+    if (!strncmp(name, "media/", 6)) return PortHdMediaTransferMember(name) ? name : NULL;
     for (i = 0; i < sizeof(kinds) / sizeof(kinds[0]); i++)
         if (strncmp(name, kinds[i], strlen(kinds[i])) == 0 && name[strlen(kinds[i])])
             return name;
@@ -54,19 +60,18 @@ int HdPackInstall(const char* root, HdPackLog log) {
     mz_zip_archive zip;
     FILE* f;
     mz_uint i, n, done = 0;
+    char pendingMedia[2][1200] = {{0}};
+    int mediaFailed = 0;
 
     snprintf(zipPath, sizeof(zipPath), "%s/ReKHCoM-HD.zip", root);
     if (stat(zipPath, &st) != 0)
         return 0;
-    snprintf(want, sizeof(want), "%lld", (long long)st.st_size);
     snprintf(markPath, sizeof(markPath), "%s/hd/.pack", root);
     if ((f = fopen(markPath, "r")) != NULL) {
         if (!fgets(mark, sizeof(mark), f))
             mark[0] = 0;
         fclose(f);
         mark[strcspn(mark, "\r\n")] = 0;
-        if (strcmp(mark, want) == 0)
-            return 0; /* this zip is in already */
     }
     memset(&zip, 0, sizeof(zip));
     if (!mz_zip_reader_init_file(&zip, zipPath, 0)) {
@@ -74,24 +79,49 @@ int HdPackInstall(const char* root, HdPackLog log) {
         return -1;
     }
     n = mz_zip_reader_get_num_files(&zip);
+    {
+        uint64_t identity = UINT64_C(14695981039346656037);
+        if (n > 16384) { mz_zip_reader_end(&zip); return -1; }
+        for (i = 0; i < n; ++i) {
+            mz_zip_archive_file_stat entry; const unsigned char* p;
+            if (!mz_zip_reader_file_stat(&zip, i, &entry)) { mz_zip_reader_end(&zip); return -1; }
+            for (p = (const unsigned char*)entry.m_filename; *p; ++p) { identity ^= *p; identity *= UINT64_C(1099511628211); }
+            identity ^= entry.m_crc32; identity *= UINT64_C(1099511628211);
+            identity ^= entry.m_uncomp_size; identity *= UINT64_C(1099511628211);
+        }
+        snprintf(want, sizeof(want), "%lld-%llx", (long long)st.st_size, (unsigned long long)identity);
+        if (!strcmp(mark, want)) { mz_zip_reader_end(&zip); return 0; }
+    }
     for (i = 0; i < n; i++) {
         mz_zip_archive_file_stat fs;
         const char* rel;
         if (!mz_zip_reader_file_stat(&zip, i, &fs) || fs.m_is_directory || !(rel = HdRelative(fs.m_filename)))
             continue;
         snprintf(out, sizeof(out), "%s/hd/%s", root, rel);
+        {
+            int media = PortHdMediaTransferMember(rel);
+            if (media == 1) {
+                FILE* existing = PortHdMediaOpenFile(out);
+                if (existing) { fclose(existing); continue; }
+            }
+            if (media > 1) {
+                snprintf(pendingMedia[media - 2], sizeof(pendingMedia[0]), "%s.transfer.part", out);
+                snprintf(out, sizeof(out), "%s", pendingMedia[media - 2]);
+            }
+        }
         MakeParents(out);
         /* write beside, then rename: a cut power leaves no half track under its real name */
         {
             char tmp[1110];
             snprintf(tmp, sizeof(tmp), "%s.part", out);
             if (!mz_zip_reader_extract_to_file(&zip, i, tmp, 0)) {
+                if (PortHdMediaTransferMember(rel)) mediaFailed = 1;
                 remove(tmp);
                 if (log) log("hd pack: %s did not unpack", fs.m_filename);
                 continue;
             }
-            remove(out);
-            if (rename(tmp, out) != 0) {
+            if (!PortHdMediaReplaceFile(tmp, out)) {
+                if (PortHdMediaTransferMember(rel)) mediaFailed = 1;
                 remove(tmp);
                 continue;
             }
@@ -99,7 +129,18 @@ int HdPackInstall(const char* root, HdPackLog log) {
         done++;
     }
     mz_zip_reader_end(&zip);
-    if (done) {
+    for (i = 0; i < 2; ++i) {
+        if (pendingMedia[i][0]) {
+            snprintf(out, sizeof(out), "%s/hd/media/%s/active.txt", root, i ? "ja" : "en");
+            if (mediaFailed || !PortHdMediaPendingValid(root, (int)i + 1, pendingMedia[i]) ||
+                !PortHdMediaReplaceFile(pendingMedia[i], out)) {
+                mediaFailed = 1;
+                if (log) log("hd pack: incomplete media variant; previous active generation preserved");
+            }
+            remove(pendingMedia[i]);
+        }
+    }
+    if (done && !mediaFailed) {
         snprintf(out, sizeof(out), "%s/hd/.pack", root);
         MakeParents(out);
         if ((f = fopen(out, "w")) != NULL) {

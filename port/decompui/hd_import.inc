@@ -23,6 +23,7 @@
 #include <d3d11.h>
 #include <d3d10.h>
 #include "hd_media_source.h"
+#include "hd_media_variants.h"
 
 namespace hd {
 
@@ -316,10 +317,10 @@ static std::string MvsText(const unsigned char* s, size_t n) {
     return out;
 }
 
-static int WriteSubtitles(const fs::path& install, const fs::path& data) {
+static int WriteSubtitles(const fs::path& install, const fs::path& data, const fs::path& mediaRoot = {}) {
     static const std::map<std::string, const char*> kLangs = { { "", "us" }, { "UK", "uk" }, { "FR", "fr" },
                                                                { "GR", "de" }, { "IT", "it" }, { "SP", "es" } };
-    fs::path hed = install / "Image" / "dt" / "Recom.hed", out = data / "hd" / "subs";
+    fs::path hed = install / "Image" / "dt" / "Recom.hed", out = (mediaRoot.empty() ? data / "hd" : mediaRoot) / "subs";
     std::error_code ec;
     if (!fs::exists(hed, ec))
         return 0;
@@ -1900,8 +1901,80 @@ static void Parallel(const std::vector<fs::path>& list, int n, const std::functi
         t.join();
 }
 
+#include "hd_media_scenes.inc"
+/* Variant work has its own private generation. Legacy import.list/journal and
+   good active generations never authorize reuse of another source or label. */
+static bool ImportMediaVariant(const fs::path& source, const fs::path& data, int language, bool movies,
+                               bool scenes, int quality, bool mf, int& count) {
+    const auto before = hdmedia::Inspect(source);
+    fs::path folder = MovieFolder(source);
+    if (folder.empty()) folder = source;
+    std::map<std::string, fs::path> inputs;
+    auto require = [&](const std::string& name) {
+        std::string relative = (name.rfind("zz_event_", 0) == 0 ? "scenes/" : "movies/") + name + ".mp4";
+        inputs[relative] = folder / (name + ".mp4");
+    };
+    if (movies) for (const char* name : kBaseMovies) require(name);
+    if (scenes) for (const char* name : kMediaSceneNames) require(name);
+    std::vector<std::string> required;
+    std::vector<fs::path> files;
+    std::map<fs::path, std::string> destinations;
+    std::error_code ec;
+    for (const auto& input : inputs) {
+        if (!fs::is_regular_file(input.second, ec)) return false;
+        required.push_back(input.first); files.push_back(input.second);
+        destinations[input.second] = input.first;
+    }
+    if (hdvariants::Reusable(data, language, before.fingerprint, quality, required)) {
+        count = (int)required.size(); return true;
+    }
+    hdvariants::Transaction transaction(data, language, before.fingerprint, quality, movies, scenes, required);
+    if (!transaction.valid()) return false;
+    fs::create_directories(transaction.Root() / "movies", ec);
+    fs::create_directories(transaction.Root() / "scenes", ec);
+    if (ec) return false;
+    std::ofstream provenance(transaction.Root() / "source.info", std::ios::binary);
+    provenance << "user-label=" << PortHdMediaLabel(language) << "\naudio-verified=no\nsource=" << source.u8string()
+               << "\nfingerprint=" << before.fingerprint << "\nsteam-language=" << before.declaredLanguage
+               << "\nsteam-build=" << before.build << "\ndepots=" << before.depotSummary << '\n';
+    provenance.close(); if (!provenance) return false;
+    sUnitShift = quality ? 23 : 26;
+    for (const auto& file : files) sJob.Plan(MoviePart(file), Units(file));
+    std::atomic<bool> ok{true}; std::mutex added;
+    Parallel(files, Workers(quality), [&](const fs::path& file) {
+        if (sJob.cancel || !ok) return;
+        const std::string& relative = destinations.at(file);
+        fs::path dst = transaction.Path(relative);
+        sJob.Say(std::string(T("Importando variante ", "Importing variant ")) + PortHdMediaLabel(language) + ": " + file.filename().u8string());
+        if (!ImportMovie(file, dst, quality)) { ok = false; return; }
+        if (mf) WriteMoviePosters(dst); // generation-specific sidecars cannot collide with another voice
+        std::lock_guard<std::mutex> lock(added);
+        if (!transaction.Add(relative)) ok = false;
+    });
+    if (!ok || sJob.cancel || hdmedia::Inspect(source).fingerprint != before.fingerprint) return false;
+    WriteSubtitles(source, data, transaction.Root());
+    if (sJob.cancel || hdmedia::Inspect(source).fingerprint != before.fingerprint || !transaction.Commit(false, false, &sJob.cancel)) return false;
+    count = (int)required.size();
+    sJob.Finish(PART_MOVIES); sJob.Finish(PART_SCENES);
+    return true;
+}
+
 static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool music, bool sprites, int quality,
-                bool resume = false) {
+                bool resume = false, int mediaLanguage = 0, bool ownJob = true) {
+    if (mediaLanguage && (movies || scenes)) {
+        HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+        bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+        int count = 0;
+        bool ok = ImportMediaVariant(source, data, mediaLanguage, movies, scenes, mf ? Compression(quality) : 0, mf, count);
+        if (mf) MFShutdown();
+        if (SUCCEEDED(com)) CoUninitialize();
+        if (!sJob.cancel && (music || sprites)) Run(source, data, false, false, music, sprites, quality, false, 0, false);
+        sJob.Say(ok ? std::string(T("Variante lista: ", "Variant ready: ")) + PortHdMediaLabel(mediaLanguage) + " (" + std::to_string(count) + ")"
+                    : T("No se publicó la variante: fuente incompleta, cambiada, cancelada o archivo inválido. Se conserva la copia anterior.",
+                        "Variant not published: source incomplete, changed, cancelled or invalid. The previous copy is preserved."));
+        sJob.running = false;
+        return;
+    }
     std::error_code ec;
     quality = Compression(quality);
     /* the journal: a new import starts one; resuming keeps the files it lists (checked) and goes on from there */
@@ -2075,7 +2148,7 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
         MFShutdown();
     if (SUCCEEDED(com))
         CoUninitialize();
-    sJob.running = false;
+    if (ownJob) sJob.running = false;
 }
 
 /* The movie's height and bits a second (its own figure, or its size over its length); false when unreadable. */
@@ -2212,13 +2285,13 @@ static uintmax_t InstalledMovieBytes(const fs::path& data) {
 }
 
 static void Start(const fs::path& source, const fs::path& data, bool movies, bool scenes, bool music, bool sprites,
-                  int quality, bool resume = false) {
+                  int quality, bool resume = false, int mediaLanguage = 0) {
     if (sJob.running)
         return;
     sJob.running = true;
     sJob.Reset();
     sJob.Say(T("Importando...", "Importing..."));
-    std::thread(Run, source, data, movies, scenes, music, sprites, quality, resume).detach();
+    std::thread(Run, source, data, movies, scenes, music, sprites, quality, resume, mediaLanguage, true).detach();
 }
 
 static int Count(const fs::path& folder, const char* ext) {
@@ -2284,11 +2357,11 @@ static void Run(fs::path root, int target) {
     if (!mz_zip_writer_init_file(&zip, tmp.u8string().c_str(), 0)) {
         result = T("No se pudo crear el archivo.", "Could not create the file.");
     } else {
-        static const char* const kinds[] = { "music", "sprites", "subs", "movies", "scenes" };
+        static const char* const kinds[] = { "music", "sprites", "subs", "movies", "scenes", "media" };
         int files = 0;
         bool ok = true;
         for (const char* kind : kinds) {
-            if (!t.movies && (strcmp(kind, "movies") == 0 || strcmp(kind, "scenes") == 0))
+            if (!t.movies && (strcmp(kind, "movies") == 0 || strcmp(kind, "scenes") == 0 || strcmp(kind, "media") == 0))
                 continue;
             fs::path dir = root / "hd" / kind;
             if (!fs::is_directory(dir, ec))
@@ -2297,6 +2370,7 @@ static void Run(fs::path root, int target) {
                 if (!it->is_regular_file(ec) || it->path().filename().u8string().rfind(".", 0) == 0)
                     continue;
                 std::string name = "hd/" + fs::relative(it->path(), root / "hd", ec).generic_u8string();
+                if (!strcmp(kind, "media") && !hdvariants::Exportable(root, name.substr(3))) continue;
                 {
                     std::lock_guard<std::mutex> g(sLock);
                     sStatus = std::string(T("Empaquetando ", "Packing ")) + name;
@@ -2466,6 +2540,16 @@ static bool HdModCard() {
     static fs::path source;
     static bool searched, sScenesMoved;
     bool changed = false;
+    static bool variantMovies[2], variantScenes[2], variantsRead, variantJobWasRunning;
+    if (variantJobWasRunning && !hd::sJob.running) variantsRead = false;
+    variantJobWasRunning = hd::sJob.running;
+    if (!variantsRead && !hd::sJob.running) {
+        for (int i = 0; i < 2; ++i) {
+            variantMovies[i] = PortHdMediaAvailable(sRoot.u8string().c_str(), i + 1, 0) != 0;
+            variantScenes[i] = PortHdMediaAvailable(sRoot.u8string().c_str(), i + 1, 1) != 0;
+        }
+        variantsRead = true;
+    }
     if (!searched) {
         searched = true;
         source = hd::FindInstall();
@@ -2562,6 +2646,7 @@ static bool HdModCard() {
     }
     ImGui::SameLine();
     if (ImGui::Button(T("Volver a comprobar", "Check again"))) rescanSource = true;
+    if (rescanSource) variantsRead = false;
     if (ImGui::IsItemHovered())
         ImGui::SetTooltip("%s", T("Después de cambiar el idioma del juego en Steam y terminar la descarga, comprueba otra vez los archivos disponibles.",
                                   "After changing the game's language in Steam and finishing the download, check the available files again."));
@@ -2610,11 +2695,21 @@ static bool HdModCard() {
         if (ImGui::TextLink(T("Página oficial del juego", "Official game page")))
             SDL_OpenURL("https://store.steampowered.com/app/2552430/");
     }
+    static int importLanguage;
+    static bool sourceLabelConfirmed;
+    const char* importLabels[] = {T("Sin etiqueta (Auto antiguo)", "Unlabelled (legacy Auto)"), "EN", "JP"};
+    if (CycleRow(T("Idioma de esta importación de vídeos", "This movie import's language"),
+                 T("La etiqueta la eliges tú; no cambia texto, subtítulos, música ni Undub. Se guarda separada y no reemplaza otra voz.",
+                   "You choose the label; text, subtitles, music and Undub stay separate. It is stored separately and does not replace another voice."),
+                 importLanguage, 3, importLabels)) sourceLabelConfirmed = false;
+    if (importLanguage)
+        ImGui::Checkbox(T("Confirmo que el audio de la fuente es el idioma que elegí (no está verificado automáticamente)",
+                          "I confirm the source audio is the language I selected (not automatically verified)"), &sourceLabelConfirmed);
     /* everything loaded (movies, scenes, music and HUD, no import cut short): no big load button to press by mistake
        (the user, 24/10), only "already loaded" and a small button that opens the load again, to change the quality
        or fill what is missing (a load keeps every movie already right) */
     static bool sReload;
-    bool loaded = haveBase && haveScenes > 0 && haveTracks > 0 && haveSprites > 0 && !hd::sJob.running &&
+    bool loaded = !importLanguage && haveBase && haveScenes > 0 && haveTracks > 0 && haveSprites > 0 && !hd::sJob.running &&
                   !fs::exists(sRoot / "hd" / "import.journal", ec);
     if (!loaded)
         sReload = false;
@@ -2680,13 +2775,16 @@ static bool HdModCard() {
         char full[96];
         snprintf(full, sizeof(full), "%s  %s", T("CARGAR TODO DESDE EL JUEGO", "LOAD EVERYTHING FROM THE GAME"),
                  kScenesSize[quality]);
-        if (PlayButton(full, ImVec2(ImGui::GetContentRegionAvail().x, Px(52)), !source.empty() && !hd::sJob.running)) {
-            hd::Start(source, sRoot, true, true, true, true, quality);
+        if (PlayButton(full, ImVec2(ImGui::GetContentRegionAvail().x, Px(52)), !source.empty() && !hd::sJob.running && (!importLanguage || sourceLabelConfirmed))) {
+            variantsRead = false;
+            hd::Start(source, sRoot, true, true, true, true, quality, false, importLanguage);
             sReload = false;
         }
-        ImGui::BeginDisabled(source.empty());
-        if (ImGui::Button(T("Solo lo básico: intros, música y HUD (~0,6 GB)", "Just the basics: intros, music and HUD (~0.6 GB)")))
-            hd::Start(source, sRoot, true, false, true, true, quality);
+        ImGui::BeginDisabled(source.empty() || (importLanguage && !sourceLabelConfirmed));
+        if (ImGui::Button(T("Solo lo básico: intros, música y HUD (~0,6 GB)", "Just the basics: intros, music and HUD (~0.6 GB)"))) {
+            variantsRead = false;
+            hd::Start(source, sRoot, true, false, true, true, quality, false, importLanguage);
+        }
         ImGui::EndDisabled();
     }
     /* what is already installed (a full mod imported at source quality, say), re-encoded here to the quality above:
@@ -2696,7 +2794,7 @@ static bool HdModCard() {
         static uintmax_t installed = (uintmax_t)-1;
         if (installed == (uintmax_t)-1 || hd::sJob.running)
             installed = hd::InstalledMovieBytes(sRoot);
-        ImGui::BeginDisabled(haveMovies <= 0 || quality == 0);
+        ImGui::BeginDisabled(haveMovies <= 0 || quality == 0 || importLanguage != 0);
         char label[160];
         if (confirm)
             snprintf(label, sizeof(label), "%s", T("¿Seguro? Reemplaza tus videos por los más livianos (pulsa de nuevo)",
@@ -2727,9 +2825,33 @@ static bool HdModCard() {
     hdexport::Section(sRoot, haveTracks > 0 || haveSprites > 0);
 #endif
     ImGui::Separator();
+    int mediaLanguage = std::clamp(Ini("hd_media_language"), 0, 2);
+    ImGui::TextWrapped("%s", T("Audio de vídeos HD (independiente del texto y Undub)", "HD movie audio (separate from text and Undub)"));
+    if (ImGui::SmallButton(T("Revisar variantes importadas", "Check imported variants"))) variantsRead = false;
+    ImGui::SameLine();
+    if (ImGui::TextLink(T("Ayuda oficial de idiomas de Steam", "Official Steam language help")))
+        SDL_OpenURL("https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+    const char* audioLabels[] = {T("Auto: importación antigua", "Auto: legacy import"), "EN", "JP"};
+    for (int i = 0; i < 3; ++i) {
+        bool available = !i || variantMovies[i - 1] || variantScenes[i - 1];
+        if (i) ImGui::SameLine();
+        ImGui::BeginDisabled(!available || hd::sJob.running);
+        if (ImGui::RadioButton(audioLabels[i], mediaLanguage == i)) {
+            mediaLanguage = Ini("hd_media_language") = i; changed = true;
+        }
+        ImGui::EndDisabled();
+        if (!available && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            ImGui::SetTooltip("%s", T("No hay una variante importada completa y válida. Importa tu fuente con esa etiqueta, o consulta la guía de Steam y vuelve a comprobar.",
+                                      "No complete valid imported variant. Import your source with that label, or use the Steam guide and check again."));
+    }
+    if (mediaLanguage)
+        ImGui::TextWrapped("%s", T("La etiqueta del audio fue declarada por el usuario. Si falta una escena de esa variante, se usa la original de GBA.",
+                                  "The audio label was declared by the user. If that variant lacks a scene, the original GBA scene is used."));
+    bool selectedMovies = mediaLanguage ? variantMovies[mediaLanguage - 1] : haveBase;
+    bool selectedScenes = mediaLanguage ? variantScenes[mediaLanguage - 1] : haveScenes > 0;
     changed |= GatedToggle(T("Videos HD", "HD movies"),
                          T("La apertura, los créditos y los finales de Sora y Riku de Re:Chain of Memories.",
-                           "Re:Chain of Memories' opening, credits and Sora's and Riku's endings."), Ini("hd_movies"), !(!haveBase));
+                           "Re:Chain of Memories' opening, credits and Sora's and Riku's endings."), Ini("hd_movies"), selectedMovies);
     changed |= GatedToggle(T("Música HD", "HD music"),
                          T("La banda sonora orquestada de Re:Chain of Memories en lugar de la música de GBA.",
                            "Re:Chain of Memories' soundtrack in place of the GBA music."), Ini("hd_music"), !(haveTracks == 0));
@@ -2737,10 +2859,10 @@ static bool HdModCard() {
                          T("Las escenas de historia de Re:Chain of Memories en lugar de las de GBA donde coinciden, "
                            "con subtítulos en el idioma del juego. Desactivado por defecto.",
                            "Re:Chain of Memories' story scenes in place of the GBA ones where they match, with subtitles "
-                           "in the game's language. Off by default."), Ini("hd_scenes"), !(haveScenes <= 0));
+                           "in the game's language. Off by default."), Ini("hd_scenes"), selectedScenes);
     changed |= GatedToggle(T("Subtítulos HD", "HD subtitles"),
                          T("Los subtítulos de Re:Chain of Memories en los videos y escenas HD, en el idioma del juego.",
-                           "Re:Chain of Memories' subtitles over the HD movies and scenes, in the game's language."), Ini("hd_subtitles"), !(haveMovies <= 0));
+                           "Re:Chain of Memories' subtitles over the HD movies and scenes, in the game's language."), Ini("hd_subtitles"), selectedMovies || selectedScenes);
     /* one switch, as the game's HD HUD: the cards, the battle HUD and the title logo */
     if (GatedToggle(T("HUD HD", "HD HUD"),
                   T("Las cartas, el HUD de combate y el logo del título con el arte de Re:Chain of Memories. "

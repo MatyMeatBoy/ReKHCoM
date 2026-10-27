@@ -11,6 +11,7 @@
 #include "port/port.h"
 #include "port/port_embedded_assets.h"
 #include "port/port_aspect.h"
+#include "port/port_hd_media.h"
 #ifndef PORT_PS5_GUEST
 #include "port/port_device_profile_host.h"
 #endif
@@ -148,6 +149,7 @@ static const Key sKeys[] = {
     { "net_stats", &gPortConfig.netStats, 0, 1 },
     { "net_delay", &gPortConfig.netDelay, 0, 8 },
     { "hd_movies", &gPortConfig.hdMovies, 0, 1 },
+    { "hd_media_language", &gPortConfig.hdMediaLanguage, 0, 2 },
     { "hd_music", &gPortConfig.hdMusic, 0, 1 },
     { "hd_scenes", &gPortConfig.hdScenes, 0, 1 },
     { "hd_subtitles", &gPortConfig.hdSubtitles, 0, 1 },
@@ -527,14 +529,24 @@ int PortAssetPresent(int asset) {
     };
     static int result[PORT_ASSET_COUNT];
     static Uint64 when[PORT_ASSET_COUNT];
+    static int mediaLanguage = -1;
     Uint64 now = SDL_GetTicks();
     int i;
     if (asset < 0 || asset >= PORT_ASSET_COUNT)
         return 0;
     if (asset == PORT_ASSET_UNDUB)
         return PortUndubAvailable();
+    if (mediaLanguage != gPortConfig.hdMediaLanguage) {
+        memset(when, 0, sizeof(when));
+        mediaLanguage = gPortConfig.hdMediaLanguage;
+    }
     if (!when[asset] || now - when[asset] > 1000) {
         result[asset] = 0;
+        if (gPortConfig.hdMediaLanguage && (asset == PORT_ASSET_HD_MOVIES || asset == PORT_ASSET_HD_SCENES)) {
+            result[asset] = PortHdMediaAvailable(PortConfigPath(""), gPortConfig.hdMediaLanguage, asset == PORT_ASSET_HD_SCENES);
+            when[asset] = now ? now : 1;
+            return result[asset];
+        }
         for (i = 0; i < 2 && files[asset][i] && !result[asset]; i++) {
             FILE* f = fopen(PortConfigPath(files[asset][i]), "rb");
             result[asset] = f != NULL;

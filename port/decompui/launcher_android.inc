@@ -9,6 +9,23 @@
  * The fonts, box art and logo ship in the APK's assets (launcher/) and are copied to files/assets on start. */
 #include <jni.h>
 
+extern "C" JNIEXPORT jboolean JNICALL Java_com_rekhcom_android_LauncherActivity_commitHdMedia(
+        JNIEnv* env, jclass, jstring root, jint mode, jstring pending) {
+    const char* data = env->GetStringUTFChars(root, nullptr);
+    const char* file = env->GetStringUTFChars(pending, nullptr);
+    char active[1600]; bool ok = false;
+    if (data && file && PortHdMediaLabel(mode)) {
+        fs::path expected = fs::u8path(data) / "hd/media" / PortHdMediaLabel(mode);
+        if (fs::u8path(file).parent_path() == expected && PortHdMediaPendingValid(data, mode, file)) {
+            SDL_snprintf(active, sizeof(active), "%s/hd/media/%s/active.txt", data, PortHdMediaLabel(mode));
+            ok = PortHdMediaReplaceFile(file, active) != 0;
+        }
+    }
+    if (file) env->ReleaseStringUTFChars(pending, file);
+    if (data) env->ReleaseStringUTFChars(root, data);
+    return ok ? JNI_TRUE : JNI_FALSE;
+}
+
 enum { ANDROID_PICK_ROM = 10, ANDROID_PICK_SAVE = 20, ANDROID_PICK_EXPORT = 30, ANDROID_PICK_HD = 40 };
 
 /* calls a method of the activity; false when the activity is not there */
