@@ -6926,12 +6926,12 @@
     "issue378-hd-audio-subtitle-independence": {
       "id": "issue378-hd-audio-subtitle-independence",
       "piece": "Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-issue378-subtitles",
       "created_at": "2026-10-27T18:27:56.322518+00:00",
-      "updated_at": "2026-10-27T18:30:26.966968+00:00",
+      "updated_at": "2026-10-27T18:51:17.810962+00:00",
       "branch": "fix/issue378-subtitles",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/385",
       "approval": "Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/378",
       "evidence": [
@@ -6939,6 +6939,11 @@
           "at": "2026-10-27T18:30:26.966968+00:00",
           "owner": "codex-issue378-subtitles",
           "detail": "Freshmain55b730619, worktree undub-subtitles-es; consumidor pide ES luegoUS, subtítulos de variantes quedan asociados a generación de audio. Primero reproducir con LoadSubs/MovieSubtitlePath reales; aceptar ES de otra biblioteca sólo si tiempos de cues coinciden exactamente con referencia de voz seleccionada; si faltan ES no inventar. No toca380 ni builds grandes."
+        },
+        {
+          "at": "2026-10-27T18:51:17.810962+00:00",
+          "owner": "codex-issue378-subtitles",
+          "detail": "PR385 head7ef323611, rebased main8d495811e; 14 native and guest-to-host consumer cases passed, exact-source results pruebas/issue378-subtitles/subtitle-consumer-t88vju9w/results.json; existing variants and Win32/x32 syntax pass. Only compatible complete cue vectors reuse real ES; missing/incompatible ES retains existing fallback. No real Japanese source/audio playback verified; no GPU/build/perf claim. Minimal scope, immutable pre1 unchanged."
         }
       ],
       "claimed_at": "2026-10-27T18:28:02.374425+00:00"
@@ -7032,7 +7037,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:50:46.217640+00:00",
+  "updated_at": "2026-10-27T18:51:17.810962+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
