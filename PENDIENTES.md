@@ -251,4 +251,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue378-hd-audio-subtitle-independence | Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado | en_curso | codex-issue378-subtitles | fix/issue378-subtitles | Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados | 2026-10-27T18:30:26.966968+00:00 |
 | android22-pre1-diagnostic-build | APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto | en_curso | codex-android22-build | — | — | 2026-10-27T18:29:06.260644+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T18:31:59.860311+00:00)
+Integrador: libre
