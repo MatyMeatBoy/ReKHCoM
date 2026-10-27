@@ -5034,6 +5034,19 @@
       ],
       "claimed_at": "2026-10-27T08:07:28.084989+00:00",
       "completed_at": "2026-10-27T08:12:09.245569+00:00"
+    },
+    "save-panel-palette-exhaustion": {
+      "id": "save-panel-palette-exhaustion",
+      "piece": "Save panel palette exhaustion BIOS semantics",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:12:15.815024+00:00",
+      "updated_at": "2026-10-27T08:12:15.815024+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": {
@@ -5042,7 +5055,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T08:10:10.550151+00:00"
   },
-  "updated_at": "2026-10-27T08:12:09.245569+00:00",
+  "updated_at": "2026-10-27T08:12:15.815970+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
