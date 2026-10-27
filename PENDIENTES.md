@@ -255,5 +255,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | card-key-hilt-black-microfix | Cambio literal de1-2pixelsblancos a negro en KingdomKeytodosvalores yHeroica5; conservarrestoaprobado | en_curso | codex-card-microfix | — | — | 2026-10-27T18:48:05.984482+00:00 |
 | hud-polish-visibility-contours | Prioridad usuario: calidadHUDvisible enemigoapagado/Soraagujeros+AA local contorno y bosses1+bars por maxHP real; diagnóstico causal32/64/Sora/Riku/map/battle/boss sinblur global | en_curso | codex-hud-contours | fix/hud-visibility-contours | Coordinador/usuario27/10prioridadúltima; proponer causa verificada antesfix; artebaseaprobado sinAtlas | 2026-10-27T18:53:13.260591+00:00 |
 | synthesis-hd-gray-digits-coverage | Síntesis HD aprobada: pulir terminación gris y verificar0..99 por reglas/colores | en_curso | codex-synthesis-gray-digits | refine/synthesis-gray-digits | Usuario27/10 aprueba base actual y pide microacabado gris inferior y todos los dígitos; coordinador asigna sin Atlas | 2026-10-27T18:53:20.240398+00:00 |
+| issue386-stackoverflow | Crash Windows64 al entrar mode_mapinspect, issue386 | pendiente | — | — | — | 2026-10-27T18:54:31.158123+00:00 |
 
 Integrador: libre
