@@ -7255,10 +7255,23 @@
       "reference": "issue386 debugger original integer-divzero masked by secondary stack overflow",
       "evidence": [],
       "claimed_at": "2026-10-27T19:17:54.126227+00:00"
+    },
+    "issue386-moogle-charge-scroll": {
+      "id": "issue386-moogle-charge-scroll",
+      "piece": "Hijo audit64-menu-scroll-boundaries: corregir división0 alcanzable en scrollbar MsCharge con10..12tipos",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T19:20:49.301337+00:00",
+      "updated_at": "2026-10-27T19:20:49.301337+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario pide arreglar todos los fallos64 por patrones; coordinador aprueba fix local MsCharge y prueba consumidor real sin GPU",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:20:39.784823+00:00",
+  "updated_at": "2026-10-27T19:20:49.301337+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
