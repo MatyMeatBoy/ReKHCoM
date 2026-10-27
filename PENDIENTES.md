@@ -298,4 +298,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | attack-card-last-horizontal-pixel | Isolate literal remaining horizontal pixel below Olympia crown from user b91e screenshot; preserve all other art; current production D3D11 A/B | en_curso | codex-card-final-line | — | Usuario27oct literal1pixel; root delegated worker no Atlas for visual port corrections | 2026-10-27T23:50:53.221359+00:00 |
 | hd-music-movie-test-fixture | Keep HD decoder failure fixture compatible with actual movie engine ident and assert movie pause/resume | en_curso | codex-integrador | — | Usuario: integrar todo Claude y preservar comprobaciones de audio y escenas | 2026-10-27T23:52:06.222605+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T23:53:03.519533+00:00)
+Integrador: libre
