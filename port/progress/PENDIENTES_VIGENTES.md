@@ -35,6 +35,27 @@ Prioridad 1 cerrada salvo guante y botón A (abajo). #360: esperando el log de P
 HUD HD con `KHCOM_HD_HUD_DEV=1`, `KHCOM_HOST_SHOT`) y `blink.py`/`premire.py` (32 bits offscreen).
 El usuario pide seguir hasta vaciar pendientes sin preguntar.
 
+**Reparto:** Codex coordina e integra con lock; Claude (`claude-v22`) abre PR
+pequeños con evidencia y no integra. Tareas de cartas cerradas quedan en
+`en_revision` para que Codex las pase a integrado.
+
+## OptiPort 2.2 — pasada de los 4 bloques parciales (27/10)
+
+Tareas en la cola: `optiport-v22-profiling` (claude-v22, PR #379),
+`optiport-v22-async`, `optiport-v22-pacing`, `optiport-v22-soak` (libres).
+
+- [x] **Vista profunda de tirones** (pedido del usuario), PR #379: etapas por
+  cuadro y costes puntuales en `frames.csv`, línea `stutter:` en `kh_com.log`,
+  peores en `report.json`. Lección general en OptiPort PR #7.
+- [ ] **Herida repetida 3/3:** entrar a las cartas de mapa (puerta) cuesta
+  40–55 ms: 6 cargas HD (decode 11 ms, subida 17,5 ms: imagen + copia blanca)
+  y 12 glifos nuevos (8,6 ms). Opciones: copia blanca bajo demanda en GPU
+  (requiere targets; consola los negocia opcionalmente), precarga de las
+  cartas durante la transición, glifos precalentados por fuente. Medir con
+  la misma fixture antes/después. [Evidencia](OPTIPORT_STUTTER_VIEW.md).
+- [ ] Repetir en equipo sin carga externa: cargas de ~97 ms y `present`
+  largos aparecieron en una sola corrida ruidosa; no confirmados.
+
 ## PRIORIDAD 1 — Cartas (usuario 27/10, pasan directo por Claude, NO por Atlas)
 
 Sacadas de los preliminares de Atlas (9 piezas; respaldo de la base en
