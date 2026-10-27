@@ -189,4 +189,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | guest-songlog-env | Portable guest optional song logging link fix | integrado | codex-crash | https://github.com/MatyMeatBoy/ReKHCoM/pull/316 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T08:12:09.245569+00:00 |
 | save-panel-palette-exhaustion | Save panel palette exhaustion BIOS semantics | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/319 | — | 2026-10-27T08:14:37.978186+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T08:10:10.550151+00:00)
+Integrador: codex-crash (ocupado; 2026-10-27T08:18:18.474518+00:00)
