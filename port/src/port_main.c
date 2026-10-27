@@ -1637,6 +1637,22 @@ static void NativeMovieRendererReset(void) {
 }
 #endif
 
+/* The closing Options frame is still black and game logic is paused. Walk
+ * only the current HUD's OAM through the normal consumer so content-keyed
+ * replacements decode/upload here, rather than on the first resumed frame.
+ * This runs on the same renderer thread as Present; missing pieces retain
+ * their normal cached miss and cartridge fallback. */
+static void PrepareHudAfterOptions(int menuCanvas) {
+    if (!menuCanvas || PortUiActive() || !gPortConfig.hdHud || !PortPpuHudActive())
+        return;
+    GrowPixelBuffer(&sHudBuf, &sHudCapacity, (size_t)gPortHudW * gPortHudH);
+    uint64_t started = SDL_GetPerformanceCounter();
+    PortPpuRenderHud(sHudBuf);
+    if (SDL_getenv("KHCOM_HD_MENU_PROFILE"))
+        PortLog("HD HUD: prepared current HUD before gameplay in %.1f ms",
+                (SDL_GetPerformanceCounter() - started) * 1000.0 / SDL_GetPerformanceFrequency());
+}
+
 static void Present(void) {
     if (!RendererResetService()) return;
     const char* hdProfile;
@@ -1680,6 +1696,7 @@ static void Present(void) {
         }
     }
     PortUiDraw(sComposite, gPortScreen.width, gPortScreen.height);
+    PrepareHudAfterOptions(menuCanvas);
     {
         extern void PortPpuOverKeepDrawn(const uint32_t* composite);
         PortPpuOverKeepDrawn(sComposite); /* the title's hint over its HD illustration */
