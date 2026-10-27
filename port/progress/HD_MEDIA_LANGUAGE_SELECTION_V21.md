@@ -239,3 +239,8 @@ Se exige wanted no nulo antes de comparar un miembro específico. GREEN con
 manifest mixto movies/scenes, disponibilidad independiente tras truncar una
 escena, y restauración miniz real completa/mixta o incompleta preservando
 ambos índices activos. No atribuir esta regresión a QA de fuente/dispositivo.
+
+Revisión P2 del mismo carril: transferencia incompleta preservaba active pero
+retornaba1 y sugería borrar el ZIP. Ahora retorna-1 y pide conservar/reparar
+el paquete; no escribe marca de éxito. Harness miniz real exige código y log
+correctos para componente incompleto y manifiesto mixto parcialmente copiado.

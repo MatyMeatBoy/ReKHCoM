@@ -4,7 +4,7 @@
  * (port/progress/HD_MOD.md): plain stdio and miniz, no SDL.
  *
  * Only hd/<music|sprites|subs|movies|scenes>/... entries are taken (a bare music/... is read as hd/music/...);
- * anything else, or a path with "..", is skipped. hd/.pack remembers the zip installed (its size), so the next start
+ * anything else, or a path with "..", is skipped. hd/.pack remembers the installed central-directory fingerprint, so the next start
  * does nothing until another zip is copied over it. The zip itself is left where it was (the player may delete it). */
 #include <stdio.h>
 #include <string.h>
@@ -53,7 +53,8 @@ static const char* HdRelative(const char* name) {
     return NULL;
 }
 
-/* 1: a zip was installed now, 0: nothing to do, -1: the zip could not be read (the hd folder is left as it was) */
+/* 1: installed now, 0: nothing to do, -1: read/activation failed. Some files may
+   have copied; failed media activation preserves the previous active index. */
 int HdPackInstall(const char* root, HdPackLog log) {
     char zipPath[1024], markPath[1024], out[1100], mark[64] = "", want[64];
     struct stat st;
@@ -147,6 +148,10 @@ int HdPackInstall(const char* root, HdPackLog log) {
             fprintf(f, "%s\n", want);
             fclose(f);
         }
+    }
+    if (mediaFailed) {
+        if (log) log("hd pack: media transfer incomplete; keep %s and retry after correcting missing/corrupt files", zipPath);
+        return -1;
     }
     if (log) log("hd pack: %u files from %s into %s/hd (the zip can be deleted now)", (unsigned)done, zipPath, root);
     return done ? 1 : 0;
