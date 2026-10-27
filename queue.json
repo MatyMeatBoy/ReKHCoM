@@ -2495,13 +2495,13 @@
     "anadir-naipes-oclusion-hd": {
       "id": "anadir-naipes-oclusion-hd",
       "piece": "Anadir naipes: oclusion HD por selector en cada frame original",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:39:55.315628+00:00",
-      "updated_at": "2026-10-25T13:48:35.544380+00:00",
+      "updated_at": "2026-10-27T17:12:27.794390+00:00",
       "branch": "codex/naipes-selector-oclusion",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/124",
-      "approval": null,
+      "approval": "Atlas exact 27f14d9fe9bb4428b0dccf98c1e06a8c; approved; revision 1; sha256 0db2cffe126f6fdafea85eb2e80bab81ea13e35362780915600fbd62146b613a; decision 2026-10-25T15:56:14.987975+00:00",
       "reference": "20261024-195741-61a4e3 / 7116d737f2284b269ee859ebaf65596f",
       "evidence": [
         {
@@ -2513,10 +2513,16 @@
           "at": "2026-10-25T13:48:35.544380+00:00",
           "owner": "codex-atlas",
           "detail": "61frames480..540;22271celdas ocultas identicas,378glifos parcialmente tapados; compilacion Windows correcta."
+        },
+        {
+          "at": "2026-10-27T17:12:27.794390+00:00",
+          "owner": "codex-atlas",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/124 MERGED 2026-10-25T16:17:50Z; merge e50433901a394d6bc5def8d5da68c64d677c2e56 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact 27f14d9fe9bb4428b0dccf98c1e06a8c, approved, revision 1, SHA256 0db2cffe126f6fdafea85eb2e80bab81ea13e35362780915600fbd62146b613a; no se hereda aprobacion de otra version.\nRevalidado 2026-10-27T17:12:27.698985+00:00; main f1b51b9c21663aeacdbacd7184b2b2b6baa104e2; merge real e50433901a394d6bc5def8d5da68c64d677c2e56; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T13:40:01.774921+00:00",
-      "sent": "27f14d9fe9bb4428b0dccf98c1e06a8c"
+      "sent": "27f14d9fe9bb4428b0dccf98c1e06a8c",
+      "completed_at": "2026-10-27T17:12:27.794390+00:00"
     },
     "darkside-06-feedback-revision": {
       "id": "darkside-06-feedback-revision",
@@ -6575,7 +6581,7 @@
     "created_at": "2026-10-27T17:11:02.822041+00:00",
     "updated_at": "2026-10-27T17:11:02.822041+00:00"
   },
-  "updated_at": "2026-10-27T17:12:19.468806+00:00",
+  "updated_at": "2026-10-27T17:12:27.795391+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
