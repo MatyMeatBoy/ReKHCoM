@@ -212,6 +212,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | controller-prompt-original-live-spans | Scoped original tutorial spans with reversible live button overlays and bounded unsupported-key fallback | pr_abierto | codex-control-prompts | https://github.com/MatyMeatBoy/ReKHCoM/pull/347 | Parent authorizes Original enable live-page and fallback increment atop338, preserving VM/reveal/geometry | 2026-10-27T11:01:11.271597+00:00 |
 | hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/346 | — | 2026-10-27T11:04:35.112736+00:00 |
 | optiport-serial-profile-contract | Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow | en_curso | codex-profile-contract | — | Root delega plan serial ycorregir postcondicionesreales sinrewriteharness | 2026-10-27T10:54:25.159040+00:00 |
-| hud-canvas-preflight | Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento | pendiente | — | — | — | 2026-10-27T11:04:53.035390+00:00 |
+| hud-canvas-preflight | Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento | en_curso | device_profiles_sol | — | — | 2026-10-27T11:04:58.188147+00:00 |
 
 Integrador: libre

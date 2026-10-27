@@ -5739,19 +5739,20 @@
     "hud-canvas-preflight": {
       "id": "hud-canvas-preflight",
       "piece": "Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "device_profiles_sol",
       "created_at": "2026-10-27T11:04:53.035390+00:00",
-      "updated_at": "2026-10-27T11:04:53.035390+00:00",
+      "updated_at": "2026-10-27T11:04:58.188147+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "port/progress/HUD_OPTIONS_WARM.md",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T11:04:58.188147+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:04:53.035390+00:00",
+  "updated_at": "2026-10-27T11:04:58.188147+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
