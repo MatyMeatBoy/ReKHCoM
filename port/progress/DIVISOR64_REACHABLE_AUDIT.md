@@ -16,30 +16,41 @@ human/versus battles. Parasite Cage's playable enemy card supplies Dispel
 (`card_catalog.c`). The card-display lifecycle still creates `HCEffectName`
 through `SoraHeartlessCardShow`. `ApplyRikuHcEffect` can likewise clear effects
 with Dispel; battle teardown also clears the effective effect while an old
-name/counter can remain. The intended outcome is an inactive name task, not a
-blink calculation using the absent effect's zero count.
+name/counter can remain. The original GBA/32-bit zero quotient is zero, after which the existing checks
+choose whether to keep or finish the task. An early return that also clears
+card state is not equivalent: a new effect can be pending in that state.
 
-The PC-only guard retires that task and clears its matching inactive card
-effect/replacement flag. Active effect arithmetic remains unchanged. No global
-division wrapper, exception recovery or GBA behavior change is introduced.
+The fix uses the existing PC `DIV0` helper at these two calculation sites only.
+It returns the GBA-compatible zero quotient, then leaves every lifecycle check,
+state mutation, blink clamp and task return unchanged. Non-PC source paths are
+unchanged. No global division wrapper or exception recovery is introduced.
 
-Verification: `test_hc_effect_name_lifecycle.py` extracts the full production
-Sora/Riku effect producers and `HCEffectName_1`, plus real IDs and EU counts.
+Verification: `test_hc_effect_name_lifecycle.py` extracts production effect
+producers, the name consumer and shuffling predicate, real IDs and EU counts.
 Task/render hooks and minimal surrounding objects are test doubles. The
-unmodified source faults with `0xC0000094` for both Sora and Riku producer-to-NONE
-cases. The guarded source passes 16 cases: both sides, Dispel/NONE, battle-end
-stale positive counters, expiration, replacement, and positive counts 1/2/3
-around the Incrementor capacity of 2. Count 3 is a boundary control, not a
-claim that this producer naturally exceeds its configured count.
+unmodified native source faults with `0xC0000094` independently for Sora/Riku
+producer-to-NONE cases. The corrected source passes 16 named lifecycle checks.
 
-Run without game assets:
+The additional `--compare-gba` mode takes the original consumer from immutable
+commit `038d92627bf2792465dd7eb143b7da6e0c856638`, substitutes the independently
+verified GBA zero quotient only at its two divide sites, and compares complete
+work/state/battle objects, return values, visibility, blink interval, timer and
+task-update/digit hooks with the fixed consumer. All 7,724 cases agree, including
+NONE/old/new pending state, replacement, Dispel/Mimic/random-shuffle IDs and
+counter 0/1/capacity-1/capacity/capacity+1. All 54 non-NONE effect definitions
+also receive positive/expiration controls. Mixed states and above-capacity
+counts are boundary controls, not claims that every combination occurs during
+normal gameplay. The original early-return proposal failed this differential
+check and was replaced before integration.
 
 ```text
 python port/tools/test_hc_effect_name_lifecycle.py --work <private-evidence-directory>
+python port/tools/test_hc_effect_name_lifecycle.py --compare-gba --work <private-evidence-directory>
 ```
 
-The CPU regression proves the producer/consumer failure; a packaged gameplay
-activation of the Parasite Cage card remains a separate runtime check.
+EU/US/JP non-PC preprocessed consumers are byte-identical to the original.
+A packaged gameplay activation of the Parasite Cage card remains a separate
+runtime check; the CPU fixture proves the producer/consumer failure directly.
 
 ## Other inspected denominators
 
