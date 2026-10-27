@@ -5393,14 +5393,14 @@
     "launcher-hd-media-language-variants-v21": {
       "id": "launcher-hd-media-language-variants-v21",
       "piece": "Siguiente PR EN/JP: imports namespaces por idioma, metadata/cache/journal/posters con procedencia, playback y UI seleccion independiente de texto/Undub; atomic y preservarold",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-hd-media-variants",
       "created_at": "2026-10-27T08:52:24.794876+00:00",
-      "updated_at": "2026-10-27T10:49:28.278636+00:00",
+      "updated_at": "2026-10-27T12:36:00.942232+00:00",
       "branch": "feat/hd-media-language-variants",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/335",
       "approval": "Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente",
-      "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "evidence": [
         {
           "at": "2026-10-27T10:05:32.164267+00:00",
@@ -5416,9 +5416,15 @@
           "at": "2026-10-27T10:49:28.278636+00:00",
           "owner": "codex-hd-media-variants",
           "detail": "Independent re-review confirmed P1 mixed-NULL and P2 incomplete pack return/log corrected.335head5acf2cb04;342headc6c7ad615. Production mixed LoadEverything import/coreavailability and real miniz partialrestore RED->GREEN. No new blocker found; hardwareSAF/GPU and realp95 remain pending."
+        },
+        {
+          "at": "2026-10-27T12:36:00.942232+00:00",
+          "owner": "codex-hd-media-variants",
+          "detail": "GitHub verified MERGED PR335, real merge SHA 33bd727ba5b56561c1a5cda4ab16fd0cad63c7d4. Included in bundle PR351, real merge771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; integrated is not released or device-confirmed. Existing evidence/WIP/branches preserved; worktree needed review/repro until coordinator archives."
         }
       ],
-      "claimed_at": "2026-10-27T08:56:58.558622+00:00"
+      "claimed_at": "2026-10-27T08:56:58.558622+00:00",
+      "completed_at": "2026-10-27T12:36:00.942232+00:00"
     },
     "submenu-moogle-visible-band-style-zero": {
       "id": "submenu-moogle-visible-band-style-zero",
@@ -5890,7 +5896,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:35:07.537464+00:00",
+  "updated_at": "2026-10-27T12:36:00.942232+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
