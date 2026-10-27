@@ -7610,19 +7610,20 @@
     "guest64-divzero-parity": {
       "id": "guest64-divzero-parity",
       "piece": "Restore scoped cartridge zero-divisor semantics in x32 guest hosts",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "sol-low-scenes-states",
       "created_at": "2026-10-27T20:16:52.147660+00:00",
-      "updated_at": "2026-10-27T20:16:52.147660+00:00",
+      "updated_at": "2026-10-27T20:16:57.923696+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T20:16:57.923696+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:16:52.147660+00:00",
+  "updated_at": "2026-10-27T20:16:57.923696+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
