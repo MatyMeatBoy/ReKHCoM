@@ -4576,15 +4576,16 @@
     "hd-music-loader-bounds": {
       "id": "hd-music-loader-bounds",
       "piece": "Bound async music file reads and retain original music during load",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-music-loader",
       "created_at": "2026-10-27T05:37:08.462230+00:00",
-      "updated_at": "2026-10-27T05:37:08.462230+00:00",
+      "updated_at": "2026-10-27T05:37:14.628369+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T05:37:14.628369+00:00"
     }
   },
   "integrator": {
@@ -4593,7 +4594,7 @@
     "created_at": "2026-10-27T05:36:15.146946+00:00",
     "updated_at": "2026-10-27T05:36:15.146946+00:00"
   },
-  "updated_at": "2026-10-27T05:37:08.462230+00:00",
+  "updated_at": "2026-10-27T05:37:14.628369+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
