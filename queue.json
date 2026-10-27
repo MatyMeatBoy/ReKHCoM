@@ -7139,10 +7139,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
       "evidence": [],
       "claimed_at": "2026-10-27T18:56:00.770854+00:00"
+    },
+    "menus-fade-transitions": {
+      "id": "menus-fade-transitions",
+      "piece": "Fundidos breves coherentes en todos los menús propios y previews listas, prioridad después de cuelgues",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T18:56:17.299483+00:00",
+      "updated_at": "2026-10-27T18:56:17.299483+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 2026-10-27: agregar fading a todos menús nuestros, controles, logros, escenas; cuelgues y bugs primero",
+      "reference": "Conversación actual; conservar inputs y preview previa hasta recurso listo",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:56:00.770854+00:00",
+  "updated_at": "2026-10-27T18:56:17.299483+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
