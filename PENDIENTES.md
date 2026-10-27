@@ -282,4 +282,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sol-guest64-abi-audit | Bounded guest64 savedata callback and ABI audit | en_revision | sol-low-linux-import | — | User requested32to64 parity root scoped audit | 2026-10-27T20:19:45.416959+00:00 |
 | sol-remastered-parser-safety | Bound remastered package allocations and preserve expanded language tables | integrado | codex-remastered-parser-review | https://github.com/MatyMeatBoy/ReKHCoM/pull/397 | usuario-bugs-prebuild | 2026-10-27T20:27:59.303702+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T20:27:38.034894+00:00)
+Integrador: libre
