@@ -6068,10 +6068,23 @@
       ],
       "claimed_at": "2026-10-27T13:05:59.474485+00:00",
       "completed_at": "2026-10-27T13:07:57.861013+00:00"
+    },
+    "optiport-v21-final-profile-evidence": {
+      "id": "optiport-v21-final-profile-evidence",
+      "piece": "Measure final published Windows32/64 HD workloads and update stale OptiPort board from actual evidence; no release overwrite",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T13:10:17.735490+00:00",
+      "updated_at": "2026-10-27T13:10:17.735490+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Objetivo persistente usuario: completar OptiPort y repasar versión final",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T13:08:15.696888+00:00",
+  "updated_at": "2026-10-27T13:10:17.735490+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
