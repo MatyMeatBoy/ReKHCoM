@@ -1828,10 +1828,10 @@
     "diario-subentradas": {
       "id": "diario-subentradas",
       "piece": "Diario: submenús de segundo nivel (entradas de Naipes, Personajes, Jefes, etc.) en vista ancha: márgenes, pestañas y barra PÁGINA; nunca revisados, solo el submenú principal",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-diary-priority",
       "created_at": "2026-10-24T19:47:09.121895+00:00",
-      "updated_at": "2026-10-27T18:53:55.604474+00:00",
+      "updated_at": "2026-10-27T18:55:05.002200+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
@@ -1858,7 +1858,7 @@
           "detail": "released: Returned to current pending queue with explicit user priority and no-Atlas instruction. No source work represented as completed; old claims and proposal evidence preserved."
         }
       ],
-      "claimed_at": "2026-10-25T16:02:59.106256+00:00"
+      "claimed_at": "2026-10-27T18:55:05.002200+00:00"
     },
     "agrabah-genio-arriba": {
       "id": "agrabah-genio-arriba",
@@ -7128,7 +7128,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:54:58.847942+00:00",
+  "updated_at": "2026-10-27T18:55:05.002200+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
