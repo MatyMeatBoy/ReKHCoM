@@ -275,4 +275,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sol-scd-parser-safety | Bound SCD auxiliary chunks and empty Ogg import failure | en_curso | sol-low-linux-import | — | User focus bugs crashes root delegated import followup | 2026-10-27T20:08:13.129351+00:00 |
 | android-launcher-gl-startup-guard | Guard launcher OpenGL startup failures with actual consumer regression | en_curso | sol-low-scenes-states | — | — | 2026-10-27T20:09:13.767252+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T20:10:32.756623+00:00)
