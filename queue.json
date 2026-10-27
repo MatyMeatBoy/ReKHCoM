@@ -4951,16 +4951,23 @@
     "windows-runtime-preview-20261027": {
       "id": "windows-runtime-preview-20261027",
       "piece": "Integrate verified Windows x64 runtime, launcher modes and protected states for preview ZIP",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-windows-preview",
       "created_at": "2026-10-27T07:18:13.939390+00:00",
-      "updated_at": "2026-10-27T07:20:50.598881+00:00",
+      "updated_at": "2026-10-27T07:20:59.584301+00:00",
       "branch": "task/windows64",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/314",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": null,
-      "evidence": [],
-      "claimed_at": "2026-10-27T07:18:30.613282+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-27T07:20:59.584301+00:00",
+          "owner": "codex-windows-preview",
+          "detail": "Verified and reviewed; merged 5dd6ac03f421084c86b18ac39e68184fb5e8cc3d"
+        }
+      ],
+      "claimed_at": "2026-10-27T07:18:30.613282+00:00",
+      "completed_at": "2026-10-27T07:20:59.584301+00:00"
     }
   },
   "integrator": {
@@ -4969,7 +4976,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:20:50.598881+00:00",
+  "updated_at": "2026-10-27T07:20:59.584301+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
