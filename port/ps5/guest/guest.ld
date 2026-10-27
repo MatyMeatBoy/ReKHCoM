@@ -12,6 +12,10 @@ SECTIONS {
         LONG(__stack_top)
         LONG(__region_end)
         LONG(gPortBiosArea)
+        /* Optional metadata; older hosts still read the original nine words. */
+        LONG(0x31564447)
+        LONG(__text_start)
+        LONG(__text_end)
     }
     .text : { __text_start = .; *(.text .text.*) __text_end = .; }
     .rodata : ALIGN(64) { *(.rodata .rodata.*) }
