@@ -868,6 +868,12 @@ int PortHdHpRing(const void* faceTiles, const void* faceFrame, int ratio) {
     return 1;
 }
 
+/* GBA pixels the battle EXP line (btl_exp.c) goes down when the HD HP ring is in use: the ring reaches lower than the
+   cartridge's gauge and covered the line's start ("SIG. NIVEL", user report 27/10). */
+int PortHdHudExpDrop(void) {
+    return gPortConfig.hdCards && sRingFull ? 7 : 0;
+}
+
 /* A point of the ring picture, its centre placed at (cx, cy) on the screen, s screen pixels a picture pixel. */
 static SDL_Vertex RingVertex(float px, float py, float cx, float cy, float s, SDL_FColor c) {
     SDL_Vertex v;

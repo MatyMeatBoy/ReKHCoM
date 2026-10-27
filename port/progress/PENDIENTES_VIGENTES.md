@@ -64,8 +64,11 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   - Igual para enemigos/jefes si aplica.
   - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
     Parece HUD mal posicionado o vista incompleta. Arreglar limpio.
-  - «EXP ganada» tapada por la vida nueva. 27/10: NO reproducido en 1536x864, `hud_size=1`, combate `1:0:0` con bot
-    (EXP+n y SIG. NIVEL quedan bajo el círculo). Pedir captura al usuario del caso exacto (HUD/tamaño/personaje).
+  - «EXP ganada» tapada por la vida nueva — ARREGLO en PR (27/10): el anillo HD de vida (cartas HD + gBtlHpRing)
+    tapaba «SIG. NIVEL»/«EXP +n»; btl_exp.c baja la línea 7 px GBA solo con el anillo HD (`PortHdHudExpDrop`).
+    Sin anillo, igual que el cartucho. Captura del usuario 27/10 (combate en Monstruo).
+  - Pila de cartas apiladas junto al retrato (p. ej. «7 4 6», total 17 encima): en HUD HD salen SIN marcos HD y con
+    el número dorado (premium) en GBA; deben llevar marcos/dígitos HD como las cartas en mano (captura 27/10).
 - [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
   visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
 - [x] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10, ARREGLADO con el punto del launcher)**: el commit 428aac55b (26/10, pad= en avisos
