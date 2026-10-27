@@ -22,6 +22,17 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 - [ ] Linux 64 VM: partida nueva → puerta del castillo → selección de mundo → combate tutorial **sin fallo**
   (sin música HD). Repetir con música HD (`.ogg`), que el reportero sí tiene.
 
+- [ ] **Tienda Moguri (Cambiar naipes), números HD**: en la columna derecha el «2» de «02» sale deformado
+  (como una Z con cola); en 3×04 y 4×01 la «x» y los dígitos se ven desalineados frente al resto. Arreglar
+  directo (sin Atlas); revisar los 10 dígitos y la «x» en ambas columnas.
+
+## TRASPASO (Claude, 27/10): cómo retomar
+
+Rama `fix/v21-bugs` (sin PR todavía). Lista de arriba = alcance de v2.1 estable; el usuario quiere causa
+y por qué el arreglo cubre todos los casos para cada bug. VM: `port/tools/linux_vm_test.py --share
+D:/01Claude/ReKHCoM-build/linux/vmshare277` (build de prueba de #277; añadir `hd/music` de
+`D:/01Claude/ReKHCoM-build/hd-completo/music`). Ruta de partida nueva: `keys.txt` en ese share (A cada 50 frames).
+
 - [ ] Tests nunca deben sonar: algo sonó el 27/10 en la batería; localizar qué test no usa audio dummy.
 
 ## Relevo — Claude, 26/10 noche (Codex durmiendo)
