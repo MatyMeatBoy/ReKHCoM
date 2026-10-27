@@ -5,6 +5,17 @@
 publicada a las 17:20 de Chile (`2026-10-26T20:20:29Z`, `isPrerelease=false`).
 El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el tráiler.
 
+## Relevo — Claude, 26/10 noche (Codex durmiendo)
+
+- **Limpieza:** worktrees viejos respaldados en GitHub (`backup/*-20261026`) y quitados; quedan `khcom` (base),
+  `khcom-claude-int`, `khcom-review-app` (Atlas), `khcom-codex` (solo datos de Atlas en `build/art-review`),
+  `khcom-hd-reload` y `khcom-trailer-production`. Partidas de copias de prueba en `KHCoMPC/respaldos/saves/`. Lo de
+  D: que ya no sirve, junto en `D:/01Claude/ReKHCoM-build/_para_borrar_20261026/` (borrable entera).
+- **#276 → #278:** máscara del dorso HD de la recarga (el relleno ya no invade borde ni corona).
+- **#277 → #279:** Steam Deck sin texto HD: el host de 64 bits no indicaba `KHCOM_ASSETS`. Probado en VM (Vulkan).
+- **#272 (Android, Monstruo):** PC pasa el evento 74 y entra al mapa; pedido modelo/Android/log al reportero.
+- Verificado de nuevo: pausa de cinemáticas HD con texto (#274) en 5 idiomas; regresiones de recarga y cola JP.
+
 ## Traspaso — Codex, 26/10: desync del final HD (#42)
 
 Corrección del preroll PCM de Media Foundation en rama `fix/ending-cutscene-desync`,
