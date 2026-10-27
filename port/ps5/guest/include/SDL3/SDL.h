@@ -279,6 +279,7 @@ typedef int SDL_Scancode;
 #define SDLK_RSHIFT 0x400000E5u
 #define SDLK_RETURN 0x0Du
 #define SDLK_F1 0x4000003Au
+#define SDLK_F2 0x4000003Bu
 #define SDLK_F5 0x4000003Eu
 #define SDLK_F6 0x4000003Fu
 #define SDLK_F7 0x40000040u
