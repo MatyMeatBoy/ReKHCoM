@@ -5855,19 +5855,20 @@
     "hd-stock-counter-fit": {
       "id": "hd-stock-counter-fit",
       "piece": "Encaje mínimo contador stocks Sora/enemigo con barra HD superior",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "device_profiles_sol",
       "created_at": "2026-10-27T12:07:03.875015+00:00",
-      "updated_at": "2026-10-27T12:07:03.875015+00:00",
+      "updated_at": "2026-10-27T12:07:09.318089+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "build/v21-final-stock",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T12:07:09.318089+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T12:07:03.875015+00:00",
+  "updated_at": "2026-10-27T12:07:09.318089+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
