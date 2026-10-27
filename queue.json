@@ -5770,19 +5770,20 @@
     "android-lifecycle-diagnostics-v21": {
       "id": "android-lifecycle-diagnostics-v21",
       "piece": "InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-android-lifecycle",
       "created_at": "2026-10-27T11:16:39.163268+00:00",
-      "updated_at": "2026-10-27T11:16:39.163268+00:00",
+      "updated_at": "2026-10-27T11:16:44.896715+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T11:16:44.896715+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:16:39.163268+00:00",
+  "updated_at": "2026-10-27T11:16:44.896715+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

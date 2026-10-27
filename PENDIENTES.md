@@ -213,6 +213,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/346 | — | 2026-10-27T11:04:35.112736+00:00 |
 | optiport-serial-profile-contract | Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow | pr_abierto | codex-profile-contract | https://github.com/MatyMeatBoy/ReKHCoM/pull/348 | Root delega plan serial ycorregir postcondicionesreales sinrewriteharness | 2026-10-27T11:06:08.855384+00:00 |
 | hud-canvas-preflight | Preflight transaccional canvas HUD y fallback nativo completo ante fallo de crecimiento | en_curso | device_profiles_sol | task/hud-canvas-preflight | — | 2026-10-27T11:06:49.809644+00:00 |
-| android-lifecycle-diagnostics-v21 | InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate | pendiente | — | — | Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia | 2026-10-27T11:16:39.163268+00:00 |
+| android-lifecycle-diagnostics-v21 | InstrumentacionAndroidinstancia/session/runtime/configdestroy; boundedlogs actual+5 porprocess yShareLogsummary sinhintrecreate | en_curso | codex-android-lifecycle | — | Root/user autoriza instrumentacionacotada sinbuildapp ni recuperaciónficticia | 2026-10-27T11:16:44.896715+00:00 |
 
 Integrador: libre
