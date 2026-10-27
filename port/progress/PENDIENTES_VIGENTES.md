@@ -35,6 +35,8 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
   - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
     Parece HUD mal posicionado o vista incompleta. Arreglar limpio.
   - «EXP ganada» tapada por la vida nueva.
+- [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
+  visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
 - [ ] **Cortanaipes HD** (sleight/romper carta) que se veía antes ya no aparece: revisar que se muestre **todo** el HD
   que tenemos (barrido de todas las piezas HD importadas vs. las que realmente se dibujan).
 - [ ] `HD sprites: gWorldselectTitleSpanishBanner is 960x128, its recipe wants 8.688`: aviso repetido en selección de
