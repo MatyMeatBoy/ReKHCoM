@@ -650,6 +650,13 @@ int gPortOverlayW = GBA_SCREEN_W;
 int gPortScreenLayer; /* this frame uses the screen layer (set by the presenter) */
 static int sScreenDepth, sScreenMark, sOverlay;
 static int sScreenBg[4];
+/* Synthesis presents its spotlight at menu scale and clears the world pass.
+ * Its actors (Sora and the door) are world-tagged, but must share that same
+ * composition, priority and scale. Keep this decision identical for native
+ * pixels, HD sprite replacements and HD glyph occlusion (#380). */
+static int SpriteOnScreen(int taggedScreen) {
+    return sOverlay && (taggedScreen || (sSpotlight && (sScreenBgMask & 2u)));
+}
 void PortScreenBg(int bg, int on) {
     if ((unsigned)bg < 4) {
         if (on) sScreenBgMask |= 1u << bg;
@@ -2535,7 +2542,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sObjWin[x] = 1;
                 continue;
             }
-            if (sOverlay && sOamTag[i].screen) {
+            if (SpriteOnScreen(sOamTag[i].screen)) {
                 if (sScrLine[x] == TRANSPARENT || prio < sScrPrio[x]) {
                     sScrLine[x] = (uint16_t)col;
                     sScrPrio[x] = (uint8_t)prio;
@@ -4719,7 +4726,7 @@ static void QueueStillHdParts(void) {
     int i;
     for (i = 0; i < sStillHdCount; i++) {
         const StillHd* s = &sStillHd[i];
-        int layer = sOverlay && s->screen ? 2 : 0, x0, y0, w, h;
+        int layer = SpriteOnScreen(s->screen) ? 2 : 0, x0, y0, w, h;
         float ox = layer == 2 ? (gPortOverlayW - GBA_SCREEN_W) / 2.0f : (float)gPortScreen.originX;
         float oy = layer == 2 ? 0.0f : (float)gPortScreen.originY, x[4], y[4];
         PortHdSpriteBox(s->id, &x0, &y0, &w, &h);
@@ -4875,7 +4882,7 @@ static void QueueMainHdParts(void) {
         /* a semi-transparent sprite blends with the first target's weight */
         if (mode == 1 || (((bldcnt >> 6) & 3) == 1 && (bldcnt & 0x10)))
             alpha = (eva > 16 ? 16 : eva) * 255 / 16;
-        if (sOverlay && sOamTag[i].screen) {
+        if (SpriteOnScreen(sOamTag[i].screen)) {
             /* a menu's sprite: on the screen layer, the GBA's lines centred in its width */
             int sx = ox + (gPortOverlayW - GBA_SCREEN_W) / 2;
             sMainHdPart[i] = (uint8_t)QueueHdPart(2, i, sx, oy, ow, oh, bw, bh, affine, pa, pb, pc, pd, alpha);
@@ -5443,7 +5450,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
         uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
         const SpriteTag* tag = &sOamTag[i];
         int onHud = sHudLayer && tag->hud;
-        int onScreen = sOverlay && tag->screen;
+        int onScreen = SpriteOnScreen(tag->screen);
         int layer = onScreen ? 2 : onHud;
         int ox, oy, bank, k;
         uint16_t col[2];
