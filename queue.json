@@ -6796,7 +6796,7 @@
       "status": "pr_abierto",
       "owner": "codex-startup-ledger",
       "created_at": "2026-10-27T17:57:06.035632+00:00",
-      "updated_at": "2026-10-27T18:22:07.542670+00:00",
+      "updated_at": "2026-10-27T18:23:14.439168+00:00",
       "branch": "codex/startup-cause-ledger",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/382",
       "approval": null,
@@ -6811,6 +6811,11 @@
           "at": "2026-10-27T18:22:07.542670+00:00",
           "owner": "codex-startup-ledger",
           "detail": "Coordinación autorizada por root y owner original (/root/optiport_workspace_method): no edición activa; delega a /root/skill_freshness_review la actualización documental de PR382 conservando owner. Antes de editar: registrar confirmación pública Pedro 2026-10-27T17:56:16Z test360 funciona Auto+Force64, causa no confirmada. Sin producto ni tests/build."
+        },
+        {
+          "at": "2026-10-27T18:23:14.439168+00:00",
+          "owner": "codex-startup-ledger",
+          "detail": "0a6d33f40 actualiza PR382 con observación pública Pedro 2026-10-27T17:56:16Z: test360 funciona Automatic+Force64. Causa sigue no confirmada; no atribuye a368/377 ni extiende aDeck/Android. Delegación previa owner original y CAS6c302652 documentados; sólo Markdown, UTF8/diffcheck. Root prioriza después únicamente lectura de378; sin builds ni publicaciones a reporteros."
         }
       ],
       "claimed_at": "2026-10-27T17:57:10.864202+00:00"
@@ -6885,7 +6890,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:22:29.195443+00:00",
+  "updated_at": "2026-10-27T18:23:14.439168+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
