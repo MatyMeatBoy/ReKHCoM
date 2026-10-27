@@ -6737,10 +6737,10 @@
     "v22-premium-digit-gpu-qa": {
       "id": "v22-premium-digit-gpu-qa",
       "piece": "P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-premium-digit-qa",
       "created_at": "2026-10-27T17:36:27.340479+00:00",
-      "updated_at": "2026-10-27T17:47:05.041873+00:00",
+      "updated_at": "2026-10-27T18:03:27.087530+00:00",
       "branch": null,
       "pr": null,
       "approval": "Coordinador autoriza 27/10; primero preparación sin GPU",
@@ -6750,6 +6750,11 @@
           "at": "2026-10-27T17:47:05.041873+00:00",
           "owner": "codex-premium-digit-qa",
           "detail": "pruebas/premium-digit-qa/PLAN.md; CPU EU/US/JP PASS fresh61aee4c; valid unchanged QA save with2premium equipped; selective40PNG153052bytes; runtime hash+4consumer blobs verified; awaiting coordinator GPU signal and normal-input modified/opponent fixture; no game launched"
+        },
+        {
+          "at": "2026-10-27T18:03:27.087530+00:00",
+          "owner": "codex-premium-digit-qa",
+          "detail": "pruebas/premium-digit-qa/RESULTADO.md + premium-comparison.json; 4 real D3D11 PNG awaiting coordinator review; premium0x8002 selected/stock and collection identical full/partial; CPU EU/US/JP PASS; modified/opponent/stock3/reload remain OPEN, no claimed full P1; GPU window released"
         }
       ],
       "claimed_at": "2026-10-27T17:36:34.643773+00:00"
@@ -6802,7 +6807,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:00:57.792231+00:00",
+  "updated_at": "2026-10-27T18:03:27.087530+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
