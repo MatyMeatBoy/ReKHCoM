@@ -397,8 +397,7 @@ void PortHdMusicFrame(void) {
         }
         opened = Open(song);
         if (opened < 0) {
-            /* loading (a few frames): silence, not a moment of the cartridge's song before the HD track */
-            gPortMix.musicGain = 0.0f;
+            /* Keep cartridge music audible until the loaded HD output is usable. */
             HdLog(song, 3);
             return;
         }

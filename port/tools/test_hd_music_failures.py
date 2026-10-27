@@ -35,7 +35,7 @@ static int mode, queued, closed, calls;
 static void PortLog(const char* fmt, ...) { (void)fmt; }
 static int CurrentSong(void) { return 1; }
 static void Close(void) { closed++; sSong=-1; }
-static int Open(int song) { return 1; }
+static int Open(int song) { return mode==6 ? -1 : 1; }
 static void HdLog(int song,int state) {}
 static void Pause(void) {}
 static void Resume(void) {}
@@ -57,7 +57,12 @@ int main(int argc,char** argv) {
     if(mode==3)sLoopEnd=1024;
     if(mode==4)sLoopEnd=0;
     if(mode==5)sLoopEnd=480;
+    if(mode==6)sSong=-1;
     PortHdMusicFrame();
+    if(mode==6) {
+        if(gPortMix.musicGain!=0.75f || calls || closed || sMissing!=-1)return 6;
+        return 0;
+    }
     if(mode==5) {
         if(closed || queued<=0 || calls>32)return 4;
         /* Partial queued audio is valid progress; fill the rest next frame. */
@@ -78,7 +83,7 @@ int main(int argc,char** argv) {
         folder=Path(name); src=folder/'test.c'; exe=folder/'test.exe'
         src.write_text(code,encoding='utf-8')
         subprocess.run([str(cc),str(src),'-o',str(exe)],check=True)
-        for mode, label in enumerate(('decoder stalls','device rejects data','normal track','short valid loop','empty loop','480-sample valid loop')):
+        for mode, label in enumerate(('decoder stalls','device rejects data','normal track','short valid loop','empty loop','480-sample valid loop','pending load retains cartridge music')):
             try:
                 result = subprocess.run([str(exe),str(mode)],timeout=2)
             except subprocess.TimeoutExpired:
