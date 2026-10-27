@@ -27,6 +27,12 @@ void PortUiGalleryResume(void) {
     memcpy(broken, sSceneBroken, sizeof(broken));
     sScenePause = 0;
     PortUiOpenOptions();
+    /* Resume an existing gallery, not a new Options opening. The generic
+       opening fades the restored title/field for eight frames before drawing
+       the menu. Keep its initialization, then make the first output the list. */
+    sFade = MENU_FADE * 2;
+    sClosing = sReturn = 0;
+    PortInputSuppressUntilRelease(); /* a held skip/confirm cannot start another replay */
     sPage = PAGE_SCENES;
     sSceneChoice = choice; sSceneScroll = scroll; sSceneHd = hd; sSceneHarnessTick = tick;
     memcpy(sSceneBroken, broken, sizeof(broken));
@@ -133,6 +139,8 @@ static void SceneMarkBroken(const char* movie) {
 }
 
 static void SceneMenuOpen(void) {
+    extern void PortSceneGalleryPreviewCacheClear(void);
+    PortSceneGalleryPreviewCacheClear(); /* a fresh visit can see updated poster assets */
     sPage = PAGE_SCENES;
     sSceneChoice = sSceneScroll = 0;
     sSceneHd = SDL_getenv("KHCOM_SCENES_SHOT") ? SDL_clamp(SDL_atoi(SDL_getenv("KHCOM_SCENES_SHOT")) - 1, 0, 2) : 0;
@@ -343,10 +351,12 @@ static void DrawSceneMenu(int l, int width, int height) {
             const uint32_t* preview = PortSceneGalleryPreview(eventId, SceneProviderHd(sSceneChoice));
             int pw = cardW - 12, ph = SDL_min(pw * 9 / 16, height - top - 72), px, py;
             char label[160];
-            Fill(cardX - 2, top - 2, cardW + 4, ph + 64, MENU_GREY);
+            /* Keep the existing white menu card; no grey frame around the still. */
             Fill(cardX, top, cardW, ph + 60, 0xFFFFFFFFu);
             MenuBar(cardX + 4, top + 2, cardW - 8, 1);
-            DrawText(SceneRiku(eventId) ? (SceneProviderHd(sSceneChoice) ? "Riku - HD" : "Riku - GBA") : (SceneProviderHd(sSceneChoice) ? "Sora - HD" : "Sora - GBA"),
+            extern int PortSceneGalleryPreviewIsFallback(void);
+            int previewHd = SceneProviderHd(sSceneChoice) && !PortSceneGalleryPreviewIsFallback();
+            DrawText(SceneRiku(eventId) ? (previewHd ? "Riku - HD" : "Riku - GBA") : (previewHd ? "Sora - HD" : "Sora - GBA"),
                      cardX + 16, top, MENU_INK, 0xFFD8D8D8u);
             Fill(cardX + 6, top + 16, pw, ph, 0xFFFFFFFFu);
             if (preview) {

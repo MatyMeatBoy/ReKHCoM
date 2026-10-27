@@ -4,6 +4,14 @@ Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMea
 
 ## Avance comprobable
 
+**Cierre 27/10:** el usuario prioriza ahora la entrega estable2.1 con todos los
+PR listos integrados y la evidencia existente, sin ampliar la batería.
+El porcentaje histórico siguiente no es una certificación de esta release ni
+se convierte en100% por publicarla. La implementación conjunta se verifica en
+`cd144335e`; ver el cierre vigente de [pendientes](PENDIENTES_VIGENTES.md).
+Las mediciones comparables y hardware no disponible quedan explícitamente
+como seguimiento, no como PASS. La skill pública ya incluye esos controles.
+
 **10 de 14 bloques originales integrados: aproximadamente 71 % del trabajo de
 la primera batería**, no porcentaje de estabilidad ni garantía de bugs eliminados.
 Snapshot de coordinación del 27/10/2026; reservas y estados vivos en

@@ -11,6 +11,7 @@
 #include "port/port.h"
 #include "port/port_embedded_assets.h"
 #include "port/port_aspect.h"
+#include "port/port_hd_media.h"
 #ifndef PORT_PS5_GUEST
 #include "port/port_device_profile_host.h"
 #endif
@@ -144,10 +145,12 @@ static const Key sKeys[] = {
     { "dodge_button", &gPortConfig.dodgeButton, 0, 1 },
     { "stock_button", &gPortConfig.stockButton, 0, 1 },
     { "pad_layout", &gPortConfig.padLayout, 0, 2 },
+    { "controller_prompts", &gPortConfig.controllerPrompts, 0, 4 },
     { "discord_presence", &gPortConfig.discordPresence, 0, 1 },
     { "net_stats", &gPortConfig.netStats, 0, 1 },
     { "net_delay", &gPortConfig.netDelay, 0, 8 },
     { "hd_movies", &gPortConfig.hdMovies, 0, 1 },
+    { "hd_media_language", &gPortConfig.hdMediaLanguage, 0, 2 },
     { "hd_music", &gPortConfig.hdMusic, 0, 1 },
     { "hd_scenes", &gPortConfig.hdScenes, 0, 1 },
     { "hd_subtitles", &gPortConfig.hdSubtitles, 0, 1 },
@@ -515,6 +518,25 @@ static void PortConfigLoadFile(void) {
    with a decorative border, almost an emulator but native. */
 /* What the launcher imported (the HD mod, HD_MOD.md) or found (the Japanese ROM of the undub): an option whose files
    are missing is never turned on (checked once a second at most). */
+static Uint64 sAssetWhen[PORT_ASSET_COUNT];
+static Uint64 sMediaVariantWhen[2][2];
+static int sMediaVariantKnown[2][2], sMediaVariantResult[2][2];
+int PortHdMediaVariantAvailable(int language, int component) {
+    Uint64 now = SDL_GetTicks();
+    int index = language - 1;
+    if (index < 0 || index > 1 || component < 0 || component > 1) return 0;
+    if (!sMediaVariantKnown[index][component] || now - sMediaVariantWhen[index][component] >= 1000) {
+        sMediaVariantResult[index][component] = PortHdMediaCachedAvailable(PortConfigPath(""), language, component);
+        sMediaVariantWhen[index][component] = now; sMediaVariantKnown[index][component] = 1;
+    }
+    return sMediaVariantResult[index][component];
+}
+void PortHdMediaInvalidate(void) {
+    memset(sAssetWhen, 0, sizeof(sAssetWhen));
+    memset(sMediaVariantKnown, 0, sizeof(sMediaVariantKnown));
+    PortHdMediaAvailabilityReset();
+    PortHdMovieInvalidatePaths();
+}
 int PortAssetPresent(int asset) {
     extern int PortUndubAvailable(void);
     static const char* const files[PORT_ASSET_COUNT][2] = {
@@ -526,22 +548,31 @@ int PortAssetPresent(int asset) {
         { NULL, NULL },
     };
     static int result[PORT_ASSET_COUNT];
-    static Uint64 when[PORT_ASSET_COUNT];
+    static int mediaLanguage = -1;
     Uint64 now = SDL_GetTicks();
     int i;
     if (asset < 0 || asset >= PORT_ASSET_COUNT)
         return 0;
     if (asset == PORT_ASSET_UNDUB)
         return PortUndubAvailable();
-    if (!when[asset] || now - when[asset] > 1000) {
+    if (mediaLanguage != gPortConfig.hdMediaLanguage) {
+        memset(sAssetWhen, 0, sizeof(sAssetWhen));
+        mediaLanguage = gPortConfig.hdMediaLanguage;
+    }
+    if (!sAssetWhen[asset] || now - sAssetWhen[asset] > 1000) {
         result[asset] = 0;
+        if (gPortConfig.hdMediaLanguage && (asset == PORT_ASSET_HD_MOVIES || asset == PORT_ASSET_HD_SCENES)) {
+            result[asset] = PortHdMediaVariantAvailable(gPortConfig.hdMediaLanguage, asset == PORT_ASSET_HD_SCENES);
+            sAssetWhen[asset] = now ? now : 1;
+            return result[asset];
+        }
         for (i = 0; i < 2 && files[asset][i] && !result[asset]; i++) {
             FILE* f = fopen(PortConfigPath(files[asset][i]), "rb");
             result[asset] = f != NULL;
             if (f)
                 fclose(f);
         }
-        when[asset] = now ? now : 1;
+        sAssetWhen[asset] = now ? now : 1;
     }
     return result[asset];
 }

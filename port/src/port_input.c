@@ -5,6 +5,8 @@
 
 #include "port/port.h"
 #include "port/pad_layout.h"
+#include "port/controller_prompts.h"
+#include "port/controller_prompt_glyphs.h"
 #include "port/port_ui.h"
 #include "mode.h"
 #include "text_types.h"
@@ -56,6 +58,141 @@ static int sDodgeHeld;
 static int sDodgePending;
 static int sUnstockHeld;
 static int sUnstockPending;
+/* Activity is event-driven: axis noise must not switch away from keyboard.
+   Keep only an ID, never a gamepad pointer across hotplug. */
+static SDL_JoystickID sPromptPad;
+static int sPromptKeyboard = 1;
+
+void PortPromptHandleEvent(const void* p) {
+    const SDL_Event* ev=p;
+    if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat) sPromptKeyboard=1;
+    else if (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
+        sPromptKeyboard=0; sPromptPad=ev->gbutton.which;
+    } else if (ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value)>16000) {
+        sPromptKeyboard=0; sPromptPad=ev->gaxis.which;
+    }
+}
+
+static SDL_Gamepad* PromptPad(void) {
+    return sPromptPad ? SDL_GetGamepadFromID(sPromptPad) : NULL;
+}
+
+static int PromptFamily(SDL_Gamepad* pad) {
+    int selected=gPortConfig.controllerPrompts;
+    if (selected != KH_PROMPT_AUTO) return selected;
+    switch (pad ? SDL_GetGamepadType(pad) : SDL_GAMEPAD_TYPE_UNKNOWN) {
+        case SDL_GAMEPAD_TYPE_PS3: case SDL_GAMEPAD_TYPE_PS4: case SDL_GAMEPAD_TYPE_PS5: return KH_PROMPT_PLAYSTATION;
+        case SDL_GAMEPAD_TYPE_XBOX360: case SDL_GAMEPAD_TYPE_XBOXONE: return KH_PROMPT_XBOX;
+        case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO: case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+        case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT: case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
+            return KH_PROMPT_NINTENDO;
+        default: return KH_PROMPT_GENERIC;
+    }
+}
+
+int PortControllerBindingLabel(int binding, char* out, size_t size) {
+    SDL_Gamepad* pad=PromptPad();
+    const char* label;
+    if (!gPortConfig.controllerPrompts) return 0;
+    label=KhPromptButtonLabel(binding,PromptFamily(pad),KhPadIsNintendo(pad,gPortConfig.padLayout));
+    if (label[0]=='?' && binding>=0 && binding<SDL_GAMEPAD_BUTTON_COUNT) {
+        const char* generic=SDL_GetGamepadStringForButton((SDL_GamepadButton)binding);
+        if(generic)label=generic;
+    }
+    SDL_strlcpy(out,label,size);
+    return 1;
+}
+
+int PortControllerActionLabel(int action, char* out, size_t size) {
+    SDL_Gamepad* pad=PromptPad();
+    if (!gPortConfig.controllerPrompts || action<0 || action>=PORT_ACT_COUNT) return 0;
+    if (sPromptKeyboard || !pad) {
+        int key=gPortConfig.keys[action][0];
+        if (!key) key=gPortConfig.keys[action][1];
+        const char* label=key ? SDL_GetKeyName((SDL_Keycode)key) : "-";
+        /* Tutorial buffers are game encoding, not UTF-8. Never insert a
+           multi-byte host key name as independent Latin/Shift-JIS bytes. */
+        for(const unsigned char* c=(const unsigned char*)label;*c;c++)
+            if(*c>=128) { SDL_snprintf(out,size,"Key %u",(unsigned)key);return 1; }
+        SDL_strlcpy(out,label,size);
+        return 1;
+    }
+    return PortControllerBindingLabel(gPortConfig.pad[action],out,size);
+}
+
+int PortControllerActionGlyph(int action) {
+    char label[32];
+    if(action<0 || action>=PORT_ACT_COUNT)return 0;
+    if(sPromptKeyboard || !PromptPad()) {
+        if(!gPortConfig.keys[action][0] && !gPortConfig.keys[action][1])return 0;
+    } else if(gPortConfig.pad[action]<0)return 0;
+    if(!PortControllerActionLabel(action,label,sizeof(label)))return 0;
+    return KhPromptGlyphId(label);
+}
+
+const unsigned char* PortControllerGlyphTiles(int glyph) {
+    static unsigned char tiles[2][144][128],ready[2][144];
+    int compact=glyph>=256; if(compact)glyph-=256;
+    if(glyph<=0 || glyph>=144 || !(glyph<=8 || glyph>=128 || strchr(PORT_PROMPT_LETTERS,glyph)))return NULL;
+    if(!ready[compact][glyph]) {
+        unsigned char full[128];KhPromptGlyphPixels(glyph,full);
+        if(!compact)memcpy(tiles[0][glyph],full,128);
+        else for(int y=0;y<10;y++)for(int x=0;x<5;x++) {
+            int color=0;
+            for(int px=x*12/5;px<(x+1)*12/5;px++) {
+                int at=((y/8)*2+px/8)*32+(y%8)*4+(px%8)/2;
+                int sample=(full[at]>>((px&1)*4))&15;
+                if(sample>color)color=sample;
+            }
+            KhPromptGlyphDot(tiles[1][glyph],x,y,color);
+        }
+        ready[compact][glyph]=1;
+    }
+    return tiles[compact][glyph];
+}
+
+int PortControllerPresetFamily(void) {
+    int family=PromptFamily(PromptPad());
+    return family>=KH_PROMPT_NINTENDO && family<=KH_PROMPT_PLAYSTATION?family:0;
+}
+
+int PortApplyControllerConfirmPreset(int family) {
+    int confirm,cancel;
+    if(!KhPromptPresetBindings(family,KhPadIsNintendo(PromptPad(),gPortConfig.padLayout),&confirm,&cancel))return 0;
+    gPortConfig.pad[PORT_ACT_A]=confirm;gPortConfig.pad[PORT_ACT_B]=cancel;
+    PortInputResetBindings();
+    return 1;
+}
+
+uint64_t PortControllerPromptRevision(void) {
+    static int previous[6+PORT_ACT_COUNT*3];
+    static uint64_t revision;
+    SDL_Gamepad* pad=PromptPad();
+    int current[6+PORT_ACT_COUNT*3];
+    current[0]=gPortConfig.controllerPrompts;current[1]=gPortConfig.padLayout;
+    current[2]=gPortConfig.invertCardScroll;current[3]=sPromptKeyboard;
+    current[4]=(int)sPromptPad;current[5]=pad?(int)SDL_GetGamepadType(pad):-1;
+    memcpy(current+6,gPortConfig.pad,sizeof(gPortConfig.pad));
+    memcpy(current+6+PORT_ACT_COUNT,gPortConfig.keys,sizeof(gPortConfig.keys));
+    if(memcmp(previous,current,sizeof(current))) {
+        memcpy(previous,current,sizeof(current));
+        if(++revision==0)revision=1;
+    }
+    return revision;
+}
+
+int PortControllerSemanticGlyph(int token) {
+    int action=(token&63)-1;
+    if(action<0 || action>=PORT_ACT_COUNT)return 0;
+    if((token&64) && gPortConfig.invertCardScroll && (action==PORT_ACT_L || action==PORT_ACT_R))
+        action=action==PORT_ACT_L?PORT_ACT_R:PORT_ACT_L;
+    if(!gPortConfig.controllerPrompts) {
+        static const int gba[]={ 'A','B','L','R',140,141,5,6,7,8 };
+        return action<10?gba[action]:'?';
+    }
+    int glyph=PortControllerActionGlyph(action);
+    return glyph?glyph:'?'; /* Explicit unknown, never retain a stale prior button. */
+}
 
 /* After closing an overlay, ignore buttons still held until released so the
    confirming press does not reach the game. */
@@ -262,7 +399,7 @@ uint16_t PortInputKeys(void) {
 }
 
 /* Keep the original localized instructions, swapping only this tutorial's button labels. */
-const void* PortCardScrollTutorialText(int message, const void* source) {
+static const void* CardScrollTutorialText(int message, const void* source) {
     static TextChar inverted[256];
     const TextChar* text = source;
     size_t length, i;
@@ -289,6 +426,149 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
     }
 #endif
     return inverted;
+}
+
+/* Only authored, highlighted button tokens in the tutorial range are
+   resolved. Prose, names, ordinary A/B letters and unrelated messages stay
+   untouched. This buffer is independent from the card-scroll inversion. */
+static int ControllerTutorialMessage(int message) {
+    return (message>=CARD_MSG_WORLDSELECT_TUTORIAL_0 && message<=CARD_MSG_LEON_TUTORIAL_14) ||
+           message==CARD_MSG_WARP_POINT_TUTORIAL || message==CARD_MSG_MAP_STAIR_TUTORIAL || message==CARD_MSG_RIKU_DECK_TUTORIAL
+#ifndef VERSION_EU
+           || message==CARD_MSG_RIKU_BATTLE_TUTORIAL
+#endif
+           ;
+}
+static int ControllerTutorialSemanticToken(int message,int action) {
+    int flag=message==CARD_MSG_ROBE_TUTORIAL_18 && (action==PORT_ACT_L || action==PORT_ACT_R);
+    /* CardScrollTutorialText already exchanged the displayed L/R. Store the
+       original semantic action so another inversion can refresh this page. */
+    if(flag && gPortConfig.invertCardScroll)action=action==PORT_ACT_L?PORT_ACT_R:PORT_ACT_L;
+    return (action+1) | (flag?64:0);
+}
+/* Metadata only while Original is displayed. Offsets refer to the returned
+   source, never a transformed string length or VM/reveal offset. */
+static const TextChar* sPromptOriginalSource;
+static size_t sPromptOriginalLength;
+static unsigned char sPromptOriginalTokens[512],sPromptOriginalFollowers[512];
+static void ControllerTutorialOriginal(int message,const TextChar* text) {
+    sPromptOriginalSource=NULL;sPromptOriginalLength=0;
+    memset(sPromptOriginalTokens,0,sizeof(sPromptOriginalTokens));
+    memset(sPromptOriginalFollowers,0,sizeof(sPromptOriginalFollowers));
+    if(!text || gPortConfig.controllerPrompts || !ControllerTutorialMessage(message))return;
+    size_t length=0;
+    while(length<512 && text[length])length++;
+    if(length==512)return;
+    sPromptOriginalSource=text;sPromptOriginalLength=length;
+#ifndef VERSION_JP
+    for(size_t i=0;i<length;i++)if(text[i]==MSG_CODE_HIGHLIGHT) {
+        size_t end=i+1;char token[48];int actions[2];
+        while(end<length && end-i<sizeof(token) && text[end]!=MSG_CODE_PLAIN)end++;
+        if(end>=length || text[end]!=MSG_CODE_PLAIN)continue;
+        size_t n=end-i-1;
+        for(size_t k=0;k<n;k++)token[k]=(char)text[i+1+k];
+        int count=KhPromptTokenActions(token,n,actions);
+        static const char* const names[]={"A","B","L","R","START","SELECT"};
+        for(int j=0;j<count;j++) {
+            const char* name=names[actions[j]];size_t keyLength=strlen(name),offset=n;
+            for(size_t k=0;k+keyLength<=n;k++)if(!memcmp(token+k,name,keyLength))offset=k;
+            if(offset==n)continue;
+            size_t at=i+1+offset;
+            sPromptOriginalTokens[at]=(unsigned char)ControllerTutorialSemanticToken(message,actions[j]);
+            for(size_t k=1;k<keyLength;k++) { sPromptOriginalFollowers[at+k]=1;sPromptOriginalTokens[at+k]=sPromptOriginalTokens[at]; }
+        }
+        i=end;
+    }
+#else
+    if(length&1) { sPromptOriginalSource=NULL;return; }
+    for(size_t i=0;i<length;i+=2) {
+        int actions[2];size_t bytes=0;
+        int count=KhPromptSjisActions(text+i,length-i,actions,&bytes);
+        for(int j=0;j<count;j++) {
+            size_t at=i+(j?4:0);
+            sPromptOriginalTokens[at]=(unsigned char)ControllerTutorialSemanticToken(message,actions[j]);
+            if(count==1)for(size_t k=2;k<bytes;k+=2) { sPromptOriginalFollowers[at+k]=1;sPromptOriginalTokens[at+k]=sPromptOriginalTokens[at]; }
+        }
+        if(count)i+=bytes-2;
+    }
+#endif
+}
+int PortControllerOriginalPromptAt(const void* position,int sjis,int* follower) {
+    uintptr_t base=(uintptr_t)sPromptOriginalSource,at=(uintptr_t)position;
+#ifdef VERSION_JP
+    const int expectedSjis=1;
+#else
+    const int expectedSjis=0;
+#endif
+    *follower=0;
+    if(!base || sjis!=expectedSjis || at<base || (at-base)%sizeof(TextChar))return 0;
+    size_t offset=(at-base)/sizeof(TextChar);
+    if(offset>=sPromptOriginalLength)return 0;
+    *follower=sPromptOriginalFollowers[offset];
+    return sPromptOriginalTokens[offset];
+}
+const void* PortCardScrollTutorialText(int message, const void* source) {
+    const TextChar* text=CardScrollTutorialText(message,source);
+    ControllerTutorialOriginal(message,text);
+#ifndef VERSION_JP
+    static TextChar resolved[768];
+    size_t i=0,n=0;
+    int changed=0;
+    if (!text || !gPortConfig.controllerPrompts || !ControllerTutorialMessage(message)) return text;
+    while (text[i] && i<512) {
+        if (text[i]==MSG_CODE_HIGHLIGHT) {
+            size_t end=i+1;
+            char token[48];
+            while(end<i+sizeof(token) && text[end] && text[end]!=MSG_CODE_PLAIN)end++;
+            if(text[end]==MSG_CODE_PLAIN && end-i-1<sizeof(token)) {
+                size_t length=end-i-1;
+                for(size_t k=0;k<length;k++)token[k]=(char)text[i+1+k];
+                int actions[2],countActions=KhPromptTokenActions(token,length,actions);
+                if(countActions) {
+                    resolved[n++]=MSG_CODE_HIGHLIGHT;
+                    for(int a=0;a<countActions;a++) {
+                        if(n+4>=SDL_arraysize(resolved))return text;
+                        if(a)resolved[n++]='+';
+                        resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;
+                        resolved[n++]=(TextChar)ControllerTutorialSemanticToken(message,actions[a]);
+                    }
+                    resolved[n++]=MSG_CODE_PLAIN;
+                    i=end+1;changed=1;continue;
+                }
+            }
+        }
+        if(n+1>=SDL_arraysize(resolved))return text;
+        resolved[n++]=text[i++];
+    }
+    if(text[i])return text;
+    resolved[n]=0;
+    return changed ? resolved : text;
+#else
+    static unsigned char resolved[1536];
+    size_t length=0,i=0,n=0;
+    int changed=0;
+    if(!text || !gPortConfig.controllerPrompts || !ControllerTutorialMessage(message))return text;
+    while(length<512 && text[length])length++;
+    if(length==512 || (length&1))return text;
+    while(i<length) {
+        int actions[2];size_t bytes=0;
+        int count=KhPromptSjisActions(text+i,length-i,actions,&bytes);
+        if(count) {
+            for(int a=0;a<count;a++) {
+                if(n+6>=sizeof(resolved))return text;
+                if(a) { resolved[n++]=0x81;resolved[n++]=0x7b; }
+                resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;
+                resolved[n++]=(unsigned char)ControllerTutorialSemanticToken(message,actions[a]);
+            }
+            i+=bytes;changed=1;
+        } else {
+            if(n+3>=sizeof(resolved))return text;
+            resolved[n++]=text[i++];resolved[n++]=text[i++];
+        }
+    }
+    resolved[n]=0;
+    return changed ? resolved : text;
+#endif
 }
 
 /* Select + Up/Down: the main zoom, at any moment (Auto view). Select alone reaches the game when it is released,

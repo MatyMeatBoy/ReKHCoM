@@ -160,6 +160,10 @@
   "es": "Solo en vista Auto. Al salir del combate vuelve al zoom principal."
  },
  {
+  "en": "Auto: legacy import",
+  "es": "Auto: importación antigua"
+ },
+ {
   "en": "Automatic",
   "es": "Automático"
  },
@@ -250,6 +254,10 @@
  {
   "en": "Check again",
   "es": "Volver a comprobar"
+ },
+ {
+  "en": "Check imported variants",
+  "es": "Revisar variantes importadas"
  },
  {
   "en": "Choose a folder outside this installation.",
@@ -656,6 +664,10 @@
   "es": "Modo HD"
  },
  {
+  "en": "HD movie audio (separate from text and Undub)",
+  "es": "Audio de vídeos HD (independiente del texto y Undub)"
+ },
+ {
   "en": "HD movie availability and language",
   "es": "Disponibilidad e idioma de los vídeos HD"
  },
@@ -708,6 +720,10 @@
   "es": "IP de quien aloja"
  },
  {
+  "en": "I confirm the source audio is the language I selected (not automatically verified)",
+  "es": "Confirmo que el audio de la fuente es el idioma que elegí (no está verificado automáticamente)"
+ },
+ {
   "en": "IP: host",
   "es": "IP: alojar"
  },
@@ -722,6 +738,10 @@
  {
   "en": "Import stopped.",
   "es": "Carga detenida."
+ },
+ {
+  "en": "Importing variant ",
+  "es": "Importando variante "
  },
  {
   "en": "Importing...",
@@ -968,6 +988,10 @@
   "es": "No hay logros con ese filtro."
  },
  {
+  "en": "No complete valid imported variant. Import your source with that label, or use the Steam guide and check again.",
+  "es": "No hay una variante importada completa y válida. Importa tu fuente con esa etiqueta, o consulta la guía de Steam y vuelve a comprobar."
+ },
+ {
   "en": "No room left: 99 per card, 999 in the collection.",
   "es": "No caben más: 99 por carta y 999 en la colección."
  },
@@ -1006,6 +1030,10 @@
  {
   "en": "Official",
   "es": "Oficiales"
+ },
+ {
+  "en": "Official Steam language help",
+  "es": "Ayuda oficial de idiomas de Steam"
  },
  {
   "en": "Official game page",
@@ -1452,6 +1480,10 @@
   "es": "El set de RetroAchievements (sus autores en retroachievements.org). Se consiguen al jugar la versión europea, con o sin cuenta, y quedan guardados en este equipo. Los trucos, las revanchas y cargar un savestate pausan los logros hasta reiniciar el juego."
  },
  {
+  "en": "The audio label was declared by the user. If that variant lacks a scene, the original GBA scene is used.",
+  "es": "La etiqueta del audio fue declarada por el usuario. Si falta una escena de esa variante, se usa la original de GBA."
+ },
+ {
   "en": "The card hand sits partly below the screen edge; raising it shows more of each card.",
   "es": "La mano de cartas queda en parte bajo el borde de la pantalla; subirla muestra más de cada carta."
  },
@@ -1512,6 +1544,10 @@
   "es": "No es una ROM de Kingdom Hearts: Chain of Memories."
  },
  {
+  "en": "This movie import's language",
+  "es": "Idioma de esta importación de vídeos"
+ },
+ {
   "en": "This version's executable is missing.",
   "es": "No se encontró el ejecutable de esta versión."
  },
@@ -1538,6 +1574,10 @@
  {
   "en": "Undub (Japanese voices)",
   "es": "Undub (voces japonesas)"
+ },
+ {
+  "en": "Unlabelled (legacy Auto)",
+  "es": "Sin etiqueta (Auto antiguo)"
  },
  {
   "en": "Unlocked",
@@ -1574,6 +1614,14 @@
  {
   "en": "Value",
   "es": "Valor"
+ },
+ {
+  "en": "Variant not published: source incomplete, changed, cancelled or invalid. The previous copy is preserved.",
+  "es": "No se publicó la variante: fuente incompleta, cambiada, cancelada o archivo inválido. Se conserva la copia anterior."
+ },
+ {
+  "en": "Variant ready: ",
+  "es": "Variante lista: "
  },
  {
   "en": "Verified",
@@ -1626,6 +1674,10 @@
  {
   "en": "Yes",
   "es": "Sí"
+ },
+ {
+  "en": "You choose the label; text, subtitles, music and Undub stay separate. It is stored separately and does not replace another voice.",
+  "es": "La etiqueta la eliges tú; no cambia texto, subtítulos, música ni Undub. Se guarda separada y no reemplaza otra voz."
  },
  {
   "en": "Your name",

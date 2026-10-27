@@ -4,6 +4,10 @@ Actualización de empaquetado 27/10/2026: un archivo Linux desktop/Steam Deck
 incluye x86 y host x64; Anbernic sigue siendo armhf beta, sin runtime ARM64.
 Las notas originales de implementación i386 se conservan abajo como historia.
 
+El código experimental opt-in ARM64 se prepara en `port/linuxarm64/README.md`.
+No está incluido en esos artefactos ni acredita hardware; requiere link/runtime
+y QA separados antes de promoverse. ARMhf no se renombra como ARM64.
+
 ## Por qué 32 bits
 
 El núcleo necesita punteros de 32 bits (las estructuras de la ROM los llevan

@@ -187,6 +187,8 @@ typedef struct PortConfig {
                                   SELECT, START, menu), thousandths of the layout from its place (touch_android.c's editor) */
     int crtOutput;             /* PORT_VIEW_CRT: 0 native 320x240, 1 super-res 1920x240 (x6), 2 2560x240 (x8), 3 480p (2x); last: the
                                   positional defaults stay as they are */
+    int controllerPrompts;     /* experimental display only: 0 Original, 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation */
+    int hdMediaLanguage;       /* appended: 0 legacy/Auto, 1 user-labelled EN, 2 user-labelled JP; not text/Undub */
 } PortConfig;
 
 extern PortConfig gPortConfig;
@@ -271,6 +273,10 @@ void PortHdMusicFrame(void);     /* port_hdmusic.c: the imported Re:CoM soundtra
 void PortHdMusicShutdown(void);
 const char* PortHdMusicTrack(int song); /* the Re:CoM track of a cartridge song, NULL if none */
 int PortHdMoviePlay(int movieId);  /* port_hdmovie.c: 1 if the imported HD movie played in place of the cartridge's */
+int PortHdMovieResolvePath(const char* name, char* out, size_t size);
+void PortHdMovieInvalidatePaths(void);
+void PortHdMediaInvalidate(void);
+int PortHdMediaVariantAvailable(int language, int component);
 void PortAudioMovieHold(int hold); /* port_audio.c: 1 fades the game's sound out for an HD movie, 0 brings it back */
 int PortHdScenePlay(int eventId);  /* port_hdmovie.c: 1 if the event's imported Re:CoM scene played (full mod) */
 /* badgeIndex: position in the official set (its badges.png atlas); -1 = none */
@@ -367,6 +373,12 @@ void PortPpuVBlankLines(void);
 extern int gPortHudScale;   /* output pixels per HUD pixel; 0 = no separate layer */
 extern int gPortHudW;
 extern int gPortHudH;
+/* Renderer-thread transaction before native HUD suppression. */
+int PortHudCanvasReady(int width, int height);
+void PortHudCanvasRetry(void);
+/* Scope all rendering of the frozen HUD with its captured geometry. */
+void PortPpuHudFrameBegin(int saved[4]);
+void PortPpuHudFrameEnd(const int saved[4]);
 int PortPpuHudActive(void);
 void PortPpuRenderHud(uint32_t* buf);
 /* The HUD sprites in front of HD sprites, after PortPpuRenderHud (NULL: none this frame). */
@@ -412,5 +424,15 @@ uint16_t PortInputKeys(void);
 uint16_t PortInputResolve(uint16_t keys);
 int PortInputKeyBound(int key); /* the keyboard key is bound to a game action */
 void PortInputHandleEvent(const void* sdlEvent);
+void PortPromptHandleEvent(const void* sdlEvent); /* raw, before Nintendo normalization and menu consumption */
+int PortControllerBindingLabel(int binding, char* out, size_t size);
+int PortControllerActionLabel(int action, char* out, size_t size);
+int PortControllerActionGlyph(int action); /* 0: use the accessible text label */
+const unsigned char* PortControllerGlyphTiles(int glyph); /* immutable 16x16 4bpp, no allocation */
+int PortControllerPresetFamily(void); /* identified/forced family, 0 if no honest preset is available */
+int PortApplyControllerConfirmPreset(int family); /* explicit, pinned UI choice: replaces only gamepad A/B */
+int PortControllerOriginalPromptAt(const void* position,int sjis,int* follower); /* scoped source offsets only */
+uint64_t PortControllerPromptRevision(void); /* bounded context snapshot, no texture work */
+int PortControllerSemanticGlyph(int token); /* action+1, bit64: card-scroll tutorial inversion */
 
 #endif

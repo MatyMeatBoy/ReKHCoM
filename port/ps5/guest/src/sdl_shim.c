@@ -2,6 +2,7 @@
  * rectangles on the host's GPU layer, audio and pads go to the host. */
 #include <SDL3/SDL.h>
 #include "bridge_calls.h"
+#include "../../shared/bridge_gpu_targets.h"
 
 static char sError[128] = "";
 static Uint32 sInit;
@@ -196,6 +197,17 @@ bool SDL_SaveBMP(SDL_Surface* s, const char* file) {
 /* ---- window ---- */
 
 struct SDL_Window { int w, h; };
+typedef struct TargetState {
+    SDL_Rect view, clip;
+    bool hasView, hasClip;
+    float sx, sy;
+} TargetState;
+static TargetState sWindowTargetState = { .sx = 1, .sy = 1 };
+static bool GpuTargets(void) {
+    static int available = -1;
+    if (available < 0) available = h_thread(BRIDGE_GPU_PROBE, 0, 0, 0, 0) == BRIDGE_GPU_MAGIC;
+    return available != 0;
+}
 struct SDL_Renderer {
     SDL_Window* window;
     Uint8 r, g, b, a;
@@ -207,6 +219,8 @@ struct SDL_Renderer {
     float sx, sy;
     int hostBlend;
     int vsync;
+    SDL_Texture* target;
+    bool outputBlocked;
 };
 static SDL_Window sWindow;
 static SDL_Renderer sRenderer;
@@ -223,10 +237,34 @@ SDL_Renderer* SDL_CreateRenderer(SDL_Window* w, const char* n) {
     sRenderer.hostBlend = 1;
     sRenderer.vsync = 1;
     h_gfx_blend(1);
+    {
+        char message[192];
+        int available = GpuTargets();
+        snprintf(message, sizeof(message), "bridge GPU: renderer=%s targets=%d budget=%d%s",
+                 SDL_GetRendererName(&sRenderer), available,
+                 available ? h_thread(BRIDGE_GPU_BUDGET, 0, 0, 0, 0) : 0,
+                 available ? "" : " gauge-aa=direct (optional host targets unavailable)");
+        h_log(message);
+    }
     return &sRenderer;
 }
 SDL_Renderer* SDL_GetRenderer(SDL_Window* w) { (void)w; return &sRenderer; }
-const char* SDL_GetRendererName(SDL_Renderer* r) { (void)r; return "vulkan"; }
+const char* SDL_GetRendererName(SDL_Renderer* r) {
+    static char name[96];
+    (void)r;
+    if (h_thread(BRIDGE_GPU_PROTOCOL, 0, 0, 0, 0) != BRIDGE_GPU_MAGIC ||
+        h_getenv("KHCOM_GPU_RENDERER", name, sizeof(name)) <= 0) return "bridge-unknown";
+    name[sizeof(name)-1] = 0;
+    return name;
+}
+SDL_PropertiesID SDL_GetRendererProperties(SDL_Renderer* r) { (void)r; return GpuTargets() ? 1 : 0; }
+Sint64 SDL_GetNumberProperty(SDL_PropertiesID props, const char* name, Sint64 fallback) {
+    if (props == 1 && !strcmp(name, SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER)) {
+        int limit = h_thread(BRIDGE_GPU_MAX_SIZE, 0, 0, 0, 0);
+        if (limit > 0) return limit;
+    }
+    return fallback;
+}
 SDL_Window** SDL_GetWindows(int* count) {
     SDL_Window** list = malloc(2 * sizeof(*list)); /* freed by the caller */
     if (list) { list[0] = sWindows[0]; list[1] = NULL; }
@@ -278,12 +316,14 @@ bool SDL_SetRenderScale(SDL_Renderer* r, float x, float y) { r->sx = x; r->sy = 
 bool SDL_GetRenderScale(SDL_Renderer* r, float* x, float* y) { *x = r->sx; *y = r->sy; return true; }
 
 static bool sFrameOpen;
+static void ApplyClip(SDL_Renderer* r);
 
 /* The host frame opens with the first draw after a present. */
 static void Open(void) {
     if (!sFrameOpen) {
         h_gfx_begin(0);
         sFrameOpen = true;
+        ApplyClip(&sRenderer);
     }
 }
 
@@ -322,9 +362,10 @@ bool SDL_SetRenderClipRect(SDL_Renderer* r, const SDL_Rect* rect) {
 }
 
 static void SetBlend(SDL_Renderer* r, SDL_BlendMode m) {
-    int on = m != SDL_BLENDMODE_NONE;
+    int on = GpuTargets() ? (int)m : m != SDL_BLENDMODE_NONE;
     if (on != r->hostBlend) {
-        h_gfx_blend(on);
+        if (GpuTargets()) h_thread(BRIDGE_GPU_BLEND, (uint32_t)on, 0, 0, 0);
+        else h_gfx_blend(on);
         r->hostBlend = on;
     }
 }
@@ -344,6 +385,7 @@ static void Corner(HostVertex* v, SDL_Renderer* r, float x, float y, float u, fl
 static void Quad(SDL_Renderer* r, int tex, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1,
                  uint32_t c) {
     HostVertex q[6];
+    if (r->outputBlocked) return;
     Open();
     Corner(&q[0], r, x0, y0, u0, v0, c);
     Corner(&q[1], r, x1, y0, u1, v0, c);
@@ -355,6 +397,11 @@ static void Quad(SDL_Renderer* r, int tex, float x0, float y0, float x1, float y
 }
 
 bool SDL_RenderClear(SDL_Renderer* r) {
+    if (r->outputBlocked) return false;
+    if (GpuTargets()) {
+        Open();
+        return h_thread(BRIDGE_GPU_CLEAR, Argb(r->a, r->r, r->g, r->b), 0, 0, 0) != 0;
+    }
     int w, h;
     SDL_Rect v = r->view;
     bool hv = r->hasView;
@@ -398,6 +445,7 @@ bool SDL_RenderPresent(SDL_Renderer* r) {
         h_notify("toast-states");
     }
     Open();
+    if ((r->target || r->outputBlocked) && !SDL_SetRenderTarget(r, NULL)) return false;
     h_gfx_end();
     sFrameOpen = false;
     return true;
@@ -462,6 +510,8 @@ typedef struct Tex {
     SDL_ScaleMode scale;
     SDL_BlendMode blend;
     Uint8 cr, cg, cb, ca;
+    bool target, destroyPending;
+    TargetState renderState;
     bool picture;         /* a streaming texture: the game's picture, as opposed to glyphs and icons */
 } Tex;
 
@@ -492,16 +542,22 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
     if (w <= 0 || h <= 0) { SetError("bad texture size"); return NULL; }
     t = calloc(1, sizeof(*t));
     if (!t) return NULL;
-    t->pub.w = w; t->pub.h = h;
+    t->pub.w = w; t->pub.h = h; t->pub.refcount = 1;
     t->format = format;
     t->id[0] = t->id[1] = -1;
     t->epoch = sTextureEpoch;
-    t->rgba = calloc((size_t)w * h, 4);
+    t->target = access == SDL_TEXTUREACCESS_TARGET;
+    t->renderState.sx = t->renderState.sy = 1;
+    if (t->target) {
+        if (!GpuTargets()) { free(t); SetError("GPU render targets unavailable on this host"); return NULL; }
+        t->id[0] = h_thread(BRIDGE_GPU_CREATE, (uint32_t)w, (uint32_t)h, 0, 0);
+        if (t->id[0] < 0) { free(t); SetError("GPU render target allocation failed"); return NULL; }
+    } else t->rgba = calloc((size_t)w * h, 4);
     t->blend = SDL_BLENDMODE_NONE;
     t->scale = SDL_SCALEMODE_LINEAR;
     t->cr = t->cg = t->cb = t->ca = 255;
     t->picture = access == SDL_TEXTUREACCESS_STREAMING;
-    if (!t->rgba) { free(t); SetError("out of memory"); return NULL; }
+    if (!t->target && !t->rgba) { free(t); SetError("out of memory"); return NULL; }
     return &t->pub;
 }
 
@@ -511,9 +567,14 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* r, SDL_Surface* s) {
     return t;
 }
 
+static bool UnbindTexture(SDL_Texture* p) {
+    return sRenderer.target != p || SDL_SetRenderTarget(&sRenderer, NULL);
+}
 void SDL_DestroyTexture(SDL_Texture* p) {
     Tex* t = (Tex*)p;
     if (!t) return;
+    if (t->pub.refcount > 1) { t->pub.refcount--; return; }
+    if (!UnbindTexture(p)) { t->destroyPending = true; return; }
     TextureEpoch(t);
     if (t->id[0] >= 0) h_tex_free(t->id[0]);
     if (t->id[1] >= 0) h_tex_free(t->id[1]);
@@ -526,6 +587,7 @@ bool SDL_UpdateTexture(SDL_Texture* p, const SDL_Rect* rect, const void* pixels,
     SDL_Rect r = { 0, 0, t->pub.w, t->pub.h };
     int k;
     TextureEpoch(t);
+    if (t->target) { SetError("Cannot update render target pixels"); return false; }
     if (rect) r = *rect;
     ToRgba(t->format, pixels, pitch, t->rgba + ((size_t)r.y * t->pub.w + r.x) * 4, t->pub.w * 4, r.w, r.h);
     for (k = 0; k < 2; k++)
@@ -540,11 +602,59 @@ bool SDL_SetTextureAlphaMod(SDL_Texture* p, Uint8 a) { ((Tex*)p)->ca = a; return
 
 /* The host texture for the filter this draw wants: nearest, or smooth (also used by pixel art). */
 static int HostTex(Tex* t, bool smooth) {
-    int k = smooth ? 1 : 0;
+    int k = t->target ? 0 : smooth ? 1 : 0;
     TextureEpoch(t);
+    if (t->target) {
+        if (t->id[0] < 0) t->id[0] = h_thread(BRIDGE_GPU_CREATE, t->pub.w, t->pub.h, 0, 0);
+        if (t->id[0] >= 0) h_thread(BRIDGE_GPU_SMOOTH, t->id[0], smooth, 0, 0);
+        return t->id[0];
+    }
     if (t->id[k] < 0) t->id[k] = h_tex_create(t->rgba, t->pub.w, t->pub.h, smooth);
     return t->id[k];
 }
+
+static void SaveTargetState(SDL_Renderer* r, TargetState* state) {
+    state->view = r->view; state->clip = r->clip;
+    state->hasView = r->hasView; state->hasClip = r->hasClip;
+    state->sx = r->sx; state->sy = r->sy;
+}
+SDL_Texture* SDL_GetRenderTarget(SDL_Renderer* r) { return r->target; }
+bool SDL_SetRenderTarget(SDL_Renderer* r, SDL_Texture* texture) {
+    Tex* t = (Tex*)texture;
+    SDL_Texture* previous = r->target;
+    TargetState* state;
+    int id = -1;
+    if (!GpuTargets()) return texture == NULL;
+    if (t) {
+        if (t->destroyPending) { SetError("Render target is pending destruction"); return false; }
+        if (!t->target) { SetError("Texture is not a render target"); return false; }
+        id = HostTex(t, t->scale != SDL_SCALEMODE_NEAREST);
+        if (id < 0) return false;
+    }
+    Open();
+    if (!h_thread(BRIDGE_GPU_BIND, (uint32_t)id, 0, 0, 0)) { r->outputBlocked = true; return false; }
+    r->outputBlocked = false;
+    SaveTargetState(r, r->target ? &((Tex*)r->target)->renderState : &sWindowTargetState);
+    r->target = texture;
+    state = t ? &t->renderState : &sWindowTargetState;
+    r->view = state->view; r->clip = state->clip;
+    r->hasView = state->hasView; r->hasClip = state->hasClip;
+    r->sx = state->sx; r->sy = state->sy;
+    r->hostBlend = -1;
+    ApplyClip(r);
+    if (previous && previous != texture && ((Tex*)previous)->destroyPending)
+        SDL_DestroyTexture(previous);
+    return true;
+}
+bool SDL_GetRenderViewport(SDL_Renderer* r, SDL_Rect* rect) {
+    if (r->hasView) *rect = r->view;
+    else { rect->x = rect->y = 0; h_gfx_size(&rect->w, &rect->h); }
+    return true;
+}
+bool SDL_GetRenderClipRect(SDL_Renderer* r, SDL_Rect* rect) {
+    *rect = r->hasClip ? r->clip : (SDL_Rect){0,0,0,0}; return true;
+}
+bool SDL_RenderClipEnabled(SDL_Renderer* r) { return r->hasClip; }
 
 /* Pixel art is sampled by the host's shader (crisp texels, blended seams) on a smooth texture; u + 2 asks for it,
  * u + 4 for the MMPX 3.2 filter (Options). */
@@ -563,6 +673,7 @@ bool SDL_RenderTextureRotated(SDL_Renderer* r, SDL_Texture* p, const SDL_FRect* 
     if (src) s = *src;
     if (dst) d = *dst;
     else { h_gfx_size(&ow, &oh); d.x = 0; d.y = 0; d.w = (float)ow; d.h = (float)oh; }
+    if (r->outputBlocked) return false;
     if (t->ca == 0 || d.w <= 0 || d.h <= 0 || s.w <= 0 || s.h <= 0) return true;
     id = HostTex(t, t->scale != SDL_SCALEMODE_NEAREST);
     if (id < 0) return false;
@@ -589,6 +700,7 @@ bool SDL_RenderTexture(SDL_Renderer* r, SDL_Texture* p, const SDL_FRect* src, co
 }
 
 bool SDL_RenderGeometry(SDL_Renderer* r, SDL_Texture* p, const SDL_Vertex* v, int nv, const int* idx, int ni) {
+    if (r->outputBlocked) return false;
     HostVertex out[300];
     Tex* t = (Tex*)p;
     int id = -1, n = 0, i, count = idx ? ni : nv;
@@ -682,7 +794,7 @@ int SDL_GetAudioStreamQueued(SDL_AudioStream* s) {
 
 /* ---- events, gamepads ---- */
 
-typedef struct Pad { SDL_JoystickID id; HostPad now, prev; bool present; } Pad;
+typedef struct Pad { SDL_JoystickID id; HostPad now, prev; bool present, physical; SDL_GamepadType type; } Pad;
 struct SDL_Gamepad { Pad* pad; };
 static Pad sPads[HOSTPAD_MAX];
 static struct SDL_Gamepad sPadHandles[HOSTPAD_MAX];
@@ -801,17 +913,46 @@ static void RefreshHostKeys(void) {
     }
 }
 
+/* One bounded query per event refresh; render-time getters never cross the bridge.
+ * Old/console hosts return no metadata and retain the original pad-only path. */
+static bool RefreshPadMetadata(bool* connected, SDL_GamepadType* type) {
+    static const char prefix[] = "bridge-pad-v1:1:";
+    char text[48];
+    int n = h_getenv("KHCOM_GAMEPAD_INFO_V1", text, sizeof(text)), value = 0, i;
+    if (n <= 0 || n >= (int)sizeof(text)) return false;
+    text[n] = 0;
+    if ((int)strlen(text) != n || strncmp(text, prefix, sizeof(prefix) - 1)) return false;
+    i = sizeof(prefix) - 1;
+    if ((text[i] != '0' && text[i] != '1') || text[i + 1] != ':') return false;
+    *connected = text[i] == '1';
+    i += 2;
+    if (!text[i]) return false;
+    for (; text[i]; i++) {
+        if (text[i] < '0' || text[i] > '9' || value > 10) return false;
+        value = value * 10 + text[i] - '0';
+    }
+    if (value >= SDL_GAMEPAD_TYPE_COUNT) return false;
+    *type = *connected ? (SDL_GamepadType)value : SDL_GAMEPAD_TYPE_UNKNOWN;
+    return true;
+}
+
 static void Refresh(void) {
     HostPad now[HOSTPAD_MAX];
+    bool physical = false;
+    SDL_GamepadType type = SDL_GAMEPAD_TYPE_UNKNOWN;
+    bool metadata;
     int i, b;
     memset(now, 0, sizeof(now));
     RefreshHostKeys(); /* capability before pad poll disables duplicate keyboard-to-pad emulation */
     h_pad_poll(now, HOSTPAD_MAX);
+    metadata = RefreshPadMetadata(&physical, &type);
     RefreshHostKeys();
     TouchpadHold(now);
     for (i = 0; i < HOSTPAD_MAX; i++) {
         Pad* p = &sPads[i];
         p->id = (SDL_JoystickID)(i + 1);
+        p->physical = metadata ? i == 0 && physical : now[i].connected != 0;
+        p->type = metadata ? (i == 0 ? type : SDL_GAMEPAD_TYPE_UNKNOWN) : SDL_GAMEPAD_TYPE_STANDARD;
         p->prev = p->now;
         p->now = now[i];
         StateKeys(&p->prev, &p->now);
@@ -922,20 +1063,24 @@ SDL_JoystickID* SDL_GetGamepads(int* count) {
     int i, n = 0;
     if (!ids) { if (count) *count = 0; return NULL; }
     for (i = 0; i < HOSTPAD_MAX; i++)
-        if (sPads[i].present) ids[n++] = sPads[i].id;
+        if (sPads[i].present && sPads[i].physical) ids[n++] = sPads[i].id;
     ids[n] = 0;
     if (count) *count = n;
     return ids;
 }
 
 SDL_Gamepad* SDL_GetGamepadFromID(SDL_JoystickID id) {
-    if (id < 1 || id > HOSTPAD_MAX || !sPads[id - 1].present) return NULL;
+    if (id < 1 || id > HOSTPAD_MAX || !sPads[id - 1].present || !sPads[id - 1].physical) return NULL;
     sPadHandles[id - 1].pad = &sPads[id - 1];
     return &sPadHandles[id - 1];
 }
 SDL_Gamepad* SDL_OpenGamepad(SDL_JoystickID id) { return SDL_GetGamepadFromID(id); }
-/* the console's own controllers: never a Nintendo layout */
-SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad) { (void)gamepad; return SDL_GAMEPAD_TYPE_STANDARD; }
+bool SDL_GamepadConnected(SDL_Gamepad* gamepad) {
+    return gamepad && gamepad->pad && gamepad->pad->present && gamepad->pad->physical;
+}
+SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad) {
+    return SDL_GamepadConnected(gamepad) ? gamepad->pad->type : SDL_GAMEPAD_TYPE_UNKNOWN;
+}
 const char* SDL_GetGamepadStringForButton(SDL_GamepadButton button) {
     static const char* const names[SDL_GAMEPAD_BUTTON_COUNT] = {
         "South", "East", "West", "North", "Back", "Guide", "Start", "L3", "R3",

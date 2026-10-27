@@ -121,18 +121,25 @@ GAME=./bin/khcom_$REGION
 # GPU driver, no 32-bit libraries needed. If it is missing or does not get going, the 32-bit build below runs.
 # REKHCOM_64=0 forces the 32-bit build.
 AVAILABLE64=0
-if [ "$(uname -m)" = x86_64 ] && [ -x "$DIR/bin64/rekhcom64" ] &&
-   [ -f "$DIR/bin64/guest-$REGION.bin" ]; then AVAILABLE64=1; fi
+MACHINE=$(uname -m)
+HOST64=
+IMAGE64=
+LIB64=
+case "$MACHINE" in
+    x86_64) HOST64="$DIR/bin64/rekhcom64"; IMAGE64="$DIR/bin64/guest-$REGION.bin"; LIB64="$DIR/lib64" ;;
+    aarch64|arm64) HOST64="$DIR/binarm64/rekhcom-arm64"; IMAGE64="$DIR/binarm64/guest-$REGION.macho"; LIB64="$DIR/libarm64" ;;
+esac
+if [ -n "$HOST64" ] && [ -x "$HOST64" ] && [ -f "$IMAGE64" ]; then AVAILABLE64=1; fi
 if [ "$MODE" = 2 ] && [ "$AVAILABLE64" = 0 ]; then
-    echo 'Cannot start in 64-bit mode: x86-64 Linux and complete bin64 files are required.' >&2
+    echo "Cannot start in 64-bit mode: no complete native 64-bit runtime for $MACHINE." >&2
     exit 2
 fi
 if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
     echo "ReKHCoM.sh: 64-bit build"
     BOOT=$(mktemp "$DIR/.rekhcom-boot-XXXXXX") || exit 1
     rm -f "$BOOT"
-    LD_LIBRARY_PATH="$DIR/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" KHCOM_ROM="$ROM" \
-        "$DIR/bin64/rekhcom64" "$DIR/bin64/guest-$REGION.bin" --data "$DIR" --boot-status "$BOOT"
+    LD_LIBRARY_PATH="$LIB64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" KHCOM_ROM="$ROM" \
+        "$HOST64" "$IMAGE64" --data "$DIR" --boot-status "$BOOT"
     CODE=$?
     ENTERED=0
     [ -f "$BOOT" ] && ENTERED=1
@@ -143,6 +150,26 @@ if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
         *) exit "$CODE" ;;
     esac
 fi
+
+# The universal bundle keeps ARM hard-float binaries and their loader separate.
+# A 64-bit ARM kernel may lack AArch32 support: the loader preflight checks this.
+case "$MACHINE" in
+    aarch64|arm64|armv[5-8]*|armhf)
+        GAME="$DIR/binarmhf/khcom_$REGION"
+        ARM_LIB="$DIR/libarmhf"
+        if [ ! -x "$GAME" ] || [ ! -x "$ARM_LIB/rekhcom" ]; then
+            echo "No bundled ARM 32-bit runtime for $MACHINE; use native ARM64 mode when available." >&2
+            exit 2
+        fi
+        if ! "$ARM_LIB/rekhcom" --verify "$GAME"; then
+            echo 'ARM 32-bit runtime unavailable: this kernel may not support AArch32.' >&2
+            exit 3
+        fi
+        exec "$ARM_LIB/rekhcom" --library-path "$ARM_LIB/sys:$ARM_LIB" "$GAME" "$@"
+        ;;
+    x86_64|i?86) ;;
+    *) echo "Unsupported Linux CPU architecture: $MACHINE" >&2; exit 2 ;;
+esac
 
 # With the GPU (25/10, #140): SDL draws through the system's OpenGL driver, which only loads with the system's own
 # C library. SteamOS (and Arch, Debian/Ubuntu with i386 packages) ship the 32-bit loader, C library and Mesa for

@@ -9,7 +9,7 @@ def prepare(root, out):
     start = source.index('#define SUB_MAX 256')
     stop = source.index('/* Plays hd/movies/', start)
     subtitles = source[start:stop]
-    old = 'SDL_snprintf(path, sizeof(path), "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, order[i]);'
+    old = 'MovieSubtitlePath(name, order[i], path, sizeof(path));'
     assert subtitles.count(old) == 1, 'native subtitle path contract changed'
     subtitles = subtitles.replace(old, 'MovieSubtitlePath(name, i, path, sizeof(path));')
     # The bridge supplies paths already resolved for the current guest language.

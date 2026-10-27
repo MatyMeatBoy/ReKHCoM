@@ -23,6 +23,7 @@
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
+#include "port/port_hdlayout.h"
 #include "engine.h"
 #include "sprite.h"
 #include "port/port_state.h"
@@ -35,6 +36,7 @@
 #include "port/port_preliminar_v1_tiles.h"
 
 extern const void* gMsgwinMapBlocks[4];
+extern const unsigned char gStockValueTiles[];
 extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
@@ -534,6 +536,20 @@ static int TagHudY(const SpriteTag* t, int yg, int h, int raise) {
 }
 
 static int sHudLayer;
+static int sHudCanvasFallback;
+static int sHudFrameW, sHudFrameH, sHudFrameScale, sHudFrameWorldScale;
+
+/* OAM and HUD geometry belong to the same PPU frame. Options can change the
+ * desired geometry while that frame is frozen; its consumer must keep using
+ * the preflighted dimensions until a real PPU frame replaces it. */
+void PortPpuHudFrameBegin(int saved[4]) {
+    saved[0] = gPortHudW; saved[1] = gPortHudH; saved[2] = gPortHudScale; saved[3] = gPortWorldScale;
+    gPortHudW = sHudFrameW; gPortHudH = sHudFrameH; gPortHudScale = sHudFrameScale; gPortWorldScale = sHudFrameWorldScale;
+}
+void PortPpuHudFrameEnd(const int saved[4]) {
+    gPortHudW = saved[0]; gPortHudH = saved[1]; gPortHudScale = saved[2]; gPortWorldScale = saved[3];
+}
+
 static int sHdText;
 static int sJafarFight; /* this frame shows Jafar's room (port_jafar.c) */
 int gPortHdHudPart;
@@ -758,7 +774,7 @@ int PortHdSpriteKeepsCartridge(int id);
 static int HdTextGlyph(int oamIndex) {
     int c = sOamTag[oamIndex].text;
 
-    if (!sHdText || c <= 0x20 || c == 0x7F)
+    if ((sHudCanvasFallback && sOamTag[oamIndex].hud) || !sHdText || c <= 0x20 || c == 0x7F)
         return 0;
     if (c > 0xFF) /* Shift-JIS (Japanese version); 0x8140 is the wide space */
         return c >= 0x8141;
@@ -985,6 +1001,18 @@ static int ArenaBandPixel(int distance, int start, int width, int right) {
 
 /* Battle: the card hand sits partly below the GBA screen; the sprites are
    whole, so the bottom HUD can be lifted to show more of them. */
+/* Only the legal sum1..27 sources used by both cardbattle_2 callers.
+ * Keep the native counter untouched unless that side's imported gauge is
+ * actually drawing this frame. Card artwork and value digits are unrelated. */
+static int HudStockValueY(const void* source, int y, int opponent) {
+    uintptr_t value = (uintptr_t)source, first = (uintptr_t)gStockValueTiles;
+    int top;
+    if (!source || value < first || value - first >= 27u * 128u || (value - first) % 128u)
+        return y;
+    top = PortHdStockValueTop(opponent);
+    return y < top ? top : y;
+}
+
 static int HudRaise(void) {
     int r = gPortConfig.cardHudRaise;
 
@@ -3701,6 +3729,12 @@ void PortPpuBeginFrame(void) {
                 sBgWorldLatched[1].valid, sBgWorldLatched[2].valid, sBgWorldLatched[3].valid, IO16(0x08), IO16(0x0A),
                 IO16(0x0C), IO16(0x0E), gPortScreen.wide, sSceneNarrow);
     sHudLayer = gPortScreen.wide && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
+    sHudCanvasFallback = sHudLayer && !PortHudCanvasReady(gPortHudW, gPortHudH);
+    if (sHudCanvasFallback) sHudLayer = 0;
+    sHudFrameW = gPortHudW;
+    sHudFrameH = gPortHudH;
+    sHudFrameScale = gPortHudScale;
+    sHudFrameWorldScale = gPortWorldScale;
     sHdText = gPortConfig.hdText;
 #if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
     {
@@ -4813,7 +4847,7 @@ static void QueueMainHdParts(void) {
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
         int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3, ow, oh, bw, bh, ox, oy, alpha = 255;
         int16_t pa = 0x100, pb = 0, pc = 0, pd = 0x100;
-        if (!sOamHd[i].id || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
+        if (!sOamHd[i].id || (sHudCanvasFallback && sOamTag[i].hud) || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
             (((a0 >> 12) & 1) && (IO16(0x4C) & 0xFF00)))
             continue; /* a sprite under a real mosaic (size > 1) keeps the cartridge's pixels */
         ow = sObjSize[shape][size][0];
@@ -4981,6 +5015,13 @@ static void MainHdOver(void) {
 }
 
 extern const unsigned char gReloadCardGreenTiles[], gRiCardF0RedTiles[];
+extern const unsigned char gCardPremiumValueDigitTiles[], gCardModifiedValueDigitTiles[];
+
+/* Imported digit art owns its full color treatment. If it is missing, retain
+   the cartridge's multicolor glyph instead of flattening it to one font tint. */
+static int HudDigitKeepsPalette(const void* tiles) {
+    return tiles == gCardPremiumValueDigitTiles || tiles == gCardModifiedValueDigitTiles;
+}
 const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h);
 
 void PortPpuRenderHud(uint32_t* buf) {
@@ -5077,6 +5118,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
         if (gPortConfig.hdHud && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize &&
+            !HudDigitKeepsPalette(sOamHd[i].tiles) &&
             tag->digit && tag->digit <= 10 && sHudDigitCount < 128) {
             if (!sHudDigits) sHudDigits = calloc(128, sizeof(*sHudDigits));
             if (sHudDigits) {
@@ -5113,6 +5155,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         hx = tag->ax == 2 ? HudWorldX(xg, bw, w)
              : tag->ax < 0 ? xg : (tag->ax > 0 ? w - (GBA_SCREEN_W - xg) : xg + (w - GBA_SCREEN_W) / 2);
         hy = TagHudY(tag, yg, h, HudRaise());
+        hy = HudStockValueY(sOamHd[i].tiles, hy, tag->ax > 0);
         if (!affine && !tag->hdHudPart && !tag->digit && sHudDigitOwners &&
             (size_t)w*h <= sHudDigitOwnerSize)
             hdSprite = PortHdHudSpriteRegister(rawHud, ow, oh, i, hx, hy,

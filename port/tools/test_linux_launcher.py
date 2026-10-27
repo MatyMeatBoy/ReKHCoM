@@ -67,6 +67,59 @@ class LauncherTest(unittest.TestCase):
                         f'exit {code}\n')
         host.chmod(0o755)
 
+    def fake_machine(self, machine):
+        # Substitute only the architecture probe; all selection/launch code runs unchanged.
+        self.script.write_text(self.script.read_text().replace('$(uname -m)', machine))
+
+    def fake_arm64(self, code=0, entered=True):
+        self.fake64(code, entered)
+        (self.game / 'bin64').rename(self.game / 'binarm64')
+        (self.game / 'binarm64/rekhcom64').rename(self.game / 'binarm64/rekhcom-arm64')
+        (self.game / 'binarm64/guest-eu.bin').rename(self.game / 'binarm64/guest-eu.macho')
+
+    def test_aarch64_uses_its_own_host(self):
+        self.fake_machine('aarch64')
+        self.fake_arm64()
+        self.assertEqual(self.run_script().returncode, 0)
+        self.assertTrue((self.game / 'ran64.txt').exists())
+        self.assertFalse((self.game / 'region.txt').exists())
+
+    def test_aarch64_never_runs_x86_host(self):
+        self.fake_machine('aarch64')
+        self.fake64(0)
+        self.assertEqual(self.run_script('--force64').returncode, 2)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        self.assertFalse((self.game / 'region.txt').exists())
+
+    def test_aarch64_force32_uses_armhf_loader(self):
+        self.fake_machine('aarch64')
+        self.fake_arm64()
+        (self.game / 'binarmhf').mkdir()
+        (self.game / 'libarmhf').mkdir()
+        game = self.game / 'binarmhf/khcom_eu'
+        game.write_text('#!/bin/sh\nexit 17\n')
+        game.chmod(0o755)
+        loader = self.game / 'libarmhf/rekhcom'
+        loader.write_text('#!/bin/sh\n[ "$1" = --verify ] && exit 0\nprintf armhf > arm32.txt\nexit 17\n')
+        loader.chmod(0o755)
+        self.assertEqual(self.run_script('--force32').returncode, 17)
+        self.assertTrue((self.game / 'arm32.txt').exists())
+        self.assertFalse((self.game / 'ran64.txt').exists())
+
+    def test_aarch64_failure_after_entry_never_starts_arm32(self):
+        self.fake_machine('aarch64')
+        self.fake_arm64(139, True)
+        self.assertEqual(self.run_script().returncode, 139)
+        self.assertFalse((self.game / 'region.txt').exists())
+        self.assertFalse((self.game / 'arm32.txt').exists())
+
+    def test_unknown_cpu_never_starts_x86(self):
+        self.fake_machine('riscv64')
+        self.fake64(0)
+        self.assertEqual(self.run_script().returncode, 2)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        self.assertFalse((self.game / 'region.txt').exists())
+
     def test_automatic_boot_failure_retries_32(self):
         self.fake64(4)
         self.assertEqual(self.run_script().returncode, 17)

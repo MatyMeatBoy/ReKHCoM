@@ -8,6 +8,11 @@
 static SDL_Texture* sTex[HOST_TEXTURE_SLOTS];
 static int sTexW[HOST_TEXTURE_SLOTS], sTexSmooth[HOST_TEXTURE_SLOTS];
 static unsigned sTexSerial[HOST_TEXTURE_SLOTS];
+#ifdef HOST_GPU_TARGETS
+static uint8_t sTexTarget[HOST_TEXTURE_SLOTS], sTexPendingFree[HOST_TEXTURE_SLOTS];
+static size_t sTexTargetBytes[HOST_TEXTURE_SLOTS];
+static int HostGpuBeforeFree(int slot);
+#endif
 static int HostTextureSlot(int id) {
     if (id < 0) return -1;
     unsigned slot = (unsigned)id & 4095u;
@@ -34,17 +39,29 @@ static int H_tex_create(const void* rgba, int w, int h, int smooth) {
 }
 static void H_tex_update(int id, const void* rgba) {
     int slot = HostTextureSlot(id);
-    if (slot >= 0 && rgba) SDL_UpdateTexture(sTex[slot], NULL, rgba, sTexW[slot] * 4);
+    if (slot >= 0 && rgba
+#ifdef HOST_GPU_TARGETS
+        && !sTexTarget[slot]
+#endif
+       ) SDL_UpdateTexture(sTex[slot], NULL, rgba, sTexW[slot] * 4);
 }
 static void H_tex_free(int id) {
     int slot = HostTextureSlot(id);
     if (slot < 0) return;
+#ifdef HOST_GPU_TARGETS
+    if (!HostGpuBeforeFree(slot)) return;
+#endif
     SDL_DestroyTexture(sTex[slot]);
     sTex[slot] = NULL;
 }
 static void HostTextureReset(void) {
     for (int i = 0; i < HOST_TEXTURE_SLOTS; i++) {
-        if (sTex[i]) SDL_DestroyTexture(sTex[i]);
+        if (sTex[i]) {
+#ifdef HOST_GPU_TARGETS
+            if (!HostGpuBeforeFree(i)) continue;
+#endif
+            SDL_DestroyTexture(sTex[i]);
+        }
         sTex[i] = NULL;
     }
     /* Never wrap the query epoch. At exhaustion retire all remaining handles. */

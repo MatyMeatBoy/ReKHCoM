@@ -32,6 +32,7 @@ void PortLog(const char* fmt, ...) { (void)fmt; }
 int PortUiMenuCanvas(void) { return 0; }
 int PortUndubAvailable(void) { return 0; }
 void PortSetQolButtons(int on) { (void)on; }
+void PortHdMovieInvalidatePaths(void) {} /* movie module is outside this config/input fixture */
 static int sZoomSteps[2];
 void PortUiZoomStep(int dir) { sZoomSteps[dir > 0]++; }
 
@@ -59,6 +60,13 @@ static void config_test(void) {
     assert(f); fputs("stock_button=1\n", f); fclose(f);
     PortConfigLoad(); /* old settings have no inversion key */
     assert(gPortConfig.invertCardScroll == 0);
+    assert(gPortConfig.controllerPrompts == 0);
+    for(int family=0;family<5;family++) {
+        gPortConfig.controllerPrompts=family;PortConfigSave();
+        gPortConfig.controllerPrompts=-1;PortConfigLoad();
+        assert(gPortConfig.controllerPrompts==family);
+    }
+    gPortConfig.controllerPrompts=0;
 }
 
 static void key_test(void) {
@@ -221,6 +229,70 @@ static void device_test(void) {
     event.type = SDL_EVENT_KEY_UP;
     PortInputHandleEvent(&event);
     assert(PortInputKeys() == 0);
+    /* Real input/config/tutorial integration, independent from visual-family
+       conventions: Cross stays Cross until the actual A binding changes. */
+    int padCount=0;
+    SDL_JoystickID* ids=SDL_GetGamepads(&padCount);
+    assert(ids && padCount>0);
+    SDL_JoystickID id=ids[0];SDL_free(ids);
+    char label[32];
+    int oldA=gPortConfig.pad[PORT_ACT_A],oldKey=gPortConfig.keys[PORT_ACT_A][0];
+    gPortConfig.controllerPrompts=4;
+    gPortConfig.padLayout=0;gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_SOUTH;
+    event.type=SDL_EVENT_GAMEPAD_BUTTON_DOWN;event.gbutton.which=id;
+    event.gbutton.button=SDL_GAMEPAD_BUTTON_SOUTH;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Cross"));
+    gPortConfig.pad[PORT_ACT_A]=SDL_GAMEPAD_BUTTON_EAST;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Circle"));
+    gPortConfig.padLayout=2;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Cross"));
+    gPortConfig.padLayout=0;gPortConfig.controllerPrompts=1;
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"East"));
+    gPortConfig.controllerPrompts=4;gPortConfig.invertCardScroll=0;
+#ifndef VERSION_JP
+    const TextChar tutorial[]={'A',':',MSG_CODE_HIGHLIGHT,'A',' ','B','u','t','t','o','n',MSG_CODE_PLAIN,0};
+    const TextChar mapped[]={'A',':',MSG_CODE_HIGHLIGHT,27,1,MSG_CODE_PLAIN,0};
+    assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
+    assert(PortCardScrollTutorialText(CARD_MSG_OBTAINED_ELIXIR,tutorial)==tutorial);
+#else
+    const TextChar tutorial[]={0x82,0x60,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
+    const TextChar mapped[]={27,1,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
+    assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
+    const TextChar prose[]={0x82,0x60,0};
+    assert(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,prose)==prose);
+#endif
+    assert(PortControllerActionGlyph(PORT_ACT_A)==2);
+    const unsigned char* glyph=PortControllerGlyphTiles(2);
+    assert(glyph && glyph==PortControllerGlyphTiles(2) && !PortControllerGlyphTiles(255));
+    gPortConfig.keys[PORT_ACT_A][0]=SDLK_Q;
+    event.type=SDL_EVENT_KEY_DOWN;event.key.key=SDLK_Q;event.key.repeat=0;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    assert(PortControllerActionGlyph(PORT_ACT_A)==0);
+    assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
+    event.type=SDL_EVENT_GAMEPAD_AXIS_MOTION;event.gaxis.which=id;event.gaxis.value=1000;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    event.gaxis.value=20000;PortPromptHandleEvent(&event);
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Circle"));
+    SDL_CloseGamepad(SDL_GetGamepadFromID(id));
+    assert(PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)) && !strcmp(label,"Q"));
+    assert(SDL_OpenGamepad(id));
+    int savedPad[PORT_ACT_COUNT],savedKeys[PORT_ACT_COUNT][2];
+    memcpy(savedPad,gPortConfig.pad,sizeof(savedPad));memcpy(savedKeys,gPortConfig.keys,sizeof(savedKeys));
+    gPortConfig.controllerPrompts=4;
+    assert(!memcmp(savedPad,gPortConfig.pad,sizeof(savedPad))); /* family is display only */
+    assert(PortApplyControllerConfirmPreset(4));
+    assert(gPortConfig.pad[PORT_ACT_A]==SDL_GAMEPAD_BUTTON_EAST && gPortConfig.pad[PORT_ACT_B]==SDL_GAMEPAD_BUTTON_SOUTH);
+    for(int a=2;a<PORT_ACT_COUNT;a++)assert(gPortConfig.pad[a]==savedPad[a]);
+    assert(!memcmp(savedKeys,gPortConfig.keys,sizeof(savedKeys)));
+    gPortConfig.controllerPrompts=2;gPortConfig.padLayout=2;
+    assert(PortApplyControllerConfirmPreset(2));
+    assert(gPortConfig.pad[PORT_ACT_A]==SDL_GAMEPAD_BUTTON_SOUTH && gPortConfig.pad[PORT_ACT_B]==SDL_GAMEPAD_BUTTON_EAST);
+    gPortConfig.controllerPrompts=1;gPortConfig.padLayout=0;
+    memcpy(gPortConfig.pad,savedPad,sizeof(savedPad));
+    assert(!PortApplyControllerConfirmPreset(0) && !memcmp(savedPad,gPortConfig.pad,sizeof(savedPad)));
+    gPortConfig.controllerPrompts=0;
+    assert(!PortControllerActionLabel(PORT_ACT_A,label,sizeof(label)));
+    gPortConfig.pad[PORT_ACT_A]=oldA;gPortConfig.keys[PORT_ACT_A][0]=oldKey;
     SDL_Quit();
 }
 

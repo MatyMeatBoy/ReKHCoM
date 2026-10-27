@@ -83,6 +83,8 @@ static fs::path HdRel(std::string name) {
     std::replace(name.begin(), name.end(), '\\', '/');
     if (Lower(name).rfind("hd/", 0) == 0)
         name = name.substr(3);
+    if (name.rfind("media/", 0) == 0)
+        return PortHdMediaTransferMember(name.c_str()) ? fs::u8path(name) : fs::path();
     size_t slash = name.find('/');
     if (slash == std::string::npos)
         return {};
@@ -106,6 +108,8 @@ static void Zip(const fs::path& path, Result& r) {
         return;
     }
     bool all = true, any = false, ok = true;
+    bool hasMedia = false;
+    fs::path pendingMedia[2];
     for (mz_uint i = 0; i < mz_zip_reader_get_num_files(&zip); i++) {
         mz_zip_archive_file_stat st;
         if (!mz_zip_reader_file_stat(&zip, i, &st)) {
@@ -141,7 +145,13 @@ static void Zip(const fs::path& path, Result& r) {
             any = true;
             std::error_code ec;
             fs::path dest = sRoot / "hd" / rel;
-            if (fs::exists(dest, ec))
+            int media = PortHdMediaTransferMember(rel.generic_u8string().c_str());
+            hasMedia |= media != 0;
+            if (media > 1) {
+                dest += ".transfer.part";
+                pendingMedia[media - 2] = dest;
+            }
+            if (media <= 1 && fs::exists(dest, ec))
                 continue;
             fs::create_directories(dest.parent_path(), ec);
             fs::path tmp = dest;
@@ -151,8 +161,7 @@ static void Zip(const fs::path& path, Result& r) {
             if (out)
                 fclose(out);
             if (good) {
-                fs::rename(tmp, dest, ec);
-                good = !ec;
+                good = ReplaceWith(tmp, dest);
             }
             if (good) {
                 r.hdFiles++;
@@ -166,7 +175,14 @@ static void Zip(const fs::path& path, Result& r) {
     }
     mz_zip_reader_end(&zip);
     fclose(f);
-    if (any && all && ok) {
+    for (int mode = 1; mode <= 2; ++mode) {
+        const auto& pending = pendingMedia[mode - 1];
+        if (pending.empty()) continue;
+        fs::path active = pending.parent_path() / "active.txt";
+        if (!ok || !PortHdMediaPendingValid(sRoot.u8string().c_str(), mode, pending.u8string().c_str()) || !ReplaceWith(pending, active)) ok = false;
+        std::error_code ec; fs::remove(pending, ec);
+    }
+    if (any && all && ok && !hasMedia) {
         if (Recycle(path))
             r.recycled++;
     } else if (any) {
@@ -181,11 +197,25 @@ static void MoveTree(const fs::path& from, Result& r) {
     for (const auto& e : fs::recursive_directory_iterator(from, ec))
         if (e.is_regular_file(ec))
             files.push_back(e.path());
+    std::stable_sort(files.begin(), files.end(), [](const fs::path& a, const fs::path& b) {
+        return (a.filename() == "active.txt") < (b.filename() == "active.txt");
+    });
     for (const fs::path& file : files) {
         fs::path rel = HdRel(("hd/" + fs::relative(file, from, ec).generic_u8string()));
         if (rel.empty())
             continue;
         fs::path dest = sRoot / "hd" / rel;
+        int media = PortHdMediaTransferMember(rel.generic_u8string().c_str());
+        if (media) {
+            // Copies keep the source package/folder and old active generation.
+            if (media == 1 && fs::exists(dest, ec)) continue;
+            fs::create_directories(dest.parent_path(), ec);
+            fs::path pending = dest; pending += ".transfer.part";
+            fs::copy_file(file, pending, fs::copy_options::overwrite_existing, ec);
+            if (!ec && (media == 1 || PortHdMediaPendingValid(sRoot.u8string().c_str(), media - 1, pending.u8string().c_str())) && ReplaceWith(pending, dest)) r.hdFiles++;
+            fs::remove(pending, ec);
+            continue;
+        }
         if (fs::exists(dest, ec)) {
             if (fs::file_size(dest, ec) == fs::file_size(file, ec) && Recycle(file))
                 r.recycled++;

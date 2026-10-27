@@ -45,7 +45,13 @@ static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
+static int HostGpuQuery(const char*, char*, int);
+static int HostGamepadInfoQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
+    int gpuQuery = HostGpuQuery(name, out, cap);
+    if (gpuQuery != -2) return gpuQuery;
+    int padInfo = HostGamepadInfoQuery(name, out, cap);
+    if (padInfo != -2) return padInfo;
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -108,7 +114,9 @@ static void H_gfx_begin(uint32_t clear) {
     if (clear >> 24)
         SDL_RenderClear(sRenderer);
 }
+#define HOST_GPU_TARGETS 1
 #include "host_texture_slots.h"
+#include "host_gpu_targets.h"
 static void RendererDeviceReset(void);
 static void H_gfx_clip(int x, int y, int w, int h) {
     SDL_Rect r = { x, y, w, h };
@@ -117,6 +125,7 @@ static void H_gfx_clip(int x, int y, int w, int h) {
 static void H_gfx_blend(int on) { sBlend = on; }
 /* the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters: those are drawn crisp (android64_host.c) */
 static void H_gfx_draw(int id, const void* verts, int count) {
+    if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
     int slot = HostTextureSlot(id);
     SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
@@ -129,7 +138,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
     if (count > 0 && t) {
         shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
         SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
-        SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(t, (SDL_BlendMode)sBlend);
     }
     for (int i = 0; i < count; i++) {
         out[i].position.x = v[i].x;
@@ -141,11 +150,12 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         out[i].color.b = (v[i].argb & 255) / 255.0f;
         out[i].color.a = (v[i].argb >> 24) / 255.0f;
     }
-    SDL_SetRenderDrawBlendMode(sRenderer, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(sRenderer, (SDL_BlendMode)sBlend);
     SDL_RenderGeometry(sRenderer, t, out, count, NULL, 0);
 }
 static void H_notify(const char* name) { (void)name; }
 static void H_gfx_end(void) {
+    if (sGpuOutputBlocked) return;
     /* test harness: KHCOM_HOST_SHOT=frame[,frame...] saves those frames as host_shot_<frame>.bmp in the data folder */
     static unsigned frame;
     const char* shots = getenv("KHCOM_HOST_SHOT");
@@ -190,7 +200,14 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #include "hd_music_host.h"
 #define UDP_HOST_POSIX
 #include "udp_host.h"
+#define H_thread H_thread_legacy
 #include "thread_host.h"
+#undef H_thread
+static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    int result = HostGpuCommand(op, a, b, c, d);
+    return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
+}
+
 static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
 static uint32_t H_audio_queued(void) { return sAudio ? (uint32_t)SDL_GetAudioStreamQueued(sAudio) / 4 : 0; }
 static void H_audio_clear(void) { if (sAudio) SDL_ClearAudioStream(sAudio); }
@@ -202,6 +219,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
 
 /* ---- input: a gamepad, or the keyboard ---- */
 static SDL_Gamepad* sPad;
+#include "host_gamepad_info.h"
 static void RendererDeviceReset(void) {
     HostTextureReset();
     Log("renderer reset: bridge texture generation %u", sRendererGeneration);
@@ -287,6 +305,9 @@ static void H_set_title(const char* s) {
 }
 
 /* ---- the image ---- */
+#ifdef PORT_LINUXARM64
+#include "../linuxarm64/macho_loader.inc"
+#else
 static int MapFixed(uint32_t base, size_t size) {
     void* p = mmap((void*)(uintptr_t)base, size, PROT_READ | PROT_WRITE | PROT_EXEC,
                    MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
@@ -297,11 +318,17 @@ static int MapFixed(uint32_t base, size_t size) {
     return 1;
 }
 
+#endif
+
 #define HF(name) [HF_##name] = (uint64_t)(uintptr_t)H_##name
 #define HM(name, fn) [HF_##name] = (uint64_t)(uintptr_t)fn
 
 int main(int argc, char** argv) {
+#ifdef PORT_LINUXARM64
+    const char* image = argc > 1 ? argv[1] : "guest-eu.macho";
+#else
     const char* image = argc > 1 ? argv[1] : "guest-eu.bin";
+#endif
     const char* bootStatus = NULL;
     for (int i = 2; i < argc; i++)
         if (!strcmp(argv[i], "--data") && i + 1 < argc)
@@ -316,6 +343,10 @@ int main(int argc, char** argv) {
         snprintf(assets, sizeof(assets), "%s/assets", sData);
         setenv("KHCOM_ASSETS", assets, 0);
     }
+#ifdef PORT_LINUXARM64
+    Ps5GuestHeader h;
+    if (!LoadArm64Image(image, &h)) return 3;
+#else
     FILE* f = fopen(image, "rb");
     if (!f) {
         Log("%s: %s", image, strerror(errno));
@@ -342,6 +373,8 @@ int main(int argc, char** argv) {
         return 3;
     memcpy((void*)(uintptr_t)PS5G_BASE, tmp, (size_t)size);
     free(tmp);
+
+#endif
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
         Log("SDL_Init: %s", SDL_GetError());

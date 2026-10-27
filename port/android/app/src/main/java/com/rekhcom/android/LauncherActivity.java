@@ -12,6 +12,15 @@ import org.libsdl.app.SDLActivity;
  *  pickers (a dump, a save in or out, the PC's hd folder), copied in the background with a status line it reads, and
  *  starting the game in its own process (GameActivity, :game). SAF copies are bounded, hashed (dumps) and atomic. */
 public class LauncherActivity extends SDLActivity {
+    private LifecycleTrace lifecycle;
+    private void lifecycle(String event){if(lifecycle!=null)lifecycle.record(this,event,"launcher");}
+    @Override protected void onCreate(android.os.Bundle state){
+        try{lifecycle=LifecycleTrace.attach(this,"launcher",state!=null);}catch(Throwable ignored){}
+        lifecycle("onCreate");super.onCreate(state);
+    }
+    @Override protected void onPause(){lifecycle("onPause");super.onPause();}
+    @Override protected void onStop(){lifecycle("onStop");super.onStop();}
+    @Override protected void onDestroy(){lifecycle("onDestroy");super.onDestroy();}
     private static final String[] CODES={"B8CP","B8CE","B8CJ"};
     private static final String[] HASHES={"8db73586cdb11b3795907edebf43228dbcd3e6b2",
         "10729bd884f8fdca7a310b6d606c52e46657aa48","59ec0a0a4ccd1e6acb3bbd7bfb21d63988958cfa"};
@@ -119,10 +128,57 @@ public class LauncherActivity extends SDLActivity {
        their subtitles (.txt) and the HD cards/title/HUD pictures (sprites/*.png), whichever are there. Each file lands whole (temp + rename); one already there with
        the same size is kept (a second import only adds what is new). */
     private static final String[][] HD_PARTS={{"music","[A-Za-z0-9_]+[.](ogg|loop)"},{"movies","[A-Za-z0-9_]+[.]mp4"},{"scenes","[A-Za-z0-9_]+[.]mp4"},{"subs","[A-Za-z0-9_]+[.][a-z]{2}[.]txt"},{"sprites","[A-Za-z0-9_]+[.]png"}};
+    private static native boolean commitHdMedia(String root,int mode,String pending);
+    private static String hdFile(android.content.ContentResolver resolver,Uri tree,String parent,String wanted)throws IOException{
+        try(android.database.Cursor c=resolver.query(android.provider.DocumentsContract.buildChildDocumentsUriUsingTree(tree,parent),
+                new String[]{android.provider.DocumentsContract.Document.COLUMN_DOCUMENT_ID,android.provider.DocumentsContract.Document.COLUMN_DISPLAY_NAME},null,null,null)){
+            while(c!=null&&c.moveToNext())if(wanted.equals(c.getString(1)))return c.getString(0);
+        }
+        return null;
+    }
+    private static void hdGeneration(android.content.ContentResolver resolver,Uri tree,String directory,String relative,
+                                     java.util.List<String[]> files,int depth,int[] entries)throws IOException{
+        if(depth>2)throw new IOException("HD media depth");
+        try(android.database.Cursor c=resolver.query(android.provider.DocumentsContract.buildChildDocumentsUriUsingTree(tree,directory),
+                new String[]{android.provider.DocumentsContract.Document.COLUMN_DOCUMENT_ID,android.provider.DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+                             android.provider.DocumentsContract.Document.COLUMN_SIZE,android.provider.DocumentsContract.Document.COLUMN_MIME_TYPE},null,null,null)){
+            while(c!=null&&c.moveToNext()){
+                if(++entries[0]>4096)throw new IOException("HD media inventory limit");
+                String name=c.getString(1);if(name==null||name.contains(".."))continue;
+                if(android.provider.DocumentsContract.Document.MIME_TYPE_DIR.equals(c.getString(3))){
+                    if(depth==0&&(name.equals("movies")||name.equals("scenes")||name.equals("subs")))hdGeneration(resolver,tree,c.getString(0),relative+"/"+name,files,depth+1,entries);
+                }else{
+                    String member=relative+"/"+name;
+                    if(member.matches("media/(en|ja)/g-[a-z0-9-]+/(media[.]meta|(movies|scenes)/[A-Za-z0-9_.-]+[.](mp4|png)|subs/[A-Za-z0-9_]+[.][a-z]{2}[.]txt)"))
+                        files.add(new String[]{c.getString(0),relative,name,Long.toString(c.getLong(2))});
+                }
+            }
+        }
+    }
+    private static void hdVariants(android.content.ContentResolver resolver,Uri tree,String root,java.util.List<String[]> files)throws Exception{
+        String media=child(resolver,tree,root,"media");if(media==null)return;
+        int[] entries={0};
+        for(String label:new String[]{"en","ja"}){
+            String directory=child(resolver,tree,media,label);if(directory==null)continue;
+            String active=hdFile(resolver,tree,directory,"active.txt");if(active==null)continue;
+            java.io.ByteArrayOutputStream bytes=new java.io.ByteArrayOutputStream();
+            try(InputStream in=resolver.openInputStream(android.provider.DocumentsContract.buildDocumentUriUsingTree(tree,active))){if(in==null)throw new IOException("HD active");copy(in,bytes,1024);}
+            String text=new String(bytes.toByteArray(),java.nio.charset.StandardCharsets.UTF_8).replace("\r\n","\n");
+            java.util.regex.Matcher match=java.util.regex.Pattern.compile("\\AREKHCOM_MEDIA_ACTIVE_V1\\nmovies (g-[a-z0-9-]+|-)\\nscenes (g-[a-z0-9-]+|-)\\n?\\z").matcher(text);
+            if(!match.matches())throw new IOException("HD media active index");
+            java.util.Set<String> generations=new java.util.HashSet<>();generations.add(match.group(1));generations.add(match.group(2));
+            for(String generation:generations){
+                if(generation.equals("-"))continue;
+                String folder=child(resolver,tree,directory,generation);if(folder==null)throw new IOException("HD media generation missing");
+                hdGeneration(resolver,tree,folder,"media/"+label+"/"+generation,files,0,entries);
+            }
+            files.add(new String[]{active,"media/"+label,"active.txt",Long.toString(bytes.size())});
+        }
+    }
     private String importHd(Uri tree)throws Exception{
         android.content.ContentResolver resolver=getContentResolver();
         String root=android.provider.DocumentsContract.getTreeDocumentId(tree);
-        if(child(resolver,tree,root,"music")==null&&child(resolver,tree,root,"movies")==null&&child(resolver,tree,root,"scenes")==null&&child(resolver,tree,root,"sprites")==null){String hd=child(resolver,tree,root,"hd");if(hd!=null)root=hd;}
+        if(child(resolver,tree,root,"music")==null&&child(resolver,tree,root,"movies")==null&&child(resolver,tree,root,"scenes")==null&&child(resolver,tree,root,"sprites")==null&&child(resolver,tree,root,"media")==null){String hd=child(resolver,tree,root,"hd");if(hd!=null)root=hd;}
         java.util.List<String[]> files=new java.util.ArrayList<>(); // document id, folder, name, size
         long total=0,copied=0;
         for(String[] part:HD_PARTS){
@@ -132,21 +188,33 @@ public class LauncherActivity extends SDLActivity {
                 while(c!=null&&c.moveToNext()){String name=c.getString(1);if(name!=null&&name.matches(part[1])){files.add(new String[]{c.getString(0),part[0],name,Long.toString(c.getLong(2))});total+=c.getLong(2);}}
             }
         }
+        hdVariants(resolver,tree,root,files);
+        files.sort((a,b)->Boolean.compare(a[2].equals("active.txt"),b[2].equals("active.txt")));
+        total=0;for(String[] f:files)total+=Long.parseLong(f[3]);
         if(files.isEmpty())throw new IOException(t("no hay una carpeta hd con music, movies, scenes, subs o sprites dentro","there is no hd folder with music, movies, scenes, subs or sprites inside"));
         int tracks=0,movies=0;
         for(String[] f:files){
             File dir=new File(getFilesDir(),"hd/"+f[1]);if(!dir.isDirectory()&&!dir.mkdirs())throw new IOException("hd/"+f[1]);
             File target=new File(dir,f[2]);long size=Long.parseLong(f[3]);
+            boolean variant=f[1].startsWith("media/"),active=variant&&f[2].equals("active.txt");
             if(f[2].endsWith(".ogg"))tracks++;else if(f[2].endsWith(".mp4"))movies++;
             progress(t("Copiando mod HD: ","Copying HD mod: ")+(copied>>20)+" / "+(total>>20)+" MB");
             copied+=size;
-            if(target.isFile()&&target.length()==size&&size>0)continue;
+            if(variant&&!active&&target.isFile()){
+                if(target.length()!=size)throw new IOException("Immutable HD generation differs: "+f[2]);
+                continue;
+            }
+            if(!active&&target.isFile()&&target.length()==size&&size>0)continue;
             File temp=File.createTempFile("hd-",".tmp",dir);
             try{
                 try(InputStream in=resolver.openInputStream(android.provider.DocumentsContract.buildDocumentUriUsingTree(tree,f[0]));FileOutputStream out=new FileOutputStream(temp)){
                     if(in==null)throw new IOException(f[2]);copy(in,out,4L*1024*1024*1024);out.getFD().sync();}
-                if(target.exists()&&!target.delete())throw new IOException(f[2]);
-                if(!temp.renameTo(target))throw new IOException(f[2]);
+                if(active){
+                    if(!commitHdMedia(getFilesDir().getAbsolutePath(),f[1].equals("media/en")?1:2,temp.getAbsolutePath()))throw new IOException("Incomplete HD media; previous variant preserved");
+                }else{
+                    if(!variant&&target.exists()&&!target.delete())throw new IOException(f[2]);
+                    if(!temp.renameTo(target))throw new IOException(f[2]);
+                }
             }finally{if(temp.exists())temp.delete();}
         }
         return t("Mod HD importado: ","HD mod imported: ")+tracks+t(" pistas, "," tracks, ")+movies+t(" videos. Se activa en las opciones del juego."," movies. It is turned on in the game's options.");

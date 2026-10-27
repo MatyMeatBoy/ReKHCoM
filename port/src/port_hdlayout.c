@@ -420,7 +420,7 @@ int PortHdLayoutDraw(SDL_Renderer* renderer, int layout, int texture, int sequen
     return 1;
 }
 
-#if __STDC_HOSTED__
+#if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
 static void GaugeTargetsRelease(void);
 #endif
 
@@ -431,7 +431,7 @@ void PortHdLayoutShutdown(void) {
             SDL_DestroyTexture(sTextures[i].tex);
         memset(&sTextures[i], 0, sizeof(sTextures[i]));
     }
-#if __STDC_HOSTED__
+#if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
     GaugeTargetsRelease();
 #endif
 }
@@ -542,13 +542,33 @@ static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const 
 #define GAUGE_SS 4
 #define GAUGE_TARGET_BUDGET (32ull * 1024 * 1024)
 #endif
-#if __STDC_HOSTED__ /* the consoles' SDL shim has no render targets: there the gauge draws as before */
+#if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS) /* optional bridge hosts negotiate target support; old hosts return no maximum */
 static SDL_Texture* sGaugeTarget[3];
 static int sGaugeTargetW[3], sGaugeTargetH[3];
 static int sGaugeTargetScale;
+static int sGaugeRestorePending, sGaugeRestoreClipped;
+static SDL_Texture* sGaugeRestoreTarget;
+static SDL_Renderer* sGaugeRestoreRenderer;
+static SDL_Rect sGaugeRestoreViewport, sGaugeRestoreClip;
+
+/* A failed destination restore must not turn the following copy into feedback.
+   Keep the original destination alive, and retry before any further gauge work. */
+static int GaugeRestoreOutput(void) {
+    SDL_Texture* retained;
+    if (!sGaugeRestorePending) return 1;
+    if (!SDL_SetRenderTarget(sGaugeRestoreRenderer, sGaugeRestoreTarget)) return 0;
+    SDL_SetRenderViewport(sGaugeRestoreRenderer, &sGaugeRestoreViewport);
+    SDL_SetRenderClipRect(sGaugeRestoreRenderer, sGaugeRestoreClipped ? &sGaugeRestoreClip : NULL);
+    retained = sGaugeRestoreTarget;
+    sGaugeRestoreTarget = NULL;
+    sGaugeRestorePending = 0;
+    if (retained) SDL_DestroyTexture(retained); /* release our failure-recovery reference */
+    return 1;
+}
 
 static void GaugeTargetsRelease(void) {
     int i;
+    if (!GaugeRestoreOutput()) return;
     for (i = 0; i < 3; i++) {
         if (sGaugeTarget[i]) SDL_DestroyTexture(sGaugeTarget[i]);
         sGaugeTarget[i] = NULL;
@@ -637,12 +657,15 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
     const float unit = 240.0f / 640.0f;
     float x = ox + 60.0f * unit * scale, y = oy + 60.0f * unit * scale, s = unit * scale;
     float tint[4] = { shade, shade, shade, 1.0f };
+#if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
+    if (!GaugeRestoreOutput()) return;
+#endif
     if (!sGauge.active || sGauge.frame != (int)PortFrameCount())
         return;
     if (PortHdDrawLogged())
         PortLog("hd gauge %u hp %d/%d trail %d state %d face %d", (unsigned)PortFrameCount(), sGauge.hp, sGauge.maxHp,
                 sGauge.trail, sGauge.stateAnim, sGauge.faceAnim);
-#if __STDC_HOSTED__
+#if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
     /* not on SDL's software renderer (the tests' offscreen window): restoring the window as the target crashed
        inside it */
     if (!SDL_getenv("KHCOM_GAUGE_NO_SS") && SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) != 0) {
@@ -656,6 +679,12 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
         float rx = x + ux0 * s, ry = y + uy0 * s, rw = (ux1 - ux0) * s, rh = (uy1 - uy0) * s;
         int w0 = 0, h0 = 0, level = 0, k = GaugeTargetsPrepare(renderer, rw, rh, &w0, &h0);
         SDL_Texture* big = k ? sGaugeTarget[0] : NULL;
+        static int reported = -1;
+        if (reported != k) {
+            reported = k;
+            PortLog("gauge-aa: %s scale=%d renderer=%s", k ? "GPU targets" : "direct (targets unavailable or allocation limit)",
+                    k, SDL_GetRendererName(renderer));
+        }
         if (big) {
             SDL_Texture* prev = SDL_GetRenderTarget(renderer);
             SDL_Rect viewport, clip;
@@ -665,7 +694,13 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
             int cw = w0 * k, ch = h0 * k;
             SDL_GetRenderViewport(renderer, &viewport);
             SDL_GetRenderClipRect(renderer, &clip);
-            SDL_SetRenderTarget(renderer, big);
+            if (!SDL_SetRenderTarget(renderer, big)) {
+                if (!SDL_SetRenderTarget(renderer, prev)) return;
+                GaugeTargetsRelease();
+                PortLog("gauge-aa: direct (target bind failed) renderer=%s", SDL_GetRendererName(renderer));
+                GaugeParts(renderer, x, y, s, tint);
+                return;
+            }
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
             SDL_RenderClear(renderer);
             GaugeParts(renderer, (x - rx) * k, (y - ry) * k, s * k, tint);
@@ -675,7 +710,7 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
                 SDL_Texture* next = GaugeTarget(renderer, 1 + (level & 1), nw, nh);
                 if (!next)
                     break;
-                SDL_SetRenderTarget(renderer, next);
+                if (!SDL_SetRenderTarget(renderer, next)) break;
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
                 SDL_RenderClear(renderer);
                 SDL_SetTextureBlendMode(cur, SDL_BLENDMODE_NONE);
@@ -691,7 +726,17 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
                 ch = nh;
                 level++;
             }
-            SDL_SetRenderTarget(renderer, prev);
+            if (!SDL_SetRenderTarget(renderer, prev)) {
+                sGaugeRestorePending = 1;
+                sGaugeRestoreTarget = prev;
+                sGaugeRestoreRenderer = renderer;
+                sGaugeRestoreViewport = viewport;
+                sGaugeRestoreClip = clip;
+                sGaugeRestoreClipped = clipped;
+                if (prev) prev->refcount++;
+                PortLog("gauge-aa: destination restore failed; copy skipped until recovery");
+                return;
+            }
             SDL_SetRenderViewport(renderer, &viewport);
             SDL_SetRenderClipRect(renderer, clipped ? &clip : NULL);
             SDL_SetTextureBlendMode(cur, SDL_BLENDMODE_BLEND_PREMULTIPLIED);
@@ -782,6 +827,15 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
     }
     sEnemy.active = 1;
     return 1;
+}
+
+/* Stock sums use a 16px GBA sprite with ink beginning at local y5.
+ * With an imported HP bar active, anchor9 puts the full plate below its
+ * y12 lower edge; otherwise preserve the cartridge's authored anchor4. */
+int PortHdStockValueTop(int opponent) {
+    if (!gPortConfig.hdCards) return 0;
+    return opponent ? (sEnemy.active && sEnemy.frame == (int)PortFrameCount() ? 9 : 0)
+                    : (sGauge.active && sGauge.frame == (int)PortFrameCount() ? 9 : 0);
 }
 
 void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, float shade) {

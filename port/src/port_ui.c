@@ -202,19 +202,24 @@ enum {
     ITEM_CONTROL_RESET,
     ITEM_CONTROL_NINTENDO_HEADING, /* section heading, not selectable */
     ITEM_PAD_LAYOUT,               /* force the Nintendo layout */
+    ITEM_CONTROLLER_PROMPTS,       /* experimental display family, never remaps inputs */
+    ITEM_CONTROLLER_CONFIRM_PRESET, /* explicit, confirmed replacement of pad A/B only */
     ITEM_CONTROLS_BACK,
+    ITEM_HD_MEDIA_AUTO, ITEM_HD_MEDIA_EN, ITEM_HD_MEDIA_JP,
+    ITEM_HD_MEDIA_RESCAN, ITEM_HD_MEDIA_GUIDE, ITEM_HD_MEDIA_BACK,
     ITEM_COUNT
 };
 
 /* Two pages, each a run of items: the options and the Re:CoM settings. */
 enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS, PAGE_LOBBY,
-       PAGE_SCENES };
+       PAGE_SCENES, PAGE_HD_MEDIA };
 static int sPage;
 static int sTitleRequest; /* ITEM_TITLE: due once the menu has closed */
 /* a big window over Options that asks twice, as the scene pause asks before a skip: back to the title (ITEM_TITLE),
    or which mode's presets to go back to (ITEM_MODE_RESET) */
-enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT, CONFIRM_REBEL };
+enum { CONFIRM_NONE, CONFIRM_TITLE, CONFIRM_MODE, CONFIRM_STATES, CONFIRM_QUIT, CONFIRM_FONT, CONFIRM_REBEL, CONFIRM_PAD_PRESET };
 static int sConfirm, sConfirmStep, sConfirmCursor, sConfirmMode;
+static int sPadPresetFamily;
 static void ConfirmOpen(int what);
 static void ConfirmKey(int key);
 static const char* const sModeNames[PORT_MODE_COUNT][LANG_COUNT] = {
@@ -292,7 +297,8 @@ static int OpensSomething(int item) {
     switch (item) {
         case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
         case ITEM_CHEAT_REBEL_LIST: case ITEM_CHEAT_REBEL:
-        case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET:
+        case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET: case ITEM_CONTROLLER_CONFIRM_PRESET:
+        case ITEM_HD_SUBTITLES: case ITEM_HD_MEDIA_GUIDE: case ITEM_HD_MEDIA_RESCAN:
             return 1;
         default:
             return 0;
@@ -300,9 +306,11 @@ static int OpensSomething(int item) {
 }
 
 static int PageFirst(void) {
+    if (sPage == PAGE_HD_MEDIA) return ITEM_HD_MEDIA_AUTO;
     return sPage == PAGE_REMATCH ? ITEM_REMATCH_0 : sPage == PAGE_CHEATS ? ITEM_CHEAT_DEBUG : sPage == PAGE_CONTROLS ? ITEM_CONTROL_A : sPage == PAGE_PS2 ? ITEM_PS2_DIFFICULTY : sPage == PAGE_NEWGAME ? ITEM_NG_VERSION : 0;
 }
 static int PageEnd(void) {
+    if (sPage == PAGE_HD_MEDIA) return ITEM_HD_MEDIA_BACK + 1;
     return sPage == PAGE_REMATCH ? ITEM_REMATCH_BACK + 1 : sPage == PAGE_CHEATS ? ITEM_CHEATS_BACK + 1 : sPage == PAGE_CONTROLS ? ITEM_CONTROLS_BACK + 1 : sPage == PAGE_PS2 ? ITEM_PS2_BACK + 1 : sPage == PAGE_NEWGAME ? ITEM_NG_START + 1 : ITEM_QUIT + 1;
 }
 
@@ -327,7 +335,8 @@ static int ItemVisible(int item) {
         case ITEM_CRT_OUTPUT: return gPortConfig.viewMode == PORT_VIEW_CRT;
         /* in HD text now (user 25/10): the subtitles always with it, the font from its row (A) */
         case ITEM_HDFONT:
-        case ITEM_HD_SUBTITLES: return 0;
+            return 0;
+        case ITEM_HD_SUBTITLES: return HD_MOVIES_PLAY; /* now the independent audio page; text owns subtitles */
 #if !defined(__ANDROID__) && !defined(__EMSCRIPTEN__) && !defined(PORT_ANDROID64) && !defined(PORT_TOUCH)
         case ITEM_HIDE_TOUCH:
         case ITEM_TOUCH_THEME:
@@ -439,7 +448,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
     { "HD HUD (pilot)", "HUD HD (pilote)", "HD-HUD (Pilot)", "HUD HD (pilota)", "HUD HD (piloto)", "HD HUD (試験)" },
     { "HD-2D look", "Style HD-2D", "HD-2D-Optik", "Stile HD-2D", "Estilo HD-2D", "HD-2D表示" },
-    { "HD subtitles", "Sous-titres HD", "HD-Untertitel", "Sottotitoli HD", "Subtítulos HD", "HDじまく" },
+    { "HD movie audio", "Audio des vidéos HD", "HD-Video-Audio", "Audio video HD", "Audio de vídeos HD", "HDムービー音声" },
     { "HD text font", "Police du texte HD", "Schrift des HD-Texts", "Font del testo HD", "Fuente del texto HD", "HDテキストのフォント" },
     { "HD title and menus", "Titre et menus HD", "HD-Titel und -Menüs", "Titolo e menu HD", "Título y menús HD", "HDタイトルとメニュー" },
     { "Re:CoM mode", "Mode Re:CoM", "Re:CoM-Modus", "Modalità Re:CoM", "Modo Re:CoM", "Re:CoMモード" },
@@ -538,7 +547,25 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Nintendo controller", "Manette Nintendo", "Nintendo-Controller", "Controller Nintendo", "Mando Nintendo", "ニンテンドーのコントローラー" },
     { "Force Nintendo layout", "Forcer la disposition Nintendo", "Nintendo-Belegung erzwingen", "Forza disposizione Nintendo",
       "Forzar mando Nintendo", "ニンテンドーの配置にこてい" },
+    { "Prompts (experimental)", "Boutons (expérimental)", "Tasten (experimentell)", "Pulsanti (sperimentale)",
+      "Indicaciones (experimental)", "ボタン表示（実験）" },
+    { "Confirm/cancel preset...", "Préréglage valider/retour...", "Bestätigen/Zurück-Vorgabe...", "Conferma/annulla...",
+      "Preset confirmar/cancelar...", "決定・キャンセルのプリセット..." },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
+    { "Auto: legacy import", "Auto : ancien import", "Auto: alter Import", "Auto: vecchio import", "Auto: importación antigua", "自動: 以前のデータ" },
+    { "HD audio: EN", "Audio HD : EN", "HD-Audio: EN", "Audio HD: EN", "Audio HD: EN", "HD音声: EN" },
+    { "HD audio: JP", "Audio HD : JP", "HD-Audio: JP", "Audio HD: JP", "Audio HD: JP", "HD音声: JP" },
+    { "Check imported variants", "Vérifier les variantes", "Varianten prüfen", "Controlla varianti", "Revisar variantes importadas", "データを再確認" },
+    { "Steam language guide", "Guide des langues Steam", "Steam-Sprachhilfe", "Guida lingue Steam", "Guía de idiomas de Steam", "Steam言語ガイド" },
+    { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
+};
+static const char* const sHdMediaHelp[LANG_COUNT] = {
+    "User-labelled audio, separate from text/subtitles and GBA Undub. Grey: complete import missing. Use your Steam copy: Properties > Language, then import/copy HD and check again. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio déclaré par l'utilisateur, séparé du texte et de l'Undub GBA. Gris : import complet absent. Steam : Propriétés > Langue, puis importer/copier HD et vérifier. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio vom Benutzer zugeordnet, unabhängig von Text und GBA-Undub. Grau: vollständiger Import fehlt. Steam: Eigenschaften > Sprache; HD importieren/kopieren und erneut prüfen. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio dichiarato dall'utente, separato da testo e Undub GBA. Grigio: import completo assente. Steam: Proprietà > Lingua, poi importa/copia HD e ricontrolla. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio declarado por el usuario, independiente del texto/subtítulos y Undub GBA. Gris: falta importación completa. En tu Steam: Propiedades > Idioma, importa/copia HD y revisa. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "音声ラベルはユーザー指定です。文字・じまく・GBA Undubとは別です。グレーはデータ不足。Steamのプロパティで言語を選び、HDをコピーして再確認してください。help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2"
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
 static const char* const sCheatsHelp[LANG_COUNT] = {
@@ -1140,7 +1167,7 @@ static int NeedsLauncher(int item) {
         case ITEM_HD_MUSIC: return PortAssetPresent(PORT_ASSET_HD_MUSIC) ? NEED_NONE : NEED_HD;
         case ITEM_HD_SCENES:
         case ITEM_PS2_HDSCENES: return PortAssetPresent(PORT_ASSET_HD_SCENES) ? NEED_NONE : NEED_HD;
-        case ITEM_HD_SUBTITLES: return PortAssetPresent(PORT_ASSET_HD_SUBS) ? NEED_NONE : NEED_HD;
+        case ITEM_HD_SUBTITLES: return NEED_NONE; /* audio page also explains missing variants */
         case ITEM_HD_CARDS: return PortAssetPresent(PORT_ASSET_HD_CARDS) ? NEED_NONE : NEED_HD;
         case ITEM_UNDUB: return PortUndubAvailable() ? NEED_NONE : NEED_JP;
         default: return NEED_NONE;
@@ -1210,7 +1237,19 @@ static int BankCopy(const char* from, const char* to) {
     return out != NULL;
 }
 
+static int HdMediaSelectionEnabled(int mode) {
+    return mode == 0 || (mode > 0 && mode < 3 &&
+           (PortHdMediaVariantAvailable(mode, 0) || PortHdMediaVariantAvailable(mode, 1)));
+}
+static void HdMediaSelect(int mode) {
+    if (!HdMediaSelectionEnabled(mode)) return;
+    gPortConfig.hdMediaLanguage = mode;
+    PortHdMediaInvalidate();
+    PortConfigSave();
+}
 static int ItemEnabled(int item) {
+    if (item == ITEM_HD_MEDIA_EN || item == ITEM_HD_MEDIA_JP)
+        return HdMediaSelectionEnabled(item == ITEM_HD_MEDIA_EN ? 1 : 2);
     if (item >= ITEM_REMATCH_0 && item <= ITEM_REMATCH_LAST)
         return PortRematchAvailable(item - ITEM_REMATCH_0);
     if (NeedsLauncher(item))
@@ -1357,7 +1396,12 @@ static void ValueText(int item, char* out, size_t size) {
             SDL_strlcpy(out, sOnOff[gPortConfig.hdScenes != 0][l], size);
             break;
         case ITEM_HD_SUBTITLES:
-            SDL_strlcpy(out, sOnOff[gPortConfig.hdSubtitles != 0][l], size);
+            SDL_strlcpy(out, gPortConfig.hdMediaLanguage == 1 ? "EN >" : gPortConfig.hdMediaLanguage == 2 ? "JP >" : "Auto >", size);
+            break;
+        case ITEM_HD_MEDIA_AUTO:
+        case ITEM_HD_MEDIA_EN:
+        case ITEM_HD_MEDIA_JP:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdMediaLanguage == item - ITEM_HD_MEDIA_AUTO][l], size);
             break;
         case ITEM_HD_CARDS:
             SDL_strlcpy(out, sOnOff[gPortConfig.hdCards != 0][l], size);
@@ -1382,6 +1426,15 @@ static void ValueText(int item, char* out, size_t size) {
             break;
         case ITEM_PAD_LAYOUT:
             SDL_strlcpy(out, sOnOff[gPortConfig.padLayout == 2][l], size);
+            break;
+        case ITEM_CONTROLLER_PROMPTS: {
+            static const char* const names[]={"Original / GBA","Auto","Nintendo","Xbox","PlayStation"};
+            SDL_strlcpy(out,names[SDL_clamp(gPortConfig.controllerPrompts,0,4)],size);
+            break;
+        }
+        case ITEM_CONTROLLER_CONFIRM_PRESET:
+            SDL_strlcpy(out,PortControllerPresetFamily()==2?"Nintendo A/B":PortControllerPresetFamily()==4?"PS Circle/Cross":
+                             PortControllerPresetFamily()==3?"Xbox A/B":"-",size);
             break;
         case ITEM_INVERT_CARD_SCROLL:
             SDL_strlcpy(out, sOnOff[gPortConfig.invertCardScroll != 0][l], size);
@@ -1558,6 +1611,7 @@ static void ResetControlBindings(void) {
     memcpy(gPortConfig.keys, keys, sizeof(keys));
     memcpy(gPortConfig.pad, pad, sizeof(pad));
     gPortConfig.padLayout = 0; /* the default is automatic; force Nintendo stays opt-in */
+    gPortConfig.controllerPrompts = 0;
     sControlCapture = 0;
     PortInputResetBindings();
     PortConfigSave();
@@ -1652,7 +1706,24 @@ static void Change(int item, int dir) {
             gPortConfig.hdScenes = !gPortConfig.hdScenes;
             break;
         case ITEM_HD_SUBTITLES:
-            gPortConfig.hdSubtitles = !gPortConfig.hdSubtitles;
+            if (dir > 0) { PortHdMediaInvalidate(); sPage = PAGE_HD_MEDIA; sCursor = sScroll = ITEM_HD_MEDIA_AUTO; }
+            break;
+        case ITEM_HD_MEDIA_AUTO: case ITEM_HD_MEDIA_EN: case ITEM_HD_MEDIA_JP:
+            if (dir > 0) HdMediaSelect(item - ITEM_HD_MEDIA_AUTO);
+            break;
+        case ITEM_HD_MEDIA_RESCAN:
+            if (dir > 0) PortHdMediaInvalidate();
+            break;
+        case ITEM_HD_MEDIA_GUIDE:
+            if (dir > 0) {
+#if __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) && !defined(PORT_ANDROID64)
+                SDL_OpenURL("https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+#endif
+                PortLog("HD media guide: https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+            }
+            break;
+        case ITEM_HD_MEDIA_BACK:
+            sPage = PAGE_MAIN; sCursor = ITEM_HD_SUBTITLES; sScroll = 0;
             break;
         case ITEM_HD_CARDS: /* HD HUD: the cards, the battle HUD and the title's logo together */
             gPortConfig.hdCards = !gPortConfig.hdCards;
@@ -1677,6 +1748,15 @@ static void Change(int item, int dir) {
         case ITEM_PAD_LAYOUT:
             gPortConfig.padLayout = gPortConfig.padLayout == 2 ? 0 : 2; /* off: detect the pad */
             break;
+        case ITEM_CONTROLLER_PROMPTS:
+            gPortConfig.controllerPrompts=Wrap(gPortConfig.controllerPrompts+(dir ? dir : 1),5);
+            break;
+        case ITEM_CONTROLLER_CONFIRM_PRESET:
+            if(dir>=0 && PortControllerPresetFamily()) {
+                sPadPresetFamily=PortControllerPresetFamily();
+                ConfirmOpen(CONFIRM_PAD_PRESET);
+            }
+            return;
         case ITEM_INVERT_CARD_SCROLL:
             gPortConfig.invertCardScroll = !gPortConfig.invertCardScroll;
             break;
@@ -2009,6 +2089,7 @@ void PortUiOpenOptions(void) {
     }
     if (sOpen)
         return;
+    PortHdMediaInvalidate();
     sOpen = 1;
     ResetMenuAxes(); /* an already held trigger cannot confirm the newly opened menu */
     sOpenSerial++;
@@ -2031,6 +2112,7 @@ void PortUiOpenOptions(void) {
         sPage = PAGE_CHEATS;
     if (sCursor >= ITEM_CONTROL_A && sCursor <= ITEM_CONTROLS_BACK) /* a row of the Controls page */
         sPage = PAGE_CONTROLS;
+    if (sCursor >= ITEM_HD_MEDIA_AUTO && sCursor <= ITEM_HD_MEDIA_BACK) sPage = PAGE_HD_MEDIA;
     RefreshModes();
     if (SDL_getenv("KHCOM_ACHIEVEMENTS_SHOT")) AchievementMenuOpen();
     if (SDL_getenv("KHCOM_SCENES_SHOT")) SceneMenuOpen();
@@ -2499,6 +2581,8 @@ int PortUiHandleEvent(const void* p) {
                         Change(ITEM_CHEATS_BACK, 1);
                     else if (sPage == PAGE_REMATCH)
                         Change(ITEM_REMATCH_BACK, 1);
+                    else if (sPage == PAGE_HD_MEDIA)
+                        Change(ITEM_HD_MEDIA_BACK, 1);
                     else if (sPage == PAGE_PS2)
                         Change(ITEM_PS2_BACK, 1);
                     else if (sPage == PAGE_CONTROLS)
@@ -2546,6 +2630,7 @@ int PortUiHandleEvent(const void* p) {
                 }
                 if (sPage == PAGE_CHEATS) { Change(ITEM_CHEATS_BACK, 1); break; }
                 if (sPage == PAGE_REMATCH) { Change(ITEM_REMATCH_BACK, 1); break; }
+                if (sPage == PAGE_HD_MEDIA) { Change(ITEM_HD_MEDIA_BACK, 1); break; }
                 if (sPage == PAGE_PS2) { Change(ITEM_PS2_BACK, 1); break; }
                 if (sPage == PAGE_CONTROLS) { Change(ITEM_CONTROLS_BACK, 1); break; }
                 Close();
@@ -2835,9 +2920,27 @@ static void MenuBar(int x, int t, int w, int selected) {
    under the text on a white plate, as the debug menu shows it. */
 /* The GBA's own A/B key around a letter (user 25/10): round, violet grey, lit from the top left, a dark rim and the
    letter light. Centred on cx, cy; 13 pixels across. Other pads' keys come later. */
+static int DrawPromptGlyph(int glyph,int x,int y) {
+    const unsigned char* tiles=PortControllerGlyphTiles(glyph);
+    if(!tiles)return 0;
+    for(int yy=0;yy<10;yy++)for(int xx=0;xx<12;xx++) {
+        int at=((yy/8)*2+xx/8)*32+(yy%8)*4+(xx%8)/2;
+        int color=(tiles[at]>>((xx&1)*4))&15;
+        if(color)Pixel(x+xx,y+yy,color==1?0xFFF4F0FCu:MENU_RED_DARK);
+    }
+    return 1;
+}
+
 static void GbaKey(int code, int cx, int cy) {
     const int r = 6;
     int dx, dy;
+    int action=code=='A'?PORT_ACT_A:code=='B'?PORT_ACT_B:code=='L'?PORT_ACT_L:code=='R'?PORT_ACT_R:-1;
+    char label[32];
+    if(action>=0 && PortControllerActionLabel(action,label,sizeof(label))) {
+        if(!DrawPromptGlyph(PortControllerActionGlyph(action),cx-6,cy-5))
+            DrawText(label,cx-TextWidth(label)/2,cy-5,MENU_RED_DARK,0xFFD8D8D8u);
+        return;
+    }
 
     for (dy = -r; dy <= r; dy++)
         for (dx = -r; dx <= r; dx++) {
@@ -2888,12 +2991,21 @@ static void GbaKey(int code, int cx, int cy) {
 }
 
 static void MenuButton(int x, int y, const char* text, int key) {
+    char prompt[32];
+    int mapped = (key=='A' || key=='B') && PortControllerActionLabel(key=='A' ? PORT_ACT_A : PORT_ACT_B,prompt,sizeof(prompt));
     int keyW = key ? GlyphWidth(key) + 4 : 0;
+    int glyph=mapped?PortControllerActionGlyph(key=='A'?PORT_ACT_A:PORT_ACT_B):0;
+    if (mapped) keyW=TextWidth(prompt)+4;
+    if (glyph) keyW=16;
     int w = TextWidth(text) + 20 + keyW;
 
     Shade(x - 3, y - 2, w + 6, 14, 0xFFFFFFFFu, 224);
     MenuBar(x, y, w, 1);
-    if (key)
+    if (glyph)
+        DrawPromptGlyph(glyph,x+15,y);
+    else if (mapped)
+        DrawText(prompt,x+15,y,MENU_RED_DARK,0xFFD8D8D8u);
+    else if (key)
         DrawGlyph(key, x + 15, y, MENU_RED_DARK, 0xFFD8D8D8u);
     DrawText(text, x + 16 + keyW, y, MENU_INK, 0xFFD8D8D8u);
 }
@@ -4040,6 +4152,21 @@ static const char* const sConfirmStatesRows[2][LANG_COUNT] = {
 };
 static const char* const sConfirmCancel[LANG_COUNT] = { "Cancel", "Annuler", "Abbrechen", "Annulla", "Cancelar",
                                                         "やめる" };
+static const char* const sPadPresetAsk[LANG_COUNT]={
+    "Replace only the controller's confirm/cancel bindings?", "Remplacer seulement les boutons valider/retour ?",
+    "Nur die Controller-Tasten für Bestätigen/Zurück ersetzen?", "Sostituire solo conferma/annulla del controller?",
+    "¿Reemplazar sólo confirmar/cancelar del mando?", "コントローラーの決定・キャンセルだけ変更しますか？"
+};
+static const char* const sPadPresetWarn[LANG_COUNT]={
+    "Nintendo: A/B. PlayStation: Circle/Cross. Xbox: A/B. This replaces custom A/B pad bindings; keyboard and all other bindings stay unchanged. Choosing a prompt family alone never applies it.",
+    "Nintendo : A/B. PlayStation : Cercle/Croix. Xbox : A/B. Remplace les boutons A/B personnalisés ; clavier et autres commandes conservés. Choisir la famille seule ne change rien.",
+    "Nintendo: A/B. PlayStation: Kreis/Kreuz. Xbox: A/B. Ersetzt eigene A/B-Padbelegungen; Tastatur und andere Belegungen bleiben. Die Symbolfamilie allein ändert nichts.",
+    "Nintendo: A/B. PlayStation: Cerchio/Croce. Xbox: A/B. Sostituisce A/B personalizzati del pad; tastiera e altri tasti restano. La sola famiglia visiva non cambia i comandi.",
+    "Nintendo: A/B. PlayStation: Círculo/Cruz. Xbox: A/B. Reemplaza A/B personalizados del mando; conserva teclado y demás controles. Elegir la familia visual no aplica el preset.",
+    "NintendoはA/B、PlayStationは○/×、XboxはA/B。カスタムのA/Bわりあてを置き換えます。キーボードと他のボタンは変更しません。表示だけの選択では変更しません。"
+};
+static const char* const sPadPresetApply[LANG_COUNT]={"Yes, replace pad A/B","Oui, remplacer A/B","Ja, Pad A/B ersetzen",
+    "Sì, sostituisci A/B","Sí, reemplazar A/B del mando","はい、A/Bを変更する"};
 
 /* the mode list: the three modes and Cancel; the yes/no steps: "No" first, a reset is never one press away */
 static int ConfirmRows(void) {
@@ -4066,7 +4193,7 @@ static void ConfirmOpen(int what) {
 static void ConfirmKey(int key) {
     extern void PortMenuSoundClick(void);
     extern void PortMenuSoundDecide(int confirm);
-    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES || sConfirm == CONFIRM_REBEL ? 0
+    int rows = ConfirmRows(), last = sConfirm == CONFIRM_MODE ? 2 : sConfirm == CONFIRM_STATES || sConfirm == CONFIRM_REBEL || sConfirm == CONFIRM_PAD_PRESET ? 0
                                    : sConfirm == CONFIRM_QUIT && QuitUnsavedMinutes() < 60 ? 0 : 1;
     if (sConfirm == CONFIRM_FONT && key >= 2) { /* one step: A takes the face under the cursor, B leaves it as it was */
         PortMenuSoundDecide(key == 2);
@@ -4129,6 +4256,11 @@ static void ConfirmKey(int key) {
         sConfirm = CONFIRM_NONE;
         gPortConfig.cheatSaveStates = 1;
         PortConfigSave();
+        return;
+    }
+    if(sConfirm==CONFIRM_PAD_PRESET) {
+        sConfirm=CONFIRM_NONE;
+        if(PortApplyControllerConfirmPreset(sPadPresetFamily)) { ResetMenuAxes();PortConfigSave(); }
         return;
     }
     if (sConfirm == CONFIRM_TITLE) {
@@ -4266,6 +4398,10 @@ static void DrawConfirm(int l, int width, int height) {
         labels[3] = sConfirmCancel[l];
         SDL_strlcpy(ask, sConfirmModeAsk[l], sizeof(ask));
         warn = sConfirmModeWarn[0][l];
+    } else if (sConfirm == CONFIRM_PAD_PRESET) {
+        labels[0]=sConfirmStatesRows[0][l];labels[1]=sPadPresetApply[l];
+        SDL_snprintf(ask,sizeof(ask),"%s\n%s",sPadPresetAsk[l],sPadPresetFamily==2?"Nintendo A/B":sPadPresetFamily==4?"PlayStation Circle/Cross":"Xbox A/B");
+        warn=sPadPresetWarn[l];
     } else if (sConfirm == CONFIRM_STATES) {
         labels[0] = sConfirmStatesRows[0][l];
         labels[1] = sConfirmStatesRows[1][l];
@@ -4460,7 +4596,7 @@ static void DrawMenu(int l, int width, int height) {
     if (barX + barW - 24 > artX + MENU_ART_X)
         Shade(artX + MENU_ART_X, 0, barX + barW - 24 - (artX + MENU_ART_X), top + rows * rowH, 0xFFFFFFFFu, 230);
 
-    DrawText(sPage == PAGE_REMATCH ? sRematchTitle[l] : sPage == PAGE_CHEATS ? sCheatsTitle[l] : sPage == PAGE_PS2 ? sPs2Title[l] : sPage == PAGE_CONTROLS ? (l == LANG_ES ? (sControlPad ? "Controles - Mando" : "Controles - Teclado") : (sControlPad ? "Controls - Gamepad" : "Controls - Keyboard")) : sPage == PAGE_NEWGAME ? sNgTitle[l] : sTitle[l], barX, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
+    DrawText(sPage == PAGE_HD_MEDIA ? sLabels[ITEM_HD_SUBTITLES][l] : sPage == PAGE_REMATCH ? sRematchTitle[l] : sPage == PAGE_CHEATS ? sCheatsTitle[l] : sPage == PAGE_PS2 ? sPs2Title[l] : sPage == PAGE_CONTROLS ? (l == LANG_ES ? (sControlPad ? "Controles - Mando" : "Controles - Teclado") : (sControlPad ? "Controls - Gamepad" : "Controls - Keyboard")) : sPage == PAGE_NEWGAME ? sNgTitle[l] : sTitle[l], barX, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
     if (sScroll > PageFirst())
         DrawText("\xE2\x86\x91", barX + barW - 8, 2, MENU_INK, 0xFFD8D8D8u);
     selY = -1;
@@ -4547,6 +4683,8 @@ static void DrawMenu(int l, int width, int height) {
         };
         DrawNeedNote(restart[l], width, height, barX + barW + 8, selY);
     }
+    if ((sPage == PAGE_HD_MEDIA || sCursor == ITEM_HD_SUBTITLES) && selY >= 0)
+        DrawNeedNote(sHdMediaHelp[l], width, height, barX + barW + 8, selY);
     if (sPage == PAGE_CONTROLS && sCursor == ITEM_PAD_LAYOUT)
         DrawNintendoNote(l, width, height, barX + barW + 8);
     int zoom = sCursor == ITEM_BATTLE_ZOOM && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom;

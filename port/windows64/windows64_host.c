@@ -80,7 +80,13 @@ static void QueueKey(const SDL_Event* event) {
     sHostKeyWrite = next;
 }
 static uint32_t sRendererGeneration;
+static int HostGpuQuery(const char*, char*, int);
+static int HostGamepadInfoQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
+    int gpuQuery = HostGpuQuery(name, out, cap);
+    if (gpuQuery != -2) return gpuQuery;
+    int padInfo = HostGamepadInfoQuery(name, out, cap);
+    if (padInfo != -2) return padInfo;
     if (!strcmp(name, "KHCOM_HOST_KEY_EVENT")) {
         if (cap < 64) return -1;
         sKeyboardEventsActive = 1;
@@ -176,7 +182,9 @@ static void H_gfx_begin(uint32_t clear) {
     if (clear >> 24)
         SDL_RenderClear(sRenderer);
 }
+#define HOST_GPU_TARGETS 1
 #include "host_texture_slots.h"
+#include "host_gpu_targets.h"
 static void H_gfx_clip(int x, int y, int w, int h) {
     SDL_Rect r = { x, y, w, h };
     SDL_SetRenderClipRect(sRenderer, w > 0 ? &r : NULL);
@@ -184,6 +192,7 @@ static void H_gfx_clip(int x, int y, int w, int h) {
 static void H_gfx_blend(int on) { sBlend = on; }
 /* the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters: those are drawn crisp (android64_host.c) */
 static void H_gfx_draw(int id, const void* verts, int count) {
+    if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
     int slot = HostTextureSlot(id);
     SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
@@ -196,7 +205,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
     if (count > 0 && t) {
         shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
         SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
-        SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(t, (SDL_BlendMode)sBlend);
     }
     for (int i = 0; i < count; i++) {
         out[i].position.x = v[i].x;
@@ -208,11 +217,12 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         out[i].color.b = (v[i].argb & 255) / 255.0f;
         out[i].color.a = (v[i].argb >> 24) / 255.0f;
     }
-    SDL_SetRenderDrawBlendMode(sRenderer, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(sRenderer, (SDL_BlendMode)sBlend);
     SDL_RenderGeometry(sRenderer, t, out, count, NULL, 0);
 }
 static void H_notify(const char* name) { (void)name; }
 static void H_gfx_end(void) {
+    if (sGpuOutputBlocked) return;
     /* test harness: KHCOM_HOST_SHOT=frame[,frame...] saves those frames as host_shot_<frame>.bmp in the data folder */
     static unsigned frame;
     const char* shots = getenv("KHCOM_HOST_SHOT");
@@ -257,7 +267,14 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #include "hd_music_host.h"
 /* UDP currently uses the cable fallback. */
 #include "udp_host.h"
+#define H_thread H_thread_legacy
 #include "thread_host.h"
+#undef H_thread
+static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    int result = HostGpuCommand(op, a, b, c, d);
+    return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
+}
+
 static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
 static uint32_t H_audio_queued(void) { return sAudio ? (uint32_t)SDL_GetAudioStreamQueued(sAudio) / 4 : 0; }
 static void H_audio_clear(void) { if (sAudio) SDL_ClearAudioStream(sAudio); }
@@ -269,6 +286,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
 
 /* ---- input: a gamepad, or the keyboard ---- */
 static SDL_Gamepad* sPad;
+#include "host_gamepad_info.h"
 static void RendererDeviceReset(void) {
     HostTextureReset();
     Log("renderer reset: bridge texture generation %u", sRendererGeneration);

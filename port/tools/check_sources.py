@@ -139,10 +139,23 @@ def java_problems():
     return out
 
 
+def game_header_problems():
+    """Shared prompt artwork is parsed by the cartridge C89 message module."""
+    import subprocess
+    cc = ROOT.parent / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
+    if not cc.is_file():
+        return []
+    result = subprocess.run([str(cc), '-x', 'c', '-std=gnu89', '-w', '-fsyntax-only',
+                             '-I' + str(ROOT / 'port/include'), '-'],
+                            input='#include "port/controller_prompt_glyphs.h"\n',
+                            capture_output=True, text=True)
+    return ['game C89 prompt header: ' + result.stderr.strip()] if result.returncode else []
+
+
 def main():
     problems = (shim_problems() + java_problems() + generated_problems() + hd_sprite_problems() + tool_problems() +
                 jp_glyph_problems() +
-                guest_compile_problems())
+                guest_compile_problems() + game_header_problems())
     for p in problems:
         print(p)
     if problems:

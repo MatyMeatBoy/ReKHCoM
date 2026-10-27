@@ -3,6 +3,7 @@
  * the configuration file (key codes, gamepad buttons). */
 #ifndef SDL_h_
 #define SDL_h_
+#define SDL_BRIDGE_GPU_TARGETS 1
 
 #include <stdint.h>
 #include <stddef.h>
@@ -114,6 +115,7 @@ typedef enum SDL_PixelFormat {
     SDL_PIXELFORMAT_ARGB8888 = 1, /* bytes B, G, R, A */
     SDL_PIXELFORMAT_XRGB8888 = 2, /* bytes B, G, R, x */
     SDL_PIXELFORMAT_RGBA32 = 3,   /* bytes R, G, B, A */
+    SDL_PIXELFORMAT_ABGR8888 = SDL_PIXELFORMAT_RGBA32,
     SDL_PIXELFORMAT_BGRA32 = 4    /* bytes B, G, R, A */
 } SDL_PixelFormat;
 
@@ -130,10 +132,12 @@ typedef enum SDL_FlipMode {
 typedef Uint32 SDL_BlendMode;
 #define SDL_BLENDMODE_NONE 0u
 #define SDL_BLENDMODE_BLEND 1u
+#define SDL_BLENDMODE_BLEND_PREMULTIPLIED 0x10u
 #define SDL_BLENDMODE_ADD 2u /* the host blends on or off: drawn as BLEND (Re:CoM's layouts, port_hdlayout.c) */
 typedef enum SDL_TextureAccess {
     SDL_TEXTUREACCESS_STATIC = 0,
-    SDL_TEXTUREACCESS_STREAMING = 1
+    SDL_TEXTUREACCESS_STREAMING = 1,
+    SDL_TEXTUREACCESS_TARGET = 2
 } SDL_TextureAccess;
 
 typedef struct SDL_Surface {
@@ -157,6 +161,7 @@ typedef Uint32 SDL_DisplayID;
 typedef struct SDL_DisplayMode { SDL_DisplayID displayID; SDL_PixelFormat format; int w, h; float pixel_density; float refresh_rate; } SDL_DisplayMode;
 typedef struct SDL_Window SDL_Window;
 typedef struct SDL_Renderer SDL_Renderer;
+#define SDL_SOFTWARE_RENDERER "software"
 typedef struct SDL_Texture { int w, h; int refcount; } SDL_Texture;
 #define SDL_WINDOW_FULLSCREEN 0x1u
 #define SDL_WINDOW_RESIZABLE 0x20u
@@ -182,6 +187,15 @@ const char* SDL_GetCurrentVideoDriver(void);
 #define SDL_MESSAGEBOX_ERROR 0x10u
 bool SDL_ShowSimpleMessageBox(Uint32 flags, const char* title, const char* message, SDL_Window* window);
 
+typedef Uint32 SDL_PropertiesID;
+#define SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER "SDL.renderer.max_texture_size"
+SDL_PropertiesID SDL_GetRendererProperties(SDL_Renderer* renderer);
+Sint64 SDL_GetNumberProperty(SDL_PropertiesID props, const char* name, Sint64 default_value);
+SDL_Texture* SDL_GetRenderTarget(SDL_Renderer* renderer);
+bool SDL_SetRenderTarget(SDL_Renderer* renderer, SDL_Texture* texture);
+bool SDL_GetRenderViewport(SDL_Renderer* renderer, SDL_Rect* rect);
+bool SDL_GetRenderClipRect(SDL_Renderer* renderer, SDL_Rect* rect);
+bool SDL_RenderClipEnabled(SDL_Renderer* renderer);
 bool SDL_SetRenderVSync(SDL_Renderer* renderer, int vsync);
 bool SDL_GetRenderVSync(SDL_Renderer* renderer, int* vsync);
 bool SDL_GetCurrentRenderOutputSize(SDL_Renderer* renderer, int* w, int* h);
@@ -328,6 +342,7 @@ typedef enum SDL_GamepadType {
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR, SDL_GAMEPAD_TYPE_COUNT
 } SDL_GamepadType;
 SDL_GamepadType SDL_GetGamepadType(SDL_Gamepad* gamepad);
+bool SDL_GamepadConnected(SDL_Gamepad* gamepad);
 typedef struct SDL_Joystick SDL_Joystick;
 typedef enum SDL_GamepadButton {
     SDL_GAMEPAD_BUTTON_INVALID = -1,
