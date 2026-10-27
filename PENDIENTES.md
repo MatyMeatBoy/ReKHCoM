@@ -295,4 +295,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | game-cursor-idle-four-seconds | Ocultar cursor inmovil sobreventana juego tras max4seg; reaparecer almoverraton. SDL multiplataforma, foco/salida/reentrada/menu segunflujo, preservar mandoy controles. Implementar trasprioridadespixeles/audio/HP. | pendiente | — | — | Usuario27/10 reitera mejora cursor4seg | 2026-10-27T22:33:22.971761+00:00 |
 | attack-card-native-top-seam | SOLO23restosceldasfila15 de9ATK(Crabclaw/DivineRose/FairyHarp/MetalChocobo/Oathkeeper/Pumpkinhead/Spellbinder/Ultima/WishingStar)nativeunderlaynegro conHDaceptado; conservarframecorners/dibujoHD/KKactual/DiamondDustOneWingedgrisPocionSimba. | integrado | codex-attack-seam | https://github.com/MatyMeatBoy/ReKHCoM/pull/409 | Usuario aprueba SOLOfranja yconservarresto | 2026-10-27T22:47:14.093348+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T22:47:04.866699+00:00)
+Integrador: libre
