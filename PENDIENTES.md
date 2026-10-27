@@ -165,5 +165,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_revision | codex-hud-budget | fix/hud-target-budget | — | 2026-10-27T05:32:42.412795+00:00 |
 | android-optiport-package | Playable isolated Android OptiPort test package | en_revision | codex-android-test | build/android-optiport-package | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:29:17.892180+00:00 |
 | optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | en_revision | codex-hud-invalidation | fix/hud-renderer-invalidation | Coordinador delega A invalidacion HUD y tests; usuario OptiPort | 2026-10-27T05:36:29.328637+00:00 |
+| hd-music-loader-bounds | Bound async music file reads and retain original music during load | pendiente | — | — | — | 2026-10-27T05:37:08.462230+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:36:15.146946+00:00)
