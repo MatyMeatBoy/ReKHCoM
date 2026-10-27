@@ -177,6 +177,7 @@ RELAY_PREAMBLE = r"""
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+static unsigned sRendererGeneration = 7;
 static const char* PortDeviceHostQuery(const char* name) {
     return strcmp(name,"KHCOM_HOST_DEVICE_PROFILE") == 0 ? "steam-deck:valve-dmi" : NULL;
 }
@@ -192,6 +193,8 @@ int main(void) {
     assert(!strcmp(out,"steam-deck:valve-dmi"));
     assert(H_getenv("ordinary",out,sizeof(out)) == 5 && !strcmp(out,"value"));
     assert(H_getenv("absent",out,sizeof(out)) == -1);
+    assert(H_getenv("KHCOM_RENDERER_GENERATION",out,sizeof(out)) > 0);
+    assert(!strcmp(out,"bridge-textures-v1:7"));
     return 0;
 }
 """
