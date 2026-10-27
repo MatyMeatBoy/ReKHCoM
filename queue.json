@@ -6557,10 +6557,10 @@
     "windows64-cpu-sse41-gate": {
       "id": "windows64-cpu-sse41-gate",
       "piece": "Validar requisito SSE4.1 antes del guest Windows64",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-windows64-cpu-gate",
       "created_at": "2026-10-27T16:56:57.396089+00:00",
-      "updated_at": "2026-10-27T17:12:36.959283+00:00",
+      "updated_at": "2026-10-27T17:14:44.406247+00:00",
       "branch": "fix/windows64-cpu-requirement",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/377",
       "approval": "Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro",
@@ -6575,9 +6575,15 @@
           "at": "2026-10-27T17:12:36.959283+00:00",
           "owner": "codex-windows64-cpu-gate",
           "detail": "PRdraft377 head17011d5f5. GuardCPU Windows host/selector conSSE4.1baseline intacta; consumidoresRED→GREEN, hostCPUIDmasked5/sinmarker y native81, selector/boot/ABI yfrontend32syntaxOK. Preflighttests6negativos conservan archivosajenos antescualquierwrite; no rebuildhost porguardfixture. Sin atribuciónPedroWin11; sinmerge/release. QAcheckoutanterior retirado despuésbackupúnico+hardlinksSHA/refsevidencia."
+        },
+        {
+          "at": "2026-10-27T17:14:44.406247+00:00",
+          "owner": "codex-windows64-cpu-gate",
+          "detail": "PR377 merged 61aee4c40fbfded53ba94ad4de978f16907b4939. Coordinator reviewed actual host/launcher and independently passed 6 non-fixture preservation negatives, production Launch CPU false/true and forced modes, strict C++ selector, plus hash-identified native-host rc81/marker and masked-CPU rc5/no-marker. CPU negative is simulated; Pedro Windows11 cause still unknown. No guest build, release, gameplay or performance claim."
         }
       ],
-      "claimed_at": "2026-10-27T16:57:09.995705+00:00"
+      "claimed_at": "2026-10-27T16:57:09.995705+00:00",
+      "completed_at": "2026-10-27T17:14:44.406247+00:00"
     }
   },
   "integrator": {
@@ -6586,7 +6592,7 @@
     "created_at": "2026-10-27T17:14:28.908745+00:00",
     "updated_at": "2026-10-27T17:14:28.908745+00:00"
   },
-  "updated_at": "2026-10-27T17:14:28.908745+00:00",
+  "updated_at": "2026-10-27T17:14:44.407277+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
