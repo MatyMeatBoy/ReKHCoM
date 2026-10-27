@@ -6671,10 +6671,10 @@
     "optiport-v22-async": {
       "id": "optiport-v22-async",
       "piece": "OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar",
-      "status": "en_curso",
-      "owner": "codex-v22-preview-cancellation",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T17:32:28.086015+00:00",
-      "updated_at": "2026-10-27T17:53:45.695690+00:00",
+      "updated_at": "2026-10-27T17:53:53.774407+00:00",
       "branch": "test/preview-cancel-contracts",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Usuario autorizó continuar pendientes; coordinador asignó exclusivamente cancelación/obsolescencia sin medición ni UI",
@@ -6694,6 +6694,11 @@
           "at": "2026-10-27T17:53:45.695690+00:00",
           "owner": "codex-v22-preview-cancellation",
           "detail": "Separación autorizada: PR381 cubre sólo contrato determinista y está en el hijo v22-preview-cancellation-contract. Vuelvo de pr_abierto a en_curso para release (transición directa a en_revision no permitida). Conservar PR/evidencias históricas; frío/caliente, latencia, cierre real, scheduling e I/O siguen pendientes. No integrar el padre por PR381."
+        },
+        {
+          "at": "2026-10-27T17:53:53.774407+00:00",
+          "owner": "codex-v22-preview-cancellation",
+          "detail": "released: Contrato transferido al hijo v22-preview-cancellation-contract (PR381). Padre vuelve a pendiente conservando PR/evidencias; async/perf y cierre real siguen sin verificar."
         }
       ],
       "claimed_at": "2026-10-27T17:38:43.410168+00:00"
@@ -6766,7 +6771,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T17:53:45.695690+00:00",
+  "updated_at": "2026-10-27T17:53:53.774407+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
