@@ -6182,15 +6182,21 @@
     "v22-workspace-storage-cleanup": {
       "id": "v22-workspace-storage-cleanup",
       "piece": "Codex: consolidar todos los worktrees en kh-worktrees, limpiar duplicados y VM, conservar WIP/saves/Atlas y medir espacio físico C/D",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-workspace-cleanup",
       "created_at": "2026-10-27T14:50:33.618588+00:00",
-      "updated_at": "2026-10-27T14:50:40.573035+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T15:42:59.244517+00:00",
+      "branch": "docs/workspace-cleanup-20261027",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/364",
       "approval": "Pedido directo usuario 27/10/2026: prioridad absoluta limpieza ReKHCoM en C y D",
       "reference": "respaldos/worktrees-20261027",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T15:42:59.244517+00:00",
+          "owner": "codex-workspace-cleanup",
+          "detail": "Limpieza física C/D terminada y registrada en PR364:32worktrees retirados, todossecundarios enkh-worktrees, PS5 16GiB/4.55GiB físicos, GPU4GiB/0.70GiB, archivos/regresiones/evidencia yAtlas preservados. Medición final28.72GiB C y39.13GiB D; no afirmar menos30GiB total. MétodoOptiPort instalado y prevención arnés integradaPR362."
+        }
+      ],
       "claimed_at": "2026-10-27T14:50:40.573035+00:00"
     },
     "v22-harness-storage-budget": {
@@ -6318,7 +6324,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T15:36:06.178997+00:00",
+  "updated_at": "2026-10-27T15:42:59.244517+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
