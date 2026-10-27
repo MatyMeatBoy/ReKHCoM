@@ -6146,17 +6146,18 @@ void MapSaveSetPanelPalettesExcluded(MapSaveWork* work, u8 excluded) {
     FadeSetPaletteExcluded(0x0C, excluded);
     FadeSetPaletteExcluded(0x0D, excluded);
     FadeSetPaletteExcluded(0x0E, excluded);
-    FadeSetPaletteExcluded(work->palette3->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette4->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette8->index + 0x10, excluded);
+    /* @bug Palette allocation can fail: NULL+6 reads the GBA BIOS bus. */
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette8)->index + 0x10, excluded);
 }
 
 void MapSaveSetCharaPalettesExcluded(MapSaveWork* work, u8 excluded) {
-    FadeSetPaletteExcluded(work->palette2->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette5->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette6->index + 0x10, excluded);
-    FadeSetPaletteExcluded(work->palette7->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette5)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette6)->index + 0x10, excluded);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette7)->index + 0x10, excluded);
 }
 
 void MapSaveLoadFloorTiles(u8 floor) {
