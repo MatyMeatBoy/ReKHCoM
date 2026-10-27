@@ -381,10 +381,24 @@ done:
 
 /* START (the pad's or the keyboard's), Escape or a tap pause the movie under the game's scene pause (back, or skip
    after asking); A and B do nothing, so a press meant for the dialogue before never ends a movie. 1: pause wanted. */
+static int sMovieDeviceReset;
+static int MovieResetEvent(const SDL_Event* event) {
+#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
+    if (PortRendererHandleReset(event->type)) {
+        if (event->type == SDL_EVENT_RENDER_DEVICE_RESET) sMovieDeviceReset = 1;
+        return 1;
+    }
+#else
+    (void)event;
+#endif
+    return 0;
+}
+
 static int PauseWanted(int* quit) {
     SDL_Event e;
     int pause = 0;
     while (SDL_PollEvent(&e)) {
+        if (MovieResetEvent(&e)) { if (sMovieDeviceReset) return 0; continue; }
         switch (e.type) {
             case SDL_EVENT_QUIT:
                 *quit = 1;
@@ -425,6 +439,7 @@ static void DropPendingInput(void) {
    window drawn on it by port_ui.c as over any scene. The sound waits paused. 1: skip the movie. */
 static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream* audio, int* quit) {
     extern void PortUiOpenHdMoviePause(void);
+    extern void PortUiCancelHdMoviePause(void);
     extern int PortUiHdMovieSkipTaken(void);
     extern int PortUiHandleEvent(const void* event);
     extern void PortUiDraw(uint32_t* frame, int width, int height);
@@ -486,11 +501,13 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
             SDL_PushEvent(&k);
         }
         while (SDL_PollEvent(&e)) {
+            if (MovieResetEvent(&e)) { if (sMovieDeviceReset) break; continue; }
             if (e.type == SDL_EVENT_QUIT)
                 *quit = 1;
             else
                 PortUiHandleEvent(&e);
         }
+        if (sMovieDeviceReset) break;
         PortMenuSoundFrame();
         PortAudioMenuFrame();
         SDL_memcpy(work, base, (size_t)cw * ch * 4);
@@ -523,6 +540,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
         SDL_Delay(16);
     }
     }
+    if (sMovieDeviceReset) PortUiCancelHdMoviePause();
     PortMenuSoundEnd();
     (void)PortUiTakeMenuSound(0);
     PortAudioMovieHold(1); /* the pause's last sound fades, the movie has the sound again */
@@ -745,6 +763,7 @@ static void DrawSubs(Subs* s, SDL_Renderer* renderer, LONGLONG clock, const SDL_
 /* Plays hd/movies/<name>.mp4 (a scene: hd/scenes, MoviePath) to the end (or until skipped). 0: nothing imported or it could not be opened. */
 #ifdef _WIN32
 static int PlayFile(const char* name) {
+    sMovieDeviceReset = 0;
     char path[1024];
     WCHAR wpath[1024];
     IMFSourceReader* reader = NULL;
@@ -920,7 +939,7 @@ static int PlayFile(const char* name) {
                 pause = 1;
             }
         }
-        if (quit)
+        if (quit || sMovieDeviceReset)
             break;
         /* keep about half a second of audio queued: it is the clock */
         while (!audioDone && audio && SDL_GetAudioStreamQueued(audio) < (int)(rate * channels * 2 / 2)) {
@@ -1120,7 +1139,7 @@ static int PlayFile(const char* name) {
                 SDL_Surface* frozen = SDL_RenderReadPixels(renderer, NULL);
                 int skip = MoviePause(renderer, frozen, audio, &quit);
                 SDL_DestroySurface(frozen);
-                if (quit)
+                if (quit || sMovieDeviceReset)
                     break;
                 if (skip && skipEnd < 0) /* out to black (and silence) in 0.3 s from here, as at the movie's end */
                     skipEnd = clock + 3000000;
@@ -1138,7 +1157,7 @@ static int PlayFile(const char* name) {
                 SDL_DelayNS(16000000 - spent);
         }
         if (audioDone && audio && SDL_GetAudioStreamQueued(audio) > 0 && videoDone)
-            while (SDL_GetAudioStreamQueued(audio) > 0 && !quit && !PauseWanted(&quit))
+            while (SDL_GetAudioStreamQueued(audio) > 0 && !quit && !sMovieDeviceReset && !PauseWanted(&quit))
                 SDL_Delay(10);
     }
 
@@ -1167,7 +1186,7 @@ done:
         q.type = SDL_EVENT_QUIT;
         SDL_PushEvent(&q); /* the main loop closes the game as usual */
     }
-    return played;
+    return played && !sMovieDeviceReset;
 }
 #else
 /* The path in single quotes for the shell ('\'' for a quote inside it). */
@@ -1206,6 +1225,7 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
 }
 
 static int PlayFile(const char* name) {
+    sMovieDeviceReset = 0;
     char path[1024], quoted[2200], command[2600], line[256];
     SDL_Renderer* renderer = PortRenderer();
     SDL_Texture* texture = NULL;
@@ -1304,7 +1324,7 @@ static int PlayFile(const char* name) {
                 pause = 1;
             }
         }
-        if (quit)
+        if (quit || sMovieDeviceReset)
             break;
         /* keep about half a second of audio queued: it is the clock */
         while (!audioDone && SDL_GetAudioStreamQueued(audio) < rate * channels * 2 / 2) {
@@ -1397,7 +1417,7 @@ static int PlayFile(const char* name) {
                 SDL_Surface* frozen = SDL_RenderReadPixels(renderer, NULL);
                 int skip = MoviePause(renderer, frozen, audio, &quit);
                 SDL_DestroySurface(frozen);
-                if (quit)
+                if (quit || sMovieDeviceReset)
                     break;
                 if (skip && skipEnd < 0)
                     skipEnd = clock + 3000000;
@@ -1415,7 +1435,7 @@ static int PlayFile(const char* name) {
                 SDL_DelayNS(16000000 - spent);
         }
         if (audioDone && audio && SDL_GetAudioStreamQueued(audio) > 0 && videoDone)
-            while (SDL_GetAudioStreamQueued(audio) > 0 && !quit && !PauseWanted(&quit))
+            while (SDL_GetAudioStreamQueued(audio) > 0 && !quit && !sMovieDeviceReset && !PauseWanted(&quit))
                 SDL_Delay(10);
     }
 
@@ -1441,7 +1461,7 @@ done:
         q.type = SDL_EVENT_QUIT;
         SDL_PushEvent(&q);
     }
-    return played;
+    return played && !sMovieDeviceReset;
 }
 #endif
 #elif defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST) /* the image asks its host */

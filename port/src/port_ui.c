@@ -4863,6 +4863,11 @@ static void ScenePauseClose(int skip) {
     }
 }
 
+/* Device loss aborts the HD movie without treating it as a user story skip. */
+void PortUiCancelHdMoviePause(void) {
+    if (sHdMoviePause) ScenePauseClose(0);
+}
+
 /* 0 up, 1 down, 2 confirm, 3 back, 4 START (resume) */
 static void ScenePauseKey(int key) {
     extern void PortMenuSoundClick(void);

@@ -37,6 +37,7 @@ int PortUiTextWidth(const char* text);
 void PortUiSkipPrompt(int visible);
 int PortUiIntroSkip(int pressed);
 void PortUiOpenMoviePause(void);
+void PortUiCancelHdMoviePause(void);
 void PortUiIntroSkipReset(void);
 /* Movies shown cropped and enlarged: the presenter draws the prompt itself
    (PortUiDrawSkipLayer) at the picture's normal size and place, so it is

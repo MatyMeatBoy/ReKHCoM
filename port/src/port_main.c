@@ -1400,35 +1400,38 @@ static void MovieCrop(const SDL_FRect* src, int* top, int* bottom) {
 /* The opening movie's skip prompt over a cropped movie: drawn on a copy of
    the picture and shown at the picture's normal full-height place and size
    (normal), exactly where it sits outside movies. */
+static uint32_t* sSkipBuf;
+static SDL_Texture* sSkipTexture;
+static int sSkipBufW, sSkipBufH;
+static SDL_Texture *sHd2dTex, *sMenuAlpha, *sSampleTex, *sNoticeTex;
+static int sHd2dW, sHd2dH, sMenuAlphaW, sMenuAlphaH;
+
 static void DrawSkipLayer(const SDL_FRect* normal) {
-    static uint32_t* buf;
-    static SDL_Texture* tex;
-    static int bufW, bufH;
     int r[4];
     float sc = normal->w / GBA_SCREEN_W;
     SDL_FRect src, dst;
 
-    if (bufW != gPortScreen.width || bufH != gPortScreen.height) {
-        SDL_free(buf);
-        if (tex) SDL_DestroyTexture(tex);
-        bufW = gPortScreen.width;
-        bufH = gPortScreen.height;
-        buf = (uint32_t*)SDL_malloc((size_t)bufW * bufH * 4);
-        tex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, bufW, bufH);
-        if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_PIXELART);
+    if (sSkipBufW != gPortScreen.width || sSkipBufH != gPortScreen.height) {
+        SDL_free(sSkipBuf);
+        if (sSkipTexture) SDL_DestroyTexture(sSkipTexture);
+        sSkipBufW = gPortScreen.width;
+        sSkipBufH = gPortScreen.height;
+        sSkipBuf = (uint32_t*)SDL_malloc((size_t)sSkipBufW * sSkipBufH * 4);
+        sSkipTexture = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, sSkipBufW, sSkipBufH);
+        if (sSkipTexture) SDL_SetTextureScaleMode(sSkipTexture, SDL_SCALEMODE_PIXELART);
     }
-    if (!buf || !tex)
+    if (!sSkipBuf || !sSkipTexture)
         return;
-    memcpy(buf, sComposite, (size_t)bufW * bufH * 4);
-    if (!PortUiDrawSkipLayer(buf, bufW, bufH, r))
+    memcpy(sSkipBuf, sComposite, (size_t)sSkipBufW * sSkipBufH * 4);
+    if (!PortUiDrawSkipLayer(sSkipBuf, sSkipBufW, sSkipBufH, r))
         return;
-    SDL_UpdateTexture(tex, NULL, buf, bufW * 4);
+    SDL_UpdateTexture(sSkipTexture, NULL, sSkipBuf, sSkipBufW * 4);
     src.x = (float)r[0]; src.y = (float)r[1]; src.w = (float)r[2]; src.h = (float)r[3];
     dst.x = normal->x + (r[0] - gPortScreen.originX) * sc;
     dst.y = normal->y + (r[1] - gPortScreen.originY) * sc;
     dst.w = r[2] * sc;
     dst.h = r[3] * sc;
-    SDL_RenderTexture(sRenderer, tex, &src, &dst);
+    SDL_RenderTexture(sRenderer, sSkipTexture, &src, &dst);
 }
 
 /* The title bar on the left margin: its own piece of the header asset.
@@ -1553,7 +1556,69 @@ static int HdMenuAllocations(void) {
 #endif
 }
 
+/* Device-loss recovery runs only between renderer passes. Pending detach keeps
+   presentation suppressed until the previous target can be released safely. */
+static int sRendererResetPending;
+static uint64_t sRendererGeneration;
+static int RendererResetService(void) {
+#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
+    if (!sRendererResetPending) return 1;
+    SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex,
+        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBlurTex, &sSkipTexture,
+        &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
+        &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
+    unsigned i;
+    extern void PortHdTextShutdown(void);
+    if (!SDL_IsMainThread() || (sRenderer && !SDL_SetRenderTarget(sRenderer, NULL))) return 0;
+    for (i = 0; i < sizeof(textures) / sizeof(textures[0]); i++) {
+        if (*textures[i]) SDL_DestroyTexture(*textures[i]);
+        *textures[i] = NULL;
+    }
+    sTexW = sTexH = sMainOverW = sMainOverH = sOverlayTexW = sScreenOverTexW = 0;
+    sHudTexW = sHudTexH = sHudOverW = sHudOverH = sBorderShown = 0;
+    sSkipBufW = sSkipBufH = sHd2dW = sHd2dH = sMenuAlphaW = sMenuAlphaH = 0;
+    for (i = 0; i < 2; i++) sMenuSideW[i] = sFadeSideW[i] = 0;
+    PortHdHudInvalidate();
+    PortHdSpritesShutdown();
+    PortHdLayoutShutdown();
+    PortHdTextShutdown();
+    PortAchievementToastInvalidate();
+    PortSceneGalleryPreviewInvalidate();
+    sRendererResetPending = 0;
+    ++sRendererGeneration;
+    PortLog("renderer: invalidated GPU generation %llu after device reset", (unsigned long long)sRendererGeneration);
+#endif
+    return 1;
+}
+
+int PortRendererHandleReset(uint32_t eventType) {
+#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
+    if (!SDL_IsMainThread()) return 0;
+    if (eventType == SDL_EVENT_RENDER_TARGETS_RESET) {
+        /* Only render-target contents were lost. Gauge targets are cleared and
+           redrawn on every pass; ordinary textures and readiness remain valid. */
+        return 1;
+    }
+    if (eventType == SDL_EVENT_RENDER_DEVICE_RESET) {
+        sRendererResetPending = 1;
+        RendererResetService();
+        return 1;
+    }
+#else
+    (void)eventType;
+#endif
+    return 0;
+}
+
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+/* The portable native movie consumes its own events on this same renderer thread. */
+static void NativeMovieRendererReset(void) {
+    PortRendererHandleReset(SDL_EVENT_RENDER_DEVICE_RESET);
+}
+#endif
+
 static void Present(void) {
+    if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
     uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
@@ -1801,8 +1866,6 @@ static void Present(void) {
         static uint8_t* sMask;
         if (!sMask)
             sMask = (uint8_t*)SDL_calloc((size_t)PORT_MAX_W * PORT_MAX_H, 1);
-        static SDL_Texture* sHd2dTex;
-        static int sHd2dW, sHd2dH;
         extern void PortPpuSpriteMask(uint8_t* out);
         int hw, hh;
         const uint32_t* pic;
@@ -1838,8 +1901,6 @@ static void Present(void) {
             /* the Options panel's HD picture under its canvas, which leaves it clear (port_ui.c): the canvas then goes
                up with its alpha, in a texture of its own (the frame's has none) */
             extern int PortUiHdArtUnder(SDL_Renderer*, float, float, float);
-            static SDL_Texture* sMenuAlpha;
-            static int sMenuAlphaW, sMenuAlphaH;
             SDL_Texture* frameTex = sTexture;
             if (menuCanvas && gPortConfig.hdTitle && PortUiHdArtUnder(sRenderer, dst.x, dst.y, dst.w / gPortScreen.width)) {
                 if (sMenuAlpha && (sMenuAlphaW != gPortScreen.width || sMenuAlphaH != gPortScreen.height)) {
@@ -1869,7 +1930,6 @@ static void Present(void) {
         if (menuCanvas) {
             /* Options > HD text > A: the font samples at the screen's resolution over their boxes (port_ui.c) */
             extern int PortUiHdSamples(int rects[2][4], int faces[2], const unsigned char** rgba, int* sw, int* sh);
-            static SDL_Texture* sSampleTex;
             int rects[2][4], faces[2], sw = 0, sh = 0, n, i;
             const unsigned char* rgba = NULL;
             n = PortUiHdSamples(rects, faces, &rgba, &sw, &sh);
@@ -2075,7 +2135,6 @@ static void Present(void) {
     {
         /* state / slot notices: topmost, at the window's scale */
         static uint32_t sNoticeBuf[256 * 14];
-        static SDL_Texture* sNoticeTex;
         int nw;
 
         memset(sNoticeBuf, 0, sizeof(sNoticeBuf));
@@ -2612,6 +2671,7 @@ static void PumpEvents(void) {
             }
         }
 #endif
+        if (PortRendererHandleReset(ev.type)) continue;
         KhPadNormalizeEvent(&ev, gPortConfig.padLayout);
 #ifdef __EMSCRIPTEN__
         if(ev.type==SDL_EVENT_RENDER_DEVICE_RESET) {
@@ -3270,6 +3330,10 @@ int main(int argc, char** argv) {
     sRenderer = SDL_CreateRenderer(sWindow, NULL);
     if (sRenderer == NULL)
         PortFatal("Could not create the renderer: %s", SDL_GetError());
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+    extern void HdMovieAndroidSetRendererResetCallback(void (*callback)(void));
+    HdMovieAndroidSetRendererResetCallback(NativeMovieRendererReset);
+#endif
     PortLog("Renderer: %s", SDL_GetRendererName(sRenderer));
     LogSystem();
     ApplyWindowMode();

@@ -150,6 +150,13 @@ void PortAchievementToastDraw(void* opaqueRenderer, int width, int height) {
     SDL_RenderTexture(renderer, sTexture, &src, &dst);
 }
 
+void PortAchievementToastInvalidate(void) {
+    if (sTexture) SDL_DestroyTexture(sTexture);
+    sTexture = NULL;
+    sRenderer = NULL;
+    sVisible = 0; /* rebuild the current queued toast without dropping it */
+}
+
 void PortAchievementToastShutdown(void) {
     if (sTexture) SDL_DestroyTexture(sTexture);
     sTexture = NULL; sRenderer = NULL; sCount = sHead = 0; sStart = 0; sVisible = 0;
