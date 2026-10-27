@@ -39,6 +39,20 @@ quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
   solo inventario/registro; no mover activos ni borrar. Nuevos worktrees:
   preferir `KHCoMPC/khcom-worktrees` según la raíz del repositorio.
 
+- [ ] **Galería: retorno directo al terminar/saltar escena**, sin destello
+  intermedio de título/gameplay. Claude regular UI, dependencia de pacing
+  OptiPort si aplica. Probar título/partida × normal/skip × GBA/ReKHCoM,
+  capturando cuadros, restaurando UI/renderer/input/audio sin avanzar historia.
+- [ ] **Prompts de mando completos, experimental 2.1:** Auto, Original/GBA,
+  Nintendo, Xbox y PlayStation; bindings efectivos coherentes con tutorial,
+  convención Nintendo A/PS círculo elegible, assets existentes, todos los
+  botones GBA de Opciones, overrides, hotplug y localización. Solo pendiente.
+- [ ] **Gate real del ZIP Windows 64:** primera puerta con guardado del usuario
+  confirmada RED por coordinador, WER `0x100f7bd6`,
+  `MapWallFaceIsUnreserved`, fila superior NULL/lectura BIOS GBA. Coordinador
+  corrige fuente compartida; exigir GREEN del mismo repro en build final antes
+  de entregar ZIP. Las ampliaciones UI anteriores no retrasan esa entrega.
+
 Las notas fechadas anteriores que dicen «ninguna release nueva» o describen
 otro orden de integración se conservan como historia y quedan sustituidas por
 este mandato del 27/10.

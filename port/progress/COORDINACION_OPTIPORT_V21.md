@@ -107,6 +107,31 @@ El repositorio público de referencia es
 [OptiPort](https://github.com/MatyMeatBoy/OptiPort). Es un repositorio fuente
 independiente; no convertirlo en otro backlog de reservas de ReKHCoM.
 
+## Pendientes adicionales del usuario — 27/10
+
+- **Retorno de galería sin destello intermedio:** al terminar o saltar una escena,
+  regresar directamente al modo galería/escenas, sin un cuadro fugaz del título
+  o gameplay ni su fade. Una sola tarea regular UI para Claude, coordinada con
+  pacing OptiPort si comparte rutas. Reproducir desde título y partida, final
+  normal y skip, modos GBA y ReKHCoM; capturar los cuadros de transición.
+  Restaurar UI de origen, estado del renderer, inputs y audio sin avanzar
+  historia. No ocultarlo con un fade largo ni alterar timings a medida.
+- **Layouts completos de prompts de mando, experimental 2.1:** pendiente regular
+  UI, sin implementación actual. Selector Auto / Original-GBA / Nintendo /
+  Xbox / PlayStation; tutorial y prompts deben coincidir con el binding lógico
+  efectivo. Permitir elegir convención Nintendo A / PlayStation círculo;
+  reutilizar assets de glyphs existentes para aceptar A cuando correspondan.
+  Incluir todos los botones GBA requeridos por Opciones, overrides del usuario,
+  hotplug y localización. Registrar matriz de bindings/layouts y evidencia antes
+  de integrar; no asumir equivalencia por la posición física del botón.
+
+Estas ampliaciones quedan anotadas y no bloquean el ZIP. **Sí bloquea la entrega
+final del ZIP el repro guardado real de la primera puerta en Windows 64:** el
+coordinador confirmó RED, WER `0x100f7bd6`, `MapWallFaceIsUnreserved`, fila
+superior NULL por lectura BIOS GBA. El coordinador corrige la fuente compartida;
+el ZIP debe esperar GREEN del mismo guardado/repro en la build exacta. No
+presentar los tests sintéticos previos como sustituto de esa verificación.
+
 ## Orden del espacio de trabajo después de 2.1
 
 Pendiente de cierre: inventariar worktrees, agrupar los útiles bajo
