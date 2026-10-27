@@ -5246,10 +5246,23 @@
       ],
       "claimed_at": "2026-10-27T08:38:31.302239+00:00",
       "completed_at": "2026-10-27T08:42:01.347055+00:00"
+    },
+    "v21-pre1-crossplatform": {
+      "id": "v21-pre1-crossplatform",
+      "piece": "Verified Windows Linux Android prerelease v2.1-pre1, ROM-free artifacts and reporter links",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:44:04.056087+00:00",
+      "updated_at": "2026-10-27T08:44:04.056087+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User explicitly requests new prerelease for Windows Linux Android and send to reporters; preserve previous releases",
+      "reference": "Frozen source 0022c58f1ff1ce40ec079c1dd51d5574a706df26; public release after packaged regressions",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:43:24.768009+00:00",
+  "updated_at": "2026-10-27T08:44:04.056087+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
