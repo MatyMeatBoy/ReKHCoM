@@ -6,8 +6,10 @@ Consultar [COORDINACION_OPTIPORT_V21.md](COORDINACION_OPTIPORT_V21.md) antes de
 tomar trabajo: **Codex termina OptiPort al 100 %, prerelease Windows 64 y ZIP
 personal limpio; Claude puede tomar todos los pendientes regulares** (HUD,
 jefes, recetas, Atlas, galería, etc.), reservando en `coordination/art-queue`,
-preservando WIP y abriendo PR. Codex integra esos PR regulares después de
-OptiPort. Los claims activos de core/guardas, arquitectura y QA se respetan;
+preservando WIP y abriendo PR. **Última actualización del usuario:** Codex recoge
+e integra los PR regulares ya listos antes del ZIP Windows, con revisión y lock;
+entrega el ZIP prioritario y después completa el resto de OptiPort. Los demás PR
+regulares se integran después de OptiPort. Los claims activos de core/guardas, arquitectura y QA se respetan;
 el trabajo de Claude ya integrado sigue vigente.
 
 Esta lista es un snapshot, no autoridad de reservas. Registrar por ID owner,
@@ -23,6 +25,14 @@ OptiPort; no se promete cero bugs. Windows: Auto/Forzar 32/Forzar 64; Linux
 desktop/Deck: un paquete 64/32; Android: APK universal 32+64; consolas beta.
 Verificar SRAM manual/config entre runtimes y namespaces/compatibilidad de
 quicksaves. La instalación Quiver principal sigue protegida, sin pruebas allí.
+
+- [ ] **Vista/previews en ambos modos:** identificar primero los dos modos en
+  el UI actual, sin asumir cuáles son. Pendiente posterior al ZIP prioritario:
+  OptiPort mide entrada, p95, memoria, caché, precarga/cancelación y calidad;
+  Claude toma el fallback visual y presentación como tarea regular bajo claim.
+  Objetivo: carga casi instantánea, poca pérdida de calidad y evitar esperas
+  largas al entrar a escenas. Sin implementación ni garantía medida aún; ver
+  [coordinación](COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos).
 
 - [ ] **Cierre posterior a 2.1: ordenar worktrees** según el documento de
   coordinación, conservando WIP, partidas, ROMs, evidencia y commits. Ahora

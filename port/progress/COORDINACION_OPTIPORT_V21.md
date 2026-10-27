@@ -9,8 +9,11 @@ estados sigue siendo `coordination/art-queue`, gestionada con
 ## Reparto y orden de integración
 
 - **Codex:** terminar OptiPort al 100 % de su alcance y evidencia, preparar la
-  prerelease Windows 64 y el ZIP personal limpio de Windows. Después de cerrar
-  OptiPort, integrar los PR de pendientes regulares mediante el lock remoto.
+  prerelease Windows 64 y el ZIP personal limpio de Windows. La última
+  instrucción del usuario introduce una excepción al orden inicial: recoger e
+  integrar los PR regulares ya listos antes del ZIP, con revisión y lock remoto;
+  entregar Windows sin esperar nuevas mejoras y después completar el resto de
+  OptiPort. El resto de PR regulares se integra después de cerrar OptiPort.
 - **Claude:** puede tomar **todos los pendientes regulares**, incluidos detalles
   visuales del HUD, HUD de jefes, encaje de cartas, comprobación de recetas,
   Atlas, galería y demás pendientes funcionales/visuales. Reservar cada pieza
@@ -76,7 +79,33 @@ Prueba mínima siguiente: verificar la evidencia pendiente de OptiPort y la
 matriz de runtimes contra los SHA exactos que se empaquetarán; registrar hashes
 de ZIP/APK/paquetes, resultados y límites antes de afirmar entrega o cierre.
 Los pendientes regulares pueden avanzar en paralelo bajo claim; su integración
-por Codex queda después del cierre de OptiPort.
+por Codex sigue el orden actualizado: PR ya listos antes del ZIP como excepción
+explícita del usuario; los restantes después del cierre de OptiPort.
+
+## Pendiente: vista y previews en ambos modos
+
+Solicitud posterior del 27/10: mejorar vista/previews en **ambos modos**, con
+fallback visual cuidado, carga casi instantánea y poca pérdida de calidad, sin
+entradas a escenas con esperas largas. Es trabajo pendiente, sin implementación
+en esta entrega documental y sin retrasar el ZIP Windows 64 prioritario.
+
+Antes de implementar, identificar en el UI actual cuáles son los «dos modos»
+citados y registrar sus nombres, rutas y comportamiento. No adivinar que son
+HD/GBA u otra pareja, ni bloquear la entrega actual esperando una aclaración.
+
+- **Carril OptiPort de rendimiento:** reservar en la cola única una tarea con
+  fases: identificar modos y baseline de entrada; medir latencia p95 y memoria;
+  estudiar caché, precarga y cancelación; comparar resultado con calidad visual
+  y evidencia antes/después en ambos modos. Registrar latencia y memoria reales
+  para fijar el presupuesto; «casi instantáneo» expresa el objetivo, no una
+  garantía ya medida. No avanzar lógica de escenas para ocultar esperas.
+- **Carril regular UI de Claude:** reservar el fallback visual y la presentación
+  de previews; coordinar las rutas/dependencias con el carril de rendimiento,
+  sin tocar sus guardas activas. Conservar contenido y aportar revisión visual.
+
+El repositorio público de referencia es
+[OptiPort](https://github.com/MatyMeatBoy/OptiPort). Es un repositorio fuente
+independiente; no convertirlo en otro backlog de reservas de ReKHCoM.
 
 ## Orden del espacio de trabajo después de 2.1
 
