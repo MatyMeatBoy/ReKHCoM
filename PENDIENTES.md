@@ -199,5 +199,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | bridge-gpu-targets-aa | Negotiated portable GPU targets and gauge AA | en_curso | device_profiles_sol | — | — | 2026-10-27T08:51:05.342086+00:00 |
 | launcher-hd-media-language-variants-v21 | Siguiente PR EN/JP: imports namespaces por idioma, metadata/cache/journal/posters con procedencia, playback y UI seleccion independiente de texto/Undub; atomic y preservarold | en_curso | codex-hd-media-variants | — | Usuario 27/10: implementar feature EN/JP incremental; sin descargar ni cambiar Steam automaticamente | 2026-10-27T08:56:58.558622+00:00 |
 | submenu-moogle-visible-band-style-zero | Moogle transition native border reaches edge while margin remains late in style zero | en_curso | codex-moogle-band | — | User requests coherent submenu borders and root visual review for 2.1 | 2026-10-27T08:56:52.067993+00:00 |
+| android-stale-sprites-desktop-guard | Android launcher excludes desktop-only stale sprite reimport callbacks | pendiente | — | — | User authorizes cross-platform prerelease and compatibility fixes | 2026-10-27T09:01:24.819787+00:00 |
 
 Integrador: libre
