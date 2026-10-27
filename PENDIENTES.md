@@ -252,6 +252,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android22-pre1-diagnostic-build | APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto | en_revision | codex-android22-build | build/android22-pre1 | — | 2026-10-27T18:46:50.413662+00:00 |
 | audio-intro-title-underrun | Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego | en_curso | codex-audio-skip | — | Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback | 2026-10-27T18:41:27.803327+00:00 |
 | optiport-artifact-freshness | OptiPort canonical: distinguir código/import/recipes/quality de fixture actual, registrar legacy evidence y preservar artefactos ya entregados inmutables | en_curso | codex-artifact-freshness | docs/artifact-freshness | Usuario explícito/coordinador27/10 trasreleasepre1; PRcanonical separado | 2026-10-27T18:45:12.309262+00:00 |
-| card-key-hilt-black-microfix | Cambio literal de1-2pixelsblancos a negro en KingdomKeytodosvalores yHeroica5; conservarrestoaprobado | pendiente | — | — | — | 2026-10-27T18:47:53.494232+00:00 |
+| card-key-hilt-black-microfix | Cambio literal de1-2pixelsblancos a negro en KingdomKeytodosvalores yHeroica5; conservarrestoaprobado | en_curso | codex-card-microfix | — | — | 2026-10-27T18:48:05.984482+00:00 |
 
 Integrador: libre
