@@ -8095,10 +8095,23 @@
         }
       ],
       "claimed_at": "2026-10-27T23:27:42.465079+00:00"
+    },
+    "attack-card-last-horizontal-pixel": {
+      "id": "attack-card-last-horizontal-pixel",
+      "piece": "Isolate literal remaining horizontal pixel below Olympia crown from user b91e screenshot; preserve all other art; current production D3D11 A/B",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T23:50:38.986668+00:00",
+      "updated_at": "2026-10-27T23:50:38.986668+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27oct literal1pixel; root delegated worker no Atlas for visual port corrections",
+      "reference": "C:/Users/MP/AppData/Local/Temp/codex-clipboard-b91e56c7-d092-444b-9962-29ba67928e80.png",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:38:07.098424+00:00",
+  "updated_at": "2026-10-27T23:50:38.986668+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
