@@ -3011,10 +3011,10 @@
     "atlas-menus-current-review": {
       "id": "atlas-menus-current-review",
       "piece": "Atlas menus antiguos: capturas actuales y propuestas de valores/cabecera",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-diary-audit",
       "created_at": "2026-10-25T20:35:22.062254+00:00",
-      "updated_at": "2026-10-25T20:52:54.565875+00:00",
+      "updated_at": "2026-10-27T18:54:03.323584+00:00",
       "branch": "codex/atlas-pepito-nested-current",
       "pr": null,
       "approval": null,
@@ -3024,6 +3024,11 @@
           "at": "2026-10-25T20:52:54.565875+00:00",
           "owner": "codex-atlas",
           "detail": "Pepito interior ydetalle entregadosa36793f6 desde98689987a. Otrascapturas title/deck/menu/worldcards disponiblesbuild/atlas-menus-turbo; valoresSTART y artefondotitulo siguenpendientes."
+        },
+        {
+          "at": "2026-10-27T18:54:03.323584+00:00",
+          "owner": "codex-integrador",
+          "detail": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
         }
       ],
       "claimed_at": "2026-10-25T20:35:28.184368+00:00",
@@ -7093,7 +7098,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:53:55.604474+00:00",
+  "updated_at": "2026-10-27T18:54:03.323584+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -7493,6 +7498,16 @@
       "from_owner": "codex-atlas-menus",
       "to_owner": "codex-diary-audit",
       "expected_commit": "a0e3392d75bd3683f988a141dec8c58b1144c1c3",
+      "evidence": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
+    },
+    {
+      "at": "2026-10-27T18:54:03.323584+00:00",
+      "actor": "codex-integrador",
+      "operation": "recover-task",
+      "task": "atlas-menus-current-review",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-diary-audit",
+      "expected_commit": "40607ef17c4d26f6aeb47e96925cd5b71f8bc665",
       "evidence": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
     }
   ]
