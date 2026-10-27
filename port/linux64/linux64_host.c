@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include "bridge.h"
+#include "../include/port/port_device_profile_host.h"
 
 static char sData[1024] = ".";
 static int sQuit;
@@ -51,7 +52,8 @@ static int H_getenv(const char* name, char* out, int cap) {
         return (int)strlen(out);
     }
 
-    const char* v = getenv(name);
+    const char* v = PortDeviceHostQuery(name);
+    if (!v) v = getenv(name);
     if (!v) return -1;
     snprintf(out, (size_t)cap, "%s", v);
     return (int)strlen(out);
