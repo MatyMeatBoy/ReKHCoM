@@ -7864,7 +7864,7 @@
       "status": "pr_abierto",
       "owner": "codex-olympia-seam",
       "created_at": "2026-10-27T22:11:26.193679+00:00",
-      "updated_at": "2026-10-27T22:16:46.060627+00:00",
+      "updated_at": "2026-10-27T22:19:25.628833+00:00",
       "branch": "fix/olympia-hd-underlay-seam",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/405",
       "approval": "Usuario27octprioridad1pixelescartas; rootdelegacionworker20261027",
@@ -7874,6 +7874,11 @@
           "at": "2026-10-27T22:16:46.060627+00:00",
           "owner": "codex-olympia-seam",
           "detail": "Head55cda5c32: PPUcodeonly nativeOlympiacell14,19->black when HDQueueaccepted, world/screen+HUD. REDproductionbranches thenGREEN40960cases; stockframefallbackPASS; native32/x32fullPPUsyntax EUUSJPPASS. SDLsoftwareactualQuad30transforms4affected, scale4.5 exactly4whitepixels->black; HDhighlightuntouched. No fullgameGPUQAclaim. Audio independentcontract findings preserved pruebas/audio-title-skip/REVIEW-CURRENT.md; Clauderecentclaimuntouched. Sourceonlycorrection no newartasset; parent reviewsactualSDLbeforeafter under explicitnoAtlasinstruction."
+        },
+        {
+          "at": "2026-10-27T22:19:25.628833+00:00",
+          "owner": "codex-olympia-seam",
+          "detail": "Followup1df36c75c adds new SmallCardNativeColor/gOlympia dependency to extracted first-framefallback fixture. Combinedfixture with PR406 SpriteOnScreen dependency passes both budgets; no product edits outside405. Parent406 independentlyreviewed: named64texelload bounded, firstframefallback+budget+smallseam testsPASS."
         }
       ],
       "claimed_at": "2026-10-27T22:11:30.742608+00:00"
@@ -7893,7 +7898,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:19:18.509294+00:00",
+  "updated_at": "2026-10-27T22:19:25.628833+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
