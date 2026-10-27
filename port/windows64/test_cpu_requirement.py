@@ -17,13 +17,23 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'port/windows64'))
 from prepare_movie_core import prepare
 
+SENTINELS={n:b'private test sentinel\n' for n in ('kh_com.sav','kh_com.ini','scenes_seen.dat')}
+
+
+def preflight(work):
+    # Run before prepare(), mkdir, source generation, compilation or writes.
+    for name,expected in SENTINELS.items():
+        path=work/name
+        if path.exists() and (not path.is_file() or path.read_bytes()!=expected):
+            raise SystemExit(f'Refusing to overwrite existing non-test data: {path}')
+
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--toolchain',type=Path,required=True)
     p.add_argument('--sdl',type=Path,required=True)
-    a=p.parse_args();a.work=a.work.resolve();a.work.mkdir(parents=True,exist_ok=True)
+    a=p.parse_args();a.work=a.work.resolve();preflight(a.work);a.work.mkdir(parents=True,exist_ok=True)
     prepare(ROOT,a.work)
     # Preserve the CPU's real other feature bits; only clear SSE4.1.
     override=a.work/'no-sse41.h'
@@ -37,7 +47,7 @@ def main():
     blob[0x1000:0x1006]=bytes.fromhex('b851000000c3')
     image=a.work/'synthetic.bin';image.write_bytes(blob)
     marker=a.work/'entered.txt'
-    sentinels={n:b'private test sentinel\n' for n in ('kh_com.sav','kh_com.ini','scenes_seen.dat')}
+    sentinels=SENTINELS
     for n,b in sentinels.items():(a.work/n).write_bytes(b)
     env={k:v for k,v in os.environ.items() if not k.startswith(('SDL_','KHCOM_'))}
     env.update(SDL_VIDEO_DRIVER='dummy',SDL_AUDIO_DRIVER='dummy',KHCOM_HOST_HIDDEN='1')

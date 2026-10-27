@@ -39,6 +39,10 @@ Después del cambio:
   ejecución rc0. Temporales limitados a la carpeta privada de pruebas.
 - Frontend completo Windows i686 `decompui.cpp`: syntax-only con flags reales
   del launcher, SDL3 e ImGui: PASS. No se reconstruyó el launcher completo.
+- Preflight de ambos harnesses antes de preparar/escribir/compilar: seis
+  pruebas negativas por CLI conservan bytes y árbol de archivos ajenos; sólo
+  fixtures sintéticas exactas permiten rerun. Este cambio sólo afecta tests y
+  no requirió recompilar hosts ni guest.
 
 Los binarios/logs y `cpu-results.json` quedan en el árbol privado
 `pruebas/windows64-cpu-gate`. La única advertencia de compilación del host es

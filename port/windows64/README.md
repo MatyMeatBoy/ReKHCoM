@@ -76,6 +76,10 @@ Host compiled with LLVM MinGW and SDL3 x64. --test checks:
 - `port/tools/test_launcher_cpu_gate.py --work PRIVATE_DIR --toolchain LLVM_MINGW`
   executes the production Launch consumer with fake CPU/process boundaries:
   both feature states, Auto/Force32/Force64, saved preference and missing files.
+Both CPU test CLIs reject existing non-synthetic persistent/launcher fixture
+files before preparing sources or writing anything; exact known test fixtures
+permit reruns. `port/tools/test_cpu_fixture_safety.py --work PRIVATE_DIR` verifies
+all six protected paths by invoking the real CLIs with unrelated contents.
 
 These CPU tests verify compatibility policy, not an attribution of issue360.
 Pedro reports Windows11 x64; his CPU and exception code remain unknown.

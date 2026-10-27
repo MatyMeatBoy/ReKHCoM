@@ -10,6 +10,14 @@ import subprocess
 ROOT=Path(__file__).resolve().parents[2]
 
 
+def preflight(work):
+    # Only this isolated subdirectory contains synthetic executable fixtures.
+    for name in ('rekhcom64.exe','guest-eu.bin','SDL3.dll'):
+        path=work/'launcher-fixtures/bin64'/name
+        if path.exists() and (not path.is_file() or path.read_bytes()!=b'fixture'):
+            raise SystemExit(f'Refusing to overwrite existing non-test launcher fixture: {path}')
+
+
 def function(source,signature):
     start=source.index(signature+' {');brace=source.index('{',start);end=brace+1;depth=1
     while depth:
@@ -21,7 +29,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--toolchain',type=Path,required=True)
-    a=p.parse_args();a.work=a.work.resolve();a.work.mkdir(parents=True,exist_ok=True)
+    a=p.parse_args();a.work=a.work.resolve();preflight(a.work);a.work.mkdir(parents=True,exist_ok=True)
     code=r'''#include <windows.h>
 #include <filesystem>
 #include <fstream>
