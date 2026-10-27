@@ -1,6 +1,6 @@
 # OptiPort — batería ReKHCoM 2.1
 
-Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` identifica el método aplicado en esta revisión; los tickets y resultados del juego se mantienen aquí, no en la skill general.
+Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` corresponde al commit público `0b6edd3`; incluye sus referencias locales para funcionar sin consultar otros repositorios. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
 
 ## Avance comprobable
 
