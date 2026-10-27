@@ -230,5 +230,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-enemy-gauge-length | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:19.077162+00:00 |
 | hud-green-border-quality | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:27.178285+00:00 |
 | sintesis-requisito-hd-fix | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:33.407751+00:00 |
+| anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | pendiente | — | — | — | 2026-10-27T14:56:40.246238+00:00 |
 
 Integrador: libre
