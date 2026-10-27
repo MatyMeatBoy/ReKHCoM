@@ -1,8 +1,9 @@
 # HD EN/JP: investigación y traspaso 2.1 — 27/10/2026
 
-Tarea única: `launcher-hd-media-language-selection-v21`, cola autoritativa
-`coordination/art-queue`. Investigación y primer incremento de detección/guía;
-selección e imports por idioma pendientes. No
+Tareas: `launcher-hd-media-language-selection-v21` (PR327) y
+`launcher-hd-media-language-variants-v21` (segundo incremento para revisión),
+cola autoritativa `coordination/art-queue`. Detección/guía, imports aislados
+y selección EN/JP implementados; QA de dispositivos y fuentes reales pendiente. No
 descargar contenido, cambiar idioma de Steam ni ejecutar el juego fuente en
 esta fase. La entrega Windows/QA activa sigue su propio carril.
 
@@ -113,10 +114,78 @@ import EN previo y prueba Epic/suelto desconocidos. Syntax-only del launcher
 Windows i686 con SDL3 real pasa. No se hizo build pesado, ejecución de Steam,
 descarga ni verificación auditiva/hardware/UI renderizada.
 
-## Siguiente PR: imports y playback EN/JP
+## Segundo incremento implementado: imports y playback EN/JP
 
-Seguimiento separado: `launcher-hd-media-language-variants-v21`, dependiente de
-este primer incremento. Propuesta concreta para revisar antes de implementarlo:
+Rama `feat/hd-media-language-variants`, apilada sobre el primer incremento.
+Implementado para revisión; no forma parte de la prerelease de crash congelada
+en `e71c9692c`, ni se afirma verificado con audio/instalación JP real.
+
+- El usuario etiqueta la fuente EN o JP y confirma expresamente que es su audio;
+  fuentes desconocidas también requieren esa declaración. No se anuncia
+  verificación auditiva automática ni se relabela el import antiguo.
+- `hd/media/{en,ja}/g-<id>/` contiene películas, escenas, subtítulos, posters,
+  `media.meta` (etiqueta declarada, huella, calidad e inventario/tamaños) y
+  `source.info` privado con procedencia Steam/ruta. Las generaciones son
+  inmutables. Un `active.txt` pequeño referencia por separado la generación de
+  películas y la de escenas; se reemplaza de forma atómica después de validar
+  todo el trabajo solicitado. Actualizar una parte conserva la otra.
+- La importación exige las seis piezas básicas o las 100 escenas del mapa/extras
+  según lo pedido. Cada MP4 debe estar completo; se verifica la fuente antes y
+  después del trabajo. Caché reutilizable exige la misma huella, calidad y todos
+  los archivos requeridos. Cancelación, fuente cambiante, corrupción o fallo de
+  activación conservan el índice anterior y los archivos fuente. Un fallo de
+  activación puede dejar una generación completa sin referencia, recuperable
+  para la limpieza posterior; nunca se elimina una generación buena activa.
+- Ajuste `hd_media_language=0|1|2`: Auto/legacy, EN, JP. Selector en el launcher y página «HD movie audio» del menú del juego
+  desktop/Android; variantes ausentes/incompletas en gris con ayuda/reescaneo.
+  Los toggles y readiness del juego usan la disponibilidad del componente
+  seleccionado. Auto conserva rutas antiguas sin atribuir idioma; selección
+  explícita no cae en otra voz ni en legacy: falta/archivo inválido devuelve
+  fallo y conserva el camino GBA. Texto/subtítulos y Undub GBA permanecen separados.
+- Resolver compartido en C, con apertura UTF-8 en Windows, valida índice,
+  etiqueta, rutas, inventario y tamaño/cajas MP4. Galería y sidecars usan ruta de
+  generación: cambiarla invalida el trabajo/poster previo incluso con el mismo
+  evento seleccionado. Subtítulos se buscan en la generación y después en el
+  archivo legacy del idioma de texto; no cambia la banda sonora instrumental.
+- Exporta solo generaciones activas, nunca `.stage-*`, generaciones huérfanas ni
+  `source.info` con rutas personales. ZIP/carpeta desktop, pack portable y SAF
+  Android difieren activación hasta validar los archivos referenciados. Una
+  generación ya existente no se reemplaza. Se preserva el paquete/carpeta fuente
+  de variantes. El marcador del pack ahora incluye nombres/CRC/tamaños del
+  directorio central: un ZIP diferente del mismo tamaño ya no se omite.
+
+Verificación ligera: transacción/resolver de producción (EN→JP, fingerprint,
+cancelación, MP4 inválido, fallo de swap, Auto legacy, traversal, componente
+independiente); instalador miniz/pack real (índice primero, copia incompleta,
+paquete cambiado del mismo tamaño y archivos antiguos intactos); galería async
+(generación cambiada del mismo evento y descarte del worker previo), regresión
+bridge reset/texture y source probe. Syntax-only launcher Windows i686 y NDK
+ARMv7/ARM64 y Java app+SDL con android.jar pasan. Sin build pesado ni instalación
+de Steam/Quiver. Los helpers no certifican autenticidad ni idioma del contenido.
+
+El menú del juego cubre Linux/Steam Deck sin launcher C++ y no requiere Steam
+en Android. EN/JP ausente queda deshabilitado; reescaneo invalida disponibilidad
+y rutas. La guía abre HTTPS en hosts compatibles y muestra la URL en guests.
+La validación completa se guarda por generación inmutable; consultas de UI y
+previews reutilizan resultados y se invalidan al abrir menú/reescaneo/cambio de
+idioma. No se recorre todo el material por frame ni se depende de mtime guest.
+
+Límite explícito JP: los dos clips cortos que usan offsets EN de 170/222 segundos
+conservan el fallback GBA hasta comprobar sus tiempos con una fuente JP propia.
+Las escenas completas JP parten desde cero. No aplicar offsets EN a audio JP.
+El parser numérico es acotado y evita depender de sscanf %llu en ABI guest.
+
+Prueba siguiente del integrador: builds completos seriales y fixtures reales en
+Windows/Linux/Android; importar/escuchar fuente autorizada EN y JP, subtítulos
+independientes, interrupción durante copia/export y retorno/fallback de historia.
+SAF/ZIP reales en dispositivo y cortes de energía no se ejercitaron aquí. No
+prometer persistencia perfecta tras fallo de disco/energía ni un idioma cuyo
+material no se haya obtenido y validado con el propietario.
+
+### Plan anterior, conservado como decisión de diseño
+
+Seguimiento: `launcher-hd-media-language-variants-v21`, dependiente del primer
+incremento. Propuesta original (refinada arriba con generaciones atómicas):
 `hd/media/en/{movies,scenes}` y `hd/media/ja/{movies,scenes}`, catálogo de
 procedencia por archivo y ajuste independiente `hd_media_language=auto|en|ja`.
 `auto` conserva el comportamiento legacy; EN/JP explícito exige esa variante
@@ -159,3 +228,19 @@ desconocido/faltante, off/on y fallback al cartucho sin saltar historia.
 La afirmación histórica «PC solo trae audio inglés» en `HD_MOD.md` se corrigió
 para describir solo la fuente inspeccionada entonces; no generalizarla al producto
 actual con audio JP. No modificar esas copias antiguas para acomodar la señal.
+
+### Revisión independiente: manifiesto mixto — 27/10
+
+P1 de `device_profiles_sol`: `PortHdMediaCheck` comparaba `wanted=NULL`
+cuando una inspección completa encontraba un miembro del otro componente.
+Repro con el productor real `ImportMediaVariant(movies=true, scenes=true)`
+(cargar todo), seguido de Inspect/core availability: RED AV0xc0000005.
+Se exige wanted no nulo antes de comparar un miembro específico. GREEN con
+manifest mixto movies/scenes, disponibilidad independiente tras truncar una
+escena, y restauración miniz real completa/mixta o incompleta preservando
+ambos índices activos. No atribuir esta regresión a QA de fuente/dispositivo.
+
+Revisión P2 del mismo carril: transferencia incompleta preservaba active pero
+retornaba1 y sugería borrar el ZIP. Ahora retorna-1 y pide conservar/reparar
+el paquete; no escribe marca de éxito. Harness miniz real exige código y log
+correctos para componente incompleto y manifiesto mixto parcialmente copiado.

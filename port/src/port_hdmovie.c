@@ -21,6 +21,8 @@
 #include "port/port.h"
 #include "port/port_scene_gallery.h"
 #include "port/port_hd_poster.h"
+#include "port/port_hd_media.h"
+#include <SDL3/SDL.h>
 
 #if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
 #include <stdio.h>
@@ -32,17 +34,43 @@ static int sStartAt;
 
 /* Re:CoM's story scenes (zz_event_*) live in hd/scenes, the opening, credits and endings in hd/movies; a scene
    imported before 23/10 sits in hd/movies and is still found there. */
+static int sMoviePathCached, sMoviePathResult, sMoviePathLanguage;
+static uint64_t sMoviePathAt;
+static char sMoviePathName[96], sMoviePathRoot[1024], sMoviePathValue[1600];
+void PortHdMovieInvalidatePaths(void) { sMoviePathCached = 0; }
+int PortHdMovieResolvePath(const char* name, char* out, size_t size) {
+    const char* root = PortConfigPath("");
+    uint64_t now = SDL_GetTicks();
+    if (!name || !out || !size) return 0;
+    if (!sMoviePathCached || strcmp(name, sMoviePathName) || strcmp(root, sMoviePathRoot) ||
+        sMoviePathLanguage != gPortConfig.hdMediaLanguage || now - sMoviePathAt >= 1000) {
+        SDL_strlcpy(sMoviePathName, name, sizeof(sMoviePathName));
+        SDL_strlcpy(sMoviePathRoot, root, sizeof(sMoviePathRoot));
+        sMoviePathLanguage = gPortConfig.hdMediaLanguage;
+        sMoviePathResult = PortHdMediaResolve(root, sMoviePathLanguage, name, sMoviePathValue, sizeof(sMoviePathValue));
+        sMoviePathAt = now; sMoviePathCached = 1;
+    }
+    if (!sMoviePathResult || strlen(sMoviePathValue) >= size) { out[0] = 0; return 0; }
+    SDL_strlcpy(out, sMoviePathValue, size);
+    return 1;
+}
 static void MoviePath(const char* name, char* out, size_t size) {
-    if (strncmp(name, "zz_event_", 9) == 0) {
-        FILE* f;
-        snprintf(out, size, "%s%s.mp4", PortConfigPath("hd/scenes/"), name);
-        f = fopen(out, "rb");
-        if (f) {
-            fclose(f);
-            return;
+    PortHdMovieResolvePath(name, out, size);
+}
+static void MovieSubtitlePath(const char* name, const char* language, char* out, size_t size) {
+    char movie[1600];
+    if (gPortConfig.hdMediaLanguage && PortHdMovieResolvePath(name, movie, sizeof(movie))) {
+        char* slash = strrchr(movie, '/');
+        if (slash) { *slash = 0; slash = strrchr(movie, '/'); }
+        if (slash) {
+            FILE* f;
+            *slash = 0;
+            snprintf(out, size, "%s/subs/%s.%s.txt", movie, name, language);
+            f = PortHdMediaOpenFile(out);
+            if (f) { fclose(f); return; }
         }
     }
-    snprintf(out, size, "%s%s.mp4", PortConfigPath("hd/movies/"), name);
+    snprintf(out, size, "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, language);
 }
 
 /* include/evt/mode_movie.h: MOVIE_OPENING 1, MOVIE_6F_GOAL, MOVIE_12F_E2, MOVIE_ENDING, MOVIE_RIKU_ENDING */
@@ -130,7 +158,7 @@ int PortHdSceneImported(const char* movie) {
     char path[1024];
     FILE* f;
     MoviePath(movie, path, sizeof(path));
-    f = fopen(path, "rb");
+    f = PortHdMediaOpenFile(path);
     if (f)
         fclose(f);
     return f != NULL;
@@ -142,7 +170,10 @@ int PortHdMoviePlayName(const char* movie) {
 /* The gallery uses the same mapping and movie offsets as live gameplay; never guess a file from an event number. */
 const char* PortHdGalleryMovieName(int sceneId) {
     int i, startAt;
-    if (PORT_SCENE_IS_MOVIE(sceneId)) return MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt);
+    if (PORT_SCENE_IS_MOVIE(sceneId)) {
+        const char* name = MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt);
+        return PortHdMediaClipAllowed(gPortConfig.hdMediaLanguage, startAt) ? name : NULL;
+    }
     for (i = 0; i < PortHdSceneCount(); i++)
         if (kHdScenes[i].eventId == sceneId) return kHdScenes[i].movie;
     return NULL;
@@ -205,6 +236,11 @@ int PortHdMoviePlay(int movieId) {
         return 1;
     }
     sEndingScenePlayed = 0;
+    if (!PortHdMediaClipAllowed(gPortConfig.hdMediaLanguage, startAt)) {
+        sLastScene = NULL;
+        PortLog("hd movie: JP clipped timing not validated; using original cartridge movie");
+        return 0;
+    }
     sStartAt = startAt;
     played = PlayFile(name);
     sStartAt = 0;
@@ -267,17 +303,7 @@ static int ReadImportedPoster(const char* movie, uint32_t* out, int ow, int oh, 
 }
 
 int PortHdScenePreviewPath(const char* name, char* out, size_t size) {
-    char path[1024];
-    SDL_PathInfo info;
-    int n;
-    if (!name || !*name || !out || !size) return 0;
-    /* SDL's path API uses UTF-8 on Windows too; stdio's ANSI probe would
-       miss a scene in a Unicode data directory and choose the legacy folder. */
-    SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/scenes/"), name);
-    if (strncmp(name, "zz_event_", 9) || !SDL_GetPathInfo(path, &info))
-        SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/movies/"), name);
-    n = SDL_snprintf(out, size, "%s", path);
-    return n >= 0 && (size_t)n < size;
+    return PortHdMovieResolvePath(name, out, size);
 }
 
 int PortHdScenePreview(const char* name, uint32_t* out, int ow, int oh, int second) {
@@ -578,8 +604,8 @@ static int LoadSubs(Subs* s, const char* name) {
         return 0;
     SubsOrder(order);
     for (i = 0; i < 2 && !f; i++) {
-        SDL_snprintf(path, sizeof(path), "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, order[i]);
-        f = fopen(path, "rb");
+        MovieSubtitlePath(name, order[i], path, sizeof(path));
+        f = PortHdMediaOpenFile(path);
     }
     if (!f)
         return 0;
@@ -1488,9 +1514,10 @@ static int PlayFile(const char* name) {
     const char* order[2];
     int i, played;
     MoviePath(name, path, sizeof(path));
+    if (!path[0]) return 0;
     SubsOrder(order);
     for (i = 0; i < 2; i++)
-        SDL_snprintf(subs[i], sizeof(subs[i]), "%s%s.%s.txt", PortConfigPath("hd/subs/"), name, order[i]);
+        MovieSubtitlePath(name, order[i], subs[i], sizeof(subs[i]));
     SDL_strlcpy(font, PortConfigPath("assets/fonts/KHMenu.otf"), sizeof(font));
 #if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
 #ifdef PORT_LINUX64_GUEST
@@ -1523,6 +1550,12 @@ static int PlayFile(const char* name) {
     return played != 0;
 }
 #else
+void PortHdMovieInvalidatePaths(void) {}
+int PortHdMovieResolvePath(const char* name, char* out, size_t size) {
+    (void)name;
+    if (out && size) out[0] = 0;
+    return 0;
+}
 int PortHdSceneCount(void) {
     return 0;
 }

@@ -14,8 +14,10 @@ Las observaciones de audio inglés de abajo corresponden a la fuente inspecciona
 el 21/10, no a todas las instalaciones. El launcher ahora inspecciona ACF y
 archivos locales sin cambiar Steam: muestra señales EN/JP o desconocido y separa
 texto/subtítulos, Undub GBA y audio de vídeo HD. El idioma de los imports legacy
-no está verificado; la selección de variantes/imports EN/JP queda en el siguiente
-incremento. Ver [evidencia y plan](HD_MEDIA_LANGUAGE_SELECTION_V21.md).
+no está verificado. El segundo incremento para revisión permite etiquetar e
+importar EN/JP en generaciones separadas y elegir audio HD en el launcher;
+requiere QA real y no está publicado en la prerelease de crash actual.
+Ver [evidencia y estado](HD_MEDIA_LANGUAGE_SELECTION_V21.md).
 
 ## Lo que hay en la instalación (Steam: `steamapps/common/KINGDOM HEARTS -HD 1.5+2.5 ReMIX-`)
 

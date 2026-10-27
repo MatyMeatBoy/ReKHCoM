@@ -188,6 +188,7 @@ typedef struct PortConfig {
     int crtOutput;             /* PORT_VIEW_CRT: 0 native 320x240, 1 super-res 1920x240 (x6), 2 2560x240 (x8), 3 480p (2x); last: the
                                   positional defaults stay as they are */
     int controllerPrompts;     /* experimental display only: 0 Original, 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation */
+    int hdMediaLanguage;       /* appended: 0 legacy/Auto, 1 user-labelled EN, 2 user-labelled JP; not text/Undub */
 } PortConfig;
 
 extern PortConfig gPortConfig;
@@ -272,6 +273,10 @@ void PortHdMusicFrame(void);     /* port_hdmusic.c: the imported Re:CoM soundtra
 void PortHdMusicShutdown(void);
 const char* PortHdMusicTrack(int song); /* the Re:CoM track of a cartridge song, NULL if none */
 int PortHdMoviePlay(int movieId);  /* port_hdmovie.c: 1 if the imported HD movie played in place of the cartridge's */
+int PortHdMovieResolvePath(const char* name, char* out, size_t size);
+void PortHdMovieInvalidatePaths(void);
+void PortHdMediaInvalidate(void);
+int PortHdMediaVariantAvailable(int language, int component);
 void PortAudioMovieHold(int hold); /* port_audio.c: 1 fades the game's sound out for an HD movie, 0 brings it back */
 int PortHdScenePlay(int eventId);  /* port_hdmovie.c: 1 if the event's imported Re:CoM scene played (full mod) */
 /* badgeIndex: position in the official set (its badges.png atlas); -1 = none */

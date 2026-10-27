@@ -51,6 +51,7 @@
 #define PORT_PAD_AXIS_BASE 100
 #include "../include/port/port_zoom.h"
 #include "runtime_selection.h"
+#include "../include/port/port_hd_media.h"
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl3.h"
@@ -455,7 +456,7 @@ static const Setting kSettings[] = {
     { "config_version", PORT_ZOOM_CONFIG_VERSION }, { "view_mode", 4 },   { "zoom", PORT_ZOOM_DEFAULT },         { "scale_mode", 0 },
     { "filter", 0 },         { "fullscreen", 0 },  { "vsync", 1 },        { "hud_size", 1 },
     { "narrow_fit", 1 },     { "scanlines", 0 },   { "color_correction", 0 }, { "show_fps", 0 }, { "experimental_frame_skip", 1 }, { "discord_presence", 1 }, { "net_stats", 1 }, { "net_delay", 0 }, { "hd_movies", 1 }, { "hd_music", 1 }, { "hd_scenes", 0 }, { "hd_subtitles", 1 }, { "hd_cards", 0 }, { "hd_title", 0 },
-    { "graphics_mode", 0 }, { "graphics_mode_applied", 0 }, { "gba_border", 0 },
+    { "graphics_mode", 0 }, { "graphics_mode_applied", 0 }, { "gba_border", 0 }, { "hd_media_language", 0 },
     { "window_scale", 4 },   { "fullscreen_width", 0 }, { "fullscreen_height", 0 },
     { "master_volume", 100 }, { "music_volume", 100 }, { "sfx_volume", 100 },
     { "dodge_button", 1 },   { "stock_button", 1 }, { "pad_layout", 0 }, { "experimental_moogle_notice", 0 }, { "hd_text", 0 }, { "hd_font", 0 },
@@ -1618,7 +1619,8 @@ static void PageHome(SDL_Window* window) {
     {
         std::error_code ec;
         bool hd = fs::exists(sRoot / "hd" / "movies" / "ROP.mp4", ec) || fs::exists(sRoot / "hd" / "music" / "Title.ogg", ec) ||
-                  fs::exists(sRoot / "hd" / "sprites" / "gCardWep01Tiles.png", ec);
+                  fs::exists(sRoot / "hd" / "sprites" / "gCardWep01Tiles.png", ec) ||
+                  fs::exists(sRoot / "hd/media/en/active.txt", ec) || fs::exists(sRoot / "hd/media/ja/active.txt", ec);
         int on = Ini("graphics_mode") == 1;
         ImGui::Spacing();
         if (HomeFeatureRow(T("Modo 1.5 HD", "1.5 HD mode"),
@@ -1810,9 +1812,11 @@ static void ApplyGraphicsMode(int mode) {
     Ini("hd_text") = hd;
     Ini("hd_cards") = Ini("hd_title") = hd && has("sprites/gCardWep01Tiles.png");
     Ini("hd_music") = hd && has("music/Title.ogg");
-    Ini("hd_movies") = !classic && has("movies/ROP.mp4"); /* HD intros: on unless GBA classic, as in the game */
-    Ini("hd_subtitles") = !classic && has("subs/ROP.us.txt");
-    Ini("hd_scenes") = hd && (has("scenes/zz_event_011.mp4") || has("movies/zz_event_011.mp4"));
+    int media = std::clamp(Ini("hd_media_language"), 0, 2);
+    Ini("hd_movies") = !classic && (media ? PortHdMediaAvailable(sRoot.u8string().c_str(), media, 0) : has("movies/ROP.mp4"));
+    Ini("hd_subtitles") = !classic; /* text language remains independent of audio */
+    Ini("hd_scenes") = hd && (media ? PortHdMediaAvailable(sRoot.u8string().c_str(), media, 1)
+                                      : (has("scenes/zz_event_011.mp4") || has("movies/zz_event_011.mp4")));
     Ini("dodge_button") = Ini("stock_button") = !classic;
     Ini("gba_border") = classic ? (Ini("gba_border") ? Ini("gba_border") : 1) : 0;
 }

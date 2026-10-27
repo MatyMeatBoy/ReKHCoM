@@ -32,6 +32,7 @@ void PortLog(const char* fmt, ...) { (void)fmt; }
 int PortUiMenuCanvas(void) { return 0; }
 int PortUndubAvailable(void) { return 0; }
 void PortSetQolButtons(int on) { (void)on; }
+void PortHdMovieInvalidatePaths(void) {} /* movie module is outside this config/input fixture */
 static int sZoomSteps[2];
 void PortUiZoomStep(int dir) { sZoomSteps[dir > 0]++; }
 

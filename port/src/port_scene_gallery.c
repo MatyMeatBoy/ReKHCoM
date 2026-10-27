@@ -75,6 +75,7 @@ static int sHdReplayEvent = -1;
 static SDL_Texture* sPreviewTexture;
 static SDL_Renderer* sPreviewRenderer;
 static int sTextureSerial = -1, sTextureW, sTextureH;
+static char sPreviewMediaPath[1024];
 #if defined(_WIN32) || defined(PORT_LINUX)
 typedef struct PreviewJob {
     SDL_Thread* thread;
@@ -133,13 +134,19 @@ void PortSceneGalleryPreviewSize(int* width, int* height) { *width = sPreviewW; 
 const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
     extern int PortScenePosterPreview(int, uint32_t*, int*, int*);
     extern int PortScenePosterDecode(const void*, size_t, uint32_t*, int*, int*);
+    char currentMedia[1024] = "";
+    if (hd) {
+        const char* name = PortHdGalleryMovieName(eventId);
+        if (name) PortHdMovieResolvePath(name, currentMedia, sizeof(currentMedia));
+    }
     PortSceneGalleryPreviewPoll();
-    if (eventId != sPreviewEvent || hd != sPreviewHd) {
+    if (eventId != sPreviewEvent || hd != sPreviewHd || (hd && strcmp(currentMedia, sPreviewMediaPath))) {
         const char* movie;
         char path[1024], sidecar[1200];
         void* data = NULL;
         size_t size = 0;
         ++sPreviewSerial; sPreviewEvent = eventId; sPreviewHd = hd;
+        SDL_strlcpy(sPreviewMediaPath, currentMedia, sizeof(sPreviewMediaPath));
         sPreviewReady = 0; sPreviewAttempted = 0; sPreviewWaitAt = SDL_GetTicks(); sTextureSerial = -1;
         if (!hd) {
             sPreviewReady = PortScenePosterPreview(eventId, sPreview, &sPreviewW, &sPreviewH);
@@ -153,11 +160,7 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
 #if defined(_WIN32) || defined(PORT_LINUX)
             if (!PortHdScenePreviewPath(movie, path, sizeof(path))) path[0] = 0;
 #else
-            FILE* f;
-            SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/scenes/"), movie);
-            f = fopen(path, "rb");
-            if (f) fclose(f);
-            else SDL_snprintf(path, sizeof(path), "%s%s.mp4", PortConfigPath("hd/movies/"), movie);
+            SDL_strlcpy(path, currentMedia, sizeof(path));
 #endif
             if (PortHdPosterPath(path, PortHdGalleryMovieOffset(eventId) + 1, sidecar, sizeof(sidecar))) {
 #if defined(_WIN32) || defined(PORT_LINUX)
