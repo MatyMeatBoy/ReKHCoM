@@ -39,5 +39,6 @@ def main():
         test = OUT / 'test_windows64.exe'
         subprocess.check_call(flags + [str(HERE / 'test_windows64.c'), str(HERE / 'test_preserved.S'), '-lSDL3', '-lm', '-o', str(test)])
         subprocess.check_call([str(test)], cwd=OUT)
+        subprocess.check_call([sys.executable, str(HERE / "test_boot_status.py"), str(OUT / "rekhcom64.exe")])
     print(OUT)
 if __name__ == '__main__': main()

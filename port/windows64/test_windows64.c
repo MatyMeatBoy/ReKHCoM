@@ -71,6 +71,23 @@ int main(void) {
         SDL_DestroyWindow(sWindow); sWindow = NULL;
         SDL_Quit();
     }
+    {
+        char tmp[MAX_PATH], dest[1024], source[1024];
+        assert(GetTempPathA(sizeof(tmp), tmp));
+        snprintf(dest, sizeof(dest), "%srekhcom_abi_\xc3\xb1.sav", tmp);
+        snprintf(source, sizeof(source), "%s.tmp", dest);
+        int h = B_fopen(dest, 1); assert(h >= 0);
+        assert(B_fwrite(h, "old", 3) == 3); assert(B_fclose(h) == 0);
+        h = B_fopen(source, 1); assert(h >= 0);
+        assert(B_fwrite(h, "new-save", 8) == 8); assert(B_fclose(h) == 0);
+        assert(B_rename(source, dest) == 0);
+        h = B_fopen(dest, 0); assert(h >= 0);
+        char bytes[9] = {0};
+        assert(B_fread(h, bytes, 8) == 8); assert(B_fclose(h) == 0);
+        assert(!strcmp(bytes, "new-save"));
+        assert(B_stat(source) == 0 && B_stat(dest) == 1);
+        assert(B_remove(dest) == 0);
+    }
     assert(MapFixed(0x02000000, 0x10000));
     *(volatile uint32_t*)(uintptr_t)0x02000000 = 0x12345678;
     assert(!MapFixed(0x02000000, 0x10000));

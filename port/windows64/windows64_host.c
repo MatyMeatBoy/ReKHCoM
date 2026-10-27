@@ -17,6 +17,7 @@
 #include <string.h>
 #include <windows.h>
 #include <direct.h>
+#include <io.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -34,9 +35,20 @@ static void Log(const char* fmt, ...) {
     fprintf(stderr, "[rekhcom64] %s\n", text);
 }
 
+/* Windows filesystem APIs consume UTF-16; the guest and SDL pass UTF-8. */
+static int WidePath(const char* path, wchar_t* out, int cap) {
+    return path && MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, out, cap) > 0;
+}
+static FILE* Utf8Open(const char* path, const char* mode) {
+    wchar_t wp[4096], wm[16];
+    if (!WidePath(path, wp, 4096) || !WidePath(mode, wm, 16)) return NULL;
+    return _wfopen(wp, wm);
+}
+#define fopen Utf8Open
+
 /* ---- the basics and files ---- */
 static FILE* sFiles[64];
-typedef struct { HANDLE handle; WIN32_FIND_DATAA entry; int first; } HostDir;
+typedef struct { HANDLE handle; WIN32_FIND_DATAW entry; int first; } HostDir;
 static HostDir sDirs[16];
 static void H_log(const char* s) { fprintf(stderr, "%s\n", s); }
 static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
@@ -69,16 +81,27 @@ static int H_fseek(int h, int32_t off, int whence) { return fseek(sFiles[h], off
 static int H_ftell(int h) { return (int)ftell(sFiles[h]); }
 static int H_fclose(int h) { int r = fclose(sFiles[h]); sFiles[h] = NULL; return r; }
 static int H_fflush(int h) { return fflush(sFiles[h]); }
-static int H_stat(const char* p) { struct stat s; return stat(p, &s) ? 0 : S_ISDIR(s.st_mode) ? 2 : 1; }
-static int H_remove(const char* p) { return remove(p); }
-static int H_rename(const char* a, const char* b) { return rename(a, b); }
-static int H_mkdir(const char* p) { return _mkdir(p); }
+static int H_stat(const char* p) {
+    wchar_t wp[4096];
+    if (!WidePath(p, wp, 4096)) return 0;
+    DWORD attrs = GetFileAttributesW(wp);
+    return attrs == INVALID_FILE_ATTRIBUTES ? 0 : (attrs & FILE_ATTRIBUTE_DIRECTORY) ? 2 : 1;
+}
+static int H_remove(const char* p) { wchar_t wp[4096]; return WidePath(p, wp, 4096) ? _wremove(wp) : -1; }
+static int H_rename(const char* a, const char* b) {
+    wchar_t wa[4096], wb[4096];
+    if (!WidePath(a, wa, 4096) || !WidePath(b, wb, 4096)) return -1;
+    return MoveFileExW(wa, wb, MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) ? 0 : -1;
+}
+static int H_mkdir(const char* p) { wchar_t wp[4096]; return WidePath(p, wp, 4096) ? _wmkdir(wp) : -1; }
 static int H_dir_open(const char* p) {
     char pattern[1200];
     if (snprintf(pattern, sizeof(pattern), "%s/*", p) >= (int)sizeof(pattern)) return -1;
     for (int i = 0; i < 16; i++) {
         if (!sDirs[i].handle) {
-            HANDLE h = FindFirstFileA(pattern, &sDirs[i].entry);
+            wchar_t wp[4096];
+            if (!WidePath(pattern, wp, 4096)) return -1;
+            HANDLE h = FindFirstFileW(wp, &sDirs[i].entry);
             if (h == INVALID_HANDLE_VALUE) return -1;
             sDirs[i].handle = h;
             sDirs[i].first = 1;
@@ -93,9 +116,9 @@ static int H_dir_next(int d, char* name, int cap) {
     dir = &sDirs[d];
     do {
         if (dir->first) dir->first = 0;
-        else if (!FindNextFileA(dir->handle, &dir->entry)) return 0;
+        else if (!FindNextFileW(dir->handle, &dir->entry)) return 0;
         if (dir->entry.cFileName[0] == '.') continue;
-        snprintf(name, (size_t)cap, "%s", dir->entry.cFileName);
+        if (!WideCharToMultiByte(CP_UTF8, 0, dir->entry.cFileName, -1, name, cap, NULL, NULL)) return 0;
         return 1;
     } while (1);
 }
@@ -369,10 +392,20 @@ static int __attribute__((sysv_abi)) B_thread(int op, uint32_t a, uint32_t b, ui
 #define HM(name, fn) [HF_##name] = (uint64_t)(uintptr_t)B_##name
 
 int main(int argc, char** argv) {
-    const char* image = argc > 1 ? argv[1] : "guest-eu.bin";
-    for (int i = 2; i < argc; i++)
-        if (!strcmp(argv[i], "--data") && i + 1 < argc)
+    const char* image = "guest-eu.bin";
+    const char* bootStatus = NULL;
+    for (int i = 1; i < argc; i++) {
+        const char* arg = argv[i];
+        if ((!strcmp(arg, "--data") || !strcmp(arg, "--data-dir")) && i + 1 < argc)
             snprintf(sData, sizeof(sData), "%s", argv[++i]);
+        else if (!strcmp(arg, "--rom") && i + 1 < argc) _putenv_s("KHCOM_ROM", argv[++i]);
+        else if (!strcmp(arg, "--language") && i + 1 < argc) _putenv_s("KHCOM_LANGUAGE", argv[++i]);
+        else if (!strcmp(arg, "--boot-status") && i + 1 < argc) bootStatus = argv[++i];
+        else if (arg[0] != '-') image = arg;
+        else { Log("unknown or incomplete argument: %s", arg); return 2; }
+    }
+    /* The launcher supplies a unique marker path. Remove a stale marker before any boot checks. */
+    if (bootStatus) H_remove(bootStatus);
     _putenv_s("KHCOM_DATA", sData);
     {
         /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
@@ -468,6 +501,16 @@ int main(int argc, char** argv) {
     memcpy(table, t, sizeof(t));
     typedef int (__attribute__((sysv_abi)) *GuestBoot)(uint32_t);
     GuestBoot boot = (GuestBoot)(uintptr_t)h.boot;
+    if (bootStatus) {
+        FILE* marker = fopen(bootStatus, "wb");
+        if (!marker) { Log("cannot create boot status marker"); SDL_Quit(); return 4; }
+        int wrote = fwrite("guest-entered\n", 1, 14, marker) == 14;
+        int flushed = fflush(marker) == 0 && _commit(_fileno(marker)) == 0;
+        int closed = fclose(marker) == 0;
+        if (!wrote || !flushed || !closed) {
+            H_remove(bootStatus); SDL_Quit(); return 4;
+        }
+    }
     int rc = boot(h.stackTop);
     SDL_Quit();
     return rc;
