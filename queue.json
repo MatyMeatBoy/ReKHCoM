@@ -5331,16 +5331,23 @@
     "android-stale-sprites-desktop-guard": {
       "id": "android-stale-sprites-desktop-guard",
       "piece": "Android launcher excludes desktop-only stale sprite reimport callbacks",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-android-guard",
       "created_at": "2026-10-27T09:01:24.819787+00:00",
-      "updated_at": "2026-10-27T09:04:14.742174+00:00",
+      "updated_at": "2026-10-27T09:04:23.908388+00:00",
       "branch": "fix/android-stale-sprites-guard",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/329",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": "Actual NDK ARMv7 compiler errors HdStaleSprites -> hd::StaleSprites and hd::Job::Say unavailable in hd_android.inc",
-      "evidence": [],
-      "claimed_at": "2026-10-27T09:01:52.354235+00:00"
+      "evidence": [
+        {
+          "at": "2026-10-27T09:04:23.908388+00:00",
+          "owner": "codex-android-guard",
+          "detail": "Verified and reviewed; merged fa4d4899385b2072d0ee3401e8dd72a4fcce6c30"
+        }
+      ],
+      "claimed_at": "2026-10-27T09:01:52.354235+00:00",
+      "completed_at": "2026-10-27T09:04:23.908388+00:00"
     }
   },
   "integrator": {
@@ -5349,7 +5356,7 @@
     "created_at": "2026-10-27T09:03:03.438450+00:00",
     "updated_at": "2026-10-27T09:03:03.438450+00:00"
   },
-  "updated_at": "2026-10-27T09:04:14.742174+00:00",
+  "updated_at": "2026-10-27T09:04:23.908388+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
