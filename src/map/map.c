@@ -915,7 +915,8 @@ s32 MapWallFaceIsUnreserved(s16 x, s16 y, u16 width) {
 
     for (j = 0; j < width; j++) {
         for (i = 0; i < height; i++) {
-            cell = MapCellAt(x + j, y - i);
+            // @bug The upward scan can pass row zero: the GBA reads BIOS at NULL.
+            cell = BIOS_PTR(MapCellAt(x + j, y - i));
 
             if (cell->flags & MAP_CELL_FLAG_GMK_RESERVED) {
                 return FALSE;
