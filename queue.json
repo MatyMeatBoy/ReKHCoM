@@ -6445,10 +6445,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T16:54:53.851589+00:00"
+    },
+    "windows64-cpu-sse41-gate": {
+      "id": "windows64-cpu-sse41-gate",
+      "piece": "Validar requisito SSE4.1 antes del guest Windows64",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T16:56:57.396089+00:00",
+      "updated_at": "2026-10-27T16:56:57.396089+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro",
+      "reference": "port/progress/PLAN_V22.md",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:55:36.081326+00:00",
+  "updated_at": "2026-10-27T16:56:57.396089+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
