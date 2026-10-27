@@ -25,6 +25,9 @@ El usuario confirmó el lanzamiento y pidió limpiar la lista y preparar el trá
 - [ ] **Tienda Moguri (Cambiar naipes), números HD**: en la columna derecha el «2» de «02» sale deformado
   (como una Z con cola); en 3×04 y 4×01 la «x» y los dígitos se ven desalineados frente al resto. Arreglar
   directo (sin Atlas); revisar los 10 dígitos y la «x» en ambas columnas.
+- [ ] **Cartas HD pequeñas (lista de naipes): encaje de la imagen** como se ajustaron las de llave. Marcadas por el
+  usuario: Simba (retrato desborda/cortado), Genio (asoma por la derecha), carta verde de objeto (cubo azul
+  descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
 
 ## TRASPASO (Claude, 27/10): cómo retomar
 
