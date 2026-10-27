@@ -4788,10 +4788,10 @@
     "hudhd-hechizo-jefe": {
       "id": "hudhd-hechizo-jefe",
       "piece": "HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse",
-      "status": "en_curso",
-      "owner": "claude-hudhd2",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T06:31:13.675353+00:00",
-      "updated_at": "2026-10-27T06:37:38.634541+00:00",
+      "updated_at": "2026-10-27T06:37:42.922496+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
@@ -4801,6 +4801,11 @@
           "at": "2026-10-27T06:36:22.575455+00:00",
           "owner": "claude-hudhd",
           "detail": "released: 27/10 reproducible: KHCOM_BATTLE=179:4:0 (Hades), 1536x864, hd_hud=1, bot; etiqueta de sleight del jefe (p.ej. Llamarada, nativa GBA) junto a su carta abajo-centro; la carta HD (mayor) la tapa. Hoja: khcom-hd-reload/build/hudhd_hades_label.png. Propuesta: subir pila del jefe y etiqueta en modo HUD HD; revisar en Atlas."
+        },
+        {
+          "at": "2026-10-27T06:37:42.922496+00:00",
+          "owner": "claude-hudhd2",
+          "detail": "released: Código: gráficos gStockNameBoss* (card_catalog.c:7198/7268), tareas tipo gTaskDescStockNameSora (card_friend_card.c:1556); posición relativa a la carta activa del jefe. Para HUD HD: offset propio (solo gPortConfig.hdHud) que suba etiqueta y pila del jefe sobre la carta HD; capturar 179:4:0 a 1536x864 y subir propuesta con port/tools/art_review/import_image.py --data khcom-codex/build/art-review."
         }
       ],
       "claimed_at": "2026-10-27T06:37:38.634541+00:00"
@@ -4838,7 +4843,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T06:37:38.634541+00:00",
+  "updated_at": "2026-10-27T06:37:42.922496+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
