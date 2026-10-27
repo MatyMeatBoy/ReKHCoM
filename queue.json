@@ -4407,15 +4407,16 @@
     "save-bank-flush": {
       "id": "save-bank-flush",
       "piece": "Code: retain dirty SRAM and selected bank when persistence fails",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-save-bank",
       "created_at": "2026-10-27T05:17:35.135889+00:00",
-      "updated_at": "2026-10-27T05:17:35.135889+00:00",
+      "updated_at": "2026-10-27T05:17:41.943768+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "fix/save-bank-flush",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T05:17:41.943768+00:00"
     }
   },
   "integrator": {
@@ -4424,7 +4425,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:17:35.135889+00:00",
+  "updated_at": "2026-10-27T05:17:41.943768+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
