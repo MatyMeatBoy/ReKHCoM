@@ -182,5 +182,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-previews-both-modes-perf | Pendiente posterior al ZIP: identificar dos modos UI y perf previews por fases (entrada/p95/memoria/cache/precarga/cancelacion/calidad) | pendiente | — | — | Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64 | 2026-10-27T07:05:30.008628+00:00 |
 | previews-both-modes-visual-fallback | Regular UI para Claude: vista/previews ambos modos y fallback visual cuidado; identificar modos y coordinar rutas con perf antes de implementar | pendiente | — | — | Usuario 27/10/2026: Claude puede tomar pendientes regulares; previews pendientes posteriores ZIP | 2026-10-27T07:05:35.374969+00:00 |
 | gallery-counter-wording | Localized unlocked scenes counter and preview side fill | en_revision | device_profiles_sol | task/gallery-wording | — | 2026-10-27T07:10:33.879675+00:00 |
+| windows-runtime-preview-20261027 | Integrate verified Windows x64 runtime, launcher modes and protected states for preview ZIP | pendiente | — | — | — | 2026-10-27T07:18:13.939390+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)
