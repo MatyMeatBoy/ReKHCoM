@@ -53,7 +53,8 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   usuario: Simba (retrato desborda/cortado), Genio (asoma por la derecha), carta verde de objeto (cubo azul
   descentrado), carta gris de enemigo (sombra/Soldado). Revisar todas las cartas, no solo esas.
 - [x] Tienda Moguri en vista de tienda (fila de 5 cartas con número): números HD se ven bien (captura usuario 27/10).
-- [ ] **HUD HD (solo modo HUD HD; el HUD normal no se toca):**
+- [ ] **HUD HD (solo modo HUD HD; el HUD normal no se toca):** — tareas en la cola de arte (`hudhd-*`,
+  `cartas-hd-encaje`, `escenas-retrato-x4`), registradas 27/10 para revisión en Atlas.
   Captura base 27/10: `build/hudshot` en khcom-hd-reload, ini del usuario (copia de `build/codex-evidence/
   quiver-crash-20261027`) con `hd_hud=1`, `fullscreen=0`, `KHCOM_WINDOW=1536x864`, `KHCOM_BATTLE=204:8:0`,
   `KHCOM_MONKEY=19:120`. Los números bajo el retrato y la pila del jefe solo salen al apilar/elegir: usar
@@ -63,7 +64,8 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   - Igual para enemigos/jefes si aplica.
   - Números de las cartas: **dorado y azul no se ven abajo**; **dorado no se ve arriba** (la azul arriba sí).
     Parece HUD mal posicionado o vista incompleta. Arreglar limpio.
-  - «EXP ganada» tapada por la vida nueva.
+  - «EXP ganada» tapada por la vida nueva. 27/10: NO reproducido en 1536x864, `hud_size=1`, combate `1:0:0` con bot
+    (EXP+n y SIG. NIVEL quedan bajo el círculo). Pedir captura al usuario del caso exacto (HUD/tamaño/personaje).
 - [ ] **Set HD de rotura de cartas** (cortanaipes, bloqueo/contranaipe y afines): el usuario recuerda haberlo
   visto listo; buscarlo en hd_sprites.tsv/ramas/Atlas y comprobar que se dibuja.
 - [x] **Cortanaipes / Bloqueo / Recuperar HD no se ven (CAUSA 27/10, ARREGLADO con el punto del launcher)**: el commit 428aac55b (26/10, pad= en avisos
