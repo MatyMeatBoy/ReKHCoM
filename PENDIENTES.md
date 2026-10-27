@@ -213,4 +213,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | en_curso | device_profiles_sol | — | — | 2026-10-27T10:53:27.726490+00:00 |
 | optiport-serial-profile-contract | Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow | en_curso | codex-profile-contract | — | Root delega plan serial ycorregir postcondicionesreales sinrewriteharness | 2026-10-27T10:54:25.159040+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T10:51:21.601244+00:00)
+Integrador: libre
