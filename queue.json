@@ -4975,7 +4975,7 @@
       "status": "pr_abierto",
       "owner": "codex-gallery-previews",
       "created_at": "2026-10-27T07:05:35.374969+00:00",
-      "updated_at": "2026-10-27T10:35:07.123733+00:00",
+      "updated_at": "2026-10-27T10:49:38.348467+00:00",
       "branch": "feat/gallery-preview-cache",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/342",
       "approval": "Usuario 27/10/2026: Claude puede tomar pendientes regulares; previews pendientes posteriores ZIP",
@@ -4985,6 +4985,11 @@
           "at": "2026-10-27T10:35:07.123733+00:00",
           "owner": "codex-gallery-previews",
           "detail": "Head db51d782d. ExistingGBAposterorROMbackground fallback+whitecardwithoutoutergrayframe;GBAshownsource label;noexternalart. UIvisualproposal requiresrootGPUcaptures;noqualityapprovalclaimed. SameboundedPR342stack335. WorktreeNeededyesPRrepro."
+        },
+        {
+          "at": "2026-10-27T10:49:38.348467+00:00",
+          "owner": "codex-gallery-previews",
+          "detail": "Independent re-review confirmed P1 mixed-NULL and P2 incomplete pack return/log corrected.335head5acf2cb04;342headc6c7ad615. Production mixed LoadEverything import/coreavailability and real miniz partialrestore RED->GREEN. No new blocker found; hardwareSAF/GPU and realp95 remain pending."
         }
       ],
       "claimed_at": "2026-10-27T10:27:20.731891+00:00"
@@ -5659,7 +5664,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:49:33.313483+00:00",
+  "updated_at": "2026-10-27T10:49:38.348467+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
