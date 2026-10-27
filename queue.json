@@ -7158,10 +7158,23 @@
       "approval": "Usuario 2026-10-27: agregar fading a todos menús nuestros, controles, logros, escenas; cuelgues y bugs primero",
       "reference": "Conversación actual; conservar inputs y preview previa hasta recurso listo",
       "evidence": []
+    },
+    "gallery64-repeat-title-restore": {
+      "id": "gallery64-repeat-title-restore",
+      "piece": "Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T19:01:46.452296+00:00",
+      "updated_at": "2026-10-27T19:01:46.452296+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "user-screenshot-fb1ad35b-7aaa-4edf-92e5-33cd8e9054e6",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:01:38.644011+00:00",
+  "updated_at": "2026-10-27T19:01:46.452296+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
