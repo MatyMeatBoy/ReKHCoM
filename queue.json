@@ -6774,10 +6774,23 @@
       ],
       "claimed_at": "2026-10-27T17:53:13.860325+00:00",
       "completed_at": "2026-10-27T17:55:08.584769+00:00"
+    },
+    "v22-startup-cause-ledger": {
+      "id": "v22-startup-cause-ledger",
+      "piece": "Ledger documental de causas verificables para Deck330 y Windows360; recuperar fuentes Astra y discriminar fases de arranque sin GPU",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T17:57:06.035632+00:00",
+      "updated_at": "2026-10-27T17:57:06.035632+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330 https://github.com/MatyMeatBoy/ReKHCoM/issues/360",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T17:55:13.646302+00:00",
+  "updated_at": "2026-10-27T17:57:06.035632+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
