@@ -122,13 +122,17 @@ int PortControllerActionLabel(int action, char* out, size_t size) {
 
 int PortControllerActionGlyph(int action) {
     char label[32];
-    if(sPromptKeyboard || !PromptPad() || !PortControllerActionLabel(action,label,sizeof(label)))return 0;
+    if(action<0 || action>=PORT_ACT_COUNT)return 0;
+    if(sPromptKeyboard || !PromptPad()) {
+        if(!gPortConfig.keys[action][0] && !gPortConfig.keys[action][1])return 0;
+    } else if(gPortConfig.pad[action]<0)return 0;
+    if(!PortControllerActionLabel(action,label,sizeof(label)))return 0;
     return KhPromptGlyphId(label);
 }
 
 const unsigned char* PortControllerGlyphTiles(int glyph) {
     static unsigned char tiles[144][128],ready[144];
-    if(glyph<=0 || glyph>=144 || !(glyph<=8 || glyph>=128 || strchr("ABXYLR+-",glyph)))return NULL;
+    if(glyph<=0 || glyph>=144 || !(glyph<=8 || glyph>=128 || strchr(PORT_PROMPT_LETTERS,glyph)))return NULL;
     if(!ready[glyph]) { KhPromptGlyphPixels(glyph,tiles[glyph]);ready[glyph]=1; }
     return tiles[glyph];
 }
@@ -144,6 +148,36 @@ int PortApplyControllerConfirmPreset(int family) {
     gPortConfig.pad[PORT_ACT_A]=confirm;gPortConfig.pad[PORT_ACT_B]=cancel;
     PortInputResetBindings();
     return 1;
+}
+
+uint64_t PortControllerPromptRevision(void) {
+    static int previous[6+PORT_ACT_COUNT*3];
+    static uint64_t revision;
+    SDL_Gamepad* pad=PromptPad();
+    int current[6+PORT_ACT_COUNT*3];
+    current[0]=gPortConfig.controllerPrompts;current[1]=gPortConfig.padLayout;
+    current[2]=gPortConfig.invertCardScroll;current[3]=sPromptKeyboard;
+    current[4]=(int)sPromptPad;current[5]=pad?(int)SDL_GetGamepadType(pad):-1;
+    memcpy(current+6,gPortConfig.pad,sizeof(gPortConfig.pad));
+    memcpy(current+6+PORT_ACT_COUNT,gPortConfig.keys,sizeof(gPortConfig.keys));
+    if(memcmp(previous,current,sizeof(current))) {
+        memcpy(previous,current,sizeof(current));
+        if(++revision==0)revision=1;
+    }
+    return revision;
+}
+
+int PortControllerSemanticGlyph(int token) {
+    int action=(token&63)-1;
+    if(action<0 || action>=PORT_ACT_COUNT)return 0;
+    if((token&64) && gPortConfig.invertCardScroll && (action==PORT_ACT_L || action==PORT_ACT_R))
+        action=action==PORT_ACT_L?PORT_ACT_R:PORT_ACT_L;
+    if(!gPortConfig.controllerPrompts) {
+        static const int gba[]={ 'A','B','L','R',140,141,5,6,7,8 };
+        return action<10?gba[action]:'?';
+    }
+    int glyph=PortControllerActionGlyph(action);
+    return glyph?glyph:'?'; /* Explicit unknown, never retain a stale prior button. */
 }
 
 /* After closing an overlay, ignore buttons still held until released so the
@@ -391,6 +425,13 @@ static int ControllerTutorialMessage(int message) {
 #endif
            ;
 }
+static int ControllerTutorialSemanticToken(int message,int action) {
+    int flag=message==CARD_MSG_ROBE_TUTORIAL_18 && (action==PORT_ACT_L || action==PORT_ACT_R);
+    /* CardScrollTutorialText already exchanged the displayed L/R. Store the
+       original semantic action so another inversion can refresh this page. */
+    if(flag && gPortConfig.invertCardScroll)action=action==PORT_ACT_L?PORT_ACT_R:PORT_ACT_L;
+    return (action+1) | (flag?64:0);
+}
 const void* PortCardScrollTutorialText(int message, const void* source) {
     const TextChar* text=CardScrollTutorialText(message,source);
 #ifndef VERSION_JP
@@ -415,7 +456,7 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
                         size_t count=SDL_strlen(label);
                         if(n+count+6>=SDL_arraysize(resolved))return text;
                         if(a)resolved[n++]='+';
-                        if(glyph) { resolved[n++]=PORT_PROMPT_TOKEN;resolved[n++]=(TextChar)glyph; }
+                        if(glyph) { resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;resolved[n++]=(TextChar)ControllerTutorialSemanticToken(message,actions[a]); }
                         else {
                             resolved[n++]='[';
                             for(size_t k=0;k<count;k++)resolved[n++]=(unsigned char)label[k];
@@ -450,7 +491,7 @@ const void* PortCardScrollTutorialText(int message, const void* source) {
                 int glyph=PortControllerActionGlyph(actions[a]);
                 if(n+2*SDL_strlen(label)+6>=sizeof(resolved))return text;
                 if(a) { resolved[n++]=0x81;resolved[n++]=0x7b; }
-                if(glyph) { resolved[n++]=PORT_PROMPT_TOKEN;resolved[n++]=(unsigned char)glyph; }
+                if(glyph) { resolved[n++]=PORT_PROMPT_SEMANTIC_TOKEN;resolved[n++]=(unsigned char)ControllerTutorialSemanticToken(message,actions[a]); }
                 else for(const unsigned char* c=(const unsigned char*)label;*c;c++) {
                     unsigned code=*c>='A' && *c<='Z' ? 0x8260+*c-'A' :
                                   *c>='a' && *c<='z' ? 0x8281+*c-'a' :

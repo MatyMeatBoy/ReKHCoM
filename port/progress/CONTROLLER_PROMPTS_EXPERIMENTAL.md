@@ -79,8 +79,10 @@ una build completa o revisión visual GPU.
   no reconocidas conservan el original. Revisar visualmente símbolos de todas
   las familias en pixel/HD y paletas EU/US/JP, sin afirmar cobertura total sólo
   porque un parser reconoce un nombre.
-- Adaptar líneas ya abiertas al cambiar dispositivo/binding; ahora los mensajes
-  cambian al volver a resolver su página. Revisar HD/pixel text, ancho, recorte,
+- Símbolos ya semánticos ahora se actualizan en páginas abiertas sin relayout;
+  quedan Original→activar y páginas de fallback textual no representable.
+  Contrato y límites: [CONTROLLER_PROMPT_LIVE_SYMBOLS.md](CONTROLLER_PROMPT_LIVE_SYMBOLS.md).
+  Revisar HD/pixel text, ancho, recorte,
   fuentes de símbolos, fallback accesible y mandos múltiples en pruebas GPU.
 - La identificación de familia en guests depende del tipo que exponga su shim;
   hoy un tipo genérico conserva el fallback de posición. No afirmar detección

@@ -283,7 +283,9 @@ Carril documental: `docs-v20-trailer`, `codex-trailer`, rama `codex/v20-trailer-
 - **Indicaciones de mando experimentales 2.1:** primera integración textual,
   opt-in y fiel al binding efectivo; segundo incremento incorpora símbolos
   pequeños, tokens JP/compuestos conocidos y preset confirmado Nintendo A / PS
-  Circle. Quedan actualización de páginas abiertas, metadata real de mando en
+  Circle. Refresco de símbolos semánticos abiertos en
+  [CONTROLLER_PROMPT_LIVE_SYMBOLS.md](CONTROLLER_PROMPT_LIVE_SYMBOLS.md);
+  quedan Original→activar/fallback textual, metadata real de mando en
   guests, cobertura de frases y revisión GPU. Detalle y pruebas en
   [CONTROLLER_PROMPTS_EXPERIMENTAL.md](CONTROLLER_PROMPTS_EXPERIMENTAL.md).
   No dar por completo el alcance del usuario con la entrega textual.
