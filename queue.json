@@ -7052,7 +7052,7 @@
       "status": "pr_abierto",
       "owner": "codex-audio-continuity",
       "created_at": "2026-10-27T18:41:22.472261+00:00",
-      "updated_at": "2026-10-27T23:21:27.926308+00:00",
+      "updated_at": "2026-10-27T23:24:39.201830+00:00",
       "branch": "fix/audio-underrun-smooth",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/411",
       "approval": "Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback",
@@ -7072,6 +7072,11 @@
           "at": "2026-10-27T23:21:27.926308+00:00",
           "owner": "codex-audio-continuity",
           "detail": "Head9ae66e25eb2: AUD1HF_threadlifecycleSDLhostsWin/Linux/Android64; preservePS4Ringunits/oldhostABI. Consumerbounded5msramp/fadeinF32S16normalPCMbitexact; realSDLRED/GREENenqueuefaults/partial/ratechange/INTMAX/resetPASS. Win64hostABIbootPASS,fullLinux64Android64hostsyntax+x32A64guestPASS. WASAPIrealzerodata90frames0underrunsPASS(notlistening). Frozengamef0eEU32/64D3D11tenSIGNAL-GATEDcases actualnonzeroPCM+HDtrack6, normal0recoveries/250msmainthreadstalls1-3recoveriesexit0. GBAproducerPCM/ratesbyteequalpre2controls. Oldsilent10rejectedviaAUDIO-SIGNAL-GATE. Latestrareconsumerfailuretail-discardunitREDGREENafterf0e; no normalpathchange. Reporterlistening/deviceconfirmationpending;no publicbuilddeliveredbyworker. Privateevidencepruebas/audio-title-skip, noROM/SAVinstallschanged."
+        },
+        {
+          "at": "2026-10-27T23:24:39.201830+00:00",
+          "owner": "codex-audio-continuity",
+          "detail": "Latest8cf5a39a5: optionalrecoveryunsupportedformat(ratebounds/nonstereo/nonF32S16) nativetransparentlyforwarded, notsilentlyrejected. ActualSDLmonoS32REDbefore->GREENbyteexact. ConsumerfailedPut nowclearstail(Red->Green)avoidsreplayingoldaudioaftersilence. Bothfollowupsoutsideactualgamestereo-normalpathf0eQA; PRbody/docsstateexactscope. Rootreview404b614independentexactproductionacceptance+fallbackPASS; no blockerssent."
         }
       ],
       "claimed_at": "2026-10-27T21:48:55.174572+00:00"
@@ -8068,7 +8073,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:21:27.926308+00:00",
+  "updated_at": "2026-10-27T23:24:39.201830+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
