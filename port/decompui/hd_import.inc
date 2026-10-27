@@ -1055,6 +1055,78 @@ enum { PART_MOVIES, PART_SCENES, PART_MUSIC, PART_SPRITES };
 static Job sJob;
 static thread_local int tSlot = 0, tUnits = 1; /* the worker's progress slot and the weight of its file */
 
+/* Each sprite remembers the recipe row it was made with (hd/sprites/recipes.txt: name, tab, hash of the row), so a
+   launcher of a later version knows which pictures an updated recipe left behind. */
+static uint32_t RecipeHash(const char* row) {
+    uint32_t h = 2166136261u;
+    for (; *row; row++)
+        h = (h ^ (unsigned char)*row) * 16777619u;
+    return h;
+}
+
+static std::vector<std::string> RecipeFields(const char* line) {
+    std::vector<std::string> f;
+    std::string s = line;
+    for (size_t p = 0; p <= s.size();) {
+        size_t q = s.find('\t', p);
+        f.push_back(s.substr(p, q == std::string::npos ? std::string::npos : q - p));
+        p = q == std::string::npos ? s.size() + 1 : q + 1;
+    }
+    return f;
+}
+
+static void WriteRecipeMarks(const fs::path& outDir) {
+    std::error_code ec;
+    std::ofstream out(outDir / "recipes.txt", std::ios::binary | std::ios::trunc);
+    for (const char* line : kHdSpriteRecipe) {
+        std::vector<std::string> f = RecipeFields(line);
+        if (f.size() >= 10 && f[9] != "raw" && fs::exists(outDir / (f[0] + ".png"), ec))
+            out << f[0] << '\t' << RecipeHash(line) << '\n';
+    }
+}
+
+/* How many imported sprites an updated recipe left behind: a row whose mark differs, or, in an import older than the
+   marks, a picture of another proportion than the recipe's (the game refuses those rather than stretch them, and
+   shows the cartridge's). Reads recipes.txt and each PNG's header only: cheap enough for every start. */
+static int StaleSprites(const fs::path& data) {
+    std::error_code ec;
+    fs::path dir = data / "hd" / "sprites";
+    if (!fs::is_directory(dir, ec))
+        return 0;
+    std::map<std::string, uint32_t> marks;
+    {
+        std::ifstream in(dir / "recipes.txt", std::ios::binary);
+        std::string name;
+        uint32_t hash;
+        while (in >> name >> hash)
+            marks[name] = hash;
+    }
+    int stale = 0;
+    for (const char* line : kHdSpriteRecipe) {
+        std::vector<std::string> f = RecipeFields(line);
+        if (f.size() < 10 || f[9] == "raw")
+            continue;
+        fs::path png = dir / (f[0] + ".png");
+        if (!fs::exists(png, ec))
+            continue; /* not imported (another region's word, say): nothing left behind */
+        auto mark = marks.find(f[0]);
+        if (mark != marks.end()) {
+            stale += mark->second != RecipeHash(line);
+            continue;
+        }
+        if (!marks.empty())
+            continue; /* a marked import: rows without a mark were not written by it */
+        unsigned char head[24] = { 0 };
+        std::ifstream(png, std::ios::binary).read((char*)head, sizeof(head));
+        uint32_t w = (uint32_t)head[16] << 24 | head[17] << 16 | head[18] << 8 | head[19];
+        uint32_t h = (uint32_t)head[20] << 24 | head[21] << 16 | head[22] << 8 | head[23];
+        float want = (float)(atoi(f[6].c_str()) + RecipePad(f[9], 0)) / (atoi(f[7].c_str()) + RecipePad(f[9], 1));
+        if (h && want > 0 && ((float)w / h > want * 1.03f || (float)w / h < want * 0.97f))
+            stale++;
+    }
+    return stale;
+}
+
 /* Every sprite of the recipe from the installation's Recom.hed/.pkg into data/hd/sprites/<name>.png. */
 static int WriteSprites(const fs::path& hed, const fs::path& data) {
     std::error_code ec;
@@ -1161,6 +1233,8 @@ static int WriteSprites(const fs::path& hed, const fs::path& data) {
             }
         }
     }
+    if (!sJob.cancel)
+        WriteRecipeMarks(outDir);
     return written;
 }
 
@@ -2323,6 +2397,24 @@ static void HdQuitPopup() {
 }
 
 /* An import cut short (closed, a crash, a power cut): offered on the next start, to resume or discard */
+/* An update that changed HD sprite recipes: at the first start after it, the sprites alone are imported again from
+   the installation (about a minute), so no picture is left behind showing the cartridge's instead. */
+static void HdStaleSprites() {
+    static bool checked;
+    if (checked || hd::sJob.running || SDL_getenv("DECOMPUI_SHOT"))
+        return;
+    checked = true;
+    int stale = hd::StaleSprites(sRoot);
+    if (stale <= 0)
+        return;
+    fs::path source = hd::FindInstall();
+    if (source.empty())
+        return;
+    hd::Start(source, sRoot, false, false, false, true, 0);
+    hd::sJob.Say(std::string(T("Actualizando gráficos HD cambiados en esta versión: ", "Updating HD graphics this version changed: ")) +
+                 std::to_string(stale));
+}
+
 static void HdResumePopup() {
     static bool checked;
     static hd::JournalInfo journal;

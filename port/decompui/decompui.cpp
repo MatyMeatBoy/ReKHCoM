@@ -2708,6 +2708,7 @@ static void Frame(SDL_Window* window) {
     HdOfferPopup();
     HdQuitPopup();
     HdResumePopup();
+    HdStaleSprites();
     Footer();
     ImGui::End();
     AchievementPreviewDraw();
@@ -3575,6 +3576,11 @@ int main(int argc, char** argv) {
             hd::sJob.running = true;
             hd::Compress(sRoot, quality);
             fprintf(stderr, "%s\n", hd::sJob.Status().c_str());
+            return 0;
+        }
+    for (int i = 1; i < argc; i++)
+        if (strcmp(argv[i], "--hd-stale") == 0) { /* sprites an updated recipe left behind (tests) */
+            fprintf(stderr, "%d stale HD sprites\n", hd::StaleSprites(sRoot));
             return 0;
         }
     for (int i = 1; i < argc; i++)
