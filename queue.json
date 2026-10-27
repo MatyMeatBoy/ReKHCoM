@@ -5698,7 +5698,7 @@
       "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T10:53:22.535979+00:00",
-      "updated_at": "2026-10-27T10:59:06.365693+00:00",
+      "updated_at": "2026-10-27T11:04:35.112736+00:00",
       "branch": "task/hud-toggle-warm",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/346",
       "approval": null,
@@ -5713,6 +5713,11 @@
           "at": "2026-10-27T10:59:06.365693+00:00",
           "owner": "device_profiles_sol",
           "detail": "c34c13566 RED exit77 no prepare; GREEN actual UI close+loader/register 1decode2uploads cached/missing/fail/off/nonHUD; syntax x32, reset, route3pass. Draft OAM boundary stub and GPU timing/pixels pending root; HUD_OPTIONS_WARM.md fixture."
+        },
+        {
+          "at": "2026-10-27T11:04:35.112736+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "57482a510 optional warm zero new canvas allocation; actual GrowPixelBuffer+failedrealloc RED fatal88 -> GREEN noallocator, oldpointer/capacity/content preserved, absent/undersized canvas defers. General normal-render OOM remains separate. GPU root pending."
         }
       ],
       "claimed_at": "2026-10-27T10:53:27.726490+00:00"
@@ -5733,7 +5738,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:01:11.271597+00:00",
+  "updated_at": "2026-10-27T11:04:35.112736+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
