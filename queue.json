@@ -5708,7 +5708,7 @@
       "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T10:53:22.535979+00:00",
-      "updated_at": "2026-10-27T11:04:35.112736+00:00",
+      "updated_at": "2026-10-27T11:35:26.715677+00:00",
       "branch": "task/hud-toggle-warm",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/346",
       "approval": null,
@@ -5728,6 +5728,11 @@
           "at": "2026-10-27T11:04:35.112736+00:00",
           "owner": "device_profiles_sol",
           "detail": "57482a510 optional warm zero new canvas allocation; actual GrowPixelBuffer+failedrealloc RED fatal88 -> GREEN noallocator, oldpointer/capacity/content preserved, absent/undersized canvas defers. General normal-render OOM remains separate. GPU root pending."
+        },
+        {
+          "at": "2026-10-27T11:35:26.715677+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "372604513 stacked on34974ad; helper frozen4dimscope zeroallocation, callerbounds, allpathsrestore. ActualOptionsclose+loaderPASS and independentreviewGREEN. GPU root pending."
         }
       ],
       "claimed_at": "2026-10-27T10:53:27.726490+00:00"
@@ -5838,7 +5843,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T11:35:20.265899+00:00",
+  "updated_at": "2026-10-27T11:35:26.715677+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
