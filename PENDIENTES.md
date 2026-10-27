@@ -166,4 +166,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-optiport-package | Playable isolated Android OptiPort test package | en_revision | codex-android-test | build/android-optiport-package | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:29:17.892180+00:00 |
 | optiport-hud-invalidation | Explicit HUD GPU invalidation and recovery contract inventory | en_curso | codex-hud-invalidation | — | Coordinador delega A invalidacion HUD y tests; usuario OptiPort | 2026-10-27T05:34:01.079199+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T05:36:15.146946+00:00)
