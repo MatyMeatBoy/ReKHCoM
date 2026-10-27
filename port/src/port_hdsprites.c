@@ -874,6 +874,27 @@ int PortHdHudExpDrop(void) {
     return gPortConfig.hdCards && sRingFull ? 7 : 0;
 }
 
+/* GBA x of the opponent's sleight name (card_friend_card.c draws it at 120, top centre). On the wide HUD canvas the
+   opponent's stack docks right while the name stays centred, so a long name ran under the stack's total and first
+   card (Axel's "Muro de fuego", user report 27/10). With the HD cards the name ends 2 pixels before the stack: its
+   width is its sprite frame's (count, then attr0/attr1/attr2 per piece); the stack starts at its total's x
+   (card_battle_riku.c: 184/172/160 for 1/2/3 cards), docked by the canvas' whole margin where the name gets half.
+   GBA modes, and a canvas no wider than the cartridge, keep the cartridge's place. */
+int PortHdHudStockNameX(int x, const uint16_t* frame, int stockCount) {
+    static const uint8_t width[3][4] = { { 8, 16, 32, 64 }, { 16, 32, 32, 64 }, { 8, 8, 16, 32 } };
+    int i, right = 0, stack, half = (gPortHudW - GBA_SCREEN_W) / 2;
+    if (!gPortConfig.hdCards || !frame || stockCount < 1 || stockCount > 3 || half <= 0)
+        return x;
+    for (i = 0; i < frame[0]; i++) {
+        const uint16_t* p = frame + 1 + i * 3;
+        int shape = p[0] >> 14, px = (int16_t)(p[1] << 7) >> 7;
+        if (shape < 3 && px + width[shape][p[1] >> 14] > right)
+            right = px + width[shape][p[1] >> 14];
+    }
+    stack = 196 - 12 * stockCount + half;
+    return x + right + 2 > stack ? stack - 2 - right : x;
+}
+
 /* A point of the ring picture, its centre placed at (cx, cy) on the screen, s screen pixels a picture pixel. */
 static SDL_Vertex RingVertex(float px, float py, float cx, float cy, float s, SDL_FColor c) {
     SDL_Vertex v;
