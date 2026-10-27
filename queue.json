@@ -5906,13 +5906,13 @@
     "player-hp-capacity-equivalence": {
       "id": "player-hp-capacity-equivalence",
       "piece": "Auditoría HP jugador: reglas GBA, capacidad visual y evidencia ReCoM1.5",
-      "status": "en_revision",
+      "status": "listo_pr",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T11:22:34.844415+00:00",
-      "updated_at": "2026-10-27T11:36:12.521524+00:00",
+      "updated_at": "2026-10-27T12:37:57.931825+00:00",
       "branch": "audit/player-hp-capacity",
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
+      "approval": "Root direct coordinator review; AGENTS.md visual v2.1 user exception. Explicit reconciliation to integrated.",
       "reference": "port/progress/HUD_ENEMY_STATIC_TRACK.md",
       "evidence": [
         {
@@ -5924,6 +5924,11 @@
           "at": "2026-10-27T11:36:12.521524+00:00",
           "owner": "device_profiles_sol",
           "detail": "Auditoría cerrada por prioridad entrega, sin cambioHP. Local d5df996ba: GBA80/+15/cap560 ambos;155=frame130 capacity/fill conforme recom.exe DAT470/560 y LAD privados; test actual helpersPASS. Fallbackimagen normalizado distinto; no equivalenciavisualtotal ni gameplay/GPU. Root tiene conclusión, sin nuevoPR."
+        },
+        {
+          "at": "2026-10-27T12:37:57.931825+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "No individual PR/HP code change. Source audit/tests d5df996ba included in MERGED bundle PR351, actual merge SHA 771aed8cc243d8c84afb7b0c79a47831f4304629. GBA80/+15/cap560,155 LADframe130; no unsupported visual-parity claim. State-machine intermediate states only for already merged bundle reconciliation."
         }
       ],
       "claimed_at": "2026-10-27T11:23:16.853164+00:00"
@@ -5992,7 +5997,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:37:31.477936+00:00",
+  "updated_at": "2026-10-27T12:37:57.931825+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
