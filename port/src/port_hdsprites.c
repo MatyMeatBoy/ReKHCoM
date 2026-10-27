@@ -193,6 +193,43 @@ int PortHdSpriteFind(const void* tiles, const void* frame) {
     return 0;
 }
 
+/* Which cells (GBA pixels of the sprite's box) of an HD picture are its dark, opaque inside: the reload card's black
+   back, where the cartridge's gauge fill may show (port_ppu.c). Read once from the imported picture; NULL if there is
+   none. A cell counts when almost all of it is opaque and dark, so the silver edge and the crown keep their art. */
+static uint8_t* sCellMask[HD_SPRITE_COUNT];
+static uint8_t sCellMaskTried[HD_SPRITE_COUNT];
+const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h) {
+    const HdSpriteDef* d;
+    char file[160];
+    int pw, ph, n, cx, cy;
+    unsigned char* px;
+    if (id < 1 || id > HD_SPRITE_COUNT)
+        return NULL;
+    d = &kHdSprites[id - 1];
+    *x0 = d->x0; *y0 = d->y0; *w = d->w; *h = d->h;
+    if (sCellMaskTried[id - 1])
+        return sCellMask[id - 1];
+    sCellMaskTried[id - 1] = 1;
+    px = stbi_load(SpritePath(file, sizeof(file), d->name), &pw, &ph, &n, 4);
+    if (!px)
+        return NULL;
+    sCellMask[id - 1] = (uint8_t*)SDL_calloc((size_t)d->w * d->h, 1);
+    for (cy = 0; sCellMask[id - 1] && cy < d->h; cy++)
+        for (cx = 0; cx < d->w; cx++) {
+            int u0 = cx * pw / d->w, u1 = (cx + 1) * pw / d->w, v0 = cy * ph / d->h, v1 = (cy + 1) * ph / d->h, u, v;
+            int total = 0, dark = 0;
+            for (v = v0; v < v1; v++)
+                for (u = u0; u < u1; u++) {
+                    const unsigned char* q = px + ((size_t)v * pw + u) * 4;
+                    total++;
+                    dark += q[3] > 200 && q[0] < 70 && q[1] < 70 && q[2] < 70;
+                }
+            sCellMask[id - 1][cy * d->w + cx] = total && dark * 10 >= total * 9;
+        }
+    stbi_image_free(px);
+    return sCellMask[id - 1];
+}
+
 int PortHdSpriteAny(const void* tiles) {
     int i;
     for (i = 0; i < HD_SPRITE_COUNT; i++)

@@ -4977,7 +4977,12 @@ static void MainHdOver(void) {
     }
 }
 
+extern const unsigned char gReloadCardGreenTiles[], gRiCardF0RedTiles[];
+const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h);
+
 void PortPpuRenderHud(uint32_t* buf) {
+    const uint8_t* reloadMask; /* the reload card's HD back, this frame: its dark cells and where they lie */
+    int reloadBox[4], reloadAt[2];
     uint16_t dispcnt = IO16(0x00);
     uint16_t bldcnt = IO16(0x50);
     int effect = (bldcnt >> 6) & 3, evy = IO16(0x54) & 31;
@@ -5051,6 +5056,7 @@ void PortPpuRenderHud(uint32_t* buf) {
         }
     }
 
+    reloadMask = NULL;
     for (i = 127; i >= 0; i--) {
         uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
@@ -5120,6 +5126,12 @@ void PortPpuRenderHud(uint32_t* buf) {
             pc = (int16_t)p[11];
             pd = (int16_t)p[15];
         }
+        if (sOamHd[i].id && sOamHd[i].tiles == gReloadCardGreenTiles && !affine) {
+            /* the reload card's HD back: its dark inside, placed where its frame is (the gauge below keeps to it) */
+            reloadMask = PortHdSpriteDarkCells(sOamHd[i].id, &reloadBox[0], &reloadBox[1], &reloadBox[2], &reloadBox[3]);
+            reloadAt[0] = hx - sOamHd[i].x;
+            reloadAt[1] = hy - sOamHd[i].y;
+        }
         if (sOamHd[i].id && !hdSprite && sHdCover && (size_t)w * h <= sHdCoverSize &&
             sHudOver && (size_t)w * h <= sHudOverSize && mode != 2)
             hdPart = QueueHdPart(1, i, hx, hy, ow, oh, bw, bh, affine, pa, pb, pc, pd, mode == 1 ? 0xA0 : 255);
@@ -5145,6 +5157,12 @@ void PortPpuRenderHud(uint32_t* buf) {
                 col = ObjColor(a0, a2, tx, ty, ow, mapping1d);
                 if (col < 0)
                     continue;
+                if (reloadMask && sOamHd[i].tiles == gRiCardF0RedTiles) {
+                    /* the gauge's fill and flash only inside the HD back's black, not over its silver edge or crown */
+                    int u = px - reloadAt[0] - reloadBox[0], v = py - reloadAt[1] - reloadBox[1];
+                    if (u < 0 || v < 0 || u >= reloadBox[2] || v >= reloadBox[3] || !reloadMask[v * reloadBox[2] + u])
+                        continue;
+                }
                 digitInk = digit && ((col & 31) >= 22 || ((col >> 5) & 31) >= 22 || ((col >> 10) & 31) >= 22);
                 if (gPortConfig.hdHud && (tag->hdHudPart == 4 || tag->hdHudPart == 6) && py < 32 && sPlayerBarMask &&
                     (size_t)w * 32 <= sPlayerBarMaskSize && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize) {
