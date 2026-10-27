@@ -218,4 +218,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v21-final-integration-qa | Compose reviewed2.1 candidates for final GPU and platform QA; preserve drafts until verified, publish stable2.1 when ready | pr_abierto | codex-v21-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/351 | Usuario27/10: cierra todo y PRs y sal con2.1 | 2026-10-27T11:48:23.267332+00:00 |
 | hd-stock-counter-fit | Encaje mínimo contador stocks Sora/enemigo con barra HD superior | pr_abierto | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/352 | — | 2026-10-27T12:15:45.261097+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T12:34:42.999736+00:00)
