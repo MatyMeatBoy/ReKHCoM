@@ -126,14 +126,21 @@ def heard(raw, hd, rows):
 
 
 def analyse(rows):
-    out = {'frames': len(rows), 'underruns': 0, 'jumps': 0, 'overlaps': 0, 'loading': 0, 'paused': 0,
+    out = {'frames': len(rows), 'underruns': 0, 'fallback_underruns': 0, 'fallback_observed': False,
+           'jumps': 0, 'overlaps': 0, 'loading': 0, 'paused': 0,
            'paused_moved': 0, 'tracks': set()}
     step = 48000 / 59.7275
     run_loading = 0
     prev = None
     playing_for = 0
+    fallback_previous = 0
     for r in rows:
-        frame, song, hdsong, state, queued, pos, gain = r
+        frame, song, hdsong, state, queued, pos, gain = r[:7]
+        if len(r) > 7:
+            out['fallback_observed'] = True
+            count = max(0, int(r[7]))
+            out['fallback_underruns'] += count - fallback_previous if count >= fallback_previous else count
+            fallback_previous = count
         if state == 1:
             out['tracks'].add(int(hdsong))
             playing_for += 1
@@ -182,12 +189,13 @@ def main():
             print(f'{n:12s} {r["error"]}')
             bad += 1
             continue
-        problem = r['underruns'] or r['overlaps'] or r['paused_moved'] or r['loading'] > 10 or not r['frames']
+        problem = r['underruns'] or r['fallback_underruns'] or r['overlaps'] or r['paused_moved'] or r['loading'] > 10 or not r['frames']
         bad += bool(problem)
         heard_bad = isinstance(r['heard'], str) and not r['heard'].startswith(('0 jumps', 'n/a'))
         problem = problem or heard_bad
-        bad += bool(heard_bad and not (r['underruns'] or r['overlaps'] or r['paused_moved'] or r['loading'] > 10))
+        bad += bool(heard_bad and not (r['underruns'] or r['fallback_underruns'] or r['overlaps'] or r['paused_moved'] or r['loading'] > 10))
         print(f'{n:12s} {"PROBLEM" if problem else "ok":7s} frames {r["frames"]} underruns {r["underruns"]} '
+              f'smooth recoveries {r["fallback_underruns"] if r["fallback_observed"] else "n/a"} '
               f'overlaps {r["overlaps"]} loading {r["loading"]} paused {r["paused"]}/{r["paused_moved"]} songs {r["tracks"]} '
               f'heard: {r["heard"]}')
     print(f'{bad} of {len(names)} scenarios with a problem')
