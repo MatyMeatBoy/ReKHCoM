@@ -176,7 +176,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hudhd-numeros-cartas | HUD HD: números de carta dorado/azul visibles arriba y abajo | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:04.669290+00:00 |
 | hudhd-exp-ganada | HUD HD: «EXP ganada» no tapada por la vida nueva | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:33:32.240816+00:00 |
 | hudhd-hechizo-jefe | HUD HD: nombre del hechizo del jefe junto a su pila, sin cortarse | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:41:21.640846+00:00 |
-| cartas-hd-encaje | Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas | en_curso | claude-cartas | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:43:05.260906+00:00 |
+| cartas-hd-encaje | Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas | en_revision | claude-cartas | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:43:09.912613+00:00 |
 | escenas-retrato-x4 | Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:22.665133+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)
