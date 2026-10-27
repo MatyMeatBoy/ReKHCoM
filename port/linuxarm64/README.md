@@ -93,3 +93,16 @@ python port/tools/test_linux_launcher.py --shell "C:/Program Files/Git/bin/sh.ex
 
 On Linux use `--shell /bin/sh`. Host syntax needs an existing arm64 sysroot
 and SDL3 headers; absence is a missing prerequisite, not a successful build.
+
+### Preserved whole-image review fixture
+
+The same loader test command now also runs `test_linuxarm64_image_win.c` on
+Windows, preserving the independent review fixture from save_corpus_research.
+It invokes production LoadArm64Image with a complete synthetic Mach-O: preferred
+and forced-move addresses, relocated boot/table/stack, valid protection ranges,
+overlap/file bounds rejected before mapping and invalid table rolling mapping
+back. No guest instructions run. VirtualAlloc keeps pages RW; the mprotect
+adapter validates requests/ranges and refuses WX, but does NOT test Linux
+mmap/mprotect, executable permission enforcement or AArch64 execution. POSIX
+runs the portable decoder probe and explicitly skips this Windows-only adapter.
+This expands logic coverage, not runtime/hardware readiness.

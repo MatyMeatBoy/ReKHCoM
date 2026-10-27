@@ -16,4 +16,11 @@ def main():
         subprocess.run([compiler, '-std=c11', '-O1', str(ROOT / 'port/tools/test_linuxarm64_loader.c'),
                         '-o', str(exe)], check=True)
         subprocess.run([str(exe)], check=True)
+        if os.name == 'nt':
+            subprocess.run([compiler, '-std=c11', '-O1', '-I'+str(ROOT/'port/ps5/shared'),
+                            '-I'+str(ROOT/'port/linuxarm64'), str(ROOT/'port/tools/test_linuxarm64_image_win.c'),
+                            '-o', str(exe)], check=True)
+            subprocess.run([str(exe)], check=True)
+        else:
+            print('Whole-image Windows mapping adapter skipped; use real Linux mapping QA separately.')
 if __name__ == '__main__': main()
