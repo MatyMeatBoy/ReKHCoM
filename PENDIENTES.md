@@ -161,5 +161,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-music-progress-20261027 | Bound HD music decoder progress and preserve original audio on failure | en_curso | codex-music | — | — | 2026-10-27T05:11:27.430158+00:00 |
 | save-bank-flush | Code: retain dirty SRAM and selected bank when persistence fails | en_curso | codex-save-bank | — | — | 2026-10-27T05:17:41.943768+00:00 |
 | host-music-progress | Bound host music loop decoding and propagate terminal failure | en_curso | codex-host-music | — | User authorized OptiPort indispensable fallback improvements before test builds | 2026-10-27T05:18:02.871630+00:00 |
+| optiport-linux64-streaming | Linux64 movie EOF clock and cancelable decoder pipes | pendiente | — | — | Usuario autoriza OptiPort y workers; coordinador delega correccion P1 | 2026-10-27T05:18:27.307042+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:15:45.154320+00:00)
