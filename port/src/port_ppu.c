@@ -731,6 +731,38 @@ typedef struct OamHdPart {
     const uint16_t* palette;   /* the part's original palette (ROM), for its fade */
 } OamHdPart;
 static OamHdPart sOamHd[128];
+extern const unsigned char gOlympiaSmallCardTiles[];
+extern const unsigned char gCrabclawSmallCardTiles[], gDivineRoseSmallCardTiles[], gFairyHarpSmallCardTiles[];
+extern const unsigned char gMetalChocoboSmallCardTiles[], gOathkeeperSmallCardTiles[], gPumpkinheadSmallCardTiles[];
+extern const unsigned char gSpellbinderSmallCardTiles[], gUltimaWeaponSmallCardTiles[], gWishingStarSmallCardTiles[];
+
+/* Only the native underlay changes: at fractional output scales its white
+ * Olympia cell can escape the HD window's filtered right edge. Coordinates
+ * are in the authored frame (-8,-20 origin), after the OAM flip/affine map.
+ * Call only for an accepted HD replacement; missing/off HD stays untouched. */
+static int SmallCardNativeColor(int i, int tx, int ty, int color) {
+    /* Old illustration tips outside the HD window, not a recoloured frame:
+     * only these 23 audited native cells in the horizontal seam change.
+     * The two closing corners and the artwork below stay untouched. */
+    static const struct { const void* tiles; unsigned cells; } top[] = {
+        { gCrabclawSmallCardTiles, 0x0600u }, { gDivineRoseSmallCardTiles, 0x0700u },
+        { gFairyHarpSmallCardTiles, 0x1800u }, { gMetalChocoboSmallCardTiles, 0x0800u },
+        { gOathkeeperSmallCardTiles, 0x2400u }, { gPumpkinheadSmallCardTiles, 0x0F00u },
+        { gSpellbinderSmallCardTiles, 0x0F00u }, { gUltimaWeaponSmallCardTiles, 0x0400u },
+        { gWishingStarSmallCardTiles, 0x0F00u }
+    };
+    int x = sOamHd[i].x + tx + 8;
+    if (sOamHd[i].y + ty == -5 && x >= 2 && x <= 13) {
+        for (unsigned k = 0; k < sizeof(top) / sizeof(top[0]); k++)
+            if (sOamHd[i].tiles == top[k].tiles && (top[k].cells & (1u << x)))
+                return 0;
+    }
+    if (sOamHd[i].tiles == gOlympiaSmallCardTiles &&
+        sOamHd[i].x + tx == 6 && sOamHd[i].y + ty == -1)
+        return 0;
+    return color;
+}
+
 static uint8_t sMainHdPart[128]; /* slot queued as an HD part of the game's picture (QueueMainHdParts) */
 static int16_t sMainHdBox[128][4]; /* its box on the canvas: x, y, w, h */
 static uint8_t sMainHdScreen[128];  /* ... on the screen layer (menus), its box in the screen layer's coordinates */
@@ -775,6 +807,15 @@ void PortOamSetHdPart(int oamIndex, const void* tiles, const void* frame, int x,
 
 static void ExportSprites(void);
 int PortHdSpriteKeepsCartridge(int id);
+
+/* The native frame closes over the picture at these two authored cells.
+ * Keep their own palette colours above the HD window, not a generic black
+ * patch or an alpha cutout whose filtering spills into adjacent artwork. */
+static int SmallCardNativeCorner(int i, int tx, int ty) {
+    int x = sOamHd[i].x + tx;
+    return sOamHd[i].y + ty == -4 && (x == -7 || x == 6) &&
+           PortHdSpriteKeepsCartridge(sOamHd[i].id);
+}
 
 /* Characters the outline font draws: printable Windows-1252 codes. The codes
    below 0x20 are icons (arrows, button shapes) and stay pixel art. */
@@ -2522,6 +2563,8 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             }
             if (col < 0)
                 continue;
+            if (sMainHdPart[i])
+                col = SmallCardNativeColor(i, tx, ty, col);
             if (bandOnly) {
                 if (sTitleSampleLine[x] == TRANSPARENT || prio < sTitleSamplePrio[x]) {
                     sTitleSampleLine[x] = (uint16_t)col;
@@ -4933,6 +4976,23 @@ const uint32_t* PortPpuScreenOver(void) {
 }
 
 /* One layer's parts: where the cartridge has something in front, its final pixel goes on `over`. */
+static int SmallCardCornerAt(int i, int x, int y) {
+    const OamHdPart* part = &sOamHd[i];
+    uint16_t a0 = OAM16[i * 4], a1 = OAM16[i * 4 + 1];
+    int sx = x - sMainHdBox[i][0], sy = y - sMainHdBox[i][1], tx, ty;
+    if (a0 & 0x100) {
+        const uint16_t* p = OAM16 + ((a1 >> 9) & 31) * 16;
+        int cx = sx - sMainHdBox[i][2] / 2, cy = sy - sMainHdBox[i][3] / 2;
+        tx = (((int16_t)p[3] * cx + (int16_t)p[7] * cy) >> 8) + part->w / 2;
+        ty = (((int16_t)p[11] * cx + (int16_t)p[15] * cy) >> 8) + part->h / 2;
+    } else {
+        tx = (a1 & 0x1000) ? part->w - 1 - sx : sx;
+        ty = (a1 & 0x2000) ? part->h - 1 - sy : sy;
+    }
+    return tx >= 0 && ty >= 0 && tx < part->w && ty < part->h &&
+           SmallCardNativeCorner(i, tx, ty);
+}
+
 static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const uint16_t* occObj, const uint32_t* picture,
                         uint32_t* over, int* used) {
     int i;
@@ -4951,7 +5011,8 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
                 /* 0 / 0: a window hides the sprites here; a BG of a higher priority; a sprite before this one (not
                    one that keeps its cartridge pixels under its own HD part: that part is drawn over this one anyway,
                    and copying its pixels put the small card above's bottom over the cards below, 23/10) */
-                if ((occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
+                if ((obj == prio * 128 + i && SmallCardCornerAt(i, x, y)) ||
+                    (occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
                     (obj != 0xFFFFu && obj < prio * 128 + i &&
                      !(sMainHdPart[obj & 127] && PortHdSpriteKeepsCartridge(sOamHd[obj & 127].id)))) {
                     if (!*used) {
@@ -5210,6 +5271,8 @@ void PortPpuRenderHud(uint32_t* buf) {
                 col = ObjColor(a0, a2, tx, ty, ow, mapping1d);
                 if (col < 0)
                     continue;
+                if (hdPart)
+                    col = SmallCardNativeColor(i, tx, ty, col);
                 if (reloadMask && sOamHd[i].tiles == gRiCardF0RedTiles) {
                     /* the gauge's fill and flash only inside the HD back's black, not over its silver edge or crown */
                     int u = px - reloadAt[0] - reloadBox[0], v = py - reloadAt[1] - reloadBox[1];
@@ -5249,6 +5312,12 @@ void PortPpuRenderHud(uint32_t* buf) {
                 }
                 if ((gPortConfig.hdHud || gPortConfig.hdCards) && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
                     sHudDigitOwners[py * w + px] = i + 1;
+                if ((hdSprite || hdPart) && sHudOverUsed) {
+                    /* This visible, later OAM pixel owns the foreground now.
+                     * A lower card's preserved corner cannot cover its HD art.
+                     * Its own corner is copied back below, after colour effects. */
+                    sHudOver[py * w + px] = 0;
+                }
                 if (hdSprite) continue;
                 if (hdPart) {
                     sHdCover[py * w + px] = 1;
@@ -5335,7 +5404,8 @@ void PortPpuRenderHud(uint32_t* buf) {
                 }
                 if (mode == 1)
                     argb = (argb & 0x00FFFFFFu) | 0xA0000000u;
-                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px] && !hdPart) {
+                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px] &&
+                    (!hdPart || SmallCardNativeCorner(i, tx, ty))) {
                     /* in front of an HD part: drawn over it */
                     if (!sHudOverUsed) {
                         memset(sHudOver, 0, (size_t)w * h * 4);

@@ -8,6 +8,7 @@
 #define _GNU_SOURCE
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include "../include/port/port_audio_continuity.h"
 
 #include <errno.h>
 #include <math.h>
@@ -68,6 +69,7 @@ static FILE* Utf8Open(const char* path, const char* mode) {
    appended with the exception code and address, the module or guest offset it fell in (guest offsets map to
    port/ps5/build/guest-<r>/guest.map), the registers and the code addresses found on the stack. */
 #include "crash_report.h"
+#include "guest_divzero_windows.h"
 static void CrashReportNote(const char* fmt, ...) {
     size_t n = strlen(sMachine);
     va_list ap;
@@ -276,6 +278,8 @@ static void H_gfx_end(void) {
 
 /* ---- audio ---- */
 static SDL_AudioStream* sAudio;
+static PortAudioContinuity sAudioContinuity;
+#include "audio_bridge_sdl.h"
 static int sGameRate = 48000;
 static int H_audio_open(int rate) {
     sGameRate = rate;
@@ -287,12 +291,15 @@ static int H_audio_open(int rate) {
         Log("audio: %s", SDL_GetError());
         return -1;
     }
-    SDL_ResumeAudioStreamDevice(sAudio);
+    PortAudioContinuityInit(&sAudioContinuity, sAudio);
+    if (!sAudioBridgeControls) SDL_ResumeAudioStreamDevice(sAudio);
     return 0;
 }
 static void GamePush(const int16_t* frames, uint32_t count) {
-    if (sAudio && count)
-        SDL_PutAudioStreamData(sAudio, frames, (int)count * 4);
+    if (sAudio && count) {
+        PortAudioContinuityPut(&sAudioContinuity, sAudio, frames, (int)count * 4);
+        HostAudioLogUnderruns();
+    }
 }
 #define HD_MUSIC_LOG Log
 #include "hd_music_host.h"
@@ -302,13 +309,18 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #include "thread_host.h"
 #undef H_thread
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
-    int result = HostGpuCommand(op, a, b, c, d);
+    int result = HostAudioCommand(op, a, b, c, d);
+    if (result != -2) return result;
+    result = HostGpuCommand(op, a, b, c, d);
     return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
 }
 
 static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(frames, count, sGameRate, GamePush); }
-static uint32_t H_audio_queued(void) { return sAudio ? (uint32_t)SDL_GetAudioStreamQueued(sAudio) / 4 : 0; }
-static void H_audio_clear(void) { if (sAudio) SDL_ClearAudioStream(sAudio); }
+static uint32_t H_audio_queued(void) {
+    int bytes = sAudio ? SDL_GetAudioStreamQueued(sAudio) : 0;
+    return bytes > 0 ? (uint32_t)bytes / 4 : 0;
+}
+static void H_audio_clear(void) { if (sAudio) PortAudioContinuityClear(&sAudioContinuity, sAudio); }
 static void H_audio_ratio(double ratio) {
     if (sAudio && ratio > 0.5 && ratio < 2.0)
         SDL_SetAudioStreamFrequencyRatio(sAudio, (float)ratio);
@@ -537,6 +549,13 @@ int main(int argc, char** argv) {
         !MapFixed(PS5G_BASE, h.regionEnd - PS5G_BASE))
         return 3;
     memcpy((void*)(uintptr_t)PS5G_BASE, tmp, (size_t)size);
+    sGuestDivision = PortGuestDivisionImage(tmp, (size_t)size, PS5G_BASE, h.imageEnd, h.boot);
+    sGuestDivisionMemory=PortGuestDivisionMappedMemory(PS5G_BASE,h.regionEnd);
+    if (sGuestDivision.begin && AddVectoredExceptionHandler(1, GuestDivisionHandler))
+        Log("guest DIV0 compatibility: register/mapped memory 8/16/32/64, text %08llx..%08llx", (unsigned long long)sGuestDivision.begin,
+            (unsigned long long)sGuestDivision.end);
+    else
+        Log("guest DIV0 compatibility unavailable: missing text metadata or handler");
     sGuestEnd = h.regionEnd;
     CrashReportNote("guest %s, %ld bytes", image, size);
     free(tmp);

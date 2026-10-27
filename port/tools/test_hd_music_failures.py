@@ -27,6 +27,7 @@ static int sSong=1,sMissing=-1,sRate=48000,sLevel,sHold=1,sPosition,sLoopStart,s
 static int fakeStream, *sStream=&fakeStream, fakeVorbis, *sVorbis=&fakeVorbis;
 static const char* kTracks[]={NULL,"test"};
 static int mode, queued, closed, calls;
+static int sMusicContinuity, resumed, firstPutSawResume;
 #define HD_MUSIC_LEVEL 0.33f
 #define MUSICPLAYER_STATUS_TRACK 1
 #define MUSICPLAYER_STATUS_PAUSE 2
@@ -38,12 +39,18 @@ static void Close(void) { closed++; sSong=-1; }
 static int Open(int song) { return mode==6 ? -1 : 1; }
 static void HdLog(int song,int state) {}
 static void Pause(void) {}
-static void Resume(void) {}
+static void Resume(void) {resumed=1;}
 static int SDL_SetAudioStreamGain(int* s,float gain) {return 1;}
 static int SDL_GetAudioStreamQueued(int* s) {return queued;}
 static const char* SDL_GetError(void) {return "injected device failure";}
 static int SDL_PutAudioStreamData(int* s,const void* p,int bytes) {
+    if(!queued)firstPutSawResume=resumed;
     if(mode==1)return 0; queued+=bytes; return 1;
+}
+/* The complementary real-SDL continuity test covers this boundary itself;
+ * this fixture injects output failures into the decoder's actual consumer. */
+static int PortAudioContinuityPut(int* c,int* s,const void* p,int bytes) {
+    (void)c;return SDL_PutAudioStreamData(s,p,bytes);
 }
 static int stb_vorbis_seek(int* v,unsigned pos) {return 1;}
 static int stb_vorbis_get_samples_float_interleaved(int* v,int channels,float* out,int count) {
@@ -74,6 +81,7 @@ int main(int argc,char** argv) {
         if(calls>32)return 2;
     } else {
         if(closed || gPortMix.musicGain!=0 || queued<48000/5*8) return 3;
+        if(firstPutSawResume)return 9; /* fill before first playback */
     }
     return 0;
 }

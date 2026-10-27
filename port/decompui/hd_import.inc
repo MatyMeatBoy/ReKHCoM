@@ -227,63 +227,73 @@ static bool ScdToOgg(const std::vector<unsigned char>& scd, std::vector<unsigned
 /* One asset of a .pkg and its remastered entries (the 1.5+2.5's additions: HD textures, language tables), by name. */
 static bool ReadAssetExtras(std::ifstream& pkg, long long offset, std::vector<unsigned char>& base,
                             std::map<std::string, std::vector<unsigned char>>& extras) {
-    unsigned char seed[16];
-    pkg.clear(); /* a padded read at the package's end leaves eof set: it must not fail the assets after it */
-    pkg.seekg(offset);
-    if (!pkg.read((char*)seed, 16))
+    pkg.clear();
+    pkg.seekg(0, std::ios::end);
+    const auto end = pkg.tellg();
+    if (offset < 0 || end < 0 || offset > (long long)end || (long long)end - offset < 16)
         return false;
+    pkg.seekg(offset);
+    unsigned char seed[16];
+    if (!pkg.read((char*)seed, 16)) return false;
     int32_t dlen, rcount, clen;
     memcpy(&dlen, seed, 4);
     memcpy(&rcount, seed + 4, 4);
     memcpy(&clen, seed + 8, 4);
-    if (rcount < 0 || rcount > 64)
+    if (dlen < 0 || rcount < 0 || clen < -2 || (long long)rcount * 0x30 > (long long)end - offset - 16)
         return false;
     std::vector<std::pair<std::string, std::pair<int32_t, int32_t>>> extra;
     for (int i = 0; i < rcount; i++) {
         unsigned char e[0x30];
-        if (!pkg.read((char*)e, 0x30))
-            return false;
+        if (!pkg.read((char*)e, 0x30)) return false;
         int32_t rdlen, rclen;
         memcpy(&rdlen, e + 0x28, 4);
         memcpy(&rclen, e + 0x2C, 4);
+        if (rdlen < 0 || rclen < -2) return false;
         extra.push_back({ std::string((const char*)e, strnlen((const char*)e, 32)), { rdlen, rclen } });
     }
     unsigned char key[0xB0];
     MakeKey(seed, key);
-    auto unpack = [&](size_t stored, int32_t real, int32_t packed, std::vector<unsigned char>& data) {
-        std::vector<unsigned char> raw(stored);
-        pkg.read((char*)raw.data(), (std::streamsize)raw.size());
-        size_t got = (size_t)pkg.gcount();
-        pkg.clear();
-        if (got < (size_t)(packed >= 0 ? packed : real)) /* only the 16-byte padding may be missing */
+    auto unpack = [&](int32_t real, int32_t packed, bool padded, std::vector<unsigned char>& data) {
+        const long long pos = (long long)pkg.tellg();
+        const long long stored = packed >= 0 ? packed : real;
+        if (pos < 0 || pos > (long long)end || stored > (long long)end - pos || (packed >= 0 && packed < 2))
             return false;
-        if (packed > -2)
-            DecryptHead(key, raw);
+        // Only final alignment padding may be absent; every meaningful byte
+        // must fit the physical stream before an allocation or read.
+        const long long padding = padded ? (-stored & 15) : 0;
+        const long long read = std::min(stored + padding, (long long)end - pos);
+        std::vector<unsigned char> raw((size_t)read);
+        if (read && !pkg.read((char*)raw.data(), (std::streamsize)read)) return false;
+        raw.resize((size_t)stored);
+        if (packed > -2) DecryptHead(key, raw);
         if (packed <= -1) {
-            raw.resize((size_t)real);
             data.swap(raw);
             return true;
         }
-        /* some language tables inflate past the size their header gives: keep all of it, as zlib does in Python */
+        // Language tables may expand past their size hint. Preserve the
+        // complete decoded table, matching the pre-existing remastered path.
         int inflatedLen = 0;
-        char* inflated = stbi_zlib_decode_noheader_malloc((const char*)raw.data() + 2, (int)packed - 2, &inflatedLen);
-        if (!inflated)
-            return false;
-        data.assign((unsigned char*)inflated, (unsigned char*)inflated + inflatedLen);
-        free(inflated);
-        return inflatedLen >= real;
+        std::unique_ptr<char, decltype(&stbi_image_free)> inflated(
+            stbi_zlib_decode_noheader_malloc((const char*)raw.data() + 2, packed - 2, &inflatedLen), stbi_image_free);
+        if (!inflated || inflatedLen < real) return false;
+        data.assign((unsigned char*)inflated.get(), (unsigned char*)inflated.get() + inflatedLen);
+        return true;
     };
-    if (!unpack((size_t)(clen >= 0 ? clen : dlen), dlen, clen, base))
-        return false;
+    std::vector<unsigned char> newBase;
+    std::map<std::string, std::vector<unsigned char>> newExtras;
+    if (!unpack(dlen, clen, false, newBase)) return false;
     for (auto& [name, len] : extra) {
-        long long pos = (long long)pkg.tellg();
-        pkg.seekg((pos + 15) & ~15LL);
-        size_t n = (size_t)(len.second >= 0 ? len.second : len.first);
+        const long long pos = (long long)pkg.tellg();
+        if (pos < 0 || pos > (long long)end) return false;
+        const long long padding = -pos & 15;
+        if (padding > (long long)end - pos) return false;
+        pkg.seekg(pos + padding);
         std::vector<unsigned char> data;
-        if (!unpack(n + (-n & 15), len.first, len.second, data))
-            return false;
-        extras[name].swap(data);
+        if (!unpack(len.first, len.second, true, data)) return false;
+        newExtras[name].swap(data);
     }
+    base.swap(newBase);
+    extras.swap(newExtras);
     return true;
 }
 

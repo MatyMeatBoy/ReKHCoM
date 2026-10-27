@@ -64,6 +64,21 @@ def package_identity(release, *, smoke=False, test_build=False, test_version=Non
     major,minor,patch=(int(g or 0) for g in parts.groups())
     nightly=re.search(r'nightly\.(\d{8})\.(\d+)$',base)
     version_code=major*1000000+minor*10000+patch*100+(int(nightly[2]) if nightly else 99)
+    if not (test_build or smoke):
+        official=re.fullmatch(r'(\d+)\.(\d+)(?:\.(\d+))?(?:-pre([1-9]\d?))?',base)
+        if not official:
+            raise ValueError('Official version must be MAJOR.MINOR[.PATCH][-preN]')
+        pre=int(official[4]) if official[4] else 99
+        # Reserve 1..98 for prereleases and 99 for stable. Bound every field
+        # before packing so patch/minor/major releases cannot collide.
+        if major>1999 or minor>99 or patch>99 or pre>99 or (official[4] and pre>98):
+            raise ValueError('Official version capacity: major <= 1999, minor/patch <= 99, preN = 1..98')
+        # Published v2.1 and v2.2-pre1 used the old stable slot (2010099,
+        # 2020099). Preserve those identities; begin a new epoch at pre2.
+        if (major,minor,patch)>(2,2,0) or ((major,minor,patch)==(2,2,0) and pre!=1):
+            version_code=100000000+major*1000000+minor*10000+patch*100+pre
+        if not 1<=version_code<=2100000000:
+            raise ValueError('Official versionCode exceeds Android package bounds')
     suffix='-optiport' if test_build else '-smoke' if smoke else ''
     return {'application_id':'com.rekhcom.android'+('.optiport' if test_build else '.smoke' if smoke else ''),
             'suffix':suffix,'version_name':base+('-optiport' if test_build else '-android-beta'),

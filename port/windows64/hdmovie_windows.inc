@@ -27,8 +27,9 @@ static void MovieSubtitlePath(const char* name, int i, char* out, size_t cap) {
 }
 static void PortAudioMovieHold(int on) {
     if (!sAudio) return;
-    SDL_ClearAudioStream(sAudio);
-    if (on) SDL_PauseAudioStreamDevice(sAudio); else SDL_ResumeAudioStreamDevice(sAudio);
+    H_audio_clear();
+    if (on || sAudioBridgeControls) SDL_PauseAudioStreamDevice(sAudio);
+    else SDL_ResumeAudioStreamDevice(sAudio); /* preserve legacy automatic start */
 }
 static void PortSceneGalleryMovieCapture(SDL_Renderer* renderer) { (void)renderer; }
 static void DropPendingInput(void) {

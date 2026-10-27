@@ -5,6 +5,7 @@ Synthetic OAM/VRAM and injected decoder/texture failures; no SDL, ROM or GPU.
 from pathlib import Path
 import subprocess
 import tempfile
+import re
 from test_hd_sprite_budget import ROOT, function, preamble, source
 
 ppu = (ROOT / 'port/src/port_ppu.c').read_text(encoding='utf-8')
@@ -57,6 +58,7 @@ static struct {int v[1];}*sPreliminarRecipe[4];
 static uint8_t sStagedActorEntered[3],sActorEntered[128];
 static unsigned sStagedActorFirstSeen[3],sActorSceneFrames;
 static const char gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
+static const unsigned char gOlympiaSmallCardTiles[1];
 static uint16_t sObjLine[16],sScrLine[16],sTitleSampleLine[16];
 static uint8_t sObjPrio[16],sObjSemi[16],sObjIndex[16],sScrPrio[16],sScrSemi[16],sScrIndex[16],sObjWin[16],sTitleSamplePrio[16],sTitleSampleSemi[16];
 '''
@@ -110,6 +112,11 @@ unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteReady(')
 unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
+unit += '\nstatic int sSpotlight; static unsigned sScreenBgMask;\n'
+unit += ppu_function('static int SpriteOnScreen(')
+native_color=ppu_function('static int SmallCardNativeColor(')
+unit += '\n'.join('static const unsigned char '+n+'[1]={0};' for n in sorted(set(re.findall(r'\bg\w+SmallCardTiles\b',native_color))-{'gOlympiaSmallCardTiles'}))
+unit += native_color
 unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
