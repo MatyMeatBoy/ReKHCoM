@@ -1,4 +1,4 @@
-# Indicaciones de mando experimentales — primera integración
+# Indicaciones de mando experimentales — etiquetas, símbolos y preset
 
 Pedido del usuario para 2.1; carril `controller-prompt-layouts-v21-experimental`,
 owner `codex-control-prompts`. La opción de Controles **Indicaciones
@@ -6,7 +6,7 @@ owner `codex-control-prompts`. La opción de Controles **Indicaciones
 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation. Es una familia visual; no cambia
 bindings. Restaurar controles predeterminados también restaura Original/GBA.
 
-## Implementado en este incremento
+## Primera integración textual (#332)
 
 - Resolver acción → binding efectivo → posición física → nombre de familia.
   Deshace la normalización Nintendo existente antes de nombrar la posición.
@@ -30,23 +30,55 @@ bindings. Restaurar controles predeterminados también restaura Original/GBA.
   buffer acotado independiente conserva la fuente original ante exceso de
   longitud. No reemplaza letras globalmente ni modifica ROM/SRAM.
 
-`test_controller_prompts.py` valida el contrato puro. `test_card_scroll.py`
-compila input/config reales y usa SDL virtual: INI, Cross/Circle con remapping,
-normalización Nintendo, Auto desconocido, teclado, ruido, desconexión y tutorial
-EU/US. EU/US/JP pasan; JP verifica que el texto SJIS permanece intacto, no que
-ya tiene indicaciones adaptadas. También pasa sintaxis de `port_ui.c` EU y
-`check_sources.py`. No se construyó ni ejecutó un juego completo.
+## Segundo incremento: símbolos y tokens SJIS
+
+- Base programática pequeña: letras 3×5 del diagrama existente, cuerpo de
+  botón 12×10 y primitivas Cross/Circle/Square/Triangle. No depende de que la
+  fuente del host incluya esos símbolos, ni añade arte externo. Original/GBA
+  conserva sus indicadores existentes y su comportamiento predeterminado.
+- Caché inmutable de 18.432 bytes de tiles 4bpp + 144 flags. Cada símbolo se
+  genera una vez; su dirección no cambia. `LoadObjTiles` reutiliza esas fuentes
+  estables. No se cargan imágenes ni se asigna un atlas por cuadro.
+- El resolver emite un token privado de dos unidades sólo para acciones
+  reconocidas. Los layouts reales Latin/SJIS lo consumen como un sprite y
+  conservan posición, paleta y avance de 12 píxeles. El tag 26 queda como icono
+  pixel incluso con texto HD. Teclado y bindings sin símbolo conservan nombres
+  textuales; en JP se codifican explícitamente como caracteres SJIS de ancho
+  completo, nunca se copian bytes UTF-8.
+- Patrones JP comprobados en datos locales: Ａ/Ｂ/Ｌ/Ｒ + ボタン, Ｌ・Ｒボタン
+  y ＳＥＬＥＣＴボタン. Se conserva el sufijo japonés y la prosa ajena.
+  Las combinaciones Latin conocidas L+R generan dos símbolos/etiquetas.
+  Tutoriales de warp, escaleras y Riku tienen whitelist explícita adicional.
+- Los layouts tienen un límite PC de 128 slots y continúan en otra página
+  antes de escribir fuera del arreglo, incluso con expansiones de etiquetas.
+- Indicadores de opciones `GbaKey`/`MenuButton` reutilizan estos símbolos cuando
+  hay un mando conocido activo y mantienen fallback textual/Original.
+
+## Preset explícito y confirmado
+
+La fila **Preset confirmar/cancelar...** abre una pregunta localizada con
+**No** seleccionado. Explica que reemplaza A/B personalizados del mando,
+conserva teclado y todos los demás controles. Nintendo elige posiciones A/B;
+PlayStation Circle/Cross; Xbox A/B. La familia elegida queda fijada al abrir la
+pregunta: cambiar de dispositivo al confirmarla no elige otro preset. La
+normalización Nintendo se deriva del input real/configuración de layout, nunca
+de la familia visual. Auto desconocido y Original no ofrecen un preset inventado.
+
+Pruebas: `test_controller_prompts.py` (contrato, patrones y raster 4bpp acotado),
+`test_controller_prompt_layout.py` (productor real de tiles y consumidores
+Latin/SJIS reales, dos símbolos, posiciones, fuente intacta y límite 128),
+`test_card_scroll.py --version eu/us/jp` (input/config reales y SDL virtual:
+INI, Cross/Circle, Nintendo, Auto desconocido, teclado/ruido/desconexión,
+tokens JP y preservación de custom bindings fuera del preset confirmado).
+Sintaxis de UI/mensajes EU/US/JP y `check_sources.py` pasan. No equivale a
+una build completa o revisión visual GPU.
 
 ## Pendientes obligatorios del alcance completo 2.1
 
-- Símbolos gráficos pequeños para todas las familias y GBA/Original, reutilizar
-  la base existente; esta entrega usa texto, no un atlas de símbolos nuevo.
-- Tutoriales JP: tokens SJIS explícitos y glifos, sin introducir UTF-8 en el
-  buffer del juego. Instrucciones compuestas L+R y otras frases todavía no
-  reconocidas conservan su texto original; no afirmar cobertura total.
-- Preset explícito de confirmación Nintendo A / PlayStation Circle, explicado
-  y localizado. Nunca aplicar al elegir familia ni sobrescribir controles
-  personalizados sin una acción de preset claramente confirmada.
+- Ampliar sólo patrones de tutorial comprobados que falten; frases compuestas
+  no reconocidas conservan el original. Revisar visualmente símbolos de todas
+  las familias en pixel/HD y paletas EU/US/JP, sin afirmar cobertura total sólo
+  porque un parser reconoce un nombre.
 - Adaptar líneas ya abiertas al cambiar dispositivo/binding; ahora los mensajes
   cambian al volver a resolver su página. Revisar HD/pixel text, ancho, recorte,
   fuentes de símbolos, fallback accesible y mandos múltiples en pruebas GPU.

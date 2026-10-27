@@ -416,5 +416,9 @@ void PortInputHandleEvent(const void* sdlEvent);
 void PortPromptHandleEvent(const void* sdlEvent); /* raw, before Nintendo normalization and menu consumption */
 int PortControllerBindingLabel(int binding, char* out, size_t size);
 int PortControllerActionLabel(int action, char* out, size_t size);
+int PortControllerActionGlyph(int action); /* 0: use the accessible text label */
+const unsigned char* PortControllerGlyphTiles(int glyph); /* immutable 16x16 4bpp, no allocation */
+int PortControllerPresetFamily(void); /* identified/forced family, 0 if no honest preset is available */
+int PortApplyControllerConfirmPreset(int family); /* explicit, pinned UI choice: replaces only gamepad A/B */
 
 #endif

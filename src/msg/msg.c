@@ -21,6 +21,8 @@
 #include "macros.h"
 #ifdef PLATFORM_PC
 #include "engine.h"
+#include "port/port.h"
+#include "port/controller_prompt_glyphs.h"
 #endif
 
 static SpriteTextLine* sSpriteTextLines;
@@ -6405,6 +6407,9 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
     while (*text != MSG_CODE_END) {
         s32 glyph;
 
+#ifdef PLATFORM_PC
+        if (sTextEntryCount >= 128) { *nextText = text; return sTextEntryCount; }
+#endif
         sCardMsgGlyphSprites[sTextEntryCount].x = x + cx;
         sCardMsgGlyphSprites[sTextEntryCount].y = y + cy;
         sCardMsgGlyphSprites[sTextEntryCount].visible = TRUE;
@@ -6418,6 +6423,24 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
             alternate = FALSE;
             text++;
         }
+
+#ifdef PLATFORM_PC
+        if (*text == PORT_PROMPT_TOKEN && PortControllerGlyphTiles(text[1])) {
+            TextGlyphSprite* sprite = &sCardMsgGlyphSprites[sTextEntryCount];
+            if (sprite->tiles) ReleaseObjTiles(sprite->tiles);
+            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(text[1]), 128);
+            sprite->useAlternatePalette = alternate;
+            sCardMsgGlyphCodes[sTextEntryCount++] = PORT_PROMPT_TOKEN;
+            cx += 12 << 8;
+            text += 2;
+            /* The generated token closes its highlight. Consume that control
+               here so a terminal PLAIN does not become a blank NUL glyph. */
+            if (*text == MSG_CODE_PLAIN) { alternate = FALSE; text++; }
+            if (cx > 0x9B00) { cx = 0; cy += 0xC00; }
+            if (cy > 0x1800) { *nextText = text; return sTextEntryCount; }
+            continue;
+        }
+#endif
 
         if (*text == MSG_CODE_NL) {
             cx = 0;
@@ -6541,10 +6564,27 @@ u8 LayoutCardMsgGlyphsPageSjis(s32 x, s32 y, u8* text, u8** nextText) {
     while (*text != MSG_CODE_END) {
         u16 code;
         glyph = 0;
+#ifdef PLATFORM_PC
+        if (sTextEntryCount >= 128) { *nextText = text; return sTextEntryCount; }
+#endif
         sCardMsgGlyphSprites[sTextEntryCount].x = x + cx;
         sCardMsgGlyphSprites[sTextEntryCount].y = y + cy;
         sCardMsgGlyphSprites[sTextEntryCount].visible = TRUE;
         sCardMsgGlyphSprites[sTextEntryCount].useAlternatePalette = FALSE;
+
+#ifdef PLATFORM_PC
+        if (*text == PORT_PROMPT_TOKEN && PortControllerGlyphTiles(text[1])) {
+            TextGlyphSprite* sprite = &sCardMsgGlyphSprites[sTextEntryCount];
+            if (sprite->tiles) ReleaseObjTiles(sprite->tiles);
+            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(text[1]), 128);
+            sCardMsgGlyphCodes[sTextEntryCount++] = PORT_PROMPT_TOKEN;
+            cx += 12 << 8;
+            text += 2;
+            if (cx > 0x8C00) { cx = 0; cy += 0xC00; }
+            if (cy > 0x1800) { *nextText = text; return sTextEntryCount; }
+            continue;
+        }
+#endif
 
         if (*(u16*)text == MSG_CODE_JP_NL) {
             cx = 0;
