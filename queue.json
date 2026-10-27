@@ -4977,15 +4977,21 @@
     "windows64-saved-door-null": {
       "id": "windows64-saved-door-null",
       "piece": "Windows64 saved-game first door: GBA BIOS cell read",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-crash",
       "created_at": "2026-10-27T07:58:48.998903+00:00",
-      "updated_at": "2026-10-27T07:58:59.484889+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T08:14:20.040060+00:00",
+      "branch": "fix/windows64-saved-door-null",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/318",
       "approval": "User 2026-10-27 requests fix across builds, protect Quiver install",
       "reference": "WER 0x100f7bd6; local copied save ad60a265",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T08:14:20.040060+00:00",
+          "owner": "codex-crash",
+          "detail": "Real user SRAM RED 0xC0000005; shared BIOS_PTR GREEN field520 exit0@2800; all-region x86+x64 builds pass; packaged matrix running"
+        }
+      ],
       "claimed_at": "2026-10-27T07:58:59.484889+00:00"
     },
     "gallery-direct-return-no-flash": {
@@ -5056,7 +5062,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T08:10:10.550151+00:00"
   },
-  "updated_at": "2026-10-27T08:12:21.453721+00:00",
+  "updated_at": "2026-10-27T08:14:20.040060+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
