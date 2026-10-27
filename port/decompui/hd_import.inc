@@ -159,46 +159,55 @@ static bool ReadAsset(std::ifstream& pkg, long long offset, std::vector<unsigned
 /* ---- SCD → Ogg Vorbis ----------------------------------------------------------------------------------------- */
 
 static uint32_t U32(const std::vector<unsigned char>& d, size_t at) {
-    return at + 4 <= d.size() ? (uint32_t)d[at] | (uint32_t)d[at + 1] << 8 | (uint32_t)d[at + 2] << 16 | (uint32_t)d[at + 3] << 24 : 0;
+    return at <= d.size() && d.size() - at >= 4 ? (uint32_t)d[at] | (uint32_t)d[at + 1] << 8 | (uint32_t)d[at + 2] << 16 | (uint32_t)d[at + 3] << 24 : 0;
 }
 
 /* The Ogg file and its loop points (samples): the granule of the last page ending before each byte offset. */
 static bool ScdToOgg(const std::vector<unsigned char>& scd, std::vector<unsigned char>& ogg, uint64_t& loopStart, uint64_t& loopEnd) {
     if (scd.size() < 0x100 || memcmp(scd.data(), "SEDBSSCF", 8) != 0)
         return false;
-    size_t entry = U32(scd, U32(scd, 0x3C));
+    size_t table = U32(scd, 0x3C);
+    if (table > scd.size() - 4) return false;
+    size_t entry = U32(scd, table);
+    if (entry > scd.size() - 0x20) return false;
     uint32_t size = U32(scd, entry), codec = U32(scd, entry + 12), ls = U32(scd, entry + 16), le = U32(scd, entry + 20);
     uint32_t aux = U32(scd, entry + 28);
-    if (codec != 6)
-        return false;
+    if (codec != 6) return false;
     size_t pos = entry + 0x20;
-    for (uint32_t i = 0; i < aux; i++)
-        pos += U32(scd, pos + 4);
-    if (pos + 0x20 > scd.size())
-        return false;
+    // Every auxiliary record has at least its type and length fields. Bound
+    // the count by actual bytes and require forward progress for every record.
+    if (aux > (scd.size() - pos) / 8) return false;
+    for (uint32_t i = 0; i < aux; i++) {
+        if (scd.size() - pos < 8) return false;
+        uint32_t chunk = U32(scd, pos + 4);
+        if (chunk < 8 || chunk > scd.size() - pos) return false;
+        pos += chunk;
+    }
+    if (scd.size() - pos < 0x20) return false;
     unsigned version = scd[pos], headerSize = scd[pos + 1], xorByte = scd[pos + 2];
     uint32_t seekSize = U32(scd, pos + 0x10), vorbisSize = U32(scd, pos + 0x14);
+    if (headerSize < 0x20 || headerSize > scd.size() - pos || seekSize > scd.size() - pos - headerSize)
+        return false;
     size_t head = pos + headerSize + seekSize;
-    if (head + vorbisSize + size > scd.size())
+    if (vorbisSize > scd.size() - head || size > scd.size() - head - vorbisSize || (uint64_t)vorbisSize + size < 4)
         return false;
-    ogg.assign(scd.begin() + (long)head, scd.begin() + (long)(head + vorbisSize + size));
+    std::vector<unsigned char> decoded(scd.data() + head, scd.data() + head + vorbisSize + size);
     if (version == 2 && xorByte)
-        for (size_t i = 0; i < vorbisSize; i++)
-            ogg[i] ^= (unsigned char)xorByte;
-    if (memcmp(ogg.data(), "OggS", 4) != 0)
-        return false;
+        for (size_t i = 0; i < vorbisSize; i++) decoded[i] ^= (unsigned char)xorByte;
+    if (memcmp(decoded.data(), "OggS", 4) != 0) return false;
     auto sampleAt = [&](uint64_t offset) -> uint64_t {
         uint64_t best = 0, target = vorbisSize + offset;
         size_t p = 0;
-        while (p + 27 <= ogg.size() && memcmp(&ogg[p], "OggS", 4) == 0) {
+        while (p + 27 <= decoded.size() && memcmp(&decoded[p], "OggS", 4) == 0) {
             int64_t granule;
-            memcpy(&granule, &ogg[p + 6], 8);
-            unsigned segs = ogg[p + 26];
+            memcpy(&granule, &decoded[p + 6], 8);
+            unsigned segs = decoded[p + 26];
+            if (segs > decoded.size() - p - 27) break;
             size_t body = 0;
-            for (unsigned s = 0; s < segs && p + 27 + s < ogg.size(); s++)
-                body += ogg[p + 27 + s];
+            for (unsigned s = 0; s < segs; s++)
+                body += decoded[p + 27 + s];
             size_t end = p + 27 + segs + body;
-            if (end > target)
+            if (end > decoded.size() || end > target)
                 break;
             if (granule > 0)
                 best = (uint64_t)granule;
@@ -209,6 +218,7 @@ static bool ScdToOgg(const std::vector<unsigned char>& scd, std::vector<unsigned
     uint64_t total = sampleAt(size);
     loopStart = sampleAt(ls);
     loopEnd = le > ls ? sampleAt(le) : total;
+    ogg.swap(decoded);
     return true;
 }
 
