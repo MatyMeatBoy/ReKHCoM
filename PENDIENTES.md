@@ -238,4 +238,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-linux64-language-args | Preservar --language en wrapper/host Linux64 con parser consumidor C dirigido, sin ABI/guest ni atribuir #330 | integrado | codex-linux64-args | https://github.com/MatyMeatBoy/ReKHCoM/pull/376 | Coordinador autoriza PR acotado 27/10 | 2026-10-27T17:03:50.105053+00:00 |
 | windows64-cpu-sse41-gate | Validar requisito SSE4.1 antes del guest Windows64 | pr_abierto | codex-windows64-cpu-gate | https://github.com/MatyMeatBoy/ReKHCoM/pull/377 | Coordinador autorizó mantener baseline SSE4.1 y gate launcher/host directo; no se atribuye a Pedro | 2026-10-27T17:12:36.959283+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T17:14:28.908745+00:00)
