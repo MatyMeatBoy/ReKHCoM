@@ -788,32 +788,52 @@ char* getenv(const char* name) {
 }
 
 static char* GetenvLocked(const char* name) {
-    enum { SLOTS = 128 };
+    enum { SLOTS = 512, MAX_KEY = 256, MAX_VALUE = 1 << 20, MAX_BYTES = 4 << 20 };
     static char* slots[SLOTS];
-    static const char* keys[SLOTS];
+    static char* keys[SLOTS];
     static int used;
+    static size_t bytes;
+    char *key, *value = NULL;
+    size_t keyBytes = 0;
     int i, n, cap = 160;
+    if (!name) return NULL;
     for (i = 0; i < used; i++)
         if (strcmp(keys[i], name) == 0)
-            return slots[i] && slots[i][0] == 1 ? NULL : slots[i];
-    if (used == SLOTS) /* the table is full: start over, nothing is returned from it for long */
-        used = 0;
-    i = used++;
-    free((void*)keys[i]);
-    keys[i] = strdup(name);
+            return slots[i];
+    /* A returned value lives for this image's lifetime. Saturation may refuse a
+       new key; it must never free a value still held by another caller. */
+    if (used == SLOTS) return NULL;
+    while (keyBytes < MAX_KEY && name[keyBytes]) keyBytes++;
+    if (!keyBytes || keyBytes == MAX_KEY) return NULL;
+    keyBytes++;
+    if (bytes + keyBytes + (size_t)cap > MAX_BYTES) return NULL;
+    key = strdup(name);
+    if (!key) return NULL;
     for (;;) {
-        free(slots[i]);
-        slots[i] = malloc((size_t)cap);
-        if (!slots[i])
-            return NULL;
-        n = h_getenv(name, slots[i], cap - 1);
-        if (n < cap - 2 || cap >= (1 << 20))
+        if (bytes + keyBytes + (size_t)cap > MAX_BYTES) { free(key); return NULL; }
+        value = malloc((size_t)cap);
+        if (!value) { free(key); return NULL; }
+        n = h_getenv(name, value, cap - 1);
+        if (n < 0) {
+            free(value);
+            value = NULL; /* Cache absence without an ambiguous byte sentinel. */
+            cap = 0;
             break;
-        cap *= 4; /* it filled the slot: maybe cut */
+        }
+        if (n < cap - 2) {
+            value[n] = 0;
+            break;
+        }
+        free(value);
+        if (cap == MAX_VALUE) { free(key); return NULL; }
+        cap = cap > MAX_VALUE / 4 ? MAX_VALUE : cap * 4;
     }
-    if (n < 0) { slots[i][0] = 1; slots[i][1] = 0; return NULL; }
-    slots[i][n] = 0;
-    return slots[i];
+    /* Publish only complete entries: OOM can be retried, with no NULL key left
+       for the following strcmp and no mutation of earlier values. */
+    keys[used] = key;
+    slots[used++] = value;
+    bytes += keyBytes + (size_t)cap;
+    return value;
 }
 
 void exit(int code) { h_exit(code); for (;;) {} }
