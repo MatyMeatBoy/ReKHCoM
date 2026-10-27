@@ -159,5 +159,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | media-readiness-fallbacks | Video readiness and cleanup fallbacks Android and Windows MF | en_revision | codex-media-fallbacks | fix/media-readiness-fallbacks | User authorized indispensable fallbacks before Deck Android test builds | 2026-10-27T05:13:22.548751+00:00 |
 | optiport-skill-20261027 | OptiPort skill and evidence-based progress board | en_curso | codex-optiport | — | — | 2026-10-27T05:09:56.453746+00:00 |
 | hd-music-progress-20261027 | Bound HD music decoder progress and preserve original audio on failure | en_curso | codex-music | — | — | 2026-10-27T05:11:27.430158+00:00 |
+| save-bank-flush | Code: retain dirty SRAM and selected bank when persistence fails | pendiente | — | — | — | 2026-10-27T05:17:35.135889+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:15:45.154320+00:00)
