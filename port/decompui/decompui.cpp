@@ -3505,15 +3505,21 @@ static void Launch(SDL_Window* window) {
     const fs::path guest = sRoot / "bin64" / (std::string("guest-") + kVersions[sSelected].id + ".bin");
     const fs::path boot = sRoot / (".rekhcom-boot-" + std::to_string(GetCurrentProcessId()));
     std::error_code ec;
-    bool use64 = ReKHCoMSelect64(os64, sRuntimeMode == 1, fs::is_regular_file(host),
-                                fs::is_regular_file(guest), fs::is_regular_file(sRoot / "bin64" / "SDL3.dll"));
+    const bool hasHost = fs::is_regular_file(host), hasGuest = fs::is_regular_file(guest);
+    const bool hasSdl = fs::is_regular_file(sRoot / "bin64" / "SDL3.dll");
+    const bool sse41 = PortWindowsCpuHasSse41(PortWindowsCpuLeaf1Ecx());
+    bool use64 = ReKHCoMSelect64(os64, sRuntimeMode == 1, hasHost, hasGuest, hasSdl, sse41);
     /* "Play in 32 bits" from the 64-bit problem notice, or Automatic after this version's 64-bit game crashed here */
     if (sLaunch32Once || (sRuntimeMode == 0 && s64FailedVersion == REKHCOM_VERSION)) {
         sLaunch32Once = false;
         use64 = false;
     } else if (sRuntimeMode == 2 && !use64) {
-        Notice(T("No se puede iniciar en 64 bits: requiere Windows x64 y los archivos completos de bin64.",
-                 "Cannot start in 64-bit mode: Windows x64 and the complete bin64 files are required."), true);
+        if (ReKHCoM64Missing(os64, hasHost, hasGuest, hasSdl, sse41) == ReKHCoM64MissingCpu)
+            Notice(T("El modo de 64 bits requiere una CPU compatible con SSE4.1. Puedes elegir 32 bits en Avanzado.",
+                     "64-bit mode requires a CPU with SSE4.1. You can choose 32 bits under Advanced."), true);
+        else
+            Notice(T("No se puede iniciar en 64 bits: requiere Windows x64 y los archivos completos de bin64.",
+                     "Cannot start in 64-bit mode: Windows x64 and the complete bin64 files are required."), true);
         return;
     }
     DWORD code = 0;

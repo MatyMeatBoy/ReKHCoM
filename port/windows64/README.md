@@ -2,6 +2,10 @@
 
 Native PE x86-64 SDL3 host, using the normal Windows GPU driver. The shared
 x32 game image retains 32-bit pointers and game layouts with x86-64 instructions.
+The guest is compiled with SSE4.1 enabled and requires that CPU capability.
+Automatic selects Windows32 when it is unavailable. Force64 explains the CPU
+requirement without changing the saved preference. A directly invoked host
+checks the same CPUID feature before opening/mapping the image or entering it.
 
 ```powershell
 python port/windows64/build_windows64.py --regions eu us jp --jobs 1 --test
@@ -22,7 +26,9 @@ shared guest main as --language; this needs the updated platform_ps5.c image.
 commits and closes guest-entered immediately before entering guest code.
 A marker creation error returns 4 without booting the guest. Once the marker
 exists, never retry Windows32, including after guest exit 81 or a guest crash.
-Pre-guest failures: 2 image/arguments, 3 low allocation, 4 SDL/renderer/marker.
+Pre-guest failures: 2 image/arguments, 3 low allocation, 4 SDL/renderer/marker,
+5 unsupported CPU (missing SSE4.1). Code5 also permits a pre-entry Automatic
+retry with Windows32 if a host rejects a launch that passed the selector.
 Loader failures happen before host code. The launcher must use a unique marker.
 
 ## Persistence and UTF-8
@@ -63,6 +69,20 @@ Host compiled with LLVM MinGW and SDL3 x64. --test checks:
   consumes their releases, then the queued focus-lost clears held actions.
 - Process contract: stale marker cleanup, error2/error4 without marker,
   and synthetic guest return81 with a durable marker (no ROM needed).
+- `test_cpu_requirement.py --work PRIVATE_DIR --toolchain LLVM_MINGW --sdl SDL3`
+  compiles only the actual host and a test variant with the CPUID SSE4.1 bit
+  masked. Supported CPU enters a synthetic guest and returns81; unsupported
+  returns5 without an entry marker, preserving private data sentinels.
+- `port/tools/test_launcher_cpu_gate.py --work PRIVATE_DIR --toolchain LLVM_MINGW`
+  executes the production Launch consumer with fake CPU/process boundaries:
+  both feature states, Auto/Force32/Force64, saved preference and missing files.
+Both CPU test CLIs reject existing non-synthetic persistent/launcher fixture
+files before preparing sources or writing anything; exact known test fixtures
+permit reruns. `port/tools/test_cpu_fixture_safety.py --work PRIVATE_DIR` verifies
+all six protected paths by invoking the real CLIs with unrelated contents.
+
+These CPU tests verify compatibility policy, not an attribution of issue360.
+Pedro reports Windows11 x64; his CPU and exception code remain unknown.
 
 Existing EU image smoke tests, isolated folders and silent audio:
 - Native Direct3D11: room10901 / doorpose0 / A240, clean exit500.
