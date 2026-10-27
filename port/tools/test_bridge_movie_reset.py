@@ -44,6 +44,7 @@ native_stubs=r'''
 #define SDL_snprintf snprintf
 #define SDL_zero(e) memset(&(e),0,sizeof(e))
 static int sStartAt;
+static void PortBridgeRefreshTextureEpoch(void){}
 static struct {int hdSubtitles;}gPortConfig;
 static void MoviePath(const char*n,char*p,int size){snprintf(p,size,"%s",n);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}

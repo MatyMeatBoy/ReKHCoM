@@ -449,6 +449,10 @@ static void RefreshTextureEpoch(void) {
     sTextureEpoch = epoch;
 }
 
+/* A synchronous host movie can pump a reset outside the guest input drain.
+ * Synchronize before its caller can allocate/upload more guest textures. */
+void PortBridgeRefreshTextureEpoch(void) { RefreshTextureEpoch(); }
+
 typedef struct Tex {
     SDL_Texture pub;
     SDL_PixelFormat format;

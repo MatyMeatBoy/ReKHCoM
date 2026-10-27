@@ -67,7 +67,28 @@ static int h_getenv(const char*name,char*out,int cap){queries++;assert(!strcmp(n
 static int h_tex_create(const void*p,int w,int h,int s){return H_tex_create(p,w,h,s);}
 static void h_tex_free(int id){H_tex_free(id);}
 '''
-  code=common+host+drawing+bridge+epoch+tex+function(guest,'static int HostTex(')+function(guest,'void SDL_DestroyTexture(').replace('SDL_DestroyTexture(', 'GuestDestroyTexture(',1)+r'''
+  movie=(ROOT/'port/src/port_hdmovie.c').read_text(encoding='utf-8')
+  movie=movie[movie.rindex('static int PlayFile(const char* name) {'):]
+  android=(ROOT/'port/android64/host/android64_host.c').read_text(encoding='utf-8')
+  movie_bridge=r'''
+#define SDL_snprintf snprintf
+static int sQuit,sStartAt;
+static struct {int hdSubtitles;}gPortConfig;
+static void MoviePath(const char*n,char*p,int cap){snprintf(p,cap,"%s",n);}
+static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
+static const char*PortConfigPath(const char*p){return p;}
+static void SDL_strlcpy(char*p,const char*s,int cap){snprintf(p,cap,"%s",s);}
+static void(*resetCallback)(void);
+static void RendererDeviceReset(void){HostTextureReset();}
+static void HdMovieAndroidSetRendererResetCallback(void(*cb)(void)){resetCallback=cb;}
+static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c){assert(resetCallback);resetCallback();return 0;}
+'''
+  movie_bridge+=function(android,'static int H_hd_movie(')
+  movie_bridge+='static int h_hd_movie(const char*m,const char*a,const char*b,const char*f){return H_hd_movie(m,a,b,f);}'
+  movie_bridge+=function(movie,'static int PlayFile(')
+  create=function(guest,'SDL_Texture* SDL_CreateTexture(').replace('SDL_CreateTexture(', 'GuestCreateTexture(',1)
+  create_stubs='typedef void SDL_Renderer;typedef int SDL_TextureAccess;\n#define SDL_TEXTUREACCESS_STREAMING 1\n#define SetError(...) ((void)0)\n'
+  code=common+host+drawing+bridge+epoch+tex+create_stubs+create+movie_bridge+function(guest,'static int HostTex(')+function(guest,'void SDL_DestroyTexture(').replace('SDL_DestroyTexture(', 'GuestDestroyTexture(',1)+r'''
 static Tex* make(unsigned char pixel){Tex*t=calloc(1,sizeof(*t));t->pub.w=t->pub.h=1;t->id[0]=t->id[1]=-1;t->epoch=sTextureEpoch;t->rgba=malloc(4);memset(t->rgba,pixel,4);return t;}
 int main(void){
  Tex*t=make(11);int old=HostTex(t,false),oldSmooth=HostTex(t,true);assert(old>=0&&oldSmooth>=0);
@@ -86,6 +107,15 @@ int main(void){
  GuestDestroyTexture(&t->pub);assert(destroyed==d&&HostTextureSlot(unrelated)>=0);
  failUpload=1;before=destroyed;assert(H_tex_create(pixel,1,1,0)==-1&&destroyed==before+1);failUpload=0;
  H_tex_update(-1,pixel);H_tex_free(-1);assert(HostTextureSlot(0x7fffffff)==-1);
+ /* Movie reset must synchronize before any new guest allocation/upload, even
+    before the next input drain. No host texture may become ownerless. */
+ HostTextureReset();RefreshTextureEpoch();
+ assert(!PlayFile("reset.mp4"));
+ Tex*post=(Tex*)GuestCreateTexture(NULL,0,0,1,1);
+ assert(post);int postId=HostTex(post,false);assert(postId>=0);
+ RefreshTextureEpoch();GuestDestroyTexture(&post->pub);
+ int live=0;for(int i=0;i<HOST_TEXTURE_SLOTS;i++)live+=sTex[i]!=NULL;
+ assert(live==0);
  HostTextureReset();sTexSerial[0]=HOST_TEXTURE_MAX_SERIAL;int next=H_tex_create(pixel,1,1,0);assert((next&4095)==1);
  sRendererGeneration=0xffffffffu;HostTextureReset();assert(H_tex_create(pixel,1,1,0)==-1);
  return 0;
@@ -94,6 +124,7 @@ int main(void){
  cc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
  with tempfile.TemporaryDirectory(prefix='rekhcom-bridge-epoch-') as td:
   src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(code,encoding='utf-8')
-  subprocess.run([str(cc),str(src),'-o',str(exe)],check=True)
-  subprocess.run([str(exe)],check=True,capture_output=True)
+  for target in (['PORT_ANDROID64'] if args.baseline else ['PORT_ANDROID64','PORT_LINUX64_GUEST']):
+   subprocess.run([str(cc),'-D'+target,str(src),'-o',str(exe)],check=True)
+   subprocess.run([str(exe)],check=True)
 if __name__=='__main__':main()

@@ -73,3 +73,19 @@ claim complete native32 renderer recovery.
   pre-existing stb_vorbis pointer-comparison warning.
 - `git diff --check` passes. No heavy builds, installed main changes, device
   reset reproduction or hardware recovery confirmation was performed here.
+
+## Follow-up: epoch synchronization after synchronous movies
+
+The host movie loop can reset the renderer between guest input drains. The
+old guest epoch then mislabeled any newly uploaded texture before the next
+poll; the later epoch refresh discarded that still-live handle without freeing
+it. `PlayFile` now synchronizes the optional epoch immediately after the host
+movie returns, before callers can create or upload another guest texture.
+The bridge ABI and per-draw query count remain unchanged; unsupported old-host
+queries continue to leave the cached epoch intact.
+
+The production-function regression failed at `live == 0` before the fix. It
+runs the Android host movie wrapper through `PlayFile`, creates and uploads an
+actual guest wrapper before another input drain, refreshes the epoch and
+destroys the wrapper, then checks that no host slots remain live. It passes
+with both Android64 and Linux64 guest preprocessor paths after the fix.
