@@ -193,4 +193,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | shim-render-target-reset-constant | SDL shim target-reset enum matches SDL3 and passes source gate | en_curso | codex-crash | — | User authorizes verified release fixes | 2026-10-27T08:26:44.349179+00:00 |
 | submenu-hd-transition-coherence | Coherent HD edge extensions during submenu transitions | en_curso | device_profiles_sol | — | — | 2026-10-27T08:29:31.007920+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T08:30:24.057898+00:00)
