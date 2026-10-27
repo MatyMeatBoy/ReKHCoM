@@ -5492,19 +5492,20 @@
     "controller-bridge-metadata": {
       "id": "controller-bridge-metadata",
       "piece": "Optional versioned actual controller metadata for 64-bit SDL hosts without bridge ABI changes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-control-prompts",
       "created_at": "2026-10-27T10:26:45.203781+00:00",
-      "updated_at": "2026-10-27T10:26:45.203781+00:00",
+      "updated_at": "2026-10-27T10:26:50.310729+00:00",
       "branch": null,
       "pr": null,
       "approval": "Parent authorizes producer and consumer metadata implementation for truthful Auto prompts",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T10:26:50.310729+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:26:45.203781+00:00",
+  "updated_at": "2026-10-27T10:26:50.310729+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
