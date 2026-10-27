@@ -431,9 +431,28 @@ bool SDL_RenderDebugText(SDL_Renderer* r, float x, float y, const char* s) {
 
 /* ---- textures ---- */
 
+/* Optional existing-ABI capability query. Old hosts return unset; app_state
+ * remains exclusively the background bit. Polled once per input queue drain. */
+static uint32_t sTextureEpoch;
+static void RefreshTextureEpoch(void) {
+    char value[48];
+    const char prefix[] = "bridge-textures-v1:";
+    int n = h_getenv("KHCOM_RENDERER_GENERATION", value, sizeof(value));
+    uint32_t epoch = 0;
+    if (n <= (int)sizeof(prefix) - 1 || n >= (int)sizeof(value) ||
+        memcmp(value, prefix, sizeof(prefix) - 1)) return;
+    for (int i = (int)sizeof(prefix) - 1; i < n; i++) {
+        unsigned digit = (unsigned)(value[i] - '0');
+        if (digit > 9 || epoch > (0xffffffffu - digit) / 10u) return;
+        epoch = epoch * 10u + digit;
+    }
+    sTextureEpoch = epoch;
+}
+
 typedef struct Tex {
     SDL_Texture pub;
     SDL_PixelFormat format;
+    uint32_t epoch;       /* host renderer epoch that owns the lazy IDs */
     int id[2];            /* host texture: [0] nearest, [1] smooth; -1 not made */
     uint8_t* rgba;        /* the pixels as the host wants them */
     SDL_ScaleMode scale;
@@ -441,6 +460,14 @@ typedef struct Tex {
     Uint8 cr, cg, cb, ca;
     bool picture;         /* a streaming texture: the game's picture, as opposed to glyphs and icons */
 } Tex;
+
+static void TextureEpoch(Tex* t) {
+    if (t->epoch == sTextureEpoch) return;
+    /* The host already released old GPU textures. Do not free old IDs into
+       slots which may now hold unrelated textures; retain the CPU pixels. */
+    t->id[0] = t->id[1] = -1;
+    t->epoch = sTextureEpoch;
+}
 
 static void ToRgba(SDL_PixelFormat f, const uint8_t* src, int pitch, uint8_t* dst, int dstPitch, int w, int h) {
     int x, y;
@@ -464,6 +491,7 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
     t->pub.w = w; t->pub.h = h;
     t->format = format;
     t->id[0] = t->id[1] = -1;
+    t->epoch = sTextureEpoch;
     t->rgba = calloc((size_t)w * h, 4);
     t->blend = SDL_BLENDMODE_NONE;
     t->scale = SDL_SCALEMODE_LINEAR;
@@ -482,6 +510,7 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* r, SDL_Surface* s) {
 void SDL_DestroyTexture(SDL_Texture* p) {
     Tex* t = (Tex*)p;
     if (!t) return;
+    TextureEpoch(t);
     if (t->id[0] >= 0) h_tex_free(t->id[0]);
     if (t->id[1] >= 0) h_tex_free(t->id[1]);
     free(t->rgba);
@@ -492,6 +521,7 @@ bool SDL_UpdateTexture(SDL_Texture* p, const SDL_Rect* rect, const void* pixels,
     Tex* t = (Tex*)p;
     SDL_Rect r = { 0, 0, t->pub.w, t->pub.h };
     int k;
+    TextureEpoch(t);
     if (rect) r = *rect;
     ToRgba(t->format, pixels, pitch, t->rgba + ((size_t)r.y * t->pub.w + r.x) * 4, t->pub.w * 4, r.w, r.h);
     for (k = 0; k < 2; k++)
@@ -507,6 +537,7 @@ bool SDL_SetTextureAlphaMod(SDL_Texture* p, Uint8 a) { ((Tex*)p)->ca = a; return
 /* The host texture for the filter this draw wants: nearest, or smooth (also used by pixel art). */
 static int HostTex(Tex* t, bool smooth) {
     int k = smooth ? 1 : 0;
+    TextureEpoch(t);
     if (t->id[k] < 0) t->id[k] = h_tex_create(t->rgba, t->pub.w, t->pub.h, smooth);
     return t->id[k];
 }
@@ -785,6 +816,7 @@ static void RefreshTouch(void) {
     HostTouch now[HOSTTOUCH_MAX];
     int count = h_touch_poll(now, HOSTTOUCH_MAX), i, j, state = h_app_state();
     SDL_Event e;
+    RefreshTextureEpoch();
 
     if (state != background) {
         memset(&e, 0, sizeof(e));

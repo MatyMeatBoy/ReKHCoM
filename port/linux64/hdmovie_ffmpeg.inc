@@ -187,9 +187,11 @@ static double MovieClock(int audio, int eof, long long bytes, int queued, double
     }
     return now - *began;
 }
-static void MovieEvents(int* skip) {
+static int MovieEvents(int* skip) {
+    int reset = 0;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_EVENT_RENDER_DEVICE_RESET) { RendererDeviceReset(); reset = 1; }
         if (e.type == SDL_EVENT_QUIT) sQuit = 1;
         if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat &&
             (e.key.scancode == SDL_SCANCODE_X || e.key.scancode == SDL_SCANCODE_Z || e.key.scancode == SDL_SCANCODE_RETURN))
@@ -200,11 +202,12 @@ static void MovieEvents(int* skip) {
             *skip = 1;
         if (e.type == SDL_EVENT_GAMEPAD_ADDED && !sPad) sPad = SDL_OpenGamepad(e.gdevice.which);
     }
+    return reset;
 }
 
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* fontPath) {
     char path[1024], line[256], seek[32];
-    int start = 0, w = 0, h = 0, played = 0, skip = 0;
+    int start = 0, w = 0, h = 0, played = 0, skip = 0, rendererLost = 0;
     double fps = 30;
     snprintf(path, sizeof(path), "%s", movie);
     char* at = strrchr(path, '@');
@@ -215,7 +218,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     MoviePipe probe = MovieSpawn(probeArgs);
     size_t lineBytes = 0;
     while (probe.fd >= 0 && !sQuit && !skip && lineBytes < sizeof(line) - 1) {
-        MovieEvents(&skip);
+        if (MovieEvents(&skip)) { MovieClose(&probe); return 0; }
         ssize_t n = MovieRead(&probe, line + lineBytes, sizeof(line) - 1 - lineBytes);
         if (n < 0) break;
         lineBytes += (size_t)n;
@@ -262,7 +265,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     uint8_t abuf[19200];
     size_t audioUsed = 0;
     while (video.fd >= 0 && tex && frame && !sQuit && !skip) {
-        MovieEvents(&skip);
+        if (MovieEvents(&skip)) { played = 0; rendererLost = 1; break; }
         if (sQuit || skip) break;
         /* Nonblocking producer work is bounded; video and events keep progressing without PCM. */
         for (int reads = 0; audio && !audioEof && reads < 8 &&
@@ -350,5 +353,5 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         SDL_ResumeAudioStreamDevice(sAudio);
     }
     Log("hd movie: %s from %d s, %lld frames%s", path, start, frames, skip ? " (skipped)" : "");
-    return played || skip || sQuit;
+    return rendererLost ? 0 : played || skip || sQuit;
 }

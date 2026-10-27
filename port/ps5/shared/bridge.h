@@ -34,6 +34,14 @@ enum {
     HF_COUNT
 };
 
+/* Optional capability over the existing getenv entry, implemented by Linux64
+ * and Android64 SDL GPU hosts: KHCOM_RENDERER_GENERATION returns the reserved
+ * synthetic value "bridge-textures-v1:<uint32 decimal>". Query once per input
+ * drain, after pad_poll pumps host events. Missing/invalid means unsupported.
+ * Other hosts and older guests keep their existing behavior; app_state retains
+ * its exact 0/1 background contract and no table entries/signatures change.
+ * Tex handles are opaque ints on every host: guests must never decode them. */
+
 /* The GBA regions the host maps before boot (see GBA_* in port/port.h). */
 typedef struct HostVertex {
     float x, y, u, v;

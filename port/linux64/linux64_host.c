@@ -43,7 +43,14 @@ static void H_log(const char* s) { fprintf(stderr, "%s\n", s); }
 static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
+static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
 static int H_getenv(const char* name, char* out, int cap) {
+    if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
+        if (cap <= 0) return -1;
+        snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
+        return (int)strlen(out);
+    }
+
     const char* v = getenv(name);
     if (!v) return -1;
     snprintf(out, (size_t)cap, "%s", v);
@@ -90,8 +97,6 @@ static void H_dir_close(int d) { closedir(sDirs[d]); sDirs[d] = NULL; }
 /* ---- video: the GPU ---- */
 static SDL_Window* sWindow;
 static SDL_Renderer* sRenderer;
-static SDL_Texture* sTex[4096];
-static int sTexW[4096], sTexSmooth[4096];
 static int sBlend = 1;
 
 static void H_gfx_size(int* w, int* h) { SDL_GetCurrentRenderOutputSize(sRenderer, w, h); }
@@ -101,22 +106,8 @@ static void H_gfx_begin(uint32_t clear) {
     if (clear >> 24)
         SDL_RenderClear(sRenderer);
 }
-static int H_tex_create(const void* rgba, int w, int h, int smooth) {
-    for (int i = 0; i < 4096; i++)
-        if (!sTex[i]) {
-            sTex[i] = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, w, h);
-            if (!sTex[i])
-                return -1;
-            SDL_UpdateTexture(sTex[i], NULL, rgba, w * 4);
-            SDL_SetTextureBlendMode(sTex[i], SDL_BLENDMODE_BLEND);
-            sTexW[i] = w;
-            sTexSmooth[i] = smooth;
-            return i;
-        }
-    return -1;
-}
-static void H_tex_update(int id, const void* rgba) { SDL_UpdateTexture(sTex[id], NULL, rgba, sTexW[id] * 4); }
-static void H_tex_free(int id) { SDL_DestroyTexture(sTex[id]); sTex[id] = NULL; }
+#include "host_texture_slots.h"
+static void RendererDeviceReset(void);
 static void H_gfx_clip(int x, int y, int w, int h) {
     SDL_Rect r = { x, y, w, h };
     SDL_SetRenderClipRect(sRenderer, w > 0 ? &r : NULL);
@@ -125,7 +116,8 @@ static void H_gfx_blend(int on) { sBlend = on; }
 /* the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters: those are drawn crisp (android64_host.c) */
 static void H_gfx_draw(int id, const void* verts, int count) {
     const HostVertex* v = verts;
-    SDL_Texture* t = id >= 0 && id < 4096 ? sTex[id] : NULL;
+    int slot = HostTextureSlot(id);
+    SDL_Texture* t = slot >= 0 ? sTex[slot] : NULL;
     static SDL_Vertex out[8192];
     float shift = 0;
     if (id >= 0 && !t)
@@ -134,7 +126,7 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         count = 8192;
     if (count > 0 && t) {
         shift = floorf((v[0].u + 0.25f) / 2.0f) * 2.0f;
-        SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[id] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
+        SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
         SDL_SetTextureBlendMode(t, sBlend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
     }
     for (int i = 0; i < count; i++) {
@@ -208,10 +200,15 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
 
 /* ---- input: a gamepad, or the keyboard ---- */
 static SDL_Gamepad* sPad;
+static void RendererDeviceReset(void) {
+    HostTextureReset();
+    Log("renderer reset: bridge texture generation %u", sRendererGeneration);
+}
 static void Pump(void) {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
+            case SDL_EVENT_RENDER_DEVICE_RESET: RendererDeviceReset(); break;
             case SDL_EVENT_QUIT: sQuit = 1; break;
             case SDL_EVENT_GAMEPAD_ADDED:
                 if (!sPad) sPad = SDL_OpenGamepad(e.gdevice.which);
