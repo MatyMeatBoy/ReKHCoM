@@ -5263,19 +5263,20 @@
     "hd-gauge-visible-bounds": {
       "id": "hd-gauge-visible-bounds",
       "piece": "Measured HD gauge crop preserves supersampling within budgets",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-gauge-bounds",
       "created_at": "2026-10-27T08:46:15.972296+00:00",
-      "updated_at": "2026-10-27T08:46:15.972296+00:00",
+      "updated_at": "2026-10-27T08:46:21.266004+00:00",
       "branch": null,
       "pr": null,
       "approval": "User requests smoother inner HUD edges; coordinator authorizes measured crop implementation",
       "reference": "Actual C layout geometry measurement 2026-10-27",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T08:46:21.266004+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:46:15.972296+00:00",
+  "updated_at": "2026-10-27T08:46:21.266004+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
