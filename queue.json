@@ -7942,10 +7942,23 @@
       "approval": "Usuario27/10 captura04d2324f/a5050ab1 exigeHDyconservarmarco",
       "reference": null,
       "evidence": []
+    },
+    "monstro-story-atlas-coverage": {
+      "id": "monstro-story-atlas-coverage",
+      "piece": "Cobertura Atlas por tramosMonstro: Geppetto barco dialogos y Pinocho plataformas shot e7bb35a0/266fcaa4 no vistosporusuario; identificar eventos/estadoscamara y completar bordes respetando zoom/HUD, no marcarcapturainicial comoescenacompleta.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T22:24:52.168606+00:00",
+      "updated_at": "2026-10-27T22:24:52.168606+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:22:09.830920+00:00",
+  "updated_at": "2026-10-27T22:24:52.168606+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
