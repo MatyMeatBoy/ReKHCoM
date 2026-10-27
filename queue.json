@@ -6072,13 +6072,13 @@
     "optiport-v21-final-profile-evidence": {
       "id": "optiport-v21-final-profile-evidence",
       "piece": "Measure final published Windows32/64 HD workloads and update stale OptiPort board from actual evidence; no release overwrite",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-final-profile",
       "created_at": "2026-10-27T13:10:17.735490+00:00",
-      "updated_at": "2026-10-27T13:10:22.341672+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Objetivo persistente usuario: completar OptiPort y repasar versión final",
+      "updated_at": "2026-10-27T13:25:35.991606+00:00",
+      "branch": "test/v21-final-profile-evidence",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/355",
+      "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T13:10:22.341672+00:00"
@@ -6090,7 +6090,7 @@
     "created_at": "2026-10-27T13:25:25.055629+00:00",
     "updated_at": "2026-10-27T13:25:25.055629+00:00"
   },
-  "updated_at": "2026-10-27T13:25:25.056630+00:00",
+  "updated_at": "2026-10-27T13:25:35.992155+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
