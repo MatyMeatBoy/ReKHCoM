@@ -4880,12 +4880,12 @@
     "docs-optiport-v21-coordination-20261027": {
       "id": "docs-optiport-v21-coordination-20261027",
       "piece": "Coordinacion documental OptiPort v2.1 y pendientes regulares",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-docs-v21-coordination",
       "created_at": "2026-10-27T06:54:36.951994+00:00",
-      "updated_at": "2026-10-27T07:05:46.579278+00:00",
+      "updated_at": "2026-10-27T08:04:09.214745+00:00",
       "branch": "docs/optiport-v21-coordination",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/317",
       "approval": "Usuario 27/10/2026: documentar reparto Codex/Claude y autorizacion prerelease",
       "reference": "port/progress/COORDINACION_OPTIPORT_V21.md",
       "evidence": [
@@ -4898,6 +4898,11 @@
           "at": "2026-10-27T07:05:46.579278+00:00",
           "owner": "codex-docs-v21-coordination",
           "detail": "Nuevo commit local encima de 8ddb4bd7a: 4c342d045d93a0a0de71b4e0b9c4918a8d415dd9. Actualiza ultima prioridad PR regulares listos antes ZIP, despues resto OptiPort; previews ambos modos pending only fases perf + UI Claude; enlace OptiPort publico. git diff --check PASS; checkout limpio; sin push codigo ni implementacion. WorktreeNeeded si revision/PR."
+        },
+        {
+          "at": "2026-10-27T08:04:09.214745+00:00",
+          "owner": "codex-docs-v21-coordination",
+          "detail": "SHA 1bb2a96b0f6c65892320c1ed60be25f8bf2e9798; solo tres docs sin imagen, sin core/AGENTS ni instalacion principal. git diff --check y git show --check PASS; limpio; push+PR autorizados, no merge. Pendientes unicos remotos previews perf/UI, gallery-direct-return-no-flash, controller-prompt-layouts-v21-experimental sin owner. Gate ZIP repro guardado puerta Win64 RED hasta GREEN real. WorktreeNeeded si PR abierto; siguiente prueba revision/merge integrador con lock."
         }
       ],
       "claimed_at": "2026-10-27T06:54:43.283350+00:00"
@@ -5016,7 +5021,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T08:03:15.526548+00:00",
+  "updated_at": "2026-10-27T08:04:09.214745+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
