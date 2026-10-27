@@ -5199,15 +5199,21 @@
     "launcher-hd-media-language-selection-v21": {
       "id": "launcher-hd-media-language-selection-v21",
       "piece": "Launcher 2.1: disponibilidad e import EN/JP voces/peliculas HD desde Steam propio; guia oficial y deteccion por evidencia, texto/audio separados",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-hd-media-language-research",
       "created_at": "2026-10-27T08:37:21.317859+00:00",
-      "updated_at": "2026-10-27T08:37:26.800184+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T08:39:13.049284+00:00",
+      "branch": "docs/hd-media-language-selection-v21",
       "pr": null,
       "approval": "Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T08:39:13.049284+00:00",
+          "owner": "codex-hd-media-language-research",
+          "detail": "Investigacion docs solamente local SHA a consultar commit branch; fuentes oficiales Valve tienda2552430/idiomas/depots/descargas, importer actual no ACF/language y namespace unico con import.list calidad/tamano sin idioma. Manifest local solo lectura language spanish depots2552433/2552435 y paths verificados; no audio-locale confirmado. Recomendacion guia HTTPS+rescan, no automatizacion depot validada. SteamDB pistas secundarias caveated; sin downloads/Steamchanges/heavybuild/Quiverwrite. WorktreeNeeded si revision/handoff pendiente; implementacion debe volver pendiente."
+        }
+      ],
       "claimed_at": "2026-10-27T08:37:26.800184+00:00"
     },
     "submenu-visible-band-coherence": {
@@ -5226,7 +5232,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:38:31.302239+00:00",
+  "updated_at": "2026-10-27T08:39:13.049284+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
