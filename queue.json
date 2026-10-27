@@ -5084,10 +5084,23 @@
       ],
       "claimed_at": "2026-10-27T08:12:21.453721+00:00",
       "completed_at": "2026-10-27T08:19:20.255596+00:00"
+    },
+    "linux-unified-desktop-deck-package": {
+      "id": "linux-unified-desktop-deck-package",
+      "piece": "Unificar paquete Linux x86/x64 desktop+SteamDeck; Anbernic beta; docs y contratos de packaging sin heavy build",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T08:21:24.008616+00:00",
+      "updated_at": "2026-10-27T08:21:24.008616+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 27/10: un solo artefacto Linux x86/x64 desktop Deck; Anbernic beta",
+      "reference": "port/tools/build_linux.py",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:21:15.712429+00:00",
+  "updated_at": "2026-10-27T08:21:24.008616+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
