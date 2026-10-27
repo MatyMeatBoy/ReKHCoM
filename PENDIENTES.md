@@ -168,6 +168,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-music-loader-bounds | Bound async music file reads and retain original music during load | integrado | codex-music-loader | https://github.com/MatyMeatBoy/ReKHCoM/pull/295 | Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort | 2026-10-27T05:37:50.136948+00:00 |
 | optiport-native-renderer-reset | Complete native renderer reset resource invalidation and generation fault tests | en_curso | codex-native-renderer-reset | — | Coordinador delega nativo32 tras PR297; usuario OptiPort | 2026-10-27T05:40:11.993431+00:00 |
 | bridge-texture-generations | Generation-safe bridge textures and complete Linux64 Android64 renderer recovery | en_curso | codex-bridge-reset | — | User authorized OptiPort renderer lifecycle recovery with tested guest host compatibility | 2026-10-27T05:41:57.490790+00:00 |
-| logs-utc-20261027 | Make session timestamps ASCII UTC and readable as UTF-8 | en_curso | codex-logs-utc | — | — | 2026-10-27T05:44:54.507642+00:00 |
+| logs-utc-20261027 | Make session timestamps ASCII UTC and readable as UTF-8 | pr_abierto | codex-logs-utc | https://github.com/MatyMeatBoy/ReKHCoM/pull/298 | Usuario 27/10 integrar OptiPort para builds de test | 2026-10-27T05:46:25.298093+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T05:45:49.939182+00:00)

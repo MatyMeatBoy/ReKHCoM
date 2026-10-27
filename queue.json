@@ -4643,13 +4643,13 @@
     "logs-utc-20261027": {
       "id": "logs-utc-20261027",
       "piece": "Make session timestamps ASCII UTC and readable as UTF-8",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-logs-utc",
       "created_at": "2026-10-27T05:44:48.110082+00:00",
-      "updated_at": "2026-10-27T05:44:54.507642+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": null,
+      "updated_at": "2026-10-27T05:46:25.298093+00:00",
+      "branch": "fix/log-utc-header",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/298",
+      "approval": "Usuario 27/10 integrar OptiPort para builds de test",
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T05:44:54.507642+00:00"
@@ -4661,7 +4661,7 @@
     "created_at": "2026-10-27T05:45:49.939182+00:00",
     "updated_at": "2026-10-27T05:45:49.939182+00:00"
   },
-  "updated_at": "2026-10-27T05:45:49.940184+00:00",
+  "updated_at": "2026-10-27T05:46:25.298093+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
