@@ -6178,12 +6178,12 @@
     "v22-harness-storage-budget": {
       "id": "v22-harness-storage-budget",
       "piece": "Claude: PR acotado del arnés: evitar copia completa por caso, separar evidencia de temporales, base/overlay reutilizables, outbox según fetch y límites razonados; conservar fallos, WIP y saves. Cambiar default 40G solo con criterio y regresión. Codex modifica archivos de VM fuera del repo.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-harness-budget",
       "created_at": "2026-10-27T14:53:59.220433+00:00",
-      "updated_at": "2026-10-27T15:09:03.394407+00:00",
+      "updated_at": "2026-10-27T15:12:46.646701+00:00",
       "branch": "fix/harness-storage-budget",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/362",
       "approval": "Usuario 27/10/2026: optimizar copias por test, tamaño VM con margen, delegar a Claude PR pequeños y tomar siguiente",
       "reference": "CLAUDE.md; port/tools/linux_vm_test.py; port/tools/test_hd_movie_pause_text.py",
       "evidence": [
@@ -6191,6 +6191,11 @@
           "at": "2026-10-27T15:09:03.394407+00:00",
           "owner": "codex-harness-budget",
           "detail": "Worktree centralizado; alcance linux_vm_test.py, sin tocar juego ni tareas claude-cartas"
+        },
+        {
+          "at": "2026-10-27T15:12:46.646701+00:00",
+          "owner": "codex-harness-budget",
+          "detail": "Commit28b2e98e2. 4 regresiones PASS (3 fallaban antes): sin fetch no crea/adjunta1GiB ni pisa evidencia previa; nuevosdiscos16G, existentes sinresize; fetch conserva capacidad+evidencia. Sin QEMU real. diff--check correcto."
         }
       ],
       "claimed_at": "2026-10-27T15:08:44.393431+00:00"
@@ -6277,7 +6282,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T15:09:03.394407+00:00",
+  "updated_at": "2026-10-27T15:12:46.646701+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
