@@ -172,8 +172,14 @@ static int Load(int i);
    Only promise a replacement after both textures exist, on SDL's main thread.
    Pin it now: later queues must not evict an image after its native pixels were omitted. */
 static int SpriteReady(int i) {
-    if (!sRenderer || !SDL_IsMainThread() || sState[i].present == 1)
+    if (!sRenderer || sState[i].present == 1)
         return 0;
+#if __STDC_HOSTED__
+    if (!SDL_IsMainThread())
+        return 0;
+#endif
+    /* Freestanding guests use the SDL shim without thread introspection.
+       Their game/OAM setup and Queue callers run outside the PPU row workers. */
     if (!sState[i].image && !Load(i))
         return 0;
     sState[i].present = 2;

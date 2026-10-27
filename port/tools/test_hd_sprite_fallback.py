@@ -26,7 +26,9 @@ backend = r'''
 #define SDL_clamp(x,l,h) ((x)<(l)?(l):(x)>(h)?(h):(x))
 static struct {int hdCards,hdTitle;} gPortConfig={1,1};
 static int mainThread=1;
+#if __STDC_HOSTED__
 static int SDL_IsMainThread(void){return mainThread;}
+#endif
 static int GroupOn(int group){return 1;}
 static int PortHdDrawLogged(void){return 0;}
 static void PortPaletteFade(const uint16_t*a,const volatile uint16_t*b,int c,int*d,int*e){*d=*e=0;}
@@ -78,9 +80,13 @@ int main(void){
  reset();width=height=4096;native_frame();assert(!decodes);
  reset();sBytes=32u*1024*1024;sState[1].image=(void*)1;sState[1].bytes=sBytes;sState[1].lastUsed=9;native_frame();assert(!creates);
  reset();sRenderer=NULL;native_frame();assert(!decodes);
+#if __STDC_HOSTED__
  reset();mainThread=0;native_frame();assert(!decodes);
+#endif
  reset();sRenderer=NULL;assert(!PortHdSpriteFind((void*)42,NULL)&&!decodes);
+#if __STDC_HOSTED__
  reset();mainThread=0;assert(!PortHdSpriteFind((void*)42,NULL)&&!decodes);
+#endif
  reset();assert(queue());assert(sState[0].image&&sState[0].white&&sState[0].lastUsed==9);
  reset();infoOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
  reset();decodeOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
@@ -90,6 +96,7 @@ int main(void){
  /* Subsequent loads cannot evict a replacement whose native pixels have been omitted. */
  sBytes=32u*1024*1024;sState[0].bytes=sBytes;assert(!Load(2));assert(sState[0].image);
  puts("PASS first-frame native pixel: invalid header/decode/upload, oversize/pinned budget, no renderer/off-main-thread; valid replacement acquired/pinned before omission");
+ return 0;
 }
 '''
 a = source.index('typedef struct HdSpriteDraw {')
@@ -105,5 +112,8 @@ with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
     folder = Path(folder)
     src, exe = folder / 'fallback.c', folder / 'fallback.exe'
     src.write_text(unit, encoding='utf-8')
-    subprocess.run([str(compiler), '-std=c11', '-Wno-compare-distinct-pointer-types', str(src), '-o', str(exe)], check=True)
-    subprocess.run([str(exe)], cwd=folder, check=True)
+    for freestanding in (False, True):
+        flags = ['-ffreestanding'] if freestanding else []
+        subprocess.run([str(compiler), '-std=c11', '-Werror=implicit-function-declaration', *flags,
+                        '-Wno-compare-distinct-pointer-types', str(src), '-o', str(exe)], check=True)
+        subprocess.run([str(exe)], cwd=folder, check=True)
