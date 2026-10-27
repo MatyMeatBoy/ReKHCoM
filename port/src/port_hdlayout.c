@@ -280,7 +280,8 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     float u1 = (su0 == su1 ? su1 + 0.5f : (float)su1) * uvScale / t->w, v1 = (sv0 == sv1 ? sv1 + 0.5f : (float)sv1) * uvScale / t->h;
     float tu[4] = { u0, u1, u0, u1 }, tv[4] = { v0, v0, v1, v1 };
     float cr = SDL_cosf(-c->rz), sr = SDL_sinf(-c->rz), crx = SDL_cosf(-c->rx), cry = SDL_cosf(-c->ry);
-    SDL_Vertex v[4];
+    SDL_Vertex v[4], over[4];
+    int bright = 0;
     int k;
     for (k = 0; k < 4; k++) {
         float col[4], x = cx[k] + c->px, y = cy[k] + c->py, nx;
@@ -299,8 +300,16 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         v[k].color.g = SDL_min(1.0f, col[1] * c->c[1]);
         v[k].color.b = SDL_min(1.0f, col[2] * c->c[2]);
         v[k].color.a = SDL_min(1.0f, col[3] * c->c[3]);
-        v[k].tex_coord.x = tu[k];
-        v[k].tex_coord.y = tv[k];
+        /* the PS2's modulate goes to twice the texel (0x80 is 1.0, 0xFF nearly 2.0): what a vertex colour asks past
+           1.0 is added in a second pass (the enemy gauge's green is 1.16/1.81/0.06 at the top) */
+        over[k].position = v[k].position;
+        over[k].color.r = SDL_max(0.0f, col[0] * c->c[0] - 1.0f);
+        over[k].color.g = SDL_max(0.0f, col[1] * c->c[1] - 1.0f);
+        over[k].color.b = SDL_max(0.0f, col[2] * c->c[2] - 1.0f);
+        over[k].color.a = v[k].color.a;
+        bright |= over[k].color.r > 0.0f || over[k].color.g > 0.0f || over[k].color.b > 0.0f;
+        v[k].tex_coord.x = over[k].tex_coord.x = tu[k];
+        v[k].tex_coord.y = over[k].tex_coord.y = tv[k];
     }
     if (su0 == su1 && sv0 == sv1) {
         float x0 = v[0].position.x, y0 = v[0].position.y, x1 = x0, y1 = y0;
@@ -330,6 +339,14 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         }
         out[1].position.x += 0.01f; /* off SDL's software copy path, as below */
         SDL_RenderGeometry(r, t->tex, out, n, idx, (n - 2) * 3);
+        if (bright) {
+            SDL_Vertex quad2[4] = { over[0], over[1], over[3], over[2] };
+            if ((n = ClipToRect(quad2, 4, clip, out)) >= 3) {
+                out[1].position.x += 0.01f;
+                SDL_SetTextureBlendMode(t->tex, SDL_BLENDMODE_ADD);
+                SDL_RenderGeometry(r, t->tex, out, n, idx, (n - 2) * 3);
+            }
+        }
         return 0;
     }
     /* SDL's software renderer turns an axis-aligned quad into a copy that reads past the texture (port_hdsprites.c,
@@ -337,6 +354,11 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     v[1].position.x += 0.01f;
     v[1].position.y += 0.01f;
     SDL_RenderGeometry(r, t->tex, v, 4, kIndex, 6);
+    if (bright) {
+        over[1].position = v[1].position;
+        SDL_SetTextureBlendMode(t->tex, SDL_BLENDMODE_ADD);
+        SDL_RenderGeometry(r, t->tex, over, 4, kIndex, 6);
+    }
     return 0;
 }
 
