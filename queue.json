@@ -7867,10 +7867,23 @@
         }
       ],
       "claimed_at": "2026-10-27T22:11:30.742608+00:00"
+    },
+    "combat-erra-spanish-hd": {
+      "id": "combat-erra-spanish-hd",
+      "piece": "Aviso ERRA en combate sinHD: identificar MISS/localeEspañol y consumidor real, emparejar avisos contranaipe, receta/import/mapping vigentes y fallback seguro",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T22:16:54.811930+00:00",
+      "updated_at": "2026-10-27T22:16:54.811930+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27/10 solicita ERRA HD despuesprioridades1pixeles2audio3HP",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:16:46.060627+00:00",
+  "updated_at": "2026-10-27T22:16:54.811930+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
