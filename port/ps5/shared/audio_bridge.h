@@ -7,4 +7,7 @@
 #define BRIDGE_AUDIO_PAUSE 0x201
 #define BRIDGE_AUDIO_RESUME 0x202
 #define BRIDGE_AUDIO_GAIN 0x203
+/* Independent of AUD1 lifecycle support: ring hosts also need the input rate
+ * for HD mixing, while retaining their device-frame queued-count contract. */
+#define BRIDGE_AUDIO_INPUT_RATE 0x204
 #endif
