@@ -70,6 +70,7 @@ u16* gPortSubGlyphCodes;
 
 static u16 sMsgGlyphCodes[128];
 static u16 sCardMsgGlyphCodes[128];
+#include "port/controller_prompt_runtime.inc"
 
 /* HD text for menu text (TextSlot): the character each slot's tiles show,
    by tile handle; a handle reloaded with another character is overwritten. */
@@ -6403,6 +6404,9 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
     }
 
     sTextEntryCount = 0;
+#ifdef PLATFORM_PC
+    ResetControllerPromptGlyphs();
+#endif
 
     while (*text != MSG_CODE_END) {
         s32 glyph;
@@ -6425,11 +6429,14 @@ u8 LayoutCardMsgGlyphsPage(s32 x, s32 y, MsgLatinChar* text, MsgLatinChar** next
         }
 
 #ifdef PLATFORM_PC
-        if (*text == PORT_PROMPT_TOKEN && PortControllerGlyphTiles(text[1])) {
+        int promptToken=*text==PORT_PROMPT_SEMANTIC_TOKEN?text[1]:0;
+        int promptGlyph=promptToken?PortControllerSemanticGlyph(promptToken):*text==PORT_PROMPT_TOKEN?text[1]:0;
+        if (promptGlyph && PortControllerGlyphTiles(promptGlyph)) {
             TextGlyphSprite* sprite = &sCardMsgGlyphSprites[sTextEntryCount];
             if (sprite->tiles) ReleaseObjTiles(sprite->tiles);
-            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(text[1]), 128);
+            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(promptGlyph), 128);
             sprite->useAlternatePalette = alternate;
+            RememberControllerPromptGlyph(sTextEntryCount,promptToken,promptGlyph);
             sCardMsgGlyphCodes[sTextEntryCount++] = PORT_PROMPT_TOKEN;
             cx += 12 << 8;
             text += 2;
@@ -6560,6 +6567,9 @@ u8 LayoutCardMsgGlyphsPageSjis(s32 x, s32 y, u8* text, u8** nextText) {
     }
 
     sTextEntryCount = 0;
+#ifdef PLATFORM_PC
+    ResetControllerPromptGlyphs();
+#endif
 
     while (*text != MSG_CODE_END) {
         u16 code;
@@ -6573,10 +6583,13 @@ u8 LayoutCardMsgGlyphsPageSjis(s32 x, s32 y, u8* text, u8** nextText) {
         sCardMsgGlyphSprites[sTextEntryCount].useAlternatePalette = FALSE;
 
 #ifdef PLATFORM_PC
-        if (*text == PORT_PROMPT_TOKEN && PortControllerGlyphTiles(text[1])) {
+        int promptToken=*text==PORT_PROMPT_SEMANTIC_TOKEN?text[1]:0;
+        int promptGlyph=promptToken?PortControllerSemanticGlyph(promptToken):*text==PORT_PROMPT_TOKEN?text[1]:0;
+        if (promptGlyph && PortControllerGlyphTiles(promptGlyph)) {
             TextGlyphSprite* sprite = &sCardMsgGlyphSprites[sTextEntryCount];
             if (sprite->tiles) ReleaseObjTiles(sprite->tiles);
-            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(text[1]), 128);
+            sprite->tiles = LoadObjTiles(PortControllerGlyphTiles(promptGlyph), 128);
+            RememberControllerPromptGlyph(sTextEntryCount,promptToken,promptGlyph);
             sCardMsgGlyphCodes[sTextEntryCount++] = PORT_PROMPT_TOKEN;
             cx += 12 << 8;
             text += 2;
@@ -6789,6 +6802,9 @@ u8 LayoutCardMsgGlyphsPageSjis(s32 x, s32 y, u8* text, u8** nextText) {
 
 void DrawCardMsgGlyphs(u8 n) {
     u8 i;
+#ifdef PLATFORM_PC
+    RefreshControllerPromptGlyphs();
+#endif
 
     for (i = 0; i < n; i++) {
         TextGlyphSprite* sprites = sCardMsgGlyphSprites;
@@ -6832,6 +6848,10 @@ void FreeCardMsgGlyphSprites() {
     }
 
     EwramFree(sCardMsgGlyphSprites);
+#ifdef PLATFORM_PC
+    ResetControllerPromptGlyphs();
+    sCardMsgGlyphSprites = NULL;
+#endif
 }
 
 void DrawMsgGlyphsWithPalette(u8 n, void* palette) {

@@ -3,12 +3,14 @@
 #include <string.h>
 /* Private two-unit token; only the port's scoped tutorial resolver emits it. */
 #define PORT_PROMPT_TOKEN 26
+#define PORT_PROMPT_SEMANTIC_TOKEN 27
+#define PORT_PROMPT_LETTERS "ABXYLRZSDCVKJ+-?"
 static inline int KhPromptGlyphId(const char* label) {
     static const char* const names[]={"Cross","Circle","Square","Triangle","Up","Down","Left","Right"};
     static const char* const pairs[]={"LB","RB","LT","RT","L1","R1","L2","R2","ZL","ZR","LS","RS","Menu","View","Options","Share"};
     for(int i=0;i<8;i++)if(!strcmp(label,names[i]))return i+1;
     for(int i=0;i<16;i++)if(!strcmp(label,pairs[i]))return 128+i;
-    if(label[0] && !label[1] && strchr("ABXYLR+-",label[0]))return (unsigned char)label[0];
+    if(label[0] && !label[1] && strchr(PORT_PROMPT_LETTERS,label[0]))return (unsigned char)label[0];
     return 0;
 }
 static inline void KhPromptGlyphDot(unsigned char out[128],int x,int y,int value) {
@@ -48,6 +50,8 @@ static inline void KhPromptGlyphPixels(int id, unsigned char out[128]) {
                 case 'A':bits=0x2BED;break;case 'B':bits=0x6BAE;break;case 'X':bits=0x5AAD;break;case 'Y':bits=0x5A92;break;
                 case 'L':bits=0x4927;break;case 'R':bits=0x6BAD;break;case 'T':bits=0x7492;break;case 'S':bits=0x788F;break;
                 case 'Z':bits=0x72A7;break;case 'E':bits=0x79E7;break;case '1':bits=0x2C97;break;case '2':bits=0x62A7;break;
+                case 'C':bits=034443;break;case 'D':bits=065556;break;case 'V':bits=055552;break;case 'K':bits=055655;break;
+                case 'J':bits=011153;break;case '?':bits=061202;break;
                 case '-':bits=0x01C0;break;case '+':bits=0x05D0;break;
             }
             for(int y=0;y<5;y++)for(int x=0;x<3;x++)if(bits&(1u<<(14-y*3-x)))KhPromptGlyphDot(out,start+c*4+x,y+2,2);

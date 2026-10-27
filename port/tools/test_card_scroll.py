@@ -250,12 +250,12 @@ static void device_test(void) {
     gPortConfig.controllerPrompts=4;gPortConfig.invertCardScroll=0;
 #ifndef VERSION_JP
     const TextChar tutorial[]={'A',':',MSG_CODE_HIGHLIGHT,'A',' ','B','u','t','t','o','n',MSG_CODE_PLAIN,0};
-    const TextChar mapped[]={'A',':',MSG_CODE_HIGHLIGHT,26,2,MSG_CODE_PLAIN,0};
+    const TextChar mapped[]={'A',':',MSG_CODE_HIGHLIGHT,27,1,MSG_CODE_PLAIN,0};
     assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
     assert(PortCardScrollTutorialText(CARD_MSG_OBTAINED_ELIXIR,tutorial)==tutorial);
 #else
     const TextChar tutorial[]={0x82,0x60,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
-    const TextChar mapped[]={26,2,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
+    const TextChar mapped[]={27,1,0x83,0x7b,0x83,0x5e,0x83,0x93,0};
     assert(!memcmp(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,tutorial),mapped,sizeof(mapped)));
     const TextChar prose[]={0x82,0x60,0};
     assert(PortCardScrollTutorialText(CARD_MSG_ROBE_TUTORIAL_00,prose)==prose);
