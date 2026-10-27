@@ -767,6 +767,22 @@ static void RenderMarginColumns(SDL_Texture* tex, int fw, int side, float picX, 
 
 extern int PortMenuSliding(void);
 
+/* Some menu bottom bands are sprites while entering, before their BG copy
+   reaches the edge. Carry only a currently visible uniform 64-pixel run;
+   never a badge, tab, cached color or a band waiting behind a window. */
+static uint32_t MenuVisibleBottomBand(const uint32_t* row, int width, int edgeX, int side, int y) {
+    int step = side < 0 ? 1 : -1, k;
+    uint32_t color;
+    if (!row || y < 132 || y >= GBA_SCREEN_H || edgeX < 0 || edgeX >= width ||
+        edgeX + 63 * step < 0 || edgeX + 63 * step >= width)
+        return 0;
+    color = row[edgeX];
+    for (k = 1; k < 64; k++)
+        if (row[edgeX + k * step] != color)
+            return 0;
+    return color;
+}
+
 static void SideBar(int sx, int sy, int side, float y, float scale, float x0, float x1, int edgeX) {
     float w = SIDE_STRIP * scale;
     int band;
@@ -906,6 +922,8 @@ static void SideBar(int sx, int sy, int side, float y, float scale, float x0, fl
             /* the edge's background hidden this frame (rows of plain colour
                in the picture where the background has something else) */
             int hidden = sSideStyle == 4 && !backgroundOnly && PortMenuSliding() && shownEdge != bgRow[edgeX];
+            uint32_t visibleBottom = sSideStyle == 4 ? MenuVisibleBottomBand(
+                &gPortFrame[(sy + yy) * gPortScreen.width], gPortScreen.width, edgeX, side, yy) : 0;
             for (xx = 0; xx < fw; xx++) {
                 int d = side < 0 ? fw - 1 - xx : xx, sample = edgeX;
                 uint32_t* px = &strip[yy * fw + xx];
@@ -970,6 +988,8 @@ static void SideBar(int sx, int sy, int side, float y, float scale, float x0, fl
                    carries on what the edge shows, never what is not there yet */
                 if (hidden && !(yy < 16 && side < 0 && PortMenuHeaderPixelAt(yy, d)))
                     *px = shownEdge;
+                if (visibleBottom)
+                    *px = visibleBottom;
             }
         }
         /* The tab strip: a line between rows of the panel's own colour is
