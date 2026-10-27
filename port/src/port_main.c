@@ -2093,6 +2093,8 @@ static void Present(void) {
             PortHdTextDraw(sRenderer, 2, od.x, od.y, sOverlayScale);
     }
     if (PortPpuHudActive() && !menuCanvas) {
+        int savedHud[3];
+        PortPpuHudFrameBegin(savedHud);
         SDL_FRect hd;
         if (sHudTexture == NULL || sHudTexW != gPortHudW || sHudTexH != gPortHudH) {
             if (sHudTexture != NULL)
@@ -2169,6 +2171,7 @@ static void Present(void) {
         PortHdHudDrawLabel(sRenderer, outW, outH);
         if (!menuCanvas) PortHdTextHudDigits(sRenderer, hd.x, hd.y, (float)gPortHudScale);
         PortHdTextDraw(sRenderer, 1, hd.x, hd.y, (float)gPortHudScale);
+        PortPpuHudFrameEnd(savedHud);
     }
     {
         /* the scene pause's panel above every HD layer (it is drawn on the picture, under them) */

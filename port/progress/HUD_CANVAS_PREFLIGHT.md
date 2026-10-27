@@ -62,3 +62,18 @@ Comprobar entrada/salida de Opciones y reset durante las fases de fade, además
 de CPU: crecer el buffer world/composite sigue otro contrato esencial.
 No ejecutar ni escribir instalación Quiver. No se han ejecutado juegos,
 GPU ni builds completos durante este carril.
+
+## Revisión P1: dimensiones del HUD durante pausa
+
+El revisor reprodujo un desbordamiento960bytes: output1281→1282 a alto720,
+world641x360 sin cambiar, HUD427x240→428x240. El loop de pausa no emite otro
+cuadro PPU, pero Present consumía las dimensiones deseadas nuevas con el buffer
+preflighted del cuadro viejo. RED exit90 en el consumidor y canary PPU real.
+
+Ahora la PPU captura W/H/scale junto a su decisión de canvas. Todo el pase HUD
+de Present entra/sale de ese contexto de geometría congelada; después restaura
+las dimensiones deseadas. No repite PPU/HBlank, no reserva desde el consumidor
+ni cambia preferencias. La siguiente PPU real preflighta las dimensiones nuevas.
+La regresión incluye consumidor real con capacidad vieja y la PPU completa:
+los240píxeles canary permanecen intactos, geometría deseada restaurada. GREEN.
+Al combinar #346, su warm-up debe entrar en el mismo scope de geometría PPU.

@@ -81,5 +81,18 @@ int main(void) {
     sFixtureCanvasReady=1;PortPpuRenderFrame();
     CHECK(!sHudCanvasFallback&&PortPpuHudActive()&&HdTextGlyph(1));
     CHECK(memcmp(fallback,gPortFrame,bytes)); /* HUD once again separate */
+    /* Exact review repro: the paused world641x360 stays fixed while output
+       1281->1282 changes desired HUD427x240->428x240. No extra PPU frame. */
+    PortPpuSetResolution(641,360);
+    gPortHudW=427;gPortHudH=240;gPortHudScale=3;PortPpuRenderFrame();
+    CHECK(PortPpuHudActive());
+    size_t capacity=427u*240u;
+    uint32_t* guarded=malloc((capacity+240)*sizeof(*guarded));CHECK(guarded);
+    for(size_t k=0;k<capacity+240;k++)guarded[k]=0xcdcdcdcd;
+    int saved[3];gPortHudW=428;
+    PortPpuHudFrameBegin(saved);PortPpuRenderHud(guarded);PortPpuHudFrameEnd(saved);
+    CHECK(gPortHudW==428&&gPortHudH==240&&gPortHudScale==3);
+    for(size_t k=capacity;k<capacity+240;k++)CHECK(guarded[k]==0xcdcdcdcd);
+    free(guarded);
     free(fallback);puts("PASS full production PPU: failed canvas pixels equal cartridge control; recovery restores separate HUD");return 0;
 }

@@ -535,6 +535,19 @@ static int TagHudY(const SpriteTag* t, int yg, int h, int raise) {
 
 static int sHudLayer;
 static int sHudCanvasFallback;
+static int sHudFrameW, sHudFrameH, sHudFrameScale;
+
+/* OAM and HUD geometry belong to the same PPU frame. Options can change the
+ * desired geometry while that frame is frozen; its consumer must keep using
+ * the preflighted dimensions until a real PPU frame replaces it. */
+void PortPpuHudFrameBegin(int saved[3]) {
+    saved[0] = gPortHudW; saved[1] = gPortHudH; saved[2] = gPortHudScale;
+    gPortHudW = sHudFrameW; gPortHudH = sHudFrameH; gPortHudScale = sHudFrameScale;
+}
+void PortPpuHudFrameEnd(const int saved[3]) {
+    gPortHudW = saved[0]; gPortHudH = saved[1]; gPortHudScale = saved[2];
+}
+
 static int sHdText;
 static int sJafarFight; /* this frame shows Jafar's room (port_jafar.c) */
 int gPortHdHudPart;
@@ -3704,6 +3717,9 @@ void PortPpuBeginFrame(void) {
     sHudLayer = gPortScreen.wide && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
     sHudCanvasFallback = sHudLayer && !PortHudCanvasReady(gPortHudW, gPortHudH);
     if (sHudCanvasFallback) sHudLayer = 0;
+    sHudFrameW = gPortHudW;
+    sHudFrameH = gPortHudH;
+    sHudFrameScale = gPortHudScale;
     sHdText = gPortConfig.hdText;
 #if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
     {

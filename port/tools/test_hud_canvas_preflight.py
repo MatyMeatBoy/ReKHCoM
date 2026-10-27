@@ -20,12 +20,14 @@ else:core='static int PortHudCanvasReady(int w,int h){(void)w;(void)h;return 0;}
 core+=fn(ppu,'ObjColor')+'\n'
 a=ppu.index('        if (!sOamHd[i].id ||',ppu.index('static void QueueMainHdParts('));b=ppu.index('continue;',a)+len('continue;')
 core+='static int QueueAllowed(int i){int a0=0,affine=0,dbl=0,shape=0,mode=0;for(int once=0;once<1;once++){'+ppu[a:b]+'return 1;}return 0;}\n'
+if 'void PortPpuHudFrameBegin(' in ppu:core+=fn(ppu,'PortPpuHudFrameBegin')+'\n'+fn(ppu,'PortPpuHudFrameEnd')+'\n'
 core+='static void SelectLayer(void){'+select+'}\n'+fn(ppu,'HdTextGlyph')+'\n'
 a=ppu.index('        if (sHudLayer && sOamTag[i].hud)');b=ppu.index('        if (bandOnly',a)
 core+='static int NativeInk(int i){for(int once=0;once<1;once++){'+ppu[a:b]+'return 1;}return 0;}\n'
 # Exact Present canvas branch prefix, including its actual allocation path.
 a=main.index('    if (PortPpuHudActive() && !menuCanvas)');b=main.index('        /* The field HUD',a)
-core+='static void PresentCanvas(void){int menuCanvas=0;'+main[a:b]+'}}\n'
+restore='        PortPpuHudFrameEnd(savedHud);\n' if 'PortPpuHudFrameEnd(savedHud)' in main else ''
+core+='static void PresentCanvas(void){int menuCanvas=0;'+main[a:b]+restore+'}}\n'
 pre=r'''
 #include <stdint.h>
 #include <stdlib.h>
@@ -43,6 +45,7 @@ static int gPortHudW=240,gPortHudH=160,gPortHudScale=1;
 static struct{int wide;}gPortScreen={1};
 static struct{int hdHud,hdText;}gPortConfig={1,1};
 static int sHudLayer,sHdText=1,sHudCanvasFallback;
+static int sHudFrameW,sHudFrameH,sHudFrameScale;
 static unsigned char VRAM8[0x18000];static uint16_t PLTT16[512];
 static uint16_t IO16(int i){(void)i;return 0;}
 static struct{int id;}sOamHd[2]={{1},{1}};
@@ -61,7 +64,7 @@ static void SDL_DestroyTexture(SDL_Texture*t){if(t){texDestroys++;free(t);}}
 static void PortLog(const char*f,...){(void)f;logs++;}
 static void GrowPixelBuffer(uint32_t**p,size_t*n,size_t k){if(k>*n){*p=SDL_malloc(k*4);if(!*p)exit(88);*n=k;}}
 static int PortPpuHudActive(void){return sHudLayer;}
-static void PortPpuRenderHud(uint32_t*p){if(!p)exit(89);draws++;}
+static void PortPpuRenderHud(uint32_t*p){if(!p)exit(89);if((size_t)gPortHudW*gPortHudH>sHudCapacity){fprintf(stderr,"stale HUD canvas overflow\n");exit(90);}draws++;}
 #define CHECK(c) do{if(!(c)){fprintf(stderr,"FAIL %d: %s\n",__LINE__,#c);return 77;}}while(0)
 '''
 test=r'''
@@ -94,6 +97,11 @@ int main(void){
  CHECK(HdTextGlyph(1));
  a=allocs;failAlloc=0;sRendererGeneration++;SelectLayer();CHECK(sHudLayer&&allocs==a+1);
  CHECK(HdTextGlyph(1)); /* unrelated text remains HD */
+ /* Frozen Options frame: world can stay641x360 while desired HUD grows. */
+ failAlloc=0;gPortHudW=427;gPortHudH=240;gPortHudScale=3;SelectLayer();CHECK(sHudLayer);
+ gPortHudW=428;failAlloc=1;a=allocs;int beforeDraw=draws;
+ PresentCanvas();CHECK(draws==beforeDraw+1&&allocs==a&&gPortHudW==428&&gPortHudH==240&&gPortHudScale==3);
+ SelectLayer();CHECK(!sHudLayer&&sHudCanvasFallback); /* next real frame falls back */
  puts("PASS canvas transaction + actual PPU/native ink/Present: sticky failure, rollback, lower resolution and generation recovery");return 0;
 }
 '''
