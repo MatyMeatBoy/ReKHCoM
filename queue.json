@@ -4405,10 +4405,10 @@
     "hd-music-progress-20261027": {
       "id": "hd-music-progress-20261027",
       "piece": "Bound HD music decoder progress and preserve original audio on failure",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-music",
       "created_at": "2026-10-27T05:11:21.181016+00:00",
-      "updated_at": "2026-10-27T05:18:34.125295+00:00",
+      "updated_at": "2026-10-27T05:19:02.834040+00:00",
       "branch": "fix/optiport-music",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/288",
       "approval": "Usuario 27/10: integrar y enviar test builds OptiPort",
@@ -4418,9 +4418,15 @@
           "at": "2026-10-27T05:18:34.125295+00:00",
           "owner": "codex-music",
           "detail": "Six producer fault cases pass including 480-sample loop added after independent review"
+        },
+        {
+          "at": "2026-10-27T05:19:02.834040+00:00",
+          "owner": "codex-music",
+          "detail": "Merged 249c55e887b56b09afa36e36452baab07b8a5079; six fault/control cases"
         }
       ],
-      "claimed_at": "2026-10-27T05:11:27.430158+00:00"
+      "claimed_at": "2026-10-27T05:11:27.430158+00:00",
+      "completed_at": "2026-10-27T05:19:02.834040+00:00"
     },
     "save-bank-flush": {
       "id": "save-bank-flush",
@@ -4471,7 +4477,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:18:49.269375+00:00",
+  "updated_at": "2026-10-27T05:19:02.834040+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
