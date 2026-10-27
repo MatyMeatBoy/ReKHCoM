@@ -2,6 +2,7 @@
 from pathlib import Path
 import subprocess
 import tempfile
+import re
 
 ROOT=Path(__file__).resolve().parents[2]
 source=(ROOT/'port/src/port_ppu.c').read_text(encoding='utf-8')
@@ -16,13 +17,14 @@ world=world[world.index('            if (col < 0)'):world.index('            if 
 hud=source[source.index('void PortPpuRenderHud('):]
 hud=hud[hud.index('                if (col < 0)'):hud.index('                if (reloadMask &&')]
 helper=block('static int SmallCardNativeColor(') if 'static int SmallCardNativeColor(' in source else ''
+extra_tiles='\n'.join('static const unsigned char '+n+'[1]={0};' for n in sorted(set(re.findall(r'\bg\w+SmallCardTiles\b',helper))-{'gOlympiaSmallCardTiles'}))
 code=r'''
 #include <assert.h>
 #include <stdio.h>
 static const unsigned char gOlympiaSmallCardTiles[1]={0},otherTiles[1]={0};
 static struct {const void*tiles;int x,y;} sOamHd[1];
 static unsigned char sMainHdPart[1];
-'''+helper+r'''
+'''+extra_tiles+helper+r'''
 static int Pixel(int hud,int ready,int x,int y,int original) {
   int col=original,i=0,tx=x,ty=y,hdPart=ready;
   sMainHdPart[0]=ready;
