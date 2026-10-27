@@ -7049,12 +7049,12 @@
     "audio-intro-title-underrun": {
       "id": "audio-intro-title-underrun",
       "piece": "Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-audio-continuity",
       "created_at": "2026-10-27T18:41:22.472261+00:00",
-      "updated_at": "2026-10-27T22:34:23.556611+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T23:21:27.926308+00:00",
+      "branch": "fix/audio-underrun-smooth",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/411",
       "approval": "Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback",
       "reference": null,
       "evidence": [
@@ -7067,6 +7067,11 @@
           "at": "2026-10-27T22:34:23.556611+00:00",
           "owner": "codex-integrator-worker",
           "detail": "Verified Claudeprojectlog8638d140 lastassistant21:49:22UTC isApiErrorMessage=true stop_sequence sessionlimit until21:50Chile; noClaudeprocess, audio-underrun clean81d andnoaudioPR. UserexplicitlyasksfinishClaudequeue; rootauthorizedhandoff. Preserveoriginalbranchref beforefreshsource."
+        },
+        {
+          "at": "2026-10-27T23:21:27.926308+00:00",
+          "owner": "codex-audio-continuity",
+          "detail": "Head9ae66e25eb2: AUD1HF_threadlifecycleSDLhostsWin/Linux/Android64; preservePS4Ringunits/oldhostABI. Consumerbounded5msramp/fadeinF32S16normalPCMbitexact; realSDLRED/GREENenqueuefaults/partial/ratechange/INTMAX/resetPASS. Win64hostABIbootPASS,fullLinux64Android64hostsyntax+x32A64guestPASS. WASAPIrealzerodata90frames0underrunsPASS(notlistening). Frozengamef0eEU32/64D3D11tenSIGNAL-GATEDcases actualnonzeroPCM+HDtrack6, normal0recoveries/250msmainthreadstalls1-3recoveriesexit0. GBAproducerPCM/ratesbyteequalpre2controls. Oldsilent10rejectedviaAUDIO-SIGNAL-GATE. Latestrareconsumerfailuretail-discardunitREDGREENafterf0e; no normalpathchange. Reporterlistening/deviceconfirmationpending;no publicbuilddeliveredbyworker. Privateevidencepruebas/audio-title-skip, noROM/SAVinstallschanged."
         }
       ],
       "claimed_at": "2026-10-27T21:48:55.174572+00:00"
@@ -8063,7 +8068,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:15:20.799233+00:00",
+  "updated_at": "2026-10-27T23:21:27.926308+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
