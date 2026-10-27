@@ -4261,13 +4261,13 @@
     "sysmsg-palette-null": {
       "id": "sysmsg-palette-null",
       "piece": "System message and glyph NULL palette BIOS reads",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-sysmsg-null",
       "created_at": "2026-10-27T04:37:19.806954+00:00",
-      "updated_at": "2026-10-27T04:51:40.686966+00:00",
+      "updated_at": "2026-10-27T05:09:08.594899+00:00",
       "branch": "fix/sysmsg-palette-null",
-      "pr": null,
-      "approval": "Parent authorized implementation and local commit; review before push",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/285",
+      "approval": "Usuario 27/10: integrar bloques verificados para test builds OptiPort",
       "reference": "Android272 audit same NULL class",
       "evidence": [
         {
@@ -4279,6 +4279,11 @@
           "at": "2026-10-27T04:51:40.686966+00:00",
           "owner": "codex-sysmsg-null",
           "detail": "Parent review addressed in separate commit: real choice setup/wait functions tested at BIOS.index0xe3a0; unallocated bank upload fails before guard and passes after PC-only skip. Valid bank7 uploads preserved. SetObjTileSource already BIOS_PTR; no allocator edits."
+        },
+        {
+          "at": "2026-10-27T05:09:08.594899+00:00",
+          "owner": "codex-sysmsg-null",
+          "detail": "Actual message/choice fault injection harness passed"
         }
       ],
       "claimed_at": "2026-10-27T04:37:25.821487+00:00"
@@ -4349,7 +4354,7 @@
     "created_at": "2026-10-27T05:08:08.674562+00:00",
     "updated_at": "2026-10-27T05:08:08.674562+00:00"
   },
-  "updated_at": "2026-10-27T05:09:02.397213+00:00",
+  "updated_at": "2026-10-27T05:09:08.594899+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
