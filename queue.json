@@ -6162,10 +6162,10 @@
     "v22-scenes-character-triggers": {
       "id": "v22-scenes-character-triggers",
       "piece": "Menú de escenas: L2/R2 alterna Sora/Riku y su catálogo; tooltip según mando activo; preservar selección y desbloqueos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-scenes-triggers",
       "created_at": "2026-10-27T14:50:27.170115+00:00",
-      "updated_at": "2026-10-27T15:56:00.728107+00:00",
+      "updated_at": "2026-10-27T16:02:13.547376+00:00",
       "branch": "feat/gallery-character-triggers",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/367",
       "approval": "Pedido directo del usuario 27/10/2026 en chat Codex: menú de escenas L2/R2 y tooltip",
@@ -6180,9 +6180,15 @@
           "at": "2026-10-27T15:56:00.728107+00:00",
           "owner": "codex-scenes-triggers",
           "detail": "Commit e16c87d50. Probes consumidorC EU/US/JP PASS: separaciónSora/Riku, umbral/rearme, selección/scroll/resume, aliases/fallbackHD, locked/configintacta y labelsPS/Xbox/Nintendo. Capturasreales UIactual sobrecoreEUcacheado (no fullbuild), rootrevisóSora151,Riku48,F2,L2/R2/ZL/ZRsin solapes. Evidencia local pruebas/gallery-character-triggers/build-metadata.json y PNG."
+        },
+        {
+          "at": "2026-10-27T16:02:13.547376+00:00",
+          "owner": "codex-scenes-triggers",
+          "detail": "PR367 integrado 8d4496440de431d602dfe7aa4efb2bb0ca97ce6b; coordinador revisó diff y3capturas reales de Sora/Riku conL2/R2 yZL/ZR, fuentes/imágenes SHA coinciden con e16c87d50, seisregresionesC EU/US/JP pasan repetidasporintegrador. Captura UIactual sobrecoreEU cacheadorevisiónnoidentificada: noatribuirwholebuild."
         }
       ],
-      "claimed_at": "2026-10-27T15:35:49.604861+00:00"
+      "claimed_at": "2026-10-27T15:35:49.604861+00:00",
+      "completed_at": "2026-10-27T16:02:13.547376+00:00"
     },
     "v22-workspace-storage-cleanup": {
       "id": "v22-workspace-storage-cleanup",
@@ -6351,7 +6357,7 @@
     "created_at": "2026-10-27T16:01:49.406149+00:00",
     "updated_at": "2026-10-27T16:01:49.406149+00:00"
   },
-  "updated_at": "2026-10-27T16:01:49.406149+00:00",
+  "updated_at": "2026-10-27T16:02:13.547376+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
