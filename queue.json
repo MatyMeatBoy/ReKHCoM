@@ -6287,13 +6287,8 @@
       "evidence": []
     }
   },
-  "integrator": {
-    "owner": "codex-workspace-integrator",
-    "token": "f725ff029456ef4578945c279bd94db14e97a461205b8548",
-    "created_at": "2026-10-27T15:13:54.400407+00:00",
-    "updated_at": "2026-10-27T15:13:54.400407+00:00"
-  },
-  "updated_at": "2026-10-27T15:15:05.941616+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-27T15:15:12.147002+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
