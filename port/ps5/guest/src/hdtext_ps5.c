@@ -135,6 +135,12 @@ static void LoadCustomFont(void) {
     }
 }
 
+/* port_ppu.c: HD text only with its face loaded; without it the cartridge's text stays (#277) */
+int PortPortableHdReady(void) {
+    LoadCustomFont();
+    return sFace[0].loaded;
+}
+
 static HFONT MakeFont(Face* face, int px, float xk) {
     Inst* f;
 
