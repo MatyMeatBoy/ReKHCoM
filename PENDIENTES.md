@@ -211,5 +211,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v21-skill-snapshot | Sync reviewed public OptiPort0b6edd3 method into project snapshot, retaining project-specific results only in board | integrado | codex-v21-board | https://github.com/MatyMeatBoy/ReKHCoM/pull/344 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T10:53:39.582164+00:00 |
 | controller-prompt-original-live-spans | Scoped original tutorial spans with reversible live button overlays and bounded unsupported-key fallback | en_curso | codex-control-prompts | — | Parent authorizes Original enable live-page and fallback increment atop338, preserving VM/reveal/geometry | 2026-10-27T10:48:18.877070+00:00 |
 | hud-toggle-battle-warm | Precarga acotada HUD al activar desde Opciones durante combate; consumidor real y fixture GPU | en_curso | device_profiles_sol | — | — | 2026-10-27T10:53:27.726490+00:00 |
+| optiport-serial-profile-contract | Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow | pendiente | — | — | Root delega plan serial ycorregir postcondicionesreales sinrewriteharness | 2026-10-27T10:54:19.196552+00:00 |
 
 Integrador: codex-crash (ocupado; 2026-10-27T10:51:21.601244+00:00)

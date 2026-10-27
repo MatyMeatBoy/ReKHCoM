@@ -5699,6 +5699,19 @@
       "reference": "port/progress/PENDIENTES_VIGENTES.md",
       "evidence": [],
       "claimed_at": "2026-10-27T10:53:27.726490+00:00"
+    },
+    "optiport-serial-profile-contract": {
+      "id": "optiport-serial-profile-contract",
+      "piece": "Validar reporteprofiling ypreparar planserial original14: CSVcoverage finite mode/quality assets hashes p50p95p99,32/64, no runtime/buildnow",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T10:54:19.196552+00:00",
+      "updated_at": "2026-10-27T10:54:19.196552+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root delega plan serial ycorregir postcondicionesreales sinrewriteharness",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": {
@@ -5707,7 +5720,7 @@
     "created_at": "2026-10-27T10:51:21.601244+00:00",
     "updated_at": "2026-10-27T10:51:21.601244+00:00"
   },
-  "updated_at": "2026-10-27T10:54:09.355073+00:00",
+  "updated_at": "2026-10-27T10:54:19.196552+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
