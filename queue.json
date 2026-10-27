@@ -5598,10 +5598,10 @@
     "controller-bridge-metadata": {
       "id": "controller-bridge-metadata",
       "piece": "Optional versioned actual controller metadata for 64-bit SDL hosts without bridge ABI changes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T10:26:45.203781+00:00",
-      "updated_at": "2026-10-27T10:31:21.815350+00:00",
+      "updated_at": "2026-10-27T12:36:53.286158+00:00",
       "branch": "feature/controller-bridge-metadata",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/340",
       "approval": "Parent authorizes producer and consumer metadata implementation for truthful Auto prompts",
@@ -5611,9 +5611,15 @@
           "at": "2026-10-27T10:31:21.815350+00:00",
           "owner": "codex-control-prompts",
           "detail": "Actual producer + all three H_getenv + shim Refresh/getters CPU RED/GREEN; bounded query cache, old-host/malformed fallback; native Windows64 syntax; check_sources"
+        },
+        {
+          "at": "2026-10-27T12:36:53.286158+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "GitHub PR#340 state MERGED verified; mergeCommit a933cfa93c5eb48f8c88d32eccbe9879879621e5; included in bundle PR351 merged 771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; runtime QA limits remain in project evidence."
         }
       ],
-      "claimed_at": "2026-10-27T10:26:50.310729+00:00"
+      "claimed_at": "2026-10-27T10:26:50.310729+00:00",
+      "completed_at": "2026-10-27T12:36:53.286158+00:00"
     },
     "guest-getenv-stable-values": {
       "id": "guest-getenv-stable-values",
@@ -5944,7 +5950,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:47.578633+00:00",
+  "updated_at": "2026-10-27T12:36:53.286158+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
