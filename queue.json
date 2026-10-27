@@ -6766,15 +6766,16 @@
     "optiport-v22-pacing": {
       "id": "optiport-v22-pacing",
       "piece": "OptiPort 2.2: aislar tirones repetibles y etapa costosa, sin tocar velocidad GBA",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:34.299497+00:00",
-      "updated_at": "2026-10-27T17:32:34.299497+00:00",
+      "updated_at": "2026-10-27T19:52:41.585889+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "PLAN_V22.md",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T19:52:41.585889+00:00"
     },
     "optiport-v22-soak": {
       "id": "optiport-v22-soak",
@@ -7397,7 +7398,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:51:35.879318+00:00",
+  "updated_at": "2026-10-27T19:52:41.585889+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
