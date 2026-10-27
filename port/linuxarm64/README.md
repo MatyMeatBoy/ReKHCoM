@@ -62,7 +62,7 @@ only for a 64 KiB scratch region, not as a simulation of the Linux mmap loader.
 ## Integration evidence — 27 October 2026
 
 Source spike9300d2992 is preserved on codex/linux-arm64-feasibility. This PR
-cherry-picks only that commit onto mainc8109de7d, retaining current renderer
+cherry-picks only that commit onto current main (rebased after34132bd71), retaining renderer
 reset/texture ownership, HD streaming, safe desktop entry and runtime changes.
 Nested khcom-worktrees toolchain discovery is supported. Guest configuration
 is idempotent and leaves touch/PPU-thread options disabled for this target.
@@ -82,3 +82,14 @@ forced relocation), then boot/title/scene/audio/input/save/quit tests in isolate
 AArch64 Linux or an emulator, followed by real device GPU/driver/performance QA.
 Current loader tests mock mappings on Windows; they do not prove mmap/protection
 or instruction execution on Linux. No FPS, driver, handheld or release claim.
+
+Re-run lightweight contracts without building dependencies or the game:
+
+```powershell
+python port/tools/test_linuxarm64_build.py
+python port/tools/test_linuxarm64_loader.py
+python port/tools/test_linux_launcher.py --shell "C:/Program Files/Git/bin/sh.exe"
+```
+
+On Linux use `--shell /bin/sh`. Host syntax needs an existing arm64 sysroot
+and SDL3 headers; absence is a missing prerequisite, not a successful build.
