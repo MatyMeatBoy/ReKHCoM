@@ -201,10 +201,25 @@ void LoadDecimalDigitTiles(u32 value, u8* glyphs, u8* dst, u16 stride, u16 count
 #ifdef PLATFORM_PC
         {
             /* the moogle shop's and map cards' numbers are text, as the deck menus' are (card_deckmenu2.c): HD text
-               draws them over these tiles, in their own colours */
+               draws them over these tiles, in their own colours. All ten digits take the colours of this set's 0
+               (panel = its commonest colour, then face and shadow, as port_ppu.c reads one tile): a dense digit (2)
+               has more face than panel and, read alone, was drawn as a block of the wrong colour behind it. */
             void PortRegisterBgTextTile(void* address, int code, int style, const void* source32);
-            if (stride == 32)
-                PortRegisterBgTextTile(&dst[(count - 1 - i) * stride], '0' + (int)digit, 2, &glyphs[digit * stride]);
+            if (stride == 32) {
+                int uses[16] = { 0 }, order[3] = { -1, -1, -1 }, k, n;
+                for (n = 0; n < 32; n++) {
+                    uses[glyphs[n] & 15]++;
+                    uses[glyphs[n] >> 4]++;
+                }
+                for (k = 0; k < 3; k++)
+                    for (n = 1; n < 16; n++)
+                        if (uses[n] && n != order[0] && n != order[1] && (order[k] < 0 || uses[n] > uses[order[k]]))
+                            order[k] = n;
+                PortRegisterBgTextTile(&dst[(count - 1 - i) * stride], '0' + (int)digit,
+                                       order[1] < 0 ? 2 : 2 | (order[1] << 8) | ((order[2] < 0 ? order[0] : order[2]) << 12) |
+                                                          (order[0] << 16),
+                                       &glyphs[digit * stride]);
+            }
         }
 #endif
     }
