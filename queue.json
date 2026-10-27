@@ -6004,15 +6004,21 @@
     "linux-native-launcher-336": {
       "id": "linux-native-launcher-336",
       "piece": "Native Linux helper336: Play,preparedHDtransaction,ownedsourcePythonimport,noWine; KDE/Zenity/CLI, packagingonly",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux-native-launcher",
       "created_at": "2026-10-27T12:47:17.440359+00:00",
-      "updated_at": "2026-10-27T12:47:22.816440+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T12:58:07.606940+00:00",
+      "branch": "feat/linux-native-launcher-336",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/353",
       "approval": "Usuario exige336en2.1; rootautorizahelperacotado sinfullGUI niWindowschanges",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T12:58:07.606940+00:00",
+          "owner": "codex-linux-native-launcher",
+          "detail": "head de434db7c3b08078b34b6b040aaf8572330726b8; native import 7 tests PASS (Windows symlink privilege skip); package resources/permissions PASS; first rename interruption rollback and runtime token constraints covered; Linux VM root pending; Wine crash original not reproduced."
+        }
+      ],
       "claimed_at": "2026-10-27T12:47:22.816440+00:00"
     },
     "linux-native-launcher-package-v21": {
@@ -6031,7 +6037,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T12:48:29.317870+00:00",
+  "updated_at": "2026-10-27T12:58:07.606940+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
