@@ -7271,20 +7271,26 @@
     "issue386-moogle-charge-scroll": {
       "id": "issue386-moogle-charge-scroll",
       "piece": "Hijo audit64-menu-scroll-boundaries: corregir división0 alcanzable en scrollbar MsCharge con10..12tipos",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-moogle-charge-scroll",
       "created_at": "2026-10-27T19:20:49.301337+00:00",
-      "updated_at": "2026-10-27T19:21:06.536178+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T19:23:33.811999+00:00",
+      "branch": "fix/moogle-charge-scroll",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/388",
       "approval": "Usuario pide arreglar todos los fallos64 por patrones; coordinador aprueba fix local MsCharge y prueba consumidor real sin GPU",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T19:23:33.811999+00:00",
+          "owner": "codex-moogle-charge-scroll",
+          "detail": "PR388 head55759a121, freshmain8d. Full unchanged production MsChargeDraw+GetTabCount RED0xC0000094 count10, GREEN146243 CPUcases counts0..286,tabs0..4,scroll-1..98. Local positive-range and valid-scroll guard; no global DIV0/ABI/save changes. Evidence pruebas/64bit-crash-ledger/ms-charge, document MOOGLE_CHARGE_SCROLL_386.md. NoGPU/fullmenu claim; root combinedbuild. Child audit64-menu-scroll-boundaries."
+        }
+      ],
       "claimed_at": "2026-10-27T19:21:06.536178+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:22:54.820356+00:00",
+  "updated_at": "2026-10-27T19:23:33.811999+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
