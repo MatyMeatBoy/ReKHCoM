@@ -2416,23 +2416,29 @@
     "escena-004-muro-derecho": {
       "id": "escena-004-muro-derecho",
       "piece": "Escena004: completar muro derecho y revisar escena de Leon equivalente",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas",
       "created_at": "2026-10-25T13:33:32.092325+00:00",
-      "updated_at": "2026-10-25T13:39:49.213521+00:00",
+      "updated_at": "2026-10-27T17:12:19.468806+00:00",
       "branch": "codex/escena-004-muro",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/123",
-      "approval": null,
+      "approval": "Atlas exact 8827dd92eb9c4392876f611cbf4cfcb2; honors; revision 3; sha256 a51ea1b1871e442050f882341987804581e993389e32c8bfc47011d614ac9673; decision 2026-10-25T15:55:10.141249+00:00",
       "reference": "20261024-174616-2db556 / d39a773a8c174176b3870d672367d05d",
       "evidence": [
         {
           "at": "2026-10-25T13:39:49.213521+00:00",
           "owner": "codex-atlas",
           "detail": "004300/600 y005300; GBA identico3/3, compila y salidas0. Captura real en Atlas."
+        },
+        {
+          "at": "2026-10-27T17:12:19.468806+00:00",
+          "owner": "codex-atlas",
+          "detail": "Reconciliacion historica: https://github.com/MatyMeatBoy/ReKHCoM/pull/123 MERGED 2026-10-25T16:12:14Z; merge 2f43bb6a9b1631bee4402342d559cfd6ab306785 ancestro del main observado 1c0b6c7e4166b2a25364cda1b2ac9a776989b4db. Dueno original conservado; no se repite implementacion. Atlas exact 8827dd92eb9c4392876f611cbf4cfcb2, honors, revision 3, SHA256 a51ea1b1871e442050f882341987804581e993389e32c8bfc47011d614ac9673; no se hereda aprobacion de otra version.\nRevalidado 2026-10-27T17:12:19.422686+00:00; main f1b51b9c21663aeacdbacd7184b2b2b6baa104e2; merge real 2f43bb6a9b1631bee4402342d559cfd6ab306785; GitHub MERGED y referencia de autorizacion/aprobacion preservada segun su origen. Sin gameplay adicional ni cierre de feedback posterior."
         }
       ],
       "claimed_at": "2026-10-25T13:33:40.340277+00:00",
-      "sent": "8827dd92eb9c4392876f611cbf4cfcb2"
+      "sent": "8827dd92eb9c4392876f611cbf4cfcb2",
+      "completed_at": "2026-10-27T17:12:19.468806+00:00"
     },
     "sintesis-requisito-hd": {
       "id": "sintesis-requisito-hd",
@@ -6569,7 +6575,7 @@
     "created_at": "2026-10-27T17:11:02.822041+00:00",
     "updated_at": "2026-10-27T17:11:02.822041+00:00"
   },
-  "updated_at": "2026-10-27T17:12:11.961998+00:00",
+  "updated_at": "2026-10-27T17:12:19.468806+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
