@@ -10,6 +10,7 @@ and the x86-64 host with 32-bit game images; Anbernic uses armhf. Prepare once:
 """
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
