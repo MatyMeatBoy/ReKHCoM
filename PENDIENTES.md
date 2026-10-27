@@ -223,4 +223,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v21-final-profile-evidence | Measure final published Windows32/64 HD workloads and update stale OptiPort board from actual evidence; no release overwrite | integrado | codex-final-profile | https://github.com/MatyMeatBoy/ReKHCoM/pull/355 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T13:25:45.575663+00:00 |
 | gallery-empty-preview-backdrop | Render lightweight distinct GBA/HD gallery backdrop when no poster exists, no IO or allocation; preserve actual previews | integrado | codex-gallery-backdrop | https://github.com/MatyMeatBoy/ReKHCoM/pull/356 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T13:35:22.321808+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T13:34:55.786508+00:00)
+Integrador: libre
