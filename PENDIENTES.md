@@ -224,4 +224,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gallery-empty-preview-backdrop | Render lightweight distinct GBA/HD gallery backdrop when no poster exists, no IO or allocation; preserve actual previews | integrado | codex-gallery-backdrop | https://github.com/MatyMeatBoy/ReKHCoM/pull/356 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T13:35:22.321808+00:00 |
 | v22-handoff-optiport | Document 2.2 roadmap, conservative10/14 OptiPort baseline and published versus main-only changes; no new runtime work | integrado | codex-v22-handoff | https://github.com/MatyMeatBoy/ReKHCoM/pull/357 | Usuario pide anotar pendientes porcentaje OptiPort y demás para2.2 | 2026-10-27T13:44:10.305336+00:00 |
 
-Integrador: claude-retoma (ocupado; 2026-10-27T14:02:35.235073+00:00)
+Integrador: libre
