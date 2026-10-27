@@ -30,6 +30,7 @@
 #define RRF_SUBKEY_WOW6464KEY 0x00010000
 #endif
 #include "../include/port/port_device_profile_host.h"
+#include "../include/port/port_windows_cpu.h"
 
 static char sData[1024] = ".";
 static int sQuit;
@@ -67,6 +68,7 @@ static FILE* Utf8Open(const char* path, const char* mode) {
    appended with the exception code and address, the module or guest offset it fell in (guest offsets map to
    port/ps5/build/guest-<r>/guest.map), the registers and the code addresses found on the stack. */
 static char sMachine[1024];
+static uint32_t sCpuLeaf1Ecx;
 static uint32_t sGuestEnd;
 static void CrashLine(FILE* f, const char* fmt, ...) {
     va_list ap;
@@ -156,18 +158,17 @@ static void CrashReportBegin(void) {
     MEMORYSTATUSEX m = { sizeof(m) };
     char cpu[64] = "";
     DWORD size = sizeof(cpu);
-    int regs[4];
     snprintf(sCrashPath, sizeof(sCrashPath), "%s/kh_com.log", sData);
     if (get) get(&v);
     GlobalMemoryStatusEx(&m);
     RegGetValueA(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", "ProcessorNameString",
                  RRF_RT_REG_SZ, NULL, cpu, &size);
-    __cpuid(regs, 1);
+    sCpuLeaf1Ecx = PortWindowsCpuLeaf1Ecx();
     snprintf(sMachine, sizeof(sMachine),
              "host built " __DATE__ ", Windows %lu.%lu build %lu\nCPU %s, %d logical cores, SSE4.1 %s, AVX %s\n"
              "RAM %llu MB, free %llu MB\nfolder %s\n",
              v.dwMajorVersion, v.dwMinorVersion, v.dwBuildNumber, cpu, SDL_GetNumLogicalCPUCores(),
-             (regs[2] >> 19) & 1 ? "yes" : "no", (regs[2] >> 28) & 1 ? "yes" : "no", m.ullTotalPhys >> 20,
+             PortWindowsCpuHasSse41(sCpuLeaf1Ecx) ? "yes" : "no", (sCpuLeaf1Ecx >> 28) & 1 ? "yes" : "no", m.ullTotalPhys >> 20,
              m.ullAvailPhys >> 20, sData);
     SetUnhandledExceptionFilter(CrashFilter);
     AddVectoredExceptionHandler(0, CrashVectored);
@@ -599,6 +600,11 @@ int main(int argc, char** argv) {
     if (bootStatus) H_remove(bootStatus);
     _putenv_s("KHCOM_DATA", sData);
     CrashReportBegin();
+    if (!PortWindowsCpuHasSse41(sCpuLeaf1Ecx)) {
+        Log("%s", sMachine);
+        Log("CPU SSE4.1 is required by the 64-bit guest; use the 32-bit game on this CPU.");
+        return PORT_WINDOWS64_CPU_UNSUPPORTED;
+    }
     {
         /* the game's packaged files, its HD text fonts among them, as the other hosts say (#277: without it the
            Steam Deck's HD text found no font and the dialogue showed none) */
