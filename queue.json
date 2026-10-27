@@ -4909,6 +4909,19 @@
       "approval": "Usuario 27/10/2026: mejorar vista/previews ambos modos; no retrasar ZIP Windows64",
       "reference": "port/progress/COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos",
       "evidence": []
+    },
+    "previews-both-modes-visual-fallback": {
+      "id": "previews-both-modes-visual-fallback",
+      "piece": "Regular UI para Claude: vista/previews ambos modos y fallback visual cuidado; identificar modos y coordinar rutas con perf antes de implementar",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T07:05:35.374969+00:00",
+      "updated_at": "2026-10-27T07:05:35.374969+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 27/10/2026: Claude puede tomar pendientes regulares; previews pendientes posteriores ZIP",
+      "reference": "port/progress/COORDINACION_OPTIPORT_V21.md#pendiente-vista-y-previews-en-ambos-modos",
+      "evidence": []
     }
   },
   "integrator": {
@@ -4917,7 +4930,7 @@
     "created_at": "2026-10-27T06:31:28.522283+00:00",
     "updated_at": "2026-10-27T06:31:28.522283+00:00"
   },
-  "updated_at": "2026-10-27T07:05:30.008628+00:00",
+  "updated_at": "2026-10-27T07:05:35.374969+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
