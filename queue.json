@@ -7634,13 +7634,13 @@
     "guest64-divzero-parity": {
       "id": "guest64-divzero-parity",
       "piece": "Restore scoped cartridge zero-divisor semantics in x32 guest hosts",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-guest64-parity",
       "created_at": "2026-10-27T20:16:52.147660+00:00",
-      "updated_at": "2026-10-27T20:47:18.285249+00:00",
+      "updated_at": "2026-10-27T21:05:56.890561+00:00",
       "branch": "fix/guest-divzero-parity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/396",
-      "approval": null,
+      "approval": "usuario-fallback-general-logicaGBA",
       "reference": null,
       "evidence": [
         {
@@ -7657,9 +7657,15 @@
           "at": "2026-10-27T20:47:18.285249+00:00",
           "owner": "codex-guest64-parity",
           "detail": "Head a772c955a pushed review fix. Root Win realexceptions/14336decoder/linkerPASS, originalThumb192PASS. Root independently ran newLinuxfixture in existingDebian snapshot1GiB2CPU: zero signed/unsigned preserved, normal61r1, overflow/outsideguestfatal, priorSA_SIGINFO custom/default/ignore bounded-forward PASS exit0. Platformcoverage: firstblockWindows/Linuxregister32 only; allplatformparity parentremainspartial, memory/16 andPS5/ARM64/Webcoveragepending."
+        },
+        {
+          "at": "2026-10-27T21:05:56.890561+00:00",
+          "owner": "codex-guest64-parity",
+          "detail": "PR396 merged7ea52c96e4865d5cd17819bbd2108fd63ece6385. General flatguest DIV/IDIVregister+mappedmemory8/16/32/64, widthcorrectq/r0, SIB/RIP/EIP/address32, provenzero. Root250actualWindows+250LinuxVM+20480context+192ROMcontrolsPASS; independentSolreview250/20480/linkerPASS no blockers. Win/Linuxx64 andLinuxARM64syntaxPASS (ARMguard excludesx86). Coreguardscomplement. Finalrebuiltguest+host/packageverification belongsdeliverytask; otherplatformparity auditstillopen, no allcrashclaim."
         }
       ],
-      "claimed_at": "2026-10-27T20:16:57.923696+00:00"
+      "claimed_at": "2026-10-27T20:16:57.923696+00:00",
+      "completed_at": "2026-10-27T21:05:56.890561+00:00"
     },
     "sol-guest64-abi-audit": {
       "id": "sol-guest64-abi-audit",
@@ -7739,7 +7745,7 @@
     "created_at": "2026-10-27T21:04:32.721998+00:00",
     "updated_at": "2026-10-27T21:04:32.721998+00:00"
   },
-  "updated_at": "2026-10-27T21:04:32.722431+00:00",
+  "updated_at": "2026-10-27T21:05:56.890561+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
