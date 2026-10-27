@@ -7326,15 +7326,21 @@
     "qa-sol-low-diverse-saves": {
       "id": "qa-sol-low-diverse-saves",
       "piece": "QA: saves distintos y menus reales 32/64",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "sol-low-diverse-saves",
       "created_at": "2026-10-27T19:24:06.687806+00:00",
-      "updated_at": "2026-10-27T19:24:12.921539+00:00",
+      "updated_at": "2026-10-27T19:59:07.875513+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
-      "reference": null,
-      "evidence": [],
+      "reference": "64da671f1107b2235514d23164f79130ae1a773d",
+      "evidence": [
+        {
+          "at": "2026-10-27T19:59:07.875513+00:00",
+          "owner": "sol-low-diverse-saves",
+          "detail": "QA 6/6 runs 3 SHA unique SAV x32/x64; natural load-map/status-return plus contextual Moogle empty-onepage-multipage18-bottomscroll-return. verified-results.private.json, MATRIX.md. Original hashes preserved. HD1 D3D11 mid/late; dummy limitations explicit. No product edits."
+        }
+      ],
       "claimed_at": "2026-10-27T19:24:12.921539+00:00"
     },
     "qa-sol-low-scenes-states": {
@@ -7404,7 +7410,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:54:42.133133+00:00",
+  "updated_at": "2026-10-27T19:59:07.875513+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
