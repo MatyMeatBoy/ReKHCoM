@@ -5626,14 +5626,14 @@
     "linux-arm64-experimental-v21": {
       "id": "linux-arm64-experimental-v21",
       "piece": "Integrar9300d2992 experimental LinuxARM64 conmain actual, ABI/loader/builder/routing tests, sinheavybuild ni hardwareclaim",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux-arm64",
       "created_at": "2026-10-27T10:36:20.825294+00:00",
-      "updated_at": "2026-10-27T11:14:05.005381+00:00",
+      "updated_at": "2026-10-27T12:36:17.198153+00:00",
       "branch": "feat/linux-arm64-experimental",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/345",
       "approval": "Usuario autoriza LinuxARM64 scope; root delega nueva branch preservando vieja",
-      "reference": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/351",
       "evidence": [
         {
           "at": "2026-10-27T10:49:04.577782+00:00",
@@ -5644,9 +5644,15 @@
           "at": "2026-10-27T11:14:05.005381+00:00",
           "owner": "codex-linux-arm64",
           "detail": "Head38de8b4d1 preserved independentwholeLoadArm64Imagefixture. Bothportable+wholeloaderprobesPASS:preferred/forcedmove/header/table/stack/protectionrequests/bounds/rollback. WindowsVirtualAllocRWadapterNOTLinuxmmap/mprotect/ARMexec. Fullsourcebuild/runtime/hardwarependingunchanged. WorktreeNeededyesPRrepro."
+        },
+        {
+          "at": "2026-10-27T12:36:17.198153+00:00",
+          "owner": "codex-linux-arm64",
+          "detail": "GitHub verified MERGED PR345, real merge SHA 1a8bbe7801ba93a3e91b740a30b13e8c0028138c. Included in bundle PR351, real merge771aed8cc243d8c84afb7b0c79a47831f4304629. Queue reconciliation only; integrated is not released or device-confirmed. Existing evidence/WIP/branches preserved; worktree needed review/repro until coordinator archives."
         }
       ],
-      "claimed_at": "2026-10-27T10:36:26.495128+00:00"
+      "claimed_at": "2026-10-27T10:36:26.495128+00:00",
+      "completed_at": "2026-10-27T12:36:17.198153+00:00"
     },
     "v21-verified-board": {
       "id": "v21-verified-board",
@@ -5908,7 +5914,7 @@
     "created_at": "2026-10-27T12:34:42.999736+00:00",
     "updated_at": "2026-10-27T12:34:42.999736+00:00"
   },
-  "updated_at": "2026-10-27T12:36:11.718733+00:00",
+  "updated_at": "2026-10-27T12:36:17.198153+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
