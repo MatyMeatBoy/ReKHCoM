@@ -7658,22 +7658,28 @@
     "v22-pre2-windows-crash-delivery": {
       "id": "v22-pre2-windows-crash-delivery",
       "piece": "Compilar Windows32/64 EU US JP desde source main fijado con fixes386/scroll/reporter/importador, versionpre2; verificar paquete exacto y SAVusuario, manifiesto/hash, publicar solo plataformas compiladas. Pre1 inmutable; no afirmar confirmaciones de hardware pendientes.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-pre2-crash-delivery",
       "created_at": "2026-10-27T20:11:53.244246+00:00",
-      "updated_at": "2026-10-27T21:33:38.624767+00:00",
+      "updated_at": "2026-10-27T21:40:19.081029+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/396",
-      "approval": "Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild.",
+      "approval": "usuario-publicar-prebuild",
       "reference": "PR387/388/389/390/392; releases/v2.2-pre1 immutable",
       "evidence": [
         {
           "at": "2026-10-27T21:33:38.624767+00:00",
           "owner": "codex-pre2-crash-delivery",
           "detail": "Windowspre2 published https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2-pre2 source7ea52c96e, all6EU/US/JP32/64 built. ZIP81209437bytes SHAa94d30fa284e245bbf8f7c4e49285dd6a90eb8eb3947733cc76f714272c81396, serverdigest matches, tagtargetsame, Lateststable remains2.1. ExactZIP startup6/6, realhost21contracts, savedmap32/64normalHD andHDreturnbothPASS;358entriesCRC/PE11inputequality/newguestmetadataPASS, noROM/save/config/HD. Reporter386/360/378/336 testlinks posted. Nohardware/allbugsclaim."
+        },
+        {
+          "at": "2026-10-27T21:40:19.081029+00:00",
+          "owner": "codex-pre2-crash-delivery",
+          "detail": "Delivered pre2Windows release/source7ea52c96e. Server SHAa94d30fa284e245bbf8f7c4e49285dd6a90eb8eb3947733cc76f714272c81396 and81209437bytes matchimmutablelocal;6assetsinclnotes+manifest+validation. ExactZIP6startup/21hostcontracts/4SAVmenusnormalHD/2fieldreturns pass; noinputmodified. Specificreporterhardware confirmations andLinux/Androidbuilds separatepending, no0bugsclaim."
         }
       ],
-      "claimed_at": "2026-10-27T20:12:53.479868+00:00"
+      "claimed_at": "2026-10-27T20:12:53.479868+00:00",
+      "completed_at": "2026-10-27T21:40:19.081029+00:00"
     },
     "guest64-divzero-parity": {
       "id": "guest64-divzero-parity",
@@ -7809,7 +7815,7 @@
     "created_at": "2026-10-27T21:33:44.287250+00:00",
     "updated_at": "2026-10-27T21:33:44.287250+00:00"
   },
-  "updated_at": "2026-10-27T21:38:36.342248+00:00",
+  "updated_at": "2026-10-27T21:40:19.082030+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
