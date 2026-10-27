@@ -21,13 +21,17 @@ def main():
     unit+=r'''
 const u16 gTextBrownPalette[16]={0},gTextWhitePalette[16]={0},gTextGrayPalette[16]={0},gBStatesPalette[16]={0};
 u8 gFEventTiles[32]; void* gFEventAnims; void* gFEventFrames;
+u16 gDialogBoxPalette[16],gCard00Palette[16];
+u8 gHandCursorTiles[32],gMsgBoxTiles[32],gYesChoiceText[1],gNoChoiceText[1];
+void* gHandCursorAnims; void* gHandCursorFrames;
+const s32 gMsgwaitYesnoCursorY[2]={0};
 u8 gPortBiosArea[0x10000];
 static TextGlyphSprite* sCardMsgGlyphSprites;
 static u8 sTextEntryCount;
 static SysMsgWinWork* sActiveSysmsgwin;
 static const s32 sSysmsgwinTextY[4]={0};
 static ObjPalette valid;
-static int mask, calls, fades;
+static int mask, calls, fades, banks;
 CardMessageDef gCardMessageDefs[1];
 u8 gMessageWindowOpen,gMessageWindowAnswerYes;
 const void* PortCardScrollTutorialText(int m,const void* p) { return p; }
@@ -35,7 +39,19 @@ u8 LayoutCardMsgGlyphsPage(s32 x,s32 y,MsgLatinChar* p,MsgLatinChar** n) { retur
 void* EwramAlloc(u32 n) { return calloc(1,n); }
 ObjPalette* LoadObjPalette(const void* p,u16 n) { return mask & (1 << (calls++ % 3)) ? NULL : &valid; }
 void* LoadTextPalette(s32 p) { return LoadObjPalette(NULL,32); }
-void FadeSetPaletteExcluded(u16 slot,u8 on) { assert(slot==23 || slot==29); fades++; }
+void FadeSetPaletteExcluded(u16 slot,u8 on) { assert(slot==23 || slot==29 || slot==(u16)(0xe3a0+16)); fades++; }
+void LoadObjPaletteBank(u16 bank,void* p) { assert(bank==7); banks++; }
+u16 LoadTextSlots(const void* p,TextSlot* s) { return 0; }
+ObjTiles* LoadObjTiles(const void* p,u16 n) { return AllocObjTiles(n,NULL); }
+void SetTaskUpdate(Task* t,TaskUpdateFunc f) {}
+u8 UpdateSysmsgwinChoiceInput(SysMsgWinWork* w,void* t) { return 1; }
+u8 UpdateSysmsgwinChoice(SysMsgWinWork* w,void* t) { return 1; }
+s32 UpdateSysmsgwinClose(SysMsgWinWork* w) { return 1; }
+u16 GetKeysPressed(void) { return A_BUTTON; }
+void m4aSongNumStart(u16 n) {}
+void* AnimUpdate(AnimState* a) { return NULL; }
+void ReleaseObjTiles(void* p) {}
+void ReleaseObjPalette(ObjPalette* p) {}
 void CpuSet(const void* a,void* b,u32 c) { memset(b,0,(c&0x1fffff)*4); }
 void InitTextSlots(TextSlot* p,s32 n) {}
 ObjTiles* AllocObjTiles(u16 n,const void* p) { static ObjTiles t; return &t; }
@@ -47,6 +63,8 @@ void SetBgPriority(s32 a,u16 b) {}
 '''
     unit+=function('src/msg/msg.c','InitCardMsgGlyphSprites')+'\n'
     unit+=function('src/card/card_sysmsgwin.c','sysmsgwin_0')+'\n'
+    unit+=function('src/card/card_sysmsgwin.c','UpdateSysmsgwinChoiceSetup')+'\n'
+    unit+=function('src/card/card_sysmsgwin.c','UpdateSysmsgwinWaitInput')+'\n'
     unit+=r'''
 int main(void) {
  valid.index=7; ((ObjPalette*)gPortBiosArea)->index=13;
@@ -61,7 +79,17 @@ int main(void) {
      free(sCardMsgGlyphSprites);
    }
  }
- puts("message palettes: eight NULL mixes, four window modes, BIOS and real indices passed");
+ ((ObjPalette*)gPortBiosArea)->index=0xe3a0;
+ for(mask=0;mask<8;mask++) {
+   SysMsgWinWork work={0}; calls=banks=0;
+   UpdateSysmsgwinChoiceSetup(&work,NULL);
+   assert(banks==((mask&1)?0:1)); assert(work.choiceVisible);
+   memset(&work,0,sizeof(work)); gCardMessageDefs[0].flags=CARD_MSG_FLAG_CHOICE_AT_END;
+   work.messageDef=&gCardMessageDefs[0]; calls=banks=0;
+   UpdateSysmsgwinWaitInput(&work,NULL);
+   assert(banks==((mask&1)?0:1)); assert(work.choiceVisible);
+ }
+ puts("message palettes: eight NULL mixes, four modes, two choice paths, BIOS 0xe3a0 and valid bank passed");
  return 0;
 }
 '''
@@ -73,7 +101,3 @@ int main(void) {
         subprocess.run(cmd+[str(p/'test.c'),'-Wl,--gc-sections','-o',str(p/'test.exe')],check=True)
         subprocess.run([str(p/'test.exe')],check=True)
 if __name__=='__main__': main()
-
-
-
-

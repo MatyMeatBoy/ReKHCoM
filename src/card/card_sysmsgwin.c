@@ -233,6 +233,10 @@ u8 UpdateSysmsgwinWaitInput(SysMsgWinWork* work, void* task) {
             // @bug palette4 can be NULL (NULL read).
             FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
 #endif
+#ifdef PLATFORM_PC
+            // A BIOS read is not an allocated palette bank to upload into.
+            if (work->palette2 != NULL)
+#endif
             LoadObjPaletteBank(BIOS_PTR(work->palette2)->index, pal);
             SetObjTileSource(work->tiles4, gHandCursorTiles);
             AnimInit(&work->anim3, gHandCursorAnims, gHandCursorFrames);
@@ -623,6 +627,10 @@ u8 UpdateSysmsgwinChoiceSetup(SysMsgWinWork* work, void* task) {
 #else
     // @bug palette4 can be NULL (NULL read).
     FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
+#endif
+#ifdef PLATFORM_PC
+    // A BIOS read is not an allocated palette bank to upload into.
+    if (work->palette2 != NULL)
 #endif
     LoadObjPaletteBank(BIOS_PTR(work->palette2)->index, pal);
     SetObjTileSource(work->tiles4, gHandCursorTiles);
