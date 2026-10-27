@@ -4194,13 +4194,13 @@
     "hd-sprite-budget-guard": {
       "id": "hd-sprite-budget-guard",
       "piece": "HD sprite header and cache budget guard",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-hd-sprite-guard",
       "created_at": "2026-10-27T04:24:56.848876+00:00",
-      "updated_at": "2026-10-27T04:43:03.520578+00:00",
+      "updated_at": "2026-10-27T05:08:57.031367+00:00",
       "branch": "fix/hd-sprite-guard",
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/284",
+      "approval": "Usuario 27/10: integra todo lo reconocido y prepara builds de test OptiPort",
       "reference": "Auditoria build/hd-audit-worker.md; tarea usuario 2026-10-27",
       "evidence": [
         {
@@ -4217,6 +4217,11 @@
           "at": "2026-10-27T04:43:03.520578+00:00",
           "owner": "codex-hd-sprite-guard",
           "detail": "Review follow-up: SDL_IsMainThread guarded by __STDC_HOSTED__; real caller contract documented for guest shim. Freestanding harness RED undeclared function then hosted/freestanding GREEN; 12/32MiB budget GREEN; check_sources ok."
+        },
+        {
+          "at": "2026-10-27T05:08:57.031367+00:00",
+          "owner": "codex-hd-sprite-guard",
+          "detail": "Verified tests and independent review"
         }
       ],
       "claimed_at": "2026-10-27T04:25:04.512763+00:00"
@@ -4338,7 +4343,7 @@
     "created_at": "2026-10-27T05:08:08.674562+00:00",
     "updated_at": "2026-10-27T05:08:08.674562+00:00"
   },
-  "updated_at": "2026-10-27T05:08:51.725390+00:00",
+  "updated_at": "2026-10-27T05:08:57.031367+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
