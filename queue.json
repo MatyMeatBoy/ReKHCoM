@@ -5224,20 +5224,26 @@
     "submenu-visible-band-coherence": {
       "id": "submenu-visible-band-coherence",
       "piece": "Match submenu margin bands to currently visible native edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T08:38:26.052811+00:00",
-      "updated_at": "2026-10-27T08:38:31.302239+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T08:40:27.857680+00:00",
+      "branch": "task/submenu-visible-band-coherence",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/325",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T08:40:27.857680+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "c19cc3dc3 actual before hidden D3D status212 blue native bottom/black margin; source helper absent RED then GREEN bounds/nonuniform/visible/hidden/fade tests; after rebuilt runtime pending root serial. Top heuristic unchanged. Four-mode cold/warm before captures available; no claim fullcoverage"
+        }
+      ],
       "claimed_at": "2026-10-27T08:38:31.302239+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:39:29.211130+00:00",
+  "updated_at": "2026-10-27T08:40:27.857680+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
