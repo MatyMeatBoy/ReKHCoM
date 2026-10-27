@@ -5199,12 +5199,12 @@
     "launcher-hd-media-language-selection-v21": {
       "id": "launcher-hd-media-language-selection-v21",
       "piece": "Launcher 2.1: disponibilidad e import EN/JP voces/peliculas HD desde Steam propio; guia oficial y deteccion por evidencia, texto/audio separados",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-hd-media-language",
       "created_at": "2026-10-27T08:37:21.317859+00:00",
-      "updated_at": "2026-10-27T08:40:54.158105+00:00",
-      "branch": "docs/hd-media-language-selection-v21",
-      "pr": null,
+      "updated_at": "2026-10-27T08:55:08.324631+00:00",
+      "branch": "feat/hd-media-language-provenance",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/327",
       "approval": "Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora",
       "reference": "port/progress/HD_MEDIA_LANGUAGE_SELECTION_V21.md",
       "evidence": [
@@ -5217,6 +5217,11 @@
           "at": "2026-10-27T08:39:29.211130+00:00",
           "owner": "codex-hd-media-language-research",
           "detail": "released: Research terminado y documentado en commit local e178043db1b62ad18f03855f56dac01f260ab36b, branch docs/hd-media-language-selection-v21, HD_MEDIA_LANGUAGE_SELECTION_V21.md + pending snapshot. git diff/show check PASS y checkout limpio. Implementacion EN/JP sigue PENDIENTE sin owner; no descargar/cambiar Steam ahora. Siguiente prueba minima fixtures ACF/procedencia/import EN->JP y validar muestra hablada propia antes de afirmar audio disponible. WorktreeNeeded si documento local pendiente de revision/integracion; sin push codigo ni PR."
+        },
+        {
+          "at": "2026-10-27T08:55:08.324631+00:00",
+          "owner": "codex-hd-media-language",
+          "detail": "Primer incremento implementado SHA 07d6f1e021645981717b74e816e58ac896e28c02, preserva investigacion e178 mediante cherry/rebase 6e8f1003d. Parser ACF/VDF bounded readonly, custominstalldir/multilib, knownrevision mapping signals EN/JP unknownsafe, fingerprint/refresco, UI disponibilidad+guiaHTTPS y Undub separado. Legacy import language sigue desconocido; import/playback intactos. RED-GREEN test C++ produccion incluye invalidUTF8/duplicates/truncation/deep/huge/downloadpartial/mixeddepots/Unicode/multilib/cacheENthenJP/same-sizemtimecontent; syntax launcher i686 realSDL y diffcheck PASS trasrebase. No heavybuild/Steamwrites/download/Quiverwrite. Variants/importcache/playback siguiente tarea launcher-hd-media-language-variants-v21 pending sinowner. WorktreeNeeded si PR abierto; no merge."
         }
       ],
       "claimed_at": "2026-10-27T08:40:54.158105+00:00"
@@ -5310,7 +5315,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:52:24.794876+00:00",
+  "updated_at": "2026-10-27T08:55:08.324631+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
