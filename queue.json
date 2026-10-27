@@ -6970,10 +6970,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T18:41:27.803327+00:00"
+    },
+    "optiport-artifact-freshness": {
+      "id": "optiport-artifact-freshness",
+      "piece": "OptiPort canonical: distinguir código/import/recipes/quality de fixture actual, registrar legacy evidence y preservar artefactos ya entregados inmutables",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T18:43:02.266316+00:00",
+      "updated_at": "2026-10-27T18:43:02.266316+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario explícito/coordinador27/10 trasreleasepre1; PRcanonical separado",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:41:44.086865+00:00",
+  "updated_at": "2026-10-27T18:43:02.266316+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

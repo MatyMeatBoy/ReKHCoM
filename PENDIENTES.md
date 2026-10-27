@@ -251,5 +251,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue378-hd-audio-subtitle-independence | Issue378: subtítulos ES independientes de voz HD, sólo con timing compatible comprobado | en_curso | codex-issue378-subtitles | fix/issue378-subtitles | Usuario pide solucionar378; coordinador autoriza fixture del consumidor y revisión temporal sin inventar texto ni mezclar tiempos no validados | 2026-10-27T18:30:26.966968+00:00 |
 | android22-pre1-diagnostic-build | APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto | en_curso | codex-android22-build | — | — | 2026-10-27T18:29:06.260644+00:00 |
 | audio-intro-title-underrun | Audio: reproducir tiron al saltar intro→titulo y evitar chasquidos al faltar PCM, sin modificar logica juego | en_curso | codex-audio-skip | — | Usuario27/10reporta stutteraudioalsaltarintroypidesmoothfallback | 2026-10-27T18:41:27.803327+00:00 |
+| optiport-artifact-freshness | OptiPort canonical: distinguir código/import/recipes/quality de fixture actual, registrar legacy evidence y preservar artefactos ya entregados inmutables | pendiente | — | — | Usuario explícito/coordinador27/10 trasreleasepre1; PRcanonical separado | 2026-10-27T18:43:02.266316+00:00 |
 
 Integrador: libre
