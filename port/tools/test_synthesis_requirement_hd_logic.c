@@ -135,20 +135,21 @@ int main(void) {
     reset(MAP_CARD_NONE, 0, EVENT_KEY_RULE_TOTAL, 100);
     SynthesisHdTag(&sTask, 0, 0);
     CHECK(sWork.entries[0].tiles == &sBody && sWork.entries[1].tiles == &sRequirement);
-    /* Real initialization for each rule and color, then the actual adapter. */
-    for (color = 0; color < 5; color++) for (rule = 1; rule <= 4; rule++) {
+    /* Every displayed value through real initialization, then the adapter. */
+    for (color = 0; color < 5; color++) for (rule = 1; rule <= 4; rule++)
+      for (value = 0; value < 100; value++) {
         sTileCount = 0; sPaletteCount = 0; sOn = 1; sMissing = -1;
         gMapCardBackDefs[color].tiles2 = (void*)sOriginalBody;
         gMapCardBackDefs[color].sprites2 = sDummyFrames;
         gMapCardBackDefs[color].palette = gDoorCardPalette;
         realKey.kind = MAP_CARD_NONE; realKey.color = color;
-        realKey.rule = rule; realKey.value = 12;
+        realKey.rule = rule; realKey.value = value;
         InitEventKeyCard(&sTask.cards[0], &realKey);
         sWork.entries[0].tiles = sTask.cards[0].sprite.tiles2;
         sWork.entries[1].tiles = sTask.cards[0].sprite.tiles3;
         PortSynthesisHdTagCard(&sTask.cards[0], &realKey, 0, 0);
         CHECK(((ObjTiles*)sWork.entries[0].tiles)->src == gSynthesisHdIdentities + color);
-        CHECK(((ObjTiles*)sWork.entries[1].tiles)->src == gSynthesisHdIdentities + 5 + (rule - 1) * 100 + 12);
+        CHECK(((ObjTiles*)sWork.entries[1].tiles)->src == gSynthesisHdIdentities + 5 + (rule - 1) * 100 + value);
     }
     /* Real GetEventKey -> Init -> PayEventKey(1) -> GetEventKey -> update -> HD. */
     sTileCount = 0; sPaletteCount = 0;
