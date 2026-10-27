@@ -3740,6 +3740,21 @@ static bool TouchScroll(const SDL_Event& ev) {
 }
 #endif
 
+static int LauncherVideoFailed(const char* stage, SDL_Window* window, SDL_GLContext gl) {
+    // Preserve the SDL error before reporting/cleanup can replace it. In
+    // particular, never enter ImGui's GL backend without a current context.
+    char message[1024];
+    snprintf(message, sizeof(message), "%s: %s", stage, SDL_GetError());
+    SDL_Log("launcher video startup: %s", message);
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ReKHCoM", message, window);
+    KhRaDestroy(sRaUi);
+    sRaUi = nullptr;
+    if (gl) SDL_GL_DestroyContext(gl);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
+}
+
 int main(int argc, char** argv) {
     sRoot = ExeDir();
 #ifdef LAUNCHER_ANDROID
@@ -3877,7 +3892,10 @@ int main(int argc, char** argv) {
     }
 #endif
     SDL_GLContext gl = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, gl);
+    if (!gl)
+        return LauncherVideoFailed("OpenGL context creation", window, gl);
+    if (!SDL_GL_MakeCurrent(window, gl))
+        return LauncherVideoFailed("OpenGL context activation", window, gl);
     SDL_GL_SetSwapInterval(1);
 
     IMGUI_CHECKVERSION();
