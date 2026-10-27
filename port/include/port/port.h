@@ -373,6 +373,12 @@ void PortPpuVBlankLines(void);
 extern int gPortHudScale;   /* output pixels per HUD pixel; 0 = no separate layer */
 extern int gPortHudW;
 extern int gPortHudH;
+/* Renderer-thread transaction before native HUD suppression. */
+int PortHudCanvasReady(int width, int height);
+void PortHudCanvasRetry(void);
+/* Scope all rendering of the frozen HUD with its captured geometry. */
+void PortPpuHudFrameBegin(int saved[4]);
+void PortPpuHudFrameEnd(const int saved[4]);
 int PortPpuHudActive(void);
 void PortPpuRenderHud(uint32_t* buf);
 /* The HUD sprites in front of HD sprites, after PortPpuRenderHud (NULL: none this frame). */
