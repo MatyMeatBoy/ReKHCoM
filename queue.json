@@ -6435,15 +6435,21 @@
     "v22-linux64-language-args": {
       "id": "v22-linux64-language-args",
       "piece": "Preservar --language en wrapper/host Linux64 con parser consumidor C dirigido, sin ABI/guest ni atribuir #330",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux64-args",
       "created_at": "2026-10-27T16:54:47.746692+00:00",
-      "updated_at": "2026-10-27T16:55:21.218556+00:00",
+      "updated_at": "2026-10-27T17:01:18.137066+00:00",
       "branch": "fix/linux64-language-args",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/376",
       "approval": "Coordinador autoriza PR acotado 27/10",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T17:01:18.137066+00:00",
+          "owner": "codex-linux64-args",
+          "detail": "eb148e7ee685e31837211c4a21e87b859f1df37a; 3 C production host+guest consumer PASS; 16 wrapper tests PASS after rebase; baseline red verified; full Linux host syntax PASS with existing stb warning; pruebas/linux64-language-args; language only, no #330 causal claim"
+        }
+      ],
       "claimed_at": "2026-10-27T16:54:53.851589+00:00"
     },
     "windows64-cpu-sse41-gate": {
@@ -6468,7 +6474,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T16:59:15.440952+00:00",
+  "updated_at": "2026-10-27T17:01:18.137066+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
