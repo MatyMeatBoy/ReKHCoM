@@ -5551,15 +5551,21 @@
     "guest-getenv-stable-values": {
       "id": "guest-getenv-stable-values",
       "piece": "Keep bounded guest getenv values alive across cache saturation and allocation failures",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-control-prompts",
       "created_at": "2026-10-27T10:35:13.181084+00:00",
-      "updated_at": "2026-10-27T10:35:18.629401+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T10:38:11.299209+00:00",
+      "branch": "fix/guest-getenv-stable-values",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/343",
       "approval": "Parent requests actual rollover RED and bounded stable producer fix",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T10:38:11.299209+00:00",
+          "owner": "codex-control-prompts",
+          "detail": "Actual GetenvLocked RED/GREEN: 1500 queries retain held pointer, key/value/growth OOM retry, oversized values and 4 MiB budget; check_sources"
+        }
+      ],
       "claimed_at": "2026-10-27T10:35:18.629401+00:00"
     },
     "linux-arm64-experimental-v21": {
@@ -5592,7 +5598,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T10:37:15.997287+00:00",
+  "updated_at": "2026-10-27T10:38:11.300266+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
