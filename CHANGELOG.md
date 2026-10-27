@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2-pre2 — Windows test build preparation
+
+- Guard zero-range scrolling in the map-card list and Moogle trade-in menu (#388, #389).
+- Preserve the original guest exception in Windows x64 crash reports (#387).
+- Reject malformed HD packages and report import worker failures (#390).
+- Source version and Windows PE metadata identify pre2 (2.2.0.2). Compilation, packaging and packaged-artifact checks remain pending; this entry does not announce an Android build.
+
 ## v2.1 — 2026-10-27
 
 - Unified Windows x86/x64 and Linux desktop/Steam Deck x86/x86-64 packages, with automatic architecture selection and explicit overrides. Android beta contains both ARM32 and ARM64.
