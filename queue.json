@@ -6345,8 +6345,13 @@
       "evidence": []
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-27T15:56:00.728107+00:00",
+  "integrator": {
+    "owner": "codex-scenes-integrator",
+    "token": "40bfc7bbaf33bf90a31b028fd5d353d048a6fd799ab39338",
+    "created_at": "2026-10-27T16:01:49.406149+00:00",
+    "updated_at": "2026-10-27T16:01:49.406149+00:00"
+  },
+  "updated_at": "2026-10-27T16:01:49.406149+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
