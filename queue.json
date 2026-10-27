@@ -6353,10 +6353,10 @@
     "v22-board-reconcile-integrated-state": {
       "id": "v22-board-reconcile-integrated-state",
       "piece": "Reconciliar SOLO PLAN_V22 con PR363/364/365/367 integrados, rutas releases/kh-worktrees y P0#360 aún abierto; no tocar fallback ni PENDIENTES de Claude",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v22-board-reconcile",
       "created_at": "2026-10-27T16:14:42.349652+00:00",
-      "updated_at": "2026-10-27T16:18:49.989872+00:00",
+      "updated_at": "2026-10-27T16:43:18.893196+00:00",
       "branch": "docs/v22-board-reconcile",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/370",
       "approval": "Usuario27/10: seguir integrando PR y pendientes; coordinador aprueba alcance documental independiente",
@@ -6371,9 +6371,15 @@
           "at": "2026-10-27T16:18:49.989872+00:00",
           "owner": "codex-v22-board-reconcile",
           "detail": "85e8c5bc0: SOLO PLAN_V22. #363/#364/#365/#367/#368 verificadosmerged; issue360abierto. 6links+ZIP2.1SHAvalidos; test_runtime_selection C++17WallWextraWerrorstatic PASS. Sin launcher/juegoni matrices. DistingueAuto2/3/4,excepcionesaviso,Force64elecciónexplicita,nocausaReportero."
+        },
+        {
+          "at": "2026-10-27T16:43:18.893196+00:00",
+          "owner": "codex-v22-board-reconcile",
+          "detail": "PR370 merged; commit e20a640e8f4baed4b6c7ad49e33012dabfb01477. Coordinator reviewed complete doc diff including separate Steam Deck330 and Moto Android report; six links and runtime selection consumer verified; no release published."
         }
       ],
-      "claimed_at": "2026-10-27T16:14:48.736720+00:00"
+      "claimed_at": "2026-10-27T16:14:48.736720+00:00",
+      "completed_at": "2026-10-27T16:43:18.893196+00:00"
     },
     "v22-gallery-return-evidence": {
       "id": "v22-gallery-return-evidence",
@@ -6416,7 +6422,7 @@
     "created_at": "2026-10-27T16:43:09.601090+00:00",
     "updated_at": "2026-10-27T16:43:09.601090+00:00"
   },
-  "updated_at": "2026-10-27T16:43:09.601090+00:00",
+  "updated_at": "2026-10-27T16:43:18.893196+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
