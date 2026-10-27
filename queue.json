@@ -8115,10 +8115,23 @@
       "reference": "C:/Users/MP/AppData/Local/Temp/codex-clipboard-b91e56c7-d092-444b-9962-29ba67928e80.png",
       "evidence": [],
       "claimed_at": "2026-10-27T23:50:53.221359+00:00"
+    },
+    "hd-music-movie-test-fixture": {
+      "id": "hd-music-movie-test-fixture",
+      "piece": "Keep HD decoder failure fixture compatible with actual movie engine ident and assert movie pause/resume",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T23:52:01.559713+00:00",
+      "updated_at": "2026-10-27T23:52:01.559713+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: integrar todo Claude y preservar comprobaciones de audio y escenas",
+      "reference": "PR398 plus PR411 root review; REVIEW-398-399.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:51:30.908127+00:00",
+  "updated_at": "2026-10-27T23:52:01.560725+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
