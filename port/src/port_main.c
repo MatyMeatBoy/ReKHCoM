@@ -2093,7 +2093,7 @@ static void Present(void) {
             PortHdTextDraw(sRenderer, 2, od.x, od.y, sOverlayScale);
     }
     if (PortPpuHudActive() && !menuCanvas) {
-        int savedHud[3];
+        int savedHud[4];
         PortPpuHudFrameBegin(savedHud);
         SDL_FRect hd;
         if (sHudTexture == NULL || sHudTexW != gPortHudW || sHudTexH != gPortHudH) {

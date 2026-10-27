@@ -41,11 +41,11 @@ static SDL_Texture *sHudTexture;static int sHudTexW,sHudTexH;
 static uint32_t *sHudBuf;static size_t sHudCapacity;
 static uint64_t sRendererGeneration=1;
 static int allocs,texCreates,texDestroys,logs,failAlloc,failTex,draws;
-static int gPortHudW=240,gPortHudH=160,gPortHudScale=1;
+static int gPortHudW=240,gPortHudH=160,gPortHudScale=1,gPortWorldScale=2;
 static struct{int wide;}gPortScreen={1};
 static struct{int hdHud,hdText;}gPortConfig={1,1};
 static int sHudLayer,sHdText=1,sHudCanvasFallback;
-static int sHudFrameW,sHudFrameH,sHudFrameScale;
+static int sHudFrameW,sHudFrameH,sHudFrameScale,sHudFrameWorldScale;
 static unsigned char VRAM8[0x18000];static uint16_t PLTT16[512];
 static uint16_t IO16(int i){(void)i;return 0;}
 static struct{int id;}sOamHd[2]={{1},{1}};
@@ -99,8 +99,8 @@ int main(void){
  CHECK(HdTextGlyph(1)); /* unrelated text remains HD */
  /* Frozen Options frame: world can stay641x360 while desired HUD grows. */
  failAlloc=0;gPortHudW=427;gPortHudH=240;gPortHudScale=3;SelectLayer();CHECK(sHudLayer);
- gPortHudW=428;failAlloc=1;a=allocs;int beforeDraw=draws;
- PresentCanvas();CHECK(draws==beforeDraw+1&&allocs==a&&gPortHudW==428&&gPortHudH==240&&gPortHudScale==3);
+ gPortHudW=428;gPortWorldScale=3;failAlloc=1;a=allocs;int beforeDraw=draws;
+ PresentCanvas();CHECK(draws==beforeDraw+1&&allocs==a&&gPortHudW==428&&gPortHudH==240&&gPortHudScale==3&&gPortWorldScale==3);
  SelectLayer();CHECK(!sHudLayer&&sHudCanvasFallback); /* next real frame falls back */
  puts("PASS canvas transaction + actual PPU/native ink/Present: sticky failure, rollback, lower resolution and generation recovery");return 0;
 }

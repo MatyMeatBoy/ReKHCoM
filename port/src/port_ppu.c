@@ -535,17 +535,17 @@ static int TagHudY(const SpriteTag* t, int yg, int h, int raise) {
 
 static int sHudLayer;
 static int sHudCanvasFallback;
-static int sHudFrameW, sHudFrameH, sHudFrameScale;
+static int sHudFrameW, sHudFrameH, sHudFrameScale, sHudFrameWorldScale;
 
 /* OAM and HUD geometry belong to the same PPU frame. Options can change the
  * desired geometry while that frame is frozen; its consumer must keep using
  * the preflighted dimensions until a real PPU frame replaces it. */
-void PortPpuHudFrameBegin(int saved[3]) {
-    saved[0] = gPortHudW; saved[1] = gPortHudH; saved[2] = gPortHudScale;
-    gPortHudW = sHudFrameW; gPortHudH = sHudFrameH; gPortHudScale = sHudFrameScale;
+void PortPpuHudFrameBegin(int saved[4]) {
+    saved[0] = gPortHudW; saved[1] = gPortHudH; saved[2] = gPortHudScale; saved[3] = gPortWorldScale;
+    gPortHudW = sHudFrameW; gPortHudH = sHudFrameH; gPortHudScale = sHudFrameScale; gPortWorldScale = sHudFrameWorldScale;
 }
-void PortPpuHudFrameEnd(const int saved[3]) {
-    gPortHudW = saved[0]; gPortHudH = saved[1]; gPortHudScale = saved[2];
+void PortPpuHudFrameEnd(const int saved[4]) {
+    gPortHudW = saved[0]; gPortHudH = saved[1]; gPortHudScale = saved[2]; gPortWorldScale = saved[3];
 }
 
 static int sHdText;
@@ -3720,6 +3720,7 @@ void PortPpuBeginFrame(void) {
     sHudFrameW = gPortHudW;
     sHudFrameH = gPortHudH;
     sHudFrameScale = gPortHudScale;
+    sHudFrameWorldScale = gPortWorldScale;
     sHdText = gPortConfig.hdText;
 #if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
     {

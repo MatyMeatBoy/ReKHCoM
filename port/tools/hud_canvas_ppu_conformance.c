@@ -89,9 +89,9 @@ int main(void) {
     size_t capacity=427u*240u;
     uint32_t* guarded=malloc((capacity+240)*sizeof(*guarded));CHECK(guarded);
     for(size_t k=0;k<capacity+240;k++)guarded[k]=0xcdcdcdcd;
-    int saved[3];gPortHudW=428;
+    int saved[4];gPortHudW=428;gPortWorldScale++;int desiredWorldScale=gPortWorldScale;
     PortPpuHudFrameBegin(saved);PortPpuRenderHud(guarded);PortPpuHudFrameEnd(saved);
-    CHECK(gPortHudW==428&&gPortHudH==240&&gPortHudScale==3);
+    CHECK(gPortHudW==428&&gPortHudH==240&&gPortHudScale==3&&gPortWorldScale==desiredWorldScale);
     for(size_t k=capacity;k<capacity+240;k++)CHECK(guarded[k]==0xcdcdcdcd);
     free(guarded);
     free(fallback);puts("PASS full production PPU: failed canvas pixels equal cartridge control; recovery restores separate HUD");return 0;
