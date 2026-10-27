@@ -5202,7 +5202,10 @@ void PortPpuRenderHud(uint32_t* buf) {
                 if (hdSprite) continue;
                 if (hdPart) {
                     sHdCover[py * w + px] = 1;
-                    continue;
+                    /* Small-card HD assets replace only the picture window. Their
+                       native crown, frame and value notch stay underneath. */
+                    if (!PortHdSpriteKeepsCartridge(sOamHd[i].id))
+                        continue;
                 }
                 if (tag->hdHudPart == 5 && px >= 31 && PortHdHudPlayerFrameReady()) {
                     int r = col & 31, g = (col >> 5) & 31, b = (col >> 10) & 31;
@@ -5282,7 +5285,7 @@ void PortPpuRenderHud(uint32_t* buf) {
                 }
                 if (mode == 1)
                     argb = (argb & 0x00FFFFFFu) | 0xA0000000u;
-                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px]) {
+                if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px] && !hdPart) {
                     /* in front of an HD part: drawn over it */
                     if (!sHudOverUsed) {
                         memset(sHudOver, 0, (size_t)w * h * 4);
