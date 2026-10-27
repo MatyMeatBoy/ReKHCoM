@@ -287,4 +287,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | card-olympia-seam-source | Olympia/Heroica native underlay white cell14,19 visible through fractional HD edge: minimal HD-only native cell correction, preserve HD illustration and fallbacks | pr_abierto | codex-olympia-seam | https://github.com/MatyMeatBoy/ReKHCoM/pull/405 | Usuario27octprioridad1pixelescartas; rootdelegacionworker20261027 | 2026-10-27T22:16:46.060627+00:00 |
 | combat-erra-spanish-hd | Aviso ERRA en combate sinHD: identificar MISS/localeEspañol y consumidor real, emparejar avisos contranaipe, receta/import/mapping vigentes y fallback seguro | pendiente | — | — | Usuario27/10 solicita ERRA HD despuesprioridades1pixeles2audio3HP | 2026-10-27T22:16:54.811930+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T22:18:05.386599+00:00)
+Integrador: libre
