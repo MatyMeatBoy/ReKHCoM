@@ -153,5 +153,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | crash-diagnostics-20261027 | Logs persistentes y diagnostico #277/#272; crash Monstruo Quiver (instalacion solo lectura) | en_curso | codex-crash | fix/crash-diagnostics | — | 2026-10-27T04:07:45.126813+00:00 |
 | hd-sprite-budget-guard | HD sprite header and cache budget guard | en_revision | codex-hd-sprite-guard | fix/hd-sprite-guard | — | 2026-10-27T04:35:53.116568+00:00 |
 | session-logs-history-20261027 | Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar | pendiente | — | — | — | 2026-10-27T04:35:24.576312+00:00 |
+| sysmsg-palette-null | System message and glyph NULL palette BIOS reads | pendiente | — | — | Parent authorized implementation and local commit; review before push | 2026-10-27T04:37:19.806954+00:00 |
 
 Integrador: libre
