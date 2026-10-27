@@ -141,8 +141,9 @@ runtime is required:
 python port/windows64/test_crash_report.py --cc PATH_TO_LLVM_MINGW/bin/clang.exe -v
 ```
 
-Seven checks also cover first-exception ownership, unavailable worker,
-unwritable long path and a blocked worker's bounded wait. To reproduce the
+Eight checks also cover first-exception ownership, unavailable worker,
+unwritable long path, bounded reads at the end of a stack region and a blocked
+worker's bounded wait. To reproduce the
 original masked fault, run `test_foreign_stack_fault` with `--baseline 8d495811e`.
 This reporter fix is separate from the map-card scrolling denominator fix.
 
