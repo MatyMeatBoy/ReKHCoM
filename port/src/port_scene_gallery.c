@@ -70,12 +70,69 @@ void PortSceneGalleryAuditEnd(void) {
 #define PREVIEW_H 360
 static uint32_t sPreview[PREVIEW_W * PREVIEW_H];
 static int sPreviewEvent = -1, sPreviewHd = -1, sPreviewReady, sPreviewSerial, sPreviewW, sPreviewH, sPreviewAttempted;
+static int sPreviewFallback; /* requested HD, displaying its GBA poster while unavailable/cold */
 static Uint64 sPreviewWaitAt;
 static int sHdReplayEvent = -1;
 static SDL_Texture* sPreviewTexture;
 static SDL_Renderer* sPreviewRenderer;
 static int sTextureSerial = -1, sTextureW, sTextureH;
 static char sPreviewMediaPath[1024];
+/* Small immutable GBA stills are shared by the native and HD fallback views.
+   At most three entries and 1 MiB, apart from the selected buffer and one job. */
+#define GBA_PREVIEW_CACHE_BYTES (1024u * 1024u)
+typedef struct GbaPreviewCache { uint32_t* pixels; int event, w, h; unsigned used; } GbaPreviewCache;
+static GbaPreviewCache sGbaPreviewCache[3];
+static size_t sGbaPreviewBytes;
+static unsigned sGbaPreviewClock;
+void PortSceneGalleryPreviewCacheClear(void) {
+    unsigned i;
+    for (i = 0; i < 3; ++i) { SDL_free(sGbaPreviewCache[i].pixels); memset(&sGbaPreviewCache[i], 0, sizeof(sGbaPreviewCache[i])); }
+    sGbaPreviewBytes = 0; sGbaPreviewClock = 0;
+}
+static int PreviewGba(int eventId) {
+    extern int PortScenePosterPreview(int, uint32_t*, int*, int*);
+    extern int PortSceneBackgroundPreview(int, uint32_t*, int, int);
+    unsigned i, victim;
+    size_t bytes;
+    int ready;
+    for (i = 0; i < 3; ++i) if (sGbaPreviewCache[i].pixels && sGbaPreviewCache[i].event == eventId) {
+        GbaPreviewCache* entry = &sGbaPreviewCache[i];
+        sPreviewW = entry->w; sPreviewH = entry->h; entry->used = ++sGbaPreviewClock;
+        memcpy(sPreview, entry->pixels, (size_t)entry->w * entry->h * 4);
+        return 1;
+    }
+    ready = PortScenePosterPreview(eventId, sPreview, &sPreviewW, &sPreviewH);
+    if (!ready) {
+        sPreviewW = 360; sPreviewH = 240;
+        ready = PortSceneBackgroundPreview(eventId, sPreview, sPreviewW, sPreviewH);
+    }
+    if (!ready || sPreviewW <= 0 || sPreviewH <= 0 || sPreviewW > PREVIEW_W || sPreviewH > PREVIEW_H) return 0;
+    bytes = (size_t)sPreviewW * sPreviewH * 4;
+    if (bytes > GBA_PREVIEW_CACHE_BYTES) return 1;
+    for (;;) {
+        victim = 0;
+        for (i = 0; i < 3; ++i) {
+            if (!sGbaPreviewCache[i].pixels) { victim = i; break; }
+            if (sGbaPreviewCache[i].used < sGbaPreviewCache[victim].used) victim = i;
+        }
+        if (!sGbaPreviewCache[victim].pixels && sGbaPreviewBytes + bytes <= GBA_PREVIEW_CACHE_BYTES) break;
+        /* If memory, rather than slots, is full, choose an occupied LRU. */
+        if (!sGbaPreviewCache[victim].pixels) {
+            for (i = 0; i < 3; ++i) if (sGbaPreviewCache[i].pixels &&
+                (!sGbaPreviewCache[victim].pixels || sGbaPreviewCache[i].used < sGbaPreviewCache[victim].used)) victim = i;
+        }
+        sGbaPreviewBytes -= (size_t)sGbaPreviewCache[victim].w * sGbaPreviewCache[victim].h * 4;
+        SDL_free(sGbaPreviewCache[victim].pixels); memset(&sGbaPreviewCache[victim], 0, sizeof(sGbaPreviewCache[victim]));
+    }
+    sGbaPreviewCache[victim].pixels = SDL_malloc(bytes);
+    if (sGbaPreviewCache[victim].pixels) {
+        GbaPreviewCache* entry = &sGbaPreviewCache[victim];
+        memcpy(entry->pixels, sPreview, bytes); entry->event = eventId;
+        entry->w = sPreviewW; entry->h = sPreviewH; entry->used = ++sGbaPreviewClock;
+        sGbaPreviewBytes += bytes;
+    }
+    return 1; /* allocation failure only loses this optional warm-cache entry */
+}
 #if defined(_WIN32) || defined(PORT_LINUX)
 typedef struct PreviewJob {
     SDL_Thread* thread;
@@ -107,7 +164,7 @@ void PortSceneGalleryPreviewPoll(void) {
         job->thread = NULL;
         if (job->ok && job->serial == sPreviewSerial && job->event == sPreviewEvent && sPreviewHd) {
             SDL_memcpy(sPreview, job->pixels, sizeof(sPreview));
-            sPreviewW = PREVIEW_W; sPreviewH = PREVIEW_H; sPreviewReady = 1;
+            sPreviewW = PREVIEW_W; sPreviewH = PREVIEW_H; sPreviewReady = 1; sPreviewFallback = 0;
             sTextureSerial = -1;
             PortLog("scene gallery preview: HD event %d from bounded async poster", job->event);
         }
@@ -125,11 +182,12 @@ void PortSceneGalleryPreviewInvalidate(void) {
 
 void PortSceneGalleryPreviewCancel(void) {
     ++sPreviewSerial;
-    sPreviewEvent = sPreviewHd = -1; sPreviewReady = 0;
+    sPreviewEvent = sPreviewHd = -1; sPreviewReady = sPreviewFallback = 0;
     SDL_DestroyTexture(sPreviewTexture); sPreviewTexture = NULL; sPreviewRenderer = NULL;
     sTextureSerial = -1;
     PortSceneGalleryPreviewPoll(); /* never wait for a cold decoder when closing a menu */
 }
+int PortSceneGalleryPreviewIsFallback(void) { return sPreviewFallback; }
 void PortSceneGalleryPreviewSize(int* width, int* height) { *width = sPreviewW; *height = sPreviewH; }
 const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
     extern int PortScenePosterPreview(int, uint32_t*, int*, int*);
@@ -147,15 +205,9 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
         size_t size = 0;
         ++sPreviewSerial; sPreviewEvent = eventId; sPreviewHd = hd;
         SDL_strlcpy(sPreviewMediaPath, currentMedia, sizeof(sPreviewMediaPath));
-        sPreviewReady = 0; sPreviewAttempted = 0; sPreviewWaitAt = SDL_GetTicks(); sTextureSerial = -1;
+        sPreviewReady = sPreviewFallback = 0; sPreviewAttempted = 0; sPreviewWaitAt = SDL_GetTicks(); sTextureSerial = -1;
         if (!hd) {
-            sPreviewReady = PortScenePosterPreview(eventId, sPreview, &sPreviewW, &sPreviewH);
-            if (sPreviewReady) PortLog("scene gallery preview: GBA event %d from clean engine poster", eventId);
-            else {
-                extern int PortSceneBackgroundPreview(int, uint32_t*, int, int);
-                sPreviewW = 360; sPreviewH = 240;
-                sPreviewReady = PortSceneBackgroundPreview(eventId, sPreview, sPreviewW, sPreviewH);
-            }
+            sPreviewReady = PreviewGba(eventId);
         } else if ((movie = PortHdGalleryMovieName(eventId)) != NULL) {
 #if defined(_WIN32) || defined(PORT_LINUX)
             if (!PortHdScenePreviewPath(movie, path, sizeof(path))) path[0] = 0;
@@ -175,9 +227,15 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
                     !PortHdPosterHasPicture(sPreview, sPreviewW, sPreviewH, sPreviewW * 4))) sPreviewReady = 0;
             }
         }
+        if (hd && !sPreviewReady) {
+            /* Show the same event immediately, without decoding an HD movie on
+               the UI thread. A clean GBA poster is preferred to its ROM backdrop. */
+            sPreviewReady = PreviewGba(eventId);
+            sPreviewFallback = sPreviewReady;
+        }
     }
 #if defined(_WIN32) || defined(PORT_LINUX)
-    if (!sPreviewReady && hd && !sPreviewAttempted && !sPreviewJob.thread && SDL_GetTicks() - sPreviewWaitAt >= 75) {
+    if ((!sPreviewReady || sPreviewFallback) && hd && !sPreviewAttempted && !sPreviewJob.thread && SDL_GetTicks() - sPreviewWaitAt >= 75) {
         const char* movie = PortHdGalleryMovieName(eventId);
         PreviewJob* job = &sPreviewJob;
         if (movie && PortHdScenePreviewPath(movie, job->path, sizeof(job->path))) {
@@ -210,9 +268,9 @@ int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float 
         if (!sPreviewTexture) return 0;
         sPreviewRenderer = renderer; sTextureW = sPreviewW; sTextureH = sPreviewH; sTextureSerial = -1;
         SDL_SetTextureBlendMode(sPreviewTexture, SDL_BLENDMODE_NONE);
-        SDL_SetTextureScaleMode(sPreviewTexture, sPreviewHd ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
     }
     if (sTextureSerial != sPreviewSerial) {
+        SDL_SetTextureScaleMode(sPreviewTexture, sPreviewHd && !sPreviewFallback ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
         SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4);
         sTextureSerial = sPreviewSerial;
     }
@@ -372,6 +430,7 @@ void PortSceneGalleryShutdown(void) {
 
 void PortSceneGalleryFinalShutdown(void) {
     PortSceneGalleryShutdown();
+    PortSceneGalleryPreviewCacheClear();
 #if defined(_WIN32) || defined(PORT_LINUX)
     if (sPreviewJob.thread) {
         SDL_WaitThread(sPreviewJob.thread, NULL);
