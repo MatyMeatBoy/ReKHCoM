@@ -5199,10 +5199,10 @@
     "launcher-hd-media-language-selection-v21": {
       "id": "launcher-hd-media-language-selection-v21",
       "piece": "Launcher 2.1: disponibilidad e import EN/JP voces/peliculas HD desde Steam propio; guia oficial y deteccion por evidencia, texto/audio separados",
-      "status": "en_revision",
-      "owner": "codex-hd-media-language-research",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T08:37:21.317859+00:00",
-      "updated_at": "2026-10-27T08:39:13.049284+00:00",
+      "updated_at": "2026-10-27T08:39:29.211130+00:00",
       "branch": "docs/hd-media-language-selection-v21",
       "pr": null,
       "approval": "Usuario 27/10: investigar y dejar anotado EN/JP import/disponibilidad UX; sin descargar ni cambiar Steam ahora",
@@ -5212,6 +5212,11 @@
           "at": "2026-10-27T08:39:13.049284+00:00",
           "owner": "codex-hd-media-language-research",
           "detail": "Investigacion docs solamente local SHA a consultar commit branch; fuentes oficiales Valve tienda2552430/idiomas/depots/descargas, importer actual no ACF/language y namespace unico con import.list calidad/tamano sin idioma. Manifest local solo lectura language spanish depots2552433/2552435 y paths verificados; no audio-locale confirmado. Recomendacion guia HTTPS+rescan, no automatizacion depot validada. SteamDB pistas secundarias caveated; sin downloads/Steamchanges/heavybuild/Quiverwrite. WorktreeNeeded si revision/handoff pendiente; implementacion debe volver pendiente."
+        },
+        {
+          "at": "2026-10-27T08:39:29.211130+00:00",
+          "owner": "codex-hd-media-language-research",
+          "detail": "released: Research terminado y documentado en commit local e178043db1b62ad18f03855f56dac01f260ab36b, branch docs/hd-media-language-selection-v21, HD_MEDIA_LANGUAGE_SELECTION_V21.md + pending snapshot. git diff/show check PASS y checkout limpio. Implementacion EN/JP sigue PENDIENTE sin owner; no descargar/cambiar Steam ahora. Siguiente prueba minima fixtures ACF/procedencia/import EN->JP y validar muestra hablada propia antes de afirmar audio disponible. WorktreeNeeded si documento local pendiente de revision/integracion; sin push codigo ni PR."
         }
       ],
       "claimed_at": "2026-10-27T08:37:26.800184+00:00"
@@ -5232,7 +5237,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T08:39:13.049284+00:00",
+  "updated_at": "2026-10-27T08:39:29.211130+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
