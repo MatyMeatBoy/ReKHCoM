@@ -247,4 +247,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-stutter-attribution-probes | Diagnostico de tirones por etapas y regresiones de sondas; hijo de profiling, sin cerrar comparacion completa32/64 | pr_abierto | codex-stutter-integration | https://github.com/MatyMeatBoy/ReKHCoM/pull/379 | Usuario pide continuar e integrar lo de Claude; coordinador reviso productores y regresiones CPU reales | 2026-10-27T18:18:40.663982+00:00 |
 | v22-windows-pre1-test360 | Prebuild local v2.2-pre1 Windows32+64 EU/US/JP y nueva test360 desde SHA main fijo del coordinador; staging aislado releases, sin publicar/enviar | en_curso | codex-windows-pre1 | — | Usuario/coordinador autoriza27/10; no compilar hasta SHA fijado | 2026-10-27T18:18:59.655190+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T18:19:14.740516+00:00)
