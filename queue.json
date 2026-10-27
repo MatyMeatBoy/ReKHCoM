@@ -6004,10 +6004,10 @@
     "linux-native-launcher-336": {
       "id": "linux-native-launcher-336",
       "piece": "Native Linux helper336: Play,preparedHDtransaction,ownedsourcePythonimport,noWine; KDE/Zenity/CLI, packagingonly",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux-native-launcher",
       "created_at": "2026-10-27T12:47:17.440359+00:00",
-      "updated_at": "2026-10-27T13:00:33.547035+00:00",
+      "updated_at": "2026-10-27T13:00:47.389385+00:00",
       "branch": "feat/linux-native-launcher-336",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/353",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -6017,9 +6017,15 @@
           "at": "2026-10-27T12:58:07.606940+00:00",
           "owner": "codex-linux-native-launcher",
           "detail": "head de434db7c3b08078b34b6b040aaf8572330726b8; native import 7 tests PASS (Windows symlink privilege skip); package resources/permissions PASS; first rename interruption rollback and runtime token constraints covered; Linux VM root pending; Wine crash original not reproduced."
+        },
+        {
+          "at": "2026-10-27T13:00:47.389385+00:00",
+          "owner": "codex-linux-native-launcher",
+          "detail": "Verified and reviewed; merged 8c613ae5da8f0bdebb9568af12b87945585f2f1c"
         }
       ],
-      "claimed_at": "2026-10-27T12:47:22.816440+00:00"
+      "claimed_at": "2026-10-27T12:47:22.816440+00:00",
+      "completed_at": "2026-10-27T13:00:47.389385+00:00"
     },
     "linux-native-launcher-package-v21": {
       "id": "linux-native-launcher-package-v21",
@@ -6042,7 +6048,7 @@
     "created_at": "2026-10-27T12:59:59.605038+00:00",
     "updated_at": "2026-10-27T12:59:59.605038+00:00"
   },
-  "updated_at": "2026-10-27T13:00:33.547035+00:00",
+  "updated_at": "2026-10-27T13:00:47.389385+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
