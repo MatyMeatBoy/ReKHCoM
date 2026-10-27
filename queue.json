@@ -5173,10 +5173,10 @@
     "submenu-hd-transition-coherence": {
       "id": "submenu-hd-transition-coherence",
       "piece": "Coherent HD edge extensions during submenu transitions",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "device_profiles_sol",
       "created_at": "2026-10-27T08:29:25.832294+00:00",
-      "updated_at": "2026-10-27T08:36:21.771050+00:00",
+      "updated_at": "2026-10-27T08:36:31.665055+00:00",
       "branch": "task/submenu-hd-transition-coherence",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/324",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5186,9 +5186,15 @@
           "at": "2026-10-27T08:33:56.625192+00:00",
           "owner": "device_profiles_sol",
           "detail": "43365d0b5; actual hidden Direct3D copied64 runtime before frames524 cropped/544complete; source profile test red0xc0000409 green; mode.c guest syntax and diffcheck pass; after runtime and full relevant submenu cold/warm coverage pending root serial build. User directly authorizes coordinator visual verification for v2.1 without Atlas recorded AGENTS"
+        },
+        {
+          "at": "2026-10-27T08:36:31.665055+00:00",
+          "owner": "device_profiles_sol",
+          "detail": "Verified and reviewed; merged e0b7c740e47512db5fcc1d5aa8f0cf714456fc2c"
         }
       ],
-      "claimed_at": "2026-10-27T08:29:31.007920+00:00"
+      "claimed_at": "2026-10-27T08:29:31.007920+00:00",
+      "completed_at": "2026-10-27T08:36:31.665055+00:00"
     }
   },
   "integrator": {
@@ -5197,7 +5203,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:36:21.771050+00:00",
+  "updated_at": "2026-10-27T08:36:31.665055+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
