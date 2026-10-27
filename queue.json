@@ -1791,10 +1791,10 @@
       "status": "en_curso",
       "owner": "codex-diary-audit",
       "created_at": "2026-10-24T19:45:56.107112+00:00",
-      "updated_at": "2026-10-27T18:53:29.713701+00:00",
+      "updated_at": "2026-10-27T18:53:34.360251+00:00",
       "branch": null,
       "pr": null,
-      "approval": null,
+      "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
       "reference": "captura del usuario 24/10 en el chat",
       "evidence": [
         {
@@ -1811,6 +1811,11 @@
           "at": "2026-10-27T18:53:29.713701+00:00",
           "owner": "codex-integrador",
           "detail": "User27/10 prioritizes internal Jiminy journal, no Atlas; verified active agent registry root/harness_storage_budget/optiport_workspace_method/skill_freshness_review only, no codex-atlas-menus or codex-atlas. App thread inventory no other active KH thread; no attached journal worktree. Preserved codex/atlas-pepito-nested-current98689987a is ancestor of main8d495811e with0commits ahead: no unmerged source improvement there. Recover stopped historical claims into visible pending queue; retain all history and captures."
+        },
+        {
+          "at": "2026-10-27T18:53:34.360251+00:00",
+          "owner": "codex-diary-audit",
+          "detail": "Priority-high visible UI; check actual internal Naipes page002/004, titles, page bar, right leaf contour and nested modes; preserve original layout and active approved assets."
         }
       ],
       "claimed_at": "2026-10-25T16:02:53.468147+00:00"
@@ -7068,7 +7073,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:53:29.713701+00:00",
+  "updated_at": "2026-10-27T18:53:34.360251+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
