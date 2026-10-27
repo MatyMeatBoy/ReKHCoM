@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.1 — 2026-10-27
+
+- Unified Windows x86/x64 and Linux desktop/Steam Deck x86/x86-64 packages, with automatic architecture selection and explicit overrides. Android beta contains both ARM32 and ARM64.
+- Fixed ROM alignment, palette exhaustion and the 64-bit saved-game door crash. Bounded HD music/video failure paths, resource budgets, save replacement and current plus five prior logs improve diagnosis and resilience.
+- Restored stock frames and corrected enemy HP presentation and stock-total placement. Improved gauge edges, synchronized submenu extensions and prepare HD HUD resources before returning from Options. Optional CPU canvas failure keeps cartridge HUD rendering.
+- Separate EN/JP HD media imports, source-language information and guidance; gallery direct return, bounded preview caching/fallbacks, wording and localization improvements.
+- Experimental binding-aware Nintendo/Xbox/PlayStation/original prompts and controller metadata. Original remains the default; physical hotplug coverage is incomplete.
+- Expanded deterministic regression tools and the self-contained public OptiPort method. No general FPS gain or universal crash recovery is claimed. Linux ARM64 remains an opt-in experimental source builder; console/Android packages remain beta.
+
 ## v2.0 — 2026-10-26
 
 **The HD mod.** With your own copy of KINGDOM HEARTS -HD 1.5+2.5 ReMIX- on PC, the launcher imports Re:Chain of

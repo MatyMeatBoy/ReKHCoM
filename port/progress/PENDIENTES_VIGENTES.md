@@ -1,5 +1,28 @@
 # Pendientes después de v2.0 — 26/10/2026
 
+## Cierre de entrega 2.1 — mandato más reciente, 27/10
+
+El usuario pidió integrar todos los PR listos y publicar **2.1 estable** ahora,
+y acotar la verificación para no seguir retrasando la entrega. Esto sustituye
+el orden anterior de prerelease y la exigencia de completar cada ampliación
+antes de publicar. No equivale a cerrar sin evidencia los pendientes restantes.
+
+Conjunto de código `cd144335e`, PR #351: incluye los heads exactos de todos
+los PR abiertos #331/#332/#334/#335/#338/#339/#340/#341/#342/#345/#346/#347/
+#348/#349/#350 y #352, más correcciones de integración. Windows final EU/US/JP
+32/64 compilado; ZIP extraído pasa guardado privado, ocho salas Sora/Riku y
+puerta de Traverse en ambas arquitecturas. Monstruo World5 evento74 USA pasa
+en ambas. Nueve casos MF de vídeo pasan. Capturas GPU reales verifican stocks
+1/2/3 de jugador/enemigo y totales visibles con la corrección final. Linux
+desktop32/64 y Anbernic armhf compilados; Android se cierra por separado.
+No se amplía ahora la batería ni se promete completar campaña o cero crashes.
+
+Conservar abiertos como seguimiento: confirmación en Deck/Samsung originales,
+crash de foco Monstruo v2.0 aún sin reproducción, mediciones comparables de
+p95/p99 y memoria, QA física/hotplug de controles experimentales, detalles
+visuales sin evidencia de cierre y limpieza posterior de worktrees. Las notas
+históricas siguientes no sustituyen este estado; no borrar WIP ni fixtures.
+
 ## Mandato vigente de coordinación — 27/10/2026
 
 - [ ] **Launcher: audio/vídeos HD EN/JP y disponibilidad clara**, tarea remota
