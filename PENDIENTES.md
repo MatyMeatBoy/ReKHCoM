@@ -260,5 +260,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | menus-fade-transitions | Fundidos breves coherentes en todos los menús propios y previews listas, prioridad después de cuelgues | pendiente | — | — | Usuario 2026-10-27: agregar fading a todos menús nuestros, controles, logros, escenas; cuelgues y bugs primero | 2026-10-27T18:56:17.299483+00:00 |
 | gallery64-repeat-title-restore | Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso | en_curso | codex-gallery64 | — | — | 2026-10-27T19:01:53.090704+00:00 |
 | issue386-mapcards-stack | P0 issue386 userpre1EU64 0xC00000FD on opening MapCards submenu; actual reproduction and fixed regression32/64 | en_curso | codex-crash386 | — | Usuario27/10 bugsprioridadtotal; confirma alabrirsubmenuNaipesMapa | 2026-10-27T19:02:42.404866+00:00 |
+| v22-64bit-crash-pattern-ledger | Registro acotado de reportes64, causas probadas, fixes, artefactos y regresiones pendientes; referencia carril386 existente | pendiente | — | — | Usuario27/10 amplía a todos los cuelgues documentados64 y solución por patrones; coordinador asigna sólo inventario local sin producto | 2026-10-27T19:14:29.491816+00:00 |
 
 Integrador: libre

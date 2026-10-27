@@ -7196,10 +7196,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-27T19:02:42.404866+00:00"
+    },
+    "v22-64bit-crash-pattern-ledger": {
+      "id": "v22-64bit-crash-pattern-ledger",
+      "piece": "Registro acotado de reportes64, causas probadas, fixes, artefactos y regresiones pendientes; referencia carril386 existente",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T19:14:29.491816+00:00",
+      "updated_at": "2026-10-27T19:14:29.491816+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario27/10 amplía a todos los cuelgues documentados64 y solución por patrones; coordinador asigna sólo inventario local sin producto",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:02:42.404866+00:00",
+  "updated_at": "2026-10-27T19:14:29.491816+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
