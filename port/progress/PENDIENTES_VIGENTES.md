@@ -256,6 +256,15 @@ Carril documental: `docs-v20-trailer`, `codex-trailer`, rama `codex/v20-trailer-
 
 ## Asuntos posteriores que conservan seguimiento
 
+- **HUD HD, reporte 27/10:** estabilizar borde/contador del medidor enemigo;
+  conservar aparte la equivalencia de capacidad HP del jugador (evidencia
+  155/155 frente a anillo fallback normalizado), longitud por máximo del
+  enemigo y bordes internos dentados al caer fuera de supersampling.
+  Evidencia, pruebas y siguientes capturas en
+  [HUD_ENEMY_STATIC_TRACK.md](HUD_ENEMY_STATIC_TRACK.md). Paridad exacta con
+  Re:CoM 1.5 y revisión visual GPU todavía pendientes; no darlo por cerrado
+  únicamente por la prueba CPU ni trasladar un porcentaje optimista.
+
 No son bloqueos del lanzamiento ya realizado. Confirmar su estado actual antes de actuar;
 no iniciar nuevas baterías ni seguimientos automáticos por esta limpieza.
 

@@ -720,15 +720,17 @@ static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const 
 }
 
 /* ---- the enemy HP gauge (Gauge::CEnemyGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ------------------
-   gauge.lad's layout group 0: seven places in sequence 1 (0 the track, 1 the HP label, 2 the red trail, 3 the green
-   HP, 4..6 the extra bars' counter). Re:CoM's rules: a hit drops the green at once and holds the trail 1.5 s, then the
-   trail closes a tenth of the gap and one more each step; healing moves both. Its bars hold 200 HP each; here a bar
+   gauge.lad's layout group 0 has seven places in sequence 1. Re:CoM's rules: a hit drops the green at once and holds
+   the trail 1.5 s, then closes a tenth of the gap and one more each step; healing moves both. Its bars hold 200 HP
+   each; here a bar
    is the cartridge's own 560 (its gauge's layers: green, blue, yellow, red), so the HP and its layers stay the game's.
-   The gauge sits where the cartridge's is, its right end on the cartridge bar's. */
+   The gauge sits where the cartridge's is, its right end on the cartridge bar's.
+   The imported sequence's groups are value controls, not elapsed animations:
+   0 the length/tip, 1 red, 2 constant overlay, 3 green, 4..6 layer-count pieces. */
 #define ENEMY_LAYER 560
 static const int kEnemyPlaceGroup[7] = { 2, 0, 1, 3, 4, 5, 6 };
 static struct {
-    int active, frame, hp, maxHp, trail, delayMs, started, anim;
+    int active, frame, hp, maxHp, trail, delayMs, started;
     const void* who;
 } sEnemy;
 
@@ -773,7 +775,6 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
         }
         sEnemy.delayMs -= 17;
     }
-    sEnemy.anim++;
     sEnemy.active = 1;
     return 1;
 }
@@ -800,11 +801,15 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
     for (i = 0; i < 7; i++) {
         int frame;
         if (i >= 4 && layers <= 0)
-            continue; /* the bars' counter: only with bars left (0 is the bar's track, its empty length) */
-        frame = i == 2 ? HD_LAYOUT_HOLD(SDL_clamp(trailFrame, 0, 200))
+            continue; /* the bars' counter: only with bars left */
+        /* Green/red already normalize the current layer to 0..200. Hold the
+           matching full-length border; playing group 0 grows and wraps it.
+           Every counter piece must use the layer count, never a frame clock. */
+        frame = i == 0 ? HD_LAYOUT_HOLD(0)
+              : i == 1 ? HD_LAYOUT_HOLD(200)
+              : i == 2 ? HD_LAYOUT_HOLD(SDL_clamp(trailFrame, 0, 200))
               : i == 3 ? HD_LAYOUT_HOLD(SDL_clamp(hpFrame, 0, 200))
-              : i == 6 ? HD_LAYOUT_HOLD(layers)
-              : sEnemy.anim;
+              : HD_LAYOUT_HOLD(layers);
         PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, kEnemyPlaceGroup[i], frame, x, y, s, 1.0f, tint);
     }
 }
