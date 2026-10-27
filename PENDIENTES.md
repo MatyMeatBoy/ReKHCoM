@@ -203,6 +203,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | controller-prompt-inline-symbols | Experimental inline symbols, Japanese tutorial tokens and explicit confirm preset | pr_abierto | codex-control-prompts | https://github.com/MatyMeatBoy/ReKHCoM/pull/334 | User full2.1 prompt scope; parent explicitly authorizes continuation after332 | 2026-10-27T09:50:24.618906+00:00 |
 | harness-multikey-combos | Harness chord parsing must exercise all requested buttons, not only first token | pr_abierto | codex-harness-chords | https://github.com/MatyMeatBoy/ReKHCoM/pull/333 | User requests reliable pattern-based regression scenarios for 2.1 | 2026-10-27T10:08:06.991816+00:00 |
 | controller-prompt-live-page | Bounded semantic controller symbols refresh on binding/family revision | en_curso | codex-control-prompts | — | Parent explicitly authorizes live-page semantic-first implementation for full2.1 user scope | 2026-10-27T09:58:18.898783+00:00 |
-| steamdeck-gaming-mode-330 | Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide | en_curso | codex-deck-gaming330 | — | Usuario autoriza resolver330 sin comentario externo ni heavybuild | 2026-10-27T10:16:13.616974+00:00 |
+| steamdeck-gaming-mode-330 | Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide | en_curso | codex-deck-gaming330 | fix/steamdeck-gaming-mode-330 | Usuario autoriza resolver330 sin comentario externo ni heavybuild | 2026-10-27T10:20:54.890314+00:00 |
 
 Integrador: libre
