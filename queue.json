@@ -4214,10 +4214,10 @@
     "session-logs-history-20261027": {
       "id": "session-logs-history-20261027",
       "piece": "Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-crash",
       "created_at": "2026-10-27T04:35:24.576312+00:00",
-      "updated_at": "2026-10-27T04:47:27.905974+00:00",
+      "updated_at": "2026-10-27T04:47:41.417219+00:00",
       "branch": "fix/session-log-history",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/282",
       "approval": "Usuario 27/10: conservar al menos cinco logs y rotarlos; revision log_review",
@@ -4227,9 +4227,15 @@
           "at": "2026-10-27T04:44:03.189093+00:00",
           "owner": "codex-crash",
           "detail": "C producer 8 restarts; 6 shell tests; freestanding syntax; Windows EU and Linux64 guest compiled; independent review"
+        },
+        {
+          "at": "2026-10-27T04:47:41.417219+00:00",
+          "owner": "codex-crash",
+          "detail": "Merge 5a523c61ecf046c921c49be12f320852e17926b9; C8 restarts+freestanding+6shell+EU/Linux64build"
         }
       ],
-      "claimed_at": "2026-10-27T04:39:17.589542+00:00"
+      "claimed_at": "2026-10-27T04:39:17.589542+00:00",
+      "completed_at": "2026-10-27T04:47:41.417219+00:00"
     },
     "sysmsg-palette-null": {
       "id": "sysmsg-palette-null",
@@ -4258,7 +4264,7 @@
     "created_at": "2026-10-27T04:47:34.666353+00:00",
     "updated_at": "2026-10-27T04:47:34.666353+00:00"
   },
-  "updated_at": "2026-10-27T04:47:34.666353+00:00",
+  "updated_at": "2026-10-27T04:47:41.417219+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
