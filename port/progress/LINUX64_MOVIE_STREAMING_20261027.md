@@ -52,3 +52,8 @@ without the normalization but with this regression is retained as
 The coordinator's first VM run of the original harness passed exit 0; the updated
 stdio regression is awaiting the serial repeat. Clock and host syntax checks
 were repeated successfully after this narrowly scoped follow-up.
+
+Coordinator repeat in the Linux x86-64 VM (1 GiB, one CPU): previous code with
+the new stdio regression aborts with exit 134; corrected code passes the whole
+POSIX harness, including closed-stdio combinations, exit 0. Logs retained in
+`khcom-crash-diagnostics/build/linux64-streaming-stdio-verify/{red,green}.log`.
