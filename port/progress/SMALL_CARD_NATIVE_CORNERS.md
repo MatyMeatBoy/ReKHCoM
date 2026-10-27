@@ -11,6 +11,10 @@ cells over an accepted HD part. The world/screen path copies the finished
 native pixel only when the OAM occupancy identifies that same card; the HUD
 path retains its native colour and existing alpha/effect processing. Source
 coordinates follow flip/affine transforms, including partial OAM pieces.
+The back-to-front HUD compositor clears an earlier foreground contribution
+when a later visible HD pixel takes ownership, then restores that later
+sprite's own corner if applicable. A lower card's corner cannot remain above
+the illustration of an overlapping front card.
 There are no texture, illustration, palette, importer or value-digit edits.
 HD-off, missing, rejected and not-ready parts retain their existing fallback.
 
@@ -23,7 +27,10 @@ Validation:
 - `test_small_card_native_corners.py`: production foreground branches fail
   before and pass after this change. Covers the current 105 recipe layouts,
   varied colours, world/screen/HUD, accepted/off HD, flips, explicit affine
-  identity/2x/180-degree cases, partial pieces and OAM ownership. An optional
+  identity/2x/180-degree cases, partial pieces and OAM ownership. A separate
+  two-OAM HUD sequence failed before the ownership-clear correction and now
+  passes with a front HD illustration, front native corner, native fallback
+  and another HD sprite path. An optional
   private `KHCOM_CARD_CORNER_INVENTORY` corpus also passes with the original
   corner colours decoded from 99 native card sprites.
 - `test_stock_card_frames.py`: existing frame/fallback/foreground behavior

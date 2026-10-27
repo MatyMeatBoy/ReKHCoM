@@ -13,6 +13,7 @@ for marker in ['static int SmallCardNativeCorner(', 'static int SmallCardCornerA
 world=block('static void HdOverLayer(')
 hud=source[source.index('void PortPpuRenderHud('):]
 hud=block('if (sHdCover && (size_t)w * h <= sHdCoverSize && sHdCover[py * w + px]',hud)
+clear=block('if ((hdSprite || hdPart) && sHudOverUsed)') if 'if ((hdSprite || hdPart) && sHudOverUsed)' in source else ''
 recipes=[r.split('\t') for r in (ROOT/'port/data/hd_sprites.tsv').read_text().splitlines() if '\t' in r]
 recipes=[r for r in recipes if r[1]=='6']
 assert recipes and all(r[4:8]==['-8','-20','16','32'] and 'place=1,16,15,31' in r[9] for r in recipes)
@@ -43,11 +44,17 @@ static uint32_t sHudOver[32*64];
 static int sHudOverUsed;
 '''
 code=pre+helpers+world+r'''
-static uint32_t HudPixel(int ready,int tx,int ty,uint32_t argb){
- int i=0,hdPart=ready,px=0,py=0,w=1,h=1;sHudOverUsed=0;sHdCover[0]=ready;sHudOver[0]=0;
+static void HudWrite(int i,int hdPart,int hdSprite,int tx,int ty,uint32_t argb){
+ int px=0,py=0,w=1,h=1;
  for(int once=0;once<1;once++){
+'''+clear+r'''
+ if(hdSprite)continue;
 '''+hud+r'''
  }
+}
+static uint32_t HudPixel(int ready,int tx,int ty,uint32_t argb){
+ sHudOverUsed=0;sHdCover[0]=ready;sHudOver[0]=0;
+ HudWrite(0,ready,0,tx,ty,argb);
  return sHudOverUsed?sHudOver[0]:0;
 }
 static const uint32_t colors[][2]={'''+','.join('{%du,%du}'%p for p in colors)+r'''};
@@ -100,6 +107,18 @@ int main(void){
  memset(owner,0,sizeof(owner));memset(over,0,sizeof(over));
  int used=0;HdOverLayer(0,8,8,bg,owner,picture,over,&used);
  for(int k=0;k<64;k++)assert(over[k]==(k==6?picture[k]:0));
+ /* Real back-to-front HUD ordering: a lower card's preserved corner must
+    not remain above the illustration of the next visible HD card. */
+ for(int front=0;front<4;front++) {
+   sOamHd[127]=sOamHd[126]=(OamHdPart){1,-8,-20,16,32};
+   sHudOverUsed=0;sHudOver[0]=0;sHdCover[0]=1;
+   HudWrite(127,1,0,1,16,0xff001122u);assert(sHudOver[0]==0xff001122u);
+   if(front==0)HudWrite(126,1,0,5,20,0xff334455u); /* front HD illustration */
+   if(front==1)HudWrite(126,1,0,14,16,0xff334455u); /* front's own native corner */
+   if(front==2)HudWrite(126,0,0,5,20,0xff334455u); /* front native fallback */
+   if(front==3)HudWrite(126,0,1,5,20,0xff334455u); /* another HD sprite path */
+   assert(sHudOver[0]==((front==1||front==2)?0xff334455u:0));
+ }
  printf("PASS: %d world/screen/HUD native corner pixels; queued/off, colours, flips\n",checked);
 }
 '''

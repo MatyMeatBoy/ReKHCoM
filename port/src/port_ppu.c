@@ -5293,6 +5293,12 @@ void PortPpuRenderHud(uint32_t* buf) {
                 }
                 if ((gPortConfig.hdHud || gPortConfig.hdCards) && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
                     sHudDigitOwners[py * w + px] = i + 1;
+                if ((hdSprite || hdPart) && sHudOverUsed) {
+                    /* This visible, later OAM pixel owns the foreground now.
+                     * A lower card's preserved corner cannot cover its HD art.
+                     * Its own corner is copied back below, after colour effects. */
+                    sHudOver[py * w + px] = 0;
+                }
                 if (hdSprite) continue;
                 if (hdPart) {
                     sHdCover[py * w + px] = 1;
