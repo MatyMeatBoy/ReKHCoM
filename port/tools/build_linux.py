@@ -218,14 +218,16 @@ def bundle(arch, base, versions, dest):
          'El juego detecta Steam Deck y usa pantalla completa antes de leer tus ajustes.\n'
          if arch == 'i386' else 'ReKHCoM Anbernic: BETA armhf, sin verificacion en hardware real.\n') +
         'La version de Windows tambien funciona en Linux y Steam Deck por Proton y usa la GPU:\n'
-        'en Steam, Anadir juego ajeno > ReKHCoM.exe > Propiedades > Compatibilidad > Proton.\n'
-        'El wrapper selecciona el runtime disponible; ver LINUX.md.\n\n' +
+        'en Steam, Anadir juego ajeno > ReKHCoM.exe > Propiedades > Compatibilidad > Proton.\n' +
+        ('Linux nativo: ejecuta Setup Steam Deck.sh para registrar ReKHCoM y lee LINUX.md.\n' if arch == 'i386' else 'Ver LINUX.md para PortMaster.\n') +
+        ('Opciones: Start + Select juntos (botones GBA asignados), o F1 / Escape.\n\n' if arch == 'i386' else '\n') +
         ('Native Linux desktop / Steam Deck: x86 and x64 runtimes in one package.\n'
          'Steam Deck detection defaults to fullscreen; saved settings take precedence.\n'
          if arch == 'i386' else 'Native Anbernic: armhf BETA, not verified on real hardware.\n') +
         'The Windows version also runs on Linux and Steam Deck through Proton and uses the GPU:\n'
-        'in Steam, Add a Non-Steam Game > ReKHCoM.exe > Properties > Compatibility > Proton.\n'
-        'The wrapper selects an available runtime; see LINUX.md.\n', encoding='utf-8')
+        'in Steam, Add a Non-Steam Game > ReKHCoM.exe > Properties > Compatibility > Proton.\n' +
+        ('Native Linux: run Setup Steam Deck.sh to register ReKHCoM; see LINUX.md.\n' if arch == 'i386' else 'See LINUX.md for PortMaster.\n') +
+        ('Options: Start + Select together (bound GBA buttons), or F1 / Escape.\n' if arch == 'i386' else '\n'), encoding='utf-8')
     (dest / 'licenses').mkdir()
     shutil.copyfile(base / 'sdl-src-LICENSE.txt', dest / 'licenses/SDL3-LICENSE.txt')
     (dest / 'licenses/RUNTIME.md').write_text(
@@ -293,6 +295,7 @@ def package(version, base_i386, base_armhf):
     pc = stage / 'pc'
     bundle('i386', base_i386, ['eu', 'us', 'jp'], pc)
     shutil.copyfile(ROOT / 'port/linux/LINUX.md', pc / 'LINUX.md')
+    (pc / 'Setup Steam Deck.sh').write_bytes((ROOT / 'port/linux/Setup Steam Deck.sh').read_bytes().replace(b'\r\n', b'\n'))
     archive = out / f'ReKHCoM-{version}-linux-x86-x64-desktop-steamdeck.tar.gz'
     make_tar(pc, archive)
     made.append(archive)
