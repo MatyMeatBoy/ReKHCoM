@@ -47,6 +47,7 @@ static int sStartAt;
 static void PortBridgeRefreshTextureEpoch(void){}
 static struct {int hdSubtitles;}gPortConfig;
 static void MoviePath(const char*n,char*p,int size){snprintf(p,size,"%s",n);}
+static void MovieSubtitlePath(const char*n,const char*l,char*p,int size){snprintf(p,size,"%s.%s.txt",n,l);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
 static const char*PortConfigPath(const char*p){return p;}
 static void SDL_strlcpy(char*p,const char*s,int cap){snprintf(p,cap,"%s",s);}

@@ -203,12 +203,14 @@ enum {
     ITEM_CONTROL_NINTENDO_HEADING, /* section heading, not selectable */
     ITEM_PAD_LAYOUT,               /* force the Nintendo layout */
     ITEM_CONTROLS_BACK,
+    ITEM_HD_MEDIA_AUTO, ITEM_HD_MEDIA_EN, ITEM_HD_MEDIA_JP,
+    ITEM_HD_MEDIA_RESCAN, ITEM_HD_MEDIA_GUIDE, ITEM_HD_MEDIA_BACK,
     ITEM_COUNT
 };
 
 /* Two pages, each a run of items: the options and the Re:CoM settings. */
 enum { PAGE_MAIN, PAGE_PS2, PAGE_NEWGAME, PAGE_CHEATS, PAGE_CONTROLS, PAGE_REMATCH, PAGE_ACHIEVEMENTS, PAGE_LOBBY,
-       PAGE_SCENES };
+       PAGE_SCENES, PAGE_HD_MEDIA };
 static int sPage;
 static int sTitleRequest; /* ITEM_TITLE: due once the menu has closed */
 /* a big window over Options that asks twice, as the scene pause asks before a skip: back to the title (ITEM_TITLE),
@@ -293,6 +295,7 @@ static int OpensSomething(int item) {
         case ITEM_PS2_MENU: case ITEM_CONTROLS_MENU: case ITEM_ACHIEVEMENTS_MENU: case ITEM_SCENES_MENU: case ITEM_REMATCH_MENU:
         case ITEM_CHEAT_REBEL_LIST: case ITEM_CHEAT_REBEL:
         case ITEM_CHEATS_MENU: case ITEM_TOUCH_EDIT: case ITEM_TITLE: case ITEM_QUIT: case ITEM_MODE_RESET:
+        case ITEM_HD_SUBTITLES: case ITEM_HD_MEDIA_GUIDE: case ITEM_HD_MEDIA_RESCAN:
             return 1;
         default:
             return 0;
@@ -300,9 +303,11 @@ static int OpensSomething(int item) {
 }
 
 static int PageFirst(void) {
+    if (sPage == PAGE_HD_MEDIA) return ITEM_HD_MEDIA_AUTO;
     return sPage == PAGE_REMATCH ? ITEM_REMATCH_0 : sPage == PAGE_CHEATS ? ITEM_CHEAT_DEBUG : sPage == PAGE_CONTROLS ? ITEM_CONTROL_A : sPage == PAGE_PS2 ? ITEM_PS2_DIFFICULTY : sPage == PAGE_NEWGAME ? ITEM_NG_VERSION : 0;
 }
 static int PageEnd(void) {
+    if (sPage == PAGE_HD_MEDIA) return ITEM_HD_MEDIA_BACK + 1;
     return sPage == PAGE_REMATCH ? ITEM_REMATCH_BACK + 1 : sPage == PAGE_CHEATS ? ITEM_CHEATS_BACK + 1 : sPage == PAGE_CONTROLS ? ITEM_CONTROLS_BACK + 1 : sPage == PAGE_PS2 ? ITEM_PS2_BACK + 1 : sPage == PAGE_NEWGAME ? ITEM_NG_START + 1 : ITEM_QUIT + 1;
 }
 
@@ -327,7 +332,8 @@ static int ItemVisible(int item) {
         case ITEM_CRT_OUTPUT: return gPortConfig.viewMode == PORT_VIEW_CRT;
         /* in HD text now (user 25/10): the subtitles always with it, the font from its row (A) */
         case ITEM_HDFONT:
-        case ITEM_HD_SUBTITLES: return 0;
+            return 0;
+        case ITEM_HD_SUBTITLES: return HD_MOVIES_PLAY; /* now the independent audio page; text owns subtitles */
 #if !defined(__ANDROID__) && !defined(__EMSCRIPTEN__) && !defined(PORT_ANDROID64) && !defined(PORT_TOUCH)
         case ITEM_HIDE_TOUCH:
         case ITEM_TOUCH_THEME:
@@ -439,7 +445,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
     { "HD HUD (pilot)", "HUD HD (pilote)", "HD-HUD (Pilot)", "HUD HD (pilota)", "HUD HD (piloto)", "HD HUD (試験)" },
     { "HD-2D look", "Style HD-2D", "HD-2D-Optik", "Stile HD-2D", "Estilo HD-2D", "HD-2D表示" },
-    { "HD subtitles", "Sous-titres HD", "HD-Untertitel", "Sottotitoli HD", "Subtítulos HD", "HDじまく" },
+    { "HD movie audio", "Audio des vidéos HD", "HD-Video-Audio", "Audio video HD", "Audio de vídeos HD", "HDムービー音声" },
     { "HD text font", "Police du texte HD", "Schrift des HD-Texts", "Font del testo HD", "Fuente del texto HD", "HDテキストのフォント" },
     { "HD title and menus", "Titre et menus HD", "HD-Titel und -Menüs", "Titolo e menu HD", "Título y menús HD", "HDタイトルとメニュー" },
     { "Re:CoM mode", "Mode Re:CoM", "Re:CoM-Modus", "Modalità Re:CoM", "Modo Re:CoM", "Re:CoMモード" },
@@ -539,6 +545,20 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Force Nintendo layout", "Forcer la disposition Nintendo", "Nintendo-Belegung erzwingen", "Forza disposizione Nintendo",
       "Forzar mando Nintendo", "ニンテンドーの配置にこてい" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
+    { "Auto: legacy import", "Auto : ancien import", "Auto: alter Import", "Auto: vecchio import", "Auto: importación antigua", "自動: 以前のデータ" },
+    { "HD audio: EN", "Audio HD : EN", "HD-Audio: EN", "Audio HD: EN", "Audio HD: EN", "HD音声: EN" },
+    { "HD audio: JP", "Audio HD : JP", "HD-Audio: JP", "Audio HD: JP", "Audio HD: JP", "HD音声: JP" },
+    { "Check imported variants", "Vérifier les variantes", "Varianten prüfen", "Controlla varianti", "Revisar variantes importadas", "データを再確認" },
+    { "Steam language guide", "Guide des langues Steam", "Steam-Sprachhilfe", "Guida lingue Steam", "Guía de idiomas de Steam", "Steam言語ガイド" },
+    { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
+};
+static const char* const sHdMediaHelp[LANG_COUNT] = {
+    "User-labelled audio, separate from text/subtitles and GBA Undub. Grey: complete import missing. Use your Steam copy: Properties > Language, then import/copy HD and check again. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio déclaré par l'utilisateur, séparé du texte et de l'Undub GBA. Gris : import complet absent. Steam : Propriétés > Langue, puis importer/copier HD et vérifier. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio vom Benutzer zugeordnet, unabhängig von Text und GBA-Undub. Grau: vollständiger Import fehlt. Steam: Eigenschaften > Sprache; HD importieren/kopieren und erneut prüfen. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio dichiarato dall'utente, separato da testo e Undub GBA. Grigio: import completo assente. Steam: Proprietà > Lingua, poi importa/copia HD e ricontrolla. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "Audio declarado por el usuario, independiente del texto/subtítulos y Undub GBA. Gris: falta importación completa. En tu Steam: Propiedades > Idioma, importa/copia HD y revisa. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
+    "音声ラベルはユーザー指定です。文字・字幕・GBA Undubとは別です。灰色はデータ不足。Steamのプロパティで言語を選び、HDをコピーして再確認してください。help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2"
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
 static const char* const sCheatsHelp[LANG_COUNT] = {
@@ -1140,7 +1160,7 @@ static int NeedsLauncher(int item) {
         case ITEM_HD_MUSIC: return PortAssetPresent(PORT_ASSET_HD_MUSIC) ? NEED_NONE : NEED_HD;
         case ITEM_HD_SCENES:
         case ITEM_PS2_HDSCENES: return PortAssetPresent(PORT_ASSET_HD_SCENES) ? NEED_NONE : NEED_HD;
-        case ITEM_HD_SUBTITLES: return PortAssetPresent(PORT_ASSET_HD_SUBS) ? NEED_NONE : NEED_HD;
+        case ITEM_HD_SUBTITLES: return NEED_NONE; /* audio page also explains missing variants */
         case ITEM_HD_CARDS: return PortAssetPresent(PORT_ASSET_HD_CARDS) ? NEED_NONE : NEED_HD;
         case ITEM_UNDUB: return PortUndubAvailable() ? NEED_NONE : NEED_JP;
         default: return NEED_NONE;
@@ -1210,7 +1230,19 @@ static int BankCopy(const char* from, const char* to) {
     return out != NULL;
 }
 
+static int HdMediaSelectionEnabled(int mode) {
+    return mode == 0 || (mode > 0 && mode < 3 &&
+           (PortHdMediaVariantAvailable(mode, 0) || PortHdMediaVariantAvailable(mode, 1)));
+}
+static void HdMediaSelect(int mode) {
+    if (!HdMediaSelectionEnabled(mode)) return;
+    gPortConfig.hdMediaLanguage = mode;
+    PortHdMediaInvalidate();
+    PortConfigSave();
+}
 static int ItemEnabled(int item) {
+    if (item == ITEM_HD_MEDIA_EN || item == ITEM_HD_MEDIA_JP)
+        return HdMediaSelectionEnabled(item == ITEM_HD_MEDIA_EN ? 1 : 2);
     if (item >= ITEM_REMATCH_0 && item <= ITEM_REMATCH_LAST)
         return PortRematchAvailable(item - ITEM_REMATCH_0);
     if (NeedsLauncher(item))
@@ -1357,7 +1389,12 @@ static void ValueText(int item, char* out, size_t size) {
             SDL_strlcpy(out, sOnOff[gPortConfig.hdScenes != 0][l], size);
             break;
         case ITEM_HD_SUBTITLES:
-            SDL_strlcpy(out, sOnOff[gPortConfig.hdSubtitles != 0][l], size);
+            SDL_strlcpy(out, gPortConfig.hdMediaLanguage == 1 ? "EN >" : gPortConfig.hdMediaLanguage == 2 ? "JP >" : "Auto >", size);
+            break;
+        case ITEM_HD_MEDIA_AUTO:
+        case ITEM_HD_MEDIA_EN:
+        case ITEM_HD_MEDIA_JP:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hdMediaLanguage == item - ITEM_HD_MEDIA_AUTO][l], size);
             break;
         case ITEM_HD_CARDS:
             SDL_strlcpy(out, sOnOff[gPortConfig.hdCards != 0][l], size);
@@ -1652,7 +1689,24 @@ static void Change(int item, int dir) {
             gPortConfig.hdScenes = !gPortConfig.hdScenes;
             break;
         case ITEM_HD_SUBTITLES:
-            gPortConfig.hdSubtitles = !gPortConfig.hdSubtitles;
+            if (dir > 0) { PortHdMediaInvalidate(); sPage = PAGE_HD_MEDIA; sCursor = sScroll = ITEM_HD_MEDIA_AUTO; }
+            break;
+        case ITEM_HD_MEDIA_AUTO: case ITEM_HD_MEDIA_EN: case ITEM_HD_MEDIA_JP:
+            if (dir > 0) HdMediaSelect(item - ITEM_HD_MEDIA_AUTO);
+            break;
+        case ITEM_HD_MEDIA_RESCAN:
+            if (dir > 0) PortHdMediaInvalidate();
+            break;
+        case ITEM_HD_MEDIA_GUIDE:
+            if (dir > 0) {
+#if __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) && !defined(PORT_ANDROID64)
+                SDL_OpenURL("https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+#endif
+                PortLog("HD media guide: https://help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2");
+            }
+            break;
+        case ITEM_HD_MEDIA_BACK:
+            sPage = PAGE_MAIN; sCursor = ITEM_HD_SUBTITLES; sScroll = 0;
             break;
         case ITEM_HD_CARDS: /* HD HUD: the cards, the battle HUD and the title's logo together */
             gPortConfig.hdCards = !gPortConfig.hdCards;
@@ -2009,6 +2063,7 @@ void PortUiOpenOptions(void) {
     }
     if (sOpen)
         return;
+    PortHdMediaInvalidate();
     sOpen = 1;
     ResetMenuAxes(); /* an already held trigger cannot confirm the newly opened menu */
     sOpenSerial++;
@@ -2031,6 +2086,7 @@ void PortUiOpenOptions(void) {
         sPage = PAGE_CHEATS;
     if (sCursor >= ITEM_CONTROL_A && sCursor <= ITEM_CONTROLS_BACK) /* a row of the Controls page */
         sPage = PAGE_CONTROLS;
+    if (sCursor >= ITEM_HD_MEDIA_AUTO && sCursor <= ITEM_HD_MEDIA_BACK) sPage = PAGE_HD_MEDIA;
     RefreshModes();
     if (SDL_getenv("KHCOM_ACHIEVEMENTS_SHOT")) AchievementMenuOpen();
     if (SDL_getenv("KHCOM_SCENES_SHOT")) SceneMenuOpen();
@@ -2499,6 +2555,8 @@ int PortUiHandleEvent(const void* p) {
                         Change(ITEM_CHEATS_BACK, 1);
                     else if (sPage == PAGE_REMATCH)
                         Change(ITEM_REMATCH_BACK, 1);
+                    else if (sPage == PAGE_HD_MEDIA)
+                        Change(ITEM_HD_MEDIA_BACK, 1);
                     else if (sPage == PAGE_PS2)
                         Change(ITEM_PS2_BACK, 1);
                     else if (sPage == PAGE_CONTROLS)
@@ -2546,6 +2604,7 @@ int PortUiHandleEvent(const void* p) {
                 }
                 if (sPage == PAGE_CHEATS) { Change(ITEM_CHEATS_BACK, 1); break; }
                 if (sPage == PAGE_REMATCH) { Change(ITEM_REMATCH_BACK, 1); break; }
+                if (sPage == PAGE_HD_MEDIA) { Change(ITEM_HD_MEDIA_BACK, 1); break; }
                 if (sPage == PAGE_PS2) { Change(ITEM_PS2_BACK, 1); break; }
                 if (sPage == PAGE_CONTROLS) { Change(ITEM_CONTROLS_BACK, 1); break; }
                 Close();
@@ -4460,7 +4519,7 @@ static void DrawMenu(int l, int width, int height) {
     if (barX + barW - 24 > artX + MENU_ART_X)
         Shade(artX + MENU_ART_X, 0, barX + barW - 24 - (artX + MENU_ART_X), top + rows * rowH, 0xFFFFFFFFu, 230);
 
-    DrawText(sPage == PAGE_REMATCH ? sRematchTitle[l] : sPage == PAGE_CHEATS ? sCheatsTitle[l] : sPage == PAGE_PS2 ? sPs2Title[l] : sPage == PAGE_CONTROLS ? (l == LANG_ES ? (sControlPad ? "Controles - Mando" : "Controles - Teclado") : (sControlPad ? "Controls - Gamepad" : "Controls - Keyboard")) : sPage == PAGE_NEWGAME ? sNgTitle[l] : sTitle[l], barX, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
+    DrawText(sPage == PAGE_HD_MEDIA ? sLabels[ITEM_HD_SUBTITLES][l] : sPage == PAGE_REMATCH ? sRematchTitle[l] : sPage == PAGE_CHEATS ? sCheatsTitle[l] : sPage == PAGE_PS2 ? sPs2Title[l] : sPage == PAGE_CONTROLS ? (l == LANG_ES ? (sControlPad ? "Controles - Mando" : "Controles - Teclado") : (sControlPad ? "Controls - Gamepad" : "Controls - Keyboard")) : sPage == PAGE_NEWGAME ? sNgTitle[l] : sTitle[l], barX, MENU_TITLE_Y, MENU_INK, 0xFFD8D8D8u);
     if (sScroll > PageFirst())
         DrawText("\xE2\x86\x91", barX + barW - 8, 2, MENU_INK, 0xFFD8D8D8u);
     selY = -1;
@@ -4547,6 +4606,8 @@ static void DrawMenu(int l, int width, int height) {
         };
         DrawNeedNote(restart[l], width, height, barX + barW + 8, selY);
     }
+    if ((sPage == PAGE_HD_MEDIA || sCursor == ITEM_HD_SUBTITLES) && selY >= 0)
+        DrawNeedNote(sHdMediaHelp[l], width, height, barX + barW + 8, selY);
     if (sPage == PAGE_CONTROLS && sCursor == ITEM_PAD_LAYOUT)
         DrawNintendoNote(l, width, height, barX + barW + 8);
     int zoom = sCursor == ITEM_BATTLE_ZOOM && gPortConfig.battleZoom ? gPortConfig.battleZoom : gPortConfig.zoom;

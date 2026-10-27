@@ -2,12 +2,31 @@
 #include <cassert>
 #include <iostream>
 using namespace hdvariants;
+static std::string dataRoot;
+static uint64_t ticks;
+static struct { int hdMediaLanguage = 0, undub = 1, hdSubtitles = 1, textLanguage = 4; } gPortConfig;
+static uint64_t SDL_GetTicks() { return ticks; }
+static const char* PortConfigPath(const char*) { return dataRoot.c_str(); }
+static void SDL_strlcpy(char* p, const char* s, size_t cap) { snprintf(p, cap, "%s", s); }
+#include "hd_media_path_cache.inc"
+static int invalidations, saved;
+static bool available[2][2];
+static int PortHdMediaVariantAvailable(int mode, int part) { return mode > 0 && mode < 3 && available[mode - 1][part]; }
+static void PortHdMediaInvalidate() { ++invalidations; PortHdMovieInvalidatePaths(); PortHdMediaAvailabilityReset(); }
+static void PortConfigSave() { ++saved; }
+#include "hd_media_ui.inc"
 static void Put(const fs::path& p, const std::string& s) { fs::create_directories(p.parent_path()); std::ofstream(p, std::ios::binary) << s; }
 static std::string Movie(char marker) {
     std::string s("\0\0\0\x08moov\0\0\0\x10mdat", 16); s += std::string(8, marker); return s;
 }
 int main(int argc, char** argv) {
     assert(argc == 2); fs::path data = fs::u8path(argv[1]);
+    uint64_t number = 0;
+    assert(PortHdMediaNumber("1073741824", 1073741824, &number) && number == 1073741824);
+    assert(!PortHdMediaNumber("18446744073709551616", 1073741824, &number));
+    assert(!PortHdMediaNumber("-24", 1073741824, &number));
+    assert(PortHdMediaClipAllowed(0, 170) && PortHdMediaClipAllowed(1, 222));
+    assert(PortHdMediaClipAllowed(2, 0) && !PortHdMediaClipAllowed(2, 170) && !PortHdMediaClipAllowed(2, 222));
     Put(data / "hd/movies/ROP.mp4", Movie('L'));
     std::vector<std::string> required = {"movies/ROP.mp4", "scenes/zz_event_151.mp4"};
     Transaction en(data, 1, "aabb", 1, true, false, required);
@@ -19,6 +38,7 @@ int main(int argc, char** argv) {
     auto original = std::string(path);
     assert(original.find("/en/") != std::string::npos);
     assert(Inspect(data, 1).movies && !Inspect(data, 1).scenes);
+    assert(PortHdMediaCachedAvailable(data.u8string().c_str(), 1, 0));
     assert(Reusable(data, 1, "aabb", 1, required));
     assert(!Reusable(data, 1, "ccdd", 1, required)); // same names, changed source cannot hit EN cache
     assert(!PortHdMediaResolve(data.u8string().c_str(), 2, "ROP", path, sizeof(path)));
@@ -66,5 +86,23 @@ int main(int argc, char** argv) {
     Put(fs::path(path), "truncated");
     assert(!Inspect(data, 1).scenes && Inspect(data, 1).movies);
     assert(!PortHdMediaResolve(data.u8string().c_str(), 1, "zz_event_011", path, sizeof(path)));
+    // In-game controls reject missing variants without changing text/Undub.
+    assert(HdMediaSelectionEnabled(0) && !HdMediaSelectionEnabled(1));
+    HdMediaSelect(1); assert(!saved && gPortConfig.hdMediaLanguage == 0);
+    available[0][0] = true; HdMediaSelect(1);
+    assert(saved == 1 && invalidations == 1 && gPortConfig.hdMediaLanguage == 1);
+    assert(gPortConfig.undub == 1 && gPortConfig.hdSubtitles == 1 && gPortConfig.textLanguage == 4);
+    dataRoot = data.u8string(); ticks = 0;
+    assert(PortHdMovieResolvePath("ROP", path, sizeof(path)) && original == path);
+    Transaction replacement(data, 1, "1234", 1, true, false, required);
+    for (const auto& p : required) { Put(replacement.Path(p), Movie('R')); assert(replacement.Add(p)); }
+    assert(replacement.Commit(false));
+    assert(PortHdMovieResolvePath("ROP", path, sizeof(path)) && original == path); // cached, no repeated MP4 validation
+    PortHdMediaInvalidate();
+    assert(PortHdMovieResolvePath("ROP", path, sizeof(path)) && original != path); // explicit rescan updates generation
+    ticks = 1001;
+    assert(PortHdMovieResolvePath("ROP", path, sizeof(path)));
+    HdMediaSelect(0);
+    assert(PortHdMovieResolvePath("ROP", path, sizeof(path)) && fs::path(path) == data / "hd/movies/ROP.mp4");
     std::cout << "PASS EN/JP generation commit, cancel/fail preservation, provenance cache, legacy and corrupt paths\n";
 }

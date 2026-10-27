@@ -1962,13 +1962,19 @@ static bool ImportMediaVariant(const fs::path& source, const fs::path& data, int
 static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool music, bool sprites, int quality,
                 bool resume = false, int mediaLanguage = 0, bool ownJob = true) {
     if (mediaLanguage && (movies || scenes)) {
-        HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+        const std::string expectedSource = hdmedia::Inspect(source).fingerprint;
+        // Finish independent legacy music/art first. A cancel there must not
+        // publish a new movie index; its own existing journal remains usable.
+        if (music || sprites) Run(source, data, false, false, music, sprites, quality, false, 0, false);
         int count = 0;
-        bool ok = ImportMediaVariant(source, data, mediaLanguage, movies, scenes, mf ? Compression(quality) : 0, mf, count);
-        if (mf) MFShutdown();
-        if (SUCCEEDED(com)) CoUninitialize();
-        if (!sJob.cancel && (music || sprites)) Run(source, data, false, false, music, sprites, quality, false, 0, false);
+        bool ok = false;
+        if (!sJob.cancel && hdmedia::Inspect(source).fingerprint == expectedSource) {
+            HRESULT com = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+            bool mf = SUCCEEDED(MFStartup(MF_VERSION, MFSTARTUP_LITE));
+            ok = ImportMediaVariant(source, data, mediaLanguage, movies, scenes, mf ? Compression(quality) : 0, mf, count);
+            if (mf) MFShutdown();
+            if (SUCCEEDED(com)) CoUninitialize();
+        }
         sJob.Say(ok ? std::string(T("Variante lista: ", "Variant ready: ")) + PortHdMediaLabel(mediaLanguage) + " (" + std::to_string(count) + ")"
                     : T("No se publicó la variante: fuente incompleta, cambiada, cancelada o archivo inválido. Se conserva la copia anterior.",
                         "Variant not published: source incomplete, changed, cancelled or invalid. The previous copy is preserved."));
@@ -2288,6 +2294,11 @@ static void Start(const fs::path& source, const fs::path& data, bool movies, boo
                   int quality, bool resume = false, int mediaLanguage = 0) {
     if (sJob.running)
         return;
+    if (mediaLanguage && ReadJournal(data).found) {
+        sJob.Say(T("Primero retoma o descarta la importación anterior; su progreso se conserva.",
+                   "Resume or discard the previous import first; its progress is preserved."));
+        return;
+    }
     sJob.running = true;
     sJob.Reset();
     sJob.Say(T("Importando...", "Importing..."));
@@ -2847,6 +2858,9 @@ static bool HdModCard() {
     if (mediaLanguage)
         ImGui::TextWrapped("%s", T("La etiqueta del audio fue declarada por el usuario. Si falta una escena de esa variante, se usa la original de GBA.",
                                   "The audio label was declared by the user. If that variant lacks a scene, the original GBA scene is used."));
+    if (mediaLanguage == 2)
+        ImGui::TextWrapped("%s", T("Dos vídeos cortos conservan la versión GBA hasta verificar los tiempos de la edición JP; las escenas completas usan tu importación JP.",
+                                  "Two short movies retain the GBA version until JP timing is verified; full scenes use your JP import."));
     bool selectedMovies = mediaLanguage ? variantMovies[mediaLanguage - 1] : haveBase;
     bool selectedScenes = mediaLanguage ? variantScenes[mediaLanguage - 1] : haveScenes > 0;
     changed |= GatedToggle(T("Videos HD", "HD movies"),

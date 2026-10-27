@@ -517,6 +517,25 @@ static void PortConfigLoadFile(void) {
    with a decorative border, almost an emulator but native. */
 /* What the launcher imported (the HD mod, HD_MOD.md) or found (the Japanese ROM of the undub): an option whose files
    are missing is never turned on (checked once a second at most). */
+static Uint64 sAssetWhen[PORT_ASSET_COUNT];
+static Uint64 sMediaVariantWhen[2][2];
+static int sMediaVariantKnown[2][2], sMediaVariantResult[2][2];
+int PortHdMediaVariantAvailable(int language, int component) {
+    Uint64 now = SDL_GetTicks();
+    int index = language - 1;
+    if (index < 0 || index > 1 || component < 0 || component > 1) return 0;
+    if (!sMediaVariantKnown[index][component] || now - sMediaVariantWhen[index][component] >= 1000) {
+        sMediaVariantResult[index][component] = PortHdMediaCachedAvailable(PortConfigPath(""), language, component);
+        sMediaVariantWhen[index][component] = now; sMediaVariantKnown[index][component] = 1;
+    }
+    return sMediaVariantResult[index][component];
+}
+void PortHdMediaInvalidate(void) {
+    memset(sAssetWhen, 0, sizeof(sAssetWhen));
+    memset(sMediaVariantKnown, 0, sizeof(sMediaVariantKnown));
+    PortHdMediaAvailabilityReset();
+    PortHdMovieInvalidatePaths();
+}
 int PortAssetPresent(int asset) {
     extern int PortUndubAvailable(void);
     static const char* const files[PORT_ASSET_COUNT][2] = {
@@ -528,7 +547,6 @@ int PortAssetPresent(int asset) {
         { NULL, NULL },
     };
     static int result[PORT_ASSET_COUNT];
-    static Uint64 when[PORT_ASSET_COUNT];
     static int mediaLanguage = -1;
     Uint64 now = SDL_GetTicks();
     int i;
@@ -537,14 +555,14 @@ int PortAssetPresent(int asset) {
     if (asset == PORT_ASSET_UNDUB)
         return PortUndubAvailable();
     if (mediaLanguage != gPortConfig.hdMediaLanguage) {
-        memset(when, 0, sizeof(when));
+        memset(sAssetWhen, 0, sizeof(sAssetWhen));
         mediaLanguage = gPortConfig.hdMediaLanguage;
     }
-    if (!when[asset] || now - when[asset] > 1000) {
+    if (!sAssetWhen[asset] || now - sAssetWhen[asset] > 1000) {
         result[asset] = 0;
         if (gPortConfig.hdMediaLanguage && (asset == PORT_ASSET_HD_MOVIES || asset == PORT_ASSET_HD_SCENES)) {
-            result[asset] = PortHdMediaAvailable(PortConfigPath(""), gPortConfig.hdMediaLanguage, asset == PORT_ASSET_HD_SCENES);
-            when[asset] = now ? now : 1;
+            result[asset] = PortHdMediaVariantAvailable(gPortConfig.hdMediaLanguage, asset == PORT_ASSET_HD_SCENES);
+            sAssetWhen[asset] = now ? now : 1;
             return result[asset];
         }
         for (i = 0; i < 2 && files[asset][i] && !result[asset]; i++) {
@@ -553,7 +571,7 @@ int PortAssetPresent(int asset) {
             if (f)
                 fclose(f);
         }
-        when[asset] = now ? now : 1;
+        sAssetWhen[asset] = now ? now : 1;
     }
     return result[asset];
 }

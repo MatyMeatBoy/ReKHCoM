@@ -17,8 +17,14 @@ def main():
     if not compiler:
         compiler = str(sorted((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/clang++.exe'))[-1])
     with tempfile.TemporaryDirectory(prefix='khcom-media-variants-') as folder:
+        movie = (ROOT / 'port/src/port_hdmovie.c').read_text(encoding='utf-8')
+        start = movie.index('static int sMoviePathCached')
+        Path(folder, 'hd_media_path_cache.inc').write_text(movie[start:movie.index('static void MoviePath(', start)], encoding='utf-8')
+        ui = (ROOT / 'port/src/port_ui.c').read_text(encoding='utf-8')
+        start = ui.index('static int HdMediaSelectionEnabled(')
+        Path(folder, 'hd_media_ui.inc').write_text(ui[start:ui.index('static int ItemEnabled(', start)], encoding='utf-8')
         exe = Path(folder) / ('test.exe' if os.name == 'nt' else 'test')
-        subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-static',
+        subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-static', '-I' + folder,
                         str(ROOT / 'port/tools/test_hd_media_variants.cpp'), '-o', str(exe)], check=True)
         subprocess.run([str(exe), str(Path(folder) / 'data')], check=True, timeout=20)
 

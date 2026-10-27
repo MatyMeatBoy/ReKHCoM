@@ -25,6 +25,9 @@ static inline FILE* PortHdMediaOpenFile(const char* path) {
 #endif
 }
 static inline const char* PortHdMediaLabel(int mode) { return mode == 1 ? "en" : mode == 2 ? "ja" : NULL; }
+static inline int PortHdMediaClipAllowed(int mode, int offsetSeconds) {
+    return mode != 2 || offsetSeconds == 0; /* JP clip offsets need owned-source timing QA */
+}
 static inline int PortHdMediaToken(const char* text, const char* extra) {
     size_t i;
     if (!text || !*text) return 0;
@@ -57,7 +60,8 @@ static inline int PortHdMediaLine(FILE* f, char* line, size_t size) {
     if (!fgets(line, (int)size, f)) return 0;
     n = strlen(line);
     if (n == size - 1 && line[n - 1] != '\n') return 0;
-    line[strcspn(line, "\r\n")] = 0;
+    for (n = 0; line[n] && line[n] != '\r' && line[n] != '\n'; ++n) {}
+    line[n] = 0;
     return 1;
 }
 static inline int PortHdMediaReadActive(FILE* f, char generations[2][64]) {
@@ -82,27 +86,41 @@ static inline int PortHdMediaActive(const char* data, int mode, char generations
     if (!f) return 0;
     ok = PortHdMediaReadActive(f, generations); fclose(f); return ok;
 }
+static inline int PortHdMediaNumber(const char* text, uint64_t limit, uint64_t* out) {
+    uint64_t value = 0;
+    if (!*text) return 0;
+    for (; *text; ++text) {
+        unsigned digit = (unsigned)(*text - '0');
+        if (digit > 9 || digit > limit || value > (limit - digit) / 10) return 0;
+        value = value * 10 + digit;
+    }
+    *out = value; return 1;
+}
 static inline FILE* PortHdMediaManifest(const char* base, int mode, PortHdMediaInfo* info) {
-    char path[1400], line[256], evidence[16]; int used = 0;
+    char path[1400], line[256], evidence[16], q[4], movies[4], scenes[4], count[4]; int used = 0;
+    uint64_t qualityValue, moviesValue, scenesValue, countValue;
     FILE* f;
     snprintf(path, sizeof(path), "%s/media.meta", base);
     f = PortHdMediaOpenFile(path);
     if (!f) return NULL;
     if (!PortHdMediaLine(f, line, sizeof(line)) ||
-        sscanf(line, "REKHCOM_MEDIA_V1 %3s %15s %63s %d %d %d %d%n", info->label, evidence, info->source,
-               &info->quality, &info->movies, &info->scenes, &info->count, &used) != 7 || !used || line[used] ||
+        sscanf(line, "REKHCOM_MEDIA_V1 %3s %15s %63s %3s %3s %3s %3s%n", info->label, evidence, info->source,
+               q, movies, scenes, count, &used) != 7 || !used || line[used] ||
         !PortHdMediaLabel(mode) || strcmp(info->label, PortHdMediaLabel(mode)) || strcmp(evidence, "user") ||
-        !PortHdMediaToken(info->source, "") || info->quality < 0 || info->quality > 2 ||
-        info->movies < 0 || info->movies > 1 || info->scenes < 0 || info->scenes > 1 || info->count < 1 || info->count > 256) {
+        !PortHdMediaToken(info->source, "") || !PortHdMediaNumber(q, 2, &qualityValue) ||
+        !PortHdMediaNumber(movies, 1, &moviesValue) || !PortHdMediaNumber(scenes, 1, &scenesValue) ||
+        !PortHdMediaNumber(count, 256, &countValue) || !countValue) {
         fclose(f); return NULL;
     }
+    info->quality = (int)qualityValue; info->movies = (int)moviesValue;
+    info->scenes = (int)scenesValue; info->count = (int)countValue;
     return f;
 }
 static inline int PortHdMediaEntry(FILE* f, char member[128], uint64_t* bytes) {
-    char line[256]; unsigned long long size = 0; int used = 0;
-    if (!PortHdMediaLine(f, line, sizeof(line)) || sscanf(line, "%127s %llu%n", member, &size, &used) != 2 ||
-        !used || line[used] || !PortHdMediaMember(member) || size < 16 || size > 1024u * 1024u * 1024u) return 0;
-    *bytes = (uint64_t)size;
+    char line[256], number[24]; uint64_t size = 0; int used = 0;
+    if (!PortHdMediaLine(f, line, sizeof(line)) || sscanf(line, "%127s %23s%n", member, number, &used) != 2 ||
+        !used || line[used] || !PortHdMediaMember(member) || !PortHdMediaNumber(number, 1024u * 1024u * 1024u, &size) || size < 16) return 0;
+    *bytes = size;
     return 1;
 }
 static inline uint32_t PortHdMediaBe32(const unsigned char* p) {
@@ -159,6 +177,24 @@ static inline int PortHdMediaAvailable(const char* data, int mode, int component
     return component >= 0 && component < 2 && PortHdMediaActive(data, mode, generations) &&
            PortHdMediaGeneration(data, mode, generations[component], base, sizeof(base)) &&
            PortHdMediaCheck(base, mode, component, &info, NULL, NULL);
+}
+typedef struct PortHdMediaAvailabilityCache {
+    char root[1024], generation[64];
+    int known, result;
+} PortHdMediaAvailabilityCache;
+static PortHdMediaAvailabilityCache sPortHdMediaAvailability[4];
+static inline void PortHdMediaAvailabilityReset(void) { memset(sPortHdMediaAvailability, 0, sizeof(sPortHdMediaAvailability)); }
+static inline int PortHdMediaCachedAvailable(const char* data, int mode, int component) {
+    char generations[2][64]; PortHdMediaAvailabilityCache* cache;
+    if (mode < 1 || mode > 2 || component < 0 || component > 1) return 0;
+    if (strlen(data) >= sizeof(sPortHdMediaAvailability[0].root)) return PortHdMediaAvailable(data, mode, component);
+    if (!PortHdMediaActive(data, mode, generations)) return 0;
+    cache = &sPortHdMediaAvailability[(mode - 1) * 2 + component];
+    if (!cache->known || strcmp(cache->root, data) || strcmp(cache->generation, generations[component])) {
+        strcpy(cache->root, data); strcpy(cache->generation, generations[component]);
+        cache->result = PortHdMediaAvailable(data, mode, component); cache->known = 1;
+    }
+    return cache->result; // immutable generation: only tiny index reads until explicit rescan
 }
 static inline int PortHdMediaResolve(const char* data, int mode, const char* name, char* out, size_t size) {
     char generations[2][64], base[1300], member[128]; PortHdMediaInfo info;
