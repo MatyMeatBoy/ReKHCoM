@@ -165,4 +165,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-target-budget | Code: bound HD gauge render target memory and renderer dimensions | en_curso | codex-hud-budget | — | — | 2026-10-27T05:26:06.094829+00:00 |
 | android-optiport-package | Playable isolated Android OptiPort test package | en_revision | codex-android-test | build/android-optiport-package | User authorized separate test builds for issue272 without replacing stable app data | 2026-10-27T05:29:17.892180+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T05:27:32.730069+00:00)
+Integrador: libre
