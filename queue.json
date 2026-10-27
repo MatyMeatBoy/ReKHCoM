@@ -4447,15 +4447,16 @@
     "optiport-linux64-streaming": {
       "id": "optiport-linux64-streaming",
       "piece": "Linux64 movie EOF clock and cancelable decoder pipes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux64-streaming",
       "created_at": "2026-10-27T05:18:27.307042+00:00",
-      "updated_at": "2026-10-27T05:18:27.307042+00:00",
+      "updated_at": "2026-10-27T05:18:41.547143+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza OptiPort y workers; coordinador delega correccion P1",
       "reference": "port/linux64/hdmovie_ffmpeg.inc",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-27T05:18:41.547143+00:00"
     }
   },
   "integrator": {
@@ -4464,7 +4465,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:18:34.125295+00:00",
+  "updated_at": "2026-10-27T05:18:41.547143+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
