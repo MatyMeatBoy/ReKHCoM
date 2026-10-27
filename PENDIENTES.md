@@ -276,5 +276,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-launcher-gl-startup-guard | Guard launcher OpenGL startup failures with actual consumer regression | en_curso | sol-low-scenes-states | — | — | 2026-10-27T20:09:13.767252+00:00 |
 | divisor64-reachable-audit | Audit reachable native64 zero divisors beyond MapInspect/Moogle | en_curso | sol-low-diverse-saves | — | — | 2026-10-27T20:10:46.733037+00:00 |
 | gallery-gba-movie-hd-music-overlap-163 | Bug reportado por Pedro #163: Dearly Beloved se superpone a peliculas GBA de galeria con HD music activo; reproducir ruta real, preservar musica de pelicula y restaurar titulo al salir sin mezclar estados. | pendiente | — | — | Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild. | 2026-10-27T20:11:43.240118+00:00 |
+| gallery-sora-order-descriptions-163 | Feedback #163: Monstro y Hundred Acre Wood aparecen despues del final de Sora; descripciones de pisos repetidas End of floor1/2. Revisar orden y textos de la lista real. Aplazado frente a cuelgues, sin duplicar fixes HD ya confirmados por Pedro. | pendiente | — | — | Usuario27/10: leer issues/respuestas nuevas, push, cubrir bugs con prioridad total y entregar prebuild. | 2026-10-27T20:11:48.215524+00:00 |
 
 Integrador: libre
