@@ -5100,10 +5100,10 @@
     "linux-unified-desktop-deck-package": {
       "id": "linux-unified-desktop-deck-package",
       "piece": "Unificar paquete Linux x86/x64 desktop+SteamDeck; Anbernic beta; docs y contratos de packaging sin heavy build",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux-unified-package",
       "created_at": "2026-10-27T08:21:24.008616+00:00",
-      "updated_at": "2026-10-27T08:34:15.855985+00:00",
+      "updated_at": "2026-10-27T08:34:24.925986+00:00",
       "branch": "fix/linux-unified-desktop-deck-package",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/321",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5118,9 +5118,15 @@
           "at": "2026-10-27T08:34:10.377201+00:00",
           "owner": "codex-linux-unified-package",
           "detail": "Head 158607e50c0d0cd3f017fd182dd75e1f4308e450 agrega stage/gate exclusivo Windows x86-x64; draft y ownlist Quiver glob compatible upstream, no regex libre; pinned metadata assets historicos intactos/no publicacion externa. Fixture legacy+combined+PS5 stagea solo Windows combinado y seleccion unica Windows/Linux/Android. RED observado luego 3 Linux+4 Android GREEN; pycompile/diffcheck PASS. Sin heavybuild. WorktreeNeeded si PR abierto; root revision/merge luego build serial."
+        },
+        {
+          "at": "2026-10-27T08:34:24.925986+00:00",
+          "owner": "codex-linux-unified-package",
+          "detail": "Verified and reviewed; merged dce5ef1c6540ec7697cc562d9cc75f8583ac3052"
         }
       ],
-      "claimed_at": "2026-10-27T08:21:29.253133+00:00"
+      "claimed_at": "2026-10-27T08:21:29.253133+00:00",
+      "completed_at": "2026-10-27T08:34:24.925986+00:00"
     },
     "hud-enemy-gauge-static-track": {
       "id": "hud-enemy-gauge-static-track",
@@ -5184,7 +5190,7 @@
     "created_at": "2026-10-27T08:30:24.057898+00:00",
     "updated_at": "2026-10-27T08:30:24.057898+00:00"
   },
-  "updated_at": "2026-10-27T08:34:15.855985+00:00",
+  "updated_at": "2026-10-27T08:34:24.925986+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
