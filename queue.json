@@ -7209,13 +7209,13 @@
     "issue386-mapcards-stack": {
       "id": "issue386-mapcards-stack",
       "piece": "P0 issue386 userpre1EU64 0xC00000FD on opening MapCards submenu; actual reproduction and fixed regression32/64",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-crash386",
       "created_at": "2026-10-27T19:02:37.145264+00:00",
-      "updated_at": "2026-10-27T19:40:06.225269+00:00",
+      "updated_at": "2026-10-27T20:07:47.643406+00:00",
       "branch": "fix/mapcards-zero-scroll",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/389",
-      "approval": "Usuario27/10 bugsprioridadtotal; confirma alabrirsubmenuNaipesMapa",
+      "approval": "usuario-20261027-bugs",
       "reference": null,
       "evidence": [
         {
@@ -7227,9 +7227,15 @@
           "at": "2026-10-27T19:40:06.225269+00:00",
           "owner": "codex-crash386",
           "detail": "CorePR389actuallyMERGED64da671f1107b2235514d23164f79130ae1a773d underpriorintegratorlock; parentretainsworkflowstateuntilcombinedartifactQA thenintegrado allowed. 812x86/x64independentPASS, userSRAMrootrepro original094vsinterimguardexit0; noall64closure."
+        },
+        {
+          "at": "2026-10-27T20:07:47.643406+00:00",
+          "owner": "codex-crash386",
+          "detail": "PR389 merged64da671f, with387 safe reporter and388 sibling Moogle. Root fresh actual rootSAV SHA1e34f6e6 D3D11HD1 combined7475host/04fguest menu1601 through1900 exit0. Independent verify6runs3SAVx32/64 modes and returnPASS; Moogle empty/one/multipage. Counterfactual newreporter+oldguest preserved originalc0000094 guest+1314b9; source10/11/12boundarytests x86/x64. This closes reproducedMapInspect defect, not all documented64 crashes or hardware reports."
         }
       ],
-      "claimed_at": "2026-10-27T19:02:42.404866+00:00"
+      "claimed_at": "2026-10-27T19:02:42.404866+00:00",
+      "completed_at": "2026-10-27T20:07:47.643406+00:00"
     },
     "v22-64bit-crash-pattern-ledger": {
       "id": "v22-64bit-crash-pattern-ledger",
@@ -7479,7 +7485,7 @@
     "created_at": "2026-10-27T20:07:01.679844+00:00",
     "updated_at": "2026-10-27T20:07:01.679844+00:00"
   },
-  "updated_at": "2026-10-27T20:07:01.680917+00:00",
+  "updated_at": "2026-10-27T20:07:47.643406+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
