@@ -4184,20 +4184,26 @@
     "hd-sprite-budget-guard": {
       "id": "hd-sprite-budget-guard",
       "piece": "HD sprite header and cache budget guard",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-hd-sprite-guard",
       "created_at": "2026-10-27T04:24:56.848876+00:00",
-      "updated_at": "2026-10-27T04:25:04.512763+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T04:27:54.453617+00:00",
+      "branch": "fix/hd-sprite-guard",
       "pr": null,
       "approval": null,
       "reference": "Auditoria build/hd-audit-worker.md; tarea usuario 2026-10-27",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T04:27:54.453617+00:00",
+          "owner": "codex-hd-sprite-guard",
+          "detail": "TDD RED invalid-header assertion; GREEN production Load injected harness native32MiB and guest12MiB; no renderer/game run. Find/Queue late fallback remains outside bounded scope."
+        }
+      ],
       "claimed_at": "2026-10-27T04:25:04.512763+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T04:25:04.512763+00:00",
+  "updated_at": "2026-10-27T04:27:54.453617+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
