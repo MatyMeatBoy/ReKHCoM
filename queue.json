@@ -6980,12 +6980,12 @@
     "optiport-artifact-freshness": {
       "id": "optiport-artifact-freshness",
       "piece": "OptiPort canonical: distinguir código/import/recipes/quality de fixture actual, registrar legacy evidence y preservar artefactos ya entregados inmutables",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-artifact-freshness",
       "created_at": "2026-10-27T18:43:02.266316+00:00",
-      "updated_at": "2026-10-27T18:45:12.309262+00:00",
+      "updated_at": "2026-10-27T18:48:38.020902+00:00",
       "branch": "docs/artifact-freshness",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/8",
       "approval": "Usuario explícito/coordinador27/10 trasreleasepre1; PRcanonical separado",
       "reference": null,
       "evidence": [
@@ -6993,6 +6993,11 @@
           "at": "2026-10-27T18:45:12.309262+00:00",
           "owner": "codex-artifact-freshness",
           "detail": "Canonical upstream218ae verified; own worktree kh-worktrees/optiport-artifact-freshness; real pre-edit RED incidents documented in pruebas/optiport-artifact-freshness/behavior-validation.md; 71.4 denominator14 unchanged"
+        },
+        {
+          "at": "2026-10-27T18:48:38.020902+00:00",
+          "owner": "codex-artifact-freshness",
+          "detail": "b7c82d15e5a94e10cb8b89fbde59e047e0fe4254; 2reference modules20lines; skill-creator quick_validate PASS diffcheck clean; real pre-edit cases and application review in pruebas/optiport-artifact-freshness/behavior-validation.md; legacy premium capture index saved, originals preserved; progress71.4 denominator14 unchanged"
         }
       ],
       "claimed_at": "2026-10-27T18:43:09.493972+00:00"
@@ -7013,7 +7018,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T18:48:05.984482+00:00",
+  "updated_at": "2026-10-27T18:48:38.020902+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
