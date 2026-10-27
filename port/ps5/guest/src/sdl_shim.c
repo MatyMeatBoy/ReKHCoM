@@ -777,11 +777,37 @@ static void StateKeys(const HostPad* prev, const HostPad* now) {
     }
 }
 
+/* Optional host keyboard events: old hosts return -1 and retain their pad-only path. */
+static void RefreshHostKeys(void) {
+    static int supported = 1;
+    char text[96];
+    if (!supported) return;
+    for (int i = 0; i < 32; i++) {
+        int n = h_getenv("KHCOM_HOST_KEY_EVENT", text, sizeof(text));
+        unsigned type, key, mod, repeat;
+        if (n < 0) { supported = 0; return; }
+        if (!n) return;
+        if (sscanf(text, "%u,%u,%u,%u", &type, &key, &mod, &repeat) == 4 &&
+            (type == SDL_EVENT_KEY_DOWN || type == SDL_EVENT_KEY_UP || type == SDL_EVENT_WINDOW_FOCUS_LOST)) {
+            SDL_Event event;
+            memset(&event, 0, sizeof(event));
+            event.type = type;
+            event.key.key = key;
+            event.key.mod = (SDL_Keymod)mod;
+            event.key.repeat = repeat != 0;
+            event.key.down = type == SDL_EVENT_KEY_DOWN;
+            Push(&event);
+        }
+    }
+}
+
 static void Refresh(void) {
     HostPad now[HOSTPAD_MAX];
     int i, b;
     memset(now, 0, sizeof(now));
+    RefreshHostKeys(); /* capability before pad poll disables duplicate keyboard-to-pad emulation */
     h_pad_poll(now, HOSTPAD_MAX);
+    RefreshHostKeys();
     TouchpadHold(now);
     for (i = 0; i < HOSTPAD_MAX; i++) {
         Pad* p = &sPads[i];

@@ -52,6 +52,20 @@ int main(void) {
         assert(sWindow);
         sRenderer = SDL_CreateRenderer(sWindow, NULL);
         assert(sRenderer);
+        SDL_Event key = {0}; char eventText[96];
+        key.type = SDL_EVENT_KEY_DOWN; key.key.key = SDLK_F5; key.key.down = true;
+        assert(SDL_PushEvent(&key)); Pump();
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0);
+        assert(!strcmp(eventText, "768,1073741886,0,0"));
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) == 0);
+        key.type = SDL_EVENT_KEY_UP; key.key.down = false;
+        assert(SDL_PushEvent(&key)); Pump();
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0);
+        assert(!strcmp(eventText, "769,1073741886,0,0"));
+        for (int n = 0; n < 70; n++) QueueKey(&key);
+        assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0);
+        assert(!strncmp(eventText, "524,", 4)); /* focus lost clears held keys after queue overflow */
+        while (B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) > 0) {}
         int old = B_tex_create(pixels, 2, 2, 0);
         assert(old >= 0 && HostTextureSlot(old) >= 0);
         SDL_Event reset = {0};

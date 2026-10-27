@@ -32,8 +32,13 @@ the native save names: EU kh_com.sav, US kh_com_us.sav, JP kh_com_jp.sav;
 bank N uses *_bankN.sav. kh_com.ini and all assets use the same data root.
 Windows filesystem calls convert UTF-8 paths to UTF-16. Save replacement uses
 MoveFileExW(REPLACE_EXISTING | WRITE_THROUGH), including an existing save file.
-This preserves in-game SRAM saves. F5/F6 quickstates are NOT currently supported
-by the x32 guest: build_ps5 excludes port_state. This is a feature difference.
+This preserves in-game SRAM saves. The guest uses state_ps5.c for quickstates,
+with strict per-build validation: native32 and x32 snapshots are not interchangeable.
+Optional KHCOM_HOST_KEY_EVENT queries forward real key-down/up events to the guest,
+including F5 save, F8 load and F6/F7 slot selection when enabled in Cheats.
+Unsupported hosts return -1 and keep the existing gamepad-only path.
+Keyboard-to-pad emulation is disabled after negotiation so remapping does not
+produce duplicate actions; queue overflow releases held actions via focus-lost.
 
 ## ABI and renderer
 
