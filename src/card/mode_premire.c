@@ -207,7 +207,13 @@ u8 HCEffectName_1(HcEffectNameWork* work, void* task) {
     switch (work->side) {
     case CARD_SIDE_SORA:
         div = gHcEffectDefs[gBtlWork->hcEffect].count << 8;
+#ifdef PLATFORM_PC
+        /* NONE has count 0 during Dispel/replacement/teardown. Match the GBA
+           zero quotient, then keep the existing task/state checks unchanged. */
+        work->blinkInterval = (u32)DIV0((s16)gBtlWork->hcEffectCount << 16, div) >> 3;
+#else
         work->blinkInterval = (u32)(((s16)gBtlWork->hcEffectCount << 16) / div) >> 3;
+#endif
         state = gCardBattleState;
 
         if (state->soraHcEffect == HC_EFFECT_NONE) {
@@ -236,7 +242,11 @@ u8 HCEffectName_1(HcEffectNameWork* work, void* task) {
         break;
     case CARD_SIDE_RIKU:
         div = gHcEffectDefs[gRikuBtlWork->hcEffect].count << 8;
+#ifdef PLATFORM_PC
+        work->blinkInterval = (u32)DIV0((s16)gRikuBtlWork->hcEffectCount << 16, div) >> 3;
+#else
         work->blinkInterval = (u32)(((s16)gRikuBtlWork->hcEffectCount << 16) / div) >> 3;
+#endif
         state = gCardBattleState;
 
         if (state->rikuHcEffect == HC_EFFECT_NONE) {
