@@ -179,4 +179,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | cartas-hd-encaje | Cartas HD pequeñas: encaje de imagen (Simba, Genio, verde, gris) en todas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:18.114890+00:00 |
 | escenas-retrato-x4 | Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas | pendiente | — | — | Pendiente: revisión del usuario en Atlas (cambio visual) | 2026-10-27T06:31:22.665133+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T06:31:28.522283+00:00)
