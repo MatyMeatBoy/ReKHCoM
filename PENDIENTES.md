@@ -218,4 +218,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v21-final-integration-qa | Compose reviewed2.1 candidates for final GPU and platform QA; preserve drafts until verified, publish stable2.1 when ready | integrado | codex-v21-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/351 | Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas | 2026-10-27T12:35:07.537464+00:00 |
 | hd-stock-counter-fit | Encaje mínimo contador stocks Sora/enemigo con barra HD superior | integrado | device_profiles_sol | https://github.com/MatyMeatBoy/ReKHCoM/pull/352 | AGENTS.md visual v2.1 user exception 27/10: direct coordinator review supersedes Atlas; root final candidate QA and explicit integration reconciliation authorization. | 2026-10-27T12:37:31.477936+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T12:34:42.999736+00:00)
+Integrador: libre
