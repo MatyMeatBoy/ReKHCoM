@@ -7483,10 +7483,23 @@
         }
       ],
       "claimed_at": "2026-10-27T20:06:54.957243+00:00"
+    },
+    "sol-scd-parser-safety": {
+      "id": "sol-scd-parser-safety",
+      "piece": "Bound SCD auxiliary chunks and empty Ogg import failure",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T20:08:08.349422+00:00",
+      "updated_at": "2026-10-27T20:08:08.349422+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User focus bugs crashes root delegated import followup",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:08:00.889210+00:00",
+  "updated_at": "2026-10-27T20:08:08.349422+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
