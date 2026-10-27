@@ -7905,15 +7905,21 @@
     "card-native-crown-corners": {
       "id": "card-native-crown-corners",
       "piece": "Preserve native small-card crown/window closure corner cells under HD, per-card colours unchanged; verify layered renderer and recipe families",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-card-corners",
       "created_at": "2026-10-27T22:19:47.262893+00:00",
-      "updated_at": "2026-10-27T22:19:52.139295+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T22:29:33.969976+00:00",
+      "branch": "fix/small-card-native-corners",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/408",
       "approval": "Usuario27octliteralfranja+2cornerpixels; rootdelegacion20261027",
       "reference": "pruebas/key-hilt-black-pixels/all-card-seams/inventory.json",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T22:29:33.969976+00:00",
+          "owner": "codex-card-corners",
+          "detail": "Head08ea3ac228 codeonlyforeground2cells; noHDtexture/row15/valueedits. REDproductionbranches then105layoutsynthetic+99originalcolourpairsPASS, flips/affine/partialpiece/ownership; allpreviousKK/Olympia/frame/firstframefallbackPASS. SDLproductionQuad+cornerhelper93actualHDx30transformations93093cornerpixelsbefore->0mismatchafter,0outsidechanges. Alpha-maskcandidateREJECTEDfilterspill. FullgameGPUcapturependingintegrator. SharedPPUnative32/x32EUUSJPsyntaxPASS. OriginalSV/installsuntouched; noAtlasrequiredperuserdirectinspection."
+        }
+      ],
       "claimed_at": "2026-10-27T22:19:52.139295+00:00"
     },
     "geppetto-scene-zoom-x4": {
@@ -7991,7 +7997,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T22:28:46.256973+00:00",
+  "updated_at": "2026-10-27T22:29:33.969976+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
