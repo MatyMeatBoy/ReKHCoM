@@ -249,4 +249,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue380-door-spotlight | Issue380: reproducir y corregir Sora y puerta invisibles en menu naipes mapa; antes/despues visual32/64 | en_curso | codex-door380 | — | Usuario prioriza Sora con puerta27/10 y pide resolver issues | 2026-10-27T18:21:28.131243+00:00 |
 | android374-startup-jafar | Investigar Moto Edge60 inicio y postJafar374, separar versión APK y mecanismos83/272; reproducir sólo checks CPU pertinentes | en_revision | codex-moto374 | codex/android374-investigation | — | 2026-10-27T18:25:13.221444+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T18:27:49.096458+00:00)
