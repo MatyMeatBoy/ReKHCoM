@@ -6000,10 +6000,23 @@
       ],
       "claimed_at": "2026-10-27T12:07:09.318089+00:00",
       "completed_at": "2026-10-27T12:37:31.477936+00:00"
+    },
+    "linux-native-launcher-336": {
+      "id": "linux-native-launcher-336",
+      "piece": "Native Linux helper336: Play,preparedHDtransaction,ownedsourcePythonimport,noWine; KDE/Zenity/CLI, packagingonly",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T12:47:17.440359+00:00",
+      "updated_at": "2026-10-27T12:47:17.440359+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario exige336en2.1; rootautorizahelperacotado sinfullGUI niWindowschanges",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T12:44:03.508095+00:00",
+  "updated_at": "2026-10-27T12:47:17.440359+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
