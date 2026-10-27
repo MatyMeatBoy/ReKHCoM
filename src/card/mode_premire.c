@@ -206,6 +206,16 @@ u8 HCEffectName_1(HcEffectNameWork* work, void* task) {
 
     switch (work->side) {
     case CARD_SIDE_SORA:
+#ifdef PLATFORM_PC
+        /* Dispel/Mimic or battle teardown can clear the effective effect while
+           its name task still exists. NONE has count 0: retire the task before
+           computing its blink ratio, as the inactive-effect path below does. */
+        if (gBtlWork->hcEffect == HC_EFFECT_NONE) {
+            gCardBattleState->soraHcEffect = HC_EFFECT_NONE;
+            gCardBattleState->soraHcEffectReplaced = FALSE;
+            return 0;
+        }
+#endif
         div = gHcEffectDefs[gBtlWork->hcEffect].count << 8;
         work->blinkInterval = (u32)(((s16)gBtlWork->hcEffectCount << 16) / div) >> 3;
         state = gCardBattleState;
@@ -235,6 +245,13 @@ u8 HCEffectName_1(HcEffectNameWork* work, void* task) {
         SplitFourDigits(gBtlWork->hcEffectCount, &work->countThousands);
         break;
     case CARD_SIDE_RIKU:
+#ifdef PLATFORM_PC
+        if (gRikuBtlWork->hcEffect == HC_EFFECT_NONE) {
+            gCardBattleState->rikuHcEffect = HC_EFFECT_NONE;
+            gCardBattleState->rikuHcEffectReplaced = FALSE;
+            return 0;
+        }
+#endif
         div = gHcEffectDefs[gRikuBtlWork->hcEffect].count << 8;
         work->blinkInterval = (u32)(((s16)gRikuBtlWork->hcEffectCount << 16) / div) >> 3;
         state = gCardBattleState;
