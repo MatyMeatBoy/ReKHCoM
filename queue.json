@@ -8193,10 +8193,23 @@
       ],
       "claimed_at": "2026-10-27T23:55:21.627669+00:00",
       "completed_at": "2026-10-27T23:55:51.541455+00:00"
+    },
+    "issue410-hd-music-input-rate": {
+      "id": "issue410-hd-music-input-rate",
+      "piece": "Reported HD music too fast Windows pre1: reproduce actual mixer consumption at63072/65536 vs host48000; preserve original GBA clock and legacy ring/device units",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T23:56:38.603698+00:00",
+      "updated_at": "2026-10-27T23:56:38.603698+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: leer nuevosissues, resolver patrones relacionados audio allplatforms; report410 now corroborates source mismatch hypothesis",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/410",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:55:56.279537+00:00",
+  "updated_at": "2026-10-27T23:56:38.603698+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
