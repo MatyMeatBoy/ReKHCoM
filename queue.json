@@ -4305,6 +4305,19 @@
       "reference": "fix/hd-layout-ready",
       "evidence": [],
       "claimed_at": "2026-10-27T05:05:21.867134+00:00"
+    },
+    "media-readiness-fallbacks": {
+      "id": "media-readiness-fallbacks",
+      "piece": "Video readiness and cleanup fallbacks Android and Windows MF",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T05:08:26.698519+00:00",
+      "updated_at": "2026-10-27T05:08:26.698519+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User authorized indispensable fallbacks before Deck Android test builds",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": {
@@ -4313,7 +4326,7 @@
     "created_at": "2026-10-27T05:08:08.674562+00:00",
     "updated_at": "2026-10-27T05:08:08.674562+00:00"
   },
-  "updated_at": "2026-10-27T05:08:08.677087+00:00",
+  "updated_at": "2026-10-27T05:08:26.698519+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
