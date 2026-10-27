@@ -19,11 +19,20 @@ python port/linuxarm64/build_linuxarm64.py --jobs 1
 
 `--component host` and `--component guest` build either half independently.
 The builder writes `build/linuxarm64/out/binarm64/rekhcom-arm64`,
-`binarm64/guest-{eu,us,jp}.macho` and `libarm64/`. Copy those directories into
-the universal Linux bundle alongside `bin/lib` (x86), `bin64/lib64` (x86-64)
-and `binarmhf/libarmhf` (ARM32). The wrapper selects CPU architecture using
-`uname -m`, honors the existing automatic/force32/force64 preference and boot
-marker contract, and never launches an x86 guest on ARM.
+`binarm64/guest-{eu,us,jp}.macho` and `libarm64/`. These are experimental
+components, not a complete validated release archive. No ARM64 package is
+added to normal release staging and normal preparation does not start ARM64
+work unless `--arch arm64` is explicit. Current desktop/Deck x86+x64 and armhf
+Anbernic artifact names keep their existing meaning.
+
+For a future isolated test folder, put those components alongside the common
+assets, icon, `roms/`, `ReKHCoM.sh` and `LINUX.md` from the matching source
+package. Optional ARM32 binaries/loader must be placed in separate
+`binarmhf/` and `libarmhf/` directories; never reuse x86 `bin/lib` as ARM32.
+The wrapper selects CPU architecture using `uname -m`, honors automatic /
+force32 / force64 and the ready-marker contract, and never launches x86 on ARM.
+Do not relabel a desktop archive as ARM64 or distribute this manual staging
+as validated hardware support.
 
 The loader reserves free addresses below 4 GiB without replacing existing
 mappings. It validates Mach-O commands, segment boundaries, pointer rebases and
@@ -49,3 +58,27 @@ The small `port/tools/test_linuxarm64_loader.c` probe tests relocation decoding,
 invalid streams and pointer sliding without executing game instructions. It
 can run on Windows with LLVM or on POSIX. The Windows path uses VirtualAlloc
 only for a 64 KiB scratch region, not as a simulation of the Linux mmap loader.
+
+## Integration evidence — 27 October 2026
+
+Source spike9300d2992 is preserved on codex/linux-arm64-feasibility. This PR
+cherry-picks only that commit onto mainc8109de7d, retaining current renderer
+reset/texture ownership, HD streaming, safe desktop entry and runtime changes.
+Nested khcom-worktrees toolchain discovery is supported. Guest configuration
+is idempotent and leaves touch/PPU-thread options disabled for this target.
+
+Actual lightweight checks: ARM64 ELF LP64 host syntax using existing Debian
+arm64 ABI sysroot and SDL headers; ELF AArch64 LP64 / Mach-O arm64_32 ILP32
+objects with pointer/bridge assertions; guest UI/gallery/movie syntax;
+builder contract mocks; portable loader ULEB/opcode/bounds/slide tests; shipped
+wrapper architecture dispatch and no second session after guest entry.
+Malformed ULEB offset plus ADD_ADDR_IMM wrapped to zero in the old rebaser
+(RED); offsets/additions now reject overflow (GREEN). These checks execute
+no game instructions. Sysroot/SDK files are read only; no new dependency build.
+
+Still required before promoting this target: full serial SDL/host and EU/US/JP
+guest link, validate complete actual Mach-O segment/rebase layout (including
+forced relocation), then boot/title/scene/audio/input/save/quit tests in isolated
+AArch64 Linux or an emulator, followed by real device GPU/driver/performance QA.
+Current loader tests mock mappings on Windows; they do not prove mmap/protection
+or instruction execution on Linux. No FPS, driver, handheld or release claim.

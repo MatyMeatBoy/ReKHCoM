@@ -22,6 +22,7 @@ BASE = WORK_DIR / 'linux/arm64'
 BUILD = ROOT / 'build/linuxarm64'
 OUT = BUILD / 'out'
 TRIPLE = 'aarch64-linux-gnu'
+_SWITCH_COMMON_FLAGS = build_switch.common_flags
 LIBS = ['libX11.so.6', 'libXext.so.6', 'libXcursor.so.1', 'libXi.so.6', 'libXfixes.so.3', 'libXrandr.so.2',
         'libXss.so.1', 'libXrender.so.1', 'libXtst.so.6', 'libasound.so.2', 'libpulse.so.0', 'libudev.so.1']
 
@@ -31,8 +32,7 @@ def configure_guest():
     build_switch.BASE = 0x10000000
     build_switch.PPU_THREADS = False
     build_switch.TOUCH_CONTROLS = False
-    original = build_switch.common_flags
-    build_switch.common_flags = lambda: [f for f in original() if f != '-DPORT_SWITCH'] + ['-DPORT_LINUX64_GUEST']
+    build_switch.common_flags = lambda: [f for f in _SWITCH_COMMON_FLAGS() if f != '-DPORT_SWITCH'] + ['-DPORT_LINUX64_GUEST']
 
 
 def build_host():

@@ -61,6 +61,10 @@ int main(void) {
     assert(!ArmRebase(outOfBounds, outOfBounds + sizeof(outOfBounds), segments, 1, 0));
     const uint8_t badOpcode[] = {0x90};
     assert(!ArmRebase(badOpcode, badOpcode + 1, segments, 1, 0));
+    /* A maximal offset followed by ADD_ADDR_IMM must not wrap into the segment. */
+    segment.addr = 0x50000000;
+    const uint8_t wrapped[] = {0x11,0x20,0xfc,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,1,0x41,0x51,0};
+    assert(!ArmRebase(wrapped, wrapped + sizeof(wrapped), segments, 1, 0));
     Ps5GuestHeader header;
     assert(!LoadArm64Image("missing", &header));
 #ifdef _WIN32

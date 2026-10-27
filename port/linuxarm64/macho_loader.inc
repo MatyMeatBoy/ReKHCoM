@@ -30,11 +30,11 @@ static int ArmRebase(const uint8_t *p, const uint8_t *end, const ArmMachSegment 
         switch (byte & 240) {
         case 0: return 1;
         case 0x10: type = imm; continue;
-        case 0x20: seg = imm; if (!ArmUleb(&p, end, &at)) return 0; continue;
+        case 0x20: seg = imm; if (!ArmUleb(&p, end, &at) || at > UINT32_MAX) return 0; continue;
         case 0x30:
             if (!ArmUleb(&p, end, &skip) || skip > UINT32_MAX - at) return 0;
             at += skip; continue;
-        case 0x40: at += imm * 4; continue;
+        case 0x40: if (at > UINT32_MAX - imm * 4u) return 0; at += imm * 4u; continue;
         case 0x50: count = imm; skip = 0; break;
         case 0x60: if (!ArmUleb(&p, end, &count)) return 0; skip = 0; break;
         case 0x70: count = 1; if (!ArmUleb(&p, end, &skip)) return 0; break;

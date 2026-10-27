@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from workdir import WORK_DIR  # noqa: E402  the heavy work folder (REKHCOM_WORK)
 
 ROOT = Path(__file__).resolve().parents[2]
-TC = ROOT.parent / 'toolchain'
+TC = next((p / 'toolchain' for p in ROOT.parents if (p / 'toolchain').is_dir()), ROOT.parent / 'toolchain')
 BASE = (WORK_DIR / 'linux')
 TRIPLES = {'i386': ('i686', 'i686-linux-gnu', ''),
            'amd64': ('x86_64', 'x86_64-linux-gnu', ''),  # the 64-bit host (port/linux64, 26/10)
@@ -161,7 +161,8 @@ def main():
     env = dict(os.environ)
     env['PATH'] = os.pathsep.join([str(p / 'bin') for p in sorted(TC.glob('llvm-mingw-*'))[-1:]]
                                   + [str(TC / 'bin'), env.get('PATH', '')])
-    for arch in args.arch or list(TRIPLES):
+    # Experimental ARM64 is opt-in; existing default preparation remains unchanged.
+    for arch in args.arch or [name for name in TRIPLES if name != 'arm64']:
         prepare(arch, env, args.jobs)
 
 

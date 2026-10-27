@@ -28,7 +28,8 @@ ROOT = HERE.parents[1]
 PS5 = ROOT / 'port/ps5'
 BUILD = ROOT / 'build/switch'
 WINDOWS = os.name == 'nt'
-LLVM = ROOT.parent / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin'
+_TC = next((p / 'toolchain' for p in ROOT.parents if (p / 'toolchain').is_dir()), ROOT.parent / 'toolchain')
+LLVM = _TC / 'llvm-mingw-20261006-ucrt-x86_64/bin'
 CLANG = os.environ.get('CLANG', str(LLVM / 'clang.exe') if WINDOWS else 'clang-18')
 LLD = os.environ.get('LLD', str(LLVM / 'ld.lld.exe') if WINDOWS else 'ld.lld-18')
 TARGET = '--target=arm64_32-apple-watchos'

@@ -106,6 +106,20 @@ class LauncherTest(unittest.TestCase):
         self.assertTrue((self.game / 'arm32.txt').exists())
         self.assertFalse((self.game / 'ran64.txt').exists())
 
+    def test_aarch64_failure_after_entry_never_starts_arm32(self):
+        self.fake_machine('aarch64')
+        self.fake_arm64(139, True)
+        self.assertEqual(self.run_script().returncode, 139)
+        self.assertFalse((self.game / 'region.txt').exists())
+        self.assertFalse((self.game / 'arm32.txt').exists())
+
+    def test_unknown_cpu_never_starts_x86(self):
+        self.fake_machine('riscv64')
+        self.fake64(0)
+        self.assertEqual(self.run_script().returncode, 2)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        self.assertFalse((self.game / 'region.txt').exists())
+
     def test_automatic_boot_failure_retries_32(self):
         self.fake64(4)
         self.assertEqual(self.run_script().returncode, 17)
