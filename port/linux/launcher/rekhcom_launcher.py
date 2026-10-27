@@ -65,17 +65,18 @@ def validate(root):
             if len(fields)!=2 or fields[0]!=component:raise ImportErrorSafe('Invalid variant component.')
             generation=fields[1]
             if generation=='-':continue
-            if not re.fullmatch(r'g-[A-Za-z0-9-]+',generation):raise ImportErrorSafe('Unsafe variant generation.')
+            if not re.fullmatch(r'g-[a-z0-9-]{1,61}',generation):raise ImportErrorSafe('Unsafe variant generation.')
             base=active.parent/generation
             records=(base/'media.meta').read_text(encoding='utf-8').splitlines()
             header=records[0].split() if records else []
             if len(header)!=8 or header[:3]!=['REKHCOM_MEDIA_V1',label,'user']:raise ImportErrorSafe('Invalid variant provenance; no language is inferred.')
+            if not re.fullmatch(r'[a-z0-9]{1,63}',header[3]):raise ImportErrorSafe('Unsafe source fingerprint.')
             if header[4] not in {'0','1','2'} or header[5] not in {'0','1'} or header[6] not in {'0','1'} or header[5 if component=='movies' else 6]!='1':raise ImportErrorSafe('Unavailable variant component.')
-            if not header[-1].isdigit() or int(header[-1])!=len(records)-1 or len(records)>257:raise ImportErrorSafe('Incomplete variant manifest.')
+            if not header[-1].isdigit() or not 1<=int(header[-1])<=256 or int(header[-1])!=len(records)-1 or len(records)>257:raise ImportErrorSafe('Incomplete variant manifest.')
             previous="";has_component=False
             for record in records[1:]:
                 row=record.split()
-                if len(row)!=2 or not re.fullmatch(r'(movies|scenes)/[A-Za-z0-9_-]+\.mp4',row[0]) or not row[1].isdigit():raise ImportErrorSafe('Unsafe variant member.')
+                if len(row)!=2 or not re.fullmatch(r'(movies|scenes)/[A-Za-z0-9_]{1,80}\.mp4',row[0]) or not row[1].isdigit():raise ImportErrorSafe('Unsafe variant member.')
                 if row[0]<=previous:raise ImportErrorSafe('Variant members must be unique and sorted.')
                 previous=row[0];has_component=has_component or row[0].startswith(component+'/')
                 if (base/row[0]).stat().st_size!=int(row[1]):raise ImportErrorSafe('Incomplete variant file.')

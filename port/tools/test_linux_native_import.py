@@ -49,6 +49,16 @@ class TransactionTests(unittest.TestCase):
   (base/'movies/ROP.mp4').unlink()
   with self.assertRaises((m.ImportErrorSafe,OSError)):m.transaction(self.game,self.source)
   self.unchanged()
+ def test_runtime_token_contract_preserves_active(self):
+  for generation,fingerprint,name in [('g-UPPER','aabb','ROP'),('g-'+('a'*62),'aabb','ROP'),('g-good','AABB','ROP'),('g-good','a'*64,'ROP'),('g-good','aabb','ROP-bad'),('g-good','aabb','a'*81)]:
+   with self.subTest(generation=generation,fingerprint=fingerprint,name=name):
+    import shutil
+    shutil.rmtree(self.source);base=self.source/'media/en'/generation
+    put(base/'movies'/f'{name}.mp4',MOVIE)
+    put(base/'media.meta',f'REKHCOM_MEDIA_V1 en user {fingerprint} 0 1 0 1\nmovies/{name}.mp4 16\n'.encode())
+    put(self.source/'media/en/active.txt',f'REKHCOM_MEDIA_ACTIVE_V1\nmovies {generation}\nscenes -\n'.encode())
+    with self.assertRaises(m.ImportErrorSafe):m.transaction(self.game,self.source)
+    self.unchanged()
  def test_failed_reference_producer_preserves_active(self):
   def fail(source,stage):raise RuntimeError('dependency/codec failure')
   with self.assertRaises(RuntimeError):m.transaction(self.game,self.source,fail)
