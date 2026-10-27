@@ -7498,15 +7498,21 @@
     "sol-scd-parser-safety": {
       "id": "sol-scd-parser-safety",
       "piece": "Bound SCD auxiliary chunks and empty Ogg import failure",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "sol-low-linux-import",
       "created_at": "2026-10-27T20:08:08.349422+00:00",
-      "updated_at": "2026-10-27T20:08:13.129351+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-27T20:12:43.904003+00:00",
+      "branch": "fix/scd-parser-safety",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/394",
       "approval": "User focus bugs crashes root delegated import followup",
-      "reference": null,
-      "evidence": [],
+      "reference": "port/progress/HD_SCD_SAFETY.md",
+      "evidence": [
+        {
+          "at": "2026-10-27T20:12:43.904003+00:00",
+          "owner": "sol-low-linux-import",
+          "detail": "Head a5a34321 rebasedmain038d926. BeforeauxINTMAX+zerochunk hungactualCpp/Python;14scenariospass afterstructuralbounds. Fullnative transaction+realproducer subprocess invalidpreservesHD/save cleansstage/lock;validcommits. Prior16reader/workerlifecycle/media/native6pass1skip andx86x64syntaxpass. NoGH336causeclaim."
+        }
+      ],
       "claimed_at": "2026-10-27T20:08:13.129351+00:00"
     },
     "android-launcher-gl-startup-guard": {
@@ -7584,7 +7590,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T20:12:34.159728+00:00",
+  "updated_at": "2026-10-27T20:12:43.904003+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
