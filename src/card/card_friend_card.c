@@ -1079,7 +1079,13 @@ static void StockNameRiku_2_Body(StockNameWork* work) {
 void StockNameRiku_2(StockNameWork* work) {
 #endif
     if (gRikuBtlWork->hcEffect != HC_EFFECT_SLEIGHTBLIND && work->visible) {
+#ifdef PLATFORM_PC
+        int PortHdHudStockNameX(int x, const u16* frame, int stockCount);
+        DrawSprite(PortHdHudStockNameX(120, work->tiles->sprite, gCardBattleState->rikuStockCount), 14, NULL, work->tiles,
+                   work->palette, NULL, 0, 10);
+#else
         DrawSprite(120, 14, NULL, work->tiles, work->palette, NULL, 0, 10);
+#endif
     }
 }
 

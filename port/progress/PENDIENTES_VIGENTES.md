@@ -7,6 +7,21 @@
 posterior, no en el ZIP 2.1 existente. El resto de este documento conserva
 los detalles/historia de cada pendiente y no autoriza reabrir la batería de 2.1.
 
+## P0 — #360: 64 bits cierra el launcher (Windows 11 x64, Pedro)
+
+- [ ] Falla en Automático y en Forzar 64; Forzar 32 funciona. Pedidos datos
+  (CPU/GPU/RAM, ruta, región, HD, logs, Visor de eventos) en el issue, 27/10.
+  **No reproduce aquí** con el ZIP 2.1 (lanzado como el launcher: guest,
+  `--data`, `--boot-status`, `KHCOM_ROM`): instalación limpia EU/US/JP,
+  actualización 2.0→2.1 en modo HD con import completo, y ruta con acentos
+  (`Transferências`). Pista: Automático sólo vuelve a 32 bits con códigos de
+  arranque (2/3/4, 0xc0000135/7b/142, `runtime_selection.h`); un crash de 64
+  bits (p. ej. 0xc0000005) antes o después del marcador no reintenta, y eso
+  encaja con el reporte. Esperar logs; posible mejora: en Automático, volver a
+  32 bits si 64 bits muere por excepción en los primeros segundos.
+  Carpetas de prueba: `pruebas/issue360*` (la `-upg` tiene junction `hd`:
+  deshacerla antes de borrar).
+
 ## PRIORIDAD 1 — Cartas (usuario 27/10, pasan directo por Claude, NO por Atlas)
 
 Sacadas de los preliminares de Atlas (9 piezas; respaldo de la base en
@@ -16,12 +31,18 @@ antes/después al usuario en el chat. Comentarios del usuario entre comillas.
 
 - [ ] **Cartas pequeñas HD: encaje (lista de naipes, 105).** r1: 8 nubes «mal
   encuadrado» + «hay muchos sin centrar, hazlo pro». r2 (recorte de la carta
-  grande) y #359 (ventana completa centrada) ya integrados: verificar en runtime
-  las 105, re-import incluido, y corregir las que sigan descentradas.
-- [ ] **HUD HD: largo de la barra del enemigo** (WIP `fix/hd-enemy-gauge-length`,
-  worktree `kh-worktrees/hd-small-card-top`): frames por HP absoluto como Re:CoM.
-- [ ] **HUD HD: nombre del hechizo del jefe** («Muro de fuego» de Axel sobre sus
-  cartas, «15A Locura»): reubicar con su pila. Claim `hudhd-hechizo-jefe`.
+  grande) y #359 (ventana completa centrada) ya integrados. 27/10: re-import
+  con la receta de main y hoja de las 105 revisada: todas con el encuadre de su
+  carta grande, centradas; lista de naipes en juego correcta. Falta que el
+  usuario lo confirme en su instalación (re-importar HD).
+- [ ] **HUD HD: largo de la barra del enemigo** (WIP commiteado en
+  `fix/hd-enemy-gauge-length`, sin verificar). Captura 27/10: en el cartucho un
+  enemigo débil tiene **toda** la barra corta; con el WIP sólo el verde es corto
+  y el fondo oscuro sigue largo. Falta decidir/acortar marco y fondo.
+- [x] **HUD HD: nombre del hechizo del jefe** («Muro de fuego» de Axel sobre
+  sus cartas): con cartas HD y lienzo amplio, el nombre termina antes de la pila
+  (ancho real del sprite; pila en x del total + margen completo del lienzo).
+  GBA intacto. PR `fix/hd-boss-sleight-name`, capturas Axel 1280x720 antes/después.
 - [ ] **HUD de combate HD: borde verde interior granulado** — «mejorar y
   verificar funcionamiento al 100 % del HUD mostrado».
 - [ ] **Síntesis de estancias: carta de requisito HD** — «veo el asset pero no
