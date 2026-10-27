@@ -2358,14 +2358,19 @@ static SDL_Keycode UiMappedKey(SDL_Keycode key) {
                 return action ? SDLK_Z : SDLK_X;
     return key;
 }
+static int UiListTriggerReserved(const SDL_Event* ev) {
+    return !sScenePause && (sPage == PAGE_ACHIEVEMENTS || sPage == PAGE_SCENES) &&
+           ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION &&
+           (ev->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER || ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER);
+}
+
 int PortUiHandleEvent(const void* p) {
     const SDL_Event* ev = (const SDL_Event*)p;
     SDL_Event mapped;
 
     if ((sOpen || sScenePause) && !(sPage == PAGE_CONTROLS && sControlCapture)) {
-        /* Achievement triggers are reserved list shortcuts, as Q/E are there. */
-        int reserved = !sScenePause && sPage == PAGE_ACHIEVEMENTS && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION &&
-                       (ev->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER || ev->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER);
+        /* List triggers remain shortcuts even when an axis is also bound to A/B. */
+        int reserved = UiListTriggerReserved(ev);
         int axis = reserved ? 0 : KhPadMenuAxis(ev, gPortConfig.pad, sUiAxisHeld, &mapped);
         if (axis == 1) return 1;
         if (axis == 2) ev = &mapped;
