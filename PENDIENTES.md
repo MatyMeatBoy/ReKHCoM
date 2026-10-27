@@ -269,4 +269,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sol-low-linux-import | QA Linux SteamMachine HD importer fixtures | en_revision | sol-low-linux-import | — | User delegated 3 Sol bajo workers | 2026-10-27T19:27:58.786435+00:00 |
 | sol-linux-import-safety | ReadAsset bounds and import worker failure safety | pr_abierto | sol-low-linux-import | https://github.com/MatyMeatBoy/ReKHCoM/pull/390 | root user authorized scoped fix | 2026-10-27T19:37:07.535095+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-27T19:38:29.398468+00:00)
+Integrador: libre
