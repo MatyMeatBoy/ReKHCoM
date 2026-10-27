@@ -4360,13 +4360,13 @@
     "media-readiness-fallbacks": {
       "id": "media-readiness-fallbacks",
       "piece": "Video readiness and cleanup fallbacks Android and Windows MF",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-media-fallbacks",
       "created_at": "2026-10-27T05:08:26.698519+00:00",
-      "updated_at": "2026-10-27T05:13:22.548751+00:00",
+      "updated_at": "2026-10-27T05:18:17.119767+00:00",
       "branch": "fix/media-readiness-fallbacks",
-      "pr": null,
-      "approval": "User authorized indispensable fallbacks before Deck Android test builds",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/289",
+      "approval": "Usuario 27/10: integrar bloques verificados y enviar test builds OptiPort",
       "reference": null,
       "evidence": [
         {
@@ -4445,7 +4445,7 @@
     "created_at": "2026-10-27T05:15:45.154320+00:00",
     "updated_at": "2026-10-27T05:15:45.154320+00:00"
   },
-  "updated_at": "2026-10-27T05:18:10.540850+00:00",
+  "updated_at": "2026-10-27T05:18:17.119767+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
