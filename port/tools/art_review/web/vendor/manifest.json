@@ -1,0 +1,29 @@
+[
+  {
+    "package": "sortablejs",
+    "version": "1.15.7",
+    "license": "MIT",
+    "source": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.15.7.tgz",
+    "integrity": "sha512-Kk8wLQPlS+yi1ZEf48a4+fzHa4yxjC30M/Sr2AnQu+f/MPwvvX9XjZ6OWejiz8crBsLwSq8GHqaxaET7u6ux0A==",
+    "file": "Sortable.min.js",
+    "sha256": "bf4241bc73fef7f11c59a283a69fe8051cdd31c6d8ff5a2b9ba219e7831fcf76"
+  },
+  {
+    "package": "fuse.js",
+    "version": "7.5.0",
+    "license": "Apache-2.0",
+    "source": "https://registry.npmjs.org/fuse.js/-/fuse.js-7.5.0.tgz",
+    "integrity": "sha512-sQtrEfA+ez/3G0cCZecF70oqpCRttCexYUG4mUrtWL49ULUzUyxokt5kyqwtKzj1270RaKih+hcP3qLcumccow==",
+    "file": "fuse.min.mjs",
+    "sha256": "5ab524d12492bb233568e9600046e1aaa9623d36ebe689589144f7dc9b1da6f7"
+  },
+  {
+    "package": "hotkeys-js",
+    "version": "4.0.8",
+    "license": "MIT",
+    "source": "https://registry.npmjs.org/hotkeys-js/-/hotkeys-js-4.0.8.tgz",
+    "integrity": "sha512-A0nu5ZU7cN8nEx3uGUHrv1WnJvjPFUw4Cfxj8pLyR5AIg14ACP4D0YZ+5JHAPjlvUbPbgok56+XTZWjscYCV4A==",
+    "file": "hotkeys-js.min.js",
+    "sha256": "76ca46ca7b83ba4205cb20677dfae65f130973064f983044895460f56f1d4335"
+  }
+]
