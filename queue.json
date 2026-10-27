@@ -8074,20 +8074,26 @@
     "synthesis-gray-residual-band": {
       "id": "synthesis-gray-residual-band",
       "piece": "Reproduce remaining horizontal gray-card band after accepted-overlap fix404; isolate body/glyph/native/background layers, fix compositor only with actual A/B",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-synthesis-band",
       "created_at": "2026-10-27T23:27:37.806035+00:00",
-      "updated_at": "2026-10-27T23:27:42.465079+00:00",
-      "branch": null,
+      "updated_at": "2026-10-27T23:33:40.699514+00:00",
+      "branch": "fix/synthesis-residual-band",
       "pr": null,
       "approval": "Usuario27octpulirgraycardline; rootdelegacionresidual20261027",
       "reference": "pruebas/issue380-door/gray-accepted-after-view4-hd1/out_00470.bmp",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-27T23:33:40.699514+00:00",
+          "owner": "codex-synthesis-band",
+          "detail": "pruebas/synthesis-residual-band/REVIEW.md; real D3D11 hide-body/glyph/both exit0; 2511 straight-alpha channels maxerror0: residual y297 is spotlight background through intentional fade35, no product patch justified; world8 runtime not yet covered"
+        }
+      ],
       "claimed_at": "2026-10-27T23:27:42.465079+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:27:42.465079+00:00",
+  "updated_at": "2026-10-27T23:33:40.699514+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
