@@ -156,4 +156,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sysmsg-palette-null | System message and glyph NULL palette BIOS reads | en_revision | codex-sysmsg-null | fix/sysmsg-palette-null | Parent authorized implementation and local commit; review before push | 2026-10-27T04:40:19.813043+00:00 |
 | hd-layout-bounds | LAD SEQD parser bounds | pendiente | — | — | Delegado por usuario via agente padre: auditoria hallazgo 3, parser y tests | 2026-10-27T04:47:46.706306+00:00 |
 
-Integrador: codex-crash (ocupado; 2026-10-27T04:47:34.666353+00:00)
+Integrador: libre
