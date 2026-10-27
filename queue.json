@@ -5482,10 +5482,10 @@
     "steamdeck-gaming-mode-330": {
       "id": "steamdeck-gaming-mode-330",
       "piece": "Issue330 native Linux Gaming Mode entry and Options UX, safe Steam non-Steam shortcut guide",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-deck-gaming330",
       "created_at": "2026-10-27T10:16:08.351988+00:00",
-      "updated_at": "2026-10-27T10:29:54.680682+00:00",
+      "updated_at": "2026-10-27T10:30:04.705632+00:00",
       "branch": "fix/steamdeck-gaming-mode-330",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/337",
       "approval": "Usuario 27/10: integrar correcciones verificadas y publicar prerelease; no releases apresuradas",
@@ -5500,9 +5500,15 @@
           "at": "2026-10-27T10:21:34.738356+00:00",
           "owner": "codex-deck-gaming330",
           "detail": "Head6717c8aa0. Wrapper10tests packaging3tests sh-n py_compile diffcheck PASS; explicit helper registersXDG and guidesSteam manually, OptionsStartSelect/F1; noSteamwrite/gamecode/heavybuild. ActualDeckGamingMode pending, issue330 notclosed/commented. WorktreeNeeded yes PR/repro."
+        },
+        {
+          "at": "2026-10-27T10:30:04.705632+00:00",
+          "owner": "codex-deck-gaming330",
+          "detail": "Verified and reviewed; merged c8109de7d023b2cf57defc08e637e80d6524f135"
         }
       ],
-      "claimed_at": "2026-10-27T10:16:13.616974+00:00"
+      "claimed_at": "2026-10-27T10:16:13.616974+00:00",
+      "completed_at": "2026-10-27T10:30:04.705632+00:00"
     },
     "controller-bridge-metadata": {
       "id": "controller-bridge-metadata",
@@ -5525,7 +5531,7 @@
     "created_at": "2026-10-27T10:28:25.637236+00:00",
     "updated_at": "2026-10-27T10:28:25.637236+00:00"
   },
-  "updated_at": "2026-10-27T10:29:54.680682+00:00",
+  "updated_at": "2026-10-27T10:30:04.706652+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
