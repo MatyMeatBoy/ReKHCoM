@@ -300,4 +300,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-pre3-current-source-delivery | Build fresh pre3 Windows32/64 EU US JP with integrated card seams, audio continuity, HUD brightness and gallery fixes; immutable verified ZIP and hashes in releases | en_curso | codex-integrador | — | Usuario: nightly interno ahora, ultima version de todo, pre en releases y solo plataformas compiladas; integrar todo lo cerrado | 2026-10-27T23:54:36.683312+00:00 |
 | v22-pre3-version-identity | Child of claimed pre3 delivery: coherent source/PE/changelog identity only | pr_abierto | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/413 | Usuario: nueva pre actualizada, conservar versiones entregadas; parent v22-pre3-current-source-delivery claimed codex-integrador before edits | 2026-10-27T23:55:26.218267+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-27T23:55:42.821458+00:00)
