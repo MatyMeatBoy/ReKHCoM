@@ -166,6 +166,21 @@ static int MenuLightName(const char* name) {
     return !SDL_strncmp(name, "gTitleMenuCursorFrame", 21) || !SDL_strncmp(name, "gTitlePressStart", 16);
 }
 
+static int Load(int i);
+
+/* Find runs in game/OAM setup and Queue runs outside the PPU row workers.
+   Only promise a replacement after both textures exist, on SDL's main thread.
+   Pin it now: later queues must not evict an image after its native pixels were omitted. */
+static int SpriteReady(int i) {
+    if (!sRenderer || !SDL_IsMainThread() || sState[i].present == 1)
+        return 0;
+    if (!sState[i].image && !Load(i))
+        return 0;
+    sState[i].present = 2;
+    sState[i].lastUsed = PortFrameCount();
+    return 1;
+}
+
 int PortHdSpriteFind(const void* tiles, const void* frame) {
     int i;
     if (!tiles || (!gPortConfig.hdCards && !gPortConfig.hdTitle))
@@ -174,21 +189,7 @@ int PortHdSpriteFind(const void* tiles, const void* frame) {
         const HdSpriteDef* d = &kHdSprites[i];
         if (d->tiles != tiles || (d->frame && d->frame != frame) || !GroupOn(d->group))
             continue;
-        if (!sState[i].present) {
-            char file[160];
-            FILE* f;
-            if (d->group == 7) {
-                size_t size;
-                void* data = TitleWordAsset(d->name, &size);
-                sState[i].present = data ? 2 : 1;
-                SDL_free(data);
-            } else {
-                f = fopen(SpritePath(file, sizeof(file), d->name), "rb");
-                sState[i].present = f ? 2 : 1;
-                if (f) fclose(f);
-            }
-        }
-        return sState[i].present == 2 ? i + 1 : 0;
+        return SpriteReady(i) ? i + 1 : 0;
     }
     return 0;
 }
@@ -542,6 +543,8 @@ int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px,
     for (k = 0; k < 4; k++)
         if (!(x[k] > -4096.0f && x[k] < 8192.0f && y[k] > -4096.0f && y[k] < 8192.0f))
             return 0;
+    if (!SpriteReady(id - 1))
+        return 0;
     if (PortHdDrawLogged()) {
         static uint32_t sLoggedAt[HD_SPRITE_COUNT];
         if (sLoggedAt[id - 1] != PortFrameCount() + 1) {

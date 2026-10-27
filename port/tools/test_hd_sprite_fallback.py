@@ -1,0 +1,109 @@
+"""First-frame fallback through real QueueHdPart, sprite loader and PPU DrawObjs.
+
+Synthetic OAM/VRAM and injected decoder/texture failures; no SDL, ROM or GPU.
+"""
+from pathlib import Path
+import subprocess
+import tempfile
+from test_hd_sprite_budget import ROOT, function, preamble, source
+
+ppu = (ROOT / 'port/src/port_ppu.c').read_text(encoding='utf-8')
+def ppu_function(signature):
+    start = ppu.index(signature)
+    end = ppu.index('{', start) + 1
+    depth = 1
+    while depth:
+        depth += (ppu[end] == '{') - (ppu[end] == '}')
+        end += 1
+    return ppu[start:end]
+
+backend = r'''
+#define HD_LAYERS 3
+#define MAX_DRAWS 128
+#define GBA_SCREEN_W 240
+#define GBA_SCREEN_H 160
+#define TRANSPARENT 0xFFFF
+#define SDL_clamp(x,l,h) ((x)<(l)?(l):(x)>(h)?(h):(x))
+static struct {int hdCards,hdTitle;} gPortConfig={1,1};
+static int mainThread=1;
+static int SDL_IsMainThread(void){return mainThread;}
+static int GroupOn(int group){return 1;}
+static int PortHdDrawLogged(void){return 0;}
+static void PortPaletteFade(const uint16_t*a,const volatile uint16_t*b,int c,int*d,int*e){*d=*e=0;}
+static void PortHdSpriteHudOwner(int i){}
+static int HdTextGlyph(int i){return 0;}
+static int HeaderBandColor(int y,int x){return 0;}
+static int sDrawCount[3];
+static uint8_t sMainHdPart[128];
+static struct {int width,height,originX,originY,wide;}gPortScreen={16,16,0,0,0};
+typedef struct {int id,x,y,w,h,flags,bank;const void*tiles;const void*frame;const uint16_t*palette;} OamHdPart; static OamHdPart sOamHd[128];
+static struct {int screen,hud,text,style,clipX0,clipX1,header;}sOamTag[128];
+static struct {int x,y;}sOamExt[128];
+static int sObjSize[3][4][2]={{{16,16}}};
+static uint16_t oam[128*4],palette[512],regs[256];
+static unsigned char vram[0x20000];
+#define OAM16 oam
+#define PLTT16 palette
+#define VRAM8 vram
+#define IO16(n) regs[(n)/2]
+static int sEventBackdropProfile,sEnvActorFrameOff,sJafarFight,sLeft,sRight=16,sBottom=16,sHudLayer,sTitleBarHd,sOverlay,sLineHasObjects;
+static struct {int v[1];}*sPreliminarRecipe[4];
+static uint8_t sStagedActorEntered[3],sActorEntered[128];
+static unsigned sStagedActorFirstSeen[3],sActorSceneFrames;
+static const char gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
+static uint16_t sObjLine[16],sScrLine[16],sTitleSampleLine[16];
+static uint8_t sObjPrio[16],sObjSemi[16],sObjIndex[16],sScrPrio[16],sScrSemi[16],sScrIndex[16],sObjWin[16],sTitleSamplePrio[16],sTitleSampleSemi[16];
+'''
+cases = r'''
+static void reset(void){
+ memset(sState,0,sizeof(sState));memset(sDrawCount,0,sizeof(sDrawCount));memset(sMainHdPart,0,sizeof(sMainHdPart));
+ memset(oam,0,sizeof(oam));for(int i=1;i<128;i++)oam[i*4]=0x200;
+ memset(sOamHd,0,sizeof(sOamHd));sOamHd[0].id=1;sOamHd[0].w=sOamHd[0].h=16;
+ memset(vram,0x11,sizeof(vram));palette[257]=0x1234;
+ kHdSprites[0].tiles=(void*)42;kHdSprites[0].frame=NULL;kHdSprites[0].group=2;
+ kHdSprites[2]=kHdSprites[0];sBytes=0;width=height=decodedW=decodedH=16;infoOK=decodeOK=1;decodes=creates=destroys=failTexture=0;
+ sRenderer=(void*)1;mainThread=1;
+}
+static int queue(void){return QueueHdPart(0,0,0,0,16,16,16,16,0,256,0,0,256,255);}
+static void native_frame(void){
+ sMainHdPart[0]=queue();DrawObjs(0,0x1000);
+ assert(sObjLine[0]==0x1234); /* real native pixel survives in the very first PPU row */
+ assert(!sMainHdPart[0]&&!sDrawCount[0]&&!sState[0].image);
+}
+int main(void){
+ FILE*f=fopen("test","wb");assert(f);fputs("exists",f);fclose(f);
+ reset();infoOK=0;native_frame();
+ reset();decodeOK=0;native_frame();
+ reset();failTexture=2;native_frame();assert(destroys==1);
+ reset();width=height=4096;native_frame();assert(!decodes);
+ reset();sBytes=32u*1024*1024;sState[1].image=(void*)1;sState[1].bytes=sBytes;sState[1].lastUsed=9;native_frame();assert(!creates);
+ reset();sRenderer=NULL;native_frame();assert(!decodes);
+ reset();mainThread=0;native_frame();assert(!decodes);
+ reset();sRenderer=NULL;assert(!PortHdSpriteFind((void*)42,NULL)&&!decodes);
+ reset();mainThread=0;assert(!PortHdSpriteFind((void*)42,NULL)&&!decodes);
+ reset();assert(queue());assert(sState[0].image&&sState[0].white&&sState[0].lastUsed==9);
+ reset();infoOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
+ reset();decodeOK=0;assert(!PortHdSpriteFind((void*)42,NULL));
+ reset();failTexture=2;assert(!PortHdSpriteFind((void*)42,NULL));
+ reset();assert(PortHdSpriteFind((void*)42,NULL)==1);assert(sState[0].image&&sState[0].white&&sState[0].lastUsed==9);
+ sMainHdPart[0]=queue();DrawObjs(0,0x1000);assert(sObjLine[0]==TRANSPARENT&&sDrawCount[0]==1&&creates==2);
+ /* Subsequent loads cannot evict a replacement whose native pixels have been omitted. */
+ sBytes=32u*1024*1024;sState[0].bytes=sBytes;assert(!Load(2));assert(sState[0].image);
+ puts("PASS first-frame native pixel: invalid header/decode/upload, oversize/pinned budget, no renderer/off-main-thread; valid replacement acquired/pinned before omission");
+}
+'''
+a = source.index('typedef struct HdSpriteDraw {')
+b = source.index('} HdSpriteDraw;', a) + len('} HdSpriteDraw;')
+unit = preamble + backend + source[a:b] + '\nstatic HdSpriteDraw sDraws[3][128];\n'
+unit += function('static void Unload(') + function('static int Load(')
+if 'static int SpriteReady(' in source:
+    unit += function('static int SpriteReady(')
+unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
+unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
+compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
+with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
+    folder = Path(folder)
+    src, exe = folder / 'fallback.c', folder / 'fallback.exe'
+    src.write_text(unit, encoding='utf-8')
+    subprocess.run([str(compiler), '-std=c11', '-Wno-compare-distinct-pointer-types', str(src), '-o', str(exe)], check=True)
+    subprocess.run([str(exe)], cwd=folder, check=True)

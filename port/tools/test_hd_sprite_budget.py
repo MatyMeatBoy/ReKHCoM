@@ -8,6 +8,8 @@ source = (ROOT / 'port/src/port_hdsprites.c').read_text(encoding='utf-8')
 
 def function(signature):
     start = source.index(signature)
+    while ';' in source[start:source.index('{', start)]:
+        start = source.index(signature, start + 1)
     end = source.index('{', start) + 1
     depth = 1
     while depth:
@@ -28,7 +30,7 @@ preamble = r'''
 #define SDL_PIXELFORMAT_RGBA32 0
 #define SDL_BLENDMODE_BLEND 0
 typedef int SDL_Texture; typedef int SDL_Surface; typedef int SDL_ScaleMode;
-typedef struct { int group; const char*name; int padL,w,padR,padT,h,padB; } HdSpriteDef; static HdSpriteDef kHdSprites[3]={{0,"test",0,16,0,0,16,0}};
+typedef struct { int group; const char*name; int padL,w,padR,padT,h,padB; const void*tiles; const void*frame; int x0,y0; } HdSpriteDef; static HdSpriteDef kHdSprites[3]={{.name="test",.w=16,.h=16}};
 static struct {SDL_Texture *image,*white;uint32_t lastUsed;size_t bytes;int textureH,present;} sState[3];
 static size_t sBytes; static void*sRenderer;
 static int width,height,decodedW,decodedH,infoOK,decodeOK,decodes,creates,destroys,failTexture;
@@ -70,13 +72,14 @@ int main(void){
  puts("PASS sprite Load: header, dimensions, aspect, budget, pinned/evictable cache, changed file, decode/upload failures, memory assets");
 }
 '''
-compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
-with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-budget-') as folder:
-    folder = Path(folder)
-    unit = folder / 'sprite.c'
-    unit.write_text(preamble + function('static void Unload(') + function('static int Load(') + cases, encoding='utf-8')
-    for guest, budget in ((False, 32*1024*1024), (True, 12*1024*1024)):
-        exe = folder / ('guest.exe' if guest else 'native.exe')
-        subprocess.run([str(compiler), '-std=c11', f'-DBUDGET={budget}', *(['-DPORT_GBA_RELOC'] if guest else []), str(unit), '-o', str(exe)], check=True)
-        subprocess.run([str(exe)], check=True)
+if __name__ == '__main__':
+    compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
+    with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-budget-') as folder:
+        folder = Path(folder)
+        unit = folder / 'sprite.c'
+        unit.write_text(preamble + function('static void Unload(') + function('static int Load(') + cases, encoding='utf-8')
+        for guest, budget in ((False, 32*1024*1024), (True, 12*1024*1024)):
+            exe = folder / ('guest.exe' if guest else 'native.exe')
+            subprocess.run([str(compiler), '-std=c11', f'-DBUDGET={budget}', *(['-DPORT_GBA_RELOC'] if guest else []), str(unit), '-o', str(exe)], check=True)
+            subprocess.run([str(exe)], check=True)
 
