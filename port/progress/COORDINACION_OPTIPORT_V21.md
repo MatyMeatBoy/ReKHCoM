@@ -13,7 +13,10 @@ estados sigue siendo `coordination/art-queue`, gestionada con
   instrucción del usuario introduce una excepción al orden inicial: recoger e
   integrar los PR regulares ya listos antes del ZIP, con revisión y lock remoto;
   entregar Windows sin esperar nuevas mejoras y después completar el resto de
-  OptiPort. El resto de PR regulares se integra después de cerrar OptiPort.
+  OptiPort. Mandato posterior: continuar hasta 2.1 con todos los pendientes y
+  PR verificados, también regulares; no esperar al cierre de toda la batería
+  para integrar correcciones listas. La revisión visual de 2.1 pasa por el
+  coordinador directamente, según la excepción expresa de AGENTS.md.
 - **Claude:** puede tomar **todos los pendientes regulares**, incluidos detalles
   visuales del HUD, HUD de jefes, encaje de cartas, comprobación de recetas,
   Atlas, galería y demás pendientes funcionales/visuales. Reservar cada pieza
@@ -78,9 +81,9 @@ Los cambios entran mediante PR, sin pushes directos de código a main.
 Prueba mínima siguiente: verificar la evidencia pendiente de OptiPort y la
 matriz de runtimes contra los SHA exactos que se empaquetarán; registrar hashes
 de ZIP/APK/paquetes, resultados y límites antes de afirmar entrega o cierre.
-Los pendientes regulares pueden avanzar en paralelo bajo claim; su integración
-por Codex sigue el orden actualizado: PR ya listos antes del ZIP como excepción
-explícita del usuario; los restantes después del cierre de OptiPort.
+Los pendientes regulares pueden avanzar en paralelo bajo claim y entrar mediante
+PR revisado y lock remoto. El ZIP prioritario no exige esperar funciones nuevas;
+una regresión reproducida del alcance anunciado sí bloquea darlo por listo.
 
 ## Pendiente: vista y previews en ambos modos
 
@@ -132,19 +135,20 @@ superior NULL por lectura BIOS GBA. El coordinador corrige la fuente compartida;
 el ZIP debe esperar GREEN del mismo guardado/repro en la build exacta. No
 presentar los tests sintéticos previos como sustituto de esa verificación.
 
-Actualización posterior del coordinador, 27/10: corrección de #318 aún pendiente
-de integración; repro guardado GREEN (`field=520`, exit 0), paquete privado
-32+64 PASS y regresión del ZIP final PASS en ambos runtimes. El paquete inicial
-también pasó ocho salas y puerta de evento en ambos. No hay prerelease pública
-publicada todavía. El corpus local es una SRAM única; GameFAQs solo figura como
-catálogo candidato no descargado/validado y bloqueado. La batería usa patrones,
-fixtures deterministas y soak dirigido; no requiere campaña completa.
+Actualización del coordinador, 27/10: #318 integrado y repro guardado GREEN.
+El paquete e71 pasa seis regresiones Windows (guardado, ocho salas y puerta de
+evento en 32 y 64), y ambos recorridos de puerta en Linux32/64 VM. Android se
+valida por separado. Estado vigente y hashes en [OPTIPORT_V21.md](OPTIPORT_V21.md);
+no duplicar aquí un resultado de una build anterior como si fuera actual.
+No hay prerelease pública nueva todavía. El corpus local es una SRAM única;
+GameFAQs solo figura como catálogo candidato no descargado/validado. La batería
+usa patrones, fixtures deterministas y soak dirigido; no requiere campaña completa.
 
 Requisito persistente de entrega personal de este proyecto: colocar los ZIP
 limpios en `C:/Users/MP/Documents/00 Claude/KHCoMPC`, visibles en esa raíz;
 `build/releases` puede conservar salidas de trabajo pero no sustituye la entrega.
-El coordinador ya copió allí el ZIP corregido, SHA-256
-`be1ed897f4e98c7be88ab6113692578b25b81b91d9f02823a64d7b49dd17fc81`.
+El coordinador ya copió allí el ZIP corregido; consultar su SHA y fuente vigente
+en el tablero de artefactos, no asumir que coincide con el primer ZIP privado.
 Esta ruta personal pertenece a las notas ReKHCoM, no a la skill pública OptiPort.
 
 ## Orden del espacio de trabajo después de 2.1
