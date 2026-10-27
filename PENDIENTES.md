@@ -160,4 +160,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-skill-20261027 | OptiPort skill and evidence-based progress board | en_curso | codex-optiport | — | — | 2026-10-27T05:09:56.453746+00:00 |
 | hd-music-progress-20261027 | Bound HD music decoder progress and preserve original audio on failure | en_curso | codex-music | — | — | 2026-10-27T05:11:27.430158+00:00 |
 
-Integrador: libre
+Integrador: codex-crash (ocupado; 2026-10-27T05:15:45.154320+00:00)
