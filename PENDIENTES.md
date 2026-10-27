@@ -262,5 +262,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue386-mapcards-stack | P0 issue386 userpre1EU64 0xC00000FD on opening MapCards submenu; actual reproduction and fixed regression32/64 | en_curso | codex-crash386 | — | Usuario27/10 bugsprioridadtotal; confirma alabrirsubmenuNaipesMapa | 2026-10-27T19:02:42.404866+00:00 |
 | v22-64bit-crash-pattern-ledger | Registro acotado de reportes64, causas probadas, fixes, artefactos y regresiones pendientes; referencia carril386 existente | en_curso | codex-64bit-crash-ledger | — | Usuario27/10 amplía a todos los cuelgues documentados64 y solución por patrones; coordinador asigna sólo inventario local sin producto | 2026-10-27T19:14:45.129018+00:00 |
 | audit64-menu-scroll-boundaries | Sólo auditoría de denominadores de scroll menús compartidos tras causa386; contar0..27 y límites de página | en_curso | codex-scroll-boundary-audit | — | Usuario pide todos los cuelgues documentados64 por patrones; coordinador asigna auditoría readonly tras IDIV cero probado386 | 2026-10-27T19:17:25.154284+00:00 |
+| child386-safe-crash-reporting | Windows64: conservar primera excepción desde stack guest | pendiente | — | — | Coordinador autoriza fix acotado reporter P0 #386 y fixture CPU foreign stack | 2026-10-27T19:17:47.169523+00:00 |
 
 Integrador: libre

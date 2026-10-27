@@ -7229,10 +7229,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
       "evidence": [],
       "claimed_at": "2026-10-27T19:17:25.154284+00:00"
+    },
+    "child386-safe-crash-reporting": {
+      "id": "child386-safe-crash-reporting",
+      "piece": "Windows64: conservar primera excepción desde stack guest",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T19:17:47.169523+00:00",
+      "updated_at": "2026-10-27T19:17:47.169523+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Coordinador autoriza fix acotado reporter P0 #386 y fixture CPU foreign stack",
+      "reference": "issue386 debugger original integer-divzero masked by secondary stack overflow",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T19:17:40.235371+00:00",
+  "updated_at": "2026-10-27T19:17:47.169523+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
