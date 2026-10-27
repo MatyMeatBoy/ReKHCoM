@@ -4200,10 +4200,23 @@
         }
       ],
       "claimed_at": "2026-10-27T04:25:04.512763+00:00"
+    },
+    "session-logs-history-20261027": {
+      "id": "session-logs-history-20261027",
+      "piece": "Conservar log actual y cinco sesiones previas sin pisar crash al reiniciar",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-27T04:35:24.576312+00:00",
+      "updated_at": "2026-10-27T04:35:24.576312+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T04:27:54.453617+00:00",
+  "updated_at": "2026-10-27T04:35:24.576312+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
