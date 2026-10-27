@@ -6,10 +6,16 @@ Repaso posterior acotado: [OptiPort actualizado](OPTIPORT_V21.md) y doce
 mediciones del paquete final registradas; sin crash nuevo. La variación de
 pacing no justifica un cambio especulativo. Próximos checks concretos aún sin
 cierre: nombre de ataque del jefe frente a barra/pila; retorno de galería sin
-flash título/partida×GBA/HD×normal/skip y fondo mínimo sinposter; dígitos
+flash título/partida×GBA/HD×normal/skip; dígitos
 premium/modificados presentes/ausentes. No repetir primero la matriz de
 submenús ya capturada. El usuario pidió cortar la ampliación de pruebas al
 comunicar la release; los paquetes publicados permanecen intactos.
+
+- [x] **Fondo mínimo sinposter:** variantes GBAazul/HDdorado implementadas y
+  revisadas en juego real; ceroIO/asignaciones. Poster real conserva prioridad.
+  [Evidencia y capturas](GALLERY_EMPTY_BACKDROP.md). Ajuste posterior a la
+  publicación2.1, sin reemplazar archivos de la release. No cierra los checks
+  separados de latencia de previews ni retorno sinflash.
 
 **[2.1 estable publicada](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.1)**
 el27/10 a13:02:10UTC, tag `8c613ae5d`. PR351/353 integrados; Windows, Linux/Deck,

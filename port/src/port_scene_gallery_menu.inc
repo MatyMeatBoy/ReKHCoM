@@ -290,6 +290,31 @@ static void SceneHarness(void) {
     }
 }
 
+/* Last-resort presentation only: no files, decoding, allocations or retries.
+ * Real GBA/HD posters always take precedence over this small built-in motif. */
+static void ScenePreviewBackdrop(int x, int y, int w, int h, int hd) {
+    int row, radius, link, delta;
+    uint32_t ink = hd ? 0xFFB79A63u : 0xFF789BB7u;
+    if (w <= 0 || h <= 0) return;
+    for (row = 0; row < h; row++) {
+        unsigned level = h > 1 ? (unsigned)(row * 160 / (h - 1)) : 0;
+        unsigned r = hd ? 52 + level * 85 / 160 : 18 + level * 30 / 160;
+        unsigned g = hd ? 39 + level * 63 / 160 : 39 + level * 45 / 160;
+        unsigned b = hd ? 24 + level * 29 / 160 : 65 + level * 55 / 160;
+        Fill(x, y + row, w, 1, 0xFF000000u | (r << 16) | (g << 8) | b);
+    }
+    radius = SDL_min(w / 7, (h - 1) / 3);
+    if (radius < 2) return;
+    for (link = -1; link <= 1; link++) {
+        int cx = x + w / 2 + link * radius * 3 / 2, cy = y + h / 2;
+        for (delta = -radius; delta <= radius; delta++) {
+            int span = radius - (delta < 0 ? -delta : delta);
+            Fill(cx - span, cy + delta, 1, 1, ink);
+            Fill(cx + span, cy + delta, 1, 1, ink);
+        }
+    }
+}
+
 static void DrawSceneMenu(int l, int width, int height) {
     SceneHarness();
     static const char* const kTitle[LANG_COUNT] = { "Scenes", "Scènes", "Szenen", "Scene", "Escenas", "シーン" };
@@ -375,9 +400,7 @@ static void DrawSceneMenu(int l, int width, int height) {
                 } else for (py = 0; py < drawH; py++) for (px = 0; px < drawW; px++)
                     Pixel(drawX + px, drawY + py, preview[(py * sourceH / drawH) * sourceW + px * sourceW / drawW]);
             } else {
-                const char* empty = l == LANG_ES ? "Sin vista previa" : "No preview available";
-                while (TextWidth(empty) > pw) { empty = l == LANG_ES ? "Sin captura" : "No still yet"; break; }
-                DrawText(empty, cardX + 7, top + 18 + ph / 2, MENU_DIM, MENU_GREY);
+                ScenePreviewBackdrop(cardX + 6, top + 16, pw, ph, SceneProviderHd(sSceneChoice));
             }
             SceneCopyText(label, sizeof(label), SceneLabel(sSceneChoice, l));
             /* Wrap at spaces to keep the scene's name separate from its picture. */
