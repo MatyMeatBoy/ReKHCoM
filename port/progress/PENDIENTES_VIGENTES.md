@@ -111,6 +111,10 @@ Rama propia `fix/crash-diagnostics`, checkout `khcom-crash-diagnostics`; toma re
   completo (otra estructura de carpetas), sprites HD viejos, música ausente a mitad, ROM US/JP en 64 bits.
 - Issues 27/10 03:00+: sin respuestas nuevas de los reporteros todavía (#277, #272).
 
+- [ ] **Galería de escenas sin vista previa**: en vez del texto «Sin vista previa», un fondo minimalista inspirado
+  en KH (p. ej. corazón/corona/vitral) a baja opacidad, para que se vea pro (pedido del usuario 27/10).
+- [x] **Cartas pequeñas HD centradas** (27/10): usan el recorte de su carta grande HD; PR abierto, hoja r2 en Atlas.
+
 ## TRASPASO (Claude, 27/10): cómo retomar
 
 **Prioridad 1: el cierre de #277 (Deck) / #272 (Android) tras la Llave del Inicio.** Crítico.
