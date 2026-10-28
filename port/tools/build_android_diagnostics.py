@@ -26,7 +26,8 @@ def sha(data):
 
 def validate_private_process(name):
     # aapt accepts names Android's runtime parser rejects (including hyphens).
-    assert re.fullmatch(r':[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*', name), 'Invalid private process name: ' + name
+    if not re.fullmatch(r':[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*', name):
+        raise ValueError('Invalid private process name: ' + name)
 
 
 def main():
