@@ -10660,10 +10660,23 @@
       "approval": null,
       "reference": "Issue459 missing HUD option observation; current rekhcom_launcher.py exposes sprites but zenity raw action IDs, kdialog technical label. Preserve action IDs/import logic; startup priority and2.2.5freeze first.",
       "evidence": []
+    },
+    "v225-vita-build": {
+      "id": "v225-vita-build",
+      "piece": "Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T22:22:36.093570+00:00",
+      "updated_at": "2026-10-28T22:22:36.093570+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:22:25.912673+00:00",
+  "updated_at": "2026-10-28T22:22:36.093570+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

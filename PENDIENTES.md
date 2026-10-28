@@ -380,5 +380,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v225-ps4-build | Build final PS4 beta2.2.5 from frozenf28b884 using owncache/shared SDK, close PKG/hash/SFO02.25 audit | en_revision | codex-v225-console-build | — | Root FREEZE f28b884ab2409753cea0cfae37784d5a3ed90f31 and4consolebuild authorization | 2026-10-28T22:22:25.912673+00:00 |
 | android-official-java-first | Promote verified Java-first entry to official Android packaging via reused safe_manifest/validation; preserve appid/cert/2.2.5 beta and current native builds | integrado | codex-android-official-entry | https://github.com/MatyMeatBoy/ReKHCoM/pull/477 | Root integrator: human-authorized code review; 0e7472c32dbc58a907b40759d2b55145d7ff9ff6 | 2026-10-28T22:21:02.495607+00:00 |
 | linux-launcher-hd-hud-wording | Identify HD HUD import clearly in native Linux dialog; existing sprites action is present | pendiente | — | — | — | 2026-10-28T22:16:36.542064+00:00 |
+| v225-vita-build | Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence | pendiente | — | — | Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized | 2026-10-28T22:22:36.093570+00:00 |
 
 Integrador: libre
