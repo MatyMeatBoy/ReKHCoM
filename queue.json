@@ -9440,10 +9440,10 @@
     "android-launcher-lifecycle-contract": {
       "id": "android-launcher-lifecycle-contract",
       "piece": "Android SDLActivity lifecycle: missing configChanges contract; source/CPU + isolated runtime, preserve :game and default launchMode",
-      "status": "en_revision",
+      "status": "bloqueado",
       "owner": "codex-android-lifecycle",
       "created_at": "2026-10-28T14:11:49.519871+00:00",
-      "updated_at": "2026-10-28T14:21:37.362783+00:00",
+      "updated_at": "2026-10-28T14:37:58.964001+00:00",
       "branch": "fix/android-lifecycle-config",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/443",
       "approval": "Usuario autoriza OptiPort riesgos preventivos; root asigna carril independiente",
@@ -9453,6 +9453,11 @@
           "at": "2026-10-28T14:21:37.362783+00:00",
           "owner": "codex-android-lifecycle",
           "detail": "be03d2ca7: two manifest configChanges declarations only product change; new RED/GREEN2, package6, Java lifecycle logger, exactSDLguard3 and realaaptSDK35PASS. Runtime framework fixtures pending explicitVMhandoff; draft, noAndroid16reporterfixclaim. pruebas/android-launcher-lifecycle-contract/CONTRACT-RECEIPT.json"
+        },
+        {
+          "at": "2026-10-28T14:37:58.964001+00:00",
+          "owner": "codex-android-lifecycle",
+          "detail": "USER STOP via root: no more QA/VM/code; preserve branch be03d2ca79f32dbc6ec4bc263867743c390153c8 and source/CPU/aapt evidence. Framework runtime NOT executed; own wait_handoff PIDs5456/34756 stopped, no own VM started, no ADB called. Root will close443 UNMERGED; NOT integrated."
         }
       ],
       "claimed_at": "2026-10-28T14:12:13.566932+00:00"
@@ -9489,7 +9494,7 @@
     "created_at": "2026-10-28T14:37:46.284570+00:00",
     "updated_at": "2026-10-28T14:37:46.284570+00:00"
   },
-  "updated_at": "2026-10-28T14:37:46.284570+00:00",
+  "updated_at": "2026-10-28T14:37:58.964001+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
