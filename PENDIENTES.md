@@ -387,5 +387,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v23-p1-map-card-hd-gaps | 2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners | pendiente | — | — | — | 2026-10-28T23:02:52.355743+00:00 |
 | v23-p2-jiminy-journal | 2.3 P2: complete Jiminy journal internal submenus and rounded right book edge | pendiente | — | — | — | 2026-10-28T23:02:58.476284+00:00 |
 | v23-p3-audio-transitions | 2.3 P3: complete audio stutter review, intro skip to title and opening Moogle shop submenu | pendiente | — | — | — | 2026-10-28T23:03:04.621579+00:00 |
+| v23-quit-game-menu | v2.3: restaurar Salir del juego en el menu propio, visible en HD y normal, Windows/Linux; cerrar completamente juego y launcher sin regresar al launcher. Reporte #479 coincide con pedido del usuario, comprobar semantica por plataforma. | pendiente | — | — | Pedido directo del usuario tras prioridades v2.3 y reporte479; pendiente despues de publicar2.2.5, sin claim ni codigo aun. | 2026-10-28T23:12:19.692181+00:00 |
 
 Integrador: libre
