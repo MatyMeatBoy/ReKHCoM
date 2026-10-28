@@ -8931,20 +8931,26 @@
     "v22-switch-host-build": {
       "id": "v22-switch-host-build",
       "piece": "Build v2.2 Switch NRO offline from verified5ccb guests; SDK512MiB snapshot1CPU own768MiBjob",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-console-switch-host",
       "created_at": "2026-10-28T05:26:38.407682+00:00",
-      "updated_at": "2026-10-28T05:26:43.972059+00:00",
+      "updated_at": "2026-10-28T05:30:05.441745+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorizes Switch host window after guest and all prior heavy tasks terminal; noPS5/Web until coordination",
       "reference": "switch-guest-attempt1 and realSDKinventory2; NACPversionderived2.2",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T05:30:05.441745+00:00",
+          "owner": "codex-console-switch-host",
+          "detail": "REALSDK/offline snapshot512MiB1CPU PASS source5ccb8d, session41941terminalexit0,51.12s,job768peak717.32/minfree2.234GiB. Closed pruebas/v22-stable-switch/ReKHCoM-v2.2-switch-beta.nro 40817134 SHAf71d948eaa2e660c5b1b59a28291dade52513f6833f605bd24192ec6134b8b42. NACP2.2 and realRomFS211files allbyteshashmatchstaging;3guests identicalcompiled, noROM/SAV/INI/log. DebugELF/NACP/host.o preserved. OriginalSDKdisk size/mtime unchanged; no priorv2.0NROfound; physicalSwitchunverified. NoPS5/Web started."
+        }
+      ],
       "claimed_at": "2026-10-28T05:26:43.972059+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:26:43.972059+00:00",
+  "updated_at": "2026-10-28T05:30:05.441745+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
