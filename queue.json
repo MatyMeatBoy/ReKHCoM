@@ -10082,19 +10082,20 @@
     "font-resize-allocation-fallback": {
       "id": "font-resize-allocation-fallback",
       "piece": "Shared stb guest FontWithCap: retain usable Inst if replacement allocation fails; actual CPU NULL-deref reproduced independently of Moto",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-font-resize",
       "created_at": "2026-10-28T20:25:42.933701+00:00",
-      "updated_at": "2026-10-28T20:25:42.933701+00:00",
+      "updated_at": "2026-10-28T20:26:28.493747+00:00",
       "branch": null,
       "pr": null,
       "approval": "Human requested full sibling fallback audit; root authorized scoped independent crash fix before edit",
       "reference": "D:/01Claude/ReKHCoM-build/qa-runtime/moto374-font-sibling-audit/RESIZE-ALLOCATION-RECEIPT.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T20:26:28.493747+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:25:42.933701+00:00",
+  "updated_at": "2026-10-28T20:26:28.493747+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
