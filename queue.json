@@ -9896,10 +9896,23 @@
         }
       ],
       "claimed_at": "2026-10-28T18:40:48.360302+00:00"
+    },
+    "host-output-controls": {
+      "id": "host-output-controls",
+      "piece": "Negotiated 64-bit SDL host window/vsync controls with truthful application/legacy unsupported behavior",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T18:42:14.434025+00:00",
+      "updated_at": "2026-10-28T18:42:14.434025+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "optiport-v22-profiling",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:42:07.117094+00:00",
+  "updated_at": "2026-10-28T18:42:14.434025+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
