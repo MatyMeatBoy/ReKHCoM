@@ -10860,10 +10860,10 @@
     "optiport-v225-producer-cleanup-wasm": {
       "id": "optiport-v225-producer-cleanup-wasm",
       "piece": "Promote verified delivery-producer, tracked-cleanup and direct Wasm ABI lessons after v2.2.5 publication",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-v225-lessons",
       "created_at": "2026-10-28T23:16:43.977392+00:00",
-      "updated_at": "2026-10-28T23:28:16.927804+00:00",
+      "updated_at": "2026-10-28T23:28:36.985317+00:00",
       "branch": "codex/v225-delivery-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/18",
       "approval": "Root integrator: human-authorized code review; 3a06590903204d0116fc5a45fadfc87628e9220d",
@@ -10878,9 +10878,15 @@
           "at": "2026-10-28T23:28:16.927804+00:00",
           "owner": "codex-optiport-v225-lessons",
           "detail": "Root reviewed 3 module changes, matched official LLD ABI documentation, inspected real four-control Wasm regression and APK final compiled-entry receipts; no runtime/hardware overclaim; tracked build tools preserved."
+        },
+        {
+          "at": "2026-10-28T23:28:36.985317+00:00",
+          "owner": "codex-optiport-v225-lessons",
+          "detail": "Root reviewed 3 module changes, matched official LLD ABI documentation, inspected real four-control Wasm regression and APK final compiled-entry receipts; no runtime/hardware overclaim; tracked build tools preserved.; merged b7b7c60862106070edc987db93aaf84ef747dedc"
         }
       ],
-      "claimed_at": "2026-10-28T23:16:49.151506+00:00"
+      "claimed_at": "2026-10-28T23:16:49.151506+00:00",
+      "completed_at": "2026-10-28T23:28:36.985317+00:00"
     },
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
@@ -10903,7 +10909,7 @@
     "created_at": "2026-10-28T23:28:24.777919+00:00",
     "updated_at": "2026-10-28T23:28:24.777919+00:00"
   },
-  "updated_at": "2026-10-28T23:28:24.777919+00:00",
+  "updated_at": "2026-10-28T23:28:36.985317+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
