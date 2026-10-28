@@ -9465,10 +9465,10 @@
     "optiport-android-startup-contracts": {
       "id": "optiport-android-startup-contracts",
       "piece": "Teach bounded Android startup lifecycle diagnostics and real installation parser contracts from444/442; no device cause claim, no universal Android gate; preserve installed local lessons after upstream merge.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-startup-contracts",
       "created_at": "2026-10-28T14:30:08.722615+00:00",
-      "updated_at": "2026-10-28T14:36:59.610489+00:00",
+      "updated_at": "2026-10-28T14:38:12.181367+00:00",
       "branch": "docs/android-startup-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/12",
       "approval": "User explicitly requested teaching OptiPort the verified startup lessons and closing all PRs before stop. Root reviewed exactef9257c docs-only boundaries and two-scenario review; no device-fix claims.",
@@ -9483,9 +9483,15 @@
           "at": "2026-10-28T14:36:59.610489+00:00",
           "owner": "codex-optiport-startup-contracts",
           "detail": "24Markdown59links, actual AOSP process-name contract and packaging negative tests python-O PASS; documented source444merged and442experimental, no fake baseline effect."
+        },
+        {
+          "at": "2026-10-28T14:38:12.181367+00:00",
+          "owner": "codex-optiport-startup-contracts",
+          "detail": "Root reviewed exact docs-only head and two-scenario informed review; validated24Markdown59links and real parser/optimized negative tests; preserve separation between installation, runtime and device confirmation. User requested final closeout and stop.; merged 433fb6453344506f0abde80131f9b12f9bd69153"
         }
       ],
-      "claimed_at": "2026-10-28T14:30:45.084374+00:00"
+      "claimed_at": "2026-10-28T14:30:45.084374+00:00",
+      "completed_at": "2026-10-28T14:38:12.181367+00:00"
     }
   },
   "integrator": {
@@ -9494,7 +9500,7 @@
     "created_at": "2026-10-28T14:37:46.284570+00:00",
     "updated_at": "2026-10-28T14:37:46.284570+00:00"
   },
-  "updated_at": "2026-10-28T14:37:58.964001+00:00",
+  "updated_at": "2026-10-28T14:38:12.181367+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
