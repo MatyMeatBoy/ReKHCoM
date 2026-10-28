@@ -1,14 +1,14 @@
 # ReKHCoM
 
-PC and browser port of **Kingdom Hearts: Chain of Memories** (Game Boy Advance), built
+Native and browser ports of **Kingdom Hearts: Chain of Memories** (Game Boy Advance), built
 on top of the matching decompilation by [Pheenoh/khcom](https://github.com/Pheenoh/khcom).
 
 The decompiled game runs as a native program (Windows, Linux, Steam Deck, Android, the
-browser and PS5), with its own renderer, audio and launcher, with widescreen and
+browser and the supported consoles), with its own renderer, audio and launcher, with widescreen and
 ultrawide support at the cartridge's original speed.
 
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.0)</b></a>
+  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.2)</b></a>
   &nbsp;·&nbsp; <a href="https://matymeatboy.github.io/ReKHCoM/"><b>▶ Play in your browser · Beta</b></a>
   &nbsp;·&nbsp; <a href="CHANGELOG.md">Changelog</a>
   &nbsp;·&nbsp; <a href="https://github.com/MatyMeatBoy/ReKHCoM/tags">Previous version tags</a>
@@ -17,10 +17,21 @@ ultrawide support at the cartridge's original speed.
 Works with the **European, US and Japanese** cartridges (your own dump; no ROM is
 included), in all five European languages, English (US) and Japanese.
 
-## What's new in v2.0
+## What's new in v2.2
 
-Windows, Linux and Steam Deck are stable. Android, browser and the other ports remain
-beta; **this release does not include a Switch package**. Features vary by platform.
+Windows and Linux desktop/Steam Deck retain their stable release status. Android,
+browser, PS4, PS5, Vita, Switch and Anbernic remain beta; features and physical-device
+coverage vary by platform. See the [changelog](CHANGELOG.md) and [open reports](https://github.com/MatyMeatBoy/ReKHCoM/issues).
+
+- **Desktop stability:** guard empty/single-page menu ranges and preserve the desktop32 zero-divisor compatibility behavior in Windows/Linux64 game code, with bounded fault recovery and original exception reporting.
+- **HD gameplay polish:** corrected card-frame seam pixels, synthesis presentation and world-map contours at the full white-fade endpoint, preserving transparent requirements and original artwork.
+- **Audio continuity:** improved intro/title priming, pause/resume and bounded underrun recovery while preserving game timing and sample production.
+- **Linux HD video:** remove artificial waits after successful partial reads; use pause/skip confirmation and a separate video FPS display.
+- **Import reliability:** accept verified short MP4 alignment tails without relaxing container bounds; distinguish Android ROM ZIPs from HD archives and preserve failed-import recovery.
+- **Desktop cursor:** hide after four seconds of inactivity and restore it on movement or the appropriate focus/entry transition.
+- **Automatic architecture after updates:** prefer a compatible 64-bit runtime once per release; retain explicit session overrides and subsequent manual choices, with 32-bit available for compatibility.
+
+The established v2 features remain available:
 
 - **Optional HD mod:** import your own ReMIX music, movies and **97 story scenes**, with separate movie/cutscene switches. [HD mod](port/progress/HD_MOD.md).
 - **Sharper HD presentation:** cards, title and Options, smooth warm menu lights, and cached fonts/posters that reduce first-open work. [HD graphics](port/progress/HUD_HD_RECOM.md).
@@ -43,7 +54,7 @@ beta; **this release does not include a Switch package**. Features vary by platf
 
 ## Downloads
 
-The current stable PC release is **v2.0**. Choose the package for your platform on the
+The current stable PC release is **v2.2**. Choose the package for your platform on the
 [release page](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest); previous versions
 remain listed under [tags](https://github.com/MatyMeatBoy/ReKHCoM/tags).
 
@@ -56,7 +67,7 @@ remain listed under [tags](https://github.com/MatyMeatBoy/ReKHCoM/tags).
 | Browser | [Play online](https://matymeatboy.github.io/ReKHCoM/) | Beta |
 | PS5 | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
 | PS4 (GoldHEN) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
-| Nintendo Switch (Atmosphère) | — | Not included in v2.0 |
+| Nintendo Switch (Atmosphère) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
 | PS Vita (HENkaku) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
 | Anbernic (RG34XX and similar) | [Latest release](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest) | Beta |
 

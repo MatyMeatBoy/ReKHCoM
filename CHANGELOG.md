@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.2 — release preparation
+## v2.2
 
 - Carry forward the prebuild's stability, card/HUD corrections and audio continuity fixes; keep original game timing and supported 32/64-bit paths.
 - Keep native sprite rendering until the textures required for the current draw are usable, and retain native fallback on failed uploads.
@@ -9,8 +9,12 @@
 - Preserve the GBA zero-divisor remainder when choosing a random enemy card, including the original random-number progression.
 - Accept the observed short CD alignment tail after complete MP4 boxes, while bounding native box traversal and rejecting truncated, oversized or wraparound box lengths.
 - Hide the desktop game cursor after four seconds of inactivity over the focused window, restoring it on mouse activity, focus loss or window exit.
+- Reset desktop architecture preferences to Automatic once per updated release, preferring a compatible 64-bit runtime. Preserve same-version manual choices, explicit session overrides and unrelated settings; retain the 32-bit compatibility path and check the Linux x64 guest's SSE4.1 requirement.
 - Identify source and Windows executable metadata as v2.2 (2.2.0.0). Android retains its existing application/signing configuration and derives a higher stable version code from this version.
-- This entry prepares new builds; it does not announce published packages or additional physical-device confirmation. Existing v2.1 and v2.2-pre3 packages remain unchanged.
+- Fix Linux64 HD movie pipe progress, restore pause/Continue/Skip confirmation, respect the current movie language and show the enabled video FPS notice. Pause, resume, EOF, missing-font fallback, resize, quit and renderer-reset paths have local runtime checks.
+- Carry the release version into Vita package metadata and use response files for long Windows archiver commands; keep every regional object and discard stale archive members on rebuild.
+- Deliver Windows32/64, Linux32/64, Android, Anbernic, PS4, PS5, Vita, Switch and the browser beta from separately identified build sources. Android and console/browser packages retain their beta status; local emulation and package checks do not certify physical hardware or close unrelated reporter cases.
+- Preserve the already published v2.1 and v2.2 prerelease artifacts. Per-artifact source commits, hashes and verification limits accompany the new delivery.
 
 ## v2.2-pre3 — test build preparation
 
