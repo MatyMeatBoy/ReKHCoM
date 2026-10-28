@@ -355,4 +355,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | preview-readiness-observer | Child of optiport-v22-async: preserve CPU underlay on rejected preview upload/draw, bridge content recreation and bounded optional stage observer; no full async-area closure | pr_abierto | codex-optiport-async | https://github.com/MatyMeatBoy/ReKHCoM/pull/454 | User authorized full OptiPort pass; coordinator explicitly approved scoped readiness/underlay child and CPU/functional QA, timing lease separate | 2026-10-28T18:28:39.192572+00:00 |
 | issue449-base-import-123-copy | Basic HD import must include movie3 zz_event_123 and accurately label movies instead of intros; semantic coverage and launcher copy only | pr_abierto | codex-base-import-123 | https://github.com/MatyMeatBoy/ReKHCoM/pull/455 | Usuario sin preguntas fullpass allpending; root authorizes independent baseimport123+copy after audio452 reviewed delivery | 2026-10-28T18:36:58.184522+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T18:40:09.936069+00:00)
+Integrador: libre
