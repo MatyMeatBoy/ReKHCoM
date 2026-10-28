@@ -304,4 +304,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | gameplay-glyph-prewarm-391 | Reviewed child of Claude pacing work: prepare gameplay glyphs before game clock starts; PR391 | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/391 | Usuario: integrar mejoras Claude y stutter priority2; preserve original GBA timing | 2026-10-28T00:09:23.088938+00:00 |
 | issue407-native-movie-validation | Native Linux import: recognize already-plain MP4 safely, fix exact4096box validation boundary; retain XOR and transactional rejection, reporter cause unconfirmed | pr_abierto | codex-linux-movie407 | https://github.com/MatyMeatBoy/ReKHCoM/pull/416 | Root delegated reproduced producer/validator fixes for issue407; no issue reply until artifact review | 2026-10-28T00:17:04.843339+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T00:17:36.900891+00:00)
