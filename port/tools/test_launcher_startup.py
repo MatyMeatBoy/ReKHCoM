@@ -30,7 +30,7 @@ struct SDL_Window {};
 using SDL_GLContext = void*;
 static SDL_Window windowObject;
 static void* sRaUi;
-static int scenario, invalidCall, calls[10], destroyed[6], popupCalls;
+static int scenario, invalidCall, calls[11], destroyed[6], popupCalls;
 static bool context, platform, renderer, popupFail;
 static std::string error, logged, popup;
 #define SDL_INIT_VIDEO 1
@@ -71,6 +71,7 @@ static void SDL_Quit(){destroyed[3]++;error="quit clobber";}
 static void KhRaDestroy(void* p){if(!p)invalidCall++;destroyed[4]++;}
 static void ApplyStyle(){}
 static void LoadFonts(){}
+static bool FinalizeFonts(){return pass(10) || SDL_SetError("Neither configured nor incorporated launcher font atlas could be built");}
 static bool ImGui_ImplSDL3_InitForOpenGL(SDL_Window*,SDL_GLContext){platform=pass(8);return platform;}
 static bool ImGui_ImplOpenGL3_Init(const char*){if(!platform)invalidCall++;renderer=pass(9);return renderer;}
 static void ImGui_ImplSDL3_Shutdown(){if(!platform||renderer)invalidCall++;platform=false;destroyed[5]++;error="backend cleanup clobber";}
@@ -83,8 +84,8 @@ static void ImGui_ImplOpenGL3_Shutdown(){if(!renderer)invalidCall++;renderer=fal
 ''' + window + gl + '\nreturn 0;\n}\n' + r'''
 int main(){
  int failures=0;
- const char* stages[]={"","SDL initialization","window creation","OpenGL context creation","OpenGL context activation","OpenGL current context","OpenGL version query","OpenGL version query","ImGui SDL backend initialization","ImGui OpenGL backend initialization"};
- for(int mode=0;mode<2;mode++)for(scenario=0;scenario<=9;scenario++){
+ const char* stages[]={"","SDL initialization","window creation","OpenGL context creation","OpenGL context activation","OpenGL current context","OpenGL version query","OpenGL version query","ImGui SDL backend initialization","ImGui OpenGL backend initialization","Font atlas initialization"};
+ for(int mode=0;mode<2;mode++)for(scenario=0;scenario<=10;scenario++){
   std::remove("launcher-startup-error.log");std::remove("launcher-startup-error.log.pending");
   invalidCall=popupCalls=0;context=platform=renderer=false;sRaUi=nullptr;popupFail=mode;
   for(int& n:calls)n=0;for(int& n:destroyed)n=0;error="stale unrelated error";logged.clear();popup.clear();
@@ -93,7 +94,8 @@ int main(){
   if(scenario){
    bad|=popupCalls!=1 || popup.find(stages[scenario])==std::string::npos || logged.find(stages[scenario])==std::string::npos;
    if(scenario<=4)bad|=popup.find("injected original failure")==std::string::npos || logged.find("injected original failure")==std::string::npos;
-   else if(scenario>=8)bad|=popup.find("no SDL error detail")==std::string::npos || popup.find("stale unrelated error")!=std::string::npos;
+   else if(scenario==8||scenario==9)bad|=popup.find("no SDL error detail")==std::string::npos || popup.find("stale unrelated error")!=std::string::npos;
+   else if(scenario==10)bad|=popup.find("Neither configured nor incorporated launcher font atlas could be built")==std::string::npos;
    bad|=destroyed[0]!=(scenario>=8) || destroyed[1]!=(scenario>=4) || destroyed[2]!=(scenario>=3) || destroyed[3]!=1 || destroyed[4]!=(scenario>=2) || destroyed[5]!=(scenario==9);
    bad|=sRaUi!=nullptr || context || platform || renderer;
    for(int n=scenario+1;n<=9;n++)bad|=calls[n]!=0;
@@ -103,11 +105,13 @@ int main(){
    bad|=!file || std::string(saved).find(stages[scenario])==std::string::npos;
    if(scenario<=4)bad|=std::string(saved).find("injected original failure")==std::string::npos;
 #endif
+   if(scenario<8)bad|=calls[10]!=0;
+   if(scenario==10)bad|=calls[8]!=0||calls[9]!=0;
   }else{bad|=popupCalls!=0 || !platform || !renderer;for(int n:destroyed)bad|=n!=0;}
   if(bad){std::fprintf(stderr,"scenario%d popupFail%d result%d invalid%d popup:%s cleanup:%d/%d/%d/%d/%d/%d\n",scenario,mode,result,invalidCall,popup.c_str(),destroyed[0],destroyed[1],destroyed[2],destroyed[3],destroyed[4],destroyed[5]);failures++;}
  }
  if(failures)return 97;
- std::puts("PASS 20 actual-source startup cases: nine failure boundaries + success, popup available/unavailable, original error retained, partial cleanup once, no downstream init");
+ std::puts("PASS 22 actual-source startup cases: ten failure boundaries + success, popup available/unavailable, original error retained, partial cleanup once, no downstream init");
 }
 '''
     cc = os.environ.get('CXX') or shutil.which('clang++') or shutil.which('g++')
