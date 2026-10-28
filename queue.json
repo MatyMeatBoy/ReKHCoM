@@ -10822,10 +10822,10 @@
       "status": "pr_abierto",
       "owner": "codex-publication-peer",
       "created_at": "2026-10-28T23:16:25.875995+00:00",
-      "updated_at": "2026-10-28T23:20:05.852098+00:00",
+      "updated_at": "2026-10-28T23:20:55.798095+00:00",
       "branch": "docs/v225-publication-ledger",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/481",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; a838eee81f99ea8bf69cbae3047cb0ae37bdfa11",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5",
       "evidence": [
         {
@@ -10842,6 +10842,11 @@
           "at": "2026-10-28T23:20:05.852098+00:00",
           "owner": "codex-publication-peer",
           "detail": "UpdatedHEADa838eee81f99ea8bf69cbae3047cb0ae37bdfa11;459actualreadablelogsGLIBC_2.38+missingFFmpeg/ffprobe andexplicitv225notfixed;480answeredpending;8hashrows/version/privacy/diffcheckPASS;pruebas/coordinacion/v225-publication-docs-check-v2.json"
+        },
+        {
+          "at": "2026-10-28T23:20:55.798095+00:00",
+          "owner": "codex-publication-peer",
+          "detail": "Root reviewed final docs diff and corrected459 facts; 8 exact package hashes, 24 public links, immutable source/tag and beta scope; 11 issue replies and 4 closures read back. Docs only."
         }
       ],
       "claimed_at": "2026-10-28T23:16:31.109716+00:00"
@@ -10881,7 +10886,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:20:05.852098+00:00",
+  "updated_at": "2026-10-28T23:20:55.798095+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
