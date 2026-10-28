@@ -8754,12 +8754,12 @@
     "issue421-linux64-movie-controls": {
       "id": "issue421-linux64-movie-controls",
       "piece": "Issue421 Linux64 movie pause/confirm skip and FPS overlay parity with Windows; preserve movie clocks and audio across pause",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:59:36.852429+00:00",
-      "updated_at": "2026-10-28T04:04:36.873989+00:00",
+      "updated_at": "2026-10-28T04:11:55.266315+00:00",
       "branch": "fix/linux64-movie-controls",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/428",
       "approval": "User: fix all issue421 observations before v2.2, no Atlas gate for port fixes",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/421",
       "evidence": [
@@ -8767,13 +8767,18 @@
           "at": "2026-10-28T04:04:36.873989+00:00",
           "owner": "codex-deck-video421",
           "detail": "WIP text in audio-underrun: START/Esc/custom keys/tap pause; A/B ignore outsideUI; Continue/Skip then Yes/No(defaultNo),5languages, font fallback; audio pause and wallclock/FPSepoch adjusted; host VideoFPS overlay reads show_fps. REDmissingUI observed. GREEN/hostcompile/runtime not run: root ordered no compiler/GPU/VM at RAM0.825-0.995GiB. No live worker process. Preserve uncommitted3files and branch based07f89441a (427nowmergedc73db919)."
+        },
+        {
+          "at": "2026-10-28T04:11:55.266315+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "Draft428 exactheadace4116e97e54eff34ca4cb2035ea46d2be1f261. Production input/choice/language/clock CPUtestsPASS and completeUI TU compilesSDL3headers; ownedjob128MiB peak40.73MiB minfree1.313GiB BELOW_NORMAL. Testedfilesbyteidenticalafterrebasec73db919. Fullhostlink/runtimecapture/realpause/FPS/audio/reset pendingRAM; do notdeclarephysicalDeckfixed. tests/receipt pruebas/issue421-linux64/controls-cpu. Transport427 separatelyintegrated."
         }
       ],
       "claimed_at": "2026-10-28T03:59:42.146124+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:04:36.873989+00:00",
+  "updated_at": "2026-10-28T04:11:55.266315+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
