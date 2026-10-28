@@ -9075,7 +9075,7 @@
       "status": "en_revision",
       "owner": "codex-deck-qol-review",
       "created_at": "2026-10-28T10:49:24.403895+00:00",
-      "updated_at": "2026-10-28T10:51:47.263221+00:00",
+      "updated_at": "2026-10-28T11:02:15.485885+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/432",
       "approval": null,
@@ -9085,6 +9085,11 @@
           "at": "2026-10-28T10:51:47.263221+00:00",
           "owner": "codex-deck-qol-review",
           "detail": "pruebas/v22-issue-delivery/REVIEW-PR432.json; complete4file readonlyreview;99slot/end/ID0/save/input contracts; forward-onlygap limitation atcard_deckmenu2.c6444; actualruntimeQA stillpending"
+        },
+        {
+          "at": "2026-10-28T11:02:15.485885+00:00",
+          "owner": "codex-deck-qol-review",
+          "detail": "pruebas/v22-issue-delivery/REVIEW-PR432.json andreview432/CPU-CONTRACTS-RESULT.json:39208actualfunctionCPUcasesPASS multiset/canaries; forwardfull99refusal andsimultaneousplace+compact nextframe reproduced; no game/save/GPU/hardware QA yet; postrelease only"
         }
       ],
       "claimed_at": "2026-10-28T10:49:38.457252+00:00"
@@ -9105,7 +9110,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:01:04.669360+00:00",
+  "updated_at": "2026-10-28T11:02:15.485885+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
