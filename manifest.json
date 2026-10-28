@@ -1,12 +1,12 @@
 {
-  "version": "v2.2-web-alpha",
-  "source_commit": "5ccb8d24868ec9fb0a286803f84ad4bf2b3f840c",
+  "version": "v2.2.5-web-alpha",
+  "source_commit": "ea99f7ea49521d4509793d3c13b8dad6b214263b",
   "source_dirty": false,
-  "built_utc": "2026-10-28T10:51:11.871675+00:00",
+  "built_utc": "2026-10-28T23:11:39.902484+00:00",
   "files": {
     "index.html": {
-      "bytes": 16978,
-      "sha256": "751201b3eada9a2976c071db74115661c1bfeb87ee9f486ffdd952f70fb25640"
+      "bytes": 16984,
+      "sha256": "bc8c6dc0a59220862034f0c1fc96736d7acd6e26375cca75aca8bbbe7a9707ff"
     },
     "web.css": {
       "bytes": 14462,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "5d6cf6f7a54bd49a96fcb0d324b72db5b6a99a2ca801ae7e0999f3badf4a814d"
+      "sha256": "e9af304204339b9c1fb6786abb6a557d4f9ccca46b04a28879a49a2da98cc65c"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9507120,
-      "sha256": "f5a2fda254affa8d4c79ea08c945db6fe75088dcb1915eee2f441b9e864ee84c"
+      "bytes": 9505499,
+      "sha256": "df3abae430e4538a6afc0e63b3e44e9d199758b1e56c89e8f9da33307bd86735"
     },
     "rekhcom-us.js": {
       "bytes": 208832,
-      "sha256": "4a9ee63d94a00fa8488d22e2c52d70300dd5afb64d5eecc7ec7c090f619c6c21"
+      "sha256": "677451c31205e29c210f05d660c79f8acd5fcc01ab2a7b4841c333d0faa9b339"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9564777,
-      "sha256": "46c0bcdd3a63b12297a5bfd35aff766010b01f07f04e39bbfcf40b7995c7b377"
+      "bytes": 9562298,
+      "sha256": "ad9ca873e7a340d182845e6bc87e092afa311f069f2ab941ac094385ca11318a"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "eda2149f5ee517dff92da5649396b9a04bb3fdcd3d700caa80b898cb253050c8"
+      "sha256": "7bd4aacd0b2367e08da3acddf21bbedbf34d3f54e108bce5b32265296d9f5004"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9423133,
-      "sha256": "fff801698fd52f278a998eeeaa4de664b308885729238badd80918331c1e86f3"
+      "bytes": 9420939,
+      "sha256": "4c30c8f7a6c2cf651e343e2ebad5930f73808b361ee3c0cebde5826d3164512f"
     }
   }
 }
