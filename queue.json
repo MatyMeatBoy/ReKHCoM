@@ -9544,10 +9544,23 @@
       "reference": "https://github.com/MatyMeatBoy/OptiPort/tree/433fb6453344506f0abde80131f9b12f9bd69153",
       "evidence": [],
       "claimed_at": "2026-10-28T15:58:30.315790+00:00"
+    },
+    "optiport-v22-fullpass-ledger": {
+      "id": "optiport-v22-fullpass-ledger",
+      "piece": "Reconcile full v2.2 OptiPort application: preserve original14 baseline, define two evidence-driven additional blocks and current439/441 report facts with exit criteria, distinguish audited skill from completed product work.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T15:59:36.593626+00:00",
+      "updated_at": "2026-10-28T15:59:36.593626+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User explicitly resumed issues439/441 and prioritized a complete OptiPort pass including learned issues and evaluating additional blocks.",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T15:58:30.315790+00:00",
+  "updated_at": "2026-10-28T15:59:36.593626+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
