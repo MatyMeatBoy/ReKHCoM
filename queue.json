@@ -9768,10 +9768,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/449",
       "evidence": [],
       "claimed_at": "2026-10-28T17:54:22.896767+00:00"
+    },
+    "optiport-embedded-snapshot-refresh": {
+      "id": "optiport-embedded-snapshot-refresh",
+      "piece": "Refresh stale embedded OptiPort offline snapshot from canonical verified upstream, preserving useful local differences and recording source/hash/link coverage; installed Codex/Claude already synced separately.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T17:58:49.435737+00:00",
+      "updated_at": "2026-10-28T17:58:49.435737+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User explicitly asks full OptiPort completion, teaching verified lessons and always loading latest committed skill; root read-only audit found12of22 modules differ and3missing in repository embedded copy.",
+      "reference": "CLAUDE_COLA_ACTUAL.md; user28October autonomousfullpass; canonicalMatyMeatBoy/OptiPort394c34ff; pruebas/optiport-full-pass-20261028/EMBEDDED-SNAPSHOT-AUDIT.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:57:36.698916+00:00",
+  "updated_at": "2026-10-28T17:58:49.435737+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
