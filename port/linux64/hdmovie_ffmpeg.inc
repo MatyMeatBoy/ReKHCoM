@@ -292,7 +292,11 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
             ssize_t n = MovieRead(&video, frame + frameUsed, frameBytes - frameUsed);
             if (n < 0) break;
             frameUsed += (size_t)n;
-            if (frameUsed < frameBytes) { SDL_Delay(1); continue; }
+            /* A pipe fragments even an immediately available decoded image.
+               Waiting for every positive fragment throttles a 1080p frame by
+               hundreds of milliseconds. Yield only when the pipe has no data;
+               the outer loop still pumps events and PCM after every fragment. */
+            if (frameUsed < frameBytes) { if (!n) SDL_Delay(1); continue; }
         }
         double clock = MovieClock(audio != NULL, audioEof, audioBytes,
             audio ? SDL_GetAudioStreamQueued(audio) : 0, SDL_GetTicksNS() / 1e9, &began);
