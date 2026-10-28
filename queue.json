@@ -8565,10 +8565,23 @@
         }
       ],
       "claimed_at": "2026-10-28T02:15:25.378566+00:00"
+    },
+    "v22-stable-version": {
+      "id": "v22-stable-version",
+      "piece": "Stable v2.2 source/package version metadata and Android monotonic upgrade versionCode; no build/publication",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T02:44:34.751469+00:00",
+      "updated_at": "2026-10-28T02:44:34.751469+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User authorized stable2.2; root delegated metadata-only PR, preserve identity/signature/releases",
+      "reference": "Root stable-version metadata delegation",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:38:39.935369+00:00",
+  "updated_at": "2026-10-28T02:44:34.751469+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
