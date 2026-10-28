@@ -9506,19 +9506,24 @@
     "issue441-title-start-bar": {
       "id": "issue441-title-start-bar",
       "piece": "Linux/Deck title Press Start red bar overlays English t; exact release comparison and focused mask/draw-order fix",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-issue441-title",
       "created_at": "2026-10-28T15:56:19.562560+00:00",
-      "updated_at": "2026-10-28T16:17:08.605485+00:00",
+      "updated_at": "2026-10-28T16:20:46.276244+00:00",
       "branch": "fix/issue441-title-start-bar",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/446",
-      "approval": "Usuario reanuda441/439+OptiPort explícitamente; root asigna carril441 sin comentarios externos",
+      "approval": "User explicitly requested fix441; root reviewed exact5c3746d6 and actual missing/words screenshots, pixel evidence, native nine-case Linux A/B plus Windows controls and independent real bundle tests.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/441",
       "evidence": [
         {
           "at": "2026-10-28T16:17:08.605485+00:00",
           "owner": "codex-issue441-title",
           "detail": "5c3746d6d: publicLinuxTARdc8a zeroTITLEassets vsWindows126. Realbundle botharch RED135missing→GREEN335sourcehashes. NineLinux32realROM/exactexeSHAcfbf65c9 cases:missingreproducesTcut;5ENwordsonlyrestoreblackTpixel450,620;fullcoreENFRDEESITaccepted;normal3framesexactequal. WindowsD3D11+softwarecontrol. LinuxsoftwareVM768/1CPU terminal0, noGPUDeckclaim. Evidence pruebas/issue441-title-start-bar/PIXEL-CHECKS.json and vm-run/evidence; missing-corrupt fallback followup not yet fixed."
+        },
+        {
+          "at": "2026-10-28T16:20:46.276244+00:00",
+          "owner": "codex-issue441-title",
+          "detail": "Missing public Linux title assets reproduce clippedT; same exact game executable plus five PressStart PNG fixesT;335core assets hashchecked fori386/armhf. Normalmode frames identical. SoftwareLinux observed, physicalDeck confirmation pending."
         }
       ],
       "claimed_at": "2026-10-28T15:56:43.243450+00:00"
@@ -9616,7 +9621,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:18:23.263583+00:00",
+  "updated_at": "2026-10-28T16:20:46.276244+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
