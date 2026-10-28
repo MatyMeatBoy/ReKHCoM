@@ -9404,10 +9404,10 @@
     "android-launcher-silent-init-diagnostics": {
       "id": "android-launcher-silent-init-diagnostics",
       "piece": "Android before-launcher: exact38f84 SDL_Init/CreateWindow return1 can finish Activity without process death; record stage/SDL error/native return and preserve recoverable Java diagnostics. Reproduce clean failure vs SDL recreation exit0 before assigning S22/Moto cause; include explicit error handling across relevant launcher targets.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-launcher-init-diagnostics",
       "created_at": "2026-10-28T14:08:23.262484+00:00",
-      "updated_at": "2026-10-28T14:25:39.987559+00:00",
+      "updated_at": "2026-10-28T14:27:35.063508+00:00",
       "branch": "fix/launcher-init-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
       "approval": "User explicitly requested applying OptiPort safeguards and pushing fixes. Root exact-head review487f837a and independent40actual-source plus3GL controls PASS; Windows/Android64 TU compile receipts reviewed.",
@@ -9427,9 +9427,15 @@
           "at": "2026-10-28T14:25:39.987559+00:00",
           "owner": "codex-launcher-init-diagnostics",
           "detail": "Preserve original SDL error before cleanup; failed startup stops before downstream GL/ImGui; initialized resources released once. No S22 causal claim."
+        },
+        {
+          "at": "2026-10-28T14:27:35.063508+00:00",
+          "owner": "codex-launcher-init-diagnostics",
+          "detail": "Root exact-head source review and independent40actual-source startup cases plus3GL controls PASS. Windowsi686/Androidarm64 complete O2 TU receipts reviewed; no downstream init after failed setup, original error and partial cleanup retained. Physical S22/Moto cause remains unconfirmed.; merged 874b8942cd82a9ff21477a563dd835ebeae4fb7f"
         }
       ],
-      "claimed_at": "2026-10-28T14:13:40.539224+00:00"
+      "claimed_at": "2026-10-28T14:13:40.539224+00:00",
+      "completed_at": "2026-10-28T14:27:35.063508+00:00"
     },
     "android-launcher-lifecycle-contract": {
       "id": "android-launcher-lifecycle-contract",
@@ -9458,7 +9464,7 @@
     "created_at": "2026-10-28T14:26:42.593863+00:00",
     "updated_at": "2026-10-28T14:26:42.593863+00:00"
   },
-  "updated_at": "2026-10-28T14:26:42.594875+00:00",
+  "updated_at": "2026-10-28T14:27:35.065016+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
