@@ -16,7 +16,7 @@ same shift. Decoder pipes remain bounded by their existing OS backpressure.
 The window uses the existing subtitle font rasterizer, with SDL debug text as a
 font-unavailable fallback. Language follows the guest's subtitle identity when
 available, then the forwarded `KHCOM_LANGUAGE` command-line language, then the
-remembered1..5 game language. Automatic configuration plus `--language es` is
+remembered 1..5 game language. Automatic configuration plus `--language es` is
 covered even with subtitles disabled. A normal first-time in-game language
 choice is remembered by `src/title/mode_lang.c` before the movie can play.
 
@@ -46,29 +46,29 @@ The candidate package was compiled from
 This later evidence update changes documentation only; the compiled product
 sources are unchanged.
 
-Twelve cases ran in the existing Debian12 snapshot with512MiB/one CPU, SDL
+Twelve cases ran in the existing Debian12 snapshot with 512 MiB/one CPU, SDL
 software/dummy rendering and disk PCM. An owned miniature RKG5 guest calls the
-exact packaged host's real movie bridge. Real Debian FFmpeg/ffprobe5.1.9 decodes
-a three-second640x360 MPEG4/AAC fixture with a constant440Hz tone; no ROM, game
+exact packaged host's real movie bridge. Real Debian FFmpeg/ffprobe 5.1.9 decodes
+a three-second 640x360 MPEG4/AAC fixture with a constant 440 Hz tone; no ROM, game
 save or proprietary movie is used.
 
 | Cases | Observed result |
 | --- | --- |
-| Baseline |90frames, nonzero decoded PCM |
-| Pause/cancel/continue, FPSoff and FPSon |90frames in both cases |
-| Explicit Yes |19frames, confirmed skip |
-| Missing font; silent movie |90frames after continue in each case |
-| A/B outside pause |Four proven SDL event injections,90frames, no skip |
-| Quit; renderer reset during playback |Injected after10presents;10frames, expected consume/fallback results |
-| Resize during pause |Actual window and both captures960x540,90frames after continue |
-| Quit; renderer reset during pause |Injected after the first UI present; pause quit/device-reset logs,19frames, expected consume/fallback results |
+| Baseline | 90 frames, nonzero decoded PCM |
+| Pause/cancel/continue, FPSoff and FPSon | 90 frames in both cases |
+| Explicit Yes | 19 frames, confirmed skip |
+| Missing font; silent movie | 90 frames after continue in each case |
+| A/B outside pause |Four proven SDL event injections, 90 frames, no skip |
+| Quit; renderer reset during playback |Injected after 10 presents; 10 frames, expected consume/fallback results |
+| Resize during pause |Actual window and both captures960x540, 90 frames after continue |
+| Quit; renderer reset during pause |Injected after the first UI present; pause quit/device-reset logs, 19 frames, expected consume/fallback results |
 
-The FPSon/off pause captures differ in1584pixels, all inside the notice's
+The FPSon/off pause captures differ in 1584 pixels, all inside the notice's
 rectangle `(6,6)-(228,22)`, with zero differences outside it. The normal tone's
-longest internal zero gap is one sample; the cancel cases contain0.832/0.853s
+longest internal zero gap is one sample; the cancel cases contain 0.832/0.853 s
 of silence during the window and resume afterward. The separate real POSIX
-1080p producer/read-consumer test completed154reads with27empty reads and
-exactly27waits, preserving the event/audio pump after every fragment.
+1080p producer/read-consumer test completed 154 reads with 27 empty reads and
+exactly 27 waits, preserving the event/audio pump after every fragment.
 
 Quit/reset/resize faults use an explicit test-only SDL interposer, not a real
 GPU device loss. The checks establish local decoder, UI and pause-clock
