@@ -267,7 +267,14 @@ int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float 
     SDL_FRect dest = {x,y,w,h};
     int alpha = 255 - SDL_clamp((int)(face & 255) - (int)(shadow & 255), 0, 255);
     if (!sPreviewReady || !renderer || w <= 0 || h <= 0) return 0;
-    if (sPreviewRenderer != renderer || sTextureW != sPreviewW || sTextureH != sPreviewH) {
+    if (sPreviewRenderer != renderer || sTextureW != sPreviewW || sTextureH != sPreviewH
+#if defined(PORT_PS5_GUEST)
+        /* Bridge updates have a void acknowledgement. Recreate only for new
+           CPU content so HostTex must accept its initial upload, rather than
+           drawing an older still after an unacknowledged failed update. */
+        || sTextureSerial != sPreviewSerial
+#endif
+    ) {
         SDL_DestroyTexture(sPreviewTexture); sPreviewTexture = NULL;
     }
     if (!sPreviewTexture) {
