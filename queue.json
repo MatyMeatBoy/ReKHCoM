@@ -10815,10 +10815,23 @@
       "approval": "Pedido directo del usuario tras prioridades v2.3 y reporte479; pendiente despues de publicar2.2.5, sin claim ni codigo aun.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/479",
       "evidence": []
+    },
+    "v225-publication-ledger": {
+      "id": "v225-publication-ledger",
+      "piece": "Published v2.2.5 download/version links and compact public delivery ledger",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T23:16:25.875995+00:00",
+      "updated_at": "2026-10-28T23:16:25.875995+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:12:19.692181+00:00",
+  "updated_at": "2026-10-28T23:16:25.875995+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
