@@ -10706,10 +10706,23 @@
         }
       ],
       "claimed_at": "2026-10-28T22:32:32.232255+00:00"
+    },
+    "v225-ps5-build": {
+      "id": "v225-ps5-build",
+      "piece": "Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T22:45:50.658475+00:00",
+      "updated_at": "2026-10-28T22:45:50.658475+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:45:42.784622+00:00",
+  "updated_at": "2026-10-28T22:45:50.658475+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
