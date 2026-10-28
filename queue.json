@@ -9967,10 +9967,10 @@
       "status": "pr_abierto",
       "owner": "codex-host-output-controls",
       "created_at": "2026-10-28T18:42:14.434025+00:00",
-      "updated_at": "2026-10-28T21:55:37.961438+00:00",
+      "updated_at": "2026-10-28T21:55:58.598262+00:00",
       "branch": "fix/host-output-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/456",
-      "approval": "Root independent product45654checks and2visibilityvariants PASS; user authorized real functional validation and integration. Doc-only finalhead f1c3085855171760ccf0f72d4091da4a31aaddd2 for root final review.",
+      "approval": "Root integrator: human-authorized code review; f1c3085855171760ccf0f72d4091da4a31aaddd2",
       "reference": "optiport-v22-profiling",
       "evidence": [
         {
@@ -9987,6 +9987,11 @@
           "at": "2026-10-28T21:55:37.961438+00:00",
           "owner": "codex-host-output-controls",
           "detail": "ReadyPR456: new commit changes ONLY HOST_OUTPUT_CONTROLS.md; product bytes unchanged4eb48259. ActualWindows32/64 MonstroHD sourceea3419498 (3988+456), ownstate5/5/0, initialclient1920x1080/canvas480x270 andresize1600x900/canvas400x225,DPI120. Host64ACKwindow+VSync requested0actual0;20HDdrawentries/arch,4PNG+losslessgzip inspected. VERIFIED-SUMMARY pruebas/v225-out1-functional/attempt-20261028-185056. Observermistakesretained;allchildren terminal. NoFPS/latency/pixelidenticalcombat/fullHD/LinuxAndroidclaim;profilingparentOPEN."
+        },
+        {
+          "at": "2026-10-28T21:55:58.598262+00:00",
+          "owner": "codex-host-output-controls",
+          "detail": "Root full product diff review and independent54faultchecks+2producer visibility variants PASS. Actual MonstroHD32/64 controlled1920->1600window/canvas acknowledgement and screenshots verified sourceea341. No timing claim or physicalLinuxAndroid certification. Finalhead product identical, docsupdated."
         }
       ],
       "claimed_at": "2026-10-28T18:42:21.131067+00:00"
@@ -10450,7 +10455,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:55:37.961438+00:00",
+  "updated_at": "2026-10-28T21:55:58.598262+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
