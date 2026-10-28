@@ -343,4 +343,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-launcher-lifecycle-contract | Android SDLActivity lifecycle: missing configChanges contract; source/CPU + isolated runtime, preserve :game and default launchMode | en_revision | codex-android-lifecycle | https://github.com/MatyMeatBoy/ReKHCoM/pull/443 | Usuario autoriza OptiPort riesgos preventivos; root asigna carril independiente | 2026-10-28T14:21:37.362783+00:00 |
 | optiport-android-startup-contracts | Teach bounded Android startup lifecycle diagnostics and real installation parser contracts from444/442; no device cause claim, no universal Android gate; preserve installed local lessons after upstream merge. | pr_abierto | codex-optiport-startup-contracts | https://github.com/MatyMeatBoy/OptiPort/pull/12 | User explicitly requested teaching OptiPort the verified startup lessons and closing all PRs before stop. Root reviewed exactef9257c docs-only boundaries and two-scenario review; no device-fix claims. | 2026-10-28T14:36:59.610489+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T14:37:46.284570+00:00)
