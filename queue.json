@@ -10610,10 +10610,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T22:11:21.888165+00:00"
+    },
+    "android-official-java-first": {
+      "id": "android-official-java-first",
+      "piece": "Promote verified Java-first entry to official Android packaging via reused safe_manifest/validation; preserve appid/cert/2.2.5 beta and current native builds",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T22:13:54.958713+00:00",
+      "updated_at": "2026-10-28T22:13:54.958713+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "user",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:11:21.888165+00:00",
+  "updated_at": "2026-10-28T22:13:54.958713+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
