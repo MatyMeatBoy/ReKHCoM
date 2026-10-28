@@ -8832,12 +8832,18 @@
       "status": "en_curso",
       "owner": "codex-console-vita-guest",
       "created_at": "2026-10-28T04:39:19.999717+00:00",
-      "updated_at": "2026-10-28T04:39:25.518562+00:00",
+      "updated_at": "2026-10-28T04:46:39.179891+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorized Vita guest CPU-only window afterPS4/VM421terminal; no host VM until next coordination",
       "reference": "v22-console-delivery existingSDK; userv2.2allplatforms",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T04:46:39.179891+00:00",
+          "owner": "codex-console-vita-guest",
+          "detail": "Attempt1 terminalWinError206 in llvm-ar direct objectlist after EUobjects compiled; not RAM: job384MiBpeak127.37,minfree2.416GiB. No guest.a success claimed. Cachepreserved. Follow-up sourcefixPR429 head79148a804 via vita-windows-archive-response; fullguest rerun awaits reviewedmerge and rootserialwindow. HUDace sourceunchanged."
+        }
+      ],
       "claimed_at": "2026-10-28T04:39:25.518562+00:00"
     },
     "vita-windows-archive-response": {
@@ -8862,7 +8868,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:45:37.846134+00:00",
+  "updated_at": "2026-10-28T04:46:39.179891+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
