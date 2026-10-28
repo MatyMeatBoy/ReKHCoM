@@ -361,4 +361,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-startup-pre1-delivery | Prepare immutable Linuxstartup-pre1 from integrated main452+457+458; exactTAR normal64/safe32 QA and provenance; root publishes | en_curso | codex-linux-startup-delivery | — | Root/user prioritize330374 startup prerelease; isolated build/preparation now, runtime only coordinatedlease; no published overwrite | 2026-10-28T19:43:19.813766+00:00 |
 | dummy-cleanup-startup-pass | User-requested sweep of synthetic dummy outputs and closed CPU fixtures; preserve startup build caches, evidence, proprietary inputs and immutable releases | en_curso | codex-dummy-cleanup | — | Explicit user: hacer repasada de limpieza de dummys | 2026-10-28T19:58:35.241569+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T20:01:12.678633+00:00)
