@@ -10414,10 +10414,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T21:54:06.191665+00:00"
+    },
+    "glyph-upload-gdi-stb": {
+      "id": "glyph-upload-gdi-stb",
+      "piece": "Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T21:54:42.486629+00:00",
+      "updated_at": "2026-10-28T21:54:42.486629+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "user",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:54:27.604647+00:00",
+  "updated_at": "2026-10-28T21:54:42.486629+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
