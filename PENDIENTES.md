@@ -375,4 +375,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | glyph-upload-gdi-stb | Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits | integrado | codex-glyph-gdi-stb | https://github.com/MatyMeatBoy/ReKHCoM/pull/473 | Root integrator: human-authorized code review; edb34a3d63df7851b45e8632137216211066ddca | 2026-10-28T22:00:44.037754+00:00 |
 | v225-stable-version | Version 2.2.5 source identity and platform packaging preflight | integrado | codex-v225-version | https://github.com/MatyMeatBoy/ReKHCoM/pull/472 | Root integrator: human-authorized code review; 8be810c8cd1b79d4861f11d2bbc4ede2f7d0140c | 2026-10-28T21:59:20.581940+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T22:01:33.523121+00:00)
