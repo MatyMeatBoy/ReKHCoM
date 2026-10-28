@@ -9182,12 +9182,18 @@
       "status": "en_curso",
       "owner": "codex-arm-wasm-div-parity",
       "created_at": "2026-10-28T11:12:10.305821+00:00",
-      "updated_at": "2026-10-28T11:12:15.199987+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T11:52:04.624197+00:00",
+      "branch": "audit/arm-wasm-division-parity",
       "pr": null,
       "approval": "Root delegated post2.2 critical parity audit under user authorization; preserve released bytes and original RNG/remainder semantics",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T11:52:04.624197+00:00",
+          "owner": "codex-arm-wasm-div-parity",
+          "detail": "Audit3targets complete: rawWasm13/A64 4/AndroidARM32 6 mismatchesper28cases;prototypepreoptIRguard0each. Original192ThumbPASS. ChildWebPR435ready2dddf; ARMbuilderintegrationSTILLPENDING—parentnotcomplete. AndroidNDKcompilerRT remainderzero uninitializedslot;A64remainderzero dividend;Wasmzero/overflowtrap. NewS22crashnotattributed."
+        }
+      ],
       "claimed_at": "2026-10-28T11:12:15.199987+00:00"
     },
     "post22-wasm-gba-division-lowering": {
@@ -9242,7 +9248,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:51:59.377869+00:00",
+  "updated_at": "2026-10-28T11:52:04.624197+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
