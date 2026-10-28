@@ -8645,19 +8645,20 @@
     "v22-console-delivery": {
       "id": "v22-console-delivery",
       "piece": "Console v2.2 preflight/build delivery PS4 PS5 Vita Switch Anbernic from frozen source; existing SDK only",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-console-delivery",
       "created_at": "2026-10-28T03:16:16.107377+00:00",
-      "updated_at": "2026-10-28T03:16:16.107377+00:00",
+      "updated_at": "2026-10-28T03:16:34.436681+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly requested v2.2 for all consoles; root authorizes preflight now, builds only in coordinated serial window",
       "reference": "Frozen38f84 stable delivery console expansion",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T03:16:34.436681+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T03:16:16.107377+00:00",
+  "updated_at": "2026-10-28T03:16:34.436681+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
