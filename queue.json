@@ -10270,10 +10270,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T21:26:35.019576+00:00"
+    },
+    "linux459-steam-startup": {
+      "id": "linux459-steam-startup",
+      "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T21:27:33.205976+00:00",
+      "updated_at": "2026-10-28T21:27:33.205976+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Human requested2.2.5 all PR and new Linux issues; root explicitly assigns459first, independent460/461 unless mechanism proven",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:26:35.019576+00:00",
+  "updated_at": "2026-10-28T21:27:33.205976+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
