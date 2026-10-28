@@ -363,4 +363,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue374-font-atlas-startup-fallback | Moto374 confirmed ImGui NewFrame null ContainerAtlas: actual-source regression and bounded font build/default fallback before frame, shared launcher platforms | en_curso | codex-font-atlas | — | User asks fix crashes and startup for all; new real374 tombstones establish same font-atlas-null mechanism in5 reports | 2026-10-28T20:17:00.349798+00:00 |
 | font-resize-allocation-fallback | Shared stb guest FontWithCap: retain usable Inst if replacement allocation fails; actual CPU NULL-deref reproduced independently of Moto | pr_abierto | codex-font-resize | https://github.com/MatyMeatBoy/ReKHCoM/pull/465 | Human requested mechanism-wide font fallback review; root approved independent real FontWithCap crash fix. Integration requires root review and lock. | 2026-10-28T20:30:41.728109+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T20:38:28.076195+00:00)
