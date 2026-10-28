@@ -9964,10 +9964,10 @@
     "host-output-controls": {
       "id": "host-output-controls",
       "piece": "Negotiated 64-bit SDL host window/vsync controls with truthful application/legacy unsupported behavior",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-host-output-controls",
       "created_at": "2026-10-28T18:42:14.434025+00:00",
-      "updated_at": "2026-10-28T21:55:58.598262+00:00",
+      "updated_at": "2026-10-28T21:56:13.041626+00:00",
       "branch": "fix/host-output-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/456",
       "approval": "Root integrator: human-authorized code review; f1c3085855171760ccf0f72d4091da4a31aaddd2",
@@ -9992,9 +9992,15 @@
           "at": "2026-10-28T21:55:58.598262+00:00",
           "owner": "codex-host-output-controls",
           "detail": "Root full product diff review and independent54faultchecks+2producer visibility variants PASS. Actual MonstroHD32/64 controlled1920->1600window/canvas acknowledgement and screenshots verified sourceea341. No timing claim or physicalLinuxAndroid certification. Finalhead product identical, docsupdated."
+        },
+        {
+          "at": "2026-10-28T21:56:13.041626+00:00",
+          "owner": "codex-host-output-controls",
+          "detail": "Root full product diff review and independent54faultchecks+2producer visibility variants PASS. Actual MonstroHD32/64 controlled1920->1600window/canvas acknowledgement and screenshots verified sourceea341. No timing claim or physicalLinuxAndroid certification. Finalhead product identical, docsupdated.; merged df310b5dc96f45bb73a05e7ec68cffaa37a173c2"
         }
       ],
-      "claimed_at": "2026-10-28T18:42:21.131067+00:00"
+      "claimed_at": "2026-10-28T18:42:21.131067+00:00",
+      "completed_at": "2026-10-28T21:56:13.041626+00:00"
     },
     "moto374-startup-current-test": {
       "id": "moto374-startup-current-test",
@@ -10460,7 +10466,7 @@
     "created_at": "2026-10-28T21:56:03.805073+00:00",
     "updated_at": "2026-10-28T21:56:03.805073+00:00"
   },
-  "updated_at": "2026-10-28T21:56:03.805073+00:00",
+  "updated_at": "2026-10-28T21:56:13.041626+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
