@@ -9523,12 +9523,18 @@
       "status": "en_curso",
       "owner": "codex-linux-video439",
       "created_at": "2026-10-28T15:56:28.006852+00:00",
-      "updated_at": "2026-10-28T15:56:34.868333+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T16:16:40.666874+00:00",
+      "branch": "fix/linux-hd-video-pacing",
       "pr": null,
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/439",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T16:16:40.666874+00:00",
+          "owner": "codex-linux-video439",
+          "detail": "Source873a5ce2b pollreadiness minimal; RED449fixedsleeps→GREEN17fragments+controls; CPUtransportrealFFmpeg3pairedA/B measured; fixedhostf608239b builtclean, fullhostAV/presentationQA pending"
+        }
+      ],
       "claimed_at": "2026-10-28T15:56:34.868333+00:00"
     },
     "optiport-full-pass-20261028": {
@@ -9590,7 +9596,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:13:45.828294+00:00",
+  "updated_at": "2026-10-28T16:16:40.666874+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
