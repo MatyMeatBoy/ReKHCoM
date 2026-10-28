@@ -10586,15 +10586,21 @@
     "v225-linux-final-build": {
       "id": "v225-linux-final-build",
       "piece": "Frozen2.2.5 Linux desktop32/64 and Anbernic all regions ownD caches, exact package consumer QA and provenance",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-linux225-build",
       "created_at": "2026-10-28T22:08:41.673467+00:00",
-      "updated_at": "2026-10-28T22:08:50.238864+00:00",
+      "updated_at": "2026-10-28T22:40:46.442268+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root freeze f28b884ab2409753cea0cfae37784d5a3ed90f31; human authorizes2.2.5allplatformrelease; root owns publication/VMlease coordination",
-      "reference": "ROOT_FREEZE_SHA=f28b884ab2409753cea0cfae37784d5a3ed90f31",
-      "evidence": [],
+      "reference": "ROOT_FREEZE=f28b884ab2409753cea0cfae37784d5a3ed90f31; finaltag17c385bddf8c44de9a9130068ac9c7a51d7eabf3 native-equivalent",
+      "evidence": [
+        {
+          "at": "2026-10-28T22:40:46.442268+00:00",
+          "owner": "codex-linux225-build",
+          "detail": "Build32/64/ARMhf3regionsPASS;desktopSHA2c70860d565a1c12ccad32517cac33bdb5fde1c71d106201be9e8d24461a3194;AnbernicSHA964afc9d7705256fdb05925243883332992377825029353dafdb4aeac90da4f1;14exactTARcasesPASS;VMquiescenttrue;D:/01Claude/ReKHCoM-build/qa-runtime/v225-linux-final/CONSUMER-GATE.json;335coreassetsidenticalboth;cleanupQAremaining5525906B;hardwarepending"
+        }
+      ],
       "claimed_at": "2026-10-28T22:08:50.238864+00:00"
     },
     "v225-ps4-build": {
@@ -10697,7 +10703,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:32:32.232255+00:00",
+  "updated_at": "2026-10-28T22:40:46.442268+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
