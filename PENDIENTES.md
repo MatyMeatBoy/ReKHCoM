@@ -351,4 +351,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue439-linux-test-delivery | Build current Linux64 guests/host and combined Linux test439 with latest434436441 assets; own caches only, source/hash provenance, reporter pending | en_curso | codex-linux-test439 | — | — | 2026-10-28T16:29:30.966024+00:00 |
 | linux-test439441-delivery | Build, validate and publish immutable Linux test439441 with unchanged media quality, latest32/64 EUUSJP cores, core assets and verified title fallback; deliver to reporter before OptiPort runtime closure. | en_curso | codex-linux-delivery | — | User explicitly prioritized test for439441 first, then OptiPort and remaining tasks autonomously;720p sketch excluded. | 2026-10-28T16:49:20.503208+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T17:00:56.579122+00:00)
+Integrador: libre
