@@ -385,5 +385,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v225-ps5-build | Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence | en_revision | codex-v225-console-build | — | Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy | 2026-10-28T23:00:08.929002+00:00 |
 | web-bg-world-call-abi | Declare shared PortSetBgWorld before four Parasite calls; real Wasm signature trap regression, no gameplay/argument changes; root merges then rebuild affectedWebTU | integrado | codex-web-world-abi | https://github.com/MatyMeatBoy/ReKHCoM/pull/478 | Root integrator: human-authorized code review; 2a89b517a2a7b2825f2d1a8ab38f322891fad20b | 2026-10-28T22:58:42.688547+00:00 |
 | v23-p1-map-card-hd-gaps | 2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners | pendiente | — | — | — | 2026-10-28T23:02:52.355743+00:00 |
+| v23-p2-jiminy-journal | 2.3 P2: complete Jiminy journal internal submenus and rounded right book edge | pendiente | — | — | — | 2026-10-28T23:02:58.476284+00:00 |
 
 Integrador: libre

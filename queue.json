@@ -10770,10 +10770,23 @@
       "approval": null,
       "reference": "Owner screenshot20261028-54576822; pruebas/v23-prioridades/naipes-mapa-referencia.png. After2.2.5release. Reconcile mapinspect-grid-hd-original-frame existing task before implementation.",
       "evidence": []
+    },
+    "v23-p2-jiminy-journal": {
+      "id": "v23-p2-jiminy-journal",
+      "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T23:02:58.476284+00:00",
+      "updated_at": "2026-10-28T23:02:58.476284+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:02:52.355743+00:00",
+  "updated_at": "2026-10-28T23:02:58.476284+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
