@@ -9949,19 +9949,20 @@
     "issue330-startup-compatible-fallback": {
       "id": "issue330-startup-compatible-fallback",
       "piece": "Issue330 manual reversible safe startup: session-only force32+software, shell/Steam escaping contracts; no automatic after-boot restart or device fix claim",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-deck330-safe-startup",
       "created_at": "2026-10-28T19:00:58.541594+00:00",
-      "updated_at": "2026-10-28T19:00:58.541594+00:00",
+      "updated_at": "2026-10-28T19:01:32.350099+00:00",
       "branch": null,
       "pr": null,
       "approval": "User prioritizes Linux330/Android374 tentative startup tests; coordinator assigned scoped fallback with CPU tests, no GPU/VM until lease",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T19:01:32.350099+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:01:06.804508+00:00",
+  "updated_at": "2026-10-28T19:01:32.350099+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
