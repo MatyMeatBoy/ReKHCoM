@@ -33,6 +33,8 @@ def main():
     p.add_argument('--size', default='320x180')
     p.add_argument('--at', type=int, default=1400, help='Closing injection frame; vary to avoid a live BG effect')
     p.add_argument('--natural', action='store_true', help='Private instrumented rewardready probe, then actual boss damage/defeat')
+    p.add_argument('--left', action='store_true', help='Private natural probe: walk left before defeating the boss')
+    p.add_argument('--stage', type=int, default=0)
     args = p.parse_args()
     exe, rom, out = args.exe.resolve(), args.rom.resolve(), args.out.resolve()
     assert not out.exists(), 'Use a NEW evidence directory'
@@ -52,7 +54,7 @@ def main():
         env = {k: v for k, v in os.environ.items() if not k.startswith('KHCOM_')}
         frames = tuple(args.at+offset for offset in (-50, 40, 100, 190, 500))
         env.update(SDL_VIDEO_DRIVER='dummy', SDL_AUDIO_DRIVER='dummy', KHCOM_FAST='1',
-                   KHCOM_WINDOW=args.size, KHCOM_BATTLE=f'{entry}:0:{args.riku}',
+                   KHCOM_WINDOW=args.size, KHCOM_BATTLE=f'{entry}:{args.stage}:{args.riku}',
                    KHCOM_KEYS=f'60-63:A,{args.at+400}-{args.at+403}:A', KHCOM_MODE=f'{args.at}:levelup',
                    KHCOM_QUIT=str(args.at+550), KHCOM_OUTPUT_SHOT=','.join(map(str, frames)),
                    KHCOM_PPULOG='1', KHCOM_REGLOG=f'{args.at-10}-{args.at+101}', KHCOM_PPU_THREADS='1')
@@ -63,6 +65,15 @@ def main():
             env.update(KHCOM_KEYS='60-63:A,3000-3003:A', KHCOM_MODE=','.join(modes),
                        KHCOM_QUIT='3200', KHCOM_OUTPUT_SHOT=','.join(map(str, frames)),
                        KHCOM_REGLOG='1490-1501')
+        if args.left:
+            assert args.natural, '--left requires the private natural reward probe'
+            frames = (1350, 1700, 2100, 2500, 3000)
+            modes = ['300:rewardready'] + [f'{f}:bosskill' for f in range(1400, 2801, 100)]
+            modes += ['1490:takeprize'] + [f'{f}:drawprizes' for f in range(1501, 3000, 200)]
+            modes += [f'{f}:btllog' for f in frames]
+            env.update(KHCOM_KEYS='60-63:A,600-1350:LEFT,1800-2500:RIGHT,3500-3503:A,3600-3603:A',
+                       KHCOM_MODE=','.join(modes), KHCOM_QUIT='3800',
+                       KHCOM_OUTPUT_SHOT=','.join(map(str, frames)), KHCOM_REGLOG='2490-2501')
         with (case/'stdout.txt').open('w') as log:
             run = subprocess.run([str(case/'khcom.exe'), '--rom', str(rom), '--language', 'es'],
                                  cwd=case, env=env, stdout=log, stderr=log, timeout=180,
@@ -73,7 +84,7 @@ def main():
                    exit=run.returncode, captures=passed, frames=frames)
         results.append(row)
         (out/'RESULTS.json').write_text(json.dumps(dict(executable_sha256=exe_sha, private_rom_sha256=rom_sha,
-            view=args.view, zoom=args.zoom, hd=args.hd, riku=args.riku, size=args.size, injection_frame=args.at, natural_probe=args.natural, cases=results,
+            view=args.view, zoom=args.zoom, hd=args.hd, riku=args.riku, size=args.size, injection_frame=args.at, natural_probe=args.natural, left=args.left, stage=args.stage, cases=results,
             scope='Real debug encounter closing/reward tasks; capture completion is not pixel certification or natural EXP/device proof'), indent=2))
         print(row['name'], 'capture PASS' if passed else 'FAIL', flush=True)
         assert passed, row
