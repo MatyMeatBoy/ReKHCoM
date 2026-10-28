@@ -8235,15 +8235,21 @@
     "hud-polish-blend-fixture": {
       "id": "hud-polish-blend-fixture",
       "piece": "PR402 fixture format constants align with real guest SDL enum; RED/GREEN texture-generation and native SDL blend probe only",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-hud-blend-fixture",
       "created_at": "2026-10-28T00:08:09.376287+00:00",
-      "updated_at": "2026-10-28T00:08:15.571520+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T00:09:06.999080+00:00",
+      "branch": "fix/hd-ring-fallback-blend",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/402",
       "approval": "User fixes authorized; root delegated child of hud-polish, branch402 fixture only",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T00:09:06.999080+00:00",
+          "owner": "codex-hud-blend-fixture",
+          "detail": "Head a00012c9191dd65c5b7ff865c6ea15be8082f991 includes currentmain merge plus ONLY actual enum constants fixture. RED before missingARGB/RGBA/BGRA compile failure; GREEN production texture-generations bothPORT_ANDROID64 andPORT_LINUX64_GUEST exit0. Independent nativeSDLsoftware4formatsx3access exactdefaultmatch+explicitNONEoverride PASS; noGPU/build. Parent hud-polish unchanged; child only."
+        }
+      ],
       "claimed_at": "2026-10-28T00:08:15.571520+00:00"
     },
     "gameplay-glyph-prewarm-391": {
@@ -8268,7 +8274,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T00:08:53.156161+00:00",
+  "updated_at": "2026-10-28T00:09:06.999080+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
