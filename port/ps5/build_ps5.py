@@ -31,7 +31,8 @@ PORT_PATCHES = {
     'port_ui.c': [('        case ITEM_INTZOOM:\n        case ITEM_SCALE: return 0;',
                    '        /* the console has no window or screen mode to choose */\n' +
                    ('' if LINUX64 else '        case ITEM_FULLSCREEN:\n') +
-                   '        case ITEM_FS_RES:\n        case ITEM_VSYNC: return 0;\n'
+                   '        case ITEM_FS_RES: return 0;\n'
+                   '        case ITEM_VSYNC: { int interval; return SDL_GetRenderVSync(SDL_GetRenderer(NULL), &interval); }\n'
                    '        case ITEM_INTZOOM:\n        case ITEM_SCALE: return 0;'),
                   # the Japanese cartridge's options menu is in English (no Japanese font is available here)
                   ('#elif defined(VERSION_JP)\n    return LANG_JA;', '#elif defined(VERSION_JP)\n    return LANG_EN;'),
