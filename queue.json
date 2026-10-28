@@ -9689,7 +9689,7 @@
       "status": "en_curso",
       "owner": "codex-linux-test439",
       "created_at": "2026-10-28T16:29:21.003706+00:00",
-      "updated_at": "2026-10-28T17:03:01.703010+00:00",
+      "updated_at": "2026-10-28T17:49:15.657560+00:00",
       "branch": "build/linux-test439-latest",
       "pr": null,
       "approval": null,
@@ -9699,6 +9699,11 @@
           "at": "2026-10-28T17:03:01.703010+00:00",
           "owner": "codex-linux-test439",
           "detail": "Source248b3083 fullLinux64(363.7s) andi386(435.6s) BOTHterminalexit0, EU/US/JPfresh ownobjs. 64host f608239b exactA-Btested; guesthashes/ELF32 receipts latest-build/. Cachewarmquiet awaiting448fallbackmerge/incremental, noVM/benchmark. Packagehelper335core/tarreadbackready; rootpublishesv2.2-test439-441."
+        },
+        {
+          "at": "2026-10-28T17:49:15.657560+00:00",
+          "owner": "codex-linux-test439",
+          "detail": "2026-10-28 exact combined Linux TAR closed source07d5e1458942b7573cb8d855d0f0a3a4f6cdc661 SHA256a0db3dec9d541388634ba152b5c4b0a9b5ced7a270589653b42f8e10448268a0. Consumer derived gate PASS7/7, QEMUoff count0: pruebas/issue439-linux-video-pacing/CONSUMER-GATE.json; six real-wrapper EUUSJP32/64 directedtitle fixtures, EUUS acceptedHDwords andJPnativefallback(EUUS-only recipes); actualcore HD1080p30 legalfixture60frames, nonzeroPCM, Eventreturn. Observerfalse-negatives preserved (hostReKHCoM.log omitted), independent finalizerPASS, no physicalDeckclaim. Artifact+gate handed root for publication/reporter delivery; no quality/transcode changes."
         }
       ],
       "claimed_at": "2026-10-28T16:29:30.966024+00:00"
@@ -9725,7 +9730,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:19:48.571198+00:00",
+  "updated_at": "2026-10-28T17:49:15.657560+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
