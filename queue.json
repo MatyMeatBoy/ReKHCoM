@@ -8463,10 +8463,10 @@
     "enemy-random-card-zero-modulus": {
       "id": "enemy-random-card-zero-modulus",
       "piece": "Preservar resto GBA en selección de naipe enemigo con índice cero, todas las plataformas",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T01:35:22.663888+00:00",
-      "updated_at": "2026-10-28T01:39:49.128135+00:00",
+      "updated_at": "2026-10-28T01:49:05.471816+00:00",
       "branch": "fix/enemy-random-zero-modulus",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/417",
       "approval": "Usuario: auditar divisores y restos en todas las plataformas preservando lógica GBA",
@@ -8476,9 +8476,15 @@
           "at": "2026-10-28T01:39:49.128135+00:00",
           "owner": "codex-integrador",
           "detail": "PR417 source common MOD0 only at index-zero remainder. Actual 32-bit types: 8160 positive and32 zero whole-state/RNG cases PASS. Prior source RED C94 after positive controls. Thumb192PASS. Production ARM64_32 TU compiles and disassembly guards remainder after RNG; native32 EU, guestEU and Windows64 host links PASS. No story call/report attribution; independent review requested."
+        },
+        {
+          "at": "2026-10-28T01:49:05.471816+00:00",
+          "owner": "codex-integrador",
+          "detail": "Root and independent worker reviewed exact1d608. Full production initializer with actual32-bit types:8160 positive+32zero whole-state/RNG controls PASS; old source C94 onzero after positives. Thumb192PASS. ARM64_32 production TU compile and guarded remainder disassembly; native32EU, guestEU, Win64 host links PASS. Independent worker reran exact probe PASS. No current story or reporter attribution; no physical ARM claim.; merged 2013d0f09ba59699c3ac88a109f8313eb76516cc"
         }
       ],
-      "claimed_at": "2026-10-28T01:35:33.851766+00:00"
+      "claimed_at": "2026-10-28T01:35:33.851766+00:00",
+      "completed_at": "2026-10-28T01:49:05.471816+00:00"
     }
   },
   "integrator": {
@@ -8487,7 +8493,7 @@
     "created_at": "2026-10-28T01:48:56.506255+00:00",
     "updated_at": "2026-10-28T01:48:56.506255+00:00"
   },
-  "updated_at": "2026-10-28T01:48:56.506255+00:00",
+  "updated_at": "2026-10-28T01:49:05.471816+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
