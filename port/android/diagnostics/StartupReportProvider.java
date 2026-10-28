@@ -7,12 +7,12 @@ import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import java.io.*;
 
-/** Variant only: one exact read-only report URI, protected by Android URI grants. */
+/** Variant only: immutable UUID snapshots, protected by exact read-only URI grants. */
 public final class StartupReportProvider extends ContentProvider {
     @Override public boolean onCreate(){return true;}
     private File file(Uri uri)throws FileNotFoundException {
-        if(getContext()==null||!"content".equals(uri.getScheme())||!(getContext().getPackageName()+".startup-report").equals(uri.getAuthority())||!"/startup-report.zip".equals(uri.getPath()))throw new FileNotFoundException("Unknown report URI");
-        File file=StartupExitCollector.report(getContext());if(!file.isFile())throw new FileNotFoundException("Report unavailable");return file;
+        if(getContext()==null||!"content".equals(uri.getScheme())||!(getContext().getPackageName()+".startup-report").equals(uri.getAuthority())||uri.getPath()==null||!uri.getPath().startsWith("/")||uri.getQuery()!=null||uri.getFragment()!=null)throw new FileNotFoundException("Unknown report URI");
+        return ReportSnapshots.file(StartupExitCollector.sharedDirectory(getContext()),uri.getPath().substring(1));
     }
     @Override public ParcelFileDescriptor openFile(Uri uri,String mode)throws FileNotFoundException {if(!"r".equals(mode))throw new FileNotFoundException("Report is read only");return ParcelFileDescriptor.open(file(uri),ParcelFileDescriptor.MODE_READ_ONLY);}
     @Override public String getType(Uri uri){try{file(uri);return "application/zip";}catch(FileNotFoundException e){return null;}}

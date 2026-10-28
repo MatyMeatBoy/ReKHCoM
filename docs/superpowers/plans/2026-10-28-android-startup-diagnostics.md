@@ -16,7 +16,7 @@
 - API31 native traces are protobuf tombstones, not UTF-8 text. Keep exact bounded .pb bytes; ANR traces are separate .txt files. Missing/expired/denied/oversized traces get an explicit status, never a fabricated trace or root cause.
 - [ActivityManager primary docs](https://developer.android.com/reference/android/app/ActivityManager#getHistoricalProcessExitReasons(java.lang.String,int,int)) and [ApplicationExitInfo primary docs](https://developer.android.com/reference/android/app/ApplicationExitInfo#getTraceInputStream()). Same UID needs no DUMP permission; other UIDs are excluded.
 - UI: Open launcher, Copy summary, Share report, Refresh; plain Java Activity with hardware acceleration disabled. Do not reference/load SDL until explicit Open launcher action. Diagnostic manifest removes network permission; no global file/log permissions.
-- Collector runs off the UI thread. Bound metadata/summary to64KiB and retained trace data to4MiB total. Sharing is explicit through a read-only, non-exported, grantable provider limited to one report ZIP. No saves, ROMs, tokens, configs or other apps' reports collected.
+- Collector runs off the UI thread. Bound metadata/summary to64KiB and retained trace data to4MiB total. Each explicit Share copies off-thread into an immutable UUID-named ZIP; a non-exported provider grants READ only to that exact URI without a prefix grant. Retain at most8 own snapshots in cache/shared; Refresh never changes older shared bytes. Canonical paths and strict UUID names exclude arbitrary cache/user files. No saves, ROMs, tokens, configs or other apps' reports collected.
 
 ## Tasks and acceptance
 

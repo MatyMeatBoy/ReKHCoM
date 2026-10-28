@@ -12,6 +12,8 @@ import java.util.zip.*;
 /** Variant only: own-package historical exit records, never global logcat or saves. */
 final class StartupExitCollector {
     static File report(Context context){return new File(new File(context.getCacheDir(),"startup-diagnostics"),"report.zip");}
+    static File sharedDirectory(Context context){return new File(report(context).getParentFile(),"shared");}
+    static synchronized File shareSnapshot(Context context)throws IOException {return ReportSnapshots.create(report(context),sharedDirectory(context));}
     static synchronized String collect(Context context)throws IOException {
         File directory=report(context).getParentFile();
         if(!directory.isDirectory()&&!directory.mkdirs())throw new IOException("Cannot create report folder");
