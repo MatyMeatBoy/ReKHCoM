@@ -8422,20 +8422,26 @@
     "hd-gameplay-lossless-white-fallback": {
       "id": "hd-gameplay-lossless-white-fallback",
       "piece": "PR400 lazy-white: require usable white fade before native omission; producer/consumer failure, memory/budget, first-fade equivalence and bounded measurements",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-lazy-white-fallback",
       "created_at": "2026-10-28T00:49:22.554968+00:00",
-      "updated_at": "2026-10-28T00:49:28.125349+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T01:20:53.342000+00:00",
+      "branch": "perf/hd-lazy-white",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/400",
       "approval": "Root delegated child of hd-gameplay-lossless-load-budget; preserve parent Claude claim and assets",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T01:20:53.342000+00:00",
+          "owner": "codex-lazy-white-fallback",
+          "detail": "Final8f8f775f2b31fb36f3ff13c26af98fe80420af02 atopbc68main404. LAZY WITHDRAWN after2048D3D11:Load-5.6ms but firstfade+8.7ms. Eager policy preserved; only base/white actual bridge readiness before native omission. RED oldobjectacceptance→GREEN Queue/DrawObjs; fullshim→h_tex_create allocation/upload reject,retry,filters,epoch,cleanup PASS. FinalD3D11 four2048framesbyteidentical,two texturesatLoad/afterfade,firstfadeQueue0.0011/0.0014ms. Budgets/decoderpeak/release,404acceptance,card/reload/generations PASS;native32EU LINK PASS. Physicaldevicesunverified,noart/packageschanged. ParentClaude tasknotstolen."
+        }
+      ],
       "claimed_at": "2026-10-28T00:49:28.125349+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T01:16:53.784451+00:00",
+  "updated_at": "2026-10-28T01:20:53.342000+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
