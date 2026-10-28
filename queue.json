@@ -8169,15 +8169,21 @@
     "v22-pre3-current-source-delivery": {
       "id": "v22-pre3-current-source-delivery",
       "piece": "Build fresh pre3 Windows32/64 EU US JP with integrated card seams, audio continuity, HUD brightness and gallery fixes; immutable verified ZIP and hashes in releases",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T23:54:32.178347+00:00",
-      "updated_at": "2026-10-27T23:54:36.683312+00:00",
+      "updated_at": "2026-10-28T00:17:31.689612+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/413",
       "approval": "Usuario: nightly interno ahora, ultima version de todo, pre en releases y solo plataformas compiladas; integrar todo lo cerrado",
       "reference": "Pre2 immutable; PR405/406/408/409/401/411/398/399; new last-pixel child pending",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T00:17:31.689612+00:00",
+          "owner": "codex-integrador",
+          "detail": "Closed exact Windows32/64 EU/US/JP ZIP SHA256 3c0dcef3317f7627a9e163e826765309aecf5c2c68a10a65f24669e84606282c at 4b5d18ac1a2016810f510717864693c2e9df7ab6; startup6, productDIV21, userSAV map normal/HD+return both arches, actual-signal audio12 with immutableGBAproducer, exact card3 capturesPASS; pre2/SAV/log unchanged. Publication follows under integrator lock."
+        }
+      ],
       "claimed_at": "2026-10-27T23:54:36.683312+00:00"
     },
     "v22-pre3-version-identity": {
@@ -8306,7 +8312,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T00:17:04.843339+00:00",
+  "updated_at": "2026-10-28T00:17:31.689612+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
