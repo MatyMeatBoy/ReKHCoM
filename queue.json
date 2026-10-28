@@ -10894,17 +10894,23 @@
       "status": "en_curso",
       "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-28T23:22:23.561773+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T23:28:57.129982+00:00",
+      "branch": "fix/issue480-room-spring",
       "pr": null,
       "approval": "Usuario pide cubrir todos los issues; root autoriza triage nuevo480 y mantenerlo abierto. Sin fix ni reproduccion aun, pendiente sin claim.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/480",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T23:28:57.129982+00:00",
+          "owner": "codex-issue480",
+          "detail": "User made bugs priority1 and disabled workers. Root solo; image/video preserved; exact version/device/mode/save requested in6483230554. Bounded diagnostic pose/log only; actual B input/collision/jump unchanged. No cause/fix claimed."
+        }
+      ],
       "claimed_at": "2026-10-28T23:22:23.561773+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:28:44.242308+00:00",
+  "updated_at": "2026-10-28T23:28:57.129982+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
