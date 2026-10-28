@@ -1,8 +1,9 @@
 # Overlapping HD edge strips: commit coverage after acceptance
 
 The synthesis requirement body has two native OAM pieces sharing one row.
-Drawing its translucent HD picture in both places produces a pale horizontal
-band. The edge-strip trim in PR404 removes that repeated strip.
+Drawing its translucent HD picture twice adds an extra blend along that edge.
+The edge-strip trim in PR404 removes that repeated blend. It does not remove
+the room background intentionally visible through the translucent body.
 
 Integrator review reproduced a fallback defect in the initial proposal: a
 16x16 piece starting at source y=-8 was recorded before the sprite queue
@@ -28,6 +29,23 @@ UV and geometry, zero/different alpha, dark/white fade, layer, priority, clip,
 flipped/affine paths, retained containment and saturated bookkeeping controls.
 The existing first-frame fallback and card seam/corner regressions also pass.
 
-Current full-game validation is pending. The separately reported world-card
-opening must be checked through its actual consumer before claiming that
-transition is fixed. CPU coverage alone does not establish the visual result.
+Private native32 EU D3D11 before/after runs at the corrected combined source
+reach both synthesis selectors and return normally. At the inspected frame,
+the body pieces meet at the same output boundary rather than sharing four
+output rows; geometry and UV logs identify the actual consumers. The sampled
+floor area changes from RGB234 to233 when the extra blend is removed.
+
+Layer isolation also rejects a broader claim: the remaining visible horizontal
+edge is present with both HD pieces transparent. Its transmitted background
+matches one35%-alpha body composition in2511 channel comparisons. It is the
+room spotlight/floor edge, not another glyph pass. Making that interior opaque
+would be a separate visual change and must preserve the real digit, which is
+currently drawn before the body. The private guarded proposal is not part of
+this correction or of the published pre3 packages.
+
+After combining current main, the acceptance, first-frame fallback, attack
+seam, Olympia and native-corner regressions pass again. Full containment,
+interior intersections, flipped/affine pieces and different blend/owner states
+remain unchanged. The separately reported world-card opening still requires
+its own actual-consumer comparison; synthesis evidence does not certify it.
+Other platform/device execution and final-package verification remain separate.
