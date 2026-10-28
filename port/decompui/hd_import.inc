@@ -1694,8 +1694,8 @@ static void DiscardImport(const fs::path& data) {
     fs::remove(JournalPath(data), ec);
 }
 
-/* A whole MP4: its top-level boxes add up to the file and the index (moov) and the data (mdat) are there. Reads a few
-   bytes a box: quick even for the opening. */
+/* Complete top-level boxes with moov/mdat, optionally followed by the observed
+   legacy CD fill to a 16-byte boundary. Header-only, bounded like Linux's importer. */
 static bool Mp4Ok(const fs::path& f) {
     std::error_code ec;
     uintmax_t size = fs::file_size(f, ec), at = 0;
@@ -1703,28 +1703,45 @@ static bool Mp4Ok(const fs::path& f) {
     bool moov = false, mdat = false;
     if (ec || !in)
         return false;
-    while (at + 8 <= size) {
+    auto complete = [&]() {
+        if (!moov || !mdat) return false;
+        if (at == size) return true;
+        uintmax_t left = size - at;
+        if ((size & 15) || left == 0 || left >= 16) return false;
+        unsigned char padding[15];
+        in.seekg((std::streamoff)at);
+        if (!in.read((char*)padding, (std::streamsize)left)) return false;
+        for (uintmax_t i = 0; i < left; i++)
+            if (padding[i] != 0xcd) return false;
+        return true;
+    };
+    for (unsigned count = 0; count < 4096; count++) {
+        if (complete()) return true;
+        if (size - at < 8) return false;
         unsigned char h[16];
         in.seekg((std::streamoff)at);
         if (!in.read((char*)h, 8))
             return false;
         uint64_t box = (uint64_t)h[0] << 24 | h[1] << 16 | h[2] << 8 | h[3];
+        uint64_t minimum = 8;
         if (box == 1) {
+            if (size - at < 16) return false;
             if (!in.read((char*)h + 8, 8))
                 return false;
+            minimum = 16;
             box = 0;
             for (int i = 8; i < 16; i++)
                 box = box << 8 | h[i];
         } else if (box == 0) {
             box = size - at;
         }
-        if (box < 8)
+        if (box < minimum || box > size - at)
             return false;
         moov |= memcmp(h + 4, "moov", 4) == 0;
         mdat |= memcmp(h + 4, "mdat", 4) == 0;
         at += box;
     }
-    return at == size && moov && mdat;
+    return complete();
 }
 
 /* One movie into dst: copied as it is (quality 0), or re-encoded from a plain copy beside it (that copy becomes the
