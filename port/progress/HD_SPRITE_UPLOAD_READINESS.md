@@ -63,8 +63,15 @@ at the fade; those counts did not justify introducing that flash-time cost.
 The lazy code was removed. A native software-renderer control also produced
 four byte-identical frames without any bridge upload calls.
 
+The final eager/readiness policy was then compared against current main at
+2048×2048 for three rounds. Both created two textures at Load and still had two
+after the fade; first-fade queue medians were 0.0011 / 0.0014 ms, with all four
+frames byte-identical. The Load implementation itself is unchanged from main;
+the final policy adds no deferred white construction at that point.
+
 Evidence stays private under `pruebas/hd-lazy-white-qa/`,
 `pruebas/hd-lazy-white-max-qa/` and `pruebas/hd-lazy-white-software-qa/`.
+The final-policy comparison is in `pruebas/hd-eager-readiness-qa/`.
 These probes are not whole-menu frame measurements or GPU timers. Source art
 and published packages are unchanged; physical device and long-session testing
 remain separate gates.
