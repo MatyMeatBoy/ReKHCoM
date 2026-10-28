@@ -8338,10 +8338,10 @@
     "v22-pre3-linux-import-delivery": {
       "id": "v22-pre3-linux-import-delivery",
       "piece": "Compile current Linux32/64 EU US JP with current crash/audio/card/HUD fixes and native movie import416; exact tar snapshot-VM CPU checks, no GamingMode physical claim",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T00:21:40.751901+00:00",
-      "updated_at": "2026-10-28T00:37:20.640342+00:00",
+      "updated_at": "2026-10-28T00:37:37.061226+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/416",
       "approval": "Usuario: solucionar Steam Deck/import issues, entregar pre solo compilada, ultima version y todos fixes",
@@ -8351,9 +8351,15 @@
           "at": "2026-10-28T00:37:20.640342+00:00",
           "owner": "codex-integrador",
           "detail": "Closed nativeLinux pre3 source f64413c7218abf811308409f91b7e13a583527d3 exacttar SHA256 dff1bfa36fdbb0d47cb171db434e4499f9f2532940d557d51baceccc111afac6; successful snapshot VM all6 startups, actual copied save/map32+64 return, native importer CLI/transactions and21 product-host division controls. PhysicalGamingMode unverified; Windows8assets preserved."
+        },
+        {
+          "at": "2026-10-28T00:37:37.061226+00:00",
+          "owner": "codex-integrador",
+          "detail": "Published https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2-pre3 nativeLinux source f64413c7218abf811308409f91b7e13a583527d3; all6 new asset serverdigests match frozen files; original8Windows assets unchanged; Latestv2.1 unchanged. Headless native checks pass, physicalSteamDeck/reporters407/330/336/380 remain unconfirmed."
         }
       ],
-      "claimed_at": "2026-10-28T00:21:45.714703+00:00"
+      "claimed_at": "2026-10-28T00:21:45.714703+00:00",
+      "completed_at": "2026-10-28T00:37:37.061226+00:00"
     }
   },
   "integrator": {
@@ -8362,7 +8368,7 @@
     "created_at": "2026-10-28T00:37:25.437949+00:00",
     "updated_at": "2026-10-28T00:37:25.437949+00:00"
   },
-  "updated_at": "2026-10-28T00:37:25.437949+00:00",
+  "updated_at": "2026-10-28T00:37:37.062225+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
