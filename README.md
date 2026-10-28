@@ -17,7 +17,11 @@ ultrawide support at the cartridge's original speed.
 Works with the **European, US and Japanese** cartridges (your own dump; no ROM is
 included), in all five European languages, English (US) and Japanese.
 
-## What's new in v2.2
+## What's new in v2.2.5
+
+The 2.2.5 update focuses on launcher font readiness, Android startup recovery,
+Linux keyboard/audio packaging and HD media controls. See the
+[changelog](CHANGELOG.md) for the complete scope and remaining device checks.
 
 Windows and Linux desktop/Steam Deck retain their stable release status. Android,
 browser, PS4, PS5, Vita, Switch and Anbernic remain beta; features and physical-device

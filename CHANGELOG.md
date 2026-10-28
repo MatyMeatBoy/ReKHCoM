@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.2.5
+
+- Validate the launcher's built font atlas and every active font role before starting ImGui frames. If construction fails, try the built-in font once; a second failure stops cleanly with the original diagnostic. This addresses the locally reproduced Moto report mechanism; physical Moto/Samsung confirmation remains pending.
+- Start Android through the Java menu before SDL, validate an installed ROM before direct Play, isolate native attempts and preserve the previous startup report. Android remains beta.
+- Check font resize allocations and glyph texture uploads in FreeType, Web, Windows GDI and guest stb paths. Rejected replacements retain or resume native rendering; host GPU acknowledgement and the first failed frame have documented limits.
+- Restore Linux64 keyboard input without a connected controller, including configured keys, focus loss and bounded release handling.
+- Include the native64 PulseAudio client's matching private dependency instead of relying on a distribution-specific system installation. Keep automatic audio-driver selection and system GPU libraries unchanged.
+- Add flushed Linux startup stages and a manual session-only `--safe-startup` diagnostic mode; normal launches retain accelerated rendering and architecture selection.
+- Apply window size and VSync requests through a negotiated host capability, report unsupported operations accurately and keep Android's fixed surface contract.
+- Preserve the selected gallery still when preview creation, upload or draw is rejected; cancel stale generations and bound optional diagnostics.
+- Apply master volume to HD movies, improve Linux movie progress and title fallback, and include the missing floor12 movie in basic imports without lowering resolution or quality.
+- Carry forward post-2.2 boss sprite/background fixes and ARM/Web arithmetic compatibility work. Runtime checks and reporter confirmation remain specific to each platform and case.
+- Update the embedded OptiPort method and preserve complete patch versions in PS4/Vita package metadata. Existing stable/test downloads remain immutable; final package hashes and verification limits accompany the delivery.
+
 ## v2.2
 
 - Carry forward the prebuild's stability, card/HUD corrections and audio continuity fixes; keep original game timing and supported 32/64-bit paths.
