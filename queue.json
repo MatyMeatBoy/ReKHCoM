@@ -10454,16 +10454,21 @@
       "status": "pr_abierto",
       "owner": "codex-glyph-gdi-stb",
       "created_at": "2026-10-28T21:54:42.486629+00:00",
-      "updated_at": "2026-10-28T21:59:31.391795+00:00",
+      "updated_at": "2026-10-28T22:00:27.636529+00:00",
       "branch": "fix/glyph-upload-gdi-stb",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/473",
-      "approval": "user",
+      "approval": "Root integrator: human-authorized code review; edb34a3d63df7851b45e8632137216211066ddca",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-28T21:59:31.391795+00:00",
           "owner": "codex-glyph-gdi-stb",
           "detail": "edb34a3d63df7851b45e8632137216211066ddca actualGlyphTexture+PPUadmissionCPU24cases2ABI baseline16fail/green24PASS; D:/01Claude/ReKHCoM-build/qa-runtime/v225-glyph-admission/{red,green-final}/RESULTS.json; GDI2actualSDLheadersTUsyntaxPASS; rebased6b69 testedblobsidentical; no GPU/VM/fullstbtargetlink; ACKhost64explicitgap."
+        },
+        {
+          "at": "2026-10-28T22:00:27.636529+00:00",
+          "owner": "codex-glyph-gdi-stb",
+          "detail": "Root product full diff review and independent24actualCPUproducer-consumercasesPASSi686/x64; empty glyphs stay valid, failedresourcesreleasedonce, nextframe native fallback withoutpreferences. ActualhostGPUack remains explicitly separate."
         }
       ],
       "claimed_at": "2026-10-28T21:54:51.750448+00:00"
@@ -10501,7 +10506,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:59:42.286575+00:00",
+  "updated_at": "2026-10-28T22:00:27.636529+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
