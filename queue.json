@@ -8766,13 +8766,8 @@
       "claimed_at": "2026-10-28T03:59:42.146124+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "6eba720d3fd8ae2e30e41a20ffa5cc19285fa9ff0bfc8dc3",
-    "created_at": "2026-10-28T04:00:43.764411+00:00",
-    "updated_at": "2026-10-28T04:00:43.764411+00:00"
-  },
-  "updated_at": "2026-10-28T04:00:53.439796+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-28T04:00:58.330900+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
