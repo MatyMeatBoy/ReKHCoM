@@ -9658,19 +9658,20 @@
     "issue439-linux-test-delivery": {
       "id": "issue439-linux-test-delivery",
       "piece": "Build current Linux64 guests/host and combined Linux test439 with latest434436441 assets; own caches only, source/hash provenance, reporter pending",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux-test439",
       "created_at": "2026-10-28T16:29:21.003706+00:00",
-      "updated_at": "2026-10-28T16:29:21.003706+00:00",
+      "updated_at": "2026-10-28T16:29:30.966024+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Parent authorized latest combined test after PR447 merge248b3083",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T16:29:30.966024+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:29:21.003706+00:00",
+  "updated_at": "2026-10-28T16:29:30.966024+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
