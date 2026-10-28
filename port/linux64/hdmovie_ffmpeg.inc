@@ -123,6 +123,7 @@ static SDL_Texture* SubTexture(stbtt_fontinfo* font, const char* text, float px,
 /* Each decoder is our direct child: no shell, inherited pipe writers or pclose wait. */
 #include <fcntl.h>
 #include <signal.h>
+#include <poll.h>
 #include <spawn.h>
 #include <sys/wait.h>
 typedef struct { int fd; pid_t pid; } MoviePipe;
@@ -172,6 +173,13 @@ static void MovieClose(MoviePipe* p) {
         while (waitpid(p->pid, NULL, 0) < 0 && errno == EINTR) {}
         p->pid = -1;
     }
+}
+/* Wake as soon as a decoder writes again. A fixed sleep per empty fragment
+ * multiplies scheduler latency across a multi-megabyte raw frame. Bound the
+ * wait to1ms so the outer loop still services audio and input during stalls. */
+static void MovieWaitReadable(MoviePipe* pipe) {
+    struct pollfd ready = { pipe->fd, POLLIN, 0 };
+    (void)poll(&ready, 1, 1);
 }
 /* Positive: bytes; zero: temporarily empty; -1: EOF; -2: read error. */
 static ssize_t MovieRead(MoviePipe* p, void* bytes, size_t size) {
@@ -302,7 +310,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
                Waiting for every positive fragment throttles a 1080p frame by
                hundreds of milliseconds. Yield only when the pipe has no data;
                the outer loop still pumps events and PCM after every fragment. */
-            if (frameUsed < frameBytes) { if (!n) SDL_Delay(1); continue; }
+            if (frameUsed < frameBytes) { if (!n) MovieWaitReadable(&video); continue; }
         }
         double clock = MovieClock(audio != NULL, audioEof, audioBytes,
             audio ? SDL_GetAudioStreamQueued(audio) : 0, SDL_GetTicksNS() / 1e9, &began);

@@ -21,6 +21,7 @@ args=parser.parse_args()
 if args.emit_posix:
     helpers=source[source.index('/* Each decoder is our direct child:'):source.index('static double MovieClock(')]
     helpers=helpers.replace('static ssize_t MovieRead(', 'static ssize_t PipeRead(')
+    helpers=helpers.replace('static void MovieWaitReadable(', 'static void PipeWaitReadable(')
     native=r'''
 #define _GNU_SOURCE
 #include <assert.h>
@@ -36,7 +37,7 @@ static size_t empty, waits, reads;
 static ssize_t MovieRead(MoviePipe* p,void* data,size_t count) {
     ssize_t n=PipeRead(p,data,count);reads++;if(!n)empty++;return n;
 }
-static void SDL_Delay(int ms){assert(ms==1);waits++;usleep(1000);}
+static void MovieWaitReadable(MoviePipe* p){waits++;PipeWaitReadable(p);}
 int main(int argc,char**argv) {
     const size_t frameBytes=1920*1080*4;
     if(argc>1) {
@@ -71,7 +72,7 @@ harness = r'''
 #include <stdio.h>
 #include <stdlib.h>
 typedef long long ssize_t;
-static size_t remaining, chunk, calls, waits, emptyEvery, events, audio;
+static size_t remaining, chunk, calls, waits, fixedSleeps, emptyEvery, events, audio;
 static ssize_t MovieRead(void* pipe, void* bytes, size_t cap) {
     (void)pipe; (void)bytes; calls++;
     if (emptyEvery && calls % emptyEvery == 0) return 0;
@@ -81,11 +82,12 @@ static ssize_t MovieRead(void* pipe, void* bytes, size_t cap) {
     remaining-=n;
     return (ssize_t)n;
 }
-static void SDL_Delay(int ms) {assert(ms==1); waits++;}
+void SDL_Delay(int ms) {assert(ms==1); fixedSleeps++;}
+void MovieWaitReadable(void*pipe) {(void)pipe;waits++;}
 static void run(size_t frameBytes,size_t part,size_t empty,size_t available) {
     int video=0, complete=0;
     uint8_t* frame=malloc(frameBytes);assert(frame);size_t frameUsed=0;
-    remaining=available; chunk=part; calls=waits=events=audio=0; emptyEvery=empty;
+    remaining=available; chunk=part; calls=waits=fixedSleeps=events=audio=0; emptyEvery=empty;
     for(size_t bound=0;bound<10000;bound++) {
         events++;audio++; /* these stay outside the production read block */
 PRODUCTION
@@ -94,6 +96,7 @@ PRODUCTION
     assert(events==calls && audio==calls);
     assert(complete==(available>=frameBytes));
     /* Positive pipe progress must never incur an artificial millisecond wait. */
+    if(fixedSleeps) {fprintf(stderr,"fixed sleep on pipe readiness: %zu times\n",fixedSleeps);exit(3);}
     if(waits!=(empty?calls/empty:0)) {
         fprintf(stderr,"positive reads incurred %zu artificial waits; chunk=%zu frame=%zu calls=%zu\n",waits,chunk,frameBytes,calls);
         exit(2);
