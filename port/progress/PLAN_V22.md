@@ -2,6 +2,8 @@
 
 ## Reanudación y alcance completo — 28/10/2026
 
+Entrega de arranque: [test Linux330 publicado y enviado](LINUX_STARTUP_TEST330.md), fuente ef4091e1, gate46 del TAR exacto y Latest v2.2 intacta. La opción safe32/software es manual; la confirmación física de #330 sigue pendiente. El carril Android #374 conserva su entrega y verificación independientes.
+
 La [pasada completa de OptiPort](OPTIPORT_FULL_PASS_20261028.md) evalúa16 áreas con criterios de cierre:14 originales más contratos entre runtimes/paquetes y fiabilidad del ensayo/coordinación. 10/14 (~71%) sigue siendo el resultado histórico del alcance original; el porcentaje de esta pasada ampliada espera conciliación de evidencia, no se infiere de leer24 documentos ni de añadir bloques.
 
 Prioridad reanudada: entregar primero el [test Linux439/441](LINUX_TEST439441.md), sin reducir la calidad de los vídeos; después completar la aplicación de OptiPort y continuar los demás pendientes. La reducción a720p queda sólo como boceto interno aplazado por el usuario, sin activación automática ni reparación de instalaciones existentes. Los reports abiertos actuales son449/441/439/412/374/330. Los PR432/440/442/443 quedaron cerrados sin merge por la orden anterior de parada: sus piezas pendientes no se vuelven resueltas por ese cierre. Main incluye444/446/447/448; los artefactos públicos2.2 conservan su fuente original. La skill completa394c34ff está revisada y sincronizada; eso no completa las16 áreas de aplicación.
