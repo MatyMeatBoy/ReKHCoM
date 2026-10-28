@@ -617,6 +617,14 @@ static int HostTex(Tex* t, bool smooth) {
     return t->id[k];
 }
 
+/* A CPU SDL_Texture is not yet a usable bridge texture. HD replacement
+ * callers need the actual draw's filter/epoch upload before omitting native
+ * pixels. Direct legacy rendering and GPU targets both consume HostTex. */
+bool PortBridgeTextureReady(SDL_Texture* texture) {
+    Tex* t = (Tex*)texture;
+    return t && !sRenderer.outputBlocked && HostTex(t, t->scale != SDL_SCALEMODE_NEAREST) >= 0;
+}
+
 static void SaveTargetState(SDL_Renderer* r, TargetState* state) {
     state->view = r->view; state->clip = r->clip;
     state->hasView = r->hasView; state->hasClip = r->hasClip;
