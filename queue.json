@@ -10614,15 +10614,21 @@
     "android-official-java-first": {
       "id": "android-official-java-first",
       "piece": "Promote verified Java-first entry to official Android packaging via reused safe_manifest/validation; preserve appid/cert/2.2.5 beta and current native builds",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-android-official-entry",
       "created_at": "2026-10-28T22:13:54.958713+00:00",
-      "updated_at": "2026-10-28T22:14:28.274838+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T22:18:40.299862+00:00",
+      "branch": "fix/android-official-java-first",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/477",
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T22:18:40.299862+00:00",
+          "owner": "codex-android-official-entry",
+          "detail": "0e7472c32dbc58a907b40759d2b55145d7ff9ff6; actualstage normal+optimized/AAPT35 official+separate PASS; safeManifest/queuedlaunch/StartupSDL9/attemptjournal341PASS; no native source changes; Ccompilef28continueselsewhere; packagingruntimeunverified. D:/01Claude/ReKHCoM-build/qa-runtime/v225-android-web/java-first-green-final2 + optimized2."
+        }
+      ],
       "claimed_at": "2026-10-28T22:14:28.274838+00:00"
     },
     "linux-launcher-hd-hud-wording": {
@@ -10640,7 +10646,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:16:36.542064+00:00",
+  "updated_at": "2026-10-28T22:18:40.299862+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
