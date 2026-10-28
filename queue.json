@@ -9057,12 +9057,12 @@
     "boss-parasite-cage-left-cull": {
       "id": "boss-parasite-cage-left-cull",
       "piece": "FUTURE explicituser: Monstro ParasiteCage sprite clips moving farleft. Reproduce boss/camera-edge variants, preserve full sprite original gameplay/collisions, identify world/OAM cull boundary vsviewport. Not a v2.2 blocker per user.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-parasite-cull",
       "created_at": "2026-10-28T05:57:28.484066+00:00",
-      "updated_at": "2026-10-28T11:12:54.750620+00:00",
+      "updated_at": "2026-10-28T11:30:12.481092+00:00",
       "branch": "fix/parasite-left-cull",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/434",
       "approval": null,
       "reference": "pruebas/future-boss-coverage/parasite-cage-left-clipping.png",
       "evidence": [
@@ -9070,6 +9070,11 @@
           "at": "2026-10-28T11:12:54.750620+00:00",
           "owner": "codex-parasite-cull",
           "detail": "Ownedcheckoutkh-worktrees/parasite-left-cull fromorigin/main6895c747; sourceimageparasite-cage-left-clipping.png inspected; readonlycausalauditfirst; no stableartifactchanges."
+        },
+        {
+          "at": "2026-10-28T11:30:12.481092+00:00",
+          "owner": "codex-parasite-cull",
+          "detail": "Code-onlyfix,no newartasset;userwaivedAtlas,repro/capturesdirectrootreview. Exacthead92f8de8029d8cb1202065a0642c7b8f8127f421f;actualBosPcDraw CPURED/GREEN943positions+destroy;native32A/Bx4LEFT2606outsidepixelsrestored,GBA0changes;Originalentireidentical,x3LEFT2701,x4RIGHT0changes;LEFT->levelupfourUIframesallidentical;129regionalbodysetsowntransparenttile0; port/progress/PARASITE_BODY_WIDE.md andpruebas/parasite-left-cull; native64/HDcombined/naturalvictoryintegrationQApending"
         }
       ],
       "claimed_at": "2026-10-28T11:11:59.347557+00:00"
@@ -9166,7 +9171,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:14:13.561454+00:00",
+  "updated_at": "2026-10-28T11:30:12.481092+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
