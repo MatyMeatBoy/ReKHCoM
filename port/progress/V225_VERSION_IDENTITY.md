@@ -1,7 +1,9 @@
 # Version identity for 2.2.5
 
-The shared release header is now `v2.2.5`. Windows, Linux, Android,
-Switch and Web consume this header; PS5 packaging must explicitly receive
+The shared release header is now `v2.2.5`. The Windows PE resource matches
+`2.2.5.0`, and the Web page's visible/accessibility labels retain Beta while
+showing `v2.2.5`. Linux, Android, Switch and game logs consume the header;
+PS5 packaging must explicitly receive
 `--version 2.2.5`, which produces content version `02.002.005`.
 
 Android's actual official package producer yields version name
