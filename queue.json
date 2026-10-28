@@ -9565,10 +9565,10 @@
     "optiport-v22-fullpass-ledger": {
       "id": "optiport-v22-fullpass-ledger",
       "piece": "Reconcile full v2.2 OptiPort application: preserve original14 baseline, define two evidence-driven additional blocks and current439/441 report facts with exit criteria, distinguish audited skill from completed product work.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-fullpass-ledger",
       "created_at": "2026-10-28T15:59:36.593626+00:00",
-      "updated_at": "2026-10-28T16:11:21.223432+00:00",
+      "updated_at": "2026-10-28T16:13:37.731595+00:00",
       "branch": "docs/optiport-full-pass-v22",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/445",
       "approval": "User explicitly requested full OptiPort pass and assessing added blocks. Independent console_delivery review of445 found no blockers; importer copy-vs-transcode clarification applied at364a98bc.",
@@ -9578,9 +9578,15 @@
           "at": "2026-10-28T16:11:21.223432+00:00",
           "owner": "codex-fullpass-ledger",
           "detail": "2docs,10local links resolve, diffcheckPASS. Preserve original10/14historical;16currentareas require evidence reconciliation before a new percentage. Scope439/441/importer facts, no product or artifact changes."
+        },
+        {
+          "at": "2026-10-28T16:13:37.731595+00:00",
+          "owner": "codex-fullpass-ledger",
+          "detail": "Independent console review and root links/diffcheck PASS; final importer copy/transcode clarification. Preserve historical10/14, evaluate16areas without invented wholepass percentage; new scope includes439/441/import repair and exact publicv2.2 boundaries. Documentation only.; merged 48418ad155fa3ec945cd686d51604b29e75dc8b5"
         }
       ],
-      "claimed_at": "2026-10-28T15:59:42.715248+00:00"
+      "claimed_at": "2026-10-28T15:59:42.715248+00:00",
+      "completed_at": "2026-10-28T16:13:37.731595+00:00"
     }
   },
   "integrator": {
@@ -9589,7 +9595,7 @@
     "created_at": "2026-10-28T16:13:21.528459+00:00",
     "updated_at": "2026-10-28T16:13:21.528459+00:00"
   },
-  "updated_at": "2026-10-28T16:13:21.528459+00:00",
+  "updated_at": "2026-10-28T16:13:37.732608+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
