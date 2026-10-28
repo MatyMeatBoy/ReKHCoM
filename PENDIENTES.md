@@ -314,6 +314,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-stable-android-delivery | Prepare and build verified v2.2 Android beta from frozen source with shared offline toolchain; no publication | en_revision | codex-stable-android | — | User authorized stable2.2/testbuild; root delegated Android preparation now, build only after exclusive window | 2026-10-28T03:14:12.907103+00:00 |
 | v22-console-delivery | Console v2.2 preflight/build delivery PS4 PS5 Vita Switch Anbernic from frozen source; existing SDK only | en_curso | codex-console-delivery | — | User explicitly requested v2.2 for all consoles; root authorizes preflight now, builds only in coordinated serial window | 2026-10-28T03:21:49.330059+00:00 |
 | v22-vita-package-version | Derive Vita SFO APP_VER from release version; verify console metadata without VM | integrado | codex-vita-metadata | https://github.com/MatyMeatBoy/ReKHCoM/pull/425 | User requested v2.2 all platforms; root delegated minimal console metadata correction | 2026-10-28T03:50:26.874143+00:00 |
-| v22-web-release-label | Align existing Web beta labels with v2.2 stable delivery | pendiente | — | — | User requested v2.2 all platforms; root includes Web beta and delegated label audit | 2026-10-28T03:52:59.699269+00:00 |
+| v22-web-release-label | Align existing Web beta labels with v2.2 stable delivery | en_curso | codex-console-web-label | — | User requested v2.2 all platforms; root includes Web beta and delegated label audit | 2026-10-28T03:53:04.897300+00:00 |
 
 Integrador: libre
