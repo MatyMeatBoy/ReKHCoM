@@ -392,4 +392,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v225-producer-cleanup-wasm | Promote verified delivery-producer, tracked-cleanup and direct Wasm ABI lessons after v2.2.5 publication | pr_abierto | codex-optiport-v225-lessons | https://github.com/MatyMeatBoy/OptiPort/pull/18 | — | 2026-10-28T23:19:46.427241+00:00 |
 | issue480-android-room-spring-layers | Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA. | pendiente | — | — | Usuario pide cubrir todos los issues; root autoriza triage nuevo480 y mantenerlo abierto. Sin fix ni reproduccion aun, pendiente sin claim. | 2026-10-28T23:17:53.499932+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T23:21:06.132894+00:00)
+Integrador: libre
