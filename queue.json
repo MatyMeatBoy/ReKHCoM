@@ -8876,10 +8876,23 @@
       ],
       "claimed_at": "2026-10-28T04:42:55.269847+00:00",
       "completed_at": "2026-10-28T04:47:17.295979+00:00"
+    },
+    "v22-vita-host-build": {
+      "id": "v22-vita-host-build",
+      "piece": "Link/package Vita v2.2 VPK from verified5ccb ARMguests; offline512MiB snapshot1CPU, own768MiBjob",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T04:54:48.680974+00:00",
+      "updated_at": "2026-10-28T04:54:48.680974+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root authorizes Vita host exclusive window after421VM47532PASS; preserveoriginal16GiBVM/SDK/releases, no Switch/PS5 until coordination",
+      "reference": "vita-guest-attempt2/ARTIFACT-RECEIPT.json; SDKinventory2; PR425/429integrated",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:53:03.104957+00:00",
+  "updated_at": "2026-10-28T04:54:48.680974+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
