@@ -9061,20 +9061,26 @@
     "pr432-deck-management-review": {
       "id": "pr432-deck-management-review",
       "piece": "Post-v2.2 review and QA of external PR432 deck insert/compact; do not change author code or include in current release. Validate99slots, end-gap, IDs/value0, multiset/order, save/load, remapped input/repeat and UI labels.",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-deck-qol-review",
       "created_at": "2026-10-28T10:49:24.403895+00:00",
-      "updated_at": "2026-10-28T10:49:38.457252+00:00",
+      "updated_at": "2026-10-28T10:51:47.263221+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/432",
       "approval": null,
-      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/432",
-      "evidence": [],
+      "reference": "head1e45a50b4aea66b68a02a215b7122d67737a90e4; post-v2.2, no author edits or release scope expansion",
+      "evidence": [
+        {
+          "at": "2026-10-28T10:51:47.263221+00:00",
+          "owner": "codex-deck-qol-review",
+          "detail": "pruebas/v22-issue-delivery/REVIEW-PR432.json; complete4file readonlyreview;99slot/end/ID0/save/input contracts; forward-onlygap limitation atcard_deckmenu2.c6444; actualruntimeQA stillpending"
+        }
+      ],
       "claimed_at": "2026-10-28T10:49:38.457252+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T10:49:38.457252+00:00",
+  "updated_at": "2026-10-28T10:51:47.263221+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
