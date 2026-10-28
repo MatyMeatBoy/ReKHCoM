@@ -309,4 +309,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | enemy-random-card-zero-modulus | Preservar resto GBA en selección de naipe enemigo con índice cero, todas las plataformas | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/417 | Usuario: auditar divisores y restos en todas las plataformas preservando lógica GBA | 2026-10-28T01:49:05.471816+00:00 |
 | issue418-worldselect-outline | World-card selection transition retains outline: actual rendering A/B, fade and native/HD consumer | en_curso | codex-world-outline | — | Root delegated issue418 reproduction and verified common-source fix; preserve native GBA behavior | 2026-10-28T01:57:36.792362+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T02:02:56.134041+00:00)
