@@ -9819,15 +9819,16 @@
     "preview-readiness-observer": {
       "id": "preview-readiness-observer",
       "piece": "Child of optiport-v22-async: preserve CPU underlay on rejected preview upload/draw, bridge content recreation and bounded optional stage observer; no full async-area closure",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-async",
       "created_at": "2026-10-28T18:26:20.621968+00:00",
-      "updated_at": "2026-10-28T18:26:20.621968+00:00",
+      "updated_at": "2026-10-28T18:27:24.114002+00:00",
       "branch": null,
       "pr": null,
       "approval": "User authorized full OptiPort pass; coordinator explicitly approved scoped readiness/underlay child and CPU/functional QA, timing lease separate",
       "reference": "optiport-v22-async",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T18:27:24.114002+00:00"
     },
     "issue449-base-import-123-copy": {
       "id": "issue449-base-import-123-copy",
@@ -9845,7 +9846,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:27:04.778500+00:00",
+  "updated_at": "2026-10-28T18:27:24.114002+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
