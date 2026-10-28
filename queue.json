@@ -10514,6 +10514,19 @@
       ],
       "claimed_at": "2026-10-28T21:55:02.237313+00:00",
       "completed_at": "2026-10-28T21:59:20.581940+00:00"
+    },
+    "v225-release-notes": {
+      "id": "v225-release-notes",
+      "piece": "2.2.5 release notes and source freeze ledger",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T22:01:37.282000+00:00",
+      "updated_at": "2026-10-28T22:01:37.282000+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Owner requested stable2.2.5 with integrated fixes and explicit platform limits",
+      "evidence": []
     }
   },
   "integrator": {
@@ -10522,7 +10535,7 @@
     "created_at": "2026-10-28T22:01:33.523121+00:00",
     "updated_at": "2026-10-28T22:01:33.523121+00:00"
   },
-  "updated_at": "2026-10-28T22:01:33.524288+00:00",
+  "updated_at": "2026-10-28T22:01:37.282000+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
