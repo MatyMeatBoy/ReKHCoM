@@ -9956,10 +9956,10 @@
     "moto374-startup-current-test": {
       "id": "moto374-startup-current-test",
       "piece": "Moto374 current Android startup test: Java-only safe launcher/ROM selection/reporting before SDL, fresh existing game process, current444+452 diagnostics",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-moto374-startup",
       "created_at": "2026-10-28T18:59:42.917676+00:00",
-      "updated_at": "2026-10-28T20:37:01.366396+00:00",
+      "updated_at": "2026-10-28T20:38:38.364202+00:00",
       "branch": "fix/moto374-safe-startup",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/462",
       "approval": "User explicitly requested startup fix/test and integration. Root/peer reviewed exact2548; independent342 ownership+ROM,9 callbacks,2 actual producers,40 C++ faults, APK225hashes+signature/ID/code PASS. API34 three boot attempts never reached install; runtime unverified, no devicefixclaim. Integrate reviewed source for new causal font-fallback test, not publish old bypass APK.",
@@ -9974,9 +9974,15 @@
           "at": "2026-10-28T20:37:01.366396+00:00",
           "owner": "codex-moto374-startup",
           "detail": "Ready source review2548, ROOT-INDEPENDENT-2548/ROOT-APK-AUDIT/signature/badging verified; RUNTIME-ENVIRONMENT-FINAL.json correctly separates AVD boot failures from app. Olda68 retained immutable, not public."
+        },
+        {
+          "at": "2026-10-28T20:38:38.364202+00:00",
+          "owner": "codex-moto374-startup",
+          "detail": "Root and independent peer source review2548;342+9+actual2producer/REDmutant/40C++failures,SDKJava+manifest-negative andAPK225memberhash/signature/ID/code verified. Integrating source for causal-font test. Three API34 boots failed BEFORE install, recordedUNVERIFIED. OldbypassAPK not published or represented devicefix.; merged b42b19cc3b1680344de78732f5268c2f4634f205"
         }
       ],
-      "claimed_at": "2026-10-28T18:59:50.031370+00:00"
+      "claimed_at": "2026-10-28T18:59:50.031370+00:00",
+      "completed_at": "2026-10-28T20:38:38.364202+00:00"
     },
     "issue330-startup-compatible-fallback": {
       "id": "issue330-startup-compatible-fallback",
@@ -10117,7 +10123,7 @@
     "created_at": "2026-10-28T20:38:28.076195+00:00",
     "updated_at": "2026-10-28T20:38:28.076195+00:00"
   },
-  "updated_at": "2026-10-28T20:38:28.076195+00:00",
+  "updated_at": "2026-10-28T20:38:38.365207+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
