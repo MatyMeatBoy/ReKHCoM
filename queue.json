@@ -10269,12 +10269,18 @@
       "status": "en_curso",
       "owner": "codex-v23-release-builds",
       "created_at": "2026-10-28T21:26:25.921019+00:00",
-      "updated_at": "2026-10-28T21:26:35.019576+00:00",
+      "updated_at": "2026-10-28T21:34:38.532806+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated explicit user v2.3 all-integrations mandate 2026-10-28",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:34:38.532806+00:00",
+          "owner": "codex-v23-release-builds",
+          "detail": "PUBLIC TARGET corrected by user to v2.2.5; v23 is internal claim/worktree name only. Inventory and MATRIX/VERSION-PREFLIGHT at releases/v2.2.5-candidate. Own clean checkout3988eaac baseline normalEU32/64 PASS session49972terminal0; configure31.828s/build32 84.813s/build64+ABI53.890s. Frozen component copies D:/01Claude/ReKHCoM-build/qa-runtime/v225-baseline-win3988 with CLOSED-RECEIPT hashes; no GPU/runtime/HD quality or finalpackage claim. Initial Android/Win caches absent; new own caches ready. PS4/Vita current version producer ignoresPATCH and needs explicit mapping before finalpackage. No finalsource/tag/publishing yet; no RAMfloor; sharedtoolchains readonly, compatibilityjunction restored only."
+        }
+      ],
       "claimed_at": "2026-10-28T21:26:35.019576+00:00"
     },
     "linux459-steam-startup": {
@@ -10313,7 +10319,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:31:21.626351+00:00",
+  "updated_at": "2026-10-28T21:34:38.532806+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
