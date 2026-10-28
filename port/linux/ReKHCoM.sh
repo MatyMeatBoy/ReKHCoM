@@ -188,6 +188,7 @@ if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
     CODE=$?
     ENTERED=0
     [ -f "$BOOT" ] && ENTERED=1
+    echo "ReKHCoM.sh: 64-bit exit=$CODE boot_marker=$ENTERED runtime_mode=$MODE"
     rm -f "$BOOT"
     if [ "$MODE" = 2 ] || [ "$ENTERED" = 1 ]; then exit "$CODE"; fi
     case "$CODE" in
