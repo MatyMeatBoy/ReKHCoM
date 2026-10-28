@@ -96,6 +96,7 @@ static HdFont sFonts[4][2]; /* [style][cache slot]; style 2: numbers, menu face 
 static int sNextFont[4];
 static int sCustomTried;
 static Face sFace[2]; /* KHMenu (menu, dialogue), Comic Hearts (movie subtitles) */
+static int sGlyphUploadFailed;
 
 static const char* AssetsRoot(void) {
     const char* env = SDL_getenv("KHCOM_ASSETS");
@@ -138,7 +139,7 @@ static void LoadCustomFont(void) {
 /* port_ppu.c: HD text only with its face loaded; without it the cartridge's text stays (#277) */
 int PortPortableHdReady(void) {
     LoadCustomFont();
-    return sFace[0].loaded;
+    return sFace[0].loaded && !sGlyphUploadFailed;
 }
 
 static HFONT MakeFont(Face* face, int px, float xk) {
@@ -397,7 +398,9 @@ static void GlyphTexture(SDL_Renderer* renderer, HdGlyph* g, Bitmap* bm) {
     g->advance = bm->advance;
     g->left = bm->left;
     g->top = bm->top;
-    if (bm->a != NULL && bm->w > 0 && bm->h > 0) {
+    if (sGlyphUploadFailed) {
+        g->ready = 0;
+    } else if (bm->a != NULL && bm->w > 0 && bm->h > 0) {
         uint32_t* argb = SDL_malloc((size_t)bm->w * bm->h * 4);
         int i;
 
@@ -405,14 +408,23 @@ static void GlyphTexture(SDL_Renderer* renderer, HdGlyph* g, Bitmap* bm) {
             for (i = 0; i < bm->w * bm->h; i++)
                 argb[i] = ((uint32_t)bm->a[i] << 24) | 0xFFFFFFu;
             g->tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, bm->w, bm->h);
-            if (g->tex != NULL) {
-                SDL_UpdateTexture(g->tex, NULL, argb, bm->w * 4);
+            if (g->tex != NULL && SDL_UpdateTexture(g->tex, NULL, argb, bm->w * 4)) {
                 SDL_SetTextureBlendMode(g->tex, SDL_BLENDMODE_BLEND);
                 SDL_SetTextureScaleMode(g->tex, SDL_SCALEMODE_NEAREST);
                 g->w = bm->w;
                 g->h = bm->h;
+            } else {
+                if (g->tex) SDL_DestroyTexture(g->tex);
+                g->tex = NULL;
+                sGlyphUploadFailed = 1;
             }
             SDL_free(argb);
+        } else {
+            sGlyphUploadFailed = 1;
+        }
+        if (sGlyphUploadFailed) {
+            g->ready = 0;
+            PortLog("HD text: glyph texture rejected; original text resumes next frame");
         }
     }
     SDL_free(bm->a);
@@ -717,6 +729,7 @@ int PortCodepointToSjis(unsigned cp) {
 #undef PORT_HD_TEXT_SIMPLE_DRAW
 
 void PortHdTextShutdown(void) {
+    sGlyphUploadFailed = 0;
     int style, slot;
     for (style = 0; style < 4; style++)
         for (slot = 0; slot < 2; slot++) FontRelease(&sFonts[style][slot]);
