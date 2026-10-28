@@ -164,7 +164,7 @@ static unsigned Unicode(int code,int jp) {
 }
 static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) {
     FT_Face face=f->font;FT_Matrix matrix;FT_Bitmap* b;unsigned cp=Unicode(code,jp);uint32_t* rgba;int x,y;
-    if(g->ready)return;g->ready=1;
+    if(!ready || g->ready)return;g->ready=1;
     if(!face || !cp)return;
     if(jp)face=japanese;
     else if(!FT_Get_Char_Index(face,cp))face=fallback;
@@ -185,8 +185,15 @@ static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) 
         rgba[y*g->w+x]=((uint32_t)row[x]<<24)|0xFFFFFF;
     }
     g->tex=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STATIC,g->w,g->h);
-    if(g->tex){SDL_UpdateTexture(g->tex,NULL,rgba,g->w*4);SDL_SetTextureBlendMode(g->tex,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(g->tex,SDL_SCALEMODE_NEAREST);}
-    else ready=0;
+    if(g->tex && SDL_UpdateTexture(g->tex,NULL,rgba,g->w*4)) {
+        SDL_SetTextureBlendMode(g->tex,SDL_BLENDMODE_BLEND);
+        SDL_SetTextureScaleMode(g->tex,SDL_SCALEMODE_NEAREST);
+    } else {
+        if(g->tex)SDL_DestroyTexture(g->tex);
+        g->tex=NULL;g->ready=0;ready=0;
+        /* The current PPU pass may already have omitted SD glyphs. */
+        PortLog("HD text: glyph texture rejected; original text resumes next frame");
+    }
     SDL_free(rgba);
 }
 static HdGlyph* Glyph(SDL_Renderer* r,HdFont* f,int code) {HdGlyph* g=&f->glyphs[code&255];Raster(r,f,g,code&255,0);return g;}
