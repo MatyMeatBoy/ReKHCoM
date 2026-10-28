@@ -5240,6 +5240,25 @@ static inline s32 PcLayerDepth(s32 index) {
     return index * 1024 - 0x3300;
 }
 
+#ifdef PLATFORM_PC
+static int sPortBodyGfxSet = -1;
+
+/* The torso is a BG tilemap; its limbs are OBJ. Keep the authored body
+ * attached to the same world origin outside the cartridge's viewport.
+ * Tile zero is transparent in every body set: do not wrap another torso
+ * into the extended view. The PPU validates this source against live VRAM
+ * and keeps screen/UI layers on their original drawing path. */
+static int BosPcWorldTile(int bg, int tx, int ty) {
+    if (bg != 1 || sPortBodyGfxSet < 0) {
+        return -1;
+    }
+    if ((unsigned)tx >= 32 || (unsigned)ty >= 32) {
+        return 0;
+    }
+    return ((const u16*)sPcGfxSets[sPortBodyGfxSet].map)[ty * 32 + tx];
+}
+#endif
+
 void BosPcDraw(PcWork* work) {
     const PcAnimStep* step;
     const PcSpriteCmd* cmd;
@@ -5260,12 +5279,20 @@ void BosPcDraw(PcWork* work) {
     u16* attributes;
 
     if (work->animSteps == NULL) {
+#ifdef PLATFORM_PC
+        sPortBodyGfxSet = -1;
+        PortSetBgWorld(1, NULL, 0, 0);
+#endif
         return;
     }
 
     step = &work->animSteps[work->animFrame];
 
     if (step->op != PC_ANIM_OP_FRAME) {
+#ifdef PLATFORM_PC
+        sPortBodyGfxSet = -1;
+        PortSetBgWorld(1, NULL, 0, 0);
+#endif
         return;
     }
 
@@ -5363,6 +5390,10 @@ void BosPcDraw(PcWork* work) {
     }
 
     SetBgScroll(1, (u16)(-sx + 0x50), (u16)(-sy + 8));
+#ifdef PLATFORM_PC
+    sPortBodyGfxSet = step->gfxSet;
+    PortSetBgWorld(1, BosPcWorldTile, -sx + 0x50, -sy + 8);
+#endif
 }
 
 u8 BosPcIsAnimDone(PcWork* work) {
@@ -6034,6 +6065,10 @@ void task_bos_pc_2(PcWork* work) {
 }
 
 void task_bos_pc_3(PcWork* work) {
+#ifdef PLATFORM_PC
+    sPortBodyGfxSet = -1;
+    PortSetBgWorld(1, NULL, 0, 0);
+#endif
     ReleaseEnemyBtlObj(&work->body);
     ReleaseEnemyBtlObj(&work->body2);
     ColliderUnregister(&work->collider);
