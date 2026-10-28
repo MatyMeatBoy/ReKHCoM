@@ -8019,10 +8019,10 @@
     "geppetto-scene-zoom-x4": {
       "id": "geppetto-scene-zoom-x4",
       "piece": "Reporte27/10 escenaGeppetto entra zoomincorrecto conx4 activo; reproducir entrada/galeria vs historia, respetar configuracion y restaurar encuadre al salir",
-      "status": "en_curso",
-      "owner": "codex-scene-zoom",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T22:20:10.816648+00:00",
-      "updated_at": "2026-10-27T22:22:09.830920+00:00",
+      "updated_at": "2026-10-28T00:48:09.033427+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuarioreportecapturageppetto235? imagen8d397e8c",
@@ -8032,6 +8032,11 @@
           "at": "2026-10-27T22:22:09.830920+00:00",
           "owner": "codex-scene-zoom",
           "detail": "Usuario aclara historia(no galeria), zoomacercar/alejar le gusta y DEBEconservar. Regla: llenar bordes segun zoomusuario(x4), HUDdialogo/texto/retrato/iconos escalaestable delzoomusuario mientras camaraespecialindependiente SOLOescenasespecificas. SiguienteGeppetto screenshot266fcaa4 muestra vacioderecha y no encontradaAtlas: identificarID/inventariar cobertura antesconsiderarverificada. No reemplazarzoomglobal."
+        },
+        {
+          "at": "2026-10-28T00:48:09.033427+00:00",
+          "owner": "codex-scene-zoom",
+          "detail": "released: Preparation captured the user criteria and three actual Atlas submissions, but product implementation has not started. Return to pending because the user explicitly deferred background/scene coverage until later. Keep special Geppetto camera zoom, scale dialogue HUD independently to selected zoom, fill borders, review every beat through x3Integer2; preserve Atlas submission20261027-192745-53829f."
         }
       ],
       "claimed_at": "2026-10-27T22:22:04.472794+00:00"
@@ -8400,7 +8405,7 @@
     "created_at": "2026-10-28T00:47:47.931083+00:00",
     "updated_at": "2026-10-28T00:47:47.931083+00:00"
   },
-  "updated_at": "2026-10-28T00:48:04.162597+00:00",
+  "updated_at": "2026-10-28T00:48:09.034459+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
