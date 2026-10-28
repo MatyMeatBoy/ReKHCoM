@@ -10445,15 +10445,21 @@
     "glyph-upload-gdi-stb": {
       "id": "glyph-upload-gdi-stb",
       "piece": "Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-glyph-gdi-stb",
       "created_at": "2026-10-28T21:54:42.486629+00:00",
-      "updated_at": "2026-10-28T21:54:51.750448+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T21:59:31.391795+00:00",
+      "branch": "fix/glyph-upload-gdi-stb",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/473",
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:59:31.391795+00:00",
+          "owner": "codex-glyph-gdi-stb",
+          "detail": "edb34a3d63df7851b45e8632137216211066ddca actualGlyphTexture+PPUadmissionCPU24cases2ABI baseline16fail/green24PASS; D:/01Claude/ReKHCoM-build/qa-runtime/v225-glyph-admission/{red,green-final}/RESULTS.json; GDI2actualSDLheadersTUsyntaxPASS; rebased6b69 testedblobsidentical; no GPU/VM/fullstbtargetlink; ACKhost64explicitgap."
+        }
+      ],
       "claimed_at": "2026-10-28T21:54:51.750448+00:00"
     },
     "v225-stable-version": {
@@ -10489,7 +10495,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:59:25.890811+00:00",
+  "updated_at": "2026-10-28T21:59:31.391795+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
