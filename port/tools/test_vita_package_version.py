@@ -14,7 +14,7 @@ spec.loader.exec_module(build)
 
 class PackageVersionTests(unittest.TestCase):
     def test_release_version_reaches_sfo_command(self):
-        for version, expected in [('2.2', '02.02'), ('1.9.16', '01.09'), ('2.2-pre3', '02.02')]:
+        for version, expected in [('2.2', '02.20'), ('2.2.5', '02.25'), ('2.3', '02.30'), ('99.9.9', '99.99')]:
             with self.subTest(version=version), patch.object(build.build_switch, 'version', return_value=version):
                 script = build.package_script(['eu', 'us', 'jp'])
                 command = shlex.split(next(line for line in script.splitlines()
@@ -26,10 +26,16 @@ class PackageVersionTests(unittest.TestCase):
                 self.assertIn('for r in eu us jp;', script)
                 self.assertNotIn('APPVERSION', script)
 
+    def test_unrepresentable_release_stops_before_package_commands(self):
+        for version in ('1.9.16','2.2-pre3','100.0.0','2.10.0','2.2.10'):
+            with self.subTest(version=version), patch.object(build.build_switch, 'version', return_value=version):
+                with self.assertRaises(ValueError):build.package_script(['eu'])
+
     def test_current_header_reaches_package(self):
         header = (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8')
-        major, minor = re.search(r'#define REKHCOM_VERSION\s+"v(\d+)\.(\d+)', header).groups()
-        expected = f'{int(major):02d}.{int(minor):02d}'
+        release = re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"', header).group(1)
+        from sony_package_version import sfo_release_version
+        expected = sfo_release_version(release)
         script = build.package_script(['eu'])
         self.assertIn('APP_VER=' + expected, script)
         self.assertIn('VERSION=' + expected, script)
