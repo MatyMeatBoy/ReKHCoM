@@ -17,10 +17,25 @@ final class StartupExitCollector {
     static synchronized String collect(Context context)throws IOException {
         File directory=report(context).getParentFile();
         if(!directory.isDirectory()&&!directory.mkdirs())throw new IOException("Cannot create report folder");
-        StringBuilder text=new StringBuilder("ReKHCoM optional startup diagnostic (not a crash fix)\n");
-        text.append("Current build: 2.2-test412; base APK SHA256 bd7999c234669ac88dfd5ec22ae3ccddd95db011eda0a1608fb8526819e19a4e\n");
+        ReportSnapshots.preservePrior(report(context));
+        StringBuilder text=new StringBuilder("ReKHCoM optional safe startup test (device root cause not established)\n");
+        try{android.content.pm.PackageInfo info=context.getPackageManager().getPackageInfo(context.getPackageName(),0);text.append("Current build: ").append(info.versionName).append(" code=").append(info.versionCode).append('\n');}catch(Exception error){text.append("Build identity unavailable\n");}
+        try(InputStream input=context.getAssets().open("startup-build.txt")){ByteArrayOutputStream bytes=new ByteArrayOutputStream();ReportLimits.copy(input,bytes,4096);text.append(new String(bytes.toByteArray(),StandardCharsets.UTF_8)).append('\n');}catch(IOException ignored){}
         text.append("Model: ").append(ReportLimits.text(Build.MANUFACTURER+" "+Build.MODEL,200)).append("\nAndroid API: ").append(Build.VERSION.SDK_INT).append('\n');
         text.append("Only this app's exit records. Exit reason is not a verified root cause. Updates/force-stop may add unrelated exit records.\n");
+        text.append("An Activity/native return can finish with no process-exit record. Safe-entry retirement of its own terminated SDL process is intentional; correlate nonce/PID/stages.\n");
+        text.append(StartupStageJournal.summary(context.getFilesDir())).append('\n');
+        text.append(LifecycleJournal.summary(context.getFilesDir())).append('\n');
+        LinkedHashMap<String,byte[]> ownLogs=new LinkedHashMap<>();
+        for(String name:new String[]{"launcher-startup-error.log","kh_com_host.log","kh_com.log"}){
+            File file=new File(context.getFilesDir(),name);int limit=name.startsWith("launcher-")?1024:28000;
+            if(!file.isFile())continue;
+            try(RandomAccessFile input=new RandomAccessFile(file,"r")){
+                byte[] bytes=new byte[(int)Math.min(limit,input.length())];input.seek(input.length()-bytes.length);input.readFully(bytes);
+                ownLogs.put("native-"+name.replace('.','-')+".txt",bytes);
+                text.append("Included own log tail: ").append(name).append(" bytes=").append(bytes.length).append('\n');
+            }catch(IOException error){text.append("Own log unavailable: ").append(name).append('\n');}
+        }
         LinkedHashMap<String,File> traces=new LinkedHashMap<>();
         if(Build.VERSION.SDK_INT<30)text.append("Android does not expose historical process exits before API30. No retained trace available.\n");
         else {
@@ -32,6 +47,9 @@ final class StartupExitCollector {
         try {
             try(ZipOutputStream zip=new ZipOutputStream(new FileOutputStream(pending))){
                 zip.putNextEntry(new ZipEntry("summary.txt"));zip.write(summary.getBytes(StandardCharsets.UTF_8));zip.closeEntry();
+                for(Map.Entry<String,byte[]> item:ownLogs.entrySet()){
+                    zip.putNextEntry(new ZipEntry(item.getKey()));zip.write(item.getValue());zip.closeEntry();
+                }
                 for(Map.Entry<String,File> item:traces.entrySet()){
                     if(!ReportLimits.safeName(item.getKey()))throw new IOException("Invalid report entry");
                     zip.putNextEntry(new ZipEntry(item.getKey()));
@@ -53,7 +71,7 @@ final class StartupExitCollector {
             long remaining=ReportLimits.TRACE_LIMIT;int accepted=0;
             for(ApplicationExitInfo entry:entries){
                 String process=entry.getProcessName();
-                if(!process.equals(context.getPackageName())&&!process.equals(context.getPackageName()+":game"))continue;
+                if(!ReportProcessScope.owns(context.getPackageName(),process))continue;
                 accepted++;
                 text.append("\nExit ").append(accepted).append(" timestamp_ms=").append(entry.getTimestamp()).append(" process=").append(process).append('\n');
                 text.append("reason=").append(reason(entry.getReason())).append(" (").append(entry.getReason()).append(") status=").append(entry.getStatus()).append(" importance=").append(entry.getImportance()).append('\n');

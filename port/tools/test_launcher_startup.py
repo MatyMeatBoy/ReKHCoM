@@ -51,6 +51,7 @@ ImGuiIO& GetIO(){return io;}
 void DestroyContext(){if(!context||platform||renderer)invalidCall++;context=false;destroyed[0]++;error="context cleanup clobber";}
 }
 static const char* SDL_GetError(){return error.c_str();}
+static const char* SDL_GetAndroidInternalStoragePath(){error="storage lookup clobber";return ".";}
 static void SDL_ClearError(){error.clear();}
 static void SDL_Log(const char* fmt,...){char b[2048];va_list ap;va_start(ap,fmt);vsnprintf(b,sizeof(b),fmt,ap);va_end(ap);logged+=b;error="log clobber";}
 static bool SDL_ShowSimpleMessageBox(int,const char*,const char* message,SDL_Window*){popup=message;popupCalls++;error="popup unavailable";return !popupFail;}
@@ -84,6 +85,7 @@ int main(){
  int failures=0;
  const char* stages[]={"","SDL initialization","window creation","OpenGL context creation","OpenGL context activation","OpenGL current context","OpenGL version query","OpenGL version query","ImGui SDL backend initialization","ImGui OpenGL backend initialization"};
  for(int mode=0;mode<2;mode++)for(scenario=0;scenario<=9;scenario++){
+  std::remove("launcher-startup-error.log");std::remove("launcher-startup-error.log.pending");
   invalidCall=popupCalls=0;context=platform=renderer=false;sRaUi=nullptr;popupFail=mode;
   for(int& n:calls)n=0;for(int& n:destroyed)n=0;error="stale unrelated error";logged.clear();popup.clear();
   int result=Bootstrap();
@@ -95,6 +97,12 @@ int main(){
    bad|=destroyed[0]!=(scenario>=8) || destroyed[1]!=(scenario>=4) || destroyed[2]!=(scenario>=3) || destroyed[3]!=1 || destroyed[4]!=(scenario>=2) || destroyed[5]!=(scenario==9);
    bad|=sRaUi!=nullptr || context || platform || renderer;
    for(int n=scenario+1;n<=9;n++)bad|=calls[n]!=0;
+#ifdef LAUNCHER_ANDROID
+   char saved[2048]={0};FILE* file=std::fopen("launcher-startup-error.log","rb");
+   if(file){std::fread(saved,1,sizeof(saved)-1,file);std::fclose(file);}
+   bad|=!file || std::string(saved).find(stages[scenario])==std::string::npos;
+   if(scenario<=4)bad|=std::string(saved).find("injected original failure")==std::string::npos;
+#endif
   }else{bad|=popupCalls!=0 || !platform || !renderer;for(int n:destroyed)bad|=n!=0;}
   if(bad){std::fprintf(stderr,"scenario%d popupFail%d result%d invalid%d popup:%s cleanup:%d/%d/%d/%d/%d/%d\n",scenario,mode,result,invalidCall,popup.c_str(),destroyed[0],destroyed[1],destroyed[2],destroyed[3],destroyed[4],destroyed[5]);failures++;}
  }
@@ -110,7 +118,7 @@ int main(){
         exe=path/('consumer.exe' if os.name=='nt' else 'consumer')
         for android in (False, True):
             subprocess.run([cc,'-std=c++17','-static',*(['-DLAUNCHER_ANDROID'] if android else []),str(cpp),'-o',str(exe)],check=True)
-            result=subprocess.run([str(exe)],capture_output=True,text=True,timeout=5)
+            result=subprocess.run([str(exe)],cwd=path,capture_output=True,text=True,timeout=5)
             print(('Android GLES' if android else 'desktop GL')+': '+result.stdout,end='')
             assert result.returncode==0,(result.returncode,result.stderr)
 

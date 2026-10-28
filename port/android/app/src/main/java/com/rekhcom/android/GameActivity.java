@@ -3,7 +3,8 @@ package com.rekhcom.android;
 import org.libsdl.app.SDLActivity;
 
 /** Runs the selected native core in :game, separate from the ROM launcher. */
-public class GameActivity extends SDLActivity {
+public class GameActivity extends StartupSdlActivity {
+    @Override protected String startupRole(){return "game";}
     private LifecycleTrace lifecycle;
     private String lifecycleRuntime="pending";
     private void lifecycle(String event){if(lifecycle!=null)lifecycle.record(this,event,lifecycleRuntime);}

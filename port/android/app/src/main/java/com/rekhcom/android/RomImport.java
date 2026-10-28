@@ -51,6 +51,20 @@ public final class RomImport {
         for(int i=0;i<HASHES.length;i++)if(HASHES[i].equals(data.hash))return i;
         throw new IOException("ROM not recognized; use a supported clean EU, US or JP dump");
     }
+    /** Read-only validation of a previous installation; never asks the user to
+     * reimport a valid existing dump and never writes ROM/save/config data. */
+    public static String verifyInstalled(File file)throws Exception{
+        if(!file.isFile()||file.length()!=ROM_SIZE)throw new IOException("A clean 32 MiB GBA dump is required");
+        MessageDigest digest=MessageDigest.getInstance("SHA-1");Copied data=new Copied();byte[] block=new byte[65536];
+        try(InputStream in=new FileInputStream(file)){
+            int n;while((n=in.read(block))!=-1){
+                if(n==0||n>ROM_SIZE-data.size)throw new IOException("ROM read failed or size changed");
+                digest.update(block,0,n);data.size+=n;
+            }
+        }
+        StringBuilder hex=new StringBuilder();for(byte value:digest.digest())hex.append(String.format(Locale.ROOT,"%02x",value&255));
+        data.hash=hex.toString();return CODES[region(data)];
+    }
     private static void safeName(String name)throws IOException{
         if(name.length()>1024||name.startsWith("/")||name.indexOf('\\')>=0||name.indexOf(':')>=0||name.indexOf('\0')>=0)
             throw new IOException("Unsafe ZIP entry name");

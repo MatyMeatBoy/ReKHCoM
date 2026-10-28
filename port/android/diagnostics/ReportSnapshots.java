@@ -5,6 +5,22 @@ import java.util.*;
 /** Immutable per-user-action exports. Only this dedicated cache folder is managed. */
 final class ReportSnapshots {
     private static final int RETAIN=8;
+    /** Preserve once before safe-entry auto-collection replaces the old report.
+     * This cache backup is separate from rolling share snapshots; never rewrite it. */
+    static synchronized File preservePrior(File source)throws IOException {
+        File target=new File(source.getParentFile(),"pre-safe-entry-report.zip");
+        if(target.exists()){if(!target.isFile())throw new IOException("Prior report backup is not a file");return target;}
+        if(!source.isFile())return null;
+        File pending=File.createTempFile("pre-safe-entry-",".pending",source.getParentFile());
+        try{
+            try(InputStream in=new FileInputStream(source);FileOutputStream out=new FileOutputStream(pending)){
+                ReportLimits.copy(in,out,ReportLimits.TRACE_LIMIT+ReportLimits.TEXT_LIMIT+65536);out.getFD().sync();
+            }
+            if(target.exists())return target;
+            if(!pending.renameTo(target))throw new IOException("Cannot preserve prior report");
+            return target;
+        }finally{pending.delete();}
+    }
     static boolean name(String value){return value!=null&&value.matches("startup-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.zip");}
     static File file(File directory,String name)throws FileNotFoundException {
         try {

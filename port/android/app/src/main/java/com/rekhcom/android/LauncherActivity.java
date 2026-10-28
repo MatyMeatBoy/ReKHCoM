@@ -10,17 +10,22 @@ import org.libsdl.app.SDLActivity;
  *  on SDL. What it cannot do from native code goes through here (decompui/launcher_android.inc): the system's file
  *  pickers (a dump, a save in or out, the PC's hd folder), copied in the background with a status line it reads, and
  *  starting the game in its own process (GameActivity, :game). SAF copies are bounded, hashed (dumps) and atomic. */
-public class LauncherActivity extends SDLActivity {
+public class LauncherActivity extends StartupSdlActivity {
+    @Override protected String startupRole(){return "launcher";}
     private LifecycleTrace lifecycle;
     private void lifecycle(String event){if(lifecycle!=null)lifecycle.record(this,event,"launcher");}
     @Override protected void onCreate(android.os.Bundle state){
+        safeChildPending=state!=null&&state.getBoolean("startup_safe_child",false);if(safeChildPending)busy=true;
         try{lifecycle=LifecycleTrace.attach(this,"launcher",state!=null);}catch(Throwable ignored){}
         lifecycle("onCreate");super.onCreate(state);
     }
     @Override protected void onPause(){lifecycle("onPause");super.onPause();}
     @Override protected void onStop(){lifecycle("onStop");super.onStop();}
     @Override protected void onDestroy(){lifecycle("onDestroy");super.onDestroy();}
+    @Override protected void onSaveInstanceState(android.os.Bundle state){state.putBoolean("startup_safe_child",safeChildPending);super.onSaveInstanceState(state);}
     private static final int PICK_ROM=10,PICK_SAVE=20,PICK_EXPORT=30,PICK_HD=40;
+    private static final int SAFE_GAME=50;
+    private boolean safeChildPending;
     @Override protected String[] getLibraries(){return new String[]{"SDL3","launcher"};}
     @Override protected String[] getArguments(){return new String[0];}
 
@@ -47,13 +52,33 @@ public class LauncherActivity extends SDLActivity {
     }
     /** Called by the launcher: the game for region (eu/us/jp) with the dump at rom; kh_com.ini and netlink.cfg are written. */
     public void nativeLaunch(final String region,final String rom){
+        if(StartupGameAttempt.valid(getIntent().getStringExtra("startup_attempt"))){
+            runOnUiThread(()->safeLaunchGame(region));return;
+        }
         runOnUiThread(()->{Intent i=new Intent(this,GameActivity.class);i.putExtra("region",region);i.putExtra("rom",rom);startActivity(i);});
+    }
+    private void safeLaunchGame(final String region){
+            // Admission is on the UI thread even when JNI calls from SDLThread.
+            if(busy)return;busy=true;progress(t("Preparando inicio seguro…","Preparing safe start…"));
+            new Thread(()->{
+                try{
+                    String selected="us".equals(region)?"us":"jp".equals(region)?"jp":"eu";
+                    String code="us".equals(selected)?"B8CE":"jp".equals(selected)?"B8CJ":"B8CP";
+                    File installed=new File(getFilesDir(),"roms/"+code+".gba");
+                    if(!code.equals(RomImport.verifyInstalled(installed)))throw new IOException("ROM region mismatch");
+                    if(!StartupProcessGate.awaitAbsent(getApplicationContext(),"game"))throw new IOException("Previous game process is still closing");
+                    String attempt=java.util.UUID.randomUUID().toString().replace("-","");
+                    StartupStageJournal.record(getFilesDir(),"launcher",attempt,android.os.Process.myPid(),"game_requested",0);
+                    runOnUiThread(()->{if(isFinishing()||isDestroyed())return;Intent i=new Intent().setClassName(getPackageName(),"com.rekhcom.android.GameActivity");i.putExtra("region",selected).putExtra("rom",installed.getAbsolutePath()).putExtra("startup_attempt",attempt);safeChildPending=true;try{startActivityForResult(i,SAFE_GAME);}catch(Exception error){safeChildPending=false;finish(t("No se pudo iniciar: ","Could not start: ")+error.getMessage(),true);}});
+                }catch(Exception error){finish(t("No se pudo iniciar: ","Could not start: ")+error.getMessage(),true);}
+            },"safe-graphical-game").start();
     }
     /** Read by the launcher every frame. */
     public String nativeStatus(){return (busy?1:0)+"|"+serial+"|"+(failed?1:0)+"|"+message;}
     private void finish(String text,boolean error){message=text;failed=error;busy=false;serial++;}
 
     @Override protected void onActivityResult(int request,int result,Intent data){
+        if(request==SAFE_GAME){safeChildPending=false;finish("",false);return;}
         if(request!=PICK_ROM&&request!=PICK_SAVE&&request!=PICK_EXPORT&&request!=PICK_HD){super.onActivityResult(request,result,data);return;}
         if(result!=RESULT_OK||data==null||data.getData()==null)return;
         final Uri uri=data.getData();
