@@ -8843,20 +8843,26 @@
     "vita-windows-archive-response": {
       "id": "vita-windows-archive-response",
       "piece": "Fix Vita llvm-ar Windows command length using response file; preserve all objects and source behavior",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-vita-archive",
       "created_at": "2026-10-28T04:42:49.583127+00:00",
-      "updated_at": "2026-10-28T04:42:55.269847+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T04:45:37.846134+00:00",
+      "branch": "fix/vita-archive-response",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/429",
       "approval": "User requests v2.2allplatforms; actual Vita build hit WinError206; root delegates fixes with CAS/PR",
       "reference": "vita-guest-attempt1/operation.log line110 archive; memorypeak127MiB noOOM",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T04:45:37.846134+00:00",
+          "owner": "codex-vita-archive",
+          "detail": "PR429 exacthead79148a804 basedc73db919. RealVitaEUarchiveWinError206 oldafterall.o; responsefilefix+2actualllvm-ar tests800members/payloadsamples/staleremoval PASS. Guard128MiBpeak23.73,minfree3.028GiB; sourcefileshashes recorded in vita-archive-test-attempt2. Attempt1test sourcepin receipt corrected separately, not exactsourceproof. No fullVita rerun yet, HUDaceunchanged."
+        }
+      ],
       "claimed_at": "2026-10-28T04:42:55.269847+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:42:55.269847+00:00",
+  "updated_at": "2026-10-28T04:45:37.846134+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
