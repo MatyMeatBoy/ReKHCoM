@@ -10451,10 +10451,10 @@
     "glyph-upload-gdi-stb": {
       "id": "glyph-upload-gdi-stb",
       "piece": "Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-glyph-gdi-stb",
       "created_at": "2026-10-28T21:54:42.486629+00:00",
-      "updated_at": "2026-10-28T22:00:27.636529+00:00",
+      "updated_at": "2026-10-28T22:00:44.037754+00:00",
       "branch": "fix/glyph-upload-gdi-stb",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/473",
       "approval": "Root integrator: human-authorized code review; edb34a3d63df7851b45e8632137216211066ddca",
@@ -10469,9 +10469,15 @@
           "at": "2026-10-28T22:00:27.636529+00:00",
           "owner": "codex-glyph-gdi-stb",
           "detail": "Root product full diff review and independent24actualCPUproducer-consumercasesPASSi686/x64; empty glyphs stay valid, failedresourcesreleasedonce, nextframe native fallback withoutpreferences. ActualhostGPUack remains explicitly separate."
+        },
+        {
+          "at": "2026-10-28T22:00:44.037754+00:00",
+          "owner": "codex-glyph-gdi-stb",
+          "detail": "Root product full diff review and independent24actualCPUproducer-consumercasesPASSi686/x64; empty glyphs stay valid, failedresourcesreleasedonce, nextframe native fallback withoutpreferences. ActualhostGPUack remains explicitly separate.; merged 560778e703bf0ef3f98d771072606272fd1cd272"
         }
       ],
-      "claimed_at": "2026-10-28T21:54:51.750448+00:00"
+      "claimed_at": "2026-10-28T21:54:51.750448+00:00",
+      "completed_at": "2026-10-28T22:00:44.037754+00:00"
     },
     "v225-stable-version": {
       "id": "v225-stable-version",
@@ -10511,7 +10517,7 @@
     "created_at": "2026-10-28T22:00:34.799127+00:00",
     "updated_at": "2026-10-28T22:00:34.799127+00:00"
   },
-  "updated_at": "2026-10-28T22:00:34.799127+00:00",
+  "updated_at": "2026-10-28T22:00:44.037754+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
