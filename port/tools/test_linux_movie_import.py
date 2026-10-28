@@ -17,13 +17,16 @@ def encode(data):return bytes(b^khhd_import.MOVIE_KEY[i%16] if i<256 else b for 
 
 class MovieImport(unittest.TestCase):
  def test_real_cli_plain_xor_and_mixed_sources(self):
-  for label in ('plain','xor','mixed'):
+  for label in ('plain','xor','mixed','plain-padded','xor-padded'):
    with self.subTest(label=label),tempfile.TemporaryDirectory(prefix='movie import spaces ') as t:
     root=Path(t);source=root/'owned source';movies=source/'STEAM/dt/KHCReSource/BIN/movie';movies.mkdir(parents=True)
     image=source/'Image/dt';image.mkdir(parents=True)
     (image/'Recom.hed').write_bytes(b'');(image/'Recom.pkg').write_bytes(b'')
+    expected=PLAIN
+    if label.endswith('padded'):
+     expected+=box(b'free',b'x');expected+=b'\xcd'*(-len(expected)&15)
     for i,name in enumerate(khhd_import.BASE_MOVIES):
-     (movies/(name+'.mp4')).write_bytes(encode(PLAIN) if label=='xor' or(label=='mixed' and i%2) else PLAIN)
+     (movies/(name+'.mp4')).write_bytes(encode(expected) if label in ('xor','xor-padded') or(label=='mixed' and i%2) else expected)
     game=root/'game';(game/'hd/music').mkdir(parents=True)
     old=game/'hd/music/old.ogg';old.write_bytes(b'owned old HD');save=game/'kh_com.sav';save.write_bytes(b'owned save')
     env=dict(os.environ,PATH='') # Optional poster executable absent; no codec dependency.
@@ -33,7 +36,7 @@ class MovieImport(unittest.TestCase):
     backup=launcher.transaction(game,source,producer)
     for name in khhd_import.BASE_MOVIES:
      folder='scenes' if name.startswith('zz_event_') else 'movies'
-     self.assertEqual((game/'hd'/folder/(name+'.mp4')).read_bytes(),PLAIN)
+     self.assertEqual((game/'hd'/folder/(name+'.mp4')).read_bytes(),expected)
     self.assertEqual(old.read_bytes(),b'owned old HD');self.assertEqual(save.read_bytes(),b'owned save')
     self.assertEqual((backup/'music/old.ogg').read_bytes(),b'owned old HD')
 

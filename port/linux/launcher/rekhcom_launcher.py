@@ -33,11 +33,21 @@ def scan(root):
             if any(part.startswith('.stage') for part in rel.parts):raise ImportErrorSafe('Unfinished source import; use a completed HD folder.')
             yield path,rel
 
+def _mp4_complete(stream,at,size,seen):
+    if not {b'moov',b'mdat'}<=seen:return False
+    if at==size:return True
+    # Legacy source exports can retain CD fill up to a 16-byte boundary.
+    # Accept it only after complete boxes, never inside a truncated box.
+    left=size-at
+    if size%16 or not 0<left<16:return False
+    stream.seek(at)
+    return stream.read(left)==b'\xcd'*left
+
 def mp4(path):
     size=path.stat().st_size;at=0;seen=set()
     with path.open('rb') as stream:
         for _ in range(4096):
-            if at==size:return {b'moov',b'mdat'}<=seen
+            if _mp4_complete(stream,at,size,seen):return True
             stream.seek(at);header=stream.read(8)
             if len(header)!=8:return False
             length=int.from_bytes(header[:4],'big');kind=header[4:]
@@ -49,9 +59,9 @@ def mp4(path):
             if length==0:length=size-at
             if length<minimum or length>size-at:return False
             seen.add(kind);at+=length
-    # The final allowed box may end exactly at EOF on iteration4096.
-    # Keep the same 4096-box limit while accepting that complete boundary.
-    return at==size and {b'moov',b'mdat'}<=seen
+        # The final allowed box may end at EOF or before legacy alignment fill.
+        # Keep the same 4096-box limit while accepting that complete boundary.
+        return _mp4_complete(stream,at,size,seen)
 
 def validate(root):
     files=list(scan(root))
