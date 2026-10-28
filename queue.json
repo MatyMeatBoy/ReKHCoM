@@ -9241,12 +9241,12 @@
     "android412-v22-startup": {
       "id": "android412-v22-startup",
       "piece": "Critical reporter confirmed v2.2 instant startup crash on S22 Ultra Android16 before launcher; distinguish Retroid self-resolved and Moto/Jafar. Audit exact publishedAPK38f loader/JNI/GL/filesystem and actionable crash-buffer capture, no unprovenfixclaims.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T11:54:29.501273+00:00",
+      "updated_at": "2026-10-28T12:08:48.004311+00:00",
       "branch": "feat/android-startup-diagnostics",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/issues/412",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/437",
       "approval": null,
       "reference": "Rootauthorizedtest412optionalJavaentry; worktreeandroid-startup-diagnostics base0f78f298b; designselectedbyroot",
       "evidence": [
@@ -9269,13 +9269,18 @@
           "at": "2026-10-28T11:54:29.501273+00:00",
           "owner": "codex-s22-startup",
           "detail": "Plan docs/superpowers/plans/2026-10-28-android-startup-diagnostics.md; primaryAndroidAPI30ownUIDringbuffer/API31nativeprotobuftraces; sameID/cert/versionCode102020099, exact2.2libs/assets, no network/globalpermissions, limitedexport; no normalreleasechanges"
+        },
+        {
+          "at": "2026-10-28T12:08:48.004311+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "Draft437headb162c8954a4e494892b92204c1969c8d6750ca39; optionalJavafirstdiagnostics,noartasset; cleanofflineAPK9cc6e4588ELF/assetsbyteparity+samecode102020099/certPASS; JVMhelper/JavaSDK35PASS; read-onlyAPI34roundtripactualsession34689 stillinprogress,rootreviewandruntimebeforeReady/prerelease; stableunchanged,no S22fixclaim"
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:01:11.920825+00:00",
+  "updated_at": "2026-10-28T12:08:48.004311+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
