@@ -9460,20 +9460,26 @@
     "optiport-android-startup-contracts": {
       "id": "optiport-android-startup-contracts",
       "piece": "Teach bounded Android startup lifecycle diagnostics and real installation parser contracts from444/442; no device cause claim, no universal Android gate; preserve installed local lessons after upstream merge.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-startup-contracts",
       "created_at": "2026-10-28T14:30:08.722615+00:00",
-      "updated_at": "2026-10-28T14:30:45.084374+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T14:34:34.505057+00:00",
+      "branch": "docs/android-startup-contracts",
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/12",
       "approval": "User explicitly requested teaching OptiPort lessons; root delegated post444 merge, only two conditional reference paragraphs.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T14:34:34.505057+00:00",
+          "owner": "codex-optiport-startup-contracts",
+          "detail": "Head ef9257c707d8157ff552e8a0ea782c4160f8badc based44e. Two conditional Android paragraphs only verified-lessons. Informed baseline already correct and updated peerPASS2/2 no fakeRED.24MD59localtargetsUTF8fencesdiffPASS; actual AOSP14 name validator rejection/acceptance reexecuted; real package validator python-O2testsPASS. Exact API34 attempt3installSuccess/completedfalse harness separated. Installed copies untouched pending merge. Private evidence OPTIPORT-STARTUP-{BEHAVIOR,VALIDATION}.json."
+        }
+      ],
       "claimed_at": "2026-10-28T14:30:45.084374+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:30:45.084374+00:00",
+  "updated_at": "2026-10-28T14:34:34.505057+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
