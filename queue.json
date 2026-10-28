@@ -8702,20 +8702,26 @@
     "v22-web-release-label": {
       "id": "v22-web-release-label",
       "piece": "Align existing Web beta labels with v2.2 stable delivery",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-console-web-label",
       "created_at": "2026-10-28T03:52:59.699269+00:00",
-      "updated_at": "2026-10-28T03:53:04.897300+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T03:53:54.362186+00:00",
+      "branch": "release/web-v22-label",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/426",
       "approval": "User requested v2.2 all platforms; root includes Web beta and delegated label audit",
       "reference": "v22-stable-delivery expansion28Oct; release_check requires source Web label",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T03:53:54.362186+00:00",
+          "owner": "codex-console-web-label",
+          "detail": "Only3HTMLversionlabels change2.0/1.9.15to2.2Beta; noWebruntime/game change. check_web_labels.py REDold/GREENall3againstport_version, diffcheckPASS. SDK6.0.12emcc.exe+SDL3static/source+EUUSJPcachepresent. ActualWebbuild/browserQA/Pagespending; oldbytesnotrelabeled."
+        }
+      ],
       "claimed_at": "2026-10-28T03:53:04.897300+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T03:53:04.897300+00:00",
+  "updated_at": "2026-10-28T03:53:54.362186+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
