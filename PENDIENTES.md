@@ -301,4 +301,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-pre3-version-identity | Child of claimed pre3 delivery: coherent source/PE/changelog identity only | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/413 | Usuario: nueva pre actualizada, conservar versiones entregadas; parent v22-pre3-current-source-delivery claimed codex-integrador before edits | 2026-10-27T23:55:51.541455+00:00 |
 | issue410-hd-music-input-rate | Reported HD music too fast Windows pre1: reproduce actual mixer consumption at63072/65536 vs host48000; preserve original GBA clock and legacy ring/device units | pr_abierto | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/414 | Usuario: leer nuevosissues, resolver patrones relacionados audio allplatforms; report410 now corroborates source mismatch hypothesis | 2026-10-28T00:00:27.837821+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T00:01:42.787753+00:00)
+Integrador: libre
