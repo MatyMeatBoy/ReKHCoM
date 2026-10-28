@@ -361,4 +361,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-startup-pre1-delivery | Prepare immutable Linuxstartup-pre1 from integrated main452+457+458; exactTAR normal64/safe32 QA and provenance; root publishes | en_revision | codex-linux-startup-delivery | release/linux-startup-pre1 | Root/user prioritize330374 startup prerelease; isolated build/preparation now, runtime only coordinatedlease; no published overwrite | 2026-10-28T20:05:18.210336+00:00 |
 | dummy-cleanup-startup-pass | User-requested sweep of synthetic dummy outputs and closed CPU fixtures; preserve startup build caches, evidence, proprietary inputs and immutable releases | pr_abierto | codex-dummy-cleanup | https://github.com/MatyMeatBoy/ReKHCoM/pull/463 | Human explicitly requested dummy cleanup; root authorized this documentation-only subclaim and reviewed deletion scope before execution. Independent reviewer codex-deck_video_421 verified all151 backup member hashes. | 2026-10-28T20:05:02.498971+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T20:06:15.857868+00:00)
