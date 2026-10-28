@@ -9306,12 +9306,12 @@
     "post22-arm32-division-lowering": {
       "id": "post22-arm32-division-lowering",
       "piece": "Game-only Android32 CMake and Linux/Anbernic armhf pre-LLVM-optimization scalar i32 division/remainder lowering; preserve host/SDL/importer and shared helper",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-arm32-div-lowering",
       "created_at": "2026-10-28T12:10:24.583307+00:00",
-      "updated_at": "2026-10-28T12:15:02.465752+00:00",
+      "updated_at": "2026-10-28T12:34:21.877829+00:00",
       "branch": "fix/arm32-cartridge-division",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/440",
       "approval": "Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable",
       "reference": "pruebas/post22-arm-wasm-division",
       "evidence": [
@@ -9319,6 +9319,11 @@
           "at": "2026-10-28T12:15:02.465752+00:00",
           "owner": "codex-arm32-div-lowering",
           "detail": "Base955eb92c own kh-worktrees/arm32-cartridge-division. Producer audit: CMakegame_REGION OBJECT exact src boundary, arm64 early-return; Anbernic build_linux cc_game rule. Plan docs/superpowers/plans/2026-10-28-arm32-cartridge-division.md; root review requested BEFORE producer edits. Lowerer shared read-only; consoleworker ownsbuild_switch. Probe84 and original192Thumb inspected."
+        },
+        {
+          "at": "2026-10-28T12:34:21.877829+00:00",
+          "owner": "codex-arm32-div-lowering",
+          "detail": "USERCHANGED priority to OptiPort. Saved DRAFTPR440 ee605fe25 (no fullbuild active). Actual2TUs perAnbernic/Androidgame producer +forcedRSP/warmcachePASS, QEMU192+5 each with actualproducerflags/fixedaddress/pointer/floatcallbackABI,4failurepreservationPASS. Rawbaseline6ARM32mismatchesparent retained; lowerer435read-only. Remaining: script/header automaticcachepressure tests,negative x86/arm64configure and independentadapterreview. No APK/device/S22fix claim; diag412prebuiltELFs untouched. Handoff doc port/progress/ARM32_CARTRIDGE_DIVISION_20261028.md and pruebas/post22-arm32-division. OwnerworkingOptiPort; do not assume child complete."
         }
       ],
       "claimed_at": "2026-10-28T12:10:30.123648+00:00"
@@ -9339,7 +9344,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:34:12.559095+00:00",
+  "updated_at": "2026-10-28T12:34:21.877829+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
