@@ -27,8 +27,24 @@ startup block: nine negative cases and one positive. False/NULL returns retain
 errors and avoid downstream calls; controlled nonreturns leave their distinct
 begin stage visible even with buffered stderr followed by `_Exit` (no normal
 flush). These controlled stubs demonstrate observability, not a Deck repro.
-The actual Linux64 host compiles/links using the cached sysroot. Device/Gaming
-Mode reproduction and linked-SDL runtime evidence require the coordinated smoke.
+The actual Linux64 host compiles/links using the cached sysroot. Coordinated
+offline Debian snapshot smoke passes with the same host bytes and the real EU
+guest07d5 from immutable TAR439441: linked SDL3004018, dummy video/audio,
+software renderer, successful boot marker, directed title at frame31 and wrapper
+exit0/marker1 from a foreign working directory. A separate real invalid-driver
+control logs failed SDL_Init, host4/marker0 and the existing32-bit fallback;
+the final nonzero exit is expected because that same invalid driver also rejects32.
+`SMOKE-VERIFIED.json` records28 raw postconditions, source/component hashes and
+QEMU0 after teardown. This is not Steam/Gamescope/physical Deck reproduction.
+
+Normal guest shutdown may call `H_exit` and terminate the process directly;
+`boot` need not return. Therefore missing `guest-core status=returned` is not a
+hang when the wrapper records exit0/marker1 and the actual core transition is
+present. The first private observer wrongly required that return and exact
+frame30 instead of observed31; its FAIL/raw logs remain intact. The positive
+was reconciled without rerunning; only the unexecuted negative control ran next.
+The core's displayed SDL3.4.0 label belongs to its shim; the host's actual linked
+library is SDL3.4.18. Those labels do not establish a library-conflict cause.
 Private receipts: `pruebas/issue330-entry-diagnostic/20261028-new-log/`.
 
 Android #374 has a similar early-startup symptom in a different executable:
