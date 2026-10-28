@@ -250,10 +250,62 @@ class LauncherTest(unittest.TestCase):
         self.assertTrue((self.game / 'region.txt').exists())
 
     def test_guest_failure_and_quit_never_retry(self):
-        for code, entered in ((4, True), (81, False), (0, False), (139, False)):
+        for code, entered in ((4, True), (81, False), (0, False), (139, False),
+                              (137, False), (143, False), (137, True), (143, True)):
             self.fake64(code, entered)
             self.assertEqual(self.run_script().returncode, code)
             self.assertFalse((self.game / 'region.txt').exists())
+
+    def capture_startup_environment(self):
+        for region in ('eu', 'us', 'jp'):
+            stub = self.game / 'bin' / ('khcom_' + region)
+            text = stub.read_text(encoding='utf8')
+            stub.write_text(text.replace('#!/bin/sh\n', '#!/bin/sh\nprintf "%s\\n" '
+                            '"${REKHCOM_GPU-unset}" "${SDL_RENDER_DRIVER-unset}" > startup-env.txt\n', 1), encoding='utf8')
+
+    def test_safe_startup_is_child_only_and_preserves_outdated_preferences(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        self.capture_startup_environment()
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        original = 'runtime_mode=2\nruntime_auto_version=v2.1\ncustom=keep\n'
+        ini = self.game / 'decompui.ini'
+        ini.write_text(original)
+        config = self.game / 'kh_com.ini'
+        config.write_bytes(b'player settings sentinel\n')
+        save = self.game / 'private.sav'
+        save.write_bytes(b'private save sentinel\x00\xff')
+        self.env.update(REKHCOM_GPU='1', SDL_RENDER_DRIVER='opengl')
+        result = self.run_script('--region', 'us', '--safe-startup', '--force64',
+                                 '--language', 'es space', '$literal')
+        self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
+        self.assert_game('us', ['--language', 'es space', '$literal'])
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
+        self.assertEqual(ini.read_text(), original)
+        self.assertEqual(config.read_bytes(), b'player settings sentinel\n')
+        self.assertEqual(save.read_bytes(), b'private save sentinel\x00\xff')
+        self.assertIn('safe startup: native32, bundled libraries, software renderer; session only',
+                      (self.game / 'ReKHCoM.log').read_text())
+        self.assertEqual(self.env['REKHCOM_GPU'], '1')
+        self.assertEqual(self.env['SDL_RENDER_DRIVER'], 'opengl')
+
+    def test_safe_startup_wins_in_both_runtime_flag_orders_without_sticking(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        self.capture_startup_environment()
+        for args in [('--force64', '--safe-startup'), ('--safe-startup', '--auto')]:
+            self.assertEqual(self.run_script(*args).returncode, 17)
+            self.assertFalse((self.game / 'ran64.txt').exists())
+            self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
+        self.env.update(REKHCOM_64='0', REKHCOM_GPU='0', SDL_RENDER_DRIVER='opengl')
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'opengl'])
+
+    def test_safe_startup_after_game_arguments_remains_a_literal_game_argument(self):
+        self.env['REKHCOM_64'] = '0'
+        self.assertEqual(self.run_script('--language', 'es', '--safe-startup').returncode, 17)
+        self.assert_game('eu', ['--language', 'es', '--safe-startup'])
 
     def test_forced_modes_and_persistent_preference(self):
         self.fake64(4)
@@ -391,6 +443,22 @@ class LauncherTest(unittest.TestCase):
                                   capture_output=True, text=True)
         self.assertEqual(launched.returncode, 17, launched.stderr)
         self.assert_game('eu', ['--language', 'es space'])
+
+    def test_manual_safe_steam_command_preserves_escaped_path_and_arguments(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        self.capture_startup_environment()
+        result = self.run_script('--steam-help')
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('--safe-startup', result.stdout)
+        options = next(line.split(': ', 1)[1] for line in result.stdout.splitlines()
+                       if line.startswith('Launch Options: '))
+        command = '/bin/sh ' + options + ' --safe-startup --language "es space"'
+        launched = subprocess.run([SHELL, '-c', command], cwd=self.root, env=self.env,
+                                  capture_output=True, text=True)
+        self.assertEqual(launched.returncode, 17, launched.stderr)
+        self.assert_game('eu', ['--language', 'es space'])
+        self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
 
 
 if __name__ == '__main__':

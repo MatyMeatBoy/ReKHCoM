@@ -126,6 +126,30 @@ with Proton Experimental remains unverified without those runtime details.
 
 Not reviewed by Valve: there is no Deck Verified status.
 
+### Optional safe startup (one launch)
+
+If the native shortcut still closes before the game appears, this manual test
+uses the existing 32-bit runtime, bundled libraries and SDL software renderer.
+It can be slower. It is a compatibility attempt, not a confirmed Gaming Mode fix.
+
+1. In the native Steam shortcut's Launch Options, keep the quoted absolute
+   script path and insert `--safe-startup` immediately after it, before any
+   game arguments. For example: `"/home/deck/Games/ReKHCoM/ReKHCoM.sh" --safe-startup`.
+   Keep Target `/bin/sh`, Start In the game folder, and forced Proton unchecked.
+2. Launch once in Gaming Mode. The same data folder is used. The wrapper does
+   not delete saves, edit game settings or migrate the saved runtime preference;
+   the game's ordinary save/settings behavior is unchanged. The log identifies
+   `safe startup: native32, bundled libraries, software renderer; session only`.
+3. Remove only `--safe-startup` to return to normal startup and the saved
+   runtime choice. If this attempt also fails, keep the new `ReKHCoM.log` and
+   `kh_com.log`; do not delete or reset the existing saves/configuration.
+
+This option overrides other runtime-mode flags only for that launch. It does
+not change the parent environment, Steam's overlay, the shortcut registration
+or media quality. It adds no automatic retry after gameplay starts or after
+an intentional signal exit. Quoted paths and existing desktop-entry escaping
+remain the normal launch path.
+
 ## ARM handhelds (`anbernic-beta`)
 
 **Beta, not yet tested on a real handheld.** Aimed at the Anbernic RG34XX

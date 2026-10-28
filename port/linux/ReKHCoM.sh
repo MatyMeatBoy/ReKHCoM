@@ -4,6 +4,7 @@
 # file name): the region is read from the ROM header.
 #   ./ReKHCoM.sh                 first ROM found in roms/
 #   ./ReKHCoM.sh --region us     a specific version (eu, us or jp)
+#   ./ReKHCoM.sh --safe-startup  temporary native32/software troubleshooting
 DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P) || exit 1
 
 # Desktop Entry Exec has two escaping passes (string, then quoted argument),
@@ -19,6 +20,7 @@ steam_help() {
     printf 'Target: /bin/sh\nStart In: "%s"\nLaunch Options: ' "$DIR"
     printf '"%s"\n' "$(printf '%s' "$DIR/ReKHCoM.sh" | sed 's/[\\"$`]/\\&/g')"
     printf 'Keep these quotes. Add game arguments after the quoted script path.\n'
+    printf 'Optional troubleshooting: add --safe-startup immediately after the script path, before game arguments.\n'
 }
 
 case "$1" in
@@ -74,17 +76,15 @@ runtime_migrate() {
         echo 'Runtime migration could not be saved; using Automatic for this launch.' >&2
     fi
 }
-runtime_migrate
-[ "$1" = --migrate-runtime-only ] && exit 0
-# Shared preference: 0 automatic, 1 force32, 2 force64. CLI overrides are not saved.
-MODE=$(sed -n 's/^runtime_mode=//p' "$DIR/decompui.ini" 2>/dev/null | tr -d '\r' | tail -n 1)
-case "$MODE" in 1|2) ;; *) MODE=0 ;; esac
-[ "$RUNTIME_MIGRATED" = 1 ] && MODE=0
+# Parse the wrapper prefix before migration: an explicit troubleshooting launch
+# must not rewrite the user's saved runtime preference, even on a new release.
 CLI_MODE=
+SAFE_STARTUP=0
 REGION=
 ROM=
 while [ "$#" -gt 0 ]; do
     case "$1" in
+        --safe-startup) SAFE_STARTUP=1; shift ;;
         --force32) CLI_MODE=1; shift ;;
         --force64) CLI_MODE=2; shift ;;
         --auto) CLI_MODE=0; shift ;;
@@ -96,8 +96,20 @@ while [ "$#" -gt 0 ]; do
         *) break ;;
     esac
 done
+[ "$SAFE_STARTUP" = 1 ] || runtime_migrate
+[ "$1" = --migrate-runtime-only ] && exit 0
+# Shared preference: 0 automatic, 1 force32, 2 force64. CLI overrides are not saved.
+MODE=$(sed -n 's/^runtime_mode=//p' "$DIR/decompui.ini" 2>/dev/null | tr -d '\r' | tail -n 1)
+case "$MODE" in 1|2) ;; *) MODE=0 ;; esac
+[ "$RUNTIME_MIGRATED" = 1 ] && MODE=0
 if [ -n "$CLI_MODE" ]; then MODE=$CLI_MODE
 elif [ "${REKHCOM_64:-1}" = 0 ]; then MODE=1
+fi
+if [ "$SAFE_STARTUP" = 1 ]; then
+    MODE=1
+    REKHCOM_GPU=0
+    SDL_RENDER_DRIVER=software
+    export REKHCOM_GPU SDL_RENDER_DRIVER
 fi
 
 code_of() {
@@ -138,6 +150,7 @@ rotate_session_log() {
 rotate_session_log "$DIR/ReKHCoM.log" || echo "Log rotation failed; retaining previous evidence" >&2
 exec >>"$DIR/ReKHCoM.log" 2>&1
 echo "ReKHCoM.sh: $(date), native Linux, folder $DIR, region ${REGION:-auto}"
+[ "$SAFE_STARTUP" = 1 ] && echo 'ReKHCoM.sh: safe startup: native32, bundled libraries, software renderer; session only'
 
 
 if [ -z "$ROM" ]; then
