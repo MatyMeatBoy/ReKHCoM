@@ -10260,19 +10260,20 @@
     "v23-release-builds": {
       "id": "v23-release-builds",
       "piece": "Prepare v2.3 release matrix, surviving cache inventory and exact Windows32/64 baseline; final platform packaging after root source freeze",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v23-release-builds",
       "created_at": "2026-10-28T21:26:25.921019+00:00",
-      "updated_at": "2026-10-28T21:26:25.921019+00:00",
+      "updated_at": "2026-10-28T21:26:35.019576+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated explicit user v2.3 all-integrations mandate 2026-10-28",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T21:26:35.019576+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:26:25.921019+00:00",
+  "updated_at": "2026-10-28T21:26:35.019576+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
