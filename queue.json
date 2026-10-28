@@ -8119,15 +8119,16 @@
     "game-cursor-idle-four-seconds": {
       "id": "game-cursor-idle-four-seconds",
       "piece": "Ocultar cursor inmovil sobreventana juego tras max4seg; reaparecer almoverraton. SDL multiplataforma, foco/salida/reentrada/menu segunflujo, preservar mandoy controles. Implementar trasprioridadespixeles/audio/HP.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-integrador",
       "created_at": "2026-10-27T22:33:22.971761+00:00",
-      "updated_at": "2026-10-27T22:33:22.971761+00:00",
+      "updated_at": "2026-10-28T01:44:29.807880+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10 reitera mejora cursor4seg",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T01:44:29.807880+00:00"
     },
     "attack-card-native-top-seam": {
       "id": "attack-card-native-top-seam",
@@ -8481,7 +8482,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T01:39:49.128135+00:00",
+  "updated_at": "2026-10-28T01:44:29.807880+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
