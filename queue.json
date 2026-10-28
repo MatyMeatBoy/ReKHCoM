@@ -9650,13 +9650,13 @@
     "issue441-title-bar-ready-guard": {
       "id": "issue441-title-bar-ready-guard",
       "piece": "Protect native Press Start fallback when current HD parts rejected; preserve all-good blink/fade/bar phases",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-title-bar-guard",
       "created_at": "2026-10-28T16:24:35.248916+00:00",
-      "updated_at": "2026-10-28T16:59:41.066036+00:00",
+      "updated_at": "2026-10-28T17:00:38.981195+00:00",
       "branch": "fix/title-bar-native-fallback",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/448",
-      "approval": "Root authorizes sibling after446merge; actualmissingassetTocclusion reproduced, no art edits",
+      "approval": "User requested441fix and preventive fallbacks. Root reviewed code36613 unchanged in final9e884a37; independentactualCPUtestPASS, nativeWindows and12Linux32/64 pixel receipts reviewed.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/446",
       "evidence": [
         {
@@ -9668,6 +9668,11 @@
           "at": "2026-10-28T16:59:41.066036+00:00",
           "owner": "codex-title-bar-guard",
           "detail": "FINAL9e884a37445b2b64855efa8bca14124220db344e (onlydocafter36613 code). CPU56RED/GREEN;65WindowsD3D11/software/OriginalpositiveframesPIXELexact;WORDS+POSTERmissing/corruptT32→256blackpixelsEXACTGBA3frameseach. NativeLinux32/64all12casesexit0: fullPIXELidentical, missing/corruptTlogicalcells2→16matchesGBA16exact, acceptedHDwords0; deltaonlybar. FALLBACK-LINUX-VERIFIED.json, FALLBACK-NATIVE-PIXEL-CHECKS.json, rawfallback-vm-run/evidence. VM22684terminal0+QEMUcount0+439lease/cachefreed. NoGPUDeckhardwareclaim/noartedits/noPublishedoverwrite."
+        },
+        {
+          "at": "2026-10-28T17:00:38.981195+00:00",
+          "owner": "codex-title-bar-guard",
+          "detail": "Allgood65Windowsframes and Linux32/64 fullassets before/fixed identical; missing/corrupt WORDS+POSTER restoresnativeT matchingOriginalGBA; everyactivePressStartpart accepted beforeHDbarhandover. Noart/timing/qualitychange, nohardwareDeckclaim."
         }
       ],
       "claimed_at": "2026-10-28T16:25:04.471364+00:00"
@@ -9702,7 +9707,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:59:41.066036+00:00",
+  "updated_at": "2026-10-28T17:00:38.981195+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
