@@ -59,7 +59,7 @@ final class StartupExitCollector {
             long remaining=ReportLimits.TRACE_LIMIT;int accepted=0;
             for(ApplicationExitInfo entry:entries){
                 String process=entry.getProcessName();
-                if(!process.equals(context.getPackageName())&&!process.equals(context.getPackageName()+":game")&&!process.equals(context.getPackageName()+":startup-profile"))continue;
+                if(!process.equals(context.getPackageName())&&!process.equals(context.getPackageName()+":game")&&!process.equals(context.getPackageName()+":startup_profile"))continue;
                 accepted++;
                 text.append("\nExit ").append(accepted).append(" timestamp_ms=").append(entry.getTimestamp()).append(" process=").append(process).append('\n');
                 text.append("reason=").append(reason(entry.getReason())).append(" (").append(entry.getReason()).append(") status=").append(entry.getStatus()).append(" importance=").append(entry.getImportance()).append('\n');

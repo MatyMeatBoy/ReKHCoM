@@ -21,7 +21,7 @@ final class StartupProfileSession {
  }
  static synchronized void rejected(Context context){mode="default-rejected";expected=ORIGINAL;note(context,"request rejected; using original default");}
  static boolean isOwnProfileProcess(Context context){
-  String own=context.getPackageName()+":startup-profile";
+  String own=context.getPackageName()+":startup_profile";
   android.app.ActivityManager manager=(android.app.ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
   if(manager==null)return false;
   java.util.List<android.app.ActivityManager.RunningAppProcessInfo> processes=manager.getRunningAppProcesses();

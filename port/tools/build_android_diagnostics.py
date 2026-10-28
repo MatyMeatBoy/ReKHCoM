@@ -24,6 +24,11 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def validate_private_process(name):
+    # aapt accepts names Android's runtime parser rejects (including hyphens).
+    assert re.fullmatch(r':[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*', name), 'Invalid private process name: ' + name
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-apk', type=Path, required=True)
@@ -91,13 +96,17 @@ def main():
     if args.compat_options:
         attrs = dict(launcher.attrib)
         attrs[NS + 'name'] = 'com.rekhcom.android.CompatibilityLauncherActivity'
-        attrs[NS + 'process'] = ':startup-profile'
+        attrs[NS + 'process'] = ':startup_profile'
         ET.SubElement(application, 'activity', attrs)
     entry = ET.SubElement(application, 'activity', {NS + 'name': 'com.rekhcom.android.StartupDiagnosticActivity', NS + 'exported': 'true', NS + 'hardwareAccelerated': 'false', NS + 'configChanges': 'orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode'})
     intent = ET.SubElement(entry, 'intent-filter')
     ET.SubElement(intent, 'action', {NS + 'name': 'android.intent.action.MAIN'})
     ET.SubElement(intent, 'category', {NS + 'name': 'android.intent.category.LAUNCHER'})
     ET.SubElement(application, 'provider', {NS + 'name': 'com.rekhcom.android.StartupReportProvider', NS + 'authorities': 'com.rekhcom.android.startup-report', NS + 'exported': 'false', NS + 'grantUriPermissions': 'true'})
+    for activity in application.findall('activity'):
+        process = activity.get(NS + 'process')
+        if process:
+            validate_private_process(process)
     tree.write(manifest, encoding='utf-8', xml_declaration=True)
     for name in ('gradlew.bat', 'build.gradle', 'settings.gradle'):
         shutil.copy2(args.gradle_seed / name, stage / name)
