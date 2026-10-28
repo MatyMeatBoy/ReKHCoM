@@ -9009,10 +9009,10 @@
     "runtime-auto-per-update": {
       "id": "runtime-auto-per-update",
       "piece": "Reset desktop architecture preference to Auto once per release version; preserve same-version/userCLI choices and compatibility fallbacks",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-runtime-migration",
       "created_at": "2026-10-28T05:52:50.190184+00:00",
-      "updated_at": "2026-10-28T06:20:55.396058+00:00",
+      "updated_at": "2026-10-28T10:40:42.606032+00:00",
       "branch": "feat/auto-runtime-per-update",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/431",
       "approval": "User explicitly requests everyupdate resetsAuto/prefer64compatible; root approved atomic decompui.ini version marker, Windowslauncher/LinuxGUI+shell only",
@@ -9022,9 +9022,15 @@
           "at": "2026-10-28T06:20:55.396058+00:00",
           "owner": "codex-runtime-migration",
           "detail": "Head d43f6ab23; actual C++ readonly transactions PASS,22 shell+GUI PASS,3 Linux/Anbernic packaging PASS. Receipt runtime-migration-attempt1 peak99.17MiB; repeat deferred by RAM gate1.331GiB. Full launcher link pending serial window; no publication."
+        },
+        {
+          "at": "2026-10-28T10:40:42.606032+00:00",
+          "owner": "codex-runtime-migration",
+          "detail": "Exact head reviewed by root and independent worker; C++ transactions/readonly plus22shellGUI and3packagefixtures PASS; full launcher compile/link PASS24s peak346MiB; three closed repacks memberhash/CRC PASS with separate game_source and packaging_source. User authorizes stable integration; no game code changes.; merged 5107e613beb0f84dfa957e008630252b4c85bad4"
         }
       ],
-      "claimed_at": "2026-10-28T05:52:55.231473+00:00"
+      "claimed_at": "2026-10-28T05:52:55.231473+00:00",
+      "completed_at": "2026-10-28T10:40:42.606032+00:00"
     },
     "boss-parasite-cage-left-cull": {
       "id": "boss-parasite-cage-left-cull",
@@ -9059,7 +9065,7 @@
     "created_at": "2026-10-28T10:40:34.076692+00:00",
     "updated_at": "2026-10-28T10:40:34.076692+00:00"
   },
-  "updated_at": "2026-10-28T10:40:34.076692+00:00",
+  "updated_at": "2026-10-28T10:40:42.606032+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
