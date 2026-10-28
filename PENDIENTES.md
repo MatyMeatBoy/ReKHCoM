@@ -303,4 +303,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hud-polish-blend-fixture | PR402 fixture format constants align with real guest SDL enum; RED/GREEN texture-generation and native SDL blend probe only | integrado | codex-hud-blend-fixture | https://github.com/MatyMeatBoy/ReKHCoM/pull/402 | User fixes authorized; root delegated child of hud-polish, branch402 fixture only | 2026-10-28T00:10:07.283785+00:00 |
 | gameplay-glyph-prewarm-391 | Reviewed child of Claude pacing work: prepare gameplay glyphs before game clock starts; PR391 | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/391 | Usuario: integrar mejoras Claude y stutter priority2; preserve original GBA timing | 2026-10-28T00:09:23.088938+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T00:09:58.646411+00:00)
+Integrador: libre
