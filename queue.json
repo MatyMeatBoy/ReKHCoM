@@ -9463,23 +9463,28 @@
       "status": "pr_abierto",
       "owner": "codex-optiport-startup-contracts",
       "created_at": "2026-10-28T14:30:08.722615+00:00",
-      "updated_at": "2026-10-28T14:34:34.505057+00:00",
+      "updated_at": "2026-10-28T14:36:59.610489+00:00",
       "branch": "docs/android-startup-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/12",
-      "approval": "User explicitly requested teaching OptiPort lessons; root delegated post444 merge, only two conditional reference paragraphs.",
+      "approval": "User explicitly requested teaching OptiPort the verified startup lessons and closing all PRs before stop. Root reviewed exactef9257c docs-only boundaries and two-scenario review; no device-fix claims.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
       "evidence": [
         {
           "at": "2026-10-28T14:34:34.505057+00:00",
           "owner": "codex-optiport-startup-contracts",
           "detail": "Head ef9257c707d8157ff552e8a0ea782c4160f8badc based44e. Two conditional Android paragraphs only verified-lessons. Informed baseline already correct and updated peerPASS2/2 no fakeRED.24MD59localtargetsUTF8fencesdiffPASS; actual AOSP14 name validator rejection/acceptance reexecuted; real package validator python-O2testsPASS. Exact API34 attempt3installSuccess/completedfalse harness separated. Installed copies untouched pending merge. Private evidence OPTIPORT-STARTUP-{BEHAVIOR,VALIDATION}.json."
+        },
+        {
+          "at": "2026-10-28T14:36:59.610489+00:00",
+          "owner": "codex-optiport-startup-contracts",
+          "detail": "24Markdown59links, actual AOSP process-name contract and packaging negative tests python-O PASS; documented source444merged and442experimental, no fake baseline effect."
         }
       ],
       "claimed_at": "2026-10-28T14:30:45.084374+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:34:34.505057+00:00",
+  "updated_at": "2026-10-28T14:36:59.610489+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
