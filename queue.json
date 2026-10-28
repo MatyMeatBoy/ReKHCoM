@@ -10572,15 +10572,21 @@
     "v225-android-web-delivery": {
       "id": "v225-android-web-delivery",
       "piece": "Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-v225-android-web",
       "created_at": "2026-10-28T22:07:50.955630+00:00",
-      "updated_at": "2026-10-28T22:08:16.399020+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T23:04:38.939831+00:00",
+      "branch": "release/v225-web-final",
       "pr": null,
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T23:04:38.939831+00:00",
+          "owner": "codex-v225-android-web",
+          "detail": "APKclosed6ddb671726a12caed4f65e696635a7672c444a849b0d16e9504bd638b104604e 27553410B signer/cert/code102020599 JavaFirst8ELF216assets245ZIPCRC PASS; nativef28/pack17. Webea99closed23files30052243B/fatal3links+ABI6Nodechecks, leafbos3recompile adapterASTlinkonlyproof oldcache17; sitecandidateweb-site-ea99 + ANDROID/WEB-BUILD-SOURCES. RuntimefinalAPK/browserROMUNVERIFIED, previousfonttestphysicalsuccessseparate. Rootpublishes; noownprocesses."
+        }
+      ],
       "claimed_at": "2026-10-28T22:08:16.399020+00:00"
     },
     "v225-linux-final-build": {
@@ -10799,7 +10805,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:03:04.621579+00:00",
+  "updated_at": "2026-10-28T23:04:38.939831+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
