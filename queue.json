@@ -10891,10 +10891,10 @@
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
       "piece": "Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA.",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-28T23:51:40.655190+00:00",
+      "updated_at": "2026-10-28T23:53:11.040914+00:00",
       "branch": "fix/issue480-room-spring",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/482",
       "approval": "Root integrator: human-authorized code review; 8527aec7aacc6d3c8575200b125de377d16dd994",
@@ -10914,13 +10914,18 @@
           "at": "2026-10-28T23:51:40.655190+00:00",
           "owner": "codex-issue480",
           "detail": "Root solo review per user no-workers instruction; 2 real transition positives, exact native32/guest64 kinematics, 2 negative fixture controls, current builds/ABI/boot PASS, physics and drawing unchanged; partial diagnostics only, do not close480."
+        },
+        {
+          "at": "2026-10-28T23:53:11.040914+00:00",
+          "owner": "codex-issue480",
+          "detail": "PR482 MERGED, diagnostics only; code and two architecture transition controls delivered, actual480 cause unconfirmed. Postmerge metadata transition pr_abierto->en_revision rejected, corrected via supported en_curso; lock released. Await reporter APK/save/layout; no fix or closure claimed."
         }
       ],
       "claimed_at": "2026-10-28T23:22:23.561773+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:52:05.661844+00:00",
+  "updated_at": "2026-10-28T23:53:11.040914+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
