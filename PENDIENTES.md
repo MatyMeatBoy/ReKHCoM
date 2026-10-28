@@ -381,4 +381,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-official-java-first | Promote verified Java-first entry to official Android packaging via reused safe_manifest/validation; preserve appid/cert/2.2.5 beta and current native builds | pr_abierto | codex-android-official-entry | https://github.com/MatyMeatBoy/ReKHCoM/pull/477 | Root integrator: human-authorized code review; 0e7472c32dbc58a907b40759d2b55145d7ff9ff6 | 2026-10-28T22:20:38.889818+00:00 |
 | linux-launcher-hd-hud-wording | Identify HD HUD import clearly in native Linux dialog; existing sprites action is present | pendiente | — | — | — | 2026-10-28T22:16:36.542064+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T22:20:47.599935+00:00)
