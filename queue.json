@@ -9083,10 +9083,23 @@
         }
       ],
       "claimed_at": "2026-10-28T10:49:38.457252+00:00"
+    },
+    "optiport-v22-postrelease-lessons": {
+      "id": "optiport-v22-postrelease-lessons",
+      "piece": "Teach verified release provenance, draft/Latest verification, measured build-policy and retained auxiliary lessons after v2.2",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T11:00:30.613828+00:00",
+      "updated_at": "2026-10-28T11:00:30.613828+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requested OptiPort learning at end with worker; v2.2 public and root explicitly authorizes skill PR; root integrates and installed copies only after merge",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T10:56:06.568692+00:00",
+  "updated_at": "2026-10-28T11:00:30.613828+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
