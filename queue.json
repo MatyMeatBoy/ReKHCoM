@@ -9140,19 +9140,20 @@
     "post22-arm-wasm-division-parity": {
       "id": "post22-arm-wasm-division-parity",
       "piece": "CPU-only audit of ARM32/ARM64/Wasm DIV and REM zero/overflow parity with original GBA contracts; excludes published UI fixes and x86 ledger395",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-arm-wasm-div-parity",
       "created_at": "2026-10-28T11:12:10.305821+00:00",
-      "updated_at": "2026-10-28T11:12:10.305821+00:00",
+      "updated_at": "2026-10-28T11:12:15.199987+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated post2.2 critical parity audit under user authorization; preserve released bytes and original RNG/remainder semantics",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T11:12:15.199987+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:12:10.305821+00:00",
+  "updated_at": "2026-10-28T11:12:15.199987+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
