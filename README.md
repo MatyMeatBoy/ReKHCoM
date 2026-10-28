@@ -8,7 +8,7 @@ browser and the supported consoles), with its own renderer, audio and launcher, 
 ultrawide support at the cartridge's original speed.
 
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.2)</b></a>
+  <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.2.5)</b></a>
   &nbsp;·&nbsp; <a href="https://matymeatboy.github.io/ReKHCoM/"><b>▶ Play in your browser · Beta</b></a>
   &nbsp;·&nbsp; <a href="CHANGELOG.md">Changelog</a>
   &nbsp;·&nbsp; <a href="https://github.com/MatyMeatBoy/ReKHCoM/tags">Previous version tags</a>
@@ -58,9 +58,11 @@ The established v2 features remain available:
 
 ## Downloads
 
-The current stable PC release is **v2.2**. Choose the package for your platform on the
+The current stable PC release is **v2.2.5**. Choose the package for your platform on the
 [release page](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest); previous versions
 remain listed under [tags](https://github.com/MatyMeatBoy/ReKHCoM/tags).
+The [v2.2.5 publication record](port/progress/v225-publication.md) links every package,
+its SHA-256, the Web deployment and the checks still awaiting physical devices.
 
 | Platform | Download | Status |
 |---|---|---|
