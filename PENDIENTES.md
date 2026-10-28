@@ -318,4 +318,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue421-linux64-movie-parity | Issue421 Linux64 HD movie timing/pause/FPS parity: reproduce bounded production helpers, fix confirmed divergence before v2.2; no physical Deck claim | pr_abierto | codex-deck-video421 | https://github.com/MatyMeatBoy/ReKHCoM/pull/427 | User: fix issues before v2.2 across all platforms, workers authorized | 2026-10-28T03:59:15.655818+00:00 |
 | issue421-linux64-movie-controls | Issue421 Linux64 movie pause/confirm skip and FPS overlay parity with Windows; preserve movie clocks and audio across pause | en_curso | codex-deck-video421 | — | User: fix all issue421 observations before v2.2, no Atlas gate for port fixes | 2026-10-28T03:59:42.146124+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T04:00:43.764411+00:00)
