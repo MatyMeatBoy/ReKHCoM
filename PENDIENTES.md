@@ -381,6 +381,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | android-official-java-first | Promote verified Java-first entry to official Android packaging via reused safe_manifest/validation; preserve appid/cert/2.2.5 beta and current native builds | integrado | codex-android-official-entry | https://github.com/MatyMeatBoy/ReKHCoM/pull/477 | Root integrator: human-authorized code review; 0e7472c32dbc58a907b40759d2b55145d7ff9ff6 | 2026-10-28T22:21:02.495607+00:00 |
 | linux-launcher-hd-hud-wording | Identify HD HUD import clearly in native Linux dialog; existing sprites action is present | pendiente | — | — | — | 2026-10-28T22:16:36.542064+00:00 |
 | v225-vita-build | Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence | en_revision | codex-v225-console-build | — | Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized | 2026-10-28T22:32:19.399380+00:00 |
-| v225-switch-build | Build final Switch beta2.2.5 guest3regions then offline snapshotSDKhost after rootVMlease, close NRO/NACP/debug | pendiente | — | — | Root frozenf28 fourconsoleauthorization; SwitchguestCPU duringLinuxlease, hostonlyafterrootrelease | 2026-10-28T22:32:27.186177+00:00 |
+| v225-switch-build | Build final Switch beta2.2.5 guest3regions then offline snapshotSDKhost after rootVMlease, close NRO/NACP/debug | en_curso | codex-v225-console-build | — | Root frozenf28 fourconsoleauthorization; SwitchguestCPU duringLinuxlease, hostonlyafterrootrelease | 2026-10-28T22:32:32.232255+00:00 |
 
 Integrador: libre
