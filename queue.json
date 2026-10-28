@@ -8762,7 +8762,7 @@
       "status": "pr_abierto",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:59:36.852429+00:00",
-      "updated_at": "2026-10-28T04:11:55.266315+00:00",
+      "updated_at": "2026-10-28T04:41:02.557713+00:00",
       "branch": "fix/linux64-movie-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/428",
       "approval": "User: fix all issue421 observations before v2.2, no Atlas gate for port fixes",
@@ -8777,6 +8777,11 @@
           "at": "2026-10-28T04:11:55.266315+00:00",
           "owner": "codex-deck-video421",
           "detail": "Draft428 exactheadace4116e97e54eff34ca4cb2035ea46d2be1f261. Production input/choice/language/clock CPUtestsPASS and completeUI TU compilesSDL3headers; ownedjob128MiB peak40.73MiB minfree1.313GiB BELOW_NORMAL. Testedfilesbyteidenticalafterrebasec73db919. Fullhostlink/runtimecapture/realpause/FPS/audio/reset pendingRAM; do notdeclarephysicalDeckfixed. tests/receipt pruebas/issue421-linux64/controls-cpu. Transport427 separatelyintegrated."
+        },
+        {
+          "at": "2026-10-28T04:41:02.557713+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "Draft428 ace4116 unchanged. Root linked exact host, candidatepackagehostSHA b5fb7bb8119336b53c4f15f8dd07d0e0c9815604769a1e0c4732f2d4f4992908. Real DebianFFmpeg5.1.9 in512MiB snapshot: baseline90frames;cancelFPS0/1,missingfont,silent,AB90;Yes19;PCMnonzero audio cases, silentzero; POSIXreal154reads27empty27waits. AB4injectedmarkers verified. FPSactualcapture1584changedpx bbox6,6,228,22 zerooutside. Quit/reset missing due TESTSHIM repeatednegatedpredicate, fixedselectorCPU218PASS andprepared events-only epoch3 NOT run yet. Prior7successes+POSIX retainedSHA in pruebas/issue421-linux64/PRIOR-SUCCESS.json; no overallPASS/physicalDeckclaim yet."
         }
       ],
       "claimed_at": "2026-10-28T03:59:42.146124+00:00"
@@ -8837,7 +8842,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:39:25.518562+00:00",
+  "updated_at": "2026-10-28T04:41:02.557713+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
