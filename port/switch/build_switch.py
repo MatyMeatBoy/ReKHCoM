@@ -16,6 +16,8 @@ Needs the generated assets of each region (build/<region>) and the ROM pointer l
 """
 import argparse
 import concurrent.futures
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -38,6 +40,7 @@ BASE = 0x10000000
 sys.path.insert(0, str(PS5))
 sys.path.insert(0, str(ROOT / 'port/tools'))
 from workdir import WORK_DIR  # noqa: E402  (the heavy work folder, REKHCOM_WORK)
+from cartridge_division_ir import lower_cartridge_division, fingerprint as division_fingerprint  # noqa: E402
 VM_DISK = WORK_DIR / 'ps5/ps5env.qcow2'  # the consoles build VM (port/progress/TOOLKIT_CONSOLAS.md)
 import build_ps5  # noqa: E402  (its PORT_PATCHES and PORT_EXCLUDED are shared)
 
@@ -81,10 +84,26 @@ def macho_symbols(source, out):
 
 
 def compile_all(jobs, units):
+    units = list(units)
+    game_root = (ROOT / 'src').resolve()
+    def is_game(src):
+        return src.suffix == '.c' and src.resolve().is_relative_to(game_root)
+    # Objects made before arithmetic lowering have no marker and must rebuild.
+    # Include the actual compiler/flags and producer/helper revisions; changing
+    # a target or a shared cached generator must not reuse an old game object.
+    compiler = subprocess.check_output([CLANG, '--version'], text=True) if any(is_game(u[0]) for u in units) else ''
+    producer = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    lowering = division_fingerprint()
     def one(unit):
         src, obj, extra = unit
+        game = is_game(src)
+        marker = obj.with_suffix('.gba-ir.sha256')
+        key = hashlib.sha256(json.dumps([str(CLANG), compiler, str(src.resolve()),
+                                        hashlib.sha256(src.read_bytes()).hexdigest(),
+                                        [str(x) for x in extra], producer, lowering]).encode()).hexdigest() if game else None
         obj.parent.mkdir(parents=True, exist_ok=True)
-        if obj.exists() and obj.stat().st_mtime >= src.stat().st_mtime and not os.environ.get('REBUILD'):
+        cache_matches = not game or (marker.is_file() and marker.read_text() == key)
+        if cache_matches and obj.exists() and obj.stat().st_mtime >= src.stat().st_mtime and not os.environ.get('REBUILD'):
             dep = obj.with_suffix('.d')
             if dep.exists():
                 text = dep.read_text().replace('\\\n', ' ')
@@ -92,8 +111,28 @@ def compile_all(jobs, units):
                 body = re.split(r':\s', text, maxsplit=1)[-1]
                 deps = [Path(d.replace('\\ ', ' ')) for d in re.split(r'(?<!\\)\s+', body) if d]
                 newest = max((d.stat().st_mtime for d in deps if d.exists()), default=0)
-                if newest <= obj.stat().st_mtime:
+                if newest <= obj.stat().st_mtime and (not game or all(d.is_file() for d in deps)):
                     return None
+        if game:
+            marker.unlink(missing_ok=True)  # A failed rebuild cannot certify an old/partial object.
+            ir = obj.with_suffix('.gba.ll')
+            frontend = [CLANG, *extra, '-MD', '-MF', obj.with_suffix('.d'), '-MT', obj,
+                        '-Xclang', '-disable-llvm-passes', '-S', '-emit-llvm', src, '-o', ir]
+            r = subprocess.run([str(c) for c in frontend], capture_output=True, text=True)
+            if r.returncode:
+                return f'{src}\n{r.stderr}'
+            try:
+                ir.write_text(lower_cartridge_division(ir.read_text()))
+            except ValueError as error:
+                return f'{src}\n{error}'
+            # Keep the frontend's original header dependencies. Emitting a .d
+            # here would replace them with just the generated LLVM input.
+            backend = [CLANG, *extra, '-Qunused-arguments', '-c', ir, '-o', obj]
+            r = subprocess.run([str(c) for c in backend], capture_output=True, text=True)
+            if r.returncode:
+                return f'{src}\n{r.stderr}'
+            marker.write_text(key)
+            return None
         cmd = [CLANG, *extra, '-MD', '-MF', obj.with_suffix('.d'), '-c', src, '-o', obj]
         r = subprocess.run([str(c) for c in cmd], capture_output=True, text=True)
         return f'{src}\n{r.stderr}' if r.returncode else None
