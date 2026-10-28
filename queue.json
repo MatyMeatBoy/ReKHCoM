@@ -6736,10 +6736,10 @@
     "optiport-v22-async": {
       "id": "optiport-v22-async",
       "piece": "OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-async",
       "created_at": "2026-10-27T17:32:28.086015+00:00",
-      "updated_at": "2026-10-27T17:53:53.774407+00:00",
+      "updated_at": "2026-10-28T17:52:14.957642+00:00",
       "branch": "test/preview-cancel-contracts",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Usuario autorizó continuar pendientes; coordinador asignó exclusivamente cancelación/obsolescencia sin medición ni UI",
@@ -6766,7 +6766,7 @@
           "detail": "released: Contrato transferido al hijo v22-preview-cancellation-contract (PR381). Padre vuelve a pendiente conservando PR/evidencias; async/perf y cierre real siguen sin verificar."
         }
       ],
-      "claimed_at": "2026-10-27T17:38:43.410168+00:00"
+      "claimed_at": "2026-10-28T17:52:14.957642+00:00"
     },
     "optiport-v22-pacing": {
       "id": "optiport-v22-pacing",
@@ -9743,7 +9743,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:51:34.965406+00:00",
+  "updated_at": "2026-10-28T17:52:14.957642+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
