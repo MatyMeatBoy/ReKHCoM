@@ -8299,10 +8299,10 @@
     "issue407-native-movie-validation": {
       "id": "issue407-native-movie-validation",
       "piece": "Native Linux import: recognize already-plain MP4 safely, fix exact4096box validation boundary; retain XOR and transactional rejection, reporter cause unconfirmed",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux-movie407",
       "created_at": "2026-10-28T00:14:15.935443+00:00",
-      "updated_at": "2026-10-28T00:17:04.843339+00:00",
+      "updated_at": "2026-10-28T00:19:37.804251+00:00",
       "branch": "fix/linux-movie-import-validation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/416",
       "approval": "Root delegated reproduced producer/validator fixes for issue407; no issue reply until artifact review",
@@ -8312,9 +8312,15 @@
           "at": "2026-10-28T00:17:04.843339+00:00",
           "owner": "codex-linux-movie407",
           "detail": "RED actualproducerCLI plain/mixed and exact4096box before; GREEN after. New3methods include6movies xplain/xor/mixed,10malformed plain/XOR outputs preservealloldfiles/SAV,4095/4096/4097bounds;7existingtransactiontestsPASS(skip1Windows symlink). Copy plainftyp mirrorsC++CopyMovie, strictpostvalidationintact; no secondfullscan/ffmpeg. Reporter exactcause andnativeLinux/GamingMode unverified. Private AUDIT-407.json/diagnose407.py record pre-fix audit; no externalreply."
+        },
+        {
+          "at": "2026-10-28T00:19:37.804251+00:00",
+          "owner": "codex-linux-movie407",
+          "detail": "Root actual CLI producer/transaction movie tests3 PASS; native import transactional7 cases PASS with Windows symlink skip; independent producer parity with C++ CopyMovie confirmed. Valid plainMP4 and XOR sources, exact4096boxes accepted;4097/truncated/overflow/missingmdat rejected preserving oldHD/SAV/stagecleanup. Reproduces possible causes of407, reporter actualsource and nativeLinux runtime NOTconfirmed; notclosingissue or claiming in frozenWindowspre3.; merged f64413c7218abf811308409f91b7e13a583527d3"
         }
       ],
-      "claimed_at": "2026-10-28T00:14:22.173388+00:00"
+      "claimed_at": "2026-10-28T00:14:22.173388+00:00",
+      "completed_at": "2026-10-28T00:19:37.804251+00:00"
     }
   },
   "integrator": {
@@ -8323,7 +8329,7 @@
     "created_at": "2026-10-28T00:19:29.011766+00:00",
     "updated_at": "2026-10-28T00:19:29.011766+00:00"
   },
-  "updated_at": "2026-10-28T00:19:29.011766+00:00",
+  "updated_at": "2026-10-28T00:19:37.804251+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
