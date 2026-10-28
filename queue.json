@@ -8401,19 +8401,20 @@
     "hd-gameplay-lossless-white-fallback": {
       "id": "hd-gameplay-lossless-white-fallback",
       "piece": "PR400 lazy-white: require usable white fade before native omission; producer/consumer failure, memory/budget, first-fade equivalence and bounded measurements",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-lazy-white-fallback",
       "created_at": "2026-10-28T00:49:22.554968+00:00",
-      "updated_at": "2026-10-28T00:49:22.554968+00:00",
+      "updated_at": "2026-10-28T00:49:28.125349+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated child of hd-gameplay-lossless-load-budget; preserve parent Claude claim and assets",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T00:49:28.125349+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T00:49:22.554968+00:00",
+  "updated_at": "2026-10-28T00:49:28.125349+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
