@@ -352,4 +352,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-test439441-delivery | Build, validate and publish immutable Linux test439441 with unchanged media quality, latest32/64 EUUSJP cores, core assets and verified title fallback; deliver to reporter before OptiPort runtime closure. | integrado | codex-linux-delivery | https://github.com/MatyMeatBoy/ReKHCoM/pull/450 | User authorized public test and full OptiPort continuation; deck_video_421 independently APPROVED exact516eeaf3e65abda425667eaa83370a8e36e9bf08 after reviewing3docs/source/QA/publication. | 2026-10-28T17:57:14.850237+00:00 |
 | issue449-movie-master-volume | Movie master volume times fade in native32/64 and Android routes, negotiated mixed-host movie gain without PCM clock changes | en_curso | codex-movie-master-volume | — | Usuario: sin preguntas fullpass all pending; root activa449audio trasLinuxpublicado, import123/copyseparados | 2026-10-28T17:54:22.896767+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T17:56:56.497887+00:00)
+Integrador: libre
