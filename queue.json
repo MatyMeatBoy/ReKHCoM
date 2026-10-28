@@ -10544,23 +10544,28 @@
       "status": "pr_abierto",
       "owner": "codex-v225-notes",
       "created_at": "2026-10-28T22:01:37.282000+00:00",
-      "updated_at": "2026-10-28T22:05:11.413385+00:00",
+      "updated_at": "2026-10-28T22:06:52.977504+00:00",
       "branch": "release/v225-release-notes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/476",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; ddb5bb5292eca0776b72ad4f96940fcffe66f010",
       "reference": "Owner requested stable2.2.5 with integrated fixes and explicit platform limits",
       "evidence": [
         {
           "at": "2026-10-28T22:05:11.413385+00:00",
           "owner": "codex-v225-notes",
           "detail": "Changelog/README/source-delivery doc aligned with integrated fixes; explicit beta/device/firstframe and cleanup limits, no published claim. DiffcheckPASS."
+        },
+        {
+          "at": "2026-10-28T22:06:52.977504+00:00",
+          "owner": "codex-v225-notes",
+          "detail": "Independent release_readiness peer reviewed exact3MDs with no blockers; root matched merged mechanisms including475. Changelogtop2.2.5 and beta/hardware/firstframe/hostACK limits explicit, latestREADMEstill2.2untilpublicverification. DiffcheckPASS."
         }
       ],
       "claimed_at": "2026-10-28T22:03:57.339861+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:05:55.277748+00:00",
+  "updated_at": "2026-10-28T22:06:52.977504+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
