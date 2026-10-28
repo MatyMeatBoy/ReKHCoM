@@ -90,14 +90,15 @@ enum LevelUpStat {
 
 void Level_Up_0(LevelUpWork* work) {
 #ifdef PLATFORM_PC
-    /* screen layer: bonus boxes left, stat panels right */
-    PortBgSplit(0, 146);
-    PortBgSplit(1, 146);
-    PortBgSplitBands(0, 1);
-    PortBgSplitBands(1, 1);
+    /* Only the stat panel is screen UI. Most boss arenas keep their world
+       on BG0; splitting that layer too removes the scenery between panels.
+       Ursula uses BG0 for stats instead of BG1 (matching its loads below). */
+    int statsBg = gBtlWork->battleId == BATTLE_URSULA ? 0 : 1;
+    PortBgSplit(statsBg, 146);
+    PortBgSplitBands(statsBg, 1);
     /* the stat panels leave past the right edge; on the GBA that is off
        screen, in the wide view the wrapped map would reach the left margin */
-    PortBgClip(gBtlWork->battleId == BATTLE_URSULA ? 0 : 1, 1);
+    PortBgClip(statsBg, 1);
 #endif
     s16 x;
     s16 y;
