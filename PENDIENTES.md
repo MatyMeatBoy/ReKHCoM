@@ -356,6 +356,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue449-base-import-123-copy | Basic HD import must include movie3 zz_event_123 and accurately label movies instead of intros; semantic coverage and launcher copy only | pr_abierto | codex-base-import-123 | https://github.com/MatyMeatBoy/ReKHCoM/pull/455 | Usuario sin preguntas fullpass allpending; root authorizes independent baseimport123+copy after audio452 reviewed delivery | 2026-10-28T18:36:58.184522+00:00 |
 | profile-controlled-adapter | OptiPort profiling support: effective configuration, capture identity and relative private input paths (PR453) | pr_abierto | codex-v22-profile-execution | https://github.com/MatyMeatBoy/ReKHCoM/pull/453 | — | 2026-10-28T18:41:10.554211+00:00 |
 | host-output-controls | Negotiated 64-bit SDL host window/vsync controls with truthful application/legacy unsupported behavior | pr_abierto | codex-host-output-controls | https://github.com/MatyMeatBoy/ReKHCoM/pull/456 | — | 2026-10-28T18:58:50.242577+00:00 |
-| moto374-startup-current-test | Moto374 current Android startup test: Java-only safe launcher/ROM selection/reporting before SDL, fresh existing game process, current444+452 diagnostics | pendiente | — | — | — | 2026-10-28T18:59:42.917676+00:00 |
+| moto374-startup-current-test | Moto374 current Android startup test: Java-only safe launcher/ROM selection/reporting before SDL, fresh existing game process, current444+452 diagnostics | en_curso | codex-moto374-startup | — | — | 2026-10-28T18:59:50.031370+00:00 |
 
 Integrador: libre
