@@ -31,8 +31,8 @@ namespace hd {
 
 static const unsigned char kMovieKey[16] = { 0x3f, 0x1e, 0xc1, 0x93, 0x26, 0x42, 0x58, 0xb8,
                                              0xaa, 0x9d, 0x53, 0x75, 0xbf, 0x62, 0x9a, 0x97 };
-/* with the movies, the endings' scenes too (Sora's capsule room, Riku's ending and crossroads): they lead into RSE / RRE */
-static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_151", "zz_event_621", "zz_event_631" };
+/* Basic movie coverage includes movie3's floor12 scene and the ending scenes. */
+static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_123", "zz_event_151", "zz_event_621", "zz_event_631" };
 static const char* const kTracks[] = {
     "01F_Town_B", "01F_Town_F", "03F_Hercul", "03F_Hercules_B", "12_Event_Yuttari", "13_Event_Namine",
     "14_Event_Odayaka", "15_Event_XIII", "16_XIIIBoss1", "17_Halloween_F", "18_Helloween_B", "19_Alice_Field",
@@ -2159,7 +2159,8 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
                 list.push_back(folder / (std::string(m) + ".mp4"));
         if (scenes)
             for (const auto& f : fs::directory_iterator(folder, ec))
-                if (f.path().extension() == ".mp4" && f.path().filename().string().rfind("zz_event_", 0) == 0)
+                if (f.path().extension() == ".mp4" && f.path().filename().string().rfind("zz_event_", 0) == 0 &&
+                    std::find(list.begin(), list.end(), f.path()) == list.end())
                     list.push_back(f.path());
         for (const fs::path& f : list)
             sJob.Plan(MoviePart(f), Units(f));
@@ -2906,7 +2907,7 @@ static bool HdModCard() {
             sReload = false;
         }
         ImGui::BeginDisabled(source.empty() || (importLanguage && !sourceLabelConfirmed));
-        if (ImGui::Button(T("Solo lo básico: intros, música y HUD (~0,6 GB)", "Just the basics: intros, music and HUD (~0.6 GB)"))) {
+        if (ImGui::Button(T("Solo lo básico: películas, música y HUD (~0,6 GB)", "Just the basics: movies, music and HUD (~0.6 GB)"))) {
             variantsRead = false;
             hd::Start(source, sRoot, true, false, true, true, quality, false, importLanguage);
         }
