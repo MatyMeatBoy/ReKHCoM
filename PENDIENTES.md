@@ -315,5 +315,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-console-delivery | Console v2.2 preflight/build delivery PS4 PS5 Vita Switch Anbernic from frozen source; existing SDK only | en_curso | codex-console-delivery | — | User explicitly requested v2.2 for all consoles; root authorizes preflight now, builds only in coordinated serial window | 2026-10-28T03:21:49.330059+00:00 |
 | v22-vita-package-version | Derive Vita SFO APP_VER from release version; verify console metadata without VM | integrado | codex-vita-metadata | https://github.com/MatyMeatBoy/ReKHCoM/pull/425 | User requested v2.2 all platforms; root delegated minimal console metadata correction | 2026-10-28T03:50:26.874143+00:00 |
 | v22-web-release-label | Align existing Web beta labels with v2.2 stable delivery | integrado | codex-console-web-label | https://github.com/MatyMeatBoy/ReKHCoM/pull/426 | User requested v2.2 all platforms; root includes Web beta and delegated label audit | 2026-10-28T03:54:39.042470+00:00 |
+| issue421-linux64-movie-parity | Issue421 Linux64 HD movie timing/pause/FPS parity: reproduce bounded production helpers, fix confirmed divergence before v2.2; no physical Deck claim | pendiente | — | — | User: fix issues before v2.2 across all platforms, workers authorized | 2026-10-28T03:55:51.557831+00:00 |
 
 Integrador: libre
