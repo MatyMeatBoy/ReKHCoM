@@ -9918,7 +9918,7 @@
       "status": "pr_abierto",
       "owner": "codex-host-output-controls",
       "created_at": "2026-10-28T18:42:14.434025+00:00",
-      "updated_at": "2026-10-28T18:58:50.242577+00:00",
+      "updated_at": "2026-10-28T19:04:57.823605+00:00",
       "branch": "fix/host-output-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/456",
       "approval": null,
@@ -9928,6 +9928,11 @@
           "at": "2026-10-28T18:58:50.242577+00:00",
           "owner": "codex-host-output-controls",
           "detail": "Draft exacthead4eb48259fcb7d079cf82deb7c59570c519f6e060.54CPUchecks+real producer visibility variantsPASS; baselineRED no-opsetter/supportedrowhidden.13TU/link checks+3properconsoleUI+privateguestlinkPASS. Sources/commands/hashes in pruebas/optiport-full-pass-20261028/host-output-controls/{tu-attempt1,candidate-attempt2}/receipts. GPU2Monstro output-equivalence pending, no gain/device fix/parentcompletion claimed. Ops230..237 preserve MOV1/PRV1/table."
+        },
+        {
+          "at": "2026-10-28T19:04:57.823605+00:00",
+          "owner": "codex-host-output-controls",
+          "detail": "FROZEN_BY_EXPLICIT_USER_PRIORITY: only330/374 startup until tentative solution/test sent. Preserve head4eb48259fcb7d079cf82deb7c59570c519f6e060 draftPR456, caches/receipts. NoGPU parity validation/timing/parent completion. New separateMoto374 lane authorized; do not auto-resume OUT1 until root/user priority allows."
         }
       ],
       "claimed_at": "2026-10-28T18:42:21.131067+00:00"
@@ -9962,7 +9967,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:01:32.350099+00:00",
+  "updated_at": "2026-10-28T19:04:57.823605+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
