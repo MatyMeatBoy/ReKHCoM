@@ -10891,12 +10891,12 @@
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
       "piece": "Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-28T23:28:57.129982+00:00",
+      "updated_at": "2026-10-28T23:51:30.218488+00:00",
       "branch": "fix/issue480-room-spring",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/482",
       "approval": "Usuario pide cubrir todos los issues; root autoriza triage nuevo480 y mantenerlo abierto. Sin fix ni reproduccion aun, pendiente sin claim.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/480",
       "evidence": [
@@ -10904,13 +10904,18 @@
           "at": "2026-10-28T23:28:57.129982+00:00",
           "owner": "codex-issue480",
           "detail": "User made bugs priority1 and disabled workers. Root solo; image/video preserved; exact version/device/mode/save requested in6483230554. Bounded diagnostic pose/log only; actual B input/collision/jump unchanged. No cause/fix claimed."
+        },
+        {
+          "at": "2026-10-28T23:51:30.218488+00:00",
+          "owner": "codex-issue480",
+          "detail": "PARTIAL diagnostics only. Native32/guest64 same samples PASS and two invalid fixtures correctly rejected. APK/save/layout requested, still no response; bug not reproduced and not fixed."
         }
       ],
       "claimed_at": "2026-10-28T23:22:23.561773+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:28:57.129982+00:00",
+  "updated_at": "2026-10-28T23:51:30.218488+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
