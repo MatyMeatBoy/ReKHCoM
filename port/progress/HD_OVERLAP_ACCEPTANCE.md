@@ -32,12 +32,12 @@ The existing first-frame fallback and card seam/corner regressions also pass.
 Private native32 EU D3D11 before/after runs at the corrected combined source
 reach both synthesis selectors and return normally. At the inspected frame,
 the body pieces meet at the same output boundary rather than sharing four
-output rows; geometry and UV logs identify the actual consumers. The sampled
-floor area changes from RGB234 to233 when the extra blend is removed.
+output rows; geometry and UV logs identify the actual consumers. The isolated
+edge comparison distinguishes this small blend change from the background band.
 
 Layer isolation also rejects a broader claim: the remaining visible horizontal
 edge is present with both HD pieces transparent. Its transmitted background
-matches one35%-alpha body composition in2511 channel comparisons. It is the
+matches one 35%-alpha body composition in 2511 channel comparisons. It is the
 room spotlight/floor edge, not another glyph pass. Making that interior opaque
 would be a separate visual change and must preserve the real digit, which is
 currently drawn before the body. The private guarded proposal is not part of
