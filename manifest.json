@@ -1,12 +1,12 @@
 {
-  "version": "v2.0-web-alpha",
-  "source_commit": "59b44df99e05e1f4245516447d5800c88be72cf1",
+  "version": "v2.2-web-alpha",
+  "source_commit": "5ccb8d24868ec9fb0a286803f84ad4bf2b3f840c",
   "source_dirty": false,
-  "built_utc": "2026-10-26T20:43:23.141531+00:00",
+  "built_utc": "2026-10-28T10:51:11.871675+00:00",
   "files": {
     "index.html": {
-      "bytes": 16981,
-      "sha256": "339009ea66598a0c9abeea3ba7838284c94bdd73f13c133df33d59447fddf34d"
+      "bytes": 16978,
+      "sha256": "751201b3eada9a2976c071db74115661c1bfeb87ee9f486ffdd952f70fb25640"
     },
     "web.css": {
       "bytes": 14462,
@@ -97,28 +97,28 @@
       "sha256": "eaa349ba375164b474b490c1d1e53c909508790aa5e39f9ba54336172f6503a4"
     },
     "rekhcom-eu.js": {
-      "bytes": 206850,
-      "sha256": "daf0666e9864553730fbb259919a09f92d91387d2a09a37279f8f51f1deedbdf"
+      "bytes": 208954,
+      "sha256": "5d6cf6f7a54bd49a96fcb0d324b72db5b6a99a2ca801ae7e0999f3badf4a814d"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9435082,
-      "sha256": "f0f54252ab1926b10f8da8ca4dd127718596f48a1f974f8d7a5f67c794af2756"
+      "bytes": 9507120,
+      "sha256": "f5a2fda254affa8d4c79ea08c945db6fe75088dcb1915eee2f441b9e864ee84c"
     },
     "rekhcom-us.js": {
-      "bytes": 206728,
-      "sha256": "aa4c105b04b0908aa0f6acbd2aa3a715a9933255b28b315e862ed889f8fed7aa"
+      "bytes": 208832,
+      "sha256": "4a9ee63d94a00fa8488d22e2c52d70300dd5afb64d5eecc7ec7c090f619c6c21"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9495751,
-      "sha256": "635ee3cdddbadc4076475c24a5eb6dc55e567740e4266ebac9beee9d82357c97"
+      "bytes": 9564777,
+      "sha256": "46c0bcdd3a63b12297a5bfd35aff766010b01f07f04e39bbfcf40b7995c7b377"
     },
     "rekhcom-jp.js": {
-      "bytes": 205636,
-      "sha256": "ef3c2db859b2eafd8bf56f4db5166117b1912e0c130e6717ebd1d6b262b61211"
+      "bytes": 207740,
+      "sha256": "eda2149f5ee517dff92da5649396b9a04bb3fdcd3d700caa80b898cb253050c8"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9355796,
-      "sha256": "5f7fc9290b92ff81398d769480185ebd0ef0c057f9cfb00799e8eb18e664a362"
+      "bytes": 9423133,
+      "sha256": "fff801698fd52f278a998eeeaa4de664b308885729238badd80918331c1e86f3"
     }
   }
 }
