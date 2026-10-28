@@ -10432,19 +10432,20 @@
     "v225-stable-version": {
       "id": "v225-stable-version",
       "piece": "Version 2.2.5 source identity and platform packaging preflight",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v225-version",
       "created_at": "2026-10-28T21:54:57.218816+00:00",
-      "updated_at": "2026-10-28T21:54:57.218816+00:00",
+      "updated_at": "2026-10-28T21:55:02.237313+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "User chooses 2.2.5 stable; source freeze and all supported packages",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T21:55:02.237313+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:54:57.218816+00:00",
+  "updated_at": "2026-10-28T21:55:02.237313+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
