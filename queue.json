@@ -8820,10 +8820,23 @@
         }
       ],
       "claimed_at": "2026-10-28T04:28:21.406507+00:00"
+    },
+    "v22-vita-guest-build": {
+      "id": "v22-vita-guest-build",
+      "piece": "Compile v2.2 Vita EU US JP guest archives only, frozen sourceace4116, jobs1 and384MiB owned budget; no VM",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T04:39:19.999717+00:00",
+      "updated_at": "2026-10-28T04:39:19.999717+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root explicitly authorized Vita guest CPU-only window afterPS4/VM421terminal; no host VM until next coordination",
+      "reference": "v22-console-delivery existingSDK; userv2.2allplatforms",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:38:50.530075+00:00",
+  "updated_at": "2026-10-28T04:39:19.999717+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
