@@ -170,6 +170,13 @@ def dialog(tool,kind,text):
     result=subprocess.run(args,text=True,stdout=subprocess.PIPE)
     return result.stdout.strip() if result.returncode==0 else ''
 
+def migrate_runtime_preference(data):
+    """Use the common selector before loading/showing any architecture controls."""
+    script=data/'ReKHCoM.sh'
+    if script.is_file():
+        subprocess.run(['/bin/sh',str(script),'--migrate-runtime-only'],check=False)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--data',type=Path,required=True)
@@ -177,7 +184,11 @@ def main():
     for name in ('import-hd','import-source','import-sprites'):group.add_argument('--'+name,type=Path)
     group.add_argument('--play',action='store_true');group.add_argument('--gui',action='store_true')
     p.add_argument('--terminal',action='store_true',help=argparse.SUPPRESS)
+    runtime=p.add_mutually_exclusive_group()
+    for option in ('force32','force64','auto'):
+        runtime.add_argument('--'+option,dest='runtime_override',action='store_const',const='--'+option)
     a=p.parse_args();action='play' if a.play else 'prepared' if a.import_hd else 'source' if a.import_source else 'sprites' if a.import_sprites else ''
+    migrate_runtime_preference(a.data)
     source=a.import_hd or a.import_source or a.import_sprites
     tool='kdialog' if shutil.which('kdialog') else 'zenity' if shutil.which('zenity') else None
     if not action:
@@ -199,7 +210,7 @@ def main():
                 return 2
             prefix=[terminal,'--nofork','-e'] if terminal=='konsole' else [terminal,'--wait','--'] if terminal=='gnome-terminal' else [terminal,'-e']
             return subprocess.run(prefix+command).returncode
-    if action=='play':os.execv('/bin/sh',['/bin/sh',str(a.data/'ReKHCoM.sh')])
+    if action=='play':os.execv('/bin/sh',['/bin/sh',str(a.data/'ReKHCoM.sh'),*([a.runtime_override] if a.runtime_override else [])])
     try:
         if action=='prepared' and (source/'hd').is_dir():source=source/'hd'
         backup=transaction(a.data,source,None if action=='prepared' else source_producer(action=='sprites'))

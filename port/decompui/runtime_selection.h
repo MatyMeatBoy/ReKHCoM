@@ -5,6 +5,19 @@
 // These predicates deliberately contain no clock-based crash heuristic.
 inline int ReKHCoMRuntimeMode(const std::string& value) { return value == "1" ? 1 : value == "2" ? 2 : 0; }
 inline bool ReKHCoMForce32(const std::string& value) { return value == "1"; }
+inline int ReKHCoMRuntimeOverride(int argc, char** argv) {
+    int mode = -1;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--auto") mode = 0;
+        else if (arg == "--force32") mode = 1;
+        else if (arg == "--force64") mode = 2;
+    }
+    return mode;
+}
+inline int ReKHCoMEffectiveRuntimeMode(int preference, int explicitMode) {
+    return explicitMode >= 0 ? explicitMode : preference;
+}
 enum ReKHCoM64MissingRequirement { ReKHCoM64Ready, ReKHCoM64MissingFiles, ReKHCoM64MissingCpu };
 inline ReKHCoM64MissingRequirement ReKHCoM64Missing(bool os64, bool host, bool guest, bool sdl, bool sse41) {
     if (!os64 || !host || !guest || !sdl) return ReKHCoM64MissingFiles;

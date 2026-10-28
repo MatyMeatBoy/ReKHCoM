@@ -31,6 +31,10 @@ class Linux64PackageTests(unittest.TestCase):
             for name in ['bin64/rekhcom64', 'lib64/libSDL3.so.0'] + [f'bin64/guest-{r}.bin' for r in ('eu', 'us', 'jp')]:
                 write('build/linux64/out/' + name)
             write('port/include/port/port_zoom.h', b'#define PORT_ZOOM_CONFIG_VERSION 2\n')
+            write('port/include/port/port_version.h', b'#define REKHCOM_VERSION "v2.1"\n')
+            write('port/linux/ReKHCoM Launcher.sh', b'#!/bin/sh\n')
+            write('port/linux/launcher/rekhcom_launcher.py', b'# launcher fixture\n')
+            write('port/data/hd_sprites.tsv', b'fixture\n')
             write('port/linux/LINUX.md')
             write('port/linux/Setup Steam Deck.sh', b'#!/bin/sh\n')
             write('port/linux/anbernic/ReKHCoM.sh', b'#!/bin/sh\n')
@@ -45,6 +49,7 @@ class Linux64PackageTests(unittest.TestCase):
                 (dest / 'lib').mkdir()
                 (dest / 'lib/rekhcom').write_bytes(b'loader')
                 (dest / 'ReKHCoM.sh').write_bytes(b'#!/bin/sh\n')
+                linux.install_runtime_version(dest)
                 if arch == 'i386':
                     import shutil
                     shutil.copytree(root / 'build/linux64/out', dest, dirs_exist_ok=True)
@@ -64,11 +69,13 @@ class Linux64PackageTests(unittest.TestCase):
                 self.assertEqual(members['LINUX.md'].mode, 0o644)
                 self.assertEqual(members['Setup Steam Deck.sh'].mode, 0o755)
                 self.assertEqual(members['roms'].mode, 0o755)
+                self.assertEqual(tar.extractfile('ReKHCoM.version').read(), b'v2.1\n')
                 self.assertNotIn('kh_com.default.ini', members, 'Deck detection must not ship a forced preset')
                 self.assertFalse(any(Path(n).suffix in ('.gba', '.sav', '.ini', '.khst') for n in members))
                 self.assertFalse(any('arm64' in n for n in members))
             with zipfile.ZipFile(next(p for p in archives if p.name.endswith('.zip'))) as archive:
                 self.assertEqual(archive.getinfo('ReKHCoM.sh').external_attr >> 16 & 0o777, 0o755)
+                self.assertEqual(archive.read('rekhcom/ReKHCoM.version'), b'v2.1\n')
             # Run the production release stager against this fixture repository.
             write('port/tools/stage_release.py', (TOOLS / 'stage_release.py').read_bytes())
             write('build/releases/ReKHCoM-v2.1-android-beta.apk')

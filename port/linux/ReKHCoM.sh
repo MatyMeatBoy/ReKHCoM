@@ -48,22 +48,56 @@ case "$1" in
         steam_help
         exit 0 ;;
 esac
-# Shared launcher preference: 0 automatic (default), 1 force 32, 2 force 64.
-MODE=$(sed -n 's/^runtime_mode=//p' "$DIR/decompui.ini" 2>/dev/null | tail -n 1)
+# Same selector INI as Windows. Migrate only architecture keys, once per release.
+# ReKHCoM.version is generated from port_version.h when packaging.
+RUNTIME_RELEASE=$(sed -n '1p' "$DIR/ReKHCoM.version" 2>/dev/null | tr -d '\r')
+case "$RUNTIME_RELEASE" in v[0-9]*.[0-9]*) ;; *) RUNTIME_RELEASE= ;; esac
+RUNTIME_MIGRATED=0
+runtime_migrate() {
+    [ -n "$RUNTIME_RELEASE" ] || return 0
+    previous=$(sed -n 's/^runtime_auto_version=//p' "$DIR/decompui.ini" 2>/dev/null | tr -d '\r' | tail -n 1)
+    [ "$previous" != "$RUNTIME_RELEASE" ] || return 0
+    RUNTIME_MIGRATED=1
+    if [ -e "$DIR/decompui.ini" ] && { [ ! -f "$DIR/decompui.ini" ] || [ ! -r "$DIR/decompui.ini" ] || [ ! -w "$DIR/decompui.ini" ]; }; then
+        echo 'Runtime migration could not be saved; using Automatic for this launch.' >&2
+        return 0
+    fi
+    runtime_temp=$(mktemp "$DIR/.rekhcom-runtime-XXXXXX") || return 0
+    if [ -f "$DIR/decompui.ini" ]; then
+        if ! sed '/^runtime_mode=/d; /^force_32=/d; /^runtime_auto_version=/d; /^auto64_failed=/d' "$DIR/decompui.ini" > "$runtime_temp"; then
+            rm -f "$runtime_temp"; return 0
+        fi
+    fi
+    if ! printf '\nruntime_mode=0\nruntime_auto_version=%s\n' "$RUNTIME_RELEASE" >> "$runtime_temp" ||
+       ! mv -f "$runtime_temp" "$DIR/decompui.ini"; then
+        rm -f "$runtime_temp"
+        echo 'Runtime migration could not be saved; using Automatic for this launch.' >&2
+    fi
+}
+runtime_migrate
+[ "$1" = --migrate-runtime-only ] && exit 0
+# Shared preference: 0 automatic, 1 force32, 2 force64. CLI overrides are not saved.
+MODE=$(sed -n 's/^runtime_mode=//p' "$DIR/decompui.ini" 2>/dev/null | tr -d '\r' | tail -n 1)
 case "$MODE" in 1|2) ;; *) MODE=0 ;; esac
-case "$1" in
-    --force32) MODE=1; shift ;;
-    --force64) MODE=2; shift ;;
-    --auto) MODE=0; shift ;;
-esac
-[ "${REKHCOM_64:-1}" = 0 ] && MODE=1
+[ "$RUNTIME_MIGRATED" = 1 ] && MODE=0
+CLI_MODE=
 REGION=
 ROM=
-if [ "$1" = "--region" ]; then
-    case "$2" in
-        eu|us|jp) REGION=$2; shift 2 ;;
-        *) echo 'Usage: ReKHCoM.sh [--region eu|us|jp] [game arguments]' >&2; exit 2 ;;
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --force32) CLI_MODE=1; shift ;;
+        --force64) CLI_MODE=2; shift ;;
+        --auto) CLI_MODE=0; shift ;;
+        --region)
+            case "$2" in
+                eu|us|jp) REGION=$2; shift 2 ;;
+                *) echo 'Usage: ReKHCoM.sh [--region eu|us|jp] [game arguments]' >&2; exit 2 ;;
+            esac ;;
+        *) break ;;
     esac
+done
+if [ -n "$CLI_MODE" ]; then MODE=$CLI_MODE
+elif [ "${REKHCOM_64:-1}" = 0 ]; then MODE=1
 fi
 
 code_of() {
@@ -130,6 +164,17 @@ case "$MACHINE" in
     aarch64|arm64) HOST64="$DIR/binarm64/rekhcom-arm64"; IMAGE64="$DIR/binarm64/guest-$REGION.macho"; LIB64="$DIR/libarm64" ;;
 esac
 if [ -n "$HOST64" ] && [ -x "$HOST64" ] && [ -f "$IMAGE64" ]; then AVAILABLE64=1; fi
+# This x32 guest is compiled with -msse4.1. Never enter it on an older CPU.
+if [ "$MACHINE" = x86_64 ] && [ "$AVAILABLE64" = 1 ]; then
+    if ! awk '/^flags[[:space:]]*:/ { seen++; found=0; for(i=1;i<=NF;i++) if($i=="sse4_1") found=1; if(!found) bad=1 }
+              END { exit !(seen && !bad) }' /proc/cpuinfo; then
+        if [ "$MODE" = 2 ]; then
+            echo 'Cannot start in 64-bit mode: this game requires a CPU with SSE4.1.' >&2
+            exit 2
+        fi
+        AVAILABLE64=0
+    fi
+fi
 if [ "$MODE" = 2 ] && [ "$AVAILABLE64" = 0 ]; then
     echo "Cannot start in 64-bit mode: no complete native 64-bit runtime for $MACHINE." >&2
     exit 2

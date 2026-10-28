@@ -9,6 +9,7 @@ and the x86-64 host with 32-bit game images; Anbernic uses armhf. Prepare once:
     python port/tools/build_linux.py --arch i386 --versions eu us jp
 """
 import argparse
+import re
 import os
 import shutil
 import subprocess
@@ -196,6 +197,7 @@ def bundle(arch, base, versions, dest):
     # The loader runs the game, so the process is named after its file.
     (dest / 'lib' / LOADER[arch]).rename(dest / 'lib' / 'rekhcom')
     (dest / 'ReKHCoM.sh').write_bytes((ROOT / 'port/linux/ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
+    install_runtime_version(dest)
     for name in ('KHMenu.otf', 'ComicHearts.otf', 'NOTICE.md'):
         (dest / 'assets/fonts').mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / 'port/assets/fonts' / name, dest / 'assets/fonts' / name)
@@ -275,8 +277,18 @@ def make_zip(src, archive):
             z.writestr(info, f.read_bytes())
 
 
+def install_runtime_version(dest):
+    # Shared GUI/GamingMode selector migration identifies the actual code release,
+    # not a folder name or mutable user preference. No cartridge/save is read.
+    version = re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"',
+                        (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8'))[1]
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / 'ReKHCoM.version').write_bytes((version + '\n').encode('utf-8'))
+
+
 def install_native_launcher(dest):
     """Ship the native desktop/import entry separately from the Gaming Mode game."""
+    install_runtime_version(dest)
     pairs = [(ROOT / 'port/linux/ReKHCoM Launcher.sh', dest / 'ReKHCoM Launcher.sh'),
              (ROOT / 'port/linux/launcher/rekhcom_launcher.py', dest / 'launcher/rekhcom_launcher.py'),
              (ROOT / 'port/data/hd_sprites.tsv', dest / 'launcher/port/data/hd_sprites.tsv')]

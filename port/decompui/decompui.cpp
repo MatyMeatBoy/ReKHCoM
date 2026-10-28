@@ -69,6 +69,7 @@ namespace fs = std::filesystem;
 #include "../include/port/pad_layout.h"
 #include "save_import.h"
 #include "save_file.h"
+#include "runtime_preferences.h"
 #include "save_editor.h"
 #include "card_table.h"
 #include "../achievements/ra_client.h"
@@ -674,6 +675,8 @@ static void ApplyUiLanguage() {
 }
 
 static int sRuntimeMode;
+static int sRuntimeCliMode = -1;
+static std::string sRuntimeAutoVersion;
 static uint32_t sRuntime64Problem; /* the exit code of a failed 64-bit run, for its notice (Runtime64Popup) */
 static bool sRuntime64Entered, sLaunch32Once;
 static std::string s64FailedVersion; /* Automatic: the version whose 64-bit game crashed here; it starts in 32 bits */
@@ -706,18 +709,33 @@ static void LoadLauncherState() {
             sUiLanguage = std::clamp(std::atoi(line.c_str() + 12), 0, (int)UI_LANGUAGE_COUNT);
         }
     }
+#ifndef LAUNCHER_ANDROID
+    f.close(); // Atomic replacement must not retain an open Windows reader.
+    auto runtime = RekhcomRuntime::Migrate(sRoot / "decompui.ini", REKHCOM_VERSION);
+    sRuntimeMode = runtime.mode;
+    s64FailedVersion = runtime.failedVersion;
+    sRuntimeAutoVersion = runtime.version;
+    if (!runtime.persisted)
+        fprintf(stderr, "Runtime preference migration could not be saved; using Automatic for this launch.\n");
+#endif
     ApplyUiLanguage();
 }
 
 static void SaveLauncherState() {
+#ifdef LAUNCHER_ANDROID
     std::ofstream f(sRoot / "decompui.ini", std::ios::trunc);
     f << "runtime_mode=" << sRuntimeMode << "\n";
     f << "version=" << kVersions[sSelected].id << "\n";
     f << "ui_language=" << sUiLanguage << "\n";
-    if (sHdOfferDeclined)
-        f << "hd_offer=0\n"; /* "Don't ask again" on the HD mod's offer */
-    if (!s64FailedVersion.empty())
-        f << "auto64_failed=" << s64FailedVersion << "\n";
+    if (sHdOfferDeclined) f << "hd_offer=0\n";
+    if (!s64FailedVersion.empty()) f << "auto64_failed=" << s64FailedVersion << "\n";
+#else
+    RekhcomRuntime::Save(sRoot / "decompui.ini", {
+        {"runtime_mode", std::to_string(sRuntimeMode)}, {"runtime_auto_version", sRuntimeAutoVersion},
+        {"version", kVersions[sSelected].id}, {"ui_language", std::to_string(sUiLanguage)},
+        {"hd_offer", sHdOfferDeclined ? "0" : ""}, {"auto64_failed", s64FailedVersion},
+        {"force_32", ""}, {"game_language", ""}});
+#endif
 }
 
 /* The version chosen (the user, 24/10): the European one the first time, then always the last one chosen, saved at
@@ -2023,7 +2041,7 @@ static void Runtime64Popup(SDL_Window* window) {
                          "partidas y ajustes son los mismos.",
                          "The 64-bit game closed with an error (code %s). You can keep playing in 32 bits: your saves "
                          "and settings are the same."), code);
-    if (sRuntimeMode == 0)
+    if (ReKHCoMEffectiveRuntimeMode(sRuntimeMode, sRuntimeCliMode) == 0)
         ImGui::TextWrapped("%s", T("En Automático, esta versión arrancará en 32 bits desde ahora. Para volver a probar 64 "
                                    "bits, elige Forzar 64 bits en Avanzado.",
                                    "On Automatic, this version will start in 32 bits from now on. To try 64 bits again, "
@@ -3508,12 +3526,13 @@ static void Launch(SDL_Window* window) {
     const bool hasHost = fs::is_regular_file(host), hasGuest = fs::is_regular_file(guest);
     const bool hasSdl = fs::is_regular_file(sRoot / "bin64" / "SDL3.dll");
     const bool sse41 = PortWindowsCpuHasSse41(PortWindowsCpuLeaf1Ecx());
-    bool use64 = ReKHCoMSelect64(os64, sRuntimeMode == 1, hasHost, hasGuest, hasSdl, sse41);
+    const int runtimeMode = ReKHCoMEffectiveRuntimeMode(sRuntimeMode, sRuntimeCliMode);
+    bool use64 = ReKHCoMSelect64(os64, runtimeMode == 1, hasHost, hasGuest, hasSdl, sse41);
     /* "Play in 32 bits" from the 64-bit problem notice, or Automatic after this version's 64-bit game crashed here */
-    if (sLaunch32Once || (sRuntimeMode == 0 && s64FailedVersion == REKHCOM_VERSION)) {
+    if (sLaunch32Once || (runtimeMode == 0 && s64FailedVersion == REKHCOM_VERSION)) {
         sLaunch32Once = false;
         use64 = false;
-    } else if (sRuntimeMode == 2 && !use64) {
+    } else if (runtimeMode == 2 && !use64) {
         if (ReKHCoM64Missing(os64, hasHost, hasGuest, hasSdl, sse41) == ReKHCoM64MissingCpu)
             Notice(T("El modo de 64 bits requiere una CPU compatible con SSE4.1. Puedes elegir 32 bits en Avanzado.",
                      "64-bit mode requires a CPU with SSE4.1. You can choose 32 bits under Advanced."), true);
@@ -3546,7 +3565,7 @@ static void Launch(SDL_Window* window) {
                                       sRoot.c_str(), &si, &pi);
         SetEnvironmentVariableW(L"KHCOM_ROM", hadRom ? oldRom.c_str() : nullptr);
         if (!created) {
-            if (use64 && sRuntimeMode == 0) { use64 = false; continue; }
+            if (use64 && runtimeMode == 0) { use64 = false; continue; }
             Notice(T("No se pudo iniciar el juego.", "Could not start the game."), true);
             if (started) SDL_ShowWindow(window);
             return;
@@ -3563,13 +3582,13 @@ static void Launch(SDL_Window* window) {
         bool enteredGame = fs::is_regular_file(boot);
         fs::remove(boot, ec);
         /* Windows could not load the 64-bit files: Automatic goes on in 32 bits at once */
-        if (use64 && sRuntimeMode == 0 && !ReKHCoMCrashed64(code) && ReKHCoMRetry32(code, enteredGame)) {
+        if (use64 && runtimeMode == 0 && !ReKHCoMCrashed64(code) && ReKHCoMRetry32(code, enteredGame)) {
             use64 = false;
             continue;
         }
         /* the 64-bit game crashed, or Force 64-bit could not start: the notice offers 32 bits and a report (#360) */
         if (use64 && (ReKHCoMCrashed64(code) || ReKHCoMRetry32(code, enteredGame))) {
-            if (sRuntimeMode == 0) {
+            if (runtimeMode == 0) {
                 s64FailedVersion = REKHCOM_VERSION;
                 SaveLauncherState();
             }
@@ -3757,6 +3776,9 @@ static int LauncherVideoFailed(const char* stage, SDL_Window* window, SDL_GLCont
 
 int main(int argc, char** argv) {
     sRoot = ExeDir();
+#ifndef LAUNCHER_ANDROID
+    sRuntimeCliMode = ReKHCoMRuntimeOverride(argc, argv);
+#endif
 #ifdef LAUNCHER_ANDROID
     AndroidExtractAssets(sRoot);
 #endif
