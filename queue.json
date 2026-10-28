@@ -6739,8 +6739,8 @@
       "status": "en_curso",
       "owner": "codex-optiport-async",
       "created_at": "2026-10-27T17:32:28.086015+00:00",
-      "updated_at": "2026-10-28T17:52:14.957642+00:00",
-      "branch": "test/preview-cancel-contracts",
+      "updated_at": "2026-10-28T17:55:39.721483+00:00",
+      "branch": "perf/optiport-async-observer",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Usuario autorizó continuar pendientes; coordinador asignó exclusivamente cancelación/obsolescencia sin medición ni UI",
       "reference": "PLAN_V22.md",
@@ -6764,6 +6764,11 @@
           "at": "2026-10-27T17:53:53.774407+00:00",
           "owner": "codex-v22-preview-cancellation",
           "detail": "released: Contrato transferido al hijo v22-preview-cancellation-contract (PR381). Padre vuelve a pendiente conservando PR/evidencias; async/perf y cierre real siguen sin verificar."
+        },
+        {
+          "at": "2026-10-28T17:55:39.721483+00:00",
+          "owner": "codex-optiport-async",
+          "detail": "2026-10-28 resumed scope after public test439441. Own branch07d5; OptiPort394c34ff read. Current production cancellation contract8 positives+2 broken controls PASS under x64 clang; pruebas/optiport-v22-async/contracts-current/contract-vfkkkmkm. Plan docs/superpowers/plans/2026-10-28-preview-latency-observer.md. CPU/source/adapter preparation only, no runtime or benchmark until root WINDOWS_FUNCTIONAL gate and no VM without lease; old PR381 integrated evidence reused, new measured closure still pending."
         }
       ],
       "claimed_at": "2026-10-28T17:52:14.957642+00:00"
@@ -9754,7 +9759,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:55:24.931239+00:00",
+  "updated_at": "2026-10-28T17:55:39.722866+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
