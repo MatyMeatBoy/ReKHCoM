@@ -8083,10 +8083,10 @@
     "hd-overlap-accepted-parts": {
       "id": "hd-overlap-accepted-parts",
       "piece": "Correccion integrador PR404: registrar cobertura HD solo tras queueaceptada, contemplarcontainment y variantesfade; conservar fallback antepieza rechazada. Franja requisito sintesis yabrirnaipemundo.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-hd-overlap",
       "created_at": "2026-10-27T22:28:41.739471+00:00",
-      "updated_at": "2026-10-28T00:49:35.388377+00:00",
+      "updated_at": "2026-10-28T01:14:13.956264+00:00",
       "branch": "fix/hd-part-overlap-once",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/404",
       "approval": "Usuario pidecorregirfranja ypreservarresto; rootreviewhallofalloverificado",
@@ -8101,6 +8101,11 @@
           "at": "2026-10-28T00:49:35.388377+00:00",
           "owner": "codex-hd-overlap",
           "detail": "Integrator resumes owned PR404 after pre3 publication. Refresh current main and update scope using completed real synthesis A/B: edge overlap correction is distinct from intentional background visible through translucent gray body; no opacity redesign without user choice."
+        },
+        {
+          "at": "2026-10-28T01:14:13.956264+00:00",
+          "owner": "codex-hd-overlap",
+          "detail": "Final scoped head732c5394 after main merge. Actual D3D11 against published pre3:2325 pixels inside requirement,0 outside, earlier/cancel frames identical,854 PNG identical. Generic candidate was rejected for8479 unrelated changes; new unrelated-tag negative fails its compiled executable, scoped production controls pass all405 tags and fallback states. Independent worker scope review passes; no opacity change or world-opening/device/package claim."
         }
       ],
       "claimed_at": "2026-10-27T22:28:46.256973+00:00"
@@ -8419,7 +8424,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T00:49:35.388377+00:00",
+  "updated_at": "2026-10-28T01:14:13.956264+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
