@@ -359,4 +359,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | moto374-startup-current-test | Moto374 current Android startup test: Java-only safe launcher/ROM selection/reporting before SDL, fresh existing game process, current444+452 diagnostics | en_curso | codex-moto374-startup | — | — | 2026-10-28T18:59:50.031370+00:00 |
 | issue330-startup-compatible-fallback | Issue330 manual reversible safe startup: session-only force32+software, shell/Steam escaping contracts; no automatic after-boot restart or device fix claim | pr_abierto | codex-deck330-safe-startup | https://github.com/MatyMeatBoy/ReKHCoM/pull/458 | User prioritizes Linux330/Android374 tentative startup tests; coordinator assigned scoped fallback with CPU tests, no GPU/VM until lease | 2026-10-28T19:13:18.348169+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T19:40:33.385357+00:00)
