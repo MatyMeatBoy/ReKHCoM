@@ -10347,10 +10347,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T21:49:54.936388+00:00"
+    },
+    "linux460-audio-backend-audit": {
+      "id": "linux460-audio-backend-audit",
+      "piece": "Issue460 Bazzite silence: inspect actual SDL backends, host stream lifecycle and device defaults; controlled CPU probes, no speculative device fix",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T21:51:02.487749+00:00",
+      "updated_at": "2026-10-28T21:51:02.487749+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root explicitly assigns audio support after470 delivery; no460owner in currentCAS00e01a18; user2.2.5Linuxbugs mandate",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/460",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:50:45.863806+00:00",
+  "updated_at": "2026-10-28T21:51:02.487749+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
