@@ -9224,10 +9224,10 @@
     "android412-v22-startup": {
       "id": "android412-v22-startup",
       "piece": "Critical reporter confirmed v2.2 instant startup crash on S22 Ultra Android16 before launcher; distinguish Retroid self-resolved and Moto/Jafar. Audit exact publishedAPK38f loader/JNI/GL/filesystem and actionable crash-buffer capture, no unprovenfixclaims.",
-      "status": "en_revision",
+      "status": "en_curso",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T11:45:45.510459+00:00",
+      "updated_at": "2026-10-28T11:52:12.237055+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/issues/412",
       "approval": null,
@@ -9242,13 +9242,18 @@
           "at": "2026-10-28T11:45:45.510459+00:00",
           "owner": "codex-s22-startup",
           "detail": "pruebas/android412-v22-startup/AUDIT-AND-RUNTIME.json; awaitinghardwarestartuptrace,no cause/fixclaim; API34partialenvironmentclassified; publisheddiagnosticreply6467915280"
+        },
+        {
+          "at": "2026-10-28T11:52:12.237055+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "RootauthorizedboundedoptionalJava-before-SDLtest412; sameapplicationId/certificate/versionCode102020099,versionNameexplicit; reusableexact2.2ELFs/assets immutable; rootreviewsbeforeprerelease, no stablereleasemutation; planfirst/docsprimaryAPI30/31"
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:52:04.624197+00:00",
+  "updated_at": "2026-10-28T11:52:12.237055+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
