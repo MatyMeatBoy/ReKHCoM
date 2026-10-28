@@ -10819,10 +10819,10 @@
     "v225-publication-ledger": {
       "id": "v225-publication-ledger",
       "piece": "Published v2.2.5 download/version links and compact public delivery ledger",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-publication-peer",
       "created_at": "2026-10-28T23:16:25.875995+00:00",
-      "updated_at": "2026-10-28T23:20:55.798095+00:00",
+      "updated_at": "2026-10-28T23:21:21.958772+00:00",
       "branch": "docs/v225-publication-ledger",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/481",
       "approval": "Root integrator: human-authorized code review; a838eee81f99ea8bf69cbae3047cb0ae37bdfa11",
@@ -10847,9 +10847,15 @@
           "at": "2026-10-28T23:20:55.798095+00:00",
           "owner": "codex-publication-peer",
           "detail": "Root reviewed final docs diff and corrected459 facts; 8 exact package hashes, 24 public links, immutable source/tag and beta scope; 11 issue replies and 4 closures read back. Docs only."
+        },
+        {
+          "at": "2026-10-28T23:21:21.958772+00:00",
+          "owner": "codex-publication-peer",
+          "detail": "Root reviewed final docs diff and corrected459 facts; 8 exact package hashes, 24 public links, immutable source/tag and beta scope; 11 issue replies and 4 closures read back. Docs only.; merged 79317f772ce7c163179d044c0d2064ccc9fe255d"
         }
       ],
-      "claimed_at": "2026-10-28T23:16:31.109716+00:00"
+      "claimed_at": "2026-10-28T23:16:31.109716+00:00",
+      "completed_at": "2026-10-28T23:21:21.958772+00:00"
     },
     "optiport-v225-producer-cleanup-wasm": {
       "id": "optiport-v225-producer-cleanup-wasm",
@@ -10891,7 +10897,7 @@
     "created_at": "2026-10-28T23:21:06.132894+00:00",
     "updated_at": "2026-10-28T23:21:06.132894+00:00"
   },
-  "updated_at": "2026-10-28T23:21:06.133910+00:00",
+  "updated_at": "2026-10-28T23:21:21.958772+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
