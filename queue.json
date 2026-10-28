@@ -10572,19 +10572,20 @@
     "v225-android-web-delivery": {
       "id": "v225-android-web-delivery",
       "piece": "Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v225-android-web",
       "created_at": "2026-10-28T22:07:50.955630+00:00",
-      "updated_at": "2026-10-28T22:07:50.955630+00:00",
+      "updated_at": "2026-10-28T22:08:16.399020+00:00",
       "branch": null,
       "pr": null,
       "approval": "user",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T22:08:16.399020+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:07:50.955630+00:00",
+  "updated_at": "2026-10-28T22:08:16.399020+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
