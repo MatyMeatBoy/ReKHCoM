@@ -10431,15 +10431,21 @@
     "sony-package-patch-version": {
       "id": "sony-package-patch-version",
       "piece": "Encode PS4/Vita package release PATCH as explicit NN.NN major.(minor*10+patch) with bounded fields; v2.2.5 ->02.25",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-sony-package-version",
       "created_at": "2026-10-28T21:54:00.890117+00:00",
-      "updated_at": "2026-10-28T21:54:06.191665+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Root approved exact encoding/ranges and separate PR after OUT1 tests",
+      "updated_at": "2026-10-28T21:59:42.286575+00:00",
+      "branch": "fix/sony-patch-package-version",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/474",
+      "approval": "Root authorized explicit encoding major.(minor*10+patch), major0..99/minorpatch0..9 and separate PR after OUT1 functional. Exact head submitted for final root review.",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:59:42.286575+00:00",
+          "owner": "codex-sony-package-version",
+          "detail": "PR474: PS4/Vita actual producers use shared SFO helper;2.2.5->02.25,2.3->02.30,missingpatch0; rejects nonstable/fieldoverflow. REDactualVita2.2.5output02.02 observed beforepatch; GREEN7CPUtests normaland-O, including10kboundedtriplesuniqueordered,PS4actualheaderinput/VitaactualSFOcommand. NoSDK/packagebuild/VM/hardware or sharedversionheader changes; published2.2bytesunchanged."
+        }
+      ],
       "claimed_at": "2026-10-28T21:54:06.191665+00:00"
     },
     "glyph-upload-gdi-stb": {
@@ -10495,7 +10501,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:59:31.391795+00:00",
+  "updated_at": "2026-10-28T21:59:42.286575+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
