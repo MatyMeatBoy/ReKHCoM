@@ -371,4 +371,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux461-keyboard-without-controller | Issue461 Linux64 keyboard disappears without physical controller: metadata filters legacy keyboard-to-pad bridge; reproduce actual host/shim source and restore keyboard events | pr_abierto | codex-linux461 | https://github.com/MatyMeatBoy/ReKHCoM/pull/470 | Human2.2.5 allPR/newLinuxbugs mandate; root assigned independent461 after459triage; exactheadrequiresrootreview/integratorlock. | 2026-10-28T21:39:21.303442+00:00 |
 | optiport-installed-embedded-v225 | Sync installed Codex/Claude preserving local additions; refresh embedded committed snapshot for2.2.5 and report final16area gaps read-only | en_curso | codex-optiport-sync-v225 | — | user | 2026-10-28T21:49:54.936388+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T21:50:24.044073+00:00)
+Integrador: libre
