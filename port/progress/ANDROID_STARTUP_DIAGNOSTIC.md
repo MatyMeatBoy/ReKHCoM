@@ -39,8 +39,13 @@ also verifies signing identity, package/version, entry Activity and permissions.
 
 ## Bounded validation
 
-Pinned product source `b162c8954a4e494892b92204c1969c8d6750ca39` produced APK
-SHA256 `9cc6e458b6780801ade3d745d1ace2e5cd91e9cc6714fd8b136801408c891e84`:
+Initial product source `b162c8954a4e494892b92204c1969c8d6750ca39` produced APK
+SHA256 `9cc6e458b6780801ade3d745d1ace2e5cd91e9cc6714fd8b136801408c891e84`
+for the complete installer roundtrip. The immutable-share refinement at product
+source `4007948f030e63a6fa0a2e55d3ab92c15f3ef2c5` produced candidate SHA256
+`28847519552dd22f904eb2645e7388a101214d1096d19e6796d201dca1363bae`.
+Its225 native/asset/binary-manifest entries and install identity are identical,
+so that installer proof remains applicable; new sharing/UI checks use the new APK:
 
 - ROM-free JVM checks cover exact binary/empty copies, rejection of oversized
   traces, safe ZIP names and a valid UTF-8 byte cap. SDK35 Java compilation passes.
@@ -49,14 +54,18 @@ SHA256 `9cc6e458b6780801ade3d745d1ace2e5cd91e9cc6714fd8b136801408c891e84`:
 - The Java screen opens before any SDL/launcher/guest library appears in the
   process maps. Native SDL/launcher libraries appear after explicit Open action.
 - Copy action and Android share chooser run; no report is sent to another person.
+  Two new UUID Shares around a Refresh preserve the first snapshot byte-for-byte
+  while the second contains the updated ZIP. CPU checks enforce retention8,
+  canonical/name rejection and eight non-read/write modes in the real provider.
   The provider denies an ungranted shell caller.
 - A retained historical native :game trace from this QA environment exports in a
-  valid ZIP as286700 raw protobuf bytes. It is not a S22/current-build crash.
+  valid ZIP as 286700 raw protobuf bytes. It is not a S22/current-build crash.
 - First roundtrip was interrupted by an unrelated emulator System UI ANR; logs
   and image are preserved. The second complete roundtrip passes without that
   interruption. This verifies the diagnostic flow, not physical S22/Android16.
 
 Local receipts/captures are in `pruebas/android412-v22-startup/`, including the
-exact APK build receipt and `diagnostic-roundtrip-attempt2/RESULT.json`.
+exact APK build receipt and `diagnostic-roundtrip-attempt2/RESULT.json` and
+`snapshot-validation-attempt1/RESULT.json`.
 Root review precedes any separate diagnostic prerelease. Never add/replace a
 diagnostic APK in the immutable public v2.2 release.
