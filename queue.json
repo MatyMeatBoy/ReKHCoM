@@ -10819,15 +10819,21 @@
     "v225-publication-ledger": {
       "id": "v225-publication-ledger",
       "piece": "Published v2.2.5 download/version links and compact public delivery ledger",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-publication-peer",
       "created_at": "2026-10-28T23:16:25.875995+00:00",
-      "updated_at": "2026-10-28T23:16:31.109716+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T23:18:01.381450+00:00",
+      "branch": "docs/v225-publication-ledger",
       "pr": null,
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T23:18:01.381450+00:00",
+          "owner": "codex-publication-peer",
+          "detail": "Docs-only; README2.2.5,8packagehashrows,10assets,publicsource/Webidentity and limits; link/version assertions PASS"
+        }
+      ],
       "claimed_at": "2026-10-28T23:16:31.109716+00:00"
     },
     "optiport-v225-producer-cleanup-wasm": {
@@ -10859,7 +10865,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:17:53.499932+00:00",
+  "updated_at": "2026-10-28T23:18:01.382452+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
