@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2 — release preparation
+
+- Carry forward the prebuild's stability, card/HUD corrections and audio continuity fixes; keep original game timing and supported 32/64-bit paths.
+- Keep native sprite rendering until both required HD textures are usable, and retain native fallback on failed uploads.
+- Correct the synthesis requirement's overlapping HD parts and cover world-card contours at the complete white-fade endpoint without changing intermediate fades.
+- Distinguish Android ROM ZIPs from HD packs, verify clean ROMs before installation and preserve previous files on failed imports.
+- Identify source and Windows executable metadata as v2.2 (2.2.0.0). Android retains its existing application/signing configuration and derives a higher stable version code from this version.
+- This entry prepares new builds; it does not announce published packages or additional physical-device confirmation. Existing v2.1 and v2.2-pre3 packages remain unchanged.
+
 ## v2.2-pre3 — test build preparation
 
 - Preserve native small-card frame corners and correct the reported stray attack-card seam pixels without retouching HD illustrations.

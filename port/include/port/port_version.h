@@ -4,6 +4,6 @@
 #ifndef REKHCOM_VERSION
 /* the game's exit code after Options > Quit the game: its launcher closes too instead of coming back */
 #define REKHCOM_EXIT_QUIT_ALL 81
-#define REKHCOM_VERSION "v2.2-pre3"
+#define REKHCOM_VERSION "v2.2"
 #endif
 #endif
