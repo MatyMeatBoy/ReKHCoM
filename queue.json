@@ -8549,12 +8549,12 @@
     "issue407-mp4-alignment": {
       "id": "issue407-mp4-alignment",
       "piece": "Compatibilidad MP4 con relleno final alineado y límites en validadores Python/C++",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:15:16.857139+00:00",
-      "updated_at": "2026-10-28T02:26:36.713680+00:00",
+      "updated_at": "2026-10-28T02:45:32.157994+00:00",
       "branch": "fix/mp4-alignment-validation",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/423",
       "approval": "Usuario: verificar todos los issues, corregir cuelgues y plataformas antes de v2.2",
       "reference": "Issue407 exact message; owned ROP143102000 bytes, moov ends143101988 plus12CD padding, current Python validator false",
       "evidence": [
@@ -8562,6 +8562,11 @@
           "at": "2026-10-28T02:26:36.713680+00:00",
           "owner": "codex-integrador",
           "detail": "Own ROP143102000: complete top boxes end143101988,12CD to16-byte boundary; old Python rejects exact issue407 message. New Python80 controls including owned seek-only PASS; CLI plain/xor padded+invalid rollback3 tests PASS; native transactions7 tests PASS with1 Windows symlink skip. C++ sibling bounds/min16/4096 and CD-tail compatibility implemented but compiler verification deferred for Discord/RAM<3GiB. Independent worker read-only review no blockers. WIP root audio-underrun; no PR/merge yet."
+        },
+        {
+          "at": "2026-10-28T02:45:32.157994+00:00",
+          "owner": "codex-integrador",
+          "detail": "Exact27f3b28 root80 Python+CppinclownedROP PASS; independent79+CLI+transactions PASS. Oldnative actualwraploop expected0.4stimeout and ownROP false. Bounds/tail/4096 reviewed no blockers. FullWindowslauncher link next; no reporterinput/codec/device claim. Smallprobepeak61.38MiB,minfree6.265GiB, BELOW_NORMAL."
         }
       ],
       "claimed_at": "2026-10-28T02:15:25.378566+00:00"
@@ -8582,7 +8587,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:44:54.173767+00:00",
+  "updated_at": "2026-10-28T02:45:32.157994+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
