@@ -8119,15 +8119,21 @@
     "game-cursor-idle-four-seconds": {
       "id": "game-cursor-idle-four-seconds",
       "piece": "Ocultar cursor inmovil sobreventana juego tras max4seg; reaparecer almoverraton. SDL multiplataforma, foco/salida/reentrada/menu segunflujo, preservar mandoy controles. Implementar trasprioridadespixeles/audio/HP.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T22:33:22.971761+00:00",
-      "updated_at": "2026-10-28T01:44:29.807880+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T02:01:20.062018+00:00",
+      "branch": "fix/game-cursor-idle-four-seconds",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/420",
       "approval": "Usuario27/10 reitera mejora cursor4seg",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T02:01:20.062018+00:00",
+          "owner": "codex-integrador",
+          "detail": "Common SDL policy4s and focus lifecycle for desktop native/hosts. Root and independent worker tests PASS, reviewed214e53588 code byte-identical after rebase017a053. Full links Windows32/64 and Linux32/64 PASS. Final Linux64 BELOW_NORMAL alone min observed freeRAM3.474GiB. Physical Wayland/Deck compositor unverified."
+        }
+      ],
       "claimed_at": "2026-10-28T01:44:29.807880+00:00"
     },
     "attack-card-native-top-seam": {
@@ -8514,7 +8520,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T01:57:36.792362+00:00",
+  "updated_at": "2026-10-28T02:01:20.062018+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
