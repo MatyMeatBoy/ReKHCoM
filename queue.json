@@ -8891,20 +8891,26 @@
     "v22-vita-host-build": {
       "id": "v22-vita-host-build",
       "piece": "Link/package Vita v2.2 VPK from verified5ccb ARMguests; offline512MiB snapshot1CPU, own768MiBjob",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-console-vita-host",
       "created_at": "2026-10-28T04:54:48.680974+00:00",
-      "updated_at": "2026-10-28T04:54:54.823028+00:00",
+      "updated_at": "2026-10-28T05:00:06.359728+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes Vita host exclusive window after421VM47532PASS; preserveoriginal16GiBVM/SDK/releases, no Switch/PS5 until coordination",
       "reference": "vita-guest-attempt2/ARTIFACT-RECEIPT.json; SDKinventory2; PR425/429integrated",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T05:00:06.359728+00:00",
+          "owner": "codex-console-vita-host",
+          "detail": "REAL offline snapshot SDK link/SELF/VPK PASS source5ccb8d, session59141terminalexit0,158.91s,job768MiBpeak673.59/minfree1.608GiB. Closed pruebas/v22-stable-vita/ReKHCoM-v2.2-vita-beta.vpk 13635904 SHA0ab6c68de0d0b71eec501b0efd93591722e185b674af4283865d0bb69218da94. FullZIPCRC216entries, SFOAPP_VER/VERSION02.02/titleIDmatch, three distinctSCEselves. Debug28.25MB ELFs/velf/objects preserved+hash/token/exitchecked. Originalv2.0VPK bdf92316... and16GiBVMfile size/mtime unchanged. No physicalVita test claim; no Switch/PS5 started."
+        }
+      ],
       "claimed_at": "2026-10-28T04:54:54.823028+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:58:28.380619+00:00",
+  "updated_at": "2026-10-28T05:00:06.359728+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
