@@ -58,6 +58,9 @@ static int CurrentSong(void) {
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include <string.h>
+#if !defined(__EMSCRIPTEN__)
+#include "port/port_audio_continuity.h"
+#endif
 
 #define STB_VORBIS_NO_PUSHDATA_API
 #define STB_VORBIS_NO_INTEGER_CONVERSION
@@ -78,6 +81,8 @@ static const char* MusicPath(char* out, size_t size, const char* track, const ch
 }
 
 static SDL_AudioStream* sStream;
+static PortAudioContinuity sMusicContinuity;
+static int sPaused;
 static stb_vorbis* sVorbis;
 static int sRate;
 static unsigned sLoopStart, sLoopEnd, sPosition;
@@ -163,8 +168,11 @@ static void Close(void) {
     sVorbis = NULL;
     SDL_free(sFile);
     sFile = NULL;
-    if (sStream)
-        SDL_ClearAudioStream(sStream);
+    if (sStream) {
+        SDL_PauseAudioStreamDevice(sStream);
+        sPaused = 1;
+        PortAudioContinuityClear(&sMusicContinuity, sStream);
+    }
     sSong = -1;
 }
 
@@ -207,8 +215,10 @@ static int Open(int song) {
     if (sStream == NULL) {
         SDL_AudioSpec spec = { SDL_AUDIO_F32, 2, sRate };
         sStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL);
-        if (sStream)
-            SDL_ResumeAudioStreamDevice(sStream);
+        if (sStream) {
+            PortAudioContinuityInit(&sMusicContinuity, sStream);
+            sPaused = 1;
+        }
     } else {
         SDL_AudioSpec spec = { SDL_AUDIO_F32, 2, sRate };
         SDL_SetAudioStreamFormat(sStream, &spec, NULL);
@@ -220,7 +230,6 @@ static int Open(int song) {
 
 /* the device waits with what is queued, so the track resumes exactly where it stopped (clearing the stream dropped
    a fifth of a second and the track jumped on: the stutter after menus) */
-static int sPaused;
 static void Pause(void) {
     if (sStream && !sPaused) {
         SDL_PauseAudioStreamDevice(sStream);
@@ -247,14 +256,15 @@ static int Feed(float gain) {
     sLevel = gain;
     SDL_SetAudioStreamGain(sStream, sLevel * sHold);
     gain = 1.0f;
-    Resume();
     while (SDL_GetAudioStreamQueued(sStream) < (int)(sRate / 5 * 2 * sizeof(float))) {
         int want = 2048, got, i;
         /* Bound frame work, not valid track length: very short loops can need
            more iterations. Keep accepted PCM and fill the remainder next frame.
            Decoder/seek/output failures below still fail immediately. */
-        if (++blocks > 32)
+        if (++blocks > 32) {
+            Resume();
             return 1;
+        }
         if (sPosition + (unsigned)want > sLoopEnd)
             want = (int)(sLoopEnd - sPosition);
         if (want <= 0) {
@@ -274,11 +284,12 @@ static int Feed(float gain) {
         }
         for (i = 0; i < got * 2; i++)
             pcm[i] *= gain;
-        if (!SDL_PutAudioStreamData(sStream, pcm, got * 2 * (int)sizeof(float)))
+        if (!PortAudioContinuityPut(&sMusicContinuity, sStream, pcm, got * 2 * (int)sizeof(float)))
             return 0;
         sPosition += (unsigned)got;
         rewound = 0;
     }
+    Resume();
     return 1;
 }
 
@@ -347,7 +358,8 @@ static long Position(void) {
 #endif
 
 /* KHCOM_HDAUDIOLOG=file (test_hd_audio_flow.py): one line per audio frame - the game's song, the HD track's song,
-   state (0 none, 1 plays, 2 paused, 3 loading), queued ms, position in samples, the cartridge music gain left */
+   state (0 none, 1 plays, 2 paused, 3 loading), queued ms, position in samples, the cartridge music gain left,
+   cumulative consumer underruns. Synthesized recovery PCM must not hide starvation from the flow test. */
 static void HdLog(int song, int state) {
 #if __STDC_HOSTED__
     static FILE* f;
@@ -361,8 +373,9 @@ static void HdLog(int song, int state) {
             f = fopen(path, "w");
     }
     if (f)
-        fprintf(f, "%u %d %d %d %d %ld %.3f\n", frame++, song, sSong, state, QueuedMs(), Position(),
-                (double)gPortMix.musicGain);
+        fprintf(f, "%u %d %d %d %d %ld %.3f %u\n", frame++, song, sSong, state, QueuedMs(), Position(),
+                (double)gPortMix.musicGain,
+                sStream ? (unsigned)PortAudioContinuityUnderruns(&sMusicContinuity, sStream) : 0);
 #else
     (void)song, (void)state; /* the bridge images have no files of their own */
 #endif
@@ -381,6 +394,10 @@ void PortHdMusicFrame(void) {
     }
     song = CurrentSong();
     playing = song > 0 && (bgm->status & MUSICPLAYER_STATUS_TRACK) && !(bgm->status & MUSICPLAYER_STATUS_PAUSE);
+    /* a movie switches the cartridge's sound engine off (m4aSoundVSyncOff: ident + 10) and leaves the song's
+       status as it was: it is silent, so is the HD track (#163: the gallery's GBA movies under Dearly Beloved) */
+    if (gSoundInfoPtr && (gSoundInfoPtr->ident == ID_NUMBER + 10 || gSoundInfoPtr->ident == ID_NUMBER + 11))
+        playing = 0;
     /* our Options overlay does not stop the song (the cartridge's keeps playing under it, so does the HD track) */
     if (!playing) {
         Pause(); /* stopped or paused: the track resumes from where it was */

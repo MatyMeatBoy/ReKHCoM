@@ -21,11 +21,18 @@ static int AudioLog(void) {
 }
 #include "port/port_audio.h"
 #include "port/port_state.h"
+#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
+#include "port/port_audio_continuity.h"
+#define PORT_AUDIO_CONTINUITY 1
+#endif
 
 #define OUT_RATE 48000
 #define FRAME_SAMPLES_MAX PORT_MIX_MAX
 
 static SDL_AudioStream* sStream;
+#ifdef PORT_AUDIO_CONTINUITY
+static PortAudioContinuity sContinuity;
+#endif
 static int sStreamRate;
 static int sStreamPriming = 1;
 static float sQueuedAvg = -1.0f;
@@ -428,7 +435,11 @@ void PortAudioPsgOff(void) {
 void PortAudioReset(void) {
     if (sStream != NULL) {
         SDL_PauseAudioStreamDevice(sStream);
+#ifdef PORT_AUDIO_CONTINUITY
+        PortAudioContinuityClear(&sContinuity, sStream);
+#else
         SDL_ClearAudioStream(sStream);
+#endif
         SDL_SetAudioStreamFrequencyRatio(sStream, 1.0f);
     }
     sStreamPriming = 1;
@@ -469,6 +480,9 @@ int PortAudioInit(void) {
         PortLog("Audio: could not open the output device: %s", SDL_GetError());
         return 0;
     }
+#ifdef PORT_AUDIO_CONTINUITY
+    PortAudioContinuityInit(&sContinuity, sStream);
+#endif
     /* The convenience API opens paused. Fill the intended safety buffer
        before starting playback, rather than racing the first audio callback. */
     sStreamPriming = 1;
@@ -490,7 +504,11 @@ static void Queue(int n, int rate) {
         SDL_SetAudioStreamFormat(sStream, &in, NULL);
         sStreamRate = rate;
     }
+#ifdef PORT_AUDIO_CONTINUITY
+    PortAudioContinuityPut(&sContinuity, sStream, sOut, n * 2 * (int)sizeof(float));
+#else
     SDL_PutAudioStreamData(sStream, sOut, n * 2 * (int)sizeof(float));
+#endif
 
     /* Keep ~4 frames queued. The fill level is smoothed and the playback rate
        corrected by at most 0.3% (about 5 cents), which is inaudible; only a
@@ -532,6 +550,9 @@ static void Queue(int n, int rate) {
                 SDL_GetAudioStreamFormat(sStream, &src, &dst);
                 PortLog("audio: queued %.0f (avg %.0f, target %.0f) ratio %.4f in %d Hz out %d Hz", queued, sQueuedAvg,
                         target, ratio, src.freq, dst.freq);
+#ifdef PORT_AUDIO_CONTINUITY
+                PortLog("audio continuity: consumer underruns %u", (unsigned)PortAudioContinuityUnderruns(&sContinuity, sStream));
+#endif
             }
         }
     }

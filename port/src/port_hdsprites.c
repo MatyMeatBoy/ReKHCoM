@@ -385,6 +385,20 @@ static int Load(int i) {
         if (px) stbi_image_free(px);
         goto invalid;
     }
+    /* Kingdom Key's one-cell seam correction:
+       Kingdom Key's native white dot lies outside the HD window; cover just
+       that GBA cell with its neighbouring native near-black.
+       Cure's black and Simba's blue native top lines, every other illustration
+       and all separately rendered value digits stay unchanged. */
+    if (kHdSprites[i].group == 6 && w == 128 && h == 256) {
+        if (!strcmp(kHdSprites[i].name, "gKingdomKeySmallCardHD")) {
+            for (int y = 120; y < 128; y++)
+                for (int x = 88; x < 96; x++) {
+                    unsigned char* p = px + (y * w + x) * 4;
+                    p[0] = p[1] = p[2] = 8; p[3] = 255;
+                }
+        }
+    }
     if (kHdSprites[i].group == 7 && MenuLightName(kHdSprites[i].name) && MenuLightReady(sRenderer)) {
         /* Remove only this light's box, not its words, bar or underline.
            German Press Start has eight extra rows above the same orb. */
@@ -896,7 +910,9 @@ static int RingLoad(void) {
         SDL_memcpy(dark, px, (size_t)w * h * 4);
         for (k = 0; k < w * h; k++) {
             unsigned char* c = dark + k * 4;
-            if (c[1] > c[0] + 30 && c[1] > c[2] + 30) /* the green: the empty track's dark grey */
+            /* the green: the empty track's dark grey; its antialiased rim too (yellow-green where it meets the black
+               outline), which a stricter test left as a bright line along the grey (user report 27/10) */
+            if (c[1] >= c[0] && c[1] > c[2] + 8)
                 c[0] = c[1] = c[2] = (unsigned char)(28 + c[1] / 16);
         }
     }

@@ -65,3 +65,24 @@ sólo cuenta lo que se repite.
 2. Glifos: precalentar dígitos y letras frecuentes al crear cada fuente.
 3. Repetir en un equipo sin carga externa para confirmar o descartar las
    cargas de ~97 ms y los `present` largos.
+
+## Paso 2: glifos precalentados (tarea `optiport-v22-pacing`, 27/10)
+
+La vista profunda mostró que los 12 glifos del cuadro 327 son de la fuente de
+menús (estilo 0) a la escala de la capa de pantalla (6,75), no a la del mundo.
+`PortHdTextWarmGame` (port_hdtext_warmup.inc, todos los backends) prepara antes
+de jugar el juego latino del estilo 0 a las escalas de mundo y menú (sus dos
+ranuras) y los dígitos de celda del estilo 2; una escala posterior sigue
+renderizando al usarse.
+
+| Corrida (puerta, W32 EU, GPU) | Glifos en 327 | Cuadro 327 | Preparación al arrancar |
+| --- | --- | --- | --- |
+| Antes, 3 corridas | 12 (4,3–8,6 ms) | 38–55 ms | — |
+| Después 1 | 0 | 34,9 ms | 174 ms |
+| Después 2 | 0 | 109 ms (subida 23 ms, present 43 ms) | 173 ms |
+| Después 3 | 0 | 115 ms; cuadro 326 con PPU 462 ms sin cargas | 192 ms |
+
+Las corridas 2 y 3 coinciden con carga externa del equipo: cuentan para
+«glifos 0», no para el tiempo total. El coste se mueve a una sola vez antes del
+título (~0,17 s). Queda en 327 la parte de las 6 cargas HD (decode ~10 ms,
+subida ~12 ms): siguiente paso, la copia blanca bajo demanda o la precarga.

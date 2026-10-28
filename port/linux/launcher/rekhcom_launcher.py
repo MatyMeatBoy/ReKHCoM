@@ -49,7 +49,9 @@ def mp4(path):
             if length==0:length=size-at
             if length<minimum or length>size-at:return False
             seen.add(kind);at+=length
-    return False
+    # The final allowed box may end exactly at EOF on iteration4096.
+    # Keep the same 4096-box limit while accepting that complete boundary.
+    return at==size and {b'moov',b'mdat'}<=seen
 
 def validate(root):
     files=list(scan(root))
