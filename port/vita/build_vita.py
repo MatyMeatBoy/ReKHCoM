@@ -149,12 +149,20 @@ for r in REGIONS; do
   vita-make-fself -s -c eboot-$r.velf eboot-$r.self
 done
 mv eboot-eu.self eboot.bin
-vita-mksfoex -s TITLE_ID=TITLEID -d ATTRIBUTE2=12 "ReKHCoM" param.sfo
+vita-mksfoex -s TITLE_ID=TITLEID -s APP_VER=APPVERSION -s VERSION=APPVERSION -d ATTRIBUTE2=12 "ReKHCoM" param.sfo
 ASSETS=$(cd pkg && find . -type f | sed 's|^\./||' | while read f; do printf -- '-a pkg/%s=%s ' "$f" "$f"; done)
 SELFS=$(for r in REGIONS; do [ $r = eu ] || printf -- '-a eboot-%s.self=eboot_%s.self ' $r $r; done)
 vita-pack-vpk -s param.sfo -b eboot.bin $SELFS $ASSETS ReKHCoM.vpk
 ls -l ReKHCoM.vpk
 '''
+
+
+def package_script(regions):
+    """SFO's two-component version follows the same release header as the game."""
+    major, minor = re.match(r'(\d+)\.(\d+)', build_switch.version()).groups()
+    app_version = f'{int(major):02d}.{int(minor):02d}'
+    return (VM_SCRIPT.replace('REGIONS', ' '.join(regions)).replace('TITLEID', TITLE_ID)
+            .replace('APPVERSION', app_version))
 
 
 def livearea(sce_sys):
@@ -202,7 +210,7 @@ def package(regions):
                 PS5 / 'shared/audio_bridge.h', ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     (share / 'guest.ld').write_text(GUEST_LD)
-    script = VM_SCRIPT.replace('REGIONS', ' '.join(regions)).replace('TITLEID', TITLE_ID)
+    script = package_script(regions)
     (share / 'build.sh').write_bytes(script.encode())
     out = BUILD / 'vm-out'
     shutil.rmtree(out, ignore_errors=True)  # a package left by an earlier run must never pass for this one
