@@ -9565,20 +9565,26 @@
     "optiport-v22-fullpass-ledger": {
       "id": "optiport-v22-fullpass-ledger",
       "piece": "Reconcile full v2.2 OptiPort application: preserve original14 baseline, define two evidence-driven additional blocks and current439/441 report facts with exit criteria, distinguish audited skill from completed product work.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-fullpass-ledger",
       "created_at": "2026-10-28T15:59:36.593626+00:00",
-      "updated_at": "2026-10-28T15:59:42.715248+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "User explicitly resumed issues439/441 and prioritized a complete OptiPort pass including learned issues and evaluating additional blocks.",
+      "updated_at": "2026-10-28T16:11:21.223432+00:00",
+      "branch": "docs/optiport-full-pass-v22",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/445",
+      "approval": "User explicitly requested full OptiPort pass and assessing added blocks. Independent console_delivery review of445 found no blockers; importer copy-vs-transcode clarification applied at364a98bc.",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T16:11:21.223432+00:00",
+          "owner": "codex-fullpass-ledger",
+          "detail": "2docs,10local links resolve, diffcheckPASS. Preserve original10/14historical;16currentareas require evidence reconciliation before a new percentage. Scope439/441/importer facts, no product or artifact changes."
+        }
+      ],
       "claimed_at": "2026-10-28T15:59:42.715248+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:11:13.455510+00:00",
+  "updated_at": "2026-10-28T16:11:21.223432+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
