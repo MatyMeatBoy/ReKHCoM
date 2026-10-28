@@ -51,7 +51,7 @@ static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) 
     const uint16_t* widths=PortLatinGlyphWidths();
     float gameWidth=0;int i,m[5];
     uint32_t* rgba;
-    if(g->ready)return;g->ready=1;
+    if(!gPortWebHdReady || g->ready)return;g->ready=1;
     for(i=0;sample[i];i++)gameWidth+=widths[(unsigned char)sample[i]]*f->scale;
     if(!WebRaster(f->style,f->cap,gameWidth,code,jp,scratch,m)) {gPortWebHdReady=0;return;}
     g->w=m[0];g->h=m[1];g->advance=m[2];g->left=m[3];g->top=m[4];
@@ -60,8 +60,15 @@ static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) 
     if(!rgba){gPortWebHdReady=0;return;}
     for(i=0;i<g->w*g->h;i++)rgba[i]=((uint32_t)scratch[i]<<24)|0xFFFFFF;
     g->tex=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STATIC,g->w,g->h);
-    if(g->tex){SDL_UpdateTexture(g->tex,NULL,rgba,g->w*4);SDL_SetTextureBlendMode(g->tex,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(g->tex,SDL_SCALEMODE_NEAREST);}
-    else gPortWebHdReady=0;
+    if(g->tex && SDL_UpdateTexture(g->tex,NULL,rgba,g->w*4)) {
+        SDL_SetTextureBlendMode(g->tex,SDL_BLENDMODE_BLEND);
+        SDL_SetTextureScaleMode(g->tex,SDL_SCALEMODE_NEAREST);
+    } else {
+        if(g->tex)SDL_DestroyTexture(g->tex);
+        g->tex=NULL;g->ready=0;gPortWebHdReady=0;
+        /* The current PPU pass may already have omitted SD glyphs. */
+        PortLog("HD text: glyph texture rejected; original text resumes next frame");
+    }
     SDL_free(rgba);
 }
 static HdGlyph* Glyph(SDL_Renderer* renderer,HdFont* f,int code) {
