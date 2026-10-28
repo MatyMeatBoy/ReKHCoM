@@ -8,11 +8,14 @@ No Steam configuration or existing desktop entries are touched.
 """
 import argparse
 import os
+import shlex
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import unittest
+import importlib.util
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 SHELL = '/bin/sh'
@@ -37,6 +40,10 @@ class LauncherTest(unittest.TestCase):
         self.xdg = self.root / 'app data'
         self.env = dict(os.environ, XDG_DATA_HOME=self.posix(self.root) + '/app data', LD_LIBRARY_PATH='/inherited/libs')
         self.directory = self.posix(self.game)
+        self.cpuinfo = self.root / 'cpuinfo'
+        self.cpuinfo.write_text('flags : sse sse2 sse4_1\n')
+        cpu_path = shlex.quote(self.posix(self.root) + '/cpuinfo')
+        self.script.write_text(self.script.read_text().replace('/proc/cpuinfo', cpu_path))
         for region in ('eu', 'us', 'jp'):
             stub = self.game / 'bin' / ('khcom_' + region)
             stub.write_text('#!/bin/sh\nprintf "%s\\n" "$PWD" "$LD_LIBRARY_PATH" "$@" > args.txt\n'
@@ -70,6 +77,122 @@ class LauncherTest(unittest.TestCase):
     def fake_machine(self, machine):
         # Substitute only the architecture probe; all selection/launch code runs unchanged.
         self.script.write_text(self.script.read_text().replace('$(uname -m)', machine))
+
+    def test_update_runtime_defaults_once_then_keeps_new_manual_choice(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        ini = self.game / 'decompui.ini'
+        unrelated = 'version=jp\nui_language=4\nhd_offer=0\ncustom_setting=keep\n'
+        ini.write_text('runtime_mode=1\nruntime_auto_version=v2.1\n' + unrelated)
+        self.assertEqual(self.run_script().returncode, 0)
+        self.assertTrue((self.game / 'ran64.txt').exists())
+        text = ini.read_text()
+        self.assertIn(unrelated, text)
+        self.assertIn('runtime_mode=0\n', text)
+        self.assertIn('runtime_auto_version=v2.2\n', text)
+        ini.write_text(text.replace('runtime_mode=0', 'runtime_mode=1'))
+        (self.game / 'ran64.txt').unlink()
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        (self.game / 'ReKHCoM.version').write_text('v2.2.1\n')
+        self.assertEqual(self.run_script().returncode, 0)
+
+    def test_updated_version_cli_is_explicit_and_not_persisted(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        ini = self.game / 'decompui.ini'
+        ini.write_text('force_32=1\ncustom_setting=keep\n')
+        self.assertEqual(self.run_script('--region', 'eu', '--force32').returncode, 17)
+        self.assertIn('runtime_mode=0\n', ini.read_text())
+        self.assertNotIn('force_32=', ini.read_text())
+        self.assertEqual(self.run_script('--force64').returncode, 0)
+        self.assertIn('runtime_mode=0\n', ini.read_text())
+
+    def test_cpu_without_guest_sse41_uses32_and_force64_reports_error(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        self.cpuinfo.write_text('flags : sse sse2 sse4a\n')
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        (self.game / 'decompui.ini').write_text('runtime_mode=1\n')
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertFalse((self.game / 'ran64.txt').exists())
+        self.assertEqual(self.run_script('--force64').returncode, 2)
+        self.assertIn('SSE4.1', (self.game / 'ReKHCoM.log').read_text())
+        self.assertFalse((self.game / 'ran64.txt').exists())
+
+    def test_migrate_only_never_launches_or_rotates_logs(self):
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        (self.game / 'decompui.ini').write_text('runtime_mode=1\n')
+        log = self.game / 'ReKHCoM.log'
+        log.write_text('existing evidence\n')
+        self.assertEqual(self.run_script('--migrate-runtime-only').returncode, 0)
+        self.assertIn('runtime_mode=0\n', (self.game / 'decompui.ini').read_text())
+        self.assertEqual(log.read_text(), 'existing evidence\n')
+        self.assertFalse((self.game / 'args.txt').exists())
+
+    def test_failed_atomic_migration_keeps_original_and_still_starts(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        ini = self.game / 'decompui.ini'
+        original = 'runtime_mode=1\ncustom_setting=keep\n'
+        ini.write_text(original)
+        # Inject a failed rename, never a mocked success. Production selection
+        # and migration still run; no temporary output can replace the original.
+        self.script.write_text(self.script.read_text().replace('! mv -f "$runtime_temp"', '! false "$runtime_temp"'))
+        self.assertEqual(self.run_script().returncode, 0)
+        self.assertEqual(ini.read_text(), original)
+        self.assertFalse(list(self.game.glob('.rekhcom-runtime-*')))
+
+    def test_gui_migrates_before_dialog_and_does_not_forward_old_force32(self):
+        self.fake_machine('x86_64')
+        self.fake64(0, entered=True)
+        (self.game / 'ReKHCoM.version').write_text('v2.2\n')
+        ini = self.game / 'decompui.ini'
+        ini.write_text('runtime_mode=1\nruntime_auto_version=v2.1\ncustom=keep\n')
+        spec = importlib.util.spec_from_file_location('native_launcher_runtime', ROOT / 'port/linux/launcher/rekhcom_launcher.py')
+        launcher = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(launcher)
+        real_run = subprocess.run
+        captured = []
+        expected_mode = 0
+        class Played(Exception):
+            pass
+        def fake_run(command, *args, **kwargs):
+            if command[0] == '/bin/sh':
+                return real_run([SHELL, *command[1:]], cwd=self.root, env=self.env, capture_output=True, text=True)
+            if command[0] == 'zenity':
+                self.assertIn('runtime_mode=' + str(expected_mode) + '\n', ini.read_text())
+                self.assertIn('runtime_auto_version=v2.2\n', ini.read_text())
+                return subprocess.CompletedProcess(command, 0, 'play\n')
+            raise AssertionError(command)
+        def execute(executable, command):
+            captured.append(command)
+            result = real_run([SHELL, *command[1:]], cwd=self.root, env=self.env, capture_output=True, text=True)
+            raise Played(result.returncode)
+        with patch.object(launcher.subprocess, 'run', side_effect=fake_run), \
+             patch.object(launcher.os, 'execv', side_effect=execute), \
+             patch.object(launcher.shutil, 'which', side_effect=lambda x: 'zenity' if x == 'zenity' else None), \
+             patch.dict(launcher.os.environ, DISPLAY=':fixture'):
+            with patch.object(launcher.sys, 'argv', ['launcher', '--data', str(self.game), '--gui']):
+                with self.assertRaises(Played) as outcome:
+                    launcher.main()
+                self.assertEqual(outcome.exception.args, (0,))
+            self.assertEqual(captured[-1], ['/bin/sh', str(self.script)])
+            ini.write_text(ini.read_text().replace('runtime_mode=0', 'runtime_mode=1'))
+            expected_mode = 1
+            with patch.object(launcher.sys, 'argv', ['launcher', '--data', str(self.game), '--gui']):
+                with self.assertRaises(Played) as outcome:
+                    launcher.main()
+                self.assertEqual(outcome.exception.args, (17,))
+            with patch.object(launcher.sys, 'argv', ['launcher', '--data', str(self.game), '--play', '--force64']):
+                with self.assertRaises(Played) as outcome:
+                    launcher.main()
+                self.assertEqual(outcome.exception.args, (0,))
+            self.assertEqual(captured[-1][-1], '--force64')
+            self.assertIn('runtime_mode=1\n', ini.read_text())
 
     def fake_arm64(self, code=0, entered=True):
         self.fake64(code, entered)

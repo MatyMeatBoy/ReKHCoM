@@ -11,6 +11,9 @@ spec.loader.exec_module(m)
 with tempfile.TemporaryDirectory() as tmp:
     dest = Path(tmp)/'package with spaces'
     m.install_native_launcher(dest)
+    header=(ROOT/'port/include/port/port_version.h').read_text(encoding='utf-8')
+    version=next(line.split('"')[1] for line in header.splitlines() if line.startswith('#define REKHCOM_VERSION '))
+    assert (dest/'ReKHCoM.version').read_text().strip() == version
     assert (dest/'launcher/port/data/hd_sprites.tsv').read_bytes() == (ROOT/'port/data/hd_sprites.tsv').read_bytes()
     for name in ('khhd_import.py','khhd_pkg.py','khhd_scd.py','khhd_subs.py','khhd_sprites.py','khhd_posters.py'):
         assert (dest/'launcher/port/tools'/name).is_file(), name
