@@ -9206,23 +9206,28 @@
       "status": "en_revision",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T11:45:17.181989+00:00",
+      "updated_at": "2026-10-28T11:45:45.510459+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/issues/412",
       "approval": null,
-      "reference": "Exactv2.2APKbd7999c2source38f; reportconfirmed6467667226; diagnosticreply6467915280,issueopen",
+      "reference": "Issue https://github.com/MatyMeatBoy/ReKHCoM/issues/412; no code PR yet",
       "evidence": [
         {
           "at": "2026-10-28T11:45:17.181989+00:00",
           "owner": "codex-s22-startup",
           "detail": "pruebas/android412-v22-startup/AUDIT-AND-RUNTIME.json;read-onlyAPKdeps+1.9.14Java→2.2SDL/GLESstartupmapping;API34ARMtranslationinstall/JNI/SDL_mainentered/pidalive/crashbufferempty BUTSystemUIANR screenshot meansUIreadinessUNVERIFIED;twoenvironmentattemptspreserved,ownedemulatoroff;causeS22unconfirmed,no speculativepatch;waitingcrash/startupentry"
+        },
+        {
+          "at": "2026-10-28T11:45:45.510459+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "pruebas/android412-v22-startup/AUDIT-AND-RUNTIME.json; awaitinghardwarestartuptrace,no cause/fixclaim; API34partialenvironmentclassified; publisheddiagnosticreply6467915280"
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:45:17.181989+00:00",
+  "updated_at": "2026-10-28T11:45:45.510459+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
