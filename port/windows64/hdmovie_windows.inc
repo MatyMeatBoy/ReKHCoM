@@ -11,7 +11,7 @@ typedef WCHAR SubChar;
 static int sStartAt, sMovieDeviceReset;
 static const char *sMovieSubs[2], *sMovieFont;
 static SDL_Keycode sMovieStartKeys[2] = { SDLK_RETURN, 0 };
-static struct { int hdSubtitles; } gPortConfig;
+static struct { int hdSubtitles, masterVolume; } gPortConfig;
 static void RendererDeviceReset(void);
 #define PortLog Log
 static SDL_Renderer* PortRenderer(void) { return sRenderer; }
@@ -161,6 +161,7 @@ static int MoviePause(SDL_Renderer* renderer, SDL_Surface* shot, SDL_AudioStream
 #undef SDL_getenv
 
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
+    gPortConfig.masterVolume = PortMovieVolumeTake(&sMovieVolume);
     char path[2048];
     if (!movie || snprintf(path, sizeof(path), "%s", movie) >= (int)sizeof(path)) return 0;
     sStartAt = 0; sMovieDeviceReset = 0;

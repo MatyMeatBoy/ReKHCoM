@@ -407,7 +407,7 @@ static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(fr
 
 /* HD movies: played here to the end with the NDK's decoders (port/portable/hdmovie_android.c, as on 32-bit Android) */
 void HdMovieAndroidSetRendererResetCallback(void (*callback)(void));
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font);
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font, int masterVolume);
 void HdMovieLog(const char* fmt, ...) {
     char text[1024];
     va_list ap;
@@ -417,8 +417,9 @@ void HdMovieLog(const char* fmt, ...) {
     Log("%s", text);
 }
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
+    const int masterVolume = PortMovieVolumeTake(&sMovieVolume);
     HdMovieAndroidSetRendererResetCallback(RendererDeviceReset);
-    int played = HdMovieAndroidPlay(sRenderer, movie, subs1, subs2, font);
+    int played = HdMovieAndroidPlay(sRenderer, movie, subs1, subs2, font, masterVolume);
     HdMovieAndroidSetRendererResetCallback(NULL);
     if (played == 2)
         sQuit = 1;
