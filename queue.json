@@ -10664,20 +10664,26 @@
     "v225-vita-build": {
       "id": "v225-vita-build",
       "piece": "Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-v225-console-build",
       "created_at": "2026-10-28T22:22:36.093570+00:00",
-      "updated_at": "2026-10-28T22:22:42.621556+00:00",
+      "updated_at": "2026-10-28T22:32:19.399380+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T22:32:19.399380+00:00",
+          "owner": "codex-v225-console-build",
+          "detail": "VitaFINAL13,650,627B SHAdcec3dfe616dc5298df6d30d026826914e39c7104f4feac3af6e437658e4acbf/sourcef28,15207terminal0/462.469s, QEMU46488terminal0. ActualSFO02.25/3executables216ZIPentriesfullCRCpassed. RealSDKgate/snapshotnoNIC/freshnonce/originalSDKdiskstatunchangedPASS. Compressed3ARMELF+symbols13.45MBretaineddebug-symbols/vita. Rootcollectorready, nohardwareclaim;VMleasecededLinux."
+        }
+      ],
       "claimed_at": "2026-10-28T22:22:42.621556+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:22:42.621556+00:00",
+  "updated_at": "2026-10-28T22:32:19.399380+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
