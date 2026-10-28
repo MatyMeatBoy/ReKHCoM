@@ -1,10 +1,21 @@
 # Pendientes tras publicar 2.2
 
 **Estado vigente, 28/10/2026:** [v2.2 ya está publicada](V22_PUBLISHED_VERIFICATION.md)
-con ocho paquetes y Web beta. Nueve issues recibieron enlaces reales; 418/421 se
-cerraron. 407/412/374/330/336/378/163 siguen abiertos para sus casos concretos.
-La revisión nueva 432 continúa después del release. #360 ya fue confirmado y
-cerrado; su casilla histórica inferior no es una tarea P0 vigente.
+con ocho paquetes y Web beta. Los paquetes estables son inmutables. El
+[test Linux439/441](LINUX_TEST439441.md) está publicado, reúne los fixes446/447/448,
+pasa siete controles del paquete y se envió al reportero en ambos issues.
+La confirmación física sigue pendiente. Los issues abiertos actuales son
+449/441/439/412/374/330. 407/378/336/163 ya recibieron respuestas y se cerraron,
+igual que418/421 y360. Sus filas históricas no reabren esos casos.
+432/440/442/443 quedaron cerrados sin merge por la orden anterior de parada;
+eso no resuelve sus tareas. Ramas y evidencia se conservan para su revisión.
+
+Orden autorizado: entregar el test Linux, completar la aplicación de OptiPort
+y continuar los demás pendientes. La reducción a720p queda sólo como boceto
+interno aplazado: no reactivarla automáticamente. La skill está revisada y
+sincronizada en394c34ff; el trabajo del producto tiene
+[16 criterios de cierre](OPTIPORT_FULL_PASS_20261028.md), sin porcentaje global
+nuevo hasta conciliar la evidencia.
 
 La autoridad de reservas sigue siendo `coordination/art-queue`. Las secciones
 siguientes conservan historia y no reabren trabajos integrados/publicados.
