@@ -29,6 +29,13 @@ with tempfile.TemporaryDirectory(prefix='legacy-startup-') as directory:
     output=Path(directory)/'must-not-exist'
     old=subprocess.run([sys.executable,'-O',str(ROOT/'port/tools/build_android_diagnostics.py'),'--base-apk','placeholder','--gradle-seed','placeholder','--toolchain','placeholder','--out',str(output)],capture_output=True,text=True)
     if old.returncode!=2 or 'Historical test412 native bytes' not in old.stderr or output.exists():raise RuntimeError('Legacy native412 builder did not stop before staging under -O')
+    for version in ('2.2-test374-safe-startup','2.2-test374-font-fallback'):
+        if build.package_identity(version)!=('ReKHCoM-v'+version+'.apk',version):raise RuntimeError('Test identity mismatch')
+    try:build.package_identity('../overwrite')
+    except ValueError:pass
+    else:raise RuntimeError('Unsafe test identity accepted')
+    bad=subprocess.run([sys.executable,'-O',str(ROOT/'port/tools/build_android_safe_startup.py'),'--base-apk','placeholder','--gradle-seed','placeholder','--toolchain','placeholder','--game-source','placeholder','--out',str(output),'--version-name','../overwrite'],capture_output=True,text=True)
+    if bad.returncode!=2 or 'invalid choice' not in bad.stderr or output.exists():raise RuntimeError('Invalid package identity reached staging under -O')
     jdk=sorted((TOOLS/'android/java').glob('jdk-*/bin'))[-1]
     subprocess.run([str(jdk/'javac.exe'),'-d',directory,str(ROOT/'port/android/diagnostics/ReportProcessScope.java'),str(ROOT/'port/android/diagnostics/ReportProcessScopeTest.java')],check=True)
     subprocess.run([str(jdk/'java.exe'),'-cp',directory,'com.rekhcom.android.ReportProcessScopeTest'],check=True)

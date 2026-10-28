@@ -11,6 +11,12 @@ BASE_SHA='bd7999c234669ac88dfd5ec22ae3ccddd95db011eda0a1608fb8526819e19a4e'
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def require(ok,message):
     if not ok:raise ValueError(message)
+TEST_VERSIONS=('2.2-test374-safe-startup','2.2-test374-font-fallback')
+
+def package_identity(version):
+    require(version in TEST_VERSIONS,'Unsupported startup test identity')
+    return 'ReKHCoM-v'+version+'.apk',version
+
 def safe_manifest(text,template):
     require('SDL_ENV.' not in text,'Autoplay fixture not allowed')
     ET.register_namespace('android',NS[1:-1]);root=ET.fromstring(text);app=root.find('application')
@@ -43,7 +49,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('base-apk','gradle-seed','toolchain','out'):parser.add_argument('--'+name,type=Path,required=True)
     parser.add_argument('--game-source',required=True)
+    parser.add_argument('--version-name',choices=TEST_VERSIONS,default=TEST_VERSIONS[0])
     args=parser.parse_args();out=args.out.resolve();tools=args.toolchain.resolve();sdk=tools/'sdk'
+    filename,version=package_identity(args.version_name)
     require(not out.exists(),'Use a new output folder; preserve prior evidence')
     require(sha(args.base_apk)==BASE_SHA,'Unexpected public asset baseline')
     dirty=subprocess.check_output(['git','-C',str(ROOT),'status','--porcelain'],text=True).strip()
@@ -90,12 +98,12 @@ android {
  namespace 'com.rekhcom.android'
  compileSdk 35
  buildToolsVersion '35.0.0'
- defaultConfig { applicationId 'com.rekhcom.android'; minSdk 21; targetSdk 35; versionCode 102020099; versionName '2.2-test374-safe-startup' }
+ defaultConfig { applicationId 'com.rekhcom.android'; minSdk 21; targetSdk 35; versionCode 102020099; versionName '@@VERSION@@' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
  buildTypes { debug { debuggable true } }
  packaging { jniLibs { useLegacyPackaging true; keepDebugSymbols += ['**/*.so'] } }
 }
-""")
+""".replace('@@VERSION@@',version))
     temporary=out/'tmp';temporary.mkdir()
     # Invoke the existing distribution itself: --offline does not stop Gradle's
     # wrapper from downloading its bootstrap distribution when that is missing.
@@ -117,10 +125,10 @@ android {
     signature=subprocess.check_output([str(bt/'apksigner.bat'),'verify','--verbose','--print-certs',str(apk)],env=env,text=True)
     badging=subprocess.check_output([str(bt/'aapt.exe'),'dump','badging',str(apk)],env=env,text=True)
     require(CERT in signature,'Unexpected signing certificate')
-    require("name='com.rekhcom.android' versionCode='102020099' versionName='2.2-test374-safe-startup'" in badging,'Wrong install identity')
+    require(("name='com.rekhcom.android' versionCode='102020099' versionName='"+version+"'") in badging,'Wrong install identity')
     require('com.rekhcom.android.StartupDiagnosticActivity' in badging,'Wrong entry')
-    target=out/'ReKHCoM-v2.2-test374-safe-startup.apk';shutil.copy2(apk,target)
-    receipt=dict(source=revision,game_native_source=args.game_source,assets_baseline_apk_sha256=BASE_SHA,assets=assets,native_input_sha256=inputs,packaged_library_sha256=libraries,apk=str(target),sha256=sha(target),application_id='com.rekhcom.android',version_code=102020099,certificate_sha256=CERT,native_count=len(libraries),offline=True,runtime_tested=False,install_tested=False,limits='Java-first path is a tentative launcher bypass; no Moto/S22 causal fix or gameplay stability claim. Native current outputs must be tied to separate compile receipts; no mtime proof.')
+    target=out/filename;shutil.copy2(apk,target)
+    receipt=dict(source=revision,game_native_source=args.game_source,assets_baseline_apk_sha256=BASE_SHA,assets=assets,native_input_sha256=inputs,packaged_library_sha256=libraries,apk=str(target),sha256=sha(target),application_id='com.rekhcom.android',version_code=102020099,version_name=version,certificate_sha256=CERT,native_count=len(libraries),offline=True,runtime_tested=False,install_tested=False,limits='Java-first path is a tentative launcher bypass; no Moto/S22 causal fix or gameplay stability claim. Native current outputs must be tied to separate compile receipts; no mtime proof.')
     (out/'BUILD-RECEIPT.json').write_text(json.dumps(receipt,indent=2));(out/'signature.txt').write_text(signature);(out/'badging.txt').write_text(badging)
     print(json.dumps({key:receipt[key] for key in ('source','apk','sha256','native_count','install_tested','runtime_tested')}))
 if __name__=='__main__':main()
