@@ -6701,12 +6701,12 @@
     "optiport-v22-profiling": {
       "id": "optiport-v22-profiling",
       "piece": "OptiPort 2.2: profiling puerta/carga y previews, igual calidad (PLAN_V22)",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v22-profile-execution",
       "created_at": "2026-10-27T17:32:21.478708+00:00",
-      "updated_at": "2026-10-28T17:51:03.625097+00:00",
-      "branch": "perf/optiport-v22-profiling",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/379",
+      "updated_at": "2026-10-28T18:14:58.854417+00:00",
+      "branch": "perf/optiport-current-baseline",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/453",
       "approval": null,
       "reference": "PLAN_V22.md",
       "evidence": [
@@ -6729,6 +6729,11 @@
           "at": "2026-10-27T18:18:46.039238+00:00",
           "owner": "codex-profile-integration",
           "detail": "released: PR379 diagnostic child v22-stutter-attribution-probes; broad parent remains pending cold/warm matched32/64 and actual performance change."
+        },
+        {
+          "at": "2026-10-28T18:14:58.854417+00:00",
+          "owner": "codex-v22-profile-execution",
+          "detail": "Tooling child c7c6bc226aa1819bf76f2cf08b702d85ee7abd90: 11 CPU report controls PASS. EU32/64 normal build source07d5 PASS; receipts in pruebas/optiport-full-pass-20261028/windows-current-build-attempt3. Inputs/quality pilots pending, no timed results or parent completion claimed."
         }
       ],
       "claimed_at": "2026-10-28T17:51:03.625097+00:00"
@@ -9797,7 +9802,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:14:10.021889+00:00",
+  "updated_at": "2026-10-28T18:14:58.854417+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
