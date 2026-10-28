@@ -43,7 +43,10 @@ public final class StartupDiagnosticActivity extends Activity {
                 java.lang.reflect.Method prepare=gate.getDeclaredMethod("prepare",Context.class,String.class);prepare.setAccessible(true);prepare.invoke(null,this,mode);
             }catch(Exception e){Toast.makeText(this,t("Perfil rechazado; launcher no abierto.","Profile rejected; launcher was not opened."),Toast.LENGTH_LONG).show();return;}
         }
-        startActivity(intent);
+        try{startActivity(intent);}catch(Exception e){
+            if(compat)try{Class<?> gate=Class.forName("com.rekhcom.android.StartupProfileSession");java.lang.reflect.Method restore=gate.getDeclaredMethod("restore",Context.class);restore.setAccessible(true);restore.invoke(null,this);}catch(Exception ignored){}
+            Toast.makeText(this,t("No se pudo abrir el launcher.","Could not open launcher."),Toast.LENGTH_LONG).show();
+        }
     }
     private Button button(LinearLayout parent,String label,Runnable action){Button b=new Button(this);b.setText(label);b.setOnClickListener(v->action.run());parent.addView(b);return b;}
     private void share(){
