@@ -9848,7 +9848,7 @@
       "status": "pr_abierto",
       "owner": "codex-optiport-async",
       "created_at": "2026-10-28T18:26:20.621968+00:00",
-      "updated_at": "2026-10-28T18:28:39.192572+00:00",
+      "updated_at": "2026-10-28T18:57:58.187718+00:00",
       "branch": "perf/optiport-async-observer",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/454",
       "approval": "User authorized full OptiPort pass; coordinator explicitly approved scoped readiness/underlay child and CPU/functional QA, timing lease separate",
@@ -9858,6 +9858,11 @@
           "at": "2026-10-28T18:28:39.192572+00:00",
           "owner": "codex-optiport-async",
           "detail": "Draft PR454 head042162012f88daa65c791d883f36addac174b60a: actual draw/bridge upload RED GREEN,10lifecycle+2mutants, observer-off/cap and underlay negative controls PASS; private32/64 candidate build PASS borrowing closed07d5 seed objects read-only, seed hashes unchanged. Prior e745 functional48positivepixels identical and14case outputs preserved; final042 affected GPU checks pending lease. Parent optiport-v22-async released pending with cold64/measurement references; this child does not close area9. pruebas/optiport-v22-async/"
+        },
+        {
+          "at": "2026-10-28T18:57:58.187718+00:00",
+          "owner": "codex-optiport-async",
+          "detail": "READY exacthead661221f2dc2ed4710bd0a19aee8c4c74b23eed7f; doc-only last commit preserves4productblobs1af8a385f54e0a74966bee83c300d617e2ddc7a0. pruebas/optiport-v22-async/FINAL-VALIDATION.json and READY-HEAD.json PASS.19completedexecutions:14authoritativecases+5supersededobserverruns preserved;100withinarchD3D11positiveframes pixel-identical including fade+letterbox; actualhost first/B upload rejection withcurrentunderlay visible, ENJPactualChange serial+generation, Bpurple66726/oldblue0 thenretry; native32cold GBA->realMF->HDready whileopen; pendingcancel rejectslateacceptance, finalshutdownreaps. CPU10lifecycle+2mutants, actualdraw/bridge REDGREEN, observeroff/cap/underlay mutantsPASS. Processcount0/noVM. No performancegain/physicalDeck/soak/crossarchconfigurationparity claim. Parentarea9PENDING; cold64PRV1 deferreduntil nextdelivery perroot. Previous pr_abierto->en_revision update correctly rejected by queue transition, state unchanged; retained pr_abierto READY."
         }
       ],
       "claimed_at": "2026-10-28T18:27:24.114002+00:00"
@@ -9918,7 +9923,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:49:11.968659+00:00",
+  "updated_at": "2026-10-28T18:57:58.187718+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
