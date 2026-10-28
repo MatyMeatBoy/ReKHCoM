@@ -3,9 +3,12 @@
 ## v2.2 — release preparation
 
 - Carry forward the prebuild's stability, card/HUD corrections and audio continuity fixes; keep original game timing and supported 32/64-bit paths.
-- Keep native sprite rendering until both required HD textures are usable, and retain native fallback on failed uploads.
+- Keep native sprite rendering until the textures required for the current draw are usable, and retain native fallback on failed uploads.
 - Correct the synthesis requirement's overlapping HD parts and cover world-card contours at the complete white-fade endpoint without changing intermediate fades.
 - Distinguish Android ROM ZIPs from HD packs, verify clean ROMs before installation and preserve previous files on failed imports.
+- Preserve the GBA zero-divisor remainder when choosing a random enemy card, including the original random-number progression.
+- Accept the observed short CD alignment tail after complete MP4 boxes, while bounding native box traversal and rejecting truncated, oversized or wraparound box lengths.
+- Hide the desktop game cursor after four seconds of inactivity over the focused window, restoring it on mouse activity, focus loss or window exit.
 - Identify source and Windows executable metadata as v2.2 (2.2.0.0). Android retains its existing application/signing configuration and derives a higher stable version code from this version.
 - This entry prepares new builds; it does not announce published packages or additional physical-device confirmation. Existing v2.1 and v2.2-pre3 packages remain unchanged.
 
