@@ -9721,10 +9721,10 @@
     "linux-test439441-delivery": {
       "id": "linux-test439441-delivery",
       "piece": "Build, validate and publish immutable Linux test439441 with unchanged media quality, latest32/64 EUUSJP cores, core assets and verified title fallback; deliver to reporter before OptiPort runtime closure.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux-delivery",
       "created_at": "2026-10-28T16:49:11.505952+00:00",
-      "updated_at": "2026-10-28T17:54:50.183600+00:00",
+      "updated_at": "2026-10-28T17:57:14.850237+00:00",
       "branch": "docs/linux-test439441-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/450",
       "approval": "User authorized public test and full OptiPort continuation; deck_video_421 independently APPROVED exact516eeaf3e65abda425667eaa83370a8e36e9bf08 after reviewing3docs/source/QA/publication.",
@@ -9739,9 +9739,15 @@
           "at": "2026-10-28T17:54:50.183600+00:00",
           "owner": "codex-linux-delivery",
           "detail": "PUBLIC test439441 source07d5 TARa0db;3remoteassets/tag/Latest2.2 and4396476426150/4416476427558 replies verified. Root seven raw-case checks PASS; physicalawaitingreporter;720pdeferred. PR450 documentationonly."
+        },
+        {
+          "at": "2026-10-28T17:57:14.850237+00:00",
+          "owner": "codex-linux-delivery",
+          "detail": "Independent exact-head worker review approved3docs; root independently reconciled7 raw TAR consumer cases,60movieframes/nonzeroPCM/Event, publisher9negativeOptimized cases, public3assets/tag/Latest and439441reporter replies. No runtime change;720p deferred;physicalfeedback remains open.; merged 9b5bf90a237c89d3596b3653b986fbb20617e32b"
         }
       ],
-      "claimed_at": "2026-10-28T16:49:20.503208+00:00"
+      "claimed_at": "2026-10-28T16:49:20.503208+00:00",
+      "completed_at": "2026-10-28T17:57:14.850237+00:00"
     },
     "issue449-movie-master-volume": {
       "id": "issue449-movie-master-volume",
@@ -9764,7 +9770,7 @@
     "created_at": "2026-10-28T17:56:56.497887+00:00",
     "updated_at": "2026-10-28T17:56:56.497887+00:00"
   },
-  "updated_at": "2026-10-28T17:56:56.498962+00:00",
+  "updated_at": "2026-10-28T17:57:14.851237+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
