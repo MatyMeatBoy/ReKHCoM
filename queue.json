@@ -8728,10 +8728,10 @@
     "issue421-linux64-movie-parity": {
       "id": "issue421-linux64-movie-parity",
       "piece": "Issue421 Linux64 HD movie timing/pause/FPS parity: reproduce bounded production helpers, fix confirmed divergence before v2.2; no physical Deck claim",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:55:51.557831+00:00",
-      "updated_at": "2026-10-28T03:59:15.655818+00:00",
+      "updated_at": "2026-10-28T04:00:53.430038+00:00",
       "branch": "fix/linux64-movie-parity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/427",
       "approval": "User: fix issues before v2.2 across all platforms, workers authorized",
@@ -8741,9 +8741,15 @@
           "at": "2026-10-28T03:59:15.655818+00:00",
           "owner": "codex-deck-video421",
           "detail": "Exacthead207a2332d; observed RED production consumer2024waits for1080p/4KiB, GREEN17 consumercases and prior productionclockPASS. POSIX realproducer harness emitted pruebas/issue421-linux64/real_pipe.c but NOT executed. Only sleep-on-positive-fragment fix; audio/events unchanged. Pause/FPS separate pending. No physicalDeckclaim."
+        },
+        {
+          "at": "2026-10-28T04:00:53.430038+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "Root reviewed actual partial-read branch and17 CPU consumer cases independentlyPASS; test buffer UB corrected to real allocation and runnerportable. Positive fragments no imposed sleep; EAGAIN/event/audio/EOF controls preserved. Native POSIX producer VM test and exact Linux host build/runtime still required; no Deck confirmation claimed.; merged c73db9193b9ccdffa36478af972381fd04fd37e3"
         }
       ],
-      "claimed_at": "2026-10-28T03:55:56.849103+00:00"
+      "claimed_at": "2026-10-28T03:55:56.849103+00:00",
+      "completed_at": "2026-10-28T04:00:53.430038+00:00"
     },
     "issue421-linux64-movie-controls": {
       "id": "issue421-linux64-movie-controls",
@@ -8766,7 +8772,7 @@
     "created_at": "2026-10-28T04:00:43.764411+00:00",
     "updated_at": "2026-10-28T04:00:43.764411+00:00"
   },
-  "updated_at": "2026-10-28T04:00:43.778991+00:00",
+  "updated_at": "2026-10-28T04:00:53.439796+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
