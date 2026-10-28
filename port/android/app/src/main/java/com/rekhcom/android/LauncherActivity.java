@@ -3,7 +3,6 @@ package com.rekhcom.android;
 import android.content.Intent;
 import android.net.Uri;
 import java.io.*;
-import java.security.MessageDigest;
 import java.util.Locale;
 import org.libsdl.app.SDLActivity;
 
@@ -21,9 +20,6 @@ public class LauncherActivity extends SDLActivity {
     @Override protected void onPause(){lifecycle("onPause");super.onPause();}
     @Override protected void onStop(){lifecycle("onStop");super.onStop();}
     @Override protected void onDestroy(){lifecycle("onDestroy");super.onDestroy();}
-    private static final String[] CODES={"B8CP","B8CE","B8CJ"};
-    private static final String[] HASHES={"8db73586cdb11b3795907edebf43228dbcd3e6b2",
-        "10729bd884f8fdca7a310b6d606c52e46657aa48","59ec0a0a4ccd1e6acb3bbd7bfb21d63988958cfa"};
     private static final int PICK_ROM=10,PICK_SAVE=20,PICK_EXPORT=30,PICK_HD=40;
     @Override protected String[] getLibraries(){return new String[]{"SDL3","launcher"};}
     @Override protected String[] getArguments(){return new String[0];}
@@ -74,43 +70,21 @@ public class LauncherActivity extends SDLActivity {
             }catch(Exception e){finish(t("No se pudo completar: ","Could not complete: ")+e.getMessage(),true);}
         },"launcher-copy").start();
     }
-    private String importHdPack(Uri uri)throws Exception{
-        File part=new File(getFilesDir(),"ReKHCoM-HD.zip.part"),pack=new File(getFilesDir(),"ReKHCoM-HD.zip");
-        try(InputStream in=getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(part)){
-            if(in==null)throw new IOException("Archivo no accesible");copy(in,out,Long.MAX_VALUE);out.getFD().sync();
-        }
-        if(pack.exists()&&!pack.delete()){part.delete();throw new IOException("No se pudo reemplazar el mod HD");}
-        if(!part.renameTo(pack)){part.delete();throw new IOException("No se pudo guardar el mod HD");}
-        return t("Mod HD copiado: se instala al abrir el juego.","HD mod copied: it installs when the game starts.");
-    }
-    private File rom(int index){return new File(getFilesDir(),"roms/"+CODES[index]+".gba");}
     private static void copy(InputStream in,OutputStream out,long limit)throws Exception{
         byte[] buf=new byte[65536];long count=0;int n;
         while((n=in.read(buf))!=-1){if(count+n>limit)throw new IOException("Archivo demasiado grande");out.write(buf,0,n);count+=n;}
     }
     private String importRom(Uri uri)throws Exception{
-        /* the HD mod made on the PC as one file (ReKHCoM-HD.zip, port/portable/hd_pack.c): copied whole to files/,
-           the game unpacks it into files/hd on its next start */
-        try(InputStream peek=getContentResolver().openInputStream(uri)){
-            byte[] head=new byte[4];
-            if(peek!=null&&peek.read(head)==4&&head[0]=='P'&&head[1]=='K'&&head[2]==3&&head[3]==4)return importHdPack(uri);
-        }
-        File dir=new File(getFilesDir(),"roms");if(!dir.exists()&&!dir.mkdirs())throw new IOException("No hay carpeta de ROM");
-        File temp=File.createTempFile("import-",".tmp",dir);
-        try {
-            try(InputStream in=getContentResolver().openInputStream(uri);FileOutputStream out=new FileOutputStream(temp)){
-                if(in==null)throw new IOException("Archivo no accesible");copy(in,out,32L*1024*1024);out.getFD().sync();
-            }
-            if(temp.length()!=32L*1024*1024)throw new IOException("Se necesita un volcado GBA de 32 MiB");
-            MessageDigest digest=MessageDigest.getInstance("SHA-1");byte[] block=new byte[65536];
-            try(FileInputStream in=new FileInputStream(temp)){int n;while((n=in.read(block))!=-1)digest.update(block,0,n);}
-            StringBuilder hex=new StringBuilder();for(byte b:digest.digest())hex.append(String.format(Locale.ROOT,"%02x",b&255));
-            for(int n=0;n<HASHES.length;n++)if(HASHES[n].equals(hex.toString())){
-                if(!temp.renameTo(rom(n)))throw new IOException("No se pudo instalar la ROM");
-                return t("ROM instalada y verificada: ","ROM installed and verified: ")+CODES[n];
-            }
-            throw new IOException("ROM no reconocida. Usa tu volcado EU, US o JP admitido.");
-        }finally{if(temp.exists())temp.delete();}
+        /* ROM ZIPs and HD packs share PK magic; inspect the bounded inventory
+           before choosing a destination. Os.rename replaces atomically on the
+           app's filesystem without first deleting a previous ROM or HD pack. */
+        RomImport.Result result=RomImport.install(getContentResolver().openInputStream(uri),getFilesDir(),(pending,target)->{
+            try{android.system.Os.rename(pending.getAbsolutePath(),target.getAbsolutePath());}
+            catch(android.system.ErrnoException e){throw new IOException("Could not install the selected file",e);}
+        });
+        return result.kind==RomImport.Kind.HD_PACK?
+            t("Mod HD copiado: se instala al abrir el juego.","HD mod copied: it installs when the game starts."):
+            t("ROM instalada y verificada: ","ROM installed and verified: ")+result.code;
     }
     private void importSave(Uri uri,int selectedSaveRegion,int selectedBank)throws Exception{
         File temp=File.createTempFile("save-",".tmp",getFilesDir());

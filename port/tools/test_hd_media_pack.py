@@ -26,6 +26,9 @@ def main():
                         '-o', str(exe)], check=True)
         data = root / 'data'
         data.mkdir()
+        save = data / 'kh_com.sav'
+        save.write_bytes(b'owned fixture save must survive failed HD activation')
+        previous_save = save.read_bytes()
         def package(generation, marker, incomplete=False, mixed=False):
             movie = struct.pack('>I4sI4s', 8, b'moov', 16, b'mdat') + marker * 8
             records = ['movies/ROP.mp4 24']
@@ -58,6 +61,7 @@ def main():
         package('g-bad', b'B', incomplete=True)
         assert run() == '-1', 'incomplete media transfer must report failure, not permit deleting its pack'
         assert active.read_bytes() == old, 'incomplete transferred generation replaced old active'
+        assert save.read_bytes() == previous_save
         assert 'zip can be deleted now' not in last_log and 'keep ' in last_log
         new_size = package('g-new', b'N')
         assert old_size == new_size, 'fixture must prove same-size package replacement'
@@ -72,6 +76,7 @@ def main():
         package('g-partial', b'P', incomplete=True, mixed=True)
         assert run() == '-1', 'incomplete mixed transfer must not report success'
         assert active.read_bytes() == before_partial, 'partial mixed restore must preserve active movies AND scenes'
+        assert save.read_bytes() == previous_save
         assert 'zip can be deleted now' not in last_log and 'keep ' in last_log
         assert (data / 'hd/media/en/g-both/scenes/zz_event_001.mp4').exists()
     print('PASS production pack: deferred activation, incomplete preservation, strict paths and same-size update')
