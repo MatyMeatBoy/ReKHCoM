@@ -10339,10 +10339,10 @@
     "linux461-keyboard-without-controller": {
       "id": "linux461-keyboard-without-controller",
       "piece": "Issue461 Linux64 keyboard disappears without physical controller: metadata filters legacy keyboard-to-pad bridge; reproduce actual host/shim source and restore keyboard events",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux461",
       "created_at": "2026-10-28T21:30:45.363538+00:00",
-      "updated_at": "2026-10-28T21:53:43.062935+00:00",
+      "updated_at": "2026-10-28T21:54:15.424384+00:00",
       "branch": "fix/v23-linux-startup",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/470",
       "approval": "Root integrator: human-authorized code review; 87e4af95ca1b0cf62b534092adf0ce7a0e8f3507",
@@ -10357,9 +10357,15 @@
           "at": "2026-10-28T21:53:43.062935+00:00",
           "owner": "codex-linux461",
           "detail": "Root reviewed actual host negotiation and bounded keyboard/focus queue. Independent 4 actual host-shim-game combinations i686/x64 with/without physical pad PASS plus metadata regressions PASS. Physical Bazzite pending."
+        },
+        {
+          "at": "2026-10-28T21:54:15.424384+00:00",
+          "owner": "codex-linux461",
+          "detail": "Root reviewed actual host negotiation and bounded keyboard/focus queue. Independent 4 actual host-shim-game combinations i686/x64 with/without physical pad PASS plus metadata regressions PASS. Physical Bazzite pending.; merged 9c9a5138e57dee902771e06728d762ed8eb5af55"
         }
       ],
-      "claimed_at": "2026-10-28T21:30:54.380753+00:00"
+      "claimed_at": "2026-10-28T21:30:54.380753+00:00",
+      "completed_at": "2026-10-28T21:54:15.424384+00:00"
     },
     "optiport-installed-embedded-v225": {
       "id": "optiport-installed-embedded-v225",
@@ -10410,7 +10416,7 @@
     "created_at": "2026-10-28T21:53:49.039879+00:00",
     "updated_at": "2026-10-28T21:53:49.039879+00:00"
   },
-  "updated_at": "2026-10-28T21:54:06.191665+00:00",
+  "updated_at": "2026-10-28T21:54:15.424384+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
