@@ -376,5 +376,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v225-stable-version | Version 2.2.5 source identity and platform packaging preflight | integrado | codex-v225-version | https://github.com/MatyMeatBoy/ReKHCoM/pull/472 | Root integrator: human-authorized code review; 8be810c8cd1b79d4861f11d2bbc4ede2f7d0140c | 2026-10-28T21:59:20.581940+00:00 |
 | v225-release-notes | 2.2.5 release notes and source freeze ledger | integrado | codex-v225-notes | https://github.com/MatyMeatBoy/ReKHCoM/pull/476 | Root integrator: human-authorized code review; ddb5bb5292eca0776b72ad4f96940fcffe66f010 | 2026-10-28T22:07:10.931162+00:00 |
 | v225-android-web-delivery | Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes | en_curso | codex-v225-android-web | — | user | 2026-10-28T22:08:16.399020+00:00 |
+| v225-linux-final-build | Frozen2.2.5 Linux desktop32/64 and Anbernic all regions ownD caches, exact package consumer QA and provenance | pendiente | — | — | Root freeze f28b884ab2409753cea0cfae37784d5a3ed90f31; human authorizes2.2.5allplatformrelease; root owns publication/VMlease coordination | 2026-10-28T22:08:41.673467+00:00 |
 
 Integrador: libre
