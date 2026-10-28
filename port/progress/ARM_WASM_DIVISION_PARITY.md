@@ -56,9 +56,19 @@ game-only scope, unchanged float/i64/vector operations and visible rejection of
 unsupported scalar forms.
 
 The real fixed-address/callback/Asyncify Wasm ABI probe also passes through the
-new game IR pipeline, including zero quotient and remainder checks. A complete
-EU build is being validated separately; CPU probes do not certify browser
-startup or a player-flow regression.
+new game IR pipeline, including zero quotient and remainder checks. Two operand
+evaluation controls confirm a value producer runs exactly once for both zero
+and ordinary divisors; the lowering does not duplicate an RNG-bearing operand.
+Separate baseline/new caller controls retain ordinary branch and remainder
+results while replacing the demonstrated zero/overflow traps with cartridge
+results.
+
+The complete EU build passed all 336 translation units and link/wasmopt. Across
+269 game units, 146 contained 1,589 frontend i32 sites: 617 signed quotients,
+839 signed remainders, 67 unsigned quotients and 66 unsigned remainders. These
+are sites before O2; constant cases can disappear afterward. The exact resulting
+Wasm module and JS API validation passed. Browser startup and player-flow
+regressions remain unverified by these CPU/compile checks.
 
 ## Limits and next targets
 
