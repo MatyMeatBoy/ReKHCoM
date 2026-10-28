@@ -75,6 +75,15 @@ def elf_symbols(source, out):
     out.write_text(text)
 
 
+def archive_guest(archive, objects):
+    """Keep large regional object lists below Windows' process command limit."""
+    response = archive.with_suffix('.objects.rsp')
+    response.write_text('\n'.join('"' + Path(obj).as_posix().replace('"', '\\"') + '"'
+                                  for obj in objects) + '\n', encoding='utf-8')
+    archive.unlink(missing_ok=True)
+    build_switch.run([AR, 'rcs', archive, '@' + str(response)])
+
+
 def build_guest(region, jobs):
     upper = region.upper()
     pc = ROOT / 'build' / region / 'pc'
@@ -106,8 +115,7 @@ def build_guest(region, jobs):
         units.append((src, out / 'asm' / (src.stem + '.o'), [*TARGET, '-c']))
     build_switch.compile_all(jobs, units)
     archive = BUILD / f'guest-{region}.a'
-    archive.unlink(missing_ok=True)
-    build_switch.run([AR, 'rcs', archive, *[u[1] for u in units]])
+    archive_guest(archive, [u[1] for u in units])
     print(f'guest {region}: {archive} ({archive.stat().st_size} bytes)')
     return archive
 
