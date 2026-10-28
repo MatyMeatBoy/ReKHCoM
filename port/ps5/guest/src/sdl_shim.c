@@ -223,11 +223,23 @@ struct SDL_Renderer {
     SDL_Texture* target;
     bool outputBlocked;
 };
+#include "bridge_output.h"
+static int OutputCapability(int capability) {
+    return h_thread(BRIDGE_OUTPUT_PROBE, 0, 0, 0, 0) == BRIDGE_OUTPUT_MAGIC &&
+        (!capability || (h_thread(BRIDGE_OUTPUT_CAPS, 0, 0, 0, 0) & capability) == capability);
+}
 static SDL_Window sWindow;
 static SDL_Renderer sRenderer;
 static SDL_Window* sWindows[2] = { &sWindow, NULL };
 
-SDL_Window* SDL_CreateWindow(const char* t, int w, int h, Uint64 f) { (void)t; (void)f; sWindow.w = w; sWindow.h = h; return &sWindow; }
+SDL_Window* SDL_CreateWindow(const char* t, int w, int h, Uint64 f) {
+    (void)t; (void)f;
+    sWindow.w = w; sWindow.h = h;
+    /* Fixed-size/legacy hosts still own a usable window. The explicit setter
+     * reports unsupported rather than pretending a resize was applied. */
+    if (OutputCapability(BRIDGE_OUTPUT_WINDOW_CAP)) SDL_SetWindowSize(&sWindow, w, h);
+    return &sWindow;
+}
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* w, const char* n) {
     (void)n;
@@ -272,7 +284,10 @@ SDL_Window** SDL_GetWindows(int* count) {
     if (count) *count = list ? 1 : 0;
     return list;
 }
-bool SDL_SyncWindow(SDL_Window* w) { (void)w; return true; }
+bool SDL_SyncWindow(SDL_Window* w) {
+    return w && OutputCapability(BRIDGE_OUTPUT_WINDOW_CAP) &&
+        h_thread(BRIDGE_OUTPUT_WINDOW_SYNC, 0, 0, 0, 0) != 0;
+}
 bool SDL_SetWindowFullscreen(SDL_Window* w, bool f) {
     (void)w;
 #ifdef PORT_LINUX64_GUEST
@@ -285,9 +300,23 @@ bool SDL_SetWindowFullscreen(SDL_Window* w, bool f) {
 }
 bool SDL_SetWindowFullscreenMode(SDL_Window* w, const SDL_DisplayMode* m) { (void)w; (void)m; return true; }
 const SDL_DisplayMode* SDL_GetWindowFullscreenMode(SDL_Window* w) { (void)w; return NULL; }
-bool SDL_SetWindowSize(SDL_Window* w, int a, int b) { (void)w; (void)a; (void)b; return true; }
+bool SDL_SetWindowSize(SDL_Window* w, int a, int b) {
+    if (!w || a <= 0 || b <= 0 || !OutputCapability(BRIDGE_OUTPUT_WINDOW_CAP) ||
+        !h_thread(BRIDGE_OUTPUT_WINDOW_SET, (uint32_t)a, (uint32_t)b, 0, 0)) return false;
+    w->w = a; w->h = b;
+    return true;
+}
 bool SDL_SetWindowMinimumSize(SDL_Window* w, int a, int b) { (void)w; (void)a; (void)b; return true; }
-bool SDL_GetWindowSizeInPixels(SDL_Window* w, int* a, int* b) { (void)w; h_gfx_size(a, b); return true; }
+bool SDL_GetWindowSizeInPixels(SDL_Window* w, int* a, int* b) {
+    if (!w || !a || !b) return false;
+    if (OutputCapability(0)) {
+        int width = h_thread(BRIDGE_OUTPUT_PIXEL_WIDTH, 0, 0, 0, 0);
+        int height = h_thread(BRIDGE_OUTPUT_PIXEL_HEIGHT, 0, 0, 0, 0);
+        if (width <= 0 || height <= 0) return false;
+        *a = width; *b = height;
+    } else h_gfx_size(a, b); /* Legacy hosts expose their existing output size. */
+    return true;
+}
 Uint64 SDL_GetWindowFlags(SDL_Window* w) { (void)w; return SDL_WINDOW_FULLSCREEN; }
 SDL_DisplayID SDL_GetDisplayForWindow(SDL_Window* w) { (void)w; return 1; }
 SDL_DisplayMode** SDL_GetFullscreenDisplayModes(SDL_DisplayID d, int* count) { (void)d; if (count) *count = 0; return NULL; }
@@ -304,8 +333,19 @@ bool SDL_ShowSimpleMessageBox(Uint32 f, const char* t, const char* m, SDL_Window
 
 /* ---- renderer ---- */
 
-bool SDL_SetRenderVSync(SDL_Renderer* r, int v) { r->vsync = v; return true; }
-bool SDL_GetRenderVSync(SDL_Renderer* r, int* v) { *v = r->vsync; return true; }
+bool SDL_SetRenderVSync(SDL_Renderer* r, int v) {
+    if (!r || v < -1 || !OutputCapability(BRIDGE_OUTPUT_VSYNC_CAP) ||
+        !h_thread(BRIDGE_OUTPUT_VSYNC_SET, (uint32_t)v, 0, 0, 0)) return false;
+    r->vsync = v;
+    return true;
+}
+bool SDL_GetRenderVSync(SDL_Renderer* r, int* v) {
+    if (!r || !v || !OutputCapability(BRIDGE_OUTPUT_VSYNC_CAP)) return false;
+    int actual = h_thread(BRIDGE_OUTPUT_VSYNC_GET, 0, 0, 0, 0);
+    if (actual <= 0) return false;
+    *v = actual - 2;
+    return true;
+}
 bool SDL_GetCurrentRenderOutputSize(SDL_Renderer* r, int* w, int* h) {
     (void)r;
     h_gfx_size(w, h);

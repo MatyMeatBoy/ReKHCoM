@@ -396,8 +396,12 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #define H_thread H_thread_legacy
 #include "thread_host.h" /* the image's other threads: none here (bridge entry thread answers one core) */
 #undef H_thread
+#define HOST_OUTPUT_WINDOW 0 /* Android owns the fixed fullscreen surface. */
+#include "host_output_sdl.h"
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
-    int result = HostAudioCommand(op, a, b, c, d);
+    int result = HostOutputCommand(op, a, b, c, d);
+    if (result != -2) return result;
+    result = HostAudioCommand(op, a, b, c, d);
     if (result != -2) return result;
     result = HostGpuCommand(op, a, b, c, d);
     return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
