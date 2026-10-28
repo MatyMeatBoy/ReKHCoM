@@ -9768,10 +9768,10 @@
     "issue449-movie-master-volume": {
       "id": "issue449-movie-master-volume",
       "piece": "Movie master volume times fade in native32/64 and Android routes, negotiated mixed-host movie gain without PCM clock changes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-movie-master-volume",
       "created_at": "2026-10-28T17:51:34.965406+00:00",
-      "updated_at": "2026-10-28T18:34:36.834600+00:00",
+      "updated_at": "2026-10-28T18:40:19.125401+00:00",
       "branch": "fix/movie-master-volume",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/452",
       "approval": "User authorized all fixes/full OptiPort; root independently reviewed exact401b2532cfe6ea914eda423d1a0d7bb0d9b435c6,7productionblobs equal6df runtime;166CPUchecks rerun isolated PASS; raw32/64baseline signal→fixedsilence while60frames/Event verified. Fivebackend/ABI/cleanup review has no blocker. Basic123/copy separate;physical unverified.",
@@ -9791,9 +9791,15 @@
           "at": "2026-10-28T18:34:36.834600+00:00",
           "owner": "codex-movie-master-volume",
           "detail": "WINDOWS-VERIFIED.json12game+3MFcontrols/59checks; ROOT-INDEPENDENT-VERIFICATION.json4rawPCMcases+166compiledchecks;8TU+Win64MFhostlink. Publictest439441 unchanged;masterfixnotyetpublished. Exacthead401b onlydocs/testworkarg beyondruntime6df; noArea6allhardwareclaim."
+        },
+        {
+          "at": "2026-10-28T18:40:19.125401+00:00",
+          "owner": "codex-movie-master-volume",
+          "detail": "Independent root166compiledchecks PASS; actualbaseline32/64 master0signal→fixedzeros while60decodedframes/Event. Reviewed fivebackends/one-shotMOV1/mixedABI/cleanup;8TU+hostlink and12game/3MFcontrols retained. Productionblobs identicalruntime6df, laterheadonlydocs/workarg. Basic123/copy separate; no physicalAndroid/Deck claim; publictests unchanged.; merged 385bfaa6e75614246068ee44afcb01fed89939d0"
         }
       ],
-      "claimed_at": "2026-10-28T17:54:22.896767+00:00"
+      "claimed_at": "2026-10-28T17:54:22.896767+00:00",
+      "completed_at": "2026-10-28T18:40:19.125401+00:00"
     },
     "optiport-embedded-snapshot-refresh": {
       "id": "optiport-embedded-snapshot-refresh",
@@ -9868,7 +9874,7 @@
     "created_at": "2026-10-28T18:40:09.936069+00:00",
     "updated_at": "2026-10-28T18:40:09.936069+00:00"
   },
-  "updated_at": "2026-10-28T18:40:09.937209+00:00",
+  "updated_at": "2026-10-28T18:40:19.125401+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
