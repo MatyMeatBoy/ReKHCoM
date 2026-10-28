@@ -323,4 +323,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | vita-windows-archive-response | Fix Vita llvm-ar Windows command length using response file; preserve all objects and source behavior | integrado | codex-vita-archive | https://github.com/MatyMeatBoy/ReKHCoM/pull/429 | User requests v2.2allplatforms; actual Vita build hit WinError206; root delegates fixes with CAS/PR | 2026-10-28T04:47:17.295979+00:00 |
 | v22-vita-host-build | Link/package Vita v2.2 VPK from verified5ccb ARMguests; offline512MiB snapshot1CPU, own768MiBjob | en_curso | codex-console-vita-host | — | Root authorizes Vita host exclusive window after421VM47532PASS; preserveoriginal16GiBVM/SDK/releases, no Switch/PS5 until coordination | 2026-10-28T04:54:54.823028+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T04:58:13.795035+00:00)
+Integrador: libre
