@@ -10724,20 +10724,26 @@
     "web-bg-world-call-abi": {
       "id": "web-bg-world-call-abi",
       "piece": "Declare shared PortSetBgWorld before four Parasite calls; real Wasm signature trap regression, no gameplay/argument changes; root merges then rebuild affectedWebTU",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-web-world-abi",
       "created_at": "2026-10-28T22:51:38.066823+00:00",
-      "updated_at": "2026-10-28T22:52:47.258766+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T22:57:12.232873+00:00",
+      "branch": "fix/web-bg-world-call-abi",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/478",
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T22:57:12.232873+00:00",
+          "owner": "codex-web-world-abi",
+          "detail": "2a89b517a2a7b2825f2d1a8ab38f322891fad20b; directSDKWasm actualsetter+4callscallback/origin/reset oldtrap/fatalreject→candidateeffectPASS. FullTUWindows32actualmno-ms-bitfields andarm64_32guestPASS. Private D:/01Claude/ReKHCoM-build/qa-runtime/v225-android-web/{bg-world-abi-green,bg-world-full-tu}/RESULTS.json. Nativeclosedf28notclaimedsourceequivalent; Webnewlinkfatalall3pending."
+        }
+      ],
       "claimed_at": "2026-10-28T22:52:47.258766+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:52:47.258766+00:00",
+  "updated_at": "2026-10-28T22:57:12.232873+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
