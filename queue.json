@@ -10088,16 +10088,21 @@
       "status": "pr_abierto",
       "owner": "codex-font-atlas",
       "created_at": "2026-10-28T20:16:51.417160+00:00",
-      "updated_at": "2026-10-28T20:45:21.879838+00:00",
+      "updated_at": "2026-10-28T20:49:34.697947+00:00",
       "branch": "fix/moto-font-atlas-fallback",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/466",
-      "approval": "User asks fix crashes and startup for all; new real374 tombstones establish same font-atlas-null mechanism in5 reports",
+      "approval": "User explicitly orders Moto causal fix and mechanism-wide font fallback. Root plus independent peer exactd510 approved; realNewFrameRED0xc0000005/control0 then16i686/x64GREEN and44startupfaultGREEN including saved originalfont error; both fullAndroidlauncher C++TUs compiled+linked0. PhysicalMoto/S22 pending and no app-runtime claim.",
       "reference": "issue374#issuecomment-6479080233",
       "evidence": [
         {
           "at": "2026-10-28T20:45:21.879838+00:00",
           "owner": "codex-font-atlas",
           "detail": "HEADd5107162 exactpeerreviewPASS. REDrealImGuiNewFrame0xc0000005 badmerge/control0; GREEN16real32/64cases+knownKHMenu preservespixels andfontSize;44startupfaultcontrolswithpersistedfontfailurePASS. Source sharedalllauncherplatforms, not hardwareclaim. FullAndroidC++compilependingconsolebeforemerge, no publishedAPK."
+        },
+        {
+          "at": "2026-10-28T20:49:34.697947+00:00",
+          "owner": "codex-font-atlas",
+          "detail": "Exactd510 sourcefull C++ inputSHA6b48b56a validated in AndroidABI2receipt D:/01Claude/ReKHCoM-build/qa-runtime/moto374-current/font-fallback-tu-attempt2/RECEIPT.json. No newAVDattempts; code does not catch arbitrary signals."
         }
       ],
       "claimed_at": "2026-10-28T20:17:00.349798+00:00"
@@ -10164,7 +10169,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:48:58.578304+00:00",
+  "updated_at": "2026-10-28T20:49:34.697947+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
