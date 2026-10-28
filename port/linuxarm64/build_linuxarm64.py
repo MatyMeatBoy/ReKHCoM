@@ -17,6 +17,7 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / 'port/tools'))
 sys.path.insert(0, str(ROOT / 'port/switch'))
 from workdir import WORK_DIR
+from linux_runtime_clients import copy_client_libraries
 import build_switch
 BASE = WORK_DIR / 'linux/arm64'
 BUILD = ROOT / 'build/linuxarm64'
@@ -49,13 +50,10 @@ def build_host():
                            str(HERE / 'linuxarm64_host.c'), f'-L{sdl / "lib"}', '-lSDL3', '-lm',
                            '-Wl,-rpath,$ORIGIN/../libarm64', '-o', str(OUT / 'binarm64/rekhcom-arm64')])
     shutil.copyfile(libraries[0], OUT / 'libarm64/libSDL3.so.0')
-    for name in LIBS:
-        candidates = [BASE / f'sysroot/{folder}/{TRIPLE}/{name}' for folder in ('usr/lib', 'lib')]
-        source = next((p for p in candidates if p.exists()), None)
-        if source:
-            (OUT / 'libarm64' / (name.split('.so')[0] + '.so')).write_bytes(source.resolve().read_bytes())
-        else:
-            print('optional system library missing:', name)
+    search = [BASE / f'sysroot/{folder}/{TRIPLE}' for folder in ('usr/lib', 'lib')]
+    search.append(BASE / f'sysroot/usr/lib/{TRIPLE}/pulseaudio')
+    readelf = os.environ.get('READELF', str(llvm / 'llvm-readelf.exe') if os.name == 'nt' else 'llvm-readelf')
+    copy_client_libraries(LIBS, search, OUT / 'libarm64', readelf)
 
 
 def main():
