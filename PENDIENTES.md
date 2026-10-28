@@ -322,4 +322,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-vita-guest-build | Compile v2.2 Vita EU US JP guest archives only, frozen sourceace4116, jobs1 and384MiB owned budget; no VM | en_curso | codex-console-vita-guest | — | Root explicitly authorized Vita guest CPU-only window afterPS4/VM421terminal; no host VM until next coordination | 2026-10-28T04:46:39.179891+00:00 |
 | vita-windows-archive-response | Fix Vita llvm-ar Windows command length using response file; preserve all objects and source behavior | integrado | codex-vita-archive | https://github.com/MatyMeatBoy/ReKHCoM/pull/429 | User requests v2.2allplatforms; actual Vita build hit WinError206; root delegates fixes with CAS/PR | 2026-10-28T04:47:17.295979+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T04:47:08.324593+00:00)
+Integrador: libre
