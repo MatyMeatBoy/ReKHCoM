@@ -9711,19 +9711,24 @@
     "linux-test439441-delivery": {
       "id": "linux-test439441-delivery",
       "piece": "Build, validate and publish immutable Linux test439441 with unchanged media quality, latest32/64 EUUSJP cores, core assets and verified title fallback; deliver to reporter before OptiPort runtime closure.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux-delivery",
       "created_at": "2026-10-28T16:49:11.505952+00:00",
-      "updated_at": "2026-10-28T17:19:48.571198+00:00",
+      "updated_at": "2026-10-28T17:54:50.183600+00:00",
       "branch": "docs/linux-test439441-delivery",
-      "pr": null,
-      "approval": "User explicitly prioritized test for439441 first, then OptiPort and remaining tasks autonomously;720p sketch excluded.",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/450",
+      "approval": "User authorized public test and full OptiPort continuation; deck_video_421 independently APPROVED exact516eeaf3e65abda425667eaa83370a8e36e9bf08 after reviewing3docs/source/QA/publication.",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-28T17:19:48.571198+00:00",
           "owner": "codex-linux-delivery",
           "detail": "Final source07d5 builds32/64all3regions, immutableTARa0db3dec and335sharedassets closed; remote draft3assets digests match. Consumer7cases ownedworker439 pending; public release remains gated. Root prepares source delivery/progress documentation and reporter replies;720p excluded."
+        },
+        {
+          "at": "2026-10-28T17:54:50.183600+00:00",
+          "owner": "codex-linux-delivery",
+          "detail": "PUBLIC test439441 source07d5 TARa0db;3remoteassets/tag/Latest2.2 and4396476426150/4416476427558 replies verified. Root seven raw-case checks PASS; physicalawaitingreporter;720pdeferred. PR450 documentationonly."
         }
       ],
       "claimed_at": "2026-10-28T16:49:20.503208+00:00"
@@ -9744,7 +9749,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:54:22.896767+00:00",
+  "updated_at": "2026-10-28T17:54:50.183600+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
