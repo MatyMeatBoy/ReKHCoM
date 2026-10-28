@@ -10431,10 +10431,10 @@
     "sony-package-patch-version": {
       "id": "sony-package-patch-version",
       "piece": "Encode PS4/Vita package release PATCH as explicit NN.NN major.(minor*10+patch) with bounded fields; v2.2.5 ->02.25",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-sony-package-version",
       "created_at": "2026-10-28T21:54:00.890117+00:00",
-      "updated_at": "2026-10-28T22:01:28.016954+00:00",
+      "updated_at": "2026-10-28T22:01:44.515857+00:00",
       "branch": "fix/sony-patch-package-version",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/474",
       "approval": "Root integrator: human-authorized code review; b20a99fd00528e54a9487c7fdcbd9edb72815807",
@@ -10449,9 +10449,15 @@
           "at": "2026-10-28T22:01:28.016954+00:00",
           "owner": "codex-sony-package-version",
           "detail": "Root full5file review; 7actualproducer/encoding tests PASS normal and -O including10000uniqueorderedtriples. 2.2.5->02.25 bounded explicit mapping; invalid values error beforepackage. Publishedoldpackagesimmutable."
+        },
+        {
+          "at": "2026-10-28T22:01:44.515857+00:00",
+          "owner": "codex-sony-package-version",
+          "detail": "Root full5file review; 7actualproducer/encoding tests PASS normal and -O including10000uniqueorderedtriples. 2.2.5->02.25 bounded explicit mapping; invalid values error beforepackage. Publishedoldpackagesimmutable.; merged 76c0be3a493fae79fc150841ef189428342dc143"
         }
       ],
-      "claimed_at": "2026-10-28T21:54:06.191665+00:00"
+      "claimed_at": "2026-10-28T21:54:06.191665+00:00",
+      "completed_at": "2026-10-28T22:01:44.515857+00:00"
     },
     "glyph-upload-gdi-stb": {
       "id": "glyph-upload-gdi-stb",
@@ -10535,7 +10541,7 @@
     "created_at": "2026-10-28T22:01:33.523121+00:00",
     "updated_at": "2026-10-28T22:01:33.523121+00:00"
   },
-  "updated_at": "2026-10-28T22:01:37.282000+00:00",
+  "updated_at": "2026-10-28T22:01:44.515857+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
