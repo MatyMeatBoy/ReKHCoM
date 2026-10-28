@@ -9819,15 +9819,21 @@
     "preview-readiness-observer": {
       "id": "preview-readiness-observer",
       "piece": "Child of optiport-v22-async: preserve CPU underlay on rejected preview upload/draw, bridge content recreation and bounded optional stage observer; no full async-area closure",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-async",
       "created_at": "2026-10-28T18:26:20.621968+00:00",
-      "updated_at": "2026-10-28T18:27:24.114002+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T18:28:39.192572+00:00",
+      "branch": "perf/optiport-async-observer",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/454",
       "approval": "User authorized full OptiPort pass; coordinator explicitly approved scoped readiness/underlay child and CPU/functional QA, timing lease separate",
       "reference": "optiport-v22-async",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T18:28:39.192572+00:00",
+          "owner": "codex-optiport-async",
+          "detail": "Draft PR454 head042162012f88daa65c791d883f36addac174b60a: actual draw/bridge upload RED GREEN,10lifecycle+2mutants, observer-off/cap and underlay negative controls PASS; private32/64 candidate build PASS borrowing closed07d5 seed objects read-only, seed hashes unchanged. Prior e745 functional48positivepixels identical and14case outputs preserved; final042 affected GPU checks pending lease. Parent optiport-v22-async released pending with cold64/measurement references; this child does not close area9. pruebas/optiport-v22-async/"
+        }
+      ],
       "claimed_at": "2026-10-28T18:27:24.114002+00:00"
     },
     "issue449-base-import-123-copy": {
@@ -9846,7 +9852,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:27:24.114002+00:00",
+  "updated_at": "2026-10-28T18:28:39.192572+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
