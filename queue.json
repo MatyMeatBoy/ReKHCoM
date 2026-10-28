@@ -9911,10 +9911,10 @@
     "profile-controlled-adapter": {
       "id": "profile-controlled-adapter",
       "piece": "OptiPort profiling support: effective configuration, capture identity and relative private input paths (PR453)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v22-profile-execution",
       "created_at": "2026-10-28T18:40:43.327657+00:00",
-      "updated_at": "2026-10-28T21:50:15.197028+00:00",
+      "updated_at": "2026-10-28T21:50:35.582445+00:00",
       "branch": "perf/optiport-current-baseline",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/453",
       "approval": "Root integrator: human-authorized code review; 6cda990d9cf20a1a58eb57ffdf52e35bdb974460",
@@ -9929,9 +9929,15 @@
           "at": "2026-10-28T21:50:15.197028+00:00",
           "owner": "codex-v22-profile-execution",
           "detail": "Root reviewed 3-file tooling diff; independent test_profile_report_contract.py 13 PASS on exact head. Controlled settings and capture identity only; profiling parent remains pending."
+        },
+        {
+          "at": "2026-10-28T21:50:35.582445+00:00",
+          "owner": "codex-v22-profile-execution",
+          "detail": "Root reviewed 3-file tooling diff; independent test_profile_report_contract.py 13 PASS on exact head. Controlled settings and capture identity only; profiling parent remains pending.; merged 6b72672d6ae642fdf921a6bd084a72b358fecc5d"
         }
       ],
-      "claimed_at": "2026-10-28T18:40:48.360302+00:00"
+      "claimed_at": "2026-10-28T18:40:48.360302+00:00",
+      "completed_at": "2026-10-28T21:50:35.582445+00:00"
     },
     "host-output-controls": {
       "id": "host-output-controls",
@@ -10349,7 +10355,7 @@
     "created_at": "2026-10-28T21:50:24.044073+00:00",
     "updated_at": "2026-10-28T21:50:24.044073+00:00"
   },
-  "updated_at": "2026-10-28T21:50:24.044073+00:00",
+  "updated_at": "2026-10-28T21:50:35.583026+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
