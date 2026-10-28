@@ -8583,7 +8583,7 @@
       "status": "pr_abierto",
       "owner": "codex-stable-version",
       "created_at": "2026-10-28T02:44:34.751469+00:00",
-      "updated_at": "2026-10-28T02:47:49.448355+00:00",
+      "updated_at": "2026-10-28T02:50:21.838584+00:00",
       "branch": "release/v2.2-version-metadata",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/424",
       "approval": "User authorized stable2.2; root delegated metadata-only PR, preserve identity/signature/releases",
@@ -8593,13 +8593,18 @@
           "at": "2026-10-28T02:47:49.448355+00:00",
           "owner": "codex-stable-version",
           "detail": "c220cf92a4130b438637992b17387d149db82fc4 only3metadatafiles. ParserGREEN(headerPEchangelog+Android102020099>pre2);6AndroididentitytestsPASS; Win/Linux/AndroiddryrunPASS jobs1allregions. No compile/package/tag/upload; olderWebnotrelabelled; globalrelease_check notscopeable/notclaimedPASS; actualAPKcertupgrade+artifactQA pending delivery."
+        },
+        {
+          "at": "2026-10-28T02:50:21.838584+00:00",
+          "owner": "codex-stable-version",
+          "detail": "Updated exacthead14ec1ef86d29ad870faccd5eb104870e4fadede6 rebased main6eeefe831 incl423. Changelog current-draw readiness wording+MOD0/RNG+MP4boundedCDalignment+desktop4s. Header/RCunchangedstablevalues, parserPASS. Still3metadatafiles,no Web/build/package/publication."
         }
       ],
       "claimed_at": "2026-10-28T02:44:54.173767+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:49:00.026052+00:00",
+  "updated_at": "2026-10-28T02:50:21.838584+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
