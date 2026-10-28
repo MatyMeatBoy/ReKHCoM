@@ -4914,6 +4914,35 @@ static void TitleArtQueue(void) {
     sMainHdAny = 1;
 }
 
+static int TitlePressStartTiles(const void* tiles) {
+    extern const unsigned char gTitlePressStartTiles[];
+    if (tiles == gTitlePressStartTiles) return 1;
+#ifdef VERSION_EU
+    extern const unsigned char gTitlePressStartFrenchTiles[], gTitlePressStartGermanTiles[];
+    extern const unsigned char gTitlePressStartItalianTiles[], gTitlePressStartSpanishTiles[];
+    return tiles == gTitlePressStartFrenchTiles || tiles == gTitlePressStartGermanTiles ||
+           tiles == gTitlePressStartItalianTiles || tiles == gTitlePressStartSpanishTiles;
+#else
+    return 0;
+#endif
+}
+
+/* The smooth bar is presented above the native picture. It may only take
+   BG0 when every active word part has a usable queued replacement. A blink
+   with no word parts keeps its existing HD gradient, rather than flickering. */
+static int TitleBarWordsReady(void) {
+    int i;
+    for (i = 0; i < 128; i++) {
+        uint16_t a0;
+        if (!TitlePressStartTiles(sOamHd[i].tiles)) continue;
+        a0 = OAM16[i * 4];
+        if ((!(a0 & 0x100) && (a0 & 0x200)) || (a0 >> 14) == 3 || ((a0 >> 10) & 3) >= 2)
+            continue; /* disabled/invalid or OBJ-window: no visible words */
+        if (!sMainHdPart[i]) return 0;
+    }
+    return 1;
+}
+
 static void QueueMainHdParts(void) {
     for (int k = 0; k < sHdPieceCount; k++) /* this pass's pieces start anew (TrimHdPiece) */
         if (sHdPieces[k].layer != 1) sHdPieces[k--] = sHdPieces[--sHdPieceCount];
@@ -5031,6 +5060,7 @@ static void QueueMainHdParts(void) {
             sMainHdAny = 1;
         }
     }
+    if (sTitleBarHd && !TitleBarWordsReady()) sTitleBarHd = 0;
 }
 
 /* What the cartridge draws in front of an HD part of the game's picture (a dialogue over a card, the cursor's
