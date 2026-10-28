@@ -8839,10 +8839,23 @@
       "reference": "v22-console-delivery existingSDK; userv2.2allplatforms",
       "evidence": [],
       "claimed_at": "2026-10-28T04:39:25.518562+00:00"
+    },
+    "vita-windows-archive-response": {
+      "id": "vita-windows-archive-response",
+      "piece": "Fix Vita llvm-ar Windows command length using response file; preserve all objects and source behavior",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T04:42:49.583127+00:00",
+      "updated_at": "2026-10-28T04:42:49.583127+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requests v2.2allplatforms; actual Vita build hit WinError206; root delegates fixes with CAS/PR",
+      "reference": "vita-guest-attempt1/operation.log line110 archive; memorypeak127MiB noOOM",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:41:02.557713+00:00",
+  "updated_at": "2026-10-28T04:42:49.583127+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
