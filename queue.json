@@ -10434,16 +10434,21 @@
       "status": "pr_abierto",
       "owner": "codex-sony-package-version",
       "created_at": "2026-10-28T21:54:00.890117+00:00",
-      "updated_at": "2026-10-28T21:59:42.286575+00:00",
+      "updated_at": "2026-10-28T22:01:28.016954+00:00",
       "branch": "fix/sony-patch-package-version",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/474",
-      "approval": "Root authorized explicit encoding major.(minor*10+patch), major0..99/minorpatch0..9 and separate PR after OUT1 functional. Exact head submitted for final root review.",
+      "approval": "Root integrator: human-authorized code review; b20a99fd00528e54a9487c7fdcbd9edb72815807",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-28T21:59:42.286575+00:00",
           "owner": "codex-sony-package-version",
           "detail": "PR474: PS4/Vita actual producers use shared SFO helper;2.2.5->02.25,2.3->02.30,missingpatch0; rejects nonstable/fieldoverflow. REDactualVita2.2.5output02.02 observed beforepatch; GREEN7CPUtests normaland-O, including10kboundedtriplesuniqueordered,PS4actualheaderinput/VitaactualSFOcommand. NoSDK/packagebuild/VM/hardware or sharedversionheader changes; published2.2bytesunchanged."
+        },
+        {
+          "at": "2026-10-28T22:01:28.016954+00:00",
+          "owner": "codex-sony-package-version",
+          "detail": "Root full5file review; 7actualproducer/encoding tests PASS normal and -O including10000uniqueorderedtriples. 2.2.5->02.25 bounded explicit mapping; invalid values error beforepackage. Publishedoldpackagesimmutable."
         }
       ],
       "claimed_at": "2026-10-28T21:54:06.191665+00:00"
@@ -10512,7 +10517,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:00:49.279746+00:00",
+  "updated_at": "2026-10-28T22:01:28.016954+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
