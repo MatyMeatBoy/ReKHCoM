@@ -9297,10 +9297,10 @@
     "post22-arm-guest-division-lowering": {
       "id": "post22-arm-guest-division-lowering",
       "piece": "Game-only shared ARM guest producer preoptimization cartridge i32 DIV/REM lowering for Switch/Android64/LinuxARM64/Vita; cache/dependencies and ABI probes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-arm-guest-div-lowering",
       "created_at": "2026-10-28T12:09:24.845208+00:00",
-      "updated_at": "2026-10-28T13:25:51.238321+00:00",
+      "updated_at": "2026-10-28T13:26:31.481364+00:00",
       "branch": "fix/arm-guest-cartridge-division",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/438",
       "approval": "User explicitly requested division fallback parity across all platforms and integration of verified fixes; root reviewed cddffa768 and independently ran six real-Clang tests PASS.",
@@ -9315,9 +9315,15 @@
           "at": "2026-10-28T13:25:51.238321+00:00",
           "owner": "codex-arm-guest-div-lowering",
           "detail": "Root source review and six producer tests PASS; author additional review confirms eight TU objects/four ABI QEMU pilots and four Linux configuration tests. Scope game scalar i32 division only; no full guest or physical ARM hardware claim."
+        },
+        {
+          "at": "2026-10-28T13:26:31.481364+00:00",
+          "owner": "codex-arm-guest-div-lowering",
+          "detail": "Root independent exact-head source review and six real-Clang producer tests PASS; author second pass verifies eight TU objects and four ABI QEMU pilots, four Linux flag tests. Game scalar i32 parity only; full guests and physical hardware remain unverified.; merged ccb2695f1f745c9973168f7d84eab73ff1931fa8"
         }
       ],
-      "claimed_at": "2026-10-28T12:09:29.629315+00:00"
+      "claimed_at": "2026-10-28T12:09:29.629315+00:00",
+      "completed_at": "2026-10-28T13:26:31.481364+00:00"
     },
     "post22-arm32-division-lowering": {
       "id": "post22-arm32-division-lowering",
@@ -9377,7 +9383,7 @@
     "created_at": "2026-10-28T13:26:16.156093+00:00",
     "updated_at": "2026-10-28T13:26:16.156093+00:00"
   },
-  "updated_at": "2026-10-28T13:26:16.167149+00:00",
+  "updated_at": "2026-10-28T13:26:31.538908+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
