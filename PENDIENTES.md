@@ -376,4 +376,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v225-stable-version | Version 2.2.5 source identity and platform packaging preflight | integrado | codex-v225-version | https://github.com/MatyMeatBoy/ReKHCoM/pull/472 | Root integrator: human-authorized code review; 8be810c8cd1b79d4861f11d2bbc4ede2f7d0140c | 2026-10-28T21:59:20.581940+00:00 |
 | v225-release-notes | 2.2.5 release notes and source freeze ledger | pr_abierto | codex-v225-notes | https://github.com/MatyMeatBoy/ReKHCoM/pull/476 | Root integrator: human-authorized code review; ddb5bb5292eca0776b72ad4f96940fcffe66f010 | 2026-10-28T22:06:52.977504+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T22:06:59.024414+00:00)
