@@ -8762,10 +8762,10 @@
       "status": "pr_abierto",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:59:36.852429+00:00",
-      "updated_at": "2026-10-28T04:41:02.557713+00:00",
+      "updated_at": "2026-10-28T04:57:25.684388+00:00",
       "branch": "fix/linux64-movie-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/428",
-      "approval": "User: fix all issue421 observations before v2.2, no Atlas gate for port fixes",
+      "approval": "Root integrator authorized ready after final UI audit: source ace unchanged, exact host linked and12 actual runtime casesPASS; user authorized v2.2 issue fixes and integration. Final4f9569193 only doc changes, three product/test blobs identical to testedace.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/421",
       "evidence": [
         {
@@ -8782,6 +8782,11 @@
           "at": "2026-10-28T04:41:02.557713+00:00",
           "owner": "codex-deck-video421",
           "detail": "Draft428 ace4116 unchanged. Root linked exact host, candidatepackagehostSHA b5fb7bb8119336b53c4f15f8dd07d0e0c9815604769a1e0c4732f2d4f4992908. Real DebianFFmpeg5.1.9 in512MiB snapshot: baseline90frames;cancelFPS0/1,missingfont,silent,AB90;Yes19;PCMnonzero audio cases, silentzero; POSIXreal154reads27empty27waits. AB4injectedmarkers verified. FPSactualcapture1584changedpx bbox6,6,228,22 zerooutside. Quit/reset missing due TESTSHIM repeatednegatedpredicate, fixedselectorCPU218PASS andprepared events-only epoch3 NOT run yet. Prior7successes+POSIX retainedSHA in pruebas/issue421-linux64/PRIOR-SUCCESS.json; no overallPASS/physicalDeckclaim yet."
+        },
+        {
+          "at": "2026-10-28T04:57:25.684388+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "PR428 READY exacthead4f9569193d156cca4348346141e46049818acc2e. Combined proof pruebas/issue421-linux64/COMBINED-RUNTIME-VALIDATION.json: 7+2+3 executed epochs, same hostb5fb7bb..., realFFmpeg5.1.9; pausedresize960x54090frames, pausedquit/reset19expected1/0 after firstUIpresent; CPU/header/fullhost linkPASS; FPS1584px0outside, realPOSIX154reads27waits, actualPCMpause/resume0.832/0.853s. Earlier environment/shim failures retained. Only progressdoc differs from ace; no hardwareDeck/listening certification. Integrator root to merge withlock."
         }
       ],
       "claimed_at": "2026-10-28T03:59:42.146124+00:00"
@@ -8893,7 +8898,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:54:54.823028+00:00",
+  "updated_at": "2026-10-28T04:57:25.684388+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
