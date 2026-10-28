@@ -9232,11 +9232,11 @@
       "status": "en_curso",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T11:52:12.237055+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T11:54:29.501273+00:00",
+      "branch": "feat/android-startup-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/issues/412",
       "approval": null,
-      "reference": "Issue https://github.com/MatyMeatBoy/ReKHCoM/issues/412; no code PR yet",
+      "reference": "Rootauthorizedtest412optionalJavaentry; worktreeandroid-startup-diagnostics base0f78f298b; designselectedbyroot",
       "evidence": [
         {
           "at": "2026-10-28T11:45:17.181989+00:00",
@@ -9252,13 +9252,18 @@
           "at": "2026-10-28T11:52:12.237055+00:00",
           "owner": "codex-s22-startup",
           "detail": "RootauthorizedboundedoptionalJava-before-SDLtest412; sameapplicationId/certificate/versionCode102020099,versionNameexplicit; reusableexact2.2ELFs/assets immutable; rootreviewsbeforeprerelease, no stablereleasemutation; planfirst/docsprimaryAPI30/31"
+        },
+        {
+          "at": "2026-10-28T11:54:29.501273+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "Plan docs/superpowers/plans/2026-10-28-android-startup-diagnostics.md; primaryAndroidAPI30ownUIDringbuffer/API31nativeprotobuftraces; sameID/cert/versionCode102020099, exact2.2libs/assets, no network/globalpermissions, limitedexport; no normalreleasechanges"
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:53:59.490126+00:00",
+  "updated_at": "2026-10-28T11:54:29.501273+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
