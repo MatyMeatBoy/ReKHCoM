@@ -382,6 +382,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-launcher-hd-hud-wording | Identify HD HUD import clearly in native Linux dialog; existing sprites action is present | pendiente | — | — | — | 2026-10-28T22:16:36.542064+00:00 |
 | v225-vita-build | Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence | en_revision | codex-v225-console-build | — | Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized | 2026-10-28T22:32:19.399380+00:00 |
 | v225-switch-build | Build final Switch beta2.2.5 guest3regions then offline snapshotSDKhost after rootVMlease, close NRO/NACP/debug | en_revision | codex-v225-console-build | — | Root frozenf28 fourconsoleauthorization; SwitchguestCPU duringLinuxlease, hostonlyafterrootrelease | 2026-10-28T22:45:42.784622+00:00 |
-| v225-ps5-build | Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence | pendiente | — | — | Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy | 2026-10-28T22:45:50.658475+00:00 |
+| v225-ps5-build | Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence | en_curso | codex-v225-console-build | — | Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy | 2026-10-28T22:45:55.516531+00:00 |
 
 Integrador: libre
