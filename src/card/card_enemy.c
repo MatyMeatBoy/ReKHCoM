@@ -644,7 +644,8 @@ void EnemyUsecardRandomInit(CardDisplayWork* work, CardDisplayArgs* args) {
     if (n == 1) {
         id = cardIds[0];
     } else if ((s16)work->args.index < n) {
-        id = cardIds[GetRandom() % (s16)work->args.index];
+        /* Index zero selects the first card on GBA, while still advancing RNG. */
+        id = cardIds[MOD0(GetRandom(), (s16)work->args.index)];
     } else {
         id = cardIds[GetRandom() % n];
     }
