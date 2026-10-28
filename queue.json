@@ -9502,10 +9502,23 @@
       ],
       "claimed_at": "2026-10-28T14:30:45.084374+00:00",
       "completed_at": "2026-10-28T14:38:12.181367+00:00"
+    },
+    "issue441-title-start-bar": {
+      "id": "issue441-title-start-bar",
+      "piece": "Linux/Deck title Press Start red bar overlays English t; exact release comparison and focused mask/draw-order fix",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T15:56:19.562560+00:00",
+      "updated_at": "2026-10-28T15:56:19.562560+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario reanuda441/439+OptiPort explícitamente; root asigna carril441 sin comentarios externos",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/441",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:43:31.480171+00:00",
+  "updated_at": "2026-10-28T15:56:19.562560+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
