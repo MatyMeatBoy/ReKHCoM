@@ -17,10 +17,10 @@ def package_identity(version):
     require(version in TEST_VERSIONS,'Unsupported startup test identity')
     return 'ReKHCoM-v'+version+'.apk',version
 
-def safe_manifest(text,template):
+def safe_manifest(text,template,*,application_id='com.rekhcom.android',label='ReKHCoM Safe Startup Test'):
     require('SDL_ENV.' not in text,'Autoplay fixture not allowed')
     ET.register_namespace('android',NS[1:-1]);root=ET.fromstring(text);app=root.find('application')
-    app.set(NS+'label','ReKHCoM Safe Startup Test')
+    if label is not None:app.set(NS+'label',label)
     official=ET.fromstring(template).find('application').find('activity').get(NS+'configChanges').split('|')
     activities={a.get(NS+'name'):a for a in app.findall('activity')}
     for name,role in [('LauncherActivity','launcher'),('GameActivity','game')]:
@@ -31,14 +31,18 @@ def safe_manifest(text,template):
         for intent in list(activity.findall('intent-filter')):activity.remove(intent)
     entry=ET.SubElement(app,'activity',{NS+'name':'com.rekhcom.android.StartupDiagnosticActivity',NS+'exported':'true',NS+'hardwareAccelerated':'false',NS+'configChanges':'orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode'})
     intent=ET.SubElement(entry,'intent-filter');ET.SubElement(intent,'action',{NS+'name':'android.intent.action.MAIN'});ET.SubElement(intent,'category',{NS+'name':'android.intent.category.LAUNCHER'})
-    ET.SubElement(app,'provider',{NS+'name':'com.rekhcom.android.StartupReportProvider',NS+'authorities':'com.rekhcom.android.startup-report',NS+'exported':'false',NS+'grantUriPermissions':'true'})
+    ET.SubElement(app,'provider',{NS+'name':'com.rekhcom.android.StartupReportProvider',NS+'authorities':application_id+'.startup-report',NS+'exported':'false',NS+'grantUriPermissions':'true'})
     return ET.tostring(root,encoding='unicode')
-def validate_manifest(text,template):
+def validate_manifest(text,template,*,application_id='com.rekhcom.android'):
     root=ET.fromstring(text);app=root.find('application');activities={a.get(NS+'name'):a for a in app.findall('activity')}
     require('SDL_ENV.' not in text,'Unexpected autoplay fixture')
     main=[a for a in app.findall('activity') if any(c.get(NS+'name')=='android.intent.category.LAUNCHER' for c in a.findall('./intent-filter/category'))]
     require(len(main)==1 and main[0].get(NS+'name')=='com.rekhcom.android.StartupDiagnosticActivity','Java-only entry missing/ambiguous')
     require(main[0].get(NS+'hardwareAccelerated')=='false','Entry must not require a hardware surface')
+    providers=app.findall('provider')
+    require(len(providers)==1 and providers[0].get(NS+'name')=='com.rekhcom.android.StartupReportProvider','Missing/ambiguous report provider')
+    require(providers[0].get(NS+'authorities')==application_id+'.startup-report','Wrong report provider identity')
+    require(providers[0].get(NS+'exported')=='false' and providers[0].get(NS+'grantUriPermissions')=='true','Report provider must use private read-only grants')
     official=set(ET.fromstring(template).find('application').find('activity').get(NS+'configChanges').split('|'))
     for name,role in [('LauncherActivity','launcher'),('GameActivity','game')]:
         activity=activities['com.rekhcom.android.'+name]
