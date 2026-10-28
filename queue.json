@@ -9910,20 +9910,26 @@
     "host-output-controls": {
       "id": "host-output-controls",
       "piece": "Negotiated 64-bit SDL host window/vsync controls with truthful application/legacy unsupported behavior",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-host-output-controls",
       "created_at": "2026-10-28T18:42:14.434025+00:00",
-      "updated_at": "2026-10-28T18:42:21.131067+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T18:58:50.242577+00:00",
+      "branch": "fix/host-output-controls",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/456",
       "approval": null,
       "reference": "optiport-v22-profiling",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T18:58:50.242577+00:00",
+          "owner": "codex-host-output-controls",
+          "detail": "Draft exacthead4eb48259fcb7d079cf82deb7c59570c519f6e060.54CPUchecks+real producer visibility variantsPASS; baselineRED no-opsetter/supportedrowhidden.13TU/link checks+3properconsoleUI+privateguestlinkPASS. Sources/commands/hashes in pruebas/optiport-full-pass-20261028/host-output-controls/{tu-attempt1,candidate-attempt2}/receipts. GPU2Monstro output-equivalence pending, no gain/device fix/parentcompletion claimed. Ops230..237 preserve MOV1/PRV1/table."
+        }
+      ],
       "claimed_at": "2026-10-28T18:42:21.131067+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:57:58.187718+00:00",
+  "updated_at": "2026-10-28T18:58:50.242577+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
