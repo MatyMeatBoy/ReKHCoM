@@ -9783,10 +9783,10 @@
     "optiport-embedded-snapshot-refresh": {
       "id": "optiport-embedded-snapshot-refresh",
       "piece": "Refresh stale embedded OptiPort offline snapshot from canonical verified upstream, preserving useful local differences and recording source/hash/link coverage; installed Codex/Claude already synced separately.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-embedded",
       "created_at": "2026-10-28T17:58:49.435737+00:00",
-      "updated_at": "2026-10-28T18:14:10.021889+00:00",
+      "updated_at": "2026-10-28T18:25:06.578650+00:00",
       "branch": "docs/optiport-embedded-current",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/451",
       "approval": "User requested complete OptiPort and latest skill; console_delivery independently APPROVED exactea2d58313e688621e4e9b0c7cfe648cb40eb02d2:24MD+LICENSE canonical394c34ff equality, offline/freshness/progress limits, Claude installed .NET row unchanged, diffcheckPASS.",
@@ -9796,9 +9796,15 @@
           "at": "2026-10-28T18:14:10.021889+00:00",
           "owner": "codex-optiport-embedded",
           "detail": "Root24MD+LICENSE exactgitblobs;59localtargets/3anchors/UTF8/fences PASS. Sourceprevioussnapshot recoverableGit9b5; no unrelatedlocaldocs/installedmodifications. Metadata separatesmethod freshness from productcompletion. PR451 independentreviewJSON retained."
+        },
+        {
+          "at": "2026-10-28T18:25:06.578650+00:00",
+          "owner": "codex-optiport-embedded",
+          "detail": "Root source24MD+LICENSE byte equality against canonical394c34ff and59localtargets/3anchors/UTF8/fencesPASS; console_delivery independently approved exacthead and confirmed Claude .NET row unchanged. Provenance/current-vs-historical progress clarified; no product runtime or installed copies changed.; merged b01240677fbb36f1120eb7cef77f47a368d9f24d"
         }
       ],
-      "claimed_at": "2026-10-28T17:59:56.032154+00:00"
+      "claimed_at": "2026-10-28T17:59:56.032154+00:00",
+      "completed_at": "2026-10-28T18:25:06.578650+00:00"
     }
   },
   "integrator": {
@@ -9807,7 +9813,7 @@
     "created_at": "2026-10-28T18:24:45.396148+00:00",
     "updated_at": "2026-10-28T18:24:45.396148+00:00"
   },
-  "updated_at": "2026-10-28T18:24:45.397146+00:00",
+  "updated_at": "2026-10-28T18:25:06.578650+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
