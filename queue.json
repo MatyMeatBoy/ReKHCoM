@@ -7118,7 +7118,7 @@
       "status": "pr_abierto",
       "owner": "codex-card-microfix",
       "created_at": "2026-10-27T18:47:53.494232+00:00",
-      "updated_at": "2026-10-27T22:19:13.147011+00:00",
+      "updated_at": "2026-10-28T00:47:58.333325+00:00",
       "branch": "fix/key-hilt-black-pixels",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/406",
       "approval": null,
@@ -7143,6 +7143,11 @@
           "at": "2026-10-27T22:19:13.147011+00:00",
           "owner": "codex-card-microfix",
           "detail": "PR406 root+workerindependentreview passed and merged: KingdomKey1cell verifiedD3D11source. Parent deliberately remains partial: Heroica405 pendingroot and broaderATKseam/corners newuserrequirement. Existing nightlypre2 remains unchanged without406."
+        },
+        {
+          "at": "2026-10-28T00:47:58.333325+00:00",
+          "owner": "codex-card-microfix",
+          "detail": "Known reported seam corrections405/406/408/409/415 are published in pre3. Last Pumpkinhead row changes47 output pixels confined to one row in three real frames; all449 PNG inputs unchanged; exact ZIP reproduces corrected pixels. Separate premium/device coverage remains limited; no edits to approved artwork."
         }
       ],
       "claimed_at": "2026-10-27T18:48:05.984482+00:00"
@@ -8390,7 +8395,7 @@
     "created_at": "2026-10-28T00:47:47.931083+00:00",
     "updated_at": "2026-10-28T00:47:47.931083+00:00"
   },
-  "updated_at": "2026-10-28T00:47:53.209677+00:00",
+  "updated_at": "2026-10-28T00:47:58.333325+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
