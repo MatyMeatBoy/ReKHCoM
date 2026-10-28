@@ -305,4 +305,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue407-native-movie-validation | Native Linux import: recognize already-plain MP4 safely, fix exact4096box validation boundary; retain XOR and transactional rejection, reporter cause unconfirmed | integrado | codex-linux-movie407 | https://github.com/MatyMeatBoy/ReKHCoM/pull/416 | Root delegated reproduced producer/validator fixes for issue407; no issue reply until artifact review | 2026-10-28T00:19:37.804251+00:00 |
 | v22-pre3-linux-import-delivery | Compile current Linux32/64 EU US JP with current crash/audio/card/HUD fixes and native movie import416; exact tar snapshot-VM CPU checks, no GamingMode physical claim | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/416 | Usuario: solucionar Steam Deck/import issues, entregar pre solo compilada, ultima version y todos fixes | 2026-10-28T00:37:37.061226+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T00:47:47.931083+00:00)
