@@ -1026,7 +1026,8 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         const HdSpriteDraw* q = &sArtDraws[i];
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
         float white = SDL_max(brighten > 0 ? brighten / 16.0f : 0.0f, q->white / 255.0f);
-        Quad(sArt, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
+        if (white < 1.0f)
+            Quad(sArt, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
         if (white > 0)
             Quad(sArtWhite, q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
     }
@@ -1051,7 +1052,10 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
                      (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
             sRingRatio = -1; /* once a frame, behind its first face part */
         }
-        Quad(st->image, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
+        /* At full white the coloured base must not remain under its own
+         * translucent white copy: AA edges otherwise retain A*(1-A) colour. */
+        if (white < 1.0f)
+            Quad(st->image, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
         if (white > 0)
             Quad(st->white, q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
         if (kHdSprites[q->id].group == 7 && MenuLightName(kHdSprites[q->id].name))
@@ -1067,7 +1071,8 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
                 edge.x[0] = edge.x[3] = left;
                 edge.y[1] = q->y[0]; edge.y[2] = q->y[3];
                 edge.u1 = edge.u0 + 0.25f / kHdSprites[q->id].w; /* a quarter of a cartridge pixel */
-                Quad(st->image, &edge, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
+                if (white < 1.0f)
+                    Quad(st->image, &edge, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
                 if (white > 0)
                     Quad(st->white, &edge, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
             }
@@ -1109,7 +1114,8 @@ void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float sca
                 clip = (SDL_Rect){(int)(ox + start * scale), (int)(oy + y * scale),
                                   (int)((x - start) * scale), (int)scale};
                 SDL_SetRenderClipRect(renderer, &clip);
-                Quad(st->image, q, ox, oy, scale, (SDL_FColor){shade, shade, shade, q->alpha / 255.0f});
+                if (white < 1.0f)
+                    Quad(st->image, q, ox, oy, scale, (SDL_FColor){shade, shade, shade, q->alpha / 255.0f});
                 if (white > 0)
                     Quad(st->white, q, ox, oy, scale, (SDL_FColor){1, 1, 1, q->alpha / 255.0f * white});
             }
