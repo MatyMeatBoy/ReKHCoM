@@ -367,4 +367,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | moto374-font-identity-builder | Closed PR468 builder identity component only; does not close parent Moto font fallback APK publication/reporter delivery | integrado | codex-font-builder-root | https://github.com/MatyMeatBoy/ReKHCoM/pull/468 | User requires new tentative test; root reviewed exact923837 and independently package -O PASS, filename/version allowlist preserves old identity. | 2026-10-28T20:56:42.035574+00:00 |
 | OptiPort-font-readiness | Promote bounded deferred-font readiness and acquire-before-release lesson; two Markdown paragraphs and informed scenario review | en_curso | codex-optiport-font-readiness | — | user | 2026-10-28T21:17:48.723301+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T21:21:03.143222+00:00)
