@@ -9196,7 +9196,7 @@
       "status": "pr_abierto",
       "owner": "codex-arm-wasm-div-parity",
       "created_at": "2026-10-28T11:30:20.787648+00:00",
-      "updated_at": "2026-10-28T11:39:45.918122+00:00",
+      "updated_at": "2026-10-28T11:51:59.377869+00:00",
       "branch": "audit/arm-wasm-division-parity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/435",
       "approval": "Root permits bounded tested child after raw ARM/Wasm parity RED; preserve publishedv2.2 and original GBA arithmetic",
@@ -9206,6 +9206,11 @@
           "at": "2026-10-28T11:39:45.918122+00:00",
           "owner": "codex-arm-wasm-div-parity",
           "detail": "Drafthead22e9d46bf. RawWasm/A64/ARM32differences13/4/6→guarded0/0/0 across84QEMU/Nodecases;originalThumb192PASS;Wasm192+2branch and4scope testsPASS. Fixedaddr/callback/Asyncify actualWebABI PASS;2realgameTUs6sitescompilePASS. EUfullbuild81105running,freshowncache; draftpending. NoARMproducer/publicv2.2changes."
+        },
+        {
+          "at": "2026-10-28T11:51:59.377869+00:00",
+          "owner": "codex-arm-wasm-div-parity",
+          "detail": "READYhead2dddf1f303609cca31977b43bc538604c2754166. EUfull81105terminalPASS336units+link/wasmopt749.3s;269gameTU146with1589sites(sdiv617/srem839/udiv67/urem66). ExactWasmSHA6f7852af...APIvalidationPASS.192Wasm+2branch+2singleeval,4unit,WebABI6checksPASS;84QEMU/NodeprototypeGREENvsraw13/4/6diffs,192ThumboraclePASS. Evidencepruebas/post22-arm-wasm-division. ARMproducersnotchanged,public2.2intact."
         }
       ],
       "claimed_at": "2026-10-28T11:30:25.633396+00:00"
@@ -9237,7 +9242,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:49:36.507689+00:00",
+  "updated_at": "2026-10-28T11:51:59.377869+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
