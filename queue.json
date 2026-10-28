@@ -8759,10 +8759,10 @@
     "issue421-linux64-movie-controls": {
       "id": "issue421-linux64-movie-controls",
       "piece": "Issue421 Linux64 movie pause/confirm skip and FPS overlay parity with Windows; preserve movie clocks and audio across pause",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:59:36.852429+00:00",
-      "updated_at": "2026-10-28T04:57:25.684388+00:00",
+      "updated_at": "2026-10-28T04:58:23.289866+00:00",
       "branch": "fix/linux64-movie-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/428",
       "approval": "Root integrator authorized ready after final UI audit: source ace unchanged, exact host linked and12 actual runtime casesPASS; user authorized v2.2 issue fixes and integration. Final4f9569193 only doc changes, three product/test blobs identical to testedace.",
@@ -8787,9 +8787,15 @@
           "at": "2026-10-28T04:57:25.684388+00:00",
           "owner": "codex-deck-video421",
           "detail": "PR428 READY exacthead4f9569193d156cca4348346141e46049818acc2e. Combined proof pruebas/issue421-linux64/COMBINED-RUNTIME-VALIDATION.json: 7+2+3 executed epochs, same hostb5fb7bb..., realFFmpeg5.1.9; pausedresize960x54090frames, pausedquit/reset19expected1/0 after firstUIpresent; CPU/header/fullhost linkPASS; FPS1584px0outside, realPOSIX154reads27waits, actualPCMpause/resume0.832/0.853s. Earlier environment/shim failures retained. Only progressdoc differs from ace; no hardwareDeck/listening certification. Integrator root to merge withlock."
+        },
+        {
+          "at": "2026-10-28T04:58:23.289866+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "Root exact product review+full Linux host linkPASS; actual closed-candidate host b5fb7bb8 observed12 realFFmpeg cases across7+2+3 preserved runs, POSIX1080p reads/waits, FPS1584px notice-only, actual PCM pause .832/.853s and normal1zero-sample gap, UI/No-default screenshots independentlyinspected. Final4f956 differsfromcompiledace ONLYdoc; no physicalDeckclaim. Readyforintegration.; merged 040e5dc4efc210ca6f4f89c259de0fcf55de1fa2"
         }
       ],
-      "claimed_at": "2026-10-28T03:59:42.146124+00:00"
+      "claimed_at": "2026-10-28T03:59:42.146124+00:00",
+      "completed_at": "2026-10-28T04:58:23.289866+00:00"
     },
     "v22-console-offline-build-harness": {
       "id": "v22-console-offline-build-harness",
@@ -8903,7 +8909,7 @@
     "created_at": "2026-10-28T04:58:13.795035+00:00",
     "updated_at": "2026-10-28T04:58:13.795035+00:00"
   },
-  "updated_at": "2026-10-28T04:58:13.795544+00:00",
+  "updated_at": "2026-10-28T04:58:23.290871+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
