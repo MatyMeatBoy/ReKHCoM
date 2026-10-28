@@ -7546,7 +7546,7 @@
       "status": "integrado",
       "owner": "codex-optiport-verified-contracts",
       "created_at": "2026-10-27T20:04:49.320764+00:00",
-      "updated_at": "2026-10-28T00:46:33.330381+00:00",
+      "updated_at": "2026-10-28T00:47:53.208520+00:00",
       "branch": "docs/audio-frame-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/9",
       "approval": "Usuario 27/10: dejar cola a Claude, coordinar PR y seguir pendientes; bugs prioridad total.",
@@ -7566,10 +7566,15 @@
           "at": "2026-10-28T00:46:33.330381+00:00",
           "owner": "codex-optiport-verified-contracts",
           "detail": "Post-release teaching complete: canonical OptiPort main135ba673 independently reviewed, merged and loaded; all4 changed files synchronized byte-exact into Codex and Claude after checking/preserving prior local copies. Both installed quick_validate checks pass. Receipt pruebas/coordinacion/OPTiPORT-SYNC-20261028.json; manual five-scenario evaluation is explicitly not a fresh-agent compliance result."
+        },
+        {
+          "at": "2026-10-28T00:47:53.208520+00:00",
+          "owner": "codex-optiport-verified-contracts",
+          "detail": "Post-release teaching complete: canonical OptiPort main135ba673 independently reviewed, merged and loaded; all4 changed files synchronized byte-exact into Codex and Claude after checking/preserving prior local copies. Both installed quick_validate checks pass. Receipt pruebas/coordinacion/OPTiPORT-SYNC-20261028.json; manual five-scenario evaluation is explicitly not a fresh-agent compliance result."
         }
       ],
       "claimed_at": "2026-10-28T00:20:37.286155+00:00",
-      "completed_at": "2026-10-28T00:46:33.330381+00:00"
+      "completed_at": "2026-10-28T00:47:53.208520+00:00"
     },
     "v22-pre2-version": {
       "id": "v22-pre2-version",
@@ -8385,7 +8390,7 @@
     "created_at": "2026-10-28T00:47:47.931083+00:00",
     "updated_at": "2026-10-28T00:47:47.931083+00:00"
   },
-  "updated_at": "2026-10-28T00:47:47.931083+00:00",
+  "updated_at": "2026-10-28T00:47:53.209677+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
