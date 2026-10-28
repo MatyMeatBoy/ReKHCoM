@@ -3,7 +3,7 @@
 
 Writes, under <data folder>/hd:
 - movies/ROP.mp4, RSE.mp4, RRE.mp4 and scenes/ with the endings' zz_event_151/621/631 (and with --scenes every zz_event_###.mp4): the Re:CoM movies with their first
-  0x100 bytes un-XORed (fixed 16-byte key), i.e. plain MP4 files;
+  0x100 bytes un-XORed (fixed 16-byte key), or already-plain MP4s copied unchanged;
 - subs/<movie>.<lang>.txt: the movies' subtitles in every language the game has (khhd_subs.py);
 - music/<track>.ogg + .loop: the Re:CoM soundtrack (Recom.pkg STREAM/0001/*.win32.scd → Ogg Vorbis, khhd_scd.py).
 
@@ -36,8 +36,12 @@ TRACKS = ['01F_Town_B', '01F_Town_F', '03F_Hercul', '03F_Hercules_B', '12_Event_
 def copy_movie(src, dst):
     with open(src, 'rb') as f, open(dst, 'wb') as out:
         head = bytearray(f.read(0x100))
-        for i in range(len(head)):
-            head[i] ^= MOVIE_KEY[i % 16]
+        # Match the desktop C++ CopyMovie: an already-plain ftyp header must
+        # not be encrypted again. The native transaction still validates every
+        # complete output before replacing the previous HD generation.
+        if len(head) >= 8 and head[4:8] != b'ftyp':
+            for i in range(len(head)):
+                head[i] ^= MOVIE_KEY[i % 16]
         out.write(head)
         while True:
             chunk = f.read(1 << 22)
