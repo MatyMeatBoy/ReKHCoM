@@ -373,5 +373,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux460-audio-backend-audit | Issue460 Bazzite silence: inspect actual SDL backends, host stream lifecycle and device defaults; controlled CPU probes, no speculative device fix | en_curso | codex-linux460 | — | Root explicitly assigns audio support after470 delivery; no460owner in currentCAS00e01a18; user2.2.5Linuxbugs mandate | 2026-10-28T21:51:13.621643+00:00 |
 | sony-package-patch-version | Encode PS4/Vita package release PATCH as explicit NN.NN major.(minor*10+patch) with bounded fields; v2.2.5 ->02.25 | en_curso | codex-sony-package-version | — | Root approved exact encoding/ranges and separate PR after OUT1 tests | 2026-10-28T21:54:06.191665+00:00 |
 | glyph-upload-gdi-stb | Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits | en_curso | codex-glyph-gdi-stb | — | user | 2026-10-28T21:54:51.750448+00:00 |
+| v225-stable-version | Version 2.2.5 source identity and platform packaging preflight | pendiente | — | — | — | 2026-10-28T21:54:57.218816+00:00 |
 
 Integrador: libre
