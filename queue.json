@@ -10819,12 +10819,12 @@
     "v225-publication-ledger": {
       "id": "v225-publication-ledger",
       "piece": "Published v2.2.5 download/version links and compact public delivery ledger",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-publication-peer",
       "created_at": "2026-10-28T23:16:25.875995+00:00",
-      "updated_at": "2026-10-28T23:18:01.381450+00:00",
+      "updated_at": "2026-10-28T23:18:45.567979+00:00",
       "branch": "docs/v225-publication-ledger",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/481",
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5",
       "evidence": [
@@ -10832,6 +10832,11 @@
           "at": "2026-10-28T23:18:01.381450+00:00",
           "owner": "codex-publication-peer",
           "detail": "Docs-only; README2.2.5,8packagehashrows,10assets,publicsource/Webidentity and limits; link/version assertions PASS"
+        },
+        {
+          "at": "2026-10-28T23:18:45.567979+00:00",
+          "owner": "codex-publication-peer",
+          "detail": "HEADad93ecff935aac5c75832b49f8234a974f8a5e83;docs-only2files;8packagehashesmatchpublicmanifest;24publiclinksHTTP200;version/privacyassertions/gitdiffcheckPASS;pruebas/coordinacion/v225-publication-docs-check.json"
         }
       ],
       "claimed_at": "2026-10-28T23:16:31.109716+00:00"
@@ -10865,7 +10870,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:18:01.382452+00:00",
+  "updated_at": "2026-10-28T23:18:45.567979+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
