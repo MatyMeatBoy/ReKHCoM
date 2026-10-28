@@ -30,6 +30,9 @@
 #include "types.h"
 #include <stddef.h>
 #include "bos_pc.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 #include "sprite_palettes.h"
 #include "enemy_ids.h"
 #include "gba/oam.h"
