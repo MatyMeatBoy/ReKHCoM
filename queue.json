@@ -8907,10 +8907,23 @@
         }
       ],
       "claimed_at": "2026-10-28T04:54:54.823028+00:00"
+    },
+    "v22-switch-guest-build": {
+      "id": "v22-switch-guest-build",
+      "piece": "Compile Switch v2.2 EU US JP arm64_32 guests only, source5ccb, jobs1 own384MiB budget; no VM",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T05:20:04.875654+00:00",
+      "updated_at": "2026-10-28T05:20:04.875654+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root authorizes Switch guest CPU window afterLinuxandWindowsQAterminal; hostVM requires next coordination",
+      "reference": "v22-console-delivery SDKinventory2; all closed Vita/PS4 outputs preserved",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:00:06.359728+00:00",
+  "updated_at": "2026-10-28T05:20:04.877132+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
