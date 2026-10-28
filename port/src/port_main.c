@@ -7,6 +7,10 @@
  */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
+#include "port/cursor_idle.h"
+static PortCursorIdle sCursorIdle;
+#endif
 #if defined(_WIN32) && !defined(PORT_GBA_RELOC)
 #define COBJMACROS
 #include <dxgi1_5.h>
@@ -2740,26 +2744,10 @@ static void Quit(void) {
 
 static void PumpEvents(void) {
     SDL_Event ev;
-#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
-    /* the game takes no mouse: the pointer hides after 3 s still over the window, back when it moves (user 25/10) */
-    static Uint64 sMouseMoved;
-    static int sMouseHidden;
-    Uint64 now = SDL_GetTicks();
-    if (!sMouseHidden && now - sMouseMoved > 3000) {
-        SDL_HideCursor();
-        sMouseHidden = 1;
-    }
-#endif
 
     while (SDL_PollEvent(&ev)) {
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
-        if (ev.type == SDL_EVENT_MOUSE_MOTION || ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-            sMouseMoved = now;
-            if (sMouseHidden) {
-                SDL_ShowCursor();
-                sMouseHidden = 0;
-            }
-        }
+        PortCursorIdleEvent(&sCursorIdle, sWindow, &ev);
 #endif
         if (PortRendererHandleReset(ev.type)) continue;
         PortPromptHandleEvent(&ev);
@@ -2834,6 +2822,9 @@ static void PumpEvents(void) {
         PortInputHandleEvent(&ev);
     }
     PortUiHarnessStep();
+#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
+    PortCursorIdlePoll(&sCursorIdle, sWindow);
+#endif
 }
 
 /* The frame timer always paces the game; vsync only removes tearing. On a
