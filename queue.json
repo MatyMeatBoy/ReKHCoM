@@ -9331,10 +9331,10 @@
     "optiport-post22-arithmetic-contracts": {
       "id": "optiport-post22-arithmetic-contracts",
       "piece": "OptiPort laneA bounded review/update architecture-migration and verified-lessons: original DIV/REM contract, preopt lowering, ABI/outparams, single operand evaluation",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-arithmetic",
       "created_at": "2026-10-28T12:34:01.335436+00:00",
-      "updated_at": "2026-10-28T12:42:52.775285+00:00",
+      "updated_at": "2026-10-28T12:55:24.143015+00:00",
       "branch": "docs/legacy-arithmetic-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/11",
       "approval": "Explicit user requests two workers finish OptiPort review; root assigns laneA only2refs, no gamebuilds or SDK downloads",
@@ -9344,9 +9344,15 @@
           "at": "2026-10-28T12:42:52.775285+00:00",
           "owner": "codex-optiport-arithmetic",
           "detail": "Exacthead022d6c2dd88f6458eec814817496ef14f221dc80.2refs9lines;SKILL/PR10refsuntouched. Baselineinformed alreadycorrect3cases;updatedcontrapressure3/3no blockers, nofakeRED. TrueCPUcase435 raw13/4/6→guarded84 +192controls linked.24MD59localtargets/newanchorUTF8/fences/diffcheckPASS. Bothinstalled24MDmatchedbasee0be beforeedits; unsyncedpendingmerge. B6pressurecasescoveredexistingguidance,SINCAMBIOS."
+        },
+        {
+          "at": "2026-10-28T12:55:24.143015+00:00",
+          "owner": "codex-optiport-arithmetic",
+          "detail": "Root exactdiff reviewed2refs only: originalDIV/REMcontract, preopt guard vsirrecoverableUB, type/poisonbounds andRNGsingleevaluation; verified435case clearly separates prototype fromARMproducerdelivery. IndependentBcrossreview3casesPASS, baselinealreadycorrectexplicitlynotfakeRED. Markdown24/59targetsUTF8/fences/diffPASS. Userexplicitlyrequested2workersfinishingOptiPortreview, Bfoundnonecessaryedits. Sync installedcopiesonlyaftermerge, preservebackups.; merged 44e6d2108eb6a565ef1d38cb709397a314d27d95"
         }
       ],
-      "claimed_at": "2026-10-28T12:34:06.761096+00:00"
+      "claimed_at": "2026-10-28T12:34:06.761096+00:00",
+      "completed_at": "2026-10-28T12:55:24.143015+00:00"
     }
   },
   "integrator": {
@@ -9355,7 +9361,7 @@
     "created_at": "2026-10-28T12:55:15.224349+00:00",
     "updated_at": "2026-10-28T12:55:15.224349+00:00"
   },
-  "updated_at": "2026-10-28T12:55:15.224349+00:00",
+  "updated_at": "2026-10-28T12:55:24.143015+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
