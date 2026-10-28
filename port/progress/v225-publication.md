@@ -77,15 +77,19 @@ The earlier font-test reports
 Keep [#330](https://github.com/MatyMeatBoy/ReKHCoM/issues/330),
 [#459](https://github.com/MatyMeatBoy/ReKHCoM/issues/459) and
 [#460](https://github.com/MatyMeatBoy/ReKHCoM/issues/460) open for the remaining
-Steam startup/audio evidence. In #459, the reporter says `--safe-startup` did not
-help; Steam Linux Runtime 1.0 starts the game but HD movies do not play. The two
-linked logs required access and could not be read; accessible copies were requested.
-No cause is assigned from that result alone.
+Steam startup/audio work. Both #459 logs became readable and were analyzed: the
+32-bit `--safe-startup` route stops on a bundled-libc/host-OpenGL incompatibility
+(`GLIBC_2.38` missing). The Steam Linux Runtime run reaches the game but cannot
+find FFmpeg/ffprobe, so it deliberately falls back to the cartridge movie.
+The imported HD movie is not shown to be lost. v2.2.5 does not repair these two
+runtime/dependency cases; the issue and follow-up work remain open. See the
+[log-based response](https://github.com/MatyMeatBoy/ReKHCoM/issues/459#issuecomment-6483176387).
 
 [#479](https://github.com/MatyMeatBoy/ReKHCoM/issues/479) tracks the missing
 Quit Game option. Newly reported
 [#480](https://github.com/MatyMeatBoy/ReKHCoM/issues/480) describes Android map
-layer/spring problems in Halloween Town and some other rooms; it remains unresolved.
+layer/spring problems in Halloween Town and some other rooms; it has been answered
+and queued for investigation, and remains unresolved.
 These records do not claim zero bugs or completion of all audio/art work.
 
 ## Next v2.3 priorities
