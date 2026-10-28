@@ -10294,19 +10294,20 @@
     "linux461-keyboard-without-controller": {
       "id": "linux461-keyboard-without-controller",
       "piece": "Issue461 Linux64 keyboard disappears without physical controller: metadata filters legacy keyboard-to-pad bridge; reproduce actual host/shim source and restore keyboard events",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux461",
       "created_at": "2026-10-28T21:30:45.363538+00:00",
-      "updated_at": "2026-10-28T21:30:45.363538+00:00",
+      "updated_at": "2026-10-28T21:30:54.380753+00:00",
       "branch": null,
       "pr": null,
       "approval": "Human requests2.2.5 bugs/all PR; root assigned independent461 after459 triage, no speculative grouping",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/461",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T21:30:54.380753+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:30:45.363538+00:00",
+  "updated_at": "2026-10-28T21:30:54.380753+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
