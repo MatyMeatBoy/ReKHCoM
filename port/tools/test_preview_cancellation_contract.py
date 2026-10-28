@@ -42,7 +42,7 @@ typedef struct { Uint64 modify_time; size_t size; } SDL_PathInfo;
 typedef struct SDL_Thread { int (*entry)(void*); void* data; int exists, finished; } SDL_Thread;
 static SDL_Thread queued;
 static Uint64 ticks;
-static int generation, decodeFail, threadFail, pendingWaitAllowed, joins, pendingJoins;
+static int generation, decodeFail, threadFail, missingMedia, pendingWaitAllowed, joins, pendingJoins;
 static int starts, decoded, destroys, active;
 static size_t allocations,allocationCalls;
 static void Complete(void);
@@ -56,6 +56,10 @@ static void ProbeFree(void* p) { if(p){assert(allocations);allocations--;free(p)
 #define SDL_PIXELFORMAT_ARGB8888 0
 static size_t SDL_strlcpy(char* dst,const char* src,size_t size){size_t n=strlen(src);if(size){size_t take=n<size-1?n:size-1;memcpy(dst,src,take);dst[take]=0;}return n;}
 static Uint64 SDL_GetTicks(void){return ticks;}
+static const char* SDL_getenv(const char* name){(void)name;return NULL;}
+static Uint64 SDL_GetPerformanceCounter(void){assert(!"observer-off clock");return 0;}
+static Uint64 SDL_GetPerformanceFrequency(void){assert(!"observer-off frequency");return 1;}
+static const char* PortConfigPath(const char* name){(void)name;assert(!"observer-off path/file IO");return "";}
 static int SDL_GetAtomicInt(SDL_AtomicInt* a){return a->value;}
 static void SDL_SetAtomicInt(SDL_AtomicInt* a,int value){a->value=value;}
 static SDL_Thread* SDL_CreateThread(int(*entry)(void*),const char* name,void* data){
@@ -77,7 +81,7 @@ static uint32_t GbaColor(int event){return 0xff000055u|((uint32_t)event<<8);}
 static uint32_t HdColor(int event,int gen){return 0xff0000ccu|((uint32_t)event<<8)|((uint32_t)gen<<16);}
 const char* PortHdGalleryMovieName(int event){return event==10?"event10":"event11";}
 int PortHdGalleryMovieOffset(int event){(void)event;return 0;}
-int PortHdScenePreviewPath(const char* movie,char* out,size_t size){snprintf(out,size,"g%d/%s.mp4",generation,movie);return 1;}
+int PortHdScenePreviewPath(const char* movie,char* out,size_t size){if(missingMedia){if(size)out[0]=0;return 0;}snprintf(out,size,"g%d/%s.mp4",generation,movie);return 1;}
 int PortHdMovieResolvePath(const char* movie,char* out,size_t size){return PortHdScenePreviewPath(movie,out,size);}
 int PortHdScenePreviewFile(const char* path,uint32_t* out,int w,int h,int second){
  int gen=-1,event=-1;(void)second;assert(!active);active=1;decoded++;
@@ -99,7 +103,7 @@ static void Complete(void){assert(queued.exists&&!queued.finished);queued.entry(
 static void Reset(void){
  PortSceneGalleryPreviewCancel();if(queued.exists&&!queued.finished)Complete();PortSceneGalleryPreviewPoll();
  PortSceneGalleryPreviewCacheClear();assert(!queued.exists&&!allocations);
- ticks=0;generation=decodeFail=threadFail=pendingWaitAllowed=0;
+ ticks=0;generation=decodeFail=threadFail=missingMedia=pendingWaitAllowed=0;
 }
 static void Start(int event){
  assert(PortSceneGalleryPreview(event,1));assert(sPreviewFallback&&sPreview[0]==GbaColor(event));
@@ -156,6 +160,19 @@ int main(void){
  size_t attempts=allocationCalls;ticks+=1000;assert(PortSceneGalleryPreview(10,1));assert(allocationCalls==attempts);
  puts("PASS decode/thread failure keeps fallback and releases job ownership");
 
+ /* Debounce uses elapsed selection time; no worker is started at 74ms. */
+ Reset();assert(PortSceneGalleryPreview(10,1));count=starts;
+ ticks=74;assert(PortSceneGalleryPreview(10,1));assert(starts==count&&!queued.exists);
+ ticks=75;assert(PortSceneGalleryPreview(10,1));assert(starts==count+1&&queued.exists);
+ Complete();PortSceneGalleryPreviewPoll();assert(!sPreviewFallback);
+ puts("PASS immediate fallback precedes the exact 75ms worker debounce boundary");
+
+ /* Missing imported media never starts a decoder and still owns a valid GBA still. */
+ Reset();missingMedia=1;assert(PortSceneGalleryPreview(10,1));CheckGba(10);count=starts;
+ ticks=75;assert(PortSceneGalleryPreview(10,1));assert(starts==count&&!queued.exists&&sPreviewFallback);
+ ticks=1000;assert(PortSceneGalleryPreview(10,1));assert(starts==count&&sPreviewFallback);
+ puts("PASS missing HD media preserves fallback without queued work or repeated retries");
+
  /* Process shutdown deliberately joins; this is distinct from menu closure. */
  Reset();Start(10);pendingWaitAllowed=1;before=pendingJoins;PortSceneGalleryFinalShutdown();
  assert(pendingJoins==before+1&&!queued.exists&&!sPreviewJob.thread&&!sPreviewJob.pixels&&!allocations);
@@ -196,11 +213,11 @@ def main():
     controls = []
     if args.negative_controls:
         serial_guard = 'job->serial == sPreviewSerial && '
-        close_start = 'void PortSceneGalleryPreviewCancel(void) {\n    ++sPreviewSerial;'
+        close_start = 'void PortSceneGalleryPreviewCancel(void) {\n'
         assert code.count(serial_guard) == code.count(close_start) == 1, 'Production anchors changed'
         variants = [
             ('stale-serial', code.replace(serial_guard, '', 1), b'GbaColor(event)'),
-            ('cold-join', code.replace(close_start, 'void PortSceneGalleryPreviewCancel(void) {\n    if (sPreviewJob.thread) SDL_WaitThread(sPreviewJob.thread, NULL);\n    ++sPreviewSerial;', 1), b'pendingWaitAllowed'),
+            ('cold-join', code.replace(close_start, close_start+'    if (sPreviewJob.thread) SDL_WaitThread(sPreviewJob.thread, NULL);\n', 1), b'pendingWaitAllowed'),
         ]
         for name, mutant, expected in variants:
             unit = output/(name+'.c'); binary = output/(name+'.exe')

@@ -77,6 +77,7 @@ static SDL_Texture* sPreviewTexture;
 static SDL_Renderer* sPreviewRenderer;
 static int sTextureSerial = -1, sTextureW, sTextureH;
 static char sPreviewMediaPath[1024];
+#include "port/preview_trace.h"
 /* Small immutable GBA stills are shared by the native and HD fallback views.
    At most three entries and 1 MiB, apart from the selected buffer and one job. */
 #define GBA_PREVIEW_CACHE_BYTES (1024u * 1024u)
@@ -166,6 +167,7 @@ void PortSceneGalleryPreviewPoll(void) {
             SDL_memcpy(sPreview, job->pixels, sizeof(sPreview));
             sPreviewW = PREVIEW_W; sPreviewH = PREVIEW_H; sPreviewReady = 1; sPreviewFallback = 0;
             sTextureSerial = -1;
+            PreviewTrace("cpu-hd-ready-polled");
             PortLog("scene gallery preview: HD event %d from bounded async poster", job->event);
         }
         SDL_free(job->pixels); job->pixels = NULL;
@@ -181,6 +183,8 @@ void PortSceneGalleryPreviewInvalidate(void) {
 }
 
 void PortSceneGalleryPreviewCancel(void) {
+    PreviewTrace("cancel");
+    sPreviewTracePending = 0;
     ++sPreviewSerial;
     sPreviewEvent = sPreviewHd = -1; sPreviewReady = sPreviewFallback = 0;
     SDL_DestroyTexture(sPreviewTexture); sPreviewTexture = NULL; sPreviewRenderer = NULL;
@@ -206,6 +210,7 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
         ++sPreviewSerial; sPreviewEvent = eventId; sPreviewHd = hd;
         SDL_strlcpy(sPreviewMediaPath, currentMedia, sizeof(sPreviewMediaPath));
         sPreviewReady = sPreviewFallback = 0; sPreviewAttempted = 0; sPreviewWaitAt = SDL_GetTicks(); sTextureSerial = -1;
+        PreviewTrace("request");
         if (!hd) {
             sPreviewReady = PreviewGba(eventId);
         } else if ((movie = PortHdGalleryMovieName(eventId)) != NULL) {
@@ -233,6 +238,7 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
             sPreviewReady = PreviewGba(eventId);
             sPreviewFallback = sPreviewReady;
         }
+        if (sPreviewReady) PreviewTrace(sPreviewFallback ? "cpu-gba-fallback" : (hd ? "cpu-hd-cache-ready" : "cpu-gba-ready"));
     }
 #if defined(_WIN32) || defined(PORT_LINUX)
     if ((!sPreviewReady || sPreviewFallback) && hd && !sPreviewAttempted && !sPreviewJob.thread && SDL_GetTicks() - sPreviewWaitAt >= 75) {
@@ -247,6 +253,7 @@ const uint32_t* PortSceneGalleryPreview(int eventId, int hd) {
             if (job->pixels) {
                 job->thread = SDL_CreateThread(PreviewDecodeJob, "selected HD poster", job);
                 if (!job->thread) { SDL_free(job->pixels); job->pixels = NULL; }
+                else PreviewTrace("worker-started");
             }
         }
         sPreviewAttempted = 1; /* one attempt per selection, including corrupt media */
@@ -271,10 +278,12 @@ int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float 
     }
     if (sTextureSerial != sPreviewSerial) {
         SDL_SetTextureScaleMode(sPreviewTexture, sPreviewHd && !sPreviewFallback ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
-        SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4);
+        if (!SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4)) { PreviewTrace("upload-rejected"); return 0; }
         sTextureSerial = sPreviewSerial;
+        PreviewTrace("upload-submitted");
     }
-    SDL_RenderTexture(renderer, sPreviewTexture, NULL, &dest);
+    if (!SDL_RenderTexture(renderer, sPreviewTexture, NULL, &dest)) { PreviewTraceDraw(0); return 0; }
+    PreviewTraceDraw(1);
     if (alpha > 0) {
         int r = SDL_min(255, (int)((shadow >> 16) & 255) * 255 / alpha);
         int g = SDL_min(255, (int)((shadow >> 8) & 255) * 255 / alpha);
@@ -438,6 +447,7 @@ void PortSceneGalleryFinalShutdown(void) {
         SDL_free(sPreviewJob.pixels); sPreviewJob.pixels = NULL;
     }
 #endif
+    PreviewTraceFlush();
 }
 
 /* Same native call stack as quick states/rollback; never restore from an event task's own wait. */
