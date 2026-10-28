@@ -10007,19 +10007,24 @@
     "linux-startup-pre1-delivery": {
       "id": "linux-startup-pre1-delivery",
       "piece": "Prepare immutable Linuxstartup-pre1 from integrated main452+457+458; exactTAR normal64/safe32 QA and provenance; root publishes",
-      "status": "en_revision",
+      "status": "en_curso",
       "owner": "codex-linux-startup-delivery",
       "created_at": "2026-10-28T19:43:07.280612+00:00",
-      "updated_at": "2026-10-28T20:05:18.210336+00:00",
-      "branch": "release/linux-startup-pre1",
+      "updated_at": "2026-10-28T20:14:54.726403+00:00",
+      "branch": "docs/linux-startup-test330",
       "pr": null,
-      "approval": "Root/user prioritize330374 startup prerelease; isolated build/preparation now, runtime only coordinatedlease; no published overwrite",
+      "approval": "user",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
       "evidence": [
         {
           "at": "2026-10-28T20:05:18.210336+00:00",
           "owner": "codex-linux-startup-delivery",
           "detail": "Final identity v2.2-test330-startup; sourceef4091e1ddf32c8a970bac5fad0359156bb6fa48; candidate2 immutable TAR D:/01Claude/ReKHCoM-build/qa-runtime/test330-startup/candidate2/ReKHCoM-v2.2-test330-startup-linux-x86-x64-desktop-steamdeck.tar.gz 37009001B SHAa2e1ec91b98e2781904eadc233aef8875f52e45a76ba32281847a77e6fd76e56; pruebas/issue330-entry-diagnostic/test330-delivery/FINAL-CONSUMER-GATE.json PASS46/fourcases; ROM/SAV/decompui+sentinelINIexact hashes preserved, activeINIordinarycache/default serialization documented; ownedQEMU48168 terminated/leaseROOT; BUILD-SOURCES+SHA256SUMS ready rootpublication; noDeckclaim/no455"
+        },
+        {
+          "at": "2026-10-28T20:14:54.726403+00:00",
+          "owner": "codex-linux-startup-delivery",
+          "detail": "Published startup test ledger only; root authorized documentation PR, no builds/runtime/artifact changes."
         }
       ],
       "claimed_at": "2026-10-28T19:43:19.813766+00:00"
@@ -10057,7 +10062,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:12:10.330667+00:00",
+  "updated_at": "2026-10-28T20:14:54.726403+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
