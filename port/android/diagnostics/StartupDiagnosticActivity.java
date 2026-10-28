@@ -20,12 +20,30 @@ public final class StartupDiagnosticActivity extends Activity {
         LinearLayout layout=new LinearLayout(this);layout.setOrientation(LinearLayout.VERTICAL);layout.setPadding(24,24,24,24);
         TextView title=new TextView(this);title.setText(t("ReKHCoM · Diagnóstico de arranque","ReKHCoM · Startup diagnostic"));title.setTextSize(22);layout.addView(title);
         TextView help=new TextView(this);help.setText(t("Prueba opcional: no corrige el cierre. Esta pantalla no carga SDL. Abre el launcher una vez; si se cierra, vuelve aquí y comparte el informe. Red desactivada en esta variante.","Optional test, not a crash fix. This screen does not load SDL. Open the launcher once; if it closes, return here and share the report. Network is disabled in this variant."));layout.addView(help);
-        open=button(layout,t("Abrir launcher","Open launcher"),()->startActivity(new Intent().setClassName(getPackageName(),"com.rekhcom.android.LauncherActivity")));
+        boolean options=false;
+        try{getPackageManager().getActivityInfo(new ComponentName(getPackageName(),"com.rekhcom.android.CompatibilityLauncherActivity"),0);options=true;}catch(android.content.pm.PackageManager.NameNotFoundException ignored){}
+        final boolean compat=options;
+        open=button(layout,t("Abrir launcher (predeterminado)","Open launcher (default)"),()->openLauncher(compat,"default"));
+        if(compat){
+            button(layout,t("Compatibilidad de mandos (sin HIDAPI)","Controller compatibility (HIDAPI off)"),()->openLauncher(true,"hidapi-off"));
+            TextView info=new TextView(this);info.setText(t("Sólo esta prueba; mandos Android y touch siguen activos. No afecta al juego, que usa otro proceso.","This launcher test only; Android controllers and touch remain active. Does not affect the game, which uses another process."));layout.addView(info);
+        }
         copy=button(layout,t("Copiar resumen","Copy summary"),()->{ClipboardManager c=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE);if(c!=null)c.setPrimaryClip(ClipData.newPlainText("ReKHCoM startup",report.getText()));});
         share=button(layout,t("Compartir informe","Share report"),this::share);
         refresh=button(layout,t("Actualizar informe","Refresh report"),this::collect);
         ScrollView scroll=new ScrollView(this);report=new TextView(this);report.setTextIsSelectable(true);scroll.addView(report);layout.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));setContentView(layout);
         collect();
+    }
+    private void openLauncher(boolean compat,String mode){
+        Intent intent=new Intent().setClassName(getPackageName(),compat?"com.rekhcom.android.CompatibilityLauncherActivity":"com.rekhcom.android.LauncherActivity");
+        if(compat){
+            try{
+                // Reflection keeps the original diagnostic build free of optional profile classes.
+                Class<?> gate=Class.forName("com.rekhcom.android.StartupProfileSession");
+                java.lang.reflect.Method prepare=gate.getDeclaredMethod("prepare",Context.class,String.class);prepare.setAccessible(true);prepare.invoke(null,this,mode);
+            }catch(Exception e){Toast.makeText(this,t("Perfil rechazado; launcher no abierto.","Profile rejected; launcher was not opened."),Toast.LENGTH_LONG).show();return;}
+        }
+        startActivity(intent);
     }
     private Button button(LinearLayout parent,String label,Runnable action){Button b=new Button(this);b.setText(label);b.setOnClickListener(v->action.run());parent.addView(b);return b;}
     private void share(){

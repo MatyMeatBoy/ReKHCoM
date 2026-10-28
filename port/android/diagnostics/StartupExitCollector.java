@@ -21,6 +21,12 @@ final class StartupExitCollector {
         text.append("Current build: 2.2-test412; base APK SHA256 bd7999c234669ac88dfd5ec22ae3ccddd95db011eda0a1608fb8526819e19a4e\n");
         text.append("Model: ").append(ReportLimits.text(Build.MANUFACTURER+" "+Build.MODEL,200)).append("\nAndroid API: ").append(Build.VERSION.SDK_INT).append('\n');
         text.append("Only this app's exit records. Exit reason is not a verified root cause. Updates/force-stop may add unrelated exit records.\n");
+        File profiles=new File(directory,"profile-attempts.txt");
+        if(profiles.isFile()&&profiles.length()<=4096){
+            try(InputStream input=new FileInputStream(profiles);ByteArrayOutputStream data=new ByteArrayOutputStream()){
+                ReportLimits.copy(input,data,4096);text.append("\nLauncher profile attempts (timestamps; not proof of crash cause):\n").append(new String(data.toByteArray(),StandardCharsets.UTF_8));
+            }catch(IOException e){text.append("Profile evidence unavailable.\n");}
+        }
         LinkedHashMap<String,File> traces=new LinkedHashMap<>();
         if(Build.VERSION.SDK_INT<30)text.append("Android does not expose historical process exits before API30. No retained trace available.\n");
         else {

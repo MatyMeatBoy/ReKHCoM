@@ -30,7 +30,9 @@ def main():
     parser.add_argument('--gradle-seed', type=Path, required=True, help='Existing generated project; wrapper/config read-only')
     parser.add_argument('--toolchain', type=Path, required=True, help='Existing toolchain/android directory')
     parser.add_argument('--out', type=Path, required=True, help='New dedicated output directory')
+    parser.add_argument('--compat-options', action='store_true', help='Separate optional HIDAPI launcher profiles; never normal stable')
     args = parser.parse_args()
+    version = '2.2-test412-options' if args.compat_options else '2.2-test412-startup-diagnostic'
     args.base_apk = args.base_apk.resolve()
     args.gradle_seed = args.gradle_seed.resolve()
     args.out = args.out.resolve()
@@ -72,7 +74,7 @@ def main():
     shutil.copytree(sdl_java, source / 'java/org')
     diagnostic = ROOT / 'port/android/diagnostics'
     for file in diagnostic.glob('*.java'):
-        if not file.name.endswith('Test.java'):
+        if not file.name.endswith('Test.java') and (args.compat_options or file.name not in ('StartupProfiles.java', 'StartupProfileSession.java', 'CompatibilityLauncherActivity.java')):
             shutil.copy2(file, source / 'java/com/rekhcom/android' / file.name)
     manifest = source / 'AndroidManifest.xml'
     ET.register_namespace('android', NS[1:-1])
@@ -86,6 +88,10 @@ def main():
     for intent in list(launcher.findall('intent-filter')):
         launcher.remove(intent)
     launcher.set(NS + 'exported', 'false')
+    if args.compat_options:
+        attrs = dict(launcher.attrib)
+        attrs[NS + 'name'] = 'com.rekhcom.android.CompatibilityLauncherActivity'
+        ET.SubElement(application, 'activity', attrs)
     entry = ET.SubElement(application, 'activity', {NS + 'name': 'com.rekhcom.android.StartupDiagnosticActivity', NS + 'exported': 'true', NS + 'hardwareAccelerated': 'false', NS + 'configChanges': 'orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode'})
     intent = ET.SubElement(entry, 'intent-filter')
     ET.SubElement(intent, 'action', {NS + 'name': 'android.intent.action.MAIN'})
@@ -107,7 +113,7 @@ android {
  buildTypes { debug { debuggable true } }
  packaging { jniLibs { useLegacyPackaging true; keepDebugSymbols += ['**/*.so'] } }
 }
-""", encoding='utf-8')
+""".replace('2.2-test412-startup-diagnostic', version), encoding='utf-8')
     command = [str(stage / 'gradlew.bat'), '--offline', '--no-daemon', '--max-workers=1', 'assembleDebug']
     with (args.out / 'gradle.log').open('wb') as log:
         result = subprocess.run(command, cwd=stage, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=0x08000000 if os.name == 'nt' else 0)
@@ -120,15 +126,15 @@ android {
     signature = subprocess.check_output([str(build_tools / ('apksigner.bat' if os.name == 'nt' else 'apksigner')), 'verify', '--verbose', '--print-certs', str(apk)], env=env, text=True)
     assert CERT in signature
     badging = subprocess.check_output([str(build_tools / ('aapt.exe' if os.name == 'nt' else 'aapt')), 'dump', 'badging', str(apk)], env=env, text=True)
-    assert "name='com.rekhcom.android' versionCode='102020099' versionName='2.2-test412-startup-diagnostic'" in badging
+    assert ("name='com.rekhcom.android' versionCode='102020099' versionName='" + version + "'") in badging
     assert 'com.rekhcom.android.StartupDiagnosticActivity' in badging
     assert 'android.permission.' not in badging, 'Unexpected diagnostic permission'
-    destination = args.out / 'ReKHCoM-v2.2-test412-startup-diagnostic.apk'
+    destination = args.out / ('ReKHCoM-v' + version + '.apk')
     shutil.copy2(apk, destination)
     (args.out / 'signature.txt').write_text(signature)
     (args.out / 'badging.txt').write_text(badging)
-    staged_java = {file.name: sha((source / 'java/com/rekhcom/android' / file.name).read_bytes()) for file in diagnostic.glob('*.java') if not file.name.endswith('Test.java')}
-    receipt = {'source': subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip(), 'source_dirty': bool(subprocess.check_output(['git', '-C', str(ROOT), 'status', '--porcelain'], text=True).strip()), 'diagnostic_staged_java_sha256': staged_java, 'base_source': PIN, 'base_apk_sha256': BASE_SHA, 'apk': str(destination), 'apk_sha256': sha(destination.read_bytes()), 'application_id': 'com.rekhcom.android', 'version_code': 102020099, 'version_name': '2.2-test412-startup-diagnostic', 'certificate_sha256': CERT, 'immutable_entries': immutable, 'native_library_count': 8, 'native_rebuild': False, 'offline': True, 'normal_release_modified': False}
+    staged_java = {file.name: sha((source / 'java/com/rekhcom/android' / file.name).read_bytes()) for file in diagnostic.glob('*.java') if (source / 'java/com/rekhcom/android' / file.name).is_file()}
+    receipt = {'source': subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip(), 'source_dirty': bool(subprocess.check_output(['git', '-C', str(ROOT), 'status', '--porcelain'], text=True).strip()), 'diagnostic_staged_java_sha256': staged_java, 'base_source': PIN, 'base_apk_sha256': BASE_SHA, 'apk': str(destination), 'apk_sha256': sha(destination.read_bytes()), 'application_id': 'com.rekhcom.android', 'version_code': 102020099, 'version_name': version, 'compat_options': args.compat_options, 'certificate_sha256': CERT, 'immutable_entries': immutable, 'native_library_count': 8, 'native_rebuild': False, 'offline': True, 'normal_release_modified': False}
     (args.out / 'BUILD-RECEIPT.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({k: v for k, v in receipt.items() if k != 'immutable_entries'}))
 
