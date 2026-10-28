@@ -9650,15 +9650,21 @@
     "issue441-title-bar-ready-guard": {
       "id": "issue441-title-bar-ready-guard",
       "piece": "Protect native Press Start fallback when current HD parts rejected; preserve all-good blink/fade/bar phases",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-title-bar-guard",
       "created_at": "2026-10-28T16:24:35.248916+00:00",
-      "updated_at": "2026-10-28T16:25:04.471364+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T16:49:38.691265+00:00",
+      "branch": "fix/title-bar-native-fallback",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/448",
       "approval": "Root authorizes sibling after446merge; actualmissingassetTocclusion reproduced, no art edits",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/446",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T16:49:38.691265+00:00",
+          "owner": "codex-title-bar-guard",
+          "detail": "36613e646: PPU30lines accepted-queue guard; noactive/OBJoff preserves oldHDbar. ActualQueueMain+TitleBarLine56CPUregionchecksRED/GREEN; actualEU32D3D11+software65positiveframesidentical; realWORDS+POSTERmissing/corruptTmask32→256exactGBA3frameseach. Linux32/64PPU-onlycompilelinkPASS; nativeLinuxruntimependingtargeted. pruebas/issue441-title-start-bar/FALLBACK-NATIVE-PIXEL-CHECKS.json and FALLBACK-WINDOWS-RECEIPT.json. Noartifactpublish/Deckhardwareclaim."
+        }
+      ],
       "claimed_at": "2026-10-28T16:25:04.471364+00:00"
     },
     "issue439-linux-test-delivery": {
@@ -9691,7 +9697,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:49:20.503208+00:00",
+  "updated_at": "2026-10-28T16:49:38.691265+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
