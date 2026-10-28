@@ -8744,10 +8744,23 @@
         }
       ],
       "claimed_at": "2026-10-28T03:55:56.849103+00:00"
+    },
+    "issue421-linux64-movie-controls": {
+      "id": "issue421-linux64-movie-controls",
+      "piece": "Issue421 Linux64 movie pause/confirm skip and FPS overlay parity with Windows; preserve movie clocks and audio across pause",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T03:59:36.852429+00:00",
+      "updated_at": "2026-10-28T03:59:36.852429+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User: fix all issue421 observations before v2.2, no Atlas gate for port fixes",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/421",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T03:59:15.655818+00:00",
+  "updated_at": "2026-10-28T03:59:36.852429+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
