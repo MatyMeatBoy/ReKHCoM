@@ -90,6 +90,25 @@ def package_filename(identity):
     return f"ReKHCoM-{identity['release_tag']}-android-beta{identity['suffix']}.apk"
 
 
+def prepare_java_first_entry(stage, sdl_source, identity, *, smoke=False):
+    """Reuse the verified Java-only entry; keep smoke autoplay independent."""
+    if smoke:
+        return False
+    from build_android_safe_startup import safe_manifest, validate_manifest
+    source=Path(stage)/'app/src/main'
+    manifest=source/'AndroidManifest.xml'
+    template=(Path(sdl_source)/'android-project/app/src/main/AndroidManifest.xml').read_text(encoding='utf-8')
+    text=safe_manifest(manifest.read_text(encoding='utf-8'),template,
+                       application_id=identity['application_id'],label=None)
+    validate_manifest(text,template,application_id=identity['application_id'])
+    java=source/'java/com/rekhcom/android';java.mkdir(parents=True,exist_ok=True)
+    for path in (ROOT/'port/android/diagnostics').glob('*.java'):
+        if not path.name.endswith('Test.java'):
+            shutil.copy2(path,java/path.name)
+    manifest.write_text(text,encoding='utf-8')
+    return True
+
+
 def playable_test_manifest(text, identity):
     if 'SDL_ENV.' in text:
         raise ValueError('Playable test packages must not contain SDL_ENV fixtures')
@@ -174,6 +193,7 @@ def main():
         manifest.write_text(text.replace('  <activity',metadata+'  <activity',1),encoding='utf-8')
     else:
         assert 'SDL_ENV.' not in manifest.read_text(encoding='utf-8')
+    prepare_java_first_entry(stage,sdl,identity,smoke=args.smoke)
 
     shutil.copytree(skeleton/'app/src/main/java/org',stage/'app/src/main/java/org',dirs_exist_ok=True)
     shutil.copytree(skeleton/'gradle',stage/'gradle',dirs_exist_ok=True)
