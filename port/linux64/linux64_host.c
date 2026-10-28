@@ -11,6 +11,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include "../include/port/port_audio_continuity.h"
+#include "../include/port/cursor_idle.h"
 #include <dirent.h>
 #include <errno.h>
 #include <math.h>
@@ -240,8 +241,10 @@ static void RendererDeviceReset(void) {
     Log("renderer reset: bridge texture generation %u", sRendererGeneration);
 }
 static void Pump(void) {
+    static PortCursorIdle cursor;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
+        PortCursorIdleEvent(&cursor, sWindow, &e);
         switch (e.type) {
             case SDL_EVENT_RENDER_DEVICE_RESET: RendererDeviceReset(); break;
             case SDL_EVENT_QUIT: sQuit = 1; break;
@@ -261,6 +264,7 @@ static void Pump(void) {
             default: break;
         }
     }
+    PortCursorIdlePoll(&cursor, sWindow);
 }
 static int H_pad_poll(HostPad* out, int count) {
     /* RetroPad numbering by position (bridge.h): B Y SELECT START UP DOWN LEFT RIGHT A X L R */
