@@ -306,4 +306,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-pre3-linux-import-delivery | Compile current Linux32/64 EU US JP with current crash/audio/card/HUD fixes and native movie import416; exact tar snapshot-VM CPU checks, no GamingMode physical claim | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/416 | Usuario: solucionar Steam Deck/import issues, entregar pre solo compilada, ultima version y todos fixes | 2026-10-28T00:37:37.061226+00:00 |
 | hd-gameplay-lossless-white-fallback | PR400 lazy-white: require usable white fade before native omission; producer/consumer failure, memory/budget, first-fade equivalence and bounded measurements | en_curso | codex-lazy-white-fallback | — | Root delegated child of hd-gameplay-lossless-load-budget; preserve parent Claude claim and assets | 2026-10-28T00:49:28.125349+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T01:15:37.811033+00:00)
+Integrador: libre
