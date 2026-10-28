@@ -8614,7 +8614,7 @@
       "status": "en_curso",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:54:25.529458+00:00",
-      "updated_at": "2026-10-28T04:20:00.693458+00:00",
+      "updated_at": "2026-10-28T06:18:52.137794+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord",
@@ -8629,6 +8629,11 @@
           "at": "2026-10-28T04:20:00.693458+00:00",
           "owner": "codex-integrador",
           "detail": "Progress28Oct04:20UTC: all desktopLinux32/64 and Anbernicarmhf EU/US/JP candidate compiled and independently closed/audited from PR428 headace4116e (unmerged DRAFT; do not publish yet). Linux TAR31409321 SHA80b868e8e97ba998473a09f86b1fd81c6ea4f511843abf6faba59f423f3ef57a; AnbernicZIP19813224 SHAccc428fca31e8212ca6fad72b913946650113cee13362e8b667c62bf1af8d4ce. Serial resume job256MiB peak101MiB minfree1.609GiB PASS. PR428 exact full host linkPASS independently peak34.31MiB; CPUcontrols/UIcompilePASS minfree1.313GiB. Runtime VM QA prepared next, no heavy process active now. Windows38f exact6startups/21DIV/SRAMmap32/64PASS; Android closed root copy. All consoles/Web builds still pending, RAM guarded; no stable2.2 published. Reporter421 progress comment6460459960, kept open."
+        },
+        {
+          "at": "2026-10-28T06:18:52.137794+00:00",
+          "owner": "codex-integrador",
+          "detail": "28Oct06:16UTC: GitHub v2.2 DRAFT created; five closed Android/PS4/PS5/Vita/Switch assets uploaded, API size/SHA256 digest independently match local hashes (pruebas/v22-release-readiness/DRAFT-UPLOAD-READBACK.json). NOT public stable. Main040e includes428/429; Windows exact HDvisual/audio PASS, Linux exact TAR SRAM32/64/startups/import/DIV PASS. Eight downloadable candidates closed, but new requested Auto migration requires Windowslauncher/Linux/Anbernic repacks; console_delivery owns. Webfirstattempt TERMINAL RAM cancellation floor3GiB peak393MiB; readiness resumes cached build with measured budgets. Nine issues reviewed by worker for individualized replies after public release; no blanket closures. Draft release target must move to final reviewed merge before publishing."
         }
       ],
       "claimed_at": "2026-10-28T02:54:42.405252+00:00"
@@ -9037,7 +9042,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:57:33.524603+00:00",
+  "updated_at": "2026-10-28T06:18:52.137794+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
