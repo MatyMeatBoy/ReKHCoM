@@ -26,6 +26,7 @@ BUILD = HERE / 'build'
 DIST = HERE / 'dist'
 sys.path.insert(0, str(ROOT / 'port/tools'))
 from workdir import WORK_DIR  # noqa: E402
+from sony_package_version import sfo_release_version  # noqa: E402
 OO = Path(os.environ.get('OO_PS4_TOOLCHAIN', WORK_DIR / 'ps4/toolchain'))
 WINDOWS = os.name == 'nt'
 LLVM = ROOT.parent / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin'
@@ -53,8 +54,10 @@ def tool(name):
 def version():
     import re
     text = (ROOT / 'port/include/port/port_version.h').read_text(encoding='utf-8')
-    major, minor = re.search(r'#define REKHCOM_VERSION\s+"v(\d+)\.(\d+)', text).groups()
-    return f'{int(major):02d}.{int(minor):02d}'
+    match = re.search(r'#define REKHCOM_VERSION\s+"([^"]+)"', text)
+    if match is None:
+        raise ValueError('Missing REKHCOM_VERSION for Sony SFO package')
+    return sfo_release_version(match.group(1))
 
 
 def build_guests(regions, jobs):

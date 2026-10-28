@@ -33,6 +33,8 @@ SWITCH = ROOT / 'port/switch'
 BUILD = ROOT / 'build/vita'
 TARGET = ['--target=armv7a-none-eabihf', '-mcpu=cortex-a9', '-mfpu=neon', '-mthumb']
 TITLE_ID = 'RKHC00001'
+sys.path.insert(0, str(ROOT / 'port/tools'))
+from sony_package_version import sfo_release_version  # noqa: E402
 sys.path.insert(0, str(PS5))
 sys.path.insert(0, str(SWITCH))
 import build_ps5  # noqa: E402  (PORT_PATCHES, PORT_EXCLUDED, the notices)
@@ -166,9 +168,8 @@ ls -l ReKHCoM.vpk
 
 
 def package_script(regions):
-    """SFO's two-component version follows the same release header as the game."""
-    major, minor = re.match(r'(\d+)\.(\d+)', build_switch.version()).groups()
-    app_version = f'{int(major):02d}.{int(minor):02d}'
+    """Encode all three release components within SFO's NN.NN capacity."""
+    app_version = sfo_release_version(build_switch.version())
     return (VM_SCRIPT.replace('REGIONS', ' '.join(regions)).replace('TITLEID', TITLE_ID)
             .replace('APPVERSION', app_version))
 
