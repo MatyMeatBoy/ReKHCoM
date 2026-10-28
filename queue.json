@@ -9096,10 +9096,10 @@
       "status": "pr_abierto",
       "owner": "codex-boss-levelup-backdrop",
       "created_at": "2026-10-28T05:57:33.524603+00:00",
-      "updated_at": "2026-10-28T11:49:36.507689+00:00",
+      "updated_at": "2026-10-28T11:53:59.490126+00:00",
       "branch": "fix/boss-levelup-backdrop",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/436",
-      "approval": null,
+      "approval": "Usuario: al subir de nivel en Jaula se ve fondo cortado como Jafar, ver si pasa con todos los fondos de jefes; despues seguir pendientes hasta acabar. Revision directa coordinador autorizada sin Atlas; root inspecciono captura combinada y fuente6cf71f8, codigo sin nuevos assets.",
       "reference": "pruebas/future-boss-coverage/parasite-cage-levelup-background.png",
       "evidence": [
         {
@@ -9116,6 +9116,11 @@
           "at": "2026-10-28T11:49:36.507689+00:00",
           "owner": "codex-boss-levelup-backdrop",
           "detail": "Head6cf71f8f2 adds docs-only x32 compile proof; product card_level_up.c unchangedsha b4a1e1ae. Two combined translation units built with actual Windows64 guest target(ELF32/EM_X86_64). Execution pending: available HUDPS5cache lacksPORT_LINUX64_GUEST and differs from frozenWindowsguest, not safely interchangeable. Mainbase0f78. CombinedEU32LEFT->defeat->Draw/pickup->reward normal/HDfonts verified callbacks0000 at12rewardframespercase; centralblack0. Prior182CPUroles/45Original and naturalPC/Jafarproof retained."
+        },
+        {
+          "at": "2026-10-28T11:53:59.490126+00:00",
+          "owner": "codex-boss-levelup-backdrop",
+          "detail": "Root independentCPU actual182battleIDsx4roles PASS; actualcombined normal/HD contact inspected, backdrop continuous. 45Originalcomparisons identical; naturalParasite/Jafar andshared434 LEFTdefeat-reward callback0000 tracked. x32twoTU compilePASS; runtime64/other7natural partial disclosed, no universalboss claim."
         }
       ],
       "claimed_at": "2026-10-28T11:12:43.108949+00:00"
@@ -9253,7 +9258,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:52:12.237055+00:00",
+  "updated_at": "2026-10-28T11:53:59.490126+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
