@@ -3759,17 +3759,27 @@ static bool TouchScroll(const SDL_Event& ev) {
 }
 #endif
 
-static int LauncherVideoFailed(const char* stage, SDL_Window* window, SDL_GLContext gl) {
+static int LauncherVideoFailed(const char* stage, SDL_Window* window, SDL_GLContext gl,
+                               bool imguiSdlReady = false, bool imguiGlReady = false) {
     // Preserve the SDL error before reporting/cleanup can replace it. In
     // particular, never enter ImGui's GL backend without a current context.
     char message[1024];
-    snprintf(message, sizeof(message), "%s: %s", stage, SDL_GetError());
+    const char* detail = SDL_GetError();
+    snprintf(message, sizeof(message), "%s: %s", stage,
+             detail && *detail ? detail : "no SDL error detail");
+    // Log before the dialog/cleanup: Android may finish the Activity without
+    // killing its process, so a process-exit report alone can miss this failure.
+    fprintf(stderr, "launcher video startup: %s\n", message);
     SDL_Log("launcher video startup: %s", message);
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ReKHCoM", message, window);
-    KhRaDestroy(sRaUi);
+    if (!SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ReKHCoM", message, window))
+        SDL_Log("launcher startup error dialog unavailable: %s", SDL_GetError());
+    if (imguiGlReady) ImGui_ImplOpenGL3_Shutdown();
+    if (imguiSdlReady) ImGui_ImplSDL3_Shutdown();
+    if (ImGui::GetCurrentContext()) ImGui::DestroyContext();
+    if (sRaUi) KhRaDestroy(sRaUi);
     sRaUi = nullptr;
     if (gl) SDL_GL_DestroyContext(gl);
-    SDL_DestroyWindow(window);
+    if (window) SDL_DestroyWindow(window);
     SDL_Quit();
     return 1;
 }
@@ -3879,7 +3889,7 @@ int main(int argc, char** argv) {
     SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight"); /* as the game: the page is laid out wide */
 #endif
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))
-        return 1;
+        return LauncherVideoFailed("SDL initialization", nullptr, nullptr);
 #ifdef LAUNCHER_ANDROID
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
@@ -3903,7 +3913,7 @@ int main(int argc, char** argv) {
                                           SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
                                               (shotDir != nullptr ? SDL_WINDOW_HIDDEN : 0));
     if (window == nullptr)
-        return 1;
+        return LauncherVideoFailed("window creation", window, nullptr);
     SDL_SetWindowMinimumSize(window, (int)Px(960), (int)Px(640));
 #ifdef LAUNCHER_ANDROID
     {
@@ -3918,6 +3928,17 @@ int main(int argc, char** argv) {
         return LauncherVideoFailed("OpenGL context creation", window, gl);
     if (!SDL_GL_MakeCurrent(window, gl))
         return LauncherVideoFailed("OpenGL context activation", window, gl);
+    // ImGui's GL backend queries/parses GL_VERSION during initialization.
+    // Do not enter it with a missing current context or a null driver string.
+    if (SDL_GL_GetCurrentContext() != gl) {
+        SDL_SetError("created OpenGL context is not current");
+        return LauncherVideoFailed("OpenGL current context", window, gl);
+    }
+    const char* glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    if (!glVersion || !*glVersion) {
+        SDL_SetError("OpenGL version string is unavailable");
+        return LauncherVideoFailed("OpenGL version query", window, gl);
+    }
     SDL_GL_SetSwapInterval(1);
 
     IMGUI_CHECKVERSION();
@@ -3927,12 +3948,17 @@ int main(int argc, char** argv) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
     ApplyStyle();
     LoadFonts();
-    ImGui_ImplSDL3_InitForOpenGL(window, gl);
+    SDL_ClearError();
+    if (!ImGui_ImplSDL3_InitForOpenGL(window, gl))
+        return LauncherVideoFailed("ImGui SDL backend initialization", window, gl);
+    SDL_ClearError();
 #ifdef LAUNCHER_ANDROID
-    ImGui_ImplOpenGL3_Init("#version 300 es");
+    const bool imguiGlReady = ImGui_ImplOpenGL3_Init("#version 300 es");
 #else
-    ImGui_ImplOpenGL3_Init("#version 130");
+    const bool imguiGlReady = ImGui_ImplOpenGL3_Init("#version 130");
 #endif
+    if (!imguiGlReady)
+        return LauncherVideoFailed("ImGui OpenGL backend initialization", window, gl, true);
     LoadBoxArt();
     if (shotDir && SDL_getenv("DECOMPUI_REWRITE_SETTINGS")) SaveIni();
     if (shotDir && SDL_getenv("DECOMPUI_PADFOCUS")) /* harness: the action the drawing lights */

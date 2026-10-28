@@ -27,6 +27,9 @@ static SDL_Window windowObject;
 static void* sRaUi = &windowObject;
 static int scenario, invalidCall, swapCalls, destroyGL, destroyWindow, quitCalls, raDestroy, diagnostics;
 #define SDL_MESSAGEBOX_ERROR 1
+namespace ImGui { static void* GetCurrentContext(){return nullptr;} static void DestroyContext(){} }
+static void ImGui_ImplSDL3_Shutdown(){}
+static void ImGui_ImplOpenGL3_Shutdown(){}
 static const char* SDL_GetError(){return "injected startup failure";}
 static void SDL_Log(const char*,...){}
 static bool SDL_ShowSimpleMessageBox(int,const char*,const char* message,SDL_Window*){
@@ -34,6 +37,10 @@ static bool SDL_ShowSimpleMessageBox(int,const char*,const char* message,SDL_Win
 }
 static SDL_GLContext SDL_GL_CreateContext(SDL_Window*){return scenario==1 ? nullptr : &windowObject;}
 static bool SDL_GL_MakeCurrent(SDL_Window*,SDL_GLContext gl){if(!gl)invalidCall++;return scenario!=2;}
+#define GL_VERSION 1
+static SDL_GLContext SDL_GL_GetCurrentContext(){return &windowObject;}
+static const unsigned char* glGetString(int){return (const unsigned char*)"3.0";}
+static bool SDL_SetError(const char*){return false;}
 static bool SDL_GL_SetSwapInterval(int){swapCalls++;return true;}
 static void SDL_GL_DestroyContext(SDL_GLContext gl){if(!gl)invalidCall++;destroyGL++;}
 static void SDL_DestroyWindow(SDL_Window*){destroyWindow++;}
