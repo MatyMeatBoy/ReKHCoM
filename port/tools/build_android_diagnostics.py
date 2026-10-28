@@ -31,6 +31,8 @@ def main():
     parser.add_argument('--toolchain', type=Path, required=True, help='Existing toolchain/android directory')
     parser.add_argument('--out', type=Path, required=True, help='New dedicated output directory')
     args = parser.parse_args()
+    if (ROOT / 'port/android/app/src/main/java/com/rekhcom/android/StartupSdlActivity.java').exists():
+        parser.error('Historical test412 native bytes predate current startup diagnostics. Use build_android_safe_startup.py with current native outputs; do not regenerate the published test412 APK.')
     args.base_apk = args.base_apk.resolve()
     args.gradle_seed = args.gradle_seed.resolve()
     args.out = args.out.resolve()

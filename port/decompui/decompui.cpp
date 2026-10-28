@@ -3767,6 +3767,23 @@ static int LauncherVideoFailed(const char* stage, SDL_Window* window, SDL_GLCont
     const char* detail = SDL_GetError();
     snprintf(message, sizeof(message), "%s: %s", stage,
              detail && *detail ? detail : "no SDL error detail");
+#ifdef LAUNCHER_ANDROID
+    // Logcat is not a retained file. Keep the already-copied original error
+    // where the Java-only recovery entry can share it after this Activity ends.
+    const char* internal = SDL_GetAndroidInternalStoragePath();
+    char errorFile[1536], pending[1552];
+    int count = internal ? snprintf(errorFile, sizeof(errorFile), "%s/launcher-startup-error.log", internal) : -1;
+    if (count > 0 && count < (int)sizeof(errorFile)) {
+        snprintf(pending, sizeof(pending), "%s.pending", errorFile);
+        FILE* output = fopen(pending, "wb");
+        if (output) {
+            size_t length = strlen(message);
+            bool stored = fwrite(message, 1, length, output) == length;
+            if (fclose(output) != 0) stored = false;
+            if (!stored || rename(pending, errorFile) != 0) remove(pending);
+        }
+    }
+#endif
     // Log before the dialog/cleanup: Android may finish the Activity without
     // killing its process, so a process-exit report alone can miss this failure.
     fprintf(stderr, "launcher video startup: %s\n", message);
