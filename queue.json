@@ -9766,7 +9766,7 @@
       "status": "pr_abierto",
       "owner": "codex-movie-master-volume",
       "created_at": "2026-10-28T17:51:34.965406+00:00",
-      "updated_at": "2026-10-28T18:09:00.990825+00:00",
+      "updated_at": "2026-10-28T18:25:46.486181+00:00",
       "branch": "fix/movie-master-volume",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/452",
       "approval": "Usuario: sin preguntas fullpass all pending; root activa449audio trasLinuxpublicado, import123/copyseparados",
@@ -9776,6 +9776,11 @@
           "at": "2026-10-28T18:09:00.990825+00:00",
           "owner": "codex-movie-master-volume",
           "detail": "HEAD6df6d33d03838319fedb7eceeb7433bab7ef19df; pruebas/issue449-movie-master-volume RED/GREEN+CPU166+TU8PASS; Windows64host linkPASS; draft awaiting root-coordinated real movie runtime; no device listening/Deck/API16 claim"
+        },
+        {
+          "at": "2026-10-28T18:25:46.486181+00:00",
+          "owner": "codex-movie-master-volume",
+          "detail": "HEAD401b2532cfe6ea914eda423d1a0d7bb0d9b435c6; product blobs identical6df; WINDOWS-VERIFIED.json PASS12EU32/64game+3MFreset/errors+59postconditions, master0silent+60framesEvent,50/100steadyRMS.5;CPU166/TU8PASS; no physical/Deck/Android runtimeclaim; WINDOWSquiescentreleasedROOT"
         }
       ],
       "claimed_at": "2026-10-28T17:54:22.896767+00:00"
@@ -9808,7 +9813,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:25:20.044543+00:00",
+  "updated_at": "2026-10-28T18:25:46.486181+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
