@@ -9534,10 +9534,10 @@
     "optiport-full-pass-20261028": {
       "id": "optiport-full-pass-20261028",
       "piece": "Audit full24MD latest433fb and original app14blockscope; close material gaps media cadence/PTS, compositor crossbackend ownership, harness observer+orchestrator lifecycle. Compact existing refs; honest baseline/updated checks; no device cause claims, no closed productlane revival.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-full-pass",
       "created_at": "2026-10-28T15:58:20.200747+00:00",
-      "updated_at": "2026-10-28T16:10:32.439442+00:00",
+      "updated_at": "2026-10-28T16:11:07.131544+00:00",
       "branch": "docs/full-method-pass",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/13",
       "approval": "User explicitly prioritizes optimizing full OptiPort and learned issues. Root reviewed exact18e6b0bf 3references; informed peerbaseline3/3 already correct, no fabricated RED/effectiveness claim.",
@@ -9552,9 +9552,15 @@
           "at": "2026-10-28T16:10:32.439442+00:00",
           "owner": "codex-optiport-full-pass",
           "detail": "Full24Markdown audit,59localtargets3anchors/UTF8/fences/diff PASS; media cadence vs displayFPS, actual compositor path, observer/session ownership, import output identity. New wholepass percentage remains unassigned."
+        },
+        {
+          "at": "2026-10-28T16:11:07.131544+00:00",
+          "owner": "codex-optiport-full-pass",
+          "detail": "Root exact-head review of full-skill compact amendments and honest evidence boundaries;24MD audit59targets3anchors checks PASS; informed baseline already correct3/3, no fakeRED. Media/asset import identity/compositor/observer/session criteria applied without promoting439/441 hypotheses to fixes.; merged 394c34ff3f588d25d8f491579f22b8320380cc5f"
         }
       ],
-      "claimed_at": "2026-10-28T15:58:30.315790+00:00"
+      "claimed_at": "2026-10-28T15:58:30.315790+00:00",
+      "completed_at": "2026-10-28T16:11:07.131544+00:00"
     },
     "optiport-v22-fullpass-ledger": {
       "id": "optiport-v22-fullpass-ledger",
@@ -9577,7 +9583,7 @@
     "created_at": "2026-10-28T16:10:55.706286+00:00",
     "updated_at": "2026-10-28T16:10:55.706286+00:00"
   },
-  "updated_at": "2026-10-28T16:10:55.707592+00:00",
+  "updated_at": "2026-10-28T16:11:07.145583+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
