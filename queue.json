@@ -10386,10 +10386,10 @@
     "optiport-installed-embedded-v225": {
       "id": "optiport-installed-embedded-v225",
       "piece": "Sync installed Codex/Claude preserving local additions; refresh embedded committed snapshot for2.2.5 and report final16area gaps read-only",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-sync-v225",
       "created_at": "2026-10-28T21:49:36.744319+00:00",
-      "updated_at": "2026-10-28T21:56:53.580053+00:00",
+      "updated_at": "2026-10-28T21:57:09.167542+00:00",
       "branch": "docs/optiport-snapshot-v225",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/471",
       "approval": "Root integrator: human-authorized code review; 7a1ecdd7f86c190f33dfee223858f04f0c87a5d6",
@@ -10404,9 +10404,15 @@
           "at": "2026-10-28T21:56:53.580053+00:00",
           "owner": "codex-optiport-sync-v225",
           "detail": "Root reviewed snapshot provenance and exact canonical 348e099 byte comparison26files PASS; installed 25MD64links/5anchors receipts PASS, Claude local.NET preserved via3way. Documentation snapshot only; audit16gaps remain explicit."
+        },
+        {
+          "at": "2026-10-28T21:57:09.167542+00:00",
+          "owner": "codex-optiport-sync-v225",
+          "detail": "Root reviewed snapshot provenance and exact canonical 348e099 byte comparison26files PASS; installed 25MD64links/5anchors receipts PASS, Claude local.NET preserved via3way. Documentation snapshot only; audit16gaps remain explicit.; merged 6b69a0ac180576f6f6e86c171383ac1f19ae511c"
         }
       ],
-      "claimed_at": "2026-10-28T21:49:54.936388+00:00"
+      "claimed_at": "2026-10-28T21:49:54.936388+00:00",
+      "completed_at": "2026-10-28T21:57:09.167542+00:00"
     },
     "linux460-audio-backend-audit": {
       "id": "linux460-audio-backend-audit",
@@ -10477,7 +10483,7 @@
     "created_at": "2026-10-28T21:56:59.545683+00:00",
     "updated_at": "2026-10-28T21:56:59.545683+00:00"
   },
-  "updated_at": "2026-10-28T21:56:59.545683+00:00",
+  "updated_at": "2026-10-28T21:57:09.167542+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
