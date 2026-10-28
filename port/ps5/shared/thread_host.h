@@ -6,6 +6,7 @@
  * the image and comes back here when fn returns (the PPU's never do). */
 #ifndef THREAD_HOST_H
 #define THREAD_HOST_H
+#include "audio_bridge.h"
 
 #if defined(THREAD_HOST_LIBNX) || defined(THREAD_HOST_POSIX)
 #define THREAD_HOST_MAX 2  /* with the game's thread, the three cores an application has on the Switch */
@@ -37,6 +38,10 @@ static void* ThreadHostMain(void* p) {
 #endif
 
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+#ifdef THREAD_HOST_AUDIO_RATE
+    if (op == BRIDGE_AUDIO_INPUT_RATE)
+        return THREAD_HOST_AUDIO_RATE(a);
+#endif
     switch (op) {
         case 0: { /* the cores: KHCOM_PPU_THREADS=1 keeps the image on its own thread */
             const char* env = getenv("KHCOM_PPU_THREADS");
@@ -102,6 +107,10 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
 }
 #else
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+#ifdef THREAD_HOST_AUDIO_RATE
+    if (op == BRIDGE_AUDIO_INPUT_RATE)
+        return THREAD_HOST_AUDIO_RATE(a);
+#endif
     (void)a; (void)b; (void)c; (void)d;
     return op == 0; /* one core: the image draws on its own thread */
 }

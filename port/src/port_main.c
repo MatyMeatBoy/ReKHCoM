@@ -3497,6 +3497,20 @@ int main(int argc, char** argv) {
         PortLog("HD menu: prepared before gameplay in %.1f ms",
                 (SDL_GetPerformanceCounter() - start) * 1000.0 / SDL_GetPerformanceFrequency());
     }
+    if (gPortConfig.hdText) {
+        /* gameplay's HD text too, at the world canvas' scale (port_hdtext_warmup.inc) */
+        extern void PortHdTextWarmGame(SDL_Renderer*, float, float);
+        int w = 0, h = 0;
+        SDL_FRect at;
+        uint64_t start = SDL_GetPerformanceCounter();
+        SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
+        SDL_Rect area = AspectRect(w, h);
+        UpdateResolution();
+        OutputRect(area.w, area.h, &at);
+        PortHdTextWarmGame(sRenderer, at.w / gPortScreen.width, MenuScale(area.w, area.h));
+        PortLog("HD text: gameplay glyphs prepared in %.1f ms",
+                (SDL_GetPerformanceCounter() - start) * 1000.0 / SDL_GetPerformanceFrequency());
+    }
 
     PortBiosAreaRefresh();
     PortGameSections(&sGameData, &sGameDataSize, &sGameBss, &sGameBssSize);

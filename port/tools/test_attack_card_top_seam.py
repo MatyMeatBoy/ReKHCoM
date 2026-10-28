@@ -33,8 +33,9 @@ int main(void){unsigned checks=0;
   int gx=x+sOamHd[0].x+8,gy=y+sOamHd[0].y+20;
   int target=ready&&gy==15&&gx>=0&&gx<16&&(cases[c].expected&(1u<<gx));
   int olympia=ready&&cases[c].tiles==gOlympiaSmallCardTiles&&gx==14&&gy==19;
+  int pumpkin=ready&&cases[c].tiles==gPumpkinheadSmallCardTiles&&gy==16&&gx>=2&&gx<=13;
   int colors[]={0x7fff,0x0421,0x7c00,0,-1};
-  for(int k=0;k<5;k++){int expected=colors[k]>=0&&(target||olympia)?0:colors[k];
+  for(int k=0;k<5;k++){int expected=colors[k]>=0&&(target||olympia||pumpkin)?0:colors[k];
    assert(Pixel(route,ready,x,y,colors[k])==expected);checks++;
   }
  }
@@ -46,4 +47,17 @@ with tempfile.TemporaryDirectory(prefix='attack-top-seam-') as d:
  c=Path(d)/'test.c';exe=Path(d)/'test.exe';c.write_text(code)
  subprocess.run([str(cc),'-std=c99',str(c),'-o',str(exe)],check=True)
  subprocess.run([str(exe)],check=True,timeout=15,creationflags=0x08004000)
-print('PASS: 23 audited cells across nine attack cards; other cells/cards and HD-unavailable controls unchanged')
+print('PASS: 23 top-seam cells and 12 Pumpkinhead first-interior cells; other cells/cards and HD-unavailable controls unchanged')
+
+# All ordinary values share the same small-card image; the value is rendered
+# separately. Check the source catalog rather than assuming one tested value.
+catalog=(ROOT/'src/card/card_catalog.c').read_text(encoding='utf-8')
+rows=re.findall(r'\{\s*([^{}]+?)\{[^{}]*\},\s*\}',catalog)
+values=[]
+for row in rows:
+    match=re.search(r'CARD_KIND_PUMPKINHEAD,\s*0x0,\s*(\d+),',row)
+    if match:
+        assert 'gPumpkinheadSmallCardFrame0, gPumpkinheadSmallCardTiles, gPumpkinheadSmallCardPalette' in row
+        values.append(int(match[1]))
+assert sorted(values)==list(range(10)),values
+print('PASS: Pumpkinhead values0..9 share the corrected artwork; separate digit rendering unchanged')

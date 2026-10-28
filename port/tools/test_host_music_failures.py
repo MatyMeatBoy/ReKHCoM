@@ -5,6 +5,8 @@ import tempfile
 ROOT=Path(__file__).resolve().parents[2]
 source=(ROOT/'port/ps5/shared/hd_music_host.h').read_text(encoding='utf-8')
 production=source[source.index('enum { HD_MUSIC_OPEN,'):source.rindex('#endif')]
+if 'static int sHdInputRate;' in source:
+ production=source[source.index('static int sHdInputRate;'):source.index('#ifndef HD_MUSIC_LOG')]+production
 preamble=r'''
 #include <stdint.h>
 #include <stdio.h>

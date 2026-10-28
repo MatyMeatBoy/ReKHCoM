@@ -13,6 +13,7 @@
  * "apk:/<name>" paths are the APK's assets. */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include "../../include/port/port_audio_continuity.h"
 #include <dirent.h>
 #include <errno.h>
 #include <math.h>
@@ -359,6 +360,8 @@ static void H_gfx_end(void) {
 /* ---- audio ---------------------------------------------------------------------------------------------------- */
 
 static SDL_AudioStream* sAudio;
+static PortAudioContinuity sAudioContinuity;
+#include "audio_bridge_sdl.h"
 static int sGameRate = 48000; /* the rate the game opened the audio at */
 static int H_audio_open(int rate) {
     sGameRate = rate;
@@ -370,13 +373,16 @@ static int H_audio_open(int rate) {
         Log("audio: %s", SDL_GetError());
         return -1;
     }
-    SDL_ResumeAudioStreamDevice(sAudio);
+    PortAudioContinuityInit(&sAudioContinuity, sAudio);
+    if (!sAudioBridgeControls) SDL_ResumeAudioStreamDevice(sAudio);
     Log("audio: %d Hz", rate);
     return 0;
 }
 static void GamePush(const int16_t* frames, uint32_t count) {
-    if (sAudio && count)
-        SDL_PutAudioStreamData(sAudio, frames, (int)count * 4);
+    if (sAudio && count) {
+        PortAudioContinuityPut(&sAudioContinuity, sAudio, frames, (int)count * 4);
+        HostAudioLogUnderruns();
+    }
 }
 
 /* HD music: the host decodes the track the game names and mixes it into the game's blocks (shared/hd_music_host.h) */
@@ -391,7 +397,9 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #include "thread_host.h" /* the image's other threads: none here (bridge entry thread answers one core) */
 #undef H_thread
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
-    int result = HostGpuCommand(op, a, b, c, d);
+    int result = HostAudioCommand(op, a, b, c, d);
+    if (result != -2) return result;
+    result = HostGpuCommand(op, a, b, c, d);
     return result == -2 ? H_thread_legacy(op, a, b, c, d) : result;
 }
 
@@ -416,10 +424,13 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         sQuit = 1;
     return played != 0;
 }
-static uint32_t H_audio_queued(void) { return sAudio ? (uint32_t)SDL_GetAudioStreamQueued(sAudio) / 4 : 0; }
+static uint32_t H_audio_queued(void) {
+    int bytes = sAudio ? SDL_GetAudioStreamQueued(sAudio) : 0;
+    return bytes > 0 ? (uint32_t)bytes / 4 : 0;
+}
 static void H_audio_clear(void) {
     if (sAudio)
-        SDL_ClearAudioStream(sAudio);
+        PortAudioContinuityClear(&sAudioContinuity, sAudio);
 }
 static void H_audio_ratio(double ratio) {
     if (sAudio && ratio > 0.5 && ratio < 2.0)

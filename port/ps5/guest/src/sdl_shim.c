@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include "bridge_calls.h"
 #include "../../shared/bridge_gpu_targets.h"
+#include "../../shared/audio_bridge.h"
 
 static char sError[128] = "";
 static Uint32 sInit;
@@ -553,7 +554,10 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
         t->id[0] = h_thread(BRIDGE_GPU_CREATE, (uint32_t)w, (uint32_t)h, 0, 0);
         if (t->id[0] < 0) { free(t); SetError("GPU render target allocation failed"); return NULL; }
     } else t->rgba = calloc((size_t)w * h, 4);
-    t->blend = SDL_BLENDMODE_NONE;
+    /* as SDL3: a format with alpha starts blended (SDL_CreateTextureWithProperties); NONE drew the HP ring's
+       transparent corners as a white/black box on 64-bit hosts without the gauge layouts */
+    t->blend = format == SDL_PIXELFORMAT_ARGB8888 || format == SDL_PIXELFORMAT_RGBA32 ||
+               format == SDL_PIXELFORMAT_BGRA32 ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE;
     t->scale = SDL_SCALEMODE_LINEAR;
     t->cr = t->cg = t->cb = t->ca = 255;
     t->picture = access == SDL_TEXTUREACCESS_STREAMING;
@@ -731,6 +735,7 @@ struct SDL_AudioStream {
     float ratio;
     bool open;
     float residue;
+    int bridgeControls;
 };
 static SDL_AudioStream sAudio;
 
@@ -739,26 +744,46 @@ static void SetRatio(SDL_AudioStream* s) {
 }
 
 SDL_AudioStream* SDL_OpenAudioDeviceStream(SDL_AudioDeviceID d, const SDL_AudioSpec* spec, SDL_AudioStreamCallback cb, void* u) {
+    int controls = h_thread(BRIDGE_AUDIO_PROBE, 0, 0, 0, 0) == BRIDGE_AUDIO_MAGIC;
     (void)d; (void)cb; (void)u;
     if (h_audio_open(spec->freq) < 0) { SetError("audio device unavailable"); return NULL; }
     sAudio.outRate = sAudio.inRate = spec->freq;
     sAudio.ratio = 1.0f;
     sAudio.open = true;
+    sAudio.bridgeControls = controls;
+    h_thread(BRIDGE_AUDIO_INPUT_RATE, (uint32_t)sAudio.inRate, 0, 0, 0);
+    if (sAudio.bridgeControls)
+        h_thread(BRIDGE_AUDIO_PAUSE, 0, 0, 0, 0);
     return &sAudio;
 }
-void SDL_DestroyAudioStream(SDL_AudioStream* s) { s->open = false; h_audio_clear(); }
-bool SDL_PauseAudioStreamDevice(SDL_AudioStream* s) { (void)s; return true; }
-bool SDL_ResumeAudioStreamDevice(SDL_AudioStream* s) { (void)s; return true; }
+void SDL_DestroyAudioStream(SDL_AudioStream* s) {
+    if (s->bridgeControls) h_thread(BRIDGE_AUDIO_PAUSE, 0, 0, 0, 0);
+    s->open = false; h_audio_clear();
+}
+bool SDL_PauseAudioStreamDevice(SDL_AudioStream* s) {
+    return !s->bridgeControls || h_thread(BRIDGE_AUDIO_PAUSE, 0, 0, 0, 0) > 0;
+}
+bool SDL_ResumeAudioStreamDevice(SDL_AudioStream* s) {
+    return !s->bridgeControls || h_thread(BRIDGE_AUDIO_RESUME, 0, 0, 0, 0) > 0;
+}
 bool SDL_ClearAudioStream(SDL_AudioStream* s) { (void)s; h_audio_clear(); return true; }
-/* the fade before an HD movie (PortAudioMovieHold): the hosts have no output level; the movie just starts */
-bool SDL_SetAudioStreamGain(SDL_AudioStream* s, float gain) { (void)s; (void)gain; return true; }
+bool SDL_SetAudioStreamGain(SDL_AudioStream* s, float gain) {
+    uint32_t bits;
+    if (!(gain >= 0.0f && gain <= 3.402823466e38f)) return false;
+    memcpy(&bits, &gain, sizeof(bits));
+    return !s->bridgeControls || h_thread(BRIDGE_AUDIO_GAIN, bits, 0, 0, 0) > 0;
+}
 bool SDL_SetAudioStreamFrequencyRatio(SDL_AudioStream* s, float ratio) {
     if (ratio != s->ratio) { s->ratio = ratio; SetRatio(s); }
     return true;
 }
 bool SDL_SetAudioStreamFormat(SDL_AudioStream* s, const SDL_AudioSpec* in, const SDL_AudioSpec* out) {
     (void)out;
-    if (in && in->freq != s->inRate) { s->inRate = in->freq; SetRatio(s); }
+    if (in && in->freq != s->inRate) {
+        s->inRate = in->freq;
+        h_thread(BRIDGE_AUDIO_INPUT_RATE, (uint32_t)s->inRate, 0, 0, 0);
+        SetRatio(s);
+    }
     return true;
 }
 bool SDL_GetAudioStreamFormat(SDL_AudioStream* s, SDL_AudioSpec* in, SDL_AudioSpec* out) {
@@ -784,10 +809,11 @@ bool SDL_PutAudioStreamData(SDL_AudioStream* s, const void* buf, int len) {
     return true;
 }
 
-/* SDL counts what is queued in the input's format: the host reports frames at the device rate (outRate) */
+/* SDL hosts with lifecycle support report INPUT frames already. Legacy ring
+ * hosts report device frames and still require the original conversion. */
 int SDL_GetAudioStreamQueued(SDL_AudioStream* s) {
     uint64_t frames = h_audio_queued();
-    if (s->outRate > 0 && s->inRate > 0)
+    if (!s->bridgeControls && s->outRate > 0 && s->inRate > 0)
         frames = frames * (uint64_t)s->inRate / (uint64_t)s->outRate;
     return (int)(frames * 8u);
 }
