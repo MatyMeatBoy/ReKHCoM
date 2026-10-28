@@ -50,6 +50,25 @@ set(REGIONS "eu" CACHE STRING "Cartridge regions to compile: eu;us;jp")
 option(REKHCOM_UBSAN "Test build: log shifts by 32+, divisions by zero, NULL and misaligned accesses (ubsan_log.c)" OFF)
 set(UBSAN_FLAGS -fsanitize=shift,integer-divide-by-zero,null,alignment -fsanitize-minimal-runtime -fsanitize-recover=all)
 file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS "${ROOT}/src/*.c")
+if(ANDROID_ABI STREQUAL "armeabi-v7a")
+    # Cartridge arithmetic belongs to game C units only. Do not wrap SDL,
+    # launcher/importer, portable code, or the arm64 host's compiler.
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    set(CARTRIDGE_COMPILER "${ROOT}/port/tools/compile_cartridge_game.py")
+    set(CARTRIDGE_LOWERER "${ROOT}/port/tools/cartridge_division_ir.py")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${CARTRIDGE_COMPILER}" "${CARTRIDGE_LOWERER}")
+    execute_process(COMMAND "${Python3_EXECUTABLE}" "${CARTRIDGE_COMPILER}" --print-fingerprint
+        RESULT_VARIABLE CARTRIDGE_RESULT OUTPUT_VARIABLE CARTRIDGE_FINGERPRINT
+        ERROR_VARIABLE CARTRIDGE_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT CARTRIDGE_RESULT EQUAL 0)
+        message(FATAL_ERROR "Cartridge compiler fingerprint failed: ${CARTRIDGE_ERROR}")
+    endif()
+    # Both content in the compiler command and source dependencies invalidate
+    # old unguarded objects, including a build resumed after updating tools.
+    set_property(SOURCE ${GAME_SOURCES} APPEND PROPERTY OBJECT_DEPENDS
+        "${CARTRIDGE_COMPILER}" "${CARTRIDGE_LOWERER}")
+endif()
 file(GLOB PORT_SOURCES CONFIGURE_DEPENDS "${ROOT}/port/src/*.c")
 foreach(name port_memory port_sections port_state port_hdtext port_watchdog port_biosfault)
     list(REMOVE_ITEM PORT_SOURCES "${ROOT}/port/src/${name}.c")
@@ -75,6 +94,10 @@ foreach(region IN LISTS REGIONS)
     string(REPLACE ".set _" ".set " fixed "${fixed}")
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/fixed_symbols_${region}.S" "${fixed}")
     add_library(game_${region} OBJECT ${GAME_SOURCES})
+    if(ANDROID_ABI STREQUAL "armeabi-v7a")
+        set_property(TARGET game_${region} PROPERTY C_COMPILER_LAUNCHER
+            "${Python3_EXECUTABLE};${CARTRIDGE_COMPILER};--fingerprint;${CARTRIDGE_FINGERPRINT};--")
+    endif()
     set_target_properties(game_${region} PROPERTIES POSITION_INDEPENDENT_CODE ON)
     target_compile_options(game_${region} PRIVATE -O2 -w -std=gnu89 -funsigned-char -fno-strict-aliasing -fwrapv -fno-common
         -include "${ROOT}/port/include/port/game_prefix.h")
