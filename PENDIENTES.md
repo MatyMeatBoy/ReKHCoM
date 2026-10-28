@@ -310,4 +310,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue418-worldselect-outline | World-card selection transition retains outline: actual rendering A/B, fade and native/HD consumer | integrado | codex-world-outline | https://github.com/MatyMeatBoy/ReKHCoM/pull/422 | Root delegated issue418 reproduction and verified common-source fix; preserve native GBA behavior | 2026-10-28T02:38:35.420443+00:00 |
 | issue407-mp4-alignment | Compatibilidad MP4 con relleno final alineado y límites en validadores Python/C++ | en_curso | codex-integrador | fix/mp4-alignment-validation | Usuario: verificar todos los issues, corregir cuelgues y plataformas antes de v2.2 | 2026-10-28T02:26:36.713680+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T02:38:26.881176+00:00)
+Integrador: libre
