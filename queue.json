@@ -9093,12 +9093,12 @@
     "boss-levelup-backdrop-coverage-audit": {
       "id": "boss-levelup-backdrop-coverage-audit",
       "piece": "FUTURE explicituser: Monstro ParasiteCage level-up screen has central uncovered black background strip like earlierJafar. Audit same transition/camera/zoom coverage for ALL boss backdrops, reuse establishedJafar fix onlyaftermechanism proof. Not v2.2 blocker.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-boss-levelup-backdrop",
       "created_at": "2026-10-28T05:57:33.524603+00:00",
-      "updated_at": "2026-10-28T11:14:13.561454+00:00",
+      "updated_at": "2026-10-28T11:47:28.559615+00:00",
       "branch": "fix/boss-levelup-backdrop",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/436",
       "approval": null,
       "reference": "pruebas/future-boss-coverage/parasite-cage-levelup-background.png",
       "evidence": [
@@ -9106,6 +9106,11 @@
           "at": "2026-10-28T11:14:13.561454+00:00",
           "owner": "codex-boss-levelup-backdrop",
           "detail": "Initial causal audit; own checkout kh-worktrees/boss-levelup-backdrop at origin/main6895. Screenshot central black strip distinct from left-cull lane; no product edits yet. SourceJafar rebind/origin mechanism only a hypothesis until actual level-up trace."
+        },
+        {
+          "at": "2026-10-28T11:47:28.559615+00:00",
+          "owner": "codex-boss-levelup-backdrop",
+          "detail": "Technical role-classification fix, no artwork asset; direct coordinator review of real captures per explicit user workflow. PR436 heada6f67edd0 based0f78/#434. Exact stableEU32 RED;182IDsx4roles+cleanupPASS,45OriginalpixelABidentical. Combined434 LEFT thenrealbosskill+Draw/pickup->reward normal/HDfonts PASS;12rewardframes/case callbacks0000 and0blackcolumns. Other7naturalarenas partial fixture, no universal/native64/hardware claim. Evidence pruebas/boss-levelup-backdrop/COMBINED-AFTER434.json,NATURAL-PIXEL-CHECKS.json,ORIGINAL-GBA-PIXELS.json. Productonlycard_level_up.c; PPU/main/camera unchanged."
         }
       ],
       "claimed_at": "2026-10-28T11:12:43.108949+00:00"
@@ -9227,7 +9232,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:45:45.510459+00:00",
+  "updated_at": "2026-10-28T11:47:28.560750+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
