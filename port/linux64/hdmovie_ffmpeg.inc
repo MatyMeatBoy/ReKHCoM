@@ -217,6 +217,8 @@ static int MovieEvents(int* pause) {
 }
 
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* fontPath) {
+    const int masterVolume = PortMovieVolumeTake(&sMovieVolume);
+    if (!movie) return 0;
     char path[1024], line[256], seek[32];
     int start = 0, w = 0, h = 0, played = 0, skip = 0, pause = 0, rendererLost = 0, pauseTested = 0;
     double fps = 30;
@@ -255,6 +257,12 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     uint8_t* frame = malloc(frameBytes);
     SDL_AudioSpec spec = { SDL_AUDIO_S16, 2, 48000 };
     SDL_AudioStream* audio = sound.fd >= 0 ? SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL) : NULL;
+    if (audio && !SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, 1.0f))) {
+        SDL_DestroyAudioStream(audio);
+        if (tex) SDL_DestroyTexture(tex);
+        MovieClose(&video); MovieClose(&sound); free(frame);
+        return 0;
+    }
     stbtt_fontinfo font;
     unsigned char* fontData = NULL;
     int haveFont = 0;
@@ -264,8 +272,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         haveFont = fontData && stbtt_InitFont(&font, fontData, stbtt_GetFontOffsetForIndex(fontData, 0));
     }
     LoadMovieSubs(subs1, subs2);
-    if (audio)
-        SDL_ResumeAudioStreamDevice(audio);
+    if (audio) SDL_ResumeAudioStreamDevice(audio);
     if (sAudio)
         SDL_PauseAudioStreamDevice(sAudio); /* the game's own sound waits */
     double began = SDL_GetTicksNS() / 1e9;

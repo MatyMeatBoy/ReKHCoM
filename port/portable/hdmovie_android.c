@@ -12,6 +12,7 @@
  * cartridge's movie plays.
  */
 #include <SDL3/SDL.h>
+#include "../ps5/shared/audio_bridge.h"
 #include <dlfcn.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -465,7 +466,7 @@ static int YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy
 /* Plays the movie at path to the end (or until skipped). subs, subs2: the subtitle file to show and the one to try
    if it is missing (NULL: none); font: the KHMenu face to try before the APK's. 0: it could not be opened, 1 played,
    2 played and the app was closed. */
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* fontPath) {
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* fontPath, int masterVolume) {
     Track video, audioTrack;
     AMediaFormat *vFormat = NULL, *aFormat = NULL;
     AImageReader* reader = NULL;
@@ -523,8 +524,11 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
             SDL_AudioSpec spec = { SDL_AUDIO_S16, (int)channels, (int)rate };
             audio = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL);
         }
-        if (audio)
-            SDL_ResumeAudioStreamDevice(audio);
+        if (audio) {
+            if (!SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, 1.0f))) {
+                goto done;
+            } else SDL_ResumeAudioStreamDevice(audio);
+        }
         else {
             CloseTrack(&audioTrack);
             audioOn = 0;
@@ -742,7 +746,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
                         duration = skipEnd;
                     edge = clock < fade ? clock : (duration > fade && clock > duration - fade ? duration - clock : fade);
                     if (audio) /* the sound fades with the picture */
-                        SDL_SetAudioStreamGain(audio, edge <= 0 ? 0.0f : (float)edge / fade);
+                        SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, edge <= 0 ? 0.0f : (float)edge / fade));
                     if (edge < fade) {
                         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
                         SDL_SetRenderDrawColor(renderer, 0, 0, 0, (Uint8)(255 - (edge < 0 ? 0 : edge) * 255 / fade));

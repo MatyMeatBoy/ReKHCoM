@@ -23,6 +23,7 @@
 #include "port/port_hd_poster.h"
 #include "port/port_hd_media.h"
 #include "port/port_hd_subtitles.h"
+#include "../ps5/shared/audio_bridge.h"
 #include <SDL3/SDL.h>
 
 #if defined(_WIN32) || defined(__ANDROID__) || defined(PORT_ANDROID64) || defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
@@ -783,6 +784,7 @@ static void DrawSubs(Subs* s, SDL_Renderer* renderer, LONGLONG clock, const SDL_
 /* Plays hd/movies/<name>.mp4 (a scene: hd/scenes, MoviePath) to the end (or until skipped). 0: nothing imported or it could not be opened. */
 #ifdef _WIN32
 static int PlayFile(const char* name) {
+    const int masterVolume = gPortConfig.masterVolume;
     sMovieDeviceReset = 0;
     char path[1024];
     WCHAR wpath[1024];
@@ -887,8 +889,11 @@ static int PlayFile(const char* name) {
         {
             SDL_AudioSpec spec = { SDL_AUDIO_S16, (int)channels, (int)rate };
             audio = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL);
-            if (audio)
-                SDL_ResumeAudioStreamDevice(audio);
+            if (audio) {
+                if (!SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, 1.0f))) {
+                    goto done; /* replacement is not usable; preserve original fallback */
+                } else SDL_ResumeAudioStreamDevice(audio);
+            }
             else
                 audioDone = 1;
         }
@@ -1133,7 +1138,7 @@ static int PlayFile(const char* name) {
                 LONGLONG edge = clock < fade ? clock : (end > fade && clock > end - fade ? end - clock : fade);
                 /* the sound fades with the picture: a skip never cuts it with a pop */
                 if (audio)
-                    SDL_SetAudioStreamGain(audio, edge <= 0 ? 0.0f : (float)edge / fade);
+                    SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, edge <= 0 ? 0.0f : (float)edge / fade));
                 if (edge < fade) {
                     Uint8 a = (Uint8)(255 - (edge < 0 ? 0 : edge) * 255 / fade);
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -1245,6 +1250,7 @@ int PortHdScenePreviewFile(const char* path, uint32_t* out, int ow, int oh, int 
 }
 
 static int PlayFile(const char* name) {
+    const int masterVolume = gPortConfig.masterVolume;
     sMovieDeviceReset = 0;
     char path[1024], quoted[2200], command[2600], line[256];
     SDL_Renderer* renderer = PortRenderer();
@@ -1322,8 +1328,11 @@ static int PlayFile(const char* name) {
     {
         SDL_AudioSpec spec = { SDL_AUDIO_S16, channels, rate };
         audio = sound ? SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL) : NULL;
-        if (audio)
-            SDL_ResumeAudioStreamDevice(audio);
+        if (audio) {
+            if (!SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, 1.0f))) {
+                goto done;
+            } else SDL_ResumeAudioStreamDevice(audio);
+        }
         else
             audioDone = 1;
     }
@@ -1413,7 +1422,7 @@ static int PlayFile(const char* name) {
                 LONGLONG end = skipEnd >= 0 ? skipEnd : duration;
                 LONGLONG edge = clock < fade ? clock : (end > fade && clock > end - fade ? end - clock : fade);
                 if (audio)
-                    SDL_SetAudioStreamGain(audio, edge <= 0 ? 0.0f : (float)edge / fade);
+                    SDL_SetAudioStreamGain(audio, PortMovieGain(masterVolume, edge <= 0 ? 0.0f : (float)edge / fade));
                 if (edge < fade) {
                     Uint8 a = (Uint8)(255 - (edge < 0 ? 0 : edge) * 255 / fade);
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -1488,10 +1497,11 @@ done:
 #include <SDL3/SDL.h>
 #if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
 int h_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font);
+int h_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 #else
 #include <stdarg.h>
 SDL_Renderer* PortRenderer(void);
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font);
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font, int masterVolume);
 void HdMovieLog(const char* fmt, ...) {
     char text[1024];
     va_list ap;
@@ -1504,6 +1514,7 @@ void HdMovieLog(const char* fmt, ...) {
 
 /* Plays hd/movies/<name>.mp4 (a scene: hd/scenes, MoviePath) to the end (or until skipped). 0: nothing imported or it could not be opened. */
 static int PlayFile(const char* name) {
+    const int masterVolume = gPortConfig.masterVolume;
     char path[512], subs[2][512], font[512];
     const char* order[2];
     int i, played;
@@ -1518,6 +1529,13 @@ static int PlayFile(const char* name) {
     if (sStartAt > 0) /* the 64-bit Linux host reads where to start after an @ (port/linux64) */
         SDL_snprintf(path + strlen(path), sizeof(path) - strlen(path), "@%d", sStartAt);
 #endif
+    if (h_thread(BRIDGE_MOVIE_PROBE, 0, 0, 0, 0) == BRIDGE_MOVIE_MAGIC) {
+        unsigned percent = masterVolume < 0 ? 0 : masterVolume > 100 ? 100 : (unsigned)masterVolume;
+        if (h_thread(BRIDGE_MOVIE_MASTER, percent, 0, 0, 0) != 1) return 0;
+    } else if (masterVolume != 100) {
+        PortLog("hd movie: host lacks master volume control; using original movie");
+        return 0;
+    }
     played = h_hd_movie(path, gPortConfig.hdSubtitles ? subs[0] : NULL, gPortConfig.hdSubtitles ? subs[1] : NULL, font);
     {
         extern void PortBridgeRefreshTextureEpoch(void);
@@ -1528,7 +1546,7 @@ static int PlayFile(const char* name) {
         return 0;
     PortAudioMovieHold(1);
     played = HdMovieAndroidPlay(PortRenderer(), path, gPortConfig.hdSubtitles ? subs[0] : NULL,
-                                gPortConfig.hdSubtitles ? subs[1] : NULL, font);
+                                gPortConfig.hdSubtitles ? subs[1] : NULL, font, masterVolume);
     PortAudioMovieHold(0);
 #endif
     if (played == 2) { /* the app was closed during the movie: the main loop closes the game as usual */

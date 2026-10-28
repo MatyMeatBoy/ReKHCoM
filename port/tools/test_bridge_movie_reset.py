@@ -11,10 +11,13 @@ header=r'''
 #include <string.h>
 #include <assert.h>
 #include <stddef.h>
+#include "audio_bridge.h"
+static PortMovieVolumeState sMovieVolume;
+#define PortLog(...) ((void)0)
 #define HdMovieLog(...) ((void)0)
 typedef int SDL_AudioStream;
 typedef struct {int type;struct{int repeat,key,scancode;}key;struct{int button;}gbutton;struct{int which;}gdevice;}SDL_Event;
-enum {SDL_EVENT_RENDER_DEVICE_RESET=1,SDL_EVENT_QUIT,SDL_EVENT_TERMINATING,SDL_EVENT_DID_ENTER_BACKGROUND,SDL_EVENT_DID_ENTER_FOREGROUND,SDL_EVENT_KEY_DOWN,SDL_EVENT_GAMEPAD_BUTTON_DOWN,SDL_EVENT_RENDER_TARGETS_RESET,SDL_EVENT_GAMEPAD_ADDED};
+enum {SDL_EVENT_RENDER_DEVICE_RESET=1,SDL_EVENT_QUIT,SDL_EVENT_TERMINATING,SDL_EVENT_DID_ENTER_BACKGROUND,SDL_EVENT_DID_ENTER_FOREGROUND,SDL_EVENT_KEY_DOWN,SDL_EVENT_GAMEPAD_BUTTON_DOWN,SDL_EVENT_RENDER_TARGETS_RESET,SDL_EVENT_GAMEPAD_ADDED,SDL_EVENT_MOUSE_BUTTON_DOWN,SDL_EVENT_FINGER_DOWN};
 enum {SDLK_ESCAPE=10,SDLK_AC_BACK,SDL_GAMEPAD_BUTTON_START,SDL_SCANCODE_X,SDL_SCANCODE_Z,SDL_SCANCODE_RETURN,SDL_GAMEPAD_BUTTON_SOUTH,SDL_GAMEPAD_BUTTON_EAST};
 static SDL_Event events[8];static int at,count,callbacks,paused,resumed;
 static int SDL_PollEvent(SDL_Event*e){if(at==count)return 0;*e=events[at++];return 1;}
@@ -31,7 +34,7 @@ wrapper=host[a:b]
 body=r'''
 static void*sRenderer;static int sQuit;
 static int publicResult;
-static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c){
+static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int masterVolume){
  assert(sRendererResetCallback==RendererDeviceReset);
  return publicResult; /* production internal-to-public mapping tested separately */
 }
@@ -45,7 +48,8 @@ native_stubs=r'''
 #define SDL_zero(e) memset(&(e),0,sizeof(e))
 static int sStartAt;
 static void PortBridgeRefreshTextureEpoch(void){}
-static struct {int hdSubtitles;}gPortConfig;
+static struct {int hdSubtitles,masterVolume;}gPortConfig;
+static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return PortMovieVolumeCommand(&sMovieVolume,op,a);}
 static void MoviePath(const char*n,char*p,int size){snprintf(p,size,"%s",n);}
 static void MovieSubtitlePath(const char*n,const char*l,char*p,int size){snprintf(p,size,"%s.%s.txt",n,l);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
@@ -63,7 +67,7 @@ linux_events=linux[a:b]
 linux_return=next(line.strip() for line in linux.splitlines() if 'return rendererLost ?' in line)
 linux_return='static int LinuxReturn(int rendererLost,int played,int skip){'+linux_return+'}\n'
 linux_stubs=r'''
-static int*sPad;
+static int*sPad;static int sMovieStartKeys[2]={13,0};
 static int*SDL_OpenGamepad(int id){static int pad;return &pad;}
 '''
 cases=r'''
@@ -90,7 +94,7 @@ int main(void){
 cc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
 with tempfile.TemporaryDirectory(prefix='rekhcom-movie-reset-') as td:
  src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(header+production+body+wrapper+native_stubs+native_wrapper+linux_stubs+linux_events+linux_return+cases,encoding='utf-8')
- subprocess.run([str(cc),str(src),'-o',str(exe)],check=True,capture_output=True)
- subprocess.run([str(exe)],check=True,capture_output=True)
- subprocess.run([str(cc),'-DPORT_ANDROID64',str(src),'-o',str(exe)],check=True,capture_output=True)
- subprocess.run([str(exe)],check=True,capture_output=True)
+ subprocess.run([str(cc),str(src),'-I'+str(ROOT/'port/ps5/shared'),'-o',str(exe)],check=True)
+ subprocess.run([str(exe)],check=True)
+ subprocess.run([str(cc),'-DPORT_ANDROID64',str(src),'-I'+str(ROOT/'port/ps5/shared'),'-o',str(exe)],check=True)
+ subprocess.run([str(exe)],check=True)

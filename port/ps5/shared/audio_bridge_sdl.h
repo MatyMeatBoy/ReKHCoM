@@ -5,6 +5,7 @@
 #define AUDIO_BRIDGE_SDL_H
 #include "audio_bridge.h"
 static int sAudioBridgeControls;
+static PortMovieVolumeState sMovieVolume;
 static void HostAudioLogUnderruns(void) {
     static int enabled = -1;
     static uint32_t previous;
@@ -19,6 +20,8 @@ static void HostAudioLogUnderruns(void) {
 }
 static int HostAudioCommand(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     (void)b; (void)c; (void)d;
+    int movie = PortMovieVolumeCommand(&sMovieVolume, op, a);
+    if (movie != -2) return movie;
     switch (op) {
     case BRIDGE_AUDIO_PROBE: sAudioBridgeControls = 1; return BRIDGE_AUDIO_MAGIC;
     case BRIDGE_AUDIO_PAUSE: return sAudio && SDL_PauseAudioStreamDevice(sAudio);
