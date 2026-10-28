@@ -9060,10 +9060,10 @@
       "status": "pr_abierto",
       "owner": "codex-parasite-cull",
       "created_at": "2026-10-28T05:57:28.484066+00:00",
-      "updated_at": "2026-10-28T11:30:12.481092+00:00",
+      "updated_at": "2026-10-28T11:35:56.960454+00:00",
       "branch": "fix/parasite-left-cull",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/434",
-      "approval": null,
+      "approval": "Usuario: mejoras para el futuro en la pelea contra monstruo de jaula al moverse muy a la izquierda se corta el sprite, arreglar; luego seguir con pendientes hasta acabar. Codigo de presentacion; Atlas eximido por usuario, revision directa del coordinador del head92f8de8 y captura real.",
       "reference": "pruebas/future-boss-coverage/parasite-cage-left-clipping.png",
       "evidence": [
         {
@@ -9075,6 +9075,11 @@
           "at": "2026-10-28T11:30:12.481092+00:00",
           "owner": "codex-parasite-cull",
           "detail": "Code-onlyfix,no newartasset;userwaivedAtlas,repro/capturesdirectrootreview. Exacthead92f8de8029d8cb1202065a0642c7b8f8127f421f;actualBosPcDraw CPURED/GREEN943positions+destroy;native32A/Bx4LEFT2606outsidepixelsrestored,GBA0changes;Originalentireidentical,x3LEFT2701,x4RIGHT0changes;LEFT->levelupfourUIframesallidentical;129regionalbodysetsowntransparenttile0; port/progress/PARASITE_BODY_WIDE.md andpruebas/parasite-left-cull; native64/HDcombined/naturalvictoryintegrationQApending"
+        },
+        {
+          "at": "2026-10-28T11:35:56.960454+00:00",
+          "owner": "codex-parasite-cull",
+          "detail": "Root inspected actualfixed screenshot and exactsource92f8de8; independent943CPU PASS. Records existing user authorization and coordinator review, not a new claim of user image approval. No new art asset or originalgame logic change."
         }
       ],
       "claimed_at": "2026-10-28T11:11:59.347557+00:00"
@@ -9199,7 +9204,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:32:08.448301+00:00",
+  "updated_at": "2026-10-28T11:35:56.960454+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
