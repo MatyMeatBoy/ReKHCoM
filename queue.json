@@ -10145,8 +10145,8 @@
       "status": "en_curso",
       "owner": "codex-moto374-font-delivery",
       "created_at": "2026-10-28T20:46:12.255600+00:00",
-      "updated_at": "2026-10-28T20:55:38.165721+00:00",
-      "branch": "fix/moto374-font-delivery",
+      "updated_at": "2026-10-28T21:12:07.149899+00:00",
+      "branch": "docs/moto374-font-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/468",
       "approval": "Root exact HEAD9238379905c5f2322b6cec636212e1353a010cff review and independent test_package -O PASS; user authorized separate tentative font-fallback Android test delivery.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/466",
@@ -10165,6 +10165,11 @@
           "at": "2026-10-28T20:55:38.165721+00:00",
           "owner": "codex-moto374-font-delivery",
           "detail": "Split closed builder component PR468 into separate root integration child moto374-font-identity-builder. Parent delivery remains OPEN until actual APK closed, public prerelease and reporter replies. Do not mark entire delivery done merely merging builder."
+        },
+        {
+          "at": "2026-10-28T21:12:07.149899+00:00",
+          "owner": "codex-moto374-font-delivery",
+          "detail": "Published test/source2dd receipt and replies374/412 verified by root. Documentation-only final closure in new sparse checkout docs-moto374-delivery; former android22-pre1 path absent, no pruning/deleting/recovery edits performed. Parent remains open pending closure PR; no product/build/VM/public asset mutations."
         }
       ],
       "claimed_at": "2026-10-28T20:46:16.987307+00:00"
@@ -10223,7 +10228,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:56:47.646314+00:00",
+  "updated_at": "2026-10-28T21:12:07.149899+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
