@@ -10306,20 +10306,26 @@
     "linux461-keyboard-without-controller": {
       "id": "linux461-keyboard-without-controller",
       "piece": "Issue461 Linux64 keyboard disappears without physical controller: metadata filters legacy keyboard-to-pad bridge; reproduce actual host/shim source and restore keyboard events",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux461",
       "created_at": "2026-10-28T21:30:45.363538+00:00",
-      "updated_at": "2026-10-28T21:30:54.380753+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Human requests2.2.5 bugs/all PR; root assigned independent461 after459 triage, no speculative grouping",
+      "updated_at": "2026-10-28T21:39:21.303442+00:00",
+      "branch": "fix/v23-linux-startup",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/470",
+      "approval": "Human2.2.5 allPR/newLinuxbugs mandate; root assigned independent461 after459triage; exactheadrequiresrootreview/integratorlock.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/461",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:39:21.303442+00:00",
+          "owner": "codex-linux461",
+          "detail": "HEAD87e4af95ca1b0cf62b534092adf0ce7a0e8f3507. Actualpublicv2.2host→shim→gameinput RED32/64no-controllerSTARTlost; concontrollerdefaultworks/custombindinglost; GREEN4runsfullkeys/custom/focus/repeat/hotplug/overflow/wrap/legacydefaults/noinventedphysicalpad PASS. FullactualLinux64hostcompile+linkPASS SHA8249a2f8eb28d250a96cb18d0d15e05500b2df71f0b7d5699adb16dcf90cb634; metadataregressionPASS; noVM/SteamOS/Bazzitehardwareclaim. D:/01Claude/ReKHCoM-build/qa-runtime/linux461-keyboard preservedsourcepatch+receipts."
+        }
+      ],
       "claimed_at": "2026-10-28T21:30:54.380753+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:34:38.532806+00:00",
+  "updated_at": "2026-10-28T21:39:21.303442+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
