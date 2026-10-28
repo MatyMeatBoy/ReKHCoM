@@ -6,10 +6,10 @@ The edge-strip trim in PR404 removes that repeated blend. It does not remove
 the room background intentionally visible through the translucent body.
 
 Eligibility is limited to the existing synthesis identity array: five bodies
-and four sets of100 requirement values. An initially generic implementation
+and four sets of 100 requirement values. An initially generic implementation
 also changed accepted overlap blends on unrelated card crowns. A current-game
-comparison caught8479 changed pixels outside the requirement at one selector
-frame, with all854 PNG inputs identical. Those unrelated sprites now retain
+comparison caught 8479 changed pixels outside the requirement at one selector
+frame, with all 854 PNG inputs identical. Those unrelated sprites now retain
 their previous composition. The identity bound is checked without dereferencing
 the tag; null, unrelated and one-past-end tags do not enable trimming.
 
@@ -36,13 +36,20 @@ bounds rejection, decoder/upload failure and recovery, full queue, row/column
 UV and geometry, zero/different alpha, dark/white fade, layer, priority, clip,
 flipped/affine paths, retained containment and saturated bookkeeping controls.
 The existing first-frame fallback and card seam/corner regressions also pass.
-The acceptance probe covers all405 valid identity tags and negative tag bounds.
+The acceptance probe covers all 405 valid identity tags and negative tag bounds.
 
 Private native32 EU D3D11 before/after runs at the corrected combined source
 reach both synthesis selectors and return normally. At the inspected frame,
 the body pieces meet at the same output boundary rather than sharing four
 output rows; geometry and UV logs identify the actual consumers. The isolated
 edge comparison distinguishes this small blend change from the background band.
+The scoped implementation is also checked against the published pre3 native32
+EU executable: both selector frames change 2325 pixels inside the requirement
+body and zero outside; the earlier and cancelled frames are byte-identical.
+All 854 private PNG inputs match. The new unrelated-sprite negative control
+fails against the earlier generic implementation and passes with eligibility
+restricted to synthesis tags. A separate reviewer checked the identity bound,
+exclusion paths and unchanged drawing-state key.
 
 Layer isolation also rejects a broader claim: the remaining visible horizontal
 edge is present with both HD pieces transparent. Its transmitted background
