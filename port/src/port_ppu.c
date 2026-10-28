@@ -760,6 +760,13 @@ static int SmallCardNativeColor(int i, int tx, int ty, int color) {
     if (sOamHd[i].tiles == gOlympiaSmallCardTiles &&
         sOamHd[i].x + tx == 6 && sOamHd[i].y + ty == -1)
         return 0;
+    /* Pumpkinhead's native illustration leaks through the HD window's
+     * filtered top edge as one coloured output row below the black border.
+     * Neutralize only that interior underlay, not the original two closing
+     * corners (x=1/14), the native-only fallback or any HD artwork texel. */
+    if (sOamHd[i].tiles == gPumpkinheadSmallCardTiles &&
+        sOamHd[i].y + ty == -4 && x >= 2 && x <= 13)
+        return 0;
     return color;
 }
 
