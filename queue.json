@@ -9057,15 +9057,16 @@
     "boss-parasite-cage-left-cull": {
       "id": "boss-parasite-cage-left-cull",
       "piece": "FUTURE explicituser: Monstro ParasiteCage sprite clips moving farleft. Reproduce boss/camera-edge variants, preserve full sprite original gameplay/collisions, identify world/OAM cull boundary vsviewport. Not a v2.2 blocker per user.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-parasite-cull",
       "created_at": "2026-10-28T05:57:28.484066+00:00",
-      "updated_at": "2026-10-28T05:57:28.484066+00:00",
+      "updated_at": "2026-10-28T11:11:59.347557+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "pruebas/future-boss-coverage/parasite-cage-left-clipping.png",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T11:11:59.347557+00:00"
     },
     "boss-levelup-backdrop-coverage-audit": {
       "id": "boss-levelup-backdrop-coverage-audit",
@@ -9138,7 +9139,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:07:20.264898+00:00",
+  "updated_at": "2026-10-28T11:11:59.348593+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
