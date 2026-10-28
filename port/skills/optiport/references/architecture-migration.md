@@ -11,7 +11,16 @@ Buscar compatibilidad y beneficios medidos, sin asumir que 64 bits será más r�
 | Archivos y documentos | Mantener anchos, endian, layout y versiones de formatos legacy. Probar lectura y escritura cruzadas entre builds con copias de documentos; verificar también cachés y código generado existente. |
 | ABI y callbacks | Auditar Microsoft x64 frente a SysV AMD64 donde corresponda: argumentos enteros/flotantes, retorno, alineación de stack, shadow space/red zone y registros no volátiles. Probar wrappers, trampolines y callbacks con tipos reales, incluidos floats; una llamada de enteros que pasa no valida toda la frontera. |
 | Dependencias | Ejecutable, DLL/shared libraries y plugins de cada proceso deben tener arquitectura y ABI coherentes. Revisar disponibilidad de decoders, renderer, audio y funciones HD, además del enlace correcto. |
+| Instrucciones de CPU | Revisar los flags efectivos del host y del código generado/guest, por ejemplo SSE4.1 o AVX. Identificar x64 no demuestra esas extensiones: contrastar capacidades del equipo antes de ejecutar una ruta que las exige, y probar también la selección cuando faltan. Un cierre por instrucción ilegal es una hipótesis hasta disponer de excepción y binario exactos. |
 | Rutas efectivas | Revisar preprocesado, flags y capacidades negociadas: una función puede compilar en el build de 32 bits y desaparecer en un guest freestanding de 64 bits. Registrar el renderer real, calidad efectiva y motivo de fallback; un nombre fijo de backend o una compilación exitosa no demuestran paridad. |
+
+## Aritmética del original y optimización
+
+Derivar de helpers, binario u oráculo del original el contrato de DIV/REM: ancho, signo, redondeo, resto, divisor cero y mínimo entero con signo dividido por −1. Probar cociente y resto completos: un helper que devuelve cero en un registro puede dejar sin inicializar el resto en otro registro o parámetro de salida. Que un runtime de 32 bits continúe no demuestra ese contrato ni lo establece para otro runtime.
+
+Una operación que el original resolvía puede ser indefinida en el nuevo lenguaje/IR. Establecer su semántica antes de que el optimizador la use para eliminar código o ramas; comprobar el IR real, pues emitir LLVM con optimización ya puede llegar tarde. Si se adopta un lowering, validar la fase frontend, atributos y optimización posterior; un catch o guard tardío no reconstruye lo eliminado. Delimitar tipos/operadores y casos ya plegados por el frontend; no convertir arbitrariamente `poison` o corrupción en cero. La [referencia de LLVM](https://llvm.org/docs/LangRef.html#sdiv-instruction) documenta los límites de DIV/REM, distintos del contrato que deba preservarse.
+
+No sustituir un divisor inválido por `1` sin demostrar equivalencia con el original. Comparar cero, límites, negativos y controles ordinarios con el mismo oráculo. Conservar la evaluación y orden observables de los operandos: en `next_rng() % count`, saltar la llamada cuando `count` es cero o evaluarla dos veces cambia el estado. Observar resultado, contador/estado posterior y ramas dependientes. Los probes deben pasar por el productor y ABI afectados; separar el mecanismo probado de su integración en cada plataforma y del recorrido real de la aplicación.
 
 ## Selección y fallback
 
@@ -26,3 +35,9 @@ Comparar A/B con el mismo escenario, assets, opciones, backend y calidad: carga 
 Compilar con el SDK y los guards reales de cada frontend afectado. Un escáner textual de constantes o un harness del motor puede pasar mientras una UI compartida invoca una función disponible sólo en escritorio. Mantener funciones de extracción/reparación separadas de receptores móviles y probar el punto común que las llama; no inventar respuestas de éxito para ocultar una API ausente.
 
 Registrar por separado compilación, probes de ABI, harness, arranque del paquete y recorrido real del software. Un probe SysV aprobado no certifica Microsoft x64 ni una aplicación completa. Mantener pendientes explícitos de QA, hardware y sesiones prolongadas; publicar una alpha sólo dentro de la autorización del usuario, con SHA, hashes y límites comprobados.
+
+Si una arquitectura inicia y otra falla, aplicar también las fases de
+[diagnóstico de arranque](linux-launch-context.md): proceso, marcador,
+inicialización gráfica y primer resultado no son el mismo hito. El razonamiento
+por fases sirve a ambos runtimes; los detalles de Linux/Steam sólo corresponden
+a esas plataformas. No atribuir el fallo a ABI o CPU por el nombre de la build.

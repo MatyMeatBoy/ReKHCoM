@@ -4,6 +4,8 @@ Reanudación del usuario, 28/10/2026: resolver [441](https://github.com/MatyMeat
 
 ## Alcance y avance
 
+Actualización posterior a la entrega Linux439/441: método canónico394c34ff revisado y sincronizado en Codex/Claude; la [copia embebida del repositorio](../skills/OPTIPORT_SNAPSHOT.md) también se actualiza desde sus24 documentos y licencia comprometidos. La copia antigua carecía de la comprobación de vigencia y de tres módulos. Esta sincronización documental no cierra los trabajos de profiling, caché/cancelación, resistencia ni el nuevo449 de volumen de películas.
+
 La batería histórica conserva **10/14 bloques integrados (~71%)**, con los contratos originales de [la primera pasada](OPTIPORT_V21.md). La auditoría de24 documentos de la skill mide cobertura documental. Ninguna de esas cifras es un porcentaje de estabilidad ni de esta pasada ampliada.
 
 Se evalúan **16 áreas**: las14 originales y dos contratos que antes estaban fuera del denominador. El porcentaje global nuevo queda **pendiente de conciliación**: primero se contrasta cada criterio ampliado con la evidencia vigente. No se trasladan automáticamente diez cierres a un denominador mayor, ni se cuentan lectura, implementación, pruebas y confirmación externa como si fueran el mismo estado. Se reutiliza evidencia válida para el mismo contrato, binario y calidad; se repiten sólo las comprobaciones afectadas.

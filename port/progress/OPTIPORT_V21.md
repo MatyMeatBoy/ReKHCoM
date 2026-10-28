@@ -5,7 +5,7 @@ porcentaje y pendientes para esa versión. Base conservadora: **10/14 (~71%)**;
 cuatro bloques parciales, más alcance añadido separado. 2.1 publicada; no
 seguir ampliando sus verificaciones ni reemplazar sus artefactos.
 
-Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La copia en `port/skills/optiport` corresponde al commit público `17f0ffa`; incluye sus referencias locales para funcionar sin consultar otros repositorios. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
+Skill pública y reutilizable: [MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort). La referencia histórica de2.1 era `17f0ffa`. La [procedencia de la copia embebida actual](../skills/OPTIPORT_SNAPSHOT.md) se registra por separado y sus instrucciones exigen contrastar upstream antes de cada pasada. Conserva referencias locales para funcionar sin conexión. Los tickets, paths privados y resultados del juego se mantienen aquí, no en la skill general.
 
 ## Estado vigente después de publicar2.1 — 27/10
 
