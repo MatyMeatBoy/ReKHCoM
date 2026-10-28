@@ -9460,19 +9460,20 @@
     "optiport-android-startup-contracts": {
       "id": "optiport-android-startup-contracts",
       "piece": "Teach bounded Android startup lifecycle diagnostics and real installation parser contracts from444/442; no device cause claim, no universal Android gate; preserve installed local lessons after upstream merge.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-startup-contracts",
       "created_at": "2026-10-28T14:30:08.722615+00:00",
-      "updated_at": "2026-10-28T14:30:08.722615+00:00",
+      "updated_at": "2026-10-28T14:30:45.084374+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly requested teaching OptiPort lessons; root delegated post444 merge, only two conditional reference paragraphs.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T14:30:45.084374+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:30:08.722615+00:00",
+  "updated_at": "2026-10-28T14:30:45.084374+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
