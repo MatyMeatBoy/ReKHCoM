@@ -10085,15 +10085,21 @@
     "issue374-font-atlas-startup-fallback": {
       "id": "issue374-font-atlas-startup-fallback",
       "piece": "Moto374 confirmed ImGui NewFrame null ContainerAtlas: actual-source regression and bounded font build/default fallback before frame, shared launcher platforms",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-font-atlas",
       "created_at": "2026-10-28T20:16:51.417160+00:00",
-      "updated_at": "2026-10-28T20:17:00.349798+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T20:45:21.879838+00:00",
+      "branch": "fix/moto-font-atlas-fallback",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/466",
       "approval": "User asks fix crashes and startup for all; new real374 tombstones establish same font-atlas-null mechanism in5 reports",
       "reference": "issue374#issuecomment-6479080233",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T20:45:21.879838+00:00",
+          "owner": "codex-font-atlas",
+          "detail": "HEADd5107162 exactpeerreviewPASS. REDrealImGuiNewFrame0xc0000005 badmerge/control0; GREEN16real32/64cases+knownKHMenu preservespixels andfontSize;44startupfaultcontrolswithpersistedfontfailurePASS. Source sharedalllauncherplatforms, not hardwareclaim. FullAndroidC++compilependingconsolebeforemerge, no publishedAPK."
+        }
+      ],
       "claimed_at": "2026-10-28T20:17:00.349798+00:00"
     },
     "font-resize-allocation-fallback": {
@@ -10118,7 +10124,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:38:46.292104+00:00",
+  "updated_at": "2026-10-28T20:45:21.879838+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
