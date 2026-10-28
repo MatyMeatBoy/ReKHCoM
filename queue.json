@@ -10186,13 +10186,8 @@
       "completed_at": "2026-10-28T20:53:12.930217+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "dafc1e74b2fd10ae7e5d7a9b48a1e770c1a103eaf98428d8",
-    "created_at": "2026-10-28T20:53:03.152405+00:00",
-    "updated_at": "2026-10-28T20:53:03.152405+00:00"
-  },
-  "updated_at": "2026-10-28T20:53:12.930217+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-28T20:53:18.271783+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

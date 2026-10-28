@@ -365,4 +365,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | moto374-font-fallback-delivery | Moto374 causal font atlas fallback: two Android full-TU compile checks and separate immutable test APK, no AVD retries | en_curso | codex-moto374-font-delivery | fix/moto374-font-delivery | Root delegated explicit user startup mandate, 2026-10-28 | 2026-10-28T20:48:58.578304+00:00 |
 | font-glyph-upload-fallback | FreeType/Web glyph upload rejection: discard failed texture and native text on next frame; no claim of same-frame fallback or shim GPU ack | integrado | codex-font-upload | https://github.com/MatyMeatBoy/ReKHCoM/pull/467 | Human mechanism-wide font fallback audit and root explicit FreeType+Web next-frame scope approval; root reviews and integrates under lock. | 2026-10-28T20:53:12.930217+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T20:53:03.152405+00:00)
+Integrador: libre
