@@ -9298,17 +9298,23 @@
       "status": "en_curso",
       "owner": "codex-arm32-div-lowering",
       "created_at": "2026-10-28T12:10:24.583307+00:00",
-      "updated_at": "2026-10-28T12:10:30.123648+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T12:15:02.465752+00:00",
+      "branch": "fix/arm32-cartridge-division",
       "pr": null,
       "approval": "Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable",
       "reference": "pruebas/post22-arm-wasm-division",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T12:15:02.465752+00:00",
+          "owner": "codex-arm32-div-lowering",
+          "detail": "Base955eb92c own kh-worktrees/arm32-cartridge-division. Producer audit: CMakegame_REGION OBJECT exact src boundary, arm64 early-return; Anbernic build_linux cc_game rule. Plan docs/superpowers/plans/2026-10-28-arm32-cartridge-division.md; root review requested BEFORE producer edits. Lowerer shared read-only; consoleworker ownsbuild_switch. Probe84 and original192Thumb inspected."
+        }
+      ],
       "claimed_at": "2026-10-28T12:10:30.123648+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:10:30.123648+00:00",
+  "updated_at": "2026-10-28T12:15:02.465752+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
