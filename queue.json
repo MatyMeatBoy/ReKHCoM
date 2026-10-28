@@ -10374,13 +10374,8 @@
       "claimed_at": "2026-10-28T21:51:13.621643+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "6532fa3fdfbb924f761e864ff5a54c45bbf14dff75eb40dc",
-    "created_at": "2026-10-28T21:51:45.025256+00:00",
-    "updated_at": "2026-10-28T21:51:45.025256+00:00"
-  },
-  "updated_at": "2026-10-28T21:51:54.852311+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-28T21:52:00.719741+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
