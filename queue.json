@@ -9168,10 +9168,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T11:12:15.199987+00:00"
+    },
+    "post22-wasm-gba-division-lowering": {
+      "id": "post22-wasm-gba-division-lowering",
+      "piece": "Game-only Web scalar i32 DIV/REM cartridge semantics before optimization; cross-target CPU prototype, ARM builders unchanged",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T11:30:20.787648+00:00",
+      "updated_at": "2026-10-28T11:30:20.787648+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root permits bounded tested child after raw ARM/Wasm parity RED; preserve publishedv2.2 and original GBA arithmetic",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:30:12.481092+00:00",
+  "updated_at": "2026-10-28T11:30:20.787648+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
