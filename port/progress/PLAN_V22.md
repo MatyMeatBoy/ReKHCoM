@@ -1,5 +1,13 @@
 # ReKHCoM 2.2 — traspaso y pendientes
 
+## Reanudación y alcance completo — 28/10/2026
+
+La [pasada completa de OptiPort](OPTIPORT_FULL_PASS_20261028.md) evalúa16 áreas con criterios de cierre:14 originales más contratos entre runtimes/paquetes y fiabilidad del ensayo/coordinación. 10/14 (~71%) sigue siendo el resultado histórico del alcance original; el porcentaje de esta pasada ampliada espera conciliación de evidencia, no se infiere de leer24 documentos ni de añadir bloques.
+
+Prioridad reanudada: #439 vídeoHD entrecortado en SteamDeck con juego60FPS/importaciónmínima; #441 barra roja sobre textoStart sólo reportada en Linux; y revisar resolución real del importador con reparación opcional de instalaciones existentes. No atribuir estos casos al códec, la resolución o la GPU antes de medir. Los reports abiertos actuales son439/441/412/374/330. Los PR432/440/442/443 quedaron cerrados sin merge por la orden anterior de parada: sus piezas pendientes no se vuelven resueltas por ese cierre. Main incluye #444; los artefactos públicos2.2 conservan su fuente original.
+
+Las secciones siguientes conservan los snapshots anteriores; esta actualización prevalece. La cola remota sigue siendo la autoridad de reservas.
+
 ## Estado vigente: v2.2 publicada, 28/10/2026
 
 [Entrega y verificación publicadas](V22_PUBLISHED_VERIFICATION.md): ocho paquetes
