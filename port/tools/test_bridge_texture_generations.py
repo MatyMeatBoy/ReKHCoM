@@ -25,7 +25,13 @@ typedef unsigned char Uint8;
 typedef int SDL_PixelFormat;
 typedef int SDL_ScaleMode;
 typedef int SDL_BlendMode;
-#define SDL_PIXELFORMAT_ABGR8888 0
+/* Match the guest SDL_PixelFormat enum, including its byte-order alias. */
+#define SDL_PIXELFORMAT_UNKNOWN 0
+#define SDL_PIXELFORMAT_ARGB8888 1
+#define SDL_PIXELFORMAT_XRGB8888 2
+#define SDL_PIXELFORMAT_RGBA32 3
+#define SDL_PIXELFORMAT_ABGR8888 SDL_PIXELFORMAT_RGBA32
+#define SDL_PIXELFORMAT_BGRA32 4
 #define SDL_TEXTUREACCESS_STATIC 0
 #define SDL_BLENDMODE_BLEND 1
 static void*sRenderer;
