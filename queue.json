@@ -9244,7 +9244,7 @@
       "status": "pr_abierto",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T12:08:48.004311+00:00",
+      "updated_at": "2026-10-28T12:34:12.559095+00:00",
       "branch": "feat/android-startup-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/437",
       "approval": null,
@@ -9274,6 +9274,11 @@
           "at": "2026-10-28T12:08:48.004311+00:00",
           "owner": "codex-s22-startup",
           "detail": "Draft437headb162c8954a4e494892b92204c1969c8d6750ca39; optionalJavafirstdiagnostics,noartasset; cleanofflineAPK9cc6e4588ELF/assetsbyteparity+samecode102020099/certPASS; JVMhelper/JavaSDK35PASS; read-onlyAPI34roundtripactualsession34689 stillinprogress,rootreviewandruntimebeforeReady/prerelease; stableunchanged,no S22fixclaim"
+        },
+        {
+          "at": "2026-10-28T12:34:12.559095+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "Finalhead751d69448 docs+hosttestonlyoverproduct4007948; APK28847519 cleanoffline;8ELF/assets225binarymanifestparity;previousfullstable→diag→stable/sentinelreusedsamecode/cert;newactualAPI34uniqueUUID2Shares+Refresh oldhashunchanged/newhashdifferent;providerShellDenied,JavaUI/mapsbeforeSDL,explicitOpenSDL;CPUretention8,path/write8guardsPASS;DIAGNOSTIC-FINAL-VALIDATION.json;rootreview/publicationPENDING,noS22fixclaim"
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
@@ -9334,7 +9339,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:34:06.761096+00:00",
+  "updated_at": "2026-10-28T12:34:12.559095+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
