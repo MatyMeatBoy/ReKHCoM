@@ -9021,10 +9021,23 @@
       "approval": null,
       "reference": "pruebas/future-boss-coverage/parasite-cage-left-clipping.png",
       "evidence": []
+    },
+    "boss-levelup-backdrop-coverage-audit": {
+      "id": "boss-levelup-backdrop-coverage-audit",
+      "piece": "FUTURE explicituser: Monstro ParasiteCage level-up screen has central uncovered black background strip like earlierJafar. Audit same transition/camera/zoom coverage for ALL boss backdrops, reuse establishedJafar fix onlyaftermechanism proof. Not v2.2 blocker.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T05:57:33.524603+00:00",
+      "updated_at": "2026-10-28T05:57:33.524603+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "pruebas/future-boss-coverage/parasite-cage-levelup-background.png",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:57:28.484066+00:00",
+  "updated_at": "2026-10-28T05:57:33.524603+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
