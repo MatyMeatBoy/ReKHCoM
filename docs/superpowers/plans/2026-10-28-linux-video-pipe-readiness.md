@@ -6,6 +6,6 @@ Evidence: actualMovieRead + nativeFFmpeg transport in existing512MiB/1CPU Debian
 
 - [x] RED actualconsumer regression forbidsfixedsleep onEAGAIN while preservingpositiveprogress/EOF/eventaudio pumping.
 - [x] MinimalLinux64 helper poll(POLLIN,1ms max), usedonlyvideoEAGAIN. Noencoding/asset/importerchange.
-- [ ] GREEN CPU tests and realPOSIXfragmentproducer; actualhost compile fromclean source.
-- [ ] RealFFmpeg same encodedfile hash, actualbaseline/fixedhost audio/video/pause/skip cases and presentation timestamps; distinguishsoftwarebackend/VM fromDeck.
+- [x] GREEN CPU tests and realPOSIXfragmentproducer; actualhost compile fromclean source.
+- [x] RealFFmpeg same encodedfile hash, actualbaseline/fixedhost audio/video/pause/skip cases and presentation timestamps; distinguishsoftwarebackend/VM fromDeck.
 - [ ] Small PR with rawcomparabletiming, source/binary/mediahashes andhardwarelimit. Reporterissue remains open untilconfirmation; rootintegrates/buildpublishes.
