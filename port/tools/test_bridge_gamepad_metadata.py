@@ -22,6 +22,7 @@ static unsigned sHostKeyRead, sHostKeyWrite;
 static int sKeyboardEventsActive;
 static uint32_t sRendererGeneration;
 static const char* PortDeviceHostQuery(const char*n){(void)n;return NULL;}
+static int HostGpuQuery(const char*n,char*out,int cap){(void)n;(void)out;(void)cap;return -2;}
 size_t SDL_strlcpy(char*d,const char*s,size_t n){return snprintf(d,n,"%s",s);}
 /* ACTUAL_HOST_ENV */
 static const char* malformed;

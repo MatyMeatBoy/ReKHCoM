@@ -72,6 +72,23 @@ static void H_log(const char* s) { fprintf(stderr, "%s\n", s); }
 static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
+/* Optional event channel over getenv keeps the fixed bridge table compatible with old hosts. */
+static SDL_KeyboardEvent sHostKeys[64];
+static unsigned sHostKeyRead, sHostKeyWrite;
+static int sKeyboardEventsActive;
+static void QueueKey(const SDL_Event* event) {
+    unsigned next = (sHostKeyWrite + 1) & 63;
+    if (next == sHostKeyRead) {
+        /* A lost release must clear held actions instead of leaving them stuck. */
+        sHostKeyRead = sHostKeyWrite = 0;
+        SDL_zero(sHostKeys[0]);
+        sHostKeys[0].type = SDL_EVENT_WINDOW_FOCUS_LOST;
+        sHostKeyWrite = 1;
+        next = 2;
+    }
+    sHostKeys[sHostKeyWrite] = event->key;
+    sHostKeyWrite = next;
+}
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
 static int HostGpuQuery(const char*, char*, int);
 static int HostGamepadInfoQuery(const char* name, char* out, int cap);
@@ -80,6 +97,15 @@ static int H_getenv(const char* name, char* out, int cap) {
     if (gpuQuery != -2) return gpuQuery;
     int padInfo = HostGamepadInfoQuery(name, out, cap);
     if (padInfo != -2) return padInfo;
+    if (!strcmp(name, "KHCOM_HOST_KEY_EVENT")) {
+        if (cap < 64) return -1;
+        sKeyboardEventsActive = 1;
+        if (sHostKeyRead == sHostKeyWrite) { out[0] = 0; return 0; }
+        SDL_KeyboardEvent* key = &sHostKeys[sHostKeyRead];
+        int n = snprintf(out, (size_t)cap, "%u,%u,%u,%u", key->type == SDL_EVENT_WINDOW_FOCUS_LOST ? 0x20cu : key->type, key->key, key->mod, key->repeat);
+        sHostKeyRead = (sHostKeyRead + 1) & 63;
+        return n;
+    }
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -279,8 +305,11 @@ static void Pump(void) {
                     sPad = NULL;
                 }
                 break;
+            case SDL_EVENT_WINDOW_FOCUS_LOST: QueueKey(&e); break;
+            case SDL_EVENT_KEY_UP: QueueKey(&e); break;
             case SDL_EVENT_KEY_DOWN:
-                if (e.key.key == SDLK_F11 || (e.key.key == SDLK_RETURN && (e.key.mod & SDL_KMOD_ALT)))
+                QueueKey(&e);
+                if (!sKeyboardEventsActive && (e.key.key == SDLK_F11 || (e.key.key == SDLK_RETURN && (e.key.mod & SDL_KMOD_ALT))))
                     SDL_SetWindowFullscreen(sWindow, !(SDL_GetWindowFlags(sWindow) & SDL_WINDOW_FULLSCREEN));
                 break;
             default: break;
@@ -312,7 +341,7 @@ static int H_pad_poll(HostPad* out, int count) {
     out[0].connected = 1;
     kb = SDL_GetKeyboardState(NULL);
     for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); i++)
-        if (kb[keys[i].k]) out[0].buttons |= 1u << keys[i].bit;
+        if (!sKeyboardEventsActive && kb[keys[i].k]) out[0].buttons |= 1u << keys[i].bit;
     if (sPad) {
         for (size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++)
             if (SDL_GetGamepadButton(sPad, map[i].b)) out[0].buttons |= 1u << map[i].bit;
