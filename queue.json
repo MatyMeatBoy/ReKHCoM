@@ -8989,10 +8989,10 @@
     "v22-final-release-notes": {
       "id": "v22-final-release-notes",
       "piece": "Final v2.2 README/CHANGELOG and published platform matrix from verified closed artifacts; docs only, no version rebuild/relabel; wait full platform evidence before PR integration",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-release-docs",
       "created_at": "2026-10-28T05:33:24.346025+00:00",
-      "updated_at": "2026-10-28T06:20:29.911801+00:00",
+      "updated_at": "2026-10-28T10:56:01.617768+00:00",
       "branch": "release/v2.2-final-notes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/430",
       "approval": "Usuario: lanzar v2.2 todas plataformas, integrar y cerrar PRs/issues con evidencia",
@@ -9002,9 +9002,15 @@
           "at": "2026-10-28T06:20:29.911801+00:00",
           "owner": "codex-release-docs",
           "detail": "Draft430 b6c45d83f: README/CHANGELOG v2.2 matrix, limits and Auto migration description; diffcheckPASS. Hold merge until runtime migration integrated and Web/all final packages ready. Review requested from deck_video_421, no publication claim."
+        },
+        {
+          "at": "2026-10-28T10:56:01.617768+00:00",
+          "owner": "codex-release-docs",
+          "detail": "Independent exact docs review PASS.431 merged5107 and rebuilt desktop exact QA PASS; eight uploaded assets digests/Quiver/version gate PASS. Web three regions built/frozen30files, exactWasm and ABI/controls/editor/UI PASS; browserROMstartup explicitly unverified due automation restriction and remains beta. Publication follows immediately at this merge SHA with scoped release notes; no game changes or artifact relabel.; merged 2ab2ebb6b739a12ae864dc1fa66dbd9f9638b4fc"
         }
       ],
-      "claimed_at": "2026-10-28T05:33:30.441089+00:00"
+      "claimed_at": "2026-10-28T05:33:30.441089+00:00",
+      "completed_at": "2026-10-28T10:56:01.617768+00:00"
     },
     "runtime-auto-per-update": {
       "id": "runtime-auto-per-update",
@@ -9085,7 +9091,7 @@
     "created_at": "2026-10-28T10:55:52.673602+00:00",
     "updated_at": "2026-10-28T10:55:52.673602+00:00"
   },
-  "updated_at": "2026-10-28T10:55:52.673602+00:00",
+  "updated_at": "2026-10-28T10:56:01.617768+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
