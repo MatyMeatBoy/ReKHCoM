@@ -9241,10 +9241,10 @@
     "android412-v22-startup": {
       "id": "android412-v22-startup",
       "piece": "Critical reporter confirmed v2.2 instant startup crash on S22 Ultra Android16 before launcher; distinguish Retroid self-resolved and Moto/Jafar. Audit exact publishedAPK38f loader/JNI/GL/filesystem and actionable crash-buffer capture, no unprovenfixclaims.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T13:18:33.213968+00:00",
+      "updated_at": "2026-10-28T13:19:22.192396+00:00",
       "branch": "feat/android-startup-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/437",
       "approval": "Explicit user authorization: prioritize Android16 bug, send test builds to affected reporters, integrate reviewed PRs. Root reviewed exact751d6944 Java-first bounded diagnostic; no fix claim.",
@@ -9284,9 +9284,15 @@
           "at": "2026-10-28T13:18:33.213968+00:00",
           "owner": "codex-s22-startup",
           "detail": "Root independent ReportLimitsTest and ReportSnapshotsTest PASS; reviewed collector/provider/activity/offline packaging, exact native bytes and API34 roundtrip evidence. Physical Android16 failure remains open."
+        },
+        {
+          "at": "2026-10-28T13:19:22.192396+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "Root exact-head review; independent JVM limits/snapshot tests PASS; API34 same-version stable-diagnostic-stable and immutable URI/native parity evidence reviewed. Optional diagnostic only; S22Android16 root cause unconfirmed.; merged 06938e338ee983f6fc79b9da6ed5a0918520c96f"
         }
       ],
-      "claimed_at": "2026-10-28T11:32:08.448301+00:00"
+      "claimed_at": "2026-10-28T11:32:08.448301+00:00",
+      "completed_at": "2026-10-28T13:19:22.192396+00:00"
     },
     "post22-arm-guest-division-lowering": {
       "id": "post22-arm-guest-division-lowering",
@@ -9366,7 +9372,7 @@
     "created_at": "2026-10-28T13:19:02.453796+00:00",
     "updated_at": "2026-10-28T13:19:02.453796+00:00"
   },
-  "updated_at": "2026-10-28T13:19:02.453796+00:00",
+  "updated_at": "2026-10-28T13:19:22.195924+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
