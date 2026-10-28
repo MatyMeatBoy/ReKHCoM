@@ -748,6 +748,7 @@ SDL_AudioStream* SDL_OpenAudioDeviceStream(SDL_AudioDeviceID d, const SDL_AudioS
     sAudio.ratio = 1.0f;
     sAudio.open = true;
     sAudio.bridgeControls = controls;
+    h_thread(BRIDGE_AUDIO_INPUT_RATE, (uint32_t)sAudio.inRate, 0, 0, 0);
     if (sAudio.bridgeControls)
         h_thread(BRIDGE_AUDIO_PAUSE, 0, 0, 0, 0);
     return &sAudio;
@@ -775,7 +776,11 @@ bool SDL_SetAudioStreamFrequencyRatio(SDL_AudioStream* s, float ratio) {
 }
 bool SDL_SetAudioStreamFormat(SDL_AudioStream* s, const SDL_AudioSpec* in, const SDL_AudioSpec* out) {
     (void)out;
-    if (in && in->freq != s->inRate) { s->inRate = in->freq; SetRatio(s); }
+    if (in && in->freq != s->inRate) {
+        s->inRate = in->freq;
+        h_thread(BRIDGE_AUDIO_INPUT_RATE, (uint32_t)s->inRate, 0, 0, 0);
+        SetRatio(s);
+    }
     return true;
 }
 bool SDL_GetAudioStreamFormat(SDL_AudioStream* s, SDL_AudioSpec* in, SDL_AudioSpec* out) {
