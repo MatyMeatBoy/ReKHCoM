@@ -332,4 +332,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | boss-levelup-backdrop-coverage-audit | FUTURE explicituser: Monstro ParasiteCage level-up screen has central uncovered black background strip like earlierJafar. Audit same transition/camera/zoom coverage for ALL boss backdrops, reuse establishedJafar fix onlyaftermechanism proof. Not v2.2 blocker. | pendiente | — | — | — | 2026-10-28T05:57:33.524603+00:00 |
 | pr432-deck-management-review | Post-v2.2 review and QA of external PR432 deck insert/compact; do not change author code or include in current release. Validate99slots, end-gap, IDs/value0, multiset/order, save/load, remapped input/repeat and UI labels. | en_revision | codex-deck-qol-review | https://github.com/MatyMeatBoy/ReKHCoM/pull/432 | — | 2026-10-28T10:51:47.263221+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T10:55:52.673602+00:00)
