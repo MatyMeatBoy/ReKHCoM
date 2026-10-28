@@ -10007,12 +10007,12 @@
     "linux-startup-pre1-delivery": {
       "id": "linux-startup-pre1-delivery",
       "piece": "Prepare immutable Linuxstartup-pre1 from integrated main452+457+458; exactTAR normal64/safe32 QA and provenance; root publishes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux-startup-delivery",
       "created_at": "2026-10-28T19:43:07.280612+00:00",
-      "updated_at": "2026-10-28T20:14:54.726403+00:00",
+      "updated_at": "2026-10-28T20:17:26.175300+00:00",
       "branch": "docs/linux-startup-test330",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/464",
       "approval": "user",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
       "evidence": [
@@ -10025,6 +10025,11 @@
           "at": "2026-10-28T20:14:54.726403+00:00",
           "owner": "codex-linux-startup-delivery",
           "detail": "Published startup test ledger only; root authorized documentation PR, no builds/runtime/artifact changes."
+        },
+        {
+          "at": "2026-10-28T20:17:26.175300+00:00",
+          "owner": "codex-linux-startup-delivery",
+          "detail": "Published test330 documentation; head d3be77089; checked BUILD-SOURCES, final gate46, ROOT-FINAL-AUDIT and publication receipt; no builds/runtime. Latest stable unchanged and physical confirmation pending."
         }
       ],
       "claimed_at": "2026-10-28T19:43:19.813766+00:00"
@@ -10076,7 +10081,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:17:00.349798+00:00",
+  "updated_at": "2026-10-28T20:17:26.175300+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
