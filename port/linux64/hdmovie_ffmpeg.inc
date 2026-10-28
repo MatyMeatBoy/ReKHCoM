@@ -1,7 +1,7 @@
 /* HD movies for the 64-bit Linux host (linux64_host.c): the game image asks through the hd_movie bridge entry with
  * the file (and, after an @, the second to start at), its two subtitle files and the font; the system's ffmpeg decodes
  * video and audio through pipes, as the 32-bit build does (port/src/port_hdmovie.c), and the subtitles are drawn with
- * stb_truetype. Without ffmpeg the cartridge's movie plays. A, B or START skip it. */
+ * stb_truetype. Without ffmpeg the cartridge's movie plays. START pauses with an explicit skip confirmation. */
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
 
@@ -118,6 +118,8 @@ static SDL_Texture* SubTexture(stbtt_fontinfo* font, const char* text, float px,
     return t;
 }
 
+#include "hdmovie_ui.inc"
+
 /* Each decoder is our direct child: no shell, inherited pipe writers or pclose wait. */
 #include <fcntl.h>
 #include <signal.h>
@@ -187,19 +189,20 @@ static double MovieClock(int audio, int eof, long long bytes, int queued, double
     }
     return now - *began;
 }
-static int MovieEvents(int* skip) {
+static int MovieEvents(int* pause) {
     int reset = 0;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_EVENT_RENDER_DEVICE_RESET) { RendererDeviceReset(); reset = 1; }
         if (e.type == SDL_EVENT_QUIT) sQuit = 1;
         if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat &&
-            (e.key.scancode == SDL_SCANCODE_X || e.key.scancode == SDL_SCANCODE_Z || e.key.scancode == SDL_SCANCODE_RETURN))
-            *skip = 1;
+            (e.key.key == SDLK_ESCAPE || e.key.key == sMovieStartKeys[0] ||
+             (sMovieStartKeys[1] && e.key.key == sMovieStartKeys[1])))
+            *pause = 1;
         if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN &&
-            (e.gbutton.button == SDL_GAMEPAD_BUTTON_SOUTH || e.gbutton.button == SDL_GAMEPAD_BUTTON_EAST ||
-             e.gbutton.button == SDL_GAMEPAD_BUTTON_START))
-            *skip = 1;
+            e.gbutton.button == SDL_GAMEPAD_BUTTON_START)
+            *pause = 1;
+        if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN || e.type == SDL_EVENT_FINGER_DOWN) *pause = 1;
         if (e.type == SDL_EVENT_GAMEPAD_ADDED && !sPad) sPad = SDL_OpenGamepad(e.gdevice.which);
     }
     return reset;
@@ -207,8 +210,9 @@ static int MovieEvents(int* skip) {
 
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* fontPath) {
     char path[1024], line[256], seek[32];
-    int start = 0, w = 0, h = 0, played = 0, skip = 0, rendererLost = 0;
+    int start = 0, w = 0, h = 0, played = 0, skip = 0, pause = 0, rendererLost = 0, pauseTested = 0;
     double fps = 30;
+    MovieSettings(subs1);
     snprintf(path, sizeof(path), "%s", movie);
     char* at = strrchr(path, '@');
     if (at && strchr(at, '/') == NULL) { start = atoi(at + 1); *at = 0; }
@@ -218,7 +222,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     MoviePipe probe = MovieSpawn(probeArgs);
     size_t lineBytes = 0;
     while (probe.fd >= 0 && !sQuit && !skip && lineBytes < sizeof(line) - 1) {
-        if (MovieEvents(&skip)) { MovieClose(&probe); return 0; }
+        if (MovieEvents(&pause)) { MovieClose(&probe); return 0; }
         ssize_t n = MovieRead(&probe, line + lineBytes, sizeof(line) - 1 - lineBytes);
         if (n < 0) break;
         lineBytes += (size_t)n;
@@ -246,7 +250,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     stbtt_fontinfo font;
     unsigned char* fontData = NULL;
     int haveFont = 0;
-    if (fontPath && (subs1 || subs2)) {
+    if (fontPath) {
         size_t size = 0;
         fontData = SDL_LoadFile(fontPath, &size);
         haveFont = fontData && stbtt_InitFont(&font, fontData, stbtt_GetFontOffsetForIndex(fontData, 0));
@@ -257,6 +261,8 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     if (sAudio)
         SDL_PauseAudioStreamDevice(sAudio); /* the game's own sound waits */
     double began = SDL_GetTicksNS() / 1e9;
+    double fpsEpoch = began, fpsValue = 0;
+    int fpsFrames = 0;
     int audioEof = !audio;
     size_t frameUsed = 0;
     long long frames = 0, audioBytes = 0;
@@ -265,7 +271,7 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     uint8_t abuf[19200];
     size_t audioUsed = 0;
     while (video.fd >= 0 && tex && frame && !sQuit && !skip) {
-        if (MovieEvents(&skip)) { played = 0; rendererLost = 1; break; }
+        if (MovieEvents(&pause)) { played = 0; rendererLost = 1; break; }
         if (sQuit || skip) break;
         /* Nonblocking producer work is bounded; video and events keep progressing without PCM. */
         for (int reads = 0; audio && !audioEof && reads < 8 &&
@@ -339,7 +345,27 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
                 shot = 1;
             }
         }
-        SDL_RenderPresent(sRenderer);
+        if (sMovieFps) {
+            double now = SDL_GetTicksNS() / 1e9;
+            fpsFrames++;
+            if (now - fpsEpoch >= .5) { fpsValue = fpsFrames / (now - fpsEpoch); fpsFrames = 0; fpsEpoch = now; }
+            char text[64]; snprintf(text, sizeof(text), "Video %.1f FPS", fpsValue);
+            SDL_SetRenderScale(sRenderer, 2, 2);
+            SDL_SetRenderDrawColor(sRenderer, 0, 0, 0, 255); SDL_RenderDebugText(sRenderer, 4, 4, text);
+            SDL_SetRenderDrawColor(sRenderer, 255, 255, 255, 255); SDL_RenderDebugText(sRenderer, 3, 3, text);
+            SDL_SetRenderScale(sRenderer, 1, 1);
+        }
+        {
+            const char* at = getenv("KHCOM_HDMOVIE_PAUSETEST");
+            if (at && !pauseTested && due >= atof(at)) { pause = 1; pauseTested = 1; }
+        }
+        if (pause) {
+            double before = SDL_GetTicksNS() / 1e9;
+            skip = MoviePause(&font, haveFont, audio, &rendererLost, &began);
+            fpsEpoch += SDL_GetTicksNS() / 1e9 - before;
+            pause = 0;
+            if (rendererLost) { played = 0; break; }
+        } else SDL_RenderPresent(sRenderer);
         {
             const char* limit = getenv("KHCOM_HDMOVIE_SECONDS"); /* test harness: stop after that many seconds */
             if (limit && due >= atof(limit)) break;
