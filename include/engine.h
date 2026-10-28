@@ -94,6 +94,10 @@ int PortFastText(void);
 int PortTakeDodge(int held, int facingLeft);
 /* Return-stocked-cards button: 1 once per completed hold. */
 int PortTakeUnstock(void);
+/* Deck editor: the dodge button places the held card and pushes the rest, the stock button closes the deck's gaps.
+   1 once per press, whatever the battle options for those buttons. */
+int PortTakeDeckPlace(void);
+int PortTakeDeckCompact(void);
 /* Opening movie: show or hide the "A again skips" prompt. */
 void PortUiSkipPrompt(int visible);
 /* This frame shows a GBA-size screen (menus, the battle start): scale the

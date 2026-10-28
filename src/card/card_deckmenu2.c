@@ -41,6 +41,12 @@ void PortRegisterBgTextTile(void* address, int code, int style, const void* sour
 void PortClearBgTextTiles(void);
 #endif
 
+#ifdef PLATFORM_PC
+/* The deck grid's extra buttons (port_input.c): place the held card pushing the rest, close the gaps. Defined after
+   SwapHeldDeckCard. */
+static u8 DeckGridPortButtons(DeckMenuWork* work);
+#endif
+
 /* Keep cartridge tile transfers intact; attach optional HD metadata to
    numeric cells. The renderer checks the tile signature before using it. */
 #ifdef PLATFORM_PC
@@ -1747,6 +1753,12 @@ u8 UpdateDeckMenuDeckGrid(DeckMenuWork* work, void* task) {
             work->exitRequested = FALSE;
         }
     }
+
+#ifdef PLATFORM_PC
+    if (DeckGridPortButtons(work)) {
+        return 1;
+    }
+#endif
 
     switch (GetKeysRepeat()) {
     case DPAD_UP:
@@ -6392,6 +6404,120 @@ u8 SwapHeldDeckCard(DeckMenuWork* work) {
 
     return TRUE;
 }
+
+#ifdef PLATFORM_PC
+/* The deck grid's card at a grid position, or NULL. */
+static DeckCard2Work* FindDeckGridCard(DeckMenuWork* work, s16 col, s16 row) {
+    DeckCard2Work* card;
+
+    for (card = ListPoolFirst(&work->pool); card != NULL; card = ListPoolNext(&card->node)) {
+        if (card->args.col == col && card->args.row == row) {
+            return card;
+        }
+    }
+
+    return NULL;
+}
+
+/* The held card goes to the cursor's slot and the cards from there on move one slot down the deck, up to the first
+   gap (the held card's own slot is one now). FALSE when there is no gap after the cursor. */
+static u8 PlaceHeldDeckCard(DeckMenuWork* work) {
+    DeckCard2Work* held = FindDeckGridCard(work, work->heldCol, work->heldRow);
+    DeckCard2Work* target = FindDeckGridCard(work, work->cursorCol, work->cursorRow);
+    u16* deck = GetDeck(work->deckIndex)->cards;
+    s32 from;
+    s32 to;
+    s32 gap;
+    u16 card;
+
+    if (held == NULL || target == NULL) {
+        return FALSE;
+    }
+
+    from = held->args.slot - deck;
+    to = target->args.slot - deck;
+
+    if (from != to) {
+        card = deck[from];
+        deck[from] = CARD_NONE;
+
+        for (gap = to; gap < DECK_SIZE && deck[gap] != CARD_NONE; gap++) {
+        }
+
+        if (gap == DECK_SIZE) {
+            deck[from] = card;
+            return FALSE;
+        }
+
+        for (; gap > to; gap--) {
+            deck[gap] = deck[gap - 1];
+        }
+
+        deck[to] = card;
+        ClearCardGrid(work);
+        TaskPoolUpdate(&work->taskpool);
+        RecreateDeckGridCards(work, work->categoryFilter);
+    }
+
+    return TRUE;
+}
+
+/* The deck's cards to its first slots, in their order: the gaps go to the end. FALSE when there were none. */
+static u8 CompactDeckSlots(DeckMenuWork* work) {
+    u16* deck = GetDeck(work->deckIndex)->cards;
+    s32 i;
+    s32 n = 0;
+    u8 moved = FALSE;
+
+    for (i = 0; i < DECK_SIZE; i++) {
+        if (deck[i] != CARD_NONE) {
+            if (i != n) {
+                deck[n] = deck[i];
+                deck[i] = CARD_NONE;
+                moved = TRUE;
+            }
+
+            n++;
+        }
+    }
+
+    if (moved) {
+        ClearCardGrid(work);
+        TaskPoolUpdate(&work->taskpool);
+        RecreateDeckGridCards(work, work->categoryFilter);
+    }
+
+    return moved;
+}
+
+/* The dodge button with a card held places it (A swaps it, as on the cartridge); the stock button with none closes
+   the gaps. Only with the whole deck shown, as A's own moves. TRUE when a button was taken. */
+static u8 DeckGridPortButtons(DeckMenuWork* work) {
+    u8 ok;
+
+    if (PortTakeDeckPlace()) {
+        ok = work->holding && work->categoryFilter == CATEGORY_FILTER_DECK_ALL && PlaceHeldDeckCard(work);
+
+        if (ok) {
+            m4aSongNumStart(SONG_SYS_KETEI2);
+            work->holding = FALSE;
+            AnimStart(&work->anim2, 0, ANIM_FLAG_LOOP);
+        } else {
+            m4aSongNumStart(SONG_SYS_BEEP);
+        }
+
+        return TRUE;
+    }
+
+    if (PortTakeDeckCompact()) {
+        ok = !work->holding && work->categoryFilter == CATEGORY_FILTER_DECK_ALL && CompactDeckSlots(work);
+        m4aSongNumStart(ok ? SONG_SYS_KETEI2 : SONG_SYS_BEEP);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+#endif
 
 enum DeckKeyboardPage {
     DECK_KEYBOARD_PAGE_HIRAGANA,
