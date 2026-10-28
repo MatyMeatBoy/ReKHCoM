@@ -8534,10 +8534,23 @@
         }
       ],
       "claimed_at": "2026-10-28T01:57:36.792362+00:00"
+    },
+    "issue407-mp4-alignment": {
+      "id": "issue407-mp4-alignment",
+      "piece": "Compatibilidad MP4 con relleno final alineado y límites en validadores Python/C++",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T02:15:16.857139+00:00",
+      "updated_at": "2026-10-28T02:15:16.857139+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: verificar todos los issues, corregir cuelgues y plataformas antes de v2.2",
+      "reference": "Issue407 exact message; owned ROP143102000 bytes, moov ends143101988 plus12CD padding, current Python validator false",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:09:41.932416+00:00",
+  "updated_at": "2026-10-28T02:15:16.857139+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
