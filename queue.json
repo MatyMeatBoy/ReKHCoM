@@ -10690,20 +10690,26 @@
     "v225-switch-build": {
       "id": "v225-switch-build",
       "piece": "Build final Switch beta2.2.5 guest3regions then offline snapshotSDKhost after rootVMlease, close NRO/NACP/debug",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-v225-console-build",
       "created_at": "2026-10-28T22:32:27.186177+00:00",
-      "updated_at": "2026-10-28T22:32:32.232255+00:00",
+      "updated_at": "2026-10-28T22:45:42.784622+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root frozenf28 fourconsoleauthorization; SwitchguestCPU duringLinuxlease, hostonlyafterrootrelease",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T22:45:42.784622+00:00",
+          "owner": "codex-v225-console-build",
+          "detail": "SwitchFINAL40,818,494B SHAb304d6c557d2e826d56304b31cbea2473a426477d751bbf68b7c40a59610981b/sourcef28. Guest47265PASS180.204s/host55009PASS56.875s/QEMU21880exit0. NACP2.2.5/fullhash/boundedRomFS3uniqueguestpayload+names passed. Snapshot/NICnone/cachegate/freshmarker/SDKdiskstatunchangedPASS. NativeARM64ELF+symbols+NACP gzip5.70MBretained. NoSwitchhardwareclaim;rootcollectorready."
+        }
+      ],
       "claimed_at": "2026-10-28T22:32:32.232255+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:40:46.442268+00:00",
+  "updated_at": "2026-10-28T22:45:42.784622+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
