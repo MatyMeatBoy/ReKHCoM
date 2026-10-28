@@ -97,6 +97,7 @@ static bool SDL_RenderFillRect(SDL_Renderer*r,const SDL_FRect*d){(void)r;(void)d
 #define SDL_min(x,y) ((x)<(y)?(x):(y))
 static void PreviewTrace(const char*s){(void)s;}
 static void PreviewTraceDraw(int a){(void)a;}
+static void PreviewTraceUnderlay(void){}
 static SDL_Texture*sPreviewTexture;
 static SDL_Renderer*sPreviewRenderer;
 static int sPreviewReady=1,sPreviewW=2,sPreviewH=2,sTextureW,sTextureH,sTextureSerial=-1,sPreviewSerial=1,sPreviewHd=1,sPreviewFallback;

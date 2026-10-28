@@ -36,7 +36,9 @@ int main(void){
  PreviewTrace("request");PreviewTraceDraw(1);PortSceneGalleryPreviewPresented(1);PreviewTraceFlush();
  CHECK(clocks==0&&opens==0&&sPreviewTraceCount==0&&!sPreviewTracePending);
  enable=1;sPreviewTraceEnabled=-1;PreviewTrace("request");PreviewTraceDraw(0);
- CHECK(!sPreviewTracePending);PreviewTraceDraw(1);CHECK(sPreviewTracePending);
+ CHECK(sPreviewTracePending==2);PortSceneGalleryPreviewPresented(1);
+ CHECK(!sPreviewTracePending&&sPreviewTrace[sPreviewTraceCount-1].stage[0]=='u');
+ PreviewTraceDraw(1);CHECK(sPreviewTracePending==1);
  PortSceneGalleryPreviewPresented(1);CHECK(!sPreviewTracePending);
  int n=clocks;PreviewTraceDraw(1);PortSceneGalleryPreviewPresented(1);CHECK(clocks==n);
  unsigned oldGeneration=sPreviewTrace[0].generation;

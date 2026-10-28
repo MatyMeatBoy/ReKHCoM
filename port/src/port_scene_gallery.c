@@ -279,13 +279,13 @@ int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float 
     }
     if (!sPreviewTexture) {
         sPreviewTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, sPreviewW, sPreviewH);
-        if (!sPreviewTexture) return 0;
+        if (!sPreviewTexture) { PreviewTrace("create-rejected"); PreviewTraceUnderlay(); return 0; }
         sPreviewRenderer = renderer; sTextureW = sPreviewW; sTextureH = sPreviewH; sTextureSerial = -1;
         SDL_SetTextureBlendMode(sPreviewTexture, SDL_BLENDMODE_NONE);
     }
     if (sTextureSerial != sPreviewSerial) {
         SDL_SetTextureScaleMode(sPreviewTexture, sPreviewHd && !sPreviewFallback ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
-        if (!SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4)) { PreviewTrace("upload-rejected"); return 0; }
+        if (!SDL_UpdateTexture(sPreviewTexture, NULL, sPreview, sPreviewW * 4)) { PreviewTrace("upload-rejected"); PreviewTraceUnderlay(); return 0; }
         sTextureSerial = sPreviewSerial;
         PreviewTrace("upload-submitted");
     }

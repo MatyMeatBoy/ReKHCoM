@@ -54,6 +54,7 @@ static void PortSceneGalleryPreviewSize(int*w,int*h){*w=sPreviewW;*h=sPreviewH;}
 static void Pixel(int x,int y,uint32_t color){CHECK(x>=0&&x<4&&y>=0&&y<4);canvas[y*4+x]=color;pixelWrites++;}
 static void PreviewTrace(const char* stage){(void)stage;}
 static void PreviewTraceDraw(int accepted){(void)accepted;}
+static void PreviewTraceUnderlay(void){}
 '''
     code += function(source, 'int PortSceneGalleryPreviewDraw(SDL_Renderer* renderer, float x, float y, float w, float h, uint32_t face, uint32_t shadow)')
     code += '\nstatic void Compose(int queue) { const uint32_t* preview=sPreview; int pw=4,ph=4,px,py,cardX=-6,top=-16; sFb=canvas;sHdUiFrame=queue?canvas:NULL;\n'

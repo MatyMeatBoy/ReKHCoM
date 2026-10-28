@@ -34,15 +34,18 @@ static void PreviewTrace(const char* stage) {
 }
 static void PreviewTraceDraw(int accepted) {
     if (!PreviewTraceEnabled()) return;
-    if (!accepted) { PreviewTrace("draw-rejected"); return; }
+    if (!accepted) { PreviewTrace("draw-rejected"); sPreviewTracePending = 2; return; }
     if (sPreviewTraceDrawSerial != sPreviewSerial || sPreviewTraceDrawFallback != sPreviewFallback) {
         PreviewTrace("draw-submitted"); sPreviewTracePending = 1;
         sPreviewTraceDrawSerial = sPreviewSerial; sPreviewTraceDrawFallback = sPreviewFallback;
     }
 }
+static void PreviewTraceUnderlay(void) {
+    if (PreviewTraceEnabled()) sPreviewTracePending = 2;
+}
 void PortSceneGalleryPreviewPresented(int accepted) {
     if (!PreviewTraceEnabled() || !sPreviewTracePending) return;
-    PreviewTrace(accepted ? "present-return" : "present-rejected");
+    PreviewTrace(accepted ? (sPreviewTracePending == 2 ? "underlay-present-return" : "present-return") : "present-rejected");
     sPreviewTracePending = 0;
 }
 static void PreviewTraceFlush(void) {
