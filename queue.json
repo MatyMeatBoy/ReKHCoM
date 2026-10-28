@@ -9771,10 +9771,10 @@
       "status": "pr_abierto",
       "owner": "codex-movie-master-volume",
       "created_at": "2026-10-28T17:51:34.965406+00:00",
-      "updated_at": "2026-10-28T18:25:46.486181+00:00",
+      "updated_at": "2026-10-28T18:34:36.834600+00:00",
       "branch": "fix/movie-master-volume",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/452",
-      "approval": "Usuario: sin preguntas fullpass all pending; root activa449audio trasLinuxpublicado, import123/copyseparados",
+      "approval": "User authorized all fixes/full OptiPort; root independently reviewed exact401b2532cfe6ea914eda423d1a0d7bb0d9b435c6,7productionblobs equal6df runtime;166CPUchecks rerun isolated PASS; raw32/64baseline signal→fixedsilence while60frames/Event verified. Fivebackend/ABI/cleanup review has no blocker. Basic123/copy separate;physical unverified.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/449",
       "evidence": [
         {
@@ -9786,6 +9786,11 @@
           "at": "2026-10-28T18:25:46.486181+00:00",
           "owner": "codex-movie-master-volume",
           "detail": "HEAD401b2532cfe6ea914eda423d1a0d7bb0d9b435c6; product blobs identical6df; WINDOWS-VERIFIED.json PASS12EU32/64game+3MFreset/errors+59postconditions, master0silent+60framesEvent,50/100steadyRMS.5;CPU166/TU8PASS; no physical/Deck/Android runtimeclaim; WINDOWSquiescentreleasedROOT"
+        },
+        {
+          "at": "2026-10-28T18:34:36.834600+00:00",
+          "owner": "codex-movie-master-volume",
+          "detail": "WINDOWS-VERIFIED.json12game+3MFcontrols/59checks; ROOT-INDEPENDENT-VERIFICATION.json4rawPCMcases+166compiledchecks;8TU+Win64MFhostlink. Publictest439441 unchanged;masterfixnotyetpublished. Exacthead401b onlydocs/testworkarg beyondruntime6df; noArea6allhardwareclaim."
         }
       ],
       "claimed_at": "2026-10-28T17:54:22.896767+00:00"
@@ -9852,7 +9857,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T18:28:39.192572+00:00",
+  "updated_at": "2026-10-28T18:34:36.834600+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
