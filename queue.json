@@ -9182,10 +9182,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T11:30:25.633396+00:00"
+    },
+    "android412-v22-startup": {
+      "id": "android412-v22-startup",
+      "piece": "Critical reporter confirmed v2.2 instant startup crash on S22 Ultra Android16 before launcher; distinguish Retroid self-resolved and Moto/Jafar. Audit exact publishedAPK38f loader/JNI/GL/filesystem and actionable crash-buffer capture, no unprovenfixclaims.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T11:32:02.037043+00:00",
+      "updated_at": "2026-10-28T11:32:02.037043+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/412#issuecomment-6467667226",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:30:25.633396+00:00",
+  "updated_at": "2026-10-28T11:32:02.037043+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
