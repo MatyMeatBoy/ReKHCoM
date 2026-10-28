@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import ninja_syntax  # noqa: E402
 from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
+from compile_cartridge_game import fingerprint as cartridge_compile_fingerprint
 
 # clang/lld/llvm-readelf from llvm-mingw and ninja from ../toolchain.
 _TC = ROOT.parent / 'toolchain'
@@ -106,7 +107,16 @@ def configure(version, arch, base, out):
         n.variable('game_cflags', game_cflags)
         n.variable('port_cflags', port_cflags)
         n.variable('ldflags', ldflags)
-        n.rule('cc_game', '$cc $game_cflags -MD -MF $out.d -c $in -o $out', description='CC $in', depfile='$out.d', deps='gcc')
+        game_command = '$cc $game_cflags -MD -MF $out.d -c $in -o $out'
+        game_dependencies = []
+        if arch == 'armhf':
+            # Only cartridge game TUs: ARM compiler-rt remainder-by-zero does
+            # not implement the GBA contract. Guard frontend IR before LLVM
+            # optimization; port/SDL/launcher and desktop i386 stay unchanged.
+            game_dependencies = ['port/tools/compile_cartridge_game.py', 'port/tools/cartridge_division_ir.py']
+            launcher = f'"{sys.executable}" port/tools/compile_cartridge_game.py --fingerprint {cartridge_compile_fingerprint()} -- '
+            game_command = launcher + game_command
+        n.rule('cc_game', game_command, description='CC $in', depfile='$out.d', deps='gcc')
         n.rule('cc_port', '$cc $port_cflags -MD -MF $out.d -c $in -o $out', description='CC $in', depfile='$out.d', deps='gcc')
         n.rule('as', f'$cc {target} -c $in -o $out', description='AS $in')
         n.rule('link', '$cc @$out.rsp -o $out $ldflags', rspfile='$out.rsp', rspfile_content='$in', description='LINK $out')
@@ -114,7 +124,7 @@ def configure(version, arch, base, out):
         # Game code first: the quick-state build id hashes it up to the platform layer.
         for src in sorted((ROOT / 'src').rglob('*.c')):
             obj = f'$builddir/game/{rel(src)[4:-2]}.o'
-            n.build(obj, 'cc_game', rel(src))
+            n.build(obj, 'cc_game', rel(src), implicit=game_dependencies)
             objs.append(obj)
         skip = WINDOWS_ONLY | ({'port_biosfault'} if arch != 'i386' else set())  # x86 decoder
         port_sources = [p for p in sorted((ROOT / 'port/src').glob('*.c')) if p.stem not in skip]
