@@ -17,6 +17,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / 'port/tools'))
 from workdir import WORK_DIR  # noqa: E402
+from linux_runtime_clients import copy_client_libraries  # noqa: E402
 
 TC = sorted((ROOT.parent / 'toolchain').glob('llvm-mingw-*'))[-1] / 'bin'
 BASE = WORK_DIR / 'linux/amd64'
@@ -29,10 +30,19 @@ LIBS = ['libX11.so.6', 'libXext.so.6', 'libXcursor.so.1', 'libXi.so.6', 'libXfix
 
 
 def find(name):
-    for d in (BASE / 'sysroot/usr/lib/x86_64-linux-gnu', BASE / 'sysroot/lib/x86_64-linux-gnu'):
+    for d in runtime_search():
         if (d / name).exists():
             return d / name
     return None
+
+
+def runtime_search():
+    return [BASE / 'sysroot/usr/lib/x86_64-linux-gnu', BASE / 'sysroot/lib/x86_64-linux-gnu',
+            BASE / 'sysroot/usr/lib/x86_64-linux-gnu/pulseaudio']
+
+
+def copy_runtime_libraries(destination):
+    copy_client_libraries(LIBS, runtime_search(), destination / 'lib64', TC / 'llvm-readelf.exe')
 
 
 def main():
@@ -57,14 +67,7 @@ def main():
                            f'-I{BASE / "sdl/include"}', str(HERE / 'linux64_host.c'), f'-L{BASE / "sdl/lib"}', '-lSDL3',
                            '-lm', '-Wl,-rpath,$ORIGIN/../lib64', '-o', str(OUT / 'bin64/rekhcom64')])
     shutil.copyfile(sorted((BASE / 'sdl/lib').glob('libSDL3.so.0*'))[0], OUT / 'lib64/libSDL3.so.0')
-    for name in LIBS:
-        src = find(name)
-        if not src:
-            print('not in the sysroot:', name)
-            continue
-        data = src.resolve().read_bytes()
-        plain = name.split('.so')[0] + '.so'  # SDL opens libX11.so, libasound.so ...
-        (OUT / 'lib64' / plain).write_bytes(data)
+    copy_runtime_libraries(OUT)
     print(OUT, sorted(p.name for p in (OUT / 'bin64').iterdir()), len(list((OUT / 'lib64').iterdir())), 'libraries')
 
 
