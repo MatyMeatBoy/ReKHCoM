@@ -9379,10 +9379,10 @@
     "android412-compat-options": {
       "id": "android412-compat-options",
       "piece": "Optional diagnostic Android startup profiles: default intact, HIDAPI off before SDL main, Java-only report; exact native2.2, no fix claim",
-      "status": "pr_abierto",
+      "status": "bloqueado",
       "owner": "codex-android-options",
       "created_at": "2026-10-28T13:50:56.070738+00:00",
-      "updated_at": "2026-10-28T14:08:03.626649+00:00",
+      "updated_at": "2026-10-28T14:43:23.801709+00:00",
       "branch": "feat/android-startup-options",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/442",
       "approval": null,
@@ -9397,6 +9397,11 @@
           "at": "2026-10-28T14:08:03.626649+00:00",
           "owner": "codex-android-options",
           "detail": "DRAFTa7add6f91/product6513564d; offlineAPK39a38d parity8ELFs224entriesPASS, CPUSDKJavaPASS; API34attempt1BOOTtimeout noAPKinstalled, preserved; attempt2runtimeQA ACTIVE"
+        },
+        {
+          "at": "2026-10-28T14:43:23.801709+00:00",
+          "owner": "codex-android-options",
+          "detail": "Explicit owner STOP2026-10-28: PR442closedwithoutmerge, branch/headc55preserved. APK106dfpublishedexperimentaltest412-options and sent412/374 with nativeblack/Backincomplete/HIDAPIoffunverified limits; notstable/nofix. FINAL-STOP-RECEIPT.json."
         }
       ],
       "claimed_at": "2026-10-28T13:51:04.092045+00:00"
@@ -9495,7 +9500,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:38:21.302741+00:00",
+  "updated_at": "2026-10-28T14:43:23.801709+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
