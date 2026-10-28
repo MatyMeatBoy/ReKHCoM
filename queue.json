@@ -10198,10 +10198,10 @@
     "moto374-font-identity-builder": {
       "id": "moto374-font-identity-builder",
       "piece": "Closed PR468 builder identity component only; does not close parent Moto font fallback APK publication/reporter delivery",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-font-builder-root",
       "created_at": "2026-10-28T20:55:43.222541+00:00",
-      "updated_at": "2026-10-28T20:56:23.263451+00:00",
+      "updated_at": "2026-10-28T20:56:42.035574+00:00",
       "branch": "fix/moto374-font-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/468",
       "approval": "User requires new tentative test; root reviewed exact923837 and independently package -O PASS, filename/version allowlist preserves old identity.",
@@ -10211,9 +10211,15 @@
           "at": "2026-10-28T20:56:23.263451+00:00",
           "owner": "codex-font-builder-root",
           "detail": "Root exact923837 twofilediffreview; independent actual package identity/manifest/legacy /-O controlsPASS ROOT-IDENTITY-468.txt. Child closes builder only. Parentmoto374-font-fallback-delivery staysen_curso until APK/reporterreceipt."
+        },
+        {
+          "at": "2026-10-28T20:56:42.035574+00:00",
+          "owner": "codex-font-builder-root",
+          "detail": "Root exact923837review and independent actual -O package validatorPASS. Allowlisted newfont-fallback version/filename preserves immutable previoussafe-startup default. Identity consistent Gradle/badging/output/receipt; this integration closes builder component only, parent APK delivery stillopen.; merged 2dd3d01bafc071cf2959e27bc04ba762e24190ed"
         }
       ],
-      "claimed_at": "2026-10-28T20:55:49.714552+00:00"
+      "claimed_at": "2026-10-28T20:55:49.714552+00:00",
+      "completed_at": "2026-10-28T20:56:42.035574+00:00"
     }
   },
   "integrator": {
@@ -10222,7 +10228,7 @@
     "created_at": "2026-10-28T20:56:31.600319+00:00",
     "updated_at": "2026-10-28T20:56:31.600319+00:00"
   },
-  "updated_at": "2026-10-28T20:56:31.601342+00:00",
+  "updated_at": "2026-10-28T20:56:42.035574+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
