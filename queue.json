@@ -9097,20 +9097,26 @@
     "optiport-v22-postrelease-lessons": {
       "id": "optiport-v22-postrelease-lessons",
       "piece": "Teach verified release provenance, draft/Latest verification, measured build-policy and retained auxiliary lessons after v2.2",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-postrelease",
       "created_at": "2026-10-28T11:00:30.613828+00:00",
-      "updated_at": "2026-10-28T11:00:35.213923+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T11:03:14.244875+00:00",
+      "branch": "docs/postrelease-provenance",
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/10",
       "approval": "User requested OptiPort learning at end with worker; v2.2 public and root explicitly authorizes skill PR; root integrates and installed copies only after merge",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T11:03:14.244875+00:00",
+          "owner": "codex-optiport-postrelease",
+          "detail": "Head db1d1cd;3references4paragraphs. Two actual independent4scenario reading reviews;baselinealreadycorrect,gapclarificationonly,nofakeRED.24Markdown58localtargetsUTF8/fences/diffcheckPASS; projectevidenceOPTIPORT-BEHAVIORAL-REVIEW.md andOPTIPORT-MD-VALIDATION.json. Installedcopiesunchangedpendingmerge."
+        }
+      ],
       "claimed_at": "2026-10-28T11:00:35.213923+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:02:15.485885+00:00",
+  "updated_at": "2026-10-28T11:03:14.244875+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
