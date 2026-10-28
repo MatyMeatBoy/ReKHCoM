@@ -10011,10 +10011,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
       "evidence": [],
       "claimed_at": "2026-10-28T19:43:19.813766+00:00"
+    },
+    "dummy-cleanup-startup-pass": {
+      "id": "dummy-cleanup-startup-pass",
+      "piece": "User-requested sweep of synthetic dummy outputs and closed CPU fixtures; preserve startup build caches, evidence, proprietary inputs and immutable releases",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T19:58:29.724163+00:00",
+      "updated_at": "2026-10-28T19:58:29.724163+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Explicit user: hacer repasada de limpieza de dummys",
+      "reference": "Workspace housekeeping during330/374 startup delivery",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:43:19.813766+00:00",
+  "updated_at": "2026-10-28T19:58:29.724163+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
