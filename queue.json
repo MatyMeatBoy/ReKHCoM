@@ -9244,10 +9244,10 @@
       "status": "pr_abierto",
       "owner": "codex-s22-startup",
       "created_at": "2026-10-28T11:32:02.037043+00:00",
-      "updated_at": "2026-10-28T12:34:12.559095+00:00",
+      "updated_at": "2026-10-28T13:18:33.213968+00:00",
       "branch": "feat/android-startup-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/437",
-      "approval": null,
+      "approval": "Explicit user authorization: prioritize Android16 bug, send test builds to affected reporters, integrate reviewed PRs. Root reviewed exact751d6944 Java-first bounded diagnostic; no fix claim.",
       "reference": "Rootauthorizedtest412optionalJavaentry; worktreeandroid-startup-diagnostics base0f78f298b; designselectedbyroot",
       "evidence": [
         {
@@ -9279,6 +9279,11 @@
           "at": "2026-10-28T12:34:12.559095+00:00",
           "owner": "codex-s22-startup",
           "detail": "Finalhead751d69448 docs+hosttestonlyoverproduct4007948; APK28847519 cleanoffline;8ELF/assets225binarymanifestparity;previousfullstable→diag→stable/sentinelreusedsamecode/cert;newactualAPI34uniqueUUID2Shares+Refresh oldhashunchanged/newhashdifferent;providerShellDenied,JavaUI/mapsbeforeSDL,explicitOpenSDL;CPUretention8,path/write8guardsPASS;DIAGNOSTIC-FINAL-VALIDATION.json;rootreview/publicationPENDING,noS22fixclaim"
+        },
+        {
+          "at": "2026-10-28T13:18:33.213968+00:00",
+          "owner": "codex-s22-startup",
+          "detail": "Root independent ReportLimitsTest and ReportSnapshotsTest PASS; reviewed collector/provider/activity/offline packaging, exact native bytes and API34 roundtrip evidence. Physical Android16 failure remains open."
         }
       ],
       "claimed_at": "2026-10-28T11:32:08.448301+00:00"
@@ -9356,7 +9361,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:55:29.569104+00:00",
+  "updated_at": "2026-10-28T13:18:33.213968+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
