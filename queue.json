@@ -9404,12 +9404,12 @@
     "android-launcher-silent-init-diagnostics": {
       "id": "android-launcher-silent-init-diagnostics",
       "piece": "Android before-launcher: exact38f84 SDL_Init/CreateWindow return1 can finish Activity without process death; record stage/SDL error/native return and preserve recoverable Java diagnostics. Reproduce clean failure vs SDL recreation exit0 before assigning S22/Moto cause; include explicit error handling across relevant launcher targets.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-launcher-init-diagnostics",
       "created_at": "2026-10-28T14:08:23.262484+00:00",
-      "updated_at": "2026-10-28T14:23:22.402508+00:00",
+      "updated_at": "2026-10-28T14:24:41.011591+00:00",
       "branch": "fix/launcher-init-diagnostics",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
       "approval": "User prioritized Android16 crashes and optional launcher compatibility; Astra source audit findings require focused reproduction, not an assumed device fix.",
       "reference": "pruebas/astra-android16-startup/FINDINGS.md",
       "evidence": [
@@ -9417,6 +9417,11 @@
           "at": "2026-10-28T14:23:22.402508+00:00",
           "owner": "codex-launcher-init-diagnostics",
           "detail": "RED actual-source silent SDL exits and ignored backend return; GREEN40 native injected cases across desktop/GLES, GL3 regression and Android24 readiness PASS. Final Windows TU O2 compiled; Android64 TU final running session5977. No reporter root cause assigned."
+        },
+        {
+          "at": "2026-10-28T14:24:41.011591+00:00",
+          "owner": "codex-launcher-init-diagnostics",
+          "detail": "Exacthead487f837a0f3bd3b6a6a711575c9aa915dea21c5a. RED silent exits/ignored backends and separate RED missing-current/null-empty-version. GREEN40 actual-source native cases, GL3 +Android24 readiness PASS; wholeTU O2 Win i686/Android64 API21 PASS. Receipts pruebas/launcher-init-diagnostics/final-compiles/COMPILE-RECEIPT.json. No Java/manifest/APK publication/device-fix claim."
         }
       ],
       "claimed_at": "2026-10-28T14:13:40.539224+00:00"
@@ -9443,7 +9448,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:23:22.402508+00:00",
+  "updated_at": "2026-10-28T14:24:41.011591+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
