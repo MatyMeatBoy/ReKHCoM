@@ -3794,7 +3794,7 @@ void PortPpuBeginFrame(void) {
     sHudFrameScale = gPortHudScale;
     sHudFrameWorldScale = gPortWorldScale;
     sHdText = gPortConfig.hdText;
-#if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST)
+#if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST) || defined(_WIN32)
     {
         extern int PortPortableHdReady(void);
         sHdText = sHdText && PortPortableHdReady();
