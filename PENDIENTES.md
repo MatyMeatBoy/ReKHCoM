@@ -366,4 +366,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | font-glyph-upload-fallback | FreeType/Web glyph upload rejection: discard failed texture and native text on next frame; no claim of same-frame fallback or shim GPU ack | integrado | codex-font-upload | https://github.com/MatyMeatBoy/ReKHCoM/pull/467 | Human mechanism-wide font fallback audit and root explicit FreeType+Web next-frame scope approval; root reviews and integrates under lock. | 2026-10-28T20:53:12.930217+00:00 |
 | moto374-font-identity-builder | Closed PR468 builder identity component only; does not close parent Moto font fallback APK publication/reporter delivery | integrado | codex-font-builder-root | https://github.com/MatyMeatBoy/ReKHCoM/pull/468 | User requires new tentative test; root reviewed exact923837 and independently package -O PASS, filename/version allowlist preserves old identity. | 2026-10-28T20:56:42.035574+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T20:56:31.600319+00:00)
+Integrador: libre
