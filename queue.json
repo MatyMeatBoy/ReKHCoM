@@ -9300,16 +9300,21 @@
       "status": "pr_abierto",
       "owner": "codex-arm-guest-div-lowering",
       "created_at": "2026-10-28T12:09:24.845208+00:00",
-      "updated_at": "2026-10-28T12:31:38.998279+00:00",
+      "updated_at": "2026-10-28T13:25:51.238321+00:00",
       "branch": "fix/arm-guest-cartridge-division",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/438",
-      "approval": "Root authorizes next ARM guest child after435 merged; no Web producer changes, Android32/Anbernic delegated elsewhere, helper read-only",
+      "approval": "User explicitly requested division fallback parity across all platforms and integration of verified fixes; root reviewed cddffa768 and independently ran six real-Clang tests PASS.",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-28T12:31:38.998279+00:00",
           "owner": "codex-arm-guest-div-lowering",
           "detail": "Handoff per user OptiPort-priority. Exactheadcddffa768e7c71c34d981c45d329b0d4fb0b5828 clean;6 realClang cache/scope/deps/failure testsPASS;4producerconfigs8realgameTUsPASS;actualMachO/ThumbCPU4fixedglobal+callback+5casefixturesPASS. Evidencepruebas/post22-arm-wasm-division/arm-guest-pilots-final/. No active builds, no fullguest/platformbuilds run. Parent auditOPEN, Android32/Anbernic otherlane. Sourcehelper/Web/x86 unchanged."
+        },
+        {
+          "at": "2026-10-28T13:25:51.238321+00:00",
+          "owner": "codex-arm-guest-div-lowering",
+          "detail": "Root source review and six producer tests PASS; author additional review confirms eight TU objects/four ABI QEMU pilots and four Linux configuration tests. Scope game scalar i32 division only; no full guest or physical ARM hardware claim."
         }
       ],
       "claimed_at": "2026-10-28T12:09:29.629315+00:00"
@@ -9367,7 +9372,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T13:19:41.235380+00:00",
+  "updated_at": "2026-10-28T13:25:51.238321+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
