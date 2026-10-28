@@ -9894,16 +9894,21 @@
       "status": "pr_abierto",
       "owner": "codex-base-import-123",
       "created_at": "2026-10-28T18:26:33.610628+00:00",
-      "updated_at": "2026-10-28T18:36:58.184522+00:00",
+      "updated_at": "2026-10-28T21:51:39.667094+00:00",
       "branch": "fix/base-import-movie-123",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/455",
-      "approval": "Usuario sin preguntas fullpass allpending; root authorizes independent baseimport123+copy after audio452 reviewed delivery",
+      "approval": "Root integrator: human-authorized code review; f0c995ec0d20d89a9c2e876d447933afed31c3a5",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/449",
       "evidence": [
         {
           "at": "2026-10-28T18:36:58.184522+00:00",
           "owner": "codex-base-import-123",
           "detail": "HEADf0c995ec0d20d89a9c2e876d447933afed31c3a5; pruebas/issue449-base-import-123 RED/GREEN catalogs,actualCLIplainXOR/fullunique,legacycollector historicalRED/guardGREEN,4focused+CPPvariant+transaction3+poster4PASS; no real-library import/fullGUI/runtime/publishedartifactclaim; protected inputs unchanged"
+        },
+        {
+          "at": "2026-10-28T21:51:39.667094+00:00",
+          "owner": "codex-base-import-123",
+          "detail": "Root full diff review; exact HEAD 4 base movie tests PASS plus real import coordinator EN-JP persistent-cache cancel/copy/corrupt/incomplete-coverage PASS. Byte preserving, seven required basic movies, no quality reduction."
         }
       ],
       "claimed_at": "2026-10-28T18:27:04.778500+00:00"
@@ -10364,7 +10369,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:51:13.621643+00:00",
+  "updated_at": "2026-10-28T21:51:39.667094+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
