@@ -7898,15 +7898,21 @@
     "v22-pre2-linux-crash-delivery": {
       "id": "v22-pre2-linux-crash-delivery",
       "piece": "Compilar pre2 Linux x86/x64 nativo, launcher separado e importador actual; verificar tar exacto y VM, issue330 GamingMode queda sin hardware confirmado",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux-pre2",
       "created_at": "2026-10-27T22:04:24.244598+00:00",
-      "updated_at": "2026-10-27T22:04:29.108684+00:00",
+      "updated_at": "2026-10-28T00:46:18.251221+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/416",
       "approval": "Usuario autoriza prebuilds y responder reporteros Linux/SteamDeck",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T00:46:18.251221+00:00",
+          "owner": "codex-linux-pre2",
+          "detail": "The historical pre2 Linux candidate is preserved privately and deliberately superseded by the published pre3 native package, per user request for current versions. The crash-delivery scope is fulfilled by pre3: source f64413c7, exact tar VM startup6, actual copied save map32/64 return, native import and product-host DIV21 checks. This does NOT claim a Linux pre2 upload."
+        }
+      ],
       "claimed_at": "2026-10-27T22:04:29.108684+00:00"
     },
     "card-olympia-seam-source": {
@@ -8363,7 +8369,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T00:37:42.124859+00:00",
+  "updated_at": "2026-10-28T00:46:18.251221+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
