@@ -10724,10 +10724,10 @@
     "web-bg-world-call-abi": {
       "id": "web-bg-world-call-abi",
       "piece": "Declare shared PortSetBgWorld before four Parasite calls; real Wasm signature trap regression, no gameplay/argument changes; root merges then rebuild affectedWebTU",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-web-world-abi",
       "created_at": "2026-10-28T22:51:38.066823+00:00",
-      "updated_at": "2026-10-28T22:58:26.317525+00:00",
+      "updated_at": "2026-10-28T22:58:42.688547+00:00",
       "branch": "fix/web-bg-world-call-abi",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/478",
       "approval": "Root integrator: human-authorized code review; 2a89b517a2a7b2825f2d1a8ab38f322891fad20b",
@@ -10742,9 +10742,15 @@
           "at": "2026-10-28T22:58:26.317525+00:00",
           "owner": "codex-web-world-abi",
           "detail": "Root reviewed4filediff; independent actualsetter+4callexprs Wasm/Node: baseline link0 then unreachable, fatalguard rejects, declaredcandidate realstateeffectsPASS with/withoutfatal. SharedPCheaderonlydeclaration,no changedcalls/args/gameplay. Web3regionsmustrebuildcaller/relinkfatal beforedelivery; nativeartifactsretainf28explicitprovenance."
+        },
+        {
+          "at": "2026-10-28T22:58:42.688547+00:00",
+          "owner": "codex-web-world-abi",
+          "detail": "Root reviewed4filediff; independent actualsetter+4callexprs Wasm/Node: baseline link0 then unreachable, fatalguard rejects, declaredcandidate realstateeffectsPASS with/withoutfatal. SharedPCheaderonlydeclaration,no changedcalls/args/gameplay. Web3regionsmustrebuildcaller/relinkfatal beforedelivery; nativeartifactsretainf28explicitprovenance.; merged ea99f7ea49521d4509793d3c13b8dad6b214263b"
         }
       ],
-      "claimed_at": "2026-10-28T22:52:47.258766+00:00"
+      "claimed_at": "2026-10-28T22:52:47.258766+00:00",
+      "completed_at": "2026-10-28T22:58:42.688547+00:00"
     }
   },
   "integrator": {
@@ -10753,7 +10759,7 @@
     "created_at": "2026-10-28T22:58:32.150233+00:00",
     "updated_at": "2026-10-28T22:58:32.150233+00:00"
   },
-  "updated_at": "2026-10-28T22:58:32.150233+00:00",
+  "updated_at": "2026-10-28T22:58:42.688547+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
