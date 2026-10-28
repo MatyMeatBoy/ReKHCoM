@@ -9291,10 +9291,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T12:09:29.629315+00:00"
+    },
+    "post22-arm32-division-lowering": {
+      "id": "post22-arm32-division-lowering",
+      "piece": "Game-only Android32 CMake and Linux/Anbernic armhf pre-LLVM-optimization scalar i32 division/remainder lowering; preserve host/SDL/importer and shared helper",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T12:10:24.583307+00:00",
+      "updated_at": "2026-10-28T12:10:24.583307+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable",
+      "reference": "pruebas/post22-arm-wasm-division",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:09:29.629315+00:00",
+  "updated_at": "2026-10-28T12:10:24.583307+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
