@@ -9914,16 +9914,21 @@
       "status": "pr_abierto",
       "owner": "codex-v22-profile-execution",
       "created_at": "2026-10-28T18:40:43.327657+00:00",
-      "updated_at": "2026-10-28T18:41:10.554211+00:00",
+      "updated_at": "2026-10-28T21:50:15.197028+00:00",
       "branch": "perf/optiport-current-baseline",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/453",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; 6cda990d9cf20a1a58eb57ffdf52e35bdb974460",
       "reference": "optiport-v22-profiling",
       "evidence": [
         {
           "at": "2026-10-28T18:41:10.554211+00:00",
           "owner": "codex-v22-profile-execution",
           "detail": "Head6cda990d9cf20a1a58eb57ffdf52e35bdb974460;13CPU PASS. Tooling support only, not parent profiling completion. Functional12cases exposed host window/vsync mismatch; see QUALITY-CURRENT-REVIEW.json. GPU quiescent."
+        },
+        {
+          "at": "2026-10-28T21:50:15.197028+00:00",
+          "owner": "codex-v22-profile-execution",
+          "detail": "Root reviewed 3-file tooling diff; independent test_profile_report_contract.py 13 PASS on exact head. Controlled settings and capture identity only; profiling parent remains pending."
         }
       ],
       "claimed_at": "2026-10-28T18:40:48.360302+00:00"
@@ -10339,7 +10344,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:49:54.936388+00:00",
+  "updated_at": "2026-10-28T21:50:15.197028+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
