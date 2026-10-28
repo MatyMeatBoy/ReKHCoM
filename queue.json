@@ -8161,11 +8161,11 @@
       "status": "en_revision",
       "owner": "codex-synthesis-band",
       "created_at": "2026-10-27T23:27:37.806035+00:00",
-      "updated_at": "2026-10-27T23:38:07.098424+00:00",
+      "updated_at": "2026-10-28T01:16:53.784451+00:00",
       "branch": "fix/synthesis-residual-band",
       "pr": null,
       "approval": "Usuario27octpulirgraycardline; rootdelegacionresidual20261027",
-      "reference": "pruebas/issue380-door/gray-accepted-after-view4-hd1/out_00470.bmp",
+      "reference": "https://www.jp.square-enix.com/kingdom/khhd/img/khrecom/khrecom_system_detail_2_2.jpg",
       "evidence": [
         {
           "at": "2026-10-27T23:33:40.699514+00:00",
@@ -8176,6 +8176,11 @@
           "at": "2026-10-27T23:38:07.098424+00:00",
           "owner": "codex-synthesis-band",
           "detail": "pruebas/synthesis-residual-band/REVIEW.md and GUARDED-COMPARISON.json; private D3D11 current vs opaque-interior proposal, no product patch. Literal all-uniform opaque hides glyph and rejected. Guarded variant preserves all1892 actual glyph pixels byte-exact,5614outputpixelschanged,0outsidebody; two PNGs ready for user preference. Generic per-value implementation not integrated."
+        },
+        {
+          "at": "2026-10-28T01:16:53.784451+00:00",
+          "owner": "codex-synthesis-band",
+          "detail": "User asked to see both proposals, then how original1.5HD looks. Both actual/proposed images displayed; original official Square Enix screenshot inspected in browser and shown: white outline/digits with scene visible through interior. Current35percent is a port recipe choice, exact original alpha not yet measured. Opaque proposal remains unapproved and unintegrated. Main404 now fixes only repeated accepted edge blends, not opacity; tagged405 scope preserves other card images."
         }
       ],
       "claimed_at": "2026-10-27T23:27:42.465079+00:00"
@@ -8430,7 +8435,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T01:15:50.984139+00:00",
+  "updated_at": "2026-10-28T01:16:53.784451+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
