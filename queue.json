@@ -8607,10 +8607,23 @@
       ],
       "claimed_at": "2026-10-28T02:44:54.173767+00:00",
       "completed_at": "2026-10-28T02:51:44.881461+00:00"
+    },
+    "v22-stable-delivery": {
+      "id": "v22-stable-delivery",
+      "piece": "Compilar, verificar y publicar v2.2 estable Windows/Linux y APK Android beta; responder issues pendientes",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T02:54:25.529458+00:00",
+      "updated_at": "2026-10-28T02:54:25.529458+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord",
+      "reference": "Main38f84bd36b176c926be2d236fdf320eb844c152b incluye422/423/424; prereleases inmutables; sólo plataformas compiladas/verificadas",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:51:49.343240+00:00",
+  "updated_at": "2026-10-28T02:54:25.529458+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
