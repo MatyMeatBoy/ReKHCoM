@@ -10844,15 +10844,21 @@
     "optiport-v225-producer-cleanup-wasm": {
       "id": "optiport-v225-producer-cleanup-wasm",
       "piece": "Promote verified delivery-producer, tracked-cleanup and direct Wasm ABI lessons after v2.2.5 publication",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-v225-lessons",
       "created_at": "2026-10-28T23:16:43.977392+00:00",
-      "updated_at": "2026-10-28T23:16:49.151506+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T23:19:46.427241+00:00",
+      "branch": "codex/v225-delivery-contracts",
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/18",
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T23:19:46.427241+00:00",
+          "owner": "codex-optiport-v225-lessons",
+          "detail": "HEAD3a06590903204d0116fc5a45fadfc87628e9220d; canonicalbase ddd468b9; 3 narrow reference additions. ActualWasm4controls REDlink+trap/fatalreject GREENtyped effects; actualfinalAPKAAPToneJavaMAIN/privateprocesses/providerPASS; Gittrackedbuild2tools unchangedhash/cleanfiltersPASS(no deletion); skillvalidator+76links/29MD+UTF8/fences/diffcheckPASS. Evidence pruebas/optiport-v225-delivery-lessons. No runtime/hardware/performance claim."
+        }
+      ],
       "claimed_at": "2026-10-28T23:16:49.151506+00:00"
     },
     "issue480-android-room-spring-layers": {
@@ -10870,7 +10876,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:18:45.567979+00:00",
+  "updated_at": "2026-10-28T23:19:46.427241+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
