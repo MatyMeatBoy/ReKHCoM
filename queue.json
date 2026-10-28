@@ -9967,10 +9967,10 @@
       "status": "pr_abierto",
       "owner": "codex-host-output-controls",
       "created_at": "2026-10-28T18:42:14.434025+00:00",
-      "updated_at": "2026-10-28T19:04:57.823605+00:00",
+      "updated_at": "2026-10-28T21:55:37.961438+00:00",
       "branch": "fix/host-output-controls",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/456",
-      "approval": null,
+      "approval": "Root independent product45654checks and2visibilityvariants PASS; user authorized real functional validation and integration. Doc-only finalhead f1c3085855171760ccf0f72d4091da4a31aaddd2 for root final review.",
       "reference": "optiport-v22-profiling",
       "evidence": [
         {
@@ -9982,6 +9982,11 @@
           "at": "2026-10-28T19:04:57.823605+00:00",
           "owner": "codex-host-output-controls",
           "detail": "FROZEN_BY_EXPLICIT_USER_PRIORITY: only330/374 startup until tentative solution/test sent. Preserve head4eb48259fcb7d079cf82deb7c59570c519f6e060 draftPR456, caches/receipts. NoGPU parity validation/timing/parent completion. New separateMoto374 lane authorized; do not auto-resume OUT1 until root/user priority allows."
+        },
+        {
+          "at": "2026-10-28T21:55:37.961438+00:00",
+          "owner": "codex-host-output-controls",
+          "detail": "ReadyPR456: new commit changes ONLY HOST_OUTPUT_CONTROLS.md; product bytes unchanged4eb48259. ActualWindows32/64 MonstroHD sourceea3419498 (3988+456), ownstate5/5/0, initialclient1920x1080/canvas480x270 andresize1600x900/canvas400x225,DPI120. Host64ACKwindow+VSync requested0actual0;20HDdrawentries/arch,4PNG+losslessgzip inspected. VERIFIED-SUMMARY pruebas/v225-out1-functional/attempt-20261028-185056. Observermistakesretained;allchildren terminal. NoFPS/latency/pixelidenticalcombat/fullHD/LinuxAndroidclaim;profilingparentOPEN."
         }
       ],
       "claimed_at": "2026-10-28T18:42:21.131067+00:00"
@@ -10445,7 +10450,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:55:02.237313+00:00",
+  "updated_at": "2026-10-28T21:55:37.961438+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
