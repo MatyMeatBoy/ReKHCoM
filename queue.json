@@ -8549,10 +8549,10 @@
     "issue407-mp4-alignment": {
       "id": "issue407-mp4-alignment",
       "piece": "Compatibilidad MP4 con relleno final alineado y límites en validadores Python/C++",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:15:16.857139+00:00",
-      "updated_at": "2026-10-28T02:45:32.157994+00:00",
+      "updated_at": "2026-10-28T02:48:55.599373+00:00",
       "branch": "fix/mp4-alignment-validation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/423",
       "approval": "Usuario: verificar todos los issues, corregir cuelgues y plataformas antes de v2.2",
@@ -8567,9 +8567,15 @@
           "at": "2026-10-28T02:45:32.157994+00:00",
           "owner": "codex-integrador",
           "detail": "Exact27f3b28 root80 Python+CppinclownedROP PASS; independent79+CLI+transactions PASS. Oldnative actualwraploop expected0.4stimeout and ownROP false. Bounds/tail/4096 reviewed no blockers. FullWindowslauncher link next; no reporterinput/codec/device claim. Smallprobepeak61.38MiB,minfree6.265GiB, BELOW_NORMAL."
+        },
+        {
+          "at": "2026-10-28T02:48:55.599373+00:00",
+          "owner": "codex-integrador",
+          "detail": "Root and independent review exact27f3. Python/Cpp80 with ownedROP, generated79 independent PASS; old nativeROP reject+wrapcycle expectedtimeout0.4s. CLI padded/plain/XOR and rollback PASS; transactions7 withWindows symlinkskip. FullWindows32launcher compile/link PASS under BELOW_NORMAL jobs1, peakjob330.08MiB,minfree5.975GiB. Strict finalCD1..15 align16 aftercompleteboxes; extmin16/remaining/4096 bounds. Reporter source still unconfirmed; no decoder/device claim.; merged 6eeefe83101caf6eee8fcc0f8d10bef52efd9f1f"
         }
       ],
-      "claimed_at": "2026-10-28T02:15:25.378566+00:00"
+      "claimed_at": "2026-10-28T02:15:25.378566+00:00",
+      "completed_at": "2026-10-28T02:48:55.599373+00:00"
     },
     "v22-stable-version": {
       "id": "v22-stable-version",
@@ -8598,7 +8604,7 @@
     "created_at": "2026-10-28T02:48:47.528355+00:00",
     "updated_at": "2026-10-28T02:48:47.528355+00:00"
   },
-  "updated_at": "2026-10-28T02:48:47.528355+00:00",
+  "updated_at": "2026-10-28T02:48:55.600396+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
