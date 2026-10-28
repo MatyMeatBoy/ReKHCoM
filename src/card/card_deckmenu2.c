@@ -6419,8 +6419,10 @@ static DeckCard2Work* FindDeckGridCard(DeckMenuWork* work, s16 col, s16 row) {
     return NULL;
 }
 
-/* The held card goes to the cursor's slot and the cards from there on move one slot down the deck, up to the first
-   gap (the held card's own slot is one now). FALSE when there is no gap after the cursor. */
+/* The held card goes just before the card at the cursor: it takes the cursor's slot and the cards from there on move
+   one slot down the deck, up to the first gap after it (the held card's own slot is one now). With no gap after it,
+   the last card goes to an extra slot past the end and the held card's slot is closed, which leaves the held card just
+   before the cursor's. The other gaps stay where they are. */
 static u8 PlaceHeldDeckCard(DeckMenuWork* work) {
     DeckCard2Work* held = FindDeckGridCard(work, work->heldCol, work->heldRow);
     DeckCard2Work* target = FindDeckGridCard(work, work->cursorCol, work->cursorRow);
@@ -6444,16 +6446,19 @@ static u8 PlaceHeldDeckCard(DeckMenuWork* work) {
         for (gap = to; gap < DECK_SIZE && deck[gap] != CARD_NONE; gap++) {
         }
 
-        if (gap == DECK_SIZE) {
-            deck[from] = card;
-            return FALSE;
-        }
+        if (gap < DECK_SIZE) {
+            for (; gap > to; gap--) {
+                deck[gap] = deck[gap - 1];
+            }
 
-        for (; gap > to; gap--) {
-            deck[gap] = deck[gap - 1];
-        }
+            deck[to] = card;
+        } else {
+            for (gap = from; gap < to - 1; gap++) {
+                deck[gap] = deck[gap + 1];
+            }
 
-        deck[to] = card;
+            deck[to - 1] = card;
+        }
         ClearCardGrid(work);
         TaskPoolUpdate(&work->taskpool);
         RecreateDeckGridCards(work, work->categoryFilter);
@@ -6491,11 +6496,19 @@ static u8 CompactDeckSlots(DeckMenuWork* work) {
 }
 
 /* The dodge button with a card held places it (A swaps it, as on the cartridge); the stock button with none closes
-   the gaps. Only with the whole deck shown, as A's own moves. TRUE when a button was taken. */
+   the gaps. Only with the whole deck shown, as A's own moves. Both presses are taken together and whether a card is
+   held picks the one that acts, so pressing both does one thing. TRUE when a button was taken. */
 static u8 DeckGridPortButtons(DeckMenuWork* work) {
+    u8 place = PortTakeDeckPlace();
+    u8 compact = PortTakeDeckCompact();
     u8 ok;
 
-    if (PortTakeDeckPlace()) {
+    if (place && compact) {
+        place = work->holding;
+        compact = !work->holding;
+    }
+
+    if (place) {
         ok = work->holding && work->categoryFilter == CATEGORY_FILTER_DECK_ALL && PlaceHeldDeckCard(work);
 
         if (ok) {
@@ -6509,7 +6522,7 @@ static u8 DeckGridPortButtons(DeckMenuWork* work) {
         return TRUE;
     }
 
-    if (PortTakeDeckCompact()) {
+    if (compact) {
         ok = !work->holding && work->categoryFilter == CATEGORY_FILTER_DECK_ALL && CompactDeckSlots(work);
         m4aSongNumStart(ok ? SONG_SYS_KETEI2 : SONG_SYS_BEEP);
         return TRUE;
