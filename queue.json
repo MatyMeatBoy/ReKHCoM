@@ -8994,10 +8994,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T05:33:30.441089+00:00"
+    },
+    "runtime-auto-per-update": {
+      "id": "runtime-auto-per-update",
+      "piece": "Reset desktop architecture preference to Auto once per release version; preserve same-version/userCLI choices and compatibility fallbacks",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T05:52:50.190184+00:00",
+      "updated_at": "2026-10-28T05:52:50.190184+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User explicitly requests everyupdate resetsAuto/prefer64compatible; root approved atomic decompui.ini version marker, Windowslauncher/LinuxGUI+shell only",
+      "reference": "Latest root architecture specification; no game/Android/console changes, isolated checkout and tinyCPUtests only during Webbuild",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:42:49.968587+00:00",
+  "updated_at": "2026-10-28T05:52:50.190184+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
