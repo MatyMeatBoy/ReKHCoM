@@ -336,4 +336,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | post22-wasm-gba-division-lowering | Game-only Web scalar i32 DIV/REM cartridge semantics before optimization; cross-target CPU prototype, ARM builders unchanged | en_curso | codex-arm-wasm-div-parity | — | Root permits bounded tested child after raw ARM/Wasm parity RED; preserve publishedv2.2 and original GBA arithmetic | 2026-10-28T11:30:25.633396+00:00 |
 | android412-v22-startup | Critical reporter confirmed v2.2 instant startup crash on S22 Ultra Android16 before launcher; distinguish Retroid self-resolved and Moto/Jafar. Audit exact publishedAPK38f loader/JNI/GL/filesystem and actionable crash-buffer capture, no unprovenfixclaims. | en_curso | codex-s22-startup | — | — | 2026-10-28T11:32:08.448301+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T11:36:05.567291+00:00)
