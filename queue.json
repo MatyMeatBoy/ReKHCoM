@@ -9057,10 +9057,10 @@
     "boss-parasite-cage-left-cull": {
       "id": "boss-parasite-cage-left-cull",
       "piece": "FUTURE explicituser: Monstro ParasiteCage sprite clips moving farleft. Reproduce boss/camera-edge variants, preserve full sprite original gameplay/collisions, identify world/OAM cull boundary vsviewport. Not a v2.2 blocker per user.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-parasite-cull",
       "created_at": "2026-10-28T05:57:28.484066+00:00",
-      "updated_at": "2026-10-28T11:35:56.960454+00:00",
+      "updated_at": "2026-10-28T11:36:14.634020+00:00",
       "branch": "fix/parasite-left-cull",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/434",
       "approval": "Usuario: mejoras para el futuro en la pelea contra monstruo de jaula al moverse muy a la izquierda se corta el sprite, arreglar; luego seguir con pendientes hasta acabar. Codigo de presentacion; Atlas eximido por usuario, revision directa del coordinador del head92f8de8 y captura real.",
@@ -9080,9 +9080,15 @@
           "at": "2026-10-28T11:35:56.960454+00:00",
           "owner": "codex-parasite-cull",
           "detail": "Root inspected actualfixed screenshot and exactsource92f8de8; independent943CPU PASS. Records existing user authorization and coordinator review, not a new claim of user image approval. No new art asset or originalgame logic change."
+        },
+        {
+          "at": "2026-10-28T11:36:14.634020+00:00",
+          "owner": "codex-parasite-cull",
+          "detail": "Root exactreview+actualscreenshot approved; independent943CPU PASS, native32A/B2606exteriorpixelsrestored/0GBAchanges, Original240x160identical,x3/x4left/rightverified, levelupUI4framesidentical. PresentationPLATFORM_PC only; noPPU/collision/AIchange. Native64+HDcombinedQA remains followup; no physicalpass or stableartifactmutation claimed.; merged 0f78f298bc517d8544a9b45573d866ac1c78b199"
         }
       ],
-      "claimed_at": "2026-10-28T11:11:59.347557+00:00"
+      "claimed_at": "2026-10-28T11:11:59.347557+00:00",
+      "completed_at": "2026-10-28T11:36:14.634020+00:00"
     },
     "boss-levelup-backdrop-coverage-audit": {
       "id": "boss-levelup-backdrop-coverage-audit",
@@ -9209,7 +9215,7 @@
     "created_at": "2026-10-28T11:36:05.567291+00:00",
     "updated_at": "2026-10-28T11:36:05.567291+00:00"
   },
-  "updated_at": "2026-10-28T11:36:05.568351+00:00",
+  "updated_at": "2026-10-28T11:36:14.635023+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
