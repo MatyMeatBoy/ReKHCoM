@@ -1007,6 +1007,10 @@ static void LoadFonts() {
     ImFontConfig cfg;
     cfg.OversampleH = 2;
 
+    // Clear every alias before removing its atlas; later optional merges inspect
+    // these roles even when loading a replacement system font fails.
+    io.FontDefault = nullptr;
+    sFontBody = sFontSmall = sFontTitle = sFontMenu = sFontMenuSmall = nullptr;
     io.Fonts->Clear();
     if (fs::exists(regular)) {
         sFontBody = io.Fonts->AddFontFromFileTTF(regular.c_str(), Px(18), &cfg, ranges);
@@ -1088,6 +1092,49 @@ static void LoadFonts() {
         sFontMenu = sFontBody;
     if (sFontMenuSmall == nullptr)
         sFontMenuSmall = sFontSmall;
+}
+
+/* AddFont returns an unbuilt object: a later merge can make Build fail while
+ * those pointers still look valid. Never let either frame loop consume it. */
+static bool FinalizeFonts() {
+    ImGuiIO& io = ImGui::GetIO();
+    ImFontAtlas* atlas = io.Fonts;
+    auto usable = [&]() {
+        if (!atlas->IsBuilt() || atlas->TexWidth <= 0 || atlas->TexHeight <= 0)
+            return false;
+        auto loaded = [&](ImFont* font) {
+            if (!font) return false;
+            bool owned = false;
+            for (ImFont* member : atlas->Fonts)
+                owned |= member == font;
+            return owned && font->IsLoaded() && font->ContainerAtlas == atlas &&
+                   std::isfinite(font->FontSize) && font->FontSize > 0;
+        };
+        for (ImFont* font : atlas->Fonts)
+            if (!loaded(font)) return false;
+        ImFont* roles[] = {sFontBody, sFontSmall, sFontTitle, sFontMenu, sFontMenuSmall};
+        for (ImFont* font : roles)
+            if (!loaded(font)) return false;
+        return !io.FontDefault || loaded(io.FontDefault);
+    };
+    if (atlas->Build() && usable())
+        return true;
+
+    fprintf(stderr, "launcher font atlas: configured fonts unavailable; trying incorporated default\n");
+    io.FontDefault = nullptr;
+    sFontBody = sFontSmall = sFontTitle = sFontMenu = sFontMenuSmall = nullptr;
+    atlas->Clear();
+    ImFontConfig fallback;
+    float size = Px(16);
+    fallback.SizePixels = std::isfinite(size) && size > 0 ? size : 16;
+    ImFont* font = atlas->AddFontDefault(&fallback);
+    sFontBody = sFontSmall = sFontTitle = sFontMenu = sFontMenuSmall = font;
+    if (!font || !atlas->Build() || !usable()) {
+        SDL_SetError("Neither configured nor incorporated launcher font atlas could be built");
+        return false;
+    }
+    fprintf(stderr, "launcher font atlas: incorporated default ready (custom lettering may be unavailable)\n");
+    return true;
 }
 
 /* ---- widgets ----------------------------------------------------------------- */
@@ -3965,6 +4012,8 @@ int main(int argc, char** argv) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
     ApplyStyle();
     LoadFonts();
+    if (!FinalizeFonts())
+        return LauncherVideoFailed("Font atlas initialization", window, gl);
     SDL_ClearError();
     if (!ImGui_ImplSDL3_InitForOpenGL(window, gl))
         return LauncherVideoFailed("ImGui SDL backend initialization", window, gl);
