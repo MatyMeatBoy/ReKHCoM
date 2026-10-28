@@ -8580,10 +8580,10 @@
     "v22-stable-version": {
       "id": "v22-stable-version",
       "piece": "Stable v2.2 source/package version metadata and Android monotonic upgrade versionCode; no build/publication",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-stable-version",
       "created_at": "2026-10-28T02:44:34.751469+00:00",
-      "updated_at": "2026-10-28T02:50:21.838584+00:00",
+      "updated_at": "2026-10-28T02:51:44.881461+00:00",
       "branch": "release/v2.2-version-metadata",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/424",
       "approval": "User authorized stable2.2; root delegated metadata-only PR, preserve identity/signature/releases",
@@ -8598,9 +8598,15 @@
           "at": "2026-10-28T02:50:21.838584+00:00",
           "owner": "codex-stable-version",
           "detail": "Updated exacthead14ec1ef86d29ad870faccd5eb104870e4fadede6 rebased main6eeefe831 incl423. Changelog current-draw readiness wording+MOD0/RNG+MP4boundedCDalignment+desktop4s. Header/RCunchangedstablevalues, parserPASS. Still3metadatafiles,no Web/build/package/publication."
+        },
+        {
+          "at": "2026-10-28T02:51:44.881461+00:00",
+          "owner": "codex-stable-version",
+          "detail": "Root reviewed final3file diff14ec1ef8 after423; root reran version/RC/changelog and Androididentity parser PASS:v2.2,PE2,2,0,0,APKcode102020099>pre2, appidentitysame. Worker6Androidpackage tests and Win/Linux/Androiddryruns PASS. Webnotrebuilt/relabelled; globalrelease_check notclaimed. No package/tag/publication/deviceclaim; finalartifactsignatures/upgradeQA remain deliverygates.; merged 38f84bd36b176c926be2d236fdf320eb844c152b"
         }
       ],
-      "claimed_at": "2026-10-28T02:44:54.173767+00:00"
+      "claimed_at": "2026-10-28T02:44:54.173767+00:00",
+      "completed_at": "2026-10-28T02:51:44.881461+00:00"
     }
   },
   "integrator": {
@@ -8609,7 +8615,7 @@
     "created_at": "2026-10-28T02:51:36.655886+00:00",
     "updated_at": "2026-10-28T02:51:36.655886+00:00"
   },
-  "updated_at": "2026-10-28T02:51:36.656885+00:00",
+  "updated_at": "2026-10-28T02:51:44.881461+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
