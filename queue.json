@@ -9628,19 +9628,20 @@
     "issue441-title-bar-ready-guard": {
       "id": "issue441-title-bar-ready-guard",
       "piece": "Protect native Press Start fallback when current HD parts rejected; preserve all-good blink/fade/bar phases",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-title-bar-guard",
       "created_at": "2026-10-28T16:24:35.248916+00:00",
-      "updated_at": "2026-10-28T16:24:35.248916+00:00",
+      "updated_at": "2026-10-28T16:25:04.471364+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes sibling after446merge; actualmissingassetTocclusion reproduced, no art edits",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/446",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T16:25:04.471364+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:24:35.248916+00:00",
+  "updated_at": "2026-10-28T16:25:04.471364+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
