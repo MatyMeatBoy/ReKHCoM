@@ -10600,19 +10600,20 @@
     "v225-ps4-build": {
       "id": "v225-ps4-build",
       "piece": "Build final PS4 beta2.2.5 from frozenf28b884 using owncache/shared SDK, close PKG/hash/SFO02.25 audit",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v225-console-build",
       "created_at": "2026-10-28T22:11:16.164878+00:00",
-      "updated_at": "2026-10-28T22:11:16.164878+00:00",
+      "updated_at": "2026-10-28T22:11:21.888165+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root FREEZE f28b884ab2409753cea0cfae37784d5a3ed90f31 and4consolebuild authorization",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T22:11:21.888165+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:11:16.164878+00:00",
+  "updated_at": "2026-10-28T22:11:21.888165+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
