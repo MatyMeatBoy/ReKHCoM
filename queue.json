@@ -10326,19 +10326,20 @@
     "optiport-installed-embedded-v225": {
       "id": "optiport-installed-embedded-v225",
       "piece": "Sync installed Codex/Claude preserving local additions; refresh embedded committed snapshot for2.2.5 and report final16area gaps read-only",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-sync-v225",
       "created_at": "2026-10-28T21:49:36.744319+00:00",
-      "updated_at": "2026-10-28T21:49:36.744319+00:00",
+      "updated_at": "2026-10-28T21:49:54.936388+00:00",
       "branch": null,
       "pr": null,
       "approval": "user",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T21:49:54.936388+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:49:36.744319+00:00",
+  "updated_at": "2026-10-28T21:49:54.936388+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
