@@ -28,6 +28,8 @@ Priorizar corrupción de documentos y crashes por impacto antes que cosmética o
 
 Ampliar la lectura ante evidencia contradictoria, reproducción que no concuerda, fallo de la validación mínima o una frontera ABI desconocida. Una búsqueda sin resultado no prueba ausencia. Consultar el siguiente caller, backend, versión o fuente que resuelva esa incertidumbre específica.
 
+Para reuso de SDK/runtime, ampliar por [perfil de software y revisión](repository-research.md#búsqueda-por-mecanismo-y-revisión): símbolos/fragmentos → implementación completa y layout → fork/historial pertinente → toolchain/ABI → reproducción mínima. Si varias fuentes tienen el mismo cuerpo, agruparlas para evitar repetir la misma prueba; si una biblioteca ya está enlazada, registrar procedencia sin inventar trabajo pendiente. Una tasa límite o falta de autenticación no es evidencia de ausencia. Cuando el objetivo sea matching, leer [sus contratos](decompilation-contracts.md) antes de interpretar scores o progreso ajeno.
+
 ## Reutilizar y parar
 
 Guardar en el board o caché local un registro compacto: pregunta, conclusión/hipótesis, repositorio y commit, versión de dependencia/toolchain relevante, fecha, archivo/rango o URL, prueba y límites. Usar hashes o identificadores necesarios; no guardar PII, secretos ni documentos privados. Reutilizar lecturas con fingerprint sin cambios en vez de releerlas; invalidar la parte afectada cuando cambien fuente, versión, configuración, assets o binario, y volver a comprobar lo que dependa de ella.
