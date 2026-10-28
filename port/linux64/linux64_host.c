@@ -23,6 +23,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "bridge.h"
 #include "linux64_args.h"
@@ -41,6 +42,27 @@ static void Log(const char* fmt, ...) {
     vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
     fprintf(stderr, "[rekhcom64] %s\n", text);
+}
+
+/* Startup-only diagnostics keep call order and driver selection unchanged.
+ * Flush each boundary even when a driver terminates without returning. */
+static void StartupStage(const char* stage, const char* status) {
+    static uint64_t began;
+    struct timespec now;
+    uint64_t us = 0;
+    if (clock_gettime(CLOCK_MONOTONIC, &now) == 0)
+        us = (uint64_t)now.tv_sec * 1000000 + (uint64_t)now.tv_nsec / 1000;
+    if (!began) began = us;
+    Log("startup: pid=%ld stage=%s status=%s elapsed_us=%llu", (long)getpid(), stage, status,
+        (unsigned long long)(us >= began ? us - began : 0));
+    fflush(stderr);
+}
+static void StartupError(const char* stage) {
+    char error[512];
+    snprintf(error, sizeof(error), "%s", SDL_GetError()); /* before logging can replace SDL's error */
+    StartupStage(stage, "failed");
+    Log("startup: stage=%s error=%s", stage, error[0] ? error : "no SDL error detail");
+    fflush(stderr);
 }
 
 /* ---- the basics and files ---- */
@@ -393,22 +415,45 @@ int main(int argc, char** argv) {
             (unsigned long long)sGuestDivision.end);
     else
         Log("guest DIV0 compatibility unavailable: missing text metadata or handler");
+    StartupStage("image-scratch-release", "begin");
     free(tmp);
+    StartupStage("image-scratch-release", "done");
 
 #endif
 
+    StartupStage("sdl-info", "begin");
+    Log("startup: SDL compiled=%d linked=%d env_present display=%d wayland=%d runtime_dir=%d ld_library_path=%d ld_preload=%d video_hint=%d audio_hint=%d",
+        SDL_VERSION, SDL_GetVersion(), getenv("DISPLAY") != NULL, getenv("WAYLAND_DISPLAY") != NULL,
+        getenv("XDG_RUNTIME_DIR") != NULL, getenv("LD_LIBRARY_PATH") != NULL, getenv("LD_PRELOAD") != NULL,
+        getenv("SDL_VIDEO_DRIVER") != NULL, getenv("SDL_AUDIO_DRIVER") != NULL);
+    StartupStage("sdl-info", "done");
+    StartupStage("sdl-init", "begin");
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
+        StartupError("sdl-init");
         Log("SDL_Init: %s", SDL_GetError());
         return 4;
     }
+    StartupStage("sdl-init", "done");
+    Log("startup: SDL drivers video=%s audio=%s", SDL_GetCurrentVideoDriver() ? SDL_GetCurrentVideoDriver() : "none",
+        SDL_GetCurrentAudioDriver() ? SDL_GetCurrentAudioDriver() : "none");
+    StartupStage("window", "begin");
     sWindow = SDL_CreateWindow("Kingdom Hearts: Chain of Memories", 1280, 720,
                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
-    sRenderer = sWindow ? SDL_CreateRenderer(sWindow, NULL) : NULL;
+    if (sWindow) StartupStage("window", "done");
+    else StartupError("window");
+    if (sWindow) {
+        StartupStage("renderer", "begin");
+        sRenderer = SDL_CreateRenderer(sWindow, NULL);
+        if (sRenderer) StartupStage("renderer", "done");
+        else StartupError("renderer");
+    }
     if (!sRenderer) {
         Log("no renderer: %s", SDL_GetError());
         return 4;
     }
-    SDL_SetRenderVSync(sRenderer, 1);
+    StartupStage("vsync", "begin");
+    if (SDL_SetRenderVSync(sRenderer, 1)) StartupStage("vsync", "done");
+    else StartupError("vsync"); /* original nonfatal policy */
     Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));
     {
         /* full screen as kh_com.ini says (the Steam Deck package's preset), or REKHCOM_FULLSCREEN=1 */
@@ -431,8 +476,11 @@ int main(int argc, char** argv) {
                 fclose(cfg);
             }
         }
-        if (full)
-            SDL_SetWindowFullscreen(sWindow, true);
+        if (full) {
+            StartupStage("fullscreen", "begin");
+            if (SDL_SetWindowFullscreen(sWindow, true)) StartupStage("fullscreen", "done");
+            else StartupError("fullscreen");
+        }
     }
 
     uint64_t* table = (uint64_t*)(uintptr_t)h.hostTable;
@@ -448,15 +496,27 @@ int main(int argc, char** argv) {
         HM(thread, H_thread),
     };
     _Static_assert(sizeof(t) / sizeof(t[0]) == HF_COUNT, "bridge table out of step with bridge_list.h");
+    StartupStage("bridge-table", "begin");
     memcpy(table, t, sizeof(t));
+    StartupStage("bridge-table", "done");
     int (*boot)(uint32_t) = (int (*)(uint32_t))(uintptr_t)h.boot;
     if (bootStatus) {
+        StartupStage("boot-marker", "begin");
         FILE* ready = fopen(bootStatus, "w");
-        if (!ready) { SDL_Quit(); return 4; }
-        fputs("ready\n", ready);
-        fclose(ready);
+        if (!ready) {
+            Log("startup: boot marker open failed errno=%d", errno);
+            StartupStage("boot-marker", "failed");
+            SDL_Quit(); return 4;
+        }
+        int wrote = fputs("ready\n", ready) >= 0;
+        int closed = fclose(ready) == 0;
+        Log("startup: boot marker wrote=%d closed=%d", wrote, closed);
+        StartupStage("boot-marker", wrote && closed ? "done" : "failed");
     }
+    StartupStage("guest-core", "begin");
     int rc = boot(h.stackTop);
+    Log("startup: guest core returned code=%d", rc);
+    StartupStage("guest-core", "returned");
     SDL_Quit();
     return rc;
 }
