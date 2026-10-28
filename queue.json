@@ -8614,7 +8614,7 @@
       "status": "en_curso",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:54:25.529458+00:00",
-      "updated_at": "2026-10-28T03:49:03.275884+00:00",
+      "updated_at": "2026-10-28T04:20:00.693458+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord",
@@ -8624,6 +8624,11 @@
           "at": "2026-10-28T03:49:03.275884+00:00",
           "owner": "codex-integrador",
           "detail": "Scope expanded by user: v2.2 ALL supported platforms, RAM guarded. Source38f84. Windows all7 build stages and closed ZIP auditPASS, exact6 regional32/64 startup/version checksPASS (job512 peak348.65MiB minfree2.445GiB);21 DIV checks running under owned job. Android27,505,608 bytes bd7999c234669ac88dfd5ec22ae3ccddd95db011eda0a1608fb8526819e19a4e audited root and copied releases/v2.2, unpublished; no hardware claim. Linux/Anbernic jobs1 guarded wrappers prepared, not started. Console metadata worker active, no VM/build. Latestv2.1."
+        },
+        {
+          "at": "2026-10-28T04:20:00.693458+00:00",
+          "owner": "codex-integrador",
+          "detail": "Progress28Oct04:20UTC: all desktopLinux32/64 and Anbernicarmhf EU/US/JP candidate compiled and independently closed/audited from PR428 headace4116e (unmerged DRAFT; do not publish yet). Linux TAR31409321 SHA80b868e8e97ba998473a09f86b1fd81c6ea4f511843abf6faba59f423f3ef57a; AnbernicZIP19813224 SHAccc428fca31e8212ca6fad72b913946650113cee13362e8b667c62bf1af8d4ce. Serial resume job256MiB peak101MiB minfree1.609GiB PASS. PR428 exact full host linkPASS independently peak34.31MiB; CPUcontrols/UIcompilePASS minfree1.313GiB. Runtime VM QA prepared next, no heavy process active now. Windows38f exact6startups/21DIV/SRAMmap32/64PASS; Android closed root copy. All consoles/Web builds still pending, RAM guarded; no stable2.2 published. Reporter421 progress comment6460459960, kept open."
         }
       ],
       "claimed_at": "2026-10-28T02:54:42.405252+00:00"
@@ -8778,7 +8783,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:11:55.266315+00:00",
+  "updated_at": "2026-10-28T04:20:00.693458+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
