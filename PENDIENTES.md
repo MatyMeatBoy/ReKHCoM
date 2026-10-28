@@ -385,4 +385,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v225-ps5-build | Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence | en_curso | codex-v225-console-build | — | Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy | 2026-10-28T22:45:55.516531+00:00 |
 | web-bg-world-call-abi | Declare shared PortSetBgWorld before four Parasite calls; real Wasm signature trap regression, no gameplay/argument changes; root merges then rebuild affectedWebTU | pr_abierto | codex-web-world-abi | https://github.com/MatyMeatBoy/ReKHCoM/pull/478 | Root integrator: human-authorized code review; 2a89b517a2a7b2825f2d1a8ab38f322891fad20b | 2026-10-28T22:58:26.317525+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T22:58:32.150233+00:00)
