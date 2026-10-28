@@ -9506,15 +9506,16 @@
     "issue441-title-start-bar": {
       "id": "issue441-title-start-bar",
       "piece": "Linux/Deck title Press Start red bar overlays English t; exact release comparison and focused mask/draw-order fix",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-issue441-title",
       "created_at": "2026-10-28T15:56:19.562560+00:00",
-      "updated_at": "2026-10-28T15:56:19.562560+00:00",
+      "updated_at": "2026-10-28T15:56:43.243450+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario reanuda441/439+OptiPort explícitamente; root asigna carril441 sin comentarios externos",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/441",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T15:56:43.243450+00:00"
     },
     "issue439-linux-video-pacing": {
       "id": "issue439-linux-video-pacing",
@@ -9532,7 +9533,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T15:56:34.868333+00:00",
+  "updated_at": "2026-10-28T15:56:43.243450+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
