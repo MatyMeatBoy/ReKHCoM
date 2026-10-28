@@ -48,11 +48,54 @@ class ReportContract(unittest.TestCase):
         profile.validate_case_log(correct,'monstro-opening',False,True)
         self.assertIn('10303',profile.SCENARIOS['monstro-opening']['KHCOM_MODE'])
 
+    def test_controlled_profile_changes_only_four_hd_flags(self):
+        off=profile.controlled_settings(False);on=profile.controlled_settings(True)
+        self.assertEqual({k for k in off if off[k]!=on[k]}, {'hd_hud','hd_text','hd_cards','hd_title'})
+        self.assertEqual((off['view_mode'],off['zoom'],off['vsync'],off['experimental_frame_skip']), (4,8,0,0))
+        self.assertEqual(off['graphics_mode'],off['graphics_mode_applied'])
+        self.assertEqual(off['hd_movies'],0)
+    def test_effective_settings_must_be_observed_and_match(self):
+        line='Settings: graphics mode 1, view 4, fullscreen 0, vsync 0, frame skip 0, HD movies 0 music 0 scenes 0 HUD 1 text 1'
+        profile.validate_effective_settings(line,True)
+        for bad in ('',line.replace('view 4','view 3'),line.replace('HUD 1','HUD 0'),line.replace('frame skip 0','frame skip 1')):
+            with self.subTest(value=bad),self.assertRaises(ValueError):profile.validate_effective_settings(bad,True)
+    def test_quality_capture_uses_real_host_counter_and_valid_bmp(self):
+        import struct,tempfile
+        with tempfile.TemporaryDirectory() as temp:
+            folder=Path(temp)
+            with self.assertRaises(ValueError):profile.quality_capture(folder,True,450)
+            header=b'BM'+struct.pack('<IHHI',70,0,0,54)+struct.pack('<IiiHHIIiiII',40,2,2,1,24,0,16,0,0,0,0)
+            (folder/'host_shot_450.bmp').write_bytes(header+b'\0'*16)
+            result=profile.quality_capture(folder,True,450)
+            self.assertEqual(result['domain'],'host-present counter; not guest logic frame')
+            self.assertEqual(result['dimensions'],[2,2])
+            (folder/'host_shot_450.bmp').write_bytes(header)
+            with self.assertRaises(ValueError):profile.quality_capture(folder,True,450)
+            self.assertEqual(profile.quality_environment(False,450), {'KHCOM_PRESENTSHOTS':'450-450'})
+            self.assertEqual(profile.quality_environment(True,450), {'KHCOM_HOST_SHOT':'450'})
+
     def test_serial_plan_alternates_and_uses_explicit_host_guest(self):
         result=plan.commands(*[Path(n) for n in ('build32','build64','host64','guest','rom','sprites','assets','out')])
         self.assertEqual(len(result),8)
         self.assertEqual([('--guest' in c) for c in result],[False,True,True,False,False,True,False,True])
         self.assertTrue(all('--fast' not in c and '--software' not in c for c in result))
         self.assertEqual(plan.quote("space's $path"), "'space''s $path'")
+
+    def test_resource_override_resolves_from_private_child_cwd(self):
+        cwd=Path.cwd()/'private'/'case'
+        asset=Path.cwd()/'private'/'assets'
+        value=profile.resource_override(asset,cwd)
+        self.assertFalse(Path(value).is_absolute())
+        self.assertEqual((cwd/value).resolve(),asset.resolve())
+
+    def test_long_workspace_does_not_truncate_sprite_override(self):
+        base=Path.cwd()/('long-private-evidence-folder-'*6)
+        sprite=base/'current-cached-import'/'hd'/'sprites'
+        cwd=base/'quality-current-win64'/'timestamp'/'monstro-battle-hd1'
+        value=profile.resource_override(sprite,cwd)
+        filename='gCardModifiedValueDigitTiles_9.png'
+        self.assertGreater(len(str(sprite/filename)),160)
+        self.assertLess(len(value+'/'+filename),160)
+        self.assertEqual((cwd/value).resolve(),sprite.resolve())
 
 if __name__ == '__main__':unittest.main()

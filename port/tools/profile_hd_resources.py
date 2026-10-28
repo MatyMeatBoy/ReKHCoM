@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import shutil
 import statistics
+import struct
 import subprocess
 import time
 
@@ -109,6 +110,56 @@ def validate_case_log(log, scenario, strict_hd, require_progress=False):
         raise ValueError('HD text requested but no loaded font evidence')
 
 
+def controlled_settings(hd):
+    """Controlled graphics cohort, not a copy of a personal installation."""
+    return dict(config_version=11, graphics_mode=1, graphics_mode_applied=1,
+                view_mode=4, zoom=8, scale_mode=0, integer_zoom=0, filter=0,
+                vsync=0, fullscreen=0, experimental_frame_skip=0,
+                hd_hud=int(hd), hd_text=int(hd), hd_cards=int(hd), hd_title=int(hd),
+                hd_music=0, hd_movies=0, hd_scenes=0)
+
+
+def resource_override(path, cwd):
+    """Short child-relative paths avoid the game's bounded sprite path buffer."""
+    try:
+        return os.path.relpath(Path(path).resolve(), Path(cwd).resolve())
+    except ValueError:  # Different Windows drives have no relative path.
+        return str(Path(path).resolve())
+
+
+def validate_effective_settings(log, hd):
+    match = re.search(r'Settings: graphics mode (\d+), view (\d+), fullscreen (\d+), vsync (\d+), '
+                      r'frame skip (\d+), HD movies (\d+) music (\d+) scenes (\d+) HUD (\d+) text (\d+)', log)
+    expected = (1, 4, 0, 0, 0, 0, 0, 0, int(hd), int(hd))
+    if not match or tuple(map(int, match.groups())) != expected:
+        raise ValueError('effective controlled graphics settings missing or different; do not interpret this sample')
+    return dict(zip(('graphics_mode','view_mode','fullscreen','vsync','frame_skip',
+                     'hd_movies','hd_music','hd_scenes','hd_hud','hd_text'), map(int, match.groups())))
+
+
+def quality_environment(guest, frame):
+    # The freestanding SDL shim cannot read the rendered host texture. Use the
+    # existing real host readback, not a renamed/missing guest screenshot.
+    return {'KHCOM_HOST_SHOT': str(frame)} if guest else {'KHCOM_PRESENTSHOTS': f'{frame}-{frame}'}
+
+
+def quality_capture(folder, guest, frame):
+    name = f'host_shot_{frame}.bmp' if guest else f'present_{frame:05d}.bmp'
+    path = Path(folder) / name
+    if not path.is_file(): raise ValueError('quality capture unavailable: '+str(path))
+    with path.open('rb') as stream: header = stream.read(54)
+    if len(header) < 54 or header[:2] != b'BM': raise ValueError('invalid quality BMP: '+str(path))
+    size, offset = struct.unpack_from('<I', header, 2)[0], struct.unpack_from('<I', header, 10)[0]
+    width, height = struct.unpack_from('<ii', header, 18)
+    bpp = struct.unpack_from('<H', header, 28)[0]
+    if width <= 0 or not height or bpp not in (24,32) or offset < 54 or size != path.stat().st_size:
+        raise ValueError('invalid quality BMP metadata: '+str(path))
+    required = offset + ((width*bpp+31)//32*4)*abs(height)
+    if size < required: raise ValueError('truncated quality BMP: '+str(path))
+    return dict(path=str(path), sha256=sha256(path), dimensions=[width,abs(height)],
+                frame=frame, domain='host-present counter; not guest logic frame' if guest else 'guest/game frame counter')
+
+
 def sha256(path):
     digest = hashlib.sha256()
     with Path(path).open('rb') as stream:
@@ -156,7 +207,7 @@ def main():
     out=args.output_root.resolve()/datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
     out.mkdir(parents=True)
     shutil.copytree(args.assets, out/'assets')
-    report={'schema':2,'exe_sha256':sha256(source_exe),
+    report={'schema':3,'controlled_profile':'1920x1080/view4/zoom8/vsync0/frame-skip0; four HD flags only; not personal config','exe_sha256':sha256(source_exe),
             'dll_sha256':sha256(build/'SDL3.dll'), 'rom_sha256':sha256(args.rom),
             'guest_sha256':sha256(args.guest) if args.guest else None,
             'assets_fingerprint':tree_fingerprint(args.assets), 'sprites_fingerprint':tree_fingerprint(args.hd_sprites),
@@ -173,12 +224,10 @@ def main():
             shutil.copy2(source_exe,folder/'khcom.exe')
             shutil.copy2(build/'SDL3.dll',folder/'SDL3.dll')
             if args.guest: shutil.copy2(args.guest,folder/'guest.bin')
-            (folder/'kh_com.ini').write_text('config_version=11\ngraphics_mode=1\ngraphics_mode_applied=1\n'
-                f'view_mode=4\nzoom=8\nvsync=0\nfullscreen=0\nexperimental_frame_skip=0\n'
-                f'hd_hud={hd}\nhd_text={hd}\nhd_cards={hd}\nhd_title={hd}\nhd_music=0\nhd_movies=0\nhd_scenes=0\n')
+            (folder/'kh_com.ini').write_text(''.join(f'{key}={value}\n' for key,value in controlled_settings(hd).items()))
             env={k:v for k,v in os.environ.items() if not k.startswith(('KHCOM_','SDL_'))}
             env.update(SDL_AUDIO_DRIVER='dummy', KHCOM_HIDDEN='1', KHCOM_BACKGROUND_TEST='1',
-                KHCOM_HOST_HIDDEN='1', KHCOM_ASSETS=str((out/'assets').resolve()), KHCOM_WINDOW='1920x1080', KHCOM_PPU_THREADS='1', KHCOM_HD_HUD_DEV='1',
+                KHCOM_HOST_HIDDEN='1', KHCOM_ASSETS=resource_override(out/'assets',folder), KHCOM_WINDOW='1920x1080', KHCOM_PPU_THREADS='1', KHCOM_HD_HUD_DEV='1',
                 KHCOM_FRAMELOG='frames.csv', KHCOM_QUIT=str(args.frames),KHCOM_TRACE_MODES='1',
                 KHCOM_KEYS=','.join(f'{f}-{f+2}:A' for f in range(240,args.frames,40)), **SCENARIOS[scenario])
             initial_mode=env.get('KHCOM_MODE', '')
@@ -187,10 +236,10 @@ def main():
             # the gameplay frame limit. Keep this benchmark on the title scene.
             if scenario == 'title':
                 env['KHCOM_KEYS']=''
-            if args.quality_capture: env['KHCOM_PRESENTSHOTS']=f'{args.frames-1}-{args.frames-1}'
+            if args.quality_capture: env.update(quality_environment(bool(args.guest),args.frames-1))
             if args.fast: env['KHCOM_FAST']='1'
             if args.software: env['SDL_VIDEO_DRIVER']='dummy'
-            if args.hd_sprites: env['KHCOM_HD_SPRITES']=str(args.hd_sprites.resolve())
+            if args.hd_sprites: env['KHCOM_HD_SPRITES']=resource_override(args.hd_sprites,folder)
             began=time.monotonic(); peak_rss=0; peak_private=None
             with (folder/'stderr.txt').open('w') as stderr:
                 command=[str(folder/'khcom.exe')]
@@ -211,12 +260,12 @@ def main():
             log=(folder/'kh_com.log').read_text(errors='replace')
             assert process.returncode==0 and 'CRASH' not in log, (scenario,process.returncode,folder)
             validate_case_log(log, scenario, bool(hd and not args.allow_degraded), require_progress=True)
-            if args.quality_capture and not (folder/f'present_{args.frames-1:05d}.bmp').is_file():
-                raise ValueError('quality capture unavailable: '+str(folder))
+            effective_settings=validate_effective_settings(log,hd)
+            capture=quality_capture(folder,bool(args.guest),args.frames-1) if args.quality_capture else None
             with (folder/'frames.csv').open() as stream:
                 metrics=summarize_frames(list(csv.DictReader(stream)), args.frames, args.warm_start, args.min_warm)
             validate_pacing(metrics, args.fast, args.quality_capture)
-            case=dict(scenario=scenario,hd=hd,seconds=round(time.monotonic()-began,3),
+            case=dict(scenario=scenario,hd=hd,effective_settings=effective_settings,quality_capture=capture,seconds=round(time.monotonic()-began,3),
                 **metrics, peak_rss_mib=peak_rss/1048576 if peak_rss else None,
                 peak_private_mib=peak_private/1048576 if peak_private is not None else None,
                 allow_degraded=args.allow_degraded,
