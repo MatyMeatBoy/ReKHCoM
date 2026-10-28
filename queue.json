@@ -10001,19 +10001,20 @@
     "linux-startup-pre1-delivery": {
       "id": "linux-startup-pre1-delivery",
       "piece": "Prepare immutable Linuxstartup-pre1 from integrated main452+457+458; exactTAR normal64/safe32 QA and provenance; root publishes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux-startup-delivery",
       "created_at": "2026-10-28T19:43:07.280612+00:00",
-      "updated_at": "2026-10-28T19:43:07.280612+00:00",
+      "updated_at": "2026-10-28T19:43:19.813766+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root/user prioritize330374 startup prerelease; isolated build/preparation now, runtime only coordinatedlease; no published overwrite",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T19:43:19.813766+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:43:07.280612+00:00",
+  "updated_at": "2026-10-28T19:43:19.813766+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
