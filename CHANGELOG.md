@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.2-pre3 — test build preparation
+
+- Preserve native small-card frame corners and correct the reported stray attack-card seam pixels without retouching HD illustrations.
+- Restore bright enemy HP gauge colours while retaining the game's HP, trailing gauge and layer logic.
+- Honour audio priming and pause/resume in the SDL 64-bit bridge, and fade bounded PCM starvation toward silence without repeating old game audio or advancing the game clock.
+- Pause gallery HD music while GBA movies own audio, and put Sora's world scenes before his ending in all six gallery languages.
+- Source and Windows metadata identify pre3 (2.2.0.3). Only compiled, separately verified platform packages will be offered; this entry does not announce a completed build or physical-device confirmation.
+
 ## v2.2-pre2 — Windows test build preparation
 
 - Guard zero-range scrolling in the map-card list and Moogle trade-in menu (#388, #389).

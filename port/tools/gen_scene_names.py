@@ -1,6 +1,9 @@
 """Names for Options > Scenes (port/src/port_scene_gallery_menu.inc), in the six menu languages, built from the event
 ids of port/src/port_hdscenes.inc ("EVENT_046_11F_TWILIGHT_TOWN_E1_2" -> "11F · Twilight Town · Event 1 (2)"). The
 cartridge's own event names are Japanese debug text, so these are the port's. Writes port/src/port_scene_names.inc.
+The floors' generic scenes (entrance, end of floor, scene) also name who appears in them, read from their scripts
+(src/evt/events/NNN_*.inc). Story order: the floors in order, the worlds' scenes (chosen in any order between 2F and
+10F) after 10F and before 11F, Riku's after Sora's (#163: Monstro and 100 Acre Wood were listed after the ending).
 
     python port/tools/gen_scene_names.py
 """
@@ -55,6 +58,49 @@ WORDS.update({
 })
 
 
+EVENTS = ROOT / 'src/evt/events'
+# who appears in a scene, in the six languages; the party, Jiminy, objects and effects are left out
+CHARACTERS = {
+    'AXEL': ('Axel',) * 5 + ('アクセル',),
+    'LARXENE': ('Larxene',) * 5 + ('ラクシーヌ',),
+    'VEXEN': ('Vexen',) * 5 + ('ヴィクセン',),
+    'MARLUXIA': ('Marluxia',) * 5 + ('マールーシャ',),
+    'LEXAEUS': ('Lexaeus',) * 5 + ('レクセウス',),
+    'ZEXION': ('Zexion',) * 5 + ('ゼクシオン',),
+    'NAMINE': ('Naminé',) * 5 + ('ナミネ',),
+    'RIKU_REPLICA': ('Riku Replica', 'Réplique de Riku', 'Riku-Replik', 'Replica di Riku', 'Réplica de Riku', 'リク＝レプリカ'),
+    'RIKU': ('Riku',) * 5 + ('リク',),
+    'ANSEM': ('Ansem',) * 5 + ('アンセム',),
+    'DIZ': ('DiZ',) * 5 + ('ディズ',),
+    'MICKEY': ('Mickey', 'Mickey', 'Micky', 'Topolino', 'Mickey', 'ミッキー'),
+    'KAIRI': ('Kairi',) * 5 + ('カイリ',),
+    'ROBED_FIGURE': ('Hooded figure', 'Silhouette encapuchonnée', 'Kapuzengestalt', 'Figura incappucciata',
+                     'Figura encapuchada', 'フードの男'),
+}
+GENERIC = ('ENTRANCE', 'GOAL', 'DEMO')
+
+
+def cast(ident):
+    """The scene's named characters (script order of first appearance), without the story's lead."""
+    number = int(ident.split('_')[1])
+    files = sorted(EVENTS.glob(f'{number:03d}_*.inc'))
+    if not files:
+        return []
+    found = []
+    for token in re.findall(r'CHARA_([A-Z0-9_]+)', files[0].read_text(encoding='utf-8', errors='replace')):
+        if token in CHARACTERS and token not in found and not (token == 'RIKU' and '_RIKU_' in ident):
+            found.append(token)
+    return found[:3]
+
+
+def story_order(ident):
+    """Floors in order, then the worlds' scenes between 10F and 11F, Riku's after Sora's; cinematics fit between."""
+    number = int(ident.split('_')[1])
+    if 74 <= number <= 148:  # Monstro .. 100 Acre Wood: worlds of the middle floors, never after the ending
+        return 42 * 100 + 1 + (number - 74)  # 4201..4275, between 10F (4200) and 11F (4300)
+    return number * 100
+
+
 def name(ident):
     m = re.match(r'EVENT_(\d+)_?(.*)', ident)
     rest = m.group(2)
@@ -97,6 +143,10 @@ def name(ident):
                 kind = (kind + (f' ({n})' if kind[-1:].isdigit() else ' ' + n)) if kind else n
         if kind:
             parts.append(kind)
+        if tokens and tokens[0] in GENERIC:
+            who = cast(ident)
+            if who:
+                parts.append(', '.join(CHARACTERS[c][lang] for c in who))
         out.append(' · '.join(parts) if parts else f'#{int(m.group(1)):03d}')
     return out
 
@@ -112,14 +162,14 @@ def main():
              'static const struct { unsigned short eventId; short storyOrder; const char* name[6]; } kSceneNames[] = {']
     for ident in seen:
         cells = ', '.join('"' + n.replace('"', '\\"') + '"' for n in name(ident))
-        order = int(ident.split('_')[1]) * 2
+        order = story_order(ident)
         lines.append(f'    {{ {ident}, {order}, {{ {cells} }} }},')
     movies = [
         (1, -1, ('Sora · Opening cinematic', 'Sora · Cinématique initiale', 'Sora · Introfilm', 'Sora · Filmato iniziale', 'Sora · Cinemática inicial', 'ソラ · オープニング')),
-        (2, 51, ('Sora · 6F · Cinematic', 'Sora · 6F · Cinématique', 'Sora · 6F · Film', 'Sora · 6F · Filmato', 'Sora · 6F · Cinemática', 'ソラ · 6F · ムービー')),
-        (3, 113, ('Sora · 12F · Cinematic', 'Sora · 12F · Cinématique', 'Sora · 12F · Film', 'Sora · 12F · Filmato', 'Sora · 12F · Cinemática', 'ソラ · 12F · ムービー')),
-        (4, 147, ('Sora · Ending cinematic', 'Sora · Cinématique finale', 'Sora · Schlussfilm', 'Sora · Filmato finale', 'Sora · Cinemática final', 'ソラ · エンディング')),
-        (5, 391, ('Riku · Ending cinematic', 'Riku · Cinématique finale', 'Riku · Schlussfilm', 'Riku · Filmato finale', 'Riku · Cinemática final', 'リク · エンディング')),
+        (2, 2550, ('Sora · 6F · Cinematic', 'Sora · 6F · Cinématique', 'Sora · 6F · Film', 'Sora · 6F · Filmato', 'Sora · 6F · Cinemática', 'ソラ · 6F · ムービー')),
+        (3, 5650, ('Sora · 12F · Cinematic', 'Sora · 12F · Cinématique', 'Sora · 12F · Film', 'Sora · 12F · Filmato', 'Sora · 12F · Cinemática', 'ソラ · 12F · ムービー')),
+        (4, 7350, ('Sora · Ending cinematic', 'Sora · Cinématique finale', 'Sora · Schlussfilm', 'Sora · Filmato finale', 'Sora · Cinemática final', 'ソラ · エンディング')),
+        (5, 19550, ('Riku · Ending cinematic', 'Riku · Cinématique finale', 'Riku · Schlussfilm', 'Riku · Filmato finale', 'Riku · Cinemática final', 'リク · エンディング')),
     ]
     for movie, order, names in movies:
         cells = ', '.join('"' + n.replace('"', '\\"') + '"' for n in names)

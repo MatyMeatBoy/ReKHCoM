@@ -351,6 +351,20 @@ static int Load(int i) {
         if (px) stbi_image_free(px);
         goto invalid;
     }
+    /* Kingdom Key's one-cell seam correction:
+       Kingdom Key's native white dot lies outside the HD window; cover just
+       that GBA cell with its neighbouring native near-black.
+       Cure's black and Simba's blue native top lines, every other illustration
+       and all separately rendered value digits stay unchanged. */
+    if (kHdSprites[i].group == 6 && w == 128 && h == 256) {
+        if (!strcmp(kHdSprites[i].name, "gKingdomKeySmallCardHD")) {
+            for (int y = 120; y < 128; y++)
+                for (int x = 88; x < 96; x++) {
+                    unsigned char* p = px + (y * w + x) * 4;
+                    p[0] = p[1] = p[2] = 8; p[3] = 255;
+                }
+        }
+    }
     if (kHdSprites[i].group == 7 && MenuLightName(kHdSprites[i].name) && MenuLightReady(sRenderer)) {
         /* Remove only this light's box, not its words, bar or underline.
            German Press Start has eight extra rows above the same orb. */

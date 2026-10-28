@@ -12,6 +12,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "audio_bridge.h"
+
+/* The guest may change its PCM rate after opening the device. Playback ratio
+ * also includes queue PLL correction, so it cannot identify that rate exactly. */
+static int sHdInputRate;
+static int HdMusicInputRate(uint32_t rate) {
+    if (!rate || rate > 384000)
+        return 0;
+    sHdInputRate = (int)rate;
+    return 1;
+}
+#define THREAD_HOST_AUDIO_RATE(rate) HdMusicInputRate(rate)
 
 #ifndef HD_MUSIC_LOG
 #define HD_MUSIC_LOG(...) ((void)0) /* a host with a log defines it before including this file */
@@ -185,10 +197,12 @@ static void HdMusicMix(int16_t* frames, uint32_t count, int rate) {
     }
 }
 
-/* The host's H_audio_push: the game's block with the track mixed in, handed to the host's own push (rate: the one
-   the game opened the audio at). */
+/* The host's H_audio_push: mix at the current input PCM rate. Old guests that
+ * do not send it retain the rate supplied by their host's audio-open path. */
 static void HdMusicPush(const int16_t* frames, uint32_t count, int rate, void (*push)(const int16_t*, uint32_t)) {
     static int16_t mix[1024 * 2];
+    if (sHdInputRate)
+        rate = sHdInputRate;
     if (!sHd.playing) {
         push(frames, count);
         return;
