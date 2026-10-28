@@ -9382,17 +9382,23 @@
       "status": "en_curso",
       "owner": "codex-android-options",
       "created_at": "2026-10-28T13:50:56.070738+00:00",
-      "updated_at": "2026-10-28T13:51:04.092045+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T13:54:58.102737+00:00",
+      "branch": "feat/android-startup-options",
       "pr": null,
       "approval": null,
       "reference": "User optional launcher choices Android16; root assignment 2026-10-28",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T13:54:58.102737+00:00",
+          "owner": "codex-android-options",
+          "detail": "Root approved boundedDefault+HIDAPIoff; plainJava entry gate validates before SDL, CPUprofiles PASS; nativeGetHint QA pending"
+        }
+      ],
       "claimed_at": "2026-10-28T13:51:04.092045+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T13:51:04.092045+00:00",
+  "updated_at": "2026-10-28T13:54:58.102737+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
