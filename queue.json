@@ -10162,10 +10162,10 @@
     "font-glyph-upload-fallback": {
       "id": "font-glyph-upload-fallback",
       "piece": "FreeType/Web glyph upload rejection: discard failed texture and native text on next frame; no claim of same-frame fallback or shim GPU ack",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-font-upload",
       "created_at": "2026-10-28T20:47:02.458854+00:00",
-      "updated_at": "2026-10-28T20:49:48.564077+00:00",
+      "updated_at": "2026-10-28T20:53:12.930217+00:00",
       "branch": "fix/font-glyph-upload-fallback",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/467",
       "approval": "Human mechanism-wide font fallback audit and root explicit FreeType+Web next-frame scope approval; root reviews and integrates under lock.",
@@ -10175,9 +10175,15 @@
           "at": "2026-10-28T20:49:48.564077+00:00",
           "owner": "codex-font-upload",
           "detail": "HEADae4f31eb830c954374189b27dc52f28b7c3280d4; actualRaster RED12of20/GREEN20of20 i686+x86_64 ownership destroyonce, success/cache, refusal, disabled no-repeat, explicit recovery retry; PPU next-frame existing checks sourceverified; firstframe loss documented; noGPU/VM or64shimackclaim; pruebas/moto374-safe-startup-current/FONT-UPLOAD-FALLBACK-RECEIPT.json"
+        },
+        {
+          "at": "2026-10-28T20:53:12.930217+00:00",
+          "owner": "codex-font-upload",
+          "detail": "Root reviewed exactae4f FreeType/Web readiness/errorownership and independently20 actualRaster i686/x64casesPASS; successcache unchanged, upload/createfail destroysownedonce/disablesHD/logsbounded/nativefallback nextframe. First failedframe glyph may be missing; not same-frame guarantee, no64GPUack/browser/deviceclaim.; merged 60c24a89579f72c6e25f6671e4ead26905131058"
         }
       ],
-      "claimed_at": "2026-10-28T20:47:13.300789+00:00"
+      "claimed_at": "2026-10-28T20:47:13.300789+00:00",
+      "completed_at": "2026-10-28T20:53:12.930217+00:00"
     }
   },
   "integrator": {
@@ -10186,7 +10192,7 @@
     "created_at": "2026-10-28T20:53:03.152405+00:00",
     "updated_at": "2026-10-28T20:53:03.152405+00:00"
   },
-  "updated_at": "2026-10-28T20:53:03.152405+00:00",
+  "updated_at": "2026-10-28T20:53:12.930217+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
