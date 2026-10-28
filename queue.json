@@ -10234,19 +10234,20 @@
     "OptiPort-font-readiness": {
       "id": "OptiPort-font-readiness",
       "piece": "Promote bounded deferred-font readiness and acquire-before-release lesson; two Markdown paragraphs and informed scenario review",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-font-readiness",
       "created_at": "2026-10-28T21:17:25.766403+00:00",
-      "updated_at": "2026-10-28T21:17:25.766403+00:00",
+      "updated_at": "2026-10-28T21:17:48.723301+00:00",
       "branch": null,
       "pr": null,
       "approval": "user",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T21:17:48.723301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:17:25.766403+00:00",
+  "updated_at": "2026-10-28T21:17:48.723301+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
