@@ -9970,10 +9970,10 @@
     "issue330-startup-compatible-fallback": {
       "id": "issue330-startup-compatible-fallback",
       "piece": "Issue330 manual reversible safe startup: session-only force32+software, shell/Steam escaping contracts; no automatic after-boot restart or device fix claim",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-deck330-safe-startup",
       "created_at": "2026-10-28T19:00:58.541594+00:00",
-      "updated_at": "2026-10-28T19:41:02.024538+00:00",
+      "updated_at": "2026-10-28T19:42:00.600268+00:00",
       "branch": "fix/issue330-safe-startup",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/458",
       "approval": "User authorized tentative startup tests. Root reviewed exact7636973 wrapper flags/environment/settings and independently passed26 actual shell controls; session-only explicit safe32software, no new automatic retries.",
@@ -9988,9 +9988,15 @@
           "at": "2026-10-28T19:41:02.024538+00:00",
           "owner": "codex-deck330-safe-startup",
           "detail": "ROOT-WRAPPER-VERIFICATION.json PASS26; preserve457 merged logging; no confirmed physicalDeckfix."
+        },
+        {
+          "at": "2026-10-28T19:42:00.600268+00:00",
+          "owner": "codex-deck330-safe-startup",
+          "detail": "Root independent26 real wrapper tests PASS; safe flag dominates only currentlaunch, preferences/save sentinels unchanged, Steam quotingliteral arguments and137/143 no-retry preserved. Manual compatibility attempt, not physicalDeckfix.; merged ef4091e1ddf32c8a970bac5fad0359156bb6fa48"
         }
       ],
-      "claimed_at": "2026-10-28T19:01:32.350099+00:00"
+      "claimed_at": "2026-10-28T19:01:32.350099+00:00",
+      "completed_at": "2026-10-28T19:42:00.600268+00:00"
     }
   },
   "integrator": {
@@ -9999,7 +10005,7 @@
     "created_at": "2026-10-28T19:41:50.797287+00:00",
     "updated_at": "2026-10-28T19:41:50.797287+00:00"
   },
-  "updated_at": "2026-10-28T19:41:50.797287+00:00",
+  "updated_at": "2026-10-28T19:42:00.600268+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
