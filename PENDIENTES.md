@@ -372,4 +372,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-installed-embedded-v225 | Sync installed Codex/Claude preserving local additions; refresh embedded committed snapshot for2.2.5 and report final16area gaps read-only | en_curso | codex-optiport-sync-v225 | — | user | 2026-10-28T21:49:54.936388+00:00 |
 | linux460-audio-backend-audit | Issue460 Bazzite silence: inspect actual SDL backends, host stream lifecycle and device defaults; controlled CPU probes, no speculative device fix | en_curso | codex-linux460 | — | Root explicitly assigns audio support after470 delivery; no460owner in currentCAS00e01a18; user2.2.5Linuxbugs mandate | 2026-10-28T21:51:13.621643+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T21:51:45.025256+00:00)
