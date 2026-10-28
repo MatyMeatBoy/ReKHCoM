@@ -8611,12 +8611,12 @@
     "v22-stable-delivery": {
       "id": "v22-stable-delivery",
       "piece": "Compilar, verificar y publicar v2.2 estable Windows/Linux y APK Android beta; responder issues pendientes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:54:25.529458+00:00",
-      "updated_at": "2026-10-28T11:01:04.669360+00:00",
+      "updated_at": "2026-10-28T11:04:30.938620+00:00",
       "branch": "docs/v22-published-verification",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/433",
       "approval": "Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord",
       "reference": "Main38f84bd36b176c926be2d236fdf320eb844c152b incluye422/423/424; prereleases inmutables; sólo plataformas compiladas/verificadas",
       "evidence": [
@@ -8639,6 +8639,11 @@
           "at": "2026-10-28T11:01:04.669360+00:00",
           "owner": "codex-integrador",
           "detail": "PUBLIC stableLatestv2.2 tag2ab2ebb6b739a12ae864dc1fa66dbd9f9638b4fc; all8remoteassetdigests/Quiver/tag PASS, Pages2c07b788d 30exacthashesPASS, browserROMstartup explicitly unverified tool limitation/beta. Nine issue replies sent+readback,418/421closed;407/412/374/330/336/378/163open. Preparing publication ledger/currentpending snapshot docs-only PR under this owned delivery task; original artifact sources preserved, no rebuild or publishedbytes change."
+        },
+        {
+          "at": "2026-10-28T11:04:30.938620+00:00",
+          "owner": "codex-integrador",
+          "detail": "Published delivery ledger95c248769 reviewed independently against all exactpublicreceipts. Eight packages Latestv2.2 tag2ab2ebb6, Pages30hashesPASS, nine issue repliesreadback and418/421closuresonly; sevenopen followups acknowledged. Newdocupdates supersede stale2.1/preparationheaders; no publishedartifactmutation. Delivery taskcomplete once433docsmerged, no claimallglobalbacklogdone."
         }
       ],
       "claimed_at": "2026-10-28T02:54:42.405252+00:00"
@@ -9116,7 +9121,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T11:03:14.244875+00:00",
+  "updated_at": "2026-10-28T11:04:30.938620+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
