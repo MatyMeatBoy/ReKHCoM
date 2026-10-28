@@ -10141,10 +10141,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/466",
       "evidence": [],
       "claimed_at": "2026-10-28T20:46:16.987307+00:00"
+    },
+    "font-glyph-upload-fallback": {
+      "id": "font-glyph-upload-fallback",
+      "piece": "FreeType/Web glyph upload rejection: discard failed texture and native text on next frame; no claim of same-frame fallback or shim GPU ack",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T20:47:02.458854+00:00",
+      "updated_at": "2026-10-28T20:47:02.458854+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Human requested font mechanism-wide fallback audit; root explicitly approved scoped FreeType+Web next-frame child",
+      "reference": "D:/01Claude/ReKHCoM-build/qa-runtime/moto374-font-sibling-audit/RECEIPT.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:46:16.987307+00:00",
+  "updated_at": "2026-10-28T20:47:02.458854+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
