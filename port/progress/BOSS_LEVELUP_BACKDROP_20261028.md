@@ -43,6 +43,11 @@ al moverse a la izquierda. No modifica ningún paquete ya publicado de v2.2.
   aparece con cero enemigos/premios y los callbacks BG de mundo en `0000`:
   el cuerpo BG1 no invade las estadísticas. Normal/fuentes HD, dos pasadas
   completas: fondo continuo y cero columnas negras centrales al final.
+- El compilador real del guest Windows64 también acepta ambas unidades
+  combinadas como `x86_64-unknown-linux-gnux32` (ELF32, ISA x86-64). No se
+  ejecutó ese guest: el cache de objetos existente había sido reconstruido
+  para consola sin `PORT_LINUX64_GUEST` y no corresponde al guest Windows
+  congelado; no se mezclaron esos objetos para fingir una prueba nativa64.
 
 ## Límites de la auditoría de otros jefes
 
