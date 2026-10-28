@@ -2,6 +2,8 @@
 
 **Entrega #330, 28/10/2026:** [test de arranque Linux publicado y enviado](LINUX_STARTUP_TEST330.md), target ef4091e1 y gate46 del TAR exacto. Sigue pendiente la confirmación física; safe32/software es una opción manual y Latest v2.2 no cambió. La entrega Android #374 es independiente.
 
+**Entrega #374/#412, 28/10/2026:** [test Android font-fallback publicado y enviado](ANDROID_FONT_FALLBACK_TEST374.md), fuente2dd3d01b, fixes465/466/467 y APK separado de la baseline. Firma, ABI y CPU verificadas; instalación/runtime y confirmación física pendientes. Latest v2.2 intacta; los issues siguen abiertos.
+
 **Estado vigente, 28/10/2026:** [v2.2 ya está publicada](V22_PUBLISHED_VERIFICATION.md)
 con ocho paquetes y Web beta. Los paquetes estables son inmutables. El
 [test Linux439/441](LINUX_TEST439441.md) está publicado, reúne los fixes446/447/448,
