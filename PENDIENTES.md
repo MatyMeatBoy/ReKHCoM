@@ -333,4 +333,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr432-deck-management-review | Post-v2.2 review and QA of external PR432 deck insert/compact; do not change author code or include in current release. Validate99slots, end-gap, IDs/value0, multiset/order, save/load, remapped input/repeat and UI labels. | pendiente | — | https://github.com/MatyMeatBoy/ReKHCoM/pull/432 | — | 2026-10-28T11:04:47.082169+00:00 |
 | optiport-v22-postrelease-lessons | Teach verified release provenance, draft/Latest verification, measured build-policy and retained auxiliary lessons after v2.2 | pr_abierto | codex-optiport-postrelease | https://github.com/MatyMeatBoy/OptiPort/pull/10 | User requested OptiPort learning at end with worker; v2.2 public and root explicitly authorizes skill PR; root integrates and installed copies only after merge | 2026-10-28T11:03:14.244875+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T11:05:05.838668+00:00)
+Integrador: libre
