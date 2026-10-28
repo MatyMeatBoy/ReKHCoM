@@ -8757,17 +8757,23 @@
       "status": "en_curso",
       "owner": "codex-deck-video421",
       "created_at": "2026-10-28T03:59:36.852429+00:00",
-      "updated_at": "2026-10-28T03:59:42.146124+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T04:04:36.873989+00:00",
+      "branch": "fix/linux64-movie-controls",
       "pr": null,
       "approval": "User: fix all issue421 observations before v2.2, no Atlas gate for port fixes",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/421",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T04:04:36.873989+00:00",
+          "owner": "codex-deck-video421",
+          "detail": "WIP text in audio-underrun: START/Esc/custom keys/tap pause; A/B ignore outsideUI; Continue/Skip then Yes/No(defaultNo),5languages, font fallback; audio pause and wallclock/FPSepoch adjusted; host VideoFPS overlay reads show_fps. REDmissingUI observed. GREEN/hostcompile/runtime not run: root ordered no compiler/GPU/VM at RAM0.825-0.995GiB. No live worker process. Preserve uncommitted3files and branch based07f89441a (427nowmergedc73db919)."
+        }
+      ],
       "claimed_at": "2026-10-28T03:59:42.146124+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:00:58.330900+00:00",
+  "updated_at": "2026-10-28T04:04:36.873989+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
