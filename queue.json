@@ -9603,19 +9603,20 @@
     "hd-video-resolution-repair": {
       "id": "hd-video-resolution-repair",
       "piece": "Explicit real720p cap for new WindowsMF/LinuxFFmpeg HD video imports plus opt-in existing-video repair. Preserve0..2compression ABI, source/targetprofile fingerprints/journals, ENJP immutable generations and rollback/cancel; no original/protected mutation, no Android local transcode claim. Plan approval before product code.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-hd-video-resolution-repair",
       "created_at": "2026-10-28T16:17:47.514327+00:00",
-      "updated_at": "2026-10-28T16:17:47.514327+00:00",
+      "updated_at": "2026-10-28T16:18:23.263583+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly requested resolution reduction and optional discrete repair; root delegated Windows/Linux implementation and asks plan before code.",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T16:18:23.263583+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:17:47.514327+00:00",
+  "updated_at": "2026-10-28T16:18:23.263583+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
