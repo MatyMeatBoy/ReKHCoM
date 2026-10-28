@@ -339,4 +339,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | post22-arm32-division-lowering | Game-only Android32 CMake and Linux/Anbernic armhf pre-LLVM-optimization scalar i32 division/remainder lowering; preserve host/SDL/importer and shared helper | en_revision | codex-arm32-div-lowering | https://github.com/MatyMeatBoy/ReKHCoM/pull/440 | Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable | 2026-10-28T12:34:21.877829+00:00 |
 | optiport-post22-arithmetic-contracts | OptiPort laneA bounded review/update architecture-migration and verified-lessons: original DIV/REM contract, preopt lowering, ABI/outparams, single operand evaluation | integrado | codex-optiport-arithmetic | https://github.com/MatyMeatBoy/OptiPort/pull/11 | Explicit user requests two workers finish OptiPort review; root assigns laneA only2refs, no gamebuilds or SDK downloads | 2026-10-28T12:55:24.143015+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T13:26:16.156093+00:00)
