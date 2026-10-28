@@ -9678,19 +9678,20 @@
     "linux-test439441-delivery": {
       "id": "linux-test439441-delivery",
       "piece": "Build, validate and publish immutable Linux test439441 with unchanged media quality, latest32/64 EUUSJP cores, core assets and verified title fallback; deliver to reporter before OptiPort runtime closure.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-linux-delivery",
       "created_at": "2026-10-28T16:49:11.505952+00:00",
-      "updated_at": "2026-10-28T16:49:11.505952+00:00",
+      "updated_at": "2026-10-28T16:49:20.503208+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly prioritized test for439441 first, then OptiPort and remaining tasks autonomously;720p sketch excluded.",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T16:49:20.503208+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T16:49:11.505952+00:00",
+  "updated_at": "2026-10-28T16:49:20.503208+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
