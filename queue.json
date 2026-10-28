@@ -9375,10 +9375,23 @@
       ],
       "claimed_at": "2026-10-28T12:34:06.761096+00:00",
       "completed_at": "2026-10-28T12:55:24.143015+00:00"
+    },
+    "android412-compat-options": {
+      "id": "android412-compat-options",
+      "piece": "Optional diagnostic Android startup profiles: default intact, HIDAPI off before SDL main, Java-only report; exact native2.2, no fix claim",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T13:50:56.070738+00:00",
+      "updated_at": "2026-10-28T13:50:56.070738+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "User optional launcher choices Android16; root assignment 2026-10-28",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T13:26:42.870665+00:00",
+  "updated_at": "2026-10-28T13:50:56.070738+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
