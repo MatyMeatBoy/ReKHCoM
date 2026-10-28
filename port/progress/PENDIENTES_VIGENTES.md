@@ -1,4 +1,17 @@
-# Pendientes vigentes — preparación de 2.2
+# Pendientes tras publicar 2.2
+
+**Estado vigente, 28/10/2026:** [v2.2 ya está publicada](V22_PUBLISHED_VERIFICATION.md)
+con ocho paquetes y Web beta. Nueve issues recibieron enlaces reales; 418/421 se
+cerraron. 407/412/374/330/336/378/163 siguen abiertos para sus casos concretos.
+La revisión nueva 432 continúa después del release. #360 ya fue confirmado y
+cerrado; su casilla histórica inferior no es una tarea P0 vigente.
+
+La autoridad de reservas sigue siendo `coordination/art-queue`. Las secciones
+siguientes conservan historia y no reabren trabajos integrados/publicados.
+Consulta el registro enlazado y la cola antes de tomar un pendiente. Publicar
+no equivale a cerrar toda la cola ni a certificar equipos no probados.
+
+## Traspaso histórico: preparación de 2.2
 
 **Mandato actual, 27/10/2026:** el usuario traslada lo restante a **2.2**.
 [Plan y traspaso](PLAN_V22.md): OptiPort conserva una base provisional de
