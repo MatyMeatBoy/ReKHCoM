@@ -313,5 +313,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-stable-delivery | Compilar, verificar y publicar v2.2 estable Windows/Linux y APK Android beta; responder issues pendientes | en_curso | codex-integrador | — | Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord | 2026-10-28T02:54:42.405252+00:00 |
 | v22-stable-android-delivery | Prepare and build verified v2.2 Android beta from frozen source with shared offline toolchain; no publication | en_revision | codex-stable-android | — | User authorized stable2.2/testbuild; root delegated Android preparation now, build only after exclusive window | 2026-10-28T03:14:12.907103+00:00 |
 | v22-console-delivery | Console v2.2 preflight/build delivery PS4 PS5 Vita Switch Anbernic from frozen source; existing SDK only | en_curso | codex-console-delivery | — | User explicitly requested v2.2 for all consoles; root authorizes preflight now, builds only in coordinated serial window | 2026-10-28T03:21:49.330059+00:00 |
+| v22-vita-package-version | Derive Vita SFO APP_VER from release version; verify console metadata without VM | pendiente | — | — | User requested v2.2 all platforms; root delegated minimal console metadata correction | 2026-10-28T03:46:52.821064+00:00 |
 
 Integrador: libre
