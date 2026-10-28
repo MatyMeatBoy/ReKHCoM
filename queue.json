@@ -8449,10 +8449,10 @@
     "issue412-rom-import-play": {
       "id": "issue412-rom-import-play",
       "piece": "Android picker ROM/ZIP/HD classification and native status→region→GameReady consumer; distinguish startup crashes; bounded validated import and preservation",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-android-rom-play",
       "created_at": "2026-10-28T01:23:56.844161+00:00",
-      "updated_at": "2026-10-28T01:50:47.199126+00:00",
+      "updated_at": "2026-10-28T01:53:34.114166+00:00",
       "branch": "fix/android-rom-import-play",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/419",
       "approval": "Root delegated verified Android import/play fix; no APK, no modified ROM or weakened SHA whitelist",
@@ -8462,9 +8462,15 @@
           "at": "2026-10-28T01:50:47.199126+00:00",
           "owner": "codex-android-rom-play",
           "detail": "3d2e58f365537ef967b15ccea1a26a62faf34aa5; JVM59 ownedEU rawZIP CRC plus49synthetic; native completion Play24 masks; HDpack active+SAV preserve; JavaSDK35compile; no APK/device or reporter-format attribution"
+        },
+        {
+          "at": "2026-10-28T01:53:34.114166+00:00",
+          "owner": "codex-android-rom-play",
+          "detail": "Root reviewed exact3d2e58: bounded classification, immutable SHA/32MiB, ROM CRC, owned close before atomic rename, no arbitrary output paths. Fresh root59 JVM with owned EU raw+ZIP PASS, actual native status/completion/ScanInstall/KeepSelection/GameReady24 masks+Java output PASS, real miniz pack preservation PASS. Worker actual Activity/SDL Java SDK35 compile PASS; root compile separately in progress. No APK/device/S22 fix claim; Retroid format unconfirmed.; merged 7c64774fb6974ca6bede42f0e943fdbda1d56c14"
         }
       ],
-      "claimed_at": "2026-10-28T01:24:02.430179+00:00"
+      "claimed_at": "2026-10-28T01:24:02.430179+00:00",
+      "completed_at": "2026-10-28T01:53:34.114166+00:00"
     },
     "enemy-random-card-zero-modulus": {
       "id": "enemy-random-card-zero-modulus",
@@ -8499,7 +8505,7 @@
     "created_at": "2026-10-28T01:53:25.404657+00:00",
     "updated_at": "2026-10-28T01:53:25.404657+00:00"
   },
-  "updated_at": "2026-10-28T01:53:25.404657+00:00",
+  "updated_at": "2026-10-28T01:53:34.114166+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
