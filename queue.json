@@ -8209,10 +8209,10 @@
     "issue410-hd-music-input-rate": {
       "id": "issue410-hd-music-input-rate",
       "piece": "Reported HD music too fast Windows pre1: reproduce actual mixer consumption at63072/65536 vs host48000; preserve original GBA clock and legacy ring/device units",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T23:56:38.603698+00:00",
-      "updated_at": "2026-10-28T00:00:27.837821+00:00",
+      "updated_at": "2026-10-28T00:04:58.700736+00:00",
       "branch": "fix/hd-music-input-rate",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/414",
       "approval": "Usuario: leer nuevosissues, resolver patrones relacionados audio allplatforms; report410 now corroborates source mismatch hypothesis",
@@ -8222,9 +8222,15 @@
           "at": "2026-10-28T00:00:27.837821+00:00",
           "owner": "codex-integrador",
           "detail": "Actual production decoder-step baseline63072/65536 vs48000 proves speed mismatch; new production guest+dispatch+mix24 rate/track/PLL contractsPASS, originalPCMexact. Existing threeSDL+legacyring and9decoder/movie regressionsPASS. Fullbuild/package/independentreview pending."
+        },
+        {
+          "at": "2026-10-28T00:04:58.700736+00:00",
+          "owner": "codex-integrador",
+          "detail": "Root actual production mixer baseline and24 input/track/PLL combinationsPASS; independent exact-head reviewer executes same contracts on singlecore, realPOSIX winpthread and libnxdispatchSDKstubs (72combinations), no blockers. OriginalPCMbyteexact, invalid/core/legacy/disabledHD preserved; all6host sharedpaths and3VMheadercopylists verified; full realVorbis header syntax and decoder failure controlsPASS. Final package/fullhost build/reporter/device confirmation remain separate.; merged c1a2db9f9f563fdb9aabbe1c0aa643ece4e60fa5"
         }
       ],
-      "claimed_at": "2026-10-27T23:56:43.094410+00:00"
+      "claimed_at": "2026-10-27T23:56:43.094410+00:00",
+      "completed_at": "2026-10-28T00:04:58.700736+00:00"
     }
   },
   "integrator": {
@@ -8233,7 +8239,7 @@
     "created_at": "2026-10-28T00:04:49.336549+00:00",
     "updated_at": "2026-10-28T00:04:49.336549+00:00"
   },
-  "updated_at": "2026-10-28T00:04:49.336549+00:00",
+  "updated_at": "2026-10-28T00:04:58.700736+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
