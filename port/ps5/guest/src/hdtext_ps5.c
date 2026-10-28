@@ -180,9 +180,12 @@ static HFONT FontWithCap(Face* face, float cap, float scale) {
     if (GlyphBox(f, 'H', &x0, &y0, &x1, &y1) && y1 - y0 > 0) {
         int fit = (int)(px * cap / (float)(y1 - y0) + 0.5f);
         if (fit != px && fit > 0) {
-            SDL_free(f);
-            px = fit;
-            f = MakeFont(face, px, 1.0f);
+            /* Keep the usable size if allocating its fitted replacement fails. */
+            Inst* fitted = MakeFont(face, fit, 1.0f);
+            if (fitted != NULL) {
+                SDL_free(f);
+                f = fitted;
+            }
         }
     }
     for (i = 0; i < n; i++) {
