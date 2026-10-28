@@ -8625,19 +8625,20 @@
     "v22-stable-android-delivery": {
       "id": "v22-stable-android-delivery",
       "piece": "Prepare and build verified v2.2 Android beta from frozen source with shared offline toolchain; no publication",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-stable-android",
       "created_at": "2026-10-28T02:56:47.361071+00:00",
-      "updated_at": "2026-10-28T02:56:47.361071+00:00",
+      "updated_at": "2026-10-28T02:57:03.358897+00:00",
       "branch": null,
       "pr": null,
       "approval": "User authorized stable2.2/testbuild; root delegated Android preparation now, build only after exclusive window",
       "reference": "Frozen delivery source38f84bd36b176c926be2d236fdf320eb844c152b",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T02:57:03.358897+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T02:56:47.361071+00:00",
+  "updated_at": "2026-10-28T02:57:03.358897+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
