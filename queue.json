@@ -10710,15 +10710,21 @@
     "v225-ps5-build": {
       "id": "v225-ps5-build",
       "piece": "Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-v225-console-build",
       "created_at": "2026-10-28T22:45:50.658475+00:00",
-      "updated_at": "2026-10-28T22:45:55.516531+00:00",
+      "updated_at": "2026-10-28T23:00:08.929002+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T23:00:08.929002+00:00",
+          "owner": "codex-v225-console-build",
+          "detail": "CLOSED source f28b884ab2409753cea0cfae37784d5a3ed90f31; PPSA98511.zip 27912327 B SHA256 563ea35d35349ed91c5d5d5098c1a5476ed1acd1b94e6fb28c70ccbb34459139; FINAL-AUDIT.json CRC224/3regions/version02.002.005 PASS; recovery exact224 members and actual unstripped LLVM ELF+symbols retained debug-symbols/ps5/DEBUG-MANIFEST.json. No hardware certification; VM terminal."
+        }
+      ],
       "claimed_at": "2026-10-28T22:45:55.516531+00:00"
     },
     "web-bg-world-call-abi": {
@@ -10754,7 +10760,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:58:47.382349+00:00",
+  "updated_at": "2026-10-28T23:00:08.929002+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
