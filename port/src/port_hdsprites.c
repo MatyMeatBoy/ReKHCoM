@@ -169,8 +169,16 @@ static int MenuLightName(const char* name) {
 static int Load(int i);
 static int LoadCounted(int i);
 
+static int SpriteTextureReady(SDL_Texture* texture) {
+#ifdef PORT_SDL_BRIDGE_TEXTURE_READY
+    return PortBridgeTextureReady(texture);
+#else
+    return texture != NULL; /* native SDL creates its renderer texture immediately */
+#endif
+}
+
 /* Find runs in game/OAM setup and Queue runs outside the PPU row workers.
-   Only promise a replacement after both textures exist, on SDL's main thread.
+   Promise only a usable base image; Queue also checks white when requested.
    Pin it now: later queues must not evict an image after its native pixels were omitted. */
 static int SpriteReady(int i) {
     if (!sRenderer || sState[i].present == 1)
@@ -182,6 +190,8 @@ static int SpriteReady(int i) {
     /* Freestanding guests use the SDL shim without thread introspection.
        Their game/OAM setup and Queue callers run outside the PPU row workers. */
     if (!sState[i].image && !LoadCounted(i))
+        return 0;
+    if (!SpriteTextureReady(sState[i].image))
         return 0;
     sState[i].present = 2;
     sState[i].lastUsed = PortFrameCount();
@@ -595,6 +605,14 @@ int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px,
             return 0;
     if (!SpriteReady(id - 1))
         return 0;
+    {
+        /* Match the global OBJ brighten applied by the world/HUD draw calls;
+         * screen-menu layer2 only uses the part's palette fade. */
+        unsigned bld = layer == 2 ? 0 : IO16(0x50);
+        int globalWhite = (bld & 0x10) && ((bld >> 6) & 3) == 2 && (IO16(0x54) & 31);
+        if ((white > 0 || globalWhite) && !SpriteTextureReady(sState[id - 1].white))
+            return 0;
+    }
     if (PortHdDrawLogged()) {
         static uint32_t sLoggedAt[HD_SPRITE_COUNT];
         if (sLoggedAt[id - 1] != PortFrameCount() + 1) {

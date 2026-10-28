@@ -219,6 +219,9 @@ bool SDL_RenderDebugText(SDL_Renderer* renderer, float x, float y, const char* s
 
 SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h);
 SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer, SDL_Surface* surface);
+/* Local guest helper, using the existing texture bridge commands. */
+#define PORT_SDL_BRIDGE_TEXTURE_READY 1
+bool PortBridgeTextureReady(SDL_Texture* texture);
 void SDL_DestroyTexture(SDL_Texture* texture);
 bool SDL_UpdateTexture(SDL_Texture* texture, const SDL_Rect* rect, const void* pixels, int pitch);
 bool SDL_SetTextureScaleMode(SDL_Texture* texture, SDL_ScaleMode mode);

@@ -8,7 +8,7 @@ import tempfile
 import re
 from test_hd_sprite_budget import ROOT, function, preamble
 
-before = 'static SDL_Surface* SDL_CreateSurfaceFrom(int w,int h,int f,void*p,int pitch){return (void*)1;}'
+before = 'static SDL_Surface* SDL_CreateSurfaceFrom(int w,int h,int f,void*p,int pitch){return ++surfaces==failSurface?NULL:(void*)1;}'
 after = ('static unsigned char captured[128*256*4];\n'
          'static SDL_Surface* SDL_CreateSurfaceFrom(int w,int h,int f,void*p,int pitch)'
          '{memcpy(captured,p,(size_t)w*h*4);return (void*)1;}')
