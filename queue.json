@@ -9407,12 +9407,18 @@
       "status": "en_curso",
       "owner": "codex-launcher-init-diagnostics",
       "created_at": "2026-10-28T14:08:23.262484+00:00",
-      "updated_at": "2026-10-28T14:13:40.539224+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T14:23:22.402508+00:00",
+      "branch": "fix/launcher-init-diagnostics",
       "pr": null,
       "approval": "User prioritized Android16 crashes and optional launcher compatibility; Astra source audit findings require focused reproduction, not an assumed device fix.",
       "reference": "pruebas/astra-android16-startup/FINDINGS.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T14:23:22.402508+00:00",
+          "owner": "codex-launcher-init-diagnostics",
+          "detail": "RED actual-source silent SDL exits and ignored backend return; GREEN40 native injected cases across desktop/GLES, GL3 regression and Android24 readiness PASS. Final Windows TU O2 compiled; Android64 TU final running session5977. No reporter root cause assigned."
+        }
+      ],
       "claimed_at": "2026-10-28T14:13:40.539224+00:00"
     },
     "android-launcher-lifecycle-contract": {
@@ -9437,7 +9443,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:21:37.362783+00:00",
+  "updated_at": "2026-10-28T14:23:22.402508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
