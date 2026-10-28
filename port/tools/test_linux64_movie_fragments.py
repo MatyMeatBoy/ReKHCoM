@@ -5,6 +5,8 @@ display, proprietary media, VM or long-running benchmark is required.
 """
 from pathlib import Path
 import argparse
+import os
+import shutil
 import subprocess
 import tempfile
 
@@ -82,7 +84,7 @@ static ssize_t MovieRead(void* pipe, void* bytes, size_t cap) {
 static void SDL_Delay(int ms) {assert(ms==1); waits++;}
 static void run(size_t frameBytes,size_t part,size_t empty,size_t available) {
     int video=0, complete=0;
-    uint8_t frame[1]; size_t frameUsed=0;
+    uint8_t* frame=malloc(frameBytes);assert(frame);size_t frameUsed=0;
     remaining=available; chunk=part; calls=waits=events=audio=0; emptyEvery=empty;
     for(size_t bound=0;bound<10000;bound++) {
         events++;audio++; /* these stay outside the production read block */
@@ -97,6 +99,7 @@ PRODUCTION
         exit(2);
     }
     if(complete)assert(frameUsed==frameBytes);
+    free(frame);
 }
 int main(void) {
     for(size_t part=4096;part<=65536;part*=2) {
@@ -108,11 +111,14 @@ int main(void) {
     puts("PASS17 fragment consumers: positive progress, EAGAIN waits, EOF, event/audio pumping");
 }
 '''.replace('PRODUCTION', consumer)
-compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
+compiler = shutil.which('cc') or shutil.which('clang') or shutil.which('gcc')
+if not compiler:
+    compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
+flags={'creationflags':0x08004000} if os.name=='nt' else {}
 with tempfile.TemporaryDirectory(prefix='rekhcom-movie-fragments-') as directory:
     out = Path(directory)
     (out / 'test.c').write_text(harness, encoding='utf-8')
-    subprocess.run([str(compiler), '-std=c11', '-Wall', '-Wextra', '-Werror', str(out / 'test.c'), '-o', str(out / 'test.exe')], check=True, creationflags=0x08004000)
-    result=subprocess.run([str(out / 'test.exe')], capture_output=True, text=True, creationflags=0x08004000)
+    subprocess.run([str(compiler), '-std=c11', '-Wall', '-Wextra', '-Werror', str(out / 'test.c'), '-o', str(out / 'test.exe')], check=True, **flags)
+    result=subprocess.run([str(out / 'test.exe')], capture_output=True, text=True, **flags)
     print(result.stdout+result.stderr, end='')
     assert result.returncode==0, result.returncode
