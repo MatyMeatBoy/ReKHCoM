@@ -9281,19 +9281,20 @@
     "post22-arm-guest-division-lowering": {
       "id": "post22-arm-guest-division-lowering",
       "piece": "Game-only shared ARM guest producer preoptimization cartridge i32 DIV/REM lowering for Switch/Android64/LinuxARM64/Vita; cache/dependencies and ABI probes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-arm-guest-div-lowering",
       "created_at": "2026-10-28T12:09:24.845208+00:00",
-      "updated_at": "2026-10-28T12:09:24.845208+00:00",
+      "updated_at": "2026-10-28T12:09:29.629315+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes next ARM guest child after435 merged; no Web producer changes, Android32/Anbernic delegated elsewhere, helper read-only",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T12:09:29.629315+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T12:09:24.845208+00:00",
+  "updated_at": "2026-10-28T12:09:29.629315+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
