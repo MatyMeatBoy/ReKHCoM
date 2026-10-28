@@ -8798,20 +8798,26 @@
     "v22-ps4-offline-build": {
       "id": "v22-ps4-offline-build",
       "piece": "Build/audit v2.2 PS4 EU US JP with existing OpenOrbis and jobs1; package512MiB owned budget",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-console-ps4",
       "created_at": "2026-10-28T04:28:15.978448+00:00",
-      "updated_at": "2026-10-28T04:28:21.406507+00:00",
+      "updated_at": "2026-10-28T04:35:08.351218+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorizes serialPS4build now; user requested v2.2allconsoles; no other VM/build untilterminal",
       "reference": "Sourceace4116; existingSDK inventory-attempt1 and2; no newSDK",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T04:35:08.351218+00:00",
+          "owner": "codex-console-ps4",
+          "detail": "REAL allEUUSJP+host+PKG PASS sourceace4116, session34290terminalexit0,314.98s, BelowNormaljobs1 ownedjob512MiBpeak87.43/minfree1.577GiB. FinalPKG39256064 SHA91ab374c8299e609e8de6ba1252d3dcf175a0dcc18bba38d3785d6ed1cc1d695; readbackAPP_VER/VERSION02.02/title/contentIDmatch. Originalv2.0c5c456d9...verifiedunchanged. Actualconsoleexecutionunverified; rootdeliveryintegrationpending."
+        }
+      ],
       "claimed_at": "2026-10-28T04:28:21.406507+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:28:21.406507+00:00",
+  "updated_at": "2026-10-28T04:35:08.351218+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
