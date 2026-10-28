@@ -9689,12 +9689,18 @@
       "status": "en_curso",
       "owner": "codex-linux-test439",
       "created_at": "2026-10-28T16:29:21.003706+00:00",
-      "updated_at": "2026-10-28T16:29:30.966024+00:00",
-      "branch": null,
+      "updated_at": "2026-10-28T17:03:01.703010+00:00",
+      "branch": "build/linux-test439-latest",
       "pr": null,
       "approval": null,
       "reference": "Parent authorized latest combined test after PR447 merge248b3083",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T17:03:01.703010+00:00",
+          "owner": "codex-linux-test439",
+          "detail": "Source248b3083 fullLinux64(363.7s) andi386(435.6s) BOTHterminalexit0, EU/US/JPfresh ownobjs. 64host f608239b exactA-Btested; guesthashes/ELF32 receipts latest-build/. Cachewarmquiet awaiting448fallbackmerge/incremental, noVM/benchmark. Packagehelper335core/tarreadbackready; rootpublishesv2.2-test439-441."
+        }
+      ],
       "claimed_at": "2026-10-28T16:29:30.966024+00:00"
     },
     "linux-test439441-delivery": {
@@ -9713,7 +9719,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:01:15.293558+00:00",
+  "updated_at": "2026-10-28T17:03:01.703010+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
