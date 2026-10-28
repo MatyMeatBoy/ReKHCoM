@@ -81,4 +81,21 @@ class ReportContract(unittest.TestCase):
         self.assertTrue(all('--fast' not in c and '--software' not in c for c in result))
         self.assertEqual(plan.quote("space's $path"), "'space''s $path'")
 
+    def test_resource_override_resolves_from_private_child_cwd(self):
+        cwd=Path.cwd()/'private'/'case'
+        asset=Path.cwd()/'private'/'assets'
+        value=profile.resource_override(asset,cwd)
+        self.assertFalse(Path(value).is_absolute())
+        self.assertEqual((cwd/value).resolve(),asset.resolve())
+
+    def test_long_workspace_does_not_truncate_sprite_override(self):
+        base=Path.cwd()/('long-private-evidence-folder-'*6)
+        sprite=base/'current-cached-import'/'hd'/'sprites'
+        cwd=base/'quality-current-win64'/'timestamp'/'monstro-battle-hd1'
+        value=profile.resource_override(sprite,cwd)
+        filename='gCardModifiedValueDigitTiles_9.png'
+        self.assertGreater(len(str(sprite/filename)),160)
+        self.assertLess(len(value+'/'+filename),160)
+        self.assertEqual((cwd/value).resolve(),sprite.resolve())
+
 if __name__ == '__main__':unittest.main()

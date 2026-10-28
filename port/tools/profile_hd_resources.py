@@ -119,6 +119,14 @@ def controlled_settings(hd):
                 hd_music=0, hd_movies=0, hd_scenes=0)
 
 
+def resource_override(path, cwd):
+    """Short child-relative paths avoid the game's bounded sprite path buffer."""
+    try:
+        return os.path.relpath(Path(path).resolve(), Path(cwd).resolve())
+    except ValueError:  # Different Windows drives have no relative path.
+        return str(Path(path).resolve())
+
+
 def validate_effective_settings(log, hd):
     match = re.search(r'Settings: graphics mode (\d+), view (\d+), fullscreen (\d+), vsync (\d+), '
                       r'frame skip (\d+), HD movies (\d+) music (\d+) scenes (\d+) HUD (\d+) text (\d+)', log)
@@ -219,7 +227,7 @@ def main():
             (folder/'kh_com.ini').write_text(''.join(f'{key}={value}\n' for key,value in controlled_settings(hd).items()))
             env={k:v for k,v in os.environ.items() if not k.startswith(('KHCOM_','SDL_'))}
             env.update(SDL_AUDIO_DRIVER='dummy', KHCOM_HIDDEN='1', KHCOM_BACKGROUND_TEST='1',
-                KHCOM_HOST_HIDDEN='1', KHCOM_ASSETS=str((out/'assets').resolve()), KHCOM_WINDOW='1920x1080', KHCOM_PPU_THREADS='1', KHCOM_HD_HUD_DEV='1',
+                KHCOM_HOST_HIDDEN='1', KHCOM_ASSETS=resource_override(out/'assets',folder), KHCOM_WINDOW='1920x1080', KHCOM_PPU_THREADS='1', KHCOM_HD_HUD_DEV='1',
                 KHCOM_FRAMELOG='frames.csv', KHCOM_QUIT=str(args.frames),KHCOM_TRACE_MODES='1',
                 KHCOM_KEYS=','.join(f'{f}-{f+2}:A' for f in range(240,args.frames,40)), **SCENARIOS[scenario])
             initial_mode=env.get('KHCOM_MODE', '')
@@ -231,7 +239,7 @@ def main():
             if args.quality_capture: env.update(quality_environment(bool(args.guest),args.frames-1))
             if args.fast: env['KHCOM_FAST']='1'
             if args.software: env['SDL_VIDEO_DRIVER']='dummy'
-            if args.hd_sprites: env['KHCOM_HD_SPRITES']=str(args.hd_sprites.resolve())
+            if args.hd_sprites: env['KHCOM_HD_SPRITES']=resource_override(args.hd_sprites,folder)
             began=time.monotonic(); peak_rss=0; peak_private=None
             with (folder/'stderr.txt').open('w') as stderr:
                 command=[str(folder/'khcom.exe')]
