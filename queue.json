@@ -8961,10 +8961,23 @@
       "reference": "SourceHUD5ccb; inventory2SDKLapyallverified; appversionnormalizes2.2.0",
       "evidence": [],
       "claimed_at": "2026-10-28T05:31:17.507098+00:00"
+    },
+    "debug-hd-override-long-path": {
+      "id": "debug-hd-override-long-path",
+      "piece": "Development KHCOM_HD_SPRITES absolute override: PortHdSpritePath callers160-byte buffers silentlytruncate valid PNGpaths; default relative runtime route unaffected. Repro actual stable/pre3 software fixtures differ2pathchars, five HDcards fallbacknative. Future bounded/dynamic pathjoin and distinct diagnostics; retain validrelative workflow and nativefallback, boundary/UTF8 tests.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T05:32:35.116691+00:00",
+      "updated_at": "2026-10-28T05:32:35.116691+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "pruebas/card-final-horizontal-line/v22-stable-exact-software/COMPARISON.json",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:31:17.507098+00:00",
+  "updated_at": "2026-10-28T05:32:35.116691+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
