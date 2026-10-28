@@ -727,6 +727,51 @@ int PortHarnessMode(const char* name, int arg) {
         PortLog("harness: gmk count %d", count);
         return 1;
     }
+    /* Explicit spring diagnostic fixture. Pose only sets the starting point;
+       ordinary B input and the original collision/jump tasks drive the test. */
+    if ((strcmp(name, "springpose") == 0 || strcmp(name, "springlog") == 0) &&
+        strcmp(PortHarnessModeName(), "Mode_MapFld") == 0 &&
+        gFieldState != NULL && gMapRoomState != NULL) {
+        Task* task = ListPoolFirst(&gFieldState->tasks.head);
+        Task* player = ListPoolFirst(&gFieldState->tasks2.head);
+        FldWork* fld = player != NULL ? player->work : NULL;
+        int count = 0;
+        for (; task != NULL; task = ListPoolNext(&task->node)) {
+            if (task->desc == &gTaskDescMapGmkJump) {
+                MapGmkJumpWork* spring = task->work;
+                if (strcmp(name, "springpose") == 0 && count == arg) {
+                    gFieldState->actor.fieldPosition = spring->obj.fieldPosition;
+                    gFieldState->actor.speed = 0;
+                    MapSetCameraTarget(spring->obj.fieldPosition.x,
+                                       spring->obj.fieldPosition.y + spring->obj.fieldPosition.z);
+                }
+                PortLog("harness: spring %d at=%d,%d,%d ground=%d height=%d angle=%d state=%d contacts=%u stand=%u flags=%u",
+                        count, spring->obj.fieldPosition.x, spring->obj.fieldPosition.y,
+                        spring->obj.fieldPosition.z, spring->obj.fieldPosition.ground,
+                        spring->jumpHeight, spring->obj.angle, spring->state,
+                        spring->collider.touchedTypes, spring->collider.standFlags,
+                        spring->collider.flags);
+                count++;
+            }
+        }
+        PortLog("harness: spring actor at=%d,%d,%d ground=%d angle=%d state=%d vz=%d target=%d,%d,%d jump=%d springs=%d",
+                gFieldState->actor.fieldPosition.x, gFieldState->actor.fieldPosition.y,
+                gFieldState->actor.fieldPosition.z, gFieldState->actor.fieldPosition.ground,
+                gFieldState->actor.angle, fld != NULL ? fld->state : -1,
+                fld != NULL ? fld->vz : 0, fld != NULL ? fld->targetX : 0,
+                fld != NULL ? fld->targetY : 0, fld != NULL ? fld->targetZ : 0,
+                gMapRoomState->jumpGmkHeight, count);
+        if (fld != NULL)
+            PortLog("harness: spring playerCollider at=%d,%d,%d platform=%d,%d,%d flags=%u stand=%u contacts=%u",
+                    fld->collider.x, fld->collider.y / 2, fld->collider.z,
+                    fld->collider.platformX, fld->collider.platformY, fld->collider.platformZ,
+                    fld->collider.flags, fld->collider.standFlags, fld->collider.touchedTypes);
+        if (strcmp(name, "springpose") == 0 && (arg < 0 || arg >= count)) {
+            PortLog("harness: spring pose unavailable index=%d count=%d", arg, count);
+            return 0;
+        }
+        return 1;
+    }
     if (strcmp(name, "poslog") == 0 && gFieldState != NULL) {
         extern void PortLog(const char* format, ...);
         Task* enm = ListPoolFirst(&gFieldState->tasks4.head);
