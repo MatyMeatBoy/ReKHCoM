@@ -349,4 +349,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-video-resolution-repair | Explicit real720p cap for new WindowsMF/LinuxFFmpeg HD video imports plus opt-in existing-video repair. Preserve0..2compression ABI, source/targetprofile fingerprints/journals, ENJP immutable generations and rollback/cancel; no original/protected mutation, no Android local transcode claim. Plan approval before product code. | en_curso | codex-hd-video-resolution-repair | — | User explicitly requested resolution reduction and optional discrete repair; root delegated Windows/Linux implementation and asks plan before code. | 2026-10-28T16:18:23.263583+00:00 |
 | issue441-title-bar-ready-guard | Protect native Press Start fallback when current HD parts rejected; preserve all-good blink/fade/bar phases | en_curso | codex-title-bar-guard | — | Root authorizes sibling after446merge; actualmissingassetTocclusion reproduced, no art edits | 2026-10-28T16:25:04.471364+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-28T16:28:16.929222+00:00)
