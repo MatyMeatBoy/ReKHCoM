@@ -459,7 +459,11 @@ static void DrawSceneMenu(int l, int width, int height) {
                     sHdUiGlyphs[n].x = drawX; sHdUiGlyphs[n].y = drawY;
                     sHdUiGlyphs[n].pw = drawW; sHdUiGlyphs[n].run = drawH;
                     sHdUiGlyphs[n].face = 0xFFFFFFFFu; sHdUiGlyphs[n].shadow = 0xFF000000u;
-                } else for (py = 0; py < drawH; py++) for (px = 0; px < drawW; px++)
+                }
+                /* Keep the selected still underneath its optional full-resolution
+                   overlay: texture creation/upload/draw can fail independently
+                   of CPU decode. The valid overlay covers exactly this region. */
+                for (py = 0; py < drawH; py++) for (px = 0; px < drawW; px++)
                     Pixel(drawX + px, drawY + py, preview[(py * sourceH / drawH) * sourceW + px * sourceW / drawW]);
             } else {
                 ScenePreviewBackdrop(cardX + 6, top + 16, pw, ph, SceneProviderHd(sSceneChoice));

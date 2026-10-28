@@ -2344,7 +2344,10 @@ static void Present(void) {
             }
         }
     }
-    SDL_RenderPresent(sRenderer);
+    {
+        extern void PortSceneGalleryPreviewPresented(int accepted);
+        PortSceneGalleryPreviewPresented(SDL_RenderPresent(sRenderer));
+    }
     if (hdProfile)
         PortLog("hd-menu-perf: frame=%u menu=%d ms=%.3f alloc_delta=%d allocations=%d", (unsigned)sFrameCount,
                 menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart) * 1000.0 / SDL_GetPerformanceFrequency(),
