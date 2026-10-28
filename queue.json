@@ -6624,12 +6624,12 @@
     "v22-steamdeck-330-entry-diagnostic": {
       "id": "v22-steamdeck-330-entry-diagnostic",
       "piece": "Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-deck330-startup",
       "created_at": "2026-10-27T16:42:13.584546+00:00",
-      "updated_at": "2026-10-28T18:49:11.968659+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T19:01:06.803444+00:00",
+      "branch": "fix/linux64-startup-stages",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/457",
       "approval": "Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330#issuecomment-6446302893",
       "evidence": [
@@ -6642,6 +6642,11 @@
           "at": "2026-10-28T18:49:11.968659+00:00",
           "owner": "codex-integrador",
           "detail": "Explicit user28Oct asks fix330 using received6469653895log, improve milestones for next pre, integrate PRs/publish/tests/reply. Current agent registry onlyroot+console_delivery+deck_video_421+release_readiness; old diagnostic owner absent. App inventory onlythisKH threadactive; oldtask hasno branch/noPR, historicalreadonlyDIAGNOSTICO preserved, no sourceWIP. PriorSTOP and current explicitresume verified; recover into codex-deck330-startup for source-stage diagnosis, not speculative overlay fix."
+        },
+        {
+          "at": "2026-10-28T19:01:06.803444+00:00",
+          "owner": "codex-deck330-startup",
+          "detail": "HEADe4c6011f92d05356b7244b0baae548885ab818ff; actual source startup10 CPU9negative/1positive flushed _Exit cases PASS; wrapper22PASS; Linuxhost-onlycompile/linkPASS cachedSDL; pruebas/issue330-entry-diagnostic/20261028-new-log; no causeDeck/GPU/VM/runtimeclaim pendingROOTlease; fallback unchanged"
         }
       ],
       "claimed_at": "2026-10-27T16:42:20.354644+00:00"
@@ -9956,7 +9961,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:00:58.541594+00:00",
+  "updated_at": "2026-10-28T19:01:06.804508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
