@@ -2,7 +2,7 @@
 """Import the HD mod from the player's own KINGDOM HEARTS -HD 1.5+2.5 ReMIX- (reference for the launcher's importer).
 
 Writes, under <data folder>/hd:
-- movies/ROP.mp4, RSE.mp4, RRE.mp4 and scenes/ with the endings' zz_event_151/621/631 (and with --scenes every zz_event_###.mp4): the Re:CoM movies with their first
+- movies/ROP.mp4, RSE.mp4, RRE.mp4 and scenes/ with movie3's zz_event_123 and the endings' zz_event_151/621/631 (and with --scenes every zz_event_###.mp4): the Re:CoM movies with their first
   0x100 bytes un-XORed (fixed 16-byte key), or already-plain MP4s copied unchanged;
 - subs/<movie>.<lang>.txt: the movies' subtitles in every language the game has (khhd_subs.py);
 - music/<track>.ogg + .loop: the Re:CoM soundtrack (Recom.pkg STREAM/0001/*.win32.scd → Ogg Vorbis, khhd_scd.py).
@@ -21,8 +21,8 @@ import khhd_subs  # noqa: E402
 import khhd_posters  # noqa: E402
 
 MOVIE_KEY = bytes.fromhex('3f1ec193264258b8aa9d5375bf629a97')
-# with the movies, the endings' scenes too (Sora's capsule room, Riku's ending and crossroads): they lead into RSE / RRE
-BASE_MOVIES = ('ROP', 'RSE', 'RRE', 'zz_event_151', 'zz_event_621', 'zz_event_631')
+# Basic movie coverage includes movie3's floor12 scene and the ending scenes.
+BASE_MOVIES = ('ROP', 'RSE', 'RRE', 'zz_event_123', 'zz_event_151', 'zz_event_621', 'zz_event_631')
 TRACKS = ['01F_Town_B', '01F_Town_F', '03F_Hercul', '03F_Hercules_B', '12_Event_Yuttari', '13_Event_Namine',
           '14_Event_Odayaka', '15_Event_XIII', '16_XIIIBoss1', '17_Halloween_F', '18_Helloween_B', '19_Alice_Field',
           '20_Event_13thFloor', '21_Alice_Battle', '22_PeterPan_Field', '23_PeterPan_Battle', '24_Pinocchio_Field',

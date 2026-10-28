@@ -37,21 +37,34 @@ static void Put(const fs::path& p, const std::string& bytes) { fs::create_direct
 int main(int argc, char** argv) {
     assert(argc == 2); fs::path root = fs::u8path(argv[1]), source = root / "owned-source", data = root / "data";
     for (const char* name : kBaseMovies) Put(source / (std::string(name) + ".mp4"), Movie('E'));
+    Put(source / "zz_event_123.mp4", Movie('E')); // Independent movie3 input, even if catalog is incomplete.
     Put(data / "hd/movies/ROP.mp4", Movie('L'));
+    // Same source fingerprint, but a pre-fix basic generation selected only six
+    // files. It must not authorize reuse when the required movie3 is added.
+    std::vector<std::string> previousSix = { "movies/ROP.mp4", "movies/RSE.mp4", "movies/RRE.mp4",
+        "scenes/zz_event_151.mp4", "scenes/zz_event_621.mp4", "scenes/zz_event_631.mp4" };
+    {
+        hdvariants::Transaction old(data, 1, hdmedia::Inspect(source).fingerprint, 0, true, false, previousSix);
+        assert(old.valid());
+        for (const auto& member : previousSix) { Put(old.Path(member), Movie('E')); assert(old.Add(member)); }
+        assert(old.Commit(false));
+    }
     int count = 0;
-    assert(ImportMediaVariant(source, data, 1, true, false, 0, false, count) && count == 6 && calls == 6);
+    assert(ImportMediaVariant(source, data, 1, true, false, 0, false, count) && count == 7 && calls == 7);
     assert(sUnitShift == 26);
     char path[1600];
     assert(PortHdMediaResolve(data.u8string().c_str(), 1, "ROP", path, sizeof(path)));
     const std::string en = path;
-    assert(ImportMediaVariant(source, data, 1, true, false, 0, false, count) && calls == 6); // persistent same-source cache
+    assert(PortHdMediaResolve(data.u8string().c_str(), 1, "zz_event_123", path, sizeof(path)));
+    assert(fs::path(path).parent_path().filename() == "scenes");
+    assert(ImportMediaVariant(source, data, 1, true, false, 0, false, count) && calls == 7); // persistent same-source cache
     for (const char* name : kBaseMovies) Put(source / (std::string(name) + ".mp4"), Movie('J'));
     calls = 0; cancelAt = 2;
     assert(!ImportMediaVariant(source, data, 2, true, false, 0, false, count));
     assert(!hdvariants::Inspect(data, 2).movies && hdvariants::Inspect(data, 1).movies);
     assert(PortHdMediaResolve(data.u8string().c_str(), 1, "ROP", path, sizeof(path)) && en == path);
     cancelAt = 0; calls = 0; sJob.cancel = false;
-    assert(ImportMediaVariant(source, data, 2, true, false, 0, false, count) && calls == 6);
+    assert(ImportMediaVariant(source, data, 2, true, false, 0, false, count) && calls == 7);
     assert(PortHdMediaResolve(data.u8string().c_str(), 2, "ROP", path, sizeof(path)) && en != path);
     const std::string jp = path;
     // New content + a failed copy cannot publish over a complete JP generation.
@@ -76,6 +89,10 @@ int main(int argc, char** argv) {
     for (const char* name : kMediaSceneNames) Put(source / (std::string(name) + ".mp4"), Movie('B'));
     calls = 0;
     assert(ImportMediaVariant(source, data, 1, true, true, 0, false, count));
+    std::map<std::string, bool> uniqueMovies;
+    for (const char* name : kBaseMovies) uniqueMovies[name] = true;
+    for (const char* name : kMediaSceneNames) uniqueMovies[name] = true;
+    assert(count == (int)uniqueMovies.size() && calls == count); // Full profile copies each file once.
     auto combined = hdvariants::Inspect(data, 1);
     assert(combined.movies && combined.scenes);
     assert(PortHdMediaAvailable(data.u8string().c_str(), 1, 0));

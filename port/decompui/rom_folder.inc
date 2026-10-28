@@ -382,7 +382,7 @@ static void HdOfferPopup() {
         { T("Completo · Calidad original, ~6,7 GB", "Full · Original quality, ~6.7 GB"), 0, true },
         { T("Completo · Buena calidad, ~3,7 GB (sugerido)", "Full · Good quality, ~3.7 GB (suggested)"), 1, true },
         { T("Completo · Ahorro, ~2 GB", "Full · Saving, ~2 GB"), 2, true },
-        { T("Solo lo básico: intros, música y HUD, ~0,6 GB", "Just the basics: intros, music and HUD, ~0.6 GB"), 1, false } };
+        { T("Solo lo básico: películas, música y HUD, ~0,6 GB", "Just the basics: movies, music and HUD, ~0.6 GB"), 1, false } };
     int picked = -1;
     for (int i = 0; i < 4; i++)
         if (ImGui::Button(choices[i].label, ImVec2(-FLT_MIN, Px(40))))
