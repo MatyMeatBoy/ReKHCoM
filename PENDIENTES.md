@@ -308,4 +308,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue412-rom-import-play | Android picker ROM/ZIP/HD classification and native status→region→GameReady consumer; distinguish startup crashes; bounded validated import and preservation | en_curso | codex-android-rom-play | — | Root delegated verified Android import/play fix; no APK, no modified ROM or weakened SHA whitelist | 2026-10-28T01:24:02.430179+00:00 |
 | enemy-random-card-zero-modulus | Preservar resto GBA en selección de naipe enemigo con índice cero, todas las plataformas | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/417 | Usuario: auditar divisores y restos en todas las plataformas preservando lógica GBA | 2026-10-28T01:49:05.471816+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T01:48:56.506255+00:00)
+Integrador: libre
