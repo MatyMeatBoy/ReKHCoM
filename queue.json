@@ -10370,15 +10370,21 @@
     "optiport-installed-embedded-v225": {
       "id": "optiport-installed-embedded-v225",
       "piece": "Sync installed Codex/Claude preserving local additions; refresh embedded committed snapshot for2.2.5 and report final16area gaps read-only",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-sync-v225",
       "created_at": "2026-10-28T21:49:36.744319+00:00",
-      "updated_at": "2026-10-28T21:49:54.936388+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T21:54:27.604647+00:00",
+      "branch": "docs/optiport-snapshot-v225",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/471",
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:54:27.604647+00:00",
+          "owner": "codex-optiport-sync-v225",
+          "detail": "7a1ecdd7f; upstream348e099; Codex+embed25MDexact, Claude.NETpreserved3way394; small verifiedbackup/SYNC-RECEIPT+LINK-VALIDATION and AREAS16-AUDIT.json/md under pruebas/optiport-v225-sync; no runtime or stability percent. GDI/stb upload rejection gap handed off."
+        }
+      ],
       "claimed_at": "2026-10-28T21:49:54.936388+00:00"
     },
     "linux460-audio-backend-audit": {
@@ -10411,7 +10417,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:54:21.073391+00:00",
+  "updated_at": "2026-10-28T21:54:27.604647+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
