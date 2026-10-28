@@ -8784,19 +8784,20 @@
     "v22-console-offline-build-harness": {
       "id": "v22-console-offline-build-harness",
       "piece": "Prepare serial offline console wrappers with real cache gates and RAM guards; no build before exclusive window",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-console-offline",
       "created_at": "2026-10-28T04:24:49.191794+00:00",
-      "updated_at": "2026-10-28T04:24:49.191794+00:00",
+      "updated_at": "2026-10-28T04:24:54.798966+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated concrete offline builders for v2.2 all consoles with existing SDK/VM and RAM limits",
       "reference": "v22-console-delivery verified inventory-attempt1",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T04:24:54.798966+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T04:24:49.191794+00:00",
+  "updated_at": "2026-10-28T04:24:54.798966+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
