@@ -10822,7 +10822,7 @@
       "status": "pr_abierto",
       "owner": "codex-publication-peer",
       "created_at": "2026-10-28T23:16:25.875995+00:00",
-      "updated_at": "2026-10-28T23:18:45.567979+00:00",
+      "updated_at": "2026-10-28T23:20:05.852098+00:00",
       "branch": "docs/v225-publication-ledger",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/481",
       "approval": null,
@@ -10837,6 +10837,11 @@
           "at": "2026-10-28T23:18:45.567979+00:00",
           "owner": "codex-publication-peer",
           "detail": "HEADad93ecff935aac5c75832b49f8234a974f8a5e83;docs-only2files;8packagehashesmatchpublicmanifest;24publiclinksHTTP200;version/privacyassertions/gitdiffcheckPASS;pruebas/coordinacion/v225-publication-docs-check.json"
+        },
+        {
+          "at": "2026-10-28T23:20:05.852098+00:00",
+          "owner": "codex-publication-peer",
+          "detail": "UpdatedHEADa838eee81f99ea8bf69cbae3047cb0ae37bdfa11;459actualreadablelogsGLIBC_2.38+missingFFmpeg/ffprobe andexplicitv225notfixed;480answeredpending;8hashrows/version/privacy/diffcheckPASS;pruebas/coordinacion/v225-publication-docs-check-v2.json"
         }
       ],
       "claimed_at": "2026-10-28T23:16:31.109716+00:00"
@@ -10876,7 +10881,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:19:46.427241+00:00",
+  "updated_at": "2026-10-28T23:20:05.852098+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
