@@ -10724,19 +10724,20 @@
     "web-bg-world-call-abi": {
       "id": "web-bg-world-call-abi",
       "piece": "Declare shared PortSetBgWorld before four Parasite calls; real Wasm signature trap regression, no gameplay/argument changes; root merges then rebuild affectedWebTU",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-web-world-abi",
       "created_at": "2026-10-28T22:51:38.066823+00:00",
-      "updated_at": "2026-10-28T22:51:38.066823+00:00",
+      "updated_at": "2026-10-28T22:52:47.258766+00:00",
       "branch": null,
       "pr": null,
       "approval": "user",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T22:52:47.258766+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:51:38.067826+00:00",
+  "updated_at": "2026-10-28T22:52:47.258766+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
