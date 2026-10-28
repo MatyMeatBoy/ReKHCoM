@@ -8671,12 +8671,12 @@
     "v22-vita-package-version": {
       "id": "v22-vita-package-version",
       "piece": "Derive Vita SFO APP_VER from release version; verify console metadata without VM",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-vita-metadata",
       "created_at": "2026-10-28T03:46:52.821064+00:00",
-      "updated_at": "2026-10-28T03:48:41.738744+00:00",
+      "updated_at": "2026-10-28T03:49:14.427084+00:00",
       "branch": "fix/vita-release-version",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/425",
       "approval": "User requested v2.2 all platforms; root delegated minimal console metadata correction",
       "reference": "v22-console-delivery; frozen desktop source38f84",
       "evidence": [
@@ -8684,13 +8684,18 @@
           "at": "2026-10-28T03:48:41.738744+00:00",
           "owner": "codex-vita-metadata",
           "detail": "Vita package command omitted APP_VER/VERSION; old v2.0VPK readback00.00 both fields. Old command explicit2.2assert RED; fixedgeneratedcommand2tests/3versions+currentheader PASS. SwitchNACP already derives2.2. PrimaryVitaSDK stringoverride verified; noSDK/VM/compiler started. OnlyVita builder+test+doc, no gameinputs."
+        },
+        {
+          "at": "2026-10-28T03:49:14.427084+00:00",
+          "owner": "codex-vita-metadata",
+          "detail": "PR425 exacthead2c1e959f8, based38f84. Source delta only port/vita/build_vita.py+test+doc; Windows/Android/game inputs byteequivalent. TestsPASS and diffcheckclean, no VM/build. Root review/integrator lock required."
         }
       ],
       "claimed_at": "2026-10-28T03:46:57.553341+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T03:49:03.275884+00:00",
+  "updated_at": "2026-10-28T03:49:14.427084+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
