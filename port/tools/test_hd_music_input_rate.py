@@ -81,6 +81,9 @@ for host in ('windows64/windows64_host.c','linux64/linux64_host.c','android64/ho
     text=(ROOT/'port'/host).read_text()
     assert text.index('#include "hd_music_host.h"')<text.index('#include "thread_host.h"'),host
 assert 'h_thread(BRIDGE_AUDIO_INPUT_RATE, (uint32_t)sAudio.inRate' in function(shim,'SDL_AudioStream* SDL_OpenAudioDeviceStream(')
+for script,count in (('switch/build_switch.py',1),('vita/build_vita.py',2)):
+    text=(ROOT/'port'/script).read_text()
+    assert text.count("PS5 / 'shared/audio_bridge.h'")==count,script
 cc=next((ROOT.parent/'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='hd-rate-') as tmp:
     path=Path(tmp);src=path/'probe.c';exe=path/'probe.exe'
