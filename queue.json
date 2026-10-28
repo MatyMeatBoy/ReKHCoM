@@ -6624,10 +6624,10 @@
     "v22-steamdeck-330-entry-diagnostic": {
       "id": "v22-steamdeck-330-entry-diagnostic",
       "piece": "Diagnóstico acotado #330: comparar scripts de assetLinux2.1 publicado con main y probar quoting/rutaDocumentsconespacios en fixtures, sin gameplay ni causa especulativa ni comentarios públicos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-deck330-startup",
       "created_at": "2026-10-27T16:42:13.584546+00:00",
-      "updated_at": "2026-10-28T19:40:18.181612+00:00",
+      "updated_at": "2026-10-28T19:40:43.063732+00:00",
       "branch": "fix/linux64-startup-stages",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/457",
       "approval": "User authorized startup test delivery. Root reviewed exact70f70d; independent source CPU10 and real native smoke log reconciliation PASS; defaults and fallback policy unchanged, no physical Deck cause claim.",
@@ -6657,9 +6657,15 @@
           "at": "2026-10-28T19:40:18.181612+00:00",
           "owner": "codex-deck330-startup",
           "detail": "Root exact-head review70f70d plus ROOT-SMOKE-VERIFICATION.json; stage SDL_Init/window/renderer/vsync boundaries flushed with bounded error; actual linked3.4.18 confirmed. Ready integration."
+        },
+        {
+          "at": "2026-10-28T19:40:43.063732+00:00",
+          "owner": "codex-deck330-startup",
+          "detail": "Root reviewed70f70d product identicale4c; independent10CPU and real SDL3.4.18 native smoke log reconciliation PASS, title31/exit0marker1 and failed SDL-init4marker0 existing32fallback; no physicalDeck claim.; merged d293f00fcfb85294729ecb252a1443c1f9cc9184"
         }
       ],
-      "claimed_at": "2026-10-27T16:42:20.354644+00:00"
+      "claimed_at": "2026-10-27T16:42:20.354644+00:00",
+      "completed_at": "2026-10-28T19:40:43.063732+00:00"
     },
     "v22-linux64-language-args": {
       "id": "v22-linux64-language-args",
@@ -9988,7 +9994,7 @@
     "created_at": "2026-10-28T19:40:33.385357+00:00",
     "updated_at": "2026-10-28T19:40:33.385357+00:00"
   },
-  "updated_at": "2026-10-28T19:40:33.385357+00:00",
+  "updated_at": "2026-10-28T19:40:43.063732+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
