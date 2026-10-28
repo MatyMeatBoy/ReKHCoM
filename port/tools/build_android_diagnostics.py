@@ -91,6 +91,7 @@ def main():
     if args.compat_options:
         attrs = dict(launcher.attrib)
         attrs[NS + 'name'] = 'com.rekhcom.android.CompatibilityLauncherActivity'
+        attrs[NS + 'process'] = ':startup-profile'
         ET.SubElement(application, 'activity', attrs)
     entry = ET.SubElement(application, 'activity', {NS + 'name': 'com.rekhcom.android.StartupDiagnosticActivity', NS + 'exported': 'true', NS + 'hardwareAccelerated': 'false', NS + 'configChanges': 'orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode'})
     intent = ET.SubElement(entry, 'intent-filter')
