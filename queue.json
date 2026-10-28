@@ -6627,7 +6627,7 @@
       "status": "pr_abierto",
       "owner": "codex-deck330-startup",
       "created_at": "2026-10-27T16:42:13.584546+00:00",
-      "updated_at": "2026-10-28T19:01:06.803444+00:00",
+      "updated_at": "2026-10-28T19:19:30.439088+00:00",
       "branch": "fix/linux64-startup-stages",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/457",
       "approval": "Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes",
@@ -6647,6 +6647,11 @@
           "at": "2026-10-28T19:01:06.803444+00:00",
           "owner": "codex-deck330-startup",
           "detail": "HEADe4c6011f92d05356b7244b0baae548885ab818ff; actual source startup10 CPU9negative/1positive flushed _Exit cases PASS; wrapper22PASS; Linuxhost-onlycompile/linkPASS cachedSDL; pruebas/issue330-entry-diagnostic/20261028-new-log; no causeDeck/GPU/VM/runtimeclaim pendingROOTlease; fallback unchanged"
+        },
+        {
+          "at": "2026-10-28T19:19:30.439088+00:00",
+          "owner": "codex-deck330-startup",
+          "detail": "HEAD70f70d42198bdd46586c578db92bd62ee51a6d4d doc-only after reviewed e4c; product/test blobs identicale4c; SMOKE-VERIFIED.json PASS28 actual SDL3.4.18 dummy/software+EUcore/title31/exit0marker1, invalid-driver SDLfailed4marker0 existing32fallback, exacthost1e764ff7 core07d5/TARa0db, QEMU0/leaseROOT; rawobserverFAILpreserved no positive rerun; CPU10/shell22PASS; no physicalDeck or common330/374cause claim"
         }
       ],
       "claimed_at": "2026-10-27T16:42:20.354644+00:00"
@@ -9973,7 +9978,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:13:18.348169+00:00",
+  "updated_at": "2026-10-28T19:19:30.439088+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
