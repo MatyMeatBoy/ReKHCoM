@@ -9534,19 +9534,20 @@
     "optiport-full-pass-20261028": {
       "id": "optiport-full-pass-20261028",
       "piece": "Audit full24MD latest433fb and original app14blockscope; close material gaps media cadence/PTS, compositor crossbackend ownership, harness observer+orchestrator lifecycle. Compact existing refs; honest baseline/updated checks; no device cause claims, no closed productlane revival.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-full-pass",
       "created_at": "2026-10-28T15:58:20.200747+00:00",
-      "updated_at": "2026-10-28T15:58:20.200747+00:00",
+      "updated_at": "2026-10-28T15:58:30.315790+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly resumed full OptiPort optimization, consider more blocks and all verified lessons; root delegated method lane with CAS before edits.",
       "reference": "https://github.com/MatyMeatBoy/OptiPort/tree/433fb6453344506f0abde80131f9b12f9bd69153",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T15:58:30.315790+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T15:58:20.200747+00:00",
+  "updated_at": "2026-10-28T15:58:30.315790+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
