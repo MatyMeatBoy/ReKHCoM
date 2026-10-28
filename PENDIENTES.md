@@ -316,4 +316,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-vita-package-version | Derive Vita SFO APP_VER from release version; verify console metadata without VM | integrado | codex-vita-metadata | https://github.com/MatyMeatBoy/ReKHCoM/pull/425 | User requested v2.2 all platforms; root delegated minimal console metadata correction | 2026-10-28T03:50:26.874143+00:00 |
 | v22-web-release-label | Align existing Web beta labels with v2.2 stable delivery | integrado | codex-console-web-label | https://github.com/MatyMeatBoy/ReKHCoM/pull/426 | User requested v2.2 all platforms; root includes Web beta and delegated label audit | 2026-10-28T03:54:39.042470+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T03:54:29.213143+00:00)
+Integrador: libre
