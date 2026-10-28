@@ -311,4 +311,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue407-mp4-alignment | Compatibilidad MP4 con relleno final alineado y límites en validadores Python/C++ | integrado | codex-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/423 | Usuario: verificar todos los issues, corregir cuelgues y plataformas antes de v2.2 | 2026-10-28T02:48:55.599373+00:00 |
 | v22-stable-version | Stable v2.2 source/package version metadata and Android monotonic upgrade versionCode; no build/publication | pr_abierto | codex-stable-version | https://github.com/MatyMeatBoy/ReKHCoM/pull/424 | User authorized stable2.2; root delegated metadata-only PR, preserve identity/signature/releases | 2026-10-28T02:47:49.448355+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T02:48:47.528355+00:00)
+Integrador: libre
