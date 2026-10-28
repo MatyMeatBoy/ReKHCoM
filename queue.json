@@ -9407,10 +9407,10 @@
       "status": "pr_abierto",
       "owner": "codex-launcher-init-diagnostics",
       "created_at": "2026-10-28T14:08:23.262484+00:00",
-      "updated_at": "2026-10-28T14:24:41.011591+00:00",
+      "updated_at": "2026-10-28T14:25:39.987559+00:00",
       "branch": "fix/launcher-init-diagnostics",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/444",
-      "approval": "User prioritized Android16 crashes and optional launcher compatibility; Astra source audit findings require focused reproduction, not an assumed device fix.",
+      "approval": "User explicitly requested applying OptiPort safeguards and pushing fixes. Root exact-head review487f837a and independent40actual-source plus3GL controls PASS; Windows/Android64 TU compile receipts reviewed.",
       "reference": "pruebas/astra-android16-startup/FINDINGS.md",
       "evidence": [
         {
@@ -9422,6 +9422,11 @@
           "at": "2026-10-28T14:24:41.011591+00:00",
           "owner": "codex-launcher-init-diagnostics",
           "detail": "Exacthead487f837a0f3bd3b6a6a711575c9aa915dea21c5a. RED silent exits/ignored backends and separate RED missing-current/null-empty-version. GREEN40 actual-source native cases, GL3 +Android24 readiness PASS; wholeTU O2 Win i686/Android64 API21 PASS. Receipts pruebas/launcher-init-diagnostics/final-compiles/COMPILE-RECEIPT.json. No Java/manifest/APK publication/device-fix claim."
+        },
+        {
+          "at": "2026-10-28T14:25:39.987559+00:00",
+          "owner": "codex-launcher-init-diagnostics",
+          "detail": "Preserve original SDL error before cleanup; failed startup stops before downstream GL/ImGui; initialized resources released once. No S22 causal claim."
         }
       ],
       "claimed_at": "2026-10-28T14:13:40.539224+00:00"
@@ -9448,7 +9453,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T14:24:41.011591+00:00",
+  "updated_at": "2026-10-28T14:25:39.987559+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
