@@ -10342,16 +10342,21 @@
       "status": "pr_abierto",
       "owner": "codex-linux461",
       "created_at": "2026-10-28T21:30:45.363538+00:00",
-      "updated_at": "2026-10-28T21:39:21.303442+00:00",
+      "updated_at": "2026-10-28T21:53:43.062935+00:00",
       "branch": "fix/v23-linux-startup",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/470",
-      "approval": "Human2.2.5 allPR/newLinuxbugs mandate; root assigned independent461 after459triage; exactheadrequiresrootreview/integratorlock.",
+      "approval": "Root integrator: human-authorized code review; 87e4af95ca1b0cf62b534092adf0ce7a0e8f3507",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/461",
       "evidence": [
         {
           "at": "2026-10-28T21:39:21.303442+00:00",
           "owner": "codex-linux461",
           "detail": "HEAD87e4af95ca1b0cf62b534092adf0ce7a0e8f3507. Actualpublicv2.2host→shim→gameinput RED32/64no-controllerSTARTlost; concontrollerdefaultworks/custombindinglost; GREEN4runsfullkeys/custom/focus/repeat/hotplug/overflow/wrap/legacydefaults/noinventedphysicalpad PASS. FullactualLinux64hostcompile+linkPASS SHA8249a2f8eb28d250a96cb18d0d15e05500b2df71f0b7d5699adb16dcf90cb634; metadataregressionPASS; noVM/SteamOS/Bazzitehardwareclaim. D:/01Claude/ReKHCoM-build/qa-runtime/linux461-keyboard preservedsourcepatch+receipts."
+        },
+        {
+          "at": "2026-10-28T21:53:43.062935+00:00",
+          "owner": "codex-linux461",
+          "detail": "Root reviewed actual host negotiation and bounded keyboard/focus queue. Independent 4 actual host-shim-game combinations i686/x64 with/without physical pad PASS plus metadata regressions PASS. Physical Bazzite pending."
         }
       ],
       "claimed_at": "2026-10-28T21:30:54.380753+00:00"
@@ -10386,7 +10391,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:53:06.682933+00:00",
+  "updated_at": "2026-10-28T21:53:43.062935+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
