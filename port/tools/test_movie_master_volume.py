@@ -4,11 +4,12 @@ import re
 import json
 import os
 import subprocess
+import argparse
 
 ROOT = Path(__file__).resolve().parents[2]
 
-def probe():
-    out = ROOT / 'build/movie-master-volume'
+def probe(work=None):
+    out = Path(work).resolve() if work is not None else ROOT / 'build/movie-master-volume'
     out.mkdir(parents=True, exist_ok=True)
     source = (ROOT / 'port/src/port_hdmovie.c').read_text()
     start = source.rindex('static int PlayFile(const char* name) {')
@@ -128,6 +129,9 @@ def check():
                 raise RuntimeError('fade overwrites master: ' + expression)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--work', type=Path, help='Owned output directory; defaults to build/movie-master-volume')
+    args = parser.parse_args()
     check()
-    probe()
+    probe(args.work)
     print('production movie initial gain/fade PASS')

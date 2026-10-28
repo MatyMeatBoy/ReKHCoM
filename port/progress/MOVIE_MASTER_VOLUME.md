@@ -52,10 +52,27 @@ bridge command handles integers only and invokes no SDL API.
   production movie controls/clock and 17 fragmented-read cases pass.
 - Eight changed production TUs compile with cached Windows/Linux/Android target
   toolchains; Windows64's complete MF host links successfully.
+- Windows functional lease: 12 real EU32/64 game cases plus three actual MF
+  reset/missing/corrupt controls pass. Both 07d5 baselines deliver nonzero PCM
+  with master 0; both candidates deliver entirely silent, nonempty output while
+  decoding all 60 frames and returning to Event. Master 50/100 steady movie RMS
+  ratio is 0.5 within 0.001; pause/cancel preserves all 60 frames and confirmed
+  skip fades the PCM before returning to Event (45/39 frames). Reset preserves
+  renderer generation/clip recovery and the one-shot value resets to legacy100.
+
+`WINDOWS-VERIFIED.json` records 59 postconditions and raw paths. The first private
+observer required every normal EOF envelope to fall below 80%; the original32
+control also lacks a complete EOF fade on this fixture. Verified entry and
+confirmed-skip fades are reported separately. The 64-bit master100 recording
+includes a short pre-movie transient, so gain comparison uses median 50ms RMS
+windows in the steady movie interval 0.4..1.6s, not whole-file peak. Raw samples
+remain intact. Software late-frame counts are recorded without a timing claim.
 
 Private commands, RED log and target receipts live in
 `pruebas/issue449-movie-master-volume/`. These are CPU, source and compilation
-results. Real movie playback, physical listening, Deck hardware and Android
-device/API16 validation are pending a coordinated runtime window. No published
-artifact is replaced. The omitted basic-import `_123` scene and launcher copy
+results, plus actual Windows MF playback to the SDL software/disk sink. Physical
+listening, Deck hardware and Android device/API16 validation remain unverified.
+`test_movie_master_volume.py --work DIR` lets an independent reviewer put all
+probe outputs in their own directory. No published artifact is replaced.
+The omitted basic-import `_123` scene and launcher copy
 in #449 are separate follow-up work, not resolved by this audio change.
