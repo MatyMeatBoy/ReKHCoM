@@ -370,4 +370,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux459-steam-startup | Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix | pendiente | — | — | Human requested2.2.5 all PR and new Linux issues; root explicitly assigns459first, independent460/461 unless mechanism proven | 2026-10-28T21:30:35.825058+00:00 |
 | linux461-keyboard-without-controller | Issue461 Linux64 keyboard disappears without physical controller: metadata filters legacy keyboard-to-pad bridge; reproduce actual host/shim source and restore keyboard events | en_curso | codex-linux461 | — | Human requests2.2.5 bugs/all PR; root assigned independent461 after459 triage, no speculative grouping | 2026-10-28T21:30:54.380753+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T21:31:04.820877+00:00)
+Integrador: libre
