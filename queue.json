@@ -10240,20 +10240,26 @@
     "OptiPort-font-readiness": {
       "id": "OptiPort-font-readiness",
       "piece": "Promote bounded deferred-font readiness and acquire-before-release lesson; two Markdown paragraphs and informed scenario review",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-font-readiness",
       "created_at": "2026-10-28T21:17:25.766403+00:00",
-      "updated_at": "2026-10-28T21:17:48.723301+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T21:21:33.966938+00:00",
+      "branch": "docs/deferred-font-readiness",
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/16",
       "approval": "user",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T21:21:33.966938+00:00",
+          "owner": "codex-optiport-font-readiness",
+          "detail": "Head a60a2b37fcd8a4e2b3f489016eea48b6bb439b57; 2refs only; baseline informed2scenarios correct, no fakeRED; updated peer review/defaultoptional/budget refinement; 64local links5anchors/25MD and diffcheckPASS; private OPTIPORT-FONT-READINESS-REVIEW.md. Root merges/syncs installed preserving local additions."
+        }
+      ],
       "claimed_at": "2026-10-28T21:17:48.723301+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T21:21:19.624284+00:00",
+  "updated_at": "2026-10-28T21:21:33.966938+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
