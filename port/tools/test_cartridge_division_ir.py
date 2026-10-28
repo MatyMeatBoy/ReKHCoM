@@ -44,6 +44,9 @@ int probe_srem(int a,int b){return a%b;}
 unsigned probe_udiv(unsigned a,unsigned b){return a/b;}
 unsigned probe_urem(unsigned a,unsigned b){return a%b;}
 int probe_branch(int a,int b){return (a/b)<0;}
+static volatile unsigned call_count;
+static int next_operand(void){++call_count;return 7;}
+int probe_once(int b){int r;call_count=0;r=next_operand()%b;return (int)call_count*100+r;}
 ''')
         command=[str(clang),'--target=wasm32','-O2','-fwrapv','-funsigned-char','-fno-strict-aliasing',
                  '-Xclang','-disable-llvm-passes','-S','-emit-llvm',str(source),'-o',str(ir)]
@@ -64,7 +67,8 @@ for(const b of [0,1,2,3,7,0x7fffffff,0x80000000,0xffffffff]){
  count++;
 }
 if(e.probe_branch(0x80000000,-1)!==1||e.probe_branch(7,0)!==0)throw Error('post-division branch changed');
-console.log(JSON.stringify({cases:count,branchControls:2,result:'PASS'}));
+if(e.probe_once(0)!==100||e.probe_once(3)!==101)throw Error('operand evaluated more than once');
+console.log(JSON.stringify({cases:count,branchControls:2,operandEvaluationControls:2,result:'PASS'}));
 ''')
         completed=subprocess.run([str(node),str(driver),str(wasm)],capture_output=True,text=True,check=True)
         print(completed.stdout.strip())
