@@ -8083,10 +8083,10 @@
     "hd-overlap-accepted-parts": {
       "id": "hd-overlap-accepted-parts",
       "piece": "Correccion integrador PR404: registrar cobertura HD solo tras queueaceptada, contemplarcontainment y variantesfade; conservar fallback antepieza rechazada. Franja requisito sintesis yabrirnaipemundo.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-hd-overlap",
       "created_at": "2026-10-27T22:28:41.739471+00:00",
-      "updated_at": "2026-10-28T01:14:13.956264+00:00",
+      "updated_at": "2026-10-28T01:15:46.268084+00:00",
       "branch": "fix/hd-part-overlap-once",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/404",
       "approval": "Usuario pidecorregirfranja ypreservarresto; rootreviewhallofalloverificado",
@@ -8106,9 +8106,15 @@
           "at": "2026-10-28T01:14:13.956264+00:00",
           "owner": "codex-hd-overlap",
           "detail": "Final scoped head732c5394 after main merge. Actual D3D11 against published pre3:2325 pixels inside requirement,0 outside, earlier/cancel frames identical,854 PNG identical. Generic candidate was rejected for8479 unrelated changes; new unrelated-tag negative fails its compiled executable, scoped production controls pass all405 tags and fallback states. Independent worker scope review passes; no opacity change or world-opening/device/package claim."
+        },
+        {
+          "at": "2026-10-28T01:15:46.268084+00:00",
+          "owner": "codex-hd-overlap",
+          "detail": "Scoped synthesis-only correction reviewed independently: all405 tags plus null/unrelated/one-past controls, accepted-only coverage/state keys and native fallback pass. Compiled generic predecessor fails new scope negative; current native32EU full link and rebuilt x32EU guest pass. Actual D3D11 against pre3 changes2325 pixels inside requirement in each selector,0 outside; earlier/cancel frames and854 PNG inputs identical. Full opacity/world-opening/all-values visual/device checks remain separate; published pre3 unchanged.; merged bc68bdebab036159393d4813eca631028e3358ed"
         }
       ],
-      "claimed_at": "2026-10-27T22:28:46.256973+00:00"
+      "claimed_at": "2026-10-27T22:28:46.256973+00:00",
+      "completed_at": "2026-10-28T01:15:46.268084+00:00"
     },
     "game-cursor-idle-four-seconds": {
       "id": "game-cursor-idle-four-seconds",
@@ -8429,7 +8435,7 @@
     "created_at": "2026-10-28T01:15:37.811033+00:00",
     "updated_at": "2026-10-28T01:15:37.811033+00:00"
   },
-  "updated_at": "2026-10-28T01:15:37.811033+00:00",
+  "updated_at": "2026-10-28T01:15:46.268084+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
