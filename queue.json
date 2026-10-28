@@ -10142,19 +10142,24 @@
     "moto374-font-fallback-delivery": {
       "id": "moto374-font-fallback-delivery",
       "piece": "Moto374 causal font atlas fallback: two Android full-TU compile checks and separate immutable test APK, no AVD retries",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-moto374-font-delivery",
       "created_at": "2026-10-28T20:46:12.255600+00:00",
-      "updated_at": "2026-10-28T20:48:58.578304+00:00",
+      "updated_at": "2026-10-28T20:53:32.682504+00:00",
       "branch": "fix/moto374-font-delivery",
-      "pr": null,
-      "approval": "Root delegated explicit user startup mandate, 2026-10-28",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/468",
+      "approval": "Root exact HEAD9238379905c5f2322b6cec636212e1353a010cff review and independent test_package -O PASS; user authorized separate tentative font-fallback Android test delivery.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/466",
       "evidence": [
         {
           "at": "2026-10-28T20:48:58.578304+00:00",
           "owner": "codex-moto374-font-delivery",
           "detail": "Exact d5107162cfb67a396ebc17656f6baedd6489a596 two full C++ launcher TU+link Android armv7/arm64 PASS exits0/0; D:/01Claude/ReKHCoM-build/qa-runtime/moto374-current/font-fallback-tu-attempt2/RECEIPT.json. Own two cache outputs hashed. Optional identity builder local ae4d8ef1e8bcad092917a84276c1c015e442cb18 tests normal/-O PASS. Await final font+465 merges before refreshing guest sources/package. No AVD retries; runtime remains unverified, baseline a68 immutable."
+        },
+        {
+          "at": "2026-10-28T20:53:32.682504+00:00",
+          "owner": "codex-moto374-font-delivery",
+          "detail": "PR468 exact923837 builder identity2files; normal/-O tests pass. Fontd510 full launcher C++ TU Android32/64 PASS; native final7a refresh90314 terminal0 components hashed. Await467+468 merge before scopedFT32 refresh/newAPK. AVD3attempts preinstall failures, no more retries; install/runtime physical Moto unverified."
         }
       ],
       "claimed_at": "2026-10-28T20:46:16.987307+00:00"
@@ -10187,7 +10192,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:53:18.271783+00:00",
+  "updated_at": "2026-10-28T20:53:32.682504+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
