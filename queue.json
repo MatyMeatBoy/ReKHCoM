@@ -9891,10 +9891,10 @@
     "issue449-base-import-123-copy": {
       "id": "issue449-base-import-123-copy",
       "piece": "Basic HD import must include movie3 zz_event_123 and accurately label movies instead of intros; semantic coverage and launcher copy only",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-base-import-123",
       "created_at": "2026-10-28T18:26:33.610628+00:00",
-      "updated_at": "2026-10-28T21:51:39.667094+00:00",
+      "updated_at": "2026-10-28T21:51:54.852311+00:00",
       "branch": "fix/base-import-movie-123",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/455",
       "approval": "Root integrator: human-authorized code review; f0c995ec0d20d89a9c2e876d447933afed31c3a5",
@@ -9909,9 +9909,15 @@
           "at": "2026-10-28T21:51:39.667094+00:00",
           "owner": "codex-base-import-123",
           "detail": "Root full diff review; exact HEAD 4 base movie tests PASS plus real import coordinator EN-JP persistent-cache cancel/copy/corrupt/incomplete-coverage PASS. Byte preserving, seven required basic movies, no quality reduction."
+        },
+        {
+          "at": "2026-10-28T21:51:54.852311+00:00",
+          "owner": "codex-base-import-123",
+          "detail": "Root full diff review; exact HEAD 4 base movie tests PASS plus real import coordinator EN-JP persistent-cache cancel/copy/corrupt/incomplete-coverage PASS. Byte preserving, seven required basic movies, no quality reduction.; merged f1e3c17e5efb8b5875d26f2b3548a61bb055d984"
         }
       ],
-      "claimed_at": "2026-10-28T18:27:04.778500+00:00"
+      "claimed_at": "2026-10-28T18:27:04.778500+00:00",
+      "completed_at": "2026-10-28T21:51:54.852311+00:00"
     },
     "profile-controlled-adapter": {
       "id": "profile-controlled-adapter",
@@ -10374,7 +10380,7 @@
     "created_at": "2026-10-28T21:51:45.025256+00:00",
     "updated_at": "2026-10-28T21:51:45.025256+00:00"
   },
-  "updated_at": "2026-10-28T21:51:45.025256+00:00",
+  "updated_at": "2026-10-28T21:51:54.852311+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
