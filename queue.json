@@ -10417,10 +10417,10 @@
     "linux460-audio-backend-audit": {
       "id": "linux460-audio-backend-audit",
       "piece": "Issue460 Bazzite silence: inspect actual SDL backends, host stream lifecycle and device defaults; controlled CPU probes, no speculative device fix",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-linux460",
       "created_at": "2026-10-28T21:51:02.487749+00:00",
-      "updated_at": "2026-10-28T22:05:35.499760+00:00",
+      "updated_at": "2026-10-28T22:05:50.535937+00:00",
       "branch": "fix/linux460-pulse-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/475",
       "approval": "Root integrator: human-authorized code review; 61d16afba7737f985298bc92d53eef49ab29c15a",
@@ -10435,9 +10435,15 @@
           "at": "2026-10-28T22:05:35.499760+00:00",
           "owner": "codex-linux460",
           "detail": "Root full4file review; independent actualamd64runtimewriter+missingprivate/wrongELFrejection+3ELFABIfixtures PASS. NativeVM receipt olddlopen fails missingpulsecommon,newdlopenPASS, maskedprivatepathPASS, actualSDLdummyqueue19200->0. PhysicalBazzitepending; hostGPU/systemSONAMEs preserved."
+        },
+        {
+          "at": "2026-10-28T22:05:50.535937+00:00",
+          "owner": "codex-linux460",
+          "detail": "Root full4file review; independent actualamd64runtimewriter+missingprivate/wrongELFrejection+3ELFABIfixtures PASS. NativeVM receipt olddlopen fails missingpulsecommon,newdlopenPASS, maskedprivatepathPASS, actualSDLdummyqueue19200->0. PhysicalBazzitepending; hostGPU/systemSONAMEs preserved.; merged 2e7b6246526e8578fba56c15a2521d96361826bf"
         }
       ],
-      "claimed_at": "2026-10-28T21:51:13.621643+00:00"
+      "claimed_at": "2026-10-28T21:51:13.621643+00:00",
+      "completed_at": "2026-10-28T22:05:50.535937+00:00"
     },
     "sony-package-patch-version": {
       "id": "sony-package-patch-version",
@@ -10559,7 +10565,7 @@
     "created_at": "2026-10-28T22:05:40.469797+00:00",
     "updated_at": "2026-10-28T22:05:40.469797+00:00"
   },
-  "updated_at": "2026-10-28T22:05:40.469797+00:00",
+  "updated_at": "2026-10-28T22:05:50.537209+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
