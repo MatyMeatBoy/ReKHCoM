@@ -1,5 +1,17 @@
 # ReKHCoM 2.2 — traspaso y pendientes
 
+## Estado vigente: v2.2 publicada, 28/10/2026
+
+[Entrega y verificación publicadas](V22_PUBLISHED_VERIFICATION.md): ocho paquetes
+disponibles y Web beta desplegado, fuentes/hashes por artefacto, nueve respuestas
+a issues y cierres 418/421. Siguen abiertos 407/412/374/330/336/378/163 y la revisión
+nueva 432. Web arrancando una ROM y los dispositivos originales conservan sus
+límites de verificación. La cola remota determina los próximos claims.
+
+Lo que sigue es el traspaso histórico del 27/10; sus frases sobre una build futura
+no sustituyen el estado publicado anterior. El porcentaje 10/14 describe aquella
+batería original, no todos los pendientes ni un porcentaje de estabilidad.
+
 Estado del 27/10/2026. El usuario pidió trasladar aquí lo pendiente después
 de publicar 2.1. No seguir ampliando la revisión de 2.1 ni sustituir sus
 archivos publicados. Este documento organiza el trabajo; la autoridad de
