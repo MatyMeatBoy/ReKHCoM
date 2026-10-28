@@ -8849,10 +8849,10 @@
     "vita-windows-archive-response": {
       "id": "vita-windows-archive-response",
       "piece": "Fix Vita llvm-ar Windows command length using response file; preserve all objects and source behavior",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-vita-archive",
       "created_at": "2026-10-28T04:42:49.583127+00:00",
-      "updated_at": "2026-10-28T04:45:37.846134+00:00",
+      "updated_at": "2026-10-28T04:47:17.295979+00:00",
       "branch": "fix/vita-archive-response",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/429",
       "approval": "User requests v2.2allplatforms; actual Vita build hit WinError206; root delegates fixes with CAS/PR",
@@ -8862,9 +8862,15 @@
           "at": "2026-10-28T04:45:37.846134+00:00",
           "owner": "codex-vita-archive",
           "detail": "PR429 exacthead79148a804 basedc73db919. RealVitaEUarchiveWinError206 oldafterall.o; responsefilefix+2actualllvm-ar tests800members/payloadsamples/staleremoval PASS. Guard128MiBpeak23.73,minfree3.028GiB; sourcefileshashes recorded in vita-archive-test-attempt2. Attempt1test sourcepin receipt corrected separately, not exactsourceproof. No fullVita rerun yet, HUDaceunchanged."
+        },
+        {
+          "at": "2026-10-28T04:47:17.295979+00:00",
+          "owner": "codex-vita-archive",
+          "detail": "Root exact-head review and real llvm-ar tests independentlyPASS: 800-member command exceeds32767 chars, response retains order/payload and rebuilt archive removes stale members. Vita-only builder/test delta; game source unchanged. OriginalWinError206 source reproduced; full regional Vita build still required.; merged 5ccb8d24868ec9fb0a286803f84ad4bf2b3f840c"
         }
       ],
-      "claimed_at": "2026-10-28T04:42:55.269847+00:00"
+      "claimed_at": "2026-10-28T04:42:55.269847+00:00",
+      "completed_at": "2026-10-28T04:47:17.295979+00:00"
     }
   },
   "integrator": {
@@ -8873,7 +8879,7 @@
     "created_at": "2026-10-28T04:47:08.324593+00:00",
     "updated_at": "2026-10-28T04:47:08.324593+00:00"
   },
-  "updated_at": "2026-10-28T04:47:08.324593+00:00",
+  "updated_at": "2026-10-28T04:47:17.297429+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
