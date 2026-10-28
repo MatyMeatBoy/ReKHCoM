@@ -25,6 +25,7 @@ static char sPreviewMediaPath[1024]="immutable/en/g-old/scene.mp4";
 static const char* SDL_getenv(const char*n){(void)n;return enable?"1":NULL;}
 static uint64_t SDL_GetPerformanceCounter(void){clocks++;return (uint64_t)clocks*100;}
 static uint64_t SDL_GetPerformanceFrequency(void){return 1000;}
+static unsigned PortFrameCount(void){return 42;}
 static FILE* Open(const char*p,const char*m){opens++;return fopen(p,m);}
 #define fopen Open
 '''

@@ -59,6 +59,7 @@ static Uint64 SDL_GetTicks(void){return ticks;}
 static const char* SDL_getenv(const char* name){(void)name;return NULL;}
 static Uint64 SDL_GetPerformanceCounter(void){assert(!"observer-off clock");return 0;}
 static Uint64 SDL_GetPerformanceFrequency(void){assert(!"observer-off frequency");return 1;}
+static unsigned PortFrameCount(void){assert(!"observer-off frame access");return 0;}
 static const char* PortConfigPath(const char* name){(void)name;assert(!"observer-off path/file IO");return "";}
 static int SDL_GetAtomicInt(SDL_AtomicInt* a){return a->value;}
 static void SDL_SetAtomicInt(SDL_AtomicInt* a,int value){a->value=value;}

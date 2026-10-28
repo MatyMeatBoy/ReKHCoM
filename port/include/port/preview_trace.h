@@ -8,7 +8,7 @@ typedef struct PreviewTraceRecord {
     uint64_t counter;
     const char* stage;
     int serial, event, hd, fallback;
-    unsigned generation;
+    unsigned generation, frame;
 } PreviewTraceRecord;
 static PreviewTraceRecord sPreviewTrace[PREVIEW_TRACE_CAPACITY];
 static unsigned sPreviewTraceCount, sPreviewTraceDropped;
@@ -26,6 +26,7 @@ static void PreviewTrace(const char* stage) {
     r->counter = SDL_GetPerformanceCounter(); r->stage = stage;
     r->serial = sPreviewSerial; r->event = sPreviewEvent;
     r->hd = sPreviewHd; r->fallback = sPreviewFallback;
+    r->frame = PortFrameCount();
     /* Generation identity without recording a player's absolute media path. */
     r->generation = 2166136261u;
     for (const unsigned char* p = (const unsigned char*)sPreviewMediaPath; *p; ++p)
@@ -50,11 +51,11 @@ static void PreviewTraceFlush(void) {
     if (!f) return;
     fprintf(f, "# frequency=%llu dropped=%u; CPUready=polled; bridge returns are submissions, not GPU completion\n",
         (unsigned long long)SDL_GetPerformanceFrequency(), sPreviewTraceDropped);
-    fputs("counter,stage,serial,event,hd,fallback,generation\n", f);
+    fputs("counter,stage,serial,event,hd,fallback,generation,guest_frame\n", f);
     for (unsigned i = 0; i < sPreviewTraceCount; ++i) {
         PreviewTraceRecord* r = &sPreviewTrace[i];
-        fprintf(f, "%llu,%s,%d,%d,%d,%d,%u\n", (unsigned long long)r->counter,
-            r->stage, r->serial, r->event, r->hd, r->fallback, r->generation);
+        fprintf(f, "%llu,%s,%d,%d,%d,%d,%u,%u\n", (unsigned long long)r->counter,
+            r->stage, r->serial, r->event, r->hd, r->fallback, r->generation, r->frame);
     }
     fclose(f);
 }
