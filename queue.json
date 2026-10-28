@@ -8951,15 +8951,21 @@
     "v22-ps5-offline-build": {
       "id": "v22-ps5-offline-build",
       "piece": "Build PS5 v2.2 all regions+PPSA98511.zip offline existingSDK/Lapy/snapshot512MiB1CPU own768MiBjob; record realguestmem/swap",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-console-ps5",
       "created_at": "2026-10-28T05:31:12.035167+00:00",
-      "updated_at": "2026-10-28T05:31:17.507098+00:00",
+      "updated_at": "2026-10-28T05:42:49.968587+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes PS5 exclusive window now afterSwitchclosed; no Web until terminal; noSDKdownloads/newVMdisk",
       "reference": "SourceHUD5ccb; inventory2SDKLapyallverified; appversionnormalizes2.2.0",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T05:42:49.968587+00:00",
+          "owner": "codex-console-ps5",
+          "detail": "REALSDK offline snapshot512MiB1CPU allguest+host+PPSA98511.zip PASS source5ccb8d, session44967terminalexit0,371.75s,job768peak704.41/minfree1.695GiB. Closed pruebas/v22-stable-ps5/PPSA98511.zip27900856 SHA2a9c69f8090681b723c4a0c889a0109de3c397af7f98498aaf0604c0d419036d. CRC224entries/contentVersion02.002.000/titleID3guests/LapycontracthashPASS. Originalv2.0ZIP07e70255... and disk size/mtimeunchanged. DEBUGLIMITATION: originalbuilder removedfetched incl65MBdebug afteradaptervalidated; archiveNOTretained, onlyserialresult/hash/memberlist. Correctedadapterfuture-retention; no rerun perroot. No physicalPS5claim. WebNOTstarted; newtitleHUDstableblockerunderrootdiagnosis."
+        }
+      ],
       "claimed_at": "2026-10-28T05:31:17.507098+00:00"
     },
     "debug-hd-override-long-path": {
@@ -8991,7 +8997,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:33:30.441089+00:00",
+  "updated_at": "2026-10-28T05:42:49.968587+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
