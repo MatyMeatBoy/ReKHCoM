@@ -8611,10 +8611,10 @@
     "v22-stable-delivery": {
       "id": "v22-stable-delivery",
       "piece": "Compilar, verificar y publicar v2.2 estable Windows/Linux y APK Android beta; responder issues pendientes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-integrador",
       "created_at": "2026-10-28T02:54:25.529458+00:00",
-      "updated_at": "2026-10-28T11:04:30.938620+00:00",
+      "updated_at": "2026-10-28T11:05:14.892010+00:00",
       "branch": "docs/v22-published-verification",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/433",
       "approval": "Usuario: publicar siguiente stable v2.2, integrar PRs y enviar release a issues abiertos; cuidar RAM/Discord",
@@ -8644,9 +8644,15 @@
           "at": "2026-10-28T11:04:30.938620+00:00",
           "owner": "codex-integrador",
           "detail": "Published delivery ledger95c248769 reviewed independently against all exactpublicreceipts. Eight packages Latestv2.2 tag2ab2ebb6, Pages30hashesPASS, nine issue repliesreadback and418/421closuresonly; sevenopen followups acknowledged. Newdocupdates supersede stale2.1/preparationheaders; no publishedartifactmutation. Delivery taskcomplete once433docsmerged, no claimallglobalbacklogdone."
+        },
+        {
+          "at": "2026-10-28T11:05:14.892010+00:00",
+          "owner": "codex-integrador",
+          "detail": "Independent review of publication ledger/currentpending snapshot PASS; public stable tag2ab2ebb6, all8remote hashes/Quiver/version PASS; Pages30exacthashes PASS; nine reporter repliesreadback and418/421closedonly. Documentation-only closure of delivery task; sevenexternalissues/PR432/otherglobalbacklog remain explicitly open and publicartifacts unchanged.; merged 6895c747569fe4f794126d3fb741b983e9f45e94"
         }
       ],
-      "claimed_at": "2026-10-28T02:54:42.405252+00:00"
+      "claimed_at": "2026-10-28T02:54:42.405252+00:00",
+      "completed_at": "2026-10-28T11:05:14.892010+00:00"
     },
     "v22-stable-android-delivery": {
       "id": "v22-stable-android-delivery",
@@ -9131,7 +9137,7 @@
     "created_at": "2026-10-28T11:05:05.838668+00:00",
     "updated_at": "2026-10-28T11:05:05.838668+00:00"
   },
-  "updated_at": "2026-10-28T11:05:05.838668+00:00",
+  "updated_at": "2026-10-28T11:05:14.892010+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
