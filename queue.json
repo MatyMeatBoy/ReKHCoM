@@ -10063,19 +10063,20 @@
     "issue374-font-atlas-startup-fallback": {
       "id": "issue374-font-atlas-startup-fallback",
       "piece": "Moto374 confirmed ImGui NewFrame null ContainerAtlas: actual-source regression and bounded font build/default fallback before frame, shared launcher platforms",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-font-atlas",
       "created_at": "2026-10-28T20:16:51.417160+00:00",
-      "updated_at": "2026-10-28T20:16:51.417160+00:00",
+      "updated_at": "2026-10-28T20:17:00.349798+00:00",
       "branch": null,
       "pr": null,
       "approval": "User asks fix crashes and startup for all; new real374 tombstones establish same font-atlas-null mechanism in5 reports",
       "reference": "issue374#issuecomment-6479080233",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T20:17:00.349798+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:16:51.417160+00:00",
+  "updated_at": "2026-10-28T20:17:00.349798+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
