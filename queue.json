@@ -8458,10 +8458,23 @@
       "reference": null,
       "evidence": [],
       "claimed_at": "2026-10-28T01:24:02.430179+00:00"
+    },
+    "enemy-random-card-zero-modulus": {
+      "id": "enemy-random-card-zero-modulus",
+      "piece": "Preservar resto GBA en selección de naipe enemigo con índice cero, todas las plataformas",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T01:35:22.663888+00:00",
+      "updated_at": "2026-10-28T01:35:22.663888+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: auditar divisores y restos en todas las plataformas preservando lógica GBA",
+      "reference": "include/types.h MOD0; src/card/card_enemy.c EnemyUsecardRandomInit; matriz ARM64/Web pendiente",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T01:31:08.403418+00:00",
+  "updated_at": "2026-10-28T01:35:22.663888+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
