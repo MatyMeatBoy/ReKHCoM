@@ -37,8 +37,14 @@ Its memory supervisor records at least 3.18 GiB physically free during the build
 
 Private D3D11 reproduction of the actual Traverse Town selection transition
 shows the reported outline at frame 480 with HD enabled and a uniform white
-frame with HD disabled, followed by the next event at frame 517. The first
-corrected game-capture attempt was cancelled by the memory guard when physical
-free memory crossed below 3 GiB; that incomplete attempt is not visual evidence
-of the correction. Final GPU A/B and further world/cancel controls are pending
-until the same memory margin is available. No Steam Deck/device test is claimed.
+frame with HD disabled, followed by the next event at frame 517. A corrected
+D3D11 run reaches the identical native uniform-white frame: 15,893 pixels change
+only within the world silhouette's bounds. The other 17 sampled frames,
+including tutorial, unfaded selection and the following event, are byte-identical
+to the previous HD build. The successful run keeps at least 3.218 GiB physical
+RAM free and exits normally.
+
+An earlier corrected capture was cancelled by the memory guard below 3 GiB;
+that incomplete attempt is not evidence of the correction. Additional
+world/cancel/return controls are pending the same memory margin. No Steam Deck
+device test is claimed.
