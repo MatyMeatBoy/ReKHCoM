@@ -18,7 +18,8 @@ def ppu_function(signature):
         end += 1
     return ppu[start:end]
 
-backend = r'''
+backend = '#include "' + (ROOT/'port/include/port/synthesis_requirement_hd.h').as_posix() + '"\n' + r'''
+const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT] = {0};
 #define HD_LAYERS 3
 #define MAX_DRAWS 128
 #define GBA_SCREEN_W 240
@@ -117,6 +118,12 @@ unit += ppu_function('static int SpriteOnScreen(')
 native_color=ppu_function('static int SmallCardNativeColor(')
 unit += '\n'.join('static const unsigned char '+n+'[1]={0};' for n in sorted(set(re.findall(r'\bg\w+SmallCardTiles\b',native_color))-{'gOlympiaSmallCardTiles'}))
 unit += native_color
+if 'static int TrimHdPiece(' in ppu:  # each texel of an overlapping picture drawn once
+    unit += ppu[ppu.index('static struct { int layer, id, ox, oy'):ppu.index('static int TrimHdPiece(')]
+    unit += ppu_function('static int TrimHdPiece(')
+    if 'static void RememberHdPiece(' in ppu:
+        unit += ppu_function('static void RememberHdPiece(')
+    cases=cases.replace('static void reset(void){','static void reset(void){sHdPieceCount=0;')
 unit += ppu_function('static int QueueHdPart(') + ppu_function('static void DrawObjs(') + cases
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
 with tempfile.TemporaryDirectory(prefix='rekhcom-sprite-fallback-') as folder:
