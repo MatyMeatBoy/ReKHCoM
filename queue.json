@@ -8197,20 +8197,26 @@
     "issue410-hd-music-input-rate": {
       "id": "issue410-hd-music-input-rate",
       "piece": "Reported HD music too fast Windows pre1: reproduce actual mixer consumption at63072/65536 vs host48000; preserve original GBA clock and legacy ring/device units",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-integrador",
       "created_at": "2026-10-27T23:56:38.603698+00:00",
-      "updated_at": "2026-10-27T23:56:43.094410+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-28T00:00:27.837821+00:00",
+      "branch": "fix/hd-music-input-rate",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/414",
       "approval": "Usuario: leer nuevosissues, resolver patrones relacionados audio allplatforms; report410 now corroborates source mismatch hypothesis",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/410",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-28T00:00:27.837821+00:00",
+          "owner": "codex-integrador",
+          "detail": "Actual production decoder-step baseline63072/65536 vs48000 proves speed mismatch; new production guest+dispatch+mix24 rate/track/PLL contractsPASS, originalPCMexact. Existing threeSDL+legacyring and9decoder/movie regressionsPASS. Fullbuild/package/independentreview pending."
+        }
+      ],
       "claimed_at": "2026-10-27T23:56:43.094410+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-27T23:56:43.094410+00:00",
+  "updated_at": "2026-10-28T00:00:27.837821+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
