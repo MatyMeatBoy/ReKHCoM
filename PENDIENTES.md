@@ -307,4 +307,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-gameplay-lossless-white-fallback | PR400 lazy-white: require usable white fade before native omission; producer/consumer failure, memory/budget, first-fade equivalence and bounded measurements | integrado | codex-lazy-white-fallback | https://github.com/MatyMeatBoy/ReKHCoM/pull/400 | Root delegated child of hd-gameplay-lossless-load-budget; preserve parent Claude claim and assets | 2026-10-28T01:31:03.901933+00:00 |
 | issue412-rom-import-play | Android picker ROM/ZIP/HD classification and native status→region→GameReady consumer; distinguish startup crashes; bounded validated import and preservation | en_curso | codex-android-rom-play | — | Root delegated verified Android import/play fix; no APK, no modified ROM or weakened SHA whitelist | 2026-10-28T01:24:02.430179+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-28T01:30:55.212231+00:00)
+Integrador: libre
