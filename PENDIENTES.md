@@ -375,5 +375,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | glyph-upload-gdi-stb | Reject GDI/stb glyph upload failures before readiness; focused actual-producer CPU tests and valid controls; isolate host64 ack limits | integrado | codex-glyph-gdi-stb | https://github.com/MatyMeatBoy/ReKHCoM/pull/473 | Root integrator: human-authorized code review; edb34a3d63df7851b45e8632137216211066ddca | 2026-10-28T22:00:44.037754+00:00 |
 | v225-stable-version | Version 2.2.5 source identity and platform packaging preflight | integrado | codex-v225-version | https://github.com/MatyMeatBoy/ReKHCoM/pull/472 | Root integrator: human-authorized code review; 8be810c8cd1b79d4861f11d2bbc4ede2f7d0140c | 2026-10-28T21:59:20.581940+00:00 |
 | v225-release-notes | 2.2.5 release notes and source freeze ledger | integrado | codex-v225-notes | https://github.com/MatyMeatBoy/ReKHCoM/pull/476 | Root integrator: human-authorized code review; ddb5bb5292eca0776b72ad4f96940fcffe66f010 | 2026-10-28T22:07:10.931162+00:00 |
+| v225-android-web-delivery | Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes | pendiente | — | — | user | 2026-10-28T22:07:50.955630+00:00 |
 
 Integrador: libre
