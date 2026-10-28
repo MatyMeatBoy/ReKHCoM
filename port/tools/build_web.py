@@ -139,7 +139,7 @@ def main():
     out = ROOT / 'build/web'
     out.mkdir(parents=True, exist_ok=True)
     output = out / f'rekhcom-{args.region}.js'
-    options = ['-O2', '-sASYNCIFY=1', '-sASYNCIFY_STACK_SIZE=131072',
+    options = ['-O2', '-Wl,--fatal-warnings', '-sASYNCIFY=1', '-sASYNCIFY_STACK_SIZE=131072',
                '-sEMULATE_FUNCTION_POINTER_CASTS=1', '-sGLOBAL_BASE=234946560',
                '-sINITIAL_MEMORY=268435456', '-sALLOW_MEMORY_GROWTH=1', '-sMAXIMUM_MEMORY=536870912',
                '-sSTACK_SIZE=1048576', '-sMODULARIZE=1', '-sEXPORT_NAME=createReKHCoM',
