@@ -44,7 +44,14 @@ including tutorial, unfaded selection and the following event, are byte-identica
 to the previous HD build. The successful run keeps at least 3.218 GiB physical
 RAM free and exits normally.
 
+An additional D3D11 run loads an isolated copy of the user's save, opens Agrabah
+selection, cancels back to the actual map, reenters selection and chooses Agrabah.
+The native mode log confirms both returns and the following event; Agrabah's HD
+consumer is active and its completed fade is also uniform white. The run exits
+normally, keeps the copied save identical and has at least 6.021 GiB physical RAM
+free. The original save and installation are untouched.
+
 An earlier corrected capture was cancelled by the memory guard below 3 GiB;
-that incomplete attempt is not evidence of the correction. Additional
-world/cancel/return controls are pending the same memory margin. No Steam Deck
-device test is claimed.
+that incomplete attempt is excluded from the successful evidence. No Steam Deck
+device test is claimed. Audio uses a dummy sink only to keep visual QA silent;
+these runs make no audio-continuity claim.
