@@ -6627,10 +6627,10 @@
       "status": "pr_abierto",
       "owner": "codex-deck330-startup",
       "created_at": "2026-10-27T16:42:13.584546+00:00",
-      "updated_at": "2026-10-28T19:19:30.439088+00:00",
+      "updated_at": "2026-10-28T19:40:18.181612+00:00",
       "branch": "fix/linux64-startup-stages",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/457",
-      "approval": "Coordinador27/10 por pedido usuario: seguimiento de nuevos reportes y pendientes",
+      "approval": "User authorized startup test delivery. Root reviewed exact70f70d; independent source CPU10 and real native smoke log reconciliation PASS; defaults and fallback policy unchanged, no physical Deck cause claim.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330#issuecomment-6446302893",
       "evidence": [
         {
@@ -6652,6 +6652,11 @@
           "at": "2026-10-28T19:19:30.439088+00:00",
           "owner": "codex-deck330-startup",
           "detail": "HEAD70f70d42198bdd46586c578db92bd62ee51a6d4d doc-only after reviewed e4c; product/test blobs identicale4c; SMOKE-VERIFIED.json PASS28 actual SDL3.4.18 dummy/software+EUcore/title31/exit0marker1, invalid-driver SDLfailed4marker0 existing32fallback, exacthost1e764ff7 core07d5/TARa0db, QEMU0/leaseROOT; rawobserverFAILpreserved no positive rerun; CPU10/shell22PASS; no physicalDeck or common330/374cause claim"
+        },
+        {
+          "at": "2026-10-28T19:40:18.181612+00:00",
+          "owner": "codex-deck330-startup",
+          "detail": "Root exact-head review70f70d plus ROOT-SMOKE-VERIFICATION.json; stage SDL_Init/window/renderer/vsync boundaries flushed with bounded error; actual linked3.4.18 confirmed. Ready integration."
         }
       ],
       "claimed_at": "2026-10-27T16:42:20.354644+00:00"
@@ -9978,7 +9983,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T19:19:30.439088+00:00",
+  "updated_at": "2026-10-28T19:40:18.181612+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
