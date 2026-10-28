@@ -28,6 +28,8 @@ No establecer una mejora porcentual sin valores comparables y denominador explí
 - **Transacciones:** comprobar escritura, validación y reemplazo antes de cambiar el estado en memoria. Ante error conservar documento anterior, estado pendiente y capacidad de recuperación; verificar también cancelación y falta de espacio.
 - **Presentación y exportación:** reducir trabajo de vista sólo dentro del contrato permitido. Modelos, coordenadas, unidades, IDs, undo y resultado final conservan sus invariantes. Una vista visualmente similar no valida un archivo exportado.
 
+En un reemplazo que requiere varias asignaciones, adquirir y validar el candidato completo antes de publicar sus alias y liberar el recurso anterior, cuando el presupuesto permita su coexistencia. Si falla la segunda asignación, descartar sólo el candidato parcial y conservar el anterior usable; probar cada rechazo con el consumidor real y un control válido. Si el presupuesto impide coexistir, definir antes de retirarlo una ruta de degradación, reconstrucción acotada o salida controlada; no publicar `ready` ni dereferenciar un reemplazo fallido. Para objetos con preparación diferida, aplicar la [admisión del recurso y sus alias](verified-lessons.md#objetos-creados-con-preparación-diferida).
+
 ## Ejemplos de aplicación, pendientes de medición propia
 
 | Aplicación | Hipótesis que comprobar | Evidencia necesaria |
