@@ -10420,16 +10420,21 @@
       "status": "pr_abierto",
       "owner": "codex-linux460",
       "created_at": "2026-10-28T21:51:02.487749+00:00",
-      "updated_at": "2026-10-28T22:04:13.223509+00:00",
+      "updated_at": "2026-10-28T22:05:35.499760+00:00",
       "branch": "fix/linux460-pulse-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/475",
-      "approval": "Human2.2.5bugfix mandate; root approved scoped private-client packaging fix and native Linux VM lease, root reviews/integrates.",
+      "approval": "Root integrator: human-authorized code review; 61d16afba7737f985298bc92d53eef49ab29c15a",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/460",
       "evidence": [
         {
           "at": "2026-10-28T22:04:13.223509+00:00",
           "owner": "codex-linux460",
           "detail": "HEAD61d16afba7737f985298bc92d53eef49ab29c15a. REDactualwriter omittedprivatePulse; GREENSDK+threeactualELFABIs+missing/wrongarchrejected+publishedi386closure. NATIVEVMoldclientfailsmissing16.1/newclientPASSversion16.1.0, exactpublicv2.2PulseandSDLhashes matched; actualSDLdummyresume1queued19200to0. QEMU31056terminated/session94584exit0/quiescent. D:/01Claude/ReKHCoM-build/qa-runtime/linux460-audio-audit/NATIVE-GATE.json. NoBazzitehardware/audioaudibilityclaim,noforceddriver/GPU/systemABIoverride."
+        },
+        {
+          "at": "2026-10-28T22:05:35.499760+00:00",
+          "owner": "codex-linux460",
+          "detail": "Root full4file review; independent actualamd64runtimewriter+missingprivate/wrongELFrejection+3ELFABIfixtures PASS. NativeVM receipt olddlopen fails missingpulsecommon,newdlopenPASS, maskedprivatepathPASS, actualSDLdummyqueue19200->0. PhysicalBazzitepending; hostGPU/systemSONAMEs preserved."
         }
       ],
       "claimed_at": "2026-10-28T21:51:13.621643+00:00"
@@ -10549,7 +10554,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T22:05:11.413385+00:00",
+  "updated_at": "2026-10-28T22:05:35.499760+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
