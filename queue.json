@@ -8974,10 +8974,23 @@
       "approval": null,
       "reference": "pruebas/card-final-horizontal-line/v22-stable-exact-software/COMPARISON.json",
       "evidence": []
+    },
+    "v22-final-release-notes": {
+      "id": "v22-final-release-notes",
+      "piece": "Final v2.2 README/CHANGELOG and published platform matrix from verified closed artifacts; docs only, no version rebuild/relabel; wait full platform evidence before PR integration",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-28T05:33:24.346025+00:00",
+      "updated_at": "2026-10-28T05:33:24.346025+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario: lanzar v2.2 todas plataformas, integrar y cerrar PRs/issues con evidencia",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T05:32:35.116691+00:00",
+  "updated_at": "2026-10-28T05:33:24.346025+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
