@@ -18,7 +18,8 @@ def ppu_function(signature):
         end += 1
     return ppu[start:end]
 
-backend = r'''
+backend = '#include "' + (ROOT/'port/include/port/synthesis_requirement_hd.h').as_posix() + '"\n' + r'''
+const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT] = {0};
 #define HD_LAYERS 3
 #define MAX_DRAWS 128
 #define GBA_SCREEN_W 240

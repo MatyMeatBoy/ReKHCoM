@@ -6,6 +6,7 @@ unit=f.unit[:f.unit.index('static void reset(void){')]
 unit=unit.replace('static void PortPaletteFade(const uint16_t*a,const volatile uint16_t*b,int c,int*d,int*e){*d=*e=0;}',
  'static int fakeDark,fakeWhite;static void PortPaletteFade(const uint16_t*a,const volatile uint16_t*b,int c,int*d,int*e){*d=fakeDark;*e=fakeWhite;}')
 unit+=r'''
+static const void* testTiles;
 static void reset(void){
  memset(sState,0,sizeof(sState));memset(sDrawCount,0,sizeof(sDrawCount));
  memset(sOamHd,0,sizeof(sOamHd));memset(oam,0,sizeof(oam));sHdPieceCount=0;
@@ -13,9 +14,10 @@ static void reset(void){
  sBytes=0;width=height=decodedW=decodedH=16;infoOK=decodeOK=1;
  creates=destroys=decodes=failTexture=0;sRenderer=(void*)1;mainThread=1;
  kHdSprites[0]=(HdSpriteDef){.name="test",.w=16,.h=16};
+ testTiles=gSynthesisHdIdentities;
 }
 static int queue(int layer,int x,int y,int w,int h,int alpha,int flags,int affine){
- sOamHd[0]=(OamHdPart){.id=1,.x=x,.y=y,.w=w,.h=h,.flags=flags,.palette=palette};
+ sOamHd[0]=(OamHdPart){.id=1,.x=x,.y=y,.w=w,.h=h,.flags=flags,.palette=palette,.tiles=testTiles};
  return QueueHdPart(layer,0,x,y,w,h,w,h,affine,256,0,0,256,alpha);
 }
 int main(void){FILE*f=fopen("test","wb");assert(f);fputs("exists",f);fclose(f);
@@ -35,6 +37,18 @@ int main(void){FILE*f=fopen("test","wb");assert(f);fputs("exists",f);fclose(f);
  assert(sDraws[0][1].y[0]==8&&sDraws[0][1].y[3]==12);
  reset();assert(queue(0,0,0,8,16,255,0,0));assert(queue(0,4,0,8,16,255,0,0));
  assert(sDraws[0][1].u0==.5f&&sDraws[0][1].u1==.75f);
+ /* Only the independently tagged synthesis family changes. Unrelated cards,
+    null tags and the first address past the family preserve old composition. */
+ static const unsigned char otherTiles[1];
+ const void* excluded[]={NULL,otherTiles,gSynthesisHdIdentities+SYNTHESIS_HD_COUNT};
+ for(unsigned n=0;n<sizeof(excluded)/sizeof(excluded[0]);n++){
+  reset();testTiles=excluded[n];assert(queue(0,0,0,16,8,255,0,0));
+  assert(queue(0,0,4,16,8,255,0,0));assert(sDraws[0][1].v0==.25f&&sHdPieceCount==0);
+ }
+ for(unsigned n=0;n<SYNTHESIS_HD_COUNT;n++){
+  reset();testTiles=gSynthesisHdIdentities+n;assert(queue(0,0,0,16,8,255,0,0));
+  assert(queue(0,0,4,16,8,255,0,0));assert(sDraws[0][1].v0==.5f);
+ }
  /* Different opacity/layer, flipped or affine pieces keep their old drawing. */
  reset();assert(queue(0,0,0,16,8,128,0,0));assert(queue(0,0,4,16,8,255,0,0));assert(sDraws[0][1].v0==.25f);
  reset();assert(queue(0,0,0,16,8,0,0,0));assert(queue(0,0,4,16,8,255,0,0));assert(sDraws[0][1].v0==.25f);

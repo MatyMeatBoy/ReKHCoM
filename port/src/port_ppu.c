@@ -23,6 +23,7 @@
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
+#include "port/synthesis_requirement_hd.h"
 #include "port/port_hdlayout.h"
 #include "engine.h"
 #include "sprite.h"
@@ -4759,7 +4760,12 @@ static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw,
     int dark = 0, white = 0;
     int px = part->x, py = part->y, pw = part->w, ph = part->h;
     int ox = hx - part->x, oy = hy - part->y;
-    int remember = !affine && !(part->flags & 3);
+    uintptr_t identity = (uintptr_t)part->tiles;
+    uintptr_t synthesis = (uintptr_t)gSynthesisHdIdentities;
+    /* Limit edge trimming to the independently tagged requirement pictures.
+       Other cards intentionally keep their accepted drawing unchanged. */
+    int remember = !affine && !(part->flags & 3) && identity >= synthesis &&
+                   identity - synthesis < SYNTHESIS_HD_COUNT;
     int priority = (OAM16[i * 4 + 2] >> 10) & 3;
     int clip0 = sOamTag[i].clipX0, clip1 = sOamTag[i].clipX1;
     /* the game fades by rewriting palettes (the title, menus): the HD picture follows its part's palette */
@@ -4781,7 +4787,7 @@ static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw,
         }
     } else {
         float l, r, t, b;
-        if (!(part->flags & 3)) {
+        if (remember) {
             if (!TrimHdPiece(layer, part->id, ox, oy, alpha, dark, white, priority, clip0, clip1, &px, &py, &pw, &ph))
                 return 1; /* wholly drawn by an earlier piece of this picture: nothing of the cartridge's shows either */
             hx += px - part->x;

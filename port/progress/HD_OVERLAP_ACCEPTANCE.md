@@ -5,6 +5,14 @@ Drawing its translucent HD picture twice adds an extra blend along that edge.
 The edge-strip trim in PR404 removes that repeated blend. It does not remove
 the room background intentionally visible through the translucent body.
 
+Eligibility is limited to the existing synthesis identity array: five bodies
+and four sets of100 requirement values. An initially generic implementation
+also changed accepted overlap blends on unrelated card crowns. A current-game
+comparison caught8479 changed pixels outside the requirement at one selector
+frame, with all854 PNG inputs identical. Those unrelated sprites now retain
+their previous composition. The identity bound is checked without dereferencing
+the tag; null, unrelated and one-past-end tags do not enable trimming.
+
 Integrator review reproduced a fallback defect in the initial proposal: a
 16x16 piece starting at source y=-8 was recorded before the sprite queue
 rejected it as outside the image. A subsequent valid 16x16 piece at y=0
@@ -28,6 +36,7 @@ bounds rejection, decoder/upload failure and recovery, full queue, row/column
 UV and geometry, zero/different alpha, dark/white fade, layer, priority, clip,
 flipped/affine paths, retained containment and saturated bookkeeping controls.
 The existing first-frame fallback and card seam/corner regressions also pass.
+The acceptance probe covers all405 valid identity tags and negative tag bounds.
 
 Private native32 EU D3D11 before/after runs at the corrected combined source
 reach both synthesis selectors and return normally. At the inspected frame,
