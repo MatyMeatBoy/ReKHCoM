@@ -10198,19 +10198,20 @@
     "moto374-font-identity-builder": {
       "id": "moto374-font-identity-builder",
       "piece": "Closed PR468 builder identity component only; does not close parent Moto font fallback APK publication/reporter delivery",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-font-builder-root",
       "created_at": "2026-10-28T20:55:43.222541+00:00",
-      "updated_at": "2026-10-28T20:55:43.222541+00:00",
+      "updated_at": "2026-10-28T20:55:49.714552+00:00",
       "branch": null,
       "pr": null,
       "approval": "User requires new tentative test; root reviewed exact923837 and independently package -O PASS, filename/version allowlist preserves old identity.",
       "reference": "PR468 child of moto374-font-fallback-delivery",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T20:55:49.714552+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T20:55:43.222541+00:00",
+  "updated_at": "2026-10-28T20:55:49.714552+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
