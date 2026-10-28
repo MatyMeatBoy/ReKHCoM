@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 import subprocess
-from build_web import rewrite_ir, ROOT
+from build_web import rewrite_ir, frontend_ir_flags, ROOT
 
 
 def main():
@@ -22,6 +22,7 @@ def main():
 #include <stdint.h>
 extern char FixedCount[], Hardware[];
 static volatile int nativeGlobal;
+static volatile int numerator=7, denominator=0;
 static int callback(int value) { nativeGlobal=value;return 91; }
 static void (*volatile castCallback)(int)=(void(*)(int))callback;
 int main(void) {
@@ -33,19 +34,21 @@ int main(void) {
     if(*(volatile uint32_t*)Hardware!=0x12345678)return 4;
     castCallback(37);
     if(nativeGlobal!=37)return 5;
+    if(numerator/denominator!=0 || numerator%denominator!=0)return 6;
     return 0;
 }
 ''')
     ir = out / 'probe.ll'
-    subprocess.run([str(emcc), str(source), '-O2', '-S', '-emit-llvm', '-o', str(ir)], check=True)
-    ir.write_text(rewrite_ir(ir.read_text(), {'FixedCount':26, 'Hardware':0x02000000}))
+    subprocess.run([str(emcc), str(source), *frontend_ir_flags(['-O2'], True), '-S', '-emit-llvm', '-o', str(ir)], check=True)
+    ir.write_text(rewrite_ir(ir.read_text(), {'FixedCount':26, 'Hardware':0x02000000}, cartridge_arithmetic=True))
     js = out / 'probe.js'
     subprocess.run([str(emcc), str(ir), '-O2', '-sASYNCIFY=1', '-sEMULATE_FUNCTION_POINTER_CASTS=1',
                     '-sGLOBAL_BASE=234946560', '-sINITIAL_MEMORY=268435456', '-sENVIRONMENT=node',
                     '-o', str(js)], check=True)
     subprocess.run([str(nodes[0]), str(js)], check=True)
     report = {'passed':True, 'checks':['absolute count', 'fixed hardware address',
-              'native data above hardware', 'memory survives Asyncify', 'callback return-type compatibility']}
+              'native data above hardware', 'memory survives Asyncify', 'callback return-type compatibility',
+              'cartridge zero quotient/remainder through game IR pipeline']}
     (out / 'report.json').write_text(json.dumps(report, indent=2))
     print(json.dumps(report))
 

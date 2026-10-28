@@ -11,11 +11,18 @@ import re
 import subprocess
 import shutil
 from pathlib import Path
+from cartridge_division_ir import lower_cartridge_division, fingerprint as division_fingerprint
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def rewrite_ir(source, symbols):
+def frontend_ir_flags(common, is_game):
+    # Keep optimized frontend attributes, but establish defined cartridge
+    # arithmetic before LLVM can exploit C's division UB. O2 still runs below.
+    return [*common, '-Xclang', '-disable-llvm-passes'] if is_game else common
+
+
+def rewrite_ir(source, symbols, *, cartridge_arithmetic=False):
     # Only imported globals are fixed-address cartridge aliases. A definition
     # with the same name indicates a generator error; do not silently remove it.
     imported = set()
@@ -28,8 +35,9 @@ def rewrite_ir(source, symbols):
             imported.add(match[1])
         else:
             lines.append(line)
-    return re.sub(r'@([\w.$]+)', lambda m: f'inttoptr (i32 {symbols[m[1]]} to ptr)'
-                  if m[1] in imported else m[0], ''.join(lines))
+    result = re.sub(r'@([\w.$]+)', lambda m: f'inttoptr (i32 {symbols[m[1]]} to ptr)'
+                    if m[1] in imported else m[0], ''.join(lines))
+    return lower_cartridge_division(result) if cartridge_arithmetic else result
 
 
 def main():
@@ -99,7 +107,7 @@ def main():
         header_hash.update(path.read_bytes())
     compiler_version = subprocess.check_output([str(emcc), '--version'], text=True)
     configuration = (repr(common) + header_hash.hexdigest() + compiler_version +
-                     json.dumps(symbols, sort_keys=True) + Path(__file__).read_text(encoding='utf-8'))
+                     json.dumps(symbols, sort_keys=True) + Path(__file__).read_text(encoding='utf-8') + division_fingerprint())
 
     def compile_unit(item):
         path, is_game = item
@@ -111,11 +119,11 @@ def main():
             return obj
         flags = common + ['-std=gnu89' if is_game else '-std=gnu11']
         # Game section pragmas are PE/ELF-specific; browser reset reloads instead.
-        command = [str(emcc), str(path), *flags, '-S', '-emit-llvm', '-o', str(ir)]
+        command = [str(emcc), str(path), *frontend_ir_flags(flags, is_game), '-S', '-emit-llvm', '-o', str(ir)]
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode:
             raise RuntimeError(str(path) + '\n' + result.stderr)
-        ir.write_text(rewrite_ir(ir.read_text(), symbols))
+        ir.write_text(rewrite_ir(ir.read_text(), symbols, cartridge_arithmetic=is_game))
         result = subprocess.run([str(emcc), '-O2', '-c', str(ir), '-o', str(obj)], capture_output=True, text=True)
         if result.returncode:
             raise RuntimeError(str(path) + '\n' + result.stderr)
