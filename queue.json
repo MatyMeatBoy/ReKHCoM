@@ -9731,19 +9731,20 @@
     "issue449-movie-master-volume": {
       "id": "issue449-movie-master-volume",
       "piece": "Movie master volume times fade in native32/64 and Android routes, negotiated mixed-host movie gain without PCM clock changes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-movie-master-volume",
       "created_at": "2026-10-28T17:51:34.965406+00:00",
-      "updated_at": "2026-10-28T17:51:34.965406+00:00",
+      "updated_at": "2026-10-28T17:54:22.896767+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario: sin preguntas fullpass all pending; root activa449audio trasLinuxpublicado, import123/copyseparados",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/449",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-28T17:54:22.896767+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T17:52:14.957642+00:00",
+  "updated_at": "2026-10-28T17:54:22.896767+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
