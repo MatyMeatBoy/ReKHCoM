@@ -1,9 +1,32 @@
 ---
 name: optiport
-description: Use when the user invokes OptiPort to optimize any software, or requests systematic stability, performance or 32-to-64-bit migration work for a recompilation, decompilation or source port. The method applies to engineering, design, web, desktop, data processing and other software.
+description: AI skill for incremental debugging and optimization of software, source ports, recompilations, decompilations. Use when the user invokes OptiPort to optimize any software, or requests systematic stability, performance or 32-to-64-bit migration work for a recompilation, decompilation or source port. The method applies to engineering, design, web, desktop, data processing and other software.
 ---
 
 # OptiPort
+
+## Load the latest skill before applying it
+
+At the start of each OptiPort pass or resumed session, check the latest committed
+Markdown in the default branch of the canonical repository:
+[MatyMeatBoy/OptiPort](https://github.com/MatyMeatBoy/OptiPort) (`main` unless the
+repository reports a different default). Refresh that remote reference, or use
+read-only repository access if no local clone is available. Do not create another
+checkout just to check a version.
+
+Compare the instructions actually loaded from `SKILL.md`, and the reference
+modules needed for the task, with that upstream revision. An up-to-date source
+checkout does not prove that an installed or already loaded copy is current.
+**If they differ, load the latest upstream `SKILL.md` and relevant Markdown
+modules before continuing, and synchronize the installed copy being used.**
+Record the source commit so the check is traceable.
+
+Read upstream files without switching or resetting an active working tree
+(for example, with `git show` after fetching). Preserve local edits and useful
+additions with a backup/diff or a three-way merge; never overwrite them blindly.
+If the repository cannot be reached, state that freshness could not be verified
+and use the last verified local copy, without claiming it is the latest or
+blocking unrelated project work.
 
 Help people improve their software without requiring programming knowledge. Infer build commands, architecture, backends, domain and constraints from the repository before asking questions. Explain results in plain language; ask only for missing information that changes the work. Do not present a technical checklist as work the user must perform. Use [domain-aware optimization](references/domain-aware-optimization.md) to identify what must remain correct before changing performance. Select checks from the actual application contracts.
 
@@ -42,6 +65,7 @@ When preparing any delivery, apply [release readiness](references/release-readin
 | Lifecycle | Verify focus loss/resume, suspend, device reset and scene transitions. Recreate invalid resources safely and cancel stale work. Do not catch arbitrary memory corruption and resume it. |
 | Progress protection | Check existing save errors and atomic replacement. Keep validated backups/recovery separate from manual slots. Do not promise crash recovery from incompatible snapshots or partial writes. |
 | Observability | Retain current log plus history bounded for the project's needs, record fallback cause without per-frame spam, and preserve logs if rotation fails. Exclude secrets and personal data. |
+| Workspace and storage | Keep code, releases, test evidence and shared inputs understandable to people. Measure allocated bytes without recounting links; deduplicate immutable inputs safely and size reusable VM environments from guest usage and workload peaks. See [workspace and storage](references/workspace-storage.md). |
 
 ## Verification and progress
 
@@ -55,9 +79,12 @@ Use this skill as a selective reference bank. Load only the module that changes 
 | Implement through understood engine internals or decompiled source | [Engine-informed implementation](references/engine-informed-implementation.md) |
 | Clarify controls, status, translations or responsive previews | [UX wording and localization](references/ux-localization.md) |
 | Coordinate authorized workers or finish isolated workspaces | [Coordination and workspace hygiene](references/coordination-workspaces.md) |
+| Organize folders for people, reduce disk usage or right-size VM environments | [Workspace and storage](references/workspace-storage.md) |
 | Engineering, design or another requested software domain | [Domain-aware optimization](references/domain-aware-optimization.md); optional [domain sources](references/domain-sources.md) |
 | Find evidence efficiently or resume an investigation | [Progressive retrieval](references/progressive-retrieval.md) |
 | Reproduce a scene, transition or timing failure | [Reproduction harnesses](references/reproduction-harnesses.md) |
+| Audio speed, queued units, bridge compatibility or producer starvation | [Audio stream contracts](references/audio-stream-contracts.md) |
+| Linux software starts in a terminal but fails through a launcher or Steam Deck Gaming Mode | [Linux launch context](references/linux-launch-context.md) |
 | Locate load, frame or memory costs before optimizing | [Profiling](references/profiling.md) |
 | General coverage, devices and long sessions | [Verification layers](references/verification-layers.md) |
 | Host/data architecture and 32/64-bit migration | [Architecture migration](references/architecture-migration.md) |

@@ -43,3 +43,5 @@ un lienzo grande. Recortar o reutilizar trabajo cuando sea correcto antes de sub
 presupuestos globales. Verificar alpha premultiplicado, filtrado, seams y capas
 interiores; una prueba headless no certifica suavidad visual. Mantener fallback
 seguro y registrar cuándo pierde suavizado o fidelidad.
+
+En un defecto exclusivo de un backend, seguir la composición efectiva: recurso aceptado, cobertura/máscara, superficie/target y generación, viewport/clip, blend y orden de capas hasta la presentación. Un fixture CPU o una captura de otro backend no valida esa ruta. Comparar el mismo estado y assets en los caminos afectados GPU/software, con reemplazo válido y rechazado y durante entrada/fade/retorno; comprobar que la cobertura aceptada no oculta texto/UI ajenos ni sobrevive a un target anterior. Conservar el fallback y las regiones no modificadas; limitar la conclusión a las rutas realmente ejecutadas, sin asumir la causa de un reporte por su aspecto.
