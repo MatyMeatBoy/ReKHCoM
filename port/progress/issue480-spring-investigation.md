@@ -1,6 +1,7 @@
 # Issue480: generated-room spring investigation
 
-The [Android report](https://github.com/MatyMeatBoy/ReKHCoM/issues/480) remains open.
+The [Android report](https://github.com/MatyMeatBoy/ReKHCoM/issues/480) was closed
+after the reporter confirmed both springs and ledges in the delivered test.
 The reporter supplied the save and confirmed **2.2 pre beta**, 284x160, zoom4x,
 1.5HD disabled and HD text enabled. The earlier report from the same author
 listed Tab S6 Lite, Android13 and USA; the device/OS remain prior context.
@@ -40,8 +41,8 @@ The private injection object/executable is excluded from shipping builds.
 Clean Windows32 and guest64 runs already traversed both springs before the
 correction. Thus this proves a real defect under a recycled-work precondition,
 **not** that it caused every symptom in the Android recording. The original
-save stays immutable; tests use copies. Physical Android confirmation remains
-required, and issue480 stays open.
+save stays immutable; tests use copies. Those local controls alone did not
+confirm the Android report; the later reporter confirmation is recorded below.
 
 Directed controls reached the upper ground in different generated Halloween Town
 rooms, early/later floors and shapes; Agrabah and Monstro controls also landed.
@@ -98,9 +99,9 @@ as `3d2b30b745e6520f6ebb5886d842681e1c1b7d15`. APK SHA256:
 
 The closed signature, compiled Java-only entry, six ELF libraries, USA guest
 and 214 assets passed package checks. Anonymous public downloads match the closed
-hashes. No ROM/save is included. Installation and the reported physical Android
-flow remain unverified; issue480 stays open pending that result. Stable v2.2.5
-artifacts are unchanged.
+hashes. No ROM/save is included. Those build-time package checks did not verify
+installation or the reported physical Android flow. Subsequent reporter feedback
+confirms that flow; the original manifests and stable v2.2.5 artifacts stay unchanged.
 
 All 14 map-task callsites of `FldObjIsOutOfView` were inventoried with their 14
 distinct relevant initializers; the spring was the missing height assignment.
@@ -112,3 +113,16 @@ and installed Codex/Claude copies were refreshed, preserving Claude's local note
 Generated Android build files were removed after preserving the public APK,
 logs, immutable input identity and a private unstripped-symbol archive. Hardware
 confirmation can continue without keeping that compiler output tree.
+
+## Reporter confirmation and closure
+
+At 01:19 UTC on 29 October, [uxshade confirmed the new APK test](https://github.com/MatyMeatBoy/ReKHCoM/issues/480#issuecomment-6485206732):
+after importing the prior ROM and save and following the instructions, both
+springs worked and both ledges were reachable. The report was closed with a
+thank-you reply and the CAS task marked integrated.
+
+This is external confirmation of the tested Android route, in addition to the
+controlled initialization regression. It does not certify every layout/device,
+both Android architectures physically, or uniquely isolate the old APK against
+an otherwise identical Android build. The reporter supplied a compressed video;
+its quality was sufficient alongside the save and route confirmation.

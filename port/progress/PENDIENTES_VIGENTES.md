@@ -7,10 +7,11 @@
 siguen inmutables. Las listas de issues/versiones de las secciones históricas
 siguientes no sustituyen la cola remota ni el estado actual de GitHub.
 
-- **480, abierto:** [investigación y test Android](issue480-spring-investigation.md).
+- **480, cerrado:** [investigación y test Android](issue480-spring-investigation.md).
   Omisión de inicialización del muelle corregida, revisados 14 inicializadores
   relacionados, negativo/positivo con memoria reciclada verificado. APK USA
-  publicada y enviada; atribución al recorrido Android pendiente de confirmación.
+  publicada y enviada; el reportero confirmó ambos muelles y plataformas con
+  su ROM/save en Android. El alcance es ese recorrido, no todos los dispositivos.
 - **479, cerrado:** [Quit de escritorio restaurado y test entregado](issue479-desktop-quit.md).
   Windows/Linux, tres regiones y 32/64; archivos finales y cierre verificados en
   los alcances descritos. Es un test separado para la próxima estable.
