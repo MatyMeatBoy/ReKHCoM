@@ -4218,6 +4218,21 @@ static void RenderOuterRows(int y0, int y1, int below) {
    picture (the deck editor's L/R: the words over a black screen, 23/10). */
 static uint16_t sTextObjPalette[256], sTextBld[3];
 static int sTextLatched;
+static uint16_t sJiminyHeaderPalette[16];
+static int sJiminyHeaderBlank;
+
+static void KeepJiminyHeaderPalette(void) {
+    memcpy(sJiminyHeaderPalette, PLTT16 + 5 * 16, sizeof(sJiminyHeaderPalette));
+    sJiminyHeaderBlank = (IO16(0) & 0x80) != 0;
+}
+
+void PortPpuJiminyFade(int* dark, int* white) {
+    extern const uint16_t gJiminyBgPalette[];
+    *dark = *white = 0;
+    if (!sTextLatched) return;
+    if (sJiminyHeaderBlank) { *white = 255; return; }
+    PortPaletteFade(gJiminyBgPalette + 5 * 16, sJiminyHeaderPalette, 16, dark, white);
+}
 
 void PortPpuRenderFrame(void) {
     int gy;
@@ -4228,6 +4243,7 @@ void PortPpuRenderFrame(void) {
     sTextBld[1] = IO16(0x52);
     sTextBld[2] = IO16(0x54);
     sTextLatched = 1;
+    KeepJiminyHeaderPalette();
     PortPpuBeginFrame();
     LatchAffine(1);
     QueueMainHdParts();

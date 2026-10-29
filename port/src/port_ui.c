@@ -3068,6 +3068,8 @@ static const char* const sScreenDesc[2][LANG_COUNT] = {
       "Ein Fenster, das du verschieben und vergrößern kannst.", "Una finestra da spostare e ridimensionare.",
       "Una ventana que puedes mover y cambiar de tamaño.", "うごかせておおきさもかえられるウィンドウ。" } };
 /* the graphics mode, asked once on the first start (PortUiOpenModeChoice); Options and the launcher change it later */
+#include "port/jiminy_footer.inc"
+
 static const char* const sModeDescHd[LANG_COUNT] = {
     "Re:Chain of Memories' cards, logo, faces, music and movies (imported by the launcher from your Kingdom Hearts HD "
     "1.5+2.5), HD text and every improvement.",

@@ -15,6 +15,13 @@ usuario y se revisan las escenas hermanas que la copiaron.
 
 ## Principios
 
+Diario interno, correcciones directas del usuario: la ayuda inferior necesita
+espacio propio, sin recortar el libro ni escalar por separado las capas HD.
+Debe indicar los controles configurados y conservar una ruta nativa si el
+reemplazo no está listo. Su fundido se calcula con la paleta del fotograma
+presentado, no con memoria que VBlank ya preparó para el siguiente. Este
+criterio no da por aprobados ni terminados los bordes y extensiones pendientes.
+
 Naipes mapa, prioridad2.3 del usuario: mantener corona, borde y los dos píxeles
 que cierran la ventana original. Una receta pequeña sólo reemplaza la
 ilustración; no hereda el recorte de valor si la llave nativa no lo tiene.

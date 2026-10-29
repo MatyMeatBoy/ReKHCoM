@@ -34,6 +34,7 @@ static PortCursorIdle sCursorIdle;
 #include "port/port_hdsprites.h"
 #include "../decompui/third_party/stb_image.h"
 #include "port/port_ui.h"
+#include "port/jiminy_layout.h"
 #include "port/port_state.h"
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
@@ -58,6 +59,7 @@ typedef void (*IntrFunc)(void);
 extern void AgbMain(void);
 extern Mode* gCurrentMode;
 extern Mode gModeBattle;
+extern Mode gModeJiminy;
 extern IntrFunc gIntrTable[];
 
 /* The game's mutable globals (see port/game_prefix.h). */
@@ -1715,6 +1717,11 @@ static void Present(void) {
      * layers and presentation must all use the same phase for this frame. */
     int menuCanvas = PortUiMenuCanvas();
     int sceneFade = PortUiSceneFade();
+    PortJiminyLayout journalLayout = {0};
+    int journalShown = 0;
+    int journalActive = !menuCanvas && gPortConfig.hdCards && gCurrentMode == &gModeJiminy &&
+        gPortConfig.viewMode != PORT_VIEW_ORIGINAL && gPortConfig.viewMode != PORT_VIEW_CRT &&
+        (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0;
     void PortHdHudPrepare(SDL_Renderer* renderer);
     void PortHdHudDraw(SDL_Renderer* renderer, int width, int height);
     void PortHdHudDrawLabel(SDL_Renderer* renderer, int width, int height);
@@ -1772,6 +1779,11 @@ static void Present(void) {
         dst.h = GBA_SCREEN_H * scale;
         dst.x = (float)(int)((outW - dst.w) / 2);
         dst.y = (float)(int)((outH - dst.h) / 2);
+        if (journalActive && PortJiminyFit(outW, outH, &journalLayout)) {
+            scale = journalLayout.scale;
+            dst = (SDL_FRect){ journalLayout.x, journalLayout.y, journalLayout.width, journalLayout.height };
+            journalShown = 1;
+        }
         normal = dst;
         if (sSideStyle == 10 && sFitScale <= 0 && !menuCanvas) {
             /* movies: only the video, without its letterbox, as large as the
@@ -2218,6 +2230,14 @@ static void Present(void) {
     }
     if (gPortConfig.viewMode != PORT_VIEW_CRT) /* the CRT or its shader draws them */
         DrawScanlines(&dst, outW);
+    if (journalShown) {
+        int dark = 0, white = 0;
+        /* Bank5 belongs to the header in all journal maps. Bank0 belongs to
+           portraits and may be cleared while an otherwise visible book opens. */
+        PortPpuJiminyFade(&dark, &white);
+        PortUiJournalFooter(sRenderer, outW, journalLayout.footerY, journalLayout.footerHeight,
+                             journalLayout.scale, sSideStyle == 12, dark, white);
+    }
     {
         /* state / slot notices: topmost, at the window's scale */
         static uint32_t sNoticeBuf[256 * 14];

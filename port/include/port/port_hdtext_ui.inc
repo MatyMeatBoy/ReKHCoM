@@ -1,5 +1,24 @@
 #include "port/port_hdtext_warmup.inc"
 
+/* Presentation callers retain their native line until every required glyph
+   has a usable image. Empty glyphs (spaces) need an advance, not a texture. */
+int PortHdTextUiGlyphReady(SDL_Renderer* renderer, int code, float scale) {
+    HdFont* font;
+    HdGlyph* glyph;
+    if (!gPortConfig.hdTitle || !renderer || scale <= 0) return 0;
+    font = FontForScale(scale, 3);
+    if (!font->font) return 0;
+    glyph = code > 255 ? GlyphJp(renderer, font, (uint16_t)code) : Glyph(renderer, font, code);
+    if (!glyph || !glyph->ready || glyph->advance <= 0) return 0;
+    if (glyph->w <= 0 || glyph->h <= 0) return 1;
+    if (!glyph->tex) return 0;
+#ifdef PORT_SDL_BRIDGE_TEXTURE_READY
+    return PortBridgeTextureReady(glyph->tex);
+#else
+    return 1;
+#endif
+}
+
 /* Port-owned settings and new-game panels: the same embedded KHMenu and
    portable glyph cache as the game's HD text, independent of hd_text. */
 void PortHdTextUiGlyph(SDL_Renderer* renderer, int code, float x, float y, float scale, float cell,
