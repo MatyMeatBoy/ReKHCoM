@@ -10884,10 +10884,10 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T08:43:34.343866+00:00",
+      "updated_at": "2026-10-29T08:43:48.185356+00:00",
       "branch": "fix/v23-jiminy-presented-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/499",
       "approval": "Root integrator: human-authorized code review; 30cc94a97aa0a4950769f103bb464937d0543374",
@@ -10977,6 +10977,11 @@
           "at": "2026-10-29T08:43:34.343866+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual review: all margin consumers use final pixel snapshots, bounded native OAMspan<576 and buffer<40KiB, int64 distance, no heap or game-state edits. CPU REDold/GREENnew;26journalcaptures/10comparisons knownheaderonly; validroom normalinputmap4identicalviews/exit0 andMoogleentry4views/exit0. Invalidforcedmodechain fails unchangedold, excluded. Windows32/64 ABIboot, AndroidFTUSJP, sources PASS. P2 remains partial."
+        },
+        {
+          "at": "2026-10-29T08:43:48.185356+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: all margin consumers use final pixel snapshots, bounded native OAMspan<576 and buffer<40KiB, int64 distance, no heap or game-state edits. CPU REDold/GREENnew;26journalcaptures/10comparisons knownheaderonly; validroom normalinputmap4identicalviews/exit0 andMoogleentry4views/exit0. Invalidforcedmodechain fails unchangedold, excluded. Windows32/64 ABIboot, AndroidFTUSJP, sources PASS. P2 remains partial.; merged d195d4c1110d4dcb5f5c28f500d8f3c73c124ee4; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11516,7 +11521,7 @@
     "created_at": "2026-10-29T08:43:39.131579+00:00",
     "updated_at": "2026-10-29T08:43:39.131579+00:00"
   },
-  "updated_at": "2026-10-29T08:43:39.150045+00:00",
+  "updated_at": "2026-10-29T08:43:48.185356+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
