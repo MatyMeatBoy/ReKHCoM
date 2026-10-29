@@ -11993,12 +11993,12 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T18:46:48.259724+00:00",
+      "updated_at": "2026-10-29T18:47:21.878990+00:00",
       "branch": "fix/issue515-tutorial-synthesis-actors",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Human authorized bugs priority1 and cover all new issues before2.3",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/515",
       "evidence": [
@@ -12011,13 +12011,18 @@
           "at": "2026-10-29T18:46:48.259724+00:00",
           "owner": "codex-issue515",
           "detail": "Source ddcfa009f; exact MomentsReprieve reproduced RED frozen64, GREEN currentEU32/64. Actual emitter canaries,512 bound,206 nativePPU cases,state snapshot,HD owner512,decoder fallback,source checks PASS. Preparing PR and reporter test; no device Linux/Android certification."
+        },
+        {
+          "at": "2026-10-29T18:47:21.878990+00:00",
+          "owner": "codex-issue515",
+          "detail": "PR519 head ddcfa009f50a6073e5f40de84e7269b6c4a66671; root reviewed central emitter/PPU/HD owner/state/reset. RED+GREEN exactMomentsReprieve EU32/64;206 independent cases and fault-injection PASS. Delivery/reporter confirmation remains."
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T18:46:48.259724+00:00",
+  "updated_at": "2026-10-29T18:47:21.878990+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
