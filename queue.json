@@ -10338,10 +10338,10 @@
       "status": "pr_abierto",
       "owner": "codex-linux459",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T02:55:18.068248+00:00",
+      "updated_at": "2026-10-29T02:56:32.556314+00:00",
       "branch": "docs/linux459-hdtext-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/490",
-      "approval": "Root integrator: human-authorized code review; c87838bcb13e5eaca1f267fdce0a3abee156d457",
+      "approval": "Root integrator: human-authorized code review; 6b7a6b64ffc4f842852891b2a59054174651f6c8",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
         {
@@ -10388,6 +10388,11 @@
           "at": "2026-10-29T02:55:18.068248+00:00",
           "owner": "codex-linux459",
           "detail": "HD fix489 integrated50ed2618, public test459-hdtext.1 final TAR SHA f7f5f8c6339a9ee9c98384aefb1893cc477c66f25c0b98beefa6a4e5d1fc9eb0; exact four game routes exit81,5 public assets anonymously hash matched; sent459/330 comments6486570914/6486571271. Docs490 records delivery; normal launch and reporter HD result remain open."
+        },
+        {
+          "at": "2026-10-29T02:56:32.556314+00:00",
+          "owner": "codex-linux459",
+          "detail": "Root solo doc review against PUBLIC-VERIFIED.json and closed proof: public5asset hashes, exact TAR4game exit81, source c878/merge50ed and reused64 provenance; reporter messages exist, stable latest2.2.5 unchanged;459/330 kept open. No source/runtime changes."
         }
       ],
       "claimed_at": "2026-10-29T02:17:11.379296+00:00"
@@ -11165,7 +11170,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T02:55:18.068248+00:00",
+  "updated_at": "2026-10-29T02:56:32.556314+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
