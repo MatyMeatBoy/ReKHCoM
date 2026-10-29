@@ -43,6 +43,7 @@ static void ProbeFree(void*p){(void)p;operation("image-scratch-release");}
 static int SDL_GetVersion(void){return 3004018;}
 static const char*SDL_GetCurrentVideoDriver(void){return "controlled-video";}
 static const char*SDL_GetCurrentAudioDriver(void){return "controlled-audio";}
+static void StartupLibraries(void){}
 static const char*SDL_GetError(void){return error;}
 static bool SDL_Init(int flags){if(flags!=7)_Exit(99);error="original injected error";return operation("sdl-init");}
 typedef struct { int unused; } PortStartupDeadline;

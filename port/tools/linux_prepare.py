@@ -19,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from workdir import WORK_DIR  # noqa: E402  the heavy work folder (REKHCOM_WORK)
+from linux_sdl_sonames import normalize_x11_sonames
 
 ROOT = Path(__file__).resolve().parents[2]
 TC = next((p / 'toolchain' for p in ROOT.parents if (p / 'toolchain').is_dir()), ROOT.parent / 'toolchain')
@@ -145,6 +146,11 @@ set(PKG_CONFIG_EXECUTABLE {(tools / "pkg-config.bat").as_posix()} CACHE FILEPATH
         subprocess.check_call([cmake(), '-G', 'Ninja', '-S', str(src), '-B', str(build),
                                f'-DCMAKE_TOOLCHAIN_FILE={toolchain.as_posix()}', '-DCMAKE_BUILD_TYPE=Release',
                                f'-DCMAKE_INSTALL_PREFIX={(base / name).as_posix()}', *opts], env=env)
+        if name == 'sdl':
+            config = build / 'include-config-release/build_config/SDL_build_config.h'
+            readelf = sorted(TC.glob('llvm-mingw-*'))[-1] / 'bin/llvm-readelf.exe'
+            for row in normalize_x11_sonames(config, base / 'sysroot', readelf):
+                print('SDL X11 runtime:', row['previous'], '->', row['soname'])
         subprocess.check_call([cmake(), '--build', str(build), '-j', str(jobs or os.cpu_count() or 1)], env=env)
         subprocess.check_call([cmake(), '--install', str(build)], env=env)
     shutil.copyfile(sdl_src / 'LICENSE.txt', base / 'sdl-src-LICENSE.txt')
