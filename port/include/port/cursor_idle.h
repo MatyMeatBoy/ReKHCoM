@@ -57,7 +57,7 @@ static void PortCursorIdlePoll(PortCursorIdle* state, SDL_Window* window) {
                 !(SDL_GetWindowFlags(window) & (SDL_WINDOW_HIDDEN | SDL_WINDOW_MINIMIZED));
     if (!over || !state->overGame) state->lastActivity = now;
     state->overGame = over;
-    if (over && now - state->lastActivity >= 4000) {
+    if (over && now - state->lastActivity >= 2000) {
         if (!state->hidden && SDL_HideCursor()) state->hidden = true;
     } else {
         PortCursorIdleRestore(state);
