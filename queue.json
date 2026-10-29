@@ -10822,12 +10822,12 @@
     "v23-p1-map-card-hd-gaps": {
       "id": "v23-p1-map-card-hd-gaps",
       "piece": "2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T05:02:27.646218+00:00",
+      "updated_at": "2026-10-29T05:18:08.521142+00:00",
       "branch": "fix/v23-mapcard-rewards",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/492",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/493",
       "approval": "Root integrator: human-authorized code review; 27e64a560e868b351e70d2033f104b3bbe6238a5",
       "reference": "Owner screenshot20261028-54576822; pruebas/v23-prioridades/naipes-mapa-referencia.png. After2.2.5release. Reconcile mapinspect-grid-hd-original-frame existing task before implementation.",
       "evidence": [
@@ -10860,10 +10860,15 @@
           "at": "2026-10-29T05:02:27.646218+00:00",
           "owner": "codex-mapcards23",
           "detail": "Found actual remastered Rewards door in owned FORM/0050/FO0050.RTM UK_card.imz image19, cell384,128..512,256; inspect_menu_banks and source SHA recorded. All15,475 remastered names scanned read-only; no standalone ck4/cr23 assumed. Public ReCoM screenshot used only for identification; no remote artwork downloaded. Coverage test RED identifies missing Rewards. Completing26th family and big counterpart."
+        },
+        {
+          "at": "2026-10-29T05:18:08.521142+00:00",
+          "owner": "codex-mapcards23",
+          "detail": "f2f27bcf7 completes26th family from owned menu atlas image19; five localization images identical. CoverageRED/GREEN5; actual C++881to883 upgrade stale2to0, prior881 outputs identical; two new max0/1 perchannel vsPython. Eight real game routes+three premium-cycle routes; all26 family fixture, HDoff5/fallback5 identical,8native goldcorners identical; source andABI64 checks pass. Direct image shown; no Atlas rating/other-device/audio claim. Manual root review per no-workers request."
         }
       ],
       "claimed_at": "2026-10-29T03:35:02.308468+00:00",
-      "sent": "direct-runtime-capture:pruebas/mapcards23/after-32-hd1-software/1400.png"
+      "sent": "direct-runtime-capture:pruebas/mapcards23/rewards/gold-cycle-after-64/1631.png"
     },
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
@@ -11244,7 +11249,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T05:02:27.647230+00:00",
+  "updated_at": "2026-10-29T05:18:08.521142+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
