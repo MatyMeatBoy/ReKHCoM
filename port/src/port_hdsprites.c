@@ -463,13 +463,20 @@ int PortHdTitleArtReady(float* aspect) {
     return sArt != NULL;
 }
 
-/* Keep first-open decoding/upload outside a live menu frame. Only the small
-   shared menu set is prepared; imported cards keep their bounded LRU cache. */
+/* Keep first-open decoding/upload outside a live menu frame. Shared menu
+   and title assets use the existing bounded cache; cards stay on demand. */
 void PortHdMenuAssetsWarm(SDL_Renderer* renderer) {
+    int i;
     if (!gPortConfig.hdTitle || !renderer) return;
     sRenderer = renderer;
     PortHdTitleArtReady(NULL);
     MenuLightReady(renderer);
+    /* Skipping the title's intro exposes its logo parts together. Decode
+       that fixed imported set before game audio starts, through the normal
+       bounded cache/readiness path. Cards and menu words remain on demand. */
+    for (i = 0; i < HD_SPRITE_COUNT; i++)
+        if (kHdSprites[i].group == 2 && !SDL_strncmp(kHdSprites[i].name, "gTitleLogo", 10))
+            (void)SpriteReady(i);
 }
 
 /* The illustration in a w x h box at x, y (the Options panel's picture): as tall as the box, its right side kept. */
