@@ -1,0 +1,426 @@
+{
+  "status": "Windows32 verified; Windows64 pending",
+  "implementation_commit": "5c1a6954588a609f2e8e352577e305369a907d68",
+  "base_commit": "d2d3324312bb371e19f5e53938d296bb9ba72b5f",
+  "ppu_sha256": "187d3e951d7c30e96e7f8080ad7512e2bc89b026b24cf61eec940cf188d04eba",
+  "candidate32_sha256": "67ed3d9bcfb2ed3c88b70b41e25ac7276c0275fd6241f3b3fabe1e2a685d241e",
+  "baseline32_sha256": "2c79b4cf550a452316f83f6bf5a8d889a1fe1c2c9b10796ba76155a5a9f891df",
+  "source_regions": {
+    "eu_us_jp_tiles_map_palette_identical": true,
+    "donor_pixels": 24576,
+    "donor_transparent_pixels": 0
+  },
+  "checks": {
+    "cpu_baseline": "RED: two added depth rows identical with old last-row clamp",
+    "cpu_candidate": "GREEN: production affine sampler;512source rows+160native viewport rows unchanged; donor bounds; other arena; palette fade; exact loaded-tile selector",
+    "cpu_architectures": [
+      "i686",
+      "x86_64"
+    ],
+    "root_objects_hashed": 357,
+    "root_objects_unchanged_before_after_build_and_captures": true,
+    "reused_root_objects": 356,
+    "compiled_own_ppu_only": true,
+    "real32": [
+      {
+        "zoom": "x1",
+        "mode": "sd",
+        "window": "640x480",
+        "ini_zoom": 2,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              397,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 396,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              399,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 397,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              397,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 396,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              395,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 393,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "x1",
+        "mode": "hd",
+        "window": "640x480",
+        "ini_zoom": 2,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              397,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 396,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              399,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 397,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              397,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 396,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              395,
+              640,
+              480
+            ],
+            "baseline_constant_bottom_start": 393,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "x3",
+        "mode": "sd",
+        "window": "1536x864",
+        "ini_zoom": 6,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              786,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 783,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              789,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 786,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              786,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 783,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              780,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 777,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "x3",
+        "mode": "hd",
+        "window": "1536x864",
+        "ini_zoom": 6,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              786,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 783,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              789,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 786,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              786,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 783,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              780,
+              1536,
+              864
+            ],
+            "baseline_constant_bottom_start": 777,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "integer2",
+        "mode": "sd",
+        "window": "960x540",
+        "ini_zoom": 4,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              506,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 504,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              508,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 506,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              506,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 504,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              502,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 500,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "integer2",
+        "mode": "hd",
+        "window": "960x540",
+        "ini_zoom": 4,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": [
+              0,
+              506,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 504,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": [
+              0,
+              508,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 506,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": [
+              0,
+              506,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 504,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": [
+              0,
+              502,
+              960,
+              540
+            ],
+            "baseline_constant_bottom_start": 500,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": false
+      },
+      {
+        "zoom": "auto4",
+        "mode": "sd",
+        "window": "1536x864",
+        "ini_zoom": 8,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": true
+      },
+      {
+        "zoom": "auto4",
+        "mode": "hd",
+        "window": "1536x864",
+        "ini_zoom": 8,
+        "exit": 0,
+        "frames": [
+          {
+            "frame": "out_00180.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00300.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00450.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          },
+          {
+            "frame": "out_00560.png",
+            "difference_bbox": null,
+            "baseline_constant_bottom_start": 860,
+            "upper_pixels_unchanged": true
+          }
+        ],
+        "all_pixels_identical": true
+      }
+    ]
+  },
+  "visual_review": "Coordinator reviewed real x1SD andx3HD: own projected floor replaces streaks; remainder preserved; no further redraw requested.",
+  "scope": "Actual Windows32 SDLdummy software, SD/HD flags, camera movement and pause. Windows64 capture remains required. Other physical platforms and audio unverified.",
+  "harness_notes": [
+    "Initial baseline omitted KHCOM_BACKGROUND_TEST and runtime raised priority despite BELOW_NORMAL creation. Visual evidence only, no performance claim. All candidate runs used BACKGROUND_TEST and retained caller scheduling.",
+    "Initial comparator boundary incorrectly included left-hand HUD overlay. Corrected ground-boundary estimator uses right quarter, then compares whole image. No product code change for this harness error."
+  ],
+  "private_evidence": "pruebas/halloween-floor23; proprietary captures, sources and binaries not committed"
+}
