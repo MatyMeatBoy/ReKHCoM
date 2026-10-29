@@ -330,13 +330,16 @@ static MenuSources sMenuShown = { .tabBg = { -1, -1 } }, sMenuPend = { .tabBg = 
 static uint8_t sJiminyPaperMask[240 * 160];
 static uint32_t sJiminyNameEdges[2 * 24];
 static int sJiminyPaperCapture;
+static const void* sJiminyBookFrame;
+
+const void* PortPpuJiminyBookFrame(void) { return sJiminyBookFrame; }
 
 const uint8_t* PortPpuJiminyPaperMask(void) {
     return sJiminyPaperCapture ? sJiminyPaperMask : NULL;
 }
 
 const uint32_t* PortPpuJiminyNameEdges(void) {
-    return sJiminyPaperCapture ? sJiminyNameEdges : NULL;
+    return sJiminyPaperCapture && !sJiminyBookFrame ? sJiminyNameEdges : NULL;
 }
 /* Sample every menu extension before VBlank changes its rendering inputs. */
 static void CaptureMenuMarginPixels(void);
@@ -760,6 +763,7 @@ extern const unsigned char gOlympiaSmallCardTiles[];
 extern const unsigned char gCrabclawSmallCardTiles[], gDivineRoseSmallCardTiles[], gFairyHarpSmallCardTiles[];
 extern const unsigned char gMetalChocoboSmallCardTiles[], gOathkeeperSmallCardTiles[], gPumpkinheadSmallCardTiles[];
 extern const unsigned char gSpellbinderSmallCardTiles[], gUltimaWeaponSmallCardTiles[], gWishingStarSmallCardTiles[];
+extern const unsigned char gJiminyBinderRingTiles[], gJiminyBinderRingFrame0[];
 
 /* Only the native underlay changes: at fractional output scales its white
  * Olympia cell can escape the HD window's filtered right edge. Coordinates
@@ -2891,8 +2895,14 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         top = objFront ? sObjLine[x] : bg < 0 ? bd : sBgLine[bg][x];
         blend = (objFront && sObjSemi[x]) ||
                 ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
-        if (sJiminyPaperCapture && objects && gx >= 0 && gx < 240 && gyLine >= 16 && gyLine < 160)
-            sJiminyPaperMask[gyLine * 240 + gx] = (uint8_t)PortJiminyPaperPixel(topLayer, blend, gx, gyLine);
+        if (sJiminyPaperCapture && objects && gx >= 0 && gx < 240 && gyLine >= 16 && gyLine < 160) {
+            int binder = objFront && sObjIndex[x] < 128 &&
+                sOamHd[sObjIndex[x]].tiles == gJiminyBinderRingTiles &&
+                sOamHd[sObjIndex[x]].frame == gJiminyBinderRingFrame0;
+            sJiminyPaperMask[gyLine * 240 + gx] = (uint8_t)(PortJiminyBookPixel(
+                sJiminyBookFrame != NULL, topLayer, blend, gx, gyLine) ||
+                PortJiminyBookObject(sJiminyBookFrame != NULL, topLayer, blend, binder, gx, gyLine));
+        }
         if (blend) {
             if (objFront) {
                 if (bg >= 0) { second = sBgLine[bg][x]; secondLayer = bg; }
@@ -4256,12 +4266,16 @@ void PortPpuRenderFrame(void) {
     extern Mode* gCurrentMode;
     extern const uint16_t gJiminyStoryDetailMap[];
     extern const uint16_t gJiminyCardDetailMap[], gJiminyCharacterDetailMap[];
+    extern const uint16_t gJiminyCardListMap[];
     const uint16_t* shownMap = (const uint16_t*)(VRAM8 + ((IO16(0xA) >> 8) & 31) * 2048);
 
+    /* All three lists share these body rows; their header tiles differ.
+       Select from the map actually presented, never the next menu state. */
+    sJiminyBookFrame = PortJiminyDetailMap(shownMap, gJiminyCardListMap) ? gJiminyCardListMap : NULL;
     sJiminyPaperCapture = gPortConfig.hdCards && gCurrentMode == &gModeJiminy &&
         (IO16(0) & 0x287) == 0x200 && !(IO16(0xA) & 0xC000) &&
         !(IO16(0x14) & 0x1FF) && !(IO16(0x16) & 0x1FF) &&
-        (PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
+        (sJiminyBookFrame || PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCardDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCharacterDetailMap));
     if (sJiminyPaperCapture) {

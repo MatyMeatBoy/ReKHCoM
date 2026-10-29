@@ -1469,7 +1469,7 @@ static int DrawJournalBook(const SDL_FRect* src, const SDL_FRect* dst) {
     float scale = dst->w / 240;
     int id, dark = 0, white = 0;
     if (!paper) return 0;
-    id = PortHdSpriteFind(gJiminyBgTiles, NULL);
+    id = PortHdSpriteFind(gJiminyBgTiles, PortPpuJiminyBookFrame());
     if (!id || !PortJiminyForeground(foreground, sComposite, gPortFrame, paper,
             gPortScreen.width, gPortScreen.height, (int)src->x, (int)src->y)) return 0;
     PortPpuJiminyFade(&dark, &white);
@@ -1875,7 +1875,7 @@ static void Present(void) {
             DrawBlurredReflection(&src, outW, outH);
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
-        if (journalShown && sSideStyle == 12) DrawJournalPicture(&src, &dst);
+        if (journalShown) DrawJournalPicture(&src, &dst);
         else SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
         if (moviePrompt)
             DrawSkipLayer(&normal);
