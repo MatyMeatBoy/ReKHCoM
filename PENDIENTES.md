@@ -413,4 +413,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v23-atlas-approved-activation-audit | Inventario completo78familias con aprobacion Atlas29Oct: versionexacta a source/main/gate/import/runtime, detectar aprobados noactivos (Trickmaster yotros), arreglospequenos sinactivarhijaspendientes; no asumirPRcerradomerged | en_curso | codex-atlas-v23 | https://github.com/MatyMeatBoy/ReKHCoM/pull/518 | Root integrator: human-authorized code review; 6659f929d73a687107a1b7eb0fcadb0e6257a737 | 2026-10-29T18:00:51.297139+00:00 |
 | issue515-map-card-tutorial-actors | P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions | pr_abierto | codex-issue515 | https://github.com/MatyMeatBoy/ReKHCoM/pull/519 | Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671 | 2026-10-29T18:47:30.621734+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T18:47:35.176566+00:00)
