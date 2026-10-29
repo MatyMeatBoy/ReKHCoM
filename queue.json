@@ -11993,10 +11993,10 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T18:47:30.621734+00:00",
+      "updated_at": "2026-10-29T18:47:45.140702+00:00",
       "branch": "fix/issue515-tutorial-synthesis-actors",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
@@ -12021,6 +12021,11 @@
           "at": "2026-10-29T18:47:30.621734+00:00",
           "owner": "codex-issue515",
           "detail": "Root reviewed shared bounded OAM spill, metadata/priority/reset/snapshot. ExactMomentsReprieve RED64/GREEN32+64,206 oracles,emitter canaries,HDowner512,decodefallback,source checks PASS; publicQA OAM_PARTS_515_QA.json. Test delivery/report confirmation pending."
+        },
+        {
+          "at": "2026-10-29T18:47:45.140702+00:00",
+          "owner": "codex-issue515",
+          "detail": "Root reviewed shared bounded OAM spill, metadata/priority/reset/snapshot. ExactMomentsReprieve RED64/GREEN32+64,206 oracles,emitter canaries,HDowner512,decodefallback,source checks PASS; publicQA OAM_PARTS_515_QA.json. Test delivery/report confirmation pending.; merged 634af44c005ddeabe1e92ecc44879f0bbf5d8a9c; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
@@ -12032,7 +12037,7 @@
     "created_at": "2026-10-29T18:47:35.176566+00:00",
     "updated_at": "2026-10-29T18:47:35.176566+00:00"
   },
-  "updated_at": "2026-10-29T18:47:35.176566+00:00",
+  "updated_at": "2026-10-29T18:47:45.140702+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
