@@ -594,6 +594,11 @@ void MapInspectBuildInventory() {
 
         // @bug Reads past the end of gMapCardDefs at k = 26 (harmless).
         for (k = 0; k <= 26; k++) {
+#ifdef PLATFORM_PC
+            /* The serialized inventory has reserved slots beyond the actual
+               definition table. Never interpret them as another card family. */
+            if (k * 10 >= ARRAY_COUNT(gMapCardDefs)) break;
+#endif
             color = gMapCardDefs[k * 10].color;
 
             if (color == sMapCardCategoryTypes[j]) {

@@ -1003,6 +1003,9 @@ u16 CountOwnedMapCardKinds() {
     count = 0;
 
     for (j = 0; j < 27; j++) {
+#ifdef PLATFORM_PC
+        if (j * 10 >= ARRAY_COUNT(gMapCardDefs)) break;
+#endif
         for (i = j * 10; i < j * 10 + 10; i++) {
             if (gMapCardCounts[i] != 0) {
                 count++;
@@ -1019,6 +1022,9 @@ void ListOwnedMapCardKinds(MapSelectKindEntry* out) {
     u16 j;
 
     for (i = 0; i <= 26; i++) {
+#ifdef PLATFORM_PC
+        if (i * 10 >= ARRAY_COUNT(gMapCardDefs)) break;
+#endif
         j = i * 10;
 
         while (j < i * 10 + 10) {
@@ -1298,6 +1304,9 @@ u16 CountMapCards() {
     sum = 0;
 
     for (i = 0; i <= 0x10D; i++) {
+#ifdef PLATFORM_PC
+        if (i >= ARRAY_COUNT(gMapCardDefs)) break;
+#endif
         sum += gMapCardCounts[i];
     }
 
@@ -1305,6 +1314,11 @@ u16 CountMapCards() {
 }
 
 s32 AddMapCard(u16 cardId) {
+#ifdef PLATFORM_PC
+    /* Count storage also contains reserved serialized slots; a stored count
+       is not evidence that a drawable card definition exists for that ID. */
+    if (cardId >= ARRAY_COUNT(gMapCardDefs)) return FALSE;
+#endif
     if (CountRegularMapCards() <= 98) {
         if (gMapCardCounts[cardId] <= 8) {
             gMapCardCounts[cardId]++;
@@ -1419,6 +1433,9 @@ s32 AddMapCard(u16 cardId) {
 }
 
 s32 RemoveMapCard(u16 cardId) {
+#ifdef PLATFORM_PC
+    if (cardId >= ARRAY_COUNT(gMapCardDefs)) return FALSE;
+#endif
     if (gMapCardCounts[cardId] != 0) {
         gMapCardCounts[cardId]--;
         return TRUE;
@@ -1435,6 +1452,9 @@ u16 CountMapCardsOfKind(u16 baseCardId) {
     u16 sum;
     s32 i;
 
+#ifdef PLATFORM_PC
+    if (baseCardId > ARRAY_COUNT(gMapCardDefs) - 10) return 0;
+#endif
     sum = 0;
 
     for (i = baseCardId; i < baseCardId + 10; i++) {
@@ -1464,6 +1484,9 @@ u16 CountZeroValueMapCards() {
     sum = 0;
 
     for (i = 0; i < 27; i++) {
+#ifdef PLATFORM_PC
+        if (i * 10 >= ARRAY_COUNT(gMapCardDefs)) break;
+#endif
         sum += gMapCardCounts[i * 10];
     }
 
@@ -1538,6 +1561,9 @@ const void* GetRoomName(u16 kind) {
 }
 
 u8 HasMapCard(u16 cardId) {
+#ifdef PLATFORM_PC
+    if (cardId >= ARRAY_COUNT(gMapCardDefs)) return FALSE;
+#endif
     if (gMapCardCounts[cardId] != 0) {
         return TRUE;
     }
