@@ -11184,10 +11184,23 @@
       ],
       "claimed_at": "2026-10-29T01:51:06.730641+00:00",
       "completed_at": "2026-10-29T01:54:42.601054+00:00"
+    },
+    "map-card-definition-table-bounds": {
+      "id": "map-card-definition-table-bounds",
+      "piece": "Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T03:06:37.373146+00:00",
+      "updated_at": "2026-10-29T03:06:37.373146+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T03:06:32.550346+00:00",
+  "updated_at": "2026-10-29T03:06:37.373146+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
