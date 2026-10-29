@@ -11649,10 +11649,10 @@
       "status": "pr_abierto",
       "owner": "codex-halloween-v23",
       "created_at": "2026-10-29T06:51:24.325541+00:00",
-      "updated_at": "2026-10-29T17:02:57.255455+00:00",
+      "updated_at": "2026-10-29T17:09:11.406727+00:00",
       "branch": "docs/v23-halloween-floor-validation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/514",
-      "approval": "Root integrator: human-authorized code review; 257983eff834d4037dc7605e1c25a622a60639fb",
+      "approval": "Root integrator: human-authorized code review; 4f1e7a2b1c3d9b1d0f029be94d4cf6a7e8f9d692",
       "reference": "user screenshot codex-clipboard-dfd30b14-402a-4538-805b-48305f68ea6a.png",
       "evidence": [
         {
@@ -11689,6 +11689,11 @@
           "at": "2026-10-29T17:02:57.255455+00:00",
           "owner": "codex-halloween-v23",
           "detail": "CodePR509mergedff476aa9. Real64FLOORgatePASS:8validSDHDzooms1x3xint2Auto4runs exit0;host+guest+SDLhashesintact.16SDframeswholeRGBAexactto32;4HDpausedframeswholeRGBAexact;32framesaddedgroundright40percentexact.12activeHDoverlayframesNOTwholeexact (software-nearest/D3D11smooth inclHUD/floatinglabels);noHUDparityclaim. Initial4HDmissingexternalfonts runs preserved/excluded;4newHDOTFsloaded. PublicsupplementPR514 source4f1e7a2b1c3d9b1d0f029be94d4cf6a7e8f9d692 documentaryonly. Private CROSS-ARCH32-64-RESULT.json, hostSHA62d80365...guest718704c8...;no64beforeclaim/nootherphysicalplatform/audio. LastSDLinstanceclosed,rootnotified. Evidence~29MB afterbyte-identicaldebugLZMA/fontcopyconsolidation,owncheckoutcleanpendingremoval."
+        },
+        {
+          "at": "2026-10-29T17:09:11.406727+00:00",
+          "owner": "codex-halloween-v23",
+          "detail": "Root manual review of evidence supplement only: actual ff476 SDL64 eight valid runs/32captures with both fonts, bin hashes stable. Read32/64 comparisons16SDwholeframes+4HDpausedwholeframes exact,32addedground checks exact; activeHDoverlay parity unclaimed and missing-font attempts excluded. Source implementation509 already integrated, CPU and real32 reviewed earlier. Floor scope complete; future platform packages retain separate release gates."
         }
       ],
       "claimed_at": "2026-10-29T15:54:03.034148+00:00"
@@ -11946,7 +11951,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:02:57.255455+00:00",
+  "updated_at": "2026-10-29T17:09:11.406727+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
