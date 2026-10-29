@@ -11389,10 +11389,10 @@
     "release-v23-pre1-win-android": {
       "id": "release-v23-pre1-win-android",
       "piece": "User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-v23-pre1",
       "created_at": "2026-10-29T07:00:34.758758+00:00",
-      "updated_at": "2026-10-29T07:08:04.793798+00:00",
+      "updated_at": "2026-10-29T07:09:12.354185+00:00",
       "branch": "release/v23-pre1",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/497",
       "approval": "Root integrator: human-authorized code review; f19ccdddf251e692d9e52a9cde821f739e2a875e",
@@ -11407,6 +11407,11 @@
           "at": "2026-10-29T07:08:04.793798+00:00",
           "owner": "codex-v23-pre1",
           "detail": "Root review: version header and candid changelog only; check_sources and Androidpre identity PASS. Delivery remains unfinished until rebuilt and verified packages are published."
+        },
+        {
+          "at": "2026-10-29T07:09:12.354185+00:00",
+          "owner": "codex-v23-pre1",
+          "detail": "Root review: version header and candid changelog only; check_sources and Androidpre identity PASS. Delivery remains unfinished until rebuilt and verified packages are published.; merged c6019feeb623ac6033d097cef54d263a6a1ac970; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T07:00:59.546295+00:00"
@@ -11444,7 +11449,7 @@
     "created_at": "2026-10-29T07:08:38.102654+00:00",
     "updated_at": "2026-10-29T07:08:38.102654+00:00"
   },
-  "updated_at": "2026-10-29T07:08:38.102654+00:00",
+  "updated_at": "2026-10-29T07:09:12.354185+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
