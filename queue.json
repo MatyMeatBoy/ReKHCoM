@@ -11317,23 +11317,28 @@
       "status": "pr_abierto",
       "owner": "codex-cursor2s",
       "created_at": "2026-10-29T06:21:49.354047+00:00",
-      "updated_at": "2026-10-29T06:24:32.797660+00:00",
+      "updated_at": "2026-10-29T06:24:47.741985+00:00",
       "branch": "fix/cursor-two-seconds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/496",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; e847b63ad0029b36fae90ec4c87abb0ccb38e691",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-29T06:24:32.797660+00:00",
           "owner": "codex-cursor2s",
           "detail": "Actual SDL header test RED with4s and GREEN2s; same focus/motion/error retry checks"
+        },
+        {
+          "at": "2026-10-29T06:24:47.741985+00:00",
+          "owner": "codex-cursor2s",
+          "detail": "Manual root review: deadline only; exact1999/2000ms boundary RED/GREEN and lifecycle pass."
         }
       ],
       "claimed_at": "2026-10-29T06:21:58.657365+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:24:32.797660+00:00",
+  "updated_at": "2026-10-29T06:24:47.741985+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
