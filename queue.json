@@ -11218,12 +11218,12 @@
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
       "piece": "2.3 P3: complete audio stutter review, intro skip to title and opening Moogle shop submenu",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v23-audio",
       "created_at": "2026-10-28T23:03:04.621579+00:00",
-      "updated_at": "2026-10-29T16:42:33.267517+00:00",
+      "updated_at": "2026-10-29T17:38:39.519966+00:00",
       "branch": "fix/v23-audio-transition-review",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/516",
       "approval": null,
       "reference": "Owner20261028 confirms still unpleasant audio despite existing continuity fixes. Treat as fresh transition reproductions; compare producer/consumer PCM and actual queues, avoid hiding missing audio behind positive queued count. After priorities1/2 and2.2.5release.",
       "evidence": [
@@ -11231,6 +11231,11 @@
           "at": "2026-10-29T16:42:33.267517+00:00",
           "owner": "codex-v23-audio",
           "detail": "Root resumed after journal511. Existing consumer ramp/AUD1 integrated411; investigate remaining user skips/title/Moogle at actual playback, nonzero PCM, frame/resource timings; do not repeat synthetic fallback as universal fix."
+        },
+        {
+          "at": "2026-10-29T17:38:39.519966+00:00",
+          "owner": "codex-v23-audio",
+          "detail": "PR516 measured title logo startup6 warmup; transition loads8to3, nonzero PCM/rates byte-identical; full-HD image unchanged except known animated lights. No global FPS/zero-underrun claim under359MiB free RAM. Moogle and general HD gameplay/adaptive8GB2GB budget remain pending."
         }
       ],
       "claimed_at": "2026-10-29T16:40:02.761739+00:00"
@@ -11957,7 +11962,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:09:46.439270+00:00",
+  "updated_at": "2026-10-29T17:38:39.519966+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
