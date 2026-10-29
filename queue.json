@@ -12195,10 +12195,23 @@
       "approval": null,
       "reference": "Local test517 QA 29Oct; distinct from world-card light and from user confirmed SteamOS64 startup459",
       "evidence": []
+    },
+    "optiport-render-identity-lessons": {
+      "id": "optiport-render-identity-lessons",
+      "piece": "Promote verified Linux SONAME identity, shared texture/surface failure contracts, additive HD native fallback and harness ASLR observations into OptiPort references; no claim of final full-game pass.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T22:57:18.637695+00:00",
+      "updated_at": "2026-10-29T22:57:18.637695+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "ReKHCoM PR520/521/522/523 and pruebas/issue517-worldcard; authorizing user learn in OptiPort, no workers",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:34:46.002713+00:00",
+  "updated_at": "2026-10-29T22:57:18.637695+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
