@@ -199,16 +199,20 @@ static int SpriteReady(int i) {
 }
 
 int PortHdSpriteFind(const void* tiles, const void* frame) {
-    int i;
+    int i, shared = -1;
     if (!tiles || (!gPortConfig.hdCards && !gPortConfig.hdTitle))
         return 0;
     for (i = 0; i < HD_SPRITE_COUNT; i++) {
         const HdSpriteDef* d = &kHdSprites[i];
-        if (d->tiles != tiles || (d->frame && d->frame != frame) || !GroupOn(d->group))
+        if (d->tiles != tiles || !GroupOn(d->group))
             continue;
-        return SpriteReady(i) ? i + 1 : 0;
+        if (d->frame == frame)
+            return SpriteReady(i) ? i + 1 : 0;
+        if (!d->frame && shared < 0) shared = i;
     }
-    return 0;
+    /* A missing exact replacement keeps its native pixels. A shared image
+       for these tiles is a default only when no exact definition exists. */
+    return shared >= 0 && SpriteReady(shared) ? shared + 1 : 0;
 }
 
 /* Which cells (GBA pixels of the sprite's box) of an HD picture are its dark, opaque inside: the reload card's black
@@ -675,7 +679,7 @@ void PortHdSpriteHudOwner(int slot) {
     if (!SDL_strncmp(kHdSprites[q->id].name, prefix, sizeof(prefix) - 1)) q->hudOwner = slot + 1;
 }
 
-static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
+static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
     SDL_Vertex v[4];
     static const int kIndex[6] = { 0, 1, 2, 0, 2, 3 };
     float area;
@@ -692,7 +696,7 @@ static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, floa
     area = (v[1].position.x - v[0].position.x) * (v[3].position.y - v[0].position.y) -
            (v[1].position.y - v[0].position.y) * (v[3].position.x - v[0].position.x);
     if (area < 0.5f && area > -0.5f)
-        return;
+        return 0;
     /* An axis-aligned quad is cut to the window first (texture coordinates in proportion): SDL's software
        renderer drops a triangle that reaches far past the canvas (the title's logo in its intro zoom was not
        drawn at all), and it saves the work of what cannot be seen. */
@@ -712,7 +716,7 @@ static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, floa
             float cx0 = SDL_clamp(x0, 0, (float)ow), cx1 = SDL_clamp(x1, 0, (float)ow);
             float cy0 = SDL_clamp(y0, 0, (float)oh), cy1 = SDL_clamp(y1, 0, (float)oh);
             if (cx0 == cx1 || cy0 == cy1)
-                return; /* entirely outside */
+                return 0; /* entirely outside */
             v[0].position.x = v[3].position.x = cx0;
             v[1].position.x = v[2].position.x = cx1;
             v[0].position.y = v[1].position.y = cy0;
@@ -757,8 +761,7 @@ static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, floa
         SDL_Vertex grid[81];
         int index[6 * 64], ni = 0;
         if (n == 1) {
-            SDL_RenderGeometry(sRenderer, t, v, 4, kIndex, 6);
-            return;
+            return SDL_RenderGeometry(sRenderer, t, v, 4, kIndex, 6);
         }
         for (j = 0; j <= n; j++)
             for (i = 0; i <= n; i++) {
@@ -778,9 +781,11 @@ static void Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, floa
                 index[ni++] = p; index[ni++] = p + 1; index[ni++] = p + n + 2;
                 index[ni++] = p; index[ni++] = p + n + 2; index[ni++] = p + n + 1;
             }
-        SDL_RenderGeometry(sRenderer, t, grid, (n + 1) * (n + 1), index, ni);
+        return SDL_RenderGeometry(sRenderer, t, grid, (n + 1) * (n + 1), index, ni);
     }
 }
+
+#include "port/jiminy_book_draw.inc"
 
 static int MenuLightPaint(SDL_Renderer* renderer, const float* x, const float* y,
                           const float* u, const float* v, uint64_t ticks, float shade, float white, float alpha) {
@@ -1180,6 +1185,8 @@ void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current,
 void PortHdSpritesShutdown(void) {
     int i;
     MenuLightRelease();
+    if (sJiminyForeground) SDL_DestroyTexture(sJiminyForeground);
+    sJiminyForeground = NULL;
     if (sRingFull) SDL_DestroyTexture(sRingFull);
     if (sRingEmpty) SDL_DestroyTexture(sRingEmpty);
     sRingFull = sRingEmpty = NULL;

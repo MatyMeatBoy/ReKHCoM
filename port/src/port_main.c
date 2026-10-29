@@ -35,6 +35,7 @@ static PortCursorIdle sCursorIdle;
 #include "../decompui/third_party/stb_image.h"
 #include "port/port_ui.h"
 #include "port/jiminy_layout.h"
+#include "port/jiminy_paper.h"
 #include "port/port_state.h"
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
@@ -1460,6 +1461,52 @@ static void DrawSkipLayer(const SDL_FRect* normal) {
     SDL_RenderTexture(sRenderer, sSkipTexture, &src, &dst);
 }
 
+/* Replace only the journal background; native foreground remains on top. */
+static int DrawJournalBook(const SDL_FRect* src, const SDL_FRect* dst) {
+    extern const unsigned char gJiminyBgTiles[];
+    static uint32_t foreground[240 * 160];
+    const uint8_t* paper = PortPpuJiminyPaperMask();
+    float scale = dst->w / 240;
+    int id, dark = 0, white = 0;
+    if (!paper) return 0;
+    id = PortHdSpriteFind(gJiminyBgTiles, NULL);
+    if (!id || !PortJiminyForeground(foreground, sComposite, gPortFrame, paper,
+            gPortScreen.width, gPortScreen.height, (int)src->x, (int)src->y)) return 0;
+    PortPpuJiminyFade(&dark, &white);
+    return PortHdJiminyBookDraw(sRenderer, id, foreground, dst->x, dst->y, scale, dark, white);
+}
+
+static int DrawJournalHeader(const SDL_FRect* src, const SDL_FRect* dst) {
+    SDL_Rect saved, clip;
+    int wasClipped = SDL_RenderClipEnabled(sRenderer), ok;
+    if (wasClipped && !SDL_GetRenderClipRect(sRenderer, &saved)) return 0;
+    clip.x = (int)SDL_floorf(dst->x); clip.y = (int)SDL_floorf(dst->y);
+    clip.w = (int)SDL_ceilf(dst->x + dst->w) - clip.x;
+    clip.h = (int)SDL_floorf(dst->y + 16 * dst->h / 160) - clip.y;
+    if (wasClipped) {
+        int right = SDL_min(clip.x + clip.w, saved.x + saved.w);
+        int bottom = SDL_min(clip.y + clip.h, saved.y + saved.h);
+        clip.x = SDL_max(clip.x, saved.x); clip.y = SDL_max(clip.y, saved.y);
+        clip.w = right - clip.x; clip.h = bottom - clip.y;
+    }
+    if (clip.w <= 0 || clip.h <= 0) return 1;
+    if (!SDL_SetRenderClipRect(sRenderer, &clip)) {
+        SDL_SetRenderClipRect(sRenderer, wasClipped ? &saved : NULL); return 0;
+    }
+    /* Keep the original complete source/destination transform. Cropping the
+       source to sixteen rows changed software pixel-art sampling at x4.96. */
+    ok = SDL_RenderTexture(sRenderer, sTexture, src, dst);
+    if (!SDL_SetRenderClipRect(sRenderer, wasClipped ? &saved : NULL)) ok = 0;
+    return ok;
+}
+
+static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
+    /* A ready book avoids painting the native body underneath it. Restore
+       the complete original after any rejected or partially failed draw. */
+    if (!DrawJournalBook(src, dst) || !DrawJournalHeader(src, dst))
+        SDL_RenderTexture(sRenderer, sTexture, src, dst);
+}
+
 /* The title bar on the left margin: its own piece of the header asset.
    Where the header is transparent the picture shows the frame's bar behind
    it (the journal's dark green top row), so the margin shows that bar too. */
@@ -1804,7 +1851,8 @@ static void Present(void) {
             DrawBlurredReflection(&src, outW, outH);
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
-        SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
+        if (journalShown && sSideStyle == 12) DrawJournalPicture(&src, &dst);
+        else SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
         if (moviePrompt)
             DrawSkipLayer(&normal);
         if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {

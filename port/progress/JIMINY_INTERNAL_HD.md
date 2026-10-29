@@ -85,3 +85,56 @@ binario anterior. Otra prueba64 prepara una sala vÃ¡lida y abre la entrada
 de la tienda Moguri, con cuatro capturas y salida0; sÃ³lo cubre su presentaciÃ³n,
 no el audio ni todos sus submenÃºs. Windows32/64 y las bibliotecas Android
 US/JP estÃ¡n compilados; los contratos ABI/boot64 y check_sources pasan.
+
+
+Quinto bloque: papel y anillas de las tres páginas de detalle (historia,
+naipes y personajes). Se reconstruyen las hojas con borde derecho redondeado
+y reglas en sus posiciones originales; las quince anillas proceden del
+recurso equivalente del remaster. La receta conserva el RGB555 del PPU,
+incluida su expansión de bits; no cambia los colores de recetas anteriores.
+Este recurso se limita a EU/US. Japón conserva el fondo nativo hasta verificar
+su equivalencia visual; compilar su biblioteca no certifica esa equivalencia.
+
+La sustitución sólo ocupa píxeles cuyo ganador real es BG1 opaco. Una máscara
+capturada junto al fotograma mantiene por encima textos, retratos, naipes,
+otras capas y combinaciones alfa. También conserva cambios de la interfaz
+hechos después de componer la imagen. Raíz/listas y mapas de detalle todavía
+no presentados no activan este recurso. Las tres variantes de mapa se reconocen
+por separado: pueden usar índices de tiles distintos aunque dibujen lo mismo.
+
+El primer plano conserva el lienzo completo240×160, con cabecera transparente;
+recortar a144 filas desplazaba filas del sprite al aplicar escalas no enteras.
+Una comparación real32/64 del sprite de Sora pasa de diferencias en427 píxeles
+(32 software) a identidad exacta en el recorte de control. La cabecera nativa
+se recorta en destino conservando su transformación completa. El filtro del
+primer plano sigue la opción gráfica, incluso al cambiarla con textura viva.
+La textura es única y reutilizable; se libera con los demás recursos HD.
+
+El lookup da prioridad a la definición exacta frente a una imagen que sólo
+comparte tiles. Si existe una definición exacta pero su recurso no está listo,
+conserva el nativo, sin mostrar el fondo del libro como cabecera. La prueba
+CPU falla con el lookup anterior y pasa con el nuevo. Las pruebas reales de
+composición/dibujo inyectan errores de asignación, mezcla, filtro, subida,
+bridge, geometría y cabecera: todos recuperan la imagen nativa completa.
+
+El importador C++ real actualiza una copia privada del import anterior de6
+recetas pendientes a0:889 archivos,883 previos idénticos en bytes, cinco
+cabeceras reescritas con píxeles idénticos. El libro nuevo coincide exactamente
+con la implementación Python. No se reimporta vídeo/música ni se modifica
+la instalación original. Evidencia privada: jiminy23-book-colors-native y
+jiminy23-book-colors; sólo recetas/código entran en Git.
+
+Controles privados: jiminy23-pages/BOOK-NATIVE-FALLBACK-CONTROLS.json contiene
+15 comparaciones idénticas con HD apagado o recurso ausente. Los recorridos
+jiminy23-book-transform-verified (32/64), transform-fractional y
+transform-fourthree terminan con código0 y cinco vistas cada uno. Raíz/lista
+y la cabecera mantienen sus píxeles; cambios limitados al cuerpo del libro.
+BOOK-TRANSFORM-PIXEL-CONTROLS.json conserva diez comparaciones y dos recortes
+de Sora idénticos. La versión final que respeta el filtro se vuelve a capturar
+en jiminy23-book-reviewed. Estas pruebas usan audio dummy y no validan audio.
+
+Windows32/64 y bibliotecas Android US/JP compiladas; contratos ABI/boot64,
+composición, lookup, geometría, fundido y check_sources pasan. No se afirma
+validación física de Android/consolas. P2 sigue parcial: PAGE, cabeceras de
+historia/personajes, mini-header, raíz/listas y verificación Riku/JP pendientes.
+La pre2.3-pre1 publicada no contiene este bloque ni se sobrescribe.
