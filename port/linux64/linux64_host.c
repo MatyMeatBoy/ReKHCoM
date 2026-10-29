@@ -15,6 +15,7 @@
 #include "../include/port/startup_deadline.h"
 #include <dirent.h>
 #include <errno.h>
+#include <link.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -43,6 +44,28 @@ static void Log(const char* fmt, ...) {
     vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
     fprintf(stderr, "[rekhcom64] %s\n", text);
+}
+
+/* Record the actual X11/SDL objects, rather than guessing from LD_PRELOAD
+ * warnings. Bounded, startup-only, and never dumps the environment. */
+static int StartupLibrary(struct dl_phdr_info* info, size_t size, void* opaque) {
+    unsigned* count = opaque;
+    const char* path = info->dlpi_name;
+    const char* name = path ? strrchr(path, '/') : NULL;
+    (void)size;
+    name = name ? name + 1 : path;
+    if (name && (!strncmp(name, "libX11.so", 9) || !strncmp(name, "libXext.so", 10) ||
+                 !strncmp(name, "libxcb.so", 9) || !strncmp(name, "libSDL3.so", 10) ||
+                 !strcmp(name, "gameoverlayrenderer.so"))) {
+        Log("startup: loaded-client=%s", path);
+        if (++*count >= 16) return 1;
+    }
+    return 0;
+}
+static void StartupLibraries(void) {
+    unsigned count = 0;
+    dl_iterate_phdr(StartupLibrary, &count);
+    fflush(stderr);
 }
 
 /* Startup-only diagnostics keep call order and driver selection unchanged.
@@ -477,6 +500,7 @@ int main(int argc, char** argv) {
     StartupStage("sdl-init", "done");
     Log("startup: SDL drivers video=%s audio=%s", SDL_GetCurrentVideoDriver() ? SDL_GetCurrentVideoDriver() : "none",
         SDL_GetCurrentAudioDriver() ? SDL_GetCurrentAudioDriver() : "none");
+    StartupLibraries();
     PortStartupDeadline startupDeadline = {0};
     if (!PortStartupDeadlineBegin(&startupDeadline, 30000, StartupDeadlineExpired)) {
         StartupError("window-deadline");
