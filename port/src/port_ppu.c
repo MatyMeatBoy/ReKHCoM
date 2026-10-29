@@ -328,10 +328,15 @@ typedef struct MenuSources {
 } MenuSources;
 static MenuSources sMenuShown = { .tabBg = { -1, -1 } }, sMenuPend = { .tabBg = { -1, -1 } };
 static uint8_t sJiminyPaperMask[240 * 160];
+static uint32_t sJiminyNameEdges[2 * 24];
 static int sJiminyPaperCapture;
 
 const uint8_t* PortPpuJiminyPaperMask(void) {
     return sJiminyPaperCapture ? sJiminyPaperMask : NULL;
+}
+
+const uint32_t* PortPpuJiminyNameEdges(void) {
+    return sJiminyPaperCapture ? sJiminyNameEdges : NULL;
 }
 /* Sample every menu extension before VBlank changes its rendering inputs. */
 static void CaptureMenuMarginPixels(void);
@@ -2917,6 +2922,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             }
         }
         dst[x] = sColorLut[col];
+        if (sJiminyPaperCapture && objects && (gx == 0 || gx == 239) && gyLine >= 16 && gyLine < 40)
+            PortJiminyRecordNameEdge(sJiminyNameEdges, topLayer, blend, gx, gyLine, dst[x]);
     }
 }
 
@@ -4257,7 +4264,10 @@ void PortPpuRenderFrame(void) {
         (PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCardDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCharacterDetailMap));
-    if (sJiminyPaperCapture) memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
+    if (sJiminyPaperCapture) {
+        memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
+        memset(sJiminyNameEdges, 0, sizeof(sJiminyNameEdges));
+    }
 
     memcpy(sTextObjPalette, PLTT16 + 256, sizeof(sTextObjPalette));
     sTextBld[0] = IO16(0x50);

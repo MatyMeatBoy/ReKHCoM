@@ -16,6 +16,14 @@ static inline int PortJiminyPaperPixel(int topLayer, int blend, int x, int y) {
     return topLayer == 1 && !blend && x >= 0 && x < 240 && y >= 16 && y < 160;
 }
 
+/* Name plates occupy three BG0 tile rows. Capture final colours rather than
+   infer an extension from the width of a translated title or live palettes. */
+static inline void PortJiminyRecordNameEdge(uint32_t* edges, int layer, int blend,
+        int x, int y, uint32_t pixel) {
+    if (!edges || (x != 0 && x != 239) || y < 16 || y >= 40) return;
+    edges[(x == 239 ? 24 : 0) + y - 16] = layer == 0 && !blend ? pixel : 0;
+}
+
 static inline int PortJiminyForeground(uint32_t* out, const uint32_t* composite,
         const uint32_t* native, const uint8_t* paper, int width, int height, int originX, int originY) {
     int x, y;
