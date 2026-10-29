@@ -8108,10 +8108,10 @@
     "monstro-story-atlas-coverage": {
       "id": "monstro-story-atlas-coverage",
       "piece": "Cobertura Atlas por tramosMonstro: Geppetto barco dialogos y Pinocho plataformas shot e7bb35a0/266fcaa4 no vistosporusuario; identificar eventos/estadoscamara y completar bordes respetando zoom/HUD, no marcarcapturainicial comoescenacompleta.",
-      "status": "en_curso",
-      "owner": "codex-atlas-v23",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T22:24:52.168606+00:00",
-      "updated_at": "2026-10-29T15:57:28.509794+00:00",
+      "updated_at": "2026-10-29T15:57:48.243712+00:00",
       "branch": "fix/v23-monstro-atlas-coverage",
       "pr": null,
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
@@ -8121,6 +8121,11 @@
           "at": "2026-10-29T15:57:28.509794+00:00",
           "owner": "codex-atlas-v23",
           "detail": "Checkout reutilizado v225-optiport-snapshot limpio, rama previa preservada. Atlas launcher raiz NoBrowser y API200 con 200assets y data original verificadas. Las3referencias ya existen y siguen pendientes/event_id unidentified: d2645f2d17da4063a7a958734597df8d/ae325b3ebd854803ab77d524ab6a17e7/ca01f58e0b284fbc9bfdc855c8f12977. Investigacion CPU identifica fondos075Geppetto/076Pinocho, falta activacion real. Sin GPU/build."
+        },
+        {
+          "at": "2026-10-29T15:57:48.243712+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "released: Prioridadroot/usuario29Oct Oogieaprobado noactivado; sinWIPcodigo. AtlasAPI200/dataoriginal/200assets; referenciasMonstro yaexisten3IDs d2645f/ae325b/ca01f58, event_idunidentified. MapaCPU075Geppetto y076Pinocho(compartido080) en pruebas/atlas-v23-monstro/native-backgrounds.json+PNG; faltacapturaractivacion. Rama fix/v23-monstro-atlas-coverage limpia encheckoutreutilizado v225-optiport-snapshot; sinbuild/GPU. RetomartrasOogie."
         }
       ],
       "claimed_at": "2026-10-29T15:53:49.878611+00:00"
@@ -11762,7 +11767,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T15:57:28.509794+00:00",
+  "updated_at": "2026-10-29T15:57:48.243712+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
