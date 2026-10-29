@@ -11072,10 +11072,10 @@
     "post479-delivery-record": {
       "id": "post479-delivery-record",
       "piece": "Record completed desktop479 test and current open bug priorities in public progress docs; stable2.2.5 unchanged; no app source change",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-post479-docs",
       "created_at": "2026-10-29T01:43:22.533603+00:00",
-      "updated_at": "2026-10-29T01:47:48.066292+00:00",
+      "updated_at": "2026-10-29T01:48:02.419970+00:00",
       "branch": "docs/desktop479-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/487",
       "approval": "Root integrator: human-authorized code review; 2bc4c68a3798309f91260dc3b19b1a11aaec5465",
@@ -11090,9 +11090,15 @@
           "at": "2026-10-29T01:47:48.066292+00:00",
           "owner": "codex-post479-docs",
           "detail": "Root solo docs reviewed against exact packaged sourcee51/SHA and anonymous downloads, actual24+2Windows/22Linux tests, issue479 closure and four open reports; no hardware/audio overclaim or app/artifact change."
+        },
+        {
+          "at": "2026-10-29T01:48:02.419970+00:00",
+          "owner": "codex-post479-docs",
+          "detail": "Root solo docs reviewed against exact packaged sourcee51/SHA and anonymous downloads, actual24+2Windows/22Linux tests, issue479 closure and four open reports; no hardware/audio overclaim or app/artifact change.; merged f686511d7d72a3ccf35253740e3d998aee9f87ee"
         }
       ],
-      "claimed_at": "2026-10-29T01:43:28.248594+00:00"
+      "claimed_at": "2026-10-29T01:43:28.248594+00:00",
+      "completed_at": "2026-10-29T01:48:02.419970+00:00"
     }
   },
   "integrator": {
@@ -11101,7 +11107,7 @@
     "created_at": "2026-10-29T01:47:53.101351+00:00",
     "updated_at": "2026-10-29T01:47:53.101351+00:00"
   },
-  "updated_at": "2026-10-29T01:47:53.101351+00:00",
+  "updated_at": "2026-10-29T01:48:02.419970+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
