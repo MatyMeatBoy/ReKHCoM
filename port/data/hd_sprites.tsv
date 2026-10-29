@@ -182,8 +182,9 @@ gLvupLogoFrenchTiles	3	gLvupLogoFrame0	gLvupLogoFrenchTiles	-32	-8	64	16	FORM/00
 gLvupLogoGermanTiles	3	gLvupLogoFrame0	gLvupLogoGermanTiles	-32	-8	64	16	FORM/0002/FO0002.RTM:GR_Cockpit.imz#0	pad=33,33;canvas=1040,128;blit=521,27,924,70,12,26,1005,132;scale=8	eu
 gLvupLogoItalianTiles	3	gLvupLogoFrame0	gLvupLogoItalianTiles	-32	-8	64	16	FORM/0002/FO0002.RTM:IT_Cockpit.imz#0	pad=19,19;canvas=816,128;blit=562,27,883,70,12,26,803,132;scale=8	eu
 gLvupLogoSpanishTiles	3	gLvupLogoFrame0	gLvupLogoSpanishTiles	-32	-8	64	16	FORM/0002/FO0002.RTM:SP_Cockpit.imz#0	canvas=512,128;blit=584,22,857,80,3,28,483,132;scale=8	eu
-# Map cards (22/10): the room synthesis cards; Re:CoM's cr_### are the same 22 illustrations (gCardRoom23, Key to
-# Rewards, has none), their borders the dark shades and the gold of com_card01 (the GBA's map borders are darker).
+# Map cards: Re:CoM's cr_### contain the 22 regular illustrations; Key to Rewards
+# is in the remastered menu's UK_card image19, not a standalone CARD texture.
+# Their borders use the dark shades/gold of com_card01 (GBA borders are darker).
 gCardRoom01Tiles	1	-	gCardRoom01Tiles	-16	-12	32	32	CARD/0602/CA0602.RTM:cr_002_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
 gCardRoom02Tiles	1	-	gCardRoom02Tiles	-16	-12	32	32	CARD/0601/CA0601.RTM:cr_001_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
 gCardRoom03Tiles	1	-	gCardRoom03Tiles	-16	-12	32	32	CARD/0642/CA0642.RTM:cr_018_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
@@ -206,6 +207,7 @@ gCardRoom19Tiles	1	-	gCardRoom19Tiles	-16	-12	32	32	CARD/0625/CA0625.RTM:cr_014_
 gCardRoom20Tiles	1	-	gCardRoom20Tiles	-16	-12	32	32	CARD/0607/CA0607.RTM:cr_007_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
 gCardRoom21Tiles	1	-	gCardRoom21Tiles	-16	-12	32	32	CARD/0608/CA0608.RTM:cr_008_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
 gCardRoom22Tiles	1	-	gCardRoom22Tiles	-16	-12	32	32	CARD/0609/CA0609.RTM:cr_009_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
+gCardRoom23Tiles	1	-	gCardRoom23Tiles	-16	-12	32	32	FORM/0050/FO0050.RTM:UK_card.imz#19	crop=391,128,505,256;place=4,3,28,30;scale=8
 # Corresponding story keys; the GBA's first key uses a question-mark drawing,
 # while Re:CoM uses ck_001's key symbol. Inventory/door rules stay those of GBA.
 gCardEve00Tiles	1	-	gCardEve00Tiles	-16	-12	32	32	CARD/0701/CA0701.RTM:ck_001_tm2.dds	crop=14,0,242,256;place=4,3,28,30;scale=8
@@ -895,3 +897,4 @@ gStrongInitiativeSmallCardHD	6	gStrongInitiativeSmallCardFrame0	gStrongInitiativ
 gTeemingDarknessSmallCardHD	6	gTeemingDarknessSmallCardFrame0	gTeemingDarknessSmallCardTiles	-8	-20	16	32	CARD/0602/CA0602.RTM:cr_002_tm2.dds	crop=42,14,238,224;erase=140,112,196,126;erase=126,126,196,140;erase=112,140,196,196;erase=126,196,196,210;place=1,16,15,31;scale=8
 gTranquilDarknessSmallCardHD	6	gTranquilDarknessSmallCardFrame0	gTranquilDarknessSmallCardTiles	-8	-20	16	32	CARD/0601/CA0601.RTM:cr_001_tm2.dds	crop=0,14,203,232;erase=145,116,203,131;erase=130,131,203,145;erase=116,145,203,203;erase=130,203,203,218;place=1,16,15,31;scale=8
 gWhiteRoomSmallCardHD	6	gWhiteRoomSmallCardFrame0	gWhiteRoomSmallCardTiles	-8	-20	16	32	CARD/0608/CA0608.RTM:cr_008_tm2.dds	crop=14,0,218,218;erase=146,116,204,131;erase=131,131,204,145;erase=117,145,204,203;erase=131,203,204,218;place=1,16,15,31;scale=8
+gKeyToRewardsSmallCardHD	6	gKeyToRewardsSmallCardFrame0	gKeyToRewardsSmallCardTiles	-8	-20	16	32	FORM/0050/FO0050.RTM:UK_card.imz#19	crop=391,128,505,256;place=1,16,15,31;scale=8

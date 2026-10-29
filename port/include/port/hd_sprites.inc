@@ -316,6 +316,7 @@ extern const unsigned char gCardRoom19Tiles[];
 extern const unsigned char gCardRoom20Tiles[];
 extern const unsigned char gCardRoom21Tiles[];
 extern const unsigned char gCardRoom22Tiles[];
+extern const unsigned char gCardRoom23Tiles[];
 extern const unsigned char gCardEve00Tiles[];
 extern const unsigned char gCardEve01Tiles[];
 extern const unsigned char gCardEve02Tiles[];
@@ -1006,6 +1007,8 @@ extern const unsigned char gTranquilDarknessSmallCardTiles[];
 extern const unsigned char gTranquilDarknessSmallCardFrame0[];
 extern const unsigned char gWhiteRoomSmallCardTiles[];
 extern const unsigned char gWhiteRoomSmallCardFrame0[];
+extern const unsigned char gKeyToRewardsSmallCardTiles[];
+extern const unsigned char gKeyToRewardsSmallCardFrame0[];
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1248,6 +1251,7 @@ static const HdSpriteDef kHdSprites[] = {
     { gCardRoom20Tiles, NULL, "gCardRoom20Tiles", -16, -12, 32, 32, 1 },
     { gCardRoom21Tiles, NULL, "gCardRoom21Tiles", -16, -12, 32, 32, 1 },
     { gCardRoom22Tiles, NULL, "gCardRoom22Tiles", -16, -12, 32, 32, 1 },
+    { gCardRoom23Tiles, NULL, "gCardRoom23Tiles", -16, -12, 32, 32, 1 },
     { gCardEve00Tiles, NULL, "gCardEve00Tiles", -16, -12, 32, 32, 1 },
     { gCardEve01Tiles, NULL, "gCardEve01Tiles", -16, -12, 32, 32, 1 },
     { gCardEve02Tiles, NULL, "gCardEve02Tiles", -16, -12, 32, 32, 1 },
@@ -1680,6 +1684,7 @@ static const HdSpriteDef kHdSprites[] = {
     { gTeemingDarknessSmallCardTiles, gTeemingDarknessSmallCardFrame0, "gTeemingDarknessSmallCardHD", -8, -20, 16, 32, 6 },
     { gTranquilDarknessSmallCardTiles, gTranquilDarknessSmallCardFrame0, "gTranquilDarknessSmallCardHD", -8, -20, 16, 32, 6 },
     { gWhiteRoomSmallCardTiles, gWhiteRoomSmallCardFrame0, "gWhiteRoomSmallCardHD", -8, -20, 16, 32, 6 },
+    { gKeyToRewardsSmallCardTiles, gKeyToRewardsSmallCardFrame0, "gKeyToRewardsSmallCardHD", -8, -20, 16, 32, 6 },
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"
 };

@@ -203,6 +203,7 @@ static const char* const kHdSpriteRecipe[] = {
     "gCardRoom20Tiles\t1\t-\tgCardRoom20Tiles\t-16\t-12\t32\t32\tCARD/0607/CA0607.RTM:cr_007_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
     "gCardRoom21Tiles\t1\t-\tgCardRoom21Tiles\t-16\t-12\t32\t32\tCARD/0608/CA0608.RTM:cr_008_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
     "gCardRoom22Tiles\t1\t-\tgCardRoom22Tiles\t-16\t-12\t32\t32\tCARD/0609/CA0609.RTM:cr_009_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
+    "gCardRoom23Tiles\t1\t-\tgCardRoom23Tiles\t-16\t-12\t32\t32\tFORM/0050/FO0050.RTM:UK_card.imz#19\tcrop=391,128,505,256;place=4,3,28,30;scale=8",
     "gCardEve00Tiles\t1\t-\tgCardEve00Tiles\t-16\t-12\t32\t32\tCARD/0701/CA0701.RTM:ck_001_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
     "gCardEve01Tiles\t1\t-\tgCardEve01Tiles\t-16\t-12\t32\t32\tCARD/0702/CA0702.RTM:ck_002_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
     "gCardEve02Tiles\t1\t-\tgCardEve02Tiles\t-16\t-12\t32\t32\tCARD/0703/CA0703.RTM:ck_003_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
@@ -881,4 +882,5 @@ static const char* const kHdSpriteRecipe[] = {
     "gTeemingDarknessSmallCardHD\t6\tgTeemingDarknessSmallCardFrame0\tgTeemingDarknessSmallCardTiles\t-8\t-20\t16\t32\tCARD/0602/CA0602.RTM:cr_002_tm2.dds\tcrop=42,14,238,224;erase=140,112,196,126;erase=126,126,196,140;erase=112,140,196,196;erase=126,196,196,210;place=1,16,15,31;scale=8",
     "gTranquilDarknessSmallCardHD\t6\tgTranquilDarknessSmallCardFrame0\tgTranquilDarknessSmallCardTiles\t-8\t-20\t16\t32\tCARD/0601/CA0601.RTM:cr_001_tm2.dds\tcrop=0,14,203,232;erase=145,116,203,131;erase=130,131,203,145;erase=116,145,203,203;erase=130,203,203,218;place=1,16,15,31;scale=8",
     "gWhiteRoomSmallCardHD\t6\tgWhiteRoomSmallCardFrame0\tgWhiteRoomSmallCardTiles\t-8\t-20\t16\t32\tCARD/0608/CA0608.RTM:cr_008_tm2.dds\tcrop=14,0,218,218;erase=146,116,204,131;erase=131,131,204,145;erase=117,145,204,203;erase=131,203,204,218;place=1,16,15,31;scale=8",
+    "gKeyToRewardsSmallCardHD\t6\tgKeyToRewardsSmallCardFrame0\tgKeyToRewardsSmallCardTiles\t-8\t-20\t16\t32\tFORM/0050/FO0050.RTM:UK_card.imz#19\tcrop=391,128,505,256;place=1,16,15,31;scale=8",
 };

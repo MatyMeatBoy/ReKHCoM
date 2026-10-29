@@ -1,10 +1,12 @@
 # Naipes mapa HD: contador, ilustraciones e importaciones anteriores
 
-Bloque de la prioridad2.3 del usuario, sobre main `e2324ba5`. **Parcial:**
-se cubren25 de26 familias pequeñas. `gKeyToRewards` conserva su ilustración
-original: no se identificó una contraparte en las texturas Re:CoM examinadas.
-No sustituirla por otra carta ni presentar un escalado de píxeles como arte HD.
-Todavía no forma parte de la estable2.2.5 ni de los tests anteriores inmutables.
+Prioridad2.3 del usuario: contador99/barra y las26 familias pequeñas HD
+implementados, con verificación Windows32/64 descrita abajo. PR492 cubrió25;
+la ilustración de recompensas se encontró después en el atlas del menú de
+Re:CoM, `FORM/0050/FO0050.RTM:UK_card.imz#19`, celda384,128..512,256.
+Se adapta desde esa fuente del jugador, tanto pequeña como grande, sin
+redibujarla ni distribuirla. Todavía no forma parte de la estable2.2.5 ni
+de los tests anteriores inmutables; queda para la próxima entrega.
 
 ## Cambios y mecanismo
 
@@ -14,8 +16,10 @@ Todavía no forma parte de la estable2.2.5 ni de los tests anteriores inmutables
   también recibe registro explícito: un tag antiguo podía bloquear su detección.
   No se cambia ninguna copia DMA ni el dibujo del modo original.
 - El generador sólo recorría el catálogo de combate. Ahora incorpora las26
-  familias de `gMapCardDefs`, añade25 recetas pequeñas y tres ilustraciones
-  grandes de llaves de historia. Mantiene las853 recetas existentes intactas.
+  familias de `gMapCardDefs`, añade26 recetas pequeñas, tres ilustraciones
+  grandes de llaves de historia y la grande de recompensas. Mantiene las853
+  recetas anteriores al primer bloque intactas; el complemento de recompensas
+  también conserva intactas las881 filas de PR492.
   La primera llave adopta el símbolo de llave de Re:CoM, distinto del signo
   de interrogación GBA; sus reglas siguen siendo las del original.
 - Las nuevas imágenes sólo cubren la ventana14×15 del naipe pequeño. Corona,
@@ -59,8 +63,37 @@ pertenecen al jugador y no se incluyen en el repositorio ni en paquetes.
   aplicar los offsets DMA de localización. Rama original sin `PLATFORM_PC`
   preprocesada sin cambios. `check_sources.py`, tablas generadas y ABI64 pasan.
 
-Evidencia privada en `pruebas/mapcards23/`: `RUNTIME.json`, `CONTRACTS.json`,
+## Complemento de recompensas y cobertura completa
+
+Buscar sólo texturas independientes `CARD/06xx/07xx` dejó esta ilustración fuera.
+El inventario de15475 nombres remasterizados y la inspección de las subimágenes
+del menú localizaron la puerta con sus destellos en `UK_card.imz#19`. Su imagen
+decodificada es idéntica en las cinco entradas de idioma; no contiene texto.
+La [referencia pública de Re:CoM](https://www.khwiki.com/File:Key_to_Rewards_(card).png)
+sirvió para identificarla; no se descargó ni se usó su archivo como recurso.
+
+- Test de cobertura: antes falla por `gKeyToRewards`; después pasan cinco
+  comprobaciones del generador/inventario, con26/26 recetas pequeñas.
+- Actualización real del importador C++: copia privada del import881 anterior,
+  detecta exactamente dos recetas nuevas; produce883 archivos y queda stale0.
+  Los881 outputs anteriores conservan sus bytes. Ambos nuevos coinciden con
+  Python: grande exacta, pequeña con máximo1/255 de redondeo; sin recargar media.
+- Fixture privada creada por el editor real sobre una copia: una carta por
+  familia válida,26 entradas, slots reservados vacíos y checksums correctos.
+  El contador general muestra22 porque el original excluye las cuatro doradas;
+  las categorías conservan9 rojas,7 verdes,6 azules y4 doradas.
+- Ocho recorridos adicionales: listado en tres posiciones que cubren26 familias,
+  detalle de recompensas y reentrada; Windows32, Windows64 software/Direct3D11,
+  HD apagado y ausencia sólo de las dos imágenes nuevas. Cinco comparaciones
+  HD off y cinco de fallback son idénticas al binario anterior. Todos exit0.
+- Tres recorridos más toman cinco fases del brillo premium:32 antes/después y
+  64Direct3D11. La carta pequeña HD es visible en las cinco muestras; ocho
+  regiones de esquinas originales entre las cuatro doradas siguen idénticas.
+  No se cambia la animación ni el timing original.
+
+Evidencia del primer bloque en `pruebas/mapcards23/`: `RUNTIME.json`, `CONTRACTS.json`,
 `IMPORT-VERIFIED.json`, `NATIVE-IMPORT.json`, `NATIVE-CONSUMER.json`, logs y
-capturas. No mide continuidad de audio, ni
-certifica juego físico Android/Linux/consolas o las25 ilustraciones en todas
-sus transiciones. Siguen pendientes la puerta de recompensas y su comprobación.
+capturas. Complemento en `rewards/`: `PREPARED.json`, `NATIVE-UPGRADE.json`,
+`RUNTIME.json`, `GOLD-CYCLE.json`, `CONTRACTS.json` y sus capturas. Este bloque
+no mide continuidad de audio ni certifica juego físico Android/Linux/consolas
+o cada estado posible de las26 cartas. Continúan diario y audio de prioridades2/3.

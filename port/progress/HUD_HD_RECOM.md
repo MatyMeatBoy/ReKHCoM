@@ -113,7 +113,12 @@ START" y el arte de Sora no tienen equivalente 1:1.
 ## Cartas de mapa (22/10, estudiado, para después de la v2.0)
 Las 22 ilustraciones de Re:CoM (`CARD/06xx/CA06xx.RTM:cr_###_tm2.dds`) son las mismas que las de GBA (`gCardRoom##`,
 caja -16 -12 32 32, arte en 3,2..29,30 como las de combate: sirve la receta `crop=9,0,247,256;place=3,2,29,30;scale=8`).
-Key to Rewards (`gCardRoom23`) no tiene. GBA→cr: 01→002 02→001 03→018 04→006 05→005 06→020 07→003 08→004 09→017
+Corrección29/10: Key to Rewards (`gCardRoom23`) no tiene textura independiente
+en `CARD`, pero sí ilustración en el atlas remasterizado
+`FORM/0050/FO0050.RTM:UK_card.imz#19`, celda384,128..512,256. La receta actual
+extrae esa ilustración para la carta grande y la pequeña; ver
+[verificación de naipes mapa](MAP_CARDS_HD_GAPS.md). GBA→cr de las22 regulares:
+01→002 02→001 03→018 04→006 05→005 06→020 07→003 08→004 09→017
 10→019 11→022 12→011 13→010 14→012 15→013 16→021 17→015 18→016 19→014 20→007 21→008 22→009 (carpetas: cr_001..009 =
 0601..0609, 010..016 = 0621..0627, 017..022 = 0641..0646). Mundos: `cl_001..013` (CARD/0301..).
 **Hecho 22/10:** las 22 cartas de mapa y sus marcos (los tonos oscuros y el dorado de `com_card01`, que Re:CoM usa
