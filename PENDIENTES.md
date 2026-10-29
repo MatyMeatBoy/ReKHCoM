@@ -419,4 +419,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-render-identity-lessons | Promote verified Linux SONAME identity, shared texture/surface failure contracts, additive HD native fallback and harness ASLR observations into OptiPort references; no claim of final full-game pass. | integrado | codex-optiport-render-lessons | https://github.com/MatyMeatBoy/OptiPort/pull/21 | Root integrator: human-authorized code review; 4e7211ecb9ae9f2690af3b41efa55406574df84d | 2026-10-29T22:59:43.591266+00:00 |
 | worldcard-door-center-oneframe-artifact | User29Oct: HD door synthesis mostly correct, but as the used map/world card reaches screen center a dark ball/texture flashes for one frame. Reproduce exact animation frame-by-frame; isolate native underlay, HD readiness, affine/blend/foreground before changing only this defect. Distinct from selector glow517 until proven related. | pendiente | — | — | — | 2026-10-29T23:01:48.870989+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-29T23:23:48.735739+00:00)
+Integrador: libre
