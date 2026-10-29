@@ -1116,6 +1116,10 @@ extern const unsigned char gJiminyTitleLocalizedFrame9[];
 extern const unsigned char gJiminyTitleLocalizedTiles[];
 extern const unsigned char gJiminyTitleLocalizedFrame8[];
 #endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyBgTiles[];
+extern const unsigned char gJiminyCardListMap[];
+#endif
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1872,6 +1876,9 @@ static const HdSpriteDef kHdSprites[] = {
 #endif
 #if defined(VERSION_EU)
     { gJiminyTitleLocalizedTiles, gJiminyTitleLocalizedFrame8, "gJiminyTitleLocalizedFrame8Banner", 0, 0, 104, 16, 5 },
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyBgTiles, gJiminyCardListMap, "gJiminyListBookBody", 0, 16, 240, 144, 5 },
 #endif
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"

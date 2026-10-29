@@ -52,6 +52,8 @@ static int failCreate,failBlend,failScale,failUpdate,failQuad,failForeground,fai
 static int baseReady=1,whiteReady=1,foregroundReady=1,group=1,id=1,paperReady=1;
 static int quadBase,quadWhite,foregroundDraw,nativeFallback,headerDraw,created,destroyed,dark,white;
 static int clipped;static SDL_Rect clip;
+static const void* bookFrame;
+static const void* PortPpuJiminyBookFrame(void){return bookFrame;}
 static int SDL_RenderClipEnabled(SDL_Renderer*r){(void)r;return clipped;}
 static int SDL_GetRenderClipRect(SDL_Renderer*r,SDL_Rect*out){(void)r;*out=clip;return 1;}
 static int SDL_SetRenderClipRect(SDL_Renderer*r,const SDL_Rect*in){(void)r;clipped=in!=0;if(in)clip=*in;return 1;}
@@ -76,7 +78,7 @@ static int SDL_RenderTexture(SDL_Renderer*r,SDL_Texture*t,const SDL_FRect*from,c
  assert(t==&fg&&!from&&to->h==640&&to->y==20);foregroundDraw++;return !failForeground;
 }
 static const uint8_t* PortPpuJiminyPaperMask(void){return paperReady?mask:0;}
-static int PortHdSpriteFind(const void*t,const void*f){assert(t==gJiminyBgTiles&&!f);return id;}
+static int PortHdSpriteFind(const void*t,const void*f){assert(t==gJiminyBgTiles&&f==bookFrame);return id;}
 static void PortPpuJiminyFade(int*d,int*w){*d=dark;*w=white;}
 '''
 unit=prefix+(root/'port/include/port/jiminy_book_draw.inc').read_text(encoding='utf8')+'\n'+caller+r'''
@@ -86,6 +88,7 @@ static void reset(void){
  baseReady=whiteReady=foregroundReady=group=id=paperReady=1;dark=white=0;
  quadBase=quadWhite=foregroundDraw=nativeFallback=headerDraw=created=destroyed=0;
  clipped=0;
+ bookFrame=0;
 }
 int main(void){
  static uint32_t out[240*160];static uint16_t shownMap[1024],detailMap[1024];
@@ -96,6 +99,14 @@ int main(void){
   assert(PortJiminyPaperPixel(layer,blend,20,40)==(layer==1&&!blend));
  assert(!PortJiminyPaperPixel(1,0,-1,40));assert(!PortJiminyPaperPixel(1,0,240,40));
  assert(!PortJiminyPaperPixel(1,0,20,15));assert(!PortJiminyPaperPixel(1,0,20,160));
+ for(int list=0;list<2;list++)for(int layer=0;layer<6;layer++)for(int blend=0;blend<2;blend++)
+  for(int binder=0;binder<2;binder++)
+   assert(PortJiminyBookObject(list,layer,blend,binder,88,154)==(list&&layer==4&&!blend&&binder));
+ assert(!PortJiminyBookObject(1,4,0,1,-1,154));assert(!PortJiminyBookObject(1,4,0,1,88,160));
+ for(int list=0;list<2;list++)for(int layer=0;layer<6;layer++)for(int blend=0;blend<2;blend++)
+  for(int x=-1;x<=240;x++)for(int y=15;y<=160;y++)
+   assert(PortJiminyBookPixel(list,layer,blend,x,y)==
+      (layer==1&&!blend&&x>=0&&x<240&&y>=16&&y<160&&(!list||x>=91)));
  for(int i=0;i<240*160;i++){native[i]=composite[i]=0xffeeeeee;mask[i]=1;}
  mask[20*240+5]=0;composite[20*240+6]=0xff00ff00;
  assert(PortJiminyForeground(out,composite,native,mask,240,160,0,0));
@@ -119,6 +130,8 @@ int main(void){
  reset();failHeader=1;DrawJournalPicture(&src,&dst);assert(quadBase==1&&foregroundDraw==1&&nativeFallback==1&&headerDraw==1);
  reset();clipped=1;clip=(SDL_Rect){0,0,1000,900};DrawJournalPicture(&src,&dst);assert(clipped&&clip.h==900&&headerDraw==1&&!nativeFallback);
  reset();id=0;DrawJournalPicture(&src,&dst);assert(!created&&!quadBase&&nativeFallback==1);
+ reset();bookFrame=mask;DrawJournalPicture(&src,&dst);assert(quadBase==1&&foregroundDraw==1&&!nativeFallback);
+ reset();bookFrame=mask;id=0;DrawJournalPicture(&src,&dst);assert(!created&&!quadBase&&nativeFallback==1);
  reset();paperReady=0;DrawJournalPicture(&src,&dst);assert(!created&&!quadBase&&nativeFallback==1);
  reset();puts("PASS BG1 ownership/native foreground/UI edits/bounds; allocation/upload/bridge/draw failures restore native; texture reuse/full-white");
 }

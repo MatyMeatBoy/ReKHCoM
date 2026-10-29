@@ -16,6 +16,16 @@ static inline int PortJiminyPaperPixel(int topLayer, int blend, int x, int y) {
     return topLayer == 1 && !blend && x >= 0 && x < 240 && y >= 16 && y < 160;
 }
 
+static inline int PortJiminyBookPixel(int list, int topLayer, int blend, int x, int y) {
+    return (!list || x >= 91) && PortJiminyPaperPixel(topLayer, blend, x, y);
+}
+
+/* The last binder loop is an object, unlike the fourteen BG1 loops. Only
+   that exact authored object gives way; cursors, portraits and NEW stay. */
+static inline int PortJiminyBookObject(int list, int topLayer, int blend, int binder, int x, int y) {
+    return list && topLayer == 4 && !blend && binder && x >= 0 && x < 240 && y >= 16 && y < 160;
+}
+
 /* Name plates occupy three BG0 tile rows. Capture final colours rather than
    infer an extension from the width of a translated title or live palettes. */
 static inline void PortJiminyRecordNameEdge(uint32_t* edges, int layer, int blend,

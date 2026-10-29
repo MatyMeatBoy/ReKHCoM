@@ -301,3 +301,39 @@ Evidencia privada: pruebas/jiminy23-german, NATIVE-UPGRADE.json, runtime y
 runtime-list. EU32/64, JP32/64 y Android US/JP compilados; ABI/boot64 y
 check_sources pasan. La ejecución japonesa se verifica por separado; las
 recetas europeas no afirman convertir su arte ni sus textos a HD.
+
+Undécimo bloque: las tres listas comparten el cuerpo BG1, distinto del detalle.
+Se añade un solo recurso para Historia, Naipepedia y Personajes: papel con borde
+redondeado, reglas en sus filas originales y anillas del remaster. La cubierta
+azul a la izquierda se conserva desde la imagen nativa mediante la máscara;
+no se amplía su columna ni se inventa un degradado. El libro cerrado de la raíz
+se revisa en un bloque posterior y no se da por convertido con este cambio.
+
+La selección usa el mapa presentado, no el estado siguiente. El caller anterior
+sólo dibujaba el libro en el estilo de detalle: la primera matriz de capturas
+reveló que el recurso nuevo aún no aparecía. Se corrigió ese gate y se añadió
+una comprobación positiva de activación para las tres listas en32/64. La última
+anilla era un objeto independiente: sólo su tiles/frame exactos pueden ceder al
+nuevo fondo. Cursor, retrato, NEW, otros objetos y combinaciones alpha conservan
+sus píxeles; cualquier recurso o dibujo fallido restaura el cuadro nativo entero.
+
+La prueba CPU cubre propiedad BG1/OBJ, los límites, todos los objetos ajenos y
+fallos de creación, mezcla, subida, bridge, textura blanca y dibujo. La receta
+anterior del detalle queda idéntica. El importador C++ pasa1 pendiente a0 en26.80s,
+los910 outputs anteriores mantienen sus bytes y el PNG nuevo coincide exactamente
+con Python. Una primera receta con miles de rectángulos se descartó durante la
+extracción: la versión final conserva el degradado mediante el compositor y usa
+sólo2274 bytes de receta. No se distribuyen las imágenes extraídas.
+
+Evidencia privada: pruebas/jiminy23-cover. Matriz anterior a corregir el gate no
+acredita activación HD; runtime-final sí exige verla. runtime-binder-final y
+BINDER-PIXEL-SCOPE verifican la última anilla: cambia sólo su caja de60×40px,
+con raíz, detalle y recurso ausente idénticos. JP Sora/Riku32/64 previo a este
+bloque tiene14 controles idénticos; la nueva compilación JP se valida aparte.
+La nueva compilación JP de este bloque completó además8 recorridos Sora/Riku
+32/64, con14 comparaciones anteriores/nuevas idénticas. Windows EU/US/JP32,
+guests EU/JP64, ABI/boot64 y check_sources pasan. Android US/JP ARMv7 compilado y símbolos fijos verificados; no se afirma
+prueba física, APK nuevo ni audio.172 BMP de
+recorridos terminados se compactaron sólo después de verificar PNG RGBA
+idénticos, liberando798933120 bytes lógicos. Los datos del jugador y entregas
+anteriores permanecen conservados.

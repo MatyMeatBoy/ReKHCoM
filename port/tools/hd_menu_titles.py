@@ -557,7 +557,7 @@ def jiminy_page_rows(data, syms):
     return rows
 
 
-def jiminy_book_body_rows(data, syms):
+def jiminy_book_body_rows(data, syms, *, list_body=False):
     """Shared BG1 body; the three detail maps have identical rows16..159.
 
     Keep authored line positions and colours. Replace the dithered paper edge
@@ -577,8 +577,12 @@ def jiminy_book_body_rows(data, syms):
                 b = char[(e & 1023) * 32 + sy * 4 + sx // 2]
                 out[x, y] = (e >> 12) * 16 + (b >> 4 if sx & 1 else b & 15)
         return out
-    px = pixels('gJiminyStoryDetailMap')
-    assert px == pixels('gJiminyCardDetailMap') == pixels('gJiminyCharacterDetailMap')
+    if list_body:
+        px = pixels('gJiminyCardListMap')
+        assert px == pixels('gJiminyStoryListMap') == pixels('gJiminyCharacterListMap')
+    else:
+        px = pixels('gJiminyStoryDetailMap')
+        assert px == pixels('gJiminyCardDetailMap') == pixels('gJiminyCharacterDetailMap')
     def c(index):
         # Match the PPU's RGB555 bit replication, including flat paper colours.
         value = struct.unpack_from('<H', data, syms['gJiminyBgPalette'] - 0x08000000 + 2 * index)[0]
@@ -597,6 +601,22 @@ def jiminy_book_body_rows(data, syms):
                 angle = math.radians(start + step * 90 / 12)
                 points.append((cx + radius * math.cos(angle), cy + radius * math.sin(angle)))
         polygon(color, points)
+    if list_body:
+        # The native compositor retains x<91, including the authored cover
+        # gradient. Avoid thousands of pixel rectangles in the import recipe.
+        rect(c(47),0,16,240,160)
+        rounded(c(46),-8,19,103,164,4)
+        rounded(c(42),101,19,240,164,4)
+        rounded(c(44),102,20,239,164,3)
+        for y in range(20,160):
+            if px[150,y] == 45: rect(c(45),112,y,235,y+1)
+        core_rows = [y for y in range(19,160) if sum(px[x,y] == 33 for x in range(90,111)) >= 8]
+        starts = [y for y in core_rows if y-1 not in core_rows]
+        assert len(starts) == 15
+        for y in starts:
+            ops.append('blit=' + ','.join(map(str,(384,396,447,422,92*K,(y-2-16)*K,110*K,(y+5-16)*K))))
+        ops.append(f'scale={K}')
+        return ['\t'.join(['gJiminyListBookBody','5','gJiminyCardListMap','gJiminyBgTiles','0','16','240','144',UJIMINY,';'.join(ops),'eu,us'])]
     rect(c(31), 0, 16, 240, 160)
     # The three native columns outside the page still carry the frame's bars.
     for y in range(16, 160):
@@ -633,6 +653,10 @@ def jiminy_book_body_rows(data, syms):
         ops.append('blit=' + ','.join(map(str,(384,396,447,422,131*K,(y-2-16)*K,148*K,(y+5-16)*K))))
     ops.append(f'scale={K}')
     return ['\t'.join(['gJiminyBookBody','5','-','gJiminyBgTiles','0','16','240','144',UJIMINY,';'.join(ops),'eu,us'])]
+
+
+def jiminy_list_body_rows(data, syms):
+    return jiminy_book_body_rows(data, syms, list_body=True)
 
 
 def banner_ops(px, box, colour_of, text):
@@ -697,7 +721,7 @@ def main():
     data, syms = rom()
     rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
             + jiminy_card_rows(data, syms) + jiminy_other_heading_rows(data, syms)
-            + jiminy_page_rows(data, syms) + jiminy_book_body_rows(data, syms)
+            + jiminy_page_rows(data, syms) + jiminy_book_body_rows(data, syms) + jiminy_list_body_rows(data, syms)
             + jiminy_riku_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
