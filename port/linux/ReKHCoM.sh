@@ -150,7 +150,7 @@ rotate_session_log() {
 rotate_session_log "$DIR/ReKHCoM.log" || echo "Log rotation failed; retaining previous evidence" >&2
 exec >>"$DIR/ReKHCoM.log" 2>&1
 echo "ReKHCoM.sh: $(date), native Linux, folder $DIR, region ${REGION:-auto}"
-[ "$SAFE_STARTUP" = 1 ] && echo 'ReKHCoM.sh: safe startup: native32, bundled libraries, software renderer; session only'
+[ "$SAFE_STARTUP" = 1 ] && echo 'ReKHCoM.sh: safe startup: native32, software renderer, compatible library selection; session only'
 
 
 if [ -z "$ROM" ]; then
@@ -237,7 +237,8 @@ esac
 # libraries itself, so the game's RUNPATH does not reach them; Debian's i386 packages have no libXext, libXcursor
 # ... unless asked for, nor the unversioned names SDL opens). Nothing to set: if any piece is missing, or the game
 # does not get going, it runs as before with its own loader and libraries (lib/), and SDL draws in software.
-# The log says which way it went and which renderer drew ("Renderer:"). REKHCOM_GPU=0 forces the old way.
+# The log says which way it went and which renderer drew ("Renderer:"). REKHCOM_GPU=0 forces the old way,
+# except that --safe-startup still probes a matching system loader while keeping software rendering.
 SYS_LD=
 SYS_DIRS=
 case "$(uname -m)" in
@@ -251,7 +252,12 @@ case "$(uname -m)" in
         ;;
 esac
 GPU=
-if [ "${REKHCOM_GPU:-1}" != 0 ] && [ -n "$SYS_LD" ]; then
+if [ "$SAFE_STARTUP" = 1 ] && [ -n "$SYS_LD" ]; then
+    # Software rendering does not make the old bundled libc compatible with
+    # newer host GL/X11 dependencies. Try the matching system runtime first;
+    # --list is still the only retry boundary before any game session begins.
+    GPU=1
+elif [ "${REKHCOM_GPU:-1}" != 0 ] && [ -n "$SYS_LD" ]; then
     for d in $(echo "$SYS_DIRS" | tr ':' ' '); do
         if [ -e "$d/libGL.so.1" ] || [ -e "$d/libEGL.so.1" ]; then
             [ -e "$d/libX11.so.6" ] || [ -e "$d/libX11.so" ] && GPU=1
@@ -260,8 +266,12 @@ if [ "${REKHCOM_GPU:-1}" != 0 ] && [ -n "$SYS_LD" ]; then
 fi
 if [ -n "$GPU" ]; then
     LIBS="$DIR/lib/sys$SYS_DIRS:$DIR/lib"
-    if "$SYS_LD" --library-path "$LIBS" --list "$GAME" >/dev/null 2>&1; then
-        echo "ReKHCoM.sh: GPU, system 32-bit libraries ($SYS_LD$SYS_DIRS)"
+    if "$SYS_LD" --library-path "$LIBS" --list "$GAME" >/dev/null; then
+        if [ "$SAFE_STARTUP" = 1 ]; then
+            echo "ReKHCoM.sh: software drawing, system 32-bit libraries ($SYS_LD$SYS_DIRS)"
+        else
+            echo "ReKHCoM.sh: GPU, system 32-bit libraries ($SYS_LD$SYS_DIRS)"
+        fi
         # The loader preflight above is the only safe retry boundary. Once the
         # game starts, a quit/crash must never open a second session.
         exec "$SYS_LD" --library-path "$LIBS" "$GAME" "$@"
