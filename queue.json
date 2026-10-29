@@ -11001,23 +11001,28 @@
       "status": "pr_abierto",
       "owner": "codex-optiport-recycled",
       "created_at": "2026-10-29T01:00:56.747595+00:00",
-      "updated_at": "2026-10-29T01:02:59.158468+00:00",
+      "updated_at": "2026-10-29T01:03:07.271658+00:00",
       "branch": "codex/recycled-object-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/19",
-      "approval": "User explicitly requested teaching OptiPort and preventing similar bugs, no workers",
+      "approval": "Root integrator: human-authorized code review; 384fb79c132de3a4612ffd46d3c0a25a58adc561",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/484",
       "evidence": [
         {
           "at": "2026-10-29T01:02:59.158468+00:00",
           "owner": "codex-optiport-recycled",
           "detail": "Two module changes reviewed against484CPU/gameREDGREEN and485 eight real UI cases; explicitly retains device/launcher attribution limits, no broad allocator workaround, no performance claim; no workers per user"
+        },
+        {
+          "at": "2026-10-29T01:03:07.271658+00:00",
+          "owner": "codex-optiport-recycled",
+          "detail": "Root reviewed2module changes against actual regression receipts484/485; bounded initializer/sibling review and guest capability guards, no Android cause or hardware overclaim; whitespace checked, no worker/model evaluation per user."
         }
       ],
       "claimed_at": "2026-10-29T01:01:02.663632+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:02:59.158884+00:00",
+  "updated_at": "2026-10-29T01:03:07.271658+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
