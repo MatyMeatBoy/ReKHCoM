@@ -10338,10 +10338,10 @@
       "status": "pr_abierto",
       "owner": "codex-linux459-solo",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T00:06:48.448499+00:00",
+      "updated_at": "2026-10-29T00:07:01.989084+00:00",
       "branch": "fix/linux459-safe-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/483",
-      "approval": "Human requested2.2.5 all PR and new Linux issues; root explicitly assigns459first, independent460/461 unless mechanism proven",
+      "approval": "Root integrator: human-authorized code review; 40489b92c6b3428988fda0e2d970fa875e4d7ad6",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
         {
@@ -10353,6 +10353,11 @@
           "at": "2026-10-29T00:06:48.448499+00:00",
           "owner": "codex-linux459-solo",
           "detail": "Safe-startup runtime correction; two RED regressions then all29 GREEN, real native ELF32 old/version-error vs new/exec17; closed v225 game+newwrapper reaches software title, architectureprefs unchanged, VM quiescent. Device/media/importer confirmation still pending."
+        },
+        {
+          "at": "2026-10-29T00:07:01.989084+00:00",
+          "owner": "codex-linux459-solo",
+          "detail": "Root solo review; old/new real ELF versioned-provider control and actual packaged native32 software title PASS, all29 launcher tests PASS after two RED, no post-session retry, preserved preferences, safe optional only. Partial issue459: media tools/importer and device verification remain."
         }
       ],
       "claimed_at": "2026-10-28T23:54:00.302560+00:00"
@@ -10935,7 +10940,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T00:06:48.448499+00:00",
+  "updated_at": "2026-10-29T00:07:01.989084+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
