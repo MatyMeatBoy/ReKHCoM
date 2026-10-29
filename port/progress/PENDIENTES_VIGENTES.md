@@ -1,5 +1,33 @@
 # Pendientes tras publicar 2.2
 
+## Estado vigente: 29/10/2026 UTC
+
+**Prioridad: bugs; trabajo en solitario, sin workers.** La estable pública es
+[v2.2.5](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5); sus archivos
+siguen inmutables. Las listas de issues/versiones de las secciones históricas
+siguientes no sustituyen la cola remota ni el estado actual de GitHub.
+
+- **480, abierto:** [investigación y test Android](issue480-spring-investigation.md).
+  Omisión de inicialización del muelle corregida, revisados 14 inicializadores
+  relacionados, negativo/positivo con memoria reciclada verificado. APK USA
+  publicada y enviada; atribución al recorrido Android pendiente de confirmación.
+- **479, cerrado:** [Quit de escritorio restaurado y test entregado](issue479-desktop-quit.md).
+  Windows/Linux, tres regiones y 32/64; archivos finales y cierre verificados en
+  los alcances descritos. Es un test separado para la próxima estable.
+- **459, abierto:** [selección de bibliotecas corregida](issue459-runtime.md),
+  test parcial y paquete Linux completo enviados. Confirmación SteamOS pendiente;
+  dependencias opcionales de sprites y herramientas de vídeo siguen separadas.
+- **330/460, abiertos:** esperar evidencia del arranque Gaming Mode y confirmación
+  de audio Bazzite respectivamente. No cerrarlos por controles de otra máquina.
+
+Después de los bugs abordables, orden 2.3 autorizado: contador 99/separador y
+naipes mapa pequeños HD; diario de Pepito interno; continuidad de audio al
+saltar al título y abrir tienda moguri. Las tareas ya corregidas o publicadas
+deben conciliarse con evidencia, sin volver a compilar ni reclamar arte antiguo
+como si estuviera libre. OptiPort vigente: `0f61e585a5236bf11b89dabe9cd5c4d3a99589a1`,
+copias Codex/Claude y snapshot interno sincronizados; la pasada del producto
+conserva sus 16 áreas y sus límites de medición/dispositivo.
+
 **Entrega #330, 28/10/2026:** [test de arranque Linux publicado y enviado](LINUX_STARTUP_TEST330.md), target ef4091e1 y gate46 del TAR exacto. Sigue pendiente la confirmación física; safe32/software es una opción manual y Latest v2.2 no cambió. La entrega Android #374 es independiente.
 
 **Entrega #374/#412, 28/10/2026:** [test Android font-fallback publicado y enviado](ANDROID_FONT_FALLBACK_TEST374.md), fuente2dd3d01b, fixes465/466/467 y APK separado de la baseline. Firma, ABI y CPU verificadas; instalación/runtime y confirmación física pendientes. Latest v2.2 intacta; los issues siguen abiertos.
