@@ -11981,17 +11981,23 @@
       "status": "en_curso",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T17:41:28.545364+00:00",
-      "branch": null,
+      "updated_at": "2026-10-29T17:45:05.823370+00:00",
+      "branch": "fix/issue515-tutorial-synthesis-actors",
       "pr": null,
       "approval": "Human authorized bugs priority1 and cover all new issues before2.3",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/515",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T17:45:05.823370+00:00",
+          "owner": "codex-issue515",
+          "detail": "Issue exact build Linuxv2.2.5-test479 and Windows, video f635aee0-818d-4166-99d2-efe5dc154675 after MomentsReprieve tutorial caption. Root new clean branch mainfbe2934, prior380 controls did not exercise UpdateMapSelectValueTutorial/CreateSysmsgwinTask. Reproduce first, preserve all normal/HD/world modes; no source fix yet."
+        }
+      ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:41:28.545364+00:00",
+  "updated_at": "2026-10-29T17:45:05.823370+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
