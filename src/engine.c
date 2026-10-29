@@ -26,6 +26,7 @@
 #include <stddef.h>
 #ifdef PLATFORM_PC
 #include "port/port_battle_backdrop.h"
+#include "port/port_oam.h"
 #endif
 
 u16 gLastBackdropColor IWRAM_DATA(4);
@@ -953,6 +954,19 @@ void UpdateSpriteOam() {
                 continue;
             }
 
+#ifdef PLATFORM_PC
+            /* Wide views can expose more than the cartridge's 128 parts.
+             * Never walk past GBA OAM: extra visible parts have owned storage. */
+            oam = PortOamPartBuffer(emitted);
+            if (oam == NULL) {
+                static int reported;
+                if (!reported) {
+                    PortLog("sprites: frame exceeds the %d-part rendering budget", PORT_OAM_CAPACITY);
+                    reported = 1;
+                }
+                goto oam_complete;
+            }
+#endif
             oam[0] = (attr0 & ~OAM_Y_MASK) | (y & OAM_Y_MASK);
             oam[1] = (attr1 & ~OAM_X_MASK) | (x & OAM_X_MASK);
 #ifdef PLATFORM_PC
@@ -981,6 +995,9 @@ void UpdateSpriteOam() {
         }
     }
 
+#ifdef PLATFORM_PC
+oam_complete:
+#endif
     for (i = emitted; i < 128; i++) {
         *oam = OAM_DISABLE;
         oam += 4;

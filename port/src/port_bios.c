@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "port/port.h"
+#include "port/port_oam.h"
 
 typedef struct BgAffineSrcData {
     int32_t texX;
@@ -139,8 +140,10 @@ void RegisterRamReset(uint32_t flags) {
         memset((void*)(uintptr_t)GBA_PLTT, 0, GBA_PLTT_SIZE);
     if (flags & 0x08)
         memset((void*)(uintptr_t)GBA_VRAM, 0, GBA_VRAM_SIZE);
-    if (flags & 0x10)
+    if (flags & 0x10) {
         memset((void*)(uintptr_t)GBA_OAM, 0, GBA_OAM_SIZE);
+        PortOamTagsReset();
+    }
     if (flags & 0x40)
         memset((void*)(uintptr_t)(GBA_IO + 0x60), 0, 0x48);
     if (flags & 0x80) {
