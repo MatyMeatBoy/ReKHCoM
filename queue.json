@@ -10335,12 +10335,12 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux459-solo",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-28T23:54:00.302560+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-29T00:06:48.448499+00:00",
+      "branch": "fix/linux459-safe-runtime",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/483",
       "approval": "Human requested2.2.5 all PR and new Linux issues; root explicitly assigns459first, independent460/461 unless mechanism proven",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
@@ -10348,6 +10348,11 @@
           "at": "2026-10-28T21:30:35.825058+00:00",
           "owner": "codex-linux459",
           "detail": "released: TRIAGED_NOT_FIXED: exactpublic2.2/test330scripts ninecontrolledPOSIX tests PASS, correct755modes, Setup/Launcheridentical; noactualfailedSteamshortcutfields/logprovided459. PrimaryValve8164historicalsimilar CLOSEDfixed2023 notcurrentcause. No speculativepatch. Draftreplywithpublictest330+3shortcutfields retained D:/01Claude/ReKHCoM-build/qa-runtime/linux459-startup-audit; pruebas/linux459-startup-audit/TRIAGE.json. PhysicalStartup remainsopen."
+        },
+        {
+          "at": "2026-10-29T00:06:48.448499+00:00",
+          "owner": "codex-linux459-solo",
+          "detail": "Safe-startup runtime correction; two RED regressions then all29 GREEN, real native ELF32 old/version-error vs new/exec17; closed v225 game+newwrapper reaches software title, architectureprefs unchanged, VM quiescent. Device/media/importer confirmation still pending."
         }
       ],
       "claimed_at": "2026-10-28T23:54:00.302560+00:00"
@@ -10930,7 +10935,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-28T23:54:00.302560+00:00",
+  "updated_at": "2026-10-29T00:06:48.448499+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
