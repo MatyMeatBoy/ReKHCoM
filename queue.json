@@ -10887,10 +10887,10 @@
       "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T11:06:11.789902+00:00",
+      "updated_at": "2026-10-29T11:06:36.168664+00:00",
       "branch": "fix/v23-jiminy-page",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/502",
-      "approval": "Root integrator: human-authorized code review; c21727fda6b4ad45a1b9877565aac394a2eaa07d",
+      "approval": "Root integrator: human-authorized code review; ba48a3402487a8492d28c63f96ed8672b0eac4b5",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -11032,6 +11032,11 @@
           "at": "2026-10-29T11:06:11.789902+00:00",
           "owner": "codex-jiminy23",
           "detail": "ba48a3402 PAGE5languages top8rows only, sourceBG1/overlay/LRgeometry assertions. Realregistration REDmain/GREEN EUUS+JPnonPC; WinEU32US32/64ABIboot AndroidUSJP sourcesPASS. Nativeimport5to0/899priorbyteidentical/5PNGpixelparity;finalSpanishonly1recipe/903stable.10USviews onlytab,5missingfallbackexact,10fractional4:3views6counterLRcropsexact,5finalEUviews saveunchanged. P2partial; preexisting nameplate-rightstrip identified."
+        },
+        {
+          "at": "2026-10-29T11:06:36.168664+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: PAGE isolated151,0,89,8 with nativeBG1 clear colours; bothBG0overlays and three detail backgrounds equal; nativeL/R firstinkrow8. Exactsecondstillkey keeps native on missingresource. Registration REDmain/GREEN layouts/languages/fades/EUUS and JPnonPCoff. NativeC++5to0/899oldbyteexact/5PNGpixelparity, finalSpanish1recipeonly/903oldstable.10US32/64+5missing+10fractional4:3+5finalEU captures; counterLR/rootlist unchanged. WinEU32US32/64ABIboot/AndroidUSJP/sourcesPASS. Partial P2; no audio/physical certification or worker."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11566,7 +11571,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T11:06:11.789902+00:00",
+  "updated_at": "2026-10-29T11:06:36.168664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
