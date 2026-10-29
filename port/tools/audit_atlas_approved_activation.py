@@ -42,20 +42,28 @@ def source_contract(asset, source, ready, default_scenes):
         return {'kind': 'native_boss', 'source': ['port/src/port_darkside.c',
                 *[f'port/include/port/darkside_body_{name}.inc' for name in
                   ['idle', 'crouch', 'raise', 'claw', 'lean', 'punch', 'reach']]],
-                'default_source_gate': 'PortDarksideBeachOn',
+                'default_source_gate': 'STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero',
                 'import': 'not_required_native_tiles'}
     if any(word in title for word in ['malefica', 'maléfica', 'marluxia', 'rsula', 'jafar', 'guard armor']):
         name = next(name for word, name in [('malefica', 'maleficent'), ('maléfica', 'maleficent'),
                     ('marluxia', 'marluxia'), ('rsula', 'ursula'), ('jafar', 'jafar'),
                     ('guard armor', 'guard_armor')] if word in title)
-        return {'kind': 'native_boss', 'source': [f'port/src/port_{name}.c'],
-                'default_source_gate': 'needs_exact_consumer_check', 'import': 'not_required_native_tiles'}
+        gate = {'maleficent': 'STATIC_enabled_PortArenasApproved',
+                'ursula': 'STATIC_enabled_PortArenasApproved',
+                'marluxia': 'STATIC_enabled_PortArenasApproved_when_field_matches',
+                'jafar': 'STATIC_enabled_PortJafarWide_unset_or_nonzero',
+                'guard_armor': 'STATIC_enabled_when_map_matches_and_no_explicit_NO_GUARD_PATIO'}[name]
+        return {'kind': 'native_boss', 'source': [f'port/src/port_{name}.c', 'port/src/port_ppu.c'],
+                'default_source_gate': gate, 'import': 'not_required_native_tiles'}
     if 'agrabah' in title:
         return {'kind': 'native_scene', 'source': ['port/include/port/port_agrabah_tiles.h'],
-                'default_source_gate': 'PortArtOn_or_profile_needs_exact_check',
+                'default_source_gate': 'STATIC_enabled_PortArtOn_unset_or_nonzero',
                 'import': 'not_required_native_tiles'}
-    return {'kind': 'menu_hud_or_other', 'source': [],
-            'default_source_gate': 'needs_exact_consumer_check',
+    return {'kind': 'menu_hud_or_other', 'source': [
+            'port/src/port_main.c', 'port/src/port_ppu.c', 'port/src/port_hdsprites.c',
+            'port/include/port/hd_sprites.inc', 'port/data/hd_sprites.tsv',
+            'port/src/port_config.c', 'port/src/port_ui.c'],
+            'default_source_gate': 'menu_modes_registered_HD_groups_require_hdCards_or_hdTitle',
             'import': 'needs_current_asset_and_binding_check'}
 
 
@@ -93,7 +101,7 @@ def inventory(state, desk=None):
         row['source_equivalence_to_approved_image'] = 'NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE'
         row['current_source']['files'] = [source_file(name) for name in row['current_source']['source']]
         if asset['status'] not in ['approved', 'honors']:
-            row['warning'] = 'approval record retained, but current version status needs review'
+            row['warning'] = 'accepted base remains valid; later feedback is pending follow-up, not revocation'
         if desk is not None:
             path = desk/'images'/f'{accepted}.png'
             if path.exists():
@@ -121,15 +129,47 @@ def validate_complete(state, report):
         raise ValueError('Atlas accepted-version count differs from authoritative selection')
 
 
+def attach_resource_receipt(report, receipt):
+    """Report importer/registry coverage without claiming exact-image parity."""
+    report['current_resource_audit'] = receipt['summary']
+    for row in report['accepted']:
+        if row['current_source']['kind'] == 'menu_hud_or_other':
+            row['import_chain'] = {
+                'recipe_inventory': receipt['summary'].get('inventory_status', 'NOT_SUPPLIED'),
+                'compiled_registry': receipt['summary'].get('compiled_registry_check', 'NOT_SUPPLIED'),
+                'resource_bytes': receipt['summary']['encoded_bytes'],
+                'potential_decoded_rgba_bytes': receipt['summary']['rgba_bytes'],
+                'exact_family_resource_mapping': 'PENDING_targeted_consumer_and_frame_review',
+                'runtime': 'NOT_CERTIFIED_BY_GLOBAL_INVENTORY'}
+        else:
+            row['import_chain'] = {'recipe_inventory': 'native_ROM_palette_tiles_no_Atlas_PNG_import',
+                                   'runtime': 'NOT_CERTIFIED_BY_GLOBAL_INVENTORY'}
+
+
+def attach_runtime_receipt(report, receipt):
+    accepted = {row['approved_version']: row for row in report['accepted']}
+    for version, proof in receipt.items():
+        if version not in accepted:
+            raise ValueError('Runtime receipt cannot promote a version outside authoritative approvals')
+        accepted[version]['runtime'] = proof
+        accepted[version]['source_equivalence_to_approved_image'] = proof.get('source_equivalence', 'NOT_SUPPLIED')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--state', type=Path, required=True)
     ap.add_argument('--desk', type=Path)
+    ap.add_argument('--resource-audit', type=Path)
+    ap.add_argument('--runtime-audit', type=Path)
     ap.add_argument('--out', type=Path, required=True)
     args = ap.parse_args()
     state = json.loads(args.state.read_text(encoding='utf-8-sig'))
     report = inventory(state, args.desk)
     validate_complete(state, report)
+    if args.resource_audit:
+        attach_resource_receipt(report, json.loads(args.resource_audit.read_text(encoding='utf-8')))
+    if args.runtime_audit:
+        attach_runtime_receipt(report, json.loads(args.runtime_audit.read_text(encoding='utf-8')))
     args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: report[k] for k in ['families_total', 'accepted_total', 'source_gate_gaps']}))
 

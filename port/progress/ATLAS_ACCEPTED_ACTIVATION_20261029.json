@@ -1,0 +1,5132 @@
+{
+  "schema": "rekhcom.atlas-accepted-activation/1",
+  "source_commit": "7e935dee9b91dc5e4fcf790e1f5973f7a563127b",
+  "source_worktree_dirty": true,
+  "families_total": 82,
+  "accepted_total": 78,
+  "accepted": [
+    {
+      "title": "Darkside 01 · De pie",
+      "id": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "status": "honors",
+      "sha256": "2800381052bd496c4c70b8e1db1c48b304704cbe50b3eafef6a11df491585bd9",
+      "width": 912,
+      "height": 538,
+      "family_id": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "approved_version": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "current_feedback_status": "honors",
+      "build_version": "b7b6839a2cbc448fbcec91996c9bbb45",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 1962624,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 36179,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 02 · Agachado",
+      "id": "65700d8493bb4bf99be8721f604872c1",
+      "status": "approved",
+      "sha256": "6a67262f76218f96bfc52f7e210b5696b51cffa48fa08b5a46a6c47005cc4459",
+      "width": 912,
+      "height": 560,
+      "family_id": "65700d8493bb4bf99be8721f604872c1",
+      "approved_version": "65700d8493bb4bf99be8721f604872c1",
+      "current_feedback_status": "approved",
+      "build_version": "65700d8493bb4bf99be8721f604872c1",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 2042880,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 40945,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 03 · Brazo en alto · r6",
+      "id": "2938cbbb50a345088e08d0365dd0b9f3",
+      "status": "approved",
+      "sha256": "7adfb82f1c7af2065e60b9f7b9bf714b72933b0e4557fd1bb57156038c0182b1",
+      "width": 912,
+      "height": 678,
+      "family_id": "3f7f3c01b3f24ef3a05c9ee8ab10e1f0",
+      "approved_version": "2938cbbb50a345088e08d0365dd0b9f3",
+      "current_feedback_status": "approved",
+      "build_version": "2938cbbb50a345088e08d0365dd0b9f3",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "3f7f3c01b3f24ef3a05c9ee8ab10e1f0",
+        "49d4df0e48f54c4fa8bfea35af161604",
+        "3628d716f19a477cbb6317f5e15fb673"
+      ],
+      "rgba_bytes": 2473344,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 48020,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 04 · Garra · r5",
+      "id": "32d663b982324eccb45104cc4b99b447",
+      "status": "approved",
+      "sha256": "b2dfd3524dc11273d3f8b48928b939374d39d8b8c0cb6b555a9781279f733bdf",
+      "width": 912,
+      "height": 546,
+      "family_id": "9117158ff3d24023b64527f6d0619838",
+      "approved_version": "32d663b982324eccb45104cc4b99b447",
+      "current_feedback_status": "approved",
+      "build_version": "32d663b982324eccb45104cc4b99b447",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "9117158ff3d24023b64527f6d0619838",
+        "db369cf3aa1640e6b2b954acd93ee0c9"
+      ],
+      "rgba_bytes": 1991808,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 43353,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 05 · Inclinado · r5",
+      "id": "cb75a018337a42ca8e4f492b5d413800",
+      "status": "approved",
+      "sha256": "c8727cfdd8b75aea56aad89caa39c6733c7205fbdb8cb8de8a040cb3125f0ccd",
+      "width": 912,
+      "height": 518,
+      "family_id": "cb7babd0f88149efb38536b2ed186bce",
+      "approved_version": "cb75a018337a42ca8e4f492b5d413800",
+      "current_feedback_status": "approved",
+      "build_version": "cb75a018337a42ca8e4f492b5d413800",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "cb7babd0f88149efb38536b2ed186bce",
+        "0e918387cfdd4e8ca3cf3664c139145a",
+        "60f8f0f2e7b542ae83f1ec0d79009b54"
+      ],
+      "rgba_bytes": 1889664,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 42837,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 06 · Puñetazo",
+      "id": "60f90456598249ecb1e691c51dd2434e",
+      "status": "approved",
+      "sha256": "686a6576e4ee1cc085f4fffb10fc09c36954f90fcebefb739a6696e99a26a3ad",
+      "width": 912,
+      "height": 640,
+      "family_id": "c498295fb154440b9d231994a434814f",
+      "approved_version": "60f90456598249ecb1e691c51dd2434e",
+      "current_feedback_status": "approved",
+      "build_version": "60f90456598249ecb1e691c51dd2434e",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "c498295fb154440b9d231994a434814f",
+        "236d5f51dce7483ea14b1fa90266b12e",
+        "429c00fa433842c9978689478591d110",
+        "f28d6b1435cd44bab063aa158b3fda9f",
+        "ad293ae9c5324daf883db049dd30af46"
+      ],
+      "rgba_bytes": 2334720,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 42751,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside 07 · Alcanzar · r3",
+      "id": "24a9a985d92d4c50bd83aa29178ade77",
+      "status": "approved",
+      "sha256": "96feb75deedfa3498d1def6dd6babe2e90c3974acab92421c0e6eef8cb1b18a2",
+      "width": 1356,
+      "height": 534,
+      "family_id": "ad5dd3c5acd44751a3a8afb0a8a109c5",
+      "approved_version": "24a9a985d92d4c50bd83aa29178ade77",
+      "current_feedback_status": "approved",
+      "build_version": "24a9a985d92d4c50bd83aa29178ade77",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "ad5dd3c5acd44751a3a8afb0a8a109c5"
+      ],
+      "rgba_bytes": 2896416,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 39494,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Malefica 01: cuerpo y montaje nativo",
+      "id": "306aea394d144032932cf1595bf4cbdd",
+      "status": "approved",
+      "sha256": "55791f71cfab2f30e8158a6d0efa4d15010e243a6ca6e231d64e753dfd7a40d8",
+      "width": 2048,
+      "height": 1440,
+      "family_id": "25aa0ffe25b14be5855a107bd882b6f6",
+      "approved_version": "306aea394d144032932cf1595bf4cbdd",
+      "current_feedback_status": "approved",
+      "build_version": "306aea394d144032932cf1595bf4cbdd",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "25aa0ffe25b14be5855a107bd882b6f6",
+        "4d253e4072d34f03b7569a987702c511",
+        "b3e23f09087844e5bfd1207c0ab8f2a9",
+        "312570a6afda4786b2d7c80ba4c11768"
+      ],
+      "rgba_bytes": 11796480,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_maleficent.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_maleficent.c",
+            "exists": true,
+            "git_blob": "5cacf49148b21dd6e1a44eb0c050531e619eaa42"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_PUNTO_REANUDACION.md",
+        "port\\progress\\HANDOFF_V20_20261026.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 63556,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Malefica 02: cuerpo y montaje nativo",
+      "id": "57768c3432cb475d9e2f67887c8bbaf6",
+      "status": "approved",
+      "sha256": "21ed3bdb5b4060a00f365fd432ae3158428e4f13044475de4295d13c5b5df59f",
+      "width": 2048,
+      "height": 1440,
+      "family_id": "d0172dfdf0634aff86a45bb14090ee6c",
+      "approved_version": "57768c3432cb475d9e2f67887c8bbaf6",
+      "current_feedback_status": "approved",
+      "build_version": "57768c3432cb475d9e2f67887c8bbaf6",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "d0172dfdf0634aff86a45bb14090ee6c",
+        "1541937df30b4f81a4734a58a5829c0e"
+      ],
+      "rgba_bytes": 11796480,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_maleficent.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_maleficent.c",
+            "exists": true,
+            "git_blob": "5cacf49148b21dd6e1a44eb0c050531e619eaa42"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_PUNTO_REANUDACION.md",
+        "port\\progress\\HANDOFF_V20_20261026.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 65678,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Malefica 03: cuerpo y montaje nativo",
+      "id": "2ca1f374795c4c4f9c78ec82f553fe2d",
+      "status": "approved",
+      "sha256": "fd43fbdb26eeda9940ac96ad06c0103fe59cbef17e802d22af760b601cc4d6a6",
+      "width": 2048,
+      "height": 1440,
+      "family_id": "2aed2837dedb4f91ac21fd99ab175634",
+      "approved_version": "2ca1f374795c4c4f9c78ec82f553fe2d",
+      "current_feedback_status": "approved",
+      "build_version": "2ca1f374795c4c4f9c78ec82f553fe2d",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "2aed2837dedb4f91ac21fd99ab175634",
+        "d2ec0b82f211456fb830cf2c0ce4e797"
+      ],
+      "rgba_bytes": 11796480,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_maleficent.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_maleficent.c",
+            "exists": true,
+            "git_blob": "5cacf49148b21dd6e1a44eb0c050531e619eaa42"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_PUNTO_REANUDACION.md",
+        "port\\progress\\HANDOFF_V20_20261026.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 63236,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Coliseo 121 · Cloud y Hércules",
+      "id": "9917b6dad433408b870bc5eadf613f35",
+      "status": "honors",
+      "sha256": "000f14da170db2555697af6fcac66b8bd36c9bcc2898a387ec345039b98be2d8",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "9917b6dad433408b870bc5eadf613f35",
+      "approved_version": "9917b6dad433408b870bc5eadf613f35",
+      "current_feedback_status": "honors",
+      "build_version": "9917b6dad433408b870bc5eadf613f35",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 121,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 254499,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Coliseo 122 · propuesta",
+      "id": "b4d77f38012545f9bc6c8e8517e92a37",
+      "status": "honors",
+      "sha256": "4075619c89fc3727f5cd71e4d3d8a74d5b3972fba377ec95a5ff0669f7a138b0",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "b4d77f38012545f9bc6c8e8517e92a37",
+      "approved_version": "b4d77f38012545f9bc6c8e8517e92a37",
+      "current_feedback_status": "honors",
+      "build_version": "b4d77f38012545f9bc6c8e8517e92a37",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 122,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 270706,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Coliseo 124 · borrador pausado",
+      "id": "acc5d678014f4ee68ac39f5faaaa16f7",
+      "status": "approved",
+      "sha256": "544bef42edfe85bd4f630b758847e19ba46bd3c1b34dffc47e7da780455facb7",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "acc5d678014f4ee68ac39f5faaaa16f7",
+      "approved_version": "acc5d678014f4ee68ac39f5faaaa16f7",
+      "current_feedback_status": "approved",
+      "build_version": "acc5d678014f4ee68ac39f5faaaa16f7",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 124,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 325411,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 007",
+      "id": "db18e760371f414080d2638a39d7dfd8",
+      "status": "approved",
+      "sha256": "384152299ad4dcdf59cd9cd80d3ff8bdaaf3700b361837d39d788f29b6103d7c",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "db18e760371f414080d2638a39d7dfd8",
+      "approved_version": "db18e760371f414080d2638a39d7dfd8",
+      "current_feedback_status": "approved",
+      "build_version": "db18e760371f414080d2638a39d7dfd8",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 7,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 128465,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 044",
+      "id": "0ac326ad582f4214b308a5d0c1bc6629",
+      "status": "approved",
+      "sha256": "5820034cf1236eb7a771ee442760af61fb0529e08976e6017d491e091d05cb20",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "eeb7367bc9a749dd814cb2a545e4d75e",
+      "approved_version": "0ac326ad582f4214b308a5d0c1bc6629",
+      "current_feedback_status": "approved",
+      "build_version": "0ac326ad582f4214b308a5d0c1bc6629",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "eeb7367bc9a749dd814cb2a545e4d75e"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 44,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 139539,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 045",
+      "id": "2f0e9dee739642468bded660684f5355",
+      "status": "approved",
+      "sha256": "ea6d00b2ef36e2ad8dcfe5849e62f354b78d0c9499b119761d8a4c0b92b00c9b",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "3fc33ab1393147cfb123efac84b08cf2",
+      "approved_version": "2f0e9dee739642468bded660684f5355",
+      "current_feedback_status": "approved",
+      "build_version": "2f0e9dee739642468bded660684f5355",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "3fc33ab1393147cfb123efac84b08cf2"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 45,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 125580,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 053",
+      "id": "553e59d173b14e00bc61c1d513188719",
+      "status": "honors",
+      "sha256": "dde1a8fdd985d3779c0b34b787aab37fe62cf8e19e81a668e1fc96749d4b5036",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "652df62f6e1b4853954bc4f08c59e782",
+      "approved_version": "553e59d173b14e00bc61c1d513188719",
+      "current_feedback_status": "honors",
+      "build_version": "553e59d173b14e00bc61c1d513188719",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "652df62f6e1b4853954bc4f08c59e782"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 53,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 289152,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 054",
+      "id": "18f40e19e5814241a966b3348a542977",
+      "status": "honors",
+      "sha256": "a66b76485c8d6a41a2b2e4404f639194950f3033771f422e5660a63b80f90223",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "304975fa088841d9ae67ec3934efc78d",
+      "approved_version": "18f40e19e5814241a966b3348a542977",
+      "current_feedback_status": "honors",
+      "build_version": "18f40e19e5814241a966b3348a542977",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "304975fa088841d9ae67ec3934efc78d"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 54,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 132621,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 055",
+      "id": "ac6109e021c34faa8d47288399992a72",
+      "status": "honors",
+      "sha256": "4694b110de38cd368cbbd539aa9fb8b7c41ebc56d1242214c52bc07225175e0d",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "ac6109e021c34faa8d47288399992a72",
+      "approved_version": "ac6109e021c34faa8d47288399992a72",
+      "current_feedback_status": "honors",
+      "build_version": "ac6109e021c34faa8d47288399992a72",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 55,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 80372,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 081",
+      "id": "8072e8379e404ddd9ba2eac73de50f3c",
+      "status": "approved",
+      "sha256": "a8eb74defd1cac93361318391ecdb8abe83852a804c2739aaf8383ba2e8769f1",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "6c6842a887784f77aa0c4795867f6cda",
+      "approved_version": "8072e8379e404ddd9ba2eac73de50f3c",
+      "current_feedback_status": "approved",
+      "build_version": "8072e8379e404ddd9ba2eac73de50f3c",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "6c6842a887784f77aa0c4795867f6cda",
+        "d03972341e324de2838eb705e2deb7b0"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": {
+        "status": "VERIFIED_EU32_SDLdummy_SOFTWARE_ACTIVATION",
+        "name": "081",
+        "binary_sha256": "a8d23407f96fc49a7e65cd41608b4e0190f0590e97171db510e534307636f23e",
+        "source_equivalence": "scene081 TileSource+PixelSource exacta03649691",
+        "evidence": "pruebas/atlas-v23-approved-gaps/runtime-comparison.json",
+        "scope": "newdefault=oldpreview;newdefault=newpreview;Off=olddefault pixel-exact",
+        "limits": "MixedEU32relink declared;notcleanpackage/GPU64/Android;081nativecenterchangesalreadyinapprovedpreview"
+      },
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 81,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "scene081 TileSource+PixelSource exacta03649691",
+      "png_bytes": 246225,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 087",
+      "id": "33dd78c3e05f44648d70624c52ae2cf0",
+      "status": "approved",
+      "sha256": "95bcb2dca7750a90669c245bc69286d07fe4572a1ff5c82db53c1d1be58dab86",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "78cc05ed39314dc9b88235eca0f3ad1c",
+      "approved_version": "33dd78c3e05f44648d70624c52ae2cf0",
+      "current_feedback_status": "approved",
+      "build_version": "33dd78c3e05f44648d70624c52ae2cf0",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "78cc05ed39314dc9b88235eca0f3ad1c",
+        "a4e8046fa4404186b64fa82106e8c707"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 87,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_087_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 559154,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 090",
+      "id": "37a6f9b61f0e427988c96890ce9b4f09",
+      "status": "approved",
+      "sha256": "dab5c021c74a46a9f777bb1440e0f7c88b324c3b7697094f4222e8f87d66243a",
+      "width": 3441,
+      "height": 1440,
+      "family_id": "0717ed4c3a554005a74694e692dc20f0",
+      "approved_version": "37a6f9b61f0e427988c96890ce9b4f09",
+      "current_feedback_status": "approved",
+      "build_version": "37a6f9b61f0e427988c96890ce9b4f09",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "0717ed4c3a554005a74694e692dc20f0",
+        "0551fbab97804de9802ed1b48160e278",
+        "6458681037fd4bdc91688842b9369560"
+      ],
+      "rgba_bytes": 19820160,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 90,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ESCENA090_REVISION_CODEX.md",
+        "port\\progress\\LOGICA_APROBADOS.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 190656,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 095",
+      "id": "47e89e1d59374be8aa04ff8e658ee3a6",
+      "status": "approved",
+      "sha256": "ea81e4dfdb9e9f0da6391669a9f3f0f4b98c8007b11062b6372f6c124c9094a5",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "f3fbf809b7e344bdadc74df3d132977f",
+      "approved_version": "47e89e1d59374be8aa04ff8e658ee3a6",
+      "current_feedback_status": "approved",
+      "build_version": "47e89e1d59374be8aa04ff8e658ee3a6",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "f3fbf809b7e344bdadc74df3d132977f",
+        "063184fedd8043a492e2fe4b5ea34b25",
+        "7ced288c94294e3880394f63aba5a5c6"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 95,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_095_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 428866,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 097",
+      "id": "4bdd58353e74419d9d3f5dac83cfc82d",
+      "status": "approved",
+      "sha256": "7e3dd05d252baf6ee0cf18470f1380e4e62e260fb7eebf42ed906663e9fd4329",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "31b66c063867439eb236a0a492a64ede",
+      "approved_version": "4bdd58353e74419d9d3f5dac83cfc82d",
+      "current_feedback_status": "approved",
+      "build_version": "4bdd58353e74419d9d3f5dac83cfc82d",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "ec8c60b820a847aeabe9778e8dce033d"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": {
+        "status": "VERIFIED_EU32_SDLdummy_SOFTWARE_ACTIVATION",
+        "name": "097",
+        "binary_sha256": "a8d23407f96fc49a7e65cd41608b4e0190f0590e97171db510e534307636f23e",
+        "source_equivalence": "recipe rows exactPR193; PR213 shadow condition retained with sharedPR214lifecycle; actorlogicnotmodified",
+        "evidence": "pruebas/atlas-v23-approved-gaps/runtime-comparison.json",
+        "scope": "newdefault=oldpreview;newdefault=newpreview;Off=olddefault pixel-exact",
+        "limits": "MixedEU32relink declared;notcleanpackage/GPU64/Android;081nativecenterchangesalreadyinapprovedpreview"
+      },
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 97,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_097_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "recipe rows exactPR193; PR213 shadow condition retained with sharedPR214lifecycle; actorlogicnotmodified",
+      "png_bytes": 416434,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 098",
+      "id": "de7e4e0b84f346c3a5cb9fd905010b50",
+      "status": "approved",
+      "sha256": "e0f0554533f7b1fc741fecf5d2e14cb799de60470aaa18a18735cc2137842bf9",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "74d3a0d983d7474ea7769f9216ef7cc8",
+      "approved_version": "de7e4e0b84f346c3a5cb9fd905010b50",
+      "current_feedback_status": "approved",
+      "build_version": "de7e4e0b84f346c3a5cb9fd905010b50",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "74d3a0d983d7474ea7769f9216ef7cc8"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 98,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 189064,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 099 - revision turbo",
+      "id": "f092a251c3e44a56b1b4727eb3183855",
+      "status": "approved",
+      "sha256": "760409e12b7b1763966bfcd390065872be701f75e5583cf8d1d95e2f0a5bc23d",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "00f2dd9ba4824a1a8248091663dda777",
+      "approved_version": "f092a251c3e44a56b1b4727eb3183855",
+      "current_feedback_status": "approved",
+      "build_version": "f092a251c3e44a56b1b4727eb3183855",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "00f2dd9ba4824a1a8248091663dda777",
+        "d3e87dca65eb4e9fb10535b3e731419d",
+        "ae36f45ef10e45cc809620075f0c8626"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 99,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 194584,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 102 - revision turbo",
+      "id": "3bbd4c0046224adaa320c05dae1b2a4e",
+      "status": "honors",
+      "sha256": "c2cc5ccdb4e0e7d2edc92c8a88dc42274b76801024f80422933fc1f759913ceb",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "b5ee78894f994aa684c59f38def14509",
+      "approved_version": "3bbd4c0046224adaa320c05dae1b2a4e",
+      "current_feedback_status": "honors",
+      "build_version": "3bbd4c0046224adaa320c05dae1b2a4e",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "b5ee78894f994aa684c59f38def14509",
+        "d3b580a4ed584e52805644def7d3f1ad"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 102,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 268930,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 104",
+      "id": "52df9ff43f4e48b4a722240c723bc2f8",
+      "status": "approved",
+      "sha256": "de563b78cadc4089afafdbdac8892d5dcf94fd26dcd5aac3ec0c3c1b10cde8c0",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "b462df0229ba4e74bd8e9854356fbfc9",
+      "approved_version": "52df9ff43f4e48b4a722240c723bc2f8",
+      "current_feedback_status": "approved",
+      "build_version": "52df9ff43f4e48b4a722240c723bc2f8",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "b462df0229ba4e74bd8e9854356fbfc9"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 104,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 182876,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 110",
+      "id": "aa5c68ac68e948deaa006b2dfec38897",
+      "status": "approved",
+      "sha256": "effb314635962e88b6ae12b3bca5873b8eff17480a13dde9d7caca74575bc4ee",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "e767407ba71849c18d41033041e74f9d",
+      "approved_version": "aa5c68ac68e948deaa006b2dfec38897",
+      "current_feedback_status": "approved",
+      "build_version": "aa5c68ac68e948deaa006b2dfec38897",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "e767407ba71849c18d41033041e74f9d",
+        "5f24da7d134f47e4b75d6d4d3df40f66"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 110,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_110_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 374809,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 112",
+      "id": "994a5761f7f042deaba72d7e716ee14e",
+      "status": "changes_requested",
+      "sha256": "3f7d6487c91338128a3ff5101e243638f48443695b14ff2e52099420ad3453c9",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "1dafd826b81c4c8f8df99ff28bfbe4f3",
+      "approved_version": "994a5761f7f042deaba72d7e716ee14e",
+      "current_feedback_status": "changes_requested",
+      "build_version": "994a5761f7f042deaba72d7e716ee14e",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "1dafd826b81c4c8f8df99ff28bfbe4f3",
+        "1f9bd6f511d34c14a981a691394bbabf",
+        "1771a87bba5b48df8358893e8a976bc3",
+        "a4454546dc2544ef82e346e99b1672cd",
+        "fb1b0c0d3d4142979eff6dfa83f504ce"
+      ],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 112,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_112_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "warning": "accepted base remains valid; later feedback is pending follow-up, not revocation",
+      "png_bytes": 358463,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 115",
+      "id": "edd1e953dd7141ad931a43429c621a42",
+      "status": "approved",
+      "sha256": "0f71297fd7a28083f593798fbcbcf03fb9ede38db5b831a58e74c9c02df656ae",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "db8a052dda2c4b4da6bf0cd8bd67fa91",
+      "approved_version": "edd1e953dd7141ad931a43429c621a42",
+      "current_feedback_status": "approved",
+      "build_version": "edd1e953dd7141ad931a43429c621a42",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "db8a052dda2c4b4da6bf0cd8bd67fa91"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 115,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md",
+        "port\\progress\\META_V2_0.md",
+        "port\\progress\\TRASPASO_CARGAS_ZIP_20261025.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 217431,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 116",
+      "id": "4767d7d89689440084a12cf7beeab8b9",
+      "status": "approved",
+      "sha256": "69e2ce8e7bbb5b8170a4d323d050b58db6db5cb46b9b7d3a8785b0409737e986",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "5882ccbacc0b4573b6d815725b93bf4c",
+      "approved_version": "4767d7d89689440084a12cf7beeab8b9",
+      "current_feedback_status": "approved",
+      "build_version": "4767d7d89689440084a12cf7beeab8b9",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "5882ccbacc0b4573b6d815725b93bf4c"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 116,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md",
+        "port\\progress\\META_V2_0.md",
+        "port\\progress\\TRASPASO_CARGAS_ZIP_20261025.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 239601,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 117",
+      "id": "ff9f8d6e16a149708fb8a08c5c80d431",
+      "status": "approved",
+      "sha256": "de409ca170d745080953903539c70e13c406df2e5e170b642dbaf10ffb0fa9a6",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "36884a8a1d154965aac5f8955d59b753",
+      "approved_version": "ff9f8d6e16a149708fb8a08c5c80d431",
+      "current_feedback_status": "approved",
+      "build_version": "ff9f8d6e16a149708fb8a08c5c80d431",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "36884a8a1d154965aac5f8955d59b753"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 117,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\LOGICA_APROBADOS.md",
+        "port\\progress\\META_V2_0.md",
+        "port\\progress\\TRASPASO_CARGAS_ZIP_20261025.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 136690,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 118",
+      "id": "09dcd37573df49b88edbd71f79e06b82",
+      "status": "approved",
+      "sha256": "5e8ad3ed43fe5c696f67f6efa528aaf99c82ad6dd27be36438fc01f0d1bae476",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "3aede4dd4bd2445bb06d1743baf06529",
+      "approved_version": "09dcd37573df49b88edbd71f79e06b82",
+      "current_feedback_status": "approved",
+      "build_version": "09dcd37573df49b88edbd71f79e06b82",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "3aede4dd4bd2445bb06d1743baf06529"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 118,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\META_V2_0.md",
+        "port\\progress\\TRASPASO_CARGAS_ZIP_20261025.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 244022,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 120",
+      "id": "1c523468e4fb4d83965c0ef8ba292842",
+      "status": "approved",
+      "sha256": "70bdd2038afa62f0ba45ed344774bfa06007c503f51ec9db681e2ba7e0a61401",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "e15f20f324a742eaa9b98cde42603751",
+      "approved_version": "1c523468e4fb4d83965c0ef8ba292842",
+      "current_feedback_status": "approved",
+      "build_version": "1c523468e4fb4d83965c0ef8ba292842",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "e15f20f324a742eaa9b98cde42603751"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 120,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 173077,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Darkside: evidencia runtime de cuerpo y r8 aprobados",
+      "id": "a6ae1438d7524bbe90e3a84952b1dab9",
+      "status": "approved",
+      "sha256": "6de867fde81418132f5266114420be93c7a5f3fd2cd0579d713a2e7b604a5345",
+      "width": 3840,
+      "height": 2160,
+      "family_id": "85b593a92f164922966b64436ccf06ab",
+      "approved_version": "a6ae1438d7524bbe90e3a84952b1dab9",
+      "current_feedback_status": "approved",
+      "build_version": "a6ae1438d7524bbe90e3a84952b1dab9",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "85b593a92f164922966b64436ccf06ab",
+        "14ffdd662e9d4fde9316e74c7f1e8208"
+      ],
+      "rgba_bytes": 33177600,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_darkside.c",
+          "port/include/port/darkside_body_idle.inc",
+          "port/include/port/darkside_body_crouch.inc",
+          "port/include/port/darkside_body_raise.inc",
+          "port/include/port/darkside_body_claw.inc",
+          "port/include/port/darkside_body_lean.inc",
+          "port/include/port/darkside_body_punch.inc",
+          "port/include/port/darkside_body_reach.inc"
+        ],
+        "default_source_gate": "STATIC_enabled_PortDarksideBeachOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_darkside.c",
+            "exists": true,
+            "git_blob": "b3d10e195b7f00da2200b5876f6d961c01d18431"
+          },
+          {
+            "path": "port/include/port/darkside_body_idle.inc",
+            "exists": true,
+            "git_blob": "36f800bbfe46731684fe69ce03736cef59cc464d"
+          },
+          {
+            "path": "port/include/port/darkside_body_crouch.inc",
+            "exists": true,
+            "git_blob": "c2f56498a1ad1291ee87741b0b3de9d1fce86ce4"
+          },
+          {
+            "path": "port/include/port/darkside_body_raise.inc",
+            "exists": true,
+            "git_blob": "f86762e84678444dec7ea3a0e87ec7f5191220a4"
+          },
+          {
+            "path": "port/include/port/darkside_body_claw.inc",
+            "exists": true,
+            "git_blob": "525a9567854603dbac206315c5b318143cd731a1"
+          },
+          {
+            "path": "port/include/port/darkside_body_lean.inc",
+            "exists": true,
+            "git_blob": "f963850bff7800a9f6e3865a322223f49f7a2f83"
+          },
+          {
+            "path": "port/include/port/darkside_body_punch.inc",
+            "exists": true,
+            "git_blob": "a99f7c1c730af9f0b56d0f010ce939bb3467a3b3"
+          },
+          {
+            "path": "port/include/port/darkside_body_reach.inc",
+            "exists": true,
+            "git_blob": "3ef52111de9f5d4afc8be96fcee336e9c4570d83"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 199813,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Jafar · blinkeo y copia del genio (corrección técnica)",
+      "id": "e182f7052b8348b2a88b4f2e996a0ed7",
+      "status": "approved",
+      "sha256": "6768af096eca26b15f160d5ed4097c9e0fa784802f293b18ea904c366cadfdea",
+      "width": 960,
+      "height": 1120,
+      "family_id": "53e790683ac740ab8df504a7bb8406f3",
+      "approved_version": "e182f7052b8348b2a88b4f2e996a0ed7",
+      "current_feedback_status": "approved",
+      "build_version": "e182f7052b8348b2a88b4f2e996a0ed7",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 4300800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_jafar.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortJafarWide_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_jafar.c",
+            "exists": true,
+            "git_blob": "116087d0cfb5d2c4e15e247e5a83756770562ecd"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\JAFAR_BLINK_20261025.md",
+        "port\\progress\\TRASPASO_CARGAS_ZIP_20261025.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 70623,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Malefica: evidencia runtime de sprites aprobados",
+      "id": "17d1a11e90b1438287c9654c99c49867",
+      "status": "approved",
+      "sha256": "3ed5d30dc816878848b2596bf1e864aa2ef9271eaa7740ff6b405519b4299f1c",
+      "width": 3840,
+      "height": 2160,
+      "family_id": "ae681fffa79a4feea3b4ea1ef137a512",
+      "approved_version": "17d1a11e90b1438287c9654c99c49867",
+      "current_feedback_status": "approved",
+      "build_version": "17d1a11e90b1438287c9654c99c49867",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 33177600,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_maleficent.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_maleficent.c",
+            "exists": true,
+            "git_blob": "5cacf49148b21dd6e1a44eb0c050531e619eaa42"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 208703,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Marluxia · arena",
+      "id": "c333e5cd5db24eefa4d8f1ff9015843b",
+      "status": "approved",
+      "sha256": "6849a4126da87d8b08bd9e9257154fd58e353a0bed64af8b3ef3f779cca1d483",
+      "width": 1920,
+      "height": 3276,
+      "family_id": "c333e5cd5db24eefa4d8f1ff9015843b",
+      "approved_version": "c333e5cd5db24eefa4d8f1ff9015843b",
+      "current_feedback_status": "approved",
+      "build_version": "c333e5cd5db24eefa4d8f1ff9015843b",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 25159680,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_marluxia.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved_when_field_matches",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_marluxia.c",
+            "exists": true,
+            "git_blob": "be2a5abdddd5450eea6b764d9748832d5c3ba607"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 1476208,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Oogie Boogie · arena",
+      "id": "aa913fe773c4446eb5412c3115e222c7",
+      "status": "approved",
+      "sha256": "e894551172e73b53e029417430306beba07948db59c4625f487490f882331ed2",
+      "width": 1920,
+      "height": 2184,
+      "family_id": "b7df95116b0543719423d2b29c7aa17f",
+      "approved_version": "aa913fe773c4446eb5412c3115e222c7",
+      "current_feedback_status": "approved",
+      "build_version": "aa913fe773c4446eb5412c3115e222c7",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "b7df95116b0543719423d2b29c7aa17f",
+        "7420dbb247c440e2b70a1285ce21dbe8",
+        "95e9e76c5bba4a8ea972ce940861e7e8",
+        "e90c2d6d475447458a05db85276db6bb",
+        "677876e57b1441dc856caa8847f84487"
+      ],
+      "rgba_bytes": 16773120,
+      "runtime": {
+        "status": "VERIFIED_EU32_SDLdummy_SOFTWARE_ACTIVATION",
+        "name": "Oogie",
+        "binary_sha256": "509dc4b60d716ec57d7cae0bb70bca6a98f55b2d2d4d7ab4364c87decb6e602d",
+        "source_equivalence": "entireport_oogie.c blob7238dfda exactPR107; gateonly",
+        "evidence": "pruebas/atlas-v23-oogie/runtime-comparison.json",
+        "scope": "newdefault=oldpreview;newdefault=newpreview;Off=olddefault pixel-exact",
+        "limits": "MixedEU32relink declared;notcleanpackage/GPU64/Android;081nativecenterchangesalreadyinapprovedpreview"
+      },
+      "current_source": {
+        "kind": "native_arena",
+        "source": [
+          "port/src/port_oogie.c"
+        ],
+        "default_source_gate": "enabled",
+        "gate_expression": "PortArenasApproved() && sBgLatch[bg].valid && PortOogieLayer((const void* const*)sBgLatch[bg].map)",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_oogie.c",
+            "exists": true,
+            "git_blob": "7238dfda8b7d2c400bd838057b0db564f89f219c"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_OOGIE_APPROVAL_RUNTIME.md",
+        "port\\progress\\LOGICA_APROBADOS.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "entireport_oogie.c blob7238dfda exactPR107; gateonly",
+      "png_bytes": 803912,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Trickmaster - revision turbo",
+      "id": "c6f2bb42ff5143bf98ee674f64065f71",
+      "status": "approved",
+      "sha256": "b3d5505e2e0bd2f435157416432d3fdd321cc190580b69c33292413d6362e77a",
+      "width": 1920,
+      "height": 3240,
+      "family_id": "bcf3aec4ee7f40748959a87960d4ed5d",
+      "approved_version": "c6f2bb42ff5143bf98ee674f64065f71",
+      "current_feedback_status": "approved",
+      "build_version": "c6f2bb42ff5143bf98ee674f64065f71",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "bcf3aec4ee7f40748959a87960d4ed5d"
+      ],
+      "rgba_bytes": 24883200,
+      "runtime": {
+        "status": "VERIFIED_EU32_SDLdummy_SOFTWARE_ACTIVATION",
+        "name": "Trickmaster",
+        "binary_sha256": "a8d23407f96fc49a7e65cd41608b4e0190f0590e97171db510e534307636f23e",
+        "source_equivalence": "entireport_trickmaster.c exactPR151merge86b053798",
+        "evidence": "pruebas/atlas-v23-approved-gaps/runtime-comparison.json",
+        "scope": "newdefault=oldpreview;newdefault=newpreview;Off=olddefault pixel-exact",
+        "limits": "MixedEU32relink declared;notcleanpackage/GPU64/Android;081nativecenterchangesalreadyinapprovedpreview"
+      },
+      "current_source": {
+        "kind": "native_arena",
+        "source": [
+          "port/src/port_trickmaster.c"
+        ],
+        "default_source_gate": "enabled",
+        "gate_expression": "sBgLatch[bg].valid && PortTrickmasterBackdropMatches((const void* const*)sBgLatch[bg].map) && PortArenasApproved()",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_trickmaster.c",
+            "exists": true,
+            "git_blob": "fb1c31ed3cb60501dea342602e2ca7b0665c9e56"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "entireport_trickmaster.c exactPR151merge86b053798",
+      "png_bytes": 226515,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Úrsula · arena",
+      "id": "fc418e25bb1e4505aa1ded7f5363a5ce",
+      "status": "approved",
+      "sha256": "50cac9c21e3c38bd0a92b45b0728a2ee8cad36be12d1555192b30c3e3554b515",
+      "width": 1920,
+      "height": 3276,
+      "family_id": "fc418e25bb1e4505aa1ded7f5363a5ce",
+      "approved_version": "fc418e25bb1e4505aa1ded7f5363a5ce",
+      "current_feedback_status": "approved",
+      "build_version": "fc418e25bb1e4505aa1ded7f5363a5ce",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 25159680,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_ursula.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArenasApproved",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_ursula.c",
+            "exists": true,
+            "git_blob": "d2c258e58c5cd690d11a978e7df6ca296561e43f"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 1085287,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "004 y005: ambos encuentros de Leon verificados",
+      "id": "1de7c0eee9be421884c5121e27ead2a9",
+      "status": "honors",
+      "sha256": "0b8f501ba253c3bb2e7c44a265dd58125a312fc4c6a83e5ebf0efdd6af46a110",
+      "width": 1720,
+      "height": 1488,
+      "family_id": "22fc4ea176864111880e02b851a58445",
+      "approved_version": "1de7c0eee9be421884c5121e27ead2a9",
+      "current_feedback_status": "honors",
+      "build_version": "1de7c0eee9be421884c5121e27ead2a9",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "d39a773a8c174176b3870d672367d05d"
+      ],
+      "rgba_bytes": 10237440,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 4,
+        "source": [
+          "port/include/port/port_preliminar_v1_tiles.h",
+          "port/include/port/port_preliminar_v1_data.inc"
+        ],
+        "recipe_ready": true,
+        "default_source_gate": "listed",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_preliminar_v1_tiles.h",
+            "exists": true,
+            "git_blob": "65b871147c96c1cff344692420d4896b9c09d4d5"
+          },
+          {
+            "path": "port/include/port/port_preliminar_v1_data.inc",
+            "exists": true,
+            "git_blob": "33d6ce9cba2fb5a1b004a9469eef36eb97ee8051"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 880113,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena057: madera superior y matas completas",
+      "id": "853a5ffc4f8c4a7fb4b4e74567f12551",
+      "status": "approved",
+      "sha256": "ed7fe4087b7bc86bc5aa4253dcd9380322b629f76c1894e0d39184a19a5af00d",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "e49d2f465f9346d28ba013d9a81de938",
+      "approved_version": "853a5ffc4f8c4a7fb4b4e74567f12551",
+      "current_feedback_status": "approved",
+      "build_version": "853a5ffc4f8c4a7fb4b4e74567f12551",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 57,
+        "source": [
+          "port/include/port/port_scene057_tiles.h"
+        ],
+        "default_source_gate": "dedicated_profile",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_scene057_tiles.h",
+            "exists": true,
+            "git_blob": "650756fc58a7734c2c639a106d2a311adb195a8f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 459321,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 061",
+      "id": "6bb99e9f57af425f85de491bb77a2716",
+      "status": "approved",
+      "sha256": "cc9ce793d85b71b8479ba6b5dbf3bab3cabe7cf0f0325603827720960eb7612b",
+      "width": 3440,
+      "height": 2880,
+      "family_id": "f31927d3f7014eb3a51e52fcf7323003",
+      "approved_version": "6bb99e9f57af425f85de491bb77a2716",
+      "current_feedback_status": "approved",
+      "build_version": "6bb99e9f57af425f85de491bb77a2716",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 39628800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 61,
+        "source": [
+          "port/include/port/port_scene061_tiles.h"
+        ],
+        "default_source_gate": "dedicated_profile",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_scene061_tiles.h",
+            "exists": true,
+            "git_blob": "db2c09b5054fbe67643ff91fd332fb0b667f6abd"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_061_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 450355,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Escena 074",
+      "id": "d08d6c8758ff4ca9906c89a4c4d95888",
+      "status": "honors",
+      "sha256": "4e13674bb743cbea76c0c106e5e0e886d4f0cfc4df8f714aebfc37b6aaf8665c",
+      "width": 3840,
+      "height": 2160,
+      "family_id": "303416c343704456aea87be42f0508bf",
+      "approved_version": "d08d6c8758ff4ca9906c89a4c4d95888",
+      "current_feedback_status": "honors",
+      "build_version": "d08d6c8758ff4ca9906c89a4c4d95888",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 33177600,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "scene": 74,
+        "source": [
+          "port/include/port/port_scene074_tiles.h"
+        ],
+        "default_source_gate": "dedicated_profile",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_scene074_tiles.h",
+            "exists": true,
+            "git_blob": "ea99b127dbc74925689445e4f5da6f78f6cbd2a1"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_074_TURBO_20261026.md",
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 185972,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Agrabah 107 / 108",
+      "id": "e0779d8a9f5f4eea9eb73e9586505a03",
+      "status": "approved",
+      "sha256": "6dd7585f370d2457b586e4c908839352741de925496213c7f5626f976aa0176a",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "e0779d8a9f5f4eea9eb73e9586505a03",
+      "approved_version": "e0779d8a9f5f4eea9eb73e9586505a03",
+      "current_feedback_status": "approved",
+      "build_version": "e0779d8a9f5f4eea9eb73e9586505a03",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "9369d2d01a954fc5bd2a36a46dd484c4",
+        "34f9930dc77e48dabb91cd71e453e1f2"
+      ],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "source": [
+          "port/include/port/port_agrabah_tiles.h"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArtOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_agrabah_tiles.h",
+            "exists": true,
+            "git_blob": "6539d34bbfbe5f1f1f33a883eab8850431571016"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 200192,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Agrabah 109",
+      "id": "3fa0a50b4582424cbef46d540076c838",
+      "status": "honors",
+      "sha256": "42681596aa0f76ff929581a8a47f4e985714b2b8d1681e4bce9c6aced3cf4527",
+      "width": 3440,
+      "height": 1440,
+      "family_id": "3fa0a50b4582424cbef46d540076c838",
+      "approved_version": "3fa0a50b4582424cbef46d540076c838",
+      "current_feedback_status": "honors",
+      "build_version": "3fa0a50b4582424cbef46d540076c838",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 19814400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "source": [
+          "port/include/port/port_agrabah_tiles.h"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArtOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_agrabah_tiles.h",
+            "exists": true,
+            "git_blob": "6539d34bbfbe5f1f1f33a883eab8850431571016"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 177576,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Guard Armor · patio / escena 008",
+      "id": "7ef20691e77d4bc0b99730ea3443f4af",
+      "status": "honors",
+      "sha256": "e0f3e5844d388e9b9e7d2fbb49b634f123a3e747de12e963de0a42226d59484a",
+      "width": 960,
+      "height": 270,
+      "family_id": "7ef20691e77d4bc0b99730ea3443f4af",
+      "approved_version": "7ef20691e77d4bc0b99730ea3443f4af",
+      "current_feedback_status": "honors",
+      "build_version": "7ef20691e77d4bc0b99730ea3443f4af",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 1036800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_boss",
+        "source": [
+          "port/src/port_guard_armor.c",
+          "port/src/port_ppu.c"
+        ],
+        "default_source_gate": "STATIC_enabled_when_map_matches_and_no_explicit_NO_GUARD_PATIO",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/src/port_guard_armor.c",
+            "exists": true,
+            "git_blob": "a705f5864c30e0b64cbe959c2efd1317a40c2429"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 30968,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Botones táctiles · editor de posición",
+      "id": "b989b29c54114606905d8a677f5210bf",
+      "status": "approved",
+      "sha256": "b98db98de865bdea2ca964d933b23aca008e1f1116c6ed4a4212a559014ed5dc",
+      "width": 1600,
+      "height": 2860,
+      "family_id": "ca689d6c9b5e41a3a029aab9d345096b",
+      "approved_version": "b989b29c54114606905d8a677f5210bf",
+      "current_feedback_status": "approved",
+      "build_version": "b989b29c54114606905d8a677f5210bf",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "ca689d6c9b5e41a3a029aab9d345096b"
+      ],
+      "rgba_bytes": 18304000,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 395262,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Primer arranque · elección de modo con vista previa",
+      "id": "2f30654b7e724653a0b12e104ec1d8b6",
+      "status": "honors",
+      "sha256": "4015ebc2fec092eebe340a2d00ed60fcc34f48b9bc86ff7c5b93ee9c9e7f748d",
+      "width": 2820,
+      "height": 3114,
+      "family_id": "99a168f9934a47d9b2b11662de4d19a7",
+      "approved_version": "2f30654b7e724653a0b12e104ec1d8b6",
+      "current_feedback_status": "honors",
+      "build_version": "2f30654b7e724653a0b12e104ec1d8b6",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "99a168f9934a47d9b2b11662de4d19a7"
+      ],
+      "rgba_bytes": 35125920,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 617089,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Menú START · cabecera y márgenes",
+      "id": "40493ca53a21432e9bc348cf527f20f6",
+      "status": "approved",
+      "sha256": "78017625a1f12a8d4bcfd23740d33a845d3de06a1608769a03660251412d182f",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "40493ca53a21432e9bc348cf527f20f6",
+      "approved_version": "40493ca53a21432e9bc348cf527f20f6",
+      "current_feedback_status": "approved",
+      "build_version": "40493ca53a21432e9bc348cf527f20f6",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 98360,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Ver barajas · cartas, textos y cabecera",
+      "id": "2783c8219d0d4ca4b178db5ab711b9b2",
+      "status": "approved",
+      "sha256": "6c28fc9e1130c8c706a40c4a373b1b5ae62e37d24d2f4b1d55ef3cb25cfb913d",
+      "width": 1920,
+      "height": 2160,
+      "family_id": "f809c0cd1b7242918a735c80fa06dd2b",
+      "approved_version": "2783c8219d0d4ca4b178db5ab711b9b2",
+      "current_feedback_status": "approved",
+      "build_version": "2783c8219d0d4ca4b178db5ab711b9b2",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 16588800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_TURBO_20261026.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 182681,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Naipes mapa · cartas y cabecera",
+      "id": "2d6f385fd82746dc815ef8a202cf932e",
+      "status": "approved",
+      "sha256": "be0cdaffaa6f2ea35dcc588505593bd82279295627d9012d9cd1a1d25e75a220",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "2d6f385fd82746dc815ef8a202cf932e",
+      "approved_version": "2d6f385fd82746dc815ef8a202cf932e",
+      "current_feedback_status": "approved",
+      "build_version": "2d6f385fd82746dc815ef8a202cf932e",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 35524,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Mapamundi · panel, mundos y cabecera",
+      "id": "69729697060d4f1ba33437df81202914",
+      "status": "approved",
+      "sha256": "056a50a65fab7a4d8a648c15345f75933f8a0af97c71c91b1cc9b6e07ae44bab",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "69729697060d4f1ba33437df81202914",
+      "approved_version": "69729697060d4f1ba33437df81202914",
+      "current_feedback_status": "approved",
+      "build_version": "69729697060d4f1ba33437df81202914",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 208226,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Estado · panel y cabecera",
+      "id": "c6f192ad0a2e40b7b96b5fe82e08df08",
+      "status": "approved",
+      "sha256": "0a52279e89cb5d6d38ae608ebaec7f93ac6e837e342307d89ac1f8150e99cc03",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "c6f192ad0a2e40b7b96b5fe82e08df08",
+      "approved_version": "c6f192ad0a2e40b7b96b5fe82e08df08",
+      "current_feedback_status": "approved",
+      "build_version": "c6f192ad0a2e40b7b96b5fe82e08df08",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 100217,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Diario Pepito: lista interior y detalle de carta",
+      "id": "a36793f6231a4c55b3ca636305aea2b7",
+      "status": "approved",
+      "sha256": "338b9c20de1243e742211e4d9c372253cb74752c58ba1fe0b3afc7e749323f34",
+      "width": 1920,
+      "height": 4320,
+      "family_id": "02fda8dbbd2b44d7b2cbb26fb41223af",
+      "approved_version": "a36793f6231a4c55b3ca636305aea2b7",
+      "current_feedback_status": "approved",
+      "build_version": "a36793f6231a4c55b3ca636305aea2b7",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 33177600,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 331082,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Cargar partida · panel y cabecera",
+      "id": "2a08b34d05f74ff2bf761ca5dd7bf4b7",
+      "status": "approved",
+      "sha256": "12727531b92f2c072207ed6617dfe15b5d66fd2d74d68fc5bdc7af024cc6a0fb",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "2a08b34d05f74ff2bf761ca5dd7bf4b7",
+      "approved_version": "2a08b34d05f74ff2bf761ca5dd7bf4b7",
+      "current_feedback_status": "approved",
+      "build_version": "2a08b34d05f74ff2bf761ca5dd7bf4b7",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 83525,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Guardar · panel y cabecera",
+      "id": "08f4e328a8e04249bfcd4bf9da088dca",
+      "status": "approved",
+      "sha256": "e1657b95b6bc8cd657f596d46f7ff883410aeb0976a53621f7d6404a96817b15",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "08f4e328a8e04249bfcd4bf9da088dca",
+      "approved_version": "08f4e328a8e04249bfcd4bf9da088dca",
+      "current_feedback_status": "approved",
+      "build_version": "08f4e328a8e04249bfcd4bf9da088dca",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 83085,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Elige un mundo · panel y cabecera",
+      "id": "42f13762778b463a95d861d37a182348",
+      "status": "approved",
+      "sha256": "739ecd39376ddaf7f7d4f1a88fc8177c21310476ca43746b89c80639be23e66f",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "dcd1342a862648089dedd214de3242f6",
+      "approved_version": "42f13762778b463a95d861d37a182348",
+      "current_feedback_status": "approved",
+      "build_version": "42f13762778b463a95d861d37a182348",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 41484,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Vórtice · panel y cabecera",
+      "id": "8df3db568b6949a4bacff0c96b7efcdb",
+      "status": "approved",
+      "sha256": "5b154769815d049d1bd0593bc428bd519fc57c9b2c89bae531f9f64d7ee2f141",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "8df3db568b6949a4bacff0c96b7efcdb",
+      "approved_version": "8df3db568b6949a4bacff0c96b7efcdb",
+      "current_feedback_status": "approved",
+      "build_version": "8df3db568b6949a4bacff0c96b7efcdb",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 257893,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Tienda moguri · panel y cabecera",
+      "id": "87ef5b5d5a4042fba9f0f2464fc731ae",
+      "status": "approved",
+      "sha256": "8421dcf7df5cc2d25a0a133728f4ce1e4316fee0240688e58c4097c949f512e1",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "87ef5b5d5a4042fba9f0f2464fc731ae",
+      "approved_version": "87ef5b5d5a4042fba9f0f2464fc731ae",
+      "current_feedback_status": "approved",
+      "build_version": "87ef5b5d5a4042fba9f0f2464fc731ae",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 78283,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Baraja de Riku · cartas y cabecera",
+      "id": "99c0e57996784d959cff823c7613a051",
+      "status": "approved",
+      "sha256": "22d0f0286dda716d6c359d01b3b054f4648078eed3a89ddb7f7ae6766441da8f",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "99c0e57996784d959cff823c7613a051",
+      "approved_version": "99c0e57996784d959cff823c7613a051",
+      "current_feedback_status": "approved",
+      "build_version": "99c0e57996784d959cff823c7613a051",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 220821,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Subida de nivel · panel y cabecera",
+      "id": "5b4933410681483d9d52e665e5f5d68d",
+      "status": "approved",
+      "sha256": "47c368f84bcce89f3ef758482ac0f740d7b8a055d22581da891e099e3bb898a9",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "d18eec85a0054d82938cae929c59149b",
+      "approved_version": "5b4933410681483d9d52e665e5f5d68d",
+      "current_feedback_status": "approved",
+      "build_version": "5b4933410681483d9d52e665e5f5d68d",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 59756,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Síntesis de estancias · cartas y cabecera",
+      "id": "8a3a6caf39214467bbad84b8b18eec62",
+      "status": "approved",
+      "sha256": "6fea5f97e4445f39f7898fe6f6b241e66f0d148d5e5af7f25dc71fdbe4cd1889",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "8a3a6caf39214467bbad84b8b18eec62",
+      "approved_version": "8a3a6caf39214467bbad84b8b18eec62",
+      "current_feedback_status": "approved",
+      "build_version": "8a3a6caf39214467bbad84b8b18eec62",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 261550,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Título · logo HD y barras",
+      "id": "9031374c6e5f43e09d2f50b94725f9eb",
+      "status": "honors",
+      "sha256": "4974db954ae4b57c563d7c91527e2046445348d920165bffde048ef2921ae842",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "c4e96953065648208e79a8484b6b0197",
+      "approved_version": "9031374c6e5f43e09d2f50b94725f9eb",
+      "current_feedback_status": "honors",
+      "build_version": "9031374c6e5f43e09d2f50b94725f9eb",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "ed3cd58de3e54bde89c268abbc8356b1",
+        "46f9a309a67d4bcb91cbe2ba8e04f34d",
+        "24bee72a8205435792c6192b3a8239a0"
+      ],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 1578395,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "HUD HD · retratos y Contranaipe",
+      "id": "4a39f2318749434ea1602f6d41ef30de",
+      "status": "approved",
+      "sha256": "c24c5cfb17910b509493cf5ef8d1c95a94b30743fedded4615ef8df80dbe8a99",
+      "width": 798,
+      "height": 1956,
+      "family_id": "4a39f2318749434ea1602f6d41ef30de",
+      "approved_version": "4a39f2318749434ea1602f6d41ef30de",
+      "current_feedback_status": "approved",
+      "build_version": "4a39f2318749434ea1602f6d41ef30de",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 6243552,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 750111,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Agrabah: aparición del Genio (108)",
+      "id": "a5789640eda44d0e9bac19d218cf40a0",
+      "status": "approved",
+      "sha256": "ef943423cebc64d8769d6c968897b3df12dc6489febe3b3c71dc86ec6611e206",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "2e78b9d9938f4668aa6cbf573b9b6791",
+      "approved_version": "a5789640eda44d0e9bac19d218cf40a0",
+      "current_feedback_status": "approved",
+      "build_version": "a5789640eda44d0e9bac19d218cf40a0",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "2e78b9d9938f4668aa6cbf573b9b6791"
+      ],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "native_scene",
+        "source": [
+          "port/include/port/port_agrabah_tiles.h"
+        ],
+        "default_source_gate": "STATIC_enabled_PortArtOn_unset_or_nonzero",
+        "import": "not_required_native_tiles",
+        "files": [
+          {
+            "path": "port/include/port/port_agrabah_tiles.h",
+            "exists": true,
+            "git_blob": "6539d34bbfbe5f1f1f33a883eab8850431571016"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 94210,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "native_ROM_palette_tiles_no_Atlas_PNG_import",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Ver barajas: sincronía del margen",
+      "id": "57aed9acb8734e8a9ba35298e646cc7e",
+      "status": "approved",
+      "sha256": "9843550962a2864ef7d5ae895aaa24b8a0cb4bd599c529a8b39948aecc6f9442",
+      "width": 1536,
+      "height": 864,
+      "family_id": "f6ed308217e5463eadef0ac4a962fb20",
+      "approved_version": "57aed9acb8734e8a9ba35298e646cc7e",
+      "current_feedback_status": "approved",
+      "build_version": "57aed9acb8734e8a9ba35298e646cc7e",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "f6ed308217e5463eadef0ac4a962fb20"
+      ],
+      "rgba_bytes": 5308416,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 25648,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Logros Re:CoM · borde de filigrana e insignias propias",
+      "id": "0d49fe5c171f44c7a4216206d56efc7e",
+      "status": "approved",
+      "sha256": "c92531ab1db6ed439f543b184aa20cd6c14516747f2b32e331d57fc9e90ecde4",
+      "width": 1808,
+      "height": 576,
+      "family_id": "0d49fe5c171f44c7a4216206d56efc7e",
+      "approved_version": "0d49fe5c171f44c7a4216206d56efc7e",
+      "current_feedback_status": "approved",
+      "build_version": "0d49fe5c171f44c7a4216206d56efc7e",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 4165632,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 75386,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Bonus élite · cartas y cabecera",
+      "id": "555b3dbca48b4da2a1702cbde1c1b22e",
+      "status": "approved",
+      "sha256": "7b5a06c5e6d156e63380c7baeb4d201a601ad95e1003f481b4e1a313a194be2f",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "555b3dbca48b4da2a1702cbde1c1b22e",
+      "approved_version": "555b3dbca48b4da2a1702cbde1c1b22e",
+      "current_feedback_status": "approved",
+      "build_version": "555b3dbca48b4da2a1702cbde1c1b22e",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 381192,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Naipes mundo · selección de carta",
+      "id": "3cdc76d68be745b09d5c1bf4eba0c011",
+      "status": "approved",
+      "sha256": "ffa1e2812515a0267ee8373105fd4f1322fbcc15b8d5c0946d4d940831cdf1f4",
+      "width": 1920,
+      "height": 2160,
+      "family_id": "0e705199e35740d7a0d5f85dba579621",
+      "approved_version": "3cdc76d68be745b09d5c1bf4eba0c011",
+      "current_feedback_status": "approved",
+      "build_version": "3cdc76d68be745b09d5c1bf4eba0c011",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 16588800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_WORLD_HEADER_20261026.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 409615,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "HUD de combate · cartas y medidores HD",
+      "id": "d2268d17fc234125bf31446ac44ff213",
+      "status": "approved",
+      "sha256": "2d544dca4d693aa6cdb4842107931342b2bd1250dace07d7a5c6e172fd02bf76",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "d2268d17fc234125bf31446ac44ff213",
+      "approved_version": "d2268d17fc234125bf31446ac44ff213",
+      "current_feedback_status": "approved",
+      "build_version": "d2268d17fc234125bf31446ac44ff213",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 170299,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Anadir naipes: cantidades HD detras del selector",
+      "id": "27f14d9fe9bb4428b0dccf98c1e06a8c",
+      "status": "approved",
+      "sha256": "0db2cffe126f6fdafea85eb2e80bab81ea13e35362780915600fbd62146b613a",
+      "width": 1536,
+      "height": 1614,
+      "family_id": "27f14d9fe9bb4428b0dccf98c1e06a8c",
+      "approved_version": "27f14d9fe9bb4428b0dccf98c1e06a8c",
+      "current_feedback_status": "approved",
+      "build_version": "27f14d9fe9bb4428b0dccf98c1e06a8c",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 9916416,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\META_V2_0.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 154979,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Sintesis: requisitos dentro de la carta y digitos del mod HD",
+      "id": "823cdf38241144b1b282bcf3f2532120",
+      "status": "approved",
+      "sha256": "ec82a76c9f0f88107454dc029b5dc163005c339a7d062990cbba4465f95d6bf6",
+      "width": 660,
+      "height": 746,
+      "family_id": "823cdf38241144b1b282bcf3f2532120",
+      "approved_version": "823cdf38241144b1b282bcf3f2532120",
+      "current_feedback_status": "approved",
+      "build_version": "823cdf38241144b1b282bcf3f2532120",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 1969440,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 41570,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Tienda moguri · Comprar sobres",
+      "id": "ddedd01659044342acdf92331fa7fddf",
+      "status": "approved",
+      "sha256": "2b854946d4621f046cdf757f88bd0e0b8d0d67d756219d5ed5bc1637f68a50d0",
+      "width": 1920,
+      "height": 2160,
+      "family_id": "ddedd01659044342acdf92331fa7fddf",
+      "approved_version": "ddedd01659044342acdf92331fa7fddf",
+      "current_feedback_status": "approved",
+      "build_version": "ddedd01659044342acdf92331fa7fddf",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 16588800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 49256,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Tienda moguri · Canjear naipes",
+      "id": "bbfce11b25f34df0a2004146597afb99",
+      "status": "approved",
+      "sha256": "ffef8911e5f36019ae49d538cce954659a82ad0572156823856b6a29ffc9bcfc",
+      "width": 1920,
+      "height": 2160,
+      "family_id": "bbfce11b25f34df0a2004146597afb99",
+      "approved_version": "bbfce11b25f34df0a2004146597afb99",
+      "current_feedback_status": "approved",
+      "build_version": "bbfce11b25f34df0a2004146597afb99",
+      "approval_matches_build": true,
+      "pending_descendants": [
+        "cdd96f3cf28f45959ff64f42543a0d61"
+      ],
+      "rgba_bytes": 16588800,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md",
+        "port\\progress\\ATLAS_MOGURI_SUBMENUS.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 211455,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    },
+    {
+      "title": "Título · primer plano de la intro HD",
+      "id": "d31ab43ebc4244e793d84b7a140ba11a",
+      "status": "approved",
+      "sha256": "0f47c8fcf4a1a73c8c42fef26316d737815902e32f47e8efbec3056bd8b91e4f",
+      "width": 1920,
+      "height": 1080,
+      "family_id": "d31ab43ebc4244e793d84b7a140ba11a",
+      "approved_version": "d31ab43ebc4244e793d84b7a140ba11a",
+      "current_feedback_status": "approved",
+      "build_version": "d31ab43ebc4244e793d84b7a140ba11a",
+      "approval_matches_build": true,
+      "pending_descendants": [],
+      "rgba_bytes": 8294400,
+      "runtime": "NOT_VERIFIED_BY_THIS_INVENTORY",
+      "current_source": {
+        "kind": "menu_hud_or_other",
+        "source": [
+          "port/src/port_main.c",
+          "port/src/port_ppu.c",
+          "port/src/port_hdsprites.c",
+          "port/include/port/hd_sprites.inc",
+          "port/data/hd_sprites.tsv",
+          "port/src/port_config.c",
+          "port/src/port_ui.c"
+        ],
+        "default_source_gate": "menu_modes_registered_HD_groups_require_hdCards_or_hdTitle",
+        "import": "needs_current_asset_and_binding_check",
+        "files": [
+          {
+            "path": "port/src/port_main.c",
+            "exists": true,
+            "git_blob": "0f9595f88d73b34465e02773a58f0f2b747c1cad"
+          },
+          {
+            "path": "port/src/port_ppu.c",
+            "exists": true,
+            "git_blob": "c69b7797cb67519bb5425a908451710b14df3c93"
+          },
+          {
+            "path": "port/src/port_hdsprites.c",
+            "exists": true,
+            "git_blob": "0c09593678b1a6c464cec6d5f416e02ceabd3fe7"
+          },
+          {
+            "path": "port/include/port/hd_sprites.inc",
+            "exists": true,
+            "git_blob": "3d585d5104d7599a49f003dea010af0921947c35"
+          },
+          {
+            "path": "port/data/hd_sprites.tsv",
+            "exists": true,
+            "git_blob": "5116aede256759ddbfbb3f113667fd1494f4d0f7"
+          },
+          {
+            "path": "port/src/port_config.c",
+            "exists": true,
+            "git_blob": "b818f2d2ec0ac0b33a8fe038e58482c8951f34bf"
+          },
+          {
+            "path": "port/src/port_ui.c",
+            "exists": true,
+            "git_blob": "1fa8626c691b7fd810e93f288220fc025162152f"
+          }
+        ]
+      },
+      "historical_reference_documents": [
+        "port\\progress\\ATLAS_ACCEPTED_ACTIVATION_20261029.md"
+      ],
+      "source_equivalence_to_approved_image": "NOT_PROVEN_BY_TITLE_OR_DOCUMENT_REFERENCE",
+      "png_bytes": 1244694,
+      "png_hash_matches": true,
+      "import_chain": {
+        "recipe_inventory": "PASS911current_attempted_present; allPNG_CRC_verified",
+        "compiled_registry": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs",
+        "resource_bytes": 29162805,
+        "potential_decoded_rgba_bytes": 227999232,
+        "exact_family_resource_mapping": "PENDING_targeted_consumer_and_frame_review",
+        "runtime": "NOT_CERTIFIED_BY_GLOBAL_INVENTORY"
+      }
+    }
+  ],
+  "source_gate_gaps": [],
+  "scope": "Complete accepted-version inventory; source gate inspection is not runtime certification.",
+  "current_resource_audit": {
+    "recipes": 911,
+    "stale": [],
+    "not_attempted": [],
+    "missing_outputs": [],
+    "encoded_bytes": 29162805,
+    "rgba_bytes": 227999232,
+    "import_dir": "D:\\01Claude\\ReKHCoM-build\\qa-runtime\\jiminy23-list-native\\native-upgrade\\hd\\sprites",
+    "scope": "Read-only current QA resource receipt. Inventory hash proves recipe attempted/current, not exact Atlas artwork or runtime activation. PNGs CRC-verified without decoding all images at once; sizes are potential decoded RGBA, not VRAM measurement.",
+    "inventory_status": "PASS911current_attempted_present; allPNG_CRC_verified",
+    "compiled_registry_check": "PASSgen_hd_sprites_inc--check; check_hd_sprites911rows0problemswithEU_US_JPROMs"
+  }
+}
