@@ -12082,10 +12082,10 @@
       "status": "pr_abierto",
       "owner": "codex-issue517",
       "created_at": "2026-10-29T18:48:56.757866+00:00",
-      "updated_at": "2026-10-29T22:32:36.280333+00:00",
+      "updated_at": "2026-10-29T22:32:54.943754+00:00",
       "branch": "fix/issue517-worldcard-glow",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/523",
-      "approval": "Human: bugs priority1, cover all new issues before2.3; user supplied concrete version in issue, no repeat question",
+      "approval": "Root integrator: human-authorized code review; f0151508dd6e87dfdb91f192d84aafddf96bb3c5",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/517",
       "evidence": [
         {
@@ -12107,6 +12107,11 @@
           "at": "2026-10-29T22:32:36.280333+00:00",
           "owner": "codex-issue517",
           "detail": "Self-review without workers per user. CPU PPU/presenter failure cases PASS, 206 oracles zero mismatches, 27 HD-off frames identical. EU32/64 D3D11 and Linux64 Mesa VM Original/Auto TraverseTown/Agrabah pass. Original BizHawk cyan legitimate. Native32 intermittent fixed-memory startup guard tracked separately. Delivery/report confirmation pending."
+        },
+        {
+          "at": "2026-10-29T22:32:54.943754+00:00",
+          "owner": "codex-issue517",
+          "detail": "Reviewed shared world additive path with bounded scratch, native same-frame fallback, renderer reset, canvas resize ownership; production PPU/presenter tests and 206 oracles PASS; Win64 D3D11 and Linux64 Mesa matrix; PR-BODY and evidence pruebas/issue517-worldcard. Local fix only; immutable delivery/report confirmation pending."
         }
       ],
       "claimed_at": "2026-10-29T22:08:28.166664+00:00"
@@ -12175,7 +12180,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:32:36.280333+00:00",
+  "updated_at": "2026-10-29T22:32:54.943754+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
