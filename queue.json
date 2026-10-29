@@ -10884,12 +10884,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T10:18:09.130594+00:00",
+      "updated_at": "2026-10-29T10:33:23.512073+00:00",
       "branch": "fix/v23-jiminy-headings",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/500",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/501",
       "approval": "Root integrator: human-authorized code review; a48e8a5a38983f266d851d05c34d746f868e652d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -11007,10 +11007,15 @@
           "at": "2026-10-29T10:18:09.130594+00:00",
           "owner": "codex-jiminy23",
           "detail": "PR500 merged5bfc8ed8a; rounded detail book integrated. Continue PAGE/internal Story and Character headings, miniheader and root/list cleanup in same checkout, no workers. Final code and screenshots reviewed; native fallback and missing resources preserved."
+        },
+        {
+          "at": "2026-10-29T10:33:23.512073+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "c21727fda Story/Character headings5languages; actual registration REDmain/GREENnew2880EUUS plusJP/nonPCnative controls.10US32/64captures onlytwoheadrectangles change;5EUSpanish views copiedEUsave/cheatRAM/exit0. Firstwrongregionfixture excluded. Nativeimport10to0/889oldbytesstable;7newexact3new1RGBlevel1pixalphaexact. WinEU32US32/64ABIboot/AndroidUSJP/sourcesPASS; P2partial."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-book-reviewed/before-32/3060.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-headings-spanish-eusave/before-32/4430.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11541,7 +11546,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T10:18:09.130594+00:00",
+  "updated_at": "2026-10-29T10:33:23.512617+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
