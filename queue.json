@@ -12086,10 +12086,10 @@
     "issue517-worldcard-glow": {
       "id": "issue517-worldcard-glow",
       "piece": "Issue517 Windows+Linux test479: selected World card yellow glow shows blue border instead of second yellow glow; compare supplied expected/actual videos, native palette frames and HD replacement; deliver verified test",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-issue517",
       "created_at": "2026-10-29T18:48:56.757866+00:00",
-      "updated_at": "2026-10-29T22:33:14.262039+00:00",
+      "updated_at": "2026-10-29T23:23:43.011632+00:00",
       "branch": "fix/issue517-worldcard-glow",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/523",
       "approval": "Root integrator: human-authorized code review; f0151508dd6e87dfdb91f192d84aafddf96bb3c5",
@@ -12124,6 +12124,11 @@
           "at": "2026-10-29T22:33:14.262039+00:00",
           "owner": "codex-issue517",
           "detail": "Reviewed shared world additive path with bounded scratch, native same-frame fallback, renderer reset, canvas resize ownership; production PPU/presenter tests and 206 oracles PASS; Win64 D3D11 and Linux64 Mesa matrix; PR-BODY and evidence pruebas/issue517-worldcard. Local fix only; immutable delivery/report confirmation pending.; merged 4b0b05cfec9591468a5d3d03f6a20b8693c0cb4e; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T23:23:43.011632+00:00",
+          "owner": "codex-issue517",
+          "detail": "PR523 merge4b0b05cfec9591468a5d3d03f6a20b8693c0cb4e; published https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.3-test517 source52575a86138854bd2aa8c2fc5ed2461b82c2953b. WinZIP sha256 a0003126012946dd0c49466f72f1ea5c67777c1c56fec3c1a7fd5386d0bdc8e7; LinuxTGZ3d6f1620ea1a358983107441355943c860a3bd2535cfab0fd388dea9b5d183e8. TenanonymousassetsPASS; Windows6starts+4D3Dworlds+tutorial, Linux6starts+2tutorials+4GLworlds PASS; VMquiescent. Replies517/515/330 sent. Taskimplementation/delivery complete, reporter517 confirmation pending; issue stays open."
         }
       ],
       "claimed_at": "2026-10-29T22:08:28.166664+00:00"
@@ -12249,7 +12254,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T23:03:49.099061+00:00",
+  "updated_at": "2026-10-29T23:23:43.011632+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
