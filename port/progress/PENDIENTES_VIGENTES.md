@@ -29,6 +29,12 @@ siguientes no sustituyen la cola remota ni el estado actual de GitHub.
   Guardia y consumidores relacionados probados antes/después; menú real32/64
   con partida válida conserva sus píxeles. Pendiente de próxima build; no se
   atribuye a un crash reportado ni sustituye las entregas ya publicadas.
+- **P1 visual2.3, parcial:** [contador y naipes mapa HD](MAP_CARDS_HD_GAPS.md).
+  99/barra registrados;25/26 ilustraciones pequeñas y tres llaves grandes,
+  esquinas originales conservadas. Importaciones anteriores detectan recetas
+  nuevas, incluso sin PNG. Diez recorridos Windows32/64, HD off idéntico y
+  Direct3D11 verificados. Recompensas conserva original y sigue pendiente;
+  no declarar la familia completa ni atribuir este bloque a estable2.2.5.
 
 Después de los bugs abordables, orden 2.3 autorizado: contador 99/separador y
 naipes mapa pequeños HD; diario de Pepito interno; continuidad de audio al

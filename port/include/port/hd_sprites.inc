@@ -316,6 +316,9 @@ extern const unsigned char gCardRoom19Tiles[];
 extern const unsigned char gCardRoom20Tiles[];
 extern const unsigned char gCardRoom21Tiles[];
 extern const unsigned char gCardRoom22Tiles[];
+extern const unsigned char gCardEve00Tiles[];
+extern const unsigned char gCardEve01Tiles[];
+extern const unsigned char gCardEve02Tiles[];
 extern const unsigned char gMapCardBorderRedTiles[];
 extern const unsigned char gMapCardBorderGreenTiles[];
 extern const unsigned char gMapCardBorderBlueTiles[];
@@ -953,6 +956,56 @@ extern const unsigned char gDeckMenuTextItalianTiles[];
 extern const unsigned char gDeckAddGridMap[];
 #endif
 extern const unsigned char gTitleMenuSelectedBarTiles[];
+extern const unsigned char gAlchemicWakingSmallCardTiles[];
+extern const unsigned char gAlchemicWakingSmallCardFrame0[];
+extern const unsigned char gAlmightyDarknessSmallCardTiles[];
+extern const unsigned char gAlmightyDarknessSmallCardFrame0[];
+extern const unsigned char gBlackRoomSmallCardTiles[];
+extern const unsigned char gBlackRoomSmallCardFrame0[];
+extern const unsigned char gCalmBountySmallCardTiles[];
+extern const unsigned char gCalmBountySmallCardFrame0[];
+extern const unsigned char gFalseBountySmallCardTiles[];
+extern const unsigned char gFalseBountySmallCardFrame0[];
+extern const unsigned char gFeebleDarknessSmallCardTiles[];
+extern const unsigned char gFeebleDarknessSmallCardFrame0[];
+extern const unsigned char gGuardedTroveSmallCardTiles[];
+extern const unsigned char gGuardedTroveSmallCardFrame0[];
+extern const unsigned char gKeyOfBeginningsSmallCardTiles[];
+extern const unsigned char gKeyOfBeginningsSmallCardFrame0[];
+extern const unsigned char gKeyOfGuidanceSmallCardTiles[];
+extern const unsigned char gKeyOfGuidanceSmallCardFrame0[];
+extern const unsigned char gKeyToTruthSmallCardTiles[];
+extern const unsigned char gKeyToTruthSmallCardFrame0[];
+extern const unsigned char gLastingDazeSmallCardTiles[];
+extern const unsigned char gLastingDazeSmallCardFrame0[];
+extern const unsigned char gLoomingDarknessSmallCardTiles[];
+extern const unsigned char gLoomingDarknessSmallCardFrame0[];
+extern const unsigned char gMartialWakingSmallCardTiles[];
+extern const unsigned char gMartialWakingSmallCardFrame0[];
+extern const unsigned char gMeetingGroundSmallCardTiles[];
+extern const unsigned char gMeetingGroundSmallCardFrame0[];
+extern const unsigned char gMinglingWorldsSmallCardTiles[];
+extern const unsigned char gMinglingWorldsSmallCardFrame0[];
+extern const unsigned char gMomentsReprieveSmallCardTiles[];
+extern const unsigned char gMomentsReprieveSmallCardFrame0[];
+extern const unsigned char gMoogleRoomSmallCardTiles[];
+extern const unsigned char gMoogleRoomSmallCardFrame0[];
+extern const unsigned char gPremiumRoomSmallCardTiles[];
+extern const unsigned char gPremiumRoomSmallCardFrame0[];
+extern const unsigned char gSleepingDarknessSmallCardTiles[];
+extern const unsigned char gSleepingDarknessSmallCardFrame0[];
+extern const unsigned char gSorcerousWakingSmallCardTiles[];
+extern const unsigned char gSorcerousWakingSmallCardFrame0[];
+extern const unsigned char gStagnantSpaceSmallCardTiles[];
+extern const unsigned char gStagnantSpaceSmallCardFrame0[];
+extern const unsigned char gStrongInitiativeSmallCardTiles[];
+extern const unsigned char gStrongInitiativeSmallCardFrame0[];
+extern const unsigned char gTeemingDarknessSmallCardTiles[];
+extern const unsigned char gTeemingDarknessSmallCardFrame0[];
+extern const unsigned char gTranquilDarknessSmallCardTiles[];
+extern const unsigned char gTranquilDarknessSmallCardFrame0[];
+extern const unsigned char gWhiteRoomSmallCardTiles[];
+extern const unsigned char gWhiteRoomSmallCardFrame0[];
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1195,6 +1248,9 @@ static const HdSpriteDef kHdSprites[] = {
     { gCardRoom20Tiles, NULL, "gCardRoom20Tiles", -16, -12, 32, 32, 1 },
     { gCardRoom21Tiles, NULL, "gCardRoom21Tiles", -16, -12, 32, 32, 1 },
     { gCardRoom22Tiles, NULL, "gCardRoom22Tiles", -16, -12, 32, 32, 1 },
+    { gCardEve00Tiles, NULL, "gCardEve00Tiles", -16, -12, 32, 32, 1 },
+    { gCardEve01Tiles, NULL, "gCardEve01Tiles", -16, -12, 32, 32, 1 },
+    { gCardEve02Tiles, NULL, "gCardEve02Tiles", -16, -12, 32, 32, 1 },
     { gMapCardBorderRedTiles, NULL, "gMapCardBorderRedTiles", -16, -20, 32, 39, 1 },
     { gMapCardBorderGreenTiles, NULL, "gMapCardBorderGreenTiles", -16, -20, 32, 39, 1 },
     { gMapCardBorderBlueTiles, NULL, "gMapCardBorderBlueTiles", -16, -20, 32, 39, 1 },
@@ -1599,6 +1655,31 @@ static const HdSpriteDef kHdSprites[] = {
     { gDeckMenuTextItalianTiles, gDeckAddGridMap, "gDeckAddGridItalianBanner", 0, 0, 104, 16, 5, 0, 18 },
 #endif
     { gTitleMenuSelectedBarTiles, NULL, "gTitleMenuSelectedBar", 0, 8, 128, 8, 2 },
+    { gAlchemicWakingSmallCardTiles, gAlchemicWakingSmallCardFrame0, "gAlchemicWakingSmallCardHD", -8, -20, 16, 32, 6 },
+    { gAlmightyDarknessSmallCardTiles, gAlmightyDarknessSmallCardFrame0, "gAlmightyDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gBlackRoomSmallCardTiles, gBlackRoomSmallCardFrame0, "gBlackRoomSmallCardHD", -8, -20, 16, 32, 6 },
+    { gCalmBountySmallCardTiles, gCalmBountySmallCardFrame0, "gCalmBountySmallCardHD", -8, -20, 16, 32, 6 },
+    { gFalseBountySmallCardTiles, gFalseBountySmallCardFrame0, "gFalseBountySmallCardHD", -8, -20, 16, 32, 6 },
+    { gFeebleDarknessSmallCardTiles, gFeebleDarknessSmallCardFrame0, "gFeebleDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gGuardedTroveSmallCardTiles, gGuardedTroveSmallCardFrame0, "gGuardedTroveSmallCardHD", -8, -20, 16, 32, 6 },
+    { gKeyOfBeginningsSmallCardTiles, gKeyOfBeginningsSmallCardFrame0, "gKeyOfBeginningsSmallCardHD", -8, -20, 16, 32, 6 },
+    { gKeyOfGuidanceSmallCardTiles, gKeyOfGuidanceSmallCardFrame0, "gKeyOfGuidanceSmallCardHD", -8, -20, 16, 32, 6 },
+    { gKeyToTruthSmallCardTiles, gKeyToTruthSmallCardFrame0, "gKeyToTruthSmallCardHD", -8, -20, 16, 32, 6 },
+    { gLastingDazeSmallCardTiles, gLastingDazeSmallCardFrame0, "gLastingDazeSmallCardHD", -8, -20, 16, 32, 6 },
+    { gLoomingDarknessSmallCardTiles, gLoomingDarknessSmallCardFrame0, "gLoomingDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gMartialWakingSmallCardTiles, gMartialWakingSmallCardFrame0, "gMartialWakingSmallCardHD", -8, -20, 16, 32, 6 },
+    { gMeetingGroundSmallCardTiles, gMeetingGroundSmallCardFrame0, "gMeetingGroundSmallCardHD", -8, -20, 16, 32, 6 },
+    { gMinglingWorldsSmallCardTiles, gMinglingWorldsSmallCardFrame0, "gMinglingWorldsSmallCardHD", -8, -20, 16, 32, 6 },
+    { gMomentsReprieveSmallCardTiles, gMomentsReprieveSmallCardFrame0, "gMomentsReprieveSmallCardHD", -8, -20, 16, 32, 6 },
+    { gMoogleRoomSmallCardTiles, gMoogleRoomSmallCardFrame0, "gMoogleRoomSmallCardHD", -8, -20, 16, 32, 6 },
+    { gPremiumRoomSmallCardTiles, gPremiumRoomSmallCardFrame0, "gPremiumRoomSmallCardHD", -8, -20, 16, 32, 6 },
+    { gSleepingDarknessSmallCardTiles, gSleepingDarknessSmallCardFrame0, "gSleepingDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gSorcerousWakingSmallCardTiles, gSorcerousWakingSmallCardFrame0, "gSorcerousWakingSmallCardHD", -8, -20, 16, 32, 6 },
+    { gStagnantSpaceSmallCardTiles, gStagnantSpaceSmallCardFrame0, "gStagnantSpaceSmallCardHD", -8, -20, 16, 32, 6 },
+    { gStrongInitiativeSmallCardTiles, gStrongInitiativeSmallCardFrame0, "gStrongInitiativeSmallCardHD", -8, -20, 16, 32, 6 },
+    { gTeemingDarknessSmallCardTiles, gTeemingDarknessSmallCardFrame0, "gTeemingDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gTranquilDarknessSmallCardTiles, gTranquilDarknessSmallCardFrame0, "gTranquilDarknessSmallCardHD", -8, -20, 16, 32, 6 },
+    { gWhiteRoomSmallCardTiles, gWhiteRoomSmallCardFrame0, "gWhiteRoomSmallCardHD", -8, -20, 16, 32, 6 },
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"
 };

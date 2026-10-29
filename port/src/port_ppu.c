@@ -283,6 +283,19 @@ void PortRegisterBgTextTile(void* address, int code, int style, const void* sour
     memcpy(tile->source, source32, 32);
 }
 
+/* A baked numeric tile can share a generated cell's meaning/palette while
+   retaining its own original pixels (including different shadow details). */
+void PortRegisterBgTextTileLike(void* address, int code, const void* registered, const void* source32) {
+    uintptr_t offset = (uintptr_t)registered - GBA_VRAM;
+    const BgTextTile* like;
+    if (offset >= 0x10000 || (offset & 31) || !source32) return;
+    like = &sBgTextTiles[offset / 32];
+    if (!like->code) return;
+    PortRegisterBgTextTile(address, code,
+                          like->style | like->faceIndex << 8 | like->shadowIndex << 12 | like->panelIndex << 16,
+                          source32);
+}
+
 /* A docked layer is screen UI moved toward an edge: it shows only what the
    hardware would (no world-map continuation), so parked windows stay hidden. */
 static unsigned sScreenBgMask;
