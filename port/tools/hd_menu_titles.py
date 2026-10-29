@@ -385,7 +385,7 @@ def bg_row(spec, data, syms):
     return rows
 
 
-def jiminy_card_rows(data, syms):
+def jiminy_card_rows(data, syms, layout='Card', texts=None):
     """Internal BG1 heading, keyed by its actual translated tile source."""
     variants = [
         ('', 'gJiminyBgTiles', [(UGETC, 'CARDS')], 'eu,us'),
@@ -396,6 +396,8 @@ def jiminy_card_rows(data, syms):
     ]
     rows = []
     for suffix, tiles, text, regions in variants:
+        if texts is not None:
+            text = texts[suffix]
         char = bytearray(0x8000)
         base = syms['gJiminyBgTiles'] - 0x08000000
         char[:12128] = data[base:base + 12128]
@@ -403,7 +405,8 @@ def jiminy_card_rows(data, syms):
             base = syms[tiles] - 0x08000000
             size = 3936 if suffix == 'German' else 4096
             char[0x2000:0x2000 + size] = data[base:base + size]
-        start = syms['gJiminyCardDetailMap'] - 0x08000000
+        bg_map = f'gJiminy{layout}DetailMap'
+        start = syms[bg_map] - 0x08000000
         px, pals = {}, Counter()
         for y in range(1, 14):
             for x in range(128):
@@ -419,9 +422,29 @@ def jiminy_card_rows(data, syms):
         box = (0, 0, (length + 16) // 8 * 8, 16)
         pal = pals.most_common(1)[0][0]
         ops, own = banner_ops(px, box, lambda i: colour(data, syms, 'gJiminyBgPalette', pal * 16 + i), text)
-        rows.append('\t'.join(['gJiminyCardDetail' + suffix + 'Banner', '5', 'gJiminyCardDetailMap', tiles,
+        rows.append('\t'.join([f'gJiminy{layout}Detail' + suffix + 'Banner', '5', bg_map, tiles,
                                 *map(str, box), own, ops, regions]))
     return rows
+
+
+def jiminy_other_heading_rows(data, syms):
+    # These are the cartridge's actual labels, not translations inferred from
+    # the root menu. Reuse the same remaster letter family as the card header.
+    story = {
+        '': [(UGETC, 'STOR'), (GGETC, 'Y')],
+        'French': [(UGETC, 'HISTOIRE')],
+        'Spanish': [(UGETC, 'HISTORIA')],
+        'Italian': [(UGETC, 'STORIA')],
+        'German': [(UGETC, 'GESCHICHTE')],
+    }
+    character = {
+        '': [(UGETC, 'CHARACTERS')],
+        'French': [(UGETC, 'PERSONNAGES')],
+        'Spanish': [(UGETC, 'PERSONA'), (GETC, 'J'), (UGETC, 'ES')],
+        'Italian': [(UGETC, 'PERSONAGGI')],
+        'German': [(UGETC, 'CHARAKTERE')],
+    }
+    return jiminy_card_rows(data, syms, 'Story', story) + jiminy_card_rows(data, syms, 'Character', character)
 
 
 def jiminy_book_body_rows(data, syms):
@@ -563,7 +586,7 @@ def banner_ops(px, box, colour_of, text):
 def main():
     data, syms = rom()
     rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
-            + jiminy_card_rows(data, syms) + jiminy_book_body_rows(data, syms))
+            + jiminy_card_rows(data, syms) + jiminy_other_heading_rows(data, syms) + jiminy_book_body_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return

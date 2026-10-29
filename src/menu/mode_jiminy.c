@@ -2622,8 +2622,10 @@ void JiminyDetailUpdate() {
 #if defined(PLATFORM_PC) && (defined(VERSION_EU) || defined(VERSION_US))
     /* Internal headings live in BG1, not the root journal title's OAM.
        Keep the BG intact when imported art is missing or HD is disabled. */
-    if (sJiminyWork->detailLayout == JIMINY_DETAIL_LAYOUT_CARD) {
+    {
         const void* titleTiles = gJiminyBgTiles;
+        const void* titleMap = sJiminyWork->detailLayout == JIMINY_DETAIL_LAYOUT_STORY ? gJiminyStoryDetailMap :
+            sJiminyWork->detailLayout == JIMINY_DETAIL_LAYOUT_CARD ? gJiminyCardDetailMap : gJiminyCharacterDetailMap;
         int level = (int)(gFadeWork->amount >> 8) * 255 / 31;
 #ifdef VERSION_EU
         switch (gLanguage) {
@@ -2633,7 +2635,7 @@ void JiminyDetailUpdate() {
         case LANGUAGE_GERMAN: titleTiles = gJiminyBgTitleTilesGerman; break;
         }
 #endif
-        PortHdStillSprite(titleTiles, gJiminyCardDetailMap, 0, 0,
+        PortHdStillSprite(titleTiles, titleMap, 0, 0,
             gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
             gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
     }
