@@ -2726,6 +2726,11 @@ static void HarnessFrame(void) {
 /* ---- events / pacing --------------------------------------------------------------- */
 
 int gPortExitCode; /* REKHCOM_EXIT_QUIT_ALL after Options > Quit the game */
+static int sQuitAllRequested;
+void PortRequestQuitAll(void) {
+    gPortExitCode = REKHCOM_EXIT_QUIT_ALL;
+    sQuitAllRequested = 1;
+}
 static void Quit(void) {
     void PortHdHudShutdown(void);
     extern void PortSceneGalleryFinalShutdown(void);
@@ -2748,6 +2753,8 @@ static void Quit(void) {
 static void PumpEvents(void) {
     SDL_Event ev;
 
+    if (sQuitAllRequested)
+        Quit();
     while (SDL_PollEvent(&ev)) {
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
         PortCursorIdleEvent(&sCursorIdle, sWindow, &ev);
