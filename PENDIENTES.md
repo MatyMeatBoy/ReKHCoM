@@ -412,4 +412,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v23-hd-synthesis-image-loads | User29/10: stutters in HD room synthesis (codex-clipboard-20a09ffb-6d92-4001-a435-6e49ac06ca4c.png). Profile read/decode/upload/cache/RAM and related image-heavy scenes, quality preserved. Evidence before resolution/compression changes. | pendiente | — | — | User29/10 explicit request; no assumption of bug cause | 2026-10-29T15:58:54.410184+00:00 |
 | v23-atlas-approved-activation-audit | Inventario completo78familias con aprobacion Atlas29Oct: versionexacta a source/main/gate/import/runtime, detectar aprobados noactivos (Trickmaster yotros), arreglospequenos sinactivarhijaspendientes; no asumirPRcerradomerged | en_curso | codex-atlas-v23 | — | Peticion directa usuario29Oct revisarTODOSaprobados antesZIPclean, rootdelegacion actual | 2026-10-29T16:07:52.321997+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-29T16:21:29.955034+00:00)
+Integrador: libre
