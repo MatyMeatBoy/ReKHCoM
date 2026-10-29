@@ -396,4 +396,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | post479-delivery-record | Record completed desktop479 test and current open bug priorities in public progress docs; stable2.2.5 unchanged; no app source change | integrado | codex-post479-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/487 | Root integrator: human-authorized code review; 2bc4c68a3798309f91260dc3b19b1a11aaec5465 | 2026-10-29T01:48:02.419970+00:00 |
 | issue480-confirmation-record | Record reporter Android confirmation and closure480 in current public progress, preserving immutable test manifest and scope of original local fault injection | integrado | codex-480-confirm-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/488 | Root integrator: human-authorized code review; e97b120d1c2ab8c24d0ec4aa9a1aaffa3e24dfed | 2026-10-29T01:54:42.601054+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T02:44:46.329305+00:00)
