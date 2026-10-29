@@ -10335,10 +10335,10 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-deck459-window",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T02:56:56.438629+00:00",
+      "updated_at": "2026-10-29T11:50:48.634026+00:00",
       "branch": "docs/linux459-hdtext-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/490",
       "approval": "Root integrator: human-authorized code review; 6b7a6b64ffc4f842852891b2a59054174651f6c8",
@@ -10405,7 +10405,7 @@
           "detail": "released: Blocks483/489 integrated, partial compatible route physically confirmed; HD test459-hdtext.1 publicly verified and sent459/330. Exact4games pass. Normal startup new logs and reporter HD confirmation pending; release claim for other independent work, not solved/closed."
         }
       ],
-      "claimed_at": "2026-10-29T02:17:11.379296+00:00"
+      "claimed_at": "2026-10-29T11:50:48.634026+00:00"
     },
     "linux461-keyboard-without-controller": {
       "id": "linux461-keyboard-without-controller",
@@ -11601,7 +11601,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T11:50:43.668011+00:00",
+  "updated_at": "2026-10-29T11:50:48.634026+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
