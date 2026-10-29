@@ -10887,10 +10887,10 @@
       "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T11:42:02.447627+00:00",
+      "updated_at": "2026-10-29T11:42:10.266438+00:00",
       "branch": "fix/v23-jiminy-name-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/503",
-      "approval": "Root integrator: human-authorized code review; ba48a3402487a8492d28c63f96ed8672b0eac4b5",
+      "approval": "Root integrator: human-authorized code review; b0de9c8bd198541a2ed7c9fe6d510080738dfa43",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -11052,6 +11052,11 @@
           "at": "2026-10-29T11:42:02.447627+00:00",
           "owner": "codex-jiminy23",
           "detail": "b0de9c8bd captures48finalBG0edgecolours192staticbytes, semanticnameleft/right notwidthheuristic. CPUrealrenderer/PixelEdge/ownershipfuzz/pass pluspaperfallback; WinEU32US32/64ABIbootAndroidUSJP/sourcespass.30actualbeforeafterpairs shortlongUS/EU/fractional4:3/native; gamecoreunchanged onlynamemargins. WrongoldpresetandcommonsoftwareGPUedgeassumption excluded viaactualcontrols. P2partial; new459logsprioritynext."
+        },
+        {
+          "at": "2026-10-29T11:42:10.266438+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: BG0 actualwinner and finalcolour latch beforeVBlank, bounds16..39/edge0or239,192staticbytes,noheap/framebufferwrites; PAGErightalone cannotexpandnameleft; rightuseslegitBG0oritsground. CPUrealrendererPixelEdge/ownershipfuzz andbookfallbackPASS.30actualpairedscreensUS32/64/EUSpanish/fractional4:3/matchedallHDoff; onlynamemarginschange. Software/GPUcoverageandoldpresetfalsecontrols documented. WinEU32US32/64ABIbootAndroidUSJP/sourcesPASS. P2partial, new459normalbootlogspriority, noWorker."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11586,7 +11591,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T11:42:02.447627+00:00",
+  "updated_at": "2026-10-29T11:42:10.266438+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
