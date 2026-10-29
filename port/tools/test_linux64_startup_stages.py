@@ -8,7 +8,7 @@ def main():
  out=args.work.resolve();out.mkdir(parents=True,exist_ok=True)
  source=(ROOT/'port/linux64/linux64_host.c').read_text(encoding='utf-8')
  if '/* Startup-only diagnostics' not in source:raise RuntimeError('missing flushed startup milestones in production host')
- helpers=source[source.index('/* Startup-only diagnostics'):source.index('/* ---- the basics and files ----')]
+ helpers=source[source.index('/* Startup-only diagnostics'):source.index('static void StartupDeadlineExpired')]
  start=source.index('    StartupStage("sdl-info", "begin");')
  end=source.index('    Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));',start)+len('    Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));')
  block=source[start:end]
@@ -26,6 +26,7 @@ def main():
 #define SDL_INIT_GAMEPAD 4
 #define SDL_WINDOW_RESIZABLE 1
 #define SDL_WINDOW_HIGH_PIXEL_DENSITY 2
+#define SDL_WINDOW_HIDDEN 4
 #define SDL_VERSION 3004018
 #ifndef CLOCK_MONOTONIC
 #define CLOCK_MONOTONIC 1
@@ -44,7 +45,12 @@ static const char*SDL_GetCurrentVideoDriver(void){return "controlled-video";}
 static const char*SDL_GetCurrentAudioDriver(void){return "controlled-audio";}
 static const char*SDL_GetError(void){return error;}
 static bool SDL_Init(int flags){if(flags!=7)_Exit(99);error="original injected error";return operation("sdl-init");}
-static void*SDL_CreateWindow(const char*n,int w,int h,int f){(void)n;(void)w;(void)h;(void)f;error="original injected error";return operation("window")?(void*)1:NULL;}
+typedef struct { int unused; } PortStartupDeadline;
+static void StartupDeadlineExpired(void){}
+static bool PortStartupDeadlineBegin(PortStartupDeadline*d,unsigned ms,void(*f)(void)){(void)d;(void)f;if(ms!=30000)_Exit(97);error="original injected error";return operation("window-deadline");}
+static void PortStartupDeadlineCancel(PortStartupDeadline*d){(void)d;}
+static void*SDL_CreateWindow(const char*n,int w,int h,int f){(void)n;(void)w;(void)h;if(f!=7)_Exit(96);error="original injected error";return operation("window")?(void*)1:NULL;}
+static bool SDL_ShowWindow(void*w){(void)w;error="original injected error";return operation("window-show");}
 static void*SDL_CreateRenderer(void*w,const char*n){(void)w;(void)n;error="original injected error";return operation("renderer")?(void*)2:NULL;}
 static bool SDL_SetRenderVSync(void*r,int v){(void)r;if(v!=1)_Exit(98);error="original injected error";return operation("vsync");}
 static const char*SDL_GetRendererName(void*r){(void)r;return "controlled-renderer";}
@@ -61,7 +67,7 @@ BLOCK
  cc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
  subprocess.run([str(cc),'-O2',str(out/'probe.c'),'-o',str(out/'probe.exe')],check=True,capture_output=True)
  rows=[]
- for label,argv,expected in [('success',[],0),('init-false',['sdl-init'],4),('window-null',['window'],4),('renderer-null',['renderer'],4),('vsync-false',['vsync'],0),*[(s+'-no-return',['-',s],77) for s in ('image-scratch-release','sdl-init','window','renderer','vsync')]]:
+ for label,argv,expected in [('success',[],0),('init-false',['sdl-init'],4),('deadline-false',['window-deadline'],4),('window-null',['window'],4),('show-false',['window-show'],4),('renderer-null',['renderer'],4),('vsync-false',['vsync'],0),*[(s+'-no-return',['-',s],77) for s in ('image-scratch-release','sdl-init','window','window-show','renderer','vsync')]]:
   p=subprocess.run([str(out/'probe.exe'),*argv],capture_output=True,text=True,timeout=5);log=p.stderr
   if p.returncode!=expected:raise RuntimeError((label,p.returncode,log))
   if label.endswith('no-return'):
@@ -70,10 +76,10 @@ BLOCK
   elif expected==4 or label=='vsync-false':
    if 'original injected error' not in log:raise RuntimeError((label,'error clobbered',log))
   elif 'controlled-video' not in log or 'linked=3004018' not in log:raise RuntimeError(('missing linked SDL/driver info',log))
-  downstream={'init-false':'window','window-null':'renderer','renderer-null':'vsync'}.get(label)
+  downstream={'init-false':'window','deadline-false':'window','window-null':'window-show','show-false':'renderer','renderer-null':'vsync'}.get(label)
   if downstream and f'stage={downstream} status=begin' in log:raise RuntimeError((label,'called downstream after failure',log))
   rows.append({'case':label,'exit':p.returncode,'log':log.splitlines()})
  (out/'RESULTS.json').write_text(json.dumps({'result':'PASS','cases':rows,'scope':'Actual source helper/block; buffered stderr plus _Exit proves begin milestones flushed. No SDL/device/game/VM execution.'},indent=2)+'\n')
- print('PASS10 production startup cases (9 negative/1 positive), original errors, exact flags/defaults, linked-version info and flushed nonreturns')
+ print('PASS13 production startup cases, original errors, hidden-create/show boundary, linked-version info and flushed nonreturns')
 
 if __name__=='__main__':main()

@@ -249,6 +249,19 @@ class LauncherTest(unittest.TestCase):
         self.assertTrue((self.game / 'ran64.txt').exists())
         self.assertTrue((self.game / 'region.txt').exists())
 
+    def test_native_window_deadline_retries_only_before_guest_and_in_auto(self):
+        self.fake_machine('x86_64')
+        self.capture_startup_environment()
+        for entered, flags, expected in ((False, (), 17), (True, (), 75),
+                                         (False, ('--force64',), 75)):
+            with self.subTest(entered=entered, flags=flags):
+                (self.game / 'region.txt').unlink(missing_ok=True)
+                self.fake64(75, entered)
+                self.assertEqual(self.run_script(*flags).returncode, expected)
+                self.assertEqual((self.game / 'region.txt').exists(), expected == 17)
+                if expected == 17:
+                    self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
+
     def test_guest_failure_and_quit_never_retry(self):
         for code, entered in ((4, True), (81, False), (0, False), (139, False),
                               (137, False), (143, False), (137, True), (143, True)):

@@ -12,6 +12,7 @@
 #include <SDL3/SDL_main.h>
 #include "../include/port/port_audio_continuity.h"
 #include "../include/port/cursor_idle.h"
+#include "../include/port/startup_deadline.h"
 #include <dirent.h>
 #include <errno.h>
 #include <math.h>
@@ -63,6 +64,14 @@ static void StartupError(const char* stage) {
     StartupStage(stage, "failed");
     Log("startup: stage=%s error=%s", stage, error[0] ? error : "no SDL error detail");
     fflush(stderr);
+}
+
+static void StartupDeadlineExpired(void) {
+    /* A driver can hold stdio/SDL locks. Use only the raw diagnostic channel
+     * and process exit here; never unwind video from the monitoring thread. */
+    static const char message[] = "[rekhcom64] startup: native window bootstrap exceeded 30 seconds; no guest entered; exit=75\n";
+    (void)write(STDERR_FILENO, message, sizeof(message) - 1);
+    _exit(75);
 }
 
 /* ---- the basics and files ---- */
@@ -468,12 +477,26 @@ int main(int argc, char** argv) {
     StartupStage("sdl-init", "done");
     Log("startup: SDL drivers video=%s audio=%s", SDL_GetCurrentVideoDriver() ? SDL_GetCurrentVideoDriver() : "none",
         SDL_GetCurrentAudioDriver() ? SDL_GetCurrentAudioDriver() : "none");
+    PortStartupDeadline startupDeadline = {0};
+    if (!PortStartupDeadlineBegin(&startupDeadline, 30000, StartupDeadlineExpired)) {
+        StartupError("window-deadline");
+        return 4;
+    }
     StartupStage("window", "begin");
     sWindow = SDL_CreateWindow("Kingdom Hearts: Chain of Memories", 1280, 720,
-                               SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+                               SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_HIDDEN);
     if (sWindow) StartupStage("window", "done");
     else StartupError("window");
     if (sWindow) {
+        /* SDL's visible creation includes X11 mapping. Separate that boundary
+         * without moving it past renderer creation or changing the GPU choice. */
+        StartupStage("window-show", "begin");
+        if (!SDL_ShowWindow(sWindow)) {
+            StartupError("window-show");
+            PortStartupDeadlineCancel(&startupDeadline);
+            return 4;
+        }
+        StartupStage("window-show", "done");
         StartupStage("renderer", "begin");
         sRenderer = SDL_CreateRenderer(sWindow, NULL);
         if (sRenderer) StartupStage("renderer", "done");
@@ -481,6 +504,7 @@ int main(int argc, char** argv) {
     }
     if (!sRenderer) {
         Log("no renderer: %s", SDL_GetError());
+        PortStartupDeadlineCancel(&startupDeadline);
         return 4;
     }
     StartupStage("vsync", "begin");
@@ -532,6 +556,9 @@ int main(int argc, char** argv) {
     memcpy(table, t, sizeof(t));
     StartupStage("bridge-table", "done");
     int (*boot)(uint32_t) = (int (*)(uint32_t))(uintptr_t)h.boot;
+    /* Join before writing the entry marker. No timeout thread survives into
+     * guest code, and a lost deadline race cannot start a second game. */
+    if (!PortStartupDeadlineEnter(&startupDeadline)) return 75;
     if (bootStatus) {
         StartupStage("boot-marker", "begin");
         FILE* ready = fopen(bootStatus, "w");
@@ -544,6 +571,10 @@ int main(int argc, char** argv) {
         int closed = fclose(ready) == 0;
         Log("startup: boot marker wrote=%d closed=%d", wrote, closed);
         StartupStage("boot-marker", wrote && closed ? "done" : "failed");
+        if (!wrote || !closed) {
+            remove(bootStatus);
+            SDL_Quit(); return 4;
+        }
     }
     StartupStage("guest-core", "begin");
     int rc = boot(h.stackTop);
