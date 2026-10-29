@@ -414,4 +414,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue515-map-card-tutorial-actors | P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions | en_revision | codex-issue515 | https://github.com/MatyMeatBoy/ReKHCoM/pull/519 | Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671 | 2026-10-29T19:30:23.847404+00:00 |
 | issue517-worldcard-glow | Issue517 Windows+Linux test479: selected World card yellow glow shows blue border instead of second yellow glow; compare supplied expected/actual videos, native palette frames and HD replacement; deliver verified test | pendiente | — | fix/issue517-worldcard-glow | Human: bugs priority1, cover all new issues before2.3; user supplied concrete version in issue, no repeat question | 2026-10-29T20:45:20.986849+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-29T21:03:03.003408+00:00)
+Integrador: libre
