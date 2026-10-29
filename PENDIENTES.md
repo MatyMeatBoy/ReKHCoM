@@ -402,5 +402,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | halloween-arena-floor-perspective | User29Oct screenshot: Halloween arena bottom repeats/stretches last pixels; extend using own floor in perspective, comparable to Trickmaster approach, preserve actors/collisions | pendiente | — | — | — | 2026-10-29T06:51:24.325541+00:00 |
 | release-v23-pre1-win-android | User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes | en_curso | codex-v23-pre1 | — | — | 2026-10-29T07:00:59.546295+00:00 |
 | hd-menu-light-line-origin | User29Oct: selected HD menu divider line must originate at its lit indicator; compare owned ReCoM1.5HD reference and apply consistently across port menus | pendiente | — | — | — | 2026-10-29T07:03:45.560567+00:00 |
+| options-menu-idle-blink | User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow | pendiente | — | — | — | 2026-10-29T07:04:15.251315+00:00 |
 
 Integrador: libre
