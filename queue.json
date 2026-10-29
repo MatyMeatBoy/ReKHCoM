@@ -10911,10 +10911,10 @@
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
       "piece": "Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA.",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-29T00:37:46.917263+00:00",
+      "updated_at": "2026-10-29T00:38:05.193394+00:00",
       "branch": "fix/issue480-exact-room",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/482",
       "approval": "Root integrator: human-authorized code review; 602de3736694513a21acbf436dc7f8753efb324c",
@@ -10954,6 +10954,11 @@
           "at": "2026-10-29T00:37:46.917263+00:00",
           "owner": "codex-issue480",
           "detail": "Root solo review: minimal common PC initializer only; CPU baseline RED to GREEN 12 orientation/fill cases with offscreen controls; exact reporter save synthetic dirty work RED to matching landing GREEN, both clean32/64 springs, ABI checks; Android pending, keep480 open"
+        },
+        {
+          "at": "2026-10-29T00:38:05.193394+00:00",
+          "owner": "codex-issue480",
+          "detail": "Root solo review: minimal common PC initializer only; CPU baseline RED to GREEN 12 orientation/fill cases with offscreen controls; exact reporter save synthetic dirty work RED to matching landing GREEN, both clean32/64 springs, ABI checks; Android pending, keep480 open; merged 3d2b30b745e6520f6ebb5886d842681e1c1b7d15; PARTIAL DIAGNOSTIC ONLY, reported defect remains unresolved"
         }
       ],
       "claimed_at": "2026-10-29T00:08:39.403027+00:00"
@@ -10965,7 +10970,7 @@
     "created_at": "2026-10-29T00:37:53.726021+00:00",
     "updated_at": "2026-10-29T00:37:53.726021+00:00"
   },
-  "updated_at": "2026-10-29T00:37:53.727372+00:00",
+  "updated_at": "2026-10-29T00:38:05.193394+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
