@@ -372,6 +372,8 @@ void PortPpuJiminyFade(int* dark, int* white);
 const uint8_t* PortPpuJiminyPaperMask(void);
 const void* PortPpuJiminyBookFrame(void); /* canonical presented body; NULL for detail */
 const uint32_t* PortPpuJiminyNameEdges(void); /* left/right,24 presented rows each */
+struct PortJiminyPageRow;
+const struct PortJiminyPageRow* PortPpuJiminyPageRows(void);
 void PortPpuRunFrameEvents(void); /* a skipped frame's line events, nothing drawn */
 void PortPpuVBlankLines(void);
 /* HUD layer: sprites anchored with PortHudBegin, drawn at their own scale. */

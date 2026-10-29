@@ -15,6 +15,14 @@ usuario y se revisan las escenas hermanas que la copiaron.
 
 ## Principios
 
+Submenú del diario normal/HD: las reparaciones de disposición no dependen de
+haber activado assets HD. Prolongar papel y reglas con metadatos del fotograma
+presentado, conservando propiedad de capa y cambios del compositor. El borde
+sombreado no es una textura repetible ni una banda de cabecera. Agrupar áreas
+planas para no introducir cientos de llamadas al bridge por fotograma; si el
+dibujo falla, restaurar la imagen original. No ampliar esta corrección a una
+portada nueva no solicitada. Evidencia: JIMINY_NATIVE_MARGIN_REPAIR.md.
+
 Diario interno, correcciones directas del usuario: la ayuda inferior necesita
 espacio propio, sin recortar el libro ni escalar por separado las capas HD.
 Debe indicar los controles configurados y conservar una ruta nativa si el

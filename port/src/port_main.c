@@ -1243,7 +1243,7 @@ static float PixelEdge(float origin, int r, float scale) {
     return SDL_floorf(origin + r * scale - 0.5f) + 1.0f;
 }
 
-static void DrawEdgeBands(const SDL_FRect* src, const SDL_FRect* dst, int outW, int minBlock) {
+static void DrawEdgeBands(const SDL_FRect* src, const SDL_FRect* dst, int outW, int minBlock, int leftEnd, int rightEnd) {
     static uint8_t* mask;
     if (!mask && !(mask = (uint8_t*)SDL_calloc((size_t)PORT_MAX_W * PORT_MAX_H, 1)))
         return;
@@ -1348,7 +1348,7 @@ static void DrawEdgeBands(const SDL_FRect* src, const SDL_FRect* dst, int outW, 
                 if (up <= 4 && y - up >= 0 && dn <= 4 && y + dn < GBA_SCREEN_H)
                     bar[y] = 2;
             }
-        for (y = 0; y < GBA_SCREEN_H; y++) {
+        for (y = 0; y < SDL_clamp(side ? rightEnd : leftEnd,0,GBA_SCREEN_H); y++) {
             int a2 = y, b2 = y;
             if (!bar[y])
                 continue;
@@ -1530,6 +1530,8 @@ static void DrawJournalNameMargins(const SDL_FRect* dst, int outW, uint32_t righ
         }
     }
 }
+
+#include "port/jiminy_margin_draw.inc"
 
 /* The title bar on the left margin: its own piece of the header asset.
    Where the header is transparent the picture shows the frame's bar behind
@@ -1790,9 +1792,8 @@ static void Present(void) {
     int sceneFade = PortUiSceneFade();
     PortJiminyLayout journalLayout = {0};
     int journalShown = 0;
-    int journalActive = !menuCanvas && gPortConfig.hdCards && gCurrentMode == &gModeJiminy &&
-        gPortConfig.viewMode != PORT_VIEW_ORIGINAL && gPortConfig.viewMode != PORT_VIEW_CRT &&
-        (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0;
+    int journalActive = PortJiminyMenuActive(menuCanvas, gCurrentMode == &gModeJiminy,
+        gPortConfig.viewMode == PORT_VIEW_ORIGINAL, gPortConfig.viewMode == PORT_VIEW_CRT, sSideStyle, sFitScale);
     void PortHdHudPrepare(SDL_Renderer* renderer);
     void PortHdHudDraw(SDL_Renderer* renderer, int width, int height);
     void PortHdHudDrawLabel(SDL_Renderer* renderer, int width, int height);
@@ -1880,7 +1881,7 @@ static void Present(void) {
         if (moviePrompt)
             DrawSkipLayer(&normal);
         if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
-            DrawEdgeBands(&src, &dst, outW, 3);
+            DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
             DrawHeaderLeft(&src, &dst);
         }
         if (!menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
@@ -1891,6 +1892,7 @@ static void Present(void) {
             static int counts[64];
             int n = 0, best = 0, i, gx, gy2;
             uint32_t journalRightGround = 0;
+            int pageExpanded = 0;
             SDL_FRect left = { 0.0f, dst.y, dst.x, dst.h }, right = { dst.x + dst.w, dst.y, (float)outW - dst.x - dst.w, dst.h };
             /* the ground: the commonest colour along the picture's two outer edges */
             for (gy2 = 16; gy2 < GBA_SCREEN_H - 8; gy2++)
@@ -1959,7 +1961,10 @@ static void Present(void) {
                 }
             }
             sBandGround = n ? colors[best] : 0;
-            DrawEdgeBands(&src, &dst, outW, 6);
+            if (journalShown && sSideStyle == 12) pageExpanded = RepairJiminyPageMargin(&src,&dst,outW);
+            DrawEdgeBands(&src, &dst, outW, 6,
+                journalShown && sSideStyle == 12 ? 16 : GBA_SCREEN_H,
+                journalShown && sSideStyle == 12 ? 20 : GBA_SCREEN_H);
             sBandGround = 0;
             /* the frame's top and bottom bars run the whole width: where a
                panel covers one end on the GBA (the journal's notebook over
@@ -1971,6 +1976,7 @@ static void Present(void) {
                     const uint32_t* row = &sComposite[((int)src.y + yy) * gPortScreen.width + (int)src.x];
                     uint32_t lc = row[0], rc = row[GBA_SCREEN_W - 1];
                     int lrun = 0, rrun = 0;
+                    if (journalShown && sSideStyle == 12 && yy >= 16) continue;
                     if (yy >= 24 && yy < GBA_SCREEN_H - 24)
                         continue;
                     for (k = 0; k < 120 && row[k] == lc; k++) lrun++;
@@ -1991,7 +1997,7 @@ static void Present(void) {
             }
             DrawHeaderLeft(&src, &dst);
             if (journalShown && sSideStyle == 12)
-                DrawJournalNameMargins(&dst, outW, journalRightGround);
+                DrawJournalNameMargins(&dst, outW, pageExpanded ? 0 : journalRightGround);
         }
         if (SDL_getenv("KHCOM_DBGSIDE")) PortLog("side f%u style %d fit %.2f wide %d src %.0f,%.0f %.0fx%.0f", (unsigned)PortFrameCount(), sSideStyle, sFitScale, gPortScreen.wide, src.x, src.y, src.w, src.h);
         if (!menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {
@@ -2010,7 +2016,7 @@ static void Present(void) {
             /* style 11 (the save files): the frame's bars and title band
                carried on over the scenery's own margin */
             if (sSideStyle == 11) {
-                DrawEdgeBands(&src, &dst, outW, 3);
+                DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
                 DrawHeaderLeft(&src, &dst);
             }
         }

@@ -6,6 +6,11 @@ typedef struct PortJiminyLayout {
     float scale, x, y, width, height, footerY, footerHeight;
 } PortJiminyLayout;
 
+/* These are menu layout repairs, independent of optional HD artwork. */
+static inline int PortJiminyMenuActive(int canvas, int journal, int original, int crt, int style, float fit) {
+    return !canvas && journal && !original && !crt && (style == 9 || style == 12) && fit <= 0;
+}
+
 static inline int PortJiminyFit(int width, int height, PortJiminyLayout* out) {
     float horizontal, vertical, scale;
     if (!out || width <= 0 || height <= 0) return 0;

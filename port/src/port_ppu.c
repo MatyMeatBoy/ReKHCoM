@@ -330,6 +330,8 @@ static MenuSources sMenuShown = { .tabBg = { -1, -1 } }, sMenuPend = { .tabBg = 
 static uint8_t sJiminyPaperMask[240 * 160];
 static uint32_t sJiminyNameEdges[2 * 24];
 static int sJiminyPaperCapture;
+static int sJiminyDetailCapture;
+static PortJiminyPageRow sJiminyPageRows[160];
 static const void* sJiminyBookFrame;
 
 const void* PortPpuJiminyBookFrame(void) { return sJiminyBookFrame; }
@@ -339,7 +341,11 @@ const uint8_t* PortPpuJiminyPaperMask(void) {
 }
 
 const uint32_t* PortPpuJiminyNameEdges(void) {
-    return sJiminyPaperCapture && !sJiminyBookFrame ? sJiminyNameEdges : NULL;
+    return sJiminyDetailCapture ? sJiminyNameEdges : NULL;
+}
+
+const PortJiminyPageRow* PortPpuJiminyPageRows(void) {
+    return sJiminyDetailCapture ? sJiminyPageRows : NULL;
 }
 /* Sample every menu extension before VBlank changes its rendering inputs. */
 static void CaptureMenuMarginPixels(void);
@@ -2781,6 +2787,16 @@ static void TitleArtFadeLine(int gy, int bg) {
     }
 }
 
+static uint32_t JiminyBgColor(uint16_t color, int effects, uint16_t bldcnt, int effect, int evy) {
+    if (color == TRANSPARENT) return 0;
+    if (effects && (bldcnt & (1 << 1))) {
+        if (effect == 1) return 0; /* alpha needs another layer: retain native */
+        if (effect == 2) color = Brighten(color, evy);
+        if (effect == 3) color = Darken(color, evy);
+    }
+    return sColorLut[color & 0x7FFF];
+}
+
 static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgPrio, uint32_t* frame, int objects) {
     int w = gPortScreen.width;
     uint32_t* dst = frame + y * w;
@@ -2821,7 +2837,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     /* Most extra world scanlines contain only opaque backgrounds. Windows,
        object alpha, docked messages and colour effects retain the full path.
        Keep priority metadata identical for HUD and HD text consumers. */
-    if (gPortScreen.wide && !(dispcnt & 0xE000) &&
+    if (!sJiminyDetailCapture && gPortScreen.wide && !(dispcnt & 0xE000) &&
         (!objects || !sLineHasObjects) && !docked &&
         (effect == 0 || !(bldcnt & 0x3F)) &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
@@ -2897,6 +2913,26 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         top = objFront ? sObjLine[x] : bg < 0 ? bd : sBgLine[bg][x];
         blend = (objFront && sObjSemi[x]) ||
                 ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+        if (sJiminyDetailCapture && objects && gx >= 200 && gx < 240 && gyLine >= 16 && gyLine < 160) {
+            PortJiminyPageRow* row = &sJiminyPageRows[gyLine];
+            /* PAGE ends above row20; rows20..23 already contain the
+               shaded paper edge in all three native detail maps. */
+            if (gyLine >= 20 && gx >= 224 && topLayer == 1 && !blend)
+                row->owned |= (uint16_t)(1u << (gx - 224));
+            if (bgOn[1] && (mask & WIN_BG(1))) {
+                if (gx == 200) { /* native paper/rules, safely inside the shaded edge */
+                    /* PAGE occupies BG1 above row24; it is foreground, not
+                       paper to repeat into the new page. */
+                    uint16_t paper = gyLine < 24 ? PLTT16[63] & 0x7FFF :
+                        gyLine == 159 ? PLTT16[136] & 0x7FFF : sBgLine[1][x];
+                    row->fill = JiminyBgColor(paper, mask & WIN_SFX, bldcnt, effect, evy);
+                    row->border = JiminyBgColor(PLTT16[136] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
+                    row->ground = JiminyBgColor(PLTT16[31] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
+                }
+                if (gx == 232) row->guide = gyLine >= 24 && sBgLine[1][x] == (PLTT16[133] & 0x7FFF) ?
+                    JiminyBgColor(PLTT16[59] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy) : row->fill;
+            }
+        }
         if (sJiminyPaperCapture && objects && gx >= 0 && gx < 240 && gyLine >= 16 && gyLine < 160) {
             int binder = objFront && sObjIndex[x] < 128 &&
                 sOamHd[sObjIndex[x]].tiles == gJiminyBinderRingTiles &&
@@ -2934,7 +2970,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             }
         }
         dst[x] = sColorLut[col];
-        if (sJiminyPaperCapture && objects && (gx == 0 || gx == 239) && gyLine >= 16 && gyLine < 40)
+        if (sJiminyDetailCapture && objects && (gx == 0 || gx == 239) && gyLine >= 16 && gyLine < 40)
             PortJiminyRecordNameEdge(sJiminyNameEdges, topLayer, blend, gx, gyLine, dst[x]);
     }
 }
@@ -4270,19 +4306,22 @@ void PortPpuRenderFrame(void) {
     extern const uint16_t gJiminyCardDetailMap[], gJiminyCharacterDetailMap[];
     extern const uint16_t gJiminyCardListMap[];
     const uint16_t* shownMap = (const uint16_t*)(VRAM8 + ((IO16(0xA) >> 8) & 31) * 2048);
+    int journalFrame = gCurrentMode == &gModeJiminy &&
+        (IO16(0) & 0x287) == 0x200 && !(IO16(0xA) & 0xC000) &&
+        !(IO16(0x14) & 0x1FF) && !(IO16(0x16) & 0x1FF);
 
     /* All three lists share these body rows; their header tiles differ.
        Select from the map actually presented, never the next menu state. */
     sJiminyBookFrame = PortJiminyDetailMap(shownMap, gJiminyCardListMap) ? gJiminyCardListMap : NULL;
-    sJiminyPaperCapture = gPortConfig.hdCards && gCurrentMode == &gModeJiminy &&
-        (IO16(0) & 0x287) == 0x200 && !(IO16(0xA) & 0xC000) &&
-        !(IO16(0x14) & 0x1FF) && !(IO16(0x16) & 0x1FF) &&
-        (sJiminyBookFrame || PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
+    sJiminyDetailCapture = journalFrame &&
+        (PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCardDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCharacterDetailMap));
-    if (sJiminyPaperCapture) {
-        memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
+    sJiminyPaperCapture = gPortConfig.hdCards && journalFrame && (sJiminyBookFrame || sJiminyDetailCapture);
+    if (sJiminyPaperCapture) memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
+    if (sJiminyDetailCapture) {
         memset(sJiminyNameEdges, 0, sizeof(sJiminyNameEdges));
+        memset(sJiminyPageRows, 0, sizeof(sJiminyPageRows));
     }
 
     memcpy(sTextObjPalette, PLTT16 + 256, sizeof(sTextObjPalette));
