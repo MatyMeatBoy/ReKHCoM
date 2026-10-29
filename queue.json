@@ -11389,15 +11389,21 @@
     "release-v23-pre1-win-android": {
       "id": "release-v23-pre1-win-android",
       "piece": "User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v23-pre1",
       "created_at": "2026-10-29T07:00:34.758758+00:00",
-      "updated_at": "2026-10-29T07:00:59.546295+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-29T07:07:01.414286+00:00",
+      "branch": "release/v23-pre1",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/497",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T07:07:01.414286+00:00",
+          "owner": "codex-v23-pre1",
+          "detail": "Version/docs only. check_sources PASS; Android officialpre identity102030001 verified; no gameplay mutation. Build/package gates follow merge."
+        }
+      ],
       "claimed_at": "2026-10-29T07:00:59.546295+00:00"
     },
     "hd-menu-light-line-origin": {
@@ -11428,7 +11434,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:04:15.251315+00:00",
+  "updated_at": "2026-10-29T07:07:01.414286+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
