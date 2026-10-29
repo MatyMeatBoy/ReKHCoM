@@ -10884,12 +10884,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T06:57:04.626627+00:00",
+      "updated_at": "2026-10-29T08:21:52.307663+00:00",
       "branch": "fix/v23-jiminy-pages",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/494",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/498",
       "approval": "Root integrator: human-authorized code review; 982b2ef6173abb4e7e6d8dc6625f0305949fb23d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -10947,10 +10947,15 @@
           "at": "2026-10-29T06:57:04.626627+00:00",
           "owner": "codex-jiminy23",
           "detail": "Resume after verified nightly49 delivery. User reports footer absent, mini-header/top extension, right page and pixel stretching. Investigate all three detail layouts before changing generic side styles; no workers."
+        },
+        {
+          "at": "2026-10-29T08:21:52.307663+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Footer block7e9cf4656:25 actual captures,5 exits0; HDoff5views pixel-identical; presented palette RED/GREEN; geometry/glyph/bridge CPU contracts; Windows32/64 and AndroidFT US/JP compiled, check_sources PASS. Manual root review; P2 remains unfinished."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-wide/before-32/2100.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-footer-snapshot64/before-64/4430.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11481,7 +11486,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:18:41.700840+00:00",
+  "updated_at": "2026-10-29T08:21:52.307663+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
