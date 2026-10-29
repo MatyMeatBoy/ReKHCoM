@@ -104,7 +104,11 @@ def main():
         if name:
             accented.append((name, with_accent(accent_contours(gs, name)), font['hmtx'][name][0]))
     for name, draw, advance in [('a', draw_a, 698), ('r', draw_r, 670)] + accented:
-        pen = T2CharStringPen(advance, gs)
+        # Type2 stores an increment over nominalWidthX, not the hmtx width.
+        # Absolute widths here added714 units to a/r in browser CFF shaping,
+        # although native consumers using hmtx still appeared correct.
+        encoded_width = None if advance == private.defaultWidthX else advance - private.nominalWidthX
+        pen = T2CharStringPen(encoded_width, gs)
         draw(pen)
         cs = pen.getCharString(private=private, globalSubrs=cff.GlobalSubrs)
         strings[name] = cs
