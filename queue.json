@@ -11454,10 +11454,23 @@
       "approval": null,
       "reference": "user screenshots 6f93dae3,5bf4f923,03b9e1ad",
       "evidence": []
+    },
+    "hd-audio-language-ux": {
+      "id": "hd-audio-language-ux",
+      "piece": "User29Oct: natural HD movie voice description including Japanese audio; instructions routed to launcher/platform workflow; replace confusing legacy-import wording, recognize existing English when identified and reflect selection in main/submenu; preserve unknown/JP imports safely",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T07:10:02.898562+00:00",
+      "updated_at": "2026-10-29T07:10:02.898562+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "user screenshots fde9128a and98506745",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:09:46.486758+00:00",
+  "updated_at": "2026-10-29T07:10:02.898562+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
