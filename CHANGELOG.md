@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.3-pre1
+
+- Initialize recycled spring object height before visibility/collider checks (#480); preserve original jump rules. The earlier Android candidate was confirmed by its reporter.
+- Bound map-card definition access separately from serialized save capacity, preserving reserved save slots and valid card behavior.
+- Extend small map-card HD coverage to all26 families, including Key to Rewards, and refresh imported recipes when new outputs are required. Imported images are generated from the player's owned source.
+- Register all six Jiminy page digits for HD text and add localized internal card headings. The journal remains incomplete: book edge, right-page layout, footer, remaining headings and wide extensions are pending.
+- Hide the desktop cursor after two seconds of inactivity, restoring it on movement or focus changes. Carry forward desktop Quit and optional-font warmup fixes.
+- Windows and Android prerelease packages only in this delivery. Intro/title/Moogle audio stutters, Steam Deck normal startup, HD copyright screens and the latest visual reports remain open; no all-platform stability claim.
+
 ## v2.2.5
 
 - Validate the launcher's built font atlas and every active font role before starting ImGui frames. If construction fails, try the built-in font once; a second failure stops cleanly with the original diagnostic. This addresses the locally reproduced Moto report mechanism; physical Moto/Samsung confirmation remains pending.
