@@ -10884,15 +10884,16 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-28T23:02:58.476284+00:00",
+      "updated_at": "2026-10-29T05:21:26.612535+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-29T05:21:26.612535+00:00"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11260,7 +11261,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T05:18:47.873408+00:00",
+  "updated_at": "2026-10-29T05:21:26.612535+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
