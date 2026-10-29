@@ -18,7 +18,7 @@ def ppu_function(signature):
         end += 1
     return ppu[start:end]
 
-backend = '#include "' + (ROOT/'port/include/port/synthesis_requirement_hd.h').as_posix() + '"\n' + r'''
+backend = '#include "' + (ROOT/'port/include/port/synthesis_requirement_hd.h').as_posix() + '"\n' + '#include "' + (ROOT/'port/include/port/port_oam.h').as_posix() + '"\n' + r'''
 const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT] = {0};
 #define HD_LAYERS 3
 #define MAX_DRAWS 128
@@ -56,6 +56,8 @@ static int sObjSize[3][4][2]={{{16,16}}};
 static uint16_t oam[128*4],palette[512],regs[256];
 static unsigned char vram[0x20000];
 #define OAM16 oam
+static int OamCount(void){return 128;} /* this decoder-failure fixture uses native slots */
+static uint16_t OamAttr(int slot,int attr){assert(slot>=0&&slot<128);return oam[slot*4+attr];}
 #define PLTT16 palette
 #define VRAM8 vram
 #define IO16(n) regs[(n)/2]
@@ -66,7 +68,8 @@ static unsigned sStagedActorFirstSeen[3],sActorSceneFrames;
 static const char gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
 static const unsigned char gOlympiaSmallCardTiles[1];
 static uint16_t sObjLine[16],sScrLine[16],sTitleSampleLine[16];
-static uint8_t sObjPrio[16],sObjSemi[16],sObjIndex[16],sScrPrio[16],sScrSemi[16],sScrIndex[16],sObjWin[16],sTitleSamplePrio[16],sTitleSampleSemi[16];
+static uint8_t sObjPrio[16],sObjSemi[16],sScrPrio[16],sScrSemi[16],sObjWin[16],sTitleSamplePrio[16],sTitleSampleSemi[16];
+static uint16_t sObjIndex[16],sScrIndex[16];
 '''
 cases = r'''
 static void reset(void){

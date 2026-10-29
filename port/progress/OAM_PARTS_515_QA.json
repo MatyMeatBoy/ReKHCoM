@@ -1,0 +1,184 @@
+{
+  "base": "bde2c11595ce57809f69f9f02360921ddfe0ada4",
+  "production_sha256": {
+    "src/engine.c": "eddb3e4bb36e8aa852c48cc41828c6d6e69152b9fc6f023552e44753d5eb51f2",
+    "src/evt/mode_movie.c": "f72949607ceba043b6dd7c54f0b6cdd7106666b9f7f53d9155208af46dcfa54b",
+    "port/src/port_bios.c": "0787e3ed0aad6e2427633f6b59d5e2e7fb0548bf15a4aeca619e7ac9f20dc8ab",
+    "port/src/port_ppu.c": "bd233ad00638ca71b981fd63c1787f5e6d9a8ffa94ebfd14fc7b05c04c45ca3f",
+    "port/src/port_hdsprites.c": "e9ad3d25721dd5834c362aa315f685cf127408dee3c1aa2a940e69f938dff557",
+    "port/include/port/port_oam.h": "4750e69be43f381355df5c0b1dc54bbe6afbb5fb5c116e57de72badc59eb4079"
+  },
+  "runtime": {
+    "final32-after-owner-moments": {
+      "exit": 0,
+      "binaries": {
+        "khcom.exe": "b21284190b268ec0905869609645a7dd38317714c44f0df62effdc9c9f3d8f6d"
+      },
+      "source_control": "main bde2c1159 plus this patch; production hashes below",
+      "capture_1100_sha256": "e9cab14c37d3bf4220536e117601040c96c1e2345fec7f5b7133eea0758e3a50"
+    },
+    "final64-after-owner-moments": {
+      "exit": 0,
+      "binaries": {
+        "rekhcom64.exe": "71a765fc9db5c53941457272f8841180f04c0cc4294ed79234c6abbb071c50b5",
+        "guest-eu.bin": "c7934b42db1df17b26634e9a23b10c68daebc65bbb30259088569ade6447bc32"
+      },
+      "source_control": "main bde2c1159 plus this patch; production hashes below",
+      "capture_1100_sha256": "1fc569bff819396bfc59e86dd6d305e5c9094b38b0488df523cebb878703165f"
+    },
+    "baseline64-moments-hd-auto": {
+      "exit": 0,
+      "binaries": {
+        "rekhcom64.exe": "fbc191700c8a6b6588f0da8777ae4eb84e02d140a2367ed0764b58bc49c45992",
+        "guest-eu.bin": "718704c8b3c38c89fe9ea0f5d48453081bef55e69249391c2053d80c6ac29d8e"
+      },
+      "source_control": "ff476aa9eb2b5342b66c7c146cac46d02db832ad",
+      "capture_1100_sha256": "d851d5877c43817f4c3b39317d8c18b9b86095a9a46b1da347acd6016b076af9"
+    }
+  },
+  "native_oracles": {
+    "passed": 206,
+    "mismatches": 0
+  },
+  "checks": [
+    "emitter canaries RED/GREEN,256parts,512bound,reset,matrices",
+    "full PPU spill priorities/glyph300/HUDowner512/state roundtrip",
+    "HD reload mask actual queue owner512, priorities, fallback and lifetime",
+    "First-frame native fallback after metadata/decode/upload failures and cache budget rejection",
+    "HUD canvas transaction and full PPU recovery",
+    "Windows64 ABI in fresh workspace TEMP",
+    "Windows64 boot marker",
+    "check_sources"
+  ],
+  "pixel_controls": {
+    "original": [
+      {
+        "frame": 300,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 400,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 500,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 600,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 700,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 800,
+        "whole_rgba_equal": true
+      },
+      {
+        "frame": 900,
+        "whole_rgba_equal": true
+      }
+    ],
+    "automatic": [
+      {
+        "hd": 1,
+        "frame": 300,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 1,
+        "frame": 400,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 1,
+        "frame": 500,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 1,
+        "frame": 600,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 1,
+        "frame": 700,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 1,
+        "frame": 800,
+        "rgb_change_bounds": [
+          492,
+          0,
+          1280,
+          410
+        ]
+      },
+      {
+        "hd": 1,
+        "frame": 900,
+        "rgb_change_bounds": [
+          492,
+          0,
+          1280,
+          410
+        ]
+      },
+      {
+        "hd": 0,
+        "frame": 300,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 0,
+        "frame": 400,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 0,
+        "frame": 500,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 0,
+        "frame": 600,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 0,
+        "frame": 700,
+        "rgb_change_bounds": null
+      },
+      {
+        "hd": 0,
+        "frame": 800,
+        "rgb_change_bounds": [
+          492,
+          0,
+          1280,
+          410
+        ]
+      },
+      {
+        "hd": 0,
+        "frame": 900,
+        "rgb_change_bounds": [
+          492,
+          0,
+          1280,
+          410
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "WindowsEU only for whole-game runs; no Linux/Android/console device result",
+    "SDLsoftware32 and hiddenD3D11host64; no cross-renderer whole-frame identity claim",
+    "Frozen64 RED control predates unrelated changes; not a full image equivalence claim",
+    "Raw snapshots remain exact-build-only; cartridge save layout unchanged",
+    "Targeted packages and reporter confirmation pending"
+  ]
+}

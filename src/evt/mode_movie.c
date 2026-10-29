@@ -458,6 +458,7 @@ extern u16* gPortSubGlyphCodes;
 void PortLog(const char* fmt, ...);
 unsigned PortFrameCount(void);
 void PortOamSetText(int oamIndex, int code, int style);
+void PortOamTagsReset(void);
 int PortScenePosterRendering(void);
 static u16 sMovieSubUpperCodes[MOVIE_SUB_MAX_CHARS];
 static u16 sMovieSubLowerCodes[MOVIE_SUB_MAX_CHARS];
@@ -700,6 +701,9 @@ void MovieVBlankIntr() {
                 }
 
                 oam = (u16*)OAM;
+#ifdef PLATFORM_PC
+                PortOamTagsReset(); /* direct native subtitle OAM owns this frame */
+#endif
 
 #ifndef VERSION_JP
                 x = 0;

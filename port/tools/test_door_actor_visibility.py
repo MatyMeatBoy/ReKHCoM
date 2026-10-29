@@ -20,10 +20,14 @@ def actor_pixels(path, box):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('captures', type=Path, nargs='+')
+    parser.add_argument('--frames', type=int, nargs='+', default=[380, 470],
+                        help='Include tutorial caption frames, e.g. 1100 1200 after Moment\'s Reprieve')
+    parser.add_argument('--pattern', default='out_{frame:05d}.bmp',
+                        help='Capture filename format, also accepts host_shot_{frame}.png')
     args = parser.parse_args()
     for folder in args.captures:
-        for frame in (380, 470):
-            path = folder / f'out_{frame:05d}.bmp'
+        for frame in args.frames:
+            path = folder / args.pattern.format(frame=frame)
             for actor, box, minimum in (
                     ('Sora', (480, 290, 590, 405), 500),
                     ('door', (660, 140, 810, 405), 5000)):

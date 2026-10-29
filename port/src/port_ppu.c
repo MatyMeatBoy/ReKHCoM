@@ -17,6 +17,7 @@
 #include <stdio.h>
 
 #include "port/port.h"
+#include "port/port_oam.h"
 
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -73,6 +74,26 @@ static PPU_TLS const uint16_t* sPpuOamView;
 #define PPU_OAM_BASE ((const uint16_t*)(uintptr_t)GBA_OAM)
 #endif
 
+/* Only the first 128 parts occupy GBA OAM. Extra visible parts are an owned
+ * rendering extension; HBlank and affine matrices still read native OAM.
+ * Game update finishes this store before any PPU worker reads its rows. */
+static uint16_t sExtraOam[(PORT_OAM_CAPACITY - PORT_OAM_NATIVE) * 4];
+static int sOamPartCount = PORT_OAM_NATIVE;
+static int OamCount(void) {
+    return sOamPartCount < PORT_OAM_NATIVE ? PORT_OAM_NATIVE :
+           sOamPartCount > PORT_OAM_CAPACITY ? PORT_OAM_CAPACITY : sOamPartCount;
+}
+uint16_t* PortOamPartBuffer(int slot) {
+    uint16_t* p = PortOamSlot((uint16_t*)(uintptr_t)GBA_OAM, sExtraOam, slot);
+    if (p && slot + 1 > sOamPartCount) sOamPartCount = slot + 1;
+    return p;
+}
+static uint16_t OamAttr(int slot, int attr) {
+    return slot < PORT_OAM_NATIVE ? PPU_OAM_BASE[slot * 4 + attr] :
+           sExtraOam[(slot - PORT_OAM_NATIVE) * 4 + attr];
+}
+static void VisitOamRenderState(PortStateVisitor visit);
+
 PortScreen gPortScreen = { GBA_SCREEN_W, GBA_SCREEN_H, 0, 0, 0 };
 
 /* Area the game should keep sprites alive in (see VIEW_* in gba/defines.h). */
@@ -86,7 +107,7 @@ typedef struct OamExt {
     int16_t x;
     int16_t y;
 } OamExt;
-static OamExt sOamExt[128];
+static OamExt sOamExt[PORT_OAM_CAPACITY];
 
 /* Map-block backgrounds as they were when the scroll registers were last
    committed: lets the wide view draw the world beyond the VRAM window. */
@@ -407,6 +428,7 @@ void PortTitleArtFadeFirst(int enabled) {
 void PortSetSpotlight(int active) { sSpotlight = active; }
 int PortSpotlightActive(void) { return sSpotlight; }
 void PortPpuVisitState(PortStateVisitor visit) {
+    VisitOamRenderState(visit);
     visit(sBgLatch, sizeof(sBgLatch));
     visit(sBgShift, sizeof(sBgShift));
     visit(sBgShiftLatched, sizeof(sBgShiftLatched));
@@ -539,7 +561,7 @@ typedef struct SpriteTag {
     int16_t clipX0, clipX1; /* x0==x1: no clip; coordinates include docking shift */
 } SpriteTag;
 static SpriteTag sEntryTag[128];
-static SpriteTag sOamTag[128];
+static SpriteTag sOamTag[PORT_OAM_CAPACITY];
 static int sSpriteClipX0, sSpriteClipX1;
 
 void PortSpriteClipX(int x0, int x1) {
@@ -595,7 +617,7 @@ int gPortHdHudPart;
 int gPortHudDigit;
 static PortHudDigit* sHudDigits;
 static int sHudDigitCount;
-static uint8_t* sHudDigitOwners;
+static uint16_t* sHudDigitOwners;
 static size_t sHudDigitOwnerSize;
 static uint8_t* sEnemyBarMask;
 static size_t sEnemyBarMaskSize;
@@ -651,13 +673,13 @@ int PortPpuHudDigitVisible(int digit, int x, int y) {
 }
 int PortPpuHudSpriteVisible(int slot, int x, int y) {
     int front, frontKey, key;
-    if (!sHudDigitOwners || slot<0 || slot>=128 || x<0 || y<0 || x>=gPortHudW || y>=gPortHudH) return 0;
+    if (!sHudDigitOwners || slot<0 || slot>=PORT_OAM_CAPACITY || x<0 || y<0 || x>=gPortHudW || y>=gPortHudH) return 0;
     front=sHudDigitOwners[y*gPortHudW+x];
     if (!front) return 0;
     /* Native priority precedes OAM order. A foreground object can have a larger
        slot than this counter (e.g. a battle effect with OBJ priority zero). */
-    frontKey = ((PPU_OAM_BASE[(front-1)*4+2] >> 10) & 3) * 128 + front-1;
-    key = ((PPU_OAM_BASE[slot*4+2] >> 10) & 3) * 128 + slot;
+    frontKey = ((OamAttr(front-1, 2) >> 10) & 3) * PORT_OAM_CAPACITY + front-1;
+    key = ((OamAttr(slot, 2) >> 10) & 3) * PORT_OAM_CAPACITY + slot;
     return frontKey >= key;
 }
 static int sEnemyHudRect[4]; /* left, top, right, bottom in HUD pixels */
@@ -704,7 +726,7 @@ void PortScreenBg(int bg, int on) {
 }
 static PPU_TLS uint16_t sScrLine[PORT_MAX_W];
 static PPU_TLS uint8_t sScrPrio[PORT_MAX_W];
-static PPU_TLS uint8_t sScrIndex[PORT_MAX_W];
+static PPU_TLS uint16_t sScrIndex[PORT_MAX_W];
 static uint8_t sScreenOccBg[PORT_MAX_W * GBA_SCREEN_H];
 static uint8_t sScreenOccBgLayer[PORT_MAX_W * GBA_SCREEN_H];
 static uint16_t sScreenOccObj[PORT_MAX_W * GBA_SCREEN_H];
@@ -769,7 +791,7 @@ typedef struct OamHdPart {
     const void *tiles, *frame; /* for the export (KHCOM_HDSPRITE_EXPORT) */
     const uint16_t* palette;   /* the part's original palette (ROM), for its fade */
 } OamHdPart;
-static OamHdPart sOamHd[128];
+static OamHdPart sOamHd[PORT_OAM_CAPACITY];
 extern const unsigned char gOlympiaSmallCardTiles[];
 extern const unsigned char gCrabclawSmallCardTiles[], gDivineRoseSmallCardTiles[], gFairyHarpSmallCardTiles[];
 extern const unsigned char gMetalChocoboSmallCardTiles[], gOathkeeperSmallCardTiles[], gPumpkinheadSmallCardTiles[];
@@ -810,9 +832,9 @@ static int SmallCardNativeColor(int i, int tx, int ty, int color) {
     return color;
 }
 
-static uint8_t sMainHdPart[128]; /* slot queued as an HD part of the game's picture (QueueMainHdParts) */
-static int16_t sMainHdBox[128][4]; /* its box on the canvas: x, y, w, h */
-static uint8_t sMainHdScreen[128];  /* ... on the screen layer (menus), its box in the screen layer's coordinates */
+static uint8_t sMainHdPart[PORT_OAM_CAPACITY]; /* slot queued as an HD part of the game's picture (QueueMainHdParts) */
+static int16_t sMainHdBox[PORT_OAM_CAPACITY][4]; /* its box on the canvas: x, y, w, h */
+static uint8_t sMainHdScreen[PORT_OAM_CAPACITY];  /* ... on the screen layer (menus), its box in the screen layer's coordinates */
 static int sMainHdAny;             /* some part queued this frame: the occupancy is collected for MainHdOver */
 static int sScreenHdAny;           /* some part queued on the screen layer */
 /* The title's logo as an affine background (BG2: its zoom in the intro, the staff roll's end), drawn HD instead
@@ -832,13 +854,25 @@ static void QueueMainHdParts(void);
 static void MainHdOver(void);
 
 void PortOamTagsReset(void) {
+    sOamPartCount = PORT_OAM_NATIVE;
     memset(sOamTag, 0, sizeof(sOamTag));
     memset(sOamHd, 0, sizeof(sOamHd));
 }
 
+/* Snapshot the extra parts with their matching ownership and replacement
+ * tags. Cartridge saves and the SpriteWork ABI are unchanged; raw snapshots
+ * are already checked against the exact game build by the state loader. */
+static void VisitOamRenderState(PortStateVisitor visit) {
+    visit(sExtraOam, sizeof(sExtraOam));
+    visit(&sOamPartCount, sizeof(sOamPartCount));
+    visit(sEntryTag, sizeof(sEntryTag));
+    visit(sOamTag, sizeof(sOamTag));
+    visit(sOamHd, sizeof(sOamHd));
+}
+
 void PortOamSetHdPart(int oamIndex, const void* tiles, const void* frame, int x, int y, int w, int h, int flags,
                       const void* palette, int bank) {
-    if (oamIndex < 0 || oamIndex >= 128)
+    if (oamIndex < 0 || oamIndex >= PORT_OAM_CAPACITY)
         return;
     sOamHd[oamIndex].id = (uint16_t)PortHdSpriteFind(tiles, frame);
     sOamHd[oamIndex].x = (int16_t)x;
@@ -878,7 +912,7 @@ static int HdTextGlyph(int oamIndex) {
 
 /* HD text for sprites written straight into OAM (movie subtitles). */
 void PortOamSetText(int oamIndex, int code, int style) {
-    if (oamIndex >= 0 && oamIndex < 128) {
+    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY) {
         memset(&sOamTag[oamIndex], 0, sizeof(sOamTag[0]));
         /* Cartridge horizontal bar is glyph 25, below printable Latin.
            Subtitle punctuation belongs in the HD line, unlike button icons. */
@@ -888,7 +922,7 @@ void PortOamSetText(int oamIndex, int code, int style) {
 }
 
 void PortOamSetSource(int oamIndex, int entry) {
-    if (oamIndex >= 0 && oamIndex < 128 && entry >= 0 && entry < 128)
+    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY && entry >= 0 && entry < 128)
         sOamTag[oamIndex] = sEntryTag[entry];
 }
 
@@ -936,7 +970,7 @@ static PPU_TLS uint16_t sBgLine[4][PORT_MAX_W];
 static PPU_TLS uint16_t sObjLine[PORT_MAX_W];
 static PPU_TLS int sLineHasObjects;
 static PPU_TLS uint8_t sObjPrio[PORT_MAX_W];
-static PPU_TLS uint8_t sObjIndex[PORT_MAX_W];
+static PPU_TLS uint16_t sObjIndex[PORT_MAX_W];
 /* Native pixels suppressed by HD title signs, used only to continue their
    authored footer bands. They never draw back over the HD lettering. */
 static PPU_TLS uint16_t sTitleSampleLine[PORT_MAX_W];
@@ -944,7 +978,7 @@ static PPU_TLS uint8_t sTitleSamplePrio[PORT_MAX_W], sTitleSampleSemi[PORT_MAX_W
 /* HUD layer: what covers each canvas pixel in the GBA's own compositing, so
    HUD sprites stay behind what the cartridge draws in front of them: the
    highest-priority opaque BG (4: none) and the winning other OBJ as
-   priority * 128 + OAM index (0xFFFF: none). A window that hides OBJs there
+   priority * PORT_OAM_CAPACITY + OAM index (0xFFFF: none). A window that hides OBJs there
    reads as 0 / 0. */
 static uint8_t* sOccBg;
 static uint8_t* sOccBgLayer;
@@ -1036,8 +1070,8 @@ void PortPpuSetResolution(int w, int h) {
 void PortPpuDumpOam(void) {
     int i;
 
-    for (i = 0; i < 128; i++) {
-        uint16_t a0 = OAM16[i * 4], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
+    for (i = 0; i < OamCount(); i++) {
+        uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1), a2 = OamAttr(i, 2);
         if ((a0 & 0x300) == 0x200)
             continue;
         PortLog("oam %3d ext(%4d,%4d) raw(%3d,%3d) shape %d size %d prio %d pal %2d tile %4d mode %d hud %d ax %d ay %d "
@@ -1048,7 +1082,7 @@ void PortPpuDumpOam(void) {
 }
 
 void PortOamSetPosition(int index, int x, int y) {
-    if (index >= 0 && index < 128) {
+    if (index >= 0 && index < PORT_OAM_CAPACITY) {
         sOamExt[index].x = (int16_t)x;
         sOamExt[index].y = (int16_t)y;
     }
@@ -2394,7 +2428,7 @@ static const uint8_t sObjSize[3][4][2] = {
    falls in the gap of letters such as V or T, where the sprite shows whatever lies behind it, so the glyph was
    taken for covered whenever that changed (the level-up message flickered while its effect animated). */
 static void GlyphInkPoint(int i, int* dx, int* dy) {
-    uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
+    uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1), a2 = OamAttr(i, 2);
     int shape = a0 >> 14, w, h, x, y, best = 1 << 30;
     int mapping1d = (IO16(0) >> 6) & 1, tile = a2 & 0x3FF;
 
@@ -2422,14 +2456,14 @@ static void GlyphInkPoint(int i, int* dx, int* dy) {
    replaced by the outline font, and the cartridge's proportional text lets neighbouring letter sprites overlap
    (the V of a level-up message covered part of the T next to it, so the T came and went as OAM order changed). */
 static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
-    return occ < prio * 128 + i && !HdTextGlyph(occ & 127);
+    return occ < prio * PORT_OAM_CAPACITY + i && !HdTextGlyph(occ & PORT_OAM_SLOT_MASK);
 }
 
 /* Actors that wait beyond the cartridge's camera (event 097, Preliminar 112 / 120): a sprite is hidden only while it
    has not yet come into the 240x160 frame and lies wholly outside it. Once it has been in, it draws whole, also as it
    walks out into the wide view; one crossing the frame's edge is never cut (user 25/10: Agrabah's barrels lost half,
    Sora and friends vanished leaving). Reset per scene (PortPpuRender). */
-static unsigned char sActorEntered[128];
+static unsigned char sActorEntered[PORT_OAM_CAPACITY];
 static unsigned sStagedActorFirstSeen[3];
 static unsigned char sStagedActorEntered[3]; /* Cheshire, Aladdin, Genie: independent of recycled OAM slots. */
 static int sActorSceneKey = -1;
@@ -2468,7 +2502,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         sObjSemi[i] = 0;
         sScrLine[i] = TRANSPARENT;
         sScrPrio[i] = 4;
-        sScrIndex[i] = 127;
+        sScrIndex[i] = PORT_OAM_CAPACITY - 1;
         sObjWin[i] = 0;
         sTitleSampleLine[i] = TRANSPARENT;
         sTitleSamplePrio[i] = 4;
@@ -2476,10 +2510,10 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
     if (!(dispcnt & 0x1000))
         return;
 
-    for (i = 0; i < 128; i++) {
-        uint16_t a0 = OAM16[i * 4 + 0];
-        uint16_t a1 = OAM16[i * 4 + 1];
-        uint16_t a2 = OAM16[i * 4 + 2];
+    for (i = 0; i < OamCount(); i++) {
+        uint16_t a0 = OamAttr(i, 0);
+        uint16_t a1 = OamAttr(i, 1);
+        uint16_t a2 = OamAttr(i, 2);
         int affine = (a0 >> 8) & 1;
         int dbl = (a0 >> 9) & 1;
         int mode = (a0 >> 10) & 3;
@@ -2642,14 +2676,14 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 if (sScrLine[x] == TRANSPARENT || prio < sScrPrio[x]) {
                     sScrLine[x] = (uint16_t)col;
                     sScrPrio[x] = (uint8_t)prio;
-                    sScrIndex[x] = (uint8_t)i;
+                    sScrIndex[x] = (uint16_t)i;
                     sScrSemi[x] = (mode == 1);
                 }
             } else if (sObjLine[x] == TRANSPARENT || prio < sObjPrio[x]) {
                 sLineHasObjects = 1;
                 sObjLine[x] = (uint16_t)col;
                 sObjPrio[x] = (uint8_t)prio;
-                sObjIndex[x] = (uint8_t)i;
+                sObjIndex[x] = (uint16_t)i;
                 sObjSemi[x] = (mode == 1);
             }
         }
@@ -2914,7 +2948,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
                 sOccBg[row + x] = bg < 0 ? 4 : (uint8_t)bgPrio[bg];
                 sOccBgLayer[row + x] = bg < 0 ? 4 : (uint8_t)bg;
                 sOccObj[row + x] = sObjLine[x] != TRANSPARENT ?
-                    (uint16_t)(sObjPrio[x] * 128 + sObjIndex[x]) : 0xFFFFu;
+                    (uint16_t)(sObjPrio[x] * PORT_OAM_CAPACITY + sObjIndex[x]) : 0xFFFFu;
             }
         }
         objFront = obj && (bg < 0 || sObjPrio[x] <= bgPrio[bg]);
@@ -2943,7 +2977,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             }
         }
         if (sJiminyPaperCapture && objects && gx >= 0 && gx < 240 && gyLine >= 16 && gyLine < 160) {
-            int binder = objFront && sObjIndex[x] < 128 &&
+            int binder = objFront && sObjIndex[x] < PORT_OAM_CAPACITY &&
                 sOamHd[sObjIndex[x]].tiles == gJiminyBinderRingTiles &&
                 sOamHd[sObjIndex[x]].frame == gJiminyBinderRingFrame0;
             sJiminyPaperMask[gyLine * 240 + gx] = (uint8_t)(PortJiminyBookPixel(
@@ -3085,7 +3119,7 @@ static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const 
             sScreenOccBg[gy * wo + ox] = (uint8_t)occ;
             sScreenOccBgLayer[gy * wo + ox] = (uint8_t)occLayer;
             sScreenOccObj[gy * wo + ox] = sScrLine[x] != TRANSPARENT ?
-                (uint16_t)(sScrPrio[x] * 128 + sScrIndex[x]) : 0xFFFF;
+                (uint16_t)(sScrPrio[x] * PORT_OAM_CAPACITY + sScrIndex[x]) : 0xFFFF;
         }
         for (i = 0; i <= n && found < 2; i++) {
             int prio = (i < n) ? bgPrio[order[i]] : 4;
@@ -4050,7 +4084,7 @@ static int PpuRowsIndependent(void) {
         sPpuStats[2]++;
         return 0; /* vertical mosaic: affine BGs reuse the reference of a block's first row */
     }
-    for (i = 0; i < 128; i++)
+    for (i = 0; i < OamCount(); i++)
         if (sOamTag[i].header) {
             sPpuStats[3]++;
             return 0; /* HeaderPick's once-a-frame choice */
@@ -4492,8 +4526,8 @@ static void ExportSprites(void) {
         free(canvas);
         return;
     }
-    for (i = 0; i < 128; i++) {
-        uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
+    for (i = 0; i < OamCount(); i++) {
+        uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1), a2 = OamAttr(i, 2);
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3;
         int ow, oh, k, x, y, hf, vf;
         const OamHdPart* part = &sOamHd[i];
@@ -4875,11 +4909,11 @@ static int QueueHdPart(int layer, int i, int hx, int hy, int ow, int oh, int bw,
        Other cards intentionally keep their accepted drawing unchanged. */
     int remember = !affine && !(part->flags & 3) && identity >= synthesis &&
                    identity - synthesis < SYNTHESIS_HD_COUNT;
-    int priority = (OAM16[i * 4 + 2] >> 10) & 3;
+    int priority = (OamAttr(i, 2) >> 10) & 3;
     int clip0 = sOamTag[i].clipX0, clip1 = sOamTag[i].clipX1;
     /* the game fades by rewriting palettes (the title, menus): the HD picture follows its part's palette */
-    if (part->palette && !((OAM16[i * 4] >> 13) & 1))
-        PortPaletteFade(part->palette + part->bank * 16, PLTT16 + 256 + (OAM16[i * 4 + 2] >> 12) * 16, 16, &dark, &white);
+    if (part->palette && !((OamAttr(i, 0) >> 13) & 1))
+        PortPaletteFade(part->palette + part->bank * 16, PLTT16 + 256 + (OamAttr(i, 2) >> 12) * 16, 16, &dark, &white);
     if (part->w != ow || part->h != oh)
         return 0;
     if (affine) {
@@ -5041,10 +5075,10 @@ static int TitlePressStartTiles(const void* tiles) {
    with no word parts keeps its existing HD gradient, rather than flickering. */
 static int TitleBarWordsReady(void) {
     int i;
-    for (i = 0; i < 128; i++) {
+    for (i = 0; i < OamCount(); i++) {
         uint16_t a0;
         if (!TitlePressStartTiles(sOamHd[i].tiles)) continue;
-        a0 = OAM16[i * 4];
+        a0 = OamAttr(i, 0);
         if ((!(a0 & 0x100) && (a0 & 0x200)) || (a0 >> 14) == 3 || ((a0 >> 10) & 3) >= 2)
             continue; /* disabled/invalid or OBJ-window: no visible words */
         if (!sMainHdPart[i]) return 0;
@@ -5106,8 +5140,8 @@ static void QueueMainHdParts(void) {
     QueueStillHdParts();
     if (!(IO16(0x00) & 0x1000))
         return;
-    for (i = 127; i >= 0; i--) {
-        uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1];
+    for (i = OamCount() - 1; i >= 0; i--) {
+        uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1);
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
         int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3, ow, oh, bw, bh, ox, oy, alpha = 255;
         int16_t pa = 0x100, pb = 0, pc = 0, pd = 0x100;
@@ -5193,7 +5227,7 @@ const uint32_t* PortPpuScreenOver(void) {
 /* One layer's parts: where the cartridge has something in front, its final pixel goes on `over`. */
 static int SmallCardCornerAt(int i, int x, int y) {
     const OamHdPart* part = &sOamHd[i];
-    uint16_t a0 = OAM16[i * 4], a1 = OAM16[i * 4 + 1];
+    uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1);
     int sx = x - sMainHdBox[i][0], sy = y - sMainHdBox[i][1], tx, ty;
     if (a0 & 0x100) {
         const uint16_t* p = OAM16 + ((a1 >> 9) & 31) * 16;
@@ -5211,8 +5245,8 @@ static int SmallCardCornerAt(int i, int x, int y) {
 static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const uint16_t* occObj, const uint32_t* picture,
                         uint32_t* over, int* used) {
     int i;
-    for (i = 0; i < 128; i++) {
-        int prio = (OAM16[i * 4 + 2] >> 10) & 3, x0, y0, x1, y1, x, y;
+    for (i = 0; i < OamCount(); i++) {
+        int prio = (OamAttr(i, 2) >> 10) & 3, x0, y0, x1, y1, x, y;
         if (!sMainHdPart[i] || sMainHdScreen[i] != screen)
             continue;
         x0 = sMainHdBox[i][0] < 0 ? 0 : sMainHdBox[i][0];
@@ -5226,10 +5260,10 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
                 /* 0 / 0: a window hides the sprites here; a BG of a higher priority; a sprite before this one (not
                    one that keeps its cartridge pixels under its own HD part: that part is drawn over this one anyway,
                    and copying its pixels put the small card above's bottom over the cards below, 23/10) */
-                if ((obj == prio * 128 + i && SmallCardCornerAt(i, x, y)) ||
+                if ((obj == prio * PORT_OAM_CAPACITY + i && SmallCardCornerAt(i, x, y)) ||
                     (occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
-                    (obj != 0xFFFFu && obj < prio * 128 + i &&
-                     !(sMainHdPart[obj & 127] && PortHdSpriteKeepsCartridge(sOamHd[obj & 127].id)))) {
+                    (obj != 0xFFFFu && obj < prio * PORT_OAM_CAPACITY + i &&
+                     !(sMainHdPart[obj & PORT_OAM_SLOT_MASK] && PortHdSpriteKeepsCartridge(sOamHd[obj & PORT_OAM_SLOT_MASK].id)))) {
                     if (!*used) {
                         memset(over, 0, (size_t)w * h * 4);
                         *used = 1;
@@ -5352,11 +5386,11 @@ void PortPpuRenderHud(uint32_t* buf) {
     memset(sEnemyBarRows, 0, sizeof(sEnemyBarRows));
     sHudDigitCount = 0;
     if ((gPortConfig.hdHud || gPortConfig.hdCards) && (size_t)w * h > sHudDigitOwnerSize) {
-        uint8_t* owners = realloc(sHudDigitOwners, (size_t)w * h);
+        uint16_t* owners = realloc(sHudDigitOwners, (size_t)w * h * sizeof(*owners));
         if (owners) { sHudDigitOwners = owners; sHudDigitOwnerSize = (size_t)w * h; }
     }
     if (sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize)
-        memset(sHudDigitOwners, 0, (size_t)w * h);
+        memset(sHudDigitOwners, 0, (size_t)w * h * sizeof(*sHudDigitOwners));
     if (gPortConfig.hdHud && (size_t)w * h > sEnemyBarMaskSize) {
         uint8_t* mask = realloc(sEnemyBarMask, (size_t)w * h);
         if (mask) { sEnemyBarMask = mask; sEnemyBarMaskSize = (size_t)w * h; }
@@ -5386,8 +5420,8 @@ void PortPpuRenderHud(uint32_t* buf) {
     }
 
     reloadMask = NULL;
-    for (i = 127; i >= 0; i--) {
-        uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
+    for (i = OamCount() - 1; i >= 0; i--) {
+        uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1), a2 = OamAttr(i, 2);
         int affine = (a0 >> 8) & 1, dbl = (a0 >> 9) & 1, mode = (a0 >> 10) & 3;
         int shape = (a0 >> 14) & 3, size = (a1 >> 14) & 3;
         int ow, oh, bw, bh, ox, oy, xg, yg, hx, hy, sx, sy;
@@ -5404,8 +5438,8 @@ void PortPpuRenderHud(uint32_t* buf) {
         oh = sObjSize[shape][size][1];
         if (gPortConfig.hdHud && sHudDigitOwners && (size_t)w * h <= sHudDigitOwnerSize &&
             !HudDigitKeepsPalette(sOamHd[i].tiles) &&
-            tag->digit && tag->digit <= 10 && sHudDigitCount < 128) {
-            if (!sHudDigits) sHudDigits = calloc(128, sizeof(*sHudDigits));
+            tag->digit && tag->digit <= 10 && sHudDigitCount < PORT_OAM_CAPACITY) {
+            if (!sHudDigits) sHudDigits = calloc(PORT_OAM_CAPACITY, sizeof(*sHudDigits));
             if (sHudDigits) {
                 digit = &sHudDigits[sHudDigitCount];
                 digit->x = w; digit->y = h; digit->w = digit->h = -1;
@@ -5523,7 +5557,7 @@ void PortPpuRenderHud(uint32_t* buf) {
                     int prio = (a2 >> 10) & 3;
                     if (cx >= 0 && cy >= 0 && cx < gPortScreen.width && cy < gPortScreen.height) {
                         int k = cy * gPortScreen.width + cx;
-                        if ((sOccBg[k] < prio && frontSolid[prio]) || sOccObj[k] < prio * 128 + i)
+                        if ((sOccBg[k] < prio && frontSolid[prio]) || sOccObj[k] < prio * PORT_OAM_CAPACITY + i)
                             continue;
                     }
                 }
@@ -5678,7 +5712,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                     if (px<0 || px>=width || py<0 || py>=height) continue;
                     at=py*width+px;
                     if ((occBg[at]==0 && occObj[at]==0) || occBg[at]<priority ||
-                        (occBg[at]==priority && occLayer[at]<bg) || occObj[at]<(priority+1)*128) continue;
+                        (occBg[at]==priority && occLayer[at]<bg) || occObj[at]<(priority+1)* PORT_OAM_CAPACITY) continue;
                     best=distance; inkX=ix; inkY=iy;
                 }
                 px=glyph->x+inkX; py=glyph->y+inkY;
@@ -5687,7 +5721,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                    number): only the columns left uncovered are drawn */
                 {
                     int c0 = inkX, c1 = inkX, row = py * width;
-                    #define BG_TEXT_SHOWN(cx) (glyph->x + (cx) >= 0 && glyph->x + (cx) < width &&                         !((occBg[row + glyph->x + (cx)] == 0 && occObj[row + glyph->x + (cx)] == 0) ||                           occBg[row + glyph->x + (cx)] < priority ||                           (occBg[row + glyph->x + (cx)] == priority && occLayer[row + glyph->x + (cx)] < bg) ||                           occObj[row + glyph->x + (cx)] < (priority + 1) * 128))
+                    #define BG_TEXT_SHOWN(cx) (glyph->x + (cx) >= 0 && glyph->x + (cx) < width &&                         !((occBg[row + glyph->x + (cx)] == 0 && occObj[row + glyph->x + (cx)] == 0) ||                           occBg[row + glyph->x + (cx)] < priority ||                           (occBg[row + glyph->x + (cx)] == priority && occLayer[row + glyph->x + (cx)] < bg) ||                           occObj[row + glyph->x + (cx)] < (priority + 1) * PORT_OAM_CAPACITY))
                     while (c0 > 0 && BG_TEXT_SHOWN(c0 - 1)) c0--;
                     while (c1 < 8 && BG_TEXT_SHOWN(c1)) c1++;
                     #undef BG_TEXT_SHOWN
@@ -5707,7 +5741,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                         at=py*width+px;
                         if ((occBg[at]==0 && occObj[at]==0) || occBg[at]<priority ||
                             (occBg[at]==priority && occLayer[at]<bg) ||
-                            occObj[at]<(priority+1)*128) continue;
+                            occObj[at]<(priority+1)* PORT_OAM_CAPACITY) continue;
                         visible |= (uint16_t)(1u<<ix);
                     }
                     out[n].visible[iy]=visible;
@@ -5733,8 +5767,8 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                 n++;
             }
     }
-    for (i = 127; i >= 0 && n < max && (dispcnt & 0x1000); i--) {
-        uint16_t a0 = OAM16[i * 4 + 0], a1 = OAM16[i * 4 + 1], a2 = OAM16[i * 4 + 2];
+    for (i = OamCount() - 1; i >= 0 && n < max && (dispcnt & 0x1000); i--) {
+        uint16_t a0 = OamAttr(i, 0), a1 = OamAttr(i, 1), a2 = OamAttr(i, 2);
         const SpriteTag* tag = &sOamTag[i];
         int onHud = sHudLayer && tag->hud;
         int onScreen = SpriteOnScreen(tag->screen);
@@ -5843,6 +5877,6 @@ void PortPpuSpriteMask(uint8_t* out) {
     for (i = 0; i < n; i++) {
         uint16_t obj = sOccObj[i];
         uint8_t bg = sOccBg[i];
-        out[i] = sMsgMask[i] ? 2 : (obj != 0xFFFFu && !(obj == 0 && bg == 0) && (obj >> 7) <= bg);
+        out[i] = sMsgMask[i] ? 2 : (obj != 0xFFFFu && !(obj == 0 && bg == 0) && (obj >> PORT_OAM_PRIORITY_SHIFT) <= bg);
     }
 }

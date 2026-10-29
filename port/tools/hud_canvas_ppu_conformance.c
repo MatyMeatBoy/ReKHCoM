@@ -4,6 +4,22 @@
 #undef main
 /* Optional artwork and battle-specific backgrounds are absent in this fixture. */
 int PortHdSpriteFind(const void*a,const void*b){return 0;}
+int PortPortableHdReady(void){return 1;}
+const unsigned char gCrabclawSmallCardTiles[32]={2},gDivineRoseSmallCardTiles[32]={3};
+const unsigned char gFairyHarpSmallCardTiles[32]={4},gMetalChocoboSmallCardTiles[32]={5};
+const unsigned char gOathkeeperSmallCardTiles[32]={6},gPumpkinheadSmallCardTiles[32]={7};
+const unsigned char gSpellbinderSmallCardTiles[32]={8},gUltimaWeaponSmallCardTiles[32]={9};
+const unsigned char gWishingStarSmallCardTiles[32]={10};
+const uint8_t gBtlBgHalloweenTownTiles[16384]={0};
+const unsigned char gOlympiaSmallCardTiles[32]={11};
+const unsigned char gJiminyBinderRingTiles[32]={12},gJiminyBinderRingFrame0[8]={0};
+const uint16_t gJiminyCardDetailMap[1024]={0},gJiminyCardListMap[1024]={1};
+const uint16_t gJiminyCharacterDetailMap[1024]={2},gJiminyStoryDetailMap[1024]={3};
+Mode gModeJiminy;Mode* gCurrentMode;
+const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT]={0};
+const unsigned char gTitlePressStartTiles[32]={0},gTitlePressStartFrenchTiles[32]={1};
+const unsigned char gTitlePressStartGermanTiles[32]={2},gTitlePressStartItalianTiles[32]={3};
+const unsigned char gTitlePressStartSpanishTiles[32]={4};
 void PortMarluxiaField(int on){}
 int PortEventBackdropProfile(void){return -1;}
 int PortEventId(void){return -1;}
@@ -51,6 +67,7 @@ const uint16_t gCheshirePalette[16]={0},gGeniePalette[16]={0},gMapGmkAgrabah00Pa
 u32 gLanguage;
 SpriteWork* gSpriteWork;
 #define CHECK(c) do { if (!(c)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#c); return 77; } } while (0)
+#ifndef HUD_CANVAS_NO_MAIN
 int main(void) {
     int i;
     uint32_t* fallback;
@@ -96,3 +113,4 @@ int main(void) {
     free(guarded);
     free(fallback);puts("PASS full production PPU: failed canvas pixels equal cartridge control; recovery restores separate HUD");return 0;
 }
+#endif

@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include "port/port.h"
+#include "port/port_oam.h"
 #include "port/port_hdlayout.h"
 #include "port/port_hdsprites.h"
 #include "port/port_menu_light.h"
@@ -59,7 +60,7 @@ typedef struct HdSpriteDraw {
     float x[4], y[4]; /* HUD canvas corners: top-left, top-right, bottom-right, bottom-left of the part */
     float u0, v0, u1, v1;
     uint8_t alpha, dark, white;
-    uint8_t hudOwner; /* OAM slot + 1: reload counter above native fill, clipped by final OAM ownership */
+    uint16_t hudOwner; /* OAM slot + 1: reload counter above native fill, clipped by final OAM ownership */
 } HdSpriteDraw;
 /* per layer: 0 the game's picture, 1 the HUD canvas, 2 the screen layer (menus, the title's logo) */
 #define HD_LAYERS 3
@@ -682,7 +683,7 @@ int PortHdSpriteQueue(int layer, int id, const float* x, const float* y, int px,
 void PortHdSpriteHudOwner(int slot) {
     HdSpriteDraw* q;
     static const char prefix[] = "gReloadCounterWhiteTiles_";
-    if (slot < 0 || slot >= 128 || !sDrawCount[1]) return;
+    if (slot < 0 || slot >= PORT_OAM_CAPACITY || !sDrawCount[1]) return;
     q = &sDraws[1][sDrawCount[1] - 1];
     /* These nineteen frame-specific records are the decomp's gauge->gfx3, not the deck's REV_COUNT. */
     if (!SDL_strncmp(kHdSprites[q->id].name, prefix, sizeof(prefix) - 1)) q->hudOwner = slot + 1;
