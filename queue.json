@@ -11385,10 +11385,23 @@
       "approval": null,
       "reference": "user screenshot codex-clipboard-dfd30b14-402a-4538-805b-48305f68ea6a.png",
       "evidence": []
+    },
+    "release-v23-pre1-win-android": {
+      "id": "release-v23-pre1-win-android",
+      "piece": "User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T07:00:34.758758+00:00",
+      "updated_at": "2026-10-29T07:00:34.758758+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:57:04.627626+00:00",
+  "updated_at": "2026-10-29T07:00:34.758758+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
