@@ -909,12 +909,18 @@ static void WorldBlendPrepare(void) {
     sWorldBlendWarned = 0;
 }
 
+static int WorldBlendCanvasValid(int screen) {
+    return sWorldBlendActive && sWorldBlendScreen == screen &&
+        sWorldBlendW == (screen ? gPortOverlayW : gPortScreen.width) &&
+        sWorldBlendH == (screen ? GBA_SCREEN_H : gPortScreen.height);
+}
+
 const uint32_t* PortPpuScreenAdditive(void) {
-    return sWorldBlendActive && sWorldBlendScreen ? sWorldBlendAdd : NULL;
+    return WorldBlendCanvasValid(1) ? sWorldBlendAdd : NULL;
 }
 
 const uint32_t* PortPpuMainAdditive(void) {
-    return sWorldBlendActive && !sWorldBlendScreen ? sWorldBlendAdd : NULL;
+    return WorldBlendCanvasValid(0) ? sWorldBlendAdd : NULL;
 }
 /* The title's logo as an affine background (BG2: its zoom in the intro, the staff roll's end), drawn HD instead
    while the title says so (PortTitleLogoBg) and the HD title is on. */
@@ -5316,7 +5322,8 @@ static void QueueMainHdParts(void) {
         if (!sOamHd[i].id || (sHudCanvasFallback && sOamTag[i].hud) || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
             (((a0 >> 12) & 1) && (IO16(0x4C) & 0xFF00)))
             continue; /* a sprite under a real mosaic (size > 1) keeps the cartridge's pixels */
-        if (WorldBlendWanted() && PortHdSpriteGroup(sOamHd[i].id) == 4 && !sWorldBlendActive)
+        if (WorldBlendWanted() && PortHdSpriteGroup(sOamHd[i].id) == 4 &&
+            (!sWorldBlendActive || SpriteOnScreen(sOamTag[i].screen) != sWorldBlendScreen))
             continue; /* Scratch/LCD unavailable: retain the complete native light and illustration. */
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
@@ -5354,7 +5361,7 @@ static void QueueMainHdParts(void) {
                 sMainHdBox[i][2] = (int16_t)bw;
                 sMainHdBox[i][3] = (int16_t)bh;
                 sScreenHdAny = 1;
-                if (sWorldBlendActive && PortHdSpriteGroup(sOamHd[i].id) == 4) {
+                if (sWorldBlendActive && sWorldBlendScreen && PortHdSpriteGroup(sOamHd[i].id) == 4) {
                     int x0 = PPU_MAX(0, sx), x1 = PPU_MIN(gPortOverlayW, sx + bw);
                     int y0 = PPU_MAX(0, oy), y1 = PPU_MIN(GBA_SCREEN_H, oy + bh);
                     if (x1 > x0)
@@ -5460,7 +5467,7 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
 }
 
 const uint32_t* PortPpuScreenNativeWorld(void) {
-    if (!sWorldBlendActive || !sWorldBlendScreen) return NULL;
+    if (!WorldBlendCanvasValid(1)) return NULL;
     /* World images now remain native; only other HD parts need their normal
      * foreground restored. Do not put the blue-back light above this canvas. */
     sScreenOverUsed = 0;
@@ -5470,7 +5477,7 @@ const uint32_t* PortPpuScreenNativeWorld(void) {
 }
 
 const uint32_t* PortPpuMainNativeWorld(void) {
-    if (!sWorldBlendActive || sWorldBlendScreen) return NULL;
+    if (!WorldBlendCanvasValid(0)) return NULL;
     sMainOverUsed = 0;
     if (sMainOver && sMainOverSize >= (size_t)gPortScreen.width * gPortScreen.height)
         HdOverLayer(0, gPortScreen.width, gPortScreen.height, sOccBg, sOccObj,

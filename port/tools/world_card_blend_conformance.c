@@ -49,6 +49,9 @@ int main(void) {
     HdOverLayer(1,240,160,sScreenOccBg,sScreenOccObj,gPortOverlay,sScreenOver,&sScreenOverUsed,0);
     CHECK(!sScreenOverUsed); /* no opaque blue/light copy above the HD art */
     CHECK(PortPpuScreenNativeWorld()[k]==0xffffff00);
+    gPortOverlayW++;
+    CHECK(!PortPpuScreenAdditive()&&!PortPpuScreenNativeWorld());
+    gPortOverlayW--;
     CHECK(!sScreenOverUsed); /* fallback does not repaint the blue back */
     sMainHdPart[0]=0;sWorldBlendActive=0;
     DrawObjs(20,IO16(0));ComposeOverlayLine(20,IO16(0),on,priority);
@@ -80,6 +83,9 @@ int main(void) {
     CHECK(sWorldBlendNative[k]==0xffffff00&&gPortFrame[k]==0xff0000ff);
     CHECK(PortPpuMainAdditive()[k]==0xff00ff00);
     CHECK(PortPpuMainNativeWorld()[k]==0xffffff00);
+    gPortScreen.width++;
+    CHECK(!PortPpuMainAdditive()&&!PortPpuMainNativeWorld());
+    gPortScreen.width--;
     sMainHdPart[0]=0;sWorldBlendActive=0;
     DrawObjs(20,IO16(0));ComposeLine(20,IO16(0),on,priority,gPortFrame,1);
     CHECK(gPortFrame[k]==0xffffff00);
