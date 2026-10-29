@@ -10822,10 +10822,10 @@
     "v23-p1-map-card-hd-gaps": {
       "id": "v23-p1-map-card-hd-gaps",
       "piece": "2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T05:18:28.405458+00:00",
+      "updated_at": "2026-10-29T05:18:42.911192+00:00",
       "branch": "fix/v23-mapcard-rewards",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/493",
       "approval": "Root integrator: human-authorized code review; f2f27bcf7fe221b2269d23c617d6b1e1129cb64e",
@@ -10870,10 +10870,16 @@
           "at": "2026-10-29T05:18:28.405458+00:00",
           "owner": "codex-mapcards23",
           "detail": "Root manual source/visual review under user no-workers instruction. Rewards identified in owned UK_card image19 (same pixels5locales); source crop and original frame preserved. Coverage5 RED/GREEN; actual C++ upgrade881to883, stale2to0, old881 outputs byte-identical; native/Python new outputs max0/1. Eight game paths+three premium phases on copied actual-editor26family fixture, Win32/64 software/D3D11; fiveHDoff andfivefallback comparisons identical,8nativegold corners identical; generated/source/ABI64 checksPASS. P1 counter+all26 mapped families implemented/verified in this scope; pending future release and other physical platforms; diary/audio tasks remain."
+        },
+        {
+          "at": "2026-10-29T05:18:42.911192+00:00",
+          "owner": "codex-mapcards23",
+          "detail": "Root manual source/visual review under user no-workers instruction. Rewards identified in owned UK_card image19 (same pixels5locales); source crop and original frame preserved. Coverage5 RED/GREEN; actual C++ upgrade881to883, stale2to0, old881 outputs byte-identical; native/Python new outputs max0/1. Eight game paths+three premium phases on copied actual-editor26family fixture, Win32/64 software/D3D11; fiveHDoff andfivefallback comparisons identical,8nativegold corners identical; generated/source/ABI64 checksPASS. P1 counter+all26 mapped families implemented/verified in this scope; pending future release and other physical platforms; diary/audio tasks remain.; merged 7a87572047f161d69d2b715f1e5013e7e808b4b4"
         }
       ],
       "claimed_at": "2026-10-29T03:35:02.308468+00:00",
-      "sent": "direct-runtime-capture:pruebas/mapcards23/rewards/gold-cycle-after-64/1631.png"
+      "sent": "direct-runtime-capture:pruebas/mapcards23/rewards/gold-cycle-after-64/1631.png",
+      "completed_at": "2026-10-29T05:18:42.911192+00:00"
     },
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
@@ -11259,7 +11265,7 @@
     "created_at": "2026-10-29T05:18:33.620565+00:00",
     "updated_at": "2026-10-29T05:18:33.620565+00:00"
   },
-  "updated_at": "2026-10-29T05:18:33.633707+00:00",
+  "updated_at": "2026-10-29T05:18:42.911192+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
