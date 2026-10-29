@@ -1072,6 +1072,26 @@ extern const unsigned char gJiminyCharacterDetailMap[];
 extern const unsigned char gJiminyBgTitleTilesGerman[];
 extern const unsigned char gJiminyCharacterDetailMap[];
 #endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyBgTiles[];
+extern const unsigned char gJiminyDetailOverlayMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesFrench[];
+extern const unsigned char gJiminyDetailOverlayMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesSpanish[];
+extern const unsigned char gJiminyDetailOverlayMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesItalian[];
+extern const unsigned char gJiminyDetailOverlayMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesGerman[];
+extern const unsigned char gJiminyDetailOverlayMap[];
+#endif
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1795,6 +1815,21 @@ static const HdSpriteDef kHdSprites[] = {
 #endif
 #if defined(VERSION_EU)
     { gJiminyBgTitleTilesGerman, gJiminyCharacterDetailMap, "gJiminyCharacterDetailGermanBanner", 0, 0, 104, 16, 5 },
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyBgTiles, gJiminyDetailOverlayMap, "gJiminyPageLabel", 151, 0, 89, 8, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesFrench, gJiminyDetailOverlayMap, "gJiminyPageFrenchLabel", 151, 0, 89, 8, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesSpanish, gJiminyDetailOverlayMap, "gJiminyPageSpanishLabel", 151, 0, 89, 8, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesItalian, gJiminyDetailOverlayMap, "gJiminyPageItalianLabel", 151, 0, 89, 8, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesGerman, gJiminyDetailOverlayMap, "gJiminyPageGermanLabel", 151, 0, 89, 8, 5 },
 #endif
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"

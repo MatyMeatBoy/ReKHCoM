@@ -2638,6 +2638,10 @@ void JiminyDetailUpdate() {
         PortHdStillSprite(titleTiles, titleMap, 0, 0,
             gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
             gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
+        /* The static PAGE tab ends before the dynamic numbers and L/R buttons. */
+        PortHdStillSprite(titleTiles, gJiminyDetailOverlayMap, 0, 0,
+            gFadeWork->mode == FADE_MODE_BLACK ? level : 0,
+            gFadeWork->mode == FADE_MODE_WHITE || gFadeWork->mode == FADE_MODE_ADD_WHITE ? level : 0);
     }
 #endif
 
