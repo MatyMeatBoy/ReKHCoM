@@ -1,5 +1,8 @@
 /* Shared by GDI, FreeType, browser and console glyph backends. Prepare only
    a bounded two-slot UI cache, independent of gameplay's font churn. */
+#ifndef PORT_HD_TEXT_CAN_WARM
+#define PORT_HD_TEXT_CAN_WARM(font, code, jp) 1
+#endif
 int PortCodepointToSjis(unsigned cp);
 void PortHdTextWarmUi(SDL_Renderer* renderer, float scale) {
     static const unsigned arrows[] = {0x2190, 0x2191, 0x2192, 0x2193};
@@ -8,10 +11,11 @@ void PortHdTextWarmUi(SDL_Renderer* renderer, float scale) {
     if (!gPortConfig.hdTitle || !renderer || scale <= 0) return;
     font = FontForScale(scale, 3);
     if (!font->font) return;
-    for (code = 32; code < 256; code++) Glyph(renderer, font, code);
+    for (code = 32; code < 256; code++)
+        if (PORT_HD_TEXT_CAN_WARM(font, code, 0)) Glyph(renderer, font, code);
     for (code = 0; code < 4; code++) {
         int sjis = PortCodepointToSjis(arrows[code]);
-        if (sjis > 255) GlyphJp(renderer, font, (uint16_t)sjis);
+        if (sjis > 255 && PORT_HD_TEXT_CAN_WARM(font, sjis, 1)) GlyphJp(renderer, font, (uint16_t)sjis);
     }
 }
 
@@ -30,9 +34,11 @@ void PortHdTextWarmGame(SDL_Renderer* renderer, float world, float menu) {
         if (scales[k] <= 0 || (k && scales[k] == world)) continue;
         font = FontForScale(scales[k], 0);
         if (font->font)
-            for (code = 32; code < 256; code++) Glyph(renderer, font, code);
+            for (code = 32; code < 256; code++)
+                if (PORT_HD_TEXT_CAN_WARM(font, code, 0)) Glyph(renderer, font, code);
     }
     font = FontForScale(world * (5.0f / HD_TEXT_CAP), 2);
     if (font->font)
-        for (c = cells; *c; c++) Glyph(renderer, font, (unsigned char)*c);
+        for (c = cells; *c; c++)
+            if (PORT_HD_TEXT_CAN_WARM(font, (unsigned char)*c, 0)) Glyph(renderer, font, (unsigned char)*c);
 }

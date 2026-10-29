@@ -1,5 +1,10 @@
 # Issue459: safe-startup library selection
 
+**29/10 update:** the reporter confirmed the corrected compatible path boots
+with `--safe-startup`. Normal startup still fails; fresh failed-launch logs were
+requested. HD lettering has a separate reproducible
+[portable warmup correction](issue459-hdtext.md). The issue remains open.
+
 The reporter's readable logs contain two independent conditions: native32 safe
 startup resolves host GL libraries against the older bundled libc and fails for
 missing `GLIBC_2.38`; the Steam Linux Runtime run enters the game but cannot find
