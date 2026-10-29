@@ -11075,23 +11075,28 @@
       "status": "pr_abierto",
       "owner": "codex-post479-docs",
       "created_at": "2026-10-29T01:43:22.533603+00:00",
-      "updated_at": "2026-10-29T01:47:39.579032+00:00",
+      "updated_at": "2026-10-29T01:47:48.066292+00:00",
       "branch": "docs/desktop479-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/487",
-      "approval": "User requested documenting fixes, closing resolved issues and current pending work",
+      "approval": "Root integrator: human-authorized code review; 2bc4c68a3798309f91260dc3b19b1a11aaec5465",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/479",
       "evidence": [
         {
           "at": "2026-10-29T01:47:39.579032+00:00",
           "owner": "codex-post479-docs",
           "detail": "Closed desktop test6assets public hashes, Windows24menu+2actuallauncher andLinux22VM paths PASS;479CLOSED, open330459460480 remain separate; docs-only2files review"
+        },
+        {
+          "at": "2026-10-29T01:47:48.066292+00:00",
+          "owner": "codex-post479-docs",
+          "detail": "Root solo docs reviewed against exact packaged sourcee51/SHA and anonymous downloads, actual24+2Windows/22Linux tests, issue479 closure and four open reports; no hardware/audio overclaim or app/artifact change."
         }
       ],
       "claimed_at": "2026-10-29T01:43:28.248594+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:47:39.579032+00:00",
+  "updated_at": "2026-10-29T01:47:48.066292+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
