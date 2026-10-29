@@ -397,4 +397,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue480-confirmation-record | Record reporter Android confirmation and closure480 in current public progress, preserving immutable test manifest and scope of original local fault injection | integrado | codex-480-confirm-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/488 | Root integrator: human-authorized code review; e97b120d1c2ab8c24d0ec4aa9a1aaffa3e24dfed | 2026-10-29T01:54:42.601054+00:00 |
 | map-card-definition-table-bounds | Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings. | integrado | codex-mapcard-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/491 | Root integrator: human-authorized code review; e86e45d84d68e9eccd32839c5cefc1e440b89540 | 2026-10-29T03:29:16.966904+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-29T05:18:33.620565+00:00)
+Integrador: libre
