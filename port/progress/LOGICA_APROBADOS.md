@@ -136,6 +136,17 @@ ladrillos limpios y un único pilar original; BG2 sólo prolonga el zócalo
 por su diagonal, sin copiar lámparas ni adornos. Los actores siguen la
 regla del rectángulo GBA (Pepito fuera de escena no se anticipa).
 
+## Corrección vigente 29/10: Oogie aprobado sí activo
+
+Atlas aprobó exactamente `aa913fe773c4446eb5412c3115e222c7`; esa versión
+es también su `build_version`. La receta de PR107 seguía idéntica en main,
+pero el gate conservaba Oogie como opt-in. Ahora sólo esa arena usa
+`PortArenasApproved`, con Off=0 como control original. Este bloque sustituye
+la afirmación histórica que aún enumera Oogie entre arenas pendientes.
+Las hijas `e90c2d6d475447458a05db85276db6bb` (PR130 cerrado sin merge) y
+`677876e57b1441dc856caa8847f84487` siguen pendientes. No se activan.
+Cadena y capturas: `ATLAS_OOGIE_APPROVAL_RUNTIME.md`.
+
 Integración 25/10: arenas de jefe aprobadas en Atlas (Maléfica `0cdb9c54`, Úrsula `fc418e25`, Marluxia `c333e5cd`)
 quedan encendidas para todos (`PortArenasApproved`, `KHCOM_ARENAS_V2=0` las apaga). Las que siguen pendientes en la app
 (Trickmaster, Oogie) quedan detrás de `KHCOM_ARENAS_V2=1`: una arena se enciende sola cuando su familia se aprueba.

@@ -1679,7 +1679,7 @@ int PortArenasV2(void) {
     return on;
 }
 
-/* the approved ones (art review 25/10: Maleficent, Ursula, Marluxia) are on for everyone; KHCOM_ARENAS_V2=0 turns them off */
+/* the approved ones (Atlas: Oogie, Maleficent, Ursula, Marluxia) are on for everyone; KHCOM_ARENAS_V2=0 turns them off */
 int PortArenasApproved(void) {
     static int on = -1;
     if (on < 0)
@@ -1721,8 +1721,10 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     int jfLayer = PortJafarWide() && sBgLatch[bg].valid ? PortJafarLayer((const void* const*)sBgLatch[bg].map) : 0;
     /* Marluxia's last fight: the field (BG0) wraps beyond the picture as on the hardware, the body (BG1) once */
     int mxField = PortMarluxiaExtendOn() && (bg == 0 || bg == 1);
-    /* Oogie's room goes on as one bay of a long hall */
-    int oogieHall = PortArenasV2() && sBgLatch[bg].valid && PortOogieLayer((const void* const*)sBgLatch[bg].map);
+    /* Atlas aa913fe773c4446eb5412c3115e222c7 approved this exact hall.
+     * Pending descendant proposals must not replace it; the explicit Off
+     * switch still restores the original backdrop. */
+    int oogieHall = PortArenasApproved() && sBgLatch[bg].valid && PortOogieLayer((const void* const*)sBgLatch[bg].map);
     /* Maleficent's hall (1) goes on by its bays; her dragon's layer (2) shows one dragon */
     int mdLayer = 0;
     if (PortArenasApproved() && sBgLatch[bg].valid) {

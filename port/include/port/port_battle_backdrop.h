@@ -20,7 +20,7 @@ int PortMaleficentDragonVisible(int x, int y, int cx, int cy);
 
 /* the boss arenas' Preliminar V2 (port_ppu.c): on in the review copy only (KHCOM_ARENAS_V2=1) until approved */
 int PortArenasV2(void);
-int PortArenasApproved(void); /* the approved boss arenas (Maleficent, Ursula, Marluxia): on unless KHCOM_ARENAS_V2=0 */
+int PortArenasApproved(void); /* the approved boss arenas (Oogie, Maleficent, Ursula, Marluxia): on unless KHCOM_ARENAS_V2=0 */
 
 /* Ursula's cave (port_ursula.c): 1 the cave (its floor goes on below), 2 her own layer (drawn once) */
 int PortUrsulaLayer(const void* const* maps);
