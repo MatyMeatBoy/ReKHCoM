@@ -10335,12 +10335,12 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux459",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T02:44:54.979895+00:00",
-      "branch": "fix/linux459-safe-runtime",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/489",
+      "updated_at": "2026-10-29T02:55:18.068248+00:00",
+      "branch": "docs/linux459-hdtext-delivery",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/490",
       "approval": "Root integrator: human-authorized code review; c87838bcb13e5eaca1f267fdce0a3abee156d457",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
@@ -10383,6 +10383,11 @@
           "at": "2026-10-29T02:44:54.979895+00:00",
           "owner": "codex-linux459",
           "detail": "Root solo review per user no-workers: portable face coverage matches Raster, both UI/game warmups guard unsupported glyphs, other backends default unchanged. Real SDL/FT RED2 GREEN3, eight game routes, deck actual glyphs/pixel comparison, original fallback and off path preserved. 29 launcher,10 startup,4 package tests pass. Normal startup and reporter HD confirmation remain open; test delivery next.; merged 50ed2618bf84c0e723c80ed911f2fdba561713de; PARTIAL BLOCK ONLY, reported issue remains open"
+        },
+        {
+          "at": "2026-10-29T02:55:18.068248+00:00",
+          "owner": "codex-linux459",
+          "detail": "HD fix489 integrated50ed2618, public test459-hdtext.1 final TAR SHA f7f5f8c6339a9ee9c98384aefb1893cc477c66f25c0b98beefa6a4e5d1fc9eb0; exact four game routes exit81,5 public assets anonymously hash matched; sent459/330 comments6486570914/6486571271. Docs490 records delivery; normal launch and reporter HD result remain open."
         }
       ],
       "claimed_at": "2026-10-29T02:17:11.379296+00:00"
@@ -11160,7 +11165,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T02:44:59.572532+00:00",
+  "updated_at": "2026-10-29T02:55:18.068248+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
