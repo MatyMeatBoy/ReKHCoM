@@ -11868,23 +11868,28 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-v23",
       "created_at": "2026-10-29T16:07:44.720275+00:00",
-      "updated_at": "2026-10-29T16:35:08.280537+00:00",
+      "updated_at": "2026-10-29T16:35:15.615329+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/512",
-      "approval": "Peticion directa usuario29Oct revisarTODOSaprobados antesZIPclean, rootdelegacion actual",
+      "approval": "Root integrator: human-authorized code review; 6323c21031537cf4401114407d58b841cf263e77",
       "reference": "Atlas /api/state approvals exactas; root29Oct",
       "evidence": [
         {
           "at": "2026-10-29T16:35:08.280537+00:00",
           "owner": "codex-atlas-v23",
           "detail": "PR512 exact source6323c210; three accepted gates, inventory78; broader verification remains pending"
+        },
+        {
+          "at": "2026-10-29T16:35:15.615329+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "Root manual review: only three gates changed, accepted sources preserved, Off retains olddefault. C26accepted6negative12Trick PASS; inventory5tests PASS. Read15runs30captures default=oldpreview6/6 and Off=olddefault6/6; exception081 native center preserved from accepted recipe. UTF8+78titles PASS. Other74runtime/equivalence and28UIconsumer audit remains open; provisional approvals remain valid."
         }
       ],
       "claimed_at": "2026-10-29T16:07:52.321997+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T16:35:08.280537+00:00",
+  "updated_at": "2026-10-29T16:35:15.615329+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
