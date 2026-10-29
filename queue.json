@@ -10884,12 +10884,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T08:53:07.234501+00:00",
+      "updated_at": "2026-10-29T10:16:45.474724+00:00",
       "branch": "fix/v23-jiminy-paper",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/499",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/500",
       "approval": "Root integrator: human-authorized code review; 30cc94a97aa0a4950769f103bb464937d0543374",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -10987,10 +10987,15 @@
           "at": "2026-10-29T08:53:07.234501+00:00",
           "owner": "codex-jiminy23",
           "detail": "PR498 footer merged d0180e699; PR499 presented margins merged d195d4c11. Continue P2 book/rightpage/PAGE/otherheads, no workers. Native BG1 maps decoded readonly to pruebas/jiminy23-pages: paper, grid and binder are BG1; root is blue cover, lists white rightpage, detail two pages. A full foreground overlay would cover portraits/cards: preserve actual PPU occlusion. No paper implementation yet."
+        },
+        {
+          "at": "2026-10-29T10:16:45.474724+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "a48e8a5a3 rounded detail paper, actual BG1 ownership and native foreground; exact lookup REDmain/GREENnew;15nativefallback identical pairs,20transform captures plus10finalsource identical, Sora crops exact32/64. C++import6to0/Pythonpixelparity/883oldbytesstable. CPUfailure/lifecycle/filter, Win32/64ABIboot, AndroidUSJP andsourcesPASS. P2partial/noWorkers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-margin32/before-32/1721.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-book-reviewed/before-32/3060.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11521,7 +11526,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T08:53:07.234501+00:00",
+  "updated_at": "2026-10-29T10:16:45.474724+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
