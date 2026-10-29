@@ -32,3 +32,26 @@ Windows32 y64 compilados, ABI/boot y check_sources pasan. Capturas privadas
 `pruebas/jiminy23-header` repiten la ruta amplia Auto4 de seis vistas por
 arquitectura. Continúan pendientes PAGE, otras cabeceras y borde del libro.
 Este bloque es parcial y aún no aparece en los paquetes publicados.
+
+Tercer bloque: ayuda inferior del diario con las acciones reales de abrir,
+volver, cambiar entrada y cerrar. Conserva los 240×160 píxeles del juego y
+reserva catorce filas para la ayuda, con una transformación común para todas
+las capas. Incluye seis idiomas y etiquetas de los controles configurados.
+Si falta la fuente o su textura no está lista, usa la fuente nativa sin crear
+otra textura. Original, CRT y HUD HD apagado conservan la presentación previa.
+
+El fundido usa la paleta capturada del fotograma presentado: después de
+VBlank la paleta viva puede pertenecer ya al siguiente fotograma. Una captura
+durante la transición reproducía ayuda negra sobre el libro visible; el
+control corregido limita las diferencias al footer. La prueba CPU ejercita
+las funciones reales con mutación de la paleta siguiente, negro, blanco y
+forced blank. La geometría cubre salidas pequeñas, amplias, altas y no enteras;
+la disponibilidad de glifos cubre ausencia, espacio y rechazo del bridge.
+
+Evidencia privada: `pruebas/jiminy23-footer-snapshot32`, `snapshot64`,
+`snapshotFractional64`, `snapshotFourthree64` y `snapshotOff32` (mismo prefijo).
+Cinco recorridos reales terminaron con código 0 y cinco capturas cada uno;
+el control HD apagado coincide píxel por píxel con las cinco vistas anteriores.
+No se modificó la partida original. Esto no termina la página derecha, PAGE,
+otras cabeceras, las extensiones ni el estiramiento de píxeles del libro.
+La pre2.3-pre1 publicada permanece inmutable y no contiene este tercer bloque.

@@ -367,6 +367,8 @@ uint32_t PortMenuTabPixel(int y, int phase, int side);
 
 void PortPpuSetResolution(int w, int h);
 void PortPpuRenderFrame(void);
+/* The presented journal header's fade, before the next frame changes palettes. */
+void PortPpuJiminyFade(int* dark, int* white);
 void PortPpuRunFrameEvents(void); /* a skipped frame's line events, nothing drawn */
 void PortPpuVBlankLines(void);
 /* HUD layer: sprites anchored with PortHudBegin, drawn at their own scale. */

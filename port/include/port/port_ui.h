@@ -33,6 +33,11 @@ void PortUiZoomStep(int dir); /* the main zoom, one step (dir < 0: closer), with
 /* Transparent single-line text using the cartridge font. Caller owns pixels. */
 int PortUiRenderTextLine(uint32_t* pixels, int width, int height, const char* text, uint32_t color);
 int PortUiTextWidth(const char* text);
+#ifdef SDL_h_
+/* Journal help stays outside the uncut game picture, using its current fade. */
+void PortUiJournalFooter(SDL_Renderer* renderer, int width, float y, float height,
+                         float scale, int detail, int dark, int white);
+#endif
 /* Opening movie: show or hide the "A again skips" prompt. */
 void PortUiSkipPrompt(int visible);
 int PortUiIntroSkip(int pressed);
