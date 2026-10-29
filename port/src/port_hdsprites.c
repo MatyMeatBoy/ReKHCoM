@@ -37,6 +37,7 @@ typedef struct HdSpriteDef {
 } HdSpriteDef;
 
 #include "port/hd_sprites.inc"
+#include "port/port_eu_boss_stock_alias.h"
 
 #define HD_SPRITE_COUNT ((int)(sizeof(kHdSprites) / sizeof(kHdSprites[0])))
 #define MAX_DRAWS 128
@@ -200,6 +201,7 @@ static int SpriteReady(int i) {
 
 int PortHdSpriteFind(const void* tiles, const void* frame) {
     int i, shared = -1;
+    PortHdNormalizeEuBossStock(&tiles, &frame);
     if (!tiles || (!gPortConfig.hdCards && !gPortConfig.hdTitle))
         return 0;
     for (i = 0; i < HD_SPRITE_COUNT; i++) {
