@@ -399,5 +399,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | game-cursor-idle-two-seconds | User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration | integrado | codex-cursor2s | https://github.com/MatyMeatBoy/ReKHCoM/pull/496 | Root integrator: human-authorized code review; e847b63ad0029b36fae90ec4c87abb0ccb38e691 | 2026-10-29T06:25:07.494664+00:00 |
 | monstro-objective-adaptive-hud | User screenshot29Oct: Monstro monster symbol plus objective gauge must dock together to adaptive HUD; current gauge stays in playfield | pendiente | — | — | — | 2026-10-29T06:25:50.416958+00:00 |
 | v23-startup-copyright-hd | Before2.3: copyright/legal startup screens HD only with HD enabled; audit startup-to-title audio stutters including skip transitions | pendiente | — | — | — | 2026-10-29T06:31:32.313804+00:00 |
+| halloween-arena-floor-perspective | User29Oct screenshot: Halloween arena bottom repeats/stretches last pixels; extend using own floor in perspective, comparable to Trickmaster approach, preserve actors/collisions | pendiente | — | — | — | 2026-10-29T06:51:24.325541+00:00 |
 
 Integrador: libre
