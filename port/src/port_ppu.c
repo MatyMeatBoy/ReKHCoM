@@ -727,6 +727,10 @@ void PortScreenBg(int bg, int on) {
 static PPU_TLS uint16_t sScrLine[PORT_MAX_W];
 static PPU_TLS uint8_t sScrPrio[PORT_MAX_W];
 static PPU_TLS uint16_t sScrIndex[PORT_MAX_W];
+/* World-card light: keep the native OBJ blend target independently of the
+ * visible HD replacement. Rows remain private to each PPU worker. */
+static PPU_TLS uint16_t sScrBlendLine[PORT_MAX_W];
+static PPU_TLS uint8_t sScrBlendPrio[PORT_MAX_W], sScrBlendSemi[PORT_MAX_W];
 static uint8_t sScreenOccBg[PORT_MAX_W * GBA_SCREEN_H];
 static uint8_t sScreenOccBgLayer[PORT_MAX_W * GBA_SCREEN_H];
 static uint16_t sScreenOccObj[PORT_MAX_W * GBA_SCREEN_H];
@@ -837,6 +841,81 @@ static int16_t sMainHdBox[PORT_OAM_CAPACITY][4]; /* its box on the canvas: x, y,
 static uint8_t sMainHdScreen[PORT_OAM_CAPACITY];  /* ... on the screen layer (menus), its box in the screen layer's coordinates */
 static int sMainHdAny;             /* some part queued this frame: the occupancy is collected for MainHdOver */
 static int sScreenHdAny;           /* some part queued on the screen layer */
+static unsigned char* sWorldBlendMemory;
+static size_t sWorldBlendPixels;
+static uint32_t *sWorldBlendNative, *sWorldBlendAdd;
+static uint8_t* sWorldBlendMask;
+static int sWorldBlendActive;
+static int sWorldBlendWarned;
+static size_t sWorldBlendFailedPixels;
+static int sWorldBlendScreen, sWorldBlendW, sWorldBlendH;
+
+static int WorldBlendWanted(void) {
+    uint16_t control = IO16(0x50), weights = IO16(0x52);
+    return ((control >> 6) & 3) == 1 &&
+        (control & 0x1004) == 0x1004 &&
+        (weights & 31) >= 16 && ((weights >> 8) & 31) >= 16;
+}
+
+static void WorldBlendPrepare(void) {
+    size_t pixels;
+    int found = 0;
+    sWorldBlendActive = 0;
+    if (!WorldBlendWanted() || !gPortConfig.hdCards) {
+        sWorldBlendWarned = 0;
+        sWorldBlendFailedPixels = 0;
+        return;
+    }
+    /* Only the canvas that actually owns the world illustration participates.
+     * Original/fixed views use the main picture; Auto may use a screen layer. */
+    for (int i = 0; i < OamCount(); i++) {
+        if (sOamHd[i].id && PortHdSpriteGroup(sOamHd[i].id) == 4 &&
+            (OamAttr(i, 0) & 0x300) != 0x200) {
+            sWorldBlendScreen = SpriteOnScreen(sOamTag[i].screen);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) return;
+    sWorldBlendW = sWorldBlendScreen ? gPortOverlayW : gPortScreen.width;
+    sWorldBlendH = sWorldBlendScreen ? GBA_SCREEN_H : gPortScreen.height;
+    pixels = (size_t)sWorldBlendW * sWorldBlendH;
+    if (gPortConfig.colorCorrection || sWorldBlendW < GBA_SCREEN_W || sWorldBlendW > PORT_MAX_W ||
+        sWorldBlendH < GBA_SCREEN_H || pixels > PORT_MAX_W * GBA_SCREEN_H ||
+        !!sScreenBg[2] != sWorldBlendScreen) {
+        if (!sWorldBlendWarned) PortLog("HD world light: native fallback (LCD colour transform or canvas limits)");
+        sWorldBlendWarned = 1;
+        return;
+    }
+    if (pixels == sWorldBlendFailedPixels) return; /* retry at a new effect/geometry, not every frame */
+    if (pixels != sWorldBlendPixels) {
+        /* Release before resize: never overlap two complete scratch sets. */
+        free(sWorldBlendMemory);
+        sWorldBlendMemory = malloc(pixels * (2 * sizeof(uint32_t) + 1));
+        sWorldBlendPixels = sWorldBlendMemory ? pixels : 0;
+    }
+    if (!sWorldBlendMemory) {
+        sWorldBlendFailedPixels = pixels;
+        if (!sWorldBlendWarned) PortLog("HD world light: native fallback (scratch allocation)");
+        sWorldBlendWarned = 1;
+        return;
+    }
+    sWorldBlendNative = (uint32_t*)sWorldBlendMemory;
+    sWorldBlendAdd = sWorldBlendNative + pixels;
+    sWorldBlendMask = (uint8_t*)(sWorldBlendAdd + pixels);
+    memset(sWorldBlendMemory, 0, pixels * (2 * sizeof(uint32_t) + 1));
+    sWorldBlendActive = 1;
+    sWorldBlendFailedPixels = 0;
+    sWorldBlendWarned = 0;
+}
+
+const uint32_t* PortPpuScreenAdditive(void) {
+    return sWorldBlendActive && sWorldBlendScreen ? sWorldBlendAdd : NULL;
+}
+
+const uint32_t* PortPpuMainAdditive(void) {
+    return sWorldBlendActive && !sWorldBlendScreen ? sWorldBlendAdd : NULL;
+}
 /* The title's logo as an affine background (BG2: its zoom in the intro, the staff roll's end), drawn HD instead
    while the title says so (PortTitleLogoBg) and the HD title is on. */
 static int sTitleLogoBg, sTitleLogoBgHd;
@@ -2503,6 +2582,11 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         sScrLine[i] = TRANSPARENT;
         sScrPrio[i] = 4;
         sScrIndex[i] = PORT_OAM_CAPACITY - 1;
+        if (sWorldBlendActive) {
+            sScrBlendLine[i] = TRANSPARENT;
+            sScrBlendPrio[i] = 4;
+            sScrBlendSemi[i] = 0;
+        }
         sObjWin[i] = 0;
         sTitleSampleLine[i] = TRANSPARENT;
         sTitleSamplePrio[i] = 4;
@@ -2527,6 +2611,8 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         int16_t pa = 0x100, pb = 0, pc = 0, pd = 0x100;
         int objMosaic = (a0 >> 12) & 1;
         int bandOnly = sMainHdPart[i] && !PortHdSpriteKeepsCartridge(sOamHd[i].id);
+        int blendTarget = sWorldBlendActive && bandOnly && SpriteOnScreen(sOamTag[i].screen) == sWorldBlendScreen &&
+            PortHdSpriteGroup(sOamHd[i].id) == 4;
 
         if (!affine && dbl)
             continue; /* disabled */
@@ -2536,7 +2622,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             continue; /* drawn by PortPpuRenderHud */
         if (HdTextGlyph(i) && sOamTag[i].style != 2)
             continue; /* drawn by port_hdtext.c */
-        if (bandOnly && !(sTitleBarHd && gy >= 143))
+        if (bandOnly && !blendTarget && !(sTitleBarHd && gy >= 143))
             continue; /* drawn by port_hdsprites.c over the picture */
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
@@ -2653,6 +2739,14 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             if (sMainHdPart[i])
                 col = SmallCardNativeColor(i, tx, ty, col);
             if (bandOnly) {
+                if (blendTarget) {
+                    if (sScrBlendLine[x] == TRANSPARENT || prio < sScrBlendPrio[x]) {
+                        sScrBlendLine[x] = (uint16_t)col;
+                        sScrBlendPrio[x] = (uint8_t)prio;
+                        sScrBlendSemi[x] = mode == 1;
+                    }
+                    continue;
+                }
                 if (sTitleSampleLine[x] == TRANSPARENT || prio < sTitleSamplePrio[x]) {
                     sTitleSampleLine[x] = (uint16_t)col;
                     sTitleSamplePrio[x] = (uint8_t)prio;
@@ -2673,18 +2767,30 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 continue;
             }
             if (SpriteOnScreen(sOamTag[i].screen)) {
+                if (sWorldBlendActive && sWorldBlendScreen && (sScrBlendLine[x] == TRANSPARENT || prio < sScrBlendPrio[x])) {
+                    sScrBlendLine[x] = (uint16_t)col;
+                    sScrBlendPrio[x] = (uint8_t)prio;
+                    sScrBlendSemi[x] = mode == 1;
+                }
                 if (sScrLine[x] == TRANSPARENT || prio < sScrPrio[x]) {
                     sScrLine[x] = (uint16_t)col;
                     sScrPrio[x] = (uint8_t)prio;
                     sScrIndex[x] = (uint16_t)i;
                     sScrSemi[x] = (mode == 1);
                 }
-            } else if (sObjLine[x] == TRANSPARENT || prio < sObjPrio[x]) {
-                sLineHasObjects = 1;
-                sObjLine[x] = (uint16_t)col;
-                sObjPrio[x] = (uint8_t)prio;
-                sObjIndex[x] = (uint16_t)i;
-                sObjSemi[x] = (mode == 1);
+            } else {
+                if (sWorldBlendActive && !sWorldBlendScreen && (sScrBlendLine[x] == TRANSPARENT || prio < sScrBlendPrio[x])) {
+                    sScrBlendLine[x] = (uint16_t)col;
+                    sScrBlendPrio[x] = (uint8_t)prio;
+                    sScrBlendSemi[x] = mode == 1;
+                }
+                if (sObjLine[x] == TRANSPARENT || prio < sObjPrio[x]) {
+                    sLineHasObjects = 1;
+                    sObjLine[x] = (uint16_t)col;
+                    sObjPrio[x] = (uint8_t)prio;
+                    sObjIndex[x] = (uint16_t)i;
+                    sObjSemi[x] = (mode == 1);
+                }
             }
         }
     }
@@ -2838,6 +2944,35 @@ static uint32_t JiminyBgColor(uint16_t color, int effects, uint16_t bldcnt, int 
         if (effect == 3) color = Darken(color, evy);
     }
     return sColorLut[color & 0x7FFF];
+}
+
+/* Same native two-layer decision as the normal compositor, using retained
+ * world OBJ ink only for the failure image. Never sample the HD bitmap here. */
+static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, const int* priority,
+                                 uint16_t backdrop, uint16_t control, int effect, int eva, int evb, int evy) {
+    int found = 0, objectDone = 0, topLayer = LAYER_BD, secondLayer = LAYER_BD;
+    uint16_t top = backdrop, second = backdrop;
+    for (int i = 0; i <= count && found < 2; i++) {
+        int prio = i < count ? priority[order[i]] : 4;
+        if (!objectDone && (mask & WIN_OBJ) && sScrBlendLine[x] != TRANSPARENT && sScrBlendPrio[x] <= prio) {
+            objectDone = 1;
+            if (!found++) { top = sScrBlendLine[x]; topLayer = LAYER_OBJ; }
+            else { second = sScrBlendLine[x]; secondLayer = LAYER_OBJ; }
+            if (found == 2) break;
+        }
+        if (i < count && (mask & WIN_BG(order[i])) && sBgLine[order[i]][x] != TRANSPARENT) {
+            if (!found++) { top = sBgLine[order[i]][x]; topLayer = order[i]; }
+            else { second = sBgLine[order[i]][x]; secondLayer = order[i]; }
+        }
+    }
+    if (topLayer == LAYER_OBJ && sScrBlendSemi[x] && (control & (0x100 << secondLayer)))
+        return Blend(top, second, eva, evb);
+    if ((mask & WIN_SFX) && (control & (1 << topLayer))) {
+        if (effect == 1 && (control & (0x100 << secondLayer))) return Blend(top, second, eva, evb);
+        if (effect == 2) return Brighten(top, evy);
+        if (effect == 3) return Darken(top, evy);
+    }
+    return top;
 }
 
 static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgPrio, uint32_t* frame, int objects) {
@@ -3013,6 +3148,17 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             }
         }
         dst[x] = sColorLut[col];
+        if (sWorldBlendActive && !sWorldBlendScreen) {
+            int at = row + x;
+            sWorldBlendNative[at] = sWorldBlendMask[at] ?
+                sColorLut[NativeWorldColor(x, mask, order, n, bgPrio, bd, bldcnt, effect, eva, evb, evy)] : dst[x];
+            if (sWorldBlendMask[at] && (mask & (WIN_SFX | WIN_OBJ)) == (WIN_SFX | WIN_OBJ) &&
+                topLayer == 2 && blend && effect == 1 && eva == 16 && evb == 16 &&
+                (bldcnt & (0x100 << secondLayer))) {
+                sWorldBlendAdd[at] = sColorLut[top];
+                dst[x] = sColorLut[second];
+            }
+        }
         if (sJiminyDetailCapture && objects && (gx == 0 || gx == 239) && gyLine >= 16 && gyLine < 40)
             PortJiminyRecordNameEdge(sJiminyNameEdges, topLayer, blend, gx, gyLine, dst[x]);
     }
@@ -3081,10 +3227,13 @@ static void SplitBgLine(int b, int gy) {
 }
 
 /* The screen layer's line gy: menu layers only, transparent elsewhere. */
-static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const int* bgPrio) {
+static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, const int* bgPrio, int nativeWorld) {
     int wo = gPortOverlayW, w = gPortScreen.width;
     int originO = (wo - GBA_SCREEN_W) / 2;
-    uint32_t* dst = gPortOverlay + gy * wo;
+    uint32_t* dst = (nativeWorld ? sWorldBlendNative : gPortOverlay) + gy * wo;
+    const uint16_t* objLine = nativeWorld ? sScrBlendLine : sScrLine;
+    const uint8_t* objPrio = nativeWorld ? sScrBlendPrio : sScrPrio;
+    const uint8_t* objSemi = nativeWorld ? sScrBlendSemi : sScrSemi;
     uint16_t bldcnt = IO16(0x50), bldalpha = IO16(0x52);
     int eva = ((bldalpha & 31) > 16 ? 16 : (bldalpha & 31)), evb = (((bldalpha >> 8) & 31) > 16 ? 16 : ((bldalpha >> 8) & 31));
     int evy = ((IO16(0x54) & 31) > 16 ? 16 : (IO16(0x54) & 31)), effect = (bldcnt >> 6) & 3;
@@ -3101,13 +3250,15 @@ static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const 
         uint8_t mask;
 
         dst[ox] = 0;
-        sScreenOccBg[gy * wo + ox] = 0;
-        sScreenOccBgLayer[gy * wo + ox] = 0;
-        sScreenOccObj[gy * wo + ox] = 0;
+        if (!nativeWorld) {
+            sScreenOccBg[gy * wo + ox] = 0;
+            sScreenOccBgLayer[gy * wo + ox] = 0;
+            sScreenOccObj[gy * wo + ox] = 0;
+        }
         if (x < 0 || x >= w || gx < sLeft || gx >= sRight)
             continue;
         mask = sWinMask[x];
-        if ((sHdText || sScreenHdAny) && (mask & WIN_OBJ)) {
+        if (!nativeWorld && (sHdText || sScreenHdAny) && (mask & WIN_OBJ)) {
             int occ = 4, occLayer = 4;
             for (i = 0; i < n; i++) {
                 if ((mask & WIN_BG(order[i])) && sBgLine[order[i]][x] != TRANSPARENT) {
@@ -3123,13 +3274,13 @@ static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const 
         }
         for (i = 0; i <= n && found < 2; i++) {
             int prio = (i < n) ? bgPrio[order[i]] : 4;
-            if (!objDone && (mask & WIN_OBJ) && sScrLine[x] != TRANSPARENT && sScrPrio[x] <= prio) {
+            if (!objDone && (mask & WIN_OBJ) && objLine[x] != TRANSPARENT && objPrio[x] <= prio) {
                 objDone = 1;
                 if (found++ == 0) {
-                    top = sScrLine[x];
+                    top = objLine[x];
                     topLayer = LAYER_OBJ;
                 } else {
-                    second = sScrLine[x];
+                    second = objLine[x];
                     secondLayer = LAYER_OBJ;
                 }
                 if (found == 2)
@@ -3150,7 +3301,18 @@ static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const 
         col = top;
         {
             uint32_t alpha = 0xFF000000u;
-            int blend = (topLayer == LAYER_OBJ && sScrSemi[x]) || ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+            int blend = (topLayer == LAYER_OBJ && objSemi[x]) || ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+            /* 16/16 is addition, not source-over alpha. Keep the background
+             * light separate until the HD illustration is actually drawn.
+             * The native canvas below remains an exact failure fallback. */
+            if (!nativeWorld && sWorldBlendActive && sWorldBlendScreen && sWorldBlendMask[gy * wo + ox] &&
+                (mask & (WIN_SFX | WIN_OBJ)) == (WIN_SFX | WIN_OBJ) &&
+                topLayer == 2 && blend && effect == 1 && eva == 16 && evb == 16 &&
+                found == 2 && (bldcnt & (0x100 << secondLayer))) {
+                sWorldBlendAdd[gy * wo + ox] = sColorLut[top];
+                dst[ox] = sColorLut[second];
+                continue;
+            }
             if (blend) {
                 if (found == 2 && (bldcnt & (0x100 << secondLayer)))
                     col = Blend(top, second, eva, evb);
@@ -3165,6 +3327,11 @@ static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const 
             dst[ox] = (sColorLut[col] & 0x00FFFFFFu) | alpha;
         }
     }
+}
+
+static void ComposeOverlayLine(int gy, uint16_t dispcnt, const int* bgOn, const int* bgPrio) {
+    ComposeOverlayPixels(gy, dispcnt, bgOn, bgPrio, 0);
+    if (sWorldBlendActive && sWorldBlendScreen) ComposeOverlayPixels(gy, dispcnt, bgOn, bgPrio, 1);
 }
 
 /* Extend authored title bands over the plain margin, before presentation.
@@ -5096,6 +5263,7 @@ static void QueueMainHdParts(void) {
     memset(sMainHdPart, 0, sizeof(sMainHdPart));
     memset(sMainHdScreen, 0, sizeof(sMainHdScreen));
     sMainHdAny = sScreenHdAny = 0;
+    WorldBlendPrepare();
     sTitleLogoBgHd = 0;
     sTitleArtHd = 0;
     TitleArtQueue();
@@ -5148,6 +5316,8 @@ static void QueueMainHdParts(void) {
         if (!sOamHd[i].id || (sHudCanvasFallback && sOamTag[i].hud) || (!affine && dbl) || shape == 3 || mode >= 2 || (sHudLayer && sOamTag[i].hud) ||
             (((a0 >> 12) & 1) && (IO16(0x4C) & 0xFF00)))
             continue; /* a sprite under a real mosaic (size > 1) keeps the cartridge's pixels */
+        if (WorldBlendWanted() && PortHdSpriteGroup(sOamHd[i].id) == 4 && !sWorldBlendActive)
+            continue; /* Scratch/LCD unavailable: retain the complete native light and illustration. */
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
         bw = ow << (affine && dbl);
@@ -5184,6 +5354,13 @@ static void QueueMainHdParts(void) {
                 sMainHdBox[i][2] = (int16_t)bw;
                 sMainHdBox[i][3] = (int16_t)bh;
                 sScreenHdAny = 1;
+                if (sWorldBlendActive && PortHdSpriteGroup(sOamHd[i].id) == 4) {
+                    int x0 = PPU_MAX(0, sx), x1 = PPU_MIN(gPortOverlayW, sx + bw);
+                    int y0 = PPU_MAX(0, oy), y1 = PPU_MIN(GBA_SCREEN_H, oy + bh);
+                    if (x1 > x0)
+                        for (int y = y0; y < y1; y++)
+                            memset(sWorldBlendMask + y * gPortOverlayW + x0, 1, x1 - x0);
+                }
             }
             continue;
         }
@@ -5194,6 +5371,12 @@ static void QueueMainHdParts(void) {
             sMainHdBox[i][1] = (int16_t)(oy + gPortScreen.originY);
             sMainHdBox[i][2] = (int16_t)bw;
             sMainHdBox[i][3] = (int16_t)bh;
+            if (sWorldBlendActive && !sWorldBlendScreen && PortHdSpriteGroup(sOamHd[i].id) == 4) {
+                int x0 = PPU_MAX(0, sMainHdBox[i][0]), x1 = PPU_MIN(sWorldBlendW, sMainHdBox[i][0] + bw);
+                int y0 = PPU_MAX(0, sMainHdBox[i][1]), y1 = PPU_MIN(sWorldBlendH, sMainHdBox[i][1] + bh);
+                if (x1 > x0)
+                    for (int y = y0; y < y1; y++) memset(sWorldBlendMask + y * sWorldBlendW + x0, 1, x1 - x0);
+            }
             if (!sMainHdAny && !sHudLayer && !sHdText) {
                 /* the lines collect the occupancy (who is in front where) for MainHdOver */
                 memset(sOccBg, 4, (size_t)gPortScreen.width * gPortScreen.height);
@@ -5243,11 +5426,12 @@ static int SmallCardCornerAt(int i, int x, int y) {
 }
 
 static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const uint16_t* occObj, const uint32_t* picture,
-                        uint32_t* over, int* used) {
+                        uint32_t* over, int* used, int skipWorld) {
     int i;
     for (i = 0; i < OamCount(); i++) {
         int prio = (OamAttr(i, 2) >> 10) & 3, x0, y0, x1, y1, x, y;
-        if (!sMainHdPart[i] || sMainHdScreen[i] != screen)
+        if (!sMainHdPart[i] || sMainHdScreen[i] != screen ||
+            (skipWorld && PortHdSpriteGroup(sOamHd[i].id) == 4))
             continue;
         x0 = sMainHdBox[i][0] < 0 ? 0 : sMainHdBox[i][0];
         y0 = sMainHdBox[i][1] < 0 ? 0 : sMainHdBox[i][1];
@@ -5261,7 +5445,8 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
                    one that keeps its cartridge pixels under its own HD part: that part is drawn over this one anyway,
                    and copying its pixels put the small card above's bottom over the cards below, 23/10) */
                 if ((obj == prio * PORT_OAM_CAPACITY + i && SmallCardCornerAt(i, x, y)) ||
-                    (occBg[k] == 0 && obj == 0) || occBg[k] < prio ||
+                    (occBg[k] == 0 && obj == 0) ||
+                    (occBg[k] < prio && !(sWorldBlendActive && screen == sWorldBlendScreen && sWorldBlendAdd[k])) ||
                     (obj != 0xFFFFu && obj < prio * PORT_OAM_CAPACITY + i &&
                      !(sMainHdPart[obj & PORT_OAM_SLOT_MASK] && PortHdSpriteKeepsCartridge(sOamHd[obj & PORT_OAM_SLOT_MASK].id)))) {
                     if (!*used) {
@@ -5272,6 +5457,25 @@ static void HdOverLayer(int screen, int w, int h, const uint8_t* occBg, const ui
                 }
             }
     }
+}
+
+const uint32_t* PortPpuScreenNativeWorld(void) {
+    if (!sWorldBlendActive || !sWorldBlendScreen) return NULL;
+    /* World images now remain native; only other HD parts need their normal
+     * foreground restored. Do not put the blue-back light above this canvas. */
+    sScreenOverUsed = 0;
+    HdOverLayer(1, gPortOverlayW, GBA_SCREEN_H, sScreenOccBg, sScreenOccObj,
+                sWorldBlendNative, sScreenOver, &sScreenOverUsed, 1);
+    return sWorldBlendNative;
+}
+
+const uint32_t* PortPpuMainNativeWorld(void) {
+    if (!sWorldBlendActive || sWorldBlendScreen) return NULL;
+    sMainOverUsed = 0;
+    if (sMainOver && sMainOverSize >= (size_t)gPortScreen.width * gPortScreen.height)
+        HdOverLayer(0, gPortScreen.width, gPortScreen.height, sOccBg, sOccObj,
+                    sWorldBlendNative, sMainOver, &sMainOverUsed, 1);
+    return sWorldBlendNative;
 }
 
 /* What the port draws on its copy of the picture (the title's SELECT hint, port_ui.c) stays over the HD
@@ -5305,7 +5509,7 @@ static void MainHdOver(void) {
     sMainOverUsed = sScreenOverUsed = 0;
     if (sScreenHdAny)
         HdOverLayer(1, gPortOverlayW, GBA_SCREEN_H, sScreenOccBg, sScreenOccObj, gPortOverlay, sScreenOver,
-                    &sScreenOverUsed);
+                    &sScreenOverUsed, 0);
     if (!sMainHdAny)
         return;
     if ((size_t)w * h > sMainOverSize) {
@@ -5315,7 +5519,7 @@ static void MainHdOver(void) {
         sMainOver = over;
         sMainOverSize = (size_t)w * h;
     }
-    HdOverLayer(0, w, h, sOccBg, sOccObj, gPortFrame, sMainOver, &sMainOverUsed);
+    HdOverLayer(0, w, h, sOccBg, sOccObj, gPortFrame, sMainOver, &sMainOverUsed, 0);
     if (sTitleArtHd) {
         /* the HD illustration is the title's bottom layer: whatever the game draws (the press-start bar on BG0, the
            sprites) goes back over it */

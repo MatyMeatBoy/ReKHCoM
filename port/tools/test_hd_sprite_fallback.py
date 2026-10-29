@@ -48,6 +48,7 @@ static int HdTextGlyph(int i){return 0;}
 static int HeaderBandColor(int y,int x){return 0;}
 static int sDrawCount[3];
 static uint8_t sMainHdPart[128];
+static int sWorldBlendActive,sWorldBlendScreen; /* unrelated additive effect inactive in these decoder tests */
 static struct {int width,height,originX,originY,wide;}gPortScreen={16,16,0,0,0};
 typedef struct {int id,x,y,w,h,flags,bank;const void*tiles;const void*frame;const uint16_t*palette;} OamHdPart; static OamHdPart sOamHd[128];
 static struct {int screen,hud,text,style,clipX0,clipX1,header;}sOamTag[128];
@@ -68,6 +69,8 @@ static unsigned sStagedActorFirstSeen[3],sActorSceneFrames;
 static const char gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
 static const unsigned char gOlympiaSmallCardTiles[1];
 static uint16_t sObjLine[16],sScrLine[16],sTitleSampleLine[16];
+static uint16_t sScrBlendLine[16];
+static uint8_t sScrBlendPrio[16],sScrBlendSemi[16];
 static uint8_t sObjPrio[16],sObjSemi[16],sScrPrio[16],sScrSemi[16],sObjWin[16],sTitleSamplePrio[16],sTitleSampleSemi[16];
 static uint16_t sObjIndex[16],sScrIndex[16];
 '''
@@ -154,7 +157,7 @@ unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteTextureReady(')
     unit += function('static int SpriteReady(')
-unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteQueue(')
+unit += function('int PortHdSpriteFind(') + function('int PortHdSpriteKeepsCartridge(') + function('int PortHdSpriteGroup(') + function('int PortHdSpriteQueue(')
 unit += '\nstatic int sSpotlight; static unsigned sScreenBgMask;\n'
 unit += ppu_function('static int SpriteOnScreen(')
 native_color=ppu_function('static int SmallCardNativeColor(')

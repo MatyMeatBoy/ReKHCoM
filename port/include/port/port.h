@@ -394,6 +394,12 @@ const uint32_t* PortPpuHudOver(void);
 const uint32_t* PortPpuMainOver(void);
 /* The same for the screen layer (menus), gPortOverlayW x 160 (NULL: none this frame). */
 const uint32_t* PortPpuScreenOver(void);
+/* Full-weight world-card light, separate from HD art. NativeWorld supplies
+ * the original illustration/light and rebuilds its foreground on failure. */
+const uint32_t* PortPpuScreenAdditive(void);
+const uint32_t* PortPpuScreenNativeWorld(void);
+const uint32_t* PortPpuMainAdditive(void);
+const uint32_t* PortPpuMainNativeWorld(void);
 /* HD text: a dialogue glyph the PPU left out of the picture, at its place on
    the world canvas (hud 0) or the HUD canvas (hud 1), with its colours. */
 typedef struct PortTextGlyph {

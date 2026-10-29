@@ -372,6 +372,9 @@ static SDL_Texture* sOverlayTex;
 static int sOverlayTexW;
 static SDL_Texture* sScreenOverTex; /* the menu's pixels in front of its HD parts */
 static int sScreenOverTexW;
+/* The glow must add to the actual HD picture, never an opaque blue-back copy. */
+#include "port/port_screen_world_blend.h"
+static PortScreenWorldBlend sWorldLight;
 static float sOverlayScale;
 
 void PortFitScreen(void) {
@@ -1662,7 +1665,7 @@ static uint64_t sRendererGeneration;
 static int RendererResetService(void) {
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
     if (!sRendererResetPending) return 1;
-    SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex,
+    SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex, &sWorldLight.texture,
         &sHudTexture, &sHudOverTexture, &sBorderTex, &sBlurTex, &sSkipTexture,
         &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
         &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
@@ -1674,6 +1677,8 @@ static int RendererResetService(void) {
         *textures[i] = NULL;
     }
     sTexW = sTexH = sMainOverW = sMainOverH = sOverlayTexW = sScreenOverTexW = 0;
+    sWorldLight.width = sWorldLight.height = sWorldLight.failed = 0;
+    sWorldLight.blockedWidth = sWorldLight.blockedHeight = 0;
     sHudTexW = sHudTexH = sHudOverW = sHudOverH = sBorderShown = 0;
     sSkipBufW = sSkipBufH = sHd2dW = sHd2dH = sMenuAlphaW = sMenuAlphaH = 0;
     for (i = 0; i < 2; i++) sMenuSideW[i] = sFadeSideW[i] = 0;
@@ -1789,6 +1794,11 @@ static void Present(void) {
     /* Snapshot the phase before PortUiDraw advances the fade: canvas, game
      * layers and presentation must all use the same phase for this frame. */
     int menuCanvas = PortUiMenuCanvas();
+    const uint32_t* mainWorldLight = menuCanvas ? NULL : PortPpuMainAdditive();
+    if (!mainWorldLight && !PortPpuScreenAdditive()) PortScreenWorldBlendIdle(&sWorldLight);
+    int nativeMainWorld = mainWorldLight && !PortScreenWorldBlendPrepareSize(&sWorldLight, sRenderer,
+        mainWorldLight, gPortScreen.width, gPortScreen.height);
+    PortHdSpritesWorldFallback(nativeMainWorld);
     int sceneFade = PortUiSceneFade();
     PortJiminyLayout journalLayout = {0};
     int journalShown = 0;
@@ -1821,6 +1831,7 @@ static void Present(void) {
             sComposite = gPortFrame; /* nothing is drawn over it: PortUiDraw only steps its fades */
         }
     }
+    if (nativeMainWorld) sComposite = (uint32_t*)PortPpuMainNativeWorld();
     PortUiDraw(sComposite, gPortScreen.width, gPortScreen.height);
     PrepareHudAfterOptions(menuCanvas);
     {
@@ -2133,6 +2144,20 @@ static void Present(void) {
         int effect = (bld >> 6) & 3, amount = SDL_min(*(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x54) & 31, 16);
         PortHdSpritesDraw(sRenderer, 0, worldX, worldY, worldScale, (bld & 0x10) && effect == 3 ? amount : 0,
                           (bld & 0x10) && effect == 2 ? amount : 0);
+        if (mainWorldLight && !nativeMainWorld) {
+            SDL_FRect lightRect = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
+            if (!PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &lightRect)) {
+                const uint32_t* native = PortPpuMainNativeWorld();
+                if (!SDL_UpdateTexture(sTexture, NULL, native, gPortScreen.width * 4) ||
+                    !SDL_RenderTexture(sRenderer, sTexture, NULL, &lightRect)) {
+                    sRendererResetPending = 1;
+                    return;
+                }
+                PortHdSpritesWorldFallback(1);
+                PortHdSpritesDraw(sRenderer, 0, worldX, worldY, worldScale,
+                    (bld & 0x10) && effect == 3 ? amount : 0, (bld & 0x10) && effect == 2 ? amount : 0);
+            }
+        }
         {
             const uint32_t* over = PortPpuMainOver();
             if (over) {
@@ -2180,6 +2205,9 @@ static void Present(void) {
     /* the options menu covers everything: no layer is drawn over it */
     if (PortPpuOverlayActive() && sOverlayScale > 0 && !menuCanvas) {
         SDL_FRect od;
+        const uint32_t* worldLight = PortPpuScreenAdditive();
+        int nativeWorld = worldLight && !PortScreenWorldBlendPrepare(&sWorldLight, sRenderer, worldLight, gPortOverlayW);
+        const uint32_t* overlay = nativeWorld ? PortPpuScreenNativeWorld() : gPortOverlay;
         if (sOverlayTex == NULL || sOverlayTexW != gPortOverlayW) {
             if (sOverlayTex != NULL)
                 SDL_DestroyTexture(sOverlayTex);
@@ -2189,13 +2217,27 @@ static void Present(void) {
             SDL_SetTextureBlendMode(sOverlayTex, SDL_BLENDMODE_BLEND);
             SDL_SetTextureScaleMode(sOverlayTex, SDL_SCALEMODE_PIXELART);
         }
-        SDL_UpdateTexture(sOverlayTex, NULL, gPortOverlay, sOverlayTexW * 4);
+        SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
         od.w = sOverlayTexW * sOverlayScale;
         od.h = GBA_SCREEN_H * sOverlayScale;
         od.x = (float)(int)((outW - od.w) / 2);
         od.y = (float)(int)((outH - od.h) / 2);
         SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od);
+        PortHdSpritesWorldFallback(nativeWorld);
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */
+        if (worldLight && !nativeWorld && !PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &od)) {
+            /* A failed draw cannot leave the replacement without its light.
+             * Repaint this same frame from retained native pixels, with all
+             * other HD words/parts intact. No game tick or PPU replay occurs. */
+            overlay = PortPpuScreenNativeWorld();
+            if (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
+                !SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od)) {
+                sRendererResetPending = 1;
+                return; /* Keep the last presented frame while audio/gameplay continue. */
+            }
+            PortHdSpritesWorldFallback(1);
+            PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0);
+        }
         if (PortPpuScreenOver()) {
             /* what the menu draws in front of its HD parts */
             if (sScreenOverTex == NULL || sScreenOverTexW != gPortOverlayW) {
