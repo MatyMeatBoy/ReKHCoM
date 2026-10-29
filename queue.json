@@ -10884,10 +10884,10 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T11:42:10.266438+00:00",
+      "updated_at": "2026-10-29T11:42:23.724642+00:00",
       "branch": "fix/v23-jiminy-name-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/503",
       "approval": "Root integrator: human-authorized code review; b0de9c8bd198541a2ed7c9fe6d510080738dfa43",
@@ -11057,6 +11057,11 @@
           "at": "2026-10-29T11:42:10.266438+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual review: BG0 actualwinner and finalcolour latch beforeVBlank, bounds16..39/edge0or239,192staticbytes,noheap/framebufferwrites; PAGErightalone cannotexpandnameleft; rightuseslegitBG0oritsground. CPUrealrendererPixelEdge/ownershipfuzz andbookfallbackPASS.30actualpairedscreensUS32/64/EUSpanish/fractional4:3/matchedallHDoff; onlynamemarginschange. Software/GPUcoverageandoldpresetfalsecontrols documented. WinEU32US32/64ABIbootAndroidUSJP/sourcesPASS. P2partial, new459normalbootlogspriority, noWorker."
+        },
+        {
+          "at": "2026-10-29T11:42:23.724642+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: BG0 actualwinner and finalcolour latch beforeVBlank, bounds16..39/edge0or239,192staticbytes,noheap/framebufferwrites; PAGErightalone cannotexpandnameleft; rightuseslegitBG0oritsground. CPUrealrendererPixelEdge/ownershipfuzz andbookfallbackPASS.30actualpairedscreensUS32/64/EUSpanish/fractional4:3/matchedallHDoff; onlynamemarginschange. Software/GPUcoverageandoldpresetfalsecontrols documented. WinEU32US32/64ABIbootAndroidUSJP/sourcesPASS. P2partial, new459normalbootlogspriority, noWorker.; merged 62ef1bb7c20f297437d5ed84a0f0447b607d6ed3; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11596,7 +11601,7 @@
     "created_at": "2026-10-29T11:42:14.994742+00:00",
     "updated_at": "2026-10-29T11:42:14.994742+00:00"
   },
-  "updated_at": "2026-10-29T11:42:14.994742+00:00",
+  "updated_at": "2026-10-29T11:42:23.724642+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
