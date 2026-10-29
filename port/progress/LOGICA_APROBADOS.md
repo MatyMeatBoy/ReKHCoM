@@ -28,6 +28,17 @@ VBlank. Un arn√©s que fuerza un men√∫ debe preparar sus datos de entrada;
 un cierre tambi√©n presente en el control anterior no acredita una regresi√≥n,
 y la recuperaci√≥n de lecturas inv√°lidas en32 no hace v√°lido ese recorrido.
 
+El papel HD del diario se cambia sÛlo donde BG1 ganÛ realmente la
+composiciÛn; textos, retratos, naipes y otros objetos conservan su primer
+plano. La m·scara y el fundido pertenecen al fotograma presentado. Los mapas
+pueden dibujar lo mismo con Ìndices de tiles distintos: reconocer las tres
+variantes legÌtimas, sin confundir identidad del mapa con identidad visual.
+Al separar capas, conservar la transformaciÛn completa de240◊160; recortar
+el primer plano puede desplazar filas al escalar. Si falta un recurso exacto
+o falla su textura, volver al nativo completo, sin sustituirlo por otro
+recurso que sÛlo comparte tiles. El papel plano usa la expansiÛn RGB555
+del PPU, sin alterar la conversiÛn de otros recursos ya aprobados.
+
 Naipes mapa, prioridad2.3 del usuario: mantener corona, borde y los dos p√≠xeles
 que cierran la ventana original. Una receta peque√±a s√≥lo reemplaza la
 ilustraci√≥n; no hereda el recorte de valor si la llave nativa no lo tiene.

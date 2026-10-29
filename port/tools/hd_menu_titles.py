@@ -8,6 +8,7 @@ the arrow starts), the body and outline colours, where the text starts. The text
     python port/tools/hd_menu_titles.py [--write]   (without --write: print the rows)
 """
 import re
+import math
 import struct
 import sys
 from collections import Counter
@@ -423,6 +424,84 @@ def jiminy_card_rows(data, syms):
     return rows
 
 
+def jiminy_book_body_rows(data, syms):
+    """Shared BG1 body; the three detail maps have identical rows16..159.
+
+    Keep authored line positions and colours. Replace the dithered paper edge
+    with a rounded sheet and use the remaster's actual binder loop. The native
+    compositor decides which foreground pixels must remain above this image.
+    """
+    char = data[syms['gJiminyBgTiles'] - 0x08000000:syms['gJiminyBgTiles'] - 0x08000000 + 12128]
+    px = {}
+    def pixels(name):
+        start = syms[name] - 0x08000000
+        out = {}
+        for y in range(16, 160):
+            for x in range(240):
+                e = struct.unpack_from('<H', data, start + 2 * ((y // 8) * 32 + x // 8))[0]
+                sx = 7 - x % 8 if e & 1024 else x % 8
+                sy = 7 - y % 8 if e & 2048 else y % 8
+                b = char[(e & 1023) * 32 + sy * 4 + sx // 2]
+                out[x, y] = (e >> 12) * 16 + (b >> 4 if sx & 1 else b & 15)
+        return out
+    px = pixels('gJiminyStoryDetailMap')
+    assert px == pixels('gJiminyCardDetailMap') == pixels('gJiminyCharacterDetailMap')
+    def c(index):
+        # Match the PPU's RGB555 bit replication, including flat paper colours.
+        value = struct.unpack_from('<H', data, syms['gJiminyBgPalette'] - 0x08000000 + 2 * index)[0]
+        channels = [(value >> shift) & 31 for shift in (0, 5, 10)]
+        return ''.join(f'{((v << 3) | (v >> 2)):02X}' for v in channels)
+    ops = [f'canvas={240 * K},{144 * K}']
+    def polygon(color, points):
+        ops.append('poly=' + color + 'FF,' + ','.join(str(round(v * K)) for x, y in points for v in (x, y - 16)))
+    def rect(color, x0, y0, x1, y1):
+        polygon(color, [(x0,y0),(x1,y0),(x1,y1),(x0,y1)])
+    def rounded(color, x0, y0, x1, y1, radius):
+        points = []
+        for cx, cy, start in [(x1-radius,y0+radius,-90),(x1-radius,y1-radius,0),
+                              (x0+radius,y1-radius,90),(x0+radius,y0+radius,180)]:
+            for step in range(13):
+                angle = math.radians(start + step * 90 / 12)
+                points.append((cx + radius * math.cos(angle), cy + radius * math.sin(angle)))
+        polygon(color, points)
+    rect(c(31), 0, 16, 240, 160)
+    # The three native columns outside the page still carry the frame's bars.
+    for y in range(16, 160):
+        for x in range(3):
+            if c(px[x,y]) != c(31): rect(c(px[x,y]),x,y,x+1,y+1)
+    rounded(c(61), 3,16,139,160,3)
+    rounded(c(63), 4,17,138,159,2)
+    rounded(c(136),141,16,240,160,4)
+    rounded(c(63),142,17,239,159,3)
+    # Keep long rules as rules, rather than magnifying framebuffer columns.
+    line = c(59)
+    is_line = lambda index: index in (59, 133)  # the rule also has a shaded right-edge palette
+    for y in range(16,160):
+        x = 0
+        while x < 240:
+            if not is_line(px[x,y]): x += 1; continue
+            end = x + 1
+            while end < 240 and is_line(px[end,y]): end += 1
+            if end-x >= 24: rect(line,x,y,end,y+1)
+            x = end
+    for x in range(240):
+        y = 16
+        while y < 160:
+            if not is_line(px[x,y]): y += 1; continue
+            end = y+1
+            while end < 160 and is_line(px[x,end]): end += 1
+            if end-y >= 24: rect(line,x,y,x+1,end)
+            y = end
+    # Native dark cores identify each loop's placement; no new spacing/timing.
+    core_rows = [y for y in range(16,160) if sum(px[x,y] == 49 for x in range(128,152)) >= 8]
+    starts = [y for y in core_rows if y-1 not in core_rows]
+    assert len(starts) == 15
+    for y in starts:
+        ops.append('blit=' + ','.join(map(str,(384,396,447,422,131*K,(y-2-16)*K,148*K,(y+5-16)*K))))
+    ops.append(f'scale={K}')
+    return ['\t'.join(['gJiminyBookBody','5','-','gJiminyBgTiles','0','16','240','144',UJIMINY,';'.join(ops),'eu,us'])]
+
+
 def banner_ops(px, box, colour_of, text):
     """A banner's recipe: the bar from the cartridge's pixels (palette indices), the title in Re:CoM's lettering."""
     bx, by, bw, bh = box
@@ -484,7 +563,7 @@ def banner_ops(px, box, colour_of, text):
 def main():
     data, syms = rom()
     rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
-            + jiminy_card_rows(data, syms))
+            + jiminy_card_rows(data, syms) + jiminy_book_body_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return

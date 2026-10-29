@@ -32,6 +32,10 @@ void PortHdSpriteHudOwner(int slot);
    when they are not a fade of it, e.g. another palette). */
 void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current, int count, int* dark, int* white);
 #ifdef SDL_h_
+/* Draw the journal BG below its captured native foreground; false keeps the
+   caller's full native rendering, including upload/device failures. */
+int PortHdJiminyBookDraw(SDL_Renderer* renderer, int id, const uint32_t* foreground,
+                         float ox, float oy, float scale, int dark, int white);
 /* Draw a layer's queued parts, back to front, over its canvas placed at (ox, oy) with this scale; darken/brighten
    0..16 follow the game's fade. */
 void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten);

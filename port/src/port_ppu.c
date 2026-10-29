@@ -26,6 +26,8 @@
 #include "port/synthesis_requirement_hd.h"
 #include "port/port_hdlayout.h"
 #include "engine.h"
+#include "mode.h"
+#include "port/jiminy_paper.h"
 #include "sprite.h"
 #include "port/port_state.h"
 #include "port/port_battle_backdrop.h"
@@ -325,6 +327,12 @@ typedef struct MenuSources {
     int headerX, headerDrawn;
 } MenuSources;
 static MenuSources sMenuShown = { .tabBg = { -1, -1 } }, sMenuPend = { .tabBg = { -1, -1 } };
+static uint8_t sJiminyPaperMask[240 * 160];
+static int sJiminyPaperCapture;
+
+const uint8_t* PortPpuJiminyPaperMask(void) {
+    return sJiminyPaperCapture ? sJiminyPaperMask : NULL;
+}
 /* Sample every menu extension before VBlank changes its rendering inputs. */
 static void CaptureMenuMarginPixels(void);
 #define sMenuHeaderFrame sMenuShown.headerFrame
@@ -2878,6 +2886,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         top = objFront ? sObjLine[x] : bg < 0 ? bd : sBgLine[bg][x];
         blend = (objFront && sObjSemi[x]) ||
                 ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+        if (sJiminyPaperCapture && objects && gx >= 0 && gx < 240 && gyLine >= 16 && gyLine < 160)
+            sJiminyPaperMask[gyLine * 240 + gx] = (uint8_t)PortJiminyPaperPixel(topLayer, blend, gx, gyLine);
         if (blend) {
             if (objFront) {
                 if (bg >= 0) { second = sBgLine[bg][x]; secondLayer = bg; }
@@ -4235,6 +4245,19 @@ void PortPpuJiminyFade(int* dark, int* white) {
 void PortPpuRenderFrame(void) {
     int gy;
     int w = gPortScreen.width;
+    extern Mode gModeJiminy;
+    extern Mode* gCurrentMode;
+    extern const uint16_t gJiminyStoryDetailMap[];
+    extern const uint16_t gJiminyCardDetailMap[], gJiminyCharacterDetailMap[];
+    const uint16_t* shownMap = (const uint16_t*)(VRAM8 + ((IO16(0xA) >> 8) & 31) * 2048);
+
+    sJiminyPaperCapture = gPortConfig.hdCards && gCurrentMode == &gModeJiminy &&
+        (IO16(0) & 0x287) == 0x200 && !(IO16(0xA) & 0xC000) &&
+        !(IO16(0x14) & 0x1FF) && !(IO16(0x16) & 0x1FF) &&
+        (PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
+         PortJiminyDetailMap(shownMap, gJiminyCardDetailMap) ||
+         PortJiminyDetailMap(shownMap, gJiminyCharacterDetailMap));
+    if (sJiminyPaperCapture) memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
 
     memcpy(sTextObjPalette, PLTT16 + 256, sizeof(sTextObjPalette));
     sTextBld[0] = IO16(0x50);
