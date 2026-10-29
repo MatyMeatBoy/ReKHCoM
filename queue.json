@@ -10884,12 +10884,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T10:40:02.976307+00:00",
+      "updated_at": "2026-10-29T11:06:11.789902+00:00",
       "branch": "fix/v23-jiminy-page",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/501",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/502",
       "approval": "Root integrator: human-authorized code review; c21727fda6b4ad45a1b9877565aac394a2eaa07d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -11027,10 +11027,15 @@
           "at": "2026-10-29T10:40:02.976307+00:00",
           "owner": "codex-jiminy23",
           "detail": "Continue PAGE/BG0 label and miniheader after501. Same checkout, no workers; read original translated overlay pixels before selecting replacement box so numbers and L/R remain intact."
+        },
+        {
+          "at": "2026-10-29T11:06:11.789902+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "ba48a3402 PAGE5languages top8rows only, sourceBG1/overlay/LRgeometry assertions. Realregistration REDmain/GREEN EUUS+JPnonPC; WinEU32US32/64ABIboot AndroidUSJP sourcesPASS. Nativeimport5to0/899priorbyteidentical/5PNGpixelparity;finalSpanishonly1recipe/903stable.10USviews onlytab,5missingfallbackexact,10fractional4:3views6counterLRcropsexact,5finalEUviews saveunchanged. P2partial; preexisting nameplate-rightstrip identified."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-headings-spanish-eusave/before-32/4430.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-page-spanish-final/before-32/3060.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11561,7 +11566,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T10:40:02.976307+00:00",
+  "updated_at": "2026-10-29T11:06:11.789902+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
