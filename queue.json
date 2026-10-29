@@ -10918,8 +10918,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T15:00:56.443118+00:00",
-      "branch": "fix/v23-jiminy-root-cover",
+      "updated_at": "2026-10-29T15:06:41.982820+00:00",
+      "branch": "fix/v23-jiminy-submenu-verification",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/508",
       "approval": "Root integrator: human-authorized code review; 11df90f8affe69e06cd59a6c0a750ab16dfd7b6a",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -11173,6 +11173,11 @@
           "at": "2026-10-29T15:00:56.443118+00:00",
           "owner": "codex-jiminy23",
           "detail": "PR508 mergedc44f679; list paper/15binder loops complete and verified. Remaining P2 closed root cover with its own native geometry/colors, then audit closure and audio. Current canonical private911outputs909PNG2LAD list-native read-only. No workers, builds stopped."
+        },
+        {
+          "at": "2026-10-29T15:06:41.982820+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "USER STEERING: HD book/closed-cover redraw was unnecessary; focus only repeatedly reported internal detail submenu: footer, miniheader extension, right page, stretching. Uncommitted cover WIP cancelled/preserved privately, no cover PR/release. Verify exact Spanish Tres deseos screen and deliver actual fixes; do not resume decorative cover work."
         }
       ],
       "claimed_at": "2026-10-29T14:25:01.597481+00:00",
@@ -11749,7 +11754,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T15:00:56.443118+00:00",
+  "updated_at": "2026-10-29T15:06:41.982820+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
