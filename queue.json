@@ -12132,23 +12132,28 @@
       "status": "pr_abierto",
       "owner": "codex-bridge-surface-safety",
       "created_at": "2026-10-29T22:02:01.455005+00:00",
-      "updated_at": "2026-10-29T22:07:23.359909+00:00",
+      "updated_at": "2026-10-29T22:07:40.388339+00:00",
       "branch": "fix/bridge-surface-image-bounds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/522",
-      "approval": "Human: priorizar cuelgues and fix all proven related patterns",
+      "approval": "Root integrator: human-authorized code review; 6f547f9418d7d8b8e15ceda27e2f7e363476929c",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-29T22:07:23.359909+00:00",
           "owner": "codex-bridge-surface-safety",
           "detail": "Old complete-shim NULL ConvertSurface fault C0000005 reproduced. New44surface+44texture cases across32/64+Android branches PASS; exact pixels/conversions/BMP and huge clipped rect bounded, allocator cleanup balanced; target/reset/epoch fixtures PASS. Source-only checks no device attribution. pruebas/bridge-surface-safety."
+        },
+        {
+          "at": "2026-10-29T22:07:40.388339+00:00",
+          "owner": "codex-bridge-surface-safety",
+          "detail": "Reviewed complete-shim NULL conversion reproduction, surface dimensions/pitch/span checks, deferred/empty semantics, wide conversion/BMP offsets and bounded clipped blits.44surface+44texture cases32/64+Android conditional builds PASS; byte-exact image/BMP/clip controls, allocator balance and prior GPU-target/reset/epoch tests PASS. Source-only block; no claim that all crashes or device reports are solved."
         }
       ],
       "claimed_at": "2026-10-29T22:02:06.027506+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:07:23.359909+00:00",
+  "updated_at": "2026-10-29T22:07:40.388339+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
