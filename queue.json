@@ -11936,10 +11936,10 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-v23",
       "created_at": "2026-10-29T16:07:44.720275+00:00",
-      "updated_at": "2026-10-29T18:00:18.540725+00:00",
+      "updated_at": "2026-10-29T18:00:30.926240+00:00",
       "branch": "fix/v23-trickmaster-parasite-card-recipes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/518",
-      "approval": "Root integrator: human-authorized code review; 1c5d897c7b5ab226fa8191c408ce3ee04eac2040",
+      "approval": "Root integrator: human-authorized code review; 6659f929d73a687107a1b7eb0fcadb0e6257a737",
       "reference": "Atlas /api/state approvals exactas; root29Oct",
       "evidence": [
         {
@@ -11976,6 +11976,11 @@
           "at": "2026-10-29T18:00:18.540725+00:00",
           "owner": "codex-atlas-v23",
           "detail": "Root diff review and actual regional producer coverage PASS with negative controls; worker native import4stale-to0/911unchanged, runtime16runs42captures Offexact4cases; source6659f929d73a687107a1b7eb0fcadb0e6257a737. Audit78/28 remains partial."
+        },
+        {
+          "at": "2026-10-29T18:00:30.926240+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "Four real CardDef recipes;915registry, EU99/118 USJP99/107 coverage and negatives PASS. Native C++4stale-to0/911bytesunchanged;16runtime42captures HDoffRGBAexact4cases, HDonportraitROIs. Audit partial; QA manifest port/progress/TRICKMASTER_PARASITE_HD_QA_20261029.json"
         }
       ],
       "claimed_at": "2026-10-29T16:07:52.321997+00:00"
@@ -12002,7 +12007,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T18:00:18.540725+00:00",
+  "updated_at": "2026-10-29T18:00:30.926240+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
