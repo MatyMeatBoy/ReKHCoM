@@ -405,5 +405,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | options-menu-idle-blink | User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow | pendiente | — | — | — | 2026-10-29T07:04:15.251315+00:00 |
 | hd-menu-font-spacing | User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows | pendiente | — | — | — | 2026-10-29T07:09:46.486758+00:00 |
 | hd-audio-language-ux | User29Oct: natural HD movie voice description including Japanese audio; instructions routed to launcher/platform workflow; replace confusing legacy-import wording, recognize existing English when identified and reflect selection in main/submenu; preserve unknown/JP imports safely | pendiente | — | — | — | 2026-10-29T07:10:02.898562+00:00 |
+| web-khmenu-text-spacing | User screenshot: Web frontend KHMenu words split by irregular gaps (Your adventure, Europe/America/Japan). Reproduce browser font shaping/kerning with actual font and fix without changing game canvas or losing typeface; verify desktop/mobile and deployed artifact. | pendiente | — | — | — | 2026-10-29T13:37:02.554993+00:00 |
 
 Integrador: libre
