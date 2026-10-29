@@ -10887,10 +10887,10 @@
       "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T08:43:03.747134+00:00",
+      "updated_at": "2026-10-29T08:43:34.343866+00:00",
       "branch": "fix/v23-jiminy-presented-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/499",
-      "approval": "Root integrator: human-authorized code review; 7e9cf465692b0f24c471a0dacad0577b89521bd1",
+      "approval": "Root integrator: human-authorized code review; 30cc94a97aa0a4950769f103bb464937d0543374",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -10972,6 +10972,11 @@
           "at": "2026-10-29T08:43:03.747134+00:00",
           "owner": "codex-jiminy23",
           "detail": "30cc94a97:26journalcaptures32/64exit0, tencomparisons only known leftheader transition; validroom normalinputmap4views identicalbaseline; Moogleentry4captures exit0. CPUactualcapture REDold/GREENnew; OAMspanfuzz, ABIboot64, AndroidFTUSJP andsourcesPASS. Invalidforcedchainalsofaultsoldexactaddress, documentedseparately. P2partial."
+        },
+        {
+          "at": "2026-10-29T08:43:34.343866+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: all margin consumers use final pixel snapshots, bounded native OAMspan<576 and buffer<40KiB, int64 distance, no heap or game-state edits. CPU REDold/GREENnew;26journalcaptures/10comparisons knownheaderonly; validroom normalinputmap4identicalviews/exit0 andMoogleentry4views/exit0. Invalidforcedmodechain fails unchangedold, excluded. Windows32/64 ABIboot, AndroidFTUSJP, sources PASS. P2 remains partial."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11506,7 +11511,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T08:43:03.747134+00:00",
+  "updated_at": "2026-10-29T08:43:34.343866+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
