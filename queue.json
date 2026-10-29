@@ -11712,8 +11712,13 @@
       "sent": "direct-runtime-capture:pruebas/web-font-spacing/AFTER-local-desktop.png"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-29T14:25:27.756488+00:00",
+  "integrator": {
+    "owner": "codex-integrador",
+    "token": "039726dca560a2dac4d3b2a1e7d646b8a0945885e7ea1c9c",
+    "created_at": "2026-10-29T14:25:33.179918+00:00",
+    "updated_at": "2026-10-29T14:25:33.179918+00:00"
+  },
+  "updated_at": "2026-10-29T14:25:33.179918+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
