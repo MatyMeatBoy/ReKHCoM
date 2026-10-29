@@ -10945,10 +10945,10 @@
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
       "piece": "Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-29T01:49:46.540903+00:00",
+      "updated_at": "2026-10-29T01:49:57.161604+00:00",
       "branch": "fix/issue480-exact-room",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/484",
       "approval": "Root integrator: source/test/physical reporter confirmation verified for original flow",
@@ -11008,9 +11008,16 @@
           "at": "2026-10-29T01:49:46.540903+00:00",
           "owner": "codex-issue480",
           "detail": "Reporter uxshade Android confirmation both springs and ledges after installing published test and importing original ROM/save: https://github.com/MatyMeatBoy/ReKHCoM/issues/480#issuecomment-6485206732; source484 merged3d2b30b745; original reused-work defect and14sibling initializer review. No all-device/all-layout or uniquely isolated Android A/B claim."
+        },
+        {
+          "at": "2026-10-29T01:49:57.161604+00:00",
+          "owner": "codex-issue480",
+          "detail": "Reporter uxshade Android confirmation both springs and ledges after installing published test and importing original ROM/save: https://github.com/MatyMeatBoy/ReKHCoM/issues/480#issuecomment-6485206732; source484 merged3d2b30b745; original reused-work defect and14sibling initializer review. No all-device/all-layout or uniquely isolated Android A/B claim."
         }
       ],
-      "claimed_at": "2026-10-29T01:49:41.469777+00:00"
+      "claimed_at": "2026-10-29T01:49:41.469777+00:00",
+      "completed_at": "2026-10-29T01:49:57.161604+00:00",
+      "sent": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-nightly.20261028.48"
     },
     "optiport-recycled-object-contracts": {
       "id": "optiport-recycled-object-contracts",
@@ -11112,7 +11119,7 @@
     "created_at": "2026-10-29T01:49:52.102214+00:00",
     "updated_at": "2026-10-29T01:49:52.102214+00:00"
   },
-  "updated_at": "2026-10-29T01:49:52.102214+00:00",
+  "updated_at": "2026-10-29T01:49:57.161604+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
