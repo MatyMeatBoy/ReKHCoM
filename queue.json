@@ -11191,23 +11191,28 @@
       "status": "pr_abierto",
       "owner": "codex-mapcard-bounds",
       "created_at": "2026-10-29T03:06:37.373146+00:00",
-      "updated_at": "2026-10-29T03:27:00.581271+00:00",
+      "updated_at": "2026-10-29T03:29:03.739399+00:00",
       "branch": "fix/map-card-definition-bounds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/491",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; e86e45d84d68e9eccd32839c5cefc1e440b89540",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-29T03:27:00.581271+00:00",
           "owner": "codex-mapcard-bounds",
           "detail": "e86e45d84: real10 source functions/32-bit types guarded-table probe RED4 (2 access faults)/GREEN5 at O0/O2; valid copies/cap99/gold keys unchanged. Cartridge branch normalized preprocessing identical. Windows32+64 builds,4 actual same-save map-menu before/after routes exit0 and both pixels identical. Scroll812 pass. Public releases immutable, no reported crash attribution."
+        },
+        {
+          "at": "2026-10-29T03:29:03.739399+00:00",
+          "owner": "codex-mapcard-bounds",
+          "detail": "Root solo review: actual definition extent used consistently by menu, family listing/counts and add/query/remove guards; serialized270 slots unchanged and no RNG reroll. Source witness RED4/GREEN5, caps/key controls, same preprocessed non-port branch; actual Windows32/64 same-save menu A/B4routes all exit0 and pixels identical;812scroll combinations. No user crash attribution or immutable release replacement."
         }
       ],
       "claimed_at": "2026-10-29T03:06:42.463988+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T03:27:00.581271+00:00",
+  "updated_at": "2026-10-29T03:29:03.739399+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
