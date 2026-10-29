@@ -245,3 +245,35 @@ EU32/US32/64 y bibliotecas Android US/JP compiladas, ABI/boot64, fuentes y
 contratos CPU pasan. Audio dummy, sin afirmar mejoras de sonido ni prueba
 física de Android/consolas. Continúan cubierta/listas y cobertura Riku/JP
 antes de cerrar P2 y pasar al audio; los releases anteriores no se modifican.
+
+Noveno bloque: las cabeceras de Riku tenían cinco frames propios sin receta
+HD. Se añaden D REPORT, RAPPORT D, INFORME D, DIARIO D y D-BERICHT con los
+textos, colores y cajas nativos. La F española procede de la letra real de
+STUFENANSTIEG en el atlas remasterizado. No se cambia la cabecera de Sora ni
+se renombra ningún recurso anterior; las recetas se añaden por separado del
+grupo cuya regla de nombres depende del número de frames.
+
+El test de recetas falla antes por ausencia de la función de Riku y pasa con
+los cinco bindings, sus cajas originales y las guardas EU/US. El importador
+C++ detecta cinco pendientes y llega a cero: los904 outputs anteriores
+(902PNG y2layouts LAD) conservan sus bytes. Las cinco imágenes nuevas
+coinciden con la referencia: dos exactas y tres con como máximo un nivel RGB
+de diferencia, con alfa idéntica. No se distribuyen las imágenes extraídas.
+
+Capturas reales de raíz/lista en los cinco idiomas EU32 y en US64 cambian
+únicamente la cabecera. El estado de Riku se prepara con la ruta de nueva
+partida del menú de pruebas en RAM, sin editar guardados. Las páginas de
+detalle y HD apagado tienen controles separados; no confundir una fuente
+original conservada por falta del recurso con el nuevo reemplazo aceptado.
+
+Los controles apagados coinciden en32/64, y el detalle de historia de Riku
+también es idéntico antes/después. Un primer control64 simultáneo agotó el
+plazo del observador; no se toma como prueba aprobada ni como causa de un
+crash. Sus capturas/log se conservan. Los controles anteriores/nuevos64
+secuenciales alcanzan las cinco capturas programadas y terminan con código0,
+sin modificar el binario entre intentos. No se asigna causa al driver.
+
+Evidencia privada: pruebas/jiminy23-riku y sus controles runtime/detail/off.
+Windows EU32/US32/64 y Android US/JP compilados; ABI/boot64 y fuentes pasan.
+Esto no certifica hardware Android/consolas ni audio. Continúan cubierta/listas,
+la cabecera alemana de Sora aún sin receta, y cobertura JP antes de cerrar P2.

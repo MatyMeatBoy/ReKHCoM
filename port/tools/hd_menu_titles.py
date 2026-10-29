@@ -98,6 +98,7 @@ GLYPHS = {
         E=(550, 584), L=(578, 605), T=(611, 638), N=(661, 694), K=(689, 723), A=(718, 751)).items()},
     (GROOM, '-'): (634, 16, 656, 42, 16, 42, 'blit', 28), (GLVUP, 'N'): (672, 154, 703, 180, 154, 180),
     (GLVUP, 'E'): (641, 154, 673, 180, 154, 180),
+    (GLVUP, 'F'): (612, 154, 645, 180, 154, 180),
     **{(IWWARP, k): (x0, 16, x1, 42, 16, 42) for k, (x0, x1) in dict(T=(526, 555), R=(552, 587), A1=(584, 620),
                                                                        S=(648, 684)).items()},
     **{(IWWARP, k): (x0, 60, x1, 86, 60, 86) for k, (x0, x1) in dict(C=(522, 558), A=(555, 591), E=(649, 686),
@@ -447,6 +448,33 @@ def jiminy_other_heading_rows(data, syms):
     return jiminy_card_rows(data, syms, 'Story', story) + jiminy_card_rows(data, syms, 'Character', character)
 
 
+def jiminy_riku_rows(data, syms):
+    """Riku uses distinct native frames; retain the five cartridge labels.
+
+    Keep these separate from BANNERS: adding the English frame there would
+    rename the previously imported Sora banner through its shared-name rule.
+    The F is the remaster's actual STUFENANSTIEG glyph, not a modified E.
+    """
+    specs = [
+        ('English', ('gJiminyTitle', 3, 'gJiminyTitlePalette',
+                     [(UGETC, 'D'), ' ', (UGETC, 'REPORT')], None, None, 'eu,us')),
+        ('French', ('gJiminyTitleLocalized', 3, 'gJiminyTitlePalette',
+                    [(UGETC, 'RAPPORT'), ' ', (UGETC, 'D')])),
+        ('Spanish', ('gJiminyTitleLocalized', 5, 'gJiminyTitlePalette',
+                     [(UGETC, 'IN'), (GLVUP, 'F'), (UGETC, 'ORME'), ' ', (UGETC, 'D')])),
+        ('Italian', ('gJiminyTitleLocalized', 7, 'gJiminyTitlePalette',
+                     [(UGETC, 'DIARIO'), ' ', (UGETC, 'D')])),
+        ('German', ('gJiminyTitleLocalized', 9, 'gJiminyTitlePalette',
+                    [(UGETC, 'D'), (GROOM, '-'), (UGETC, 'BERICHT')])),
+    ]
+    rows = []
+    for language, spec in specs:
+        fields = row(spec, data, syms).split('\t')
+        fields[0] = 'gJiminyRiku' + language + 'Banner'
+        rows.append('\t'.join(fields))
+    return rows
+
+
 def jiminy_page_rows(data, syms):
     """Only rows0..7: PAGE's tab, above the native numbers and moving L/R."""
     rows = []
@@ -668,7 +696,8 @@ def main():
     data, syms = rom()
     rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
             + jiminy_card_rows(data, syms) + jiminy_other_heading_rows(data, syms)
-            + jiminy_page_rows(data, syms) + jiminy_book_body_rows(data, syms))
+            + jiminy_page_rows(data, syms) + jiminy_book_body_rows(data, syms)
+            + jiminy_riku_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return
