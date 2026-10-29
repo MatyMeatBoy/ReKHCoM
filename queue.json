@@ -10884,12 +10884,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T08:23:17.180293+00:00",
+      "updated_at": "2026-10-29T08:43:03.747134+00:00",
       "branch": "fix/v23-jiminy-presented-margins",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/498",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/499",
       "approval": "Root integrator: human-authorized code review; 7e9cf465692b0f24c471a0dacad0577b89521bd1",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -10967,10 +10967,15 @@
           "at": "2026-10-29T08:23:17.180293+00:00",
           "owner": "codex-jiminy23",
           "detail": "Footer PR498 merged d0180e699. Continue original P2: header/miniheader margins still read live palette/VRAM after VBlank; investigate actual transition1721 before changing consumers."
+        },
+        {
+          "at": "2026-10-29T08:43:03.747134+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "30cc94a97:26journalcaptures32/64exit0, tencomparisons only known leftheader transition; validroom normalinputmap4views identicalbaseline; Moogleentry4captures exit0. CPUactualcapture REDold/GREENnew; OAMspanfuzz, ABIboot64, AndroidFTUSJP andsourcesPASS. Invalidforcedchainalsofaultsoldexactaddress, documentedseparately. P2partial."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-footer-snapshot64/before-64/4430.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-margin32/before-32/1721.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11501,7 +11506,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T08:23:17.180293+00:00",
+  "updated_at": "2026-10-29T08:43:03.747134+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
