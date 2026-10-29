@@ -185,6 +185,7 @@ BANNERS = [
     ('gWorldInspectBarGerman', 0, 'gWorldInspectBarPalette', [(GWWARP, 'WELTEN'), 4, (GROOM, '-'), (GWWARP, 'KA'), (GGETC, 'RT'), (GWWARP, 'EN')]),
     ('gMapInspectBarDe', 5, 'gMapInspectBarPalette', ['RAUM', (GWWARP, 'KA'), (GGETC, 'RT'), (GWWARP, 'EN')]),
     ('gMenuLoadTitleGerman', 0, 'gLoadMenuTitlePalette', ['LADEN']),
+    ('gJiminyTitleLocalized', 8, 'gJiminyTitlePalette', [(UGETC, 'REISECHRONIK')]),
     ('gMapSaveTitleGerman', 0, 'gSaveMenuTitlePalette', ['SPEICHERN']),
     ('gMapSelectTitleGerman', 0, 'gSmallHandCursorPalette', ['RAUM-GENERIERUNG']),
     ('gWorldWarpBarGerman', 0, 'gWorldWarpBarPalette', ['WELTENTOR']),
