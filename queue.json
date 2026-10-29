@@ -10335,12 +10335,12 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-deck459-window",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T11:50:53.286105+00:00",
+      "updated_at": "2026-10-29T12:20:18.514988+00:00",
       "branch": "fix/issue459-window-startup",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/490",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/504",
       "approval": "Root integrator: human-authorized code review; 6b7a6b64ffc4f842852891b2a59054174651f6c8",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
@@ -10408,6 +10408,11 @@
           "at": "2026-10-29T11:50:53.286105+00:00",
           "owner": "codex-deck459-window",
           "detail": "New Bzshizzle comments10:40/10:49: fonts test confirmedfixed; normal64 boot stillfails. PublicGDrive logs downloaded bounded/hashes inpruebas/issue459-new-logs. Normalhost log stops SDL_CreateWindow begin, x11+pipewire SDL3.4.18 initdone190ms. kh_com.log starts50searlier, successfulsafe32/software run; notfailednormalguest. Investigatewindowcall before SDLrenderer/guest, no preloadblame or forcedgeneralbackend. NoWorkers."
+        },
+        {
+          "at": "2026-10-29T12:20:18.514988+00:00",
+          "owner": "codex-deck459-window",
+          "detail": "PR504 source2db0e1e4fd4ce199afcd31193ce62252b6f47568; real SDL races Windows/Linux; 13 production stages, 6 marker cases baseline write fails, 30 wrapper tests plus final software recovery control, check_sources PASS; Debian512MiB actual host title and injected window stall Auto fallback30.18s; no physical Deck cause/confirmation; keep issue459 and task open"
         }
       ],
       "claimed_at": "2026-10-29T11:50:48.634026+00:00"
@@ -11606,7 +11611,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T11:50:53.286105+00:00",
+  "updated_at": "2026-10-29T12:20:18.514988+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
