@@ -406,4 +406,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-menu-font-spacing | User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows | pendiente | — | — | — | 2026-10-29T07:09:46.486758+00:00 |
 | hd-audio-language-ux | User29Oct: natural HD movie voice description including Japanese audio; instructions routed to launcher/platform workflow; replace confusing legacy-import wording, recognize existing English when identified and reflect selection in main/submenu; preserve unknown/JP imports safely | pendiente | — | — | — | 2026-10-29T07:10:02.898562+00:00 |
 
-Integrador: codex-integrador (ocupado; 2026-10-29T11:06:45.665210+00:00)
+Integrador: libre
