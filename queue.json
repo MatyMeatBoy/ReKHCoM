@@ -12182,10 +12182,23 @@
       ],
       "claimed_at": "2026-10-29T22:02:06.027506+00:00",
       "completed_at": "2026-10-29T22:07:53.625716+00:00"
+    },
+    "windows32-fixed-memory-placement": {
+      "id": "windows32-fixed-memory-placement",
+      "piece": "Investigate intermittent native32 startup fixed GBA image placement guard: identical EU binary succeeds then exits1 when sGbaSpace starts0214D000; preserve fixed hardware mapping and launcher recovery, no arbitrary resume. Repro log pruebas/issue517-worldcard/candidate517-hd1-view4-traverse-fine-finalnative, subsequent same-binary Auto control passes.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T22:34:46.002713+00:00",
+      "updated_at": "2026-10-29T22:34:46.002713+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Local test517 QA 29Oct; distinct from world-card light and from user confirmed SteamOS64 startup459",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:33:22.201138+00:00",
+  "updated_at": "2026-10-29T22:34:46.002713+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
