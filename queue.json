@@ -11469,13 +11469,8 @@
       "evidence": []
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "ccdc6e4aba14869d42b8de9962caf5f54ede13d8967b2b2e",
-    "created_at": "2026-10-29T07:16:23.266881+00:00",
-    "updated_at": "2026-10-29T07:16:23.266881+00:00"
-  },
-  "updated_at": "2026-10-29T07:16:23.266881+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-29T07:16:43.444037+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
