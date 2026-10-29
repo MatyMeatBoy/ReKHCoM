@@ -12094,10 +12094,23 @@
         }
       ],
       "claimed_at": "2026-10-29T19:30:28.245592+00:00"
+    },
+    "bridge-texture-failure-contract": {
+      "id": "bridge-texture-failure-contract",
+      "piece": "P1 crash audit: actual shared SDL guest texture setters/update dereference NULL after allocation failure; reproduce without ROM, fix related valid/invalid bounds and preserve native behavior.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T21:52:29.367873+00:00",
+      "updated_at": "2026-10-29T21:52:29.367873+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Human: seguir pendientes priorizando cuelgues, shared-platform fixes and preventive proven patterns",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T21:11:26.361829+00:00",
+  "updated_at": "2026-10-29T21:52:29.367873+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
