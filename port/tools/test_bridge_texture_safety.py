@@ -46,7 +46,7 @@ int main(int argc,char**argv) {
 }
 '''
 
-def main():
+def run(test, cases):
  tc=next((ROOT.parent/'toolchain').glob('llvm-mingw-*/bin'))
  with tempfile.TemporaryDirectory(prefix='bridge-texture-safety-') as temp:
   out=Path(temp);(out/'SDL3').mkdir()
@@ -57,16 +57,18 @@ def main():
   (out/'host.c').write_text(fixture.HOST.replace('/* REAL_DRAW */',native[a:b]))
   prefix='#include <stdlib.h>\nstatic int failCountdown,liveAllocations;\nstatic void*FaultCalloc(size_t n,size_t size){if(failCountdown&&!--failCountdown)return NULL;void*p=calloc(n,size);if(p)liveAllocations++;return p;}\nstatic void FaultFree(void*p){if(p)liveAllocations--;free(p);}\n#define calloc FaultCalloc\n#define free FaultFree\n'
   shim='#include "'+(ROOT/'port/ps5/guest/src/sdl_shim.c').as_posix()+'"\n'
-  (out/'guest.c').write_text(prefix+shim+'#define main OldTargetMain\n'+fixture.GUEST+'\n#undef main\n'+TEST)
+  (out/'guest.c').write_text(prefix+shim+'#define main OldTargetMain\n'+fixture.GUEST+'\n#undef main\n'+test)
   exe=out/'test.exe'
   for arch in ('i686','x86_64'):
    for android in (False,True):
     subprocess.run([str(tc/(arch+'-w64-mingw32-clang.exe')),'-std=gnu11',*(['-D__ANDROID__'] if android else []),'-I'+str(out),'-I'+str(ROOT/'port/ps5/shared'),str(out/'host.c'),str(out/'guest.c'),'-o',str(exe)],check=True)
     failures=[]
-    for case in range(11):
-     p=subprocess.run([str(exe),str(case)],capture_output=True,text=True,timeout=10,creationflags=0x08004000)
+    for case in cases:
+     p=subprocess.run([str(exe),str(case)],cwd=out,capture_output=True,text=True,timeout=10,creationflags=0x08004000)
      if p.returncode:failures.append(dict(case=case,exit=p.returncode,stderr=p.stderr[-500:]))
     assert not failures,(arch,android,failures)
+def main():
+ run(TEST,range(11))
  print('PASS complete shim: two allocation failures, null texture APIs/surface, valid pixel/modulation/draw, clipping, invalid pitch and oversized dimensions')
 
 if __name__=='__main__':main()
