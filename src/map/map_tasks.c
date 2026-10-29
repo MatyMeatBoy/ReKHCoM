@@ -2054,6 +2054,11 @@ void Task_MapGmk_Jump_0(MapGmkJumpWork* work, MapPlatform* arg) {
     FldObj* obj = &work->obj;
     AnimState* anim;
 
+#ifdef PLATFORM_PC
+    /* Task work is reused without clearing. A spring lies flat; stale height
+     * otherwise makes FldObjIsOutOfView disable its collider on screen. */
+    obj->height = 0;
+#endif
     obj->fieldPosition.x = arg->x << 13;
     obj->fieldPosition.y = arg->y << 12;
     obj->fieldPosition.z = 0;
