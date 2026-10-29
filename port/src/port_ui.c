@@ -69,9 +69,9 @@ void PortInputSuppressUntilRelease(void);
 
 enum { LANG_EN, LANG_FR, LANG_DE, LANG_IT, LANG_ES, LANG_JA, LANG_COUNT };
 
-/* Quit the game (and its launcher): the desktop builds only, whose launcher waits for the game; the console and
-   64-bit Android images have no launcher to close (and no SDL_PushEvent in their shim) */
-#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
+/* Both desktop hosts use PORT_LINUX64_GUEST for their shared guest image.
+ * Quit uses the common event pump, including where SDL_PushEvent is absent. */
+#if ((defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)) || defined(PORT_LINUX64_GUEST)
 #define QUIT_ROW 1
 #else
 #define QUIT_ROW 0
@@ -3335,7 +3335,7 @@ static void ModeChosen(int mode) {
     PortApplyGraphicsMode(mode);
     PortConfigSave();
     PortVideoApplyConfig();
-#if QUIT_ROW /* the desktops: then full screen or a window */
+#if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC) /* native window-mode wizard */
     sWizStep = WIZ_SCREEN;
     sWizCursor = gPortConfig.fullscreen ? 0 : 1;
 #else
@@ -4276,13 +4276,8 @@ static void ConfirmKey(int key) {
     }
 #if QUIT_ROW
     if (sConfirm == CONFIRM_QUIT) {
-        extern int gPortExitCode;
-        SDL_Event q;
         sConfirm = CONFIRM_NONE;
-        gPortExitCode = REKHCOM_EXIT_QUIT_ALL; /* the launcher reads it and closes as well */
-        SDL_zero(q);
-        q.type = SDL_EVENT_QUIT;
-        SDL_PushEvent(&q);
+        PortRequestQuitAll();
         return;
     }
 #endif
