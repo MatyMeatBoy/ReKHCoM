@@ -1032,6 +1032,46 @@ extern const unsigned char gJiminyCardDetailMap[];
 #if defined(VERSION_EU) || defined(VERSION_US)
 extern const unsigned char gJiminyBgTiles[];
 #endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyBgTiles[];
+extern const unsigned char gJiminyStoryDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesFrench[];
+extern const unsigned char gJiminyStoryDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesSpanish[];
+extern const unsigned char gJiminyStoryDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesItalian[];
+extern const unsigned char gJiminyStoryDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesGerman[];
+extern const unsigned char gJiminyStoryDetailMap[];
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyBgTiles[];
+extern const unsigned char gJiminyCharacterDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesFrench[];
+extern const unsigned char gJiminyCharacterDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesSpanish[];
+extern const unsigned char gJiminyCharacterDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesItalian[];
+extern const unsigned char gJiminyCharacterDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesGerman[];
+extern const unsigned char gJiminyCharacterDetailMap[];
+#endif
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1725,6 +1765,36 @@ static const HdSpriteDef kHdSprites[] = {
 #endif
 #if defined(VERSION_EU) || defined(VERSION_US)
     { gJiminyBgTiles, NULL, "gJiminyBookBody", 0, 16, 240, 144, 5 },
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyBgTiles, gJiminyStoryDetailMap, "gJiminyStoryDetailBanner", 0, 0, 64, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesFrench, gJiminyStoryDetailMap, "gJiminyStoryDetailFrenchBanner", 0, 0, 80, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesSpanish, gJiminyStoryDetailMap, "gJiminyStoryDetailSpanishBanner", 0, 0, 80, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesItalian, gJiminyStoryDetailMap, "gJiminyStoryDetailItalianBanner", 0, 0, 64, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesGerman, gJiminyStoryDetailMap, "gJiminyStoryDetailGermanBanner", 0, 0, 96, 16, 5 },
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyBgTiles, gJiminyCharacterDetailMap, "gJiminyCharacterDetailBanner", 0, 0, 104, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesFrench, gJiminyCharacterDetailMap, "gJiminyCharacterDetailFrenchBanner", 0, 0, 112, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesSpanish, gJiminyCharacterDetailMap, "gJiminyCharacterDetailSpanishBanner", 0, 0, 104, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesItalian, gJiminyCharacterDetailMap, "gJiminyCharacterDetailItalianBanner", 0, 0, 96, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesGerman, gJiminyCharacterDetailMap, "gJiminyCharacterDetailGermanBanner", 0, 0, 104, 16, 5 },
 #endif
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"

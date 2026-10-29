@@ -28,16 +28,21 @@ VBlank. Un arnés que fuerza un menú debe preparar sus datos de entrada;
 un cierre también presente en el control anterior no acredita una regresión,
 y la recuperación de lecturas inválidas en32 no hace válido ese recorrido.
 
-El papel HD del diario se cambia s�lo donde BG1 gan� realmente la
-composici�n; textos, retratos, naipes y otros objetos conservan su primer
-plano. La m�scara y el fundido pertenecen al fotograma presentado. Los mapas
-pueden dibujar lo mismo con �ndices de tiles distintos: reconocer las tres
-variantes leg�timas, sin confundir identidad del mapa con identidad visual.
-Al separar capas, conservar la transformaci�n completa de240�160; recortar
+Cabeceras del diario: obtener cada rótulo del mapa y tiles del idioma
+original. Historia/personajes no deben heredar el registro de naipes ni
+quedar fuera de la mejora. Conservar sus cajas, colores, navegación y pasos
+de fundido; un PNG en otro idioma no acredita una localización terminada.
+
+El papel HD del diario se cambia sólo donde BG1 ganó realmente la
+composición; textos, retratos, naipes y otros objetos conservan su primer
+plano. La máscara y el fundido pertenecen al fotograma presentado. Los mapas
+pueden dibujar lo mismo con índices de tiles distintos: reconocer las tres
+variantes legítimas, sin confundir identidad del mapa con identidad visual.
+Al separar capas, conservar la transformación completa de240×160; recortar
 el primer plano puede desplazar filas al escalar. Si falta un recurso exacto
 o falla su textura, volver al nativo completo, sin sustituirlo por otro
-recurso que s�lo comparte tiles. El papel plano usa la expansi�n RGB555
-del PPU, sin alterar la conversi�n de otros recursos ya aprobados.
+recurso que sólo comparte tiles. El papel plano usa la expansión RGB555
+del PPU, sin alterar la conversión de otros recursos ya aprobados.
 
 Naipes mapa, prioridad2.3 del usuario: mantener corona, borde y los dos píxeles
 que cierran la ventana original. Una receta pequeña sólo reemplaza la

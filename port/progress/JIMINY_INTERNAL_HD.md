@@ -87,54 +87,85 @@ no el audio ni todos sus submen√∫s. Windows32/64 y las bibliotecas Android
 US/JP est√°n compilados; los contratos ABI/boot64 y check_sources pasan.
 
 
-Quinto bloque: papel y anillas de las tres p·ginas de detalle (historia,
+Quinto bloque: papel y anillas de las tres p√°ginas de detalle (historia,
 naipes y personajes). Se reconstruyen las hojas con borde derecho redondeado
 y reglas en sus posiciones originales; las quince anillas proceden del
 recurso equivalente del remaster. La receta conserva el RGB555 del PPU,
-incluida su expansiÛn de bits; no cambia los colores de recetas anteriores.
-Este recurso se limita a EU/US. JapÛn conserva el fondo nativo hasta verificar
+incluida su expansi√≥n de bits; no cambia los colores de recetas anteriores.
+Este recurso se limita a EU/US. Jap√≥n conserva el fondo nativo hasta verificar
 su equivalencia visual; compilar su biblioteca no certifica esa equivalencia.
 
-La sustituciÛn sÛlo ocupa pÌxeles cuyo ganador real es BG1 opaco. Una m·scara
+La sustituci√≥n s√≥lo ocupa p√≠xeles cuyo ganador real es BG1 opaco. Una m√°scara
 capturada junto al fotograma mantiene por encima textos, retratos, naipes,
-otras capas y combinaciones alfa. TambiÈn conserva cambios de la interfaz
-hechos despuÈs de componer la imagen. RaÌz/listas y mapas de detalle todavÌa
+otras capas y combinaciones alfa. Tambi√©n conserva cambios de la interfaz
+hechos despu√©s de componer la imagen. Ra√≠z/listas y mapas de detalle todav√≠a
 no presentados no activan este recurso. Las tres variantes de mapa se reconocen
-por separado: pueden usar Ìndices de tiles distintos aunque dibujen lo mismo.
+por separado: pueden usar √≠ndices de tiles distintos aunque dibujen lo mismo.
 
-El primer plano conserva el lienzo completo240◊160, con cabecera transparente;
+El primer plano conserva el lienzo completo240√ó160, con cabecera transparente;
 recortar a144 filas desplazaba filas del sprite al aplicar escalas no enteras.
-Una comparaciÛn real32/64 del sprite de Sora pasa de diferencias en427 pÌxeles
+Una comparaci√≥n real32/64 del sprite de Sora pasa de diferencias en427 p√≠xeles
 (32 software) a identidad exacta en el recorte de control. La cabecera nativa
-se recorta en destino conservando su transformaciÛn completa. El filtro del
-primer plano sigue la opciÛn gr·fica, incluso al cambiarla con textura viva.
-La textura es ˙nica y reutilizable; se libera con los dem·s recursos HD.
+se recorta en destino conservando su transformaci√≥n completa. El filtro del
+primer plano sigue la opci√≥n gr√°fica, incluso al cambiarla con textura viva.
+La textura es √∫nica y reutilizable; se libera con los dem√°s recursos HD.
 
-El lookup da prioridad a la definiciÛn exacta frente a una imagen que sÛlo
-comparte tiles. Si existe una definiciÛn exacta pero su recurso no est· listo,
+El lookup da prioridad a la definici√≥n exacta frente a una imagen que s√≥lo
+comparte tiles. Si existe una definici√≥n exacta pero su recurso no est√° listo,
 conserva el nativo, sin mostrar el fondo del libro como cabecera. La prueba
 CPU falla con el lookup anterior y pasa con el nuevo. Las pruebas reales de
-composiciÛn/dibujo inyectan errores de asignaciÛn, mezcla, filtro, subida,
-bridge, geometrÌa y cabecera: todos recuperan la imagen nativa completa.
+composici√≥n/dibujo inyectan errores de asignaci√≥n, mezcla, filtro, subida,
+bridge, geometr√≠a y cabecera: todos recuperan la imagen nativa completa.
 
 El importador C++ real actualiza una copia privada del import anterior de6
-recetas pendientes a0:889 archivos,883 previos idÈnticos en bytes, cinco
-cabeceras reescritas con pÌxeles idÈnticos. El libro nuevo coincide exactamente
-con la implementaciÛn Python. No se reimporta vÌdeo/m˙sica ni se modifica
-la instalaciÛn original. Evidencia privada: jiminy23-book-colors-native y
-jiminy23-book-colors; sÛlo recetas/cÛdigo entran en Git.
+recetas pendientes a0:889 archivos,883 previos id√©nticos en bytes, cinco
+cabeceras reescritas con p√≠xeles id√©nticos. El libro nuevo coincide exactamente
+con la implementaci√≥n Python. No se reimporta v√≠deo/m√∫sica ni se modifica
+la instalaci√≥n original. Evidencia privada: jiminy23-book-colors-native y
+jiminy23-book-colors; s√≥lo recetas/c√≥digo entran en Git.
 
 Controles privados: jiminy23-pages/BOOK-NATIVE-FALLBACK-CONTROLS.json contiene
-15 comparaciones idÈnticas con HD apagado o recurso ausente. Los recorridos
+15 comparaciones id√©nticas con HD apagado o recurso ausente. Los recorridos
 jiminy23-book-transform-verified (32/64), transform-fractional y
-transform-fourthree terminan con cÛdigo0 y cinco vistas cada uno. RaÌz/lista
-y la cabecera mantienen sus pÌxeles; cambios limitados al cuerpo del libro.
+transform-fourthree terminan con c√≥digo0 y cinco vistas cada uno. Ra√≠z/lista
+y la cabecera mantienen sus p√≠xeles; cambios limitados al cuerpo del libro.
 BOOK-TRANSFORM-PIXEL-CONTROLS.json conserva diez comparaciones y dos recortes
-de Sora idÈnticos. La versiÛn final que respeta el filtro se vuelve a capturar
+de Sora id√©nticos. La versi√≥n final que respeta el filtro se vuelve a capturar
 en jiminy23-book-reviewed. Estas pruebas usan audio dummy y no validan audio.
 
 Windows32/64 y bibliotecas Android US/JP compiladas; contratos ABI/boot64,
-composiciÛn, lookup, geometrÌa, fundido y check_sources pasan. No se afirma
-validaciÛn fÌsica de Android/consolas. P2 sigue parcial: PAGE, cabeceras de
-historia/personajes, mini-header, raÌz/listas y verificaciÛn Riku/JP pendientes.
+composici√≥n, lookup, geometr√≠a, fundido y check_sources pasan. No se afirma
+validaci√≥n f√≠sica de Android/consolas. P2 sigue parcial: PAGE, cabeceras de
+historia/personajes, mini-header, ra√≠z/listas y verificaci√≥n Riku/JP pendientes.
 La pre2.3-pre1 publicada no contiene este bloque ni se sobrescribe.
+
+Sexto bloque: completar las cabeceras HISTORIA/PERSONAJES y sus equivalentes
+en ingl√©s, franc√©s, italiano y alem√°n. Los diez r√≥tulos se leen de las
+variantes del cartucho (incluido GESCHICHTE) y se reconstruyen con las mismas
+letras remasterizadas que la cabecera de naipes. Las cinco recetas de naipes
+anteriores se mantienen id√©nticas. El registro elige el mapa real de cada
+una de las tres p√°ginas, respetando idioma y pasos del fundido.
+
+`test_jiminy_detail_headings.py` ejecuta ese fragmento real: falla con el
+registro anterior limitado a naipes y pasa2880 combinaciones EU/US de tres
+p√°ginas, cinco idiomas y32 pasos negros/blancos/aditivos; tambi√©n mantiene
+el registro apagado en JP y en la compilaci√≥n sin PLATFORM_PC. Generaci√≥n y revisi√≥n
+de los diez PNG; el importador C++ real a√±ade diez recursos, pasa de10 recetas
+pendientes a0 y mantiene889 salidas previas id√©nticas en bytes. Siete im√°genes
+coinciden exactamente con Python; las otras tres difieren en un solo p√≠xel
+RGB y un nivel por canal, con alfa id√©ntica (tolerancia de muestreo). La prueba
+inicial exig√≠a igualdad estricta y se conserva su fallo en la evidencia;
+no se ha cambiado el importador general por esa tolerancia.
+
+Diez capturas US32/64 terminan con c√≥digo0: s√≥lo cambian las dos cabeceras
+nuevas, dentro de las primeras16 filas; ra√≠z/lista/naipes y el cuerpo del libro
+son id√©nticos al bloque500. Evidencia privada: jiminy23-headings-runtime,
+jiminy23-heading-import, jiminy23-heading-native y
+jiminy23-pages/HEADING-PIXEL-SCOPE.json. La ruta europea en espa√±ol con copia de guardado EU termina con cinco
+capturas, desbloqueo en RAM confirmado y c√≥digo0 (headings-spanish-eusave); no se confunde la revisi√≥n de diez PNG con cinco recorridos
+reales. Audio dummy, sin certificaci√≥n de sonido ni hardware de consola.
+Las notas de los bloques previos se normalizan a UTF8 sin cambiar sus reglas.
+
+P2 contin√∫a: PAGE, mini-header, ra√≠z/listas y equivalencia visual Riku/JP.
+La pre2.3-pre1 anterior se mantiene inmutable; estos cambios requieren otra
+compilaci√≥n futura y no acreditan la entrega estable2.3.
