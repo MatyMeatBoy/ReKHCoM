@@ -90,17 +90,39 @@ void* SDL_LoadFile(const char* file, size_t* datasize) {
 
 static int BytesPer(SDL_PixelFormat f) { (void)f; return 4; }
 
+static bool SurfaceSizeValid(int w, int h) {
+    return w >= 0 && h >= 0 && w <= INT_MAX / 4 &&
+        (!w || (size_t)h <= SIZE_MAX / ((size_t)w * 4));
+}
+
+static bool SurfacePixelsValid(const SDL_Surface* s) {
+    if (!s || !SurfaceSizeValid(s->w, s->h) || s->pitch < 0 ||
+        (s->w && s->h && (!s->pixels || s->pitch < s->w * 4 ||
+         (s->h > 1 && (size_t)s->pitch >
+          (SIZE_MAX - (size_t)s->w * 4) / (size_t)(s->h - 1))))) {
+        SetError("invalid surface pixels or layout");
+        return false;
+    }
+    return true;
+}
+
 SDL_Surface* SDL_CreateSurface(int w, int h, SDL_PixelFormat format) {
+    if (!SurfaceSizeValid(w, h)) { SetError("bad surface size"); return NULL; }
     SDL_Surface* s = calloc(1, sizeof(*s));
     if (!s) return NULL;
     s->w = w; s->h = h; s->format = format; s->pitch = w * BytesPer(format);
-    s->pixels = calloc((size_t)s->pitch, (size_t)h);
+    if (w && h) s->pixels = calloc((size_t)s->pitch, (size_t)h);
     s->owned = 1;
-    if (!s->pixels) { free(s); return NULL; }
+    if (w && h && !s->pixels) { free(s); return NULL; }
     return s;
 }
 
 SDL_Surface* SDL_CreateSurfaceFrom(int w, int h, SDL_PixelFormat format, void* pixels, int pitch) {
+    if (!SurfaceSizeValid(w, h) || pitch < 0 ||
+        ((pixels || pitch) && (pitch < w * 4 ||
+         (h > 1 && (size_t)pitch > (SIZE_MAX - (size_t)w * 4) / (size_t)(h - 1))))) {
+        SetError("invalid surface size or pitch"); return NULL;
+    }
     SDL_Surface* s = calloc(1, sizeof(*s));
     if (!s) return NULL;
     s->w = w; s->h = h; s->format = format; s->pitch = pitch; s->pixels = pixels;
@@ -113,7 +135,11 @@ void SDL_DestroySurface(SDL_Surface* s) {
     free(s);
 }
 
-bool SDL_SetSurfaceBlendMode(SDL_Surface* s, SDL_BlendMode m) { (void)s; (void)m; return true; }
+bool SDL_SetSurfaceBlendMode(SDL_Surface* s, SDL_BlendMode m) {
+    (void)m;
+    if (!s) { SetError("invalid surface"); return false; }
+    return true;
+}
 
 /* Bytes of a pixel as r, g, b, a. */
 static void Unpack(SDL_PixelFormat f, const uint8_t* p, uint8_t* o) {
@@ -127,52 +153,65 @@ static void Pack(SDL_PixelFormat f, uint8_t* p, const uint8_t* c) {
 }
 
 SDL_Surface* SDL_ConvertSurface(SDL_Surface* s, SDL_PixelFormat format) {
+    if (!SurfacePixelsValid(s)) return NULL;
     SDL_Surface* d = SDL_CreateSurface(s->w, s->h, format);
     int x, y;
     if (!d) return NULL;
     for (y = 0; y < s->h; y++)
         for (x = 0; x < s->w; x++) {
             uint8_t c[4];
-            Unpack(s->format, (uint8_t*)s->pixels + y * s->pitch + x * 4, c);
-            Pack(format, (uint8_t*)d->pixels + y * d->pitch + x * 4, c);
+            Unpack(s->format, (uint8_t*)s->pixels + (size_t)y * s->pitch + (size_t)x * 4, c);
+            Pack(format, (uint8_t*)d->pixels + (size_t)y * d->pitch + (size_t)x * 4, c);
         }
     return d;
 }
 
 bool SDL_BlitSurfaceScaled(SDL_Surface* src, const SDL_Rect* sr, SDL_Surface* dst, const SDL_Rect* dr, SDL_ScaleMode mode) {
+    if (!SurfacePixelsValid(src) || !SurfacePixelsValid(dst)) return false;
     SDL_Rect s = { 0, 0, src->w, src->h }, d = { 0, 0, dst->w, dst->h };
-    int x, y;
+    int64_t x, y, x0, y0, x1, y1;
     (void)mode;
     if (sr) s = *sr;
     if (dr) d = *dr;
-    if (d.w <= 0 || d.h <= 0) return true;
-    for (y = 0; y < d.h; y++)
-        for (x = 0; x < d.w; x++) {
-            int sx = s.x + x * s.w / d.w, sy = s.y + y * s.h / d.h, dx = d.x + x, dy = d.y + y;
+    if (d.w <= 0 || d.h <= 0 || s.w <= 0 || s.h <= 0) return true;
+    /* Iterate only visible destination pixels, retaining the original
+     * nearest-neighbour mapping. Huge/offscreen rectangles stay bounded. */
+    x0 = d.x < 0 ? -(int64_t)d.x : 0;
+    y0 = d.y < 0 ? -(int64_t)d.y : 0;
+    x1 = (int64_t)dst->w - d.x; if (x1 > d.w) x1 = d.w;
+    y1 = (int64_t)dst->h - d.y; if (y1 > d.h) y1 = d.h;
+    for (y = y0; y < y1; y++)
+        for (x = x0; x < x1; x++) {
+            int64_t sx = (int64_t)s.x + x * s.w / d.w, sy = (int64_t)s.y + y * s.h / d.h;
+            int64_t dx = (int64_t)d.x + x, dy = (int64_t)d.y + y;
             uint8_t c[4], o[4];
             if (dx < 0 || dy < 0 || dx >= dst->w || dy >= dst->h || sx < 0 || sy < 0 || sx >= src->w || sy >= src->h)
                 continue;
-            Unpack(src->format, (uint8_t*)src->pixels + sy * src->pitch + sx * 4, c);
-            Unpack(dst->format, (uint8_t*)dst->pixels + dy * dst->pitch + dx * 4, o);
+            Unpack(src->format, (uint8_t*)src->pixels + (size_t)sy * src->pitch + (size_t)sx * 4, c);
+            Unpack(dst->format, (uint8_t*)dst->pixels + (size_t)dy * dst->pitch + (size_t)dx * 4, o);
             if (c[3] != 255) {
                 int k;
                 for (k = 0; k < 3; k++) c[k] = (uint8_t)((c[k] * c[3] + o[k] * (255 - c[3])) / 255);
                 c[3] = (uint8_t)(c[3] + o[3] * (255 - c[3]) / 255);
             }
-            Pack(dst->format, (uint8_t*)dst->pixels + dy * dst->pitch + dx * 4, c);
+            Pack(dst->format, (uint8_t*)dst->pixels + (size_t)dy * dst->pitch + (size_t)dx * 4, c);
         }
     return true;
 }
 
 bool SDL_SaveBMP(SDL_Surface* s, const char* file) {
+    if (!SurfacePixelsValid(s)) return false;
+    if (!file) { SetError("invalid BMP filename"); return false; }
+    uint64_t total = 54 + (((uint64_t)s->w * 3 + 3) & ~3ull) * (uint64_t)s->h;
+    if (total > UINT32_MAX) { SetError("BMP size overflow"); return false; }
     FILE* f = fopen(file, "wb");
     uint8_t hdr[54];
-    int y, rowBytes, size, x;
+    int y, rowBytes, x;
+    uint32_t size = (uint32_t)total;
     uint8_t* row;
     if (!f) return false;
     rowBytes = s->w * 3;
     rowBytes = (rowBytes + 3) & ~3;
-    size = 54 + rowBytes * s->h;
     memset(hdr, 0, sizeof(hdr));
     hdr[0] = 'B'; hdr[1] = 'M';
     memcpy(hdr + 2, &size, 4);
@@ -186,7 +225,7 @@ bool SDL_SaveBMP(SDL_Surface* s, const char* file) {
     for (y = s->h - 1; y >= 0; y--) {
         for (x = 0; x < s->w; x++) {
             uint8_t c[4];
-            Unpack(s->format, (uint8_t*)s->pixels + y * s->pitch + x * 4, c);
+            Unpack(s->format, (uint8_t*)s->pixels + (size_t)y * s->pitch + (size_t)x * 4, c);
             row[x * 3] = c[2]; row[x * 3 + 1] = c[1]; row[x * 3 + 2] = c[0];
         }
         fwrite(row, 1, (size_t)rowBytes, f);
