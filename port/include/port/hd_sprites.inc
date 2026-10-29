@@ -1120,6 +1120,12 @@ extern const unsigned char gJiminyTitleLocalizedFrame8[];
 extern const unsigned char gJiminyBgTiles[];
 extern const unsigned char gJiminyCardListMap[];
 #endif
+extern const unsigned char gCardBos03Tiles[];
+extern const unsigned char gCardBos04Tiles[];
+extern const unsigned char gTrickmasterSmallCardTiles[];
+extern const unsigned char gTrickmasterSmallCardFrame0[];
+extern const unsigned char gParasiteCageSmallCardTiles[];
+extern const unsigned char gParasiteCageSmallCardFrame0[];
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1880,6 +1886,10 @@ static const HdSpriteDef kHdSprites[] = {
 #if defined(VERSION_EU) || defined(VERSION_US)
     { gJiminyBgTiles, gJiminyCardListMap, "gJiminyListBookBody", 0, 16, 240, 144, 5 },
 #endif
+    { gCardBos03Tiles, NULL, "gCardBos03Tiles", -16, -12, 32, 32, 1 },
+    { gCardBos04Tiles, NULL, "gCardBos04Tiles", -16, -12, 32, 32, 1 },
+    { gTrickmasterSmallCardTiles, gTrickmasterSmallCardFrame0, "gTrickmasterSmallCardHD", -8, -20, 16, 32, 6 },
+    { gParasiteCageSmallCardTiles, gParasiteCageSmallCardFrame0, "gParasiteCageSmallCardHD", -8, -20, 16, 32, 6 },
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"
 };
