@@ -10887,7 +10887,7 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T05:23:26.353034+00:00",
+      "updated_at": "2026-10-29T05:31:46.740046+00:00",
       "branch": "fix/v23-jiminy-journal",
       "pr": null,
       "approval": null,
@@ -10897,6 +10897,11 @@
           "at": "2026-10-29T05:23:26.353034+00:00",
           "owner": "codex-jiminy23",
           "detail": "P1 completed/merged493 before this claim; reused isolated source tree7a875720, no extra checkout. Investigate internal pages/right rounded book edge via direct game captures, no Atlas detour. Current owned QA sprites D:/01Claude/ReKHCoM-build/qa-runtime/mapcards-rewards23/native-upgrade/hd/sprites; import files884,28,293,998B after verified cleanup. No workers."
+        },
+        {
+          "at": "2026-10-29T05:31:46.740046+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Baseline source7a875720 actualUSA native32software/64D3D11, private original-save copy and journal cheat4 inRAM, both exit0. Six captures each: root1400,categories1660,attacklist1880,ThreeWishes2100,Crabclaw2340(R cycles entry),back2590. Source snapshots/PNG/logs/config in pruebas/jiminy23;12 rawBMP duplicates removed only after pixel-identical PNG verification. Book/PAGE/internal title remain native. Need investigate precise BG geometry/metadata and fractional/wide menu configuration; PortUiMenuCanvas is our options overlay, not journal (avoid false cause). No code fix yet; active sourcebranch clean. User noAtlas/noWorkers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00"
@@ -11267,7 +11272,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T05:23:26.353034+00:00",
+  "updated_at": "2026-10-29T05:31:46.740046+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
