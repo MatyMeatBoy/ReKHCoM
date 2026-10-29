@@ -277,3 +277,27 @@ Evidencia privada: pruebas/jiminy23-riku y sus controles runtime/detail/off.
 Windows EU32/US32/64 y Android US/JP compilados; ABI/boot64 y fuentes pasan.
 Esto no certifica hardware Android/consolas ni audio. Continúan cubierta/listas,
 la cabecera alemana de Sora aún sin receta, y cobertura JP antes de cerrar P2.
+
+Décimo bloque: el frame8 alemán de Sora dice REISECHRONIK en el original.
+Faltaba su binding HD, mientras las otras nueve cabeceras Sora/Riku ya estaban
+cubiertas. Se añade una sola receta EU con la caja original104×16 y letras
+remasterizadas. La prueba de las diez cabeceras falla antes en ese frame y
+pasa después; las recetas y nombres anteriores se conservan.
+
+La actualización C++ real pasa de1 pendiente a0. Los909 outputs previos
+mantienen sus bytes y la imagen nueva es idéntica a la referencia Python.
+El primer ensayo de importación agotó120s mientras seguía escribiendo;
+se conservó su registro. Sin compilaciones simultáneas, el ensayo completo
+terminó en59.39s, con progreso registrado y validación final aprobada.
+Eso no acredita una mejora de rendimiento ni un bloqueo del producto.
+
+Capturas EU32/software y EU64/Direct3D11 de portada, Naipepedia y HD apagado
+confirman cambios sólo en la cabecera. El primer perfil pulsaba Historia,
+que está bloqueada en esa nueva partida, y sólo verifica portada; el perfil
+corregido selecciona Naipepedia y comprueba que la página realmente se abre.
+No se cuenta esa selección fallida como evidencia de lista.
+
+Evidencia privada: pruebas/jiminy23-german, NATIVE-UPGRADE.json, runtime y
+runtime-list. EU32/64, JP32/64 y Android US/JP compilados; ABI/boot64 y
+check_sources pasan. La ejecución japonesa se verifica por separado; las
+recetas europeas no afirman convertir su arte ni sus textos a HD.
