@@ -10884,10 +10884,10 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T11:06:36.168664+00:00",
+      "updated_at": "2026-10-29T11:06:55.643955+00:00",
       "branch": "fix/v23-jiminy-page",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/502",
       "approval": "Root integrator: human-authorized code review; ba48a3402487a8492d28c63f96ed8672b0eac4b5",
@@ -11037,6 +11037,11 @@
           "at": "2026-10-29T11:06:36.168664+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual review: PAGE isolated151,0,89,8 with nativeBG1 clear colours; bothBG0overlays and three detail backgrounds equal; nativeL/R firstinkrow8. Exactsecondstillkey keeps native on missingresource. Registration REDmain/GREEN layouts/languages/fades/EUUS and JPnonPCoff. NativeC++5to0/899oldbyteexact/5PNGpixelparity, finalSpanish1recipeonly/903oldstable.10US32/64+5missing+10fractional4:3+5finalEU captures; counterLR/rootlist unchanged. WinEU32US32/64ABIboot/AndroidUSJP/sourcesPASS. Partial P2; no audio/physical certification or worker."
+        },
+        {
+          "at": "2026-10-29T11:06:55.643955+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: PAGE isolated151,0,89,8 with nativeBG1 clear colours; bothBG0overlays and three detail backgrounds equal; nativeL/R firstinkrow8. Exactsecondstillkey keeps native on missingresource. Registration REDmain/GREEN layouts/languages/fades/EUUS and JPnonPCoff. NativeC++5to0/899oldbyteexact/5PNGpixelparity, finalSpanish1recipeonly/903oldstable.10US32/64+5missing+10fractional4:3+5finalEU captures; counterLR/rootlist unchanged. WinEU32US32/64ABIboot/AndroidUSJP/sourcesPASS. Partial P2; no audio/physical certification or worker.; merged 5081d38588873c64115cc7c9ad91e89e64ac451d; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11576,7 +11581,7 @@
     "created_at": "2026-10-29T11:06:45.665210+00:00",
     "updated_at": "2026-10-29T11:06:45.665210+00:00"
   },
-  "updated_at": "2026-10-29T11:06:45.665210+00:00",
+  "updated_at": "2026-10-29T11:06:55.643955+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
