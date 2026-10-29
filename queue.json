@@ -11389,19 +11389,20 @@
     "release-v23-pre1-win-android": {
       "id": "release-v23-pre1-win-android",
       "piece": "User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v23-pre1",
       "created_at": "2026-10-29T07:00:34.758758+00:00",
-      "updated_at": "2026-10-29T07:00:34.758758+00:00",
+      "updated_at": "2026-10-29T07:00:59.546295+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-29T07:00:59.546295+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:00:34.758758+00:00",
+  "updated_at": "2026-10-29T07:00:59.546295+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
