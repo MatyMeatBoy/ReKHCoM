@@ -21,6 +21,12 @@ Debe indicar los controles configurados y conservar una ruta nativa si el
 reemplazo no está listo. Su fundido se calcula con la paleta del fotograma
 presentado, no con memoria que VBlank ya preparó para el siguiente. Este
 criterio no da por aprobados ni terminados los bordes y extensiones pendientes.
+La misma regla temporal se aplica a cabeceras móviles, bandas y pestañas:
+capturar sus píxeles mientras los recursos del fotograma siguen vivos. Retener
+sólo un puntero al descriptor no conserva sus colores ni su validez tras
+VBlank. Un arnés que fuerza un menú debe preparar sus datos de entrada;
+un cierre también presente en el control anterior no acredita una regresión,
+y la recuperación de lecturas inválidas en32 no hace válido ese recorrido.
 
 Naipes mapa, prioridad2.3 del usuario: mantener corona, borde y los dos píxeles
 que cierran la ventana original. Una receta pequeña sólo reemplaza la
