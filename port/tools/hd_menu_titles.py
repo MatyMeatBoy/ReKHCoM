@@ -384,6 +384,45 @@ def bg_row(spec, data, syms):
     return rows
 
 
+def jiminy_card_rows(data, syms):
+    """Internal BG1 heading, keyed by its actual translated tile source."""
+    variants = [
+        ('', 'gJiminyBgTiles', [(UGETC, 'CARDS')], 'eu,us'),
+        ('French', 'gJiminyBgTitleTilesFrench', ['CARTES'], 'eu'),
+        ('Spanish', 'gJiminyBgTitleTilesSpanish', [(WWARP, 'NAIPES')], 'eu'),
+        ('Italian', 'gJiminyBgTitleTilesItalian', ['CARTE'], 'eu'),
+        ('German', 'gJiminyBgTitleTilesGerman', ['KARTEN'], 'eu'),
+    ]
+    rows = []
+    for suffix, tiles, text, regions in variants:
+        char = bytearray(0x8000)
+        base = syms['gJiminyBgTiles'] - 0x08000000
+        char[:12128] = data[base:base + 12128]
+        if suffix:
+            base = syms[tiles] - 0x08000000
+            size = 3936 if suffix == 'German' else 4096
+            char[0x2000:0x2000 + size] = data[base:base + size]
+        start = syms['gJiminyCardDetailMap'] - 0x08000000
+        px, pals = {}, Counter()
+        for y in range(1, 14):
+            for x in range(128):
+                e = struct.unpack_from('<H', data, start + 2 * ((y // 8) * 32 + x // 8))[0]
+                sx = 7 - x % 8 if e & 1024 else x % 8
+                sy = 7 - y % 8 if e & 2048 else y % 8
+                b = char[(e & 1023) * 32 + sy * 4 + sx // 2]
+                px[x, y] = b >> 4 if sx & 1 else b & 15
+                pals[e >> 12] += 1
+        length = 0
+        while px.get((length, 1)) == px[0, 1]:
+            length += 1
+        box = (0, 0, (length + 16) // 8 * 8, 16)
+        pal = pals.most_common(1)[0][0]
+        ops, own = banner_ops(px, box, lambda i: colour(data, syms, 'gJiminyBgPalette', pal * 16 + i), text)
+        rows.append('\t'.join(['gJiminyCardDetail' + suffix + 'Banner', '5', 'gJiminyCardDetailMap', tiles,
+                                *map(str, box), own, ops, regions]))
+    return rows
+
+
 def banner_ops(px, box, colour_of, text):
     """A banner's recipe: the bar from the cartridge's pixels (palette indices), the title in Re:CoM's lettering."""
     bx, by, bw, bh = box
@@ -444,7 +483,8 @@ def banner_ops(px, box, colour_of, text):
 
 def main():
     data, syms = rom()
-    rows = [row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
+    rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
+            + jiminy_card_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return

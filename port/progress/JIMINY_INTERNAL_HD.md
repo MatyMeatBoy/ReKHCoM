@@ -20,3 +20,15 @@ negras del primer perfil eran su configuración, no un fallo del diario.
 borde derecho redondeado, variantes de páginas y localización. Este bloque
 no certifica esos elementos ni otros dispositivos, y no está en los paquetes
 2.2.5 existentes. Continuar el diario antes de pasar al audio.
+
+Segundo bloque: cabecera interna de naipes, que vive en BG1 y no en los
+sprites del título principal. Se añaden cinco recetas independientes (inglés,
+francés, español, italiano y alemán), con geometría y colores leídos del mapa
+original y letras remasterizadas. La selección usa los tiles reales del idioma;
+no reemplaza la cabecera JOURNAL/DIARIO de la raíz. Sigue el fundido negro/blanco.
+El fondo original se conserva para HD apagado o recurso ausente.
+
+Windows32 y64 compilados, ABI/boot y check_sources pasan. Capturas privadas
+`pruebas/jiminy23-header` repiten la ruta amplia Auto4 de seis vistas por
+arquitectura. Continúan pendientes PAGE, otras cabeceras y borde del libro.
+Este bloque es parcial y aún no aparece en los paquetes publicados.

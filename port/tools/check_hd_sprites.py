@@ -53,7 +53,7 @@ def main():
             problems.append(f'{r[0]}: name used twice (the second picture overwrites the first)')
         seen[r[0]] = r
     src = '\n'.join(p.read_text(encoding='utf-8', errors='replace') for p in (ROOT / 'src').rglob('*.c'))
-    loaded = set(re.findall(r'\b(g\w+Tiles)\b', src))  # named by the game's code (loads, tables, catalogs)
+    loaded = set(re.findall(r'\b(g\w*Tiles\w*)\b', src))  # includes localized TilesFrench/Spanish sources
     sym = {r: symbols(r) for r in ROMS}
     data = {r: (ROOT / 'roms' / f'{c}.gba').read_bytes() if (ROOT / 'roms' / f'{c}.gba').exists() else None
             for r, c in ROMS.items()}
