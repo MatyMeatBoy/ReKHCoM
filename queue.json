@@ -10887,8 +10887,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T06:20:21.766981+00:00",
-      "branch": "fix/v23-jiminy-book",
+      "updated_at": "2026-10-29T06:57:04.626627+00:00",
+      "branch": "fix/v23-jiminy-pages",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/494",
       "approval": "Root integrator: human-authorized code review; 982b2ef6173abb4e7e6d8dc6625f0305949fb23d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -10942,6 +10942,11 @@
           "at": "2026-10-29T06:20:21.766981+00:00",
           "owner": "codex-jiminy23",
           "detail": "Manual root review: localized BG lookup keys, existing readiness/fallback and fades; 32/64 ABI/boot/source checks; 12 actual views exit0 and pixel differences only within heading. P2 remains partial, user reports footer/right-page/extensions/pixel stretching to address next.; merged ad15a785cc0f0ff1f5591f2e1a69964124ae60ba; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T06:57:04.626627+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Resume after verified nightly49 delivery. User reports footer absent, mini-header/top extension, right page and pixel stretching. Investigate all three detail layouts before changing generic side styles; no workers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11383,7 +11388,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:51:24.325541+00:00",
+  "updated_at": "2026-10-29T06:57:04.627626+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
