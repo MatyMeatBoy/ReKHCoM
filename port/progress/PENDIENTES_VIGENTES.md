@@ -17,8 +17,8 @@ siguientes no sustituyen la cola remota ni el estado actual de GitHub.
   los alcances descritos. Es un test separado para la próxima estable.
 - **459, abierto:** [selección de bibliotecas corregida](issue459-runtime.md),
   el reportero confirmó arranque con `--safe-startup`; el arranque normal sigue
-  fallando. [Texto HD: warmup corregido y probado](issue459-hdtext.md), preparar
-  test separado; no cerrar el issue antes de sus resultados y logs nuevos.
+  fallando. [Texto HD: warmup corregido y test publicado/enviado](issue459-hdtext.md);
+  no cerrar el issue antes de sus resultados y logs nuevos.
   Dependencias opcionales de sprites y herramientas de vídeo siguen separadas.
 - **330, abierto:** esperar evidencia nueva del arranque Gaming Mode.
 - **460, cerrado por el reportero:** audio confirmado resuelto en estable2.2.5
