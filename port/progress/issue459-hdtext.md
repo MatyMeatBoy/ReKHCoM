@@ -67,3 +67,21 @@ SDL_VIDEO_DRIVER=dummy SDL_AUDIO_DRIVER=dummy ./warmup-probe /path/to/game
 
 The delivered test must retain `--safe-startup` for the reporter's current
 working route. Keep #459 open for that test and the normal-launch evidence.
+
+## Delivery — 29/10/2026 UTC
+
+[v2.2.5-test459-hdtext.1](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-test459-hdtext.1)
+is public and was sent to #459 ([6486570914](https://github.com/MatyMeatBoy/ReKHCoM/issues/459#issuecomment-6486570914))
+and #330 ([6486571271](https://github.com/MatyMeatBoy/ReKHCoM/issues/330#issuecomment-6486571271)).
+The35332743-byte TAR has SHA256
+`f7f5f8c6339a9ee9c98384aefb1893cc477c66f25c0b98beefa6a4e5d1fc9eb0`.
+All five public assets were downloaded anonymously and matched the closed local
+files. Tag50ed2618bf84c0e723c80ed911f2fdba561713de includes #489; compiled
+native32 source is c87838bcb13e5eaca1f267fdce0a3abee156d457. Desktop64 reuse is
+identified separately in SOURCE.json. Stable2.2.5 remains Latest and unchanged.
+
+The exact final TAR passed four additional isolated game routes: safe native32
+EU/US/JP and desktop64 US, deck captures, Quit81 and preserved safe-startup
+preferences. EU/US emitted15 flowing and57 small HD glyphs; JP retained original
+lettering without CJK. Reporter HD confirmation and failed normal-launch logs
+remain pending; neither issue was closed on the strength of VM checks.
