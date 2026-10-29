@@ -22,6 +22,20 @@ def git(*args, env=None):
     return subprocess.check_output(['git', *args], cwd=ROOT, env=env, text=True).strip()
 
 
+def stage_font_assets(source, site):
+    """Refresh reused output and make CSS cache identity follow actual fonts."""
+    (site / 'fonts').mkdir(parents=True, exist_ok=True)
+    for name in ('KHMenu.otf', 'ComicHearts.otf', 'NOTICE.md'):
+        shutil.copy2(source / name, site / 'fonts' / name)
+    css_path = site / 'web.css'
+    css = css_path.read_bytes().decode('utf-8')
+    for name in ('KHMenu.otf', 'ComicHearts.otf'):
+        version = hashlib.sha256((site / 'fonts' / name).read_bytes()).hexdigest()[:16]
+        pattern = r'(url\(\s*[\'\"]?fonts/' + re.escape(name) + r')(?:\?v=[0-9a-f]+)?(?=[\'\"]?\s*\))'
+        css = re.sub(pattern, lambda match: match.group(1) + '?v=' + version, css)
+    css_path.write_bytes(css.encode('utf-8'))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sdl-source', type=Path, required=True)
@@ -34,6 +48,7 @@ def main():
     for name in ['web.css','web.js','runtime.js','i18n.js','settings.js','save-editor.js','editor-ui.js', 'achievement-data.js', 'achievements.js','cards.js','controller.png','favicon.png','apple-touch-icon.png']:
         shutil.copy2(ROOT / 'port/web' / name, site / name)
     shutil.copy2(ROOT / 'port/assets/achievements/badges.png', site / 'achievement-badges.png')
+    stage_font_assets(ROOT / 'port/assets/fonts', site)
     # Version the shell too: a cached alpha1 web.js must never drive alpha2.
     html = (ROOT / 'port/web/index.html').read_text(encoding='utf-8')
     for name in ['web.css','runtime.js','i18n.js','web.js','settings.js','save-editor.js','editor-ui.js', 'achievement-data.js', 'achievements.js','cards.js']:

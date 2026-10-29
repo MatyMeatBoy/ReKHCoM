@@ -11,3 +11,7 @@ for free use in projects.
 
 - 21/10/2026: in `KHMenu.otf` the lowercase a (and á à â ä ã å) is redrawn as a two-storey a and the r has a
   longer arm, so they read apart from o and n (`port/tools/font_kh_legible.py`).
+
+- 29/10/2026: corrected the CFF relative advance encoding of those eight glyphs.
+  Their approved outlines and hmtx advances are unchanged; browser shaping now
+  uses the same widths as native rendering.
