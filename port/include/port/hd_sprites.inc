@@ -1092,6 +1092,26 @@ extern const unsigned char gJiminyDetailOverlayMap[];
 extern const unsigned char gJiminyBgTitleTilesGerman[];
 extern const unsigned char gJiminyDetailOverlayMap[];
 #endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyTitleTiles[];
+extern const unsigned char gJiminyTitleFrame3[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyTitleLocalizedTiles[];
+extern const unsigned char gJiminyTitleLocalizedFrame3[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyTitleLocalizedTiles[];
+extern const unsigned char gJiminyTitleLocalizedFrame5[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyTitleLocalizedTiles[];
+extern const unsigned char gJiminyTitleLocalizedFrame7[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyTitleLocalizedTiles[];
+extern const unsigned char gJiminyTitleLocalizedFrame9[];
+#endif
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1830,6 +1850,21 @@ static const HdSpriteDef kHdSprites[] = {
 #endif
 #if defined(VERSION_EU)
     { gJiminyBgTitleTilesGerman, gJiminyDetailOverlayMap, "gJiminyPageGermanLabel", 151, 0, 89, 8, 5 },
+#endif
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyTitleTiles, gJiminyTitleFrame3, "gJiminyRikuEnglishBanner", 0, 0, 88, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyTitleLocalizedTiles, gJiminyTitleLocalizedFrame3, "gJiminyRikuFrenchBanner", 0, 0, 88, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyTitleLocalizedTiles, gJiminyTitleLocalizedFrame5, "gJiminyRikuSpanishBanner", 0, 0, 96, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyTitleLocalizedTiles, gJiminyTitleLocalizedFrame7, "gJiminyRikuItalianBanner", 0, 0, 72, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyTitleLocalizedTiles, gJiminyTitleLocalizedFrame9, "gJiminyRikuGermanBanner", 0, 0, 96, 16, 5 },
 #endif
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"

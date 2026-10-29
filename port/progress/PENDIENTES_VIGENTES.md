@@ -45,7 +45,7 @@ Después de los bugs abordables, orden 2.3 autorizado: contador 99/separador y
 naipes mapa pequeños HD; diario de Pepito interno; continuidad de audio al
 saltar al título y abrir tienda moguri. Las tareas ya corregidas o publicadas
 deben conciliarse con evidencia, sin volver a compilar ni reclamar arte antiguo
-como si estuviera libre. OptiPort vigente: `0f61e585a5236bf11b89dabe9cd5c4d3a99589a1`,
+como si estuviera libre. OptiPort vigente: `5c4648c1d8affe27ba424a6d27a23ab1ecdb9435`,
 copias Codex/Claude y snapshot interno sincronizados; la pasada del producto
 conserva sus 16 áreas y sus límites de medición/dispositivo.
 
