@@ -12043,19 +12043,20 @@
     "issue517-worldcard-glow": {
       "id": "issue517-worldcard-glow",
       "piece": "Issue517 Windows+Linux test479: selected World card yellow glow shows blue border instead of second yellow glow; compare supplied expected/actual videos, native palette frames and HD replacement; deliver verified test",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-issue517",
       "created_at": "2026-10-29T18:48:56.757866+00:00",
-      "updated_at": "2026-10-29T18:48:56.757866+00:00",
+      "updated_at": "2026-10-29T19:30:28.245592+00:00",
       "branch": null,
       "pr": null,
       "approval": "Human: bugs priority1, cover all new issues before2.3; user supplied concrete version in issue, no repeat question",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/517",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-29T19:30:28.245592+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T19:30:23.847404+00:00",
+  "updated_at": "2026-10-29T19:30:28.245592+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
