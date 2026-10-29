@@ -10826,10 +10826,10 @@
     "v23-quit-game-menu": {
       "id": "v23-quit-game-menu",
       "piece": "v2.3: restaurar Salir del juego en el menu propio, visible en HD y normal, Windows/Linux; cerrar completamente juego y launcher sin regresar al launcher. Reporte #479 coincide con pedido del usuario, comprobar semantica por plataforma.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-quit479",
       "created_at": "2026-10-28T23:12:19.692181+00:00",
-      "updated_at": "2026-10-29T01:40:19.105314+00:00",
+      "updated_at": "2026-10-29T01:40:29.919386+00:00",
       "branch": "fix/desktop64-quit-menu",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/485",
       "approval": "Root integrator, user-authorized functional fix and desktop delivery verified",
@@ -10859,9 +10859,16 @@
           "at": "2026-10-29T01:40:19.105314+00:00",
           "owner": "codex-quit479",
           "detail": "PR485 merged0cd1473e; desktop test public6assets verified anonymous exact SHA, sourcee51; Windows24closed-menu+2actualGUIlauncher paths, Linux22exactarchive VM cases all3regions/32/64 PASS; physicalGamingMode/audio not claimed. https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-test479-desktop.1"
+        },
+        {
+          "at": "2026-10-29T01:40:29.919386+00:00",
+          "owner": "codex-quit479",
+          "detail": "PR485 merged0cd1473e; desktop test public6assets verified anonymous exact SHA, sourcee51; Windows24closed-menu+2actualGUIlauncher paths, Linux22exactarchive VM cases all3regions/32/64 PASS; physicalGamingMode/audio not claimed. https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-test479-desktop.1"
         }
       ],
-      "claimed_at": "2026-10-29T01:16:10.525067+00:00"
+      "claimed_at": "2026-10-29T01:16:10.525067+00:00",
+      "completed_at": "2026-10-29T01:40:29.919386+00:00",
+      "sent": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-test479-desktop.1"
     },
     "v225-publication-ledger": {
       "id": "v225-publication-ledger",
@@ -11069,7 +11076,7 @@
     "created_at": "2026-10-29T01:40:24.696585+00:00",
     "updated_at": "2026-10-29T01:40:24.696585+00:00"
   },
-  "updated_at": "2026-10-29T01:40:24.696585+00:00",
+  "updated_at": "2026-10-29T01:40:29.919386+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
