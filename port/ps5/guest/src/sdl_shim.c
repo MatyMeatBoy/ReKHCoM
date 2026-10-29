@@ -1,6 +1,7 @@
 /* SDL3 subset over the host bridge: the renderer draws textured triangles and
  * rectangles on the host's GPU layer, audio and pads go to the host. */
 #include <SDL3/SDL.h>
+#include <limits.h>
 #include "bridge_calls.h"
 #include "../../shared/bridge_gpu_targets.h"
 #include "../../shared/audio_bridge.h"
@@ -580,9 +581,11 @@ static void ToRgba(SDL_PixelFormat f, const uint8_t* src, int pitch, uint8_t* ds
 SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_TextureAccess access, int w, int h) {
     Tex* t;
     (void)r;
-    if (w <= 0 || h <= 0) { SetError("bad texture size"); return NULL; }
+    if (w <= 0 || h <= 0 || w > INT_MAX / 4 || (size_t)h > SIZE_MAX / ((size_t)w * 4)) {
+        SetError("bad texture size"); return NULL;
+    }
     t = calloc(1, sizeof(*t));
-    if (!t) return NULL;
+    if (!t) { SetError("out of memory"); return NULL; }
     t->pub.w = w; t->pub.h = h; t->pub.refcount = 1;
     t->format = format;
     t->id[0] = t->id[1] = -1;
@@ -606,8 +609,12 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* r, SDL_PixelFormat format, SDL_Text
 }
 
 SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* r, SDL_Surface* s) {
+    if (!s || !s->pixels) { SetError("invalid surface"); return NULL; }
     SDL_Texture* t = SDL_CreateTexture(r, s->format, SDL_TEXTUREACCESS_STATIC, s->w, s->h);
-    if (t) SDL_UpdateTexture(t, NULL, s->pixels, s->pitch);
+    if (t && !SDL_UpdateTexture(t, NULL, s->pixels, s->pitch)) {
+        SDL_DestroyTexture(t);
+        return NULL;
+    }
     return t;
 }
 
@@ -628,21 +635,49 @@ void SDL_DestroyTexture(SDL_Texture* p) {
 
 bool SDL_UpdateTexture(SDL_Texture* p, const SDL_Rect* rect, const void* pixels, int pitch) {
     Tex* t = (Tex*)p;
+    if (!t) { SetError("invalid texture"); return false; }
+    if (!pixels || pitch <= 0) { SetError("invalid texture pixels or pitch"); return false; }
     SDL_Rect r = { 0, 0, t->pub.w, t->pub.h };
     int k;
     TextureEpoch(t);
     if (t->target) { SetError("Cannot update render target pixels"); return false; }
-    if (rect) r = *rect;
+    if (rect) {
+        /* SDL clips updates to the texture. Wide arithmetic also rejects an
+         * entirely outside rectangle without wrapping its end coordinates. */
+        int64_t right = (int64_t)rect->x + rect->w, bottom = (int64_t)rect->y + rect->h;
+        if (rect->w <= 0 || rect->h <= 0 || right <= 0 || bottom <= 0 ||
+            rect->x >= r.w || rect->y >= r.h) return true;
+        r.x = rect->x > 0 ? rect->x : 0;
+        r.y = rect->y > 0 ? rect->y : 0;
+        r.w = (right < t->pub.w ? (int)right : t->pub.w) - r.x;
+        r.h = (bottom < t->pub.h ? (int)bottom : t->pub.h) - r.y;
+    }
+    if (r.w > pitch / 4 || (r.h > 1 &&
+        (size_t)pitch > (SIZE_MAX - (size_t)r.w * 4) / (size_t)(r.h - 1))) {
+        SetError("invalid texture pitch"); return false;
+    }
     ToRgba(t->format, pixels, pitch, t->rgba + ((size_t)r.y * t->pub.w + r.x) * 4, t->pub.w * 4, r.w, r.h);
     for (k = 0; k < 2; k++)
         if (t->id[k] >= 0) h_tex_update(t->id[k], t->rgba);
     return true;
 }
 
-bool SDL_SetTextureScaleMode(SDL_Texture* p, SDL_ScaleMode m) { ((Tex*)p)->scale = m; return true; }
-bool SDL_SetTextureBlendMode(SDL_Texture* p, SDL_BlendMode m) { ((Tex*)p)->blend = m; return true; }
-bool SDL_SetTextureColorMod(SDL_Texture* p, Uint8 r, Uint8 g, Uint8 b) { Tex* t = (Tex*)p; t->cr = r; t->cg = g; t->cb = b; return true; }
-bool SDL_SetTextureAlphaMod(SDL_Texture* p, Uint8 a) { ((Tex*)p)->ca = a; return true; }
+bool SDL_SetTextureScaleMode(SDL_Texture* p, SDL_ScaleMode m) {
+    if (!p) { SetError("invalid texture"); return false; }
+    ((Tex*)p)->scale = m; return true;
+}
+bool SDL_SetTextureBlendMode(SDL_Texture* p, SDL_BlendMode m) {
+    if (!p) { SetError("invalid texture"); return false; }
+    ((Tex*)p)->blend = m; return true;
+}
+bool SDL_SetTextureColorMod(SDL_Texture* p, Uint8 r, Uint8 g, Uint8 b) {
+    if (!p) { SetError("invalid texture"); return false; }
+    Tex* t = (Tex*)p; t->cr = r; t->cg = g; t->cb = b; return true;
+}
+bool SDL_SetTextureAlphaMod(SDL_Texture* p, Uint8 a) {
+    if (!p) { SetError("invalid texture"); return false; }
+    ((Tex*)p)->ca = a; return true;
+}
 
 /* The host texture for the filter this draw wants: nearest, or smooth (also used by pixel art). */
 static int HostTex(Tex* t, bool smooth) {
@@ -717,6 +752,7 @@ extern int gPortMmpx;
 
 bool SDL_RenderTextureRotated(SDL_Renderer* r, SDL_Texture* p, const SDL_FRect* src, const SDL_FRect* dst, double angle,
                               const SDL_FPoint* center, SDL_FlipMode flip) {
+    if (!r || !p) { SetError("invalid renderer or texture"); return false; }
     Tex* t = (Tex*)p;
     SDL_FRect s = { 0, 0, (float)t->pub.w, (float)t->pub.h }, d;
     int ow, oh, id;
