@@ -11622,12 +11622,18 @@
       "status": "en_curso",
       "owner": "codex-halloween-v23",
       "created_at": "2026-10-29T06:51:24.325541+00:00",
-      "updated_at": "2026-10-29T15:54:03.034148+00:00",
-      "branch": null,
+      "updated_at": "2026-10-29T16:04:03.715761+00:00",
+      "branch": "fix/v23-halloween-floor",
       "pr": null,
       "approval": null,
       "reference": "user screenshot codex-clipboard-dfd30b14-402a-4538-805b-48305f68ea6a.png",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T16:04:03.715761+00:00",
+          "owner": "codex-halloween-v23",
+          "detail": "CAS2555c3e; sparse worktree v23-halloween-floor from c44f679. Cause: affine py=size-1 bottom clamp. CPU sampler baseline RED/new GREEN incl512native+160viewport/donor bounds/other arena/live palette. Previews CPU only; real32/64 zoom QA pending root resource window; no GPU/heavy builds used."
+        }
+      ],
       "claimed_at": "2026-10-29T15:54:03.034148+00:00"
     },
     "release-v23-pre1-win-android": {
@@ -11820,7 +11826,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T15:58:54.410184+00:00",
+  "updated_at": "2026-10-29T16:04:03.715761+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
