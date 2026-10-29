@@ -113,6 +113,8 @@ int main(int argc,char**argv){
   for(i=0;i<26;i++)if(list[i].baseCardId!=i*10 || list[i].count!=1)return 97;
   if(list[26].baseCardId!=0xffff)return 97;
   for(i=0;i<260;i+=10)if(!RemoveMapCard(i) || HasMapCard(i))return 97;
+  gMapCardCounts[0]=9;if(AddMapCard(0) || CountRegularMapCards()!=9)return 97;
+  memset(gMapCardCounts,0,sizeof(gMapCardCounts));
   /* Existing regular-card capacity and gold-key exception stay intact. */
   for(i=0;i<11;i++)gMapCardCounts[i]=9;
   if(CountRegularMapCards()!=99 || AddMapCard(0) || !AddMapCard(250) ||

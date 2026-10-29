@@ -12,7 +12,7 @@ map-card menu, listing/counting owned families and counting zero-value cards.
 Adding, querying, removing or summing a family rejects IDs/ranges without valid
 definitions. The serialized270-byte count array and its reserved bytes remain
 unchanged; the fix neither clears saved data nor substitutes another card.
-The regular99-card limit, nine-copy limit and gold-key exception stay intact.
+Existing regular-card capacity checks and gold-key handling stay intact.
 The debug random-card helper retains its original random draw; the common
 producer rejects an unsupported result instead of changing the RNG sequence.
 
