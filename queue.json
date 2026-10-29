@@ -10915,12 +10915,12 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T12:30:43.344749+00:00",
+      "updated_at": "2026-10-29T13:07:50.816651+00:00",
       "branch": "fix/v23-jiminy-cover-lists",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/503",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/505",
       "approval": "Root integrator: human-authorized code review; b0de9c8bd198541a2ed7c9fe6d510080738dfa43",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
@@ -11103,10 +11103,15 @@
           "at": "2026-10-29T12:30:43.344749+00:00",
           "owner": "codex-jiminy23",
           "detail": "Resuming after startup PR504/test459 delivered and awaiting reporter. Existing503 name margins integrated; continue cover/list edges and RikuJP coverage, then audio. Same checkout, no workers; no source edits yet on this branch."
+        },
+        {
+          "at": "2026-10-29T13:07:50.816651+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Riku5 missing native frames added without renaming Sora; append-only table5; native C++5to0, all904 previous outputs byte-identical; 24 root/list captures fiveEU32+US64 header-only, off32/64 identical, Story detail32/64 identical; concurrent64 observation timeout preserved, sequential old/new exit0; Win32/64 ABIboot AndroidUSJP sourcesPASS; OptiPort5c4648c current; P2 still cover/list SoraGerman JP"
         }
       ],
       "claimed_at": "2026-10-29T12:29:24.279514+00:00",
-      "sent": "direct-runtime-capture:pruebas/jiminy23-name-runtime/before-64/3060.png"
+      "sent": "direct-runtime-capture:pruebas/jiminy23-riku/runtime/32-es-new/220.png"
     },
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
@@ -11637,7 +11642,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T12:30:43.344749+00:00",
+  "updated_at": "2026-10-29T13:07:50.816651+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
