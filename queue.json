@@ -11314,19 +11314,20 @@
     "game-cursor-idle-two-seconds": {
       "id": "game-cursor-idle-two-seconds",
       "piece": "User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-cursor2s",
       "created_at": "2026-10-29T06:21:49.354047+00:00",
-      "updated_at": "2026-10-29T06:21:49.354047+00:00",
+      "updated_at": "2026-10-29T06:21:58.657365+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-29T06:21:58.657365+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:21:49.354047+00:00",
+  "updated_at": "2026-10-29T06:21:58.657365+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
