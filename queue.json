@@ -12202,23 +12202,28 @@
       "status": "pr_abierto",
       "owner": "codex-optiport-render-lessons",
       "created_at": "2026-10-29T22:57:18.637695+00:00",
-      "updated_at": "2026-10-29T22:59:19.540501+00:00",
+      "updated_at": "2026-10-29T22:59:28.225618+00:00",
       "branch": "docs/render-identity-lessons",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/21",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; 4e7211ecb9ae9f2690af3b41efa55406574df84d",
       "reference": "ReKHCoM PR520/521/522/523 and pruebas/issue517-worldcard; authorizing user learn in OptiPort, no workers",
       "evidence": [
         {
           "at": "2026-10-29T22:59:19.540501+00:00",
           "owner": "codex-optiport-render-lessons",
           "detail": "SKILL quick validation and diff check PASS. Reviewed evidence PR520/521/522/523 and ASLR15-vs5; normal host timeout explicitly inconclusive. No agent-behavior test or full pass claimed; no workers per user."
+        },
+        {
+          "at": "2026-10-29T22:59:28.225618+00:00",
+          "owner": "codex-optiport-render-lessons",
+          "detail": "Reviewed70line reference update against retained loader, shim, PPU and sandbox policy evidence; quick_validate/diff check PASS; no device or final full-pass claim."
         }
       ],
       "claimed_at": "2026-10-29T22:57:33.025405+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:59:19.540501+00:00",
+  "updated_at": "2026-10-29T22:59:28.225618+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
