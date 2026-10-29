@@ -11441,10 +11441,23 @@
       "approval": null,
       "reference": null,
       "evidence": []
+    },
+    "hd-menu-font-spacing": {
+      "id": "hd-menu-font-spacing",
+      "piece": "User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T07:09:46.486758+00:00",
+      "updated_at": "2026-10-29T07:09:46.486758+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "user screenshots 6f93dae3,5bf4f923,03b9e1ad",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:09:25.089532+00:00",
+  "updated_at": "2026-10-29T07:09:46.486758+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

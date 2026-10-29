@@ -403,5 +403,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | release-v23-pre1-win-android | User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes | en_curso | codex-v23-pre1 | https://github.com/MatyMeatBoy/ReKHCoM/pull/497 | Root integrator: human-authorized code review; f19ccdddf251e692d9e52a9cde821f739e2a875e | 2026-10-29T07:09:12.354185+00:00 |
 | hd-menu-light-line-origin | User29Oct: selected HD menu divider line must originate at its lit indicator; compare owned ReCoM1.5HD reference and apply consistently across port menus | pendiente | — | — | — | 2026-10-29T07:03:45.560567+00:00 |
 | options-menu-idle-blink | User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow | pendiente | — | — | — | 2026-10-29T07:04:15.251315+00:00 |
+| hd-menu-font-spacing | User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows | pendiente | — | — | — | 2026-10-29T07:09:46.486758+00:00 |
 
 Integrador: libre
