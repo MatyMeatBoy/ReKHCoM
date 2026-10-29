@@ -11835,10 +11835,23 @@
       "approval": "User29/10 explicit request; no assumption of bug cause",
       "reference": null,
       "evidence": []
+    },
+    "v23-atlas-approved-activation-audit": {
+      "id": "v23-atlas-approved-activation-audit",
+      "piece": "Inventario completo78familias con aprobacion Atlas29Oct: versionexacta a source/main/gate/import/runtime, detectar aprobados noactivos (Trickmaster yotros), arreglospequenos sinactivarhijaspendientes; no asumirPRcerradomerged",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T16:07:44.720275+00:00",
+      "updated_at": "2026-10-29T16:07:44.720275+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Peticion directa usuario29Oct revisarTODOSaprobados antesZIPclean, rootdelegacion actual",
+      "reference": "Atlas /api/state approvals exactas; root29Oct",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T16:07:03.243301+00:00",
+  "updated_at": "2026-10-29T16:07:44.720275+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
