@@ -398,4 +398,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | map-card-definition-table-bounds | Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings. | integrado | codex-mapcard-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/491 | Root integrator: human-authorized code review; e86e45d84d68e9eccd32839c5cefc1e440b89540 | 2026-10-29T03:29:16.966904+00:00 |
 | game-cursor-idle-two-seconds | User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration | pr_abierto | codex-cursor2s | https://github.com/MatyMeatBoy/ReKHCoM/pull/496 | Root integrator: human-authorized code review; e847b63ad0029b36fae90ec4c87abb0ccb38e691 | 2026-10-29T06:24:47.741985+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T06:24:55.715100+00:00)
