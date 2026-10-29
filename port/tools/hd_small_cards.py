@@ -6,7 +6,7 @@ without the notch. The small card shows a part of the big card's drawing at its 
 colours, brought down to the window's 14x15 pixels, are nearest to the cartridge's (cards with the same picture, the
 attack and its sleights, share it).
 
-    python port/tools/hd_small_cards.py <Recom.hed> [--write] [--only gDonaldDuckSmallCard,...] [--sheet out.png]
+    python port/tools/hd_small_cards.py <Recom.hed> [--write] [--only gDonaldDuck,...] [--rom EU.gba] [--sheet out.png]
 """
 import re
 import struct
@@ -25,6 +25,7 @@ from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 ROOT = Path(__file__).resolve().parents[2]
 TSV = ROOT / 'port/data/hd_sprites.tsv'
 CATALOG = ROOT / 'src/card/card_catalog.c'
+MAP_CATALOG = ROOT / 'src/card/card_worldselect.c'
 NAMES = str(WORK_DIR / 'refs/OpenKh/OpenKh.Egs/resources/recom.txt')
 K = 8
 WIN = (1, 16, 15, 31)  # the picture window in the sprite's box (corners, GBA pixels)
@@ -32,12 +33,29 @@ WIN = (1, 16, 15, 31)  # the picture window in the sprite's box (corners, GBA pi
 NOTCH = [(10, 8, 14, 9), (9, 9, 14, 10), (8, 10, 14, 14), (9, 14, 14, 15)]
 
 
+def map_pairs():
+    """Map illustrations use their own small-card tile families, not the battle catalog."""
+    text = MAP_CATALOG.read_text(encoding='utf-8')
+    start = text.index('MapCardDef gMapCardDefs[')
+    text = text[start:text.index('\n};', start)]
+    found = re.findall(r'\{ (g\w+)Tiles, g\w+Palette, g\w+Frames, '
+                       r'(g\w+SmallCard)Tiles, (g\w+Palette), (g\w+Frames),', text)
+    return {small.removesuffix('SmallCard'): (big, frames.removesuffix('Frames')+'Frame0',
+                                             small+'Tiles', palette)
+            for big, small, palette, frames in found}
+
+
 def pairs():
     """{small card name: (big card's tiles base, small frame, small tiles, small palette)} from the card catalogue."""
     text = CATALOG.read_text(encoding='utf-8')
     found = re.findall(r'g\w+Frame0, (g\w+)Tiles, g\w+Palette, LOCALIZED\(\w+\), ((g\w+)SmallCardFrame0), (g\w+), (g\w+),',
                        text)
-    return {small: (big, frame, tiles, palette) for big, frame, small, tiles, palette in found}
+    result = {small: (big, frame, tiles, palette) for big, frame, small, tiles, palette in found}
+    for name, entry in map_pairs().items():
+        if name in result and result[name] != entry:
+            raise ValueError('Conflicting small-card family: '+name)
+        result[name] = entry
+    return result
 
 
 def window(data, syms, frame, tiles, palette):
@@ -84,12 +102,33 @@ def best_crop(tex, rgb, mask):
     return best
 
 
+def crop_ops(crop, *, notch=True):
+    """Keep the original frame; cut the value notch only for numbered cards.
+
+    The fitted crop need not have an exactly 14:15 ratio after rounding. Use
+    each axis' scale so the notch stays aligned with the native value cells.
+    Story keys have no value notch in their native illustration.
+    """
+    kx = (crop[2] - crop[0]) / (WIN[2] - WIN[0])
+    ky = (crop[3] - crop[1]) / (WIN[3] - WIN[1])
+    ops = ['crop=' + ','.join(map(str, crop))]
+    if notch:
+        ops.extend('erase=%d,%d,%d,%d' %
+                   (round(x0 * kx), round(y0 * ky), round(x1 * kx), round(y1 * ky))
+                   for x0, y0, x1, y1 in NOTCH)
+    ops.extend(('place=' + ','.join(map(str, WIN)), f'scale={K}'))
+    return ';'.join(ops)
+
+
 def main():
     hed = Path(sys.argv[1])
     only = None
     if '--only' in sys.argv:
         only = set(sys.argv[sys.argv.index('--only') + 1].split(','))
-    data = (ROOT / 'roms/B8CP.gba').read_bytes()
+    rom = Path(sys.argv[sys.argv.index('--rom') + 1]) if '--rom' in sys.argv else ROOT / 'roms/B8CP.gba'
+    data = rom.read_bytes()
+    if data[0xAC:0xB0] != b'B8CP':
+        raise ValueError('Crop matching uses EU symbols; supply your EU dump with --rom')
     syms = {k: int(v, 16) for k, v in re.findall(r'\.set _(\w+), (0x[0-9a-f]+)',
                                                  (ROOT / 'build/eu/pc/rom_symbols.s').read_text())}
     rows_by_tiles = {}
@@ -119,14 +158,20 @@ def main():
                                               index)
             tex = textures[big_row[8]].astype(float)
             rgb, mask, box = window(data, syms, frame, tiles, palette)
-            score, crop = best_crop(tex, rgb, mask)
-            k = (crop[2] - crop[0]) / (WIN[2] - WIN[0])
-            erase = ';'.join('erase=%d,%d,%d,%d' % (round(x0 * k), round(y0 * k), round(x1 * k), round(y1 * k))
-                             for x0, y0, x1, y1 in NOTCH)
-            ops = f'crop={",".join(map(str, crop))};{erase};place={",".join(map(str, WIN))};scale={K}'
+            # Story-key symbols have a corresponding card but differ between
+            # editions (notably question mark -> key). Colour matching would
+            # crop away the key's head: keep the full reference illustration.
+            story_key = big in ('gCardEve00', 'gCardEve01', 'gCardEve02')
+            if story_key:
+                crop = tuple(map(int, next(op[5:] for op in big_row[9].split(';') if op.startswith('crop=')).split(',')))
+                score = None
+            else:
+                score, crop = best_crop(tex, rgb, mask)
+            ops = crop_ops(crop, notch=not story_key)
             rows.append('\t'.join([small + 'SmallCardHD', '6', frame, tiles,
                                    str(box[0]), str(box[1]), str(box[2]), str(box[3]), big_row[8], ops]))
-            print(f'{small:28s} score {score:8.0f} crop {crop}', file=sys.stderr)
+            fit = 'reference' if score is None else f'score {score:8.0f}'
+            print(f'{small:28s} {fit} crop {crop}', file=sys.stderr)
             if '--sheet' in sys.argv:
                 cut = np.clip(tex[max(crop[1], 0):crop[3], max(crop[0], 0):crop[2]], 0, 255).astype(np.uint8)
                 hd = Image.fromarray(cut).resize((14 * 6, 15 * 6))
@@ -144,7 +189,9 @@ def main():
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return
-    keep = [l for l in TSV.read_text(encoding='utf-8').splitlines() if not re.match(r'g\w+SmallCardHD\t', l)]
+    # --only must never remove the approved rows of cards not regenerated.
+    generated = {row.split('\t', 1)[0] for row in rows}
+    keep = [l for l in TSV.read_text(encoding='utf-8').splitlines() if l.split('\t', 1)[0] not in generated]
     TSV.write_text('\n'.join(keep + rows) + '\n', encoding='utf-8')
     print(f'{len(rows)} small card rows in {TSV.relative_to(ROOT)}')
 

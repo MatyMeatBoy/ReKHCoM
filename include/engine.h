@@ -80,6 +80,7 @@ extern int gPortTextStyle;
    Explicit face/shadow/panel indices in style bits 8..11/12..15/16..19;
    without explicit face bits, infer the existing panel's indices. */
 void PortRegisterBgTextTile(void* address, int code, int style, const void* source32);
+void PortRegisterBgTextTileLike(void* address, int code, const void* registered, const void* source32);
 void PortClearBgTextTiles(void);
 void PortHudEnd(void);
 /* Experimental Re:Chain of Memories options: percentage applied to damage

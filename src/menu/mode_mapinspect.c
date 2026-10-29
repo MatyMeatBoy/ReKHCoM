@@ -389,6 +389,19 @@ s16 GetMapInspectSelectedValue() {
 void MapInspectDrawCardTotal() {
     LoadDecimalDigitTiles(sMapInspectCardTotal, gMapInspectTotalDigitTiles, (u8*)GetBgCharBase(0) + 0x3A0, 32, 2);
     LoadDecimalDigitTiles(99, gMapInspectTotalDigitTiles, (u8*)GetBgCharBase(0) + 0x3E0, 32, 2);
+#ifdef PLATFORM_PC
+    {
+        /* Normal/premium maps display baked tiles9e/9f, not the generated
+           limit cells1f/20. Keep those native pixels and register their actual
+           signatures. Register the baked slash explicitly as well, so stale
+           metadata from an earlier menu cannot block generic slash discovery.
+           These baked numeric bytes are shared by all regional/language sets. */
+        u8* base = GetBgCharBase(0);
+        PortRegisterBgTextTileLike(base + 0x13C0, '9', base + 0x3E0, gMapInspectTiles + 0x13C0);
+        PortRegisterBgTextTileLike(base + 0x13E0, '9', base + 0x400, gMapInspectTiles + 0x13E0);
+        PortRegisterBgTextTileLike(base + 0xA80, '/', base + 0x3E0, gMapInspectTiles + 0xA80);
+    }
+#endif
 }
 
 void MapInspectDrawCategoryCounts() {

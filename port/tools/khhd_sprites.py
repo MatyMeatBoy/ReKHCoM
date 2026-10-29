@@ -40,6 +40,26 @@ import khhd_pkg  # noqa: E402
 RECIPE = Path(__file__).resolve().parents[1] / 'data' / 'hd_sprites.tsv'
 
 
+def write_recipe_marks(out, path=RECIPE):
+    """A completed full import attempted every recipe, including absent sources.
+
+    Match the desktop importer's inventory format/hash. An --only preview
+    must not claim the rest of the recipe set was attempted.
+    """
+    marks = ['__recipe_inventory_v2__\t1']
+    for line in path.read_text(encoding='utf-8').splitlines():
+        if not line or line.startswith('#'):
+            continue
+        fields = line.split('\t')
+        if len(fields) < 10 or fields[9] == 'raw':
+            continue
+        hashed = 2166136261
+        for byte in line.encode('utf-8'):
+            hashed = ((hashed ^ byte) * 16777619) & 0xFFFFFFFF
+        marks.append(f'{fields[0]}\t{hashed}')
+    (out / 'recipes.txt').write_text('\n'.join(marks) + '\n', encoding='utf-8')
+
+
 def recipe(path=RECIPE):
     rows = []
     for line in path.read_text(encoding='utf-8').splitlines():
@@ -391,6 +411,8 @@ def main():
                 continue
             Image.fromarray(img, 'RGBA').save(out / f"{row['name']}.png", optimize=True)
             done += 1
+    if only is None:
+        write_recipe_marks(out)
     print(done, 'HD sprites ->', out)
 
 

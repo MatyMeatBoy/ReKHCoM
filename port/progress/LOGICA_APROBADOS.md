@@ -15,6 +15,16 @@ usuario y se revisan las escenas hermanas que la copiaron.
 
 ## Principios
 
+Naipes mapa, prioridad2.3 del usuario: mantener corona, borde y los dos píxeles
+que cierran la ventana original. Una receta pequeña sólo reemplaza la
+ilustración; no hereda el recorte de valor si la llave nativa no lo tiene.
+Registrar texto fijo donde lo usa el tilemap, conservando su firma original,
+sin cambiar píxeles nativos para facilitar reconocimiento. Una actualización
+también debe detectar recetas nuevas cuyo archivo aún no existe; un inventario
+de recetas intentadas no acredita que todas las imágenes estén disponibles.
+La cobertura25/26 y las capturas de este bloque no conceden aprobación a una
+ilustración de recompensas aún inexistente ni modifican valoraciones de Atlas.
+
 Título HD, correcciones directas del usuario del 26/10: mantener el logo importado de CoM sin «Re:»; los textos
 SELECT y PULSA START comparten mayúsculas, separación de ocho píxeles nativos tras el indicador y margen de seis.
 La barra inferior y su línea negra llegan al borde sin una fila vacía a escala fraccionaria. La extensión roja

@@ -1130,18 +1130,22 @@ static std::vector<std::string> RecipeFields(const char* line) {
 }
 
 static void WriteRecipeMarks(const fs::path& outDir) {
-    std::error_code ec;
     std::ofstream out(outDir / "recipes.txt", std::ios::binary | std::ios::trunc);
+    out << "__recipe_inventory_v2__\t1\n";
     for (const char* line : kHdSpriteRecipe) {
         std::vector<std::string> f = RecipeFields(line);
-        if (f.size() >= 10 && f[9] != "raw" && fs::exists(outDir / (f[0] + ".png"), ec))
+        /* Record attempted recipes as well as their available outputs. An
+           unavailable regional/source texture stays a native fallback; a
+           later added/changed recipe must still trigger a bounded retry. */
+        if (f.size() >= 10 && f[9] != "raw")
             out << f[0] << '\t' << RecipeHash(line) << '\n';
     }
 }
 
-/* How many imported sprites an updated recipe left behind: a row whose mark differs, or, in an import older than the
-   marks, a picture of another proportion than the recipe's (the game refuses those rather than stretch them, and
-   shows the cartridge's). Reads recipes.txt and each PNG's header only: cheap enough for every start. */
+/* Compare the attempted recipe inventory, not just PNGs that already exist:
+   newly added sprites have no output yet. Legacy inventories need one sprite
+   refresh. Missing outputs of known recipes remain native fallbacks, avoiding
+   endless retries for textures absent from a particular source edition. */
 static int StaleSprites(const fs::path& data) {
     std::error_code ec;
     fs::path dir = data / "hd" / "sprites";
@@ -1155,28 +1159,22 @@ static int StaleSprites(const fs::path& data) {
         while (in >> name >> hash)
             marks[name] = hash;
     }
+    auto inventory = marks.find("__recipe_inventory_v2__");
+    if (inventory == marks.end() || inventory->second != 1) {
+        if (!marks.empty())
+            return 1; /* one migration; does not reimport music or movies */
+        for (fs::directory_iterator it(dir, ec), end; !ec && it != end; it.increment(ec))
+            if (it->is_regular_file(ec) && it->path().extension() == ".png")
+                return 1;
+        return 0; /* no previous import */
+    }
     int stale = 0;
     for (const char* line : kHdSpriteRecipe) {
         std::vector<std::string> f = RecipeFields(line);
         if (f.size() < 10 || f[9] == "raw")
             continue;
-        fs::path png = dir / (f[0] + ".png");
-        if (!fs::exists(png, ec))
-            continue; /* not imported (another region's word, say): nothing left behind */
         auto mark = marks.find(f[0]);
-        if (mark != marks.end()) {
-            stale += mark->second != RecipeHash(line);
-            continue;
-        }
-        if (!marks.empty())
-            continue; /* a marked import: rows without a mark were not written by it */
-        unsigned char head[24] = { 0 };
-        std::ifstream(png, std::ios::binary).read((char*)head, sizeof(head));
-        uint32_t w = (uint32_t)head[16] << 24 | head[17] << 16 | head[18] << 8 | head[19];
-        uint32_t h = (uint32_t)head[20] << 24 | head[21] << 16 | head[22] << 8 | head[23];
-        float want = (float)(atoi(f[6].c_str()) + RecipePad(f[9], 0)) / (atoi(f[7].c_str()) + RecipePad(f[9], 1));
-        if (h && want > 0 && ((float)w / h > want * 1.03f || (float)w / h < want * 0.97f))
-            stale++;
+        stale += mark == marks.end() || mark->second != RecipeHash(line);
     }
     return stale;
 }
