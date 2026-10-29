@@ -120,7 +120,7 @@ static int sPreliminarApprovedOnly; /* only the Preliminar V1 scenes approved wi
 /* Preliminar V1 scenes approved with honours in the review app; KHCOM_SCENEnnn_WIDE=0 turns one off */
 /* every scene accepted in Atlas (Aprobado (mejorar), Aprobado, Honores: all go into the game, user 25/10) that has a
    recipe; KHCOM_SCENEnnn_WIDE=0 turns one off */
-static const int kPreliminarApproved[] = {4, 7, 44, 45, 53, 54, 55, 87, 90, 95, 98, 99, 102, 104, 110, 112, 115, 116, 117, 118,
+static const int kPreliminarApproved[] = {4, 7, 44, 45, 53, 54, 55, 81, 87, 90, 95, 97, 98, 99, 102, 104, 110, 112, 115, 116, 117, 118,
                                           120, 121, 122, 124};
 static int sPreliminarApprovedOn[sizeof(kPreliminarApproved)/sizeof(kPreliminarApproved[0])];
 /* harness switches, read once per frame on the main thread: getenv in the per-row/per-pixel drawing is slow on
@@ -1711,10 +1711,10 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     int guardPatio = bg == 0 && sBgLatch[bg].valid &&
         PortGuardArmorBackdropMatches((const void* const*)sBgLatch[bg].map) &&
         !sEnvNoGuardPatio; /* isolated before/after harness */
-    /* Trickmaster's chessboard below the map (the wide view's bottom band): the Preliminar V2 of the boss arenas,
-       waiting for the user's approval (KHCOM_ARENAS_V2=1, the review copy) */
+    /* Atlas c6f2bb42ff5143bf98ee674f64065f71 approved this exact
+     * Trickmaster backdrop; explicit arenas Off still restores the original. */
     int tmBoard = sBgLatch[bg].valid && PortTrickmasterBackdropMatches((const void* const*)sBgLatch[bg].map) &&
-        PortArenasV2();
+        PortArenasApproved();
     /* Ursula's cave (1) goes on below its floor; her own layer (2) shows one Ursula */
     int ursLayer = PortArenasApproved() && sBgLatch[bg].valid ? PortUrsulaLayer((const void* const*)sBgLatch[bg].map) : 0;
     /* Jafar's room (1) goes on by its periods; the genie's layer (2) shows one genie */
