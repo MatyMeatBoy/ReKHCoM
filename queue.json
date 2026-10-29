@@ -10338,10 +10338,10 @@
       "status": "pr_abierto",
       "owner": "codex-linux459",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T02:43:59.422500+00:00",
+      "updated_at": "2026-10-29T02:44:41.415602+00:00",
       "branch": "fix/linux459-safe-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/489",
-      "approval": "Root integrator: human-authorized code review; 40489b92c6b3428988fda0e2d970fa875e4d7ad6",
+      "approval": "Root integrator: human-authorized code review; c87838bcb13e5eaca1f267fdce0a3abee156d457",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
         {
@@ -10373,6 +10373,11 @@
           "at": "2026-10-29T02:43:59.422500+00:00",
           "owner": "codex-linux459",
           "detail": "c87838bcb: actual SDL/FreeType old warmup RED2, new GREEN3; Linux32 EU/US/JP build; 8 isolated game routes complete, deck flowing15/small57 and original off pixels identical; 29 launcher,10 startup, packaging PASS. Normal physical launch unresolved; test delivery pending."
+        },
+        {
+          "at": "2026-10-29T02:44:41.415602+00:00",
+          "owner": "codex-linux459",
+          "detail": "Root solo review per user no-workers: portable face coverage matches Raster, both UI/game warmups guard unsupported glyphs, other backends default unchanged. Real SDL/FT RED2 GREEN3, eight game routes, deck actual glyphs/pixel comparison, original fallback and off path preserved. 29 launcher,10 startup,4 package tests pass. Normal startup and reporter HD confirmation remain open; test delivery next."
         }
       ],
       "claimed_at": "2026-10-29T02:17:11.379296+00:00"
@@ -11150,7 +11155,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T02:43:59.422500+00:00",
+  "updated_at": "2026-10-29T02:44:41.415602+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
