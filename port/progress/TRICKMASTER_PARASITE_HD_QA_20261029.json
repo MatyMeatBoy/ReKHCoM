@@ -1,0 +1,321 @@
+{
+  "schema": "rekhcom.card-illustration-qa/1",
+  "source_commit": "41dd9f55e",
+  "registry_rows": 915,
+  "reverse_producer_coverage": {
+    "EU": {
+      "large": 99,
+      "small": 118
+    },
+    "US": {
+      "large": 99,
+      "small": 107
+    },
+    "JP": {
+      "large": 99,
+      "small": 107
+    },
+    "negative_controls": "removing large Bos03, small Trickmaster or EU AxelA alias produces missing sources"
+  },
+  "owned_source_identity": {
+    "rows": [
+      {
+        "asset": "CARD/0137/CA0137.RTM",
+        "texture": "ce_037_tm2.dds",
+        "dimensions": [
+          256,
+          256
+        ],
+        "bytes": 262272,
+        "sha256": "717fff72f3cb014c3640d6bd93ac3a8a16e6beba40cc9f1e507dc5ba25ea2be6"
+      },
+      {
+        "asset": "CARD/0138/CA0138.RTM",
+        "texture": "ce_038_tm2.dds",
+        "dimensions": [
+          256,
+          256
+        ],
+        "bytes": 262272,
+        "sha256": "5e42e781ffdd25a0d48e29cb4ae3cdc8287176a4a253f8d4ad9869a800e09d10"
+      }
+    ],
+    "source_hed_sha256": "06155a85d500e8fbaf947076feaadf8f4b65338e476211eea1988519f7550ff9",
+    "source_identity_unchanged": true
+  },
+  "recipe_delta": {
+    "prior_rows": 911,
+    "prior_sha256": "85305ec79b4e355a29d3ddf74293a2ba756b79c232641688e9ba9c5bec0f3326",
+    "added": [
+      "gCardBos03Tiles\t1\t-\tgCardBos03Tiles\t-16\t-12\t32\t32\tCARD/0137/CA0137.RTM:ce_037_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
+      "gCardBos04Tiles\t1\t-\tgCardBos04Tiles\t-16\t-12\t32\t32\tCARD/0138/CA0138.RTM:ce_038_tm2.dds\tcrop=14,0,242,256;place=4,3,28,30;scale=8",
+      "gTrickmasterSmallCardHD\t6\tgTrickmasterSmallCardFrame0\tgTrickmasterSmallCardTiles\t-8\t-20\t16\t32\tCARD/0137/CA0137.RTM:ce_037_tm2.dds\tcrop=9,0,247,256;erase=170,136,238,153;erase=153,153,238,170;erase=136,170,238,238;erase=153,238,238,255;place=1,16,15,31;scale=8",
+      "gParasiteCageSmallCardHD\t6\tgParasiteCageSmallCardFrame0\tgParasiteCageSmallCardTiles\t-8\t-20\t16\t32\tCARD/0138/CA0138.RTM:ce_038_tm2.dds\tcrop=9,0,247,256;erase=170,136,238,153;erase=153,153,238,170;erase=136,170,238,238;erase=153,238,238,255;place=1,16,15,31;scale=8"
+    ],
+    "previous_bytes_preserved": true
+  },
+  "importer": {
+    "pass_": true,
+    "exit": 0,
+    "seconds": 90.57800000000134,
+    "stale_before": "4 stale HD sprites\n",
+    "stale_after": "0 stale HD sprites\n",
+    "previous_outputs_identical": 911,
+    "canonical_files_unchanged": 912,
+    "comparisons": [
+      {
+        "name": "gCardBos03Tiles",
+        "size": [
+          256,
+          256
+        ],
+        "max_channel_difference": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "cpp_sha256": "f81cf929b83ac929228bc0648e5e0b137d9996011b2ceff9b002fb3bb81394ba",
+        "python_sha256": "83958b478238c9cccbb380f9a1ae9cfe9ff903ec79a85b459cd4275e97d145ed",
+        "cpp_png_bytes": 89971,
+        "potential_rgba_bytes": 262144
+      },
+      {
+        "name": "gCardBos04Tiles",
+        "size": [
+          256,
+          256
+        ],
+        "max_channel_difference": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "cpp_sha256": "b825d7bd3de5614b8819c04a352a0d0533fb5e825f90af0034a3e578f91a7071",
+        "python_sha256": "3e27ae57a59886a0e3739d9315b1236bf791b47e59d2489d1f25c90846c7fe1d",
+        "cpp_png_bytes": 86257,
+        "potential_rgba_bytes": 262144
+      },
+      {
+        "name": "gParasiteCageSmallCardHD",
+        "size": [
+          128,
+          256
+        ],
+        "max_channel_difference": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "cpp_sha256": "c26e4cde42dfc84141e0b707ca3f532d00a61b904eaf4083682d1e3bbf26635c",
+        "python_sha256": "2884ad65fcb4c07e45883e6ceb6b202ff0beed30a74095dca54db46d1332ccbf",
+        "cpp_png_bytes": 26838,
+        "potential_rgba_bytes": 131072
+      },
+      {
+        "name": "gTrickmasterSmallCardHD",
+        "size": [
+          128,
+          256
+        ],
+        "max_channel_difference": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "cpp_sha256": "99eec8de7f4d958b032e3027a4c046efc2de1586691b5d33b547317a2bfa1347",
+        "python_sha256": "b130ff07fd35d178e3c3ea9db97f7ec9afeca1000b0f7c6361ea2634e6bb28fb",
+        "cpp_png_bytes": 26331,
+        "potential_rgba_bytes": 131072
+      }
+    ],
+    "source_identity_unchanged": true,
+    "cache_destination": "C:\\Users\\MP\\Documents\\00 Claude\\KHCoMPC\\pruebas\\atlas-v23-boss-stack\\cpp915\\hd\\sprites"
+  },
+  "runtime": {
+    "pass_": true,
+    "rows": [
+      {
+        "case": "trick-battle",
+        "frame": 480,
+        "activated_binding": "gCardBos03Tiles",
+        "hd_off_rgba_identical": true,
+        "hd_on_difference_bbox": [
+          721,
+          680,
+          816,
+          790
+        ],
+        "receipts": {
+          "old-on": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 480,
+            "png_sha256": "eb6e3137bc8af6db3350eeb88c83ebb7fc9a240c7b0ad6bff43f836f01757c8b"
+          },
+          "new-on": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 480,
+            "png_sha256": "de69836ef695cec39ef93e0bbcb53c332c406219df0b8096646fabaa321583fb"
+          },
+          "old-off": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 480,
+            "png_sha256": "9babab35964a5edea893ee74d3ba48711717eb45fc337eafe0df45f4a13eb3b7"
+          },
+          "new-off": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 480,
+            "png_sha256": "9babab35964a5edea893ee74d3ba48711717eb45fc337eafe0df45f4a13eb3b7"
+          }
+        }
+      },
+      {
+        "case": "parasite-battle",
+        "frame": 780,
+        "activated_binding": "gCardBos04Tiles",
+        "hd_off_rgba_identical": true,
+        "hd_on_difference_bbox": [
+          721,
+          676,
+          816,
+          786
+        ],
+        "receipts": {
+          "old-on": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 780,
+            "png_sha256": "a3d843214a49c674d38eea6e92671eb4b585999324ec448d023f2ceea7744c31"
+          },
+          "new-on": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 780,
+            "png_sha256": "0f1bf5890a9524d2a12f61a8737495f2ed44914cd4a32cc2f8610ef61ad2a84c"
+          },
+          "old-off": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 780,
+            "png_sha256": "b12ea3710f5ca4c1697669a63f48e4db51c3e827576382d739699ad0ea8d9d7d"
+          },
+          "new-off": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 780,
+            "png_sha256": "b12ea3710f5ca4c1697669a63f48e4db51c3e827576382d739699ad0ea8d9d7d"
+          }
+        }
+      },
+      {
+        "case": "trick-deck",
+        "frame": 300,
+        "activated_binding": "gTrickmasterSmallCardHD",
+        "hd_off_rgba_identical": true,
+        "hd_on_difference_bbox": [
+          152,
+          232,
+          228,
+          314
+        ],
+        "receipts": {
+          "old-on": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 300,
+            "png_sha256": "8bddfb74cd7600685423b944868cda91c888c80d7c4476394754c45e0fcb2ee8"
+          },
+          "new-on": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 300,
+            "png_sha256": "887b379fe34f4b44938bd4cb222654a47329a8daefb47536c7feec4db9f1a8df"
+          },
+          "old-off": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 300,
+            "png_sha256": "0d444fc96c9f43b06b3b302f29b3154ab62558c64fe388789adf9371a207a144"
+          },
+          "new-off": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 300,
+            "png_sha256": "0d444fc96c9f43b06b3b302f29b3154ab62558c64fe388789adf9371a207a144"
+          }
+        }
+      },
+      {
+        "case": "parasite-deck",
+        "frame": 300,
+        "activated_binding": "gParasiteCageSmallCardHD",
+        "hd_off_rgba_identical": true,
+        "hd_on_difference_bbox": [
+          152,
+          232,
+          228,
+          314
+        ],
+        "receipts": {
+          "old-on": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 300,
+            "png_sha256": "26de5ad765750c0b147aa04747ad3666013e7aeab96b31ef92ed56784ac189c7"
+          },
+          "new-on": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 300,
+            "png_sha256": "ab1c10155f94168f4aeb05f47e59fe50802522927f99e7b4fe651bc3489eda72"
+          },
+          "old-off": {
+            "binary_sha256": "59ec4e0cf559c9f343360b024d079757df2ab242b2e3a781fc2c6ea120cbaace",
+            "frame": 300,
+            "png_sha256": "afa83806843e5049382d281a9176634117dd24ab860290e78dec4400cb88cf25"
+          },
+          "new-off": {
+            "binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+            "frame": 300,
+            "png_sha256": "afa83806843e5049382d281a9176634117dd24ab860290e78dec4400cb88cf25"
+          }
+        }
+      }
+    ],
+    "scope": "Four actual producer paths, one identified comparison frame each; old/new Off whole-frame equality. EU32 software SDLdummy mixed object relink, no GPU64/Android/clean-package or performance claim."
+  },
+  "atlas_children": [
+    {
+      "case": "trick-battle",
+      "frame": 480,
+      "id": "eb5bb35f7667483bb8b508090a2353e0",
+      "title": "HUD de combate · carta grande Trickmaster HD",
+      "source_png_sha256": "de69836ef695cec39ef93e0bbcb53c332c406219df0b8096646fabaa321583fb"
+    },
+    {
+      "case": "parasite-battle",
+      "frame": 780,
+      "id": "ca9f79411f154e89aee28b538d3fcb0e",
+      "title": "HUD de combate · carta grande Parasite Cage HD",
+      "source_png_sha256": "0f1bf5890a9524d2a12f61a8737495f2ed44914cd4a32cc2f8610ef61ad2a84c"
+    },
+    {
+      "case": "trick-deck",
+      "frame": 300,
+      "id": "819be5082470475390fd3ae596654bd4",
+      "title": "Ver barajas · carta pequeña Trickmaster HD",
+      "source_png_sha256": "887b379fe34f4b44938bd4cb222654a47329a8daefb47536c7feec4db9f1a8df"
+    },
+    {
+      "case": "parasite-deck",
+      "frame": 300,
+      "id": "62d8a64505594a1d8747f15f333dad5a",
+      "title": "Ver barajas · carta pequeña Parasite Cage HD",
+      "source_png_sha256": "ab1c10155f94168f4aeb05f47e59fe50802522927f99e7b4fe651bc3489eda72"
+    }
+  ],
+  "atlas_freeze": {
+    "time_utc": "2026-10-29T17:50:11.479459+00:00",
+    "snapshot": "C:\\Users\\MP\\Documents\\00 Claude\\KHCoMPC\\pruebas\\atlas-v23-live-state-freeze915.json",
+    "snapshot_sha256": "137af7a20df734bbead19fbb8e4b1c595112df20a6532ff3847e005d876a1851",
+    "families": 82,
+    "accepted": 78,
+    "assets": 209
+  },
+  "game_binary_sha256": "2d2975648d4a865d3c22937960984f40e6566667708ec114c03f8f04554b6112",
+  "launcher_binary_sha256": "9aa394701e4ce0b93b458d29e85b218bdda6dd300727cd7d03e179d81e716477",
+  "scope": "Isolated EU32 software runtime/import verification, mixed objects; no GPU64/Android/clean-package or loading/stutter certification."
+}
