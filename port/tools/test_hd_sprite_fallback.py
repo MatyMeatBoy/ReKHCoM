@@ -144,6 +144,9 @@ int main(void){
 a = source.index('typedef struct HdSpriteDraw {')
 b = source.index('} HdSpriteDraw;', a) + len('} HdSpriteDraw;')
 unit = preamble + backend + source[a:b] + '\nstatic HdSpriteDraw sDraws[3][128];\n'
+# These synthetic tuples are not EU boss aliases. Include the real no-alias
+# regional helper; the dedicated EU lookup test exercises its eleven mappings.
+unit += '#include "' + (ROOT/'port/include/port/port_eu_boss_stock_alias.h').as_posix() + '"\n'
 unit += function('static void Unload(') + function('static int Load(')
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteTextureReady(')
