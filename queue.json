@@ -10884,13 +10884,13 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T06:17:10.754575+00:00",
+      "updated_at": "2026-10-29T06:19:53.815041+00:00",
       "branch": "fix/v23-jiminy-book",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/494",
-      "approval": "Root integrator: human-authorized code review; 7b028b5c0ada1382a3f3c3e21b1e3e46ed303cbe",
+      "approval": "Root integrator: human-authorized code review; 982b2ef6173abb4e7e6d8dc6625f0305949fb23d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -10932,6 +10932,11 @@
           "at": "2026-10-29T06:17:10.754575+00:00",
           "owner": "codex-jiminy23",
           "detail": "Internal card BG headings implemented for five EU languages and USA; 32/64 builds and source checks pass, actual capture verification running. User requests cursor inactivity 2s; preserve in next independent block, no workers."
+        },
+        {
+          "at": "2026-10-29T06:19:53.815041+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Manual root review: localized BG lookup keys, existing readiness/fallback and fades; 32/64 ABI/boot/source checks; 12 actual views exit0 and pixel differences only within heading. P2 remains partial, user reports footer/right-page/extensions/pixel stretching to address next."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11303,7 +11308,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:17:10.754575+00:00",
+  "updated_at": "2026-10-29T06:19:53.815041+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
