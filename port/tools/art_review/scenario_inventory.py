@@ -133,7 +133,7 @@ def catalog_links(event, assets):
         key = item.get('revision_info', {}).get('catalog_key', '')
         title = item.get('title', '')
         keyed = re.fullmatch(r'scene-(\d+)', key)
-        labelled = re.search(r'\b(?:escena|scene)\s*[-_:]?\s*(\d{1,4})\b', title, re.I)
+        labelled = re.search(r'\b(?:escena|scene|coliseo)\s*[-_:]?\s*(\d{1,4})\b', title, re.I)
         reasons = []
         if keyed and int(keyed[1]) == event: reasons.append('catalog_key')
         if labelled and int(labelled[1]) == event: reasons.append('scene_label')

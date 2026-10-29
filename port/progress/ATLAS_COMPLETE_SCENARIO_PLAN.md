@@ -62,3 +62,17 @@ its database-owning Store. Family links retain renamed descendants and cycles
 are bounded; they do not grant visual approval to another camera path. The
 source/export/generator hashes identify this pass. Full camera captures and
 pending-reference registration remain unfinished.
+
+Ruling: the historical term "x3/integer2" is represented by current supported
+integer presentation profiles, not by restoring the retired integer_zoom key.
+Use1920x1080/zoom6 (x3) and1280x720/zoom4 (x2), scale_mode0, record the effective
+canvas and add window/ultrawide profiles only where the current engine permits
+them. This changes no game defaults. Both main profiles target640x360 logical
+coverage; scripted camera zooms and HUD layout remain separate checks.
+
+Library130 is now registered as a pending native full-map reference with the
+human screenshot and gallery view. Every previous desk record and all78
+accepted selections were compared unchanged. It is explicitly reference-only,
+not completed art or runtime coverage. Before more references, also recognize
+the existing "Coliseo121/122/124" scene labels to avoid duplicating approved
+families during the new source cross-check.
