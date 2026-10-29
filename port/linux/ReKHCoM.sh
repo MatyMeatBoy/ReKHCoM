@@ -204,8 +204,16 @@ if [ "$MODE" != 1 ] && [ "$AVAILABLE64" = 1 ]; then
     echo "ReKHCoM.sh: 64-bit exit=$CODE boot_marker=$ENTERED runtime_mode=$MODE"
     rm -f "$BOOT"
     if [ "$MODE" = 2 ] || [ "$ENTERED" = 1 ]; then exit "$CODE"; fi
+    if [ "$CODE" = 75 ]; then
+        # This attempt never entered the game. Use the same child-only path
+        # as --safe-startup, which is confirmed on the affected SteamOS host.
+        # Do not change the user's saved architecture or graphics preferences.
+        SAFE_STARTUP=1
+        export REKHCOM_GPU=0 SDL_RENDER_DRIVER=software
+        echo 'ReKHCoM.sh: native window startup timed out: compatible 32-bit software recovery'
+    fi
     case "$CODE" in
-        2|3|4|126|127) echo "ReKHCoM.sh: 64-bit bootstrap failed ($CODE): starting 32-bit" ;;
+        2|3|4|75|126|127) echo "ReKHCoM.sh: 64-bit bootstrap failed ($CODE): starting 32-bit" ;;
         *) exit "$CODE" ;;
     esac
 fi
