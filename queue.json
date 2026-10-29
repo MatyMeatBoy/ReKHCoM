@@ -8133,10 +8133,10 @@
     "scene-background-coverage-x3-integer2": {
       "id": "scene-background-coverage-x3-integer2",
       "piece": "Para mas tarde: auditar TODOSfondos de escenas hasta x3Integer2 con criterio nuevo, por tramo/zoom/camara/entrada/salida; añadir todoscasosreconocidos a colaAtlas conIDs+capturas, preservarzoomespeciallegitimo yHUDsegunzoomusuario. MonstroGeppetto/Pinocho ya reportados, no duplicartrabajo.",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-scene-inventory",
       "created_at": "2026-10-27T22:26:03.779081+00:00",
-      "updated_at": "2026-10-29T23:56:57.308205+00:00",
+      "updated_at": "2026-10-29T23:57:10.059541+00:00",
       "branch": "fix/atlas-coliseum-context-links",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/525",
       "approval": "Root integrator: human-authorized code review; 69f2dc5d747b35a8055acd00065985459285571d",
@@ -8171,6 +8171,11 @@
           "at": "2026-10-29T23:56:57.308205+00:00",
           "owner": "codex-scene-inventory",
           "detail": "Reviewed exact title alias addition,9RED/GREEN regressionsPASS and live authoritative desk cross; no accepted records or gameplay modified. Inventory followup only; runtime and remaining references pending."
+        },
+        {
+          "at": "2026-10-29T23:57:10.059541+00:00",
+          "owner": "codex-scene-inventory",
+          "detail": "Reviewed exact title alias addition,9RED/GREEN regressionsPASS and live authoritative desk cross; no accepted records or gameplay modified. Inventory followup only; runtime and remaining references pending.; merged acd11ca0aa252e16e75aa4078d6624e24dcb0921; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T23:03:43.709176+00:00"
@@ -12290,7 +12295,7 @@
     "created_at": "2026-10-29T23:57:01.889789+00:00",
     "updated_at": "2026-10-29T23:57:01.889789+00:00"
   },
-  "updated_at": "2026-10-29T23:57:01.889789+00:00",
+  "updated_at": "2026-10-29T23:57:10.059541+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
