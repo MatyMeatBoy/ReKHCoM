@@ -401,5 +401,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v23-startup-copyright-hd | Before2.3: copyright/legal startup screens HD only with HD enabled; audit startup-to-title audio stutters including skip transitions | pendiente | — | — | — | 2026-10-29T06:31:32.313804+00:00 |
 | halloween-arena-floor-perspective | User29Oct screenshot: Halloween arena bottom repeats/stretches last pixels; extend using own floor in perspective, comparable to Trickmaster approach, preserve actors/collisions | pendiente | — | — | — | 2026-10-29T06:51:24.325541+00:00 |
 | release-v23-pre1-win-android | User explicitly requests current prerelease as2.3-pre1: versioned Windows+Android packages, immutable prior nightly, verified source and hashes | en_curso | codex-v23-pre1 | — | — | 2026-10-29T07:00:59.546295+00:00 |
+| hd-menu-light-line-origin | User29Oct: selected HD menu divider line must originate at its lit indicator; compare owned ReCoM1.5HD reference and apply consistently across port menus | pendiente | — | — | — | 2026-10-29T07:03:45.560567+00:00 |
 
 Integrador: libre
