@@ -10826,13 +10826,13 @@
     "v23-quit-game-menu": {
       "id": "v23-quit-game-menu",
       "piece": "v2.3: restaurar Salir del juego en el menu propio, visible en HD y normal, Windows/Linux; cerrar completamente juego y launcher sin regresar al launcher. Reporte #479 coincide con pedido del usuario, comprobar semantica por plataforma.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-quit479",
       "created_at": "2026-10-28T23:12:19.692181+00:00",
-      "updated_at": "2026-10-29T01:16:10.525067+00:00",
+      "updated_at": "2026-10-29T01:40:19.105314+00:00",
       "branch": "fix/desktop64-quit-menu",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/485",
-      "approval": "Root integrator: human-authorized code review; 69b5cb14789acfe8eeeb74ba8a2430fee7675552",
+      "approval": "Root integrator, user-authorized functional fix and desktop delivery verified",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/479",
       "evidence": [
         {
@@ -10854,6 +10854,11 @@
           "at": "2026-10-29T01:00:37.705352+00:00",
           "owner": "codex-quit479",
           "detail": "released: Merged485 0cd1473e4c0a2b443b20f2685dde052e5c8d1a83. Eight native32/desktop64 real-menu cases and visible HD64 capture PASS; source fixed, appropriate desktop delivery and end-to-end launcher/Linux checks pending. Keep479 open; not in immutable2.2.5 or480APK."
+        },
+        {
+          "at": "2026-10-29T01:40:19.105314+00:00",
+          "owner": "codex-quit479",
+          "detail": "PR485 merged0cd1473e; desktop test public6assets verified anonymous exact SHA, sourcee51; Windows24closed-menu+2actualGUIlauncher paths, Linux22exactarchive VM cases all3regions/32/64 PASS; physicalGamingMode/audio not claimed. https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-test479-desktop.1"
         }
       ],
       "claimed_at": "2026-10-29T01:16:10.525067+00:00"
@@ -11059,7 +11064,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:16:10.525067+00:00",
+  "updated_at": "2026-10-29T01:40:19.106309+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
