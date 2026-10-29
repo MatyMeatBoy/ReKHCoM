@@ -12199,10 +12199,10 @@
     "optiport-render-identity-lessons": {
       "id": "optiport-render-identity-lessons",
       "piece": "Promote verified Linux SONAME identity, shared texture/surface failure contracts, additive HD native fallback and harness ASLR observations into OptiPort references; no claim of final full-game pass.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-render-lessons",
       "created_at": "2026-10-29T22:57:18.637695+00:00",
-      "updated_at": "2026-10-29T22:59:28.225618+00:00",
+      "updated_at": "2026-10-29T22:59:43.591266+00:00",
       "branch": "docs/render-identity-lessons",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/21",
       "approval": "Root integrator: human-authorized code review; 4e7211ecb9ae9f2690af3b41efa55406574df84d",
@@ -12217,9 +12217,15 @@
           "at": "2026-10-29T22:59:28.225618+00:00",
           "owner": "codex-optiport-render-lessons",
           "detail": "Reviewed70line reference update against retained loader, shim, PPU and sandbox policy evidence; quick_validate/diff check PASS; no device or final full-pass claim."
+        },
+        {
+          "at": "2026-10-29T22:59:43.591266+00:00",
+          "owner": "codex-optiport-render-lessons",
+          "detail": "Reviewed70line reference update against retained loader, shim, PPU and sandbox policy evidence; quick_validate/diff check PASS; no device or final full-pass claim.; merged 42747c240d4e55c142977a40fe4bf51cc25ceac5"
         }
       ],
-      "claimed_at": "2026-10-29T22:57:33.025405+00:00"
+      "claimed_at": "2026-10-29T22:57:33.025405+00:00",
+      "completed_at": "2026-10-29T22:59:43.591266+00:00"
     }
   },
   "integrator": {
@@ -12228,7 +12234,7 @@
     "created_at": "2026-10-29T22:59:34.457527+00:00",
     "updated_at": "2026-10-29T22:59:34.457527+00:00"
   },
-  "updated_at": "2026-10-29T22:59:34.466023+00:00",
+  "updated_at": "2026-10-29T22:59:43.591266+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
