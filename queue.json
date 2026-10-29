@@ -11310,10 +11310,23 @@
       ],
       "claimed_at": "2026-10-29T03:06:42.463988+00:00",
       "completed_at": "2026-10-29T03:29:16.966904+00:00"
+    },
+    "game-cursor-idle-two-seconds": {
+      "id": "game-cursor-idle-two-seconds",
+      "piece": "User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T06:21:49.354047+00:00",
+      "updated_at": "2026-10-29T06:21:49.354047+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:20:31.039891+00:00",
+  "updated_at": "2026-10-29T06:21:49.354047+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
