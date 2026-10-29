@@ -57,6 +57,11 @@ class ScenarioInventoryTests(unittest.TestCase):
                        dict(title='Missing identifier',status='pending')])
         self.assertEqual([a['id'] for a in catalog_links(130,assets)],['first','new'])
 
+    def test_existing_coliseum_scene_titles_are_not_new_missing_backgrounds(self):
+        assets=[dict(id=str(n),title=f'Coliseo {n} · revisión',status='approved') for n in (121,122,124)]
+        for number in (121,122,124):
+            self.assertEqual([a['id'] for a in catalog_links(number,assets)],[str(number)])
+
     def test_field_and_battle_contexts_keep_sources_and_null_story_alternatives(self):
         with tempfile.TemporaryDirectory(prefix='scenario-contexts-') as tmp:
             root=Path(tmp)
