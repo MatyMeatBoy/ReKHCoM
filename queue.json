@@ -10918,8 +10918,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T12:29:24.279514+00:00",
-      "branch": "fix/v23-jiminy-name-margins",
+      "updated_at": "2026-10-29T12:30:43.344749+00:00",
+      "branch": "fix/v23-jiminy-cover-lists",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/503",
       "approval": "Root integrator: human-authorized code review; b0de9c8bd198541a2ed7c9fe6d510080738dfa43",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -11098,6 +11098,11 @@
           "at": "2026-10-29T11:50:43.668011+00:00",
           "owner": "codex-jiminy23",
           "detail": "released: 502/503 merged, sourceclean main62ef1bb7. P2unfinished cover/list/RikuJP retained; yield lane to priority new459 normal64 logs at window-begin. No worker."
+        },
+        {
+          "at": "2026-10-29T12:30:43.344749+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Resuming after startup PR504/test459 delivered and awaiting reporter. Existing503 name margins integrated; continue cover/list edges and RikuJP coverage, then audio. Same checkout, no workers; no source edits yet on this branch."
         }
       ],
       "claimed_at": "2026-10-29T12:29:24.279514+00:00",
@@ -11632,7 +11637,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T12:29:24.279514+00:00",
+  "updated_at": "2026-10-29T12:30:43.344749+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
