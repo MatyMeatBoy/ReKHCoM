@@ -10915,10 +10915,10 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T13:07:59.543815+00:00",
+      "updated_at": "2026-10-29T13:08:13.909981+00:00",
       "branch": "fix/v23-jiminy-cover-lists",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/505",
       "approval": "Root integrator: human-authorized code review; bd66587ee79efa29c4d05693a13bdb1a9721f91f",
@@ -11113,6 +11113,11 @@
           "at": "2026-10-29T13:07:59.543815+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual code+visual review without workers; exact native frame boxes/languages/regions, remaster F, no existing names/recipes changed; native import old904 byte-identical, actual root/list diff confined header, HDoff/Story detail32/64 same; builds/ABI/source passed; concurrent64 timeout retained and sequential controls both pass; P2 remains partial"
+        },
+        {
+          "at": "2026-10-29T13:08:13.909981+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual code+visual review without workers; exact native frame boxes/languages/regions, remaster F, no existing names/recipes changed; native import old904 byte-identical, actual root/list diff confined header, HDoff/Story detail32/64 same; builds/ABI/source passed; concurrent64 timeout retained and sequential controls both pass; P2 remains partial; merged 45e0d2f22d236374c4fc6ce399341076b220ab99; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T12:29:24.279514+00:00",
@@ -11652,7 +11657,7 @@
     "created_at": "2026-10-29T13:08:04.624567+00:00",
     "updated_at": "2026-10-29T13:08:04.624567+00:00"
   },
-  "updated_at": "2026-10-29T13:08:04.624567+00:00",
+  "updated_at": "2026-10-29T13:08:13.909981+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
