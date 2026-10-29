@@ -332,8 +332,8 @@ con raíz, detalle y recurso ausente idénticos. JP Sora/Riku32/64 previo a este
 bloque tiene14 controles idénticos; la nueva compilación JP se valida aparte.
 La nueva compilación JP de este bloque completó además8 recorridos Sora/Riku
 32/64, con14 comparaciones anteriores/nuevas idénticas. Windows EU/US/JP32,
-guests EU/JP64, ABI/boot64 y check_sources pasan. Android US/JP está en
-compilación al abrir el PR; no se afirma prueba física ni audio.172 BMP de
+guests EU/JP64, ABI/boot64 y check_sources pasan. Android US/JP ARMv7 compilado y símbolos fijos verificados; no se afirma
+prueba física, APK nuevo ni audio.172 BMP de
 recorridos terminados se compactaron sólo después de verificar PNG RGBA
 idénticos, liberando798933120 bytes lógicos. Los datos del jugador y entregas
 anteriores permanecen conservados.
