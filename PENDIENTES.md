@@ -395,4 +395,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | post480-test-docs-optiport-snapshot | Document public480 Android test delivery and refresh embedded OptiPort snapshot to19 without app-source/build changes; preserve local docs and immutable releases | integrado | codex-post480-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/486 | Root integrator: human-authorized code review; 33aaee8ea7dc96ab2adb3e40b95d0e9ad1ba32fe | 2026-10-29T01:12:39.727420+00:00 |
 | post479-delivery-record | Record completed desktop479 test and current open bug priorities in public progress docs; stable2.2.5 unchanged; no app source change | integrado | codex-post479-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/487 | Root integrator: human-authorized code review; 2bc4c68a3798309f91260dc3b19b1a11aaec5465 | 2026-10-29T01:48:02.419970+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T01:49:52.102214+00:00)
