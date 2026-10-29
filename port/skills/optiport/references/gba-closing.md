@@ -33,6 +33,8 @@ Separar contenido protegido de metadata estructural y cumplir la política/licen
 
 Probar límites y campos de tablas desde consumidores, formato y referencias. Una palabra dentro del rango ROM puede ser número coincidente, dirección, código o datos. No convertirla automáticamente a puntero ni justificar extensión por la siguiente etiqueta sin revisar. Thumb/ARM y destinos de jump tables pueden requerir tratamiento distinto del bit de estado; fijar la semántica del consumidor antes de simbolizar.
 
+El límite de un símbolo no necesariamente coincide con la longitud de una copia ejecutable: revisar la instrucción/receta que copia y todos sus consumidores antes de delimitar el oráculo o un bloque IWRAM. Un decoder externo puede exportar sólo parte de un recurso; contrastar cantidad, stride e índices con consumidores y comprobar el round trip del rango sin inferir un porcentaje global. Para ejemplos y validación funcional compuesta, leer [oráculos y composición](oracle-validation.md).
+
 Un pipeline de traslado puede combinar: inventario estático de punteros/branches, enlace con padding en puntos seleccionados y ejecución determinista original/trasladado. Documentar clasificación de palabras sospechosas y desconocidas, normalización permitida de direcciones y cobertura del script. Los stand-ins de un fixture pueden resolver símbolos ausentes en el link real: conservar el gate integral. No ejecutar traslados en la instalación protegida del usuario.
 
 ## Port host: puntero serializado y puntero nativo

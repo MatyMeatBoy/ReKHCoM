@@ -32,6 +32,8 @@ Antes de automatizar aplicaciones, probar el verificador con diferencias deliber
 
 Aliases de símbolo/tipo pueden resolver declaraciones incompatibles sin reescribir headers compartidos; comprobar el símbolo efectivamente emitido, orden y visibilidad de declaraciones y contexto completo del TU. Un match de función aislada no valida datos externos ni sustituye reconstrucción final. Aplicar reversiblemente, construir el módulo y artefacto, ejecutar gates pertinentes y conservar el último aceptado. ASM/original usado en build normal demuestra integridad de la base, no equivalencia del borrador que queda detrás de una condición.
 
+Para diseñar un harness funcional o validar composición, cargar [oráculos protegidos y escenarios persistentes](oracle-validation.md). Incluye controles negativos de retorno/forwarding y límites de publicación; no es necesario para una comparación de objetos aislada.
+
 ## SDK y runtime: reutilizar sin inflar resultados
 
 Inventariar primero C ya recuperado, borradores, biblioteca enlazada y ASM original escrito a mano. Respetar las exclusiones justificadas del proyecto: no convertir un mixer programado a mano a C como obligación nueva. Un objeto runtime puede proceder de C original y seguir siendo `linked`; cambiar la etiqueta no es un logro de decompilación.

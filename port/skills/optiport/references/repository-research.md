@@ -18,6 +18,8 @@ Buscar símbolos distintivos, fragmentos de código, constantes combinadas, estr
 
 Desde un candidato útil, recorrer sólo las ramas del grafo que puedan resolver la diferencia: fork y upstream, commit que introdujo la función, diff de corrección, versión anterior y configuración de build. Un fork puede conservar una revisión antigua compatible donde el SDK actual difiere. Leer cuerpos completos, headers/layout y opciones de compilación de la revisión fijada antes de adaptar; snippets sirven para descubrir, no para validar. Guardar negativos y variantes descartadas con causa.
 
+Si el donante usa un submódulo de compilador, fijar también su gitlink, frontend y flags efectivos de esa revisión. Auditar nombres por cuerpo, callers y ABI: un nombre histórico puede describir otro rol. Un resultado dependiente de un flag ajeno al toolchain aceptado sigue siendo diagnóstico; ver [casos auditados](oracle-validation.md#evidencia-y-revisión-de-estas-lecciones).
+
 Agrupar cuerpos idénticos por hash normalizado de comentarios/espacios para evitar evaluar muchas copias del mismo candidato. Ese hash **no prueba equivalencia binaria**. Conservar identidad de repositorio, commit y licencia de cada fuente usada; no deducir permisos de una API `license:null` ni de la licencia de un fork. Al encontrar fuentes originales de una biblioteca, revisar primero si sus objetos ya están enlazados: reproducirlos puede aclarar procedencia sin añadir código recuperado.
 
 Un 403 puede ser autenticación, permisos o rate limit; revisar respuesta/headers y usar el conector o acceso autenticado disponible. No concluir que un repositorio o archivo no existe. Registrar consultas efectivas y límites de cobertura; una búsqueda profunda no demuestra exhaustividad de GitHub.
