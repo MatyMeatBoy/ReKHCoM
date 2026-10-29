@@ -52,6 +52,7 @@ class ScenarioInventoryTests(unittest.TestCase):
         self.assertEqual([a['historical_status'] for a in links],['approved','pending'])
         assets[0]['parent_id']='new'  # malformed historical cycle must not hang
         self.assertEqual(len(catalog_links(130,assets)),2)
+        assets[0].pop('parent_id')
         assets.extend([dict(id='other',title='Escena004',status='approved'),
                        dict(title='Missing identifier',status='pending')])
         self.assertEqual([a['id'] for a in catalog_links(130,assets)],['first','new'])
