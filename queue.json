@@ -10350,8 +10350,8 @@
       "status": "en_curso",
       "owner": "codex-linux459-window64",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T20:45:28.171056+00:00",
-      "branch": "fix/issue459-window-startup",
+      "updated_at": "2026-10-29T20:48:09.508717+00:00",
+      "branch": "fix/linux459-native64-window",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/504",
       "approval": "Root integrator: human-authorized code review; 2db0e1e4fd4ce199afcd31193ce62252b6f47568",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
@@ -10445,6 +10445,11 @@
           "at": "2026-10-29T12:29:17.696860+00:00",
           "owner": "codex-deck459-window",
           "detail": "released: Delivered public test459-startup.2, reply6496678893; PR504 integrated; exact archive normal64/safe32/stall64-to-real32 title and preferences verified; physical SteamOS confirmation pending, issue459 stays open. Release lane while awaiting reporter; continue P2 without workers."
+        },
+        {
+          "at": "2026-10-29T20:48:09.508717+00:00",
+          "owner": "codex-linux459-window64",
+          "detail": "Nuevo log6506424422: SDL64 inicia X11/Pipewire; SDL_CreateWindow HIDDEN bloquea antes window-show/renderer, watchdog30s exit75, recovery32software confirmado fisico. Preservar fallback; investigar diferencia clienteX11/ruta64 y nuevo test GPU64. #517 WIP3b276002e preservado, claim liberado por prioridad humana."
         }
       ],
       "claimed_at": "2026-10-29T20:45:28.171056+00:00",
@@ -12072,7 +12077,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T20:45:28.171056+00:00",
+  "updated_at": "2026-10-29T20:48:09.508717+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
