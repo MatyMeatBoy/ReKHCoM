@@ -8136,10 +8136,10 @@
       "status": "pr_abierto",
       "owner": "codex-scene-inventory",
       "created_at": "2026-10-27T22:26:03.779081+00:00",
-      "updated_at": "2026-10-29T23:41:00.659228+00:00",
+      "updated_at": "2026-10-29T23:41:09.382711+00:00",
       "branch": "tools/atlas-complete-scenario-inventory",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/524",
-      "approval": "Usuario27/10 dejaauditoriafondosparamastarde y pide enviar todosreconocidos a colaAtlas",
+      "approval": "Root integrator: human-authorized code review; 983df957695ee1cdc87e0b3383ff454a1e4e9579",
       "reference": null,
       "evidence": [
         {
@@ -8151,6 +8151,11 @@
           "at": "2026-10-29T23:41:00.659228+00:00",
           "owner": "codex-scene-inventory",
           "detail": "Source inventory block only: 8 RED/GREEN regressions including actual old catalog-ID failure; real 3-region source pass zero issues,197 stable IDs/62BGs/13worlds/209battleentries/13selectors. EU195 runtime IDs vs197USJP, library130EU128. Protected Atlas snapshot82families78accepted retained, no desk writes. Runtime captures and missing-reference registration remain pending."
+        },
+        {
+          "at": "2026-10-29T23:41:09.382711+00:00",
+          "owner": "codex-scene-inventory",
+          "detail": "Self-review per no-workers mandate. Pure read-only source/catalog parser, regional enum offsets and camera deadlines follow engine; family cycles/missing IDs bounded; 8 regressions + real 3-region zero-issue source inventory PASS. Source block only, no visual approval/runtime coverage/desk modifications claimed."
         }
       ],
       "claimed_at": "2026-10-29T23:03:43.709176+00:00"
@@ -12265,7 +12270,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T23:41:00.659228+00:00",
+  "updated_at": "2026-10-29T23:41:09.382711+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
