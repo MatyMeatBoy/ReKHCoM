@@ -12125,10 +12125,23 @@
       ],
       "claimed_at": "2026-10-29T21:52:33.796208+00:00",
       "completed_at": "2026-10-29T22:00:41.758590+00:00"
+    },
+    "bridge-surface-image-bounds": {
+      "id": "bridge-surface-image-bounds",
+      "piece": "P1 follow-up to521: shared surface conversion/blit/save dereference NULL and dimensions/pitch/offset arithmetic can overflow before texture creation. CPU fault tests and valid-pixel controls; preserve gameplay.",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T22:02:01.455005+00:00",
+      "updated_at": "2026-10-29T22:02:01.455005+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Human: priorizar cuelgues and fix all proven related patterns",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:00:46.092698+00:00",
+  "updated_at": "2026-10-29T22:02:01.455005+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
