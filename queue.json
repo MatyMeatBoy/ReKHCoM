@@ -11646,10 +11646,10 @@
     "halloween-arena-floor-perspective": {
       "id": "halloween-arena-floor-perspective",
       "piece": "User29Oct screenshot: Halloween arena bottom repeats/stretches last pixels; extend using own floor in perspective, comparable to Trickmaster approach, preserve actors/collisions",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-halloween-v23",
       "created_at": "2026-10-29T06:51:24.325541+00:00",
-      "updated_at": "2026-10-29T17:09:11.406727+00:00",
+      "updated_at": "2026-10-29T17:09:35.152611+00:00",
       "branch": "docs/v23-halloween-floor-validation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/514",
       "approval": "Root integrator: human-authorized code review; 4f1e7a2b1c3d9b1d0f029be94d4cf6a7e8f9d692",
@@ -11694,9 +11694,15 @@
           "at": "2026-10-29T17:09:11.406727+00:00",
           "owner": "codex-halloween-v23",
           "detail": "Root manual review of evidence supplement only: actual ff476 SDL64 eight valid runs/32captures with both fonts, bin hashes stable. Read32/64 comparisons16SDwholeframes+4HDpausedwholeframes exact,32addedground checks exact; activeHDoverlay parity unclaimed and missing-font attempts excluded. Source implementation509 already integrated, CPU and real32 reviewed earlier. Floor scope complete; future platform packages retain separate release gates."
+        },
+        {
+          "at": "2026-10-29T17:09:35.152611+00:00",
+          "owner": "codex-halloween-v23",
+          "detail": "Root manual review of evidence supplement only: actual ff476 SDL64 eight valid runs/32captures with both fonts, bin hashes stable. Read32/64 comparisons16SDwholeframes+4HDpausedwholeframes exact,32addedground checks exact; activeHDoverlay parity unclaimed and missing-font attempts excluded. Source implementation509 already integrated, CPU and real32 reviewed earlier. Floor scope complete; future platform packages retain separate release gates.; merged 086842fe7f48bb881bb17a2775da6b9d92dab201"
         }
       ],
-      "claimed_at": "2026-10-29T15:54:03.034148+00:00"
+      "claimed_at": "2026-10-29T15:54:03.034148+00:00",
+      "completed_at": "2026-10-29T17:09:35.152611+00:00"
     },
     "release-v23-pre1-win-android": {
       "id": "release-v23-pre1-win-android",
@@ -11956,7 +11962,7 @@
     "created_at": "2026-10-29T17:09:19.361381+00:00",
     "updated_at": "2026-10-29T17:09:19.361381+00:00"
   },
-  "updated_at": "2026-10-29T17:09:19.361381+00:00",
+  "updated_at": "2026-10-29T17:09:35.154131+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
