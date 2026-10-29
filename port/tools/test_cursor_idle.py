@@ -40,37 +40,37 @@ int main(void){
  PortCursorIdle s={0};
  ticks=100000;PortCursorIdlePoll(&s,game);assert(!hides&&!s.hidden);
  mouse=keyboard=game;PortCursorIdlePoll(&s,game);
- ticks+=3999;PortCursorIdlePoll(&s,game);assert(!hides);
+ ticks+=1999;PortCursorIdlePoll(&s,game);assert(!hides);
  ticks++;PortCursorIdlePoll(&s,game);assert(hides==1&&s.hidden);
  ticks+=500;PortCursorIdlePoll(&s,game);assert(hides==1);
  event(&s,SDL_EVENT_MOUSE_MOTION,2,1);assert(s.hidden&&!shows);
  event(&s,SDL_EVENT_MOUSE_MOTION,1,0);assert(s.hidden&&!shows);
  event(&s,SDL_EVENT_MOUSE_MOTION,1,1);assert(!s.hidden&&shows==1);
- ticks+=4000;event(&s,SDL_EVENT_MOUSE_MOTION,1,1);
+ ticks+=2000;event(&s,SDL_EVENT_MOUSE_MOTION,1,1);
  PortCursorIdlePoll(&s,game);assert(hides==1); /* deadline motion wins */
- ticks+=4000;PortCursorIdlePoll(&s,game);assert(s.hidden&&hides==2);
+ ticks+=2000;PortCursorIdlePoll(&s,game);assert(s.hidden&&hides==2);
  keyboard=other;PortCursorIdlePoll(&s,game);assert(!s.hidden&&shows==2);
  ticks+=10000;PortCursorIdlePoll(&s,game);assert(hides==2);
  keyboard=game;PortCursorIdlePoll(&s,game);assert(!s.hidden);
- ticks+=4000;PortCursorIdlePoll(&s,game);assert(s.hidden);
+ ticks+=2000;PortCursorIdlePoll(&s,game);assert(s.hidden);
  mouse=other;event(&s,SDL_EVENT_WINDOW_MOUSE_LEAVE,1,0);
  PortCursorIdlePoll(&s,game);assert(!s.hidden);
  ticks+=10000;mouse=game;event(&s,SDL_EVENT_WINDOW_MOUSE_ENTER,1,0);
  PortCursorIdlePoll(&s,game);assert(!s.hidden);
- ticks+=4000;PortCursorIdlePoll(&s,game);assert(s.hidden);
+ ticks+=2000;PortCursorIdlePoll(&s,game);assert(s.hidden);
  flags=SDL_WINDOW_MINIMIZED;PortCursorIdlePoll(&s,game);assert(!s.hidden);
  ticks+=10000;flags=0;PortCursorIdlePoll(&s,game);assert(!s.hidden);
- ticks+=4000;failHide=true;PortCursorIdlePoll(&s,game);assert(!s.hidden);
+ ticks+=2000;failHide=true;PortCursorIdlePoll(&s,game);assert(!s.hidden);
  failHide=false;PortCursorIdlePoll(&s,game);assert(s.hidden);
  failShow=true;event(&s,SDL_EVENT_MOUSE_BUTTON_DOWN,1,0);assert(s.hidden);
  failShow=false;PortCursorIdlePoll(&s,game);assert(!s.hidden);
- ticks+=4000;PortCursorIdlePoll(&s,game);assert(s.hidden);
+ ticks+=2000;PortCursorIdlePoll(&s,game);assert(s.hidden);
  flags=SDL_WINDOW_HIDDEN;PortCursorIdlePoll(&s,game);assert(!s.hidden);
  ticks+=10000;flags=0;event(&s,SDL_EVENT_WINDOW_SHOWN,1,0);
  PortCursorIdlePoll(&s,game);assert(!s.hidden);
- ticks+=4000;PortCursorIdlePoll(&s,game);assert(s.hidden);
+ ticks+=2000;PortCursorIdlePoll(&s,game);assert(s.hidden);
  PortCursorIdlePoll(&s,NULL);assert(!s.hidden);
- puts("PASS cursor: exact 4s deadline, movement, window ownership, focus/leave/reentry/minimize and SDL failure retry");
+ puts("PASS cursor: exact 2s deadline, movement, window ownership, focus/leave/reentry/minimize and SDL failure retry");
 }
 '''
 compiler = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/x86_64-w64-mingw32-clang.exe'))
