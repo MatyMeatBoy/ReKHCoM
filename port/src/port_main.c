@@ -1507,6 +1507,30 @@ static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
         SDL_RenderTexture(sRenderer, sTexture, src, dst);
 }
 
+static void DrawJournalNameMargins(const SDL_FRect* dst, int outW, uint32_t rightGround) {
+    const uint32_t* edges = PortPpuJiminyNameEdges();
+    float scale = dst->w / 240;
+    int row, side;
+    if (!edges) return;
+    for (row = 16; row < 40; row++) {
+        uint32_t colors[2];
+        SDL_FRect areas[2];
+        /* A PAGE bar at the right edge does not identify a name plate. */
+        if (!edges[row - 16]) continue;
+        colors[0] = edges[row - 16];
+        colors[1] = edges[24 + row - 16] ? edges[24 + row - 16] : rightGround;
+        areas[0] = (SDL_FRect){0, PixelEdge(dst->y, row, scale), SDL_max(0.0f, dst->x), 0};
+        areas[1] = (SDL_FRect){dst->x + dst->w, areas[0].y, SDL_max(0.0f, outW - dst->x - dst->w), 0};
+        areas[0].h = areas[1].h = PixelEdge(dst->y, row + 1, scale) - areas[0].y;
+        for (side = 0; side < 2; side++) {
+            uint32_t c = colors[side];
+            if (!c || areas[side].w <= 0 || areas[side].h <= 0) continue;
+            SDL_SetRenderDrawColor(sRenderer, (Uint8)(c >> 16), (Uint8)(c >> 8), (Uint8)c, 255);
+            SDL_RenderFillRect(sRenderer, &areas[side]);
+        }
+    }
+}
+
 /* The title bar on the left margin: its own piece of the header asset.
    Where the header is transparent the picture shows the frame's bar behind
    it (the journal's dark green top row), so the margin shows that bar too. */
@@ -1866,6 +1890,7 @@ static void Present(void) {
             static uint32_t colors[64];
             static int counts[64];
             int n = 0, best = 0, i, gx, gy2;
+            uint32_t journalRightGround = 0;
             SDL_FRect left = { 0.0f, dst.y, dst.x, dst.h }, right = { dst.x + dst.w, dst.y, (float)outW - dst.x - dst.w, dst.h };
             /* the ground: the commonest colour along the picture's two outer edges */
             for (gy2 = 16; gy2 < GBA_SCREEN_H - 8; gy2++)
@@ -1928,6 +1953,7 @@ static void Present(void) {
                 }
                 for (s2 = 0; s2 < 2; s2++) {
                     uint32_t c = kind[s2] == 2 ? (kind[!s2] != 2 ? side[!s2] : g) : side[s2];
+                    if (s2 == 1) journalRightGround = c;
                     SDL_SetRenderDrawColor(sRenderer, (Uint8)(c >> 16), (Uint8)(c >> 8), (Uint8)c, 255);
                     SDL_RenderFillRect(sRenderer, s2 ? &right : &left);
                 }
@@ -1964,6 +1990,8 @@ static void Present(void) {
                 }
             }
             DrawHeaderLeft(&src, &dst);
+            if (journalShown && sSideStyle == 12)
+                DrawJournalNameMargins(&dst, outW, journalRightGround);
         }
         if (SDL_getenv("KHCOM_DBGSIDE")) PortLog("side f%u style %d fit %.2f wide %d src %.0f,%.0f %.0fx%.0f", (unsigned)PortFrameCount(), sSideStyle, sFitScale, gPortScreen.wide, src.x, src.y, src.w, src.h);
         if (!menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {

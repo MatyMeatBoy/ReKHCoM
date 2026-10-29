@@ -205,3 +205,43 @@ cambia la receta externa española y el importador, sin cambiar el código del
 juego ni las otras cuatro recetas. Continúan el nombre en amarillo, las
 vistas de cubierta/listas y la cobertura Riku/JP, además del resto del plan2.3.
 El bloque no modifica los paquetes publicados ni cierra P2.
+
+
+Octavo bloque: el nombre amarillo no determina sus márgenes por longitud.
+La regla anterior de bandas comunes copiaba una franja al margen derecho
+con nombres largos y dejaba incompleto el margen izquierdo con nombres
+cortos. El compositor conserva24 colores por lado, sólo cuando BG0 opaco
+gana realmente en el borde del fotograma presentado. Son192 bytes estáticos;
+no hay asignación, textura nueva ni modificación del framebuffer original.
+
+La presentación extiende a la izquierda el recuadro real. A la derecha usa
+su BG0 legítimo, si lo hay, o el fondo de ese margen. El PAGE derecho no se
+confunde con un nombre de la izquierda. El color ya incluye el fundido del
+fotograma; no se consulta la paleta del próximo VBlank. La corrección se
+limita al diario amplio con Cartas HD, y mantiene la ruta original apagada.
+
+`test_jiminy_name_margins.py` ejecuta el renderer y PixelEdge reales más la
+captura portable: propietario BG0, mezclas, posiciones fuera de rango,
+negro opaco, metadatos ausentes y márgenes de ancho0. El caso de PAGE sólo
+a la derecha no genera una extensión del nombre. El contrato anterior no
+tenía ese renderer y la reproducción visual anterior conserva la franja
+incorrecta. El contrato de composición y fallback del libro sigue pasando.
+
+Treinta pares privados de capturas comparan nombres cortos y largos en
+US32/64, EU español, ventana fraccional,4:3 y HD completamente apagado.
+Sólo cambian los márgenes a la altura del nombre: libro, retratos, texto,
+PAGE y contadores mantienen sus píxeles. La cobertura de rectángulos del
+renderer software termina en columna1363; la de centros de píxel GPU en1364.
+La primera aserción de una cobertura común incluyó una columna de la franja
+errónea anterior en software; se conserva ese diagnóstico. Las columnas
+reales del libro son idénticas. El primer control histórico apagado dejaba
+texto HD activado y se excluye; un control nuevo con el mismo preset y todos
+los interruptores HD apagados sí coincide exactamente.
+
+Evidencia: NAME-MARGIN-PIXEL-SCOPE.json, NAME-MARGIN-MATRIX-CONTROLS.json y
+NAME-MARGIN-OFF-CONTROLS.json en pruebas privadas jiminy23-pages; recorridos
+jiminy23-name-*. Todas las partidas originales se conservan. Windows
+EU32/US32/64 y bibliotecas Android US/JP compiladas, ABI/boot64, fuentes y
+contratos CPU pasan. Audio dummy, sin afirmar mejoras de sonido ni prueba
+física de Android/consolas. Continúan cubierta/listas y cobertura Riku/JP
+antes de cerrar P2 y pasar al audio; los releases anteriores no se modifican.

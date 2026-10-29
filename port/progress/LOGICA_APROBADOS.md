@@ -28,6 +28,13 @@ VBlank. Un arnés que fuerza un menú debe preparar sus datos de entrada;
 un cierre también presente en el control anterior no acredita una regresión,
 y la recuperación de lecturas inválidas en32 no hace válido ese recorrido.
 
+Nombre amarillo del diario: extender el borde que BG0 dibuja realmente
+en el fotograma presentado. No deducir que una franja es global por superar
+un ancho en píxeles: la traducción cambia ese ancho. Un borde derecho PAGE
+no autoriza una extensión izquierda; una franja del nombre izquierdo no
+debe aparecer en la página derecha. Conservar negro y fundidos por propiedad
+de capa y color final, sin consultar descriptores del siguiente fotograma.
+
 PAGE del diario: medir la caja de la pestaña estática por separado de
 contadores y botones móviles. Redibujar sólo las ocho filas superiores,
 respetando las filas del acento español; no tapar controles por reconstruir
