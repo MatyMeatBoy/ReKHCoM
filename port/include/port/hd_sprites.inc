@@ -1009,6 +1009,26 @@ extern const unsigned char gWhiteRoomSmallCardTiles[];
 extern const unsigned char gWhiteRoomSmallCardFrame0[];
 extern const unsigned char gKeyToRewardsSmallCardTiles[];
 extern const unsigned char gKeyToRewardsSmallCardFrame0[];
+#if defined(VERSION_EU) || defined(VERSION_US)
+extern const unsigned char gJiminyBgTiles[];
+extern const unsigned char gJiminyCardDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesFrench[];
+extern const unsigned char gJiminyCardDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesSpanish[];
+extern const unsigned char gJiminyCardDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesItalian[];
+extern const unsigned char gJiminyCardDetailMap[];
+#endif
+#if defined(VERSION_EU)
+extern const unsigned char gJiminyBgTitleTilesGerman[];
+extern const unsigned char gJiminyCardDetailMap[];
+#endif
 static const HdSpriteDef kHdSprites[] = {
     { gCardWep01Tiles, NULL, "gCardWep01Tiles", -16, -12, 32, 32, 1 },
     { gCardWep04Tiles, NULL, "gCardWep04Tiles", -16, -12, 32, 32, 1 },
@@ -1685,6 +1705,21 @@ static const HdSpriteDef kHdSprites[] = {
     { gTranquilDarknessSmallCardTiles, gTranquilDarknessSmallCardFrame0, "gTranquilDarknessSmallCardHD", -8, -20, 16, 32, 6 },
     { gWhiteRoomSmallCardTiles, gWhiteRoomSmallCardFrame0, "gWhiteRoomSmallCardHD", -8, -20, 16, 32, 6 },
     { gKeyToRewardsSmallCardTiles, gKeyToRewardsSmallCardFrame0, "gKeyToRewardsSmallCardHD", -8, -20, 16, 32, 6 },
+#if defined(VERSION_EU) || defined(VERSION_US)
+    { gJiminyBgTiles, gJiminyCardDetailMap, "gJiminyCardDetailBanner", 0, 0, 64, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesFrench, gJiminyCardDetailMap, "gJiminyCardDetailFrenchBanner", 0, 0, 72, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesSpanish, gJiminyCardDetailMap, "gJiminyCardDetailSpanishBanner", 0, 0, 64, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesItalian, gJiminyCardDetailMap, "gJiminyCardDetailItalianBanner", 0, 0, 64, 16, 5 },
+#endif
+#if defined(VERSION_EU)
+    { gJiminyBgTitleTilesGerman, gJiminyCardDetailMap, "gJiminyCardDetailGermanBanner", 0, 0, 64, 16, 5 },
+#endif
 #include "port/synthesis_requirement_hd_entries.inc"
 #include "port/title_words_hd.inc"
 };
