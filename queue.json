@@ -11188,20 +11188,26 @@
     "map-card-definition-table-bounds": {
       "id": "map-card-definition-table-bounds",
       "piece": "Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-mapcard-bounds",
       "created_at": "2026-10-29T03:06:37.373146+00:00",
-      "updated_at": "2026-10-29T03:06:42.463988+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-29T03:27:00.581271+00:00",
+      "branch": "fix/map-card-definition-bounds",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/491",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T03:27:00.581271+00:00",
+          "owner": "codex-mapcard-bounds",
+          "detail": "e86e45d84: real10 source functions/32-bit types guarded-table probe RED4 (2 access faults)/GREEN5 at O0/O2; valid copies/cap99/gold keys unchanged. Cartridge branch normalized preprocessing identical. Windows32+64 builds,4 actual same-save map-menu before/after routes exit0 and both pixels identical. Scroll812 pass. Public releases immutable, no reported crash attribution."
+        }
+      ],
       "claimed_at": "2026-10-29T03:06:42.463988+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T03:06:42.463988+00:00",
+  "updated_at": "2026-10-29T03:27:00.581271+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
