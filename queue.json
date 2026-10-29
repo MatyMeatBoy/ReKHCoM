@@ -11784,10 +11784,10 @@
     "v23-oogie-approved-runtime": {
       "id": "v23-oogie-approved-runtime",
       "piece": "Auditar y activar arena Oogie version exacta aprobada Atlas aa913fe773c4446eb5412c3115e222c7; rastrear aprobacion receta codigo paquete match runtime captura; no activar hijas pendientes ni sueloHalloweenotroworker",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-v23",
       "created_at": "2026-10-29T15:58:25.960944+00:00",
-      "updated_at": "2026-10-29T16:21:24.379256+00:00",
+      "updated_at": "2026-10-29T16:21:40.939554+00:00",
       "branch": "fix/v23-oogie-approved-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/510",
       "approval": "Root integrator: human-authorized code review; 652827f70d5e6298fd9af415c08018e69f3be08e",
@@ -11802,10 +11802,16 @@
           "at": "2026-10-29T16:21:24.379256+00:00",
           "owner": "codex-atlas-v23",
           "detail": "Root manual review: exact aa913fe approval preserved, recipe blob unchanged; only Oogie gate becomes default, unrelated/pending children untouched, Off retained. CPU12 and EU32 six runtime runs/pixel comparisons reviewed; inspected actual330 image. Build-clean/platform limits explicit; release verification still pending."
+        },
+        {
+          "at": "2026-10-29T16:21:40.939554+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "Root manual review: exact aa913fe approval preserved, recipe blob unchanged; only Oogie gate becomes default, unrelated/pending children untouched, Off retained. CPU12 and EU32 six runtime runs/pixel comparisons reviewed; inspected actual330 image. Build-clean/platform limits explicit; release verification still pending.; merged 67e6704dc594e0a4f28bca7e53f2a0fed1368c89"
         }
       ],
       "claimed_at": "2026-10-29T15:58:32.704049+00:00",
-      "sent": "55a0b17eb5f3469dab063b67a6de03da"
+      "sent": "55a0b17eb5f3469dab063b67a6de03da",
+      "completed_at": "2026-10-29T16:21:40.939554+00:00"
     },
     "v23-title-presentation-60fps": {
       "id": "v23-title-presentation-60fps",
@@ -11867,7 +11873,7 @@
     "created_at": "2026-10-29T16:21:29.955034+00:00",
     "updated_at": "2026-10-29T16:21:29.955034+00:00"
   },
-  "updated_at": "2026-10-29T16:21:29.955034+00:00",
+  "updated_at": "2026-10-29T16:21:40.941156+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
