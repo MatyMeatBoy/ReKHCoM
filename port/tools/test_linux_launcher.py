@@ -263,6 +263,55 @@ class LauncherTest(unittest.TestCase):
             stub.write_text(text.replace('#!/bin/sh\n', '#!/bin/sh\nprintf "%s\\n" '
                             '"${REKHCOM_GPU-unset}" "${SDL_RENDER_DRIVER-unset}" > startup-env.txt\n', 1), encoding='utf8')
 
+    def fake_system32(self, compatible=True):
+        """Remap only host discovery; execute the actual wrapper selection."""
+        system = self.root / 'system32'
+        system.mkdir()
+        loader = system / 'ld-linux.so.2'
+        loader.write_text('#!/bin/sh\n'
+                          'printf "%s\\n" "$@" > system-loader.txt\n'
+                          'if [ "$1" = --library-path ]; then shift 2; fi\n'
+                          'if [ "$1" = --list ]; then printf checked > system-preflight.txt; '
+                          f'exit {0 if compatible else 1}; fi\n'
+                          'exec "$@"\n', encoding='utf8')
+        loader.chmod(0o755)
+        host_path = shlex.quote(self.posix(system))
+        self.script.write_text(self.script.read_text().replace(
+            'for d in /usr/lib32 /lib32 /lib/i386-linux-gnu /usr/lib/i386-linux-gnu; do',
+            f'for d in {host_path}; do'))
+        self.fake_machine('x86_64')
+        return self.posix(system)
+
+    def test_safe_startup_prefers_compatible_system32_even_without_gl_probe(self):
+        host = self.fake_system32()
+        self.capture_startup_environment()
+        self.env.update(REKHCOM_GPU='0', SDL_RENDER_DRIVER='opengl')
+        result = self.run_script('--safe-startup', '--language', 'en')
+        self.assertEqual(result.returncode, 17, result.stderr)
+        self.assertTrue((self.game / 'system-preflight.txt').exists(), 'software startup must preflight the available matching system loader')
+        captured = (self.game / 'system-loader.txt').read_text().splitlines()
+        self.assertEqual(captured[:2], ['--library-path', self.directory + '/lib/sys:' + host + ':' + self.directory + '/lib'])
+        self.assertNotIn('--list', captured)
+        self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
+        self.assertEqual(self.env['SDL_RENDER_DRIVER'], 'opengl')
+
+    def test_safe_startup_failed_system_preflight_keeps_bundled_fallback(self):
+        self.fake_system32(compatible=False)
+        self.capture_startup_environment()
+        result = self.run_script('--safe-startup')
+        self.assertEqual(result.returncode, 17, result.stderr)
+        self.assertTrue((self.game / 'system-preflight.txt').exists())
+        self.assertIn('--list', (self.game / 'system-loader.txt').read_text().splitlines())
+        self.assert_game('eu', [])
+        self.assertEqual((self.game / 'startup-env.txt').read_text().splitlines(), ['0', 'software'])
+
+    def test_manual_gpu_zero_still_uses_bundled_runtime_without_safe_option(self):
+        self.fake_system32()
+        self.env.update(REKHCOM_GPU='0', REKHCOM_64='0')
+        self.assertEqual(self.run_script().returncode, 17)
+        self.assertFalse((self.game / 'system-preflight.txt').exists())
+        self.assert_game('eu', [])
+
     def test_safe_startup_is_child_only_and_preserves_outdated_preferences(self):
         self.fake_machine('x86_64')
         self.fake64(0, entered=True)
@@ -285,7 +334,7 @@ class LauncherTest(unittest.TestCase):
         self.assertEqual(ini.read_text(), original)
         self.assertEqual(config.read_bytes(), b'player settings sentinel\n')
         self.assertEqual(save.read_bytes(), b'private save sentinel\x00\xff')
-        self.assertIn('safe startup: native32, bundled libraries, software renderer; session only',
+        self.assertIn('safe startup: native32, software renderer, compatible library selection; session only',
                       (self.game / 'ReKHCoM.log').read_text())
         self.assertEqual(self.env['REKHCOM_GPU'], '1')
         self.assertEqual(self.env['SDL_RENDER_DRIVER'], 'opengl')
