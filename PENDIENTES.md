@@ -394,4 +394,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-recycled-object-contracts | OptiPort: verified recycled-work initialization and desktop guest capability lessons from484/485; real consumer negative/positive tests, preserve scope and installed local additions; root solo | integrado | codex-optiport-recycled | https://github.com/MatyMeatBoy/OptiPort/pull/19 | Root integrator: human-authorized code review; 384fb79c132de3a4612ffd46d3c0a25a58adc561 | 2026-10-29T01:03:21.077380+00:00 |
 | post480-test-docs-optiport-snapshot | Document public480 Android test delivery and refresh embedded OptiPort snapshot to19 without app-source/build changes; preserve local docs and immutable releases | pr_abierto | codex-post480-docs | https://github.com/MatyMeatBoy/ReKHCoM/pull/486 | Root integrator: human-authorized code review; 33aaee8ea7dc96ab2adb3e40b95d0e9ad1ba32fe | 2026-10-29T01:12:26.059914+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T01:12:30.657155+00:00)
