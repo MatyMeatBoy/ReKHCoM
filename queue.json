@@ -10829,16 +10829,21 @@
       "status": "pr_abierto",
       "owner": "codex-quit479",
       "created_at": "2026-10-28T23:12:19.692181+00:00",
-      "updated_at": "2026-10-29T00:59:29.249100+00:00",
+      "updated_at": "2026-10-29T00:59:40.281159+00:00",
       "branch": "fix/desktop64-quit-menu",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/485",
-      "approval": "Pedido directo del usuario tras prioridades v2.3 y reporte479; pendiente despues de publicar2.2.5, sin claim ni codigo aun.",
+      "approval": "Root integrator: human-authorized code review; 69b5cb14789acfe8eeeb74ba8a2430fee7675552",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/479",
       "evidence": [
         {
           "at": "2026-10-29T00:59:29.249100+00:00",
           "owner": "codex-quit479",
           "detail": "PR485 exact69b5cb14789acfe8eeeb74ba8a2430fee7675552, eight real menu checks and visible HD64 capture PASS, native32 positive and prior64 RED; source only until delivery"
+        },
+        {
+          "at": "2026-10-29T00:59:40.281159+00:00",
+          "owner": "codex-quit479",
+          "detail": "Root solo review: common deferred cleanup retains exit81 and native-only fullscreen wizard; actual before64 RED/native32 positive, after8cases native32+guest64 originalHD text quit81/cancel0, visible captured HD Quit row, ABI+boot PASS. No full launcher or physicalLinux/package claim."
         }
       ],
       "claimed_at": "2026-10-29T00:53:57.055833+00:00"
@@ -10982,7 +10987,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T00:59:29.249100+00:00",
+  "updated_at": "2026-10-29T00:59:40.281159+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
