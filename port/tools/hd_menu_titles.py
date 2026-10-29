@@ -447,6 +447,87 @@ def jiminy_other_heading_rows(data, syms):
     return jiminy_card_rows(data, syms, 'Story', story) + jiminy_card_rows(data, syms, 'Character', character)
 
 
+def jiminy_page_rows(data, syms):
+    """Only rows0..7: PAGE's tab, above the native numbers and moving L/R."""
+    rows = []
+    palette = struct.unpack_from('<256H', data, syms['gJiminyBgPalette'] - 0x08000000)
+    def c(index):
+        v = palette[index]
+        return ''.join(f'{(((v >> s) & 31) << 3) | (((v >> s) & 31) >> 2):02X}' for s in (0,5,10))
+    for suffix, label in [('', 'PAGE'), ('French', 'PAGE'), ('Spanish', 'PAGINA'),
+                          ('Italian', 'PAGINA'), ('German', 'SEITE')]:
+        tiles = 'gJiminyBgTitleTiles' + suffix if suffix else 'gJiminyBgTiles'
+        char = bytearray(0x8000)
+        start = syms['gJiminyBgTiles'] - 0x08000000
+        char[:12128] = data[start:start + 12128]
+        if suffix:
+            start = syms[tiles] - 0x08000000
+            char[0x2000:0x3000] = data[start:start + 4096]
+        def pixels(name):
+            out = {}
+            start = syms[name] - 0x08000000
+            for y in range(8):
+                for x in range(151,240):
+                    e = struct.unpack_from('<H', data, start + 2 * ((y // 8) * 32 + x // 8))[0]
+                    sx = 7-x%8 if e & 1024 else x%8
+                    sy = 7-y%8 if e & 2048 else y%8
+                    v = char[(e & 1023)*32 + sy*4 + sx//2]
+                    out[x,y] = (e >> 12)*16 + (v >> 4 if sx & 1 else v & 15)
+            return out
+        page = pixels('gJiminyDetailOverlayMap')
+        assert page == pixels('gJiminyCharacterDetailOverlayMap')
+        behind = pixels('gJiminyStoryDetailMap')
+        assert behind == pixels('gJiminyCardDetailMap') == pixels('gJiminyCharacterDetailMap')
+        assert all(len({behind[x,y] for x in range(151,240)}) == 1 for y in range(8))
+        # The original OAM buttons begin at5+3=8, immediately below this box.
+        for frame in ('gJiminyScrollArrowFrame2','gJiminyScrollArrowFrame3'):
+            px, _ = frame_pixels(data, syms, frame, 'gJiminyScrollArrowTiles')
+            assert min(y for (x,y), value in px.items() if value) + 5 >= 8
+        ink = [(x-151,y) for (x,y), value in page.items() if value in (67,68)]
+        left, right = min(x for x,y in ink), max(x for x,y in ink)+1
+        tab = max(x-151 for (x,y), value in page.items() if y == 1 and value == 69)+2
+        ops = [f'canvas={89*K},{8*K}']
+        def poly(index, points):
+            ops.append('poly='+c(index)+'FF,'+','.join(str(round(v*K)) for point in points for v in point))
+        def rect(index,x0,y0,x1,y1):
+            poly(index,[(x0,y0),(x1,y0),(x1,y1),(x0,y1)])
+        def rounded(index,x0,y0,x1,y1,radius):
+            points=[]
+            for cx,cy,angle in [(x1-radius,y0+radius,-90),(x1-radius,y1-radius,0),
+                                (x0+radius,y1-radius,90),(x0+radius,y0+radius,180)]:
+                points += [(cx+radius*math.cos(math.radians(angle+s*7.5)),
+                            cy+radius*math.sin(math.radians(angle+s*7.5))) for s in range(13)]
+            poly(index,points)
+        # Opaque native BG1 colours clear the old pixel corners and lettering.
+        # This region is identical in all three detail layouts, including fades.
+        for y in range(8): rect(behind[151,y],0,y,89,y+1)
+        rect(69,0,6,89,8)
+        rect(70,1,7,89,8)
+        rounded(66,0,1,tab+1,10,2)
+        rounded(69,0,1,tab,10,2)
+        rounded(70,1,2,tab-1,10,1)
+        rounded(71,4,2,tab-4,9,1.25)
+        laid=[]; pen=0
+        cap_top = 3 if suffix == 'Spanish' else 2  # the native accent has its own row
+        for tex,r,ct,cb,op,advance,deco in pieces([(UGETC,label)]):
+            scale=5/(cb-ct); width=(r[2]-r[0])*scale
+            laid.append((r,op,pen,width,cap_top-(ct-r[1])*scale,cap_top+(r[3]-ct)*scale))
+            pen += advance*scale if advance else width-(3*scale if op=='sblit' else 0)
+        fit=(right-left)/max(x+w for r,op,x,w,y0,y1 in laid)
+        ops.append('ink=FFFFFFFF')
+        for i,(r,op,x,w,y0,y1) in enumerate(laid):
+            ops.append(op+'='+','.join(map(str,(*r,round((left+x*fit)*K),round(y0*K),
+                                                round((left+(x+w)*fit)*K),round(y1*K)))))
+            if suffix == 'Spanish' and i == 1:
+                # The original says PÁGINA; retain its accent in the same box.
+                points=[(left+(x+w*a)*fit,y) for a,y in ((.40,2.7),(.60,1.8),(.90,1.8),(.60,2.7))]
+                ops.append('poly=FFFFFFFF,'+','.join(str(round(v*K)) for point in points for v in point))
+        ops.append(f'scale={K}')
+        rows.append('\t'.join(['gJiminyPage'+suffix+'Label','5','gJiminyDetailOverlayMap',tiles,
+                                '151','0','89','8',UGETC,';'.join(ops),'eu' if suffix else 'eu,us']))
+    return rows
+
+
 def jiminy_book_body_rows(data, syms):
     """Shared BG1 body; the three detail maps have identical rows16..159.
 
@@ -586,7 +667,8 @@ def banner_ops(px, box, colour_of, text):
 def main():
     data, syms = rom()
     rows = ([row(b, data, syms) for b in BANNERS] + [r for b in BG_BANNERS for r in bg_row(b, data, syms)]
-            + jiminy_card_rows(data, syms) + jiminy_other_heading_rows(data, syms) + jiminy_book_body_rows(data, syms))
+            + jiminy_card_rows(data, syms) + jiminy_other_heading_rows(data, syms)
+            + jiminy_page_rows(data, syms) + jiminy_book_body_rows(data, syms))
     if '--write' not in sys.argv:
         print('\n'.join(rows))
         return

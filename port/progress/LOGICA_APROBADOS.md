@@ -28,6 +28,12 @@ VBlank. Un arnés que fuerza un menú debe preparar sus datos de entrada;
 un cierre también presente en el control anterior no acredita una regresión,
 y la recuperación de lecturas inválidas en32 no hace válido ese recorrido.
 
+PAGE del diario: medir la caja de la pestaña estática por separado de
+contadores y botones móviles. Redibujar sólo las ocho filas superiores,
+respetando las filas del acento español; no tapar controles por reconstruir
+un panel completo. El fondo que borra las letras nativas se obtiene de la
+capa inferior legítima, sin estirar un píxel del propio rótulo.
+
 Cabeceras del diario: obtener cada rótulo del mapa y tiles del idioma
 original. Historia/personajes no deben heredar el registro de naipes ni
 quedar fuera de la mejora. Conservar sus cajas, colores, navegación y pasos

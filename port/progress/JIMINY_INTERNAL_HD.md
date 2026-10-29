@@ -169,3 +169,39 @@ Las notas de los bloques previos se normalizan a UTF8 sin cambiar sus reglas.
 P2 continúa: PAGE, mini-header, raíz/listas y equivalencia visual Riku/JP.
 La pre2.3-pre1 anterior se mantiene inmutable; estos cambios requieren otra
 compilación futura y no acreditan la entrega estable2.3.
+
+
+Séptimo bloque: pestaña PAGE/PÁGINA/PAGINA/SEITE. Su caja es151,0..240,8;
+los botones L/R empiezan en5+3=8 y los dígitos quedan debajo. La receta comprueba
+esos límites con los frames originales. Reconstruye sólo esa franja con borde
+redondeado, colores RGB555 del juego y letras remasterizadas. El fondo BG1
+que despeja las letras y esquinas nativas coincide en las tres páginas; las
+dos variantes del overlay PAGE también coinciden. PÁGINA conserva su acento
+y la fila inferior original del texto español. No cambia valores ni controles.
+
+Se registra como una segunda imagen estática, con una llave exacta distinta
+del título de página. El contrato CPU real falla sin ese registro y pasa las
+combinaciones EU/US de las tres páginas, cinco idiomas y todos los pasos de
+fundido; JP y la compilación de cartucho conservan su ruta nativa. Lookup
+específico y textura ausente mantienen el fallback nativo. El importador C++
+añade cinco archivos, de5 recetas pendientes a0 (904 imágenes);899 salidas
+previas se mantienen idénticas en bytes y los cinco PNG coinciden exactamente
+con Python. La corrección final sólo cambia el recurso español:903 previos
+idénticos y cinco comparaciones de píxeles exactas.
+
+Diez capturas US32/64 sólo cambian el rótulo dentro de las primeras8 filas.
+Los recortes de contadores y L/R son idénticos, igual que raíz/lista. Cinco
+vistas adicionales64 con PAGE ausente coinciden con main501. Diez vistas64
+en ventana fraccional y4:3 terminan con código0; seis recortes de contadores
+y L/R coinciden con el control anterior. España EU se prueba con una copia
+del respaldo europeo y desbloqueo sólo en RAM. Las pruebas usan audio dummy;
+no acreditan audio ni consolas físicas. Evidencia privada: jiminy23-page-*,
+PAGE-PIXEL-SCOPE.json, PAGE-MISSING-PIXEL-CONTROL.json y
+PAGE-FRACTIONAL-CONTROLS.json en jiminy23-pages.
+
+Windows EU32/US32/64 y bibliotecas Android US/JP compiladas; ABI/boot64,
+registro, lookup y check_sources pasan. La última corrección de la tilde sólo
+cambia la receta externa española y el importador, sin cambiar el código del
+juego ni las otras cuatro recetas. Continúan el nombre en amarillo, las
+vistas de cubierta/listas y la cobertura Riku/JP, además del resto del plan2.3.
+El bloque no modifica los paquetes publicados ni cierra P2.
