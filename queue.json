@@ -10887,8 +10887,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T05:59:53.644977+00:00",
-      "branch": "fix/v23-jiminy-journal",
+      "updated_at": "2026-10-29T06:01:11.926469+00:00",
+      "branch": "fix/v23-jiminy-book",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/494",
       "approval": "Root integrator: human-authorized code review; 7b028b5c0ada1382a3f3c3e21b1e3e46ed303cbe",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -10922,6 +10922,11 @@
           "at": "2026-10-29T05:59:53.644977+00:00",
           "owner": "codex-jiminy23",
           "detail": "Manual root review: existing decimal emitter registers six journal digits, cartridge branch and DMA order/data preserved. Actual999 paired cases RED/GREEN,32/64 rebuild/ABIboot, live journal route in Original andAuto4 on32software64D3D11; source checksPASS. Partial numeric block only; book/right edge/internal headings and remaining P2 coverage not complete. No other-device/audio claim.; merged 1236dd342c993daa116ba46e3906781af340dc36; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T06:01:11.926469+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "494 numeric block merged1236dd34; source7b028b5c0 tree identical. Continuing full P2 from new reused branchbook; internal headings/PAGE/book right rounded edge and variants remain. Correct Auto4 wide baseline matches user screenshot, actual32software/64D3D11 routes exit0. Do not close journal or move to audio yet. No workers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11293,7 +11298,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T06:00:04.426325+00:00",
+  "updated_at": "2026-10-29T06:01:11.926469+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
