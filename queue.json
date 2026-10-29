@@ -10825,8 +10825,8 @@
       "status": "en_curso",
       "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T04:55:06.844551+00:00",
-      "branch": "fix/v23-mapcards-hd",
+      "updated_at": "2026-10-29T05:02:27.646218+00:00",
+      "branch": "fix/v23-mapcard-rewards",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/492",
       "approval": "Root integrator: human-authorized code review; 27e64a560e868b351e70d2033f104b3bbe6238a5",
       "reference": "Owner screenshot20261028-54576822; pruebas/v23-prioridades/naipes-mapa-referencia.png. After2.2.5release. Reconcile mapinspect-grid-hd-original-frame existing task before implementation.",
@@ -10855,6 +10855,11 @@
           "at": "2026-10-29T04:55:06.844551+00:00",
           "owner": "codex-mapcards23",
           "detail": "PR492 merged41c93771, source27e64a560, identical Git trees. Completed counter/25mapped small families+3story keys/recipe inventory repair; remaining Rewards native is NOT complete. Eleven actual Windows32/64 game runs incl D3D11/native C++ imported output; proof pruebas/mapcards23. Debug solid archive19,605,424B verified;653 private runtime files removed454,301,277 logicalB (includes hardlinks), current QA import retained28,247,175B at D:/01Claude/ReKHCoM-build/qa-runtime/mapcards23/native-import/hd/sprites. No openPRs,330/459 unchanged awaiting logs. Continue P1, then journal/audio; no workers."
+        },
+        {
+          "at": "2026-10-29T05:02:27.646218+00:00",
+          "owner": "codex-mapcards23",
+          "detail": "Found actual remastered Rewards door in owned FORM/0050/FO0050.RTM UK_card.imz image19, cell384,128..512,256; inspect_menu_banks and source SHA recorded. All15,475 remastered names scanned read-only; no standalone ck4/cr23 assumed. Public ReCoM screenshot used only for identification; no remote artwork downloaded. Coverage test RED identifies missing Rewards. Completing26th family and big counterpart."
         }
       ],
       "claimed_at": "2026-10-29T03:35:02.308468+00:00",
@@ -11239,7 +11244,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T04:55:06.844551+00:00",
+  "updated_at": "2026-10-29T05:02:27.647230+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
