@@ -10918,8 +10918,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T15:00:10.198684+00:00",
-      "branch": "fix/v23-journal-final-audit",
+      "updated_at": "2026-10-29T15:00:56.443118+00:00",
+      "branch": "fix/v23-jiminy-root-cover",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/508",
       "approval": "Root integrator: human-authorized code review; 11df90f8affe69e06cd59a6c0a750ab16dfd7b6a",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -11168,6 +11168,11 @@
           "at": "2026-10-29T15:00:10.198684+00:00",
           "owner": "codex-jiminy23",
           "detail": "Manual review all11files; C++ import910old byte-identical/new PNG exact; actual16-case32/64 matrix positive three lists, root/off unchanged; final4 binder cases difference only60x40box and details/absence identical; CPUownership/failure tests PASS; EUUSJP32 and EUJP64 compile, ABIboot/source PASS; JP8runtime14controls identical; AndroidUSJP ARMv7 fixed symbols PASS. Closed root cover remains pending, no audio/hardware claim.; merged c44f679003c0d607862973b53f28088dc0611938; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T15:00:56.443118+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "PR508 mergedc44f679; list paper/15binder loops complete and verified. Remaining P2 closed root cover with its own native geometry/colors, then audit closure and audio. Current canonical private911outputs909PNG2LAD list-native read-only. No workers, builds stopped."
         }
       ],
       "claimed_at": "2026-10-29T14:25:01.597481+00:00",
@@ -11744,7 +11749,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T15:00:16.048690+00:00",
+  "updated_at": "2026-10-29T15:00:56.443118+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
