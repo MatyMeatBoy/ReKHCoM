@@ -6,11 +6,11 @@
   "files": {
     "index.html": {
       "bytes": 16984,
-      "sha256": "bc8c6dc0a59220862034f0c1fc96736d7acd6e26375cca75aca8bbbe7a9707ff"
+      "sha256": "ddd575b09f1e1599c8431041cfbc33a93033edd412c9d51f12db1a9f80bc414e"
     },
     "web.css": {
-      "bytes": 14462,
-      "sha256": "8447913173929407d194dabbc354a58db07c7f9a555b141931905bbeb14e5148"
+      "bytes": 14481,
+      "sha256": "bb51b116d821baa42480cd301923eb606a626d690f7db4abeb06fdf34bf9e0af"
     },
     "web.js": {
       "bytes": 12712,
@@ -77,16 +77,16 @@
       "sha256": "1c040b8271b37e5076359f8fd54240e371114112924d2df81ef87c7d6a1dfdfd"
     },
     "fonts/KHMenu.otf": {
-      "bytes": 28612,
-      "sha256": "0c36302cd9d608eefdd983650e10dd0df0531780bb473b3d9b945075f02a27f2"
+      "bytes": 28604,
+      "sha256": "95b8b7e0f60a5005c9ff152a56f9ef8075f732175759c19a7fca69d97d01e1b9"
     },
     "fonts/ComicHearts.otf": {
       "bytes": 39900,
       "sha256": "e45739fd882607784e7ad8fc3a4c7c22f81853929bc41e099656641dcdeeae40"
     },
     "fonts/NOTICE.md": {
-      "bytes": 647,
-      "sha256": "60e85b3bffa16cb7642cafd1ca21da4a373f0f06a44a375995a683d51fa6d27e"
+      "bytes": 856,
+      "sha256": "5d8608c8f626e811bc7f58371f60628daf4b3b307666aa36d2541eff9c3de539"
     },
     "logo.png": {
       "bytes": 179882,
@@ -120,5 +120,17 @@
       "bytes": 9420939,
       "sha256": "4c30c8f7a6c2cf651e343e2ebad5930f73808b361ee3c0cebde5826d3164512f"
     }
+  },
+  "font_hotfix": {
+    "source_commit": "ba119a11c0b62804e224d5451de6608c487f80b5",
+    "published_utc": "2026-10-29T14:22:28.850203+00:00",
+    "parent_deployment": "46e2224a4fd65d899193c53ec7141ce93826dfca",
+    "scope": [
+      "fonts/KHMenu.otf",
+      "fonts/NOTICE.md",
+      "web.css",
+      "index.html"
+    ],
+    "validation": "All CFF widths match hmtx; approved outlines and native metrics unchanged; desktop/mobile EN/ES visual checks passed. Original engine provenance retained above."
   }
 }

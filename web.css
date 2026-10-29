@@ -5,7 +5,7 @@
 
 /* Shared launcher language: white paper, black rules, red selection and
    warm pixel light. All game canvases retain nearest-neighbour rendering. */
-@font-face{font-family:KHMenu;src:url('fonts/KHMenu.otf') format('opentype');font-display:swap}
+@font-face{font-family:KHMenu;src:url('fonts/KHMenu.otf?v=95b8b7e0f60a5005') format('opentype');font-display:swap}
 :root{--paper:#fff;--ink:#191719;--muted:#726b70;--rule:#b5aeb1;--red:#ad273e;--gold:#ffd36e;font-family:KHMenu,system-ui,sans-serif;background:#efedee;color:var(--ink);line-height:1.55;color-scheme:light}
 body{background:linear-gradient(135deg,#f8f7f7 25%,transparent 25%) 0 0/16px 16px}
 main{max-width:1180px;min-height:100vh;padding:30px 42px 20px;background:var(--paper);border-left:1px solid #ddd8da;border-right:1px solid #ddd8da}
