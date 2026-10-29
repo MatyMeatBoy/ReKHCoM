@@ -11314,10 +11314,10 @@
     "game-cursor-idle-two-seconds": {
       "id": "game-cursor-idle-two-seconds",
       "piece": "User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-cursor2s",
       "created_at": "2026-10-29T06:21:49.354047+00:00",
-      "updated_at": "2026-10-29T06:24:47.741985+00:00",
+      "updated_at": "2026-10-29T06:25:07.494664+00:00",
       "branch": "fix/cursor-two-seconds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/496",
       "approval": "Root integrator: human-authorized code review; e847b63ad0029b36fae90ec4c87abb0ccb38e691",
@@ -11332,9 +11332,15 @@
           "at": "2026-10-29T06:24:47.741985+00:00",
           "owner": "codex-cursor2s",
           "detail": "Manual root review: deadline only; exact1999/2000ms boundary RED/GREEN and lifecycle pass."
+        },
+        {
+          "at": "2026-10-29T06:25:07.494664+00:00",
+          "owner": "codex-cursor2s",
+          "detail": "Manual root review: deadline only; exact1999/2000ms boundary RED/GREEN and lifecycle pass.; merged 1876b431322ff3542958ea8438210fb7887b2df0"
         }
       ],
-      "claimed_at": "2026-10-29T06:21:58.657365+00:00"
+      "claimed_at": "2026-10-29T06:21:58.657365+00:00",
+      "completed_at": "2026-10-29T06:25:07.494664+00:00"
     }
   },
   "integrator": {
@@ -11343,7 +11349,7 @@
     "created_at": "2026-10-29T06:24:55.715100+00:00",
     "updated_at": "2026-10-29T06:24:55.715100+00:00"
   },
-  "updated_at": "2026-10-29T06:24:55.715100+00:00",
+  "updated_at": "2026-10-29T06:25:07.494664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
