@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <string.h>
 
+typedef struct PortJiminyPageRow {
+    uint32_t fill, guide, border, ground;
+    uint16_t owned; /* native BG1 ownership at shaded edge columns224..239 */
+} PortJiminyPageRow;
+
 /* Header labels differ, but these three detail layouts share the body. A
    pending mode/style change must not repaint the previous root/list frame. */
 static inline int PortJiminyDetailMap(const uint16_t* shown, const uint16_t* detail) {
