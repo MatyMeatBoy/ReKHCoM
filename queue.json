@@ -11993,10 +11993,10 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T19:29:29.115373+00:00",
+      "updated_at": "2026-10-29T19:30:23.847404+00:00",
       "branch": "release/v23-test515",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
@@ -12031,6 +12031,11 @@
           "at": "2026-10-29T19:29:29.115373+00:00",
           "owner": "codex-issue515",
           "detail": "PR519 main634af44c fix integrado; test515 fuente6ddead publicado Windows/Linux.7assets descarga anonima/hash PASS. Windows6boots+EU64 tutorial PASS; LinuxVM6boots+EU32/64 tutorial PASS. Reportero recibe test, confirmacion externa pendiente; mantener issue abierto. pruebas/issue515-tutorial y releases/v2.3-test515/PUBLIC-VERIFIED.json"
+        },
+        {
+          "at": "2026-10-29T19:30:23.847404+00:00",
+          "owner": "codex-issue515",
+          "detail": "Fix integrado y test publico Windows/Linux verificado; comentario6506360527 enviado. Solo falta confirmacion del reportero; no build ni trabajo local activo. Root retoma P1 issue517."
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
@@ -12050,7 +12055,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T19:29:29.115373+00:00",
+  "updated_at": "2026-10-29T19:30:23.847404+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
