@@ -11646,12 +11646,12 @@
     "halloween-arena-floor-perspective": {
       "id": "halloween-arena-floor-perspective",
       "piece": "User29Oct screenshot: Halloween arena bottom repeats/stretches last pixels; extend using own floor in perspective, comparable to Trickmaster approach, preserve actors/collisions",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-halloween-v23",
       "created_at": "2026-10-29T06:51:24.325541+00:00",
-      "updated_at": "2026-10-29T16:44:27.187240+00:00",
-      "branch": "fix/v23-halloween-floor",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/509",
+      "updated_at": "2026-10-29T17:02:57.255455+00:00",
+      "branch": "docs/v23-halloween-floor-validation",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/514",
       "approval": "Root integrator: human-authorized code review; 257983eff834d4037dc7605e1c25a622a60639fb",
       "reference": "user screenshot codex-clipboard-dfd30b14-402a-4538-805b-48305f68ea6a.png",
       "evidence": [
@@ -11684,6 +11684,11 @@
           "at": "2026-10-29T16:44:27.187240+00:00",
           "owner": "codex-halloween-v23",
           "detail": "Root manual review: exact loaded16KiB source match, battle/wide/affine layout restricted, only external rows below512 projected from clean native donor. Native viewport/other arenas retain original. CPU real affine test passed root; worker CPU32/64; eight real32 SD/HD zoom runs32captures, region checks andAuto4exact reviewed. Inspected candidate x3HD andx1SD vsbaseline; stripes removed with own ground perspective. Actual64 and clean delivery pending; keep claim active.; merged ff476aa9eb2b5342b66c7c146cac46d02db832ad; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T17:02:57.255455+00:00",
+          "owner": "codex-halloween-v23",
+          "detail": "CodePR509mergedff476aa9. Real64FLOORgatePASS:8validSDHDzooms1x3xint2Auto4runs exit0;host+guest+SDLhashesintact.16SDframeswholeRGBAexactto32;4HDpausedframeswholeRGBAexact;32framesaddedgroundright40percentexact.12activeHDoverlayframesNOTwholeexact (software-nearest/D3D11smooth inclHUD/floatinglabels);noHUDparityclaim. Initial4HDmissingexternalfonts runs preserved/excluded;4newHDOTFsloaded. PublicsupplementPR514 source4f1e7a2b1c3d9b1d0f029be94d4cf6a7e8f9d692 documentaryonly. Private CROSS-ARCH32-64-RESULT.json, hostSHA62d80365...guest718704c8...;no64beforeclaim/nootherphysicalplatform/audio. LastSDLinstanceclosed,rootnotified. Evidence~29MB afterbyte-identicaldebugLZMA/fontcopyconsolidation,owncheckoutcleanpendingremoval."
         }
       ],
       "claimed_at": "2026-10-29T15:54:03.034148+00:00"
@@ -11941,7 +11946,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:02:26.291382+00:00",
+  "updated_at": "2026-10-29T17:02:57.255455+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
