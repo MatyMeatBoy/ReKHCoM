@@ -398,5 +398,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | map-card-definition-table-bounds | Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings. | integrado | codex-mapcard-bounds | https://github.com/MatyMeatBoy/ReKHCoM/pull/491 | Root integrator: human-authorized code review; e86e45d84d68e9eccd32839c5cefc1e440b89540 | 2026-10-29T03:29:16.966904+00:00 |
 | game-cursor-idle-two-seconds | User-confirmed cursor behavior: reduce inactivity delay from4s to2s, preserve motion/focus restoration | integrado | codex-cursor2s | https://github.com/MatyMeatBoy/ReKHCoM/pull/496 | Root integrator: human-authorized code review; e847b63ad0029b36fae90ec4c87abb0ccb38e691 | 2026-10-29T06:25:07.494664+00:00 |
 | monstro-objective-adaptive-hud | User screenshot29Oct: Monstro monster symbol plus objective gauge must dock together to adaptive HUD; current gauge stays in playfield | pendiente | — | — | — | 2026-10-29T06:25:50.416958+00:00 |
+| v23-startup-copyright-hd | Before2.3: copyright/legal startup screens HD only with HD enabled; audit startup-to-title audio stutters including skip transitions | pendiente | — | — | — | 2026-10-29T06:31:32.313804+00:00 |
 
 Integrador: libre
