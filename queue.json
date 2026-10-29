@@ -10822,10 +10822,10 @@
     "v23-p1-map-card-hd-gaps": {
       "id": "v23-p1-map-card-hd-gaps",
       "piece": "2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T04:48:47.888768+00:00",
+      "updated_at": "2026-10-29T04:49:02.053911+00:00",
       "branch": "fix/v23-mapcards-hd",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/492",
       "approval": "Root integrator: human-authorized code review; 27e64a560e868b351e70d2033f104b3bbe6238a5",
@@ -10845,6 +10845,11 @@
           "at": "2026-10-29T04:48:47.888768+00:00",
           "owner": "codex-mapcards23",
           "detail": "Manual source review by root per user no workers;100 counter cases,4 generator checks,real launcher RED/GREEN+actual writer,10 game routes and one native-import GPU consumer;HDoff10+corners48 identical,all3regions frames and7numeric sources,actual881 C++ import and28new outputs max1/255 vsPython;check_sources andABI64 pass. PARTIAL25/26,Rewards original pending;no physical other-platform or audio claim;853 existing recipes unchanged."
+        },
+        {
+          "at": "2026-10-29T04:49:02.053911+00:00",
+          "owner": "codex-mapcards23",
+          "detail": "Manual source review by root per user no workers;100 counter cases,4 generator checks,real launcher RED/GREEN+actual writer,10 game routes and one native-import GPU consumer;HDoff10+corners48 identical,all3regions frames and7numeric sources,actual881 C++ import and28new outputs max1/255 vsPython;check_sources andABI64 pass. PARTIAL25/26,Rewards original pending;no physical other-platform or audio claim;853 existing recipes unchanged.; merged 41c93771d7dd33304345f28a6192ab63f3bd8b1a; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T03:35:02.308468+00:00",
@@ -11234,7 +11239,7 @@
     "created_at": "2026-10-29T04:48:52.669980+00:00",
     "updated_at": "2026-10-29T04:48:52.669980+00:00"
   },
-  "updated_at": "2026-10-29T04:48:52.669980+00:00",
+  "updated_at": "2026-10-29T04:49:02.053911+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
