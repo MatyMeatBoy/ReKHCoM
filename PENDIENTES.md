@@ -407,4 +407,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-audio-language-ux | User29Oct: natural HD movie voice description including Japanese audio; instructions routed to launcher/platform workflow; replace confusing legacy-import wording, recognize existing English when identified and reflect selection in main/submenu; preserve unknown/JP imports safely | pendiente | — | — | — | 2026-10-29T07:10:02.898562+00:00 |
 | web-khmenu-text-spacing | User screenshot: Web frontend KHMenu words split by irregular gaps (Your adventure, Europe/America/Japan). Reproduce browser font shaping/kerning with actual font and fix without changing game canvas or losing typeface; verify desktop/mobile and deployed artifact. | pendiente | — | — | — | 2026-10-29T13:37:02.554993+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T13:47:59.828479+00:00)
