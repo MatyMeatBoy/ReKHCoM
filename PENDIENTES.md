@@ -416,4 +416,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | bridge-texture-failure-contract | P1 crash audit: actual shared SDL guest texture setters/update dereference NULL after allocation failure; reproduce without ROM, fix related valid/invalid bounds and preserve native behavior. | integrado | codex-bridge-texture-safety | https://github.com/MatyMeatBoy/ReKHCoM/pull/521 | Root integrator: human-authorized code review; e4cd7eef16d5d3836129fecca1d5ea0c183730be | 2026-10-29T22:00:41.758590+00:00 |
 | bridge-surface-image-bounds | P1 follow-up to521: shared surface conversion/blit/save dereference NULL and dimensions/pitch/offset arithmetic can overflow before texture creation. CPU fault tests and valid-pixel controls; preserve gameplay. | pr_abierto | codex-bridge-surface-safety | https://github.com/MatyMeatBoy/ReKHCoM/pull/522 | Root integrator: human-authorized code review; 6f547f9418d7d8b8e15ceda27e2f7e363476929c | 2026-10-29T22:07:40.388339+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T22:07:45.310223+00:00)
