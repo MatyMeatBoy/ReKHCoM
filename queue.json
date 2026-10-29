@@ -10347,12 +10347,12 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-linux459-window64",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T20:48:09.508717+00:00",
+      "updated_at": "2026-10-29T21:02:34.793977+00:00",
       "branch": "fix/linux459-native64-window",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/504",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/520",
       "approval": "Root integrator: human-authorized code review; 2db0e1e4fd4ce199afcd31193ce62252b6f47568",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
@@ -10450,6 +10450,11 @@
           "at": "2026-10-29T20:48:09.508717+00:00",
           "owner": "codex-linux459-window64",
           "detail": "Nuevo log6506424422: SDL64 inicia X11/Pipewire; SDL_CreateWindow HIDDEN bloquea antes window-show/renderer, watchdog30s exit75, recovery32software confirmado fisico. Preservar fallback; investigar diferencia clienteX11/ruta64 y nuevo test GPU64. #517 WIP3b276002e preservado, claim liberado por prioridad humana."
+        },
+        {
+          "at": "2026-10-29T21:02:34.793977+00:00",
+          "owner": "codex-linux459-window64",
+          "detail": "ELF SONAME tests,13 production startup cases, native64 build and8binarynames PASS. VM3X11/OpenGL controls PASS: baseline2 Xlibs, candidate1; normal/preloaded candidate title exit0. PhysicalSteamOS pending. New full test next."
         }
       ],
       "claimed_at": "2026-10-29T20:45:28.171056+00:00",
@@ -12077,7 +12082,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T20:48:09.508717+00:00",
+  "updated_at": "2026-10-29T21:02:34.793977+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
