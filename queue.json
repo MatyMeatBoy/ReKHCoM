@@ -11622,7 +11622,7 @@
       "status": "pr_abierto",
       "owner": "codex-halloween-v23",
       "created_at": "2026-10-29T06:51:24.325541+00:00",
-      "updated_at": "2026-10-29T16:06:53.000896+00:00",
+      "updated_at": "2026-10-29T16:14:42.573161+00:00",
       "branch": "fix/v23-halloween-floor",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/509",
       "approval": null,
@@ -11637,6 +11637,11 @@
           "at": "2026-10-29T16:06:53.000896+00:00",
           "owner": "codex-halloween-v23",
           "detail": "DraftPR509 source0af154e7a. Code-only source sampler fix; no new artwork/Atlas image. CPU REDold/GREENnew,512native+160viewport unchanged/sourceidentity/palette/donor/otherarena. FullPPU-US syntaxPASS. Real32/64 zoom1x/3x/integer2/Auto normal+HD pending root shared build/GPU window; not visualPASS. Sparse8.44MB,noROM/cache copies. PrivateCPUproposal pruebas/halloween-floor23/CPU-PROPOSAL-PRIVATE.png."
+        },
+        {
+          "at": "2026-10-29T16:14:42.573161+00:00",
+          "owner": "codex-halloween-v23",
+          "detail": "Real baselineEU32 completed in authorized SDLdummy window:8runs x1/x3/integer2/Auto4 SDHD,4frames each camera+pause,all exit0. Streaks visibly reproduced x1/x3/integer2;Auto4noaddedbottompositivecontrol. FrozenexeSHA2c79b4cf550a452316f83f6bf5a8d889a1fe1c2c9b10796ba76155a5a9f891df. Lastinstanceclosed,rootnotified. Evidence BASELINE32-RESULT.json/BASELINE32-CONTACT.png. Initialharness omitted BACKGROUND_TEST so runtimeelevatedpriority despiteBELOW_NORMAL creation;allclosed,no performanceclaims;harnessfixedforfuture. Candidate32/64 pending rootdiaryintegration/rebase/sharedcache."
         }
       ],
       "claimed_at": "2026-10-29T15:54:03.034148+00:00"
@@ -11852,7 +11857,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T16:07:52.321997+00:00",
+  "updated_at": "2026-10-29T16:14:42.573161+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
