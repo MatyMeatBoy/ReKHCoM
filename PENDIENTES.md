@@ -415,4 +415,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue517-worldcard-glow | Issue517 Windows+Linux test479: selected World card yellow glow shows blue border instead of second yellow glow; compare supplied expected/actual videos, native palette frames and HD replacement; deliver verified test | pendiente | — | fix/issue517-worldcard-glow | Human: bugs priority1, cover all new issues before2.3; user supplied concrete version in issue, no repeat question | 2026-10-29T20:45:20.986849+00:00 |
 | bridge-texture-failure-contract | P1 crash audit: actual shared SDL guest texture setters/update dereference NULL after allocation failure; reproduce without ROM, fix related valid/invalid bounds and preserve native behavior. | pr_abierto | codex-bridge-texture-safety | https://github.com/MatyMeatBoy/ReKHCoM/pull/521 | Root integrator: human-authorized code review; e4cd7eef16d5d3836129fecca1d5ea0c183730be | 2026-10-29T22:00:26.310785+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T22:00:32.209031+00:00)
