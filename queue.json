@@ -11996,8 +11996,8 @@
       "status": "en_curso",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T18:47:45.140702+00:00",
-      "branch": "fix/issue515-tutorial-synthesis-actors",
+      "updated_at": "2026-10-29T19:29:29.115373+00:00",
+      "branch": "release/v23-test515",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/515",
@@ -12026,6 +12026,11 @@
           "at": "2026-10-29T18:47:45.140702+00:00",
           "owner": "codex-issue515",
           "detail": "Root reviewed shared bounded OAM spill, metadata/priority/reset/snapshot. ExactMomentsReprieve RED64/GREEN32+64,206 oracles,emitter canaries,HDowner512,decodefallback,source checks PASS; publicQA OAM_PARTS_515_QA.json. Test delivery/report confirmation pending.; merged 634af44c005ddeabe1e92ecc44879f0bbf5d8a9c; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T19:29:29.115373+00:00",
+          "owner": "codex-issue515",
+          "detail": "PR519 main634af44c fix integrado; test515 fuente6ddead publicado Windows/Linux.7assets descarga anonima/hash PASS. Windows6boots+EU64 tutorial PASS; LinuxVM6boots+EU32/64 tutorial PASS. Reportero recibe test, confirmacion externa pendiente; mantener issue abierto. pruebas/issue515-tutorial y releases/v2.3-test515/PUBLIC-VERIFIED.json"
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
@@ -12045,7 +12050,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T18:48:56.758868+00:00",
+  "updated_at": "2026-10-29T19:29:29.115373+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
