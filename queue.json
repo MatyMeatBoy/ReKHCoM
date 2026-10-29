@@ -8133,12 +8133,12 @@
     "scene-background-coverage-x3-integer2": {
       "id": "scene-background-coverage-x3-integer2",
       "piece": "Para mas tarde: auditar TODOSfondos de escenas hasta x3Integer2 con criterio nuevo, por tramo/zoom/camara/entrada/salida; añadir todoscasosreconocidos a colaAtlas conIDs+capturas, preservarzoomespeciallegitimo yHUDsegunzoomusuario. MonstroGeppetto/Pinocho ya reportados, no duplicartrabajo.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-scene-inventory",
       "created_at": "2026-10-27T22:26:03.779081+00:00",
-      "updated_at": "2026-10-29T23:41:23.184378+00:00",
-      "branch": "tools/atlas-complete-scenario-inventory",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/524",
+      "updated_at": "2026-10-29T23:56:49.563156+00:00",
+      "branch": "fix/atlas-coliseum-context-links",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/525",
       "approval": "Root integrator: human-authorized code review; 983df957695ee1cdc87e0b3383ff454a1e4e9579",
       "reference": null,
       "evidence": [
@@ -8161,6 +8161,11 @@
           "at": "2026-10-29T23:41:23.184378+00:00",
           "owner": "codex-scene-inventory",
           "detail": "Self-review per no-workers mandate. Pure read-only source/catalog parser, regional enum offsets and camera deadlines follow engine; family cycles/missing IDs bounded; 8 regressions + real 3-region zero-issue source inventory PASS. Source block only, no visual approval/runtime coverage/desk modifications claimed.; merged c704142760494f3a55fef8f1b9d0189496f89d25; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T23:56:49.563156+00:00",
+          "owner": "codex-scene-inventory",
+          "detail": "Existing Coliseo121/122/124 families are recognized, avoiding duplicate missing entries. 9regressionsPASS with REDbeforefix. Live desk cross210assets/78accepted,30unlinkedBGs. Library130 pending reference c1ab45945afe471fb5f3f6f4b089e1e6 registered; all209oldrecords/78acceptedlineages unchanged. Runtime/remaining refs unfinished."
         }
       ],
       "claimed_at": "2026-10-29T23:03:43.709176+00:00"
@@ -12275,7 +12280,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T23:41:27.722905+00:00",
+  "updated_at": "2026-10-29T23:56:49.563156+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
