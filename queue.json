@@ -10825,10 +10825,10 @@
       "status": "pr_abierto",
       "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T05:18:08.521142+00:00",
+      "updated_at": "2026-10-29T05:18:28.405458+00:00",
       "branch": "fix/v23-mapcard-rewards",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/493",
-      "approval": "Root integrator: human-authorized code review; 27e64a560e868b351e70d2033f104b3bbe6238a5",
+      "approval": "Root integrator: human-authorized code review; f2f27bcf7fe221b2269d23c617d6b1e1129cb64e",
       "reference": "Owner screenshot20261028-54576822; pruebas/v23-prioridades/naipes-mapa-referencia.png. After2.2.5release. Reconcile mapinspect-grid-hd-original-frame existing task before implementation.",
       "evidence": [
         {
@@ -10865,6 +10865,11 @@
           "at": "2026-10-29T05:18:08.521142+00:00",
           "owner": "codex-mapcards23",
           "detail": "f2f27bcf7 completes26th family from owned menu atlas image19; five localization images identical. CoverageRED/GREEN5; actual C++881to883 upgrade stale2to0, prior881 outputs identical; two new max0/1 perchannel vsPython. Eight real game routes+three premium-cycle routes; all26 family fixture, HDoff5/fallback5 identical,8native goldcorners identical; source andABI64 checks pass. Direct image shown; no Atlas rating/other-device/audio claim. Manual root review per no-workers request."
+        },
+        {
+          "at": "2026-10-29T05:18:28.405458+00:00",
+          "owner": "codex-mapcards23",
+          "detail": "Root manual source/visual review under user no-workers instruction. Rewards identified in owned UK_card image19 (same pixels5locales); source crop and original frame preserved. Coverage5 RED/GREEN; actual C++ upgrade881to883, stale2to0, old881 outputs byte-identical; native/Python new outputs max0/1. Eight game paths+three premium phases on copied actual-editor26family fixture, Win32/64 software/D3D11; fiveHDoff andfivefallback comparisons identical,8nativegold corners identical; generated/source/ABI64 checksPASS. P1 counter+all26 mapped families implemented/verified in this scope; pending future release and other physical platforms; diary/audio tasks remain."
         }
       ],
       "claimed_at": "2026-10-29T03:35:02.308468+00:00",
@@ -11249,7 +11254,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T05:18:08.521142+00:00",
+  "updated_at": "2026-10-29T05:18:28.405458+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
