@@ -11996,10 +11996,10 @@
       "status": "pr_abierto",
       "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T18:47:21.878990+00:00",
+      "updated_at": "2026-10-29T18:47:30.621734+00:00",
       "branch": "fix/issue515-tutorial-synthesis-actors",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
-      "approval": "Human authorized bugs priority1 and cover all new issues before2.3",
+      "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/515",
       "evidence": [
         {
@@ -12016,13 +12016,18 @@
           "at": "2026-10-29T18:47:21.878990+00:00",
           "owner": "codex-issue515",
           "detail": "PR519 head ddcfa009f50a6073e5f40de84e7269b6c4a66671; root reviewed central emitter/PPU/HD owner/state/reset. RED+GREEN exactMomentsReprieve EU32/64;206 independent cases and fault-injection PASS. Delivery/reporter confirmation remains."
+        },
+        {
+          "at": "2026-10-29T18:47:30.621734+00:00",
+          "owner": "codex-issue515",
+          "detail": "Root reviewed shared bounded OAM spill, metadata/priority/reset/snapshot. ExactMomentsReprieve RED64/GREEN32+64,206 oracles,emitter canaries,HDowner512,decodefallback,source checks PASS; publicQA OAM_PARTS_515_QA.json. Test delivery/report confirmation pending."
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T18:47:21.878990+00:00",
+  "updated_at": "2026-10-29T18:47:30.621734+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
