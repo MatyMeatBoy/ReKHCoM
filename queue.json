@@ -11978,19 +11978,20 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-issue515",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T17:41:20.731775+00:00",
+      "updated_at": "2026-10-29T17:41:28.545364+00:00",
       "branch": null,
       "pr": null,
       "approval": "Human authorized bugs priority1 and cover all new issues before2.3",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/515",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-29T17:41:28.545364+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:41:20.731775+00:00",
+  "updated_at": "2026-10-29T17:41:28.545364+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
