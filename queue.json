@@ -10826,10 +10826,10 @@
     "v23-quit-game-menu": {
       "id": "v23-quit-game-menu",
       "piece": "v2.3: restaurar Salir del juego en el menu propio, visible en HD y normal, Windows/Linux; cerrar completamente juego y launcher sin regresar al launcher. Reporte #479 coincide con pedido del usuario, comprobar semantica por plataforma.",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-quit479",
       "created_at": "2026-10-28T23:12:19.692181+00:00",
-      "updated_at": "2026-10-29T00:59:40.281159+00:00",
+      "updated_at": "2026-10-29T00:59:55.189961+00:00",
       "branch": "fix/desktop64-quit-menu",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/485",
       "approval": "Root integrator: human-authorized code review; 69b5cb14789acfe8eeeb74ba8a2430fee7675552",
@@ -10844,6 +10844,11 @@
           "at": "2026-10-29T00:59:40.281159+00:00",
           "owner": "codex-quit479",
           "detail": "Root solo review: common deferred cleanup retains exit81 and native-only fullscreen wizard; actual before64 RED/native32 positive, after8cases native32+guest64 originalHD text quit81/cancel0, visible captured HD Quit row, ABI+boot PASS. No full launcher or physicalLinux/package claim."
+        },
+        {
+          "at": "2026-10-29T00:59:55.189961+00:00",
+          "owner": "codex-quit479",
+          "detail": "Root solo review: common deferred cleanup retains exit81 and native-only fullscreen wizard; actual before64 RED/native32 positive, after8cases native32+guest64 originalHD text quit81/cancel0, visible captured HD Quit row, ABI+boot PASS. No full launcher or physicalLinux/package claim.; merged 0cd1473e4c0a2b443b20f2685dde052e5c8d1a83; PARTIAL DIAGNOSTIC ONLY, reported defect remains unresolved"
         }
       ],
       "claimed_at": "2026-10-29T00:53:57.055833+00:00"
@@ -10992,7 +10997,7 @@
     "created_at": "2026-10-29T00:59:45.738128+00:00",
     "updated_at": "2026-10-29T00:59:45.738128+00:00"
   },
-  "updated_at": "2026-10-29T00:59:45.738128+00:00",
+  "updated_at": "2026-10-29T00:59:55.189961+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
