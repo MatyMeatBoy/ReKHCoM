@@ -10994,10 +10994,23 @@
         }
       ],
       "claimed_at": "2026-10-29T00:08:39.403027+00:00"
+    },
+    "optiport-recycled-object-contracts": {
+      "id": "optiport-recycled-object-contracts",
+      "piece": "OptiPort: verified recycled-work initialization and desktop guest capability lessons from484/485; real consumer negative/positive tests, preserve scope and installed local additions; root solo",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-29T01:00:56.747595+00:00",
+      "updated_at": "2026-10-29T01:00:56.747595+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User explicitly requested teaching OptiPort and preventing similar bugs, no workers",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/484",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:00:37.705352+00:00",
+  "updated_at": "2026-10-29T01:00:56.747595+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
