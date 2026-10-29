@@ -11392,16 +11392,21 @@
       "status": "pr_abierto",
       "owner": "codex-v23-pre1",
       "created_at": "2026-10-29T07:00:34.758758+00:00",
-      "updated_at": "2026-10-29T07:07:01.414286+00:00",
+      "updated_at": "2026-10-29T07:08:04.793798+00:00",
       "branch": "release/v23-pre1",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/497",
-      "approval": null,
+      "approval": "Root integrator: human-authorized code review; f19ccdddf251e692d9e52a9cde821f739e2a875e",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-29T07:07:01.414286+00:00",
           "owner": "codex-v23-pre1",
           "detail": "Version/docs only. check_sources PASS; Android officialpre identity102030001 verified; no gameplay mutation. Build/package gates follow merge."
+        },
+        {
+          "at": "2026-10-29T07:08:04.793798+00:00",
+          "owner": "codex-v23-pre1",
+          "detail": "Root review: version header and candid changelog only; check_sources and Androidpre identity PASS. Delivery remains unfinished until rebuilt and verified packages are published."
         }
       ],
       "claimed_at": "2026-10-29T07:00:59.546295+00:00"
@@ -11434,7 +11439,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T07:07:01.414286+00:00",
+  "updated_at": "2026-10-29T07:08:04.794796+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
