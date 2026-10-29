@@ -10887,8 +10887,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T10:17:24.015928+00:00",
-      "branch": "fix/v23-jiminy-paper",
+      "updated_at": "2026-10-29T10:18:09.130594+00:00",
+      "branch": "fix/v23-jiminy-headings",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/500",
       "approval": "Root integrator: human-authorized code review; a48e8a5a38983f266d851d05c34d746f868e652d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -11002,6 +11002,11 @@
           "at": "2026-10-29T10:17:24.015928+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual review: actual BG1 winner/alpha mask, any-three presented detail maps, bounds and complete240x160 foreground transform, exact resource lookup/failure native fallback, cached texture teardown and live filter. CPU RED/GREEN and injected allocation/upload/bridge/draw/header failures;15fallback identical pairs,20matrix plus10finalsource captures, Sora32/64 exact. C++real upgrade6to0/883bytesstable/Pythonpixelparity. Win32/64ABIboot/AndroidUSJP/sourcesPASS. PartialEUUSbook only, PAGE/otherheads/rootlist/RikuJP/audio remain; noWorkers.; merged 5bfc8ed8af45e8b6f70eaf5539c48b5c94653d56; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T10:18:09.130594+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "PR500 merged5bfc8ed8a; rounded detail book integrated. Continue PAGE/internal Story and Character headings, miniheader and root/list cleanup in same checkout, no workers. Final code and screenshots reviewed; native fallback and missing resources preserved."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11536,7 +11541,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T10:17:29.013676+00:00",
+  "updated_at": "2026-10-29T10:18:09.130594+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
