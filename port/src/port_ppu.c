@@ -37,6 +37,11 @@
 #include "port/port_agrabah_tiles.h"
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
+#include "port/port_halloween_floor.h"
+
+extern const uint8_t gBtlBgHalloweenTownTiles[16384];
+/* Derived every frame from the actual loaded source, never saved game state. */
+static int sHalloweenFloor;
 
 extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
@@ -2257,7 +2262,9 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
         refX = sMosAffX[a];
         refY = sMosAffY[a];
     }
-    if (pa == 256 && pc == 0 && mosH == 1) {
+    if (pa == 256 && pc == 0 && mosH == 1 &&
+        !(sHalloweenFloor && gy >= GBA_SCREEN_H && (refY >> 8) >= 512 && size == 512 &&
+          ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12)) {
         DrawStraightAffine(bg, gy, cnt, refX, refY);
         return;
     }
@@ -2285,8 +2292,10 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
            in texture space. Composition still handles palette zero, fades,
            masks and sprites normally; no framebuffer colours are guessed. */
         if (sBattleView && gPortScreen.wide && ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 && size >= 512 &&
-            gy >= GBA_SCREEN_H && py >= size)
-            py = size - 1;
+            gy >= GBA_SCREEN_H && py >= size) {
+            if (!(sHalloweenFloor && size == 512 && PortHalloweenFloorSource(&px, &py)))
+                py = size - 1;
+        }
         /* Continue authored arena ornaments only in the wide margins. The
            original hardware viewport, camera and collision remain exact.
            Reflecting each short side band joins its edge without bringing
@@ -3897,6 +3906,11 @@ void PortPpuBeginFrame(void) {
         memset(gPortOverlay, 0, (size_t)gPortOverlayW * GBA_SCREEN_H * 4);
     for (b = 0; b < 4; b++) sWorldPadding[b] = WorldPadding(b, &sBgLatch[b]);
     FindTiledBackdrop(PortEventTiledBackdrop());
+    /* Texture identity includes every byte, rather than guessing from shared
+     * arena registers/bands. This also handles EU's compressed map and every
+     * platform's shared PPU without adding guest state or touching gameplay. */
+    sHalloweenFloor = sBattleView && gPortScreen.wide &&
+        memcmp(VRAM8, gBtlBgHalloweenTownTiles, sizeof(gBtlBgHalloweenTownTiles)) == 0;
     if (gPortScreen.wide) {
         sLeft = -gPortScreen.originX;
         sRight = gPortScreen.width - gPortScreen.originX;
