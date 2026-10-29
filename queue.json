@@ -10915,10 +10915,10 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T11:50:43.668011+00:00",
+      "updated_at": "2026-10-29T12:29:24.279514+00:00",
       "branch": "fix/v23-jiminy-name-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/503",
       "approval": "Root integrator: human-authorized code review; b0de9c8bd198541a2ed7c9fe6d510080738dfa43",
@@ -11100,7 +11100,7 @@
           "detail": "released: 502/503 merged, sourceclean main62ef1bb7. P2unfinished cover/list/RikuJP retained; yield lane to priority new459 normal64 logs at window-begin. No worker."
         }
       ],
-      "claimed_at": "2026-10-29T05:21:26.612535+00:00",
+      "claimed_at": "2026-10-29T12:29:24.279514+00:00",
       "sent": "direct-runtime-capture:pruebas/jiminy23-name-runtime/before-64/3060.png"
     },
     "v23-p3-audio-transitions": {
@@ -11632,7 +11632,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T12:29:17.696860+00:00",
+  "updated_at": "2026-10-29T12:29:24.279514+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
