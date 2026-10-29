@@ -20,6 +20,10 @@ def main():
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <limits.h>
+#include "audio_bridge.h"
+static PortMovieVolumeState sMovieVolume;
+#define PortLog(...) ((void)0)
 typedef struct {int w,h,alive,pixel,refcount;} SDL_Texture;
 typedef unsigned char Uint8;
 typedef int SDL_PixelFormat;
@@ -79,7 +83,7 @@ static void h_tex_free(int id){H_tex_free(id);}
   movie_bridge=r'''
 #define SDL_snprintf snprintf
 static int sQuit,sStartAt;
-static struct {int hdSubtitles;}gPortConfig;
+static struct {int hdSubtitles,masterVolume;}gPortConfig;
 static void MoviePath(const char*n,char*p,int cap){snprintf(p,cap,"%s",n);}
 static void MovieSubtitlePath(const char*n,const char*l,char*p,int cap){snprintf(p,cap,"%s.%s.txt",n,l);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
@@ -88,7 +92,7 @@ static void SDL_strlcpy(char*p,const char*s,int cap){snprintf(p,cap,"%s",s);}
 static void(*resetCallback)(void);
 static void RendererDeviceReset(void){HostTextureReset();}
 static void HdMovieAndroidSetRendererResetCallback(void(*cb)(void)){resetCallback=cb;}
-static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c){assert(resetCallback);resetCallback();return 0;}
+static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int volume){assert(resetCallback);assert(volume==gPortConfig.masterVolume);resetCallback();return 0;}
 '''
   movie_bridge+=function(android,'static int H_hd_movie(')
   movie_bridge+='static int h_hd_movie(const char*m,const char*a,const char*b,const char*f){return H_hd_movie(m,a,b,f);}'
@@ -101,7 +105,7 @@ static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,cons
 #include "bridge_gpu_targets.h"
 typedef struct {float sx,sy;} TargetState;
 static int GpuTargets(void){return 0;}
-static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -1;}
+static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return PortMovieVolumeCommand(&sMovieVolume,op,a);}
 #define SDL_TEXTUREACCESS_TARGET 2
 static bool UnbindTexture(SDL_Texture*p){(void)p;return true;}
 '''
