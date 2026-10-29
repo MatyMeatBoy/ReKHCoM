@@ -11787,16 +11787,21 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-v23",
       "created_at": "2026-10-29T15:58:25.960944+00:00",
-      "updated_at": "2026-10-29T16:07:03.243301+00:00",
+      "updated_at": "2026-10-29T16:21:24.379256+00:00",
       "branch": "fix/v23-oogie-approved-runtime",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/510",
-      "approval": "Peticion directa usuario29Oct arenaOogie aprobada sinaplicar, rootdelegacion actual",
+      "approval": "Root integrator: human-authorized code review; 652827f70d5e6298fd9af415c08018e69f3be08e",
       "reference": "aa913fe773c4446eb5412c3115e222c7",
       "evidence": [
         {
           "at": "2026-10-29T16:07:03.243301+00:00",
           "owner": "codex-atlas-v23",
           "detail": "SHA652827f/sourcegatec12cc08. ExactAtlasapproved aa913, port_oogie blob7238dfda8b7d2c400bd838057b0db564f89f219c igualPR107; PR130CLOSEDsinmerge/hijasnoaprobadas intactas. GateCPU12RED/GREEN. SixEU32dummy16:9/32:9default/on/off,12captures exit0; default=preview4/4 ycentro=Off4/4;1920newdefault=oldpreview2/2/newOff=olddefault2/2. Exe509dc4b... buildreceipt357inputsreadonly mixtosdiarioWIP. Localpruebas/atlas-v23-oogie. NO64/GPU/Android/stutter/cleanpackage. Rootintegra conlock."
+        },
+        {
+          "at": "2026-10-29T16:21:24.379256+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "Root manual review: exact aa913fe approval preserved, recipe blob unchanged; only Oogie gate becomes default, unrelated/pending children untouched, Off retained. CPU12 and EU32 six runtime runs/pixel comparisons reviewed; inspected actual330 image. Build-clean/platform limits explicit; release verification still pending."
         }
       ],
       "claimed_at": "2026-10-29T15:58:32.704049+00:00",
@@ -11857,7 +11862,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T16:14:42.573161+00:00",
+  "updated_at": "2026-10-29T16:21:24.379256+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
