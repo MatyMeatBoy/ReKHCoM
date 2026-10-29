@@ -11029,10 +11029,10 @@
     "post480-test-docs-optiport-snapshot": {
       "id": "post480-test-docs-optiport-snapshot",
       "piece": "Document public480 Android test delivery and refresh embedded OptiPort snapshot to19 without app-source/build changes; preserve local docs and immutable releases",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-post480-docs",
       "created_at": "2026-10-29T01:09:53.919773+00:00",
-      "updated_at": "2026-10-29T01:12:26.059914+00:00",
+      "updated_at": "2026-10-29T01:12:39.727420+00:00",
       "branch": "docs/post480-test-delivery",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/486",
       "approval": "Root integrator: human-authorized code review; 33aaee8ea7dc96ab2adb3e40b95d0e9ad1ba32fe",
@@ -11047,9 +11047,15 @@
           "at": "2026-10-29T01:12:26.059914+00:00",
           "owner": "codex-post480-docs",
           "detail": "Root solo docs review: exact snapshot normalized match source0f61e585,29files; public APK e82b7148 SHA and source602 verified, explicit physicalAndroid pending; all14 relevant initializers reviewed, no all-engine claim; no source or immutable artifact modifications."
+        },
+        {
+          "at": "2026-10-29T01:12:39.727420+00:00",
+          "owner": "codex-post480-docs",
+          "detail": "Root solo docs review: exact snapshot normalized match source0f61e585,29files; public APK e82b7148 SHA and source602 verified, explicit physicalAndroid pending; all14 relevant initializers reviewed, no all-engine claim; no source or immutable artifact modifications.; merged e51c2511366e3dc12e3dcf694342da416619cebb"
         }
       ],
-      "claimed_at": "2026-10-29T01:09:58.619895+00:00"
+      "claimed_at": "2026-10-29T01:09:58.619895+00:00",
+      "completed_at": "2026-10-29T01:12:39.727420+00:00"
     }
   },
   "integrator": {
@@ -11058,7 +11064,7 @@
     "created_at": "2026-10-29T01:12:30.657155+00:00",
     "updated_at": "2026-10-29T01:12:30.657155+00:00"
   },
-  "updated_at": "2026-10-29T01:12:30.657155+00:00",
+  "updated_at": "2026-10-29T01:12:39.727420+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
