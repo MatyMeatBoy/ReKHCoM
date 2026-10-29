@@ -393,4 +393,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue480-android-room-spring-layers | Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA. | pendiente | — | https://github.com/MatyMeatBoy/ReKHCoM/pull/484 | Root integrator: human-authorized code review; 602de3736694513a21acbf436dc7f8753efb324c | 2026-10-29T00:53:51.653477+00:00 |
 | optiport-recycled-object-contracts | OptiPort: verified recycled-work initialization and desktop guest capability lessons from484/485; real consumer negative/positive tests, preserve scope and installed local additions; root solo | pr_abierto | codex-optiport-recycled | https://github.com/MatyMeatBoy/OptiPort/pull/19 | Root integrator: human-authorized code review; 384fb79c132de3a4612ffd46d3c0a25a58adc561 | 2026-10-29T01:03:07.271658+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T01:03:12.337277+00:00)
