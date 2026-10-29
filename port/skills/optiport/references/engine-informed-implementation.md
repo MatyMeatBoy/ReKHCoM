@@ -18,6 +18,22 @@ Si falta conocimiento, observar o instrumentar esa frontera y consultar reportes
 
 Usar estos esquemas para comprobar invariantes, no para imponer una arquitectura nueva. Migrar incrementalmente en bloques verificables, conservando baseline y compatibilidad; evitar un rewrite grande motivado sólo por preferencia de diseño.
 
+## Estado de objetos al reutilizar memoria
+
+Si un objeto funciona al inicio pero falla tras recrearlo, seguir el allocator,
+su inicializador y cada campo leído por el consumidor afectado. Una asignación
+no implica memoria a cero; tampoco el funcionamiento de una sesión limpia
+acredita su estado después de reutilizar un bloque. Reproducir con reutilización
+real o patrones controlados sólo en el trabajo del objeto pertinente, incluyendo
+un control limpio, y comprobar la transición real antes/después de inicializar
+el campo según su contrato. Mantener las herramientas de inyección separadas
+del paquete entregado y revisar los productores hermanos del mismo consumidor.
+
+Preferir la corrección del inicializador a un clamp global, desactivar el
+consumidor o limpiar indiscriminadamente todos los objetos. El mecanismo
+reproducido bajo memoria alterada es evidencia acotada: conservar como pendiente
+su atribución a un dispositivo cuando el flujo limpio aún no falla allí.
+
 ## De comprensión a evidencia
 
 Reproducir el fallo en el producer/consumer real y fijar una aserción que distinga fallo de éxito. Incluir control válido, errores inyectados pertinentes, transición/cancelación y medición A/B si se pretende mejorar rendimiento. Probar la combinación final del código integrado, no sólo un modelo simplificado del pipeline.
