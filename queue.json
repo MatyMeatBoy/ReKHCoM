@@ -10347,10 +10347,10 @@
     "linux459-steam-startup": {
       "id": "linux459-steam-startup",
       "piece": "Issue459 SteamOS desktop app/sh works but Steam launch fails; compare exact v2.2/test330 launcher environment before bounded fix",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-linux459-window64",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T21:11:26.361829+00:00",
+      "updated_at": "2026-10-29T22:20:00.966235+00:00",
       "branch": "fix/linux459-native64-window",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/520",
       "approval": "Root integrator: human-authorized code review; c6e33d20d5edcdeaf45b9330fed2c1937d20767c",
@@ -10470,6 +10470,11 @@
           "at": "2026-10-29T21:11:26.361829+00:00",
           "owner": "codex-linux459-window64",
           "detail": "PR520 merged9be6c3d9, SDL X11 SONAME fix. PUBLIC v2.3-test459-native64.1 7assets anonymous SHA verified; archive9ca0ad7d65bce0109f5ff879aa3959d68a6c2703c5dc822b997ec557dc5d6a2f. Exactarchive4cases PASS:64OpenGLnormal/preload, safe32, stall64→32, HDfonts/prefs. Reporter459 reply6508406236 and330 reply6508406712 sent; physical64/GPU confirmation pending, issues OPEN. Lateststable2.2.5 unchanged."
+        },
+        {
+          "at": "2026-10-29T22:20:00.966235+00:00",
+          "owner": "codex-linux459-window64",
+          "detail": "Reporter6509202623 and attached2logs verify native64/OpenGL, one systemXlib, Steamoverlay loaded, title/menu, HDfonts, cleanexit0 no fallback; guestentry245695us. Testv2.3-test459-native64.1. #459 responded6509636965 and CLOSED; #330 separate stillOPEN. pruebas/issue459-new-logs/confirmed-native64/CONFIRMED.json"
         }
       ],
       "claimed_at": "2026-10-29T20:45:28.171056+00:00",
@@ -12159,7 +12164,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:08:28.166664+00:00",
+  "updated_at": "2026-10-29T22:20:00.966235+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
