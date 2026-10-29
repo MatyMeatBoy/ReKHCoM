@@ -418,4 +418,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | windows32-fixed-memory-placement | Investigate intermittent native32 startup fixed GBA image placement guard: identical EU binary succeeds then exits1 when sGbaSpace starts0214D000; preserve fixed hardware mapping and launcher recovery, no arbitrary resume. Repro log pruebas/issue517-worldcard/candidate517-hd1-view4-traverse-fine-finalnative, subsequent same-binary Auto control passes. | pendiente | — | — | — | 2026-10-29T22:34:46.002713+00:00 |
 | optiport-render-identity-lessons | Promote verified Linux SONAME identity, shared texture/surface failure contracts, additive HD native fallback and harness ASLR observations into OptiPort references; no claim of final full-game pass. | pr_abierto | codex-optiport-render-lessons | https://github.com/MatyMeatBoy/OptiPort/pull/21 | Root integrator: human-authorized code review; 4e7211ecb9ae9f2690af3b41efa55406574df84d | 2026-10-29T22:59:28.225618+00:00 |
 
-Integrador: libre
+Integrador: codex-integrador (ocupado; 2026-10-29T22:59:34.457527+00:00)
