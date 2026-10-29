@@ -90,23 +90,23 @@ python port/tools/test_map_spring_init.py --cc /path/to/i686-w64-mingw32-clang -
 ## Android test delivered
 
 The [separate Android test](https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2.5-nightly.20261028.48)
-is public and was sent in issue comment6484803708. It supports USA ROMs only,
+is public and was sent in [this issue reply](https://github.com/MatyMeatBoy/ReKHCoM/issues/480#issuecomment-6484803708). It supports USA ROMs only,
 with ARMv7 and ARM64, and installs as `com.rekhcom.android.optiport` alongside
-the normal app. Source602de3736694513a21acbf436dc7f8753efb324c was integrated
-as3d2b30b745e6520f6ebb5886d842681e1c1b7d15. APK SHA256:
+the normal app. Source `602de3736694513a21acbf436dc7f8753efb324c` was integrated
+as `3d2b30b745e6520f6ebb5886d842681e1c1b7d15`. APK SHA256:
 `e82b7148c229a34dbc7b5ff827bcf9db3ef1112083369c85c9a8dfea67161db4`.
 
 The closed signature, compiled Java-only entry, six ELF libraries, USA guest
-and214assets passed package checks. Anonymous public downloads match the closed
+and 214 assets passed package checks. Anonymous public downloads match the closed
 hashes. No ROM/save is included. Installation and the reported physical Android
 flow remain unverified; issue480 stays open pending that result. Stable v2.2.5
 artifacts are unchanged.
 
-All14 map-task callsites of `FldObjIsOutOfView` were inventoried with their14
+All 14 map-task callsites of `FldObjIsOutOfView` were inventoried with their 14
 distinct relevant initializers; the spring was the missing height assignment.
 This review does not establish that all object fields or all engine subsystems
 are free from initialization defects. The reusable method is recorded in
-OptiPort19, source0f61e585a5236bf11b89dabe9cd5c4d3a99589a1; its embedded snapshot
+OptiPort #19, source `0f61e585a5236bf11b89dabe9cd5c4d3a99589a1`; its embedded snapshot
 and installed Codex/Claude copies were refreshed, preserving Claude's local note.
 
 Generated Android build files were removed after preserving the public APK,
