@@ -11072,20 +11072,26 @@
     "post479-delivery-record": {
       "id": "post479-delivery-record",
       "piece": "Record completed desktop479 test and current open bug priorities in public progress docs; stable2.2.5 unchanged; no app source change",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-post479-docs",
       "created_at": "2026-10-29T01:43:22.533603+00:00",
-      "updated_at": "2026-10-29T01:43:28.248594+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-29T01:47:39.579032+00:00",
+      "branch": "docs/desktop479-delivery",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/487",
       "approval": "User requested documenting fixes, closing resolved issues and current pending work",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/479",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T01:47:39.579032+00:00",
+          "owner": "codex-post479-docs",
+          "detail": "Closed desktop test6assets public hashes, Windows24menu+2actuallauncher andLinux22VM paths PASS;479CLOSED, open330459460480 remain separate; docs-only2files review"
+        }
+      ],
       "claimed_at": "2026-10-29T01:43:28.248594+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:43:28.248594+00:00",
+  "updated_at": "2026-10-29T01:47:39.579032+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
