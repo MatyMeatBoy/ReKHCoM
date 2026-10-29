@@ -107,7 +107,7 @@ def crop_ops(crop, *, notch=True):
 
     The fitted crop need not have an exactly 14:15 ratio after rounding. Use
     each axis' scale so the notch stays aligned with the native value cells.
-    Story keys have no value notch in their native illustration.
+    Gold keys have no value notch in their native illustration.
     """
     kx = (crop[2] - crop[0]) / (WIN[2] - WIN[0])
     ky = (crop[3] - crop[1]) / (WIN[3] - WIN[1])
@@ -158,16 +158,17 @@ def main():
                                               index)
             tex = textures[big_row[8]].astype(float)
             rgb, mask, box = window(data, syms, frame, tiles, palette)
-            # Story-key symbols have a corresponding card but differ between
-            # editions (notably question mark -> key). Colour matching would
-            # crop away the key's head: keep the full reference illustration.
-            story_key = big in ('gCardEve00', 'gCardEve01', 'gCardEve02')
-            if story_key:
+            # Gold-key symbols use a fixed reference crop, including Rewards
+            # in the menu atlas. Searching the whole atlas by colour can pick
+            # a neighbouring key; keys have no numbered-card value notch.
+            # Beginnings also differs between editions (question mark -> key).
+            key_card = big in ('gCardEve00', 'gCardEve01', 'gCardEve02', 'gCardRoom23')
+            if key_card:
                 crop = tuple(map(int, next(op[5:] for op in big_row[9].split(';') if op.startswith('crop=')).split(',')))
                 score = None
             else:
                 score, crop = best_crop(tex, rgb, mask)
-            ops = crop_ops(crop, notch=not story_key)
+            ops = crop_ops(crop, notch=not key_card)
             rows.append('\t'.join([small + 'SmallCardHD', '6', frame, tiles,
                                    str(box[0]), str(box[1]), str(box[2]), str(box[3]), big_row[8], ops]))
             fit = 'reference' if score is None else f'score {score:8.0f}'

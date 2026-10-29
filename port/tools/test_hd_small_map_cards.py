@@ -12,6 +12,17 @@ import hd_small_cards as small
 
 
 class SmallMapCards(unittest.TestCase):
+    def test_every_map_family_has_an_import_recipe(self):
+        rows={line.split('\t')[0]:line.split('\t')
+              for line in small.TSV.read_text(encoding='utf-8').splitlines()
+              if line and not line.startswith('#')}
+        missing=[name for name in small.map_pairs() if name+'SmallCardHD' not in rows]
+        self.assertEqual(missing,[], 'Map families must not disappear from the import inventory')
+        self.assertEqual(rows['gCardRoom23Tiles'][8],
+                         'FORM/0050/FO0050.RTM:UK_card.imz#19')
+        self.assertEqual(rows['gKeyToRewardsSmallCardHD'][8],rows['gCardRoom23Tiles'][8])
+        self.assertNotIn('erase=',rows['gKeyToRewardsSmallCardHD'][9])
+
     def test_python_full_import_marks_absent_recipes_in_desktop_format(self):
         row='missing\t6\tframe\ttiles\t-8\t-20\t16\t32\towned:tex\tscale=8\teu'
         raw='layout\t3\t-\t-\t0\t0\t0\t0\towned:layout\traw'

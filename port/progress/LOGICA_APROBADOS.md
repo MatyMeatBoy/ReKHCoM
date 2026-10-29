@@ -22,8 +22,10 @@ Registrar texto fijo donde lo usa el tilemap, conservando su firma original,
 sin cambiar píxeles nativos para facilitar reconocimiento. Una actualización
 también debe detectar recetas nuevas cuyo archivo aún no existe; un inventario
 de recetas intentadas no acredita que todas las imágenes estén disponibles.
-La cobertura25/26 y las capturas de este bloque no conceden aprobación a una
-ilustración de recompensas aún inexistente ni modifican valoraciones de Atlas.
+Una ausencia en texturas independientes no demuestra ausencia en el remaster:
+revisar también las subimágenes de sus menús. Recompensas se extrajo del atlas
+real, conservando la ilustración y los destellos; las capturas runtime validan
+su composición, sin asignar ni modificar valoraciones de Atlas.
 
 Título HD, correcciones directas del usuario del 26/10: mantener el logo importado de CoM sin «Re:»; los textos
 SELECT y PULSA START comparten mayúsculas, separación de ocho píxeles nativos tras el indicador y margen de seis.
