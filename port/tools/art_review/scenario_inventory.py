@@ -123,9 +123,10 @@ def camera_segments(rows, event_end):
 
 def catalog_links(event, assets):
     result, direct, adjacency = [], {}, {}
-    ids={a.get('id') for a in assets}
+    ids={a.get('id') for a in assets if isinstance(a.get('id'),str) and a.get('id')}
     for item in assets:
         identifier,parent=item.get('id'),item.get('parent_id')
+        if identifier not in ids:continue
         if parent in ids:
             adjacency.setdefault(identifier,set()).add(parent)
             adjacency.setdefault(parent,set()).add(identifier)
@@ -282,6 +283,8 @@ def main():
     if a.out.exists():p.error('output already exists; preserve previous evidence')
     state=json.loads(a.atlas_state.read_text(encoding='utf-8-sig'))
     if not isinstance(state,dict) or not isinstance(state.get('assets'),list):p.error('Atlas export must contain an assets array')
+    if any(not isinstance(item,dict) or not isinstance(item.get('id'),str) or not item['id'] for item in state['assets']):
+        p.error('every Atlas asset must have a nonempty string identifier')
     report=inventory(a.source,state['assets'],a.region or ('eu','us','jp'))
     report['source_inputs_sha256']={name:hashlib.sha256((a.source/name).read_bytes()).hexdigest()
         for name in ['include/evt/event_ids.h','src/evt/event_index_data.c',
