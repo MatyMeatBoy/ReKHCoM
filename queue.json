@@ -10927,13 +10927,13 @@
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
       "piece": "2.3 P2: complete Jiminy journal internal submenus and rounded right book edge",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T15:06:41.982820+00:00",
+      "updated_at": "2026-10-29T16:33:52.860987+00:00",
       "branch": "fix/v23-jiminy-submenu-verification",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/508",
-      "approval": "Root integrator: human-authorized code review; 11df90f8affe69e06cd59a6c0a750ab16dfd7b6a",
+      "approval": "Root integrator: human-authorized code review; f5cef2d67fd9484993439a8da4cdba232db01852",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -11190,6 +11190,11 @@
           "at": "2026-10-29T15:06:41.982820+00:00",
           "owner": "codex-jiminy23",
           "detail": "USER STEERING: HD book/closed-cover redraw was unnecessary; focus only repeatedly reported internal detail submenu: footer, miniheader extension, right page, stretching. Uncommitted cover WIP cancelled/preserved privately, no cover PR/release. Verify exact Spanish Tres deseos screen and deliver actual fixes; do not resume decorative cover work."
+        },
+        {
+          "at": "2026-10-29T16:33:52.860987+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: scope actual native/HD detail margins only, BG1 ownership protects foreground, PAGE remains, original/CRT unchanged, per-frame capture and draw fallback bounded. CPU source/getter RED-GREEN and injected draw failures PASS; EU32/EU64 builds four normal/HD runs24captures exit0 reviewed. Rebased on510; source changes distinct. Delivery and wider journal/priority work remain pending."
         }
       ],
       "claimed_at": "2026-10-29T14:25:01.597481+00:00",
@@ -11868,7 +11873,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T16:21:46.885598+00:00",
+  "updated_at": "2026-10-29T16:33:52.860987+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
