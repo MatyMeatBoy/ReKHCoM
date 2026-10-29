@@ -11900,10 +11900,10 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-v23",
       "created_at": "2026-10-29T16:07:44.720275+00:00",
-      "updated_at": "2026-10-29T17:01:31.364592+00:00",
+      "updated_at": "2026-10-29T17:01:44.695182+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/513",
-      "approval": "Root integrator: human-authorized code review; 6323c21031537cf4401114407d58b841cf263e77",
+      "approval": "Root integrator: human-authorized code review; 1c5d897c7b5ab226fa8191c408ce3ee04eac2040",
       "reference": "Atlas /api/state approvals exactas; root29Oct",
       "evidence": [
         {
@@ -11925,13 +11925,18 @@
           "at": "2026-10-29T17:01:31.364592+00:00",
           "owner": "codex-atlas-v23",
           "detail": "PR513 eleven exact EU boss-stack aliases; actual Axel stack reproduced and corrected; source/ROM CPU and HDoff controls PASS. Other audit scope pending."
+        },
+        {
+          "at": "2026-10-29T17:01:44.695182+00:00",
+          "owner": "codex-atlas-v23",
+          "detail": "Root reviewed code and exact11tuple guards; real Find test EU/US/JP and native OAM11 passed root. Viewed actual Axel900 before/after: only three stack portraits change, native crowns/values2,2,8 retained. Off3/3 identical; no extra images/cache/recipes. Runtime64/all11bossAI/remainingmissingart and rest78audit pending; partial integration."
         }
       ],
       "claimed_at": "2026-10-29T16:07:52.321997+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T17:01:31.364592+00:00",
+  "updated_at": "2026-10-29T17:01:44.695182+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
