@@ -66,6 +66,9 @@ typedef struct HdSpriteDraw {
 #define HD_LAYERS 3
 static HdSpriteDraw sDraws[HD_LAYERS][MAX_DRAWS];
 static int sDrawCount[HD_LAYERS];
+static int sWorldBlendFallback;
+
+void PortHdSpritesWorldFallback(int fallback) { sWorldBlendFallback = fallback; }
 
 static int GroupOn(int group) {
     switch (group) {
@@ -569,6 +572,7 @@ static void BarDraw(SDL_Renderer* renderer, float ox, float oy, float scale, flo
 }
 
 void PortHdSpritesBegin(int layer) {
+    if (layer == 0) sWorldBlendFallback = 0;
     if ((unsigned)layer < HD_LAYERS)
         sDrawCount[layer] = 0;
     if (layer == 0)
@@ -1051,6 +1055,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
         HdSpriteState* st = &sState[q->id];
+        if (sWorldBlendFallback && kHdSprites[q->id].group == 4) continue;
         if (q->hudOwner) continue;
         /* the game's brightness fade (BLDY) and the part's palette fade, whichever is further */
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);

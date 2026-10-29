@@ -40,6 +40,8 @@ int PortHdJiminyBookDraw(SDL_Renderer* renderer, int id, const uint32_t* foregro
    0..16 follow the game's fade. */
 void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten);
 void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float scale, int darken, int brighten);
+/* Presenter fallback is frame-local; never change the user's HD preference. */
+void PortHdSpritesWorldFallback(int fallback);
 /* Press Start's authored light, smoothly interpolated and shared by port-owned menus. */
 int PortHdMenuLightDraw(SDL_Renderer* renderer, float x, float y, float size, uint64_t ticks, float shade, float white);
 void PortHdMenuAssetsWarm(SDL_Renderer* renderer);

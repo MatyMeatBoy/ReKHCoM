@@ -35,6 +35,7 @@ int PortHdSpriteQueue(int l,int id,const float*x,const float*y,int px,int py,int
 void PortHdSpriteBox(int id,int*x,int*y,int*w,int*h){*x=*y=*w=*h=0;}
 void PortHdTitleBarRow(int y,int x,int n,const uint32_t*a){}
 int PortHdSpriteKeepsCartridge(int id){return 0;}
+int PortHdSpriteGroup(int id){return id == 1 ? 4 : 0;}
 const uint8_t*PortHdSpriteDarkCells(int id,int*x,int*y,int*w,int*h){return NULL;}
 void PortHdSpriteHudOwner(int slot){}
 int PortJafarMapBuffer(const void*b){return 0;}
