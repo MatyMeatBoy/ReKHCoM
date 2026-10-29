@@ -10822,10 +10822,10 @@
     "v23-p1-map-card-hd-gaps": {
       "id": "v23-p1-map-card-hd-gaps",
       "piece": "2.3 P1: HD 99 and slash in map-card total plus missing small map cards; retain original frames/corners",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-mapcards23",
       "created_at": "2026-10-28T23:02:52.355743+00:00",
-      "updated_at": "2026-10-29T03:06:32.550346+00:00",
+      "updated_at": "2026-10-29T03:35:02.308468+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -10837,7 +10837,7 @@
           "detail": "released: Read-only: small map cards use separate SmallCard tiles missing from group6 recipes;22 corresponding big map-card HD assets exist. Same native16x32 frame(-8,-20), window(1,16)-(15,31), authored corner cells already protected. hd_small_cards.py pairs reads battle catalog only; extend from gMapCardDefs preserving approved rows. Total99 already calls shared LoadDecimalDigitTiles registration; remaining visual cause needs exact reproduction. Pausing visual claim to fix newly found table overread first."
         }
       ],
-      "claimed_at": "2026-10-29T03:00:14.556594+00:00"
+      "claimed_at": "2026-10-29T03:35:02.308468+00:00"
     },
     "v23-p2-jiminy-journal": {
       "id": "v23-p2-jiminy-journal",
@@ -11218,7 +11218,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T03:29:21.797342+00:00",
+  "updated_at": "2026-10-29T03:35:02.308468+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
