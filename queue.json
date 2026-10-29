@@ -10918,8 +10918,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T14:25:01.597481+00:00",
-      "branch": "fix/v23-jiminy-german-header",
+      "updated_at": "2026-10-29T14:25:50.281688+00:00",
+      "branch": "fix/v23-journal-final-audit",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/506",
       "approval": "Root integrator: human-authorized code review; 6881944439752b8b1c8718ecc3830b25db00dfe0",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -11143,6 +11143,11 @@
           "at": "2026-10-29T13:51:59.570417+00:00",
           "owner": "codex-jiminy23",
           "detail": "released: PR506 integrated25542c64dc4f0c54883441e10480e68987bb31a1; native REISECHRONIK,10headerscoverage, import1to0 old909 unchanged newPNGexact, realEU32/64 root+CardIndexlist HDdiff confinedheader/offidentical; builds EUJP32/64 AndroidUSJP and sourcesPASS. P2 still JP runtime coverage (script prepared not run) and cover/list review. User just reported Web text spacing, taking that bug now without workers. Current assets910 outputs908PNG2LAD."
+        },
+        {
+          "at": "2026-10-29T14:25:50.281688+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Web steering complete PR507 integrated and publicly deployed; resume JP coverage and cover/list audit. No workers."
         }
       ],
       "claimed_at": "2026-10-29T14:25:01.597481+00:00",
@@ -11719,7 +11724,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T14:25:44.511298+00:00",
+  "updated_at": "2026-10-29T14:25:50.281688+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
