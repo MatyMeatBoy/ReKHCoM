@@ -2487,6 +2487,12 @@ void JiminyDetailUpdate() {
 #endif
 
         source = gJiminyDigitTiles;
+#ifdef PLATFORM_PC
+        /* The shared emitter preserves the six native digit copies and adds
+           their HD meaning/palette, including leading zeroes. */
+        LoadDecimalDigitTiles(selected + 1, source, (u8*)GetBgCharBase(0) + 0x20, 32, 3);
+        LoadDecimalDigitTiles(unlocked, source, (u8*)GetBgCharBase(0) + 0x80, 32, 3);
+#else
         SplitThreeDecimalDigits(selected + 1, digits);
         dest = (u8*)GetBgCharBase(0) + 0x20;
         RequestDma3Copy(source + digits[0] * 0x20, dest, 0x20);
@@ -2501,6 +2507,7 @@ void JiminyDetailUpdate() {
         RequestDma3Copy(source + digits[1] * 0x20, dest, 0x20);
         dest = (u8*)GetBgCharBase(0) + 0xC0;
         RequestDma3Copy(source + digits[2] * 0x20, dest, 0x20);
+#endif
         sJiminyWork->state = JIMINY_STATE_DETAIL;
         DisableBg(2);
 
