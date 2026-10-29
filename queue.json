@@ -10350,10 +10350,10 @@
       "status": "pr_abierto",
       "owner": "codex-linux459-window64",
       "created_at": "2026-10-28T21:27:33.205976+00:00",
-      "updated_at": "2026-10-29T21:02:34.793977+00:00",
+      "updated_at": "2026-10-29T21:02:57.448856+00:00",
       "branch": "fix/linux459-native64-window",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/520",
-      "approval": "Root integrator: human-authorized code review; 2db0e1e4fd4ce199afcd31193ce62252b6f47568",
+      "approval": "Root integrator: human-authorized code review; c6e33d20d5edcdeaf45b9330fed2c1937d20767c",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/459",
       "evidence": [
         {
@@ -10455,6 +10455,11 @@
           "at": "2026-10-29T21:02:34.793977+00:00",
           "owner": "codex-linux459-window64",
           "detail": "ELF SONAME tests,13 production startup cases, native64 build and8binarynames PASS. VM3X11/OpenGL controls PASS: baseline2 Xlibs, candidate1; normal/preloaded candidate title exit0. PhysicalSteamOS pending. New full test next."
+        },
+        {
+          "at": "2026-10-29T21:02:57.448856+00:00",
+          "owner": "codex-linux459-window64",
+          "detail": "Reviewed SDK symlink-to-copy SONAME discrepancy, actual ELF tests including invalid metadata,13 startup fault/nonreturn cases; native64 host compiles,8binary names verified; X11/OpenGL VM baseline two Xlibs and candidate one, normal/preload title exit0. Partial459 only, physical64/GPU confirmation remains pending, watchdog and fallback unchanged."
         }
       ],
       "claimed_at": "2026-10-29T20:45:28.171056+00:00",
@@ -12082,7 +12087,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T21:02:34.793977+00:00",
+  "updated_at": "2026-10-29T21:02:57.448856+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
