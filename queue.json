@@ -10887,10 +10887,10 @@
       "status": "pr_abierto",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T10:16:45.474724+00:00",
+      "updated_at": "2026-10-29T10:17:09.172224+00:00",
       "branch": "fix/v23-jiminy-paper",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/500",
-      "approval": "Root integrator: human-authorized code review; 30cc94a97aa0a4950769f103bb464937d0543374",
+      "approval": "Root integrator: human-authorized code review; a48e8a5a38983f266d851d05c34d746f868e652d",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
       "evidence": [
         {
@@ -10992,6 +10992,11 @@
           "at": "2026-10-29T10:16:45.474724+00:00",
           "owner": "codex-jiminy23",
           "detail": "a48e8a5a3 rounded detail paper, actual BG1 ownership and native foreground; exact lookup REDmain/GREENnew;15nativefallback identical pairs,20transform captures plus10finalsource identical, Sora crops exact32/64. C++import6to0/Pythonpixelparity/883oldbytesstable. CPUfailure/lifecycle/filter, Win32/64ABIboot, AndroidUSJP andsourcesPASS. P2partial/noWorkers."
+        },
+        {
+          "at": "2026-10-29T10:17:09.172224+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Root manual review: actual BG1 winner/alpha mask, any-three presented detail maps, bounds and complete240x160 foreground transform, exact resource lookup/failure native fallback, cached texture teardown and live filter. CPU RED/GREEN and injected allocation/upload/bridge/draw/header failures;15fallback identical pairs,20matrix plus10finalsource captures, Sora32/64 exact. C++real upgrade6to0/883bytesstable/Pythonpixelparity. Win32/64ABIboot/AndroidUSJP/sourcesPASS. PartialEUUSbook only, PAGE/otherheads/rootlist/RikuJP/audio remain; noWorkers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11526,7 +11531,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T10:16:45.474724+00:00",
+  "updated_at": "2026-10-29T10:17:09.172224+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
