@@ -12199,20 +12199,26 @@
     "optiport-render-identity-lessons": {
       "id": "optiport-render-identity-lessons",
       "piece": "Promote verified Linux SONAME identity, shared texture/surface failure contracts, additive HD native fallback and harness ASLR observations into OptiPort references; no claim of final full-game pass.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-optiport-render-lessons",
       "created_at": "2026-10-29T22:57:18.637695+00:00",
-      "updated_at": "2026-10-29T22:57:33.025405+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-29T22:59:19.540501+00:00",
+      "branch": "docs/render-identity-lessons",
+      "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/21",
       "approval": null,
       "reference": "ReKHCoM PR520/521/522/523 and pruebas/issue517-worldcard; authorizing user learn in OptiPort, no workers",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T22:59:19.540501+00:00",
+          "owner": "codex-optiport-render-lessons",
+          "detail": "SKILL quick validation and diff check PASS. Reviewed evidence PR520/521/522/523 and ASLR15-vs5; normal host timeout explicitly inconclusive. No agent-behavior test or full pass claimed; no workers per user."
+        }
+      ],
       "claimed_at": "2026-10-29T22:57:33.025405+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:57:33.025405+00:00",
+  "updated_at": "2026-10-29T22:59:19.540501+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
