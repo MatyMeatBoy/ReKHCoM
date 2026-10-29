@@ -10887,8 +10887,8 @@
       "status": "en_curso",
       "owner": "codex-jiminy23",
       "created_at": "2026-10-28T23:02:58.476284+00:00",
-      "updated_at": "2026-10-29T08:22:23.092196+00:00",
-      "branch": "fix/v23-jiminy-pages",
+      "updated_at": "2026-10-29T08:23:17.180293+00:00",
+      "branch": "fix/v23-jiminy-presented-margins",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/498",
       "approval": "Root integrator: human-authorized code review; 7e9cf465692b0f24c471a0dacad0577b89521bd1",
       "reference": "Owner repeats priority2 after map-card HD; after2.2.5release. Coordinate existing diario-subentradas/diario-entradas; preserve useful WIP, no duplicate claims.",
@@ -10962,6 +10962,11 @@
           "at": "2026-10-29T08:22:23.092196+00:00",
           "owner": "codex-jiminy23",
           "detail": "Root manual review: entire240x160 preserved, conditional HD layout, configured labels, native glyph fallback without allocation, presented header palette rather than postVBlank live memory.25 actual captures/5exit0; HDoff5pixelidentical; CPUgeometry/glyph/bridge/fade PASS; Windows32/64 ABIboot and AndroidFreeType USJP compile, sources PASS. PARTIAL: PAGE/rightpage/extensions/rounding remain.; merged d0180e69988806b08be95bc6292d36b4ae3af6d3; PARTIAL BLOCK ONLY; task remains unfinished"
+        },
+        {
+          "at": "2026-10-29T08:23:17.180293+00:00",
+          "owner": "codex-jiminy23",
+          "detail": "Footer PR498 merged d0180e699. Continue original P2: header/miniheader margins still read live palette/VRAM after VBlank; investigate actual transition1721 before changing consumers."
         }
       ],
       "claimed_at": "2026-10-29T05:21:26.612535+00:00",
@@ -11496,7 +11501,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T08:22:28.040125+00:00",
+  "updated_at": "2026-10-29T08:23:17.180293+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
