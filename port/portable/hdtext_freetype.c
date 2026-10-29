@@ -162,13 +162,29 @@ static unsigned Unicode(int code,int jp) {
         0x201D,0x2022,0x2013,0x2014,0x2DC,0x2122,0x161,0x203A,0x153,0x9D,0x17E,0x178};
     return jp?PortSjisToCodepoint(code):code>=128&&code<160?cp1252[code-128]:(unsigned)code;
 }
+/* Warmup enumerates optional characters, including undefined CP1252 slots and
+   arrows on systems without CJK fonts. Do not turn a speculative miss into a
+   permanent loss of HD text. Actual requested glyph failures still take the
+   existing original-text fallback in Raster. */
+static int CanWarmGlyph(HdFont* font, int code, int jp) {
+    unsigned cp = Unicode(code, jp);
+    FT_Face face = jp ? japanese : font->font;
+    if (!face || !cp) return 0;
+    if (FT_Get_Char_Index(face, cp)) return 1;
+    return !jp && fallback && FT_Get_Char_Index(fallback, cp);
+}
+#define PORT_HD_TEXT_CAN_WARM(font, code, jp) CanWarmGlyph(font, code, jp)
 static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) {
     FT_Face face=f->font;FT_Matrix matrix;FT_Bitmap* b;unsigned cp=Unicode(code,jp);uint32_t* rgba;int x,y;
     if(!ready || g->ready)return;g->ready=1;
     if(!face || !cp)return;
     if(jp)face=japanese;
     else if(!FT_Get_Char_Index(face,cp))face=fallback;
-    if(!face || !FT_Get_Char_Index(face,cp)) {ready=0;return;}
+    if(!face || !FT_Get_Char_Index(face,cp)) {
+        ready=0;
+        PortLog("HD text: missing glyph U+%04X; original text resumes next frame", cp);
+        return;
+    }
     if(face!=f->font) {
         FT_Set_Pixel_Sizes(face,0,SDL_max(1,(int)(f->cap*(jp?11.0f/7.0f:1.4f)+.5f)));
     }

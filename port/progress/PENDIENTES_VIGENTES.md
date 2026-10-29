@@ -16,10 +16,14 @@ siguientes no sustituyen la cola remota ni el estado actual de GitHub.
   Windows/Linux, tres regiones y 32/64; archivos finales y cierre verificados en
   los alcances descritos. Es un test separado para la próxima estable.
 - **459, abierto:** [selección de bibliotecas corregida](issue459-runtime.md),
-  test parcial y paquete Linux completo enviados. Confirmación SteamOS pendiente;
-  dependencias opcionales de sprites y herramientas de vídeo siguen separadas.
-- **330/460, abiertos:** esperar evidencia del arranque Gaming Mode y confirmación
-  de audio Bazzite respectivamente. No cerrarlos por controles de otra máquina.
+  el reportero confirmó arranque con `--safe-startup`; el arranque normal sigue
+  fallando. [Texto HD: warmup corregido y probado](issue459-hdtext.md), preparar
+  test separado; no cerrar el issue antes de sus resultados y logs nuevos.
+  Dependencias opcionales de sprites y herramientas de vídeo siguen separadas.
+- **330, abierto:** esperar evidencia nueva del arranque Gaming Mode.
+- **460, cerrado por el reportero:** audio confirmado resuelto en estable2.2.5
+  por jxlanda ([6485621140](https://github.com/MatyMeatBoy/ReKHCoM/issues/460#issuecomment-6485621140));
+  agradecimiento enviado. No implica certificar todos los dispositivos/backends.
 
 Después de los bugs abordables, orden 2.3 autorizado: contador 99/separador y
 naipes mapa pequeños HD; diario de Pepito interno; continuidad de audio al
