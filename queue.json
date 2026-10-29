@@ -10911,10 +10911,10 @@
     "issue480-android-room-spring-layers": {
       "id": "issue480-android-room-spring-layers",
       "piece": "Bug480 Android: salas de Halloween Town y ocasionalmente mundos anteriores, trampolin/spring y altura/capas impiden alcanzar siguiente plataforma; cambiar naipe recrea layout y permite seguir. Repro pendiente con partida/layout exacto, comparar 32/64 normalHD zoom sin alterar reglas GBA.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-issue480",
       "created_at": "2026-10-28T23:17:53.499932+00:00",
-      "updated_at": "2026-10-28T23:53:18.275204+00:00",
+      "updated_at": "2026-10-29T00:08:39.403027+00:00",
       "branch": "fix/issue480-room-spring",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/482",
       "approval": "Root integrator: human-authorized code review; 8527aec7aacc6d3c8575200b125de377d16dd994",
@@ -10946,11 +10946,11 @@
           "detail": "released: Partial diagnostic482 integrated; precise APK/save/layout requested, no reporter response yet. Pending exact reproduction; do not treat this merged PR as a fix. Root continues other priority1 bugs without workers."
         }
       ],
-      "claimed_at": "2026-10-28T23:22:23.561773+00:00"
+      "claimed_at": "2026-10-29T00:08:39.403027+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T00:08:30.657735+00:00",
+  "updated_at": "2026-10-29T00:08:39.403620+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
