@@ -11681,17 +11681,23 @@
       "status": "en_curso",
       "owner": "codex-web-font-spacing",
       "created_at": "2026-10-29T13:37:02.554993+00:00",
-      "updated_at": "2026-10-29T13:52:21.753636+00:00",
-      "branch": null,
+      "updated_at": "2026-10-29T13:52:50.546445+00:00",
+      "branch": "fix/web-khmenu-spacing",
       "pr": null,
       "approval": null,
       "reference": "user screenshot codex-clipboard-e04e215d-5314-49eb-a030-199356df9d62.png",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-29T13:52:50.546445+00:00",
+          "owner": "codex-web-font-spacing",
+          "detail": "Public browser reproduces screenshot: a/r advances about28px too large at40px; raw hmtx and FreeType advances normal. Local same-font controls disabling kern descriptor or font-kerning:none DO NOT fix it, rejecting simple kerning hypothesis. Investigate GPOS mark/single-positioning before production change. Temporary local font server19943 live at127.0.0.1:50070; no ROM/save uploaded."
+        }
+      ],
       "claimed_at": "2026-10-29T13:52:21.753636+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T13:52:21.753636+00:00",
+  "updated_at": "2026-10-29T13:52:50.546445+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
