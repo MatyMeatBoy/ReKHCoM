@@ -11188,10 +11188,10 @@
     "map-card-definition-table-bounds": {
       "id": "map-card-definition-table-bounds",
       "piece": "Audit native map-card family scans: gMapCardDefs260 entries vs k<=26 family iteration. Real guarded-memory source probe, bound valid definition reads without changing GBA build or valid inventory results; review siblings.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-mapcard-bounds",
       "created_at": "2026-10-29T03:06:37.373146+00:00",
-      "updated_at": "2026-10-29T03:29:03.739399+00:00",
+      "updated_at": "2026-10-29T03:29:16.966904+00:00",
       "branch": "fix/map-card-definition-bounds",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/491",
       "approval": "Root integrator: human-authorized code review; e86e45d84d68e9eccd32839c5cefc1e440b89540",
@@ -11206,9 +11206,15 @@
           "at": "2026-10-29T03:29:03.739399+00:00",
           "owner": "codex-mapcard-bounds",
           "detail": "Root solo review: actual definition extent used consistently by menu, family listing/counts and add/query/remove guards; serialized270 slots unchanged and no RNG reroll. Source witness RED4/GREEN5, caps/key controls, same preprocessed non-port branch; actual Windows32/64 same-save menu A/B4routes all exit0 and pixels identical;812scroll combinations. No user crash attribution or immutable release replacement."
+        },
+        {
+          "at": "2026-10-29T03:29:16.966904+00:00",
+          "owner": "codex-mapcard-bounds",
+          "detail": "Root solo review: actual definition extent used consistently by menu, family listing/counts and add/query/remove guards; serialized270 slots unchanged and no RNG reroll. Source witness RED4/GREEN5, caps/key controls, same preprocessed non-port branch; actual Windows32/64 same-save menu A/B4routes all exit0 and pixels identical;812scroll combinations. No user crash attribution or immutable release replacement.; merged e2324ba5f525c8ec201f4ec2d01f9f6f2708907d"
         }
       ],
-      "claimed_at": "2026-10-29T03:06:42.463988+00:00"
+      "claimed_at": "2026-10-29T03:06:42.463988+00:00",
+      "completed_at": "2026-10-29T03:29:16.966904+00:00"
     }
   },
   "integrator": {
@@ -11217,7 +11223,7 @@
     "created_at": "2026-10-29T03:29:08.254540+00:00",
     "updated_at": "2026-10-29T03:29:08.254540+00:00"
   },
-  "updated_at": "2026-10-29T03:29:08.254540+00:00",
+  "updated_at": "2026-10-29T03:29:16.966904+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
