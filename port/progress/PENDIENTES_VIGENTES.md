@@ -24,6 +24,11 @@ siguientes no sustituyen la cola remota ni el estado actual de GitHub.
 - **460, cerrado por el reportero:** audio confirmado resuelto en estable2.2.5
   por jxlanda ([6485621140](https://github.com/MatyMeatBoy/ReKHCoM/issues/460#issuecomment-6485621140));
   agradecimiento enviado. No implica certificar todos los dispositivos/backends.
+- **Prevención nativa de naipes mapa:** [límites de definiciones](MAP_CARD_DEFINITION_BOUNDS.md).
+  El conteo serializado conserva270 slots, pero sólo260 tienen definición.
+  Guardia y consumidores relacionados probados antes/después; menú real32/64
+  con partida válida conserva sus píxeles. Pendiente de próxima build; no se
+  atribuye a un crash reportado ni sustituye las entregas ya publicadas.
 
 Después de los bugs abordables, orden 2.3 autorizado: contador 99/separador y
 naipes mapa pequeños HD; diario de Pepito interno; continuidad de audio al
