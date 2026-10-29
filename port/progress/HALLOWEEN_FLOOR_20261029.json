@@ -1,5 +1,5 @@
 {
-  "status": "Windows32 verified; Windows64 pending",
+  "status": "Windows32 and Windows64 floor scope verified; active HD overlay pixel parity not claimed",
   "implementation_commit": "5c1a6954588a609f2e8e352577e305369a907d68",
   "base_commit": "d2d3324312bb371e19f5e53938d296bb9ba72b5f",
   "ppu_sha256": "187d3e951d7c30e96e7f8080ad7512e2bc89b026b24cf61eec940cf188d04eba",
@@ -417,10 +417,47 @@
     ]
   },
   "visual_review": "Coordinator reviewed real x1SD andx3HD: own projected floor replaces streaks; remainder preserved; no further redraw requested.",
-  "scope": "Actual Windows32 SDLdummy software, SD/HD flags, camera movement and pause. Windows64 capture remains required. Other physical platforms and audio unverified.",
+  "scope": "Actual Windows32 software and Windows64 D3D11 floor/scenery validation across normal/HD and1x/3x/integer2/Auto4. Audio, physical Android/consoles/Linux and complete active HD overlay parity remain unverified.",
   "harness_notes": [
     "Initial baseline omitted KHCOM_BACKGROUND_TEST and runtime raised priority despite BELOW_NORMAL creation. Visual evidence only, no performance claim. All candidate runs used BACKGROUND_TEST and retained caller scheduling.",
     "Initial comparator boundary incorrectly included left-hand HUD overlay. Corrected ground-boundary estimator uses right quarter, then compares whole image. No product code change for this harness error."
   ],
-  "private_evidence": "pruebas/halloween-floor23; proprietary captures, sources and binaries not committed"
+  "private_evidence": "pruebas/halloween-floor23; proprietary captures, sources and binaries not committed",
+  "supplement64": {
+    "source_commit": "ff476aa9eb2b5342b66c7c146cac46d02db832ad",
+    "host_sha256": "62d803654c0d4a6d9121d783203232a85b2a316ba1ce3f46b08cf942cbc44474",
+    "guest_sha256": "718704c8b3c38c89fe9ea0f5d48453081bef55e69249391c2053d80c6ac29d8e",
+    "guest_bytes": 4360036,
+    "backend": "Windows64 D3D11 hidden, same i386-pointer guest source, normal and HD",
+    "runs_valid": 8,
+    "frames_valid": 32,
+    "run_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "root_binaries_unchanged_before_after": true,
+    "normal_frames_full_rgba_identical_to_verified32": 16,
+    "hd_paused_frames_full_rgba_identical_to_verified32": 4,
+    "all_frames_added_ground_right40percent_rgba_identical_to_verified32": 32,
+    "normal_auto4_full_frame_invariant": true,
+    "hd_auto4_paused_full_frame_invariant": true,
+    "active_hd_full_frame_parity": false,
+    "active_hd_limit": "HD artwork/text overlays differ between SDL software and D3D11 smoothing, including HUD and floating labels. Full active HD frame parity is not asserted; ground checks and all paused HD images are exact.",
+    "font_provision": "Both KHMenu.otf and ComicHearts.otf loaded in all four valid HD runs. Initial four missing-font HD runs are excluded and preserved as harness failures.",
+    "other_harness_note": "The first corrected x1 HD run exited0 with fonts loaded; validation expected Windows32 log wording but Windows64 logs the full font path. Criterion corrected; existing valid capture reused, only remaining3 new cases executed.",
+    "before64_limit": "No64-before image was preserved. Baseline32 and verified candidate32 are the explicit comparisons.",
+    "private_results": [
+      "CANDIDATE64-RESULT.json",
+      "CANDIDATE64-FONTS-RESULT.json",
+      "CROSS-ARCH32-64-RESULT.json",
+      "ROOT64-FONTS-BEFORE.json",
+      "ROOT64-FONTS-AFTER.json"
+    ]
+  }
 }
