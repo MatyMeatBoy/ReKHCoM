@@ -12101,23 +12101,28 @@
       "status": "pr_abierto",
       "owner": "codex-bridge-texture-safety",
       "created_at": "2026-10-29T21:52:29.367873+00:00",
-      "updated_at": "2026-10-29T22:00:06.802967+00:00",
+      "updated_at": "2026-10-29T22:00:26.310785+00:00",
       "branch": "fix/bridge-texture-failure-contract",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/521",
-      "approval": "Human: seguir pendientes priorizando cuelgues, shared-platform fixes and preventive proven patterns",
+      "approval": "Root integrator: human-authorized code review; e4cd7eef16d5d3836129fecca1d5ea0c183730be",
       "reference": null,
       "evidence": [
         {
           "at": "2026-10-29T22:00:06.802967+00:00",
           "owner": "codex-bridge-texture-safety",
           "detail": "e4cd7eef1: old complete-shim NULL texture calls faulted C0000005. Current44cases32/64+Android branches PASS; sharedGPUtarget/epoch/movie reset PASS. Production x32 shim compilation console/Linux64/Android preprocessor variants PASS. No ROM/device attribution; exactsource tests and objects in pruebas/bridge-texture-safety."
+        },
+        {
+          "at": "2026-10-29T22:00:26.310785+00:00",
+          "owner": "codex-bridge-texture-safety",
+          "detail": "Reviewed NULL texture failure reproduction, safe API rejection, SDL-compatible clipping and 32-bit size/pitch bounds, balanced surface cleanup.44 complete-shim cases across32/64 and Android branches plus real GPU-target/reset/epoch fixtures PASS; production x32 compilation console/Linux64/Android variants PASS. No claim of physical device certification or attribution to specific issue. Delivered source block only; next package still pending."
         }
       ],
       "claimed_at": "2026-10-29T21:52:33.796208+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T22:00:06.802967+00:00",
+  "updated_at": "2026-10-29T22:00:26.310785+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
