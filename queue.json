@@ -12228,13 +12228,8 @@
       "completed_at": "2026-10-29T22:59:43.591266+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-integrador",
-    "token": "80fc62e10a6fa933b19adaed1f6a8e7f5e75c08504d6e5e6",
-    "created_at": "2026-10-29T22:59:34.457527+00:00",
-    "updated_at": "2026-10-29T22:59:34.457527+00:00"
-  },
-  "updated_at": "2026-10-29T22:59:43.591266+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-29T22:59:48.579069+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
