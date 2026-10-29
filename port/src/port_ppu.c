@@ -325,10 +325,8 @@ typedef struct MenuSources {
     int headerX, headerDrawn;
 } MenuSources;
 static MenuSources sMenuShown = { .tabBg = { -1, -1 } }, sMenuPend = { .tabBg = { -1, -1 } };
-/* Sample BG tab colours with the visible picture, before VBlank DMA updates
- * its map/palette for the next frame. Presentation must not read live VRAM. */
-static uint32_t sMenuTabPixels[2][16];
-static void CaptureMenuTabPixels(void);
+/* Sample every menu extension before VBlank changes its rendering inputs. */
+static void CaptureMenuMarginPixels(void);
 #define sMenuHeaderFrame sMenuShown.headerFrame
 #define sMenuHeaderTiles sMenuShown.headerTiles
 #define sMenuHeaderPalette sMenuShown.headerPalette
@@ -4291,7 +4289,7 @@ void PortPpuRenderFrame(void) {
     /* Lines below the original picture: state after line 159. */
     RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
     MainHdOver();
-    CaptureMenuTabPixels();
+    CaptureMenuMarginPixels();
 }
 
 /* A skipped frame (frame_skip, the device is late): the visible lines' events reach the game as in a drawn frame
@@ -4619,20 +4617,21 @@ static int HeaderLeft(void) {
     return left;
 }
 
-uint32_t PortMenuHeaderPixelAt(int y, int d) {
-    int c = -1 - d, s;
-    if (!sMenuHeaderFrame || !sMenuShown.headerDrawn)
-        return PortMenuHeaderPixel(y, d);
-    s = c - sMenuShown.headerX - HeaderLeft();
-    if (s >= 0)
-        return MenuSpritePixel(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, y, 0, s);
-    return HeaderPixelRaw(y, d);
-}
-
-uint32_t PortMenuHeaderPixel(int y, int phase) {
-    if (!sMenuHeaderFrame || !HeaderOnScreen())
-        return 0;
-    return HeaderPixelRaw(y, phase);
+static int HeaderWidth(void) {
+    const uint16_t* p = sMenuHeaderFrame;
+    int n, i, left = HeaderLeft(), right = left;
+    if (!p) return 0;
+    n = *p++;
+    if (n <= 0 || n > 128) return 0;
+    for (i = 0; i < n; i++) {
+        int x = p[i * 3 + 1] & 511, shape = p[i * 3] >> 14;
+        int edge;
+        if (shape >= 3) continue;
+        if (x >= 256) x -= 512;
+        edge = x + sObjSize[shape][p[i * 3 + 1] >> 14][0];
+        if (edge > right) right = edge;
+    }
+    return right - left;
 }
 
 static uint32_t HeaderPixelRaw(int y, int phase) {
@@ -4656,16 +4655,6 @@ void PortMenuBandSource(int band, int y, void* frame, void* tiles, void* palette
     sMenuPend.bands[band].tiles = tiles;
     sMenuPend.bands[band].palette = palette;
     sMenuPend.bands[band].y = y;
-}
-
-uint32_t PortMenuBandPixel(int y, int phase) {
-    int i;
-    for (i = 0; i < 2; i++) {
-        const MenuBandSource* band = &sMenuBands[i];
-        uint32_t color = MenuSpritePixel(band->frame, band->tiles, band->palette, y - band->y, phase, 0);
-        if (color) return color;
-    }
-    return 0;
 }
 
 static uint32_t MenuTabPixelRaw(int y, int phase, int side) {
@@ -4704,18 +4693,7 @@ static uint32_t MenuTabPixelRaw(int y, int phase, int side) {
     return sColorLut[col];
 }
 
-static void CaptureMenuTabPixels(void) {
-    int side, y;
-    for (side = 0; side < 2; side++)
-        for (y = 0; y < 16; y++)
-            sMenuTabPixels[side][y] = MenuTabPixelRaw(y + 16, 0, side ? 1 : -1);
-}
-
-uint32_t PortMenuTabPixel(int y, int phase, int side) {
-    if (sMenuTabFrame && side < 0)
-        return MenuTabPixelRaw(y, phase, side);
-    return y >= 16 && y < 32 ? sMenuTabPixels[side > 0][y - 16] : 0;
-}
+#include "port/menu_margin_snapshot.inc"
 
 /* The backdrop colour (palette 0), as displayed. */
 uint32_t PortPpuBackdrop(void) {
