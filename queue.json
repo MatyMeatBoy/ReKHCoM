@@ -11118,23 +11118,28 @@
       "status": "pr_abierto",
       "owner": "codex-480-confirm-docs",
       "created_at": "2026-10-29T01:51:01.660174+00:00",
-      "updated_at": "2026-10-29T01:54:20.966171+00:00",
+      "updated_at": "2026-10-29T01:54:28.675950+00:00",
       "branch": "docs/android480-confirmation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/488",
-      "approval": "User requested documenting480, tester follow-up and closing solved issues",
+      "approval": "Root integrator: human-authorized code review; e97b120d1c2ab8c24d0ec4aa9a1aaffa3e24dfed",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/480#issuecomment-6485206732",
       "evidence": [
         {
           "at": "2026-10-29T01:54:20.966171+00:00",
           "owner": "codex-480-confirm-docs",
           "detail": "Primary reporter6485206732 confirms both Android springs/ledges with new test imported priorROM/save;480CLOSED6485653635 and CASintegrado. Docs retain local-injection limits, original manifests and test bytes unchanged."
+        },
+        {
+          "at": "2026-10-29T01:54:28.675950+00:00",
+          "owner": "codex-480-confirm-docs",
+          "detail": "Root solo docs review against primary6485206732, confirmed480CLOSED and CAScompletion; limits distinguish one Android route from universal layout/ABI coverage, unchanged initial build-gate snapshot and APK. No app source change."
         }
       ],
       "claimed_at": "2026-10-29T01:51:06.730641+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-29T01:54:20.966171+00:00",
+  "updated_at": "2026-10-29T01:54:28.675950+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
