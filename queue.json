@@ -12467,23 +12467,28 @@
       "status": "en_curso",
       "owner": "codex-scene-adjust",
       "created_at": "2026-10-30T15:08:54.176492+00:00",
-      "updated_at": "2026-10-30T15:17:16.607018+00:00",
+      "updated_at": "2026-10-30T15:25:39.281044+00:00",
       "branch": "feat/v23-scene-adjust-framing",
       "pr": null,
-      "approval": "Usuario30Oct solicita modoAjuste por defecto y Extendido comoactual con aviso breve; aclaracion equivalentevisualx6integer1 porresolucion",
+      "approval": "Usuario30Oct aprobo explicitamente diseno escrito Ajuste/Extendido para implementarlo",
       "reference": "Solicitud usuario30Oct en estechat",
       "evidence": [
         {
           "at": "2026-10-30T15:17:16.607018+00:00",
           "owner": "codex-scene-adjust",
           "detail": "Diseno escrito dec988dea docs/superpowers/specs/2026-10-30-scene-adjust-framing-design.md; usuarioaclara equivalentevisualx6integer1 segunresolucionnoescala6fija. Enfoque cameraentera+UIseparada, defaultAjuste yExtendidoactualconaviso. Preguntaasyncaprobaciondeldiseno pendiente: no gameplaysource cambiado. Se investiga catalogohonores sololectura paraexcepcionesexactas."
+        },
+        {
+          "at": "2026-10-30T15:25:39.281044+00:00",
+          "owner": "codex-scene-adjust",
+          "detail": "Plan inline listo. Politica usa build_version vigente AtlasRO; 107/108 approved nohonors, 109/121/122 honors. Sin heredar variantes. SiguienteTDD politica/config/presenter HUD independiente sincrecerPortConfig."
         }
       ],
       "claimed_at": "2026-10-30T15:09:07.226403+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T15:18:16.670934+00:00",
+  "updated_at": "2026-10-30T15:25:39.281044+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
