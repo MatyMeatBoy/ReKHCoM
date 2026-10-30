@@ -12546,20 +12546,26 @@
     "local-v23-pretest-20261030": {
       "id": "local-v23-pretest-20261030",
       "piece": "Prebuild Windows local2.3 EU32/64 para probar escenas antes de publicacion",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-local-pre23",
       "created_at": "2026-10-30T18:50:04.560237+00:00",
-      "updated_at": "2026-10-30T18:50:33.425400+00:00",
-      "branch": null,
+      "updated_at": "2026-10-30T18:55:29.742696+00:00",
+      "branch": "feat/v23-scene-three-modes",
       "pr": null,
       "approval": "Usuario solicita pre local primero antes de sacar2.3",
       "reference": "main43cf94156, PR533 escenas3modos; no publicar ni reemplazar pre1 existente",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-30T18:55:29.742696+00:00",
+          "owner": "codex-local-pre23",
+          "detail": "LOCAL PRE DELIVERED; awaiting user playtest before any public2.3 release. releases/v2.3-pre1-local.20261030.1/JUGAR/ReKHCoM.exe; Desktop ReKHCoM2.3PRElocal30-10.lnk. WindowsEU32/64 only, main43cf94156 tree matches720b457df. ZIP45680974B SHA449c85d4795c5e879a390f542d422217ec7bdc343a8ef32851b5edcf1226801b; ROM/save-free CRC+allpayload hashes+337embedded coreassets PASS. Ready folder has ownEU ROMcopy and newSpanishINI, no userSAV copied. FreshZIPextract launcherCLI0, native32/64 event121mode2 frame300 exit0 and480x180canvasPASS. No publish, no protected install/SAV/oldpreoverwrite. Online modern incomplete, integrated relaybeta only. Evidence pruebas/local-v23-pretest-20261030."
+        }
+      ],
       "claimed_at": "2026-10-30T18:50:33.425400+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T18:50:33.425400+00:00",
+  "updated_at": "2026-10-30T18:55:29.742696+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
