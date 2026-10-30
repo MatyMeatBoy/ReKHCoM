@@ -344,13 +344,16 @@ static void NetReceive(void) {
 /* waiting for the other player inside a link frame: our slots out again, the picture and the window alive */
 static void NetWait(void) {
     static u32 noticed;
-    u32 now = PortNetlinkMs();
+    u32 now = PortNetlinkMs(), waited;
     if (!sNet.waitStart)
         sNet.waitStart = now | 1;
-    else if (now - sNet.waitStart > 1000 && now - noticed > 500) {
+    /* The nonzero sentinel can be one millisecond ahead of an even clock.
+       Clamp that case instead of treating unsigned -1 as a multi-day wait. */
+    waited = (s32)(now - sNet.waitStart) > 0 ? now - sNet.waitStart : 0;
+    if (waited > 1000 && now - noticed > 500) {
         noticed = now;
-        PortUiLinkWaitingNotice((int)((now - sNet.waitStart) / 1000), now - sNet.waitStart > 10000);
-        if ((now - sNet.waitStart) / 500 % 4 == 2)
+        PortUiLinkWaitingNotice((int)(waited / 1000), waited > 10000);
+        if (waited / 500 % 4 == 2)
             PortLog("netlink: waiting at link frame %u: %u of ours made, %u acked, %u of theirs; last in %u+%u (%u)",
                     (unsigned)sLinkFrame, (unsigned)sNet.mine, (unsigned)sNet.acked, (unsigned)sNet.theirs,
                     (unsigned)sNetLastFirst, (unsigned)sNetLastCount, (unsigned)sNetSlotsIn);
@@ -358,10 +361,10 @@ static void NetWait(void) {
     NetSendSlots();
     PortLinkIdle();
     NetReceive();
-    if (sNet.waitStart && now - sNet.waitStart > 10000) { /* after 10 s, B held a moment gives up */
+    if (sNet.waitStart && waited > 10000) { /* after 10 s, B held a moment gives up */
         int autoGiveUp = PortNetlinkGiveUpSeconds(); /* tests: KHCOM_NETLINK_GIVEUP=<seconds> */
         sNet.giveUpHold = (PortInputKeys() & 0x0002 /* B */) ? sNet.giveUpHold + 1 : 0;
-        if (sNet.giveUpHold > 20 || (autoGiveUp > 0 && now - sNet.waitStart > (u32)autoGiveUp * 1000)) {
+        if (sNet.giveUpHold > 20 || (autoGiveUp > 0 && waited > (u32)autoGiveUp * 1000)) {
             sNet.dropped = 1;
             PortLog("netlink: the player gave up waiting: the link ends as a pulled cable");
         }

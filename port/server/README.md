@@ -12,6 +12,15 @@ Easypanel: upload the ZIP, select Dockerfile build, use one replica, CPU limit0.
 memory limit128MB. Publish target47800 to published47800, **UDP**. HTTP domains do
 not carry this traffic. Don't enable rolling replicas: room state is in memory.
 Retain each source ZIP and SHA256; record the pulled base digest and built image.
+If Chrome file upload is unavailable, the Easypanel inline Dockerfile can ADD the
+relay from a fixed public Git commit and verify its SHA256 before chmod444; use
+the recorded `pruebas/vps-online-beta/Easypanel.Dockerfile`, never a moving branch.
+The deployed source is commit3c32d87f216f668d2ad880bea46440db7f7687c9, relay
+SHA256ce419d4e04606ec79e97e6de305dfa19f7ace3cba468a233fa05e77b60fbe8e2.
+Its image index is sha256:b7eff822cf5f0413f609e15c746f165d5776c854226e0e8671f3ac8659ca9fe4.
+Capabilities are dropped (`ALL`); the relay needs none. Public UDP creation,
+listing and bidirectional forwarding were verified from one external Windows
+network on30Oct2026; this does not certify all regions or platforms.
 Rollback by reuploading the previous known-good ZIP and deploying it. Restart or
 rollback disconnects all active rooms. This initial service has no prior relay
 deployment to restore; stopping only this service disables the beta.

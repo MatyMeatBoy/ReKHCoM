@@ -49,6 +49,7 @@ static bool InputText(const char*,char*,size_t,int=0){return false;}
 static bool InputInt(const char*,int*,int,int){return false;}
 static void PushFont(int){}static void PopFont(){}
 static void TextColored(int,const char*,const char*){}
+static void TextWrapped(const char*,const char*){}
 }
 int main(int argc,char**argv){
     sRoot=argv[1]; desired=std::atoi(argv[3]);

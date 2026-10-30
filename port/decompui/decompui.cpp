@@ -2235,8 +2235,10 @@ static void NetlinkRows() {
                        "and room code (Android too)."),
                      mode, 10, names);
     if (mode == 9) {
-        ImGui::TextUnformatted(T("Beta: salas del multijugador original, sin Steam. Entra a Batalla de enlace en el juego.",
-                                "Beta: original multiplayer rooms, without Steam. Open Link battle in the game."));
+        ImGui::PushFont(sFontSmall);
+        ImGui::TextWrapped("%s", T("Beta: salas del multijugador original, sin Steam. Entra a Batalla de enlace en el juego.",
+                                  "Beta: original multiplayer rooms, without Steam. Open Link battle in the game."));
+        ImGui::PopFont();
     }
     if (mode == 4 || mode == 5 || mode == 6 || mode == 8) {
         ImGui::AlignTextToFramePadding();
