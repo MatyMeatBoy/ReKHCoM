@@ -62,6 +62,16 @@ class ScenarioInventoryTests(unittest.TestCase):
         for number in (121,122,124):
             self.assertEqual([a['id'] for a in catalog_links(number,assets)],[str(number)])
 
+    def test_explicit_shared_reference_ids_are_typed_and_do_not_imply_approval(self):
+        asset=dict(id='shared',title='Fondo compartido',status='pending',revision_info={'scene_ids':[75,86]})
+        for number in (75,86):
+            self.assertEqual([a['id'] for a in catalog_links(number,[asset])],['shared'])
+            self.assertEqual(catalog_links(number,[asset])[0]['historical_status'],'pending')
+        self.assertEqual(catalog_links(76,[asset]),[])
+        asset['revision_info']['scene_ids']=[True,'75']
+        self.assertEqual(catalog_links(1,[asset]),[])
+        self.assertEqual(catalog_links(75,[asset]),[])
+
     def test_field_and_battle_contexts_keep_sources_and_null_story_alternatives(self):
         with tempfile.TemporaryDirectory(prefix='scenario-contexts-') as tmp:
             root=Path(tmp)
