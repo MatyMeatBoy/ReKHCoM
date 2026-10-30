@@ -12407,10 +12407,10 @@
     "optiport-online-contracts": {
       "id": "optiport-online-contracts",
       "piece": "OptiPort: incorporar mecanismos verificados de online, pacing, rollback e historial y medicion antes/despues",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-optiport-online",
       "created_at": "2026-10-30T14:27:15.934231+00:00",
-      "updated_at": "2026-10-30T14:35:20.307716+00:00",
+      "updated_at": "2026-10-30T14:37:05.266297+00:00",
       "branch": "docs/online-protocol-contracts",
       "pr": "https://github.com/MatyMeatBoy/OptiPort/pull/22",
       "approval": "Usuario30Oct pide OptiPort enfocado al online y agregar las mejoras aprendidas al metodo",
@@ -12420,9 +12420,15 @@
           "at": "2026-10-30T14:35:20.307716+00:00",
           "owner": "codex-optiport-online",
           "detail": "OptiPort22 fuente fb9f8d5. Modulo online, descubrimientoSKILL/README y lecciones verificadas con linkReKH8c4202b03. EnlacesMarkdown PASS; revisiontextual escenariosbaselineconceptualPASS,2gapsmetodo encontrados ycorregidos, rereviewPASS. SinclaimsFPS/RTTdesdebytes. Usuarioautorizoagregarlecciones."
+        },
+        {
+          "at": "2026-10-30T14:37:05.266297+00:00",
+          "owner": "codex-optiport-online",
+          "detail": "OptiPort22 merged 35dfad84092b951e72753bd235fcaf8a4d1bc7d4; moduloonline/reviewtextual/enlacesPASS, fuenteReKH8c4202b03 conpruebas ymedicion; sincronizacioninstalada acontinuacion."
         }
       ],
-      "claimed_at": "2026-10-30T14:27:25.598774+00:00"
+      "claimed_at": "2026-10-30T14:27:25.598774+00:00",
+      "completed_at": "2026-10-30T14:37:05.266297+00:00"
     }
   },
   "integrator": {
@@ -12431,7 +12437,7 @@
     "created_at": "2026-10-30T14:36:13.615554+00:00",
     "updated_at": "2026-10-30T14:36:13.615554+00:00"
   },
-  "updated_at": "2026-10-30T14:36:13.615554+00:00",
+  "updated_at": "2026-10-30T14:37:05.266807+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
