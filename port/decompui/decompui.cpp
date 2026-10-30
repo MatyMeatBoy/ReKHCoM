@@ -1873,11 +1873,11 @@ static bool ZoomRow(const char* label, const char* help, int& value, bool inheri
 /* A graphics mode's presets, as the game's PortApplyGraphicsMode (port_config.c): set here so that what the player
    changes afterwards in the launcher stays (the game applies a mode only when graphics_mode_applied differs). */
 static bool SceneFramingRow() {
-    const char* const choices[] = { T("Ajuste", "Adjusted"), T("Extendido (experimental)", "Extended (experimental)") };
+    const char* const choices[] = { T("Ajuste", "Adjusted"), T("Extendido (experimental)", "Extended (experimental)"), T("Plano original", "Original shot") };
     return CycleRow(T("Encuadre de escenas", "Scene framing"),
-                    T("Ajuste usa un encuadre cercano al original. Extendido muestra más escenario; algunas ilustraciones de los márgenes aún están en desarrollo.",
-                      "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development."),
-                    Ini("scene_framing"), 2, choices);
+                    T("Ajuste conserva el zoom elegido en escenas con honores. Plano original usa un encuadre cercano en todas. Extendido usa el zoom elegido en todas; algunos márgenes siguen en desarrollo.",
+                      "Adjusted preserves your zoom in honors-approved scenes. Original shot uses close framing in every scene. Extended uses your zoom everywhere; some scenery edges are still in development."),
+                    Ini("scene_framing"), 3, choices);
 }
 
 static void ApplyGraphicsMode(int mode) {

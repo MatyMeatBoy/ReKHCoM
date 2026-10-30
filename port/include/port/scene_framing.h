@@ -1,7 +1,7 @@
 #ifndef PORT_SCENE_FRAMING_H
 #define PORT_SCENE_FRAMING_H
 
-enum { PORT_SCENE_ADJUST = 0, PORT_SCENE_EXTENDED = 1 };
+enum { PORT_SCENE_ADJUST = 0, PORT_SCENE_EXTENDED = 1, PORT_SCENE_ORIGINAL_SHOT = 2 };
 
 #include "scene_framing_grants.h"
 
@@ -24,7 +24,8 @@ static inline int PortSceneFramingScale(int width, int height) {
 }
 
 static inline int PortSceneFramingUse(int mode, int activeEvent, int event) {
-    return mode == PORT_SCENE_ADJUST && activeEvent && event >= 0 && !PortSceneFramingHonors(event);
+    return activeEvent && event >= 0 && (mode == PORT_SCENE_ORIGINAL_SHOT ||
+        (mode == PORT_SCENE_ADJUST && !PortSceneFramingHonors(event)));
 }
 
 static inline float PortSceneFramingNarrowScale(int adjusted, int width, int height, float normalScale) {

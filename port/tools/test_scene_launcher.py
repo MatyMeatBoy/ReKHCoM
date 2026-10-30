@@ -16,7 +16,7 @@ static int value=0,desired=-1;
 static const char* T(const char* es,const char*){return es;}
 static int& Ini(const char* name){if(std::string(name)!="scene_framing")throw 1;return value;}
 static bool CycleRow(const char*,const char* help,int& v,int count,const char*const* names){
-    if(!help||count!=2||!names[0]||!names[1])throw 2;
+    if(!help||count!=3||!names[0]||!names[1]||!names[2])throw 2;
     if(desired<0)return false;v=desired;return true;
 }
 FUNCTION
@@ -24,8 +24,10 @@ int main(){
     if(SceneFramingRow()||value!=0)return 1;
     desired=1;if(!SceneFramingRow()||value!=1)return 2;
     desired=-1;if(SceneFramingRow()||value!=1)return 3;
-    desired=0;if(!SceneFramingRow()||value!=0)return 4;
-    puts("PASS production launcher scene selector: default, both directions, retained value and explanation");
+    desired=2;if(!SceneFramingRow()||value!=2)return 4;
+    desired=-1;if(SceneFramingRow()||value!=2)return 5;
+    desired=0;if(!SceneFramingRow()||value!=0)return 6;
+    puts("PASS production launcher scene selector: default, all three choices, retained value and explanation");
 }
 '''.replace('FUNCTION',function)
     with tempfile.TemporaryDirectory(prefix='scene-launcher-') as tmp:

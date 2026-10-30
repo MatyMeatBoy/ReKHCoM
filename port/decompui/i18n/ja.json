@@ -399,5 +399,6 @@
  "Adjusted": "調整",
  "Extended (experimental)": "拡張（実験的）",
  "Scene framing": "シーンの表示",
- "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.": "調整は原作に近い画角です。拡張はより広い背景を表示しますが、端の一部の絵はまだ制作中です。"
+ "Adjusted preserves your zoom in honors-approved scenes. Original shot uses close framing in every scene. Extended uses your zoom everywhere; some scenery edges are still in development.": "調整は特に高く評価された承認済みシーンで選択したズームを保ちます。原作の画角はすべて近い画角にします。拡張はすべて選択したズームを使いますが、背景の端の一部はまだ制作中です。",
+ "Original shot": "原作の画角"
 }
