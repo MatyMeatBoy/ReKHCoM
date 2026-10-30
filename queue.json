@@ -12350,7 +12350,7 @@
       "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T13:10:05.315851+00:00",
+      "updated_at": "2026-10-30T13:22:05.542238+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": null,
       "approval": "Usuario30Oct exige full speed en ambos lados independiente del ping; rango actual ChileEspaña240ms; no basta conexión sin crash",
@@ -12360,13 +12360,18 @@
           "at": "2026-10-30T13:10:05.315851+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "New user full-speed criterion. Baseline actualVPS239ms:0wait/0desync but both59.470Hz with9double33.485ms frames/35s; real-gameCSV regression criterion fails. Deliberate PortLinkYieldFrame scheduling extension identified; A/B next. No further ComputerUse after userEscape."
+        },
+        {
+          "at": "2026-10-30T13:22:05.542238+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Scope upgraded by user: rebuild complete modern online, no cable pacing/packet dependency; reference MH Rise feel, originalVS only. Modern direct-input/session/async bootstrap/rollback design written docs/superpowers/specs/2026-10-30-modern-online-vs-design.md, pending approval. No gameplay source modified. Existing regression grades old baseline RED59.470Hz. Cleanup worker removed only verified reconstructible duplicates140008656logicalbytes with manifest."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T13:10:05.315851+00:00",
+  "updated_at": "2026-10-30T13:22:05.542238+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
