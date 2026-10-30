@@ -12350,7 +12350,7 @@
       "status": "pr_abierto",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T14:34:30.034479+00:00",
+      "updated_at": "2026-10-30T14:40:20.614953+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/529",
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -12400,6 +12400,11 @@
           "at": "2026-10-30T14:34:30.034479+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "OptiPort online fuente metodo42747c2 verificada. Push8c4202b03: recorta ACKed inputs sin borrar historial; replayPending evita falsosdesync entredequeue yfinalreplay RED/GREEN. Misma carga1200framespeer, byteahorro51.5/23.4/17.0% en24/240/300ms; datos ypaquetesiguales32/64. BuildEU32 7/7+ninja no-work; transporte/input/snapshots PASS. PR529 sigueDRAFT/noingamecertificado."
+        },
+        {
+          "at": "2026-10-30T14:40:20.614953+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "OptiPortpass cerrado: pushead hastaad2a13a67, benchmarkbaseline6beactualreproducible32/64, byteahorro51.5/23.4/17.0%, testsREDGREENhashfinreplay; buildEU32+consumidoresPASS. MetodoOptiPort22 integrado35dfad8, instaladoCodex29Markdownverificados conbackup, lockliberado. Continuanpendientes prep/barrier/routing ygameplayVPSmoderno/video: PR529DRAFT."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
@@ -12432,7 +12437,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T14:37:12.705402+00:00",
+  "updated_at": "2026-10-30T14:40:20.614953+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
