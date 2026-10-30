@@ -420,4 +420,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | worldcard-door-center-oneframe-artifact | User29Oct: HD door synthesis mostly correct, but as the used map/world card reaches screen center a dark ball/texture flashes for one frame. Reproduce exact animation frame-by-frame; isolate native underlay, HD readiness, affine/blend/foreground before changing only this defect. Distinct from selector glow517 until proven related. | pendiente | — | — | — | 2026-10-29T23:01:48.870989+00:00 |
 | rekhcom-vps-online-beta | Online original beta por relay VPS y selector launcher | pr_abierto | codex-vps-beta | https://github.com/MatyMeatBoy/ReKHCoM/pull/528 | Usuario30Oct aprueba diseño escrito e implementar con mejoras, investigación otros decomps/OpenRCT2/OpenTTD; solo original, coop futuro | 2026-10-30T12:39:51.589266+00:00 |
 
-Integrador: libre
+Integrador: codex-vps-beta-integrator (ocupado; 2026-10-30T12:40:04.144113+00:00)

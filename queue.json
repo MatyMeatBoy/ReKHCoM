@@ -12334,8 +12334,13 @@
       "claimed_at": "2026-10-30T12:06:27.692402+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-10-30T12:39:51.589266+00:00",
+  "integrator": {
+    "owner": "codex-vps-beta-integrator",
+    "token": "1a88dc1a5ac52c9cdd48bd6968dcc9390131ad64733430c7",
+    "created_at": "2026-10-30T12:40:04.144113+00:00",
+    "updated_at": "2026-10-30T12:40:04.144113+00:00"
+  },
+  "updated_at": "2026-10-30T12:40:04.144113+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
