@@ -1,6 +1,6 @@
 # Tres encuadres de escenas para 2.3
 
-Propuesta del usuario, 30/10/2026. Pendiente aprobación de este documento.
+Propuesta del usuario, 30/10/2026. Aprobado explícitamente por el usuario para implementar las tres opciones.
 
 ## Comportamiento
 
