@@ -12306,12 +12306,12 @@
     "rekhcom-vps-online-beta": {
       "id": "rekhcom-vps-online-beta",
       "piece": "Online original beta por relay VPS y selector launcher",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-vps-beta",
       "created_at": "2026-10-30T12:06:13.178841+00:00",
-      "updated_at": "2026-10-30T12:10:57.148927+00:00",
+      "updated_at": "2026-10-30T12:39:51.589266+00:00",
       "branch": "feat/vps-online-beta",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/528",
       "approval": "Usuario30Oct aprueba diseño escrito e implementar con mejoras, investigación otros decomps/OpenRCT2/OpenTTD; solo original, coop futuro",
       "reference": "Chat VPS animaciones-evi 30/10/2026",
       "evidence": [
@@ -12324,13 +12324,18 @@
           "at": "2026-10-30T12:10:57.148927+00:00",
           "owner": "codex-vps-beta",
           "detail": "Plan inline documentado, investigación primaria; sin workers ni cambios en otros servicios. Design320ff2e95."
+        },
+        {
+          "at": "2026-10-30T12:39:51.589266+00:00",
+          "owner": "codex-vps-beta",
+          "detail": "HEADb677de388; relay13+Linux2+consumer7+timerREDGREEN; WinEU32build381+4targetsPASS; actualVPSUDP and two real games lobby/lag4/jitter6/loss5 PASS10checks0desync each. Source relay3c32d87 deployed only animaciones-evi/recomp-games;128MB/0.25CPU/nonroot/capdropALL. Evidence pruebas/vps-online-beta. No physical cross-region or Android/64 certification."
         }
       ],
       "claimed_at": "2026-10-30T12:06:27.692402+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T12:10:57.148927+00:00",
+  "updated_at": "2026-10-30T12:39:51.589266+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
