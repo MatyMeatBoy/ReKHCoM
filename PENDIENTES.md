@@ -424,4 +424,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue330-shortcut-followup | Revisar comentarios30Oct de330, accesos antiguos y aprendizaje sin atribuir causa no probada | integrado | codex-330-followup | https://github.com/MatyMeatBoy/ReKHCoM/pull/531 | Usuario30Oct pide revisar nueva evidencia330 y aprender posible instalacion antigua | 2026-10-30T15:18:01.859359+00:00 |
 | scene-adjust-framing-v23 | Modo escenas Ajuste por defecto: encuadre entero equivalenteGBA, HUD independiente, excepcionesconhonores y Extendido experimental | pr_abierto | codex-scene-adjust | https://github.com/MatyMeatBoy/ReKHCoM/pull/532 | Usuario30Oct aprobo explicitamente diseno escrito Ajuste/Extendido para implementarlo | 2026-10-30T16:47:09.592454+00:00 |
 
-Integrador: libre
+Integrador: codex-scene-adjust (ocupado; 2026-10-30T16:47:30.953071+00:00)
