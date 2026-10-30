@@ -8,8 +8,8 @@ PORT_FONT_COMIC_HEARTS_RESOURCE RCDATA "ComicHearts.otf"
 // File details shown by Explorer and read by antivirus heuristics: an unsigned
 // executable without them looks anonymous. Bump with REKHCOM_VERSION
 // (release_check.py compares them).
-#define REKHCOM_RC_VERSION 2,2,5,0
-#define REKHCOM_RC_VERSION_TEXT "2.2.5"
+#define REKHCOM_RC_VERSION 2,3,0,0
+#define REKHCOM_RC_VERSION_TEXT "2.3"
 
 1 VERSIONINFO
 FILEVERSION REKHCOM_RC_VERSION
