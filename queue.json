@@ -12306,10 +12306,10 @@
     "rekhcom-vps-online-beta": {
       "id": "rekhcom-vps-online-beta",
       "piece": "Online original beta por relay VPS y selector launcher",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-vps-beta",
       "created_at": "2026-10-30T12:06:13.178841+00:00",
-      "updated_at": "2026-10-30T12:39:51.589266+00:00",
+      "updated_at": "2026-10-30T12:40:53.536654+00:00",
       "branch": "feat/vps-online-beta",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/528",
       "approval": "Usuario30Oct aprueba diseño escrito e implementar con mejoras, investigación otros decomps/OpenRCT2/OpenTTD; solo original, coop futuro",
@@ -12329,9 +12329,15 @@
           "at": "2026-10-30T12:39:51.589266+00:00",
           "owner": "codex-vps-beta",
           "detail": "HEADb677de388; relay13+Linux2+consumer7+timerREDGREEN; WinEU32build381+4targetsPASS; actualVPSUDP and two real games lobby/lag4/jitter6/loss5 PASS10checks0desync each. Source relay3c32d87 deployed only animaciones-evi/recomp-games;128MB/0.25CPU/nonroot/capdropALL. Evidence pruebas/vps-online-beta. No physical cross-region or Android/64 certification."
+        },
+        {
+          "at": "2026-10-30T12:40:53.536654+00:00",
+          "owner": "codex-vps-beta",
+          "detail": "PR528 merged57a9acacf63b12d65c614f9c56c045d834abdcea; origin/main verified, product sources identical to tested HEADb677de388. Tests/actualVPSWindowsEU32lobby impaired PASS. Server source3c32d87 same relay blob. Worktree remains QA-active for local beta delivery and potential physical test followup; no other services/releases modified."
         }
       ],
-      "claimed_at": "2026-10-30T12:06:27.692402+00:00"
+      "claimed_at": "2026-10-30T12:06:27.692402+00:00",
+      "completed_at": "2026-10-30T12:40:53.536654+00:00"
     }
   },
   "integrator": {
@@ -12340,7 +12346,7 @@
     "created_at": "2026-10-30T12:40:04.144113+00:00",
     "updated_at": "2026-10-30T12:40:04.144113+00:00"
   },
-  "updated_at": "2026-10-30T12:40:04.144113+00:00",
+  "updated_at": "2026-10-30T12:40:53.537650+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
