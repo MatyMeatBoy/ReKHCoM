@@ -12452,19 +12452,20 @@
     "scene-adjust-framing-v23": {
       "id": "scene-adjust-framing-v23",
       "piece": "Modo escenas Ajuste por defecto: encuadre entero equivalenteGBA, HUD independiente, excepcionesconhonores y Extendido experimental",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-scene-adjust",
       "created_at": "2026-10-30T15:08:54.176492+00:00",
-      "updated_at": "2026-10-30T15:08:54.176492+00:00",
+      "updated_at": "2026-10-30T15:09:07.226403+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario30Oct solicita modoAjuste por defecto y Extendido comoactual con aviso breve; aclaracion equivalentevisualx6integer1 porresolucion",
       "reference": "Solicitud usuario30Oct en estechat",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-30T15:09:07.226403+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T15:08:54.176492+00:00",
+  "updated_at": "2026-10-30T15:09:07.226403+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
