@@ -12438,15 +12438,21 @@
     "issue330-shortcut-followup": {
       "id": "issue330-shortcut-followup",
       "piece": "Revisar comentarios30Oct de330, accesos antiguos y aprendizaje sin atribuir causa no probada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-330-followup",
       "created_at": "2026-10-30T15:07:27.471617+00:00",
-      "updated_at": "2026-10-30T15:07:37.857062+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-10-30T15:16:31.930128+00:00",
+      "branch": "docs/issue330-shortcut-followup",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/531",
       "approval": "Usuario30Oct pide revisar nueva evidencia330 y aprender posible instalacion antigua",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/330",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-10-30T15:16:31.930128+00:00",
+          "owner": "codex-330-followup",
+          "detail": "Nuevoscomentarios6511468893/6517799568 revisados: no logs nuevos, preguntaLaunchOptions. Guia explica camposconjuntos y accesoSteamobsoleto como hipotesis no causa. 6consumidoreswrapper PASS Gitsh conPATH/LFdelarnes; NO SteamOSfisico. No respuestaexterna ni cierre330."
+        }
+      ],
       "claimed_at": "2026-10-30T15:07:37.857062+00:00"
     },
     "scene-adjust-framing-v23": {
@@ -12465,7 +12471,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T15:09:07.226403+00:00",
+  "updated_at": "2026-10-30T15:16:31.930128+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
