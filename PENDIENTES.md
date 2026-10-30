@@ -424,5 +424,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue330-shortcut-followup | Revisar comentarios30Oct de330, accesos antiguos y aprendizaje sin atribuir causa no probada | integrado | codex-330-followup | https://github.com/MatyMeatBoy/ReKHCoM/pull/531 | Usuario30Oct pide revisar nueva evidencia330 y aprender posible instalacion antigua | 2026-10-30T15:18:01.859359+00:00 |
 | scene-adjust-framing-v23 | Modo escenas Ajuste por defecto: encuadre entero equivalenteGBA, HUD independiente, excepcionesconhonores y Extendido experimental | integrado | codex-scene-adjust | https://github.com/MatyMeatBoy/ReKHCoM/pull/532 | Usuario30Oct aprobo explicitamente diseno escrito Ajuste/Extendido para implementarlo | 2026-10-30T16:48:13.193089+00:00 |
 | scene-framing-three-modes-v23 | Tercera opcion Plano original: encuadre cercano en todas las escenas, conserva Ajuste con honores y Extendido | integrado | codex-scenes-three | https://github.com/MatyMeatBoy/ReKHCoM/pull/533 | Usuario aprobo explicitamente diseno escrito y solicito implementar las tres opciones | 2026-10-30T18:13:49.057776+00:00 |
+| local-v23-pretest-20261030 | Prebuild Windows local2.3 EU32/64 para probar escenas antes de publicacion | pendiente | — | — | Usuario solicita pre local primero antes de sacar2.3 | 2026-10-30T18:50:04.560237+00:00 |
 
 Integrador: libre
