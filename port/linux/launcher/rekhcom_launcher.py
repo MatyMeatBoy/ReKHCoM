@@ -17,6 +17,7 @@ if sys.version_info<(3,9):
 
 KINDS={'music','movies','scenes','sprites','subs','media'}
 META={'quality','import.list','.pack'}
+ONLINE_BETA_SPEC = 'lobby:45.8.207.150:47800'
 class ImportErrorSafe(Exception):pass
 
 def scan(root):
@@ -183,25 +184,27 @@ def main():
     group=p.add_mutually_exclusive_group()
     for name in ('import-hd','import-source','import-sprites'):group.add_argument('--'+name,type=Path)
     group.add_argument('--play',action='store_true');group.add_argument('--gui',action='store_true')
+    group.add_argument('--online-beta',action='store_true',help='Select original multiplayer via the ReKHCoM beta server')
+    group.add_argument('--online-off',action='store_true',help='Disable the network link')
     p.add_argument('--terminal',action='store_true',help=argparse.SUPPRESS)
     runtime=p.add_mutually_exclusive_group()
     for option in ('force32','force64','auto'):
         runtime.add_argument('--'+option,dest='runtime_override',action='store_const',const='--'+option)
-    a=p.parse_args();action='play' if a.play else 'prepared' if a.import_hd else 'source' if a.import_source else 'sprites' if a.import_sprites else ''
+    a=p.parse_args();action='online-beta' if a.online_beta else 'online-off' if a.online_off else 'play' if a.play else 'prepared' if a.import_hd else 'source' if a.import_source else 'sprites' if a.import_sprites else ''
     migrate_runtime_preference(a.data)
     source=a.import_hd or a.import_source or a.import_sprites
     tool='kdialog' if shutil.which('kdialog') else 'zenity' if shutil.which('zenity') else None
     if not action:
         if not tool or not (os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY')):
             p.print_help();print('No desktop dialog available. Use the CLI options above; Play directly with ReKHCoM.sh.');return 0
-        if tool=='kdialog':args=['kdialog','--menu','Basic native launcher: close the game before importing. Progress/cancel: this terminal.', 'play','Play','prepared','Import prepared HD folder','source','Import owned PC music/movies','sprites','Import owned PC sprites (optional numpy/Pillow)']
-        else:args=['zenity','--list','--title','ReKHCoM native launcher','--column','Action','play','prepared','source','sprites']
+        if tool=='kdialog':args=['kdialog','--menu','Basic native launcher: close the game before importing. Progress/cancel: this terminal.', 'play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import owned PC music/movies','sprites','Import owned PC sprites (optional numpy/Pillow)']
+        else:args=['zenity','--list','--title','ReKHCoM native launcher','--column','Action','play','online-beta','online-off','prepared','source','sprites']
         result=subprocess.run(args,text=True,stdout=subprocess.PIPE)
         if result.returncode:return 0
         action=result.stdout.strip()
-        if action!='play':source=Path(dialog(tool,'directory','Select completed HD folder' if action=='prepared' else 'Select owned PC 1.5+2.5 install'))
-        if action!='play' and str(source)=='.':return 0
-        if action!='play':
+        if action not in ('play','online-beta','online-off'):source=Path(dialog(tool,'directory','Select completed HD folder' if action=='prepared' else 'Select owned PC 1.5+2.5 install'))
+        if action not in ('play','online-beta','online-off') and str(source)=='.':return 0
+        if action not in ('play','online-beta','online-off'):
             option={'prepared':'--import-hd','source':'--import-source','sprites':'--import-sprites'}[action]
             command=[sys.executable,str(Path(__file__).resolve()),'--data',str(a.data.resolve()),option,str(source),'--terminal']
             terminal=next((name for name in ('konsole','xterm','gnome-terminal','x-terminal-emulator') if shutil.which(name)),None)
@@ -210,6 +213,19 @@ def main():
                 return 2
             prefix=[terminal,'--nofork','-e'] if terminal=='konsole' else [terminal,'--wait','--'] if terminal=='gnome-terminal' else [terminal,'-e']
             return subprocess.run(prefix+command).returncode
+    if action in ('online-beta','online-off'):
+        a.data.mkdir(parents=True,exist_ok=True)
+        fd, temp = tempfile.mkstemp(prefix='.netlink-',dir=a.data)
+        try:
+            with os.fdopen(fd,'w',encoding='utf-8') as out:
+                out.write((ONLINE_BETA_SPEC if action=='online-beta' else 'off')+'\n')
+            os.replace(temp,a.data/'netlink.cfg')
+        finally:
+            if os.path.exists(temp):os.unlink(temp)
+        message='ReKHCoM server - Beta selected. Open Link battle in the game.' if action=='online-beta' else 'Network link disabled.'
+        print(message)
+        if tool and a.gui:dialog(tool,'info',message)
+        return 0
     if action=='play':os.execv('/bin/sh',['/bin/sh',str(a.data/'ReKHCoM.sh'),*([a.runtime_override] if a.runtime_override else [])])
     try:
         if action=='prepared' and (source/'hd').is_dir():source=source/'hd'

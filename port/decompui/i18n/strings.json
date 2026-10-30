@@ -196,6 +196,10 @@
   "es": "En pruebas: pueden tener fallos visuales."
  },
  {
+  "en": "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.",
+  "es": "Beta: salas del multijugador original, sin Steam. Entra a Batalla de enlace en el juego."
+ },
+ {
   "en": "Border (Original view)",
   "es": "Borde (vista Original)"
  },
@@ -1186,6 +1190,10 @@
  {
   "en": "Re:CoM mode",
   "es": "Modo Re:CoM"
+ },
+ {
+  "en": "ReKHCoM server - Beta",
+  "es": "Servidor ReKHCoM - Beta"
  },
  {
   "en": "Rebel mode",

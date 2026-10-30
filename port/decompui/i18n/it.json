@@ -393,5 +393,7 @@
  "pending": "in sospeso",
  "scenes": "scene",
  "steam_api.dll is missing next to the game.": "Manca steam_api.dll accanto al gioco.",
- "tracks": "brani"
+ "tracks": "brani",
+ "ReKHCoM server - Beta": "Server ReKHCoM - Beta",
+ "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.": "Beta: stanze del multigiocatore originale, senza Steam. Apri Battaglia link nel gioco."
 }

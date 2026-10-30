@@ -393,5 +393,7 @@
  "pending": "en attente",
  "scenes": "scènes",
  "steam_api.dll is missing next to the game.": "steam_api.dll est introuvable à côté du jeu.",
- "tracks": "pistes"
+ "tracks": "pistes",
+ "ReKHCoM server - Beta": "Serveur ReKHCoM - Bêta",
+ "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.": "Bêta : salles du multijoueur original, sans Steam. Ouvrez Combat en liaison dans le jeu."
 }
