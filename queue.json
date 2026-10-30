@@ -12347,10 +12347,10 @@
     "vps-online-fullspeed-240ms": {
       "id": "vps-online-fullspeed-240ms",
       "piece": "Mantener batalla VS a velocidad original en ambos peers con RTT240ms y medir/grabar",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T14:16:56.260815+00:00",
+      "updated_at": "2026-10-30T14:23:52.387890+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/529",
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -12390,13 +12390,18 @@
           "at": "2026-10-30T14:16:56.260815+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "Codigo/protocolo, sin pieza de arte. Push6be134fda y PR529 DRAFT para2.3. EU32 rebuild2/2+ninja sin trabajo PASS; protocolo ampliado a bombeo17ms,jitter35ms,asimetrias75/225ms,rafagas y wrap de controles; fix aislamiento sesion RED/GREEN. NO listo para merge: falta preparacion asincrona/barrier/routing moderno/hash ampliado y pruebas ingame240/300ms/video. Requerimiento usuario2.3 registrado en plan."
+        },
+        {
+          "at": "2026-10-30T14:23:52.387890+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Usuario invoca OptiPort enfocado al online y pide incorporar las mejoras verificadas al metodo OptiPort. Reanudo PR529 draft para auditoria y fixes medidos; preservar alcanceVPS y no certificar gameplay moderno incompleto."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T14:16:56.260815+00:00",
+  "updated_at": "2026-10-30T14:23:52.387890+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
