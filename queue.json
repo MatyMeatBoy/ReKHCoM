@@ -12566,10 +12566,10 @@
     "v23-release-scene-experimental": {
       "id": "v23-release-scene-experimental",
       "piece": "Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-release23",
       "created_at": "2026-10-30T19:10:23.196463+00:00",
-      "updated_at": "2026-10-30T21:35:47.614283+00:00",
+      "updated_at": "2026-10-30T21:37:47.381610+00:00",
       "branch": "release/v2.3-scene-settings",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/534",
       "approval": "Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3",
@@ -12604,13 +12604,18 @@
           "at": "2026-10-30T21:35:47.614283+00:00",
           "owner": "codex-release23",
           "detail": "Final source328a9ff5d8045b74b786843ce1c1a41ab78c11fb; PR534-537 integrados, locklibre. Run5 todos10stagesPASS; ochoassetsclean/version/CRC PASS, Windows6boot+FileVersion2.3 PASS, Linux6boot+payloadfinalidentico PASS; release_check cero problemas. Draftrelease429510325 tagv2.3 creado comoMatyMeatBoy,10assetsSHA256GitHub=local(DRAFT-VERIFIED.json). Webgh-pages e564b0612197da79da017ffa6d3b3ea5fb41b95a subido, Pagesrun41132175379 queued. Falta comprobarPages, publicarDraftLatest,verify_publication descargaspublicas,followupbordeblanco+close517;330/530abiertos; luegoSTOP. No cleanup porultimainstruccion."
+        },
+        {
+          "at": "2026-10-30T21:37:47.381610+00:00",
+          "owner": "codex-release23",
+          "detail": "PUBLICADA v2.3 stableLatest https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.3; source328a9ff5d8045b74b786843ce1c1a41ab78c11fb;8plataformas+2manifests descargapublica SHA256PASS,WebPages3WasmSHA PASS;pre/post release_check cero problemas;Windows6boot/version2.3 yLinux6boot payloadexact PASS. PUBLICATION-VERIFIED.json. #517cerradotrasconfirmacionreporteroWindowsDeck;seguimientobordeblanco538abierto;330/530abiertos. UsuarioSTOPdespuesdepublicaryissues; NOcleanup ni siguiente pendiente."
         }
       ],
       "claimed_at": "2026-10-30T19:12:50.503981+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T21:35:47.614283+00:00",
+  "updated_at": "2026-10-30T21:37:47.381610+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
