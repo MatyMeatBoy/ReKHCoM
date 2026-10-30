@@ -70,6 +70,14 @@ For the example folder above:
 Keep the quotes, including when the install path contains spaces. Optional
 arguments go **after** the quoted script path, for example `--region us`.
 
+These Launch Options belong to the **`/bin/sh` Target shown above**; copy the
+three fields together rather than pasting another player's options alone.
+If your shortcut targets `ReKHCoM.sh` directly, repeating its path in Launch
+Options passes it as a game argument instead of repairing the target. Run
+`--steam-help` from the folder you actually want to use and follow that complete
+recipe. Updating files or registering the application again does not rewrite
+an existing Steam shortcut; it may still point to an older extracted folder.
+
 The native 64-bit runtime also accepts `--language en|es|fr|de|it` after the
 script path (the last value wins). This is a limited game-option contract:
 other 32-bit game arguments are not generally supported by the 64-bit host.
