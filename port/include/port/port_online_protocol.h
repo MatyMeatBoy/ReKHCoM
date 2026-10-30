@@ -44,7 +44,7 @@ typedef struct {
     ModernControl tx[MODERN_CONTROLS], pending[MODERN_CONTROLS], rx[MODERN_CONTROLS];
     uint32_t round, base, made, remoteNext, localAck, rollback;
     uint32_t inputSent, inputAckSent, inputAt, hashAt;
-    uint8_t rollbackPending, inputPacketSent, hashesSent;
+    uint8_t rollbackPending, replayPending, inputPacketSent, hashesSent;
     ModernInputSlot inputs[MODERN_HISTORY];
     ModernHash hashes[MODERN_HASH_SLOTS];
     uint32_t packetsSent, packetsReceived, rejected, corrections, checks, mismatches;
@@ -64,6 +64,8 @@ void ModernStartInputs(ModernPeer* peer, uint32_t round, uint32_t firstFrame);
 int ModernInput(ModernPeer* peer, uint32_t frame, uint16_t localKeys,
                 uint16_t* player0, uint16_t* player1);
 int ModernTakeRollback(ModernPeer* peer, uint32_t* firstFrame);
+/* Call only after corrected simulation has caught up and refreshed its hashes. */
+void ModernFinishRollback(ModernPeer* peer);
 void ModernSetHash(ModernPeer* peer, uint32_t frame, uint32_t hash);
 
 #endif

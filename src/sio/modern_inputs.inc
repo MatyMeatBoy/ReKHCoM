@@ -55,5 +55,7 @@ int ModernGameInputUpdate(void) {
     SioKeyStateUpdateB(b);
     gSioStatus &= ~SIO_STAT_RECV_EMPTY;
     sModernFrame++;
+    if (PortRollbackResimulating() && sModernFrame == p->made)
+        ModernFinishRollback(p);
     return 1;
 }

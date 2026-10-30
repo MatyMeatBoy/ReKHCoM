@@ -40,9 +40,10 @@ int main(void){
     CHECK(ModernGameInputUpdate());CHECK(keys0==0x11&&keys1==0);CHECK(!(gSioStatus&SIO_STAT_RECV_EMPTY));
     CHECK(ModernGameFrame()==1&&peer.made==1&&tickCount==1);
     /* Restore the game counter as a snapshot does; the peer stays outside snapshots. */
-    sModernFrame=0;replay=1;hardware=0x22;
+    sModernFrame=0;replay=1;hardware=0x22;peer.replayPending=1;
     CHECK(ModernGameInputUpdate());CHECK(keys0==0x11&&ModernGameFrame()==1&&peer.made==1);
     CHECK(tickCount==1&&pumpCount==1);
+    CHECK(!peer.replayPending);
     ModernGameEndInputs();CHECK(!ModernGameRollbackSession());
     connected(1);CHECK(ModernGameBeginInputs(2));hardware=0x44;
     CHECK(ModernGameInputUpdate());CHECK(keys0==0&&keys1==0x44);

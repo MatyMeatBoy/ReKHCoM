@@ -1,5 +1,7 @@
 """Execute the pure modern protocol under a deterministic simulated network."""
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import subprocess
 import tempfile
@@ -16,8 +18,10 @@ CODE=r'''
 typedef struct {uint8_t data[512];size_t size;unsigned target;uint32_t due;} Packet;
 static ModernPeer p[2];static Packet packets[32768];static unsigned count,from;
 static uint32_t now,delay;static unsigned dropEvery,sent,jitter,asymmetry,burst;
+static uint64_t wireBytes;
 static void send_packet(void*context,const uint8_t*data,size_t size){
     (void)context;
+    wireBytes+=size;
     if(size>512||count>=32768){fprintf(stderr,"unbounded packet\n");return;}
     sent++;if(dropEvery&&sent%dropEvery==0)return;
     if(burst&&sent%200<40)return;
@@ -66,7 +70,8 @@ static int controls(void){
 }
 static int delayed_frames(unsigned rtt,unsigned drops,uint32_t base,unsigned impaired){
     assert(connect_peers(rtt/2,drops));
-    if(impaired){jitter=35;asymmetry=75;burst=1;}
+    wireBytes=0;unsigned firstSent=sent;
+    if(impaired==1){jitter=35;asymmetry=75;burst=1;}
     ModernStartInputs(&p[0],3,base);ModernStartInputs(&p[1],3,base);
     for(uint32_t f=0;f<1200;f++){
         uint16_t a,b;
@@ -81,6 +86,8 @@ static int delayed_frames(unsigned rtt,unsigned drops,uint32_t base,unsigned imp
     assert(p[0].remoteNext==base+1200&&p[1].remoteNext==base+1200);
     assert(p[0].localAck==base+1200&&p[1].localAck==base+1200);
     assert(p[0].corrections&&p[1].corrections);
+    printf("METRIC {\"rtt_ms\":%u,\"drop_every\":%u,\"asymmetric_jitter_burst\":%u,\"frames_per_peer\":1200,\"base_frame\":%u,\"bytes_both_peers\":%llu,\"packets_both_peers\":%u}\n",
+           rtt,drops,impaired==1,base,(unsigned long long)wireBytes,sent-firstSent);
     return 0;
 }
 static int control_wrap(void){
@@ -168,25 +175,53 @@ static int pending_hash(void){
     assert(p[0].rollbackPending&&p[1].rollbackPending);
     assert(!p[0].error&&!p[1].error&&p[0].checks==0&&p[1].checks==0);
     uint32_t f;ModernTakeRollback(&p[0],&f);ModernTakeRollback(&p[1],&f);
+    for(unsigned t=0;t<1000;t++){now++;pump();}
+    assert(!p[0].error&&!p[1].error&&p[0].checks==0&&p[1].checks==0);
     ModernSetHash(&p[0],1,333);ModernSetHash(&p[1],1,333);
+    ModernFinishRollback(&p[0]);ModernFinishRollback(&p[1]);
     for(unsigned t=0;t<2000;t++){now++;pump();}
     assert(!p[0].error&&!p[1].error&&p[0].checks==1&&p[1].checks==1);
     return 0;
 }
-int main(void){
+static int acknowledged_tail(void){
+    assert(connect_peers(0,0));ModernStartInputs(&p[0],1,0);ModernStartInputs(&p[1],1,0);
+    uint16_t a,b;
+    for(unsigned f=0;f<40;f++){
+        assert(ModernInput(&p[0],f,1,&a,&b));assert(ModernInput(&p[1],f,2,&a,&b));now+=17;pump();
+    }
+    for(unsigned t=0;t<400;t++){now++;pump();}
+    assert(p[0].localAck==40);count=0;from=0;now+=101;ModernPump(&p[0],now,send_packet,0);
+    unsigned checked=0;
+    for(unsigned i=0;i<count;i++)if(packets[i].data[5]==MODERN_INPUT){
+        assert(packets[i].size==37&&packets[i].data[36]==0);checked++;
+    }
+    assert(checked==1);return 0;
+}
+int main(int argc,char** argv){
+    (void)argv;
+    if(argc>1)return delayed_frames(24,0,0,2)||delayed_frames(240,0,0,1)||delayed_frames(300,13,0,1);
     if(inputs()||controls()||control_wrap()||delayed_frames(240,0,0,0)||delayed_frames(300,11,0,0)||
-       delayed_frames(300,13,0xfffffff0,0)||delayed_frames(300,13,0,1)||malformed()||hashes()||hostile_and_stale()||pending_hash())return 1;
+       delayed_frames(300,13,0xfffffff0,0)||delayed_frames(300,13,0,1)||malformed()||hashes()||hostile_and_stale()||pending_hash()||acknowledged_tail())return 1;
     puts("PASS modern core: direct/immutable input, earliest rollback, ordered reliable controls including sequence wrap, bounded history, 240/300ms loss, asymmetric jitter/burst loss at frame cadence, malformed packets and confirmed hashes");
     return 0;
 }
 '''
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cc',required=True);a=ap.parse_args()
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cc',required=True)
+    ap.add_argument('--core',type=Path,default=ROOT/'port/src/port_online_protocol.c')
+    ap.add_argument('--report',type=Path);ap.add_argument('--benchmark',action='store_true');a=ap.parse_args()
     with tempfile.TemporaryDirectory(prefix='modern-core-') as tmp:
         source,exe=Path(tmp)/'test.c',Path(tmp)/'test.exe';source.write_text(CODE)
         subprocess.run([a.cc,'-std=c99','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-static',
-                        '-I',str(ROOT/'port/include'),str(source),str(ROOT/'port/src/port_online_protocol.c'),'-o',str(exe)],check=True)
-        subprocess.run([str(exe)],check=True)
+                        '-I',str(ROOT/'port/include'),str(source),str(a.core),'-o',str(exe)],check=True)
+        result=subprocess.run([str(exe)]+(['benchmark'] if a.benchmark else []),capture_output=True,text=True)
+        print(result.stdout,end='')
+        if result.stderr:print(result.stderr,end='')
+        result.check_returncode()
+        if a.report:
+            a.report.write_text(json.dumps({'core_sha256':hashlib.sha256(a.core.read_bytes()).hexdigest(),
+                'compiler':a.cc,'benchmark':a.benchmark,
+                'metrics':[json.loads(line[7:]) for line in result.stdout.splitlines() if line.startswith('METRIC ')]},indent=2)+'\n')
 
 if __name__=='__main__':main()

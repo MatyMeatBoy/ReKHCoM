@@ -60,7 +60,7 @@ static void AckControls(ModernPeer* p, uint32_t ack) {
 void ModernStartInputs(ModernPeer* p, uint32_t round, uint32_t first) {
     memset(p->inputs,0,sizeof(p->inputs)); memset(p->hashes,0,sizeof(p->hashes));
     p->round=round; p->base=p->made=p->remoteNext=p->localAck=first;
-    p->rollbackPending=p->inputPacketSent=p->hashesSent=0; p->inputsStarted=1;
+    p->rollbackPending=p->replayPending=p->inputPacketSent=p->hashesSent=0; p->inputsStarted=1;
     p->corrections=p->checks=p->mismatches=0;
 }
 
@@ -97,7 +97,7 @@ int ModernInput(ModernPeer* p, uint32_t frame, uint16_t local, uint16_t* a, uint
 
 int ModernTakeRollback(ModernPeer* p, uint32_t* frame) {
     if(!p->rollbackPending)return 0;
-    *frame=p->rollback; p->rollbackPending=0; return 1;
+    *frame=p->rollback; p->rollbackPending=0; p->replayPending=1; return 1;
 }
 
 static void RemoteInput(ModernPeer* p, uint32_t frame, uint16_t keys) {
@@ -133,7 +133,7 @@ static ModernHash* HashSlot(ModernPeer* p, uint32_t frame) {
 }
 
 static void CompareHashes(ModernPeer* p) {
-    if(p->rollbackPending)return; /* speculative snapshots must be corrected before validation */
+    if(p->rollbackPending || p->replayPending)return; /* dequeueing is not completed replay */
     for(unsigned i=0;i<MODERN_HASH_SLOTS;i++) {
         ModernHash* h=&p->hashes[i];
         if(h->valid && h->localValid && h->remoteValid && !h->compared && Stable(p,h->frame)) {
@@ -147,6 +147,11 @@ void ModernSetHash(ModernPeer* p, uint32_t frame, uint32_t hash) {
     ModernHash* h=HashSlot(p,frame); if(!h)return;
     if(h->localValid && h->sent && h->local!=hash) { p->error=MODERN_ERR_STATE; return; }
     h->local=hash; h->localValid=1; CompareHashes(p);
+}
+
+void ModernFinishRollback(ModernPeer* p) {
+    p->replayPending=0;
+    CompareHashes(p);
 }
 
 static int PayloadValid(unsigned type, const uint8_t* d, size_t size) {
@@ -269,6 +274,9 @@ void ModernPump(ModernPeer* p, uint32_t now, ModernSend send, void* context) {
     if(p->inputsStarted && (!p->inputPacketSent || p->inputSent!=p->made ||
        p->inputAckSent!=p->remoteNext || now-p->inputAt>=100)) {
         uint32_t n=p->made-p->base, first; unsigned count=n>TAIL?TAIL:n; size_t at=13;
+        /* ACKed inputs already live in the remote peer's immutable history,
+           outside its rollback snapshots. Keep redundancy for outstanding keys. */
+        if(p->made-p->localAck<count)count=p->made-p->localAck;
         Write32(data,p->round); Write32(data+4,p->remoteNext); Write32(data+8,p->made); data[12]=0;
         first=p->made-count;
         if(count) { at+=InputRange(p,data+at,first,count); data[12]++; }
@@ -279,7 +287,7 @@ void ModernPump(ModernPeer* p, uint32_t now, ModernSend send, void* context) {
         Send(p,MODERN_INPUT,0,data,at,send,context); p->inputPacketSent=1;
         p->inputSent=p->made; p->inputAckSent=p->remoteNext; p->inputAt=now;
     }
-    if(p->inputsStarted && !p->rollbackPending && (!p->hashesSent || now-p->hashAt>=250)) {
+    if(p->inputsStarted && !p->rollbackPending && !p->replayPending && (!p->hashesSent || now-p->hashAt>=250)) {
         for(unsigned i=0;i<MODERN_HASH_SLOTS;i++) {
             ModernHash* h=&p->hashes[i];
             if(h->valid && h->localValid && Stable(p,h->frame)) {
