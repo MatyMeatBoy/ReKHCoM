@@ -137,6 +137,9 @@ def catalog_links(event, assets):
         reasons = []
         if keyed and int(keyed[1]) == event: reasons.append('catalog_key')
         if labelled and int(labelled[1]) == event: reasons.append('scene_label')
+        explicit=item.get('revision_info',{}).get('scene_ids',[])
+        if isinstance(explicit,list) and any(type(n) is int and n==event for n in explicit):
+            reasons.append('explicit_scene_id')
         if reasons:direct[identifier]=reasons
     linked, pending=set(direct),list(direct)
     while pending:
