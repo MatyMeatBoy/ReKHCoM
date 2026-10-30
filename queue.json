@@ -12350,7 +12350,7 @@
       "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T13:48:59.916331+00:00",
+      "updated_at": "2026-10-30T14:01:57.990128+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": null,
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -12375,13 +12375,18 @@
           "at": "2026-10-30T13:48:59.916331+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "Implementacion inline autorizada: selector clasico/moderno independiente, protocolo directo puro, transporte y codecs perfil/deck en WIP. Pruebas compiladas GREEN:240/300ms simulados con perdida/reorden, historial inmutable/protegido, codec32/224bytes, config y launcherWindows/Linux. AUN sin adaptador gameplay ni nueva build: no afirmar fullspeed ingame. VPS sin cambios."
+        },
+        {
+          "at": "2026-10-30T14:01:57.990128+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Foundation6aca86db9 y segundo commit: selector clasico/moderno independiente, protocolo directo+transporte+codecs, puente de controles compilado en chara (todavia sin routing), snapshots moderno64/clasico32 con error explicito. WinEU32 build372/372 e incremental3/3 PASS+ninja sin trabajo; suites core/config/codec/transport/inputbridge/snapshots/launcherWindows/Linux/relay PASS. Pendientes preparacion asincrona/barrier/routing, hash ampliado y juego real240/300ms/video. No nuevo paquete, no VPS ni otros proyectos modificados."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T13:48:59.916331+00:00",
+  "updated_at": "2026-10-30T14:01:57.990128+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
