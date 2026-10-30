@@ -49,6 +49,25 @@ manifest records the exact current build versions admitted as honors exceptions.
 
 ## Ledger
 
+- Policy/config tests pass with32/64-bit compilers: independent scene_framing0/1,
+  legacy default, persistence/clamp, integer native-complete viewport and manifest
+  of10current honors build versions verified read-only from Atlas.
+- Presenter, launcher row and actual message-consumer compiled tests pass.
+  First actual game run was RED: debug event selector enters gModeEventDebug,
+  not gModeEvent (both named Event). Added exact mode support with RED/GREEN test;
+  run02 confirms320x180 scene007 at1080 and720, baseline Extended pixel parity
+  and honor121 parity. Failed run01 retained.
+- run03 atframe900 revealed a second RED integration case: native dialog still
+  used the world scale despite independent HUD settings. Reused the existing
+  screen layer for the full message composition (BG/portrait/text/choices), at
+  user scale and its matching dock margin. Logical camera policy independent
+  of options canvas drives tagging; cleanup clears BG ownership. Actual message
+  and presenter consumer regressions now GREEN. Build91/91 passes; run04 native
+  dialog comparisons in progress. Do not claim UI split before its captures pass.
+- Native diagnostics/scripts/captures live in pruebas/scene-adjust-v23, fresh
+  isolated dirs, dummy SDL/software, one process/BelowNormal. No desktop input.
+  No64-bit game/device certification yet. No release or installed game edits.
+
 - User approved design and clarified equivalent GBA integer framing rather than
   a physical x6 on every screen. Separate issue330 documentation work is PR531.
 - Read-only current Atlas queue+SQLite review differs from historical claims:

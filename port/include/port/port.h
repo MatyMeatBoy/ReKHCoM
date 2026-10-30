@@ -233,6 +233,10 @@ void PortConfigView(int mode, int* w, int* h);
 void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* scale);
 float PortConfigMenuScaleF(int outW, int outH);
 
+/* Kept outside PortConfig to preserve the native64 guest ABI. */
+extern int gPortSceneFraming;        /*0 Ajuste (default),1 experimental Extendido */
+extern int gPortSceneCameraAdjusted; /* presenter-derived, never persisted */
+int PortSceneFramingActive(void);
 int PortConfigZoomId(int level);
 int PortConfigZoomNext(int level, int dir);
 int PortConfigBattleZoomNext(int level, int dir);

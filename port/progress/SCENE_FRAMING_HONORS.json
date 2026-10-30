@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "reviewed": "2026-10-30",
+  "source": "Read-only current Atlas build_version records; exact events only",
+  "entries": [
+    {
+      "event": 4,
+      "asset_id": "1de7c0eee9be421884c5121e27ead2a9",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "0b8f501ba253c3bb2e7c44a265dd58125a312fc4c6a83e5ebf0efdd6af46a110"
+    },
+    {
+      "event": 8,
+      "asset_id": "7ef20691e77d4bc0b99730ea3443f4af",
+      "status": "honors",
+      "revision": 0,
+      "art_sha256": "e0f3e5844d388e9b9e7d2fbb49b634f123a3e747de12e963de0a42226d59484a"
+    },
+    {
+      "event": 53,
+      "asset_id": "553e59d173b14e00bc61c1d513188719",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "dde1a8fdd985d3779c0b34b787aab37fe62cf8e19e81a668e1fc96749d4b5036"
+    },
+    {
+      "event": 54,
+      "asset_id": "18f40e19e5814241a966b3348a542977",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "a66b76485c8d6a41a2b2e4404f639194950f3033771f422e5660a63b80f90223"
+    },
+    {
+      "event": 55,
+      "asset_id": "ac6109e021c34faa8d47288399992a72",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "4694b110de38cd368cbbd539aa9fb8b7c41ebc56d1242214c52bc07225175e0d"
+    },
+    {
+      "event": 74,
+      "asset_id": "d08d6c8758ff4ca9906c89a4c4d95888",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "4e13674bb743cbea76c0c106e5e0e886d4f0cfc4df8f714aebfc37b6aaf8665c"
+    },
+    {
+      "event": 102,
+      "asset_id": "3bbd4c0046224adaa320c05dae1b2a4e",
+      "status": "honors",
+      "revision": 2,
+      "art_sha256": "c2cc5ccdb4e0e7d2edc92c8a88dc42274b76801024f80422933fc1f759913ceb"
+    },
+    {
+      "event": 109,
+      "asset_id": "3fa0a50b4582424cbef46d540076c838",
+      "status": "honors",
+      "revision": 0,
+      "art_sha256": "42681596aa0f76ff929581a8a47f4e985714b2b8d1681e4bce9c6aced3cf4527"
+    },
+    {
+      "event": 121,
+      "asset_id": "9917b6dad433408b870bc5eadf613f35",
+      "status": "honors",
+      "revision": 0,
+      "art_sha256": "000f14da170db2555697af6fcac66b8bd36c9bcc2898a387ec345039b98be2d8"
+    },
+    {
+      "event": 122,
+      "asset_id": "b4d77f38012545f9bc6c8e8517e92a37",
+      "status": "honors",
+      "revision": 1,
+      "art_sha256": "4075619c89fc3727f5cd71e4d3d8a74d5b3972fba377ec95a5ff0669f7a138b0"
+    }
+  ]
+}

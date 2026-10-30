@@ -80,6 +80,7 @@ PortConfig gPortConfig = {
 
 #define CONFIG_VERSION PORT_ZOOM_CONFIG_VERSION
 
+int gPortSceneFraming;
 static int sConfigVersion;
 /* a settings file from before the graphics modes (no graphics_mode line): the player's own settings, which "GBA
    enhanced" keeps as they are when the first start asks for a mode */
@@ -102,6 +103,7 @@ static const Key sKeys[] = {
     { "view_mode", &gPortConfig.viewMode, 0, PORT_VIEW_COUNT - 1 },
     { "crt_output", &gPortConfig.crtOutput, 0, 3 },
     { "zoom", &gPortConfig.zoom, 0, PORT_ZOOM_LEVELS },
+    { "scene_framing", &gPortSceneFraming, 0, 1 },
     { "experimental_battle_zoom", &gPortConfig.battleZoom, 0, PORT_ZOOM_LEVELS },
     { "cheat_unlock_riku", &gPortConfig.cheatUnlockRiku, 0, 1 },
     { "cheat_one_hit", &gPortConfig.cheatOneHit, 0, 1 },
@@ -418,6 +420,7 @@ static void PortConfigLoadFile(void) {
     FILE* f = fopen(PortConfigPath("kh_com.ini"), "r");
     char line[256];
 
+    gPortSceneFraming = 0; /* older configurations use Ajuste without changing their zoom */
     gPortConfig.discordPresence = 1; /* on unless the file says otherwise */
     gPortConfig.assetsSeen = -1;     /* an older kh_com.ini: what is there now counts as known */
     gPortConfig.netStats = 1;        /* the online alpha: the network line shows unless turned off */

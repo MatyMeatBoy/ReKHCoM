@@ -100,6 +100,8 @@ void PortUiSkipPrompt(int visible);
 /* This frame shows a GBA-size screen (menus, the battle start): scale the
    160 lines to the window's height. Called every frame it applies. */
 void PortFitScreen(void);
+/* Engine scenes can put dialogue on their own user-zoom canvas. */
+int PortSceneFramingActive(void);
 /* Menus drawn over the world: their sprites and screen layers go on their
    own layer, scaled to the window's height, while the world keeps its scale.
    PortScreenMarginX() is that layer's margin beyond the GBA screen. */

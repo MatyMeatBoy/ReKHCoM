@@ -37,6 +37,7 @@ static PortCursorIdle sCursorIdle;
 #include "port/jiminy_layout.h"
 #include "port/jiminy_paper.h"
 #include "port/port_state.h"
+#include "port/scene_framing.h"
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
 #include "port/port_android.h"
 #endif
@@ -61,6 +62,10 @@ extern void AgbMain(void);
 extern Mode* gCurrentMode;
 extern Mode gModeBattle;
 extern Mode gModeJiminy;
+extern Mode gModeEvent;
+extern Mode gModeEventDebug;
+extern int PortEventId(void);
+extern float gPortAutoScaleF;
 extern IntrFunc gIntrTable[];
 
 /* The game's mutable globals (see port/game_prefix.h). */
@@ -360,6 +365,7 @@ filter:
 }
 
 static int sAutoScale;
+int gPortSceneCameraAdjusted;
 /* GBA-size screens (menus, battle start): the game marks each frame. The
    160 lines then fill the window's height at a fractional scale. */
 static int sFitMark, sFit;
@@ -421,8 +427,16 @@ static float MenuScale(int outW, int outH) {
 }
 
 /* Auto view: size the canvas to the window every frame. */
+int PortSceneFramingActive(void) {
+    return gPortConfig.viewMode == PORT_VIEW_AUTO && PortSceneFramingUse(gPortSceneFraming,
+        gCurrentMode == &gModeEvent || gCurrentMode == &gModeEventDebug, PortEventId());
+}
+
 static void UpdateResolution(void) {
     int outW, outH, w, h;
+    int sceneScale = 0, hudBase = 0;
+
+    gPortSceneCameraAdjusted = 0;
 
     if (gPortConfig.viewMode != PORT_VIEW_AUTO) {
         sAutoScale = 0;
@@ -437,12 +451,21 @@ static void UpdateResolution(void) {
         }
         PortConfigAutoView(outW, outH, gCurrentMode == &gModeBattle || gCurrentMode == &gModeVsbattle,
                            &w, &h, &sAutoScale);
+        hudBase = sAutoScale;
+        if (!PortUiMenuCanvas() && PortSceneFramingActive()) {
+            sceneScale = PortSceneFramingScale(outW, outH);
+            sAutoScale = sceneScale;
+            gPortAutoScaleF = (float)sceneScale;
+            w = SDL_max(GBA_SCREEN_W, (outW + sceneScale - 1) / sceneScale);
+            h = SDL_max(GBA_SCREEN_H, (outH + sceneScale - 1) / sceneScale);
+            gPortSceneCameraAdjusted = 1;
+        }
     }
     /* screen layer: the 160 GBA lines at the window's height */
     gPortOverlayW = GBA_SCREEN_W;
     sOverlayScale = 0;
     if (gPortConfig.viewMode == PORT_VIEW_AUTO) {
-        float f = MenuScale(outW, outH);
+        float f = sceneScale > 0 ? (float)hudBase : MenuScale(outW, outH);
         gPortOverlayW = SDL_max(GBA_SCREEN_W, SDL_min((int)SDL_ceilf(outW / f), PORT_MAX_W));
         /* an even margin on both sides: with an odd width the menus' side
            margin ((width - 240) / 2) left the last column on the right
@@ -453,11 +476,11 @@ static void UpdateResolution(void) {
     }
     sFitScale = 0;
     if (sFit && gPortConfig.viewMode == PORT_VIEW_AUTO && !PortUiMenuCanvas()) {
-        float f = MenuScale(outW, outH);
+        float f = sceneScale > 0 ? (float)sceneScale : MenuScale(outW, outH);
         w = SDL_min((int)SDL_ceilf(outW / f), PORT_MAX_W);
         h = GBA_SCREEN_H;
         sFitScale = f;
-        sAutoScale = 0;
+        sAutoScale = sceneScale;
     }
     /* HUD layer: a larger whole-number scale, keeping at least 144 lines and
        the GBA width so corner-anchored elements never collide. */
@@ -466,11 +489,13 @@ static void UpdateResolution(void) {
         gPortWorldScale = sAutoScale;
     }
     gPortHudScale = 0;
-    if (gPortConfig.viewMode == PORT_VIEW_AUTO && sAutoScale > 0 && sFitScale == 0 && gPortConfig.hudSize > 0) {
-        int hs = sAutoScale + gPortConfig.hudSize;
-        while (hs > sAutoScale && (outH / hs < 144 || outW / hs < GBA_SCREEN_W))
+    if (gPortConfig.viewMode == PORT_VIEW_AUTO && sAutoScale > 0 &&
+        (sFitScale == 0 || sceneScale > 0) && (gPortConfig.hudSize > 0 || sceneScale > 0)) {
+        int base = sceneScale > 0 ? hudBase : sAutoScale;
+        int hs = base + gPortConfig.hudSize;
+        while (hs > base && (outH / hs < 144 || outW / hs < GBA_SCREEN_W))
             hs--;
-        if (hs > sAutoScale) {
+        if (sceneScale > 0 ? hs != sceneScale : hs > sAutoScale) {
             gPortHudScale = hs;
             gPortHudW = SDL_min((outW + hs - 1) / hs, PORT_MAX_W);
             gPortHudH = SDL_min((outH + hs - 1) / hs, PORT_MAX_H);
@@ -1858,6 +1883,7 @@ static void Present(void) {
         float scale = CoverActive() ? SDL_max(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                       : sSideStyle == 10 ? SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                                          : MenuScale(outW, outH);
+        scale = PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, scale);
         dst.w = GBA_SCREEN_W * scale;
         dst.h = GBA_SCREEN_H * scale;
         dst.x = (float)(int)((outW - dst.w) / 2);

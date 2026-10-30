@@ -102,6 +102,7 @@ enum {
     ITEM_CRT_OUTPUT, /* the CRT view's output (#202), only in that view */
     ITEM_ASPECT,
     ITEM_ZOOM,
+    ITEM_SCENE_FRAMING,
     ITEM_INTZOOM,
     ITEM_SCALE,
     ITEM_HUD,
@@ -408,6 +409,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "CRT output", "Sortie CRT", "CRT-Ausgabe", "Uscita CRT", "Salida CRT", "CRTしゅつりょく" },
     { "Aspect ratio", "Format d'image", "Seitenverhältnis", "Proporzioni", "Relación de aspecto", "画面の形" },
     { "Zoom", "Zoom", "Zoom", "Zoom", "Zoom", "ズーム" },
+    { "Scene framing", "Cadrage des scènes", "Szenenausschnitt", "Inquadratura scene", "Encuadre de escenas", "シーンの表示" },
     { "Integer scales only", "Échelles entières seules", "Nur ganze Pixelskalen", "Solo scale intere", "Solo escalas enteras", "せいすうスケールのみ" },
     { "Scaling", "Mise à l'échelle", "Skalierung", "Scala", "Escalado", "スケール" },
     { "HUD size", "Taille du HUD", "HUD-Größe", "Dimensione HUD", "Tamaño del HUD", "HUDサイズ" },
@@ -759,6 +761,18 @@ static const char* const sHudSizes[3][LANG_COUNT] = {
     { "Original", "Original", "Original", "Originale", "Original", "オリジナル" },
     { "Large", "Grand", "Groß", "Grande", "Grande", "おおきい" },
     { "Larger", "Plus grand", "Größer", "Più grande", "Más grande", "もっとおおきい" },
+};
+static const char* const sSceneFraming[2][LANG_COUNT] = {
+    { "Adjusted", "Ajusté", "Angepasst", "Adattato", "Ajuste", "調整" },
+    { "Extended", "Étendu", "Erweitert", "Esteso", "Extendido", "拡張" },
+};
+static const char* const sSceneFramingNote[LANG_COUNT] = {
+    "Adjusted uses framing close to the original. Extended is experimental: some scenery edges are still in development.",
+    "Ajusté utilise un cadrage proche de l'original. Étendu est expérimental : certains bords du décor sont encore en développement.",
+    "Angepasst nutzt einen originalnahen Ausschnitt. Erweitert ist experimentell: Einige Randbereiche sind noch in Arbeit.",
+    "Adattato usa un'inquadratura vicina all'originale. Esteso è sperimentale: alcuni bordi dello scenario sono ancora in sviluppo.",
+    "Ajuste usa un encuadre cercano al original. Extendido es experimental: algunos márgenes del escenario siguen en desarrollo.",
+    "調整は原作に近い画角です。拡張は実験的な表示で、背景の端の一部はまだ制作中です。",
 };
 static const char* const sAspect[PORT_ASPECT_COUNT][LANG_COUNT] = {
     { "Fill window", "Remplir la fenêtre", "Fenster füllen", "Riempi finestra", "Llenar ventana", "ウィンドウに合わせる" },
@@ -1265,6 +1279,7 @@ static int ItemEnabled(int item) {
         case ITEM_CHEAT_JOURNAL: return PortCheatActionsAvailable();
         case ITEM_BATTLE_ZOOM:
         case ITEM_ZOOM:
+        case ITEM_SCENE_FRAMING:
         case ITEM_INTZOOM:
             return gPortConfig.viewMode == PORT_VIEW_AUTO;
         case ITEM_SCALE:
@@ -1317,6 +1332,9 @@ static void ValueText(int item, char* out, size_t size) {
             break;
         case ITEM_HUD:
             SDL_strlcpy(out, sHudSizes[SDL_clamp(gPortConfig.hudSize, 0, 2)][l], size);
+            break;
+        case ITEM_SCENE_FRAMING:
+            SDL_strlcpy(out, sSceneFraming[gPortSceneFraming != 0][l], size);
             break;
         case ITEM_ASPECT:
             SDL_strlcpy(out, sAspect[SDL_clamp(gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1)][l], size);
@@ -1637,6 +1655,9 @@ static void Change(int item, int dir) {
             break;
         case ITEM_ZOOM:
             gPortConfig.zoom = PortConfigZoomNext(gPortConfig.zoom, dir);
+            break;
+        case ITEM_SCENE_FRAMING:
+            gPortSceneFraming = !gPortSceneFraming;
             break;
         case ITEM_INTZOOM:
             gPortConfig.integerZoom = !gPortConfig.integerZoom;
@@ -4698,6 +4719,8 @@ static void DrawMenu(int l, int width, int height) {
         DrawNeedNote(sBankNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HD_SCENES && selY >= 0)
         DrawNeedNote(sScenesNote[l], width, height, barX + barW + 8, selY);
+    else if (sPage == PAGE_MAIN && sCursor == ITEM_SCENE_FRAMING && selY >= 0)
+        DrawNeedNote(sSceneFramingNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HDTEXT && gPortConfig.hdText && selY >= 0)
         DrawNeedNote(sFontNote[l], width, height, barX + barW + 8, selY);
     if (sPage == PAGE_MAIN && (sCursor == ITEM_ZOOM || sCursor == ITEM_BATTLE_ZOOM) &&

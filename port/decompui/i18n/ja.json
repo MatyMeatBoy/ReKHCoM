@@ -395,5 +395,9 @@
  "steam_api.dll is missing next to the game.": "steam_api.dllがゲームの隣にありません。",
  "tracks": "トラック",
  "ReKHCoM server - Beta": "ReKHCoMサーバー - ベータ",
- "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.": "ベータ版：Steam不要のオリジナル対戦用ルームです。ゲーム内の通信対戦を開いてください。"
+ "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.": "ベータ版：Steam不要のオリジナル対戦用ルームです。ゲーム内の通信対戦を開いてください。",
+ "Adjusted": "調整",
+ "Extended (experimental)": "拡張（実験的）",
+ "Scene framing": "シーンの表示",
+ "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.": "調整は原作に近い画角です。拡張はより広い背景を表示しますが、端の一部の絵はまだ制作中です。"
 }
