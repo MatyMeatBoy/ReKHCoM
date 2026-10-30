@@ -425,4 +425,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | scene-adjust-framing-v23 | Modo escenas Ajuste por defecto: encuadre entero equivalenteGBA, HUD independiente, excepcionesconhonores y Extendido experimental | integrado | codex-scene-adjust | https://github.com/MatyMeatBoy/ReKHCoM/pull/532 | Usuario30Oct aprobo explicitamente diseno escrito Ajuste/Extendido para implementarlo | 2026-10-30T16:48:13.193089+00:00 |
 | scene-framing-three-modes-v23 | Tercera opcion Plano original: encuadre cercano en todas las escenas, conserva Ajuste con honores y Extendido | pr_abierto | codex-scenes-three | https://github.com/MatyMeatBoy/ReKHCoM/pull/533 | Usuario aprobo explicitamente diseno escrito y solicito implementar las tres opciones | 2026-10-30T18:11:27.565129+00:00 |
 
-Integrador: libre
+Integrador: codex-scenes-three (ocupado; 2026-10-30T18:12:08.242085+00:00)
