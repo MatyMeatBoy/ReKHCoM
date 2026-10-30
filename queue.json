@@ -12350,10 +12350,10 @@
       "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T13:22:05.542238+00:00",
+      "updated_at": "2026-10-30T13:32:42.219022+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": null,
-      "approval": "Usuario30Oct exige full speed en ambos lados independiente del ping; rango actual ChileEspaña240ms; no basta conexión sin crash",
+      "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
       "reference": "Chat VPS30Oct: prueba smooth y criterio full speed",
       "evidence": [
         {
@@ -12365,13 +12365,18 @@
           "at": "2026-10-30T13:22:05.542238+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "Scope upgraded by user: rebuild complete modern online, no cable pacing/packet dependency; reference MH Rise feel, originalVS only. Modern direct-input/session/async bootstrap/rollback design written docs/superpowers/specs/2026-10-30-modern-online-vs-design.md, pending approval. No gameplay source modified. Existing regression grades old baseline RED59.470Hz. Cleanup worker removed only verified reconstructible duplicates140008656logicalbytes with manifest."
+        },
+        {
+          "at": "2026-10-30T13:32:42.219022+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Approved modern design; concrete inline plan docs/superpowers/plans/2026-10-30-modern-online-implementation.md. Start pure protocol/config compiled TDD; retain classic and protected assets. No other VPS services touched."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T13:22:05.542238+00:00",
+  "updated_at": "2026-10-30T13:32:42.219022+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
