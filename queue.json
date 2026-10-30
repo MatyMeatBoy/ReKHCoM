@@ -12544,13 +12544,8 @@
       "completed_at": "2026-10-30T18:13:49.057776+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-scenes-three",
-    "token": "7f3597962eff01a18afac2ef9b813ed53100a0bcce7c14a0",
-    "created_at": "2026-10-30T18:12:08.242085+00:00",
-    "updated_at": "2026-10-30T18:12:08.242085+00:00"
-  },
-  "updated_at": "2026-10-30T18:13:49.059294+00:00",
+  "integrator": null,
+  "updated_at": "2026-10-30T18:14:14.204025+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
