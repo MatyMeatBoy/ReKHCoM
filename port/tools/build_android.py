@@ -206,7 +206,7 @@ def main():
         f'distributionSha256Sum={sha}\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists\n')
     (stage/'settings.gradle').write_text("pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\ndependencyResolutionManagement { repositories { google(); mavenCentral() } }\nrootProject.name='ReKHCoM'\ninclude ':app'\n")
     (stage/'build.gradle').write_text("plugins { id 'com.android.application' version '8.7.3' apply false }\n")
-    (stage/'gradle.properties').write_text('org.gradle.jvmargs=-Xmx1536m -Dfile.encoding=UTF-8\norg.gradle.workers.max=2\norg.gradle.daemon=false\n')
+    (stage/'gradle.properties').write_text(f"org.gradle.jvmargs=-Xmx{os.environ.get('REKHCOM_GRADLE_HEAP', '1536m')} -Dfile.encoding=UTF-8\norg.gradle.workers.max={args.jobs}\norg.gradle.daemon=false\n")
     (stage/'local.properties').write_text('sdk.dir='+str(sdk).replace('\\','/')+'\nndk.dir='+str(ndk).replace('\\','/')+'\n')
     (stage/'app/build.gradle').write_text("""plugins { id 'com.android.application' }
 android {
@@ -263,7 +263,7 @@ android {
     for name in ['FTL.TXT','GPLv2.TXT']:
         shutil.copy2(ROOT.parent/'toolchain/freetype-2.14.3/docs'/name,notices/('FreeType-'+name))
     for source,name in [(sdl/'LICENSE.txt','SDL3.txt'),(ROOT/'LICENSE.md','ReKHCoM.md'),(ROOT/'port/android/assets/NOTICE.md','touch.md')]:shutil.copy2(source,notices/name)
-    run([stage/'gradlew.bat','--no-daemon','--max-workers=2','clean','assembleDebug'],cwd=stage)
+    run([stage/'gradlew.bat','--no-daemon',f'--max-workers={args.jobs}','clean','assembleDebug'],cwd=stage)
     apk=stage/'app/build/outputs/apk/debug/app-debug.apk'
     import zipfile
     with zipfile.ZipFile(apk) as z:

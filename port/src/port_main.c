@@ -1849,7 +1849,7 @@ static void Present(void) {
     /* movies shown cropped: the skip prompt is drawn after the movie, on its
        own, so it neither grows with the video nor shifts the crop */
     moviePrompt = sSideStyle == 10 && sFitScale <= 0 && !menuCanvas && !gPortScreen.wide
-                  && gPortConfig.narrowFit && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H);
+                  && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H);
     PortUiSkipOwnLayer(moviePrompt);
     /* Menus and paused frames require an independent presentation buffer. */
     {
@@ -1881,7 +1881,7 @@ static void Present(void) {
         outW = area.w;
         outH = area.h;
     }
-    if ((sFitScale > 0 || (!gPortScreen.wide && gPortConfig.narrowFit)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
+    if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
         && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
         /* Scene without a wide view: show the GBA picture at full height
            (bars only at the sides), sampled with the pixel-art filter. */

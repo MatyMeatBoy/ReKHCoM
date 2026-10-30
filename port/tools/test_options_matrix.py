@@ -19,7 +19,7 @@ from test_text_options import item_numbers
 ROOT = Path(__file__).resolve().parents[2]
 SETTINGS = {
     'DODGE': 'dodge_button', 'STOCK': 'stock_button', 'INVERT_CARD_SCROLL': 'invert_card_scroll',
-    'CRT_OUTPUT': 'crt_output', 'ASPECT': 'aspect', 'ZOOM': 'zoom', 'HUD': 'hud_size', 'NARROW': 'narrow_fit',
+    'CRT_OUTPUT': 'crt_output', 'ASPECT': 'aspect', 'ZOOM': 'zoom', 'HUD': 'hud_size',
     'FULLSCREEN': 'fullscreen', 'VSYNC': 'vsync', 'SCANLINES': 'scanlines', 'LCD': 'color_correction',
     'GBA_BORDER': 'gba_border', 'FPS': 'show_fps', 'MASTER': 'master_volume', 'MUSIC': 'music_volume', 'SFX': 'sfx_volume',
     'UNDUB': 'undub', 'DISCORD': 'discord_presence', 'HDTEXT': 'hd_text', 'HD_MOVIES': 'hd_movies',
