@@ -399,5 +399,6 @@
  "Adjusted": "Adattato",
  "Extended (experimental)": "Esteso (sperimentale)",
  "Scene framing": "Inquadratura scene",
- "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.": "Adattato usa un'inquadratura vicina all'originale. Esteso mostra più scenario; alcune illustrazioni ai bordi sono ancora in sviluppo."
+ "Adjusted preserves your zoom in honors-approved scenes. Original shot uses close framing in every scene. Extended uses your zoom everywhere; some scenery edges are still in development.": "Adattato conserva lo zoom scelto nelle scene approvate con lode. Inquadratura originale avvicina tutte le scene. Esteso usa lo zoom scelto ovunque; alcuni bordi sono ancora in sviluppo.",
+ "Original shot": "Inquadratura originale"
 }

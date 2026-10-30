@@ -48,6 +48,9 @@ int main(void){
     gCurrentMode=&gModeEventDebug;UpdateResolution();CHECK(sAutoScale==6&&gPortSceneCameraAdjusted);
     gCurrentMode=&gModeEvent;
     event=121;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&sAutoScale==4&&gPortHudScale==0);
+    gPortSceneFraming=2;UpdateResolution();CHECK(gPortSceneCameraAdjusted&&sAutoScale==6&&sOverlayScale==4);
+    gCurrentMode=&field;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&sAutoScale==4);
+    gCurrentMode=&gModeEvent;
     event=7;gPortSceneFraming=1;UpdateResolution();CHECK(sAutoScale==4&&!gPortSceneCameraAdjusted);
     gPortSceneFraming=0;gCurrentMode=&field;UpdateResolution();CHECK(sAutoScale==4&&!gPortSceneCameraAdjusted);
     gCurrentMode=&gModeBattle;UpdateResolution();CHECK(sAutoScale==4&&!gPortSceneCameraAdjusted);

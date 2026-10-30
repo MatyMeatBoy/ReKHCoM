@@ -399,5 +399,6 @@
  "Adjusted": "Ajusté",
  "Extended (experimental)": "Étendu (expérimental)",
  "Scene framing": "Cadrage des scènes",
- "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.": "Ajusté utilise un cadrage proche de l'original. Étendu montre davantage de décor ; certaines illustrations sur les bords sont encore en développement."
+ "Adjusted preserves your zoom in honors-approved scenes. Original shot uses close framing in every scene. Extended uses your zoom everywhere; some scenery edges are still in development.": "Ajusté conserve le zoom choisi pour les scènes validées avec les honneurs. Plan original rapproche toutes les scènes. Étendu utilise votre zoom partout ; certains bords sont encore en développement.",
+ "Original shot": "Plan original"
 }

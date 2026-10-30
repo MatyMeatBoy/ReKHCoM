@@ -399,5 +399,6 @@
  "Adjusted": "Angepasst",
  "Extended (experimental)": "Erweitert (experimentell)",
  "Scene framing": "Szenenausschnitt",
- "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.": "Angepasst nutzt einen originalnahen Ausschnitt. Erweitert zeigt mehr Umgebung; einige Randgrafiken sind noch in Arbeit."
+ "Adjusted preserves your zoom in honors-approved scenes. Original shot uses close framing in every scene. Extended uses your zoom everywhere; some scenery edges are still in development.": "Angepasst behält den gewählten Zoom bei Szenen mit Auszeichnung. Originalausschnitt zeigt alle Szenen nah. Erweitert nutzt überall Ihren Zoom; einige Ränder sind noch in Arbeit.",
+ "Original shot": "Originalausschnitt"
 }

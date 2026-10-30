@@ -103,7 +103,7 @@ static const Key sKeys[] = {
     { "view_mode", &gPortConfig.viewMode, 0, PORT_VIEW_COUNT - 1 },
     { "crt_output", &gPortConfig.crtOutput, 0, 3 },
     { "zoom", &gPortConfig.zoom, 0, PORT_ZOOM_LEVELS },
-    { "scene_framing", &gPortSceneFraming, 0, 1 },
+    { "scene_framing", &gPortSceneFraming, 0, 2 },
     { "experimental_battle_zoom", &gPortConfig.battleZoom, 0, PORT_ZOOM_LEVELS },
     { "cheat_unlock_riku", &gPortConfig.cheatUnlockRiku, 0, 1 },
     { "cheat_one_hit", &gPortConfig.cheatOneHit, 0, 1 },

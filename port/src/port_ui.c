@@ -762,17 +762,36 @@ static const char* const sHudSizes[3][LANG_COUNT] = {
     { "Large", "Grand", "Groß", "Grande", "Grande", "おおきい" },
     { "Larger", "Plus grand", "Größer", "Più grande", "Más grande", "もっとおおきい" },
 };
-static const char* const sSceneFraming[2][LANG_COUNT] = {
+static const char* const sSceneFraming[3][LANG_COUNT] = {
     { "Adjusted", "Ajusté", "Angepasst", "Adattato", "Ajuste", "調整" },
     { "Extended", "Étendu", "Erweitert", "Esteso", "Extendido", "拡張" },
+    { "Original shot", "Plan original", "Originalausschnitt", "Inquadratura originale", "Plano original", "原作の画角" },
 };
-static const char* const sSceneFramingNote[LANG_COUNT] = {
-    "Adjusted uses framing close to the original. Extended is experimental: some scenery edges are still in development.",
-    "Ajusté utilise un cadrage proche de l'original. Étendu est expérimental : certains bords du décor sont encore en développement.",
-    "Angepasst nutzt einen originalnahen Ausschnitt. Erweitert ist experimentell: Einige Randbereiche sind noch in Arbeit.",
-    "Adattato usa un'inquadratura vicina all'originale. Esteso è sperimentale: alcuni bordi dello scenario sono ancora in sviluppo.",
-    "Ajuste usa un encuadre cercano al original. Extendido es experimental: algunos márgenes del escenario siguen en desarrollo.",
-    "調整は原作に近い画角です。拡張は実験的な表示で、背景の端の一部はまだ制作中です。",
+static const char* const sSceneFramingNote[3][LANG_COUNT] = {
+    {
+        "Close framing; honors-approved scenes use your chosen zoom. Dialogue and HUD keep their own zoom.",
+        "Cadrage rapproché ; les scènes validées avec les honneurs utilisent le zoom choisi. Dialogues et interface gardent leur zoom.",
+        "Naher Ausschnitt; mit Auszeichnung freigegebene Szenen nutzen den gewählten Zoom. Dialoge und HUD behalten ihren Zoom.",
+        "Inquadratura ravvicinata; le scene approvate con lode usano lo zoom scelto. Dialoghi e HUD mantengono il proprio zoom.",
+        "Encuadre cercano; las escenas aprobadas con honores usan el zoom elegido. Diálogos y HUD conservan su propio zoom.",
+        "近い画角で表示し、特に高く評価された承認済みシーンは選択したズームを使います。会話とHUDのズームは変わりません。",
+    },
+    {
+        "Experimental: some scenery edges are still in development. Uses your chosen zoom in every scene.",
+        "Expérimental : certains bords du décor sont encore en développement. Toutes les scènes utilisent le zoom choisi.",
+        "Experimentell: Einige Randbereiche sind noch in Arbeit. Alle Szenen nutzen den gewählten Zoom.",
+        "Sperimentale: alcuni bordi dello scenario sono ancora in sviluppo. Tutte le scene usano lo zoom scelto.",
+        "Experimental: algunos márgenes del escenario siguen en desarrollo. Todas las escenas usan el zoom elegido.",
+        "実験的な表示です。背景の端の一部はまだ制作中です。すべてのシーンで選択したズームを使います。",
+    },
+    {
+        "Close framing in every scene, including honors-approved ones. Dialogue and HUD keep their own zoom.",
+        "Cadrage rapproché pour toutes les scènes, même celles validées avec les honneurs. Dialogues et interface gardent leur zoom.",
+        "Naher Ausschnitt in allen Szenen, auch bei Freigabe mit Auszeichnung. Dialoge und HUD behalten ihren Zoom.",
+        "Inquadratura ravvicinata per tutte le scene, anche quelle approvate con lode. Dialoghi e HUD mantengono il proprio zoom.",
+        "Encuadre cercano en todas las escenas, incluidas las aprobadas con honores. Diálogos y HUD conservan su propio zoom.",
+        "特に高く評価された承認済みシーンも含め、すべて近い画角で表示します。会話とHUDのズームは変わりません。",
+    },
 };
 static const char* const sAspect[PORT_ASPECT_COUNT][LANG_COUNT] = {
     { "Fill window", "Remplir la fenêtre", "Fenster füllen", "Riempi finestra", "Llenar ventana", "ウィンドウに合わせる" },
@@ -1334,7 +1353,7 @@ static void ValueText(int item, char* out, size_t size) {
             SDL_strlcpy(out, sHudSizes[SDL_clamp(gPortConfig.hudSize, 0, 2)][l], size);
             break;
         case ITEM_SCENE_FRAMING:
-            SDL_strlcpy(out, sSceneFraming[gPortSceneFraming != 0][l], size);
+            SDL_strlcpy(out, sSceneFraming[SDL_clamp(gPortSceneFraming, 0, 2)][l], size);
             break;
         case ITEM_ASPECT:
             SDL_strlcpy(out, sAspect[SDL_clamp(gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1)][l], size);
@@ -1657,7 +1676,7 @@ static void Change(int item, int dir) {
             gPortConfig.zoom = PortConfigZoomNext(gPortConfig.zoom, dir);
             break;
         case ITEM_SCENE_FRAMING:
-            gPortSceneFraming = !gPortSceneFraming;
+            gPortSceneFraming = Wrap(gPortSceneFraming + dir, 3);
             break;
         case ITEM_INTZOOM:
             gPortConfig.integerZoom = !gPortConfig.integerZoom;
@@ -4720,7 +4739,7 @@ static void DrawMenu(int l, int width, int height) {
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HD_SCENES && selY >= 0)
         DrawNeedNote(sScenesNote[l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_SCENE_FRAMING && selY >= 0)
-        DrawNeedNote(sSceneFramingNote[l], width, height, barX + barW + 8, selY);
+        DrawNeedNote(sSceneFramingNote[SDL_clamp(gPortSceneFraming, 0, 2)][l], width, height, barX + barW + 8, selY);
     else if (sPage == PAGE_MAIN && sCursor == ITEM_HDTEXT && gPortConfig.hdText && selY >= 0)
         DrawNeedNote(sFontNote[l], width, height, barX + barW + 8, selY);
     if (sPage == PAGE_MAIN && (sCursor == ITEM_ZOOM || sCursor == ITEM_BATTLE_ZOOM) &&
