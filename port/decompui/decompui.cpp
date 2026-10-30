@@ -52,6 +52,7 @@
 #include "../include/port/port_zoom.h"
 #include "runtime_selection.h"
 #include "netlink_preset.h"
+#include "../include/port/port_online_config.h"
 #include "../include/port/port_hd_media.h"
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -2160,6 +2161,21 @@ static void PageSound() {
    reads when the link starts: off, steam:host, steam:join, host:<port>, join:<ip>:<port> or
    relay:<server>:<port>:<CODE>:host|join (a relay by a room code, port/tools/netlink_relay.py: crossplay with Android). */
 static void NetlinkRows() {
+    static int engine = -1;
+    if (engine < 0) {
+        std::ifstream in(sRoot / "online-engine.cfg");
+        std::string line;
+        std::getline(in, line);
+        engine = PortOnlineParseEngine(line.c_str());
+    }
+    const char* const engines[] = { T("Clásico", "Classic"), T("Moderno (beta)", "Modern (beta)") };
+    if (CycleRow(T("Motor online", "Online engine"),
+                 T("Ambos jugadores deben elegir el mismo motor. Cambia entre clásico y moderno para comparar.",
+                   "Both players must select the same engine. Switch between classic and modern to compare."),
+                 engine, 2, engines)) {
+        std::ofstream out(sRoot / "online-engine.cfg", std::ios::trunc);
+        out << PortOnlineEngineName(engine) << "\n";
+    }
     static int mode = -1, port = 47777;
     static char ip[64] = "", room[17] = "", name[25] = "";
     static const char* const kSpecs[10] = { "off", "steam:host", "steam:join", "host", "join", "relay-host", "relay-join",

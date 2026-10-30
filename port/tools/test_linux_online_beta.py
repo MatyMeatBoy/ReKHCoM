@@ -10,6 +10,18 @@ SCRIPT = ROOT/'port/linux/launcher/rekhcom_launcher.py'
 
 
 class NativeOnline(unittest.TestCase):
+    def test_engine_toggle_preserves_endpoint(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            data = Path(temporary)
+            endpoint = data/'netlink.cfg'
+            endpoint.write_bytes(b'relay:custom:47801:ROOM:host\n')
+            for engine in ('modern', 'classic'):
+                result = subprocess.run([sys.executable, str(SCRIPT), '--data', str(data),
+                                         '--online-engine', engine], capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual((data/'online-engine.cfg').read_text(), engine+'\n')
+                self.assertEqual(endpoint.read_bytes(), b'relay:custom:47801:ROOM:host\n')
+
     def test_select_beta_disable_and_preserve_other_settings(self):
         with tempfile.TemporaryDirectory() as temporary:
             data = Path(temporary)
