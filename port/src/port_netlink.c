@@ -349,12 +349,14 @@ void PortNetlinkAnnounce(int version, int region, const char* name) {
 /* The lobby's list on a relay server: 'L' asked (the socket opened for it), 'R' read back (-1 while none came) */
 static NetAddr sLobbyServer;
 int PortNetlinkLobbyAsk(const char* server, int port, int version) {
-    uint8_t d[2] = { 'L', (uint8_t)version };
+    /* A public UDP response must not amplify a spoofed two-byte request.
+       Padding also caps the room list at this client's receive buffer size. */
+    uint8_t d[PORT_NETLINK_MAX] = { 'L', (uint8_t)version };
     if (!UdpReady() && !UdpOpen(0))
         return 0;
     if (!UdpResolve(server, port, &sLobbyServer))
         return 0;
-    UdpSend(&sLobbyServer, d, 2);
+    UdpSend(&sLobbyServer, d, sizeof(d));
     return 1;
 }
 

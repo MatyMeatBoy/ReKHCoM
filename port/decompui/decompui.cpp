@@ -51,6 +51,7 @@
 #define PORT_PAD_AXIS_BASE 100
 #include "../include/port/port_zoom.h"
 #include "runtime_selection.h"
+#include "netlink_preset.h"
 #include "../include/port/port_hd_media.h"
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -2161,14 +2162,15 @@ static void PageSound() {
 static void NetlinkRows() {
     static int mode = -1, port = 47777;
     static char ip[64] = "", room[17] = "", name[25] = "";
-    static const char* const kSpecs[9] = { "off", "steam:host", "steam:join", "host", "join", "relay-host", "relay-join",
-                                           "lobby:steam", "lobby-server" };
-    const char* const names[9] = { T("Desactivado (cable)", "Off (cable)"), T("Steam: crear sala", "Steam: open a room"),
+    static const char* const kSpecs[10] = { "off", "steam:host", "steam:join", "host", "join", "relay-host", "relay-join",
+                                           "lobby:steam", "lobby-server", kNetlinkBetaSpec };
+    const char* const names[10] = { T("Desactivado (cable)", "Off (cable)"), T("Steam: crear sala", "Steam: open a room"),
                                    T("Steam: unirse a un amigo", "Steam: join a friend"),
                                    T("IP: alojar", "IP: host"), T("IP: unirse", "IP: join"),
                                    T("Relay: crear sala", "Relay: open a room"), T("Relay: unirse a una sala", "Relay: join a room"),
                                    T("Salas en el juego (Steam)", "Rooms in the game (Steam)"),
-                                   T("Salas en el juego (servidor)", "Rooms in the game (server)") };
+                                   T("Salas en el juego (servidor)", "Rooms in the game (server)"),
+                                   T("Servidor ReKHCoM - Beta", "ReKHCoM server - Beta") };
     fs::path cfg = sRoot / "netlink.cfg";
     bool save = false;
     if (mode < 0) {
@@ -2179,7 +2181,9 @@ static void NetlinkRows() {
         for (int i = 1; i < 3; i++)
             if (line == kSpecs[i])
                 mode = i;
-        if (line == "lobby:steam" || line == "lobby")
+        if (line == kNetlinkBetaSpec)
+            mode = 9;
+        else if (line == "lobby:steam" || line == "lobby")
             mode = 7;
         else if (line.rfind("lobby:", 0) == 0) { /* lobby:<server>:<port> */
             size_t colon = line.rfind(':');
@@ -2229,7 +2233,13 @@ static void NetlinkRows() {
                        "Steam open; one opens a room and the other joins (a Steam friend's room first). IP: the host "
                        "opens the UDP port on the router; the other types the host's IP. Relay: both type the same server "
                        "and room code (Android too)."),
-                     mode, 9, names);
+                     mode, 10, names);
+    if (mode == 9) {
+        ImGui::PushFont(sFontSmall);
+        ImGui::TextWrapped("%s", T("Beta: salas del multijugador original, sin Steam. Entra a Batalla de enlace en el juego.",
+                                  "Beta: original multiplayer rooms, without Steam. Open Link battle in the game."));
+        ImGui::PopFont();
+    }
     if (mode == 4 || mode == 5 || mode == 6 || mode == 8) {
         ImGui::AlignTextToFramePadding();
         ImGui::TextUnformatted(mode >= 5 ? T("Servidor", "Server") : T("IP de quien aloja", "Host's IP"));
@@ -2237,7 +2247,7 @@ static void NetlinkRows() {
         ImGui::SetNextItemWidth(Px(220));
         save |= ImGui::InputText("##netlink_ip", ip, sizeof(ip));
     }
-    if (mode >= 3 && mode != 7) {
+    if (mode >= 3 && mode != 7 && mode != 9) {
         ImGui::AlignTextToFramePadding();
         ImGui::TextUnformatted(T("Puerto UDP", "UDP port"));
         ImGui::SameLine();
@@ -2245,7 +2255,7 @@ static void NetlinkRows() {
         save |= ImGui::InputInt("##netlink_port", &port, 0, 0);
         port = std::clamp(port, 1, 65535);
     }
-    if (mode == 8) { /* the name on the rooms this player opens (Steam shows its own) */
+    if (mode == 8 || mode == 9) { /* the name on the rooms this player opens (Steam shows its own) */
         ImGui::AlignTextToFramePadding();
         ImGui::TextUnformatted(T("Tu nombre", "Your name"));
         ImGui::SameLine();
@@ -2313,7 +2323,9 @@ static void NetlinkRows() {
     }
     if (save) {
         std::ofstream f(cfg, std::ios::trunc);
-        if (mode == 3)
+        if (mode == 9)
+            f << kNetlinkBetaSpec << "\n";
+        else if (mode == 3)
             f << "host:" << port << "\n";
         else if (mode == 4)
             f << "join:" << ip << ":" << port << "\n";

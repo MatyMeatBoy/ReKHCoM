@@ -393,5 +393,7 @@
  "pending": "保留中",
  "scenes": "シーン",
  "steam_api.dll is missing next to the game.": "steam_api.dllがゲームの隣にありません。",
- "tracks": "トラック"
+ "tracks": "トラック",
+ "ReKHCoM server - Beta": "ReKHCoMサーバー - ベータ",
+ "Beta: original multiplayer rooms, without Steam. Open Link battle in the game.": "ベータ版：Steam不要のオリジナル対戦用ルームです。ゲーム内の通信対戦を開いてください。"
 }
