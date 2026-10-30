@@ -8133,10 +8133,10 @@
     "scene-background-coverage-x3-integer2": {
       "id": "scene-background-coverage-x3-integer2",
       "piece": "Para mas tarde: auditar TODOSfondos de escenas hasta x3Integer2 con criterio nuevo, por tramo/zoom/camara/entrada/salida; añadir todoscasosreconocidos a colaAtlas conIDs+capturas, preservarzoomespeciallegitimo yHUDsegunzoomusuario. MonstroGeppetto/Pinocho ya reportados, no duplicartrabajo.",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-scene-inventory",
       "created_at": "2026-10-27T22:26:03.779081+00:00",
-      "updated_at": "2026-10-30T00:10:49.290678+00:00",
+      "updated_at": "2026-10-30T00:11:03.115913+00:00",
       "branch": "fix/atlas-coliseum-context-links",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/526",
       "approval": "Root integrator: human-authorized code review; fbb186b36b9fd116c921b3f7fb34fca9f328fadd",
@@ -8186,6 +8186,11 @@
           "at": "2026-10-30T00:10:49.290678+00:00",
           "owner": "codex-scene-inventory",
           "detail": "Reviewed 13-line diff; typed IDs exclude booleans/strings, statuses preserved; 10 tests PASS. Partial source indexing only."
+        },
+        {
+          "at": "2026-10-30T00:11:03.115913+00:00",
+          "owner": "codex-scene-inventory",
+          "detail": "Reviewed 13-line diff; typed IDs exclude booleans/strings, statuses preserved; 10 tests PASS. Partial source indexing only.; merged ec7c970be91b87fc1b506eff68e879ac19c5c0f3; PARTIAL BLOCK ONLY; task remains unfinished"
         }
       ],
       "claimed_at": "2026-10-29T23:03:43.709176+00:00"
@@ -12305,7 +12310,7 @@
     "created_at": "2026-10-30T00:10:54.173337+00:00",
     "updated_at": "2026-10-30T00:10:54.173337+00:00"
   },
-  "updated_at": "2026-10-30T00:10:54.173337+00:00",
+  "updated_at": "2026-10-30T00:11:03.115913+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
