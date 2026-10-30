@@ -12510,19 +12510,20 @@
     "scene-framing-three-modes-v23": {
       "id": "scene-framing-three-modes-v23",
       "piece": "Tercera opcion Plano original: encuadre cercano en todas las escenas, conserva Ajuste con honores y Extendido",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-scenes-three",
       "created_at": "2026-10-30T17:50:34.810597+00:00",
-      "updated_at": "2026-10-30T17:50:34.810597+00:00",
+      "updated_at": "2026-10-30T17:51:01.929403+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario30Oct propone tres combinaciones; diseno breve por revisar",
       "reference": "Continuacion PR532; usuario confirma Ajuste salvo honores y solicita Plano original para todas las escenas",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-30T17:51:01.929403+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T17:50:34.810597+00:00",
+  "updated_at": "2026-10-30T17:51:01.929403+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
