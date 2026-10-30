@@ -12562,10 +12562,23 @@
         }
       ],
       "claimed_at": "2026-10-30T18:50:33.425400+00:00"
+    },
+    "v23-release-scene-experimental": {
+      "id": "v23-release-scene-experimental",
+      "piece": "Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-30T19:10:23.196463+00:00",
+      "updated_at": "2026-10-30T19:10:23.196463+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3",
+      "reference": "Continuacion533; prelocal usuario revisada; no tocar releases inmutables ni instalaciones",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T18:55:29.742696+00:00",
+  "updated_at": "2026-10-30T19:10:23.196463+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
