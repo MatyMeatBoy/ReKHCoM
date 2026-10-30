@@ -12566,12 +12566,12 @@
     "v23-release-scene-experimental": {
       "id": "v23-release-scene-experimental",
       "piece": "Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-release23",
       "created_at": "2026-10-30T19:10:23.196463+00:00",
-      "updated_at": "2026-10-30T19:24:12.891244+00:00",
+      "updated_at": "2026-10-30T19:25:49.498324+00:00",
       "branch": "release/v2.3-scene-settings",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/534",
       "approval": "Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3",
       "reference": "Continuacion533; prelocal usuario revisada; no tocar releases inmutables ni instalaciones",
       "evidence": [
@@ -12579,13 +12579,18 @@
           "at": "2026-10-30T19:24:12.891244+00:00",
           "owner": "codex-release23",
           "detail": "359588214: retirednarrow0->1, reservedABIfield, runtimealwaysheight, scene movedintoExperimental native/launcher/web, version2.3 andchangelog. TestRED/GREEN32/64, native selector andlauncherPASS; QA32build57/57. Native captures active. Freshreadonlyreview nofindings. User explicitly added ALLconsoles andcleanupworktrees/projectafterverifiedrelease. Builderjobs1/VMenvlimits implemented; freeRAM1.68GiB so planned1GiBVM, CPU1 serial. No publicreleaseyet."
+        },
+        {
+          "at": "2026-10-30T19:25:49.498324+00:00",
+          "owner": "codex-release23",
+          "detail": "PR534 head359588214. All settings/code testsPASS, legacy0=1 nativepixelparity, SpanishExperimentalcapturefits. ReadonlyreviewPASS. Userauthorizedallplatforms andcleanupafterpublication. Releasebuilds/publishingNOTdone yet; claimmustremainactiveaftercodePRmerge."
         }
       ],
       "claimed_at": "2026-10-30T19:12:50.503981+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T19:24:12.891244+00:00",
+  "updated_at": "2026-10-30T19:25:49.498324+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
