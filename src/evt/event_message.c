@@ -6485,10 +6485,10 @@ static int MsgwinDockShift(void) {
     switch (gEventState->msgWinPosition) {
     case MSG_WIN_POSITION_TOP_FACE_RIGHT:
     case MSG_WIN_POSITION_BOTTOM_FACE_RIGHT:
-        return PortWideMarginX();
+        return PortSceneFramingActive() ? PortScreenMarginX() : PortWideMarginX();
     case MSG_WIN_POSITION_TOP_FACE_LEFT:
     case MSG_WIN_POSITION_BOTTOM_FACE_LEFT:
-        return -PortWideMarginX();
+        return -(PortSceneFramingActive() ? PortScreenMarginX() : PortWideMarginX());
     }
     return 0;
 }
@@ -6502,6 +6502,9 @@ static void msgwin_2(MsgWinWork* work) {
 
 #ifdef PLATFORM_PC
     /* Without a portrait the window is a centred box: nothing to dock. */
+    int screen = PortSceneFramingActive();
+    PortScreenBg(work->bg, screen);
+    if (screen) PortScreenBegin();
     gPortSpriteShiftX = entry->portraitId != PORTRAIT_NONE ? MsgwinDockShift() : 0;
     PortDockBg(work->bg, gPortSpriteShiftX);
 #endif
@@ -6513,12 +6516,14 @@ static void msgwin_2(MsgWinWork* work) {
 
     TaskPoolDraw(&work->tasks);
 #ifdef PLATFORM_PC
+    if (screen) PortScreenEnd();
     gPortSpriteShiftX = 0;
 #endif
 }
 
 static void msgwin_3(MsgWinWork* work) {
 #ifdef PLATFORM_PC
+    PortScreenBg(work->bg, FALSE);
     /* The layer keeps the parked window: still no world-map continuation. */
     PortDockBg(work->bg, 0);
 #endif

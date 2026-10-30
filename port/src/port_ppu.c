@@ -4078,7 +4078,7 @@ void PortPpuBeginFrame(void) {
                 sBgLatch[0].valid, sBgLatch[1].valid, sBgLatch[2].valid, sBgLatch[3].valid, sBgWorldLatched[0].valid,
                 sBgWorldLatched[1].valid, sBgWorldLatched[2].valid, sBgWorldLatched[3].valid, IO16(0x08), IO16(0x0A),
                 IO16(0x0C), IO16(0x0E), gPortScreen.wide, sSceneNarrow);
-    sHudLayer = gPortScreen.wide && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
+    sHudLayer = (gPortScreen.wide || gPortSceneCameraAdjusted) && gPortHudScale > 0 && gPortHudW >= GBA_SCREEN_W;
     sHudCanvasFallback = sHudLayer && !PortHudCanvasReady(gPortHudW, gPortHudH);
     if (sHudCanvasFallback) sHudLayer = 0;
     sHudFrameW = gPortHudW;
@@ -4107,7 +4107,7 @@ void PortPpuBeginFrame(void) {
            describe UI pages, not a world that should remain under the overlay. */
         sScreenBg[b] = sOverlay && !(sSpotlight && b == 0 && !(sScreenBgMask & 2u)) &&
             ((sScreenBgMask & (1u << b)) || sBgSplit[b] ||
-             (!sBgLatch[b].valid && !sBgWorldLatched[b].valid && !arena));
+             (!gPortSceneCameraAdjusted && !sBgLatch[b].valid && !sBgWorldLatched[b].valid && !arena));
     }
     if (sOverlay)
         memset(gPortOverlay, 0, (size_t)gPortOverlayW * GBA_SCREEN_H * 4);
@@ -4128,6 +4128,11 @@ void PortPpuBeginFrame(void) {
         sRight = GBA_SCREEN_W;
         sTop = 0;
         sBottom = GBA_SCREEN_H;
+        /* A narrow scene still has a full-width independent dialogue layer. */
+        if (gPortSceneCameraAdjusted && sOverlay) {
+            sLeft = -gPortScreen.originX;
+            sRight = gPortScreen.width - gPortScreen.originX;
+        }
     }
 }
 

@@ -462,7 +462,7 @@ static const Setting kSettings[] = {
     { "window_scale", 4 },   { "fullscreen_width", 0 }, { "fullscreen_height", 0 },
     { "master_volume", 100 }, { "music_volume", 100 }, { "sfx_volume", 100 },
     { "dodge_button", 1 },   { "stock_button", 1 }, { "pad_layout", 0 }, { "experimental_moogle_notice", 0 }, { "hd_text", 0 }, { "hd_font", 0 },
-    { "invert_card_scroll", 0 }, { "game_language", 0 }, { "experimental_battle_zoom", 0 },
+    { "invert_card_scroll", 0 }, { "game_language", 0 }, { "experimental_battle_zoom", 0 }, { "scene_framing", 0 },
     { "card_hud_raise", 8 }, { "crt_output", 0 }, { "save_bank", 1 }, { "hd2d", 0 }, { "smooth_audio", 0 }, { "experimental_unstock", 0 },
     { "ps2_mode", 0 }, { "ps2_difficulty", 0 }, { "ps2_fast_text", 0 }, { "hd_hud", 0 }, { "aspect", 0 }, { "integer_zoom", 0 },
     { "kb_a", SDLK_X },         { "kb_a_2", SDLK_K },       { "pad_a", SDL_GAMEPAD_BUTTON_SOUTH },
@@ -1872,6 +1872,14 @@ static bool ZoomRow(const char* label, const char* help, int& value, bool inheri
 
 /* A graphics mode's presets, as the game's PortApplyGraphicsMode (port_config.c): set here so that what the player
    changes afterwards in the launcher stays (the game applies a mode only when graphics_mode_applied differs). */
+static bool SceneFramingRow() {
+    const char* const choices[] = { T("Ajuste", "Adjusted"), T("Extendido (experimental)", "Extended (experimental)") };
+    return CycleRow(T("Encuadre de escenas", "Scene framing"),
+                    T("Ajuste usa un encuadre cercano al original. Extendido muestra más escenario; algunas ilustraciones de los márgenes aún están en desarrollo.",
+                      "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development."),
+                    Ini("scene_framing"), 2, choices);
+}
+
 static void ApplyGraphicsMode(int mode) {
     bool hd = mode == 1, classic = mode == 3;
     Ini("graphics_mode") = mode;
@@ -1954,6 +1962,7 @@ static void PageGraphics() {
                        T("Escala de píxeles: x4 amplía cada píxel cuatro veces. Menos aumento muestra más mundo y exige más al PC.",
                          "Pixel scale: x4 enlarges each pixel four times. Lower scales show more world and cost more CPU."),
                        Ini("zoom"), false);
+    changed |= SceneFramingRow();
     NextCard("picture", T("IMAGEN", "PICTURE"));
 #ifdef REKHCOM_SHOW_EXTRA_OPTIONS /* filter: an internal setting */
     changed |= CycleRow(T("Filtro", "Filter"), nullptr, Ini("filter"), 3, filters);

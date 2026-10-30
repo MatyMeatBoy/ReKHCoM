@@ -112,6 +112,14 @@
   "es": "Lo añade a tu biblioteca de Steam como juego externo, con su portada (para jugar con el mando de Steam o en Steam Deck / Big Picture)."
  },
  {
+  "en": "Adjusted",
+  "es": "Ajuste"
+ },
+ {
+  "en": "Adjusted uses framing close to the original. Extended shows more scenery; some artwork at the edges is still in development.",
+  "es": "Ajuste usa un encuadre cercano al original. Extendido muestra más escenario; algunas ilustraciones de los márgenes aún están en desarrollo."
+ },
+ {
   "en": "Advanced",
   "es": "Avanzado"
  },
@@ -478,6 +486,10 @@
  {
   "en": "Export save",
   "es": "Exportar partida"
+ },
+ {
+  "en": "Extended (experimental)",
+  "es": "Extendido (experimental)"
  },
  {
   "en": "Extended 320x180",
@@ -1322,6 +1334,10 @@
  {
   "en": "Saving",
   "es": "Ahorro"
+ },
+ {
+  "en": "Scene framing",
+  "es": "Encuadre de escenas"
  },
  {
   "en": "Scenes",
