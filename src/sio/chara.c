@@ -336,6 +336,12 @@ void task_chgCardObj_2() {
 void task_chgCardObj_3() {
 }
 
+#ifdef PLATFORM_PC
+#include "port/port_online.h"
+#include "port/port_netlink.h"
+#include "modern_inputs.inc"
+#endif
+
 u8 SioConnectUpdate() {
     u32* status;
 

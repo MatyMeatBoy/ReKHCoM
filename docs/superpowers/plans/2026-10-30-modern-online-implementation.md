@@ -71,6 +71,12 @@
 
 ## Ledger
 
+- Foundation commit6aca86db9: pure protocol, shared engine configuration, Windows launcher consumer, Linux CLI, transport bridge and profile/deck codecs. Compiled tests pass for240/300ms simulated latency/loss, immutable inputs, bounded history and explicit encodings. This is not gameplay integration or in-game fullspeed evidence.
+- Additional regression fixes pending next commit: reject future packets that would alias retained local ring entries; bound history by missing remote inputs as well as local ACKs; defer state-hash send/compare while a correction is pending. WindowsEU32 jobs1/BelowNormal foundation build started; no product-source edits during compilation.
+- Launcher room filters now distinguish classic3/modern4 for relay and Steam; Linux desktop menu includes both engine choices. No VPS edits or new package publication.
+- Remaining work is Tasks3/4 and actual Task5 game validation/video. The selector alone must not be presented as a working modern battle engine.
+- WindowsEU32 foundation build completed372/372, subsequent ninja reports no work. Added actual game-side direct-input bridge (compiled into chara.c but not yet routed from SioLinkUpdate) and tested immediate controls, immutable replay, role ordering and no replay network I/O. Production snapshot allocator now reserves64 for modern/32 for classic; compiled tests verify allocation failure and an out-of-history correction become explicit modern errors. Final incremental build in progress. The async preparation/barrier and routing remain unfinished; no new beta ZIP or in-game claim.
+
 - User explicitly approved new design and required a toggle for testing. Proceed inline without another approval question.
 - Baseline old motor at239ms:59.470Hz/99.569% speed, nine~33.485ms intervals in35s; original fullspeed report RED. 8400battle frames/60checks/0desync/0packet waits do not by themselves satisfy the new acceptance.
 - Cleanup worker removed only reconstructed duplicate binaries and an empty failed video,140008656logical bytes; manifests and original evidence retained. No implementation delegation.

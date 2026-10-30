@@ -71,7 +71,8 @@ typedef struct {
 #define CB_LOBBY_CREATED 513
 #define CB_CALL_COMPLETED 703
 #define CB_SESSION_REQUEST 1251
-#define PROTOCOL "link-3" /* the slots' rules (NET_VERSION in src/sio/sio.c): other versions never meet */
+#include "port/port_online.h"
+#define PROTOCOL (PortOnlineModern() ? "link-4" : "link-3")
 
 static struct {
     HMODULE dll;

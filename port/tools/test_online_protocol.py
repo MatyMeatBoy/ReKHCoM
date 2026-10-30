@@ -130,9 +130,25 @@ static int hostile_and_stale(void){
     p[0].localAck=256;assert(!ModernInput(&p[0],256,1,&a,&b));assert(p[0].error==MODERN_ERR_HISTORY);
     return 0;
 }
+static int pending_hash(void){
+    assert(connect_peers(120,0));
+    ModernStartInputs(&p[0],7,0);ModernStartInputs(&p[1],7,0);
+    uint16_t a,b;
+    assert(ModernInput(&p[0],0,1,&a,&b));assert(ModernInput(&p[1],0,2,&a,&b));
+    ModernSetHash(&p[0],1,111);ModernSetHash(&p[1],1,222);
+    for(unsigned t=0;t<2000;t++){now++;pump();}
+    /* Both hashes describe speculative state until the queued correction replays. */
+    assert(p[0].rollbackPending&&p[1].rollbackPending);
+    assert(!p[0].error&&!p[1].error&&p[0].checks==0&&p[1].checks==0);
+    uint32_t f;ModernTakeRollback(&p[0],&f);ModernTakeRollback(&p[1],&f);
+    ModernSetHash(&p[0],1,333);ModernSetHash(&p[1],1,333);
+    for(unsigned t=0;t<2000;t++){now++;pump();}
+    assert(!p[0].error&&!p[1].error&&p[0].checks==1&&p[1].checks==1);
+    return 0;
+}
 int main(void){
     if(inputs()||controls()||delayed_frames(240,0,0)||delayed_frames(300,11,0)||
-       delayed_frames(300,13,0xfffffff0)||malformed()||hashes()||hostile_and_stale())return 1;
+       delayed_frames(300,13,0xfffffff0)||malformed()||hashes()||hostile_and_stale()||pending_hash())return 1;
     puts("PASS modern core: direct/immutable input, earliest rollback, ordered reliable controls, bounded history, 240/300ms loss, frame wrap, malformed packets and confirmed hashes");
     return 0;
 }

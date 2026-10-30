@@ -133,6 +133,7 @@ static ModernHash* HashSlot(ModernPeer* p, uint32_t frame) {
 }
 
 static void CompareHashes(ModernPeer* p) {
+    if(p->rollbackPending)return; /* speculative snapshots must be corrected before validation */
     for(unsigned i=0;i<MODERN_HASH_SLOTS;i++) {
         ModernHash* h=&p->hashes[i];
         if(h->valid && h->localValid && h->remoteValid && !h->compared && Stable(p,h->frame)) {
@@ -272,7 +273,7 @@ void ModernPump(ModernPeer* p, uint32_t now, ModernSend send, void* context) {
         Send(p,MODERN_INPUT,0,data,at,send,context); p->inputPacketSent=1;
         p->inputSent=p->made; p->inputAckSent=p->remoteNext; p->inputAt=now;
     }
-    if(p->inputsStarted && (!p->hashesSent || now-p->hashAt>=250)) {
+    if(p->inputsStarted && !p->rollbackPending && (!p->hashesSent || now-p->hashAt>=250)) {
         for(unsigned i=0;i<MODERN_HASH_SLOTS;i++) {
             ModernHash* h=&p->hashes[i];
             if(h->valid && h->localValid && Stable(p,h->frame)) {
