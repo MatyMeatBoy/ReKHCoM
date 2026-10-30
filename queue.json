@@ -12302,10 +12302,23 @@
       "approval": null,
       "reference": "Latest human report in root chat; no screenshot needed to start, existing synthesis/tutorial harness and full915import available",
       "evidence": []
+    },
+    "rekhcom-vps-online-beta": {
+      "id": "rekhcom-vps-online-beta",
+      "piece": "Online original beta por relay VPS y selector launcher",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-10-30T12:06:13.178841+00:00",
+      "updated_at": "2026-10-30T12:06:13.178841+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 30/10 solicita segunda opcion online beta, acepta relay; solo modo original, coop futuro; solo animaciones-evi/recomp-games",
+      "reference": "Chat VPS animaciones-evi 30/10/2026",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T00:11:07.644043+00:00",
+  "updated_at": "2026-10-30T12:06:13.178841+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
