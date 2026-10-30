@@ -5,7 +5,8 @@ Only Auto-view engine scenes use its whole-pixel camera: 1080p gives x6,
 720p x4. The complete native240x160 picture remains visible. Dialogue and
 HUD retain the user's independent scale; tall-fit dialogue keeps its floating
 scale. Extendido preserves the existing camera, with an experimental notice
-because some outer artwork remains unfinished. Both launcher and game expose
+because some outer artwork remains unfinished. Plano original forces the close
+camera in every engine scene, including honors-approved ones. Both launcher and game expose
 this setting in six languages. The config struct/host ABI does not grow.
 
 Original/CRT, field, battle, movies and the saved general zoom are unchanged.
@@ -74,3 +75,29 @@ Final run11 passes exact physical world parity at odd1281x721 between UIx1
 (padding1282, beyond the512 sprite span) and UIx4. run12 passes narrow-frame
 presentation with the complete left Yuffie portrait visually inspected, plus
 Original Ajuste/Extendido exact output parity. All QA processes have exited.
+
+## Three choices follow-up (30 October)
+
+Values0/1 preserve existing Ajuste/Extendido configurations. Newvalue2 is Plano
+original: it bypasses honors exceptions and always uses the close scene camera.
+Missing keys still default to0. Both selectors offer three choices; native
+left/right navigation wraps all three. Each native mode has its own explanatory
+note in six languages, including Extendido's unfinished-edge warning.
+
+Actual consumer regressions observed RED before implementation and GREEN after:
+policy/config/presenter and native selector on32/64; launcher row wiring on64.
+Original config, gameplay and camera/UI compositor are unchanged. Exact honors
+admission fingerprints are unchanged. A read-only fresh review found no product
+defect. EU32 game and launcher build6/6 passed.
+
+pruebas/scene-three-modes-v23/run-01-native32 confirms at frame900:
+- honors121 Ajuste and Extendido are pixel-identical;
+- honors121 Plano original is close and retains the exact dialogue crop/full
+  portrait, visually inspected;
+- ordinary007 Ajuste and Plano original are pixel-identical;
+- Spanish native options show Plano original and its complete explanation
+  without clipping or control overlap.
+
+Windows64 full guest/host build passes ABI/boot checks. run02 native64 forces
+Plano original on honors121 and matches the final32 output pixel-for-pixel,
+including the portrait and dialogue. EU32d20d7cee / hostcd766e2b / guest31456aae. No new release is published, and no official RA integration is changed.

@@ -25,19 +25,39 @@ VPS/ERP/other projects untouched; no desktop control.
 
 ## Task1: policy, persistence and selectors
 
-- [ ] Extend failing tests in test_scene_framing.py, test_scene_presenter.py,
+- [x] Extend failing tests in test_scene_framing.py, test_scene_presenter.py,
   test_scene_launcher.py and add actual native switch consumer coverage.
-- [ ] Run RED for value2, honors bypass, persistence and selector reachability.
-- [ ] Update scene_framing.h, port_config.c, port_ui.c, decompui.cpp and i18n
+- [x] Run RED for value2, honors bypass, persistence and selector reachability.
+- [x] Update scene_framing.h, port_config.c, port_ui.c, decompui.cpp and i18n
   source/table. No renderer/art input changes or new approval pins required.
-- [ ] Run policy/config/presenter/launcher/native-selector consumers GREEN.
-- [ ] Commit the tested change.
+- [x] Run policy/config/presenter/launcher/native-selector consumers GREEN.
+- [x] Commit the tested change.
 
 ## Task2: native evidence and integration
 
-- [ ] Build EU32/launcher jobs1 and Windows64 guest/host with ABI checks.
-- [ ] Capture honors121 across three modes: Ajuste=Extendido, Plano original
+- [x] Build EU32/launcher jobs1 and Windows64 guest/host with ABI checks.
+- [x] Capture honors121 across three modes: Ajuste=Extendido, Plano original
   close. Capture ordinary007: Ajuste=Plano original, full portrait intact.
-- [ ] Capture native options third value and verify notice/label fit.
+- [x] Capture native options third value and verify notice/label fit.
 - [ ] Read-only review, address findings, update progress/queue and open PR.
 - [ ] Integrate under queue lock after checks; retain useful QA evidence.
+
+## Ledger
+
+- RED retained for policy2, presenter honors2, launcher count3 and native selector.
+  Initial native test extraction crossed a shared case label; tightened to exact
+  immediate consumer lines, then observed actual two-row failure.
+- GREEN policy/config/presenter/native selector on32/64, launcher64, grants
+  unchanged. EU32 game+launcher build6/6 passes, jobs1/BelowNormal.
+- One read-only fresh reviewer found no product defects. Launcher test claim
+  clarified: it tests three-choice row wiring, native selector proves wrapping.
+- Native32 captures active; no desktop interaction and no official RA activity.
+
+- run01 native32 six cases all exit0: honors121 Ajuste=Extendido, forcedclose2
+  differs; ordinary007 Ajuste=Plano original exactly; honors text crop unchanged.
+  Phil portrait complete visually; Spanish selector/help fit without overlap.
+- Windows64 build started only after native32 finished; jobs1/BelowNormal.
+
+- run02 native64 all exit0: forced close honors121 output exactly matches
+  native32, including portrait/dialogue. Guest+host ABI/boot tests pass.
+  Final launcher consumer GREEN; Ninja no-work. Reviewer found no defects.
