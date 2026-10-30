@@ -254,6 +254,8 @@ def main():
     parser.add_argument("--version", default="eu", choices=list(baserom.versions()))
     parser.add_argument('--ensure', action='store_true', help='Reuse generated assets and upgrade pinned declarations')
     args = parser.parse_args()
+    from gen_scene_framing import generate
+    generate(ROOT, ROOT / "build" / args.version / "gen/scene_framing_grants.h")
     if args.ensure and refresh_generated_alignment(args.version):
         return 0
     _source, rom = baserom.load(args.version)

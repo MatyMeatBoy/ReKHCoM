@@ -129,6 +129,12 @@ def main():
         n.rule("copy", 'cmd /c copy /y "$in_win" "$out_win" >nul', description="COPY $out")
         n.newline()
 
+        from gen_scene_framing import inputs as scene_inputs, MANIFEST as scene_manifest
+        n.rule("scene_grants", '"' + sys.executable.replace('\\', '/') +
+               '" port/tools/gen_scene_framing.py --out "$out"', description="SCENE APPROVALS $out", restat=True)
+        n.build(rel(GEN / "scene_framing_grants.h"), "scene_grants",
+                implicit=[scene_manifest, "port/tools/gen_scene_framing.py"] + scene_inputs(ROOT))
+
         objs = []
         ra_objs = []
         ra_root = ROOT / "port/third_party/rcheevos/src"
@@ -147,7 +153,7 @@ def main():
             objs.append(obj)
         for src in sorted((ROOT / "port" / "src").glob("*.c")):
             obj = f"$builddir/port/{src.stem}.o"
-            n.build(obj, "cc_port", rel(src))
+            n.build(obj, "cc_port", rel(src), order_only=[rel(GEN / "scene_framing_grants.h")])
             objs.append(obj)
         n.build("$builddir/port/rom_relocs.o", "cc_port", rel(PC_GEN / "rom_relocs.c"))
         objs.append("$builddir/port/rom_relocs.o")

@@ -1,4 +1,5 @@
 """Execute the production presenter resolution consumer without a GPU."""
+from gen_scene_framing import generate
 import argparse
 from pathlib import Path
 import subprocess
@@ -25,7 +26,7 @@ static struct {int width,height;} gPortScreen;
 static int outWidth=1920,outHeight=1080,menu,event=7,sRenderer;
 static int sAutoScale,sFit,gPortOverlayW,gPortHudScale,gPortHudW,gPortHudH,gPortWorldScale;
 static float sOverlayScale,sFitScale,gPortAutoScaleF;
-static int gPortSceneFraming,gPortSceneCameraAdjusted;
+static int gPortSceneFraming,gPortSceneCameraAdjusted,tall;
 static int PortEventId(void){return event;}
 static int PortUiMenuCanvas(void){return menu;}
 static int SDL_GetCurrentRenderOutputSize(int r,int*w,int*h){(void)r;*w=outWidth;*h=outHeight;return 1;}
@@ -33,7 +34,7 @@ static SDL_Rect AspectRect(int w,int h){SDL_Rect r={w,h};return r;}
 static void PortConfigView(int mode,int*w,int*h){(void)mode;*w=240;*h=160;}
 static float MenuScale(int w,int h){return SDL_min(h/160.0f,w/240.0f);}
 static void PortConfigAutoView(int W,int H,int battle,int*w,int*h,int*s){
-    (void)battle;*s=menu?3:gPortConfig.zoom/2;gPortAutoScaleF=(float)*s;*w=(W+*s-1)/ *s;*h=(H+*s-1)/ *s;
+    (void)battle;*s=menu?3:gPortConfig.zoom/2;gPortAutoScaleF=tall?40.0f/9.0f:(float)*s;*w=(W+*s-1)/ *s;*h=(H+*s-1)/ *s;
 }
 static void PortPpuSetResolution(int w,int h){gPortScreen.width=w;gPortScreen.height=h;}
 #define CHECK(x) do{if(!(x)){fprintf(stderr,"line%d: %s\n",__LINE__,#x);return 1;}}while(0)
@@ -55,8 +56,10 @@ int main(void){
     sFit=0;outWidth=1280;outHeight=720;gPortConfig.zoom=4;UpdateResolution();
     CHECK(sAutoScale==4&&gPortHudScale==2&&gPortHudH==360);
     gPortConfig.hudSize=1;UpdateResolution();CHECK(gPortHudScale==3);
-    gPortConfig.viewMode=1;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&gPortHudScale==0&&sAutoScale==0);
-    gPortConfig.viewMode=0;event=-1;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&sAutoScale==2);
+    outHeight=800;gPortConfig.zoom=8;tall=1;UpdateResolution();
+    CHECK(sAutoScale==5&&fabsf(sOverlayScale-40.0f/9.0f)<0.001f);
+    tall=0;gPortConfig.viewMode=1;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&gPortHudScale==0&&sAutoScale==0);
+    gPortConfig.viewMode=0;event=-1;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&sAutoScale==4);
     puts("PASS production presenter: camera/UI independence, honors/extended, narrow scene, resize, battle/menu/Original isolation");
     return 0;
 }
@@ -69,7 +72,8 @@ def main():
     helper=source.find('int PortSceneFramingActive(void) {')
     if helper>=0:function=source[helper:source.index('\n}\n',helper)+3]+'\n'+function
     with tempfile.TemporaryDirectory(prefix='scene-presenter-') as tmp:
+        generate(ROOT,Path(tmp)/'scene_framing_grants.h')
         src,exe=Path(tmp)/'test.c',Path(tmp)/'test.exe';src.write_text(CODE.replace('/* PRODUCTION */',function))
-        subprocess.run([a.cc,'-std=c99','-static','-I',str(ROOT/'port/include'),str(src),'-o',str(exe)],check=True)
+        subprocess.run([a.cc,'-std=c99','-static','-I',tmp,'-I',str(ROOT/'port/include'),str(src),'-o',str(exe)],check=True)
         subprocess.run([str(exe)],check=True)
 if __name__=='__main__':main()

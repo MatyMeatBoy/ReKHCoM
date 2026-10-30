@@ -435,6 +435,7 @@ int PortSceneFramingActive(void) {
 static void UpdateResolution(void) {
     int outW, outH, w, h;
     int sceneScale = 0, hudBase = 0;
+    float dialogueBase = 0;
 
     gPortSceneCameraAdjusted = 0;
 
@@ -452,6 +453,7 @@ static void UpdateResolution(void) {
         PortConfigAutoView(outW, outH, gCurrentMode == &gModeBattle || gCurrentMode == &gModeVsbattle,
                            &w, &h, &sAutoScale);
         hudBase = sAutoScale;
+        dialogueBase = gPortAutoScaleF;
         if (!PortUiMenuCanvas() && PortSceneFramingActive()) {
             sceneScale = PortSceneFramingScale(outW, outH);
             sAutoScale = sceneScale;
@@ -465,7 +467,7 @@ static void UpdateResolution(void) {
     gPortOverlayW = GBA_SCREEN_W;
     sOverlayScale = 0;
     if (gPortConfig.viewMode == PORT_VIEW_AUTO) {
-        float f = sceneScale > 0 ? (float)hudBase : MenuScale(outW, outH);
+        float f = sceneScale > 0 ? dialogueBase : MenuScale(outW, outH);
         gPortOverlayW = SDL_max(GBA_SCREEN_W, SDL_min((int)SDL_ceilf(outW / f), PORT_MAX_W));
         /* an even margin on both sides: with an odd width the menus' side
            margin ((width - 240) / 2) left the last column on the right

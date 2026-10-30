@@ -1,4 +1,5 @@
 """Compile the actual scene camera policy and INI consumer."""
+from gen_scene_framing import generate
 import argparse
 import json
 from pathlib import Path
@@ -52,9 +53,9 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cc',required=True);ap.add_argument('--sdl',type=Path,required=True);a=ap.parse_args()
     arch='i686-w64-mingw32' if 'i686' in a.cc else 'x86_64-w64-mingw32';sdl=a.sdl/arch
     with tempfile.TemporaryDirectory(prefix='scene-framing-') as temporary:
-        work=Path(temporary);src,exe=work/'test.c',work/'test.exe';src.write_text(CODE)
+        work=Path(temporary);generate(ROOT,work/'scene_framing_grants.h');src,exe=work/'test.c',work/'test.exe';src.write_text(CODE)
         shutil.copy2(sdl/'bin/SDL3.dll',work/'SDL3.dll')
-        subprocess.run([a.cc,'-std=gnu11','-I'+str(ROOT/'port/include'),'-I'+str(sdl/'include'),str(src),
+        subprocess.run([a.cc,'-std=gnu11','-I'+str(work),'-I'+str(ROOT/'port/include'),'-I'+str(sdl/'include'),str(src),
                         str(ROOT/'port/src/port_config.c'),'-L'+str(sdl/'lib'),'-lSDL3','-o',str(exe)],check=True)
         r=subprocess.run([str(exe)],cwd=work,capture_output=True,text=True);print(r.stdout,end='');print(r.stderr,end='');r.check_returncode()
         manifest=json.loads((ROOT/'port/progress/SCENE_FRAMING_HONORS.json').read_text())

@@ -3,13 +3,13 @@
 
 enum { PORT_SCENE_ADJUST = 0, PORT_SCENE_EXTENDED = 1 };
 
-/* Exact events admitted from current build_version honors records.
-   See port/progress/SCENE_FRAMING_HONORS.json. Shared-map variants and later
-   revisions do not inherit admission; review the manifest when replacing art. */
+#include "scene_framing_grants.h"
+
+/* Generated from version-bound approval records and actual renderer/art inputs.
+   A changed revision or recipe loses admission until explicitly reviewed. */
 static inline int PortSceneFramingHonors(int event) {
     switch (event) {
-        case 4: case 8: case 53: case 54: case 55:
-        case 74: case 102: case 109: case 121: case 122:
+        PORT_SCENE_HONORS_CASES
             return 1;
         default: return 0;
     }
