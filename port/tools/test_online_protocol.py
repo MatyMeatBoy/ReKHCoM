@@ -15,12 +15,16 @@ CODE=r'''
 #define assert(x) do { if(!(x)){fprintf(stderr,"line%d: %s\n",__LINE__,#x);return 1;} }while(0)
 typedef struct {uint8_t data[512];size_t size;unsigned target;uint32_t due;} Packet;
 static ModernPeer p[2];static Packet packets[32768];static unsigned count,from;
-static uint32_t now,delay;static unsigned dropEvery,sent;
+static uint32_t now,delay;static unsigned dropEvery,sent,jitter,asymmetry,burst;
 static void send_packet(void*context,const uint8_t*data,size_t size){
     (void)context;
     if(size>512||count>=32768){fprintf(stderr,"unbounded packet\n");return;}
     sent++;if(dropEvery&&sent%dropEvery==0)return;
-    Packet*q=&packets[count++];memcpy(q->data,data,size);q->size=size;q->target=from^1;q->due=now+delay;
+    if(burst&&sent%200<40)return;
+    int transit=(int)delay+(from?(int)asymmetry:-(int)asymmetry);
+    if(jitter)transit+=(int)((sent*37u)%(jitter*2+1))-(int)jitter;
+    if(transit<0)transit=0;
+    Packet*q=&packets[count++];memcpy(q->data,data,size);q->size=size;q->target=from^1;q->due=now+(unsigned)transit;
 }
 static void pump(void){
     for(unsigned i=0;i<2;i++){from=i;ModernPump(&p[i],now,send_packet,0);}
@@ -30,7 +34,7 @@ static void pump(void){
     }
 }
 static int connect_peers(unsigned d,unsigned drops){
-    now=0;count=sent=0;delay=d;dropEvery=drops;
+    now=0;count=sent=jitter=asymmetry=burst=0;delay=d;dropEvery=drops;
     ModernInit(&p[0],0,0,0x123456789abcdef0ULL);ModernInit(&p[1],1,0,0);
     for(now=0;now<5000;now++)pump();
     return ModernConnected(&p[0])&&ModernConnected(&p[1]);
@@ -60,14 +64,16 @@ static int controls(void){
     assert(!ModernQueueControl(&p[0],2,0,0,401,0));
     return 0;
 }
-static int delayed_frames(unsigned rtt,unsigned drops,uint32_t base){
+static int delayed_frames(unsigned rtt,unsigned drops,uint32_t base,unsigned impaired){
     assert(connect_peers(rtt/2,drops));
+    if(impaired){jitter=35;asymmetry=75;burst=1;}
     ModernStartInputs(&p[0],3,base);ModernStartInputs(&p[1],3,base);
     for(uint32_t f=0;f<1200;f++){
         uint16_t a,b;
         assert(ModernInput(&p[0],base+f,(uint16_t)(f%1024),&a,&b));assert(a==(f%1024));
         assert(ModernInput(&p[1],base+f,(uint16_t)((f*7)%1024),&a,&b));assert(b==((f*7)%1024));
-        for(unsigned t=0;t<17;t++){now++;pump();}
+        if(impaired){now+=17;pump();} /* Real adapter is pumped at render-frame cadence. */
+        else for(unsigned t=0;t<17;t++){now++;pump();}
         uint32_t to;ModernTakeRollback(&p[0],&to);ModernTakeRollback(&p[1],&to);
         assert(!p[0].error&&!p[1].error);
     }
@@ -76,6 +82,20 @@ static int delayed_frames(unsigned rtt,unsigned drops,uint32_t base){
     assert(p[0].localAck==base+1200&&p[1].localAck==base+1200);
     assert(p[0].corrections&&p[1].corrections);
     return 0;
+}
+static int control_wrap(void){
+    assert(connect_peers(150,11));
+    const uint32_t first=0xfffffff0u;
+    p[0].txNext=p[1].rxNext=first;p[0].txAck=first-1;
+    for(unsigned i=0;i<32;i++){uint32_t sequence;uint8_t payload=(uint8_t)i;
+        assert(ModernQueueControl(&p[0],2,i,&payload,1,&sequence));assert(sequence==first+i);
+    }
+    unsigned got=0;ModernControl c;
+    for(unsigned t=0;t<15000;t+=17){now+=17;pump();
+        while(ModernReadControl(&p[1],&c)){assert(c.id==got&&c.sequence==first+got&&c.data[0]==got);got++;}
+    }
+    assert(got==32&&p[0].txCount==0&&ModernControlAcked(&p[0],first+31));
+    assert(!p[0].error&&!p[1].error);return 0;
 }
 static int malformed(void){
     assert(connect_peers(0,0));
@@ -124,6 +144,13 @@ static int hostile_and_stale(void){
     before=p[0].txAck;raw[8]^=1;le32(raw+20,123);ModernReceive(&p[0],raw,44,now);
     assert(p[0].txAck==before);raw[8]^=1;raw[6]=0;ModernReceive(&p[0],raw,44,now);
     assert(p[0].txAck==before);raw[6]=1;ModernReceive(&p[0],raw,43,now);assert(p[0].txAck==before);
+    /* Delayed packets from a prior session cannot fail the live one by version/region. */
+    header(raw,MODERN_HELLO);raw[8]^=1;raw[4]=3;raw[7]=2;
+    ModernReceive(&p[0],raw,36,now);assert(!p[0].error);
+    header(raw,MODERN_HELLO);raw[4]=3;ModernReceive(&p[0],raw,36,now);
+    assert(p[0].error==MODERN_ERR_VERSION);
+    assert(connect_peers(0,0));header(raw,MODERN_HELLO);raw[7]=2;
+    ModernReceive(&p[0],raw,36,now);assert(p[0].error==MODERN_ERR_REGION);
     /* Receiving acknowledgements is insufficient if remote input itself is absent. */
     assert(connect_peers(0,0));ModernStartInputs(&p[0],1,0);
     for(unsigned f=0;f<256;f++){p[0].localAck=f;assert(ModernInput(&p[0],f,1,&a,&b));}
@@ -147,9 +174,9 @@ static int pending_hash(void){
     return 0;
 }
 int main(void){
-    if(inputs()||controls()||delayed_frames(240,0,0)||delayed_frames(300,11,0)||
-       delayed_frames(300,13,0xfffffff0)||malformed()||hashes()||hostile_and_stale()||pending_hash())return 1;
-    puts("PASS modern core: direct/immutable input, earliest rollback, ordered reliable controls, bounded history, 240/300ms loss, frame wrap, malformed packets and confirmed hashes");
+    if(inputs()||controls()||control_wrap()||delayed_frames(240,0,0,0)||delayed_frames(300,11,0,0)||
+       delayed_frames(300,13,0xfffffff0,0)||delayed_frames(300,13,0,1)||malformed()||hashes()||hostile_and_stale()||pending_hash())return 1;
+    puts("PASS modern core: direct/immutable input, earliest rollback, ordered reliable controls including sequence wrap, bounded history, 240/300ms loss, asymmetric jitter/burst loss at frame cadence, malformed packets and confirmed hashes");
     return 0;
 }
 '''

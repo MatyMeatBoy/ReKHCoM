@@ -173,10 +173,16 @@ static int PayloadValid(unsigned type, const uint8_t* d, size_t size) {
 void ModernReceive(ModernPeer* p, const uint8_t* data, size_t size, uint32_t now) {
     unsigned type; const uint8_t* d; size_t len; uint64_t session;
     if(size<HEADER || size>MODERN_PACKET_MAX || !data || memcmp(data,"KHM2",4)) { p->rejected++; return; }
-    if(data[4]!=MODERN_PROTOCOL) { p->error=MODERN_ERR_VERSION; return; }
     if(data[6]>1 || data[6]==p->role) { p->rejected++; return; }
+    type=data[5]; session=Read64(data+8);
+    /* Route by session before interpreting compatibility errors. A delayed packet
+       from a previous room must not terminate the current game. */
+    if((p->session && session!=p->session &&
+        !(type==MODERN_HELLO && p->role==0 && !session && !p->peerReady)) ||
+       (!p->session && type!=MODERN_HELLO)) { p->rejected++; return; }
+    if(data[4]!=MODERN_PROTOCOL) { p->error=MODERN_ERR_VERSION; return; }
     if(data[7]!=p->region) { p->error=MODERN_ERR_REGION; return; }
-    type=data[5]; d=data+HEADER; len=size-HEADER; session=Read64(data+8);
+    d=data+HEADER; len=size-HEADER;
     if(!PayloadValid(type,d,len)) { p->rejected++; return; }
     if(type==MODERN_HELLO) {
         if(p->role==1 && !p->session && session)p->session=session;

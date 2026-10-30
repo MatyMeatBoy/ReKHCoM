@@ -71,6 +71,9 @@
 
 ## Ledger
 
+- User confirms30Oct that2.3 will ship with these online tests, and explicitly asks to keep improving and pushing. Foundation branch pushed to origin as MatyMeatBoy. Keep any PR draft until async preparation, battle routing and actual VPS240/300ms validation are complete; this is not permission to publish an unverified release.
+- Expanded pure-core tests: asymmetric75/225ms paths, jitter+/-35ms, deterministic burst loss plus1/13loss and actual17ms pump cadence, and reliable sequence wrap. New RED/GREEN regression: a packet from an old session with mismatched version/region must be rejected before it can fail the live session. Production transport and game-input consumer tests also pass after the fix.
+
 - Foundation commit6aca86db9: pure protocol, shared engine configuration, Windows launcher consumer, Linux CLI, transport bridge and profile/deck codecs. Compiled tests pass for240/300ms simulated latency/loss, immutable inputs, bounded history and explicit encodings. This is not gameplay integration or in-game fullspeed evidence.
 - Additional regression fixes pending next commit: reject future packets that would alias retained local ring entries; bound history by missing remote inputs as well as local ACKs; defer state-hash send/compare while a correction is pending. WindowsEU32 jobs1/BelowNormal foundation build started; no product-source edits during compilation.
 - Launcher room filters now distinguish classic3/modern4 for relay and Steam; Linux desktop menu includes both engine choices. No VPS edits or new package publication.
