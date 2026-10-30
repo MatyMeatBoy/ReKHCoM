@@ -12350,7 +12350,7 @@
       "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T13:32:42.219022+00:00",
+      "updated_at": "2026-10-30T13:48:59.916331+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": null,
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -12370,13 +12370,18 @@
           "at": "2026-10-30T13:32:42.219022+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "Approved modern design; concrete inline plan docs/superpowers/plans/2026-10-30-modern-online-implementation.md. Start pure protocol/config compiled TDD; retain classic and protected assets. No other VPS services touched."
+        },
+        {
+          "at": "2026-10-30T13:48:59.916331+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Implementacion inline autorizada: selector clasico/moderno independiente, protocolo directo puro, transporte y codecs perfil/deck en WIP. Pruebas compiladas GREEN:240/300ms simulados con perdida/reorden, historial inmutable/protegido, codec32/224bytes, config y launcherWindows/Linux. AUN sin adaptador gameplay ni nueva build: no afirmar fullspeed ingame. VPS sin cambios."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T13:32:42.219022+00:00",
+  "updated_at": "2026-10-30T13:48:59.916331+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
