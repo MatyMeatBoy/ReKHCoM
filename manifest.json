@@ -1,12 +1,12 @@
 {
-  "version": "v2.2.5-web-alpha",
-  "source_commit": "ea99f7ea49521d4509793d3c13b8dad6b214263b",
+  "version": "v2.3-web-alpha",
+  "source_commit": "328a9ff5d8045b74b786843ce1c1a41ab78c11fb",
   "source_dirty": false,
-  "built_utc": "2026-10-28T23:11:39.902484+00:00",
+  "built_utc": "2026-10-30T21:35:09.583012+00:00",
   "files": {
     "index.html": {
-      "bytes": 16984,
-      "sha256": "ddd575b09f1e1599c8431041cfbc33a93033edd412c9d51f12db1a9f80bc414e"
+      "bytes": 16978,
+      "sha256": "a1b11189ed407878080afe5cdcde100d69ab6a37e035e01a5d5aba306c1a0597"
     },
     "web.css": {
       "bytes": 14481,
@@ -25,8 +25,8 @@
       "sha256": "e29073c01672021b0c6e9c57d0e9c01f181ee49bf39bc2245497a928f603c2f0"
     },
     "settings.js": {
-      "bytes": 17947,
-      "sha256": "739892ffa883492d85ae53feaf8b9be593083d7e97910ddd091207bfaa7b46e4"
+      "bytes": 18017,
+      "sha256": "5ae685c7df91f1dcb26a078aff142093a8758f664d9a0aca73302e7fd8ebfcf0"
     },
     "save-editor.js": {
       "bytes": 3993,
@@ -98,39 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "e9af304204339b9c1fb6786abb6a557d4f9ccca46b04a28879a49a2da98cc65c"
+      "sha256": "ca6d267cbdd2f62e45397b638ebb0cce48092ba9fdee3a6298f30a66a1e2903a"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9505499,
-      "sha256": "df3abae430e4538a6afc0e63b3e44e9d199758b1e56c89e8f9da33307bd86735"
+      "bytes": 9537185,
+      "sha256": "6ce222c9c2d58b9466a8717e916a6b6d305f882cceb1dfd3922ced20b589c516"
     },
     "rekhcom-us.js": {
-      "bytes": 208832,
-      "sha256": "677451c31205e29c210f05d660c79f8acd5fcc01ab2a7b4841c333d0faa9b339"
+      "bytes": 208831,
+      "sha256": "4a22526045d8075a30420cf3f2107a890cc32f3da29a552559f0e48d478f3672"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9562298,
-      "sha256": "ad9ca873e7a340d182845e6bc87e092afa311f069f2ab941ac094385ca11318a"
+      "bytes": 9592298,
+      "sha256": "a2dcad5db33872156fb9bbe80f2f94dac424b96fb9738aedbc34626963fcc426"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "7bd4aacd0b2367e08da3acddf21bbedbf34d3f54e108bce5b32265296d9f5004"
+      "sha256": "bed1b9b595d8ad60fb466c6fe8682ab4f1177eda5d76a68b769de03313972243"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9420939,
-      "sha256": "4c30c8f7a6c2cf651e343e2ebad5930f73808b361ee3c0cebde5826d3164512f"
+      "bytes": 9447939,
+      "sha256": "4eeecead62ab7f3b7a8934e03ad2a05ff12741e78f1a9f228b50089ebe509945"
     }
-  },
-  "font_hotfix": {
-    "source_commit": "ba119a11c0b62804e224d5451de6608c487f80b5",
-    "published_utc": "2026-10-29T14:22:28.850203+00:00",
-    "parent_deployment": "46e2224a4fd65d899193c53ec7141ce93826dfca",
-    "scope": [
-      "fonts/KHMenu.otf",
-      "fonts/NOTICE.md",
-      "web.css",
-      "index.html"
-    ],
-    "validation": "All CFF widths match hmtx; approved outlines and native metrics unchanged; desktop/mobile EN/ES visual checks passed. Original engine provenance retained above."
   }
 }
