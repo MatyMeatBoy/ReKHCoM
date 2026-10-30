@@ -197,14 +197,16 @@ static int acknowledged_tail(void){
     }
     assert(checked==1);return 0;
 }
-int main(int argc,char** argv){
-    (void)argv;
-    if(argc>1)return delayed_frames(24,0,0,2)||delayed_frames(240,0,0,1)||delayed_frames(300,13,0,1);
+#ifdef MODERN_BENCHMARK
+int main(void){return delayed_frames(24,0,0,2)||delayed_frames(240,0,0,1)||delayed_frames(300,13,0,1);}
+#else
+int main(void){
     if(inputs()||controls()||control_wrap()||delayed_frames(240,0,0,0)||delayed_frames(300,11,0,0)||
        delayed_frames(300,13,0xfffffff0,0)||delayed_frames(300,13,0,1)||malformed()||hashes()||hostile_and_stale()||pending_hash()||acknowledged_tail())return 1;
     puts("PASS modern core: direct/immutable input, earliest rollback, ordered reliable controls including sequence wrap, bounded history, 240/300ms loss, asymmetric jitter/burst loss at frame cadence, malformed packets and confirmed hashes");
     return 0;
 }
+#endif
 '''
 
 def main():
@@ -214,8 +216,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='modern-core-') as tmp:
         source,exe=Path(tmp)/'test.c',Path(tmp)/'test.exe';source.write_text(CODE)
         subprocess.run([a.cc,'-std=c99','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-static',
+                        *(['-DMODERN_BENCHMARK','-Wno-unused-function'] if a.benchmark else []),
                         '-I',str(ROOT/'port/include'),str(source),str(a.core),'-o',str(exe)],check=True)
-        result=subprocess.run([str(exe)]+(['benchmark'] if a.benchmark else []),capture_output=True,text=True)
+        result=subprocess.run([str(exe)],capture_output=True,text=True)
         print(result.stdout,end='')
         if result.stderr:print(result.stderr,end='')
         result.check_returncode()

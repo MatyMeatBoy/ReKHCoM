@@ -71,6 +71,9 @@
 
 ## Ledger
 
+- OptiPort online requested30Oct: implementation8c4202b03 pushed to PR529. Measured protocol-byte reduction51.5/23.4/17.0% at24/240/300ms modeled workloads, same final1200inputs/peer and datagram count,32/64 identical. Added explicit replayPending/finalization to prevent hash validation after dequeue but before replay; RED/GREEN. EU32 build7/7 + no-work, protocol/bridge/transport/snapshot tests pass. Still no modern gameplay routing or actual modern fullspeed/video certification.
+- Lessons integrated into OptiPort22/main35dfad84092b951e72753bd235fcaf8a4d1bc7d4 under coordination lock (released). Installed Codex copy verified29canonical Markdown files; changed files/metadata backed up. Details and reproduction in port/progress/ONLINE_OPTIPORT.md. Benchmark builds only the workload entrypoint so older baseline implementations do not require later regression-only APIs; final baseline/candidate reproduction passes.
+
 - User confirms30Oct that2.3 will ship with these online tests, and explicitly asks to keep improving and pushing. Foundation branch pushed to origin as MatyMeatBoy. Keep any PR draft until async preparation, battle routing and actual VPS240/300ms validation are complete; this is not permission to publish an unverified release.
 - Expanded pure-core tests: asymmetric75/225ms paths, jitter+/-35ms, deterministic burst loss plus1/13loss and actual17ms pump cadence, and reliable sequence wrap. New RED/GREEN regression: a packet from an old session with mismatched version/region must be rejected before it can fail the live session. Production transport and game-input consumer tests also pass after the fix.
 

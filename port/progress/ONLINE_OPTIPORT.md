@@ -62,6 +62,15 @@ Estos controles no sustituyen las tareas ingame pendientes.
 
 ## Lecciones que se transfieren al método
 
+Integradas en [OptiPort22](https://github.com/MatyMeatBoy/OptiPort/pull/22),
+main35dfad84092b951e72753bd235fcaf8a4d1bc7d4, módulo
+`references/online-simulation-contracts.md`. Revisión textual de escenarios y
+enlaces locales PASS. Los29Markdown canónicos de la copia Codex instalada
+coinciden con ese main; cuatro archivos anteriores y metadata se preservaron.
+No se atribuye al módulo una mejora de comportamiento de agentes no demostrada:
+la evaluación conceptual inicial ya era correcta; la revisión encontró y corrigió
+dos límites insuficientemente precisos en la documentación nueva.
+
 - Diferenciar transporte, simulación y presentación, y medir cada contrato.
 - Separar retención para retransmisión de retención para reconstruir estado.
 - Confirmar inputs y terminar replay son condiciones distintas para un hash.
