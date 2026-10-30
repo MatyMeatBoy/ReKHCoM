@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # (row, presses, direction, the kh_com.ini key it saves to)
 ROUTE = [('VIEW', 1, 1, 'view_mode'), ('ASPECT', 1, 1, None), ('ZOOM', 1, 1, 'zoom'), ('INTZOOM', 1, 1, None),
-         ('SCALE', 1, 1, 'scale_mode'), ('HUD', 1, 1, 'hud_size'), ('NARROW', 1, 1, 'narrow_fit'),
+         ('SCALE', 1, 1, 'scale_mode'), ('HUD', 1, 1, 'hud_size'),
          ('FILTER', 1, 1, 'filter'), ('VSYNC', 1, 1, 'vsync'), ('SCANLINES', 1, 1, 'scanlines'),
          ('LCD', 1, 1, 'color_correction'), ('CARDS', 1, 1, 'card_hud_raise'), ('FPS', 1, 1, 'show_fps'),
          ('DODGE', 1, 1, 'dodge_button'), ('STOCK', 1, 1, 'stock_button'), ('SAVEBANK', 1, 1, 'save_bank'),

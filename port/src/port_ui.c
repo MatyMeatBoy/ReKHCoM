@@ -102,11 +102,9 @@ enum {
     ITEM_CRT_OUTPUT, /* the CRT view's output (#202), only in that view */
     ITEM_ASPECT,
     ITEM_ZOOM,
-    ITEM_SCENE_FRAMING,
     ITEM_INTZOOM,
     ITEM_SCALE,
     ITEM_HUD,
-    ITEM_NARROW,
     ITEM_FULLSCREEN,
     ITEM_FS_RES,
     ITEM_VSYNC,
@@ -141,6 +139,7 @@ enum {
     ITEM_PS2_MODE,
     ITEM_PS2_MENU,     /* opens the Re:CoM page */
     ITEM_EXPERIMENTAL, /* section heading, not selectable */
+    ITEM_SCENE_FRAMING,
     ITEM_BATTLE_ZOOM,
     ITEM_SMOOTHAUDIO,
     ITEM_SAVE_SLOT_EXPERIMENTAL,
@@ -409,11 +408,9 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "CRT output", "Sortie CRT", "CRT-Ausgabe", "Uscita CRT", "Salida CRT", "CRTしゅつりょく" },
     { "Aspect ratio", "Format d'image", "Seitenverhältnis", "Proporzioni", "Relación de aspecto", "画面の形" },
     { "Zoom", "Zoom", "Zoom", "Zoom", "Zoom", "ズーム" },
-    { "Scene framing", "Cadrage des scènes", "Szenenausschnitt", "Inquadratura scene", "Encuadre de escenas", "シーンの表示" },
     { "Integer scales only", "Échelles entières seules", "Nur ganze Pixelskalen", "Solo scale intere", "Solo escalas enteras", "せいすうスケールのみ" },
     { "Scaling", "Mise à l'échelle", "Skalierung", "Scala", "Escalado", "スケール" },
     { "HUD size", "Taille du HUD", "HUD-Größe", "Dimensione HUD", "Tamaño del HUD", "HUDサイズ" },
-    { "GBA-size scenes", "Scènes format GBA", "Szenen im GBA-Format", "Scene formato GBA", "Escenas tamaño GBA", "GBAサイズの場面" },
     { "Fullscreen", "Plein écran", "Vollbild", "Schermo intero", "Pantalla completa", "フルスクリーン" },
     { "Fullscreen resolution", "Résolution plein écran", "Vollbild-Auflösung", "Risoluzione a schermo intero",
       "Resolución en pantalla completa", "フルスクリーン解像度" },
@@ -457,6 +454,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Re:CoM settings", "Réglages Re:CoM", "Re:CoM-Einstellungen", "Impostazioni Re:CoM", "Ajustes Re:CoM",
       "Re:CoMオプション" },
     { "Experimental", "Expérimental", "Experimentell", "Sperimentale", "Experimentales", "実験的機能" },
+    { "Scene framing", "Cadrage des scènes", "Szenenausschnitt", "Inquadratura scene", "Encuadre de escenas", "シーンの表示" },
     { "Battle zoom", "Zoom en combat", "Kampfzoom", "Zoom battaglia", "Zoom en combate", "バトルズーム" },
     { "Audio filter", "Filtre audio", "Audiofilter", "Filtro audio", "Filtro de audio", "オーディオフィルター" },
     { "Choose save slot at save points", "Choisir un emplacement aux points de sauvegarde",
@@ -805,10 +803,6 @@ static const char* const sAspect[PORT_ASPECT_COUNT][LANG_COUNT] = {
 static const char* const sPressA[LANG_COUNT] = { "A: apply", "A : appliquer", "A: übernehmen", "A: applica",
     "A: aplicar", "A: 決定" };
 static const char* const sIntegralReference[LANG_COUNT] = { "integer", "entière", "ganzzahlig", "intera", "íntegra", "せいすう" };
-static const char* const sNarrow[2][LANG_COUNT] = {
-    { "Exact pixels", "Pixels exacts", "Exakte Pixel", "Pixel esatti", "Píxel exacto", "1:1ピクセル" },
-    { "Fill height", "Remplir la hauteur", "Höhe füllen", "Riempi altezza", "Llenar altura", "高さに合わせる" },
-};
 static const char* const sDesktop[LANG_COUNT] = { "Desktop", "Bureau", "Desktop", "Desktop", "Escritorio",
     "デスクトップ",
 };
@@ -1358,9 +1352,6 @@ static void ValueText(int item, char* out, size_t size) {
         case ITEM_ASPECT:
             SDL_strlcpy(out, sAspect[SDL_clamp(gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1)][l], size);
             break;
-        case ITEM_NARROW:
-            SDL_strlcpy(out, sNarrow[gPortConfig.narrowFit != 0][l], size);
-            break;
         case ITEM_FILTER:
             SDL_strlcpy(out, sFilters[gPortConfig.filter][l], size);
             break;
@@ -1690,9 +1681,6 @@ static void Change(int item, int dir) {
             break;
         case ITEM_ASPECT:
             gPortConfig.aspect = Wrap(gPortConfig.aspect + dir, PORT_ASPECT_COUNT);
-            break;
-        case ITEM_NARROW:
-            gPortConfig.narrowFit = !gPortConfig.narrowFit;
             break;
         case ITEM_FILTER:
             gPortConfig.filter = Wrap(gPortConfig.filter + dir, PORT_FILTER_COUNT);

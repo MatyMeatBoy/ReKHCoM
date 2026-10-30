@@ -224,7 +224,7 @@ def package(regions):
     out = BUILD / 'vm-out'
     shutil.rmtree(out, ignore_errors=True)  # a package left by an earlier run must never pass for this one
     command = [sys.executable, ROOT / 'port/tools/linux_vm_test.py', '--share', share, '--disk', build_switch.VM_DISK, '--fresh-share',
-               '--net', '--mem', '4096', '--cpus', '4', '--run', 'bash /root/share/build.sh', '--run-timeout', '1500',
+               '--net', '--mem', os.environ.get('REKHCOM_VM_MEM', '4096'), '--cpus', os.environ.get('REKHCOM_VM_CPUS', '1'), '--run', 'bash /root/share/build.sh', '--run-timeout', '1500',
                '--fetch', '/root/share/ReKHCoM.vpk', '--out', out]
     build_switch.run(command, cwd=ROOT, env=dict(os.environ, MSYS_NO_PATHCONV='1', PYTHONUTF8='1'))
     vpk = out / 'ReKHCoM.vpk'
@@ -276,7 +276,7 @@ def test(region, env, shots):
     out = BUILD / 'test-out'
     command = [sys.executable, ROOT / 'port/tools/linux_vm_test.py', '--machine', 'aarch64', '--net', '--share', share,
                '--run', 'bash /root/share/run.sh', '--run-timeout', '3200', '--fetch', '/root/run.log',
-               '--fetch', '/root/shots.tar', '--out', out, '--mem', '3072', '--cpus', '4']
+               '--fetch', '/root/shots.tar', '--out', out, '--mem', '3072', '--cpus', os.environ.get('REKHCOM_VM_CPUS', '1')]
     build_switch.run(command, cwd=ROOT, env=dict(os.environ, MSYS_NO_PATHCONV='1', PYTHONUTF8='1'))
 
 

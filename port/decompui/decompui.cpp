@@ -512,6 +512,7 @@ static void LoadIni() {
         sIni[s.key] = s.def;
     for (const auto& kv : ReadIniFile())
         sIni[kv.first] = kv.second;
+    sIni["narrow_fit"] = 1; /* retired control: always fill height */
     for (const char* retired : {"unstock_button"})
         sIni.erase(retired);
     /* Files from before the auto view switch to it once, as the game does. */
@@ -556,6 +557,7 @@ static void LoadIni() {
     if (sIni["zoom"] == PORT_ZOOM_CLASSIC) sIni["zoom"] = PORT_ZOOM_DEFAULT;
     sIni["integer_zoom"] = 0;
     sIni["config_version"] = PORT_ZOOM_CONFIG_VERSION;
+    sIni["narrow_fit"] = 1; /* do not restore a legacy disk value */
     sIniOnDisk = sIni;
 }
 
@@ -604,6 +606,7 @@ static void SaveIni() {
         if (seen == sIniOnDisk.end() || sIni[kv.first] == seen->second)
             sIni[kv.first] = kv.second; /* the game's change, not the launcher's */
     }
+    sIni["narrow_fit"] = 1; /* do not restore a legacy disk value */
     sIniOnDisk = sIni;
     std::string onlineName; /* the one text setting (the lobby's name): kept as written */
     {
@@ -1908,7 +1911,6 @@ static void PageGraphics() {
                             T("Auto (llenar ventana)", "Auto (fill window)"), "CRT 320x240" };
     const char* filters[] = { T("Nítido", "Sharp"), "Pixel art", T("Suave", "Smooth") };
     const char* huds[] = { T("Original", "Original"), T("Grande", "Large"), T("Más grande", "Larger") };
-    const char* narrow[] = { T("Píxel exacto", "Exact pixels"), T("Llenar altura", "Fill height") };
     const char* onoff[] = { T("No", "Off"), T("Sí", "On") };
     const char* scan[] = { T("No", "Off"), "25%", "50%", "75%", "100%" };
     const char* windows[] = { "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x" };
@@ -1962,13 +1964,11 @@ static void PageGraphics() {
                        T("Escala de píxeles: x4 amplía cada píxel cuatro veces. Menos aumento muestra más mundo y exige más al PC.",
                          "Pixel scale: x4 enlarges each pixel four times. Lower scales show more world and cost more CPU."),
                        Ini("zoom"), false);
-    changed |= SceneFramingRow();
     NextCard("picture", T("IMAGEN", "PICTURE"));
 #ifdef REKHCOM_SHOW_EXTRA_OPTIONS /* filter: an internal setting */
     changed |= CycleRow(T("Filtro", "Filter"), nullptr, Ini("filter"), 3, filters);
 #endif
     changed |= CycleRow(T("Tamaño del HUD", "HUD size"), nullptr, Ini("hud_size"), 3, huds);
-    changed |= CycleRow(T("Escenas tamaño GBA", "GBA-size scenes"), nullptr, Ini("narrow_fit"), 2, narrow);
     ImGui::EndChild();
     ImGui::Spacing();
     BeginCard("window");
@@ -2392,6 +2392,7 @@ static void PageExtras() {
     ImGui::Spacing();
     BeginCard("experimental");
     Eyebrow(T("EXPERIMENTALES", "EXPERIMENTAL"));
+    changed |= SceneFramingRow();
     changed |= ToggleRow(T("Brillo del título GBA", "GBA title brightness"),
                          T("Restaura el botón Brillo y los atajos L/R del título. Compensaban la pantalla de la GBA original; no hacen falta en pantallas modernas. Siempre disponibles en GBA original.",
                            "Restores the title's Brightness button and L/R shortcuts. They compensated for the original GBA screen and are unnecessary on modern displays. Always available in GBA Original."),

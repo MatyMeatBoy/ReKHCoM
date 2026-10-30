@@ -126,7 +126,7 @@ typedef struct PortConfig {
     int fullscreen;
     int vsync; /* 0 off, 1 VSync, 2 opt-in VRR presentation with VSync fallback */
     int hudSize;          /* wide view: HUD drawn this many pixel-scale steps larger (0 = same) */
-    int narrowFit;        /* scenes without a wide view: 1 fill the height, 0 exact pixels */
+    int narrowFit;        /* reserved ABI field; narrow scenes always fill height */
     int scanlines;        /* 0..100 % intensity */
     int colorCorrection;  /* emulate the GBA LCD colours */
     int frameSkip;        /* 1: a late frame runs the game and the line events but is not drawn (slow devices) */
@@ -234,7 +234,7 @@ void PortConfigAutoView(int outW, int outH, int battle, int* w, int* h, int* sca
 float PortConfigMenuScaleF(int outW, int outH);
 
 /* Kept outside PortConfig to preserve the native64 guest ABI. */
-extern int gPortSceneFraming;        /*0 Ajuste (default),1 experimental Extendido */
+extern int gPortSceneFraming;        /*0 Ajuste (default),1 Extendido,2 Plano original; experimental */
 extern int gPortSceneCameraAdjusted; /* presenter-derived, never persisted */
 int PortSceneFramingActive(void);
 int PortConfigZoomId(int level);

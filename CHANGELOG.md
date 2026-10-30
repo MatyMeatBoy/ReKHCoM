@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.3
+
+- Experimental scene framing: Adjusted (default) uses a close integer camera except for the exact current honors-approved artwork; Extended uses the selected zoom everywhere; Original shot forces the close camera in every engine scene. Dialogue, HUD and complete portraits retain their independent zoom.
+- Remove the GBA-size scenes option; narrow scenes always fill height. Scene framing is grouped under Experimental in the game, launcher and web settings.
+- Add the optional original-VS online beta through the VPS relay. The full modern no-wait online rebuild remains unfinished and is not claimed in this release.
+- Preserve approved-art version boundaries and improve Windows64 software rectangle rendering at1080p.
+- Clarify Steam Deck shortcut setup following report330; this does not establish the cause of the reporter's Gaming Mode issue.
+- Includes the fixes from2.3-pre1 below. RetroAchievements Hardcore is not available; native-device compatibility remains subject to the platform-specific beta notes.
+
 ## v2.3-pre1
 
 - Initialize recycled spring object height before visibility/collider checks (#480); preserve original jump rules. The earlier Android candidate was confirmed by its reporter.

@@ -133,7 +133,7 @@ static const Key sKeys[] = {
     { "fullscreen", &gPortConfig.fullscreen, 0, 1 },
     { "vsync", &gPortConfig.vsync, 0, 2 },
     { "hud_size", &gPortConfig.hudSize, 0, 2 },
-    { "narrow_fit", &gPortConfig.narrowFit, 0, 1 },
+    { "narrow_fit", &gPortConfig.narrowFit, 1, 1 },
     { "scanlines", &gPortConfig.scanlines, 0, 100 },
     { "color_correction", &gPortConfig.colorCorrection, 0, 1 },
     { "show_fps", &gPortConfig.showFps, 0, 1 },

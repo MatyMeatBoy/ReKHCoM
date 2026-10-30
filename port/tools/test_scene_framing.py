@@ -44,8 +44,8 @@ int main(void){
         gPortSceneFraming=mode;PortConfigSave();gPortSceneFraming=-1;PortConfigLoad();
         CHECK(gPortSceneFraming==mode&&gPortConfig.zoom==8&&gPortConfig.hudSize==1);
     }
-    FILE* f=fopen("kh_com.ini","w");CHECK(f);fprintf(f,"config_version=11\nzoom=8\n");fclose(f);
-    PortConfigLoad();CHECK(gPortSceneFraming==PORT_SCENE_ADJUST&&gPortConfig.zoom==8);
+    FILE* f=fopen("kh_com.ini","w");CHECK(f);fprintf(f,"config_version=11\nzoom=8\nnarrow_fit=0\n");fclose(f);
+    PortConfigLoad();CHECK(gPortSceneFraming==PORT_SCENE_ADJUST&&gPortConfig.zoom==8&&gPortConfig.narrowFit==1);
     f=fopen("kh_com.ini","w");CHECK(f);fprintf(f,"config_version=11\nscene_framing=999\n");fclose(f);
     PortConfigLoad();CHECK(gPortSceneFraming==2);
     f=fopen("kh_com.ini","w");CHECK(f);fprintf(f,"config_version=11\nscene_framing=-3\n");fclose(f);
