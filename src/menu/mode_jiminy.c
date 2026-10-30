@@ -35,6 +35,7 @@
 #include "map_api.h"
 #include "mode.h"
 #include "mode_jiminy.h"
+#include "mode_ms_top_api.h"
 #include "monsgage.h"
 #include "msg_api.h"
 #include "obj.h"
