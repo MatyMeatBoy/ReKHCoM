@@ -12464,10 +12464,10 @@
     "scene-adjust-framing-v23": {
       "id": "scene-adjust-framing-v23",
       "piece": "Modo escenas Ajuste por defecto: encuadre entero equivalenteGBA, HUD independiente, excepcionesconhonores y Extendido experimental",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-scene-adjust",
       "created_at": "2026-10-30T15:08:54.176492+00:00",
-      "updated_at": "2026-10-30T16:47:09.592454+00:00",
+      "updated_at": "2026-10-30T16:48:13.193089+00:00",
       "branch": "feat/v23-scene-adjust-framing",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/532",
       "approval": "Usuario30Oct aprobo explicitamente diseno escrito Ajuste/Extendido para implementarlo",
@@ -12497,9 +12497,15 @@
           "at": "2026-10-30T16:47:09.592454+00:00",
           "owner": "codex-scene-adjust",
           "detail": "PR532 HEAD128600000; implementation881f599bc + priorf98/afb. All native QA exited. run09 full right Cid portrait + old close camera parity, Extended/honors pixel parity; run10 native64 all3 outputs exact32; run11 oddwidth lowzoom world parity; run12 complete left Yuffie portrait narrow route + Original exact parity. EU32/64 builds/ABIboot; compiled consumers and source approval mutation tests PASS. Readonly review PASS. Board SCENE_FRAMING.md; evidence pruebas/scene-adjust-v23."
+        },
+        {
+          "at": "2026-10-30T16:48:13.193089+00:00",
+          "owner": "codex-scene-adjust",
+          "detail": "Merged PR532 main0515bf0a11fc1043491ea08b3566648a8ff917df, source12860000049585d0e7ff21c7c73b697a2a2b7a7a. User design approved; right Cid and left Yuffie portraits complete; native32/64 exact outputs Ajuste/Extended/honors; oddwindow/lowzoom and narrow/Original controls PASS. Compiled consumers, grantsmutation, full32/64 build ABIboot PASS. Readonly reviewer fixes checked. No release/installation/ROM/save/Atlas/VPS edits. Board port/progress/SCENE_FRAMING.md; pruebas/scene-adjust-v23."
         }
       ],
-      "claimed_at": "2026-10-30T15:09:07.226403+00:00"
+      "claimed_at": "2026-10-30T15:09:07.226403+00:00",
+      "completed_at": "2026-10-30T16:48:13.193089+00:00"
     }
   },
   "integrator": {
@@ -12508,7 +12514,7 @@
     "created_at": "2026-10-30T16:47:30.953071+00:00",
     "updated_at": "2026-10-30T16:47:30.953071+00:00"
   },
-  "updated_at": "2026-10-30T16:47:30.953071+00:00",
+  "updated_at": "2026-10-30T16:48:13.201122+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
