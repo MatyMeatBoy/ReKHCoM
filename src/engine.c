@@ -25,6 +25,7 @@
 #include "obj.h"
 #include <stddef.h>
 #ifdef PLATFORM_PC
+#include "port/port.h"
 #include "port/port_battle_backdrop.h"
 #include "port/port_oam.h"
 #endif
