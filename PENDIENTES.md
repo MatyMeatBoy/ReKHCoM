@@ -427,4 +427,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | local-v23-pretest-20261030 | Prebuild Windows local2.3 EU32/64 para probar escenas antes de publicacion | en_revision | codex-local-pre23 | feat/v23-scene-three-modes | Usuario solicita pre local primero antes de sacar2.3 | 2026-10-30T18:55:29.742696+00:00 |
 | v23-release-scene-experimental | Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada | integrado | codex-release23 | https://github.com/MatyMeatBoy/ReKHCoM/pull/534 | Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3 | 2026-10-30T21:38:08.585962+00:00 |
 
-Integrador: codex-release23 (ocupado; 2026-10-30T21:37:54.074776+00:00)
+Integrador: libre
