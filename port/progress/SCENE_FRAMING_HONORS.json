@@ -9,7 +9,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "0b8f501ba253c3bb2e7c44a265dd58125a312fc4c6a83e5ebf0efdd6af46a110",
-      "reviewed_signature": "cb1be2beffd48c1a0b0ce6a8aeae0618d18e2516e3a5ababfff1c86f0b639d6f"
+      "reviewed_signature": "fc80666db44555e15baa12829a01260f679d0366e4689ed788fe155ed2b9e1b0"
     },
     {
       "event": 8,
@@ -17,7 +17,7 @@
       "status": "honors",
       "revision": 0,
       "art_sha256": "e0f3e5844d388e9b9e7d2fbb49b634f123a3e747de12e963de0a42226d59484a",
-      "reviewed_signature": "7fb11ee89918021f4aa3c0ff6f3b7ee748413b51bb91b3c1cf97e8bb279a2caf"
+      "reviewed_signature": "246c3f17fcc8e1f1d8e7b73de630a4bdff52f3b656e9f2b544538249977dab1f"
     },
     {
       "event": 53,
@@ -25,7 +25,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "dde1a8fdd985d3779c0b34b787aab37fe62cf8e19e81a668e1fc96749d4b5036",
-      "reviewed_signature": "59ae7dbee811f2ad101bbf4e602b5d81f160f48c44e21e3176eabbb8bc04c96c"
+      "reviewed_signature": "9f6335af9cb8e0fd84e0e6f4d6b905671f08be5b1d8509401f17aece9214ee03"
     },
     {
       "event": 54,
@@ -33,7 +33,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "a66b76485c8d6a41a2b2e4404f639194950f3033771f422e5660a63b80f90223",
-      "reviewed_signature": "af28bd2e224b7fd9ca25fba29384e3fc723348eb2386010672f9843c4f52da17"
+      "reviewed_signature": "70e43c2cb77a9b26c19e2b488fbca305bd72d79a4ce12c5d3932b00a0e668e48"
     },
     {
       "event": 55,
@@ -41,7 +41,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "4694b110de38cd368cbbd539aa9fb8b7c41ebc56d1242214c52bc07225175e0d",
-      "reviewed_signature": "c5c7258d2c91788499220163778926009b5cf9433e526f5da5c488147ad67164"
+      "reviewed_signature": "0caee28e172f01b75ce21bffe1313fd5736529ad57e99dd1f51c22eed30f9a6c"
     },
     {
       "event": 74,
@@ -49,7 +49,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "4e13674bb743cbea76c0c106e5e0e886d4f0cfc4df8f714aebfc37b6aaf8665c",
-      "reviewed_signature": "7f360d74f29cb458e0d1f15c3aaba0e96bf541887d829ff93aabe13dd9ef425b"
+      "reviewed_signature": "923e5815ecf99b03b6cce737e3bc78c9837e608a07d9712f75e976c01d5c5190"
     },
     {
       "event": 102,
@@ -57,7 +57,7 @@
       "status": "honors",
       "revision": 2,
       "art_sha256": "c2cc5ccdb4e0e7d2edc92c8a88dc42274b76801024f80422933fc1f759913ceb",
-      "reviewed_signature": "cadca01932fb48f7e3087834113e8aed513f4583e9cf7317cf43e03cdc533bf2"
+      "reviewed_signature": "79d171347bd6fbfd54a90f0a467dc137d5e3d54f7bfece38dfd2079c1c428f9d"
     },
     {
       "event": 109,
@@ -65,7 +65,7 @@
       "status": "honors",
       "revision": 0,
       "art_sha256": "42681596aa0f76ff929581a8a47f4e985714b2b8d1681e4bce9c6aced3cf4527",
-      "reviewed_signature": "36828c3b1af09946861a3489302da660f01b1cf07cc5549399ac3b0d34b4a328"
+      "reviewed_signature": "a3d570e914f571a8a4356acbebd0d0252b691afef7a1c4e80c141684e4a54d40"
     },
     {
       "event": 121,
@@ -73,7 +73,7 @@
       "status": "honors",
       "revision": 0,
       "art_sha256": "000f14da170db2555697af6fcac66b8bd36c9bcc2898a387ec345039b98be2d8",
-      "reviewed_signature": "96d53594425f72a9b82bbfddfe59be6f2dc482edc53e0ab4767573389f7bee4d"
+      "reviewed_signature": "2f1f8591c261d17078cc8b35e4963a6c07e4fbca975c4b36fdc47e3c80db2da2"
     },
     {
       "event": 122,
@@ -81,7 +81,7 @@
       "status": "honors",
       "revision": 1,
       "art_sha256": "4075619c89fc3727f5cd71e4d3d8a74d5b3972fba377ec95a5ff0669f7a138b0",
-      "reviewed_signature": "24e0e1049eb7aba2b267126a0f909fb5550f1c9fa7ca87fd9d8004537cfe72f4"
+      "reviewed_signature": "06cc26a909e39bfabed6f35d3c44a149c0e7518ae1c078edd5b4916792c1d36f"
     }
   ]
 }

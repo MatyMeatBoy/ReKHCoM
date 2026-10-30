@@ -44,7 +44,7 @@ int main(void){
     CHECK(sAutoScale==6&&gPortAutoScaleF==6&&gPortWorldScale==6&&gPortSceneCameraAdjusted);
     CHECK(gPortHudScale==4&&gPortHudW==480&&gPortHudH==270);
     CHECK(sOverlayScale==4&&gPortOverlayW==480);
-    CHECK(gPortScreen.width==320&&gPortScreen.height==180&&gPortConfig.zoom==8);
+    CHECK(gPortScreen.width==480&&gPortScreen.height==180&&gPortConfig.zoom==8);
     gCurrentMode=&gModeEventDebug;UpdateResolution();CHECK(sAutoScale==6&&gPortSceneCameraAdjusted);
     gCurrentMode=&gModeEvent;
     event=121;UpdateResolution();CHECK(!gPortSceneCameraAdjusted&&sAutoScale==4&&gPortHudScale==0);

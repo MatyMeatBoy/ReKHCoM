@@ -219,6 +219,7 @@ static void H_gfx_clip(int x, int y, int w, int h) {
 }
 static void H_gfx_blend(int on) { sBlend = on; }
 /* the shim adds 2, 4 or 6 to u for pixel art and the MMPX filters: those are drawn crisp (android64_host.c) */
+#include "sdl_quad.h"
 static void H_gfx_draw(int id, const void* verts, int count) {
     if (sGpuOutputBlocked) return;
     const HostVertex* v = verts;
@@ -235,6 +236,8 @@ static void H_gfx_draw(int id, const void* verts, int count) {
         SDL_SetTextureScaleMode(t, shift > 0 || !sTexSmooth[slot] ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
         SDL_SetTextureBlendMode(t, (SDL_BlendMode)sBlend);
     }
+    if (t && !strcmp(SDL_GetRendererName(sRenderer), "software") &&
+        HostDrawSdlQuad(t, v, count, shift)) return;
     for (int i = 0; i < count; i++) {
         out[i].position.x = v[i].x;
         out[i].position.y = v[i].y;

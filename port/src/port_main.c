@@ -503,6 +503,10 @@ static void UpdateResolution(void) {
             gPortHudH = SDL_min((outH + hs - 1) / hs, PORT_MAX_H);
         }
     }
+    /* The screen compositor shares scanline storage with the world. Keep its
+       full horizontal span even when the camera shows a smaller centre crop;
+       OutputRect still presents the world at sceneScale, never at UI scale. */
+    if (sceneScale > 0 && w < gPortOverlayW) w = gPortOverlayW;
     if (w != gPortScreen.width || h != gPortScreen.height)
         PortPpuSetResolution(w, h);
 }

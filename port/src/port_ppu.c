@@ -4128,6 +4128,11 @@ void PortPpuBeginFrame(void) {
         sRight = GBA_SCREEN_W;
         sTop = 0;
         sBottom = GBA_SCREEN_H;
+        /* A narrow scene still has a full-width independent dialogue layer. */
+        if (gPortSceneCameraAdjusted && sOverlay) {
+            sLeft = -gPortScreen.originX;
+            sRight = gPortScreen.width - gPortScreen.originX;
+        }
     }
 }
 
