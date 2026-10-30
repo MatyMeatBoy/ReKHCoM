@@ -761,9 +761,9 @@ static const char* const sHudSizes[3][LANG_COUNT] = {
     { "Larger", "Plus grand", "Größer", "Più grande", "Más grande", "もっとおおきい" },
 };
 static const char* const sSceneFraming[3][LANG_COUNT] = {
-    { "Adjusted", "Ajusté", "Angepasst", "Adattato", "Ajuste", "調整" },
-    { "Extended", "Étendu", "Erweitert", "Esteso", "Extendido", "拡張" },
-    { "Original shot", "Plan original", "Originalausschnitt", "Inquadratura originale", "Plano original", "原作の画角" },
+    { "Adjusted", "Ajusté", "Angepasst", "Adattato", "Ajuste", "ちょうせい" },
+    { "Extended", "Étendu", "Erweitert", "Esteso", "Extendido", "かくちょう" },
+    { "Original shot", "Plan original", "Originalausschnitt", "Inquadratura originale", "Plano original", "原作のがかく" },
 };
 static const char* const sSceneFramingNote[3][LANG_COUNT] = {
     {
@@ -772,7 +772,7 @@ static const char* const sSceneFramingNote[3][LANG_COUNT] = {
         "Naher Ausschnitt; mit Auszeichnung freigegebene Szenen nutzen den gewählten Zoom. Dialoge und HUD behalten ihren Zoom.",
         "Inquadratura ravvicinata; le scene approvate con lode usano lo zoom scelto. Dialoghi e HUD mantengono il proprio zoom.",
         "Encuadre cercano; las escenas aprobadas con honores usan el zoom elegido. Diálogos y HUD conservan su propio zoom.",
-        "近い画角で表示し、特に高く評価された承認済みシーンは選択したズームを使います。会話とHUDのズームは変わりません。",
+        "近いがかくで表示し、特に高くひょうかされたしょうにん済みシーンは選択したズームを使います。会話とHUDのズームは変わりません。",
     },
     {
         "Experimental: some scenery edges are still in development. Uses your chosen zoom in every scene.",
@@ -780,7 +780,7 @@ static const char* const sSceneFramingNote[3][LANG_COUNT] = {
         "Experimentell: Einige Randbereiche sind noch in Arbeit. Alle Szenen nutzen den gewählten Zoom.",
         "Sperimentale: alcuni bordi dello scenario sono ancora in sviluppo. Tutte le scene usano lo zoom scelto.",
         "Experimental: algunos márgenes del escenario siguen en desarrollo. Todas las escenas usan el zoom elegido.",
-        "実験的な表示です。背景の端の一部はまだ制作中です。すべてのシーンで選択したズームを使います。",
+        "実験的な表示です。背景のはしの一部はまだ制作中です。すべてのシーンで選択したズームを使います。",
     },
     {
         "Close framing in every scene, including honors-approved ones. Dialogue and HUD keep their own zoom.",
@@ -788,7 +788,7 @@ static const char* const sSceneFramingNote[3][LANG_COUNT] = {
         "Naher Ausschnitt in allen Szenen, auch bei Freigabe mit Auszeichnung. Dialoge und HUD behalten ihren Zoom.",
         "Inquadratura ravvicinata per tutte le scene, anche quelle approvate con lode. Dialoghi e HUD mantengono il proprio zoom.",
         "Encuadre cercano en todas las escenas, incluidas las aprobadas con honores. Diálogos y HUD conservan su propio zoom.",
-        "特に高く評価された承認済みシーンも含め、すべて近い画角で表示します。会話とHUDのズームは変わりません。",
+        "特に高くひょうかされたしょうにん済みシーンもふくめ、すべて近いがかくで表示します。会話とHUDのズームは変わりません。",
     },
 };
 static const char* const sAspect[PORT_ASPECT_COUNT][LANG_COUNT] = {
