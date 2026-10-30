@@ -12569,7 +12569,7 @@
       "status": "en_curso",
       "owner": "codex-release23",
       "created_at": "2026-10-30T19:10:23.196463+00:00",
-      "updated_at": "2026-10-30T20:11:30.844462+00:00",
+      "updated_at": "2026-10-30T20:37:26.918197+00:00",
       "branch": "release/v2.3-scene-settings",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/534",
       "approval": "Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3",
@@ -12594,13 +12594,18 @@
           "at": "2026-10-30T20:11:30.844462+00:00",
           "owner": "codex-release23",
           "detail": "PR534 y correccion JP535 integrados; source9d5c1e3ec141eb5b4d770eba0b9e51315bcfcdd5. Matriz serial PID46300, pruebas/release-v23/build-matrix-run3.log; Windows32/64/package/Linux PASS. Android ARMv7 y host ARM64 compilados, APK aun pendiente. No release publicada ni limpieza ejecutada. Publicar ocho plataformas+Web y verificar hashes publicos antes cleanup propio sin force; Atlas/online529/otrosowners protegidos."
+        },
+        {
+          "at": "2026-10-30T20:37:26.918197+00:00",
+          "owner": "codex-release23",
+          "detail": "Ultima instruccion humana: publicar2.3 TODAS plataformas, cerrar issues que correspondan y STOP; limpieza posterior APLAZADA, no ejecutar cleanup. Source3b7c2ba6c893f7276abf775a3e945ff0657bb622 (PR534/535/536). Run4 PID33176 Windows/Linux/Android PASS, WebEU PASS UScompilando. #517 reportero confirma Windows/Deck comentario6511336686: cerrar trasrelease y conservar nuevo borde blanco como seguimiento separado; #330/#530 siguenpendientes. Scripts de publicacion/verificacion y borradores issues en pruebas/release-v23. No iniciar otros pendientes."
         }
       ],
       "claimed_at": "2026-10-30T19:12:50.503981+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T20:26:43.432725+00:00",
+  "updated_at": "2026-10-30T20:37:26.918197+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
