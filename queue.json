@@ -12309,23 +12309,28 @@
       "status": "en_curso",
       "owner": "codex-vps-beta",
       "created_at": "2026-10-30T12:06:13.178841+00:00",
-      "updated_at": "2026-10-30T12:08:08.477811+00:00",
+      "updated_at": "2026-10-30T12:10:57.148927+00:00",
       "branch": "feat/vps-online-beta",
       "pr": null,
-      "approval": "Usuario 30/10 solicita segunda opcion online beta, acepta relay; solo modo original, coop futuro; solo animaciones-evi/recomp-games",
+      "approval": "Usuario30Oct aprueba diseño escrito e implementar con mejoras, investigación otros decomps/OpenRCT2/OpenTTD; solo original, coop futuro",
       "reference": "Chat VPS animaciones-evi 30/10/2026",
       "evidence": [
         {
           "at": "2026-10-30T12:08:08.477811+00:00",
           "owner": "codex-vps-beta",
           "detail": "Diseño concreto documentado; usuario confirma relay reforzado, solo modo original por ahora; web futuro. Checkout kh-worktrees/vps-online-beta desde ec7c970be. Implementacion aun no iniciada."
+        },
+        {
+          "at": "2026-10-30T12:10:57.148927+00:00",
+          "owner": "codex-vps-beta",
+          "detail": "Plan inline documentado, investigación primaria; sin workers ni cambios en otros servicios. Design320ff2e95."
         }
       ],
       "claimed_at": "2026-10-30T12:06:27.692402+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T12:08:08.477811+00:00",
+  "updated_at": "2026-10-30T12:10:57.148927+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
