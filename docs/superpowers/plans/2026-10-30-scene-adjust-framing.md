@@ -63,10 +63,14 @@ manifest records the exact current build versions admitted as honors exceptions.
   user scale and its matching dock margin. Logical camera policy independent
   of options canvas drives tagging; cleanup clears BG ownership. Actual message
   and presenter consumer regressions now GREEN. Build91/91 passes; run04 native
-  dialog comparisons in progress. Do not claim UI split before its captures pass.
+  dialog comparisons passed: UI4/UI6 differ below the world area only; UI4 text
+  crop matches old Extended exactly. run05 passes options, normal gallery,
+  720-to-1080 resize, Original exact parity and narrow native-frame route.
 - Native diagnostics/scripts/captures live in pruebas/scene-adjust-v23, fresh
   isolated dirs, dummy SDL/software, one process/BelowNormal. No desktop input.
-  No64-bit game/device certification yet. No release or installed game edits.
+  Windows64 full guest+host build and ABI/boot tests pass; run10 native captures pass: Adjusted dialogue, Extended and honors121 match
+  final32 output exactly at1080p.
+  No physical Android/Linux certification. No release or installed game edits.
 
 - User approved design and clarified equivalent GBA integer framing rather than
   a physical x6 on every screen. Separate issue330 documentation work is PR531.
@@ -75,3 +79,27 @@ manifest records the exact current build versions admitted as honors exceptions.
   Manifest will use actual current build_version records, not historical labels.
 - Initial current honors event candidates:004,008,053,054,055,074,102,109,121,122.
   Shared-map variants are not automatically admitted as additional events.
+
+- Review corrections: honors admission now uses generated, fail-closed grants
+  bound to exact approval metadata and actual renderer/art source fingerprints.
+  Shared renderer edits conservatively retire all grants until explicitly reviewed.
+  Mutation tests cover source/revision/status changes and stable incremental output.
+  Tall-fit dialogue keeps its pre-camera floating scale (1280x800:4.444).
+  Read-only reviewer rechecked both corrections without further findings.
+
+- User review found a missing Cid portrait despite earlier text-only parity.
+  Shared scanline canvas was narrower than the dialogue layer. Padding its
+  internal horizontal span preserves the physical camera centre crop and admits
+  the complete portrait, including narrow scene bounds. run09 full portrait
+  visually checked, face interior exact baseline and top500 world pixels exact
+  prior Ajuste; Extended and honors still exact. Old failed assertion compared a
+  transparent portrait rectangle including intentionally different world pixels;
+  corrected criterion checks face interior plus full visual inspection.
+- Native64 capture harness corrected to host readback; it then exposed software
+  triangle coverage failure at1080p. Actual host consumer RED/GREEN isolates
+  rectangle-copy fix, limited to software backend, preserving GPU behavior.
+
+Final run11 passes exact physical world parity at odd1281x721 between UIx1
+(padding1282, beyond the512 sprite span) and UIx4. run12 passes narrow-frame
+presentation with the complete left Yuffie portrait visually inspected, plus
+Original Ajuste/Extendido exact output parity. All QA processes have exited.
