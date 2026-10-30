@@ -12402,19 +12402,20 @@
     "optiport-online-contracts": {
       "id": "optiport-online-contracts",
       "piece": "OptiPort: incorporar mecanismos verificados de online, pacing, rollback e historial y medicion antes/despues",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-optiport-online",
       "created_at": "2026-10-30T14:27:15.934231+00:00",
-      "updated_at": "2026-10-30T14:27:15.934231+00:00",
+      "updated_at": "2026-10-30T14:27:25.598774+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario30Oct pide OptiPort enfocado al online y agregar las mejoras aprendidas al metodo",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/529",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-30T14:27:25.598774+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T14:27:15.934231+00:00",
+  "updated_at": "2026-10-30T14:27:25.598774+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
