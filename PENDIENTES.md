@@ -422,4 +422,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | vps-online-fullspeed-240ms | Mantener batalla VS a velocidad original en ambos peers con RTT240ms y medir/grabar | pr_abierto | codex-vps-fullspeed | https://github.com/MatyMeatBoy/ReKHCoM/pull/529 | Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing | 2026-10-30T14:34:30.034479+00:00 |
 | optiport-online-contracts | OptiPort: incorporar mecanismos verificados de online, pacing, rollback e historial y medicion antes/despues | integrado | codex-optiport-online | https://github.com/MatyMeatBoy/OptiPort/pull/22 | Usuario30Oct pide OptiPort enfocado al online y agregar las mejoras aprendidas al metodo | 2026-10-30T14:37:05.266297+00:00 |
 
-Integrador: codex-optiport-online (ocupado; 2026-10-30T14:36:13.615554+00:00)
+Integrador: libre
