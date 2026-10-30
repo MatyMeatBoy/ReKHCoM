@@ -12350,7 +12350,7 @@
       "status": "en_curso",
       "owner": "codex-vps-fullspeed",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T14:01:57.990128+00:00",
+      "updated_at": "2026-10-30T14:13:00.567514+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": null,
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -12380,13 +12380,18 @@
           "at": "2026-10-30T14:01:57.990128+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "Foundation6aca86db9 y segundo commit: selector clasico/moderno independiente, protocolo directo+transporte+codecs, puente de controles compilado en chara (todavia sin routing), snapshots moderno64/clasico32 con error explicito. WinEU32 build372/372 e incremental3/3 PASS+ninja sin trabajo; suites core/config/codec/transport/inputbridge/snapshots/launcherWindows/Linux/relay PASS. Pendientes preparacion asincrona/barrier/routing, hash ampliado y juego real240/300ms/video. No nuevo paquete, no VPS ni otros proyectos modificados."
+        },
+        {
+          "at": "2026-10-30T14:13:00.567514+00:00",
+          "owner": "codex-vps-fullspeed",
+          "detail": "Usuario confirma que 2.3 saldra con estas pruebas y autoriza seguir mejorando/pusheando. Identidad GitHub verificada MatyMeatBoy. Push de avances foundation hastaacf16da49 a rama fix/vps-online-fullspeed-240ms; no main/release. Continuan pendientes preparacion asincrona y batalla real moderna240/300ms."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T14:01:57.990128+00:00",
+  "updated_at": "2026-10-30T14:13:00.567514+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
