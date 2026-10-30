@@ -12566,10 +12566,10 @@
     "v23-release-scene-experimental": {
       "id": "v23-release-scene-experimental",
       "piece": "Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-release23",
       "created_at": "2026-10-30T19:10:23.196463+00:00",
-      "updated_at": "2026-10-30T19:25:49.498324+00:00",
+      "updated_at": "2026-10-30T19:32:04.924813+00:00",
       "branch": "release/v2.3-scene-settings",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/534",
       "approval": "Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3",
@@ -12584,13 +12584,18 @@
           "at": "2026-10-30T19:25:49.498324+00:00",
           "owner": "codex-release23",
           "detail": "PR534 head359588214. All settings/code testsPASS, legacy0=1 nativepixelparity, SpanishExperimentalcapturefits. ReadonlyreviewPASS. Userauthorizedallplatforms andcleanupafterpublication. Releasebuilds/publishingNOTdone yet; claimmustremainactiveaftercodePRmerge."
+        },
+        {
+          "at": "2026-10-30T19:32:04.924813+00:00",
+          "owner": "codex-release23",
+          "detail": "Code PR534 mergedmain98f6d421d7f9fed8229264f73bf187735e5233bc; lockreleased. Release buildmatrix started PID8880 inownedscene-adjust-v23 fromexactmainHEAD. Logs pruebas/release-v23/build-matrix-run2.log + BUILD-STATUS.json. SerialWindows32/64 EUUSJP,Linux,Android,Web,Switch,Vita,PS4,PS5; jobs1/BelowNormal,512mGradleheap,1GiBVM/CPU1 guardedRAM. Publication andcleanupstillpending. Allcode/tests/nativecasesPASS. DoNOTcleanupcheckoutduringbuild."
         }
       ],
       "claimed_at": "2026-10-30T19:12:50.503981+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-10-30T19:27:05.376891+00:00",
+  "updated_at": "2026-10-30T19:32:04.924813+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
