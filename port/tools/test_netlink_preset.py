@@ -25,12 +25,18 @@ def main():
 #include <cstdlib>
 #include <cassert>
 #include "port/decompui/netlink_preset.h"
+#include "port/include/port/port_online_config.h"
 namespace fs=std::filesystem;
 static fs::path sRoot;
 static int desired=-1,observed=-1;
+static int engineDesired=-1,engineObserved=-1;
 static const char* T(const char* es,const char*){return es;}
 static int Px(int v){return v;}
 static bool CycleRow(const char* label,const char*,int& value,int count,const char*const*){
+    if(std::string(label)=="Motor online"){
+        engineObserved=value;
+        if(engineDesired>=0){assert(count==2);value=engineDesired;return true;}
+    }
     if(std::string(label).find("Enlace en red") == 0){
         observed=value;
         if(desired>=0){assert(desired<count);value=desired;return true;}
@@ -53,11 +59,17 @@ static void TextWrapped(const char*,const char*){}
 }
 int main(int argc,char**argv){
     sRoot=argv[1]; desired=std::atoi(argv[3]);
+    if(argc>6)engineDesired=std::atoi(argv[6]);
     {std::ofstream out(sRoot/"netlink.cfg");out<<argv[2]<<"\n";}
     NetlinkRows();
     assert(observed==std::atoi(argv[4]));
     std::ifstream in(sRoot/"netlink.cfg");std::string spec;std::getline(in,spec);
     assert(spec==argv[5]);
+    assert(engineObserved==(argc>7?std::atoi(argv[7]):0));
+    if(engineDesired>=0){
+        std::ifstream engine(sRoot/"online-engine.cfg");std::string selected;std::getline(engine,selected);
+        assert(selected==PortOnlineEngineName(engineDesired));
+    }
 }
 '''
     # Inject the real function before the test's main, not a reimplementation.
@@ -76,6 +88,11 @@ int main(int argc,char**argv){
                 ('relay:custom:47801:ABC:host', -1, 5, 'relay:custom:47801:ABC:host')]:
             subprocess.run([str(exe), str(work), before, str(selection), str(parsed), after], check=True)
         print('PASS: 7 production launcher preset/save/reopen/legacy cases')
+        for before, selection, observed in [('classic',1,0),('modern',-1,1),('modern',0,1)]:
+            (work/'online-engine.cfg').write_text(before+'\n')
+            subprocess.run([str(exe),str(work),'relay:custom:47801:ABC:host','-1','5',
+                            'relay:custom:47801:ABC:host',str(selection),str(observed)],check=True)
+        print('PASS: production engine toggle/reopen preserves custom endpoint')
 
 
 if __name__ == '__main__':

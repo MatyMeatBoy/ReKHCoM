@@ -18,8 +18,10 @@
 #include "port/port.h"
 #include "port/port_state.h"
 #include "port/port_netlink.h"
+#include "port/port_online.h"
 
-#define RB_FRAMES 32
+#define RB_CAPACITY 64
+static int sFrames = 32;
 
 int NetRollbackSession(void);
 uint32_t NetLinkFrame(void);
@@ -36,10 +38,10 @@ static const Region sRegions[] = {
     { GBA_PLTT, GBA_PLTT_SIZE },   { GBA_VRAM, GBA_VRAM_SIZE },   { GBA_OAM, GBA_OAM_SIZE },
 };
 
-static uint8_t* sSnap[RB_FRAMES];
-static uint32_t sSnapTimeline[RB_FRAMES], sSnapLink[RB_FRAMES];
-static uint8_t sSnapValid[RB_FRAMES];
-static uint16_t sKeys[RB_FRAMES]; /* the keys each timeline frame played with */
+static uint8_t* sSnap[RB_CAPACITY];
+static uint32_t sSnapTimeline[RB_CAPACITY], sSnapLink[RB_CAPACITY];
+static uint8_t sSnapValid[RB_CAPACITY];
+static uint16_t sKeys[RB_CAPACITY]; /* the keys each timeline frame played with */
 static size_t sSnapSize;
 static uint8_t* sCursor;
 static uint32_t sTimeline; /* part of the snapshot: taken back with the game */
@@ -55,8 +57,8 @@ int PortRollbackLastDepth(void) {
    and every frame played again is compared with what it was the first time: the first byte that differs is logged
    with its region (data/bss offsets: match them with the exe's symbols), so state the snapshots miss shows up. */
 static int sTestEvery = -1;
-static uint8_t* sOld[RB_FRAMES];
-static int sOldValid[RB_FRAMES];
+static uint8_t* sOld[RB_CAPACITY];
+static int sOldValid[RB_CAPACITY];
 static const char* sVisitName;
 static size_t sVisitOffset;
 static int sDiffLogged;
@@ -127,14 +129,15 @@ static int Prepare(void) {
         return 1;
     if (sFailed)
         return 0;
+    sFrames = PortOnlineModern() ? 64 : 32;
     sSnapSize = 0;
     VisitAll(VisitSize);
-    for (i = 0; i < RB_FRAMES; i++) {
+    for (i = 0; i < sFrames; i++) {
         sSnap[i] = (uint8_t*)malloc(sSnapSize);
         if (!sSnap[i]) {
             sFailed = 1;
-            PortLog("rollback: no memory for %d snapshots of %u bytes: the link waits instead", RB_FRAMES,
-                    (unsigned)sSnapSize);
+            PortLog("rollback: no memory for %d snapshots of %u bytes", sFrames, (unsigned)sSnapSize);
+            if (PortOnlineModern()) PortOnlineFail(MODERN_ERR_STATE);
             while (i-- > 0) {
                 free(sSnap[i]);
                 sSnap[i] = NULL;
@@ -142,13 +145,15 @@ static int Prepare(void) {
             return 0;
         }
     }
-    PortLog("rollback: %d snapshots of %u KB", RB_FRAMES, (unsigned)(sSnapSize / 1024));
+    PortLog("rollback: %d snapshots of %u KB", sFrames, (unsigned)(sSnapSize / 1024));
     return 1;
 }
 
 int PortRollbackResimulating(void) {
     return sResim;
 }
+
+int PortRollbackReserve(void) { return Prepare(); }
 
 /* The game's frame is done and the next one's keys are in KEYINPUT: take back a wrong guess, keep this frame. */
 void PortRollbackBoundary(int inMainLoop) {
@@ -177,7 +182,7 @@ void PortRollbackBoundary(int inMainLoop) {
     if (sTestEvery > 0 && inMainLoop && to == 0xFFFFFFFF && !sResim && NetLinkFrame() > 8 &&
         NetLinkFrame() % (uint32_t)sTestEvery == 0) {
         to = NetLinkFrame() - 6;
-        for (i = 0; i < RB_FRAMES; i++) { /* what the frames were, to compare while playing them again */
+        for (i = 0; i < sFrames; i++) { /* what the frames were, to compare while playing them again */
             if (!sOld[i])
                 sOld[i] = (uint8_t*)malloc(sSnapSize);
             sOldValid[i] = sOld[i] && sSnapValid[i];
@@ -188,16 +193,21 @@ void PortRollbackBoundary(int inMainLoop) {
     if (to != 0xFFFFFFFF) {
         /* the latest snapshot from before link frame `to` was played */
         int best = -1;
-        for (i = 0; i < RB_FRAMES; i++)
+        for (i = 0; i < sFrames; i++)
             if (sSnapValid[i] && sSnapLink[i] <= to && (best < 0 || sSnapTimeline[i] > sSnapTimeline[best]))
                 best = i;
         if (best < 0) {
+            if (PortOnlineModern()) {
+                PortOnlineFail(MODERN_ERR_HISTORY);
+                sResim = 0;
+                return;
+            }
             PortLog("rollback: link frame %u is older than the snapshots: not taken back", (unsigned)to);
         } else {
             uint32_t from = sTimeline;
             sCursor = sSnap[best];
             VisitAll(VisitLoad);
-            for (i = 0; i < RB_FRAMES; i++) /* the frames after it are being played again */
+            for (i = 0; i < sFrames; i++) /* the frames after it are being played again */
                 if (sSnapValid[i] && sSnapTimeline[i] > sTimeline)
                     sSnapValid[i] = 0;
             sResim = 1;
@@ -210,7 +220,7 @@ void PortRollbackBoundary(int inMainLoop) {
     link = NetLinkFrame();
     if (sResim && link >= NetLinkMade())
         sResim = 0; /* caught up: from here the frames are new */
-    slot = (int)(sTimeline % RB_FRAMES);
+    slot = (int)(sTimeline % sFrames);
     if (sResim)
         IO16(0x130) = sKeys[slot]; /* the keys this frame had the first time */
     else

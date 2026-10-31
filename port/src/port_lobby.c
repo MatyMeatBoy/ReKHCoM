@@ -13,11 +13,12 @@
  */
 #include "port/port.h"
 #include "port/port_netlink.h"
+#include "port/port_online.h"
 
 #include <SDL3/SDL.h>
 #include <string.h>
 
-#define LOBBY_VERSION 3 /* NET_VERSION in src/sio/sio.c: only rooms that play by the same rules are listed */
+#define LOBBY_VERSION PortOnlineVersion() /* Classic and modern rooms never meet. */
 #define LOBBY_ROOMS 20
 
 static int sBackend; /* 0 none, 1 Steam, 2 a relay server */
