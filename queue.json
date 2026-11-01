@@ -4137,10 +4137,10 @@
     "claude-close-20261026": {
       "id": "claude-close-20261026",
       "piece": "Retoma Claude: cierre técnico v2.0 y verificación de entregas",
-      "status": "pr_abierto",
-      "owner": "codex-retoma",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T16:22:20.470860+00:00",
-      "updated_at": "2026-10-26T16:45:14.432797+00:00",
+      "updated_at": "2026-11-01T23:00:03.718844+00:00",
       "branch": "codex/claude-close-20261026",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/244",
       "approval": null,
@@ -4150,6 +4150,11 @@
           "at": "2026-10-26T16:45:14.432797+00:00",
           "owner": "codex-retoma",
           "detail": "Código UI compilado; compositor y wrapping red-green; QA runtime en progreso, PR draft.239/240/241/242 integrados."
+        },
+        {
+          "at": "2026-11-01T23:00:03.718844+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T16:22:27.817401+00:00"
@@ -12838,7 +12843,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:59:45.723904+00:00",
+  "updated_at": "2026-11-01T23:00:03.718844+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13378,6 +13383,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "66bd996f285d3873a671d96c5efd607d713c010a",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:00:03.718844+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "claude-close-20261026",
+      "from_owner": "codex-retoma",
+      "to_owner": "claude-v22",
+      "expected_commit": "068c8c833042c593c3f8b42addd143947624554c",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
