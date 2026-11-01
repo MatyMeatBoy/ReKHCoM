@@ -11965,10 +11965,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:11:16.164878+00:00",
-      "updated_at": "2026-11-01T23:23:37.527034+00:00",
+      "updated_at": "2026-11-01T23:44:50.064904+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Root FREEZE f28b884ab2409753cea0cfae37784d5a3ed90f31 and4consolebuild authorization",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
         {
@@ -11983,6 +11983,11 @@
         },
         {
           "at": "2026-11-01T23:23:37.527034+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:44:50.064904+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13913,7 +13918,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:44:30.603486+00:00",
+  "updated_at": "2026-11-01T23:44:50.064904+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
