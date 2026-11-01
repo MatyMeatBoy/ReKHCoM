@@ -1413,10 +1413,10 @@
     "editor-tiles-ui": {
       "id": "editor-tiles-ui",
       "piece": "Editor avanzado: lienzo herramientas y galeria por escena/mundo/global",
-      "status": "pr_abierto",
-      "owner": "claude-integrador",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:34:21.233245+00:00",
-      "updated_at": "2026-10-25T07:21:40.828461+00:00",
+      "updated_at": "2026-11-01T22:56:01.799685+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c",
       "approval": "pedido-usuario-20261024",
@@ -1441,6 +1441,11 @@
           "at": "2026-10-25T07:21:40.828461+00:00",
           "owner": "claude-integrador",
           "detail": "editor de tiles en main (226bd523c)"
+        },
+        {
+          "at": "2026-11-01T22:56:01.799685+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T16:34:21.233245+00:00",
@@ -12725,7 +12730,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:55:52.455673+00:00",
+  "updated_at": "2026-11-01T22:56:01.799685+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13205,6 +13210,16 @@
       "from_owner": "claude-integrador",
       "to_owner": "claude-v22",
       "expected_commit": "5e37746e7f8f69ac529d1b7411ad99dccdeb0e93",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:56:01.799685+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "editor-tiles-ui",
+      "from_owner": "claude-integrador",
+      "to_owner": "claude-v22",
+      "expected_commit": "ab7ec12b645e0a8202085b575f9bbf5d19db3432",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
