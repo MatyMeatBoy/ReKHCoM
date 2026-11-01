@@ -9306,9 +9306,9 @@
       "id": "post22-arm-wasm-division-parity",
       "piece": "CPU-only audit of ARM32/ARM64/Wasm DIV and REM zero/overflow parity with original GBA contracts; excludes published UI fixes and x86 ledger395",
       "status": "en_curso",
-      "owner": "codex-arm-wasm-div-parity",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T11:12:10.305821+00:00",
-      "updated_at": "2026-10-28T11:52:04.624197+00:00",
+      "updated_at": "2026-11-01T22:19:07.270365+00:00",
       "branch": "audit/arm-wasm-division-parity",
       "pr": null,
       "approval": "Root delegated post2.2 critical parity audit under user authorization; preserve released bytes and original RNG/remainder semantics",
@@ -9318,6 +9318,11 @@
           "at": "2026-10-28T11:52:04.624197+00:00",
           "owner": "codex-arm-wasm-div-parity",
           "detail": "Audit3targets complete: rawWasm13/A64 4/AndroidARM32 6 mismatchesper28cases;prototypepreoptIRguard0each. Original192ThumbPASS. ChildWebPR435ready2dddf; ARMbuilderintegrationSTILLPENDING—parentnotcomplete. AndroidNDKcompilerRT remainderzero uninitializedslot;A64remainderzero dividend;Wasmzero/overflowtrap. NewS22crashnotattributed."
+        },
+        {
+          "at": "2026-11-01T22:19:07.270365+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
         }
       ],
       "claimed_at": "2026-10-28T11:12:15.199987+00:00"
@@ -12667,7 +12672,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:18:52.894368+00:00",
+  "updated_at": "2026-11-01T22:19:07.270365+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13127,6 +13132,16 @@
       "from_owner": "codex-arm32-div-lowering",
       "to_owner": "claude-v22",
       "expected_commit": "0600a9e1295f92289a1053824b7f4478148bc5b2",
+      "evidence": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
+    },
+    {
+      "at": "2026-11-01T22:19:07.270365+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "post22-arm-wasm-division-parity",
+      "from_owner": "codex-arm-wasm-div-parity",
+      "to_owner": "claude-v22",
+      "expected_commit": "dab0a78eddeae873971b422609977b85c9c727f1",
       "evidence": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
     }
   ]
