@@ -3429,10 +3429,10 @@
     "submenu-cambiar-naipes": {
       "id": "submenu-cambiar-naipes",
       "piece": "Cambiar naipes: receta de submenus + numeracion del mazo con el texto HD mejorado (usuario 25/10)",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-25T23:15:17.758614+00:00",
-      "updated_at": "2026-11-01T23:51:41.817509+00:00",
+      "updated_at": "2026-11-01T23:51:48.412421+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
@@ -3457,9 +3457,15 @@
           "at": "2026-11-01T23:51:41.817509+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): digitos HD del canje Moogle cerrados 27/10 (PENDIENTES) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:51:48.412421+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): digitos HD del canje Moogle cerrados 27/10 (PENDIENTES) — limpieza de cola 02/11, main db978bac6."
         }
       ],
-      "claimed_at": "2026-11-01T23:01:55.837342+00:00"
+      "claimed_at": "2026-11-01T23:01:55.837342+00:00",
+      "completed_at": "2026-11-01T23:51:48.412421+00:00"
     },
     "submenu-anadir-naipes-esquina": {
       "id": "submenu-anadir-naipes-esquina",
@@ -14045,7 +14051,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:51:41.817509+00:00",
+  "updated_at": "2026-11-01T23:51:48.412421+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
