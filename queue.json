@@ -5691,9 +5691,9 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T06:31:22.665133+00:00",
-      "updated_at": "2026-11-01T23:33:02.774905+00:00",
+      "updated_at": "2026-11-01T23:54:15.557803+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
       "evidence": [
@@ -5704,6 +5704,11 @@
         },
         {
           "at": "2026-11-01T23:33:02.774905+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): encuadre de escenas 2.3 con retratos completos (881f599bc) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:54:15.557803+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): encuadre de escenas 2.3 con retratos completos (881f599bc) — limpieza de cola 02/11, main db978bac6."
         }
@@ -14131,7 +14136,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:54:06.017672+00:00",
+  "updated_at": "2026-11-01T23:54:15.557803+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
