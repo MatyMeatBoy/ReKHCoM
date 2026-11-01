@@ -7892,10 +7892,10 @@
     "v22-64bit-crash-pattern-ledger": {
       "id": "v22-64bit-crash-pattern-ledger",
       "piece": "Registro acotado de reportes64, causas probadas, fixes, artefactos y regresiones pendientes; referencia carril386 existente",
-      "status": "en_revision",
-      "owner": "codex-64bit-crash-ledger",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T19:14:29.491816+00:00",
-      "updated_at": "2026-10-27T19:20:32.646829+00:00",
+      "updated_at": "2026-11-01T23:16:07.488962+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10 amplía a todos los cuelgues documentados64 y solución por patrones; coordinador asigna sólo inventario local sin producto",
@@ -7905,6 +7905,11 @@
           "at": "2026-10-27T19:20:32.646829+00:00",
           "owner": "codex-64bit-crash-ledger",
           "detail": "Local snapshot+ledger+README in pruebas/64bit-crash-ledger. Bounded386/360/330/277/PR318/272/374; includes root-proven386 firstIDIV0 and secondaryFD, source/fix/tag/artifact/reporter/missing separated. No product/publication. Preserve root386claims. Parent broad closure NOT claimed."
+        },
+        {
+          "at": "2026-11-01T23:16:07.488962+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T19:14:45.129018+00:00"
@@ -13308,7 +13313,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:15:49.303284+00:00",
+  "updated_at": "2026-11-01T23:16:07.488962+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14088,6 +14093,16 @@
       "from_owner": "codex-harness64",
       "to_owner": "claude-v22",
       "expected_commit": "49e0d06a4fa2b9e6dca7bb685b19972b656d8e87",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:16:07.488962+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-64bit-crash-pattern-ledger",
+      "from_owner": "codex-64bit-crash-ledger",
+      "to_owner": "claude-v22",
+      "expected_commit": "4a8c7f0dc2fe3d8489c2a2e012789354cce07562",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
