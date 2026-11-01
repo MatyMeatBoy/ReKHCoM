@@ -15,6 +15,9 @@
 #include <stddef.h>
 #include "sprite_palettes.h"
 #include "engine_math.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 
 enum BtlHpothGaugeMode {
     BTL_HPOTH_GAUGE_MODE_SINGLE,
@@ -298,7 +301,20 @@ s32 task_btl_hpoth_1(BtlHpothWork* work) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+static void task_btl_hpoth_2_Body(BtlHpothWork* work);
+
+/* The link opponent's HP gauge: top-right corner of the screen, as the enemy's (its stocked values sit under it). */
 void task_btl_hpoth_2(BtlHpothWork* work) {
+    PortHudBegin(1, -1);
+    task_btl_hpoth_2_Body(work);
+    PortHudEnd();
+}
+
+static void task_btl_hpoth_2_Body(BtlHpothWork* work) {
+#else
+void task_btl_hpoth_2(BtlHpothWork* work) {
+#endif
     s32 scale;
     ObjAffine* affine;
 
