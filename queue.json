@@ -6911,10 +6911,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:10.600293+00:00",
-      "updated_at": "2026-11-01T23:06:15.218606+00:00",
+      "updated_at": "2026-11-01T23:33:19.959688+00:00",
       "branch": null,
       "pr": null,
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
         {
@@ -6929,6 +6929,11 @@
         },
         {
           "at": "2026-11-01T23:06:15.218606+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): prioridad 1 de cartas cerrada (#371/#404) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:33:19.959688+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): prioridad 1 de cartas cerrada (#371/#404) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13705,7 +13710,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:33:02.774905+00:00",
+  "updated_at": "2026-11-01T23:33:19.959688+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
