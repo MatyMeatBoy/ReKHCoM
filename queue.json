@@ -9443,10 +9443,10 @@
     "post22-arm32-division-lowering": {
       "id": "post22-arm32-division-lowering",
       "piece": "Game-only Android32 CMake and Linux/Anbernic armhf pre-LLVM-optimization scalar i32 division/remainder lowering; preserve host/SDL/importer and shared helper",
-      "status": "bloqueado",
-      "owner": "codex-arm32-div-lowering",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T12:10:24.583307+00:00",
-      "updated_at": "2026-10-28T14:43:31.480171+00:00",
+      "updated_at": "2026-11-01T22:18:52.894368+00:00",
       "branch": "fix/arm32-cartridge-division",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/440",
       "approval": "Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable",
@@ -9466,6 +9466,11 @@
           "at": "2026-10-28T14:43:31.480171+00:00",
           "owner": "codex-arm32-div-lowering",
           "detail": "Explicit owner STOP2026-10-28: PR440closedwithoutmerge; branch/head ee605fe preserved. Incompleteverification remains pending, not integrated. No further builds or claims."
+        },
+        {
+          "at": "2026-11-01T22:18:52.894368+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
         }
       ],
       "claimed_at": "2026-10-28T12:10:30.123648+00:00"
@@ -12662,7 +12667,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:06:51.157831+00:00",
+  "updated_at": "2026-11-01T22:18:52.894368+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13113,6 +13118,16 @@
       "to_owner": "codex-deck330-startup",
       "expected_commit": "4e286f643e70ed8015f49fc5c43132d463213702",
       "evidence": "Explicit user28Oct asks fix330 using received6469653895log, improve milestones for next pre, integrate PRs/publish/tests/reply. Current agent registry onlyroot+console_delivery+deck_video_421+release_readiness; old diagnostic owner absent. App inventory onlythisKH threadactive; oldtask hasno branch/noPR, historicalreadonlyDIAGNOSTICO preserved, no sourceWIP. PriorSTOP and current explicitresume verified; recover into codex-deck330-startup for source-stage diagnosis, not speculative overlay fix."
+    },
+    {
+      "at": "2026-11-01T22:18:52.894368+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "post22-arm32-division-lowering",
+      "from_owner": "codex-arm32-div-lowering",
+      "to_owner": "claude-v22",
+      "expected_commit": "0600a9e1295f92289a1053824b7f4478148bc5b2",
+      "evidence": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
     }
   ]
 }
