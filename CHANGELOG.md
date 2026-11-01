@@ -1,13 +1,15 @@
 # Changelog
 
-## v2.5-online-beta
+## v2.6
 
 - Online lobby browser in place of the Link menu: Link opens Load (your file), then a table of public rooms with name, host level, region and players, and Create room, region Filter, Refresh and Cable buttons. Rooms take a typed name or the offered "<player>'s room"; picking a room goes straight to the connect screen, cancelling the wait returns to the list and Back returns to the title.
-- Online on the Windows 64-bit build (what Auto selects on x64), which previously had no network; typed text reaches 64-bit Windows and Linux builds.
-- Both games relay the battle's keys themselves, so rollback corrections no longer leave the two battles different. In local two-game tests with 3-6 frames of lag and 2% loss, 64-bit vs 64-bit and 32-bit vs 64-bit battles kept every state check equal; earlier builds, including the published v2.3, could drift apart for the rest of the battle.
-- The one-button dodge works in link battles, as the d-pad double tap it stands for.
-- Wide view in link battles: the opponent's HP gauge is docked top-right and the network line sits between the two gauges.
-- Link version 5: these rooms only meet other v2.5 online beta games of the same cartridge region. Windows test build; Android cross-play and physical games between distant places are not verified.
+- Online on the Windows 64-bit build (what Auto selects on x64), which previously had no network; typed text for room names on 64-bit Windows, Linux and Android.
+- Both games relay the battle's keys themselves, so rollback corrections no longer leave the two battles different. In local two-game tests with 3-6 frames of lag and 2% loss, 64-bit vs 64-bit and 32-bit vs 64-bit battles kept every state check equal; earlier builds, including v2.3, could drift apart for the rest of the battle.
+- The one-button dodge works in link battles, as the d-pad double tap it stands for. Wide view in link battles: the opponent's HP gauge is docked top-right and the network line sits between the two gauges.
+- ARM32 builds (Android 32-bit and Anbernic) now divide by zero as the cartridge does (quotient and remainder 0), like PC and ARM64, which link battles across platforms need. Checked on the full Anbernic build and against the cartridge's own routine; not run on an ARM32 device here.
+- The HD importer finds Epic Games Store installs, whose files are under `en` instead of Steam's `dt` (#541).
+- The 6th floor's pre-rendered movie plays as its HD clip (zz_event_062, 1:23-1:28, #539). Android keeps the cartridge's movie wherever the HD version would need a clip of a longer scene.
+- Link version 5: online rooms only meet other v2.6 games of the same cartridge region. Online play between distant places, Android and ARM32 devices is not verified here.
 
 ## v2.3
 
