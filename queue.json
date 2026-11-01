@@ -8462,10 +8462,10 @@
     "sol-guest64-abi-audit": {
       "id": "sol-guest64-abi-audit",
       "piece": "Bounded guest64 savedata callback and ABI audit",
-      "status": "en_revision",
-      "owner": "sol-low-linux-import",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T20:17:07.805135+00:00",
-      "updated_at": "2026-10-27T20:19:45.416959+00:00",
+      "updated_at": "2026-11-01T23:17:45.356012+00:00",
       "branch": null,
       "pr": null,
       "approval": "User requested32to64 parity root scoped audit",
@@ -8475,6 +8475,11 @@
           "at": "2026-10-27T20:19:45.416959+00:00",
           "owner": "sol-low-linux-import",
           "detail": "Bounded auditmain6be04069 no new causalABIdefect.57Windowsadapters;guestx32/arm64_32layoutcompilepass;actualWindowsABICPUtestpass;state/savebankproductionpass;allocatoractualextracti686/x64pass. No product changes; scope limits explicit."
+        },
+        {
+          "at": "2026-11-01T23:17:45.356012+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T20:17:14.532848+00:00"
@@ -13348,7 +13353,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:17:26.638792+00:00",
+  "updated_at": "2026-11-01T23:17:45.356012+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14168,6 +14173,16 @@
       "from_owner": "sol-low-linux-import",
       "to_owner": "claude-v22",
       "expected_commit": "d5bc99745c636edf656f1024c1d3cada57432454",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:17:45.356012+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "sol-guest64-abi-audit",
+      "from_owner": "sol-low-linux-import",
+      "to_owner": "claude-v22",
+      "expected_commit": "5386bf4424e728e6be58bd83386bc587b5a9b403",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
