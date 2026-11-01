@@ -7699,14 +7699,20 @@
       "id": "issue386-stackoverflow",
       "piece": "Crash Windows64 al entrar mode_mapinspect, issue386",
       "status": "en_curso",
-      "owner": "codex-crash386",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:54:31.158123+00:00",
-      "updated_at": "2026-10-27T18:54:36.970484+00:00",
+      "updated_at": "2026-11-01T23:10:16.039159+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-01T23:10:16.039159+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        }
+      ],
       "claimed_at": "2026-10-27T18:54:36.970484+00:00"
     },
     "harness-menus-architecture": {
@@ -13137,7 +13143,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:10:06.232847+00:00",
+  "updated_at": "2026-11-01T23:10:16.039159+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13807,6 +13813,16 @@
       "from_owner": "codex-card-microfix",
       "to_owner": "claude-v22",
       "expected_commit": "4c01aa761eb741d20bcdd81c7ebd144f5542998b",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:10:16.039159+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "issue386-stackoverflow",
+      "from_owner": "codex-crash386",
+      "to_owner": "claude-v22",
+      "expected_commit": "6be398f033b13efa29428a87ed195bae31ba5b26",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
