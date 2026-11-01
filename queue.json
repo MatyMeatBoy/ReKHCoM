@@ -2692,14 +2692,20 @@
       "id": "atlas-titulo-hd",
       "piece": "Titulo: HD menu y fondo original PS2 1.5",
       "status": "en_curso",
-      "owner": "codex-atlas-menus",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T16:02:36.403069+00:00",
-      "updated_at": "2026-10-25T16:02:47.744398+00:00",
+      "updated_at": "2026-11-01T22:59:14.571106+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "feedbackref:20261024-134115-f782ac;parent:c4e96953065648208e79a8484b6b0197",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-01T22:59:14.571106+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        }
+      ],
       "claimed_at": "2026-10-25T16:02:47.744398+00:00"
     },
     "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03": {
@@ -12817,7 +12823,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:59:00.408627+00:00",
+  "updated_at": "2026-11-01T22:59:14.571106+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13337,6 +13343,16 @@
       "from_owner": "claude-integrador",
       "to_owner": "claude-v22",
       "expected_commit": "e067bcd0d4d690a7e630283de656279a082c8729",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:59:14.571106+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "atlas-titulo-hd",
+      "from_owner": "codex-atlas-menus",
+      "to_owner": "claude-v22",
+      "expected_commit": "bb135d45fecfee00fae11fff9c219bad7c6f130b",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
