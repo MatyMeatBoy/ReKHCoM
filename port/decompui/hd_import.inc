@@ -357,10 +357,12 @@ static std::string MvsText(const unsigned char* s, size_t n) {
     return out;
 }
 
+static fs::path RecomHed(const fs::path& install);
+
 static int WriteSubtitles(const fs::path& install, const fs::path& data, const fs::path& mediaRoot = {}) {
     static const std::map<std::string, const char*> kLangs = { { "", "us" }, { "UK", "uk" }, { "FR", "fr" },
                                                                { "GR", "de" }, { "IT", "it" }, { "SP", "es" } };
-    fs::path hed = install / "Image" / "dt" / "Recom.hed", out = (mediaRoot.empty() ? data / "hd" : mediaRoot) / "subs";
+    fs::path hed = RecomHed(install), out = (mediaRoot.empty() ? data / "hd" : mediaRoot) / "subs";
     std::error_code ec;
     if (!fs::exists(hed, ec))
         return 0;
@@ -433,19 +435,35 @@ static int WriteSubtitles(const fs::path& install, const fs::path& data, const f
 
 /* ---- finding the game ----------------------------------------------------------------------------------------- */
 
+/* The stores lay the same files out under different folders: Steam's are under dt, the Epic Games Store's under en
+   (OpenKh's EpicGamesSourceAssets reads Image/en; #541). Every place is tried, Steam's first. */
+static const char* const kDataFolders[] = { "dt", "en" };
+
 static fs::path MovieFolder(const fs::path& install) {
-    for (const char* store : { "STEAM", "EPIC" }) {
-        fs::path p = install / store / "dt" / "KHCReSource" / "BIN" / "movie";
+    for (const char* store : { "STEAM", "EPIC" })
+        for (const char* folder : kDataFolders) {
+            fs::path p = install / store / folder / "KHCReSource" / "BIN" / "movie";
+            std::error_code ec;
+            if (fs::is_directory(p, ec))
+                return p;
+        }
+    return {};
+}
+
+/* the Re:Chain of Memories package (Recom.hed beside its .pkg); Steam's place when there is none */
+static fs::path RecomHed(const fs::path& install) {
+    for (const char* folder : kDataFolders) {
+        fs::path p = install / "Image" / folder / "Recom.hed";
         std::error_code ec;
-        if (fs::is_directory(p, ec))
+        if (fs::exists(p, ec))
             return p;
     }
-    return {};
+    return install / "Image" / "dt" / "Recom.hed";
 }
 
 static bool IsInstall(const fs::path& p) {
     std::error_code ec;
-    return fs::exists(p / "Image" / "dt" / "Recom.hed", ec) || !MovieFolder(p).empty();
+    return fs::exists(RecomHed(p), ec) || !MovieFolder(p).empty();
 }
 
 /* Every quoted value after "key" in a JSON or VDF text, with \\ unescaped */
@@ -2145,7 +2163,7 @@ static void Run(fs::path source, fs::path data, bool movies, bool scenes, bool m
     int imported = 0;
     sUnitShift = quality ? 23 : 26;
     /* everything to do, weighed up front: the bar moves with the time left, and never back */
-    fs::path hed = source / "Image" / "dt" / "Recom.hed";
+    fs::path hed = RecomHed(source);
     bool haveHed = fs::exists(hed, ec);
     std::vector<fs::path> list;
     if (movies || scenes) {

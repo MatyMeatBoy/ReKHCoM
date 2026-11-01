@@ -95,6 +95,12 @@ int main(int argc, char** argv) {
     Put(root / "Epic/EPIC/dt/KHCReSource/BIN/movie/zz_event_099.mp4", std::string(512, 'e'));
     probe = Inspect(root / "Epic");
     assert(probe.movies && probe.scenes && !probe.steam && probe.signal == Unknown);
+    // The Epic Games Store keeps its files under en (#541): movies and the music package are found there too.
+    Put(root / "EpicEn/EPIC/en/KHCReSource/BIN/movie/ROP.mp4", std::string(512, 'n'));
+    Put(root / "EpicEn/Image/en/Recom.hed", std::string(512, 'h'));
+    Put(root / "EpicEn/Image/en/Recom.pkg", std::string(512, 'p'));
+    probe = Inspect(root / "EpicEn");
+    assert(probe.movies && probe.music && !probe.steam);
     Put(root / "loose/ROP.mp4", std::string(512, 'l'));
     assert(Inspect(root / "loose").movies && Inspect(root / "loose").signal == Unknown);
     std::cout << "PASS bounded ACF, multiple libraries, provenance, partial source and EN->JP rescan\n";

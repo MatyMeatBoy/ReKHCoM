@@ -243,9 +243,12 @@ inline Probe Inspect(const fs::path& source) {
                 probe.signal = JapaneseSignal;
         }
     }
-    auto movies = source / "STEAM/dt/KHCReSource/BIN/movie";
-    if (!fs::is_directory(movies, ec)) movies = source / "EPIC/dt/KHCReSource/BIN/movie";
-    if (!fs::is_directory(movies, ec)) movies = source;
+    // Steam keeps the files under dt, the Epic Games Store under en (#541).
+    fs::path movies = source;
+    for (const char* place : { "STEAM/dt", "EPIC/dt", "STEAM/en", "EPIC/en" })
+        if (fs::is_directory(source / place / "KHCReSource/BIN/movie", ec)) { movies = source / place / "KHCReSource/BIN/movie"; break; }
+    fs::path image = fs::exists(source / "Image/dt/Recom.hed", ec) || !fs::exists(source / "Image/en/Recom.hed", ec)
+                         ? source / "Image/dt" : source / "Image/en";
     // Deterministic inventory, at most 512 entries and 512 bytes sampled per
     // recognized movie. No decoding or scan of multi-GB package contents.
     std::vector<fs::path> media;
@@ -263,8 +266,8 @@ inline Probe Inspect(const fs::path& source) {
         else probe.movies = true;
     }
     if (ec || entries == 512) { probe.signal = Unknown; Hash(hash, "inventory-incomplete"); }
-    bool hed = Sample(hash, source / "Image/dt/Recom.hed");
-    bool pkg = Sample(hash, source / "Image/dt/Recom.pkg");
+    bool hed = Sample(hash, image / "Recom.hed");
+    bool pkg = Sample(hash, image / "Recom.pkg");
     probe.music = hed && pkg;
     if (!probe.movies && !probe.scenes) probe.signal = Unknown;
     std::ostringstream out;

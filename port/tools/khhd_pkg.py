@@ -18,6 +18,29 @@ import sys
 import zlib
 from pathlib import Path
 
+# Steam keeps the files under dt, the Epic Games Store under en (OpenKh's EpicGamesSourceAssets reads Image/en; #541)
+DATA_FOLDERS = ('dt', 'en')
+
+
+def recom_hed(install):
+    """The installation's Recom.hed, wherever its store keeps it (Steam's place when there is none)."""
+    for folder in DATA_FOLDERS:
+        hed = Path(install) / 'Image' / folder / 'Recom.hed'
+        if hed.is_file():
+            return hed
+    return Path(install) / 'Image/dt/Recom.hed'
+
+
+def movie_folder(install):
+    """The installation's movie folder (Steam's place when there is none)."""
+    for store in ('STEAM', 'EPIC'):
+        for folder in DATA_FOLDERS:
+            movies = Path(install) / store / folder / 'KHCReSource/BIN/movie'
+            if movies.is_dir():
+                return movies
+    return Path(install) / 'STEAM/dt/KHCReSource/BIN/movie'
+
+
 MASTER = bytes.fromhex(
     '7e8897550b06f108ebbb141cd87aec4134b2a346ef6bfee1cf53a50512d28e52'
     '4a80e981b0f0b49cff0f1513da734e77bed730e5f65a113767bc836f2776d0cd'

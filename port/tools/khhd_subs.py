@@ -67,7 +67,7 @@ def parse(table):
 
 
 def extract(install, data):
-    hed = Path(install) / 'Image/dt/Recom.hed'
+    hed = khhd_pkg.recom_hed(install)
     out = Path(data) / 'hd/subs'
     out.mkdir(parents=True, exist_ok=True)
     want = {}

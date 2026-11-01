@@ -152,7 +152,7 @@ def source_producer(sprites=False):
     tools=references()
     def run(source,stage):
         if sprites:
-            script=tools/'khhd_sprites.py';args=[str(source/'Image/dt/Recom.hed'),str(stage)]
+            script=tools/'khhd_sprites.py';args=[str(next((h for h in (source/'Image/dt/Recom.hed',source/'Image/en/Recom.hed') if h.is_file()),source/'Image/dt/Recom.hed')),str(stage)]  # Steam dt, Epic en (#541)
         else:script=tools/'khhd_import.py';args=[str(source),str(stage),'--scenes']
         process=subprocess.Popen([sys.executable,str(script),*args])
         try:code=process.wait()

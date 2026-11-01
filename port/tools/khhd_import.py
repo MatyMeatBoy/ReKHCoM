@@ -61,7 +61,7 @@ def main():
     root = Path(args.install)
     hd = Path(args.data) / 'hd'
     if not args.no_movies:
-        movies = root / 'STEAM/dt/KHCReSource/BIN/movie'
+        movies = khhd_pkg.movie_folder(root)
         (hd / 'movies').mkdir(parents=True, exist_ok=True)
         names = list(BASE_MOVIES) + (sorted(p.stem for p in movies.glob('zz_event_*.mp4')
                                             if p.stem not in BASE_MOVIES) if args.scenes else [])
@@ -79,7 +79,7 @@ def main():
             print('movie', name)
         print(khhd_subs.extract(root, args.data), 'subtitle files')
     if not args.no_music:
-        hed = root / 'Image/dt/Recom.hed'
+        hed = khhd_pkg.recom_hed(root)
         (hd / 'music').mkdir(parents=True, exist_ok=True)
         want = {hashlib.md5(f'STREAM/0001/{t}.win32.scd'.encode()).hexdigest(): t for t in TRACKS}
         with open(hed.with_suffix('.pkg'), 'rb') as pkg:
