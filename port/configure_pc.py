@@ -95,6 +95,12 @@ def main():
     if args.reloc:
         # above the bus range, which the check build reserves without access (port_memory.c)
         ldflags += " -Wl,--image-base=0x10000000"
+    else:
+        # The GBA bus range is part of the image (port_memory.c gbaspace): it is only right at the fixed base. With
+        # a .reloc section Windows may still move the image (Exploit Protection's forced randomization), and the same
+        # binary then starts with gbaspace past 0x02000000 and exits (windows32-fixed-memory-placement: 0x0214D000
+        # = the usual 0x015EF000 moved 0xB5E000). Without relocations it is loaded at 0x00400000 or not at all.
+        ldflags += " -Wl,--disable-reloc-section"
 
     BUILD.mkdir(parents=True, exist_ok=True)
     with open(BUILD / "build.ninja", "w") as f:
