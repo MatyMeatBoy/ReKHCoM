@@ -7100,10 +7100,10 @@
     "optiport-v22-async": {
       "id": "optiport-v22-async",
       "piece": "OptiPort 2.2: entrada fria/caliente previews y cambios GBA/HD, sin esperas al cerrar",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:28.086015+00:00",
-      "updated_at": "2026-10-28T18:26:45.653393+00:00",
+      "updated_at": "2026-11-01T23:07:38.728088+00:00",
       "branch": "perf/optiport-async-observer",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/381",
       "approval": "Usuario autorizó continuar pendientes; coordinador asignó exclusivamente cancelación/obsolescencia sin medición ni UI",
@@ -7140,7 +7140,7 @@
           "detail": "released: Scoped implementation moved to child preview-readiness-observer per coordinator. CPU readiness RED/GREEN and observer contracts source042162012; Windows functional evidence preliminary48positivepixelmatches, first-return injection32/64 observed. Parent area9 remains PENDING: cold64 sidecar-only requires negotiated host preview bridge and true comparable32/64 cold/warm latency. Readonly proposal pruebas/optiport-v22-async/COLD64-BRIDGE-DESIGN-NOT-IMPLEMENTED.md. No area completion or performance gain claim."
         }
       ],
-      "claimed_at": "2026-10-28T17:52:14.957642+00:00"
+      "claimed_at": "2026-11-01T23:07:38.728088+00:00"
     },
     "optiport-v22-pacing": {
       "id": "optiport-v22-pacing",
@@ -13043,7 +13043,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:07:24.305780+00:00",
+  "updated_at": "2026-11-01T23:07:38.728088+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
