@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.5-online-beta
+
+- Online lobby browser in place of the Link menu: Link opens Load (your file), then a table of public rooms with name, host level, region and players, and Create room, region Filter, Refresh and Cable buttons. Rooms take a typed name or the offered "<player>'s room"; picking a room goes straight to the connect screen, cancelling the wait returns to the list and Back returns to the title.
+- Online on the Windows 64-bit build (what Auto selects on x64), which previously had no network; typed text reaches 64-bit Windows and Linux builds.
+- Both games relay the battle's keys themselves, so rollback corrections no longer leave the two battles different. In local two-game tests with 3-6 frames of lag and 2% loss, 64-bit vs 64-bit and 32-bit vs 64-bit battles kept every state check equal; earlier builds, including the published v2.3, could drift apart for the rest of the battle.
+- The one-button dodge works in link battles, as the d-pad double tap it stands for.
+- Wide view in link battles: the opponent's HP gauge is docked top-right and the network line sits between the two gauges.
+- Link version 5: these rooms only meet other v2.5 online beta games of the same cartridge region. Windows test build; Android cross-play and physical games between distant places are not verified.
+
 ## v2.3
 
 - Experimental scene framing: Adjusted (default) uses a close integer camera except for the exact current honors-approved artwork; Extended uses the selected zoom everywhere; Original shot forces the close camera in every engine scene. Dialogue, HUD and complete portraits retain their independent zoom.

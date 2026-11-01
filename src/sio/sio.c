@@ -93,7 +93,8 @@ enum SioHandshakeWord {
 
 #define NET_RING 64
 #define NET_RESEND 24 /* slots sent again in every datagram, until the other side has them */
-#define NET_VERSION 3 /* the slots' rules: both games must play by the same ones (HELLO carries it) */
+#define NET_VERSION 5 /* the slots' rules: both games must play by the same ones (HELLO carries it); 5: each game
+                          relays the battle's keys itself (chara.c SioKeySyncRecv). 4 is the modern online of #529 */
 #define NET_WINDOW 12 /* link frames the game may run ahead on predicted packets before it waits */
 enum { NET_HELLO = 1, NET_START, NET_SLOTS, NET_HASH };
 #define NET_HASH_EVERY 120 /* link frames between desync checks during a battle */
@@ -131,6 +132,7 @@ typedef struct {
     u32 frames, waited, waitStart, rollbacks, guessed;
     /* the desync check, on confirmed link frames only: ours by frame, sent once final; theirs as received */
     u32 hashAt[8], hash[8], hashSent[8], peerHashAt[8], peerHash[8], checks, mismatches;
+    u32 lastFirst, lastCount, slotsIn; /* KHCOM_NETLINK_TRACE: what came last (received: not taken back) */
 } NetState;
 static NetState* sNetState;
 #define sNet (*sNetState)
@@ -139,7 +141,6 @@ static u32 sNetPeerTicks, sNetRttMin;
 static u8 sNetPeerVersion, sNetVersionWarned;
 /* the game's link frame: part of the game's memory, so a rollback takes it back with everything else */
 static u32 sLinkFrame;
-static u32 sNetLastFirst, sNetLastCount, sNetSlotsIn; /* KHCOM_NETLINK_TRACE: what came last */
 
 static void NetReset(void) {
     if (sNetState == NULL)
@@ -297,9 +298,9 @@ static void NetReceive(void) {
         }
         if (d[0] == NET_SLOTS && n >= 12 && gSioWork.state == SIO_STATE_CONNECTED) {
             u32 first = NetGet32(d + 1), ack = NetGet32(d + 6), i, count = d[5];
-            sNetLastFirst = first;
-            sNetLastCount = count;
-            sNetSlotsIn++;
+            sNet.lastFirst = first;
+            sNet.lastCount = count;
+            sNet.slotsIn++;
             if (ack > sNet.acked && ack <= sNet.mine) {
                 u32 rtt = PortNetlinkMs() - sNet.sentAt[(ack - 1) % NET_RING];
                 if (rtt < 5000)
@@ -356,7 +357,7 @@ static void NetWait(void) {
         if (waited / 500 % 4 == 2)
             PortLog("netlink: waiting at link frame %u: %u of ours made, %u acked, %u of theirs; last in %u+%u (%u)",
                     (unsigned)sLinkFrame, (unsigned)sNet.mine, (unsigned)sNet.acked, (unsigned)sNet.theirs,
-                    (unsigned)sNetLastFirst, (unsigned)sNetLastCount, (unsigned)sNetSlotsIn);
+                    (unsigned)sNet.lastFirst, (unsigned)sNet.lastCount, (unsigned)sNet.slotsIn);
     }
     NetSendSlots();
     PortLinkIdle();

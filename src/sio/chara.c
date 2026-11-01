@@ -843,6 +843,17 @@ s32 SioKeySyncSend() {
         gSioSendFrame[1] = GetKeysHeld() & KEYS_MASK;
         gSioSendFrame[2] = gSioRelayKeysA;
         gSioSendFrame[3] = gSioRelayKeysB;
+#ifdef PLATFORM_PC
+        {
+            extern int NetLinkConnected(void);
+
+            if (NetLinkConnected()) { /* online each game relays the keys itself (SioKeySyncRecv): the packet stays
+                                         the same when a rollback plays the frame again, so it is never revised */
+                gSioSendFrame[2] = 0;
+                gSioSendFrame[3] = 0;
+            }
+        }
+#endif
     } else {
         gSioSendFrame[0] = SIO_CMD_DATA;
         gSioSendFrame[1] = GetKeysHeld() & KEYS_MASK;
@@ -854,6 +865,35 @@ s32 SioKeySyncSend() {
 }
 
 s32 SioKeySyncRecv() {
+#ifdef PLATFORM_PC
+    extern int NetLinkConnected(void);
+
+    /* Online, both games relay the keys the way the parent's cartridge does: the battle plays the pair of keys the
+       parent relayed last (words 2 and 3 of its packets), and that relay is the keys of the pair received before.
+       Each game makes it from the keys themselves (word 1, the same on both once confirmed): the parent's copy in
+       its packets would follow the rollback's corrections only through its revisions, which can reach the other
+       game too late for the frames already confirmed there (a lasting desync). gSioRelayKeysA/B are game memory,
+       zeroed with the link's callbacks, so a rollback takes them back like the key states they feed. */
+    if (NetLinkConnected()) {
+        u16 relayA = gSioRelayKeysA;
+        u16 relayB = gSioRelayKeysB;
+
+        if (gSioRecvFrame[0][0] == SIO_CMD_DATA && gSioRecvFrame[0][1] == gSioRecvFrame[0][0]) {
+            gSioRelayKeysA = gSioRecvFrame[1][0];
+            gSioRelayKeysB = gSioRecvFrame[1][1];
+        }
+
+        if (gSioRecvFrame[0][0] == SIO_CMD_DATA) {
+            SioKeyStateUpdateA(relayA);
+            SioKeyStateUpdateB(relayB);
+            gSioStatus &= ~SIO_STAT_RECV_EMPTY;
+        } else {
+            gSioStatus |= SIO_STAT_RECV_EMPTY;
+        }
+
+        return SIO_LINK_RESULT_NONE;
+    }
+#endif
     if (gSioPlayerId == SIO_PLAYER_PARENT) {
         if (gSioRecvFrame[0][0] == SIO_CMD_DATA && gSioRecvFrame[0][1] == gSioRecvFrame[0][0]) {
             gSioRelayKeysA = gSioRecvFrame[1][0];

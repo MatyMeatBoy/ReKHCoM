@@ -35,7 +35,7 @@ def main():
     flags = [str(tc / 'clang.exe'), '--target=x86_64-w64-mingw32', '-O2',
              f'-I{ROOT / "port/ps5/shared"}', f'-I{ROOT / "port/ps5/third_party/stb"}',
              f'-I{sdl / "include"}', f'-I{OUT.parent}', f'-L{sdl / "lib"}',
-             '-lmfplat', '-lmfreadwrite', '-lmfuuid', '-lole32', '-lpropsys', '-lgdi32']
+             '-lmfplat', '-lmfreadwrite', '-lmfuuid', '-lole32', '-lpropsys', '-lgdi32', '-lws2_32']
     subprocess.check_call(flags + [str(HERE / 'windows64_host.c'), '-lSDL3', '-lm', '-o', str(OUT / 'rekhcom64.exe')])
     shutil.copyfile(sdl / 'bin/SDL3.dll', OUT / 'SDL3.dll')
     if args.test:

@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <winsock2.h> /* before windows.h: the network link's socket (udp_host.h) */
+#include <ws2tcpip.h>
 #include <windows.h>
 #include <intrin.h>
 #include <direct.h>
@@ -110,11 +112,14 @@ static void QueueKey(const SDL_Event* event) {
 static uint32_t sRendererGeneration;
 static int HostGpuQuery(const char*, char*, int);
 static int HostGamepadInfoQuery(const char* name, char* out, int cap);
+static int HostTextQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
     int gpuQuery = HostGpuQuery(name, out, cap);
     if (gpuQuery != -2) return gpuQuery;
     int padInfo = HostGamepadInfoQuery(name, out, cap);
     if (padInfo != -2) return padInfo;
+    int textQuery = HostTextQuery(name, out, cap);
+    if (textQuery != -2) return textQuery;
     if (!strcmp(name, "KHCOM_HOST_KEY_EVENT")) {
         if (cap < 64) return -1;
         sKeyboardEventsActive = 1;
@@ -200,6 +205,7 @@ static void H_dir_close(int d) {
 
 /* ---- video: the GPU ---- */
 static SDL_Window* sWindow;
+#include "host_text.h"
 static SDL_Renderer* sRenderer;
 static int sBlend = 1;
 
@@ -307,7 +313,7 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 }
 #define HD_MUSIC_LOG Log
 #include "hd_music_host.h"
-/* UDP currently uses the cable fallback. */
+#define UDP_HOST_WINSOCK
 #include "udp_host.h"
 #define H_thread H_thread_legacy
 #include "thread_host.h"
@@ -360,6 +366,7 @@ static void Pump(void) {
                 break;
             case SDL_EVENT_WINDOW_FOCUS_LOST: QueueKey(&e); break;
             case SDL_EVENT_KEY_UP: QueueKey(&e); break;
+            case SDL_EVENT_TEXT_INPUT: HostTextQueue(e.text.text); break;
             case SDL_EVENT_KEY_DOWN:
                 QueueKey(&e);
                 if (!sKeyboardEventsActive && (e.key.key == SDLK_F11 || (e.key.key == SDLK_RETURN && (e.key.mod & SDL_KMOD_ALT))))

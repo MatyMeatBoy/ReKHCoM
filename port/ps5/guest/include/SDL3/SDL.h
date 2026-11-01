@@ -294,6 +294,7 @@ typedef int SDL_Scancode;
 #define SDLK_EQUALS 0x0000003Du
 #define SDLK_KP_MINUS 0x40000056u
 #define SDLK_KP_PLUS 0x40000057u
+#define SDLK_KP_ENTER 0x40000058u
 #define SDLK_DELETE 0x0000007Fu
 #define SDLK_AC_BACK 0x4000011Au
 
@@ -305,6 +306,7 @@ typedef enum SDL_EventType {
     SDL_EVENT_WINDOW_FOCUS_LOST = 0x20C,
     SDL_EVENT_KEY_DOWN = 0x300,
     SDL_EVENT_KEY_UP = 0x301,
+    SDL_EVENT_TEXT_INPUT = 0x303,
     SDL_EVENT_MOUSE_MOTION = 0x400,
     SDL_EVENT_MOUSE_BUTTON_DOWN = 0x401,
     SDL_EVENT_MOUSE_BUTTON_UP = 0x402,
@@ -325,9 +327,11 @@ typedef struct SDL_GamepadButtonEvent { Uint32 type; Uint32 reserved; Uint64 tim
 typedef struct SDL_GamepadAxisEvent { Uint32 type; Uint32 reserved; Uint64 timestamp; SDL_JoystickID which; Uint8 axis; Uint8 padding1, padding2, padding3; Sint16 value; Uint16 padding4; } SDL_GamepadAxisEvent;
 typedef struct SDL_GamepadDeviceEvent { Uint32 type; Uint32 reserved; Uint64 timestamp; SDL_JoystickID which; } SDL_GamepadDeviceEvent;
 typedef struct SDL_TouchFingerEvent { Uint32 type; Uint32 reserved; Uint64 timestamp; Uint64 touchID; SDL_FingerID fingerID; float x, y, dx, dy, pressure; Uint32 windowID; } SDL_TouchFingerEvent;
+typedef struct SDL_TextInputEvent { Uint32 type; Uint32 reserved; Uint64 timestamp; Uint32 windowID; const char* text; } SDL_TextInputEvent;
 typedef union SDL_Event {
     Uint32 type;
     SDL_KeyboardEvent key;
+    SDL_TextInputEvent text;
     SDL_GamepadButtonEvent gbutton;
     SDL_GamepadAxisEvent gaxis;
     SDL_GamepadDeviceEvent gdevice;
@@ -336,6 +340,10 @@ typedef union SDL_Event {
 } SDL_Event;
 bool SDL_PollEvent(SDL_Event* event);
 const bool* SDL_GetKeyboardState(int* numkeys);
+/* typed text, from hosts that pass it (host_text.h); SDL_GetKeyboardFocus is the game's one window */
+bool SDL_StartTextInput(SDL_Window* window);
+bool SDL_StopTextInput(SDL_Window* window);
+SDL_Window* SDL_GetKeyboardFocus(void);
 SDL_Scancode SDL_GetScancodeFromKey(SDL_Keycode key, SDL_Keymod* modstate);
 
 typedef struct SDL_Gamepad SDL_Gamepad;
