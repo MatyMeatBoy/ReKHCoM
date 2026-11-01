@@ -655,6 +655,10 @@ uint16_t PortInputResolve(uint16_t keys) {
     }
     if (sUnstockPending > 0 && sUnstockHeld != UNSTOCK_HOLD_FRAMES)
         sUnstockPending--;
+    /* Link battles read both players' keys from the link: the dodge button goes with this game's keys (the key
+       register's free bit 10, which the rollback replays like the others; src/key_state.c takes it back out). */
+    if (dodge && gCurrentMode == &gModeVsbattle)
+        return (keys & 0x3FF) | PORT_LINK_DODGE;
     return keys & 0x3FF;
 }
 

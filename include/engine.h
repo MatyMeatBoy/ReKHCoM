@@ -93,6 +93,8 @@ void PortUiOpenNewGame(void);
 int PortFastText(void);
 /* One-button dodge roll: the d-pad direction to roll toward, or 0. */
 int PortTakeDodge(int held, int facingLeft);
+/* The same over the link (link version 5): the button's bit beside the keys, in link battles (key_state.c). */
+#define PORT_LINK_DODGE 0x400
 /* Return-stocked-cards button: 1 once per completed hold. */
 int PortTakeUnstock(void);
 /* Opening movie: show or hide the "A again skips" prompt. */

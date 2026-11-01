@@ -23,6 +23,9 @@
 #include "btl_effect.h"
 #include "card_api.h"
 #include "card_types.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 #include "engine_math.h"
 #include "game_state.h"
 #include "gba/defines.h"
@@ -841,11 +844,17 @@ s32 SioKeySyncSend() {
     if (gSioPlayerId == SIO_PLAYER_PARENT) {
         gSioSendFrame[0] = SIO_CMD_DATA;
         gSioSendFrame[1] = GetKeysHeld() & KEYS_MASK;
+#ifdef PLATFORM_PC
+        gSioSendFrame[1] |= GetKeysHeld() & PORT_LINK_DODGE; /* link version 5 */
+#endif
         gSioSendFrame[2] = gSioRelayKeysA;
         gSioSendFrame[3] = gSioRelayKeysB;
     } else {
         gSioSendFrame[0] = SIO_CMD_DATA;
         gSioSendFrame[1] = GetKeysHeld() & KEYS_MASK;
+#ifdef PLATFORM_PC
+        gSioSendFrame[1] |= GetKeysHeld() & PORT_LINK_DODGE; /* link version 5 */
+#endif
         gSioSendFrame[2] = 0x1234;
         gSioSendFrame[3] = 0x3456;
     }
