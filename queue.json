@@ -7804,14 +7804,20 @@
       "id": "harness-menus-architecture",
       "piece": "Validar arquitectura real y hashes en arnés de menús 32/64",
       "status": "en_curso",
-      "owner": "codex-harness64",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:55:54.503567+00:00",
-      "updated_at": "2026-10-27T18:56:00.770854+00:00",
+      "updated_at": "2026-11-01T23:15:43.441246+00:00",
       "branch": null,
       "pr": null,
       "approval": "Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-01T23:15:43.441246+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        }
+      ],
       "claimed_at": "2026-10-27T18:56:00.770854+00:00"
     },
     "menus-fade-transitions": {
@@ -13297,7 +13303,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:15:25.806942+00:00",
+  "updated_at": "2026-11-01T23:15:43.441246+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14067,6 +14073,16 @@
       "from_owner": "codex-android22-build",
       "to_owner": "claude-v22",
       "expected_commit": "baf05e8839922f08e59431f9234ef50d4efeb437",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:15:43.441246+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "harness-menus-architecture",
+      "from_owner": "codex-harness64",
+      "to_owner": "claude-v22",
+      "expected_commit": "49e0d06a4fa2b9e6dca7bb685b19972b656d8e87",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
