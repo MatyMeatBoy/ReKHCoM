@@ -10132,10 +10132,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-28T05:31:12.035167+00:00",
-      "updated_at": "2026-11-01T23:20:14.435332+00:00",
+      "updated_at": "2026-11-01T23:42:17.400021+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Root authorizes PS5 exclusive window now afterSwitchclosed; no Web until terminal; noSDKdownloads/newVMdisk",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "SourceHUD5ccb; inventory2SDKLapyallverified; appversionnormalizes2.2.0",
       "evidence": [
         {
@@ -10150,6 +10150,11 @@
         },
         {
           "at": "2026-11-01T23:20:14.435332+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:42:17.400021+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13873,7 +13878,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:41:58.775062+00:00",
+  "updated_at": "2026-11-01T23:42:17.400021+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
