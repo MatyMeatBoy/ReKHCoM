@@ -8009,10 +8009,10 @@
     "qa-sol-low-diverse-saves": {
       "id": "qa-sol-low-diverse-saves",
       "piece": "QA: saves distintos y menus reales 32/64",
-      "status": "en_revision",
-      "owner": "sol-low-diverse-saves",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T19:24:06.687806+00:00",
-      "updated_at": "2026-10-27T19:59:07.875513+00:00",
+      "updated_at": "2026-11-01T23:16:32.951183+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -8022,6 +8022,11 @@
           "at": "2026-10-27T19:59:07.875513+00:00",
           "owner": "sol-low-diverse-saves",
           "detail": "QA 6/6 runs 3 SHA unique SAV x32/x64; natural load-map/status-return plus contextual Moogle empty-onepage-multipage18-bottomscroll-return. verified-results.private.json, MATRIX.md. Original hashes preserved. HD1 D3D11 mid/late; dummy limitations explicit. No product edits."
+        },
+        {
+          "at": "2026-11-01T23:16:32.951183+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T19:24:12.921539+00:00"
@@ -13318,7 +13323,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:16:13.480725+00:00",
+  "updated_at": "2026-11-01T23:16:32.951183+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14108,6 +14113,16 @@
       "from_owner": "codex-64bit-crash-ledger",
       "to_owner": "claude-v22",
       "expected_commit": "4a8c7f0dc2fe3d8489c2a2e012789354cce07562",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:16:32.951183+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "qa-sol-low-diverse-saves",
+      "from_owner": "sol-low-diverse-saves",
+      "to_owner": "claude-v22",
+      "expected_commit": "a1bd2bd9997b14e5e1d087fd823d47e38f142279",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
