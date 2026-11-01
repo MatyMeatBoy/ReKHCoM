@@ -12625,7 +12625,7 @@
       "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-11-01T06:59:28.758320+00:00",
-      "updated_at": "2026-11-01T06:59:54.232257+00:00",
+      "updated_at": "2026-11-01T21:24:00.586541+00:00",
       "branch": "fix/windows64-udp-link",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/540",
       "approval": "Usuario 01/11: pidio sistema de salas con nombre por defecto, esquiva con cuadrado en link y ajustar ancho P1/P2",
@@ -12635,13 +12635,18 @@
           "at": "2026-11-01T06:59:54.232257+00:00",
           "owner": "claude-v22",
           "detail": "2fefa2b98: VPS 64-bit EU, sala 'Torneo de Juan' vista y unida por P2, 20 state checks 0 desync con esquivas; RED contador en puerto DESYNC frame 960. Version 5 (4 reservada por PR #529)."
+        },
+        {
+          "at": "2026-11-01T21:24:00.586541+00:00",
+          "owner": "claude-v22",
+          "detail": "02/11: desync raiz (relay del padre revisado tarde) arreglado 3a09ec3bb; esquiva=doble toque; check off tras KO 8f55a7b79. 64v64 50 checks 0 desync, 32v64 70/0 (lag 3+3, 2% perdida). Prerelease v2.5-online-beta publicada (Windows, sha f09995a9...), VPS empaquetado 20 checks 0 desync. Pendiente: Linux paquete, Android ARM cross-play."
         }
       ],
       "claimed_at": "2026-11-01T06:59:35.209934+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-01T06:59:54.232257+00:00",
+  "updated_at": "2026-11-01T21:24:00.586541+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
