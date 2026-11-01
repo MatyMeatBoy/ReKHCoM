@@ -7368,10 +7368,10 @@
     "android374-startup-jafar": {
       "id": "android374-startup-jafar",
       "piece": "Investigar Moto Edge60 inicio y postJafar374, separar versión APK y mecanismos83/272; reproducir sólo checks CPU pertinentes",
-      "status": "en_revision",
-      "owner": "codex-moto374",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:22:24.225828+00:00",
-      "updated_at": "2026-10-27T18:25:13.221444+00:00",
+      "updated_at": "2026-11-01T23:08:08.991367+00:00",
       "branch": "codex/android374-investigation",
       "pr": null,
       "approval": null,
@@ -7381,6 +7381,11 @@
           "at": "2026-10-27T18:25:13.221444+00:00",
           "owner": "codex-moto374",
           "detail": "pruebas/android374-investigation/report.md+evidence.json; source93749b597; lifecyclePASS+6offlinePASS; APKreceivedunknown; noMoto cause/fix demonstrated, sourceAndroididentical2.1; nextreprophase+save"
+        },
+        {
+          "at": "2026-11-01T23:08:08.991367+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T18:22:29.195443+00:00"
@@ -13059,7 +13064,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:07:58.192895+00:00",
+  "updated_at": "2026-11-01T23:08:08.991367+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13699,6 +13704,16 @@
       "from_owner": "claude-cartas",
       "to_owner": "claude-v22",
       "expected_commit": "119cda0a6ee876567241c2ae6588e69698223ebc",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:08:08.991367+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "android374-startup-jafar",
+      "from_owner": "codex-moto374",
+      "to_owner": "claude-v22",
+      "expected_commit": "160b78c105d948933047b46be1b1d6a63f1627fa",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
