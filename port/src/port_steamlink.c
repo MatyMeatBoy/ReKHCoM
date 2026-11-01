@@ -71,7 +71,7 @@ typedef struct {
 #define CB_LOBBY_CREATED 513
 #define CB_CALL_COMPLETED 703
 #define CB_SESSION_REQUEST 1251
-#define PROTOCOL "link-3" /* the slots' rules (NET_VERSION in src/sio/sio.c): other versions never meet */
+#define PROTOCOL "link-5" /* the slots' rules (NET_VERSION in src/sio/sio.c): other versions never meet */
 
 static struct {
     HMODULE dll;
@@ -126,6 +126,7 @@ static SteamId sRoomIds[ROOMS_MAX], sTarget;
 static char sRoomNames[ROOMS_MAX][25];
 static int sRoomRegions[ROOMS_MAX];
 static int sRegion;
+static char sRoomTitle[25]; /* PortSteamlinkRoomName */
 
 /* the link's state, in the log and on screen (English, Spanish) */
 static void Status2(const char* en, const char* es, const char* name) {
@@ -223,7 +224,7 @@ static void OnResult(int id, const unsigned char* p) {
         }
         sLobby = c->lobby;
         S.SetLobbyData(S.Matchmaking(), sLobby, "rekhcom", PROTOCOL);
-        S.SetLobbyData(S.Matchmaking(), sLobby, "name", S.PersonaName(S.Friends()));
+        S.SetLobbyData(S.Matchmaking(), sLobby, "name", sRoomTitle[0] ? sRoomTitle : S.PersonaName(S.Friends()));
         {
             char region[4];
             SDL_snprintf(region, sizeof(region), "%d", sRegion);
@@ -366,6 +367,11 @@ int PortSteamlinkLobbyRooms(uint64_t* ids, char (*names)[25], int* regions, int 
     return i;
 }
 
+/* the name a room opened from the lobby is listed under */
+void PortSteamlinkRoomName(const char* name) {
+    SDL_strlcpy(sRoomTitle, name ? name : "", sizeof(sRoomTitle));
+}
+
 /* the room picked in the lobby: this one to enter (0: the first one found, as before); the cartridge region shown */
 void PortSteamlinkTarget(uint64_t lobby, int region) {
     sTarget = lobby;
@@ -431,6 +437,9 @@ int PortSteamlinkLobbyRooms(uint64_t* ids, char (*names)[25], int* regions, int 
     (void)regions;
     (void)max;
     return -1;
+}
+void PortSteamlinkRoomName(const char* name) {
+    (void)name;
 }
 void PortSteamlinkTarget(uint64_t lobby, int region) {
     (void)lobby;

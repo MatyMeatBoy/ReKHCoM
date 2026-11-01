@@ -42,5 +42,6 @@ const char* PortSteamlinkUserName(void);
 void PortSteamlinkLobbyList(void);
 int PortSteamlinkLobbyRooms(uint64_t* ids, char (*names)[25], int* regions, int max); /* -1 until the answer */
 void PortSteamlinkTarget(uint64_t lobby, int region);
+void PortSteamlinkRoomName(const char* name); /* a room opened from the lobby is listed under it */
 
 #endif

@@ -17,7 +17,7 @@
 #include <SDL3/SDL.h>
 #include <string.h>
 
-#define LOBBY_VERSION 3 /* NET_VERSION in src/sio/sio.c: only rooms that play by the same rules are listed */
+#define LOBBY_VERSION 5 /* NET_VERSION in src/sio/sio.c: only rooms that play by the same rules are listed */
 #define LOBBY_ROOMS 20
 
 static int sBackend; /* 0 none, 1 Steam, 2 a relay server */
@@ -29,6 +29,7 @@ static uint64_t sIds[LOBBY_ROOMS];
 static int sRegions[LOBBY_ROOMS];
 static uint32_t sAskedAt;
 static char sMyCode[17];
+static int sCancelled;
 
 static const char* Setting(void) {
     const char* env = SDL_getenv("KHCOM_LOBBY");
@@ -135,9 +136,11 @@ const char* PortLobbyMyCode(void) {
     return sMyCode;
 }
 
-void PortLobbyCreate(void) {
+/* a room is listed under its own name (lobby version 5; the screen offers "<player>'s room") */
+void PortLobbyCreate(const char* room) {
     char spec[200];
     if (sBackend == 1) {
+        PortSteamlinkRoomName(room);
         PortSteamlinkTarget(0, Region());
         PortNetlinkUse("steam:host");
         return;
@@ -154,7 +157,7 @@ void PortLobbyCreate(void) {
     }
     SDL_snprintf(spec, sizeof(spec), "relay:%s:%d:%s:host", sServer, sServerPort, sMyCode);
     PortNetlinkUse(spec);
-    PortNetlinkAnnounce(LOBBY_VERSION, Region(), PortLobbyPlayerName());
+    PortNetlinkAnnounce(LOBBY_VERSION, Region(), room);
 }
 
 void PortLobbyJoin(int i) {
@@ -172,4 +175,22 @@ void PortLobbyJoin(int i) {
 
 void PortLobbyCable(void) {
     PortNetlinkUse(NULL);
+}
+
+/* Back out of the lobby: the game returns to its Link menu (mode_sio.c takes it once) */
+void PortLobbyCancel(void) {
+    PortNetlinkUse(NULL);
+    sCancelled = 1;
+}
+
+int PortLobbyTakeCancel(void) {
+    int cancelled = sCancelled;
+    sCancelled = 0;
+    return cancelled;
+}
+
+/* the connect screen cancelled (or the lobby did): an open room stops being listed */
+void PortLobbyLeave(void) {
+    if (PortLobbyWanted())
+        PortNetlinkUse(NULL);
 }

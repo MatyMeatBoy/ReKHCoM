@@ -151,29 +151,12 @@ enum SioBattleMenu {
     SIO_BATTLE_MENU_LOAD
 };
 
-#ifdef PLATFORM_PC
-/* the lobby is shown once per visit from the title: coming back from Load keeps the room picked there */
-static u8 sSioLobbyShown;
-#endif
-
 void mode_sio_battle_0(s32 arg) {
     SioBattleWork* work;
     void* gfx;
     s32 i;
 
     sSioBattleWork = EwramAlloc(sizeof(SioBattleWork));
-#ifdef PLATFORM_PC
-    {
-        /* online with a lobby (port_lobby.c): the rooms first, unless a link is already going (back from a battle) */
-        extern int PortLobbyWanted(void);
-        extern void PortUiOpenLobby(void);
-        extern int NetLinkConnected(void);
-        if (PortLobbyWanted() && !NetLinkConnected() && !sSioLobbyShown) {
-            sSioLobbyShown = TRUE;
-            PortUiOpenLobby();
-        }
-    }
-#endif
     FadeStartIn(FADE_MODE_BLACK, 16);
     SetBgMode0();
     SetupBg(0, 0, 7, 0);
@@ -536,9 +519,6 @@ void mode_sio_battle_2() {
 
 void ClearSioBattleFileLoaded() {
     gSioBattleFileLoaded = FALSE;
-#ifdef PLATFORM_PC
-    sSioLobbyShown = FALSE; /* the title's Link entry: a new visit */
-#endif
 }
 
 enum SioBtlConnectState {
@@ -547,6 +527,15 @@ enum SioBtlConnectState {
     SIO_BTL_CONNECT_STATE_EXCHANGE,
     SIO_BTL_CONNECT_STATE_START_OPTIONS
 };
+
+#ifdef PLATFORM_PC
+extern int PortLobbyWanted(void);
+extern void PortUiOpenLobby(void);
+extern int PortLobbyTakeCancel(void);
+extern void PortLobbyLeave(void);
+extern int NetLinkConnected(void);
+static u8 sSioLobbyPending; /* the lobby is open over the connect screen: the link starts when it closes */
+#endif
 
 void mode_sio_btl_connect_0(s32 arg) {
     sSioBtlConnectWork = EwramAlloc(sizeof(SioBtlConnectWork));
@@ -570,6 +559,15 @@ void mode_sio_btl_connect_0(s32 arg) {
     sSioBtlConnectWork->textSlotCount = LoadTextSlots(LOCALIZED_STRING(gSioBtlConnectText), sSioBtlConnectWork->textSlots);
     sSioBtlConnectWork->palette = LoadObjPalette(gSioCursorPalette, sizeof(gSioCursorPalette));
 
+#ifdef PLATFORM_PC
+    /* online with a lobby (port_lobby.c): Versus opens the rooms, a file already loaded, and the link starts once
+       one is picked (connect_1); not when a link is already going (back from a battle) */
+    sSioLobbyPending = PortLobbyWanted() && !NetLinkConnected();
+    if (sSioLobbyPending) {
+        PortUiOpenLobby();
+        return;
+    }
+#endif
 #ifdef VERSION_EU
     if (!gSioDebugMode) {
         SioReset();
@@ -588,7 +586,25 @@ void mode_sio_btl_connect_1() {
 #ifdef VERSION_EU
     s16 width;
     s16 x;
+#endif
 
+#ifdef PLATFORM_PC
+    if (sSioLobbyPending) {
+        sSioLobbyPending = FALSE;
+        if (PortLobbyTakeCancel()) { /* Back in the lobby: the menu again, as the connect screen's cancel */
+            SioBtlConnectOnCancel();
+            return;
+        }
+#ifdef VERSION_EU
+        if (!gSioDebugMode)
+#endif
+        {
+            SioReset();
+            SioConnectInit(SioBtlConnectOnConnect, SioBtlConnectOnCancel, SIO_CONNECT_MODE_BATTLE);
+        }
+    }
+#endif
+#ifdef VERSION_EU
     if (!gSioDebugMode) {
 #endif
     switch (sSioBtlConnectWork->state) {
@@ -693,6 +709,9 @@ void SioBtlConnectOnConnect() {
 }
 
 void SioBtlConnectOnCancel() {
+#ifdef PLATFORM_PC
+    PortLobbyLeave(); /* the room is not listed any more */
+#endif
     m4aSongNumStart(SONG_SYS_CLOSE);
     ModeRequest(&gModeSioBattle, SIO_BATTLE_ENTRY_BATTLE_CANCELLED);
 }
