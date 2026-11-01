@@ -33,6 +33,7 @@ static int PlayFile(const char* name);
 /* A Re:CoM scene that holds two of the cartridge's (duartepedro, #163): its HD movie starts where the cartridge's
    own movie begins, as the GBA's flow has the first part as an event. Seconds; the file is never cut. */
 static int sStartAt;
+static int sStopAt; /* the second a clip ends at, 0 the file's end */
 
 /* Re:CoM's story scenes (zz_event_*) live in hd/scenes, the opening, credits and endings in hd/movies; a scene
    imported before 23/10 sits in hd/movies and is still found there. */
@@ -72,15 +73,24 @@ static void MovieSubtitlePath(const char* name, const char* language, char* out,
 /* HD movies replace only the cartridge's pre-rendered movies, each with its whole Re:CoM scene; the story's other
    scenes are HD cutscenes' (#163, duartepedro). Re:CoM's credits (RSE, RRE) are not this version's: the cartridge's
    play. */
-static const char* MovieFile(int movieId, int* startAt) {
-    *startAt = 0;
+static const char* MovieFile(int movieId, int* startAt, int* stopAt) {
+    const char* name;
+    *startAt = *stopAt = 0;
     switch (movieId) {
-        case 1: return "ROP";          /* the opening: the hooded man and the castle */
-        case 3: *startAt = 170; return "zz_event_123"; /* 12th floor: Namine's charm becomes Kairi's (from 2:50) */
-        case 4: *startAt = 222; return "zz_event_151"; /* Sora's ending: his friends' memories (from 3:42) */
-        case 5: return "zz_event_631"; /* Riku's ending: the road to dawn */
-        default: return NULL;          /* the 6th floor's: no Re:CoM scene matched */
+        case 1: name = "ROP"; break;   /* the opening: the hooded man and the castle */
+        case 2: *startAt = 83; *stopAt = 88; name = "zz_event_062"; break; /* 6th floor: the charm (1:23-1:28, #539) */
+        case 3: *startAt = 170; name = "zz_event_123"; break; /* 12th floor: Namine's charm becomes Kairi's (from 2:50) */
+        case 4: *startAt = 222; name = "zz_event_151"; break; /* Sora's ending: his friends' memories (from 3:42) */
+        case 5: name = "zz_event_631"; break; /* Riku's ending: the road to dawn */
+        default: return NULL;
     }
+#if defined(__ANDROID__) || defined(PORT_ANDROID64)
+    /* Android's player (hdmovie_android.c) plays a file from its start to its end: a clip of a scene would play the
+       whole scene there, so the cartridge's own movie stays */
+    if (*startAt || *stopAt)
+        return NULL;
+#endif
+    return name;
 }
 
 #ifdef VERSION_EU
@@ -164,9 +174,9 @@ int PortHdMoviePlayName(const char* movie) {
 
 /* The gallery uses the same mapping and movie offsets as live gameplay; never guess a file from an event number. */
 const char* PortHdGalleryMovieName(int sceneId) {
-    int i, startAt;
+    int i, startAt, stopAt;
     if (PORT_SCENE_IS_MOVIE(sceneId)) {
-        const char* name = MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt);
+        const char* name = MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt, &stopAt);
         return PortHdMediaClipAllowed(gPortConfig.hdMediaLanguage, startAt) ? name : NULL;
     }
     for (i = 0; i < PortHdSceneCount(); i++)
@@ -174,20 +184,21 @@ const char* PortHdGalleryMovieName(int sceneId) {
     return NULL;
 }
 int PortHdGalleryMovieOffset(int sceneId) {
-    int startAt = 0;
-    if (PORT_SCENE_IS_MOVIE(sceneId)) MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt);
+    int startAt = 0, stopAt = 0;
+    if (PORT_SCENE_IS_MOVIE(sceneId)) MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &startAt, &stopAt);
     return startAt;
 }
 
 int PortHdGalleryPlayScene(int sceneId, int hybrid) {
     const char* movie = PortHdGalleryMovieName(sceneId);
-    int oldStart = sStartAt, played;
+    int oldStart = sStartAt, oldStop = sStopAt, played;
     if (!movie || !PortHdSceneImported(movie)) return 0;
-    if (PORT_SCENE_IS_MOVIE(sceneId)) MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &sStartAt);
+    if (PORT_SCENE_IS_MOVIE(sceneId)) MovieFile(sceneId - PORT_SCENE_MOVIE_BASE, &sStartAt, &sStopAt);
     if (hybrid && !PORT_SCENE_IS_MOVIE(sceneId)) PlayExtras(sceneId, 1);
     played = PlayFile(movie);
     if (hybrid && played && !PORT_SCENE_IS_MOVIE(sceneId)) PlayExtras(sceneId, 0);
     sStartAt = oldStart;
+    sStopAt = oldStop;
     return played;
 }
 
@@ -219,8 +230,8 @@ int PortHdScenePlay(int eventId) {
    from the last event (072 for Sora, mode_event.c EVENT_EXIT_MOVIE_ENDING): Re:CoM's ending scene, which has no event
    of its own on that road, plays first (issue #42). */
 int PortHdMoviePlay(int movieId) {
-    int startAt, played;
-    const char* name = MovieFile(movieId, &startAt);
+    int startAt, stopAt, played;
+    const char* name = MovieFile(movieId, &startAt, &stopAt);
     if (gPortGalleryEvent) return 0; /* the GBA tab always replays the cartridge's own cinematic */
     if (!gPortConfig.hdMovies || name == NULL)
         return 0;
@@ -231,14 +242,17 @@ int PortHdMoviePlay(int movieId) {
         return 1;
     }
     sEndingScenePlayed = 0;
+    if (movieId == 2 && gPortConfig.hdScenes && PortHdSceneImported(name))
+        return 1; /* the 6th floor's charm: the next event's HD scene is this whole file, the clip included */
     if (!PortHdMediaClipAllowed(gPortConfig.hdMediaLanguage, startAt)) {
         sLastScene = NULL;
         PortLog("hd movie: JP clipped timing not validated; using original cartridge movie");
         return 0;
     }
     sStartAt = startAt;
+    sStopAt = stopAt;
     played = PlayFile(name);
-    sStartAt = 0;
+    sStartAt = sStopAt = 0;
     return played;
 }
 
@@ -1012,6 +1026,8 @@ static int PlayFile(const char* name) {
             clock = nextVideo >= 0 ? nextVideo : 0;
         if (skipEnd >= 0 && clock >= skipEnd)
             break;
+        if (sStopAt > 0 && clock >= (LONGLONG)sStopAt * 10000000) /* a clip of the scene: its end */
+            break;
         {
             /* test harness (test_hd_scenes.py): KHCOM_HDMOVIE_SECONDS=<n> skips every movie after n seconds */
             const char* limit = SDL_getenv("KHCOM_HDMOVIE_SECONDS");
@@ -1372,6 +1388,8 @@ static int PlayFile(const char* name) {
             clock = nextVideo;
         if (skipEnd >= 0 && clock >= skipEnd)
             break;
+        if (sStopAt > 0 && clock >= (LONGLONG)sStopAt * 10000000) /* a clip of the scene: its end */
+            break;
         {
             const char* limit = SDL_getenv("KHCOM_HDMOVIE_SECONDS");
             if (limit && skipEnd < 0 && clock >= (LONGLONG)SDL_atoi(limit) * 10000000) {
@@ -1526,7 +1544,9 @@ static int PlayFile(const char* name) {
     SDL_strlcpy(font, PortConfigPath("assets/fonts/KHMenu.otf"), sizeof(font));
 #if defined(PORT_ANDROID64) || defined(PORT_LINUX64_GUEST)
 #ifdef PORT_LINUX64_GUEST
-    if (sStartAt > 0) /* the 64-bit Linux host reads where to start after an @ (port/linux64) */
+    if (sStopAt > 0) /* the 64-bit hosts read the clip after an @: start-stop (port/linux64, port/windows64) */
+        SDL_snprintf(path + strlen(path), sizeof(path) - strlen(path), "@%d-%d", sStartAt, sStopAt);
+    else if (sStartAt > 0) /* the 64-bit Linux host reads where to start after an @ (port/linux64) */
         SDL_snprintf(path + strlen(path), sizeof(path) - strlen(path), "@%d", sStartAt);
 #endif
     if (h_thread(BRIDGE_MOVIE_PROBE, 0, 0, 0, 0) == BRIDGE_MOVIE_MAGIC) {

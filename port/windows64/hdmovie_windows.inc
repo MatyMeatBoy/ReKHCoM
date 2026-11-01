@@ -8,7 +8,7 @@
 #include "../include/port/port_hd_media.h"
 typedef WCHAR SubChar;
 #define SDL_getenv SDL_getenv_unsafe
-static int sStartAt, sMovieDeviceReset;
+static int sStartAt, sStopAt, sMovieDeviceReset;
 static const char *sMovieSubs[2], *sMovieFont;
 static SDL_Keycode sMovieStartKeys[2] = { SDLK_RETURN, 0 };
 static struct { int hdSubtitles, masterVolume; } gPortConfig;
@@ -164,9 +164,13 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     gPortConfig.masterVolume = PortMovieVolumeTake(&sMovieVolume);
     char path[2048];
     if (!movie || snprintf(path, sizeof(path), "%s", movie) >= (int)sizeof(path)) return 0;
-    sStartAt = 0; sMovieDeviceReset = 0;
+    sStartAt = sStopAt = 0; sMovieDeviceReset = 0;
     char* at = strrchr(path, '@');
-    if (at) { char* end; long second = strtol(at + 1, &end, 10); if (end != at + 1 && !*end && second >= 0 && second <= 86400) { sStartAt = (int)second; *at = 0; } }
+    if (at) { /* @start or @start-stop (a clip of the scene) */
+        char* end; long second = strtol(at + 1, &end, 10), stop = 0;
+        if (*end == '-' && end != at + 1) { char* tail; stop = strtol(end + 1, &tail, 10); if (tail == end + 1 || stop <= second) stop = -1; else end = tail; }
+        if (end != at + 1 && !*end && second >= 0 && second <= 86400 && stop >= 0 && stop <= 86400) { sStartAt = (int)second; sStopAt = (int)stop; *at = 0; }
+    }
     sMovieSubs[0] = subs1; sMovieSubs[1] = subs2; sMovieFont = font;
     gPortConfig.hdSubtitles = (subs1 && *subs1) || (subs2 && *subs2);
     sMovieStartKeys[0] = SDLK_RETURN; sMovieStartKeys[1] = 0;
