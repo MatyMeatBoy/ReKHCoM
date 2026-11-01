@@ -8356,10 +8356,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:25:44.435091+00:00",
-      "updated_at": "2026-11-01T23:17:26.638792+00:00",
+      "updated_at": "2026-11-01T23:40:11.094415+00:00",
       "branch": null,
       "pr": null,
-      "approval": "User delegated 3 Sol bajo workers",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "pruebas/sol-low-linux-import/INFORME.md",
       "evidence": [
         {
@@ -8374,6 +8374,11 @@
         },
         {
           "at": "2026-11-01T23:17:26.638792+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:40:11.094415+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13838,7 +13843,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:39:52.858666+00:00",
+  "updated_at": "2026-11-01T23:40:11.094415+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
