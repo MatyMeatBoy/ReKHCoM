@@ -7444,14 +7444,19 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:40.926521+00:00",
-      "updated_at": "2026-11-01T23:14:07.542976+00:00",
+      "updated_at": "2026-11-01T23:37:59.893440+00:00",
       "branch": null,
       "pr": null,
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "PLAN_V22.md",
       "evidence": [
         {
           "at": "2026-11-01T23:14:07.542976+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:37:59.893440+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13803,7 +13808,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:37:41.301738+00:00",
+  "updated_at": "2026-11-01T23:37:59.893440+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
