@@ -8039,10 +8039,10 @@
     "qa-sol-low-scenes-states": {
       "id": "qa-sol-low-scenes-states",
       "piece": "QA diversa galeria escenas y compatibilidad estados",
-      "status": "en_revision",
-      "owner": "sol-low-scenes-states",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T19:24:31.421802+00:00",
-      "updated_at": "2026-10-27T19:27:43.672201+00:00",
+      "updated_at": "2026-11-01T23:16:56.285311+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -8052,6 +8052,11 @@
           "at": "2026-10-27T19:27:43.672201+00:00",
           "owner": "sol-low-scenes-states",
           "detail": "5 QA privados una pasada/caso: game32 evento22 skip audit6/6 y SRAM; title64 HD back rosa persiste; KHST Riku pre1 rechazo controlado; KHST Sora/Riku v2.0 compatible load1 visual. Report pruebas/sol-low-scenes-states/REPORT.md; sin producto ni PR."
+        },
+        {
+          "at": "2026-11-01T23:16:56.285311+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T19:24:40.210348+00:00"
@@ -13328,7 +13333,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:16:38.827029+00:00",
+  "updated_at": "2026-11-01T23:16:56.285311+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14128,6 +14133,16 @@
       "from_owner": "sol-low-diverse-saves",
       "to_owner": "claude-v22",
       "expected_commit": "a1bd2bd9997b14e5e1d087fd823d47e38f142279",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:16:56.285311+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "qa-sol-low-scenes-states",
+      "from_owner": "sol-low-scenes-states",
+      "to_owner": "claude-v22",
+      "expected_commit": "df1345186f4af4d48f79d4873f31f4be467d4c49",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
