@@ -7148,9 +7148,9 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:40.246238+00:00",
-      "updated_at": "2026-11-01T23:30:45.832492+00:00",
+      "updated_at": "2026-11-01T23:52:21.295295+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
@@ -7166,6 +7166,11 @@
         },
         {
           "at": "2026-11-01T23:30:45.832492+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #371/#372 — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:52:21.295295+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #371/#372 — limpieza de cola 02/11, main db978bac6."
         }
@@ -14067,7 +14072,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:52:11.243763+00:00",
+  "updated_at": "2026-11-01T23:52:21.295295+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
