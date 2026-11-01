@@ -9578,10 +9578,10 @@
     "v22-console-offline-build-harness": {
       "id": "v22-console-offline-build-harness",
       "piece": "Prepare serial offline console wrappers with real cache gates and RAM guards; no build before exclusive window",
-      "status": "en_revision",
-      "owner": "codex-console-offline",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T04:24:49.191794+00:00",
-      "updated_at": "2026-10-28T04:38:50.530075+00:00",
+      "updated_at": "2026-11-01T23:19:18.931129+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root delegated concrete offline builders for v2.2 all consoles with existing SDK/VM and RAM limits",
@@ -9591,6 +9591,11 @@
           "at": "2026-10-28T04:38:50.530075+00:00",
           "owner": "codex-console-offline",
           "detail": "Prepared syntaxchecked realbuilders offline adapters console_build_entry/offline_console_vm/offline_preflight_guest/offline_finalize_guest; checked CASperstage, noNIC/snapshotexisting16GiB,512MiB1CPU, realcachegates+freshsuccess/result+ELF/map/debugfetch/hash,128MiBtransientoutbox. PS4separatechildbuilt/frozen; Vita/Switch/PS5notstarted while root421VM. Handoffupdated current actuals. Additionalinventory2 confirmedallSDK/Lapy, noFFmpeg/cachemediaDEB."
+        },
+        {
+          "at": "2026-11-01T23:19:18.931129+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T04:24:54.798966+00:00"
@@ -13383,7 +13388,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:19:01.815052+00:00",
+  "updated_at": "2026-11-01T23:19:18.931129+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14233,6 +14238,16 @@
       "from_owner": "codex-console-delivery",
       "to_owner": "claude-v22",
       "expected_commit": "40964d6d45e234deb60e269fc83bbc23311115f3",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:19:18.931129+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-console-offline-build-harness",
+      "from_owner": "codex-console-offline",
+      "to_owner": "claude-v22",
+      "expected_commit": "75e4f6afa1019fa48c69ae4ea4831dca01ae42a4",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
