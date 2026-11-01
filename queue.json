@@ -11656,10 +11656,10 @@
     "v225-vita-build": {
       "id": "v225-vita-build",
       "piece": "Build final Vita beta2.2.5 guest3regions+offline snapshotSDKhost, close VPK/SFO02.25/debug evidence",
-      "status": "en_revision",
-      "owner": "codex-v225-console-build",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T22:22:36.093570+00:00",
-      "updated_at": "2026-10-28T22:32:19.399380+00:00",
+      "updated_at": "2026-11-01T23:23:56.855155+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root sourcefreeze f28b884 andexclusiveconsoleVMlease authorized",
@@ -11669,6 +11669,11 @@
           "at": "2026-10-28T22:32:19.399380+00:00",
           "owner": "codex-v225-console-build",
           "detail": "VitaFINAL13,650,627B SHAdcec3dfe616dc5298df6d30d026826914e39c7104f4feac3af6e437658e4acbf/sourcef28,15207terminal0/462.469s, QEMU46488terminal0. ActualSFO02.25/3executables216ZIPentriesfullCRCpassed. RealSDKgate/snapshotnoNIC/freshnonce/originalSDKdiskstatunchangedPASS. Compressed3ARMELF+symbols13.45MBretaineddebug-symbols/vita. Rootcollectorready, nohardwareclaim;VMleasecededLinux."
+        },
+        {
+          "at": "2026-11-01T23:23:56.855155+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T22:22:42.621556+00:00"
@@ -13493,7 +13498,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:23:37.527034+00:00",
+  "updated_at": "2026-11-01T23:23:56.855155+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14453,6 +14458,16 @@
       "from_owner": "codex-v225-console-build",
       "to_owner": "claude-v22",
       "expected_commit": "bedc3841c03be7ea075415e7bc61d6bddc3c477b",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:23:56.855155+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v225-vita-build",
+      "from_owner": "codex-v225-console-build",
+      "to_owner": "claude-v22",
+      "expected_commit": "f040b310c0171f4248986067303c5873f587ce82",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
