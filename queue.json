@@ -10871,10 +10871,10 @@
     "hd-video-resolution-repair": {
       "id": "hd-video-resolution-repair",
       "piece": "Explicit real720p cap for new WindowsMF/LinuxFFmpeg HD video imports plus opt-in existing-video repair. Preserve0..2compression ABI, source/targetprofile fingerprints/journals, ENJP immutable generations and rollback/cancel; no original/protected mutation, no Android local transcode claim. Plan approval before product code.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T16:17:47.514327+00:00",
-      "updated_at": "2026-10-28T16:33:08.398993+00:00",
+      "updated_at": "2026-11-01T23:46:45.241282+00:00",
       "branch": null,
       "pr": null,
       "approval": "User explicitly requested resolution reduction and optional discrete repair; root delegated Windows/Linux implementation and asks plan before code.",
@@ -10886,7 +10886,7 @@
           "detail": "released: DEFERRED_BY_USER: internal720p sketch only; no auto-resume. Local snapshot on feat/video-resolution-repair, port/progress/HD_VIDEO_RESOLUTION_SKETCH.md and pruebas/hd-video-resolution-repair/PLAN.md. Profile/geometry/validation and PythonFFmpeg helpers not wired to import/UI/cache/journal/generations; only tiny policy controls ran, no MF/FFmpeg encode/VM or real720output. No encoder active, no default/original/protected/public artifact changes, no push/PR. Resume only if439test still fails AND user explicitly requests."
         }
       ],
-      "claimed_at": "2026-10-28T16:18:23.263583+00:00"
+      "claimed_at": "2026-11-01T23:46:45.241282+00:00"
     },
     "issue441-title-bar-ready-guard": {
       "id": "issue441-title-bar-ready-guard",
@@ -13945,7 +13945,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:46:27.803862+00:00",
+  "updated_at": "2026-11-01T23:46:45.241282+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
