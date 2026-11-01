@@ -9394,10 +9394,10 @@
     "v22-stable-android-delivery": {
       "id": "v22-stable-android-delivery",
       "piece": "Prepare and build verified v2.2 Android beta from frozen source with shared offline toolchain; no publication",
-      "status": "en_revision",
-      "owner": "codex-stable-android",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T02:56:47.361071+00:00",
-      "updated_at": "2026-10-28T03:14:12.907103+00:00",
+      "updated_at": "2026-11-01T23:18:30.752537+00:00",
       "branch": null,
       "pr": null,
       "approval": "User authorized stable2.2/testbuild; root delegated Android preparation now, build only after exclusive window",
@@ -9407,6 +9407,11 @@
           "at": "2026-10-28T03:14:12.907103+00:00",
           "owner": "codex-stable-android",
           "detail": "Frozen38f84 clean APKclosed27505608bytes SHA256bd7999c234669ac88dfd5ec22ae3ccddd95db011eda0a1608fb8526819e19a4e; appidcom.rekhcom.android/code102020099/beta. Signaturev2verified+certSHA3a5a1740... matchespre1/pre2; required8ELFs+3guests stagehashmatch; ARM64ELF16K+guestsegmentsPASS; noROM/SAV/INI fixtures; oldAPKhashespreserved. Job2GiB peak1.158GiB minfree3.493GiB jobs1Gradleofflineworkers1exit0. DeviceS22/Moto/Jafar notverified; no upload/publication."
+        },
+        {
+          "at": "2026-11-01T23:18:30.752537+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T02:57:03.358897+00:00"
@@ -13363,7 +13368,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:18:11.379423+00:00",
+  "updated_at": "2026-11-01T23:18:30.752537+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14193,6 +14198,16 @@
       "from_owner": "sol-low-linux-import",
       "to_owner": "claude-v22",
       "expected_commit": "5386bf4424e728e6be58bd83386bc587b5a9b403",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:18:30.752537+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-stable-android-delivery",
+      "from_owner": "codex-stable-android",
+      "to_owner": "claude-v22",
+      "expected_commit": "8e0bd37893b79bf73284d64e9338329b29395500",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
