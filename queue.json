@@ -11582,10 +11582,10 @@
     "v225-ps4-build": {
       "id": "v225-ps4-build",
       "piece": "Build final PS4 beta2.2.5 from frozenf28b884 using owncache/shared SDK, close PKG/hash/SFO02.25 audit",
-      "status": "en_revision",
-      "owner": "codex-v225-console-build",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T22:11:16.164878+00:00",
-      "updated_at": "2026-10-28T22:22:25.912673+00:00",
+      "updated_at": "2026-11-01T23:23:30.108884+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root FREEZE f28b884ab2409753cea0cfae37784d5a3ed90f31 and4consolebuild authorization",
@@ -11595,6 +11595,11 @@
           "at": "2026-10-28T22:22:25.912673+00:00",
           "owner": "codex-v225-console-build",
           "detail": "PS4CLOSED39,256,064B SHA88a02210c171002770ba584c15166db3136312c707106504626abbe4a2ad25e2/sourcef28. Ownbuild42667terminal0/316.547s. ActualPKG SFO02.25/02.25/title/content/header/hashPASS;debug7ELF/maps+symbolmaps9.79MBgzipverified retained debug-symbols/ps4;nohardwareclaim. Readyrootcollector, publicidentitynewimmutable."
+        },
+        {
+          "at": "2026-11-01T23:23:30.108884+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T22:11:21.888165+00:00"
@@ -13483,7 +13488,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:23:11.131511+00:00",
+  "updated_at": "2026-11-01T23:23:30.108884+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14433,6 +14438,16 @@
       "from_owner": "codex-linux225-build",
       "to_owner": "claude-v22",
       "expected_commit": "6f8295094781c21becdf1b3aec1b2fcdcc6b5e15",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:23:30.108884+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v225-ps4-build",
+      "from_owner": "codex-v225-console-build",
+      "to_owner": "claude-v22",
+      "expected_commit": "bedc3841c03be7ea075415e7bc61d6bddc3c477b",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
