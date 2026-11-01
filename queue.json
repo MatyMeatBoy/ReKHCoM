@@ -8836,10 +8836,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T20:37:37.144425+00:00",
-      "updated_at": "2026-11-01T23:18:11.379423+00:00",
+      "updated_at": "2026-11-01T23:40:46.551152+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Usuario: prioridadtotal fallback64, conservarlogicaGBA, Claude puede tomar trabajoindependiente",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "CLAUDE_COLA_ACTUAL.md; pruebas/64bit-crash-ledger/REPORT-CURRENT.md; PR396",
       "evidence": [
         {
@@ -8849,6 +8849,11 @@
         },
         {
           "at": "2026-11-01T23:18:11.379423+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:40:46.551152+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13848,7 +13853,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:40:27.925989+00:00",
+  "updated_at": "2026-11-01T23:40:46.551152+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
