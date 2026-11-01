@@ -7499,10 +7499,10 @@
     "android22-pre1-diagnostic-build": {
       "id": "android22-pre1-diagnostic-build",
       "piece": "APK diagnostica2.2pre1 paraMoto374; dosABIs todasregiones firmaactualizable ymanifest sinconfirmarfixMoto",
-      "status": "en_revision",
-      "owner": "codex-android22-build",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:28:59.207186+00:00",
-      "updated_at": "2026-10-27T18:46:50.413662+00:00",
+      "updated_at": "2026-11-01T23:15:19.796447+00:00",
       "branch": "build/android22-pre1",
       "pr": null,
       "approval": null,
@@ -7512,6 +7512,11 @@
           "at": "2026-10-27T18:46:50.413662+00:00",
           "owner": "codex-android22-build",
           "detail": "APK+SHA+manifest releases/v2.2-pre1/;source8d495811e;sha256dca49ed80688b5e42624190660ef6c9028c11d45c55b7a499dbeb46ac868ca27;signaturematchespublic2.1/code2020099;CRC+2ABI/3guestmatchPASS;Moto/JafarruntimeUNVERIFIED;awaitrootpublication"
+        },
+        {
+          "at": "2026-11-01T23:15:19.796447+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T18:29:06.260644+00:00"
@@ -13287,7 +13292,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:15:09.337492+00:00",
+  "updated_at": "2026-11-01T23:15:19.796447+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14047,6 +14052,16 @@
       "from_owner": "codex-windows-pre1",
       "to_owner": "claude-v22",
       "expected_commit": "531c82114d59ff40e46b7f09b4ca92a2a788abb5",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:15:19.796447+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "android22-pre1-diagnostic-build",
+      "from_owner": "codex-android22-build",
+      "to_owner": "claude-v22",
+      "expected_commit": "baf05e8839922f08e59431f9234ef50d4efeb437",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
