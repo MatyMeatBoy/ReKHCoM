@@ -4289,10 +4289,10 @@
     "achievements-trigger-key-centre": {
       "id": "achievements-trigger-key-centre",
       "piece": "Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD",
-      "status": "pr_abierto",
-      "owner": "codex-batteries",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T16:42:48.991972+00:00",
-      "updated_at": "2026-10-26T16:43:28.997495+00:00",
+      "updated_at": "2026-11-01T23:04:13.980581+00:00",
       "branch": "codex/achievement-triggers-gba-key",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/243",
       "approval": null,
@@ -4302,6 +4302,11 @@
           "at": "2026-10-26T16:43:28.997495+00:00",
           "owner": "codex-batteries",
           "detail": "933ce5eb8; actual input function slow LT/RT/jitter/release/reopen PASS; GbaKey real ROM EU/US/JP centred GBA/HD identical PASS; EU stock pixels byte-identical old/new; check_sources OK"
+        },
+        {
+          "at": "2026-11-01T23:04:13.980581+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T16:42:55.268483+00:00"
@@ -12960,7 +12965,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:03:56.668605+00:00",
+  "updated_at": "2026-11-01T23:04:13.980581+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13560,6 +13565,16 @@
       "from_owner": "codex-batteries",
       "to_owner": "claude-v22",
       "expected_commit": "fb787dada345cf1853d28bec629b96cef6911483",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:04:13.980581+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "achievements-trigger-key-centre",
+      "from_owner": "codex-batteries",
+      "to_owner": "claude-v22",
+      "expected_commit": "1c89ad89d626794aefb5d65bc0ec670ddafefb4f",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
