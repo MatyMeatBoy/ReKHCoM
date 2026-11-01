@@ -11716,10 +11716,10 @@
     "v225-ps5-build": {
       "id": "v225-ps5-build",
       "piece": "Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence",
-      "status": "en_revision",
-      "owner": "codex-v225-console-build",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T22:45:50.658475+00:00",
-      "updated_at": "2026-10-28T23:00:08.929002+00:00",
+      "updated_at": "2026-11-01T23:24:45.360410+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root frozenf28 fourconsoleauthorization andexclusiveVMlease afterLinuxterminal; explicitPS5nativeguestpolicy",
@@ -11729,6 +11729,11 @@
           "at": "2026-10-28T23:00:08.929002+00:00",
           "owner": "codex-v225-console-build",
           "detail": "CLOSED source f28b884ab2409753cea0cfae37784d5a3ed90f31; PPSA98511.zip 27912327 B SHA256 563ea35d35349ed91c5d5d5098c1a5476ed1acd1b94e6fb28c70ccbb34459139; FINAL-AUDIT.json CRC224/3regions/version02.002.005 PASS; recovery exact224 members and actual unstripped LLVM ELF+symbols retained debug-symbols/ps5/DEBUG-MANIFEST.json. No hardware certification; VM terminal."
+        },
+        {
+          "at": "2026-11-01T23:24:45.360410+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T22:45:55.516531+00:00"
@@ -13513,7 +13518,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:24:27.226684+00:00",
+  "updated_at": "2026-11-01T23:24:45.360410+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14493,6 +14498,16 @@
       "from_owner": "codex-v225-console-build",
       "to_owner": "claude-v22",
       "expected_commit": "92fd3a9a25367fcd554e7e8e78c16ab0c8d87235",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:24:45.360410+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v225-ps5-build",
+      "from_owner": "codex-v225-console-build",
+      "to_owner": "claude-v22",
+      "expected_commit": "ab3a24a081d4a34e211f30a3a2736d043dad2122",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
