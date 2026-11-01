@@ -12615,10 +12615,10 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-11-01T23:12:25.156776+00:00",
+      "updated_at": "2026-11-01T23:12:30.893050+00:00",
       "branch": "release/v23-test515",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
@@ -12666,6 +12666,11 @@
         },
         {
           "at": "2026-11-01T23:12:25.156776+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #519 integrado; #515 cerrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:12:30.893050+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #519 integrado; #515 cerrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13206,7 +13211,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:12:25.156776+00:00",
+  "updated_at": "2026-11-01T23:12:30.893050+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
