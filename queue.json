@@ -9749,10 +9749,10 @@
     "v22-ps5-offline-build": {
       "id": "v22-ps5-offline-build",
       "piece": "Build PS5 v2.2 all regions+PPSA98511.zip offline existingSDK/Lapy/snapshot512MiB1CPU own768MiBjob; record realguestmem/swap",
-      "status": "en_revision",
-      "owner": "codex-console-ps5",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T05:31:12.035167+00:00",
-      "updated_at": "2026-10-28T05:42:49.968587+00:00",
+      "updated_at": "2026-11-01T23:20:08.132802+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes PS5 exclusive window now afterSwitchclosed; no Web until terminal; noSDKdownloads/newVMdisk",
@@ -9762,6 +9762,11 @@
           "at": "2026-10-28T05:42:49.968587+00:00",
           "owner": "codex-console-ps5",
           "detail": "REALSDK offline snapshot512MiB1CPU allguest+host+PPSA98511.zip PASS source5ccb8d, session44967terminalexit0,371.75s,job768peak704.41/minfree1.695GiB. Closed pruebas/v22-stable-ps5/PPSA98511.zip27900856 SHA2a9c69f8090681b723c4a0c889a0109de3c397af7f98498aaf0604c0d419036d. CRC224entries/contentVersion02.002.000/titleID3guests/LapycontracthashPASS. Originalv2.0ZIP07e70255... and disk size/mtimeunchanged. DEBUGLIMITATION: originalbuilder removedfetched incl65MBdebug afteradaptervalidated; archiveNOTretained, onlyserialresult/hash/memberlist. Correctedadapterfuture-retention; no rerun perroot. No physicalPS5claim. WebNOTstarted; newtitleHUDstableblockerunderrootdiagnosis."
+        },
+        {
+          "at": "2026-11-01T23:20:08.132802+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T05:31:17.507098+00:00"
@@ -13403,7 +13408,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:19:49.759700+00:00",
+  "updated_at": "2026-11-01T23:20:08.132802+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14273,6 +14278,16 @@
       "from_owner": "codex-console-ps4",
       "to_owner": "claude-v22",
       "expected_commit": "1670d421ae66597aefe9723cad0b84e566648979",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:20:08.132802+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-ps5-offline-build",
+      "from_owner": "codex-console-ps5",
+      "to_owner": "claude-v22",
+      "expected_commit": "68dff26d1a335e6cd459c94266323314cb59f324",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
