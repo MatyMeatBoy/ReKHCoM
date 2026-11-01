@@ -9759,10 +9759,10 @@
     "v22-switch-host-build": {
       "id": "v22-switch-host-build",
       "piece": "Build v2.2 Switch NRO offline from verified5ccb guests; SDK512MiB snapshot1CPU own768MiBjob",
-      "status": "en_revision",
-      "owner": "codex-console-switch-host",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T05:26:38.407682+00:00",
-      "updated_at": "2026-10-28T05:30:05.441745+00:00",
+      "updated_at": "2026-11-01T23:21:45.451927+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorizes Switch host window after guest and all prior heavy tasks terminal; noPS5/Web until coordination",
@@ -9772,6 +9772,11 @@
           "at": "2026-10-28T05:30:05.441745+00:00",
           "owner": "codex-console-switch-host",
           "detail": "REALSDK/offline snapshot512MiB1CPU PASS source5ccb8d, session41941terminalexit0,51.12s,job768peak717.32/minfree2.234GiB. Closed pruebas/v22-stable-switch/ReKHCoM-v2.2-switch-beta.nro 40817134 SHAf71d948eaa2e660c5b1b59a28291dade52513f6833f605bd24192ec6134b8b42. NACP2.2 and realRomFS211files allbyteshashmatchstaging;3guests identicalcompiled, noROM/SAV/INI/log. DebugELF/NACP/host.o preserved. OriginalSDKdisk size/mtime unchanged; no priorv2.0NROfound; physicalSwitchunverified. NoPS5/Web started."
+        },
+        {
+          "at": "2026-11-01T23:21:45.451927+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T05:26:43.972059+00:00"
@@ -13443,7 +13448,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:21:26.727354+00:00",
+  "updated_at": "2026-11-01T23:21:45.451927+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14353,6 +14358,16 @@
       "from_owner": "codex-console-switch-guest",
       "to_owner": "claude-v22",
       "expected_commit": "672ab3932ab188aca12b3988a183c14b8db1987e",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:21:45.451927+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-switch-host-build",
+      "from_owner": "codex-console-switch-host",
+      "to_owner": "claude-v22",
+      "expected_commit": "ad56c62f431a21bfaa6be6fd4d8f8d5150026e17",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
