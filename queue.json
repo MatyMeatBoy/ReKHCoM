@@ -7821,10 +7821,10 @@
     "audit64-menu-scroll-boundaries": {
       "id": "audit64-menu-scroll-boundaries",
       "piece": "Sólo auditoría de denominadores de scroll menús compartidos tras causa386; contar0..27 y límites de página",
-      "status": "en_revision",
-      "owner": "codex-scroll-boundary-audit",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T19:17:09.796140+00:00",
-      "updated_at": "2026-10-27T19:20:39.784823+00:00",
+      "updated_at": "2026-11-01T23:10:40.360047+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario pide todos los cuelgues documentados64 por patrones; coordinador asigna auditoría readonly tras IDIV cero probado386",
@@ -7834,6 +7834,11 @@
           "at": "2026-10-27T19:20:39.784823+00:00",
           "owner": "codex-scroll-boundary-audit",
           "detail": "Root notified reachable sibling MsCharge1014/1017:10..12 unique loosecards =>range0, initAlltab4 scroll0. Status guard, Deck/ExchangeDIV0,worldselect lastPage guard already; no other scroll-variable divides found in comment-stripped src/menu/card scan. Follow-up fixchild approved; no product edits under audit."
+        },
+        {
+          "at": "2026-11-01T23:10:40.360047+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T19:17:25.154284+00:00"
@@ -13148,7 +13153,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:10:22.309228+00:00",
+  "updated_at": "2026-11-01T23:10:40.360047+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13828,6 +13833,16 @@
       "from_owner": "codex-crash386",
       "to_owner": "claude-v22",
       "expected_commit": "6be398f033b13efa29428a87ed195bae31ba5b26",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:10:40.360047+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "audit64-menu-scroll-boundaries",
+      "from_owner": "codex-scroll-boundary-audit",
+      "to_owner": "claude-v22",
+      "expected_commit": "496246a234c15b8dd6268550d6dba36c336dfde1",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
