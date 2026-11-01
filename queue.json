@@ -4490,9 +4490,9 @@
       "id": "trailer-v20-production",
       "piece": "Producir y exportar trailer real v2.0",
       "status": "en_curso",
-      "owner": "codex-trailer-production",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T21:33:57.968735+00:00",
-      "updated_at": "2026-10-26T23:22:57.431885+00:00",
+      "updated_at": "2026-11-01T23:13:11.041694+00:00",
       "branch": "trailer/v20-production",
       "pr": null,
       "approval": "Usuario aprobo brief y ordeno crear trailer largo con plataformas, Sincorazon y editor de partidas",
@@ -4507,6 +4507,11 @@
           "at": "2026-10-26T23:22:57.431885+00:00",
           "owner": "codex-trailer-production",
           "detail": "Baseline ASCII/Rebel limpio validado y preservado, SHA f1497f78ae191fcd0a05848e5d63e3f65b5c58dd998eda181306a8949c9e8cd4. Usuario amplió encargo: incorporar corrección de recarga HD mediante decompilación. Preparados inputs reales dos ciclos y traces RPM solo lectura; espera binario revisado para recapturas y entrega final."
+        },
+        {
+          "at": "2026-11-01T23:13:11.041694+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T21:34:06.805996+00:00"
@@ -13228,7 +13233,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:12:53.724701+00:00",
+  "updated_at": "2026-11-01T23:13:11.041694+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13948,6 +13953,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "8996a6f8ef1b5a4ee26b408897fd1d8d7cb65d13",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:13:11.041694+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "trailer-v20-production",
+      "from_owner": "codex-trailer-production",
+      "to_owner": "claude-v22",
+      "expected_commit": "8fe2576e21d40ff1ca5512a73ad74548e14a65bd",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
