@@ -7644,10 +7644,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:22:24.225828+00:00",
-      "updated_at": "2026-11-01T23:08:15.959880+00:00",
+      "updated_at": "2026-11-01T23:34:39.637994+00:00",
       "branch": "codex/android374-investigation",
       "pr": null,
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/374",
       "evidence": [
         {
@@ -7662,6 +7662,11 @@
         },
         {
           "at": "2026-11-01T23:08:15.959880+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #374 cerrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:34:39.637994+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #374 cerrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13736,7 +13741,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:34:26.043573+00:00",
+  "updated_at": "2026-11-01T23:34:39.637994+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
