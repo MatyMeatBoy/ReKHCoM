@@ -8177,10 +8177,10 @@
     "divisor64-reachable-audit": {
       "id": "divisor64-reachable-audit",
       "piece": "Audit reachable native64 zero divisors beyond MapInspect/Moogle",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T20:10:39.577890+00:00",
-      "updated_at": "2026-11-01T23:11:32.927375+00:00",
+      "updated_at": "2026-11-01T23:11:39.360825+00:00",
       "branch": "divisor64-reachable-audit",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/395",
       "approval": null,
@@ -8203,6 +8203,11 @@
         },
         {
           "at": "2026-11-01T23:11:32.927375+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #395 integrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:11:39.360825+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #395 integrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13184,7 +13189,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:11:32.927375+00:00",
+  "updated_at": "2026-11-01T23:11:39.360825+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
