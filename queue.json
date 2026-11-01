@@ -5688,10 +5688,10 @@
     "escenas-retrato-x4": {
       "id": "escenas-retrato-x4",
       "piece": "Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T06:31:22.665133+00:00",
-      "updated_at": "2026-11-01T23:54:15.557803+00:00",
+      "updated_at": "2026-11-01T23:54:21.755221+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
@@ -5709,6 +5709,11 @@
         },
         {
           "at": "2026-11-01T23:54:15.557803+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): encuadre de escenas 2.3 con retratos completos (881f599bc) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:54:21.755221+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): encuadre de escenas 2.3 con retratos completos (881f599bc) — limpieza de cola 02/11, main db978bac6."
         }
@@ -14136,7 +14141,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:54:15.557803+00:00",
+  "updated_at": "2026-11-01T23:54:21.755221+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
