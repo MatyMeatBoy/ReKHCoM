@@ -1,12 +1,12 @@
 {
-  "version": "v2.3-web-alpha",
-  "source_commit": "328a9ff5d8045b74b786843ce1c1a41ab78c11fb",
+  "version": "v2.6-web-alpha",
+  "source_commit": "49900e4c91cf0f965da6f222385f21998e41514a",
   "source_dirty": false,
-  "built_utc": "2026-10-30T21:35:09.583012+00:00",
+  "built_utc": "2026-11-01T23:46:41.854260+00:00",
   "files": {
     "index.html": {
       "bytes": 16978,
-      "sha256": "a1b11189ed407878080afe5cdcde100d69ab6a37e035e01a5d5aba306c1a0597"
+      "sha256": "b62323f694b8c3dcab3190a6b7f00128231bcf5568b381c621ab7a017c5c702b"
     },
     "web.css": {
       "bytes": 14481,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "ca6d267cbdd2f62e45397b638ebb0cce48092ba9fdee3a6298f30a66a1e2903a"
+      "sha256": "49b2fa1f7d34f79eadc5a3d1f7a28bf7e2bf7b5e2f71c6177d4179f1d17d9287"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9537185,
-      "sha256": "6ce222c9c2d58b9466a8717e916a6b6d305f882cceb1dfd3922ced20b589c516"
+      "bytes": 9546451,
+      "sha256": "6439af1ea39d5017f3c0e6b1dea7641c1692123409ba26897dfdff00c9e6c520"
     },
     "rekhcom-us.js": {
-      "bytes": 208831,
-      "sha256": "4a22526045d8075a30420cf3f2107a890cc32f3da29a552559f0e48d478f3672"
+      "bytes": 208832,
+      "sha256": "679389d96b308afccc604b74a065a9f7d30fdef31b5d81b2755124f196cfc5de"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9592298,
-      "sha256": "a2dcad5db33872156fb9bbe80f2f94dac424b96fb9738aedbc34626963fcc426"
+      "bytes": 9600930,
+      "sha256": "1a74df301021d63b12c447fe30f553bec7b3d9903931230098b473c7fd16d435"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "bed1b9b595d8ad60fb466c6fe8682ab4f1177eda5d76a68b769de03313972243"
+      "sha256": "e5e995ea8c4bb7b88113db850afdfce898a772ddd9684fa24a4a7816b893d16e"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9447939,
-      "sha256": "4eeecead62ab7f3b7a8934e03ad2a05ff12741e78f1a9f228b50089ebe509945"
+      "bytes": 9456595,
+      "sha256": "2c17f71ce186a74afbba4c926bdc1671a4c6db4672f79bc72d86562172ba2dec"
     }
   }
 }
