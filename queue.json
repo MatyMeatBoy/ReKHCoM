@@ -9608,10 +9608,10 @@
     "v22-ps4-offline-build": {
       "id": "v22-ps4-offline-build",
       "piece": "Build/audit v2.2 PS4 EU US JP with existing OpenOrbis and jobs1; package512MiB owned budget",
-      "status": "en_revision",
-      "owner": "codex-console-ps4",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T04:28:15.978448+00:00",
-      "updated_at": "2026-10-28T04:35:08.351218+00:00",
+      "updated_at": "2026-11-01T23:19:43.798212+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorizes serialPS4build now; user requested v2.2allconsoles; no other VM/build untilterminal",
@@ -9621,6 +9621,11 @@
           "at": "2026-10-28T04:35:08.351218+00:00",
           "owner": "codex-console-ps4",
           "detail": "REAL allEUUSJP+host+PKG PASS sourceace4116, session34290terminalexit0,314.98s, BelowNormaljobs1 ownedjob512MiBpeak87.43/minfree1.577GiB. FinalPKG39256064 SHA91ab374c8299e609e8de6ba1252d3dcf175a0dcc18bba38d3785d6ed1cc1d695; readbackAPP_VER/VERSION02.02/title/contentIDmatch. Originalv2.0c5c456d9...verifiedunchanged. Actualconsoleexecutionunverified; rootdeliveryintegrationpending."
+        },
+        {
+          "at": "2026-11-01T23:19:43.798212+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T04:28:21.406507+00:00"
@@ -13393,7 +13398,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:19:25.281440+00:00",
+  "updated_at": "2026-11-01T23:19:43.798212+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14253,6 +14258,16 @@
       "from_owner": "codex-console-offline",
       "to_owner": "claude-v22",
       "expected_commit": "75e4f6afa1019fa48c69ae4ea4831dca01ae42a4",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:19:43.798212+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-ps4-offline-build",
+      "from_owner": "codex-console-ps4",
+      "to_owner": "claude-v22",
+      "expected_commit": "1670d421ae66597aefe9723cad0b84e566648979",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
