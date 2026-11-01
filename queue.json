@@ -5451,10 +5451,10 @@
     "launcher-architecture": {
       "id": "launcher-architecture",
       "piece": "Windows runtime architecture selection and force32",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T06:08:36.971398+00:00",
-      "updated_at": "2026-11-01T23:53:53.078460+00:00",
+      "updated_at": "2026-11-01T23:53:59.545980+00:00",
       "branch": "work/launcher-architecture",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
@@ -5482,6 +5482,11 @@
         },
         {
           "at": "2026-11-01T23:53:53.078460+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): seleccion 32/64 del launcher publicada (trabajo #360) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:53:59.545980+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): seleccion 32/64 del launcher publicada (trabajo #360) — limpieza de cola 02/11, main db978bac6."
         }
@@ -14120,7 +14125,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:53:53.078460+00:00",
+  "updated_at": "2026-11-01T23:53:59.545980+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
