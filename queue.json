@@ -4570,10 +4570,10 @@
     "hd-reload-fill-decomp": {
       "id": "hd-reload-fill-decomp",
       "piece": "Recarga HD dinamica igual al original desde decomp",
-      "status": "pr_abierto",
-      "owner": "codex-ending-hud",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T22:52:34.588428+00:00",
-      "updated_at": "2026-10-26T23:49:01.926744+00:00",
+      "updated_at": "2026-11-01T23:04:48.200939+00:00",
       "branch": "fix/hd-reload-fill",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/276",
       "approval": "Pedido directo usuario corregir rellenado original, pushear y cerrar 26/10",
@@ -4583,6 +4583,11 @@
           "at": "2026-10-26T23:49:01.926744+00:00",
           "owner": "codex-ending-hud",
           "detail": "HEAD1b0ed6987b96b48282b2cc54e291aa09b12f962d rebaseccb81d3be; check_sources+HUDmask/decomp/order+pause_layers+JPqueuePASS. Numerofixcompositor: filleroriginalpreservado. Datos3ciclos+partial100real ycapturasHD/GBAparcial/full. Serievisual5nivelesenverificacionfinalproductor."
+        },
+        {
+          "at": "2026-11-01T23:04:48.200939+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T22:52:40.544341+00:00"
@@ -12975,7 +12980,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:04:26.149087+00:00",
+  "updated_at": "2026-11-01T23:04:48.200939+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13585,6 +13590,16 @@
       "from_owner": "codex-batteries",
       "to_owner": "claude-v22",
       "expected_commit": "1c89ad89d626794aefb5d65bc0ec670ddafefb4f",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:04:48.200939+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "hd-reload-fill-decomp",
+      "from_owner": "codex-ending-hud",
+      "to_owner": "claude-v22",
+      "expected_commit": "b2899fffc28b6fc45d185c5de6690e5f4d65e675",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
