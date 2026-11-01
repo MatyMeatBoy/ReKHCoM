@@ -43,7 +43,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | entrada-agentes | Entrada automatica Claude/Codex sin contexto para cola compartida | integrado | root | https://github.com/MatyMeatBoy/ReKHCoM/pull/56 | pedido-usuario-20261024 | 2026-10-24T16:34:21.232737+00:00 |
 | editor-tiles-backend | Editor avanzado: catalogo nativo tiles sprites y proyectos | integrado | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c | pedido-usuario-20261024 | 2026-11-01T22:55:52.455673+00:00 |
 | editor-tiles-ui | Editor avanzado: lienzo herramientas y galeria por escena/mundo/global | integrado | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/commit/226bd523c | pedido-usuario-20261024 | 2026-11-01T22:56:20.887715+00:00 |
-| catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-11-01T22:56:31.494236+00:00 |
+| catalogo-retratos59 | Catalogo actual: retratos de dialogo Sora y Riku | en_curso | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-11-01T22:56:38.404337+00:00 |
 | catalogo-titulo60 | Catalogo actual: titulo original y barras | pr_abierto | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | — | 2026-10-25T07:23:02.479685+00:00 |
 | catalogo-naipes-mundo | Catalogo actual: Naipes mundo | integrado | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-27T17:11:17.355281+00:00 |
 | catalogo-idioma-copyright | Catalogo actual: idioma y copyright | integrado | claude-integrador | https://github.com/MatyMeatBoy/ReKHCoM/pull/101 | pedido-usuario-20261024 | 2026-10-27T17:11:24.691520+00:00 |
