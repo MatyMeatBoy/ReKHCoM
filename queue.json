@@ -12622,10 +12622,10 @@
     "online-salas-esquiva-link": {
       "id": "online-salas-esquiva-link",
       "piece": "Online: lobby en Retar con salas con nombre, texto en 64 bits, esquiva en link (version 5), barra del rival anclada en ancho",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-11-01T06:59:28.758320+00:00",
-      "updated_at": "2026-11-01T21:57:29.259341+00:00",
+      "updated_at": "2026-11-01T22:06:51.157831+00:00",
       "branch": "fix/windows64-udp-link",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/540",
       "approval": "Usuario 01/11: pidio sistema de salas con nombre por defecto, esquiva con cuadrado en link y ajustar ancho P1/P2",
@@ -12645,9 +12645,15 @@
           "at": "2026-11-01T21:57:29.259341+00:00",
           "owner": "claude-v22",
           "detail": "Linux/Deck añadido a la prerelease v2.5-online-beta (guests linux64 idénticos a windows64, test_linux64_package OK). Android64: texto 959af3284 (NDK r30 sin errores), sin prueba Android vs PC (no hay arnés Android); ARM32 espera #440."
+        },
+        {
+          "at": "2026-11-01T22:06:51.157831+00:00",
+          "owner": "claude-v22",
+          "detail": "Integrado en main 13767b847 (merge #540) con lock claude-v22; usuario: 'integra todo'."
         }
       ],
-      "claimed_at": "2026-11-01T06:59:35.209934+00:00"
+      "claimed_at": "2026-11-01T06:59:35.209934+00:00",
+      "completed_at": "2026-11-01T22:06:51.157831+00:00"
     }
   },
   "integrator": {
@@ -12656,7 +12662,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:06:09.075538+00:00",
+  "updated_at": "2026-11-01T22:06:51.157831+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
