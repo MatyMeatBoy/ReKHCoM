@@ -12622,19 +12622,20 @@
     "online-salas-esquiva-link": {
       "id": "online-salas-esquiva-link",
       "piece": "Online: lobby en Retar con salas con nombre, texto en 64 bits, esquiva en link (version 5), barra del rival anclada en ancho",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-11-01T06:59:28.758320+00:00",
-      "updated_at": "2026-11-01T06:59:28.758320+00:00",
+      "updated_at": "2026-11-01T06:59:35.209934+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 01/11: pidio sistema de salas con nombre por defecto, esquiva con cuadrado en link y ajustar ancho P1/P2",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-01T06:59:35.209934+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-01T06:59:28.758320+00:00",
+  "updated_at": "2026-11-01T06:59:35.209934+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
