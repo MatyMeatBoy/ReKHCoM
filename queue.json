@@ -6714,10 +6714,10 @@
     "cartas-pequenas-encaje-runtime": {
       "id": "cartas-pequenas-encaje-runtime",
       "piece": "cartas prioridad 1 (PENDIENTES)",
-      "status": "en_revision",
-      "owner": "claude-cartas",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T14:56:10.600293+00:00",
-      "updated_at": "2026-10-27T15:33:35.736085+00:00",
+      "updated_at": "2026-11-01T23:06:08.761294+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -6727,6 +6727,11 @@
           "at": "2026-10-27T15:33:35.736085+00:00",
           "owner": "claude-cartas",
           "detail": "Re-import main recipe; 105-card sheet + deck list in game OK; awaiting user confirm"
+        },
+        {
+          "at": "2026-11-01T23:06:08.761294+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T14:56:56.135048+00:00"
@@ -13013,7 +13018,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:05:47.432314+00:00",
+  "updated_at": "2026-11-01T23:06:08.761294+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13643,6 +13648,16 @@
       "from_owner": "launcher-architecture-sol",
       "to_owner": "claude-v22",
       "expected_commit": "d4dd1316b3237d75de80a9f72d2c27d7fb167166",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:06:08.761294+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "cartas-pequenas-encaje-runtime",
+      "from_owner": "claude-cartas",
+      "to_owner": "claude-v22",
+      "expected_commit": "119cda0a6ee876567241c2ae6588e69698223ebc",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
