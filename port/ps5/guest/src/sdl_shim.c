@@ -1062,6 +1062,49 @@ static void RefreshHostKeys(void) {
     }
 }
 
+/* Typed text (host_text.h): asked only while the game takes text, kept until the event is read. */
+static bool sTextInput;
+static char sTextEvents[8][64];
+static unsigned sTextEventNext;
+
+bool SDL_StartTextInput(SDL_Window* window) {
+    char none[4];
+    (void)window;
+    sTextInput = h_getenv("KHCOM_HOST_TEXT_START", none, sizeof(none)) == 0;
+    return sTextInput;
+}
+
+bool SDL_StopTextInput(SDL_Window* window) {
+    char none[4];
+    (void)window;
+    if (sTextInput)
+        h_getenv("KHCOM_HOST_TEXT_STOP", none, sizeof(none));
+    sTextInput = false;
+    return true;
+}
+
+SDL_Window* SDL_GetKeyboardFocus(void) {
+    return sWindows[0];
+}
+
+static void RefreshHostText(void) {
+    char* text;
+    int n;
+    if (!sTextInput)
+        return;
+    text = sTextEvents[sTextEventNext & 7];
+    n = h_getenv("KHCOM_HOST_TEXT_EVENT", text, sizeof(sTextEvents[0]));
+    if (n > 0 && n < (int)sizeof(sTextEvents[0])) {
+        SDL_Event event;
+        text[n] = 0;
+        memset(&event, 0, sizeof(event));
+        event.type = SDL_EVENT_TEXT_INPUT;
+        event.text.text = text;
+        Push(&event);
+        sTextEventNext++;
+    }
+}
+
 /* One bounded query per event refresh; render-time getters never cross the bridge.
  * Old/console hosts return no metadata and retain the original pad-only path. */
 static bool RefreshPadMetadata(bool* connected, SDL_GamepadType* type) {
@@ -1096,6 +1139,7 @@ static void Refresh(void) {
     h_pad_poll(now, HOSTPAD_MAX);
     metadata = RefreshPadMetadata(&physical, &type);
     RefreshHostKeys();
+    RefreshHostText();
     TouchpadHold(now);
     for (i = 0; i < HOSTPAD_MAX; i++) {
         Pad* p = &sPads[i];
