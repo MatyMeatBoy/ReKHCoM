@@ -5372,15 +5372,16 @@
     "escenas-retrato-x4": {
       "id": "escenas-retrato-x4",
       "piece": "Escenas con retrato en x4 1080p (p. ej. Hades Regla 6) al Atlas",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T06:31:22.665133+00:00",
-      "updated_at": "2026-10-27T06:31:22.665133+00:00",
+      "updated_at": "2026-11-01T23:05:40.656755+00:00",
       "branch": null,
       "pr": null,
       "approval": "Pendiente: revisión del usuario en Atlas (cambio visual)",
       "reference": "port/progress/PENDIENTES_VIGENTES.md (Bugs a resolver antes de v2.1)",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-01T23:05:40.656755+00:00"
     },
     "docs-optiport-v21-coordination-20261027": {
       "id": "docs-optiport-v21-coordination-20261027",
@@ -13006,7 +13007,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:05:23.544053+00:00",
+  "updated_at": "2026-11-01T23:05:40.656755+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
