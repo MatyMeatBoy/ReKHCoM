@@ -7040,10 +7040,10 @@
     "optiport-v22-profiling": {
       "id": "optiport-v22-profiling",
       "piece": "OptiPort 2.2: profiling puerta/carga y previews, igual calidad (PLAN_V22)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:21.478708+00:00",
-      "updated_at": "2026-10-28T18:42:07.116072+00:00",
+      "updated_at": "2026-11-01T23:07:11.495095+00:00",
       "branch": "perf/optiport-current-baseline",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/453",
       "approval": null,
@@ -7085,7 +7085,7 @@
           "detail": "released: Parent INCOMPLETE. 12functionalqualitycases expose Win64 fixed1280window/unappliedvsync0; no timing. Child453support13CPU is separate. Preserve all receipts; host-output-controls next."
         }
       ],
-      "claimed_at": "2026-10-28T17:51:03.625097+00:00"
+      "claimed_at": "2026-11-01T23:07:11.495095+00:00"
     },
     "optiport-v22-async": {
       "id": "optiport-v22-async",
@@ -13033,7 +13033,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:06:51.067090+00:00",
+  "updated_at": "2026-11-01T23:07:11.495095+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
