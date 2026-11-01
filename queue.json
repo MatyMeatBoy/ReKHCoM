@@ -9638,10 +9638,10 @@
     "v22-vita-guest-build": {
       "id": "v22-vita-guest-build",
       "piece": "Compile v2.2 Vita EU US JP guest archives only, frozen sourceace4116, jobs1 and384MiB owned budget; no VM",
-      "status": "en_revision",
-      "owner": "codex-console-vita-guest",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T04:39:19.999717+00:00",
-      "updated_at": "2026-10-28T04:53:03.104957+00:00",
+      "updated_at": "2026-11-01T23:20:32.384231+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root explicitly authorized Vita guest CPU-only window afterPS4/VM421terminal; no host VM until next coordination",
@@ -9656,6 +9656,11 @@
           "at": "2026-10-28T04:53:03.104957+00:00",
           "owner": "codex-console-vita-guest",
           "detail": "Retry2 REALPASS source5ccb8d248 (PR429responsefile), session58340terminalexit0,191.09s,jobs1 BelowNormal384MiBpeak240.27/minfree1.681GiB. EU13919142/US9525072/JP9235342 .a; hashes+actualarchiveallmembers/inputARM32checks recorded vita-guest-attempt2/ARTIFACT-RECEIPT.json. Attempt1 Win206 preserved. No VPK/consolehardware claim, host stage waits rootwindow."
+        },
+        {
+          "at": "2026-11-01T23:20:32.384231+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T04:39:25.518562+00:00"
@@ -13413,7 +13418,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:20:14.435332+00:00",
+  "updated_at": "2026-11-01T23:20:32.384231+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14293,6 +14298,16 @@
       "from_owner": "codex-console-ps5",
       "to_owner": "claude-v22",
       "expected_commit": "68dff26d1a335e6cd459c94266323314cb59f324",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:20:32.384231+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-vita-guest-build",
+      "from_owner": "codex-console-vita-guest",
+      "to_owner": "claude-v22",
+      "expected_commit": "7ba4482d08af24d4ec61e7698846b4d47959bfde",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
