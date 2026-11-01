@@ -7890,10 +7890,10 @@
     "android374-startup-jafar": {
       "id": "android374-startup-jafar",
       "piece": "Investigar Moto Edge60 inicio y postJafar374, separar versión APK y mecanismos83/272; reproducir sólo checks CPU pertinentes",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:22:24.225828+00:00",
-      "updated_at": "2026-11-01T23:55:59.674655+00:00",
+      "updated_at": "2026-11-01T23:56:05.554640+00:00",
       "branch": "codex/android374-investigation",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
@@ -7928,9 +7928,15 @@
           "at": "2026-11-01T23:55:59.674655+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #374 cerrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:56:05.554640+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #374 cerrado — limpieza de cola 02/11, main db978bac6."
         }
       ],
-      "claimed_at": "2026-10-27T18:22:29.195443+00:00"
+      "claimed_at": "2026-10-27T18:22:29.195443+00:00",
+      "completed_at": "2026-11-01T23:56:05.554640+00:00"
     },
     "issue378-hd-audio-subtitle-independence": {
       "id": "issue378-hd-audio-subtitle-independence",
@@ -14205,7 +14211,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:55:59.674655+00:00",
+  "updated_at": "2026-11-01T23:56:05.554640+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
