@@ -3301,15 +3301,16 @@
     "submenu-anadir-naipes-esquina": {
       "id": "submenu-anadir-naipes-esquina",
       "piece": "Anadir naipes: esquina superior derecha, la pestana del circulo cortada (usuario 25/10)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T23:15:22.457422+00:00",
-      "updated_at": "2026-10-25T23:15:22.457422+00:00",
+      "updated_at": "2026-11-01T23:02:20.046263+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-01T23:02:20.046263+00:00"
     },
     "menu-boton-opciones": {
       "id": "menu-boton-opciones",
@@ -12917,7 +12918,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:02:02.487583+00:00",
+  "updated_at": "2026-11-01T23:02:20.046263+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
