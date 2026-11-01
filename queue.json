@@ -4199,10 +4199,10 @@
     "android-battery-validity-20261026": {
       "id": "android-battery-validity-20261026",
       "piece": "Android: rechazar app smoke sin imagen de región y conservar causa",
-      "status": "pr_abierto",
-      "owner": "codex-batteries",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T16:21:50.541280+00:00",
-      "updated_at": "2026-10-26T16:25:59.025665+00:00",
+      "updated_at": "2026-11-01T23:03:44.089997+00:00",
       "branch": "codex/android-battery-validity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/239",
       "approval": null,
@@ -4212,6 +4212,11 @@
           "at": "2026-10-26T16:25:59.025665+00:00",
           "owner": "codex-batteries",
           "detail": "8e533aefe; six offline regressions pass, four red before; check_sources OK; live battery preserved"
+        },
+        {
+          "at": "2026-11-01T23:03:44.089997+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T16:21:57.513361+00:00"
@@ -12945,7 +12950,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:03:26.307095+00:00",
+  "updated_at": "2026-11-01T23:03:44.089997+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13535,6 +13540,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "f5c7b5eae1569ca62e7ae16fb5aee97c8c3cfe17",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:03:44.089997+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "android-battery-validity-20261026",
+      "from_owner": "codex-batteries",
+      "to_owner": "claude-v22",
+      "expected_commit": "fb787dada345cf1853d28bec629b96cef6911483",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
