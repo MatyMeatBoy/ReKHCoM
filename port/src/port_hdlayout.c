@@ -49,7 +49,7 @@ static const HdLayout* Layout(int which) {
     if ((unsigned)which >= HD_LAYOUT_COUNT)
         return NULL;
     if (!sLayouts[which].data && !sLayoutTried[which]) {
-        char file[160], name[64];
+        char file[PORT_HD_PATH_MAX], name[64];
         size_t size = 0;
         void* data;
         sLayoutTried[which] = 1;
@@ -83,7 +83,7 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
         return NULL;
     t = &sTextures[which];
     if (!t->tex && !t->tried && renderer) {
-        char file[160];
+        char file[PORT_HD_PATH_MAX];
         int n;
         unsigned char* px;
         t->tried = 1;
