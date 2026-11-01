@@ -2786,10 +2786,10 @@
     "atlas-titulo-hd": {
       "id": "atlas-titulo-hd",
       "piece": "Titulo: HD menu y fondo original PS2 1.5",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-25T16:02:36.403069+00:00",
-      "updated_at": "2026-11-01T23:50:39.670635+00:00",
+      "updated_at": "2026-11-01T23:50:46.212315+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
@@ -2819,9 +2819,15 @@
           "at": "2026-11-01T23:50:39.670635+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #244 y commits del titulo HD en main — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:50:46.212315+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #244 y commits del titulo HD en main — limpieza de cola 02/11, main db978bac6."
         }
       ],
-      "claimed_at": "2026-10-25T16:02:47.744398+00:00"
+      "claimed_at": "2026-10-25T16:02:47.744398+00:00",
+      "completed_at": "2026-11-01T23:50:46.212315+00:00"
     },
     "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03": {
       "id": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
@@ -14013,7 +14019,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:50:39.670635+00:00",
+  "updated_at": "2026-11-01T23:50:46.212315+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
