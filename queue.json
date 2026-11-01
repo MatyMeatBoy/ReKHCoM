@@ -3680,14 +3680,20 @@
       "id": "code-android-test-validity",
       "piece": "Android 123/124: distinguir APK inválido de timeout y comprobar retest",
       "status": "en_curso",
-      "owner": "codex-atlas",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T02:05:35.776224+00:00",
-      "updated_at": "2026-10-26T02:05:48.863195+00:00",
+      "updated_at": "2026-11-01T23:03:19.505320+00:00",
       "branch": "codex/android-test-validity",
       "pr": null,
       "approval": "Usuario: terminar pendientes de código y pruebas vigentes",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-01T23:03:19.505320+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        }
+      ],
       "claimed_at": "2026-10-26T02:05:41.502445+00:00"
     },
     "atlas-090-wall-base": {
@@ -12934,7 +12940,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:03:00.703077+00:00",
+  "updated_at": "2026-11-01T23:03:19.505320+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13514,6 +13520,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "4fb359f5e6cd0c06daf65f92cad453a69360e83d",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:03:19.505320+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "code-android-test-validity",
+      "from_owner": "codex-atlas",
+      "to_owner": "claude-v22",
+      "expected_commit": "f5c7b5eae1569ca62e7ae16fb5aee97c8c3cfe17",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
