@@ -9448,10 +9448,10 @@
     "post22-arm32-division-lowering": {
       "id": "post22-arm32-division-lowering",
       "piece": "Game-only Android32 CMake and Linux/Anbernic armhf pre-LLVM-optimization scalar i32 division/remainder lowering; preserve host/SDL/importer and shared helper",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T12:10:24.583307+00:00",
-      "updated_at": "2026-11-01T22:19:32.047124+00:00",
+      "updated_at": "2026-11-01T22:19:38.468430+00:00",
       "branch": "fix/arm32-division-v26",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/543",
       "approval": "Root delegated bounded child under post22-arm-wasm parent after435 merged; plan review before producer edits; publicv2.2 and original inputs immutable",
@@ -9486,9 +9486,15 @@
           "at": "2026-11-01T22:19:32.047124+00:00",
           "owner": "claude-v22",
           "detail": "Integrado en main e453de5cd (#543): full build Anbernic, 391 divisiones con guarda; tests 2/4/192 OK; sin QEMU/dispositivo."
+        },
+        {
+          "at": "2026-11-01T22:19:38.468430+00:00",
+          "owner": "claude-v22",
+          "detail": "Integrado en main e453de5cd (#543): full build Anbernic, 391 divisiones con guarda; tests 2/4/192 OK; sin QEMU/dispositivo."
         }
       ],
-      "claimed_at": "2026-10-28T12:10:30.123648+00:00"
+      "claimed_at": "2026-10-28T12:10:30.123648+00:00",
+      "completed_at": "2026-11-01T22:19:38.468430+00:00"
     },
     "optiport-post22-arithmetic-contracts": {
       "id": "optiport-post22-arithmetic-contracts",
@@ -12682,7 +12688,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:19:32.047124+00:00",
+  "updated_at": "2026-11-01T22:19:38.468430+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
