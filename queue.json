@@ -3052,10 +3052,10 @@
     "escena099-wallfinish": {
       "id": "escena099-wallfinish",
       "piece": "Escena099: patron lateral completo como la arena",
-      "status": "pr_abierto",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T19:02:37.899890+00:00",
-      "updated_at": "2026-10-25T19:50:44.090680+00:00",
+      "updated_at": "2026-11-01T23:01:00.524085+00:00",
       "branch": "codex/atlas099-approved-r20261025",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/152",
       "approval": "approved exact f092a251c3e44a56b1b4727eb3183855",
@@ -3070,6 +3070,11 @@
           "at": "2026-10-25T19:50:44.090680+00:00",
           "owner": "codex-atlas",
           "detail": "Capturas EU300/600 entregadas; otras2nubes nuevas quedan pendientes"
+        },
+        {
+          "at": "2026-11-01T23:01:00.524085+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-25T19:02:43.829842+00:00",
@@ -12874,7 +12879,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:00:50.241140+00:00",
+  "updated_at": "2026-11-01T23:01:00.524085+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13434,6 +13439,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "d5262ebc63b4084f3d4de8b2987fe44175f65c77",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:01:00.524085+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "escena099-wallfinish",
+      "from_owner": "codex-atlas",
+      "to_owner": "claude-v22",
+      "expected_commit": "876a540e02d410c582219c6d5ff32be4c5eb868b",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
