@@ -7806,7 +7806,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:55:54.503567+00:00",
-      "updated_at": "2026-11-01T23:15:43.441246+00:00",
+      "updated_at": "2026-11-01T23:15:49.303284+00:00",
       "branch": null,
       "pr": null,
       "approval": "Matías 2026-10-27: priorizar cuelgues64 y parseo de patrón",
@@ -7816,6 +7816,11 @@
           "at": "2026-11-01T23:15:43.441246+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:15:49.303284+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-27T18:56:00.770854+00:00"
@@ -13303,7 +13308,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:15:43.441246+00:00",
+  "updated_at": "2026-11-01T23:15:49.303284+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
