@@ -8159,10 +8159,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:14:29.491816+00:00",
-      "updated_at": "2026-11-01T23:16:13.480725+00:00",
+      "updated_at": "2026-11-01T23:39:17.938338+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Usuario27/10 amplía a todos los cuelgues documentados64 y solución por patrones; coordinador asigna sólo inventario local sin producto",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
       "evidence": [
         {
@@ -8177,6 +8177,11 @@
         },
         {
           "at": "2026-11-01T23:16:13.480725+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:39:17.938338+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13823,7 +13828,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:39:00.464337+00:00",
+  "updated_at": "2026-11-01T23:39:17.938338+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
