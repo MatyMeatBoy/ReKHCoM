@@ -13623,10 +13623,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-11-01T23:47:10.026604+00:00",
+      "updated_at": "2026-11-01T23:47:16.013317+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/529",
-      "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "Chat VPS30Oct: prueba smooth y criterio full speed",
       "evidence": [
         {
@@ -13683,6 +13683,11 @@
           "at": "2026-11-01T23:47:10.026604+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:47:16.013317+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (PR529 cerrado: sustituido por el online de #540 (v2.5/v2.6)) — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
@@ -13955,7 +13960,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:47:10.026604+00:00",
+  "updated_at": "2026-11-01T23:47:16.013317+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
