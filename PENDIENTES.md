@@ -137,7 +137,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | hd-ui-v20-completion | Completar menús, título y opciones HD solo con HUD HD; audio y avisos | en_curso | claude-v22 | codex/hd-ui-v20-completion | — | 2026-11-01T22:59:45.723904+00:00 |
 | gallery-save-progress | Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah | en_curso | codex-atlas | — | — | 2026-10-26T10:56:11.198439+00:00 |
 | android-battery-validity-20261026 | Android: rechazar app smoke sin imagen de región y conservar causa | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/239 | — | 2026-10-26T16:25:59.025665+00:00 |
-| claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/244 | — | 2026-11-01T23:00:03.718844+00:00 |
+| claude-close-20261026 | Retoma Claude: cierre técnico v2.0 y verificación de entregas | en_curso | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/244 | — | 2026-11-01T23:00:10.585827+00:00 |
 | controls-reset-triggers-20261026 | Controles: restaurar bindings y layout automático, gatillos progresivos | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/241 | — | 2026-10-26T16:35:08.180110+00:00 |
 | achievements-trigger-key-centre | Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/243 | — | 2026-10-26T16:43:28.997495+00:00 |
 | settings-roundtrip-20261026 | Prueba real de persistencia settings juego-launcher y reset controles | pr_abierto | codex-batteries | https://github.com/MatyMeatBoy/ReKHCoM/pull/245 | — | 2026-10-26T16:47:47.000063+00:00 |

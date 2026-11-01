@@ -4140,7 +4140,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:22:20.470860+00:00",
-      "updated_at": "2026-11-01T23:00:03.718844+00:00",
+      "updated_at": "2026-11-01T23:00:10.585827+00:00",
       "branch": "codex/claude-close-20261026",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/244",
       "approval": null,
@@ -4155,6 +4155,11 @@
           "at": "2026-11-01T23:00:03.718844+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:00:10.585827+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #244 en main — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-26T16:22:27.817401+00:00"
@@ -12843,7 +12848,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:00:03.718844+00:00",
+  "updated_at": "2026-11-01T23:00:10.585827+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
