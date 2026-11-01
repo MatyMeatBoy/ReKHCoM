@@ -4074,9 +4074,9 @@
       "id": "hd-ui-v20-completion",
       "piece": "Completar menús, título y opciones HD solo con HUD HD; audio y avisos",
       "status": "en_curso",
-      "owner": "codex-atlas",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T10:55:54.235445+00:00",
-      "updated_at": "2026-10-26T10:59:03.354749+00:00",
+      "updated_at": "2026-11-01T22:59:39.224127+00:00",
       "branch": "codex/hd-ui-v20-completion",
       "pr": null,
       "approval": null,
@@ -4086,6 +4086,11 @@
           "at": "2026-10-26T10:59:03.354749+00:00",
           "owner": "codex-atlas",
           "detail": "Retomado Claude; usuario exime Atlas. Lista persistente CIERRE_V20_EN_CURSO.md. Audio/Undub implementados inicialmente, falta comprobación HD."
+        },
+        {
+          "at": "2026-11-01T22:59:39.224127+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-26T10:55:59.673664+00:00"
@@ -12828,7 +12833,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:59:21.168313+00:00",
+  "updated_at": "2026-11-01T22:59:39.224127+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13358,6 +13363,16 @@
       "from_owner": "codex-atlas-menus",
       "to_owner": "claude-v22",
       "expected_commit": "bb135d45fecfee00fae11fff9c219bad7c6f130b",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:59:39.224127+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "hd-ui-v20-completion",
+      "from_owner": "codex-atlas",
+      "to_owner": "claude-v22",
+      "expected_commit": "66bd996f285d3873a671d96c5efd607d713c010a",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
