@@ -9305,10 +9305,10 @@
     "post22-arm-wasm-division-parity": {
       "id": "post22-arm-wasm-division-parity",
       "piece": "CPU-only audit of ARM32/ARM64/Wasm DIV and REM zero/overflow parity with original GBA contracts; excludes published UI fixes and x86 ledger395",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T11:12:10.305821+00:00",
-      "updated_at": "2026-11-01T22:19:44.623456+00:00",
+      "updated_at": "2026-11-01T22:19:50.780710+00:00",
       "branch": "fix/arm32-division-v26",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/543",
       "approval": "Root delegated post2.2 critical parity audit under user authorization; preserve released bytes and original RNG/remainder semantics",
@@ -9326,6 +9326,11 @@
         },
         {
           "at": "2026-11-01T22:19:44.623456+00:00",
+          "owner": "claude-v22",
+          "detail": "Integrado en main e453de5cd (#543): full build Anbernic, 391 divisiones con guarda; tests 2/4/192 OK; sin QEMU/dispositivo."
+        },
+        {
+          "at": "2026-11-01T22:19:50.780710+00:00",
           "owner": "claude-v22",
           "detail": "Integrado en main e453de5cd (#543): full build Anbernic, 391 divisiones con guarda; tests 2/4/192 OK; sin QEMU/dispositivo."
         }
@@ -12693,7 +12698,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:19:44.623456+00:00",
+  "updated_at": "2026-11-01T22:19:50.780710+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
