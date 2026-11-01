@@ -11522,10 +11522,10 @@
     "v225-android-web-delivery": {
       "id": "v225-android-web-delivery",
       "piece": "Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes",
-      "status": "en_revision",
-      "owner": "codex-v225-android-web",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T22:07:50.955630+00:00",
-      "updated_at": "2026-10-28T23:04:38.939831+00:00",
+      "updated_at": "2026-11-01T23:22:38.080596+00:00",
       "branch": "release/v225-web-final",
       "pr": null,
       "approval": "user",
@@ -11535,6 +11535,11 @@
           "at": "2026-10-28T23:04:38.939831+00:00",
           "owner": "codex-v225-android-web",
           "detail": "APKclosed6ddb671726a12caed4f65e696635a7672c444a849b0d16e9504bd638b104604e 27553410B signer/cert/code102020599 JavaFirst8ELF216assets245ZIPCRC PASS; nativef28/pack17. Webea99closed23files30052243B/fatal3links+ABI6Nodechecks, leafbos3recompile adapterASTlinkonlyproof oldcache17; sitecandidateweb-site-ea99 + ANDROID/WEB-BUILD-SOURCES. RuntimefinalAPK/browserROMUNVERIFIED, previousfonttestphysicalsuccessseparate. Rootpublishes; noownprocesses."
+        },
+        {
+          "at": "2026-11-01T23:22:38.080596+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T22:08:16.399020+00:00"
@@ -13463,7 +13468,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:22:20.618886+00:00",
+  "updated_at": "2026-11-01T23:22:38.080596+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14393,6 +14398,16 @@
       "from_owner": "codex-v23-release-builds",
       "to_owner": "claude-v22",
       "expected_commit": "2bfe1bf8b333ed2d77ab7c60b04a7bf584f3df27",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:22:38.080596+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v225-android-web-delivery",
+      "from_owner": "codex-v225-android-web",
+      "to_owner": "claude-v22",
+      "expected_commit": "887cc505004b735642dbecd32abd02f6b99053e2",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
