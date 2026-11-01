@@ -4076,7 +4076,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-26T10:55:54.235445+00:00",
-      "updated_at": "2026-11-01T22:59:39.224127+00:00",
+      "updated_at": "2026-11-01T22:59:45.723904+00:00",
       "branch": "codex/hd-ui-v20-completion",
       "pr": null,
       "approval": null,
@@ -4091,6 +4091,11 @@
           "at": "2026-11-01T22:59:39.224127+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T22:59:45.723904+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #244 en main — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-26T10:55:59.673664+00:00"
@@ -12833,7 +12838,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:59:39.224127+00:00",
+  "updated_at": "2026-11-01T22:59:45.723904+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
