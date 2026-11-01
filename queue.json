@@ -7366,10 +7366,10 @@
     "v22-windows-pre1-test360": {
       "id": "v22-windows-pre1-test360",
       "piece": "Prebuild local v2.2-pre1 Windows32+64 EU/US/JP y nueva test360 desde SHA main fijo del coordinador; staging aislado releases, sin publicar/enviar",
-      "status": "en_revision",
-      "owner": "codex-windows-pre1",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:18:52.879235+00:00",
-      "updated_at": "2026-10-27T18:41:44.086865+00:00",
+      "updated_at": "2026-11-01T23:14:50.710462+00:00",
       "branch": "build/v2.2-pre1-windows",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/383",
       "approval": "Usuario/coordinador autoriza27/10; no compilar hasta SHA fijado",
@@ -7384,6 +7384,11 @@
           "at": "2026-10-27T18:41:44.086865+00:00",
           "owner": "codex-windows-pre1",
           "detail": "Delivered and published https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.2-pre1; immutableZIPe48938d68e80f4a356cc7035e1271648bc3f79a13298b9c10b061fcb5220dfbd; 358entriesCRCOK11compiledinputsidenticalnoROM/save/auth/importedHD; productequivmain8d4958; startup6/6PASS; exactextracted32+64saveddoor2/2PASS; rootD3D1132/64NormalHD4casegatePASS; POST-RELEASE-VALIDATION is new supplement, published ZIP/manifest unchanged"
+        },
+        {
+          "at": "2026-11-01T23:14:50.710462+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T18:18:59.655190+00:00"
@@ -13266,7 +13271,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:14:32.370842+00:00",
+  "updated_at": "2026-11-01T23:14:50.710462+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14016,6 +14021,16 @@
       "from_owner": "codex-premium-digit-qa",
       "to_owner": "claude-v22",
       "expected_commit": "eb39662d7ff2c1a66b1fe807a452cdb9e27eef9d",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:14:50.710462+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-windows-pre1-test360",
+      "from_owner": "codex-windows-pre1",
+      "to_owner": "claude-v22",
+      "expected_commit": "531c82114d59ff40e46b7f09b4ca92a2a788abb5",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
