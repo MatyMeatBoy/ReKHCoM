@@ -7369,7 +7369,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:18:52.879235+00:00",
-      "updated_at": "2026-11-01T23:14:50.710462+00:00",
+      "updated_at": "2026-11-01T23:14:56.551299+00:00",
       "branch": "build/v2.2-pre1-windows",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/383",
       "approval": "Usuario/coordinador autoriza27/10; no compilar hasta SHA fijado",
@@ -7389,6 +7389,11 @@
           "at": "2026-11-01T23:14:50.710462+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:14:56.551299+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-27T18:18:59.655190+00:00"
@@ -13271,7 +13276,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:14:50.710462+00:00",
+  "updated_at": "2026-11-01T23:14:56.551299+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
