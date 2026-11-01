@@ -3682,7 +3682,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-26T02:05:35.776224+00:00",
-      "updated_at": "2026-11-01T23:03:19.505320+00:00",
+      "updated_at": "2026-11-01T23:03:26.307095+00:00",
       "branch": "codex/android-test-validity",
       "pr": null,
       "approval": "Usuario: terminar pendientes de código y pruebas vigentes",
@@ -3692,6 +3692,11 @@
           "at": "2026-11-01T23:03:19.505320+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:03:26.307095+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #239 integrado — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-26T02:05:41.502445+00:00"
@@ -12940,7 +12945,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:03:19.505320+00:00",
+  "updated_at": "2026-11-01T23:03:26.307095+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
