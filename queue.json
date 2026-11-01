@@ -7824,13 +7824,13 @@
     "card-key-hilt-black-microfix": {
       "id": "card-key-hilt-black-microfix",
       "piece": "Cambio literal de1-2pixelsblancos a negro en KingdomKeytodosvalores yHeroica5; conservarrestoaprobado",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:47:53.494232+00:00",
-      "updated_at": "2026-11-01T23:09:16.472329+00:00",
+      "updated_at": "2026-11-01T23:35:01.669836+00:00",
       "branch": "fix/key-hilt-black-pixels",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/406",
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "user-screenshots0981ff05+5f6da3a7",
       "evidence": [
         {
@@ -7870,6 +7870,11 @@
         },
         {
           "at": "2026-11-01T23:09:16.472329+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #406 integrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:35:01.669836+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #406 integrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13741,7 +13746,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:34:39.637994+00:00",
+  "updated_at": "2026-11-01T23:35:01.669836+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
