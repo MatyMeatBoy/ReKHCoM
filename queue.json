@@ -13620,10 +13620,10 @@
     "vps-online-fullspeed-240ms": {
       "id": "vps-online-fullspeed-240ms",
       "piece": "Mantener batalla VS a velocidad original en ambos peers con RTT240ms y medir/grabar",
-      "status": "pr_abierto",
-      "owner": "codex-vps-fullspeed",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-30T13:05:34.213252+00:00",
-      "updated_at": "2026-10-30T14:40:20.614953+00:00",
+      "updated_at": "2026-11-01T23:47:10.026604+00:00",
       "branch": "fix/vps-online-fullspeed-240ms",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/529",
       "approval": "Usuario30Oct aprueba diseño nuevo completo y exige toggle entre clásico/moderno para testing",
@@ -13678,6 +13678,11 @@
           "at": "2026-10-30T14:40:20.614953+00:00",
           "owner": "codex-vps-fullspeed",
           "detail": "OptiPortpass cerrado: pushead hastaad2a13a67, benchmarkbaseline6beactualreproducible32/64, byteahorro51.5/23.4/17.0%, testsREDGREENhashfinreplay; buildEU32+consumidoresPASS. MetodoOptiPort22 integrado35dfad8, instaladoCodex29Markdownverificados conbackup, lockliberado. Continuanpendientes prep/barrier/routing ygameplayVPSmoderno/video: PR529DRAFT."
+        },
+        {
+          "at": "2026-11-01T23:47:10.026604+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-30T13:07:03.036587+00:00"
@@ -13950,7 +13955,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:46:51.519237+00:00",
+  "updated_at": "2026-11-01T23:47:10.026604+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14950,6 +14955,16 @@
       "from_owner": "codex-local-pre23",
       "to_owner": "claude-v22",
       "expected_commit": "4171af47b8dc961bcb5c5d399e86ff6b83db91d6",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:47:10.026604+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "vps-online-fullspeed-240ms",
+      "from_owner": "codex-vps-fullspeed",
+      "to_owner": "claude-v22",
+      "expected_commit": "c4430d9d44e0edcb190d47e3f145911564db4ea9",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
