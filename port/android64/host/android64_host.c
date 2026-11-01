@@ -133,11 +133,14 @@ static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 static uint32_t sRendererGeneration; /* reserved H_getenv query; app_state remains 0/1 */
 static int HostGpuQuery(const char*, char*, int);
 static int HostGamepadInfoQuery(const char* name, char* out, int cap);
+static int HostTextQuery(const char* name, char* out, int cap);
 static int H_getenv(const char* name, char* out, int cap) {
     int gpuQuery = HostGpuQuery(name, out, cap);
     if (gpuQuery != -2) return gpuQuery;
     int padInfo = HostGamepadInfoQuery(name, out, cap);
     if (padInfo != -2) return padInfo;
+    int textQuery = HostTextQuery(name, out, cap);
+    if (textQuery != -2) return textQuery;
     if (!strcmp(name, "KHCOM_RENDERER_GENERATION")) {
         if (cap <= 0) return -1;
         snprintf(out, (size_t)cap, "bridge-textures-v1:%u", sRendererGeneration);
@@ -225,6 +228,7 @@ static void H_dir_close(int d) {
 /* ---- video: the GPU ------------------------------------------------------------------------------------------- */
 
 static SDL_Window* sWindow;
+#include "host_text.h" /* the lobby's room name: the phone's keyboard */
 static SDL_Renderer* sRenderer;
 static int sBlend = 1;
 
@@ -480,6 +484,7 @@ static void Pump(void) {
         switch (e.type) {
             case SDL_EVENT_RENDER_DEVICE_RESET: RendererDeviceReset(); break;
             case SDL_EVENT_QUIT: sQuit = 1; break;
+            case SDL_EVENT_TEXT_INPUT: HostTextQueue(e.text.text); break;
             case SDL_EVENT_WILL_ENTER_BACKGROUND:
             case SDL_EVENT_DID_ENTER_BACKGROUND: sBackground = 1; break;
             case SDL_EVENT_WILL_ENTER_FOREGROUND:
