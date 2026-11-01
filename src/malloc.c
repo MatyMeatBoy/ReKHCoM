@@ -317,3 +317,24 @@ const void* GetEwramHeapName() {
 const void* GetIwramHeapName() {
     return sIwramHeap.name;
 }
+
+#ifdef PLATFORM_PC
+/* port_rollback.c's test: the heap block holding an address (its name, the offset in its data), for a difference
+   found in EWRAM or IWRAM. NULL outside both heaps. */
+const char* PortHeapBlockAt(const void* p, u32* offset) {
+    Heap* heaps[2] = { &sEwramHeap, &sIwramHeap };
+    int i;
+    for (i = 0; i < 2; i++) {
+        HeapBlock* block;
+        if (heaps[i]->start == NULL || (const u8*)p < (const u8*)heaps[i]->start ||
+            (const u8*)p >= (const u8*)heaps[i]->end)
+            continue;
+        for (block = heaps[i]->start; block != NULL && block != heaps[i]->end; block = block->next)
+            if ((const u8*)p >= (const u8*)block && (const u8*)p < (const u8*)block->next) {
+                *offset = (u32)((const u8*)p - (const u8*)(block + 1));
+                return block->size < 0 && block->name ? (const char*)block->name : "free";
+            }
+    }
+    return NULL;
+}
+#endif

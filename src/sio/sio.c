@@ -93,8 +93,8 @@ enum SioHandshakeWord {
 
 #define NET_RING 64
 #define NET_RESEND 24 /* slots sent again in every datagram, until the other side has them */
-#define NET_VERSION 5 /* the slots' rules: both games must play by the same ones (HELLO carries it); 5: the
-                          dodge button travels with the keys (4 is the modern online's lobby, PR #529) */
+#define NET_VERSION 5 /* the slots' rules: both games must play by the same ones (HELLO carries it); 5: each game
+                          relays the battle's keys itself (chara.c SioKeySyncRecv). 4 is the modern online of #529 */
 #define NET_WINDOW 12 /* link frames the game may run ahead on predicted packets before it waits */
 enum { NET_HELLO = 1, NET_START, NET_SLOTS, NET_HASH };
 #define NET_HASH_EVERY 120 /* link frames between desync checks during a battle */

@@ -68,8 +68,14 @@ static void VisitCompare(void* p, size_t n) {
     if (sDiffLogged < 12 && strcmp(sVisitName, "audio") != 0) /* the mixer is not played again (no sound) */
         for (i = 0; i < n; i++)
             if (a[i] != b[i]) {
-                PortLog("rollback test: frame played again differs in %s+0x%x (%u bytes in), was %02x now %02x",
-                        sVisitName, (unsigned)i, (unsigned)(sVisitOffset + i), a[i], b[i]);
+                extern const char* PortHeapBlockAt(const void* p, uint32_t* offset);
+                uint32_t at = 0;
+                const char* block = PortHeapBlockAt(b + i, &at); /* EWRAM/IWRAM: the game's heap block there */
+                PortLog("rollback test: frame played again differs in %s+0x%x (%u bytes in), was %02x now %02x%s%s",
+                        sVisitName, (unsigned)i, (unsigned)(sVisitOffset + i), a[i], b[i], block ? " in heap block " : "",
+                        block ? block : "");
+                if (block)
+                    PortLog("rollback test:   %u bytes into that block", (unsigned)at);
                 sDiffLogged++;
                 break;
             }

@@ -34,9 +34,6 @@ void StopSong(u16 songNum);
 
 void SioKeyStateUpdateA(u16 keys);
 void SioKeyStateUpdateB(u16 keys);
-#ifdef PLATFORM_PC
-u16 SioKeyTakeDodge(s32 player, u16 held, s32 facingLeft);
-#endif
 u8 IsSongPlaying(u16 songNum);
 
 #endif

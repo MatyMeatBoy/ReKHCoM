@@ -1028,17 +1028,6 @@ s32 task_btl_sora_1(BtlSoraWork* work) {
             held = SioKeyGetHeldB();
             pressed = SioKeyGetPressedB();
         }
-#ifdef PLATFORM_PC
-        {
-            /* The dodge button over the link, for whichever player this is. */
-            u16 dodge = SioKeyTakeDodge(work->sioKeysA ? 0 : 1, held, (act->flags & BTLOBJ_FLAG_FACING_LEFT) != 0);
-
-            if (dodge != 0) {
-                work->tapTimers[dodge == DPAD_LEFT ? 0 : 1] = 13;
-                pressed |= dodge;
-            }
-        }
-#endif
     } else {
         held = GetKeysHeld();
         pressed = GetKeysPressed();

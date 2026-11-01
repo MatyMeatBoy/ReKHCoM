@@ -3115,12 +3115,6 @@ static int FrameSkipDue(int sizeChanged) {
     }
 }
 
-/* The keys as KEYINPUT holds them (pressed = 0), plus the dodge button for the link in its free bit 10 (pressed = 1:
-   the game's "REG_KEYINPUT ^ KEYS_MASK" reads it as held). */
-static uint16_t KeyRegister(uint16_t keys) {
-    return (uint16_t)((~keys & 0x3FF) | (keys & PORT_LINK_DODGE));
-}
-
 /* One display frame: draw, vertical blank, present, input, pacing. */
 /* A frame the network link's rollback plays again (port_rollback.c): the game's frame as VBlankCycle runs it when it
    skips drawing (the same logic, test_frameskip.py), with nothing shown, sounded or paced, and the keys it had. */
@@ -3141,7 +3135,7 @@ static void ResimCycle(void) {
         extern void PortMenuLatch(void);
         PortMenuLatch();
     }
-    IO16(0x130) = KeyRegister(PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)));
+    IO16(0x130) = (uint16_t)(~PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)) & 0x3FF);
     PortRollbackBoundary(gPortInMainLoop);
 }
 
@@ -3314,7 +3308,7 @@ static void VBlankCycle(void) {
                 PortMenuSoundClose(); /* back in the game's own sound */
         }
     }
-    IO16(0x130) = KeyRegister(PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)));
+    IO16(0x130) = (uint16_t)(~PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)) & 0x3FF);
     HarnessFrame();
     {
         extern int gPortInMainLoop;

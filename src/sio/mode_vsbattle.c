@@ -196,6 +196,11 @@ int VsBattleRunning(void) {
 /* The network link's desync check (sio.c): a hash of what both games must agree on during a link battle, in
    player order (the cable's parent first): each fighter's position and HP, and the random generators. 0 when no
    link battle is running. */
+/* port_input.c: the dodge button's double tap goes the way this game's character faces */
+int VsBattleLocalFacingLeft(void) {
+    return gBtlWork != NULL && gBtlWork->actor != NULL && (gBtlWork->actor->flags & BTLOBJ_FLAG_FACING_LEFT) != 0;
+}
+
 u32 VsBattleStateHash(void) {
     extern u32 PortRandomState(void);
     BtlWork* bySide[2];
@@ -222,7 +227,9 @@ u32 VsBattleStateHash(void) {
         if (PortNetlinkTrace()) {
             const BtlObj* a = bySide[0]->actor;
             const BtlObj* b = bySide[1]->actor;
-            PortLog("netlink: hash %08x p1 %d,%d,%d hp %d p2 %d,%d,%d hp %d rng %08x", (unsigned)h, a ? (int)a->x : 0,
+            extern u32 NetLinkFrame(void);
+            PortLog("netlink: hash %08x at %u p1 %d,%d,%d hp %d p2 %d,%d,%d hp %d rng %08x", (unsigned)h,
+                    (unsigned)NetLinkFrame(), a ? (int)a->x : 0,
                     a ? (int)a->y : 0, a ? (int)a->z : 0, a ? (int)a->hp : 0, b ? (int)b->x : 0, b ? (int)b->y : 0,
                     b ? (int)b->z : 0, b ? (int)b->hp : 0, (unsigned)PortRandomState());
         }

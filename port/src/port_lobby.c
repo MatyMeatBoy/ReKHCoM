@@ -17,7 +17,8 @@
 #include <SDL3/SDL.h>
 #include <string.h>
 
-#define LOBBY_VERSION 5 /* NET_VERSION in src/sio/sio.c: only rooms that play by the same rules are listed */
+#define LOBBY_VERSION 5 /* 5: rooms named with the host's level, picked after Load (3 the first lobby, 4 the modern
+                            online of PR #529): only rooms of the same lobby are listed */
 #define LOBBY_ROOMS 20
 
 static int sBackend; /* 0 none, 1 Steam, 2 a relay server */

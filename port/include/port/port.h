@@ -453,8 +453,6 @@ uint16_t PortInputKeys(void);
 #define PORT_KEY_STOCK 0x400
 #define PORT_KEY_DODGE 0x800
 #define PORT_KEY_UNSTOCK 0x1000
-/* After PortInputResolve, in link battles: the dodge button, sent with the keys (engine.h has the same) */
-#define PORT_LINK_DODGE 0x400
 /* Turns the extra buttons into GBA keys and requests; returns the GBA key
    bits. Called once per frame. */
 uint16_t PortInputResolve(uint16_t keys);

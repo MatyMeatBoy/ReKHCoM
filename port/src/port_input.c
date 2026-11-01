@@ -8,6 +8,7 @@
 #include "port/controller_prompts.h"
 #include "port/controller_prompt_glyphs.h"
 #include "port/port_ui.h"
+#include "port/port_netlink.h"
 #include "mode.h"
 #include "text_types.h"
 #include "msg.h"
@@ -56,6 +57,7 @@ static int sZoomSelect, sZoomEat;
 static uint16_t sZoomPrev;
 static int sDodgeHeld;
 static int sDodgePending;
+static int sLinkTap, sLinkTapKey; /* link battles: the dodge's d-pad double tap, frames left and its direction */
 static int sUnstockHeld;
 static int sUnstockPending;
 /* Activity is event-driven: axis noise must not switch away from keyboard.
@@ -643,6 +645,25 @@ uint16_t PortInputResolve(uint16_t keys) {
         sDodgePending = DODGE_PENDING_FRAMES;
     else if (sDodgePending > 0)
         sDodgePending--;
+    /* A link battle reads both players' keys from the link, so there the button is the d-pad double tap itself
+       (release, tap, release, tap toward the held direction or the way the character faces): ordinary keys, which
+       both games and their rollbacks play alike. A frame played again by the rollback has its keys already. */
+    if (gCurrentMode == &gModeVsbattle && !PortRollbackResimulating()) {
+        extern int VsBattleLocalFacingLeft(void);
+        if (dodge && !sDodgeHeld && !sLinkTap) {
+            sLinkTap = 4;
+            sLinkTapKey = (keys & KEY_LEFT) ? KEY_LEFT : (keys & KEY_RIGHT) ? KEY_RIGHT
+                        : VsBattleLocalFacingLeft() ? KEY_LEFT : KEY_RIGHT;
+        }
+        if (sLinkTap) {
+            keys &= ~(KEY_LEFT | KEY_RIGHT);
+            if (sLinkTap == 3 || sLinkTap == 1)
+                keys |= sLinkTapKey;
+            sLinkTap--;
+        }
+    } else if (gCurrentMode != &gModeVsbattle) {
+        sLinkTap = 0;
+    }
     sDodgeHeld = dodge;
     /* Return-stocked-cards button: acts once when held long enough. */
     if ((keys & KEY_UNSTOCK) && gPortConfig.unstockButton) {
@@ -655,10 +676,6 @@ uint16_t PortInputResolve(uint16_t keys) {
     }
     if (sUnstockPending > 0 && sUnstockHeld != UNSTOCK_HOLD_FRAMES)
         sUnstockPending--;
-    /* Link battles read both players' keys from the link: the dodge button goes with this game's keys (the key
-       register's free bit 10, which the rollback replays like the others; src/key_state.c takes it back out). */
-    if (dodge && gCurrentMode == &gModeVsbattle)
-        return (keys & 0x3FF) | PORT_LINK_DODGE;
     return keys & 0x3FF;
 }
 

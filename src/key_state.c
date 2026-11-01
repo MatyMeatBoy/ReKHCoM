@@ -9,9 +9,6 @@
 #include "gba/keys.h"
 #include <stddef.h>
 #include "types.h"
-#ifdef PLATFORM_PC
-#include "engine.h"
-#endif
 
 static const u8 sSioKeyHeapName[8] = "SIOKEY";
 
@@ -387,57 +384,11 @@ u16 SioKeyReadChordB(u16 key1, u16 key2) {
     return KeyReadChord(sSioKeyStateB, key1, key2);
 }
 
-#ifdef PLATFORM_PC
-/* The one-button dodge over the link: each player's keys carry it as PORT_LINK_DODGE; a press is kept a few frames
-   for the battle code (as port_input.c does in one game). Game memory, so a rollback takes it back too, and both
-   games, fed the same keys, take the same dodges. */
-#define SIO_DODGE_PENDING_FRAMES 6
-static u8 sSioDodgeHeld[2], sSioDodgePending[2];
-
-static u16 SioDodgeFeed(s32 player, u16 keys) {
-    u8 held = (keys & PORT_LINK_DODGE) != 0;
-
-    if (held && !sSioDodgeHeld[player]) {
-        sSioDodgePending[player] = SIO_DODGE_PENDING_FRAMES;
-    } else if (sSioDodgePending[player] != 0) {
-        sSioDodgePending[player]--;
-    }
-
-    sSioDodgeHeld[player] = held;
-    return keys & ~PORT_LINK_DODGE;
-}
-
-/* the battle code: the d-pad direction of a pending dodge (the held one, or the way the character faces), or 0 */
-u16 SioKeyTakeDodge(s32 player, u16 held, s32 facingLeft) {
-    if (sSioDodgePending[player] == 0) {
-        return 0;
-    }
-
-    sSioDodgePending[player] = 0;
-
-    if (held & DPAD_LEFT) {
-        return DPAD_LEFT;
-    }
-
-    if (held & DPAD_RIGHT) {
-        return DPAD_RIGHT;
-    }
-
-    return facingLeft ? DPAD_LEFT : DPAD_RIGHT;
-}
-#endif
-
 void SioKeyStateUpdateA(u16 keys) {
-#ifdef PLATFORM_PC
-    keys = SioDodgeFeed(0, keys);
-#endif
     KeyStateUpdate(sSioKeyStateA, keys);
 }
 
 void SioKeyStateUpdateB(u16 keys) {
-#ifdef PLATFORM_PC
-    keys = SioDodgeFeed(1, keys);
-#endif
     KeyStateUpdate(sSioKeyStateB, keys);
 }
 
