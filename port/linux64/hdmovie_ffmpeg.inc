@@ -225,7 +225,13 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
     MovieSettings(subs1);
     snprintf(path, sizeof(path), "%s", movie);
     char* at = strrchr(path, '@');
-    if (at && strchr(at, '/') == NULL) { start = atoi(at + 1); *at = 0; }
+    int stop = 0; /* @start or @start-stop (a clip of the scene) */
+    if (at && strchr(at, '/') == NULL) {
+        const char* dash = strchr(at, '-');
+        start = atoi(at + 1);
+        if (dash && atoi(dash + 1) > start) stop = atoi(dash + 1);
+        *at = 0;
+    }
     if (access(path, R_OK) != 0) return 0;
     char* probeArgs[] = { "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
         "stream=width,height,r_frame_rate", "-of", "csv=p=0", "-i", path, NULL };
@@ -246,10 +252,12 @@ static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, c
         fps = (double)num / den;
     if (sQuit || skip) return 1; /* explicit cancellation consumes the scene */
     if (w <= 0 || h <= 0 || (size_t)w > SIZE_MAX / 4 / (size_t)h) return 0;
+    char length[32];
     snprintf(seek, sizeof(seek), "%d", start);
-    char* videoArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-i", path,
+    snprintf(length, sizeof(length), "%d", stop > start ? stop - start : 86400); /* the clip's length, or all */
+    char* videoArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-t", length, "-i", path,
         "-an", "-sn", "-f", "rawvideo", "-pix_fmt", "rgba", "-", NULL };
-    char* audioArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-i", path,
+    char* audioArgs[] = { "ffmpeg", "-v", "error", "-nostdin", "-ss", seek, "-t", length, "-i", path,
         "-vn", "-sn", "-ac", "2", "-ar", "48000", "-f", "s16le", "-", NULL };
     MoviePipe video = MovieSpawn(videoArgs), sound = MovieSpawn(audioArgs);
     SDL_Texture* tex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, w, h);

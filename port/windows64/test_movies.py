@@ -30,6 +30,7 @@ unicode_movie = base / 'fixture-\u00f1.mp4'; shutil.copyfile(fixture, unicode_mo
 cases = [
     ('normal', str(fixture), {'KHCOM_HDMOVIE_SHOT': '1'}, 1, '90 frames decoded'),
     ('offset', str(fixture) + '@2', {}, 1, 'frames decoded'),
+    ('clip', str(fixture) + '@0-1', {}, 1, 'frames decoded'),  # a clip of the scene ends at its stop (#539)
     ('skip', str(fixture), {'KHCOM_HDMOVIE_PAUSETEST': '0'}, 1, 'skip confirmed'),
     ('cancel', str(fixture), {'KHCOM_HDMOVIE_PAUSETEST': '0', 'KHCOM_HDMOVIE_PAUSE_ACTION': 'cancel'}, 1, '90 frames decoded'),
     ('reset', str(fixture), {'TEST_MOVIE_RESET': '1'}, 0, 'generation=1'),
@@ -56,4 +57,6 @@ for name, movie, extra, expected, evidence in cases:
 (base / 'report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
 assert all(item['passed'] for item in report), 'see per-case host.log'
 assert report[1]['seconds'] < report[0]['seconds'] - 0.5, 'seek did not shorten playback'
+clip = int(re.search(r'(\d+) frames decoded', (base / 'clip' / 'host.log').read_text(errors='replace')).group(1))
+assert 20 <= clip <= 45, f'a 1 s clip of the 3 s fixture decoded {clip} frames'
 print('Windows64 MF normal/seek/pause/skip/cancel/reset/Unicode/software/failure tests passed')
