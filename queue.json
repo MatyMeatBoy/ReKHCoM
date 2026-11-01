@@ -3055,7 +3055,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-25T19:02:37.899890+00:00",
-      "updated_at": "2026-11-01T23:01:00.524085+00:00",
+      "updated_at": "2026-11-01T23:01:07.755802+00:00",
       "branch": "codex/atlas099-approved-r20261025",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/152",
       "approval": "approved exact f092a251c3e44a56b1b4727eb3183855",
@@ -3075,6 +3075,11 @@
           "at": "2026-11-01T23:01:00.524085+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-01T23:01:07.755802+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #152 integrado — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-10-25T19:02:43.829842+00:00",
@@ -12879,7 +12884,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:01:00.524085+00:00",
+  "updated_at": "2026-11-01T23:01:07.755802+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
