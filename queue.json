@@ -4314,13 +4314,13 @@
     "android-battery-validity-20261026": {
       "id": "android-battery-validity-20261026",
       "piece": "Android: rechazar app smoke sin imagen de región y conservar causa",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:21:50.541280+00:00",
-      "updated_at": "2026-11-01T23:03:56.668605+00:00",
+      "updated_at": "2026-11-01T23:31:39.365813+00:00",
       "branch": "codex/android-battery-validity",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/239",
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "US battle-123 evidence 25/10: guest-us.macho is missing from the APK; usuario 26/10 autoriza relevo",
       "evidence": [
         {
@@ -4340,6 +4340,11 @@
         },
         {
           "at": "2026-11-01T23:03:56.668605+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #239 integrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:31:39.365813+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #239 integrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13663,7 +13668,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:31:20.703241+00:00",
+  "updated_at": "2026-11-01T23:31:39.365813+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
