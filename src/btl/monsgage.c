@@ -10,6 +10,9 @@
 #include "battle_work.h"
 #include "obj.h"
 #include <stddef.h>
+#ifdef PLATFORM_PC
+#include "engine.h"
+#endif
 #include "taskpool.h"
 #include "types.h"
 #include "sprite_palettes.h"
@@ -198,7 +201,21 @@ s32 task_monsgage_1(MonsgageWork* work) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+static void task_monsgage_2_Body(MonsgageWork* work);
+
+/* Monstro's objective gauge: docked to the top-right corner with the monster's symbol in the wide view, as the enemy
+   gauge it sits beside (it stayed at the cartridge's place in the playfield). */
 void task_monsgage_2(MonsgageWork* work) {
+    PortHudBegin(1, -1);
+    task_monsgage_2_Body(work);
+    PortHudEnd();
+}
+
+static void task_monsgage_2_Body(MonsgageWork* work) {
+#else
+void task_monsgage_2(MonsgageWork* work) {
+#endif
     ObjAffine* affine;
 
     if (gBtlWork->phase != BTL_PHASE_START) {

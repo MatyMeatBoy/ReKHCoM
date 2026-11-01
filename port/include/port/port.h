@@ -450,6 +450,8 @@ void PortRequestQuitAll(void);
 void PortInputResetBindings(void); /* clear keys from the old mapping and suppress held pad buttons */
 uint16_t PortInputKeys(void);
 /* The port's extra buttons, beyond the GBA's ten key bits. */
+/* the HD files' paths: room for a data folder and KHCOM_HD_SPRITES anywhere on the disk */
+#define PORT_HD_PATH_MAX 1024
 #define PORT_KEY_STOCK 0x400
 #define PORT_KEY_DODGE 0x800
 #define PORT_KEY_UNSTOCK 0x1000

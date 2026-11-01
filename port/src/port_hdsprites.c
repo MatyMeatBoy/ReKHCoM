@@ -89,7 +89,13 @@ static const char* SpritePath(char* file, size_t size, const char* name) { retur
 const char* PortHdSpritePath(char* file, size_t size, const char* name) {
     const char* dir = SDL_getenv("KHCOM_HD_SPRITES");
     if (dir) {
-        SDL_snprintf(file, size, "%s/%s.png", dir, name);
+        /* a cut path would name another file: say so once, and the cartridge's sprite stays */
+        if ((size_t)SDL_snprintf(file, size, "%s/%s.png", dir, name) >= size) {
+            static int warned;
+            if (!warned++)
+                PortLog("hd sprites: KHCOM_HD_SPRITES path too long (%u bytes at most): native sprites", (unsigned)size);
+            file[0] = 0;
+        }
         return file;
     }
     SDL_snprintf(file, size, "hd/sprites/%s.png", name);
@@ -99,7 +105,7 @@ const char* PortHdSpritePath(char* file, size_t size, const char* name) {
 /* The HD title's words (group 7, make_title_words.py): pictures of the game's own, assets/hd/title/words/<name>.png
    (embedded), not imported from Re:CoM. */
 static void* TitleWordAsset(const char* name, size_t* size) {
-    char file[160];
+    char file[PORT_HD_PATH_MAX];
     SDL_snprintf(file, sizeof(file), "assets/hd/title/words/%s.png", name);
     return PortLoadAsset(file, size);
 }
@@ -228,7 +234,7 @@ static uint8_t* sCellMask[HD_SPRITE_COUNT];
 static uint8_t sCellMaskTried[HD_SPRITE_COUNT];
 const uint8_t* PortHdSpriteDarkCells(int id, int* x0, int* y0, int* w, int* h) {
     const HdSpriteDef* d;
-    char file[160];
+    char file[PORT_HD_PATH_MAX];
     int pw, ph, n, cx, cy;
     unsigned char* px;
     if (id < 1 || id > HD_SPRITE_COUNT)
@@ -308,7 +314,7 @@ static int LoadCounted(int i) {
 }
 
 static int Load(int i) {
-    char file[160];
+    char file[PORT_HD_PATH_MAX];
     int w = 0, h = 0, n, k, decodedW, decodedH;
     unsigned char* px;
     void* data = NULL;
@@ -879,7 +885,7 @@ static SDL_Texture *sRingFull, *sRingEmpty;
 static int sRingTried, sRingRatio = -1;
 
 static int RingLoad(void) {
-    char file[160];
+    char file[PORT_HD_PATH_MAX];
     int w, h, n, k;
     unsigned char *px, *dark;
     SDL_Surface* sf;
@@ -935,7 +941,7 @@ static int RingLoad(void) {
 }
 
 int PortHdHpRing(const void* faceTiles, const void* faceFrame, int ratio) {
-    char file[160];
+    char file[PORT_HD_PATH_MAX];
     FILE* f;
     if (!gPortConfig.hdCards || !PortHdSpriteFind(faceTiles, faceFrame))
         return 0;
