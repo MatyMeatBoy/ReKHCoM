@@ -10082,10 +10082,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-28T05:20:04.875654+00:00",
-      "updated_at": "2026-11-01T23:21:26.727354+00:00",
+      "updated_at": "2026-11-01T23:43:15.925846+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Root authorizes Switch guest CPU window afterLinuxandWindowsQAterminal; hostVM requires next coordination",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "v22-console-delivery SDKinventory2; all closed Vita/PS4 outputs preserved",
       "evidence": [
         {
@@ -10100,6 +10100,11 @@
         },
         {
           "at": "2026-11-01T23:21:26.727354+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:43:15.925846+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13888,7 +13893,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:42:55.366749+00:00",
+  "updated_at": "2026-11-01T23:43:15.925846+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
