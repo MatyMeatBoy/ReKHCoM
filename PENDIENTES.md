@@ -228,7 +228,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v22-harness-storage-budget | Claude: PR acotado del arnés: evitar copia completa por caso, separar evidencia de temporales, base/overlay reutilizables, outbox según fetch y límites razonados; conservar fallos, WIP y saves. Cambiar default 40G solo con criterio y regresión. Codex modifica archivos de VM fuera del repo. | integrado | codex-harness-budget | https://github.com/MatyMeatBoy/ReKHCoM/pull/362 | Usuario 27/10/2026: optimizar copias por test, tamaño VM con margen, delegar a Claude PR pequeños y tomar siguiente | 2026-10-27T15:15:05.940621+00:00 |
 | cartas-pequenas-encaje-runtime | cartas prioridad 1 (PENDIENTES) | en_curso | claude-v22 | — | — | 2026-11-01T23:06:15.218606+00:00 |
 | hud-enemy-gauge-length | cartas prioridad 1 (PENDIENTES) | integrado | claude-cartas | https://github.com/MatyMeatBoy/ReKHCoM/pull/365 | usuario-27/10-chat | 2026-10-27T15:47:47.562730+00:00 |
-| hud-green-border-quality | cartas prioridad 1 (PENDIENTES) | en_revision | claude-v22 | — | usuario-27/10-chat | 2026-10-27T17:31:08.507586+00:00 |
+| hud-green-border-quality | cartas prioridad 1 (PENDIENTES) | en_curso | claude-v22 | — | usuario-27/10-chat | 2026-11-01T23:06:33.722372+00:00 |
 | sintesis-requisito-hd-fix | cartas prioridad 1 (PENDIENTES) | en_revision | claude-v22 | — | usuario-27/10-chat | 2026-10-27T17:31:22.759389+00:00 |
 | anadir-naipes-cantidad-sync | cartas prioridad 1 (PENDIENTES) | en_curso | claude-v22 | — | usuario-27/10-chat | 2026-11-01T23:02:43.855697+00:00 |
 | bonus-elite-cabecera | cartas prioridad 1 (PENDIENTES) | en_curso | claude-v22 | — | usuario-27/10-chat | 2026-11-01T23:03:00.703077+00:00 |
