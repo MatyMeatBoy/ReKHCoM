@@ -5156,10 +5156,10 @@
     "launcher-architecture": {
       "id": "launcher-architecture",
       "piece": "Windows runtime architecture selection and force32",
-      "status": "en_revision",
-      "owner": "launcher-architecture-sol",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T06:08:36.971398+00:00",
-      "updated_at": "2026-10-27T06:12:43.483266+00:00",
+      "updated_at": "2026-11-01T23:05:16.688159+00:00",
       "branch": "work/launcher-architecture",
       "pr": null,
       "approval": "User requested combined Windows 32/64 package",
@@ -5169,6 +5169,11 @@
           "at": "2026-10-27T06:12:43.483266+00:00",
           "owner": "launcher-architecture-sol",
           "detail": "Local commit; Windows launcher i686 syntax check passed, C++ pure selector passed, 9 Linux wrapper tests passed, settings roundtrip suite passed. Await platform host and combined package validation."
+        },
+        {
+          "at": "2026-11-01T23:05:16.688159+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T06:08:46.900377+00:00"
@@ -12996,7 +13001,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:05:07.379044+00:00",
+  "updated_at": "2026-11-01T23:05:16.688159+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13616,6 +13621,16 @@
       "from_owner": "codex-ending-hud",
       "to_owner": "claude-v22",
       "expected_commit": "b2899fffc28b6fc45d185c5de6690e5f4d65e675",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:05:16.688159+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "launcher-architecture",
+      "from_owner": "launcher-architecture-sol",
+      "to_owner": "claude-v22",
+      "expected_commit": "d4dd1316b3237d75de80a9f72d2c27d7fb167166",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
