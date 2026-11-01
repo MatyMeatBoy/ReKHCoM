@@ -9729,10 +9729,10 @@
     "v22-switch-guest-build": {
       "id": "v22-switch-guest-build",
       "piece": "Compile Switch v2.2 EU US JP arm64_32 guests only, source5ccb, jobs1 own384MiB budget; no VM",
-      "status": "en_revision",
-      "owner": "codex-console-switch-guest",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T05:20:04.875654+00:00",
-      "updated_at": "2026-10-28T05:26:33.111195+00:00",
+      "updated_at": "2026-11-01T23:21:20.735895+00:00",
       "branch": null,
       "pr": null,
       "approval": "Root authorizes Switch guest CPU window afterLinuxandWindowsQAterminal; hostVM requires next coordination",
@@ -9742,6 +9742,11 @@
           "at": "2026-10-28T05:26:33.111195+00:00",
           "owner": "codex-console-switch-guest",
           "detail": "REALPASS session87808 source5ccb8d, EUUSJPmacho9533180/7522456/7462860 bytes,292.55s,jobs1 BelowNormaljob384MiBpeak167.53/minfree2.092GiB. Sourceclean; hostpackageunverified separatechild."
+        },
+        {
+          "at": "2026-11-01T23:21:20.735895+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T05:20:10.194593+00:00"
@@ -13433,7 +13438,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:21:02.500839+00:00",
+  "updated_at": "2026-11-01T23:21:20.735895+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -14333,6 +14338,16 @@
       "from_owner": "codex-console-vita-host",
       "to_owner": "claude-v22",
       "expected_commit": "1caa19ba2454cfc076b3a79c159803fb5abfd0a4",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:21:20.735895+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "v22-switch-guest-build",
+      "from_owner": "codex-console-switch-guest",
+      "to_owner": "claude-v22",
+      "expected_commit": "672ab3932ab188aca12b3988a183c14b8db1987e",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
