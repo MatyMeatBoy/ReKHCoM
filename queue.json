@@ -10117,10 +10117,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-28T05:26:38.407682+00:00",
-      "updated_at": "2026-11-01T23:21:51.360761+00:00",
+      "updated_at": "2026-11-01T23:43:34.500937+00:00",
       "branch": null,
       "pr": null,
-      "approval": "Root explicitly authorizes Switch host window after guest and all prior heavy tasks terminal; noPS5/Web until coordination",
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "switch-guest-attempt1 and realSDKinventory2; NACPversionderived2.2",
       "evidence": [
         {
@@ -10135,6 +10135,11 @@
         },
         {
           "at": "2026-11-01T23:21:51.360761+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:43:34.500937+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
         }
@@ -13893,7 +13898,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:43:15.925846+00:00",
+  "updated_at": "2026-11-01T23:43:34.500937+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
