@@ -7536,10 +7536,10 @@
     "card-key-hilt-black-microfix": {
       "id": "card-key-hilt-black-microfix",
       "piece": "Cambio literal de1-2pixelsblancos a negro en KingdomKeytodosvalores yHeroica5; conservarrestoaprobado",
-      "status": "pr_abierto",
-      "owner": "codex-card-microfix",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T18:47:53.494232+00:00",
-      "updated_at": "2026-10-28T00:47:58.333325+00:00",
+      "updated_at": "2026-11-01T23:09:03.805211+00:00",
       "branch": "fix/key-hilt-black-pixels",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/406",
       "approval": null,
@@ -7569,6 +7569,11 @@
           "at": "2026-10-28T00:47:58.333325+00:00",
           "owner": "codex-card-microfix",
           "detail": "Known reported seam corrections405/406/408/409/415 are published in pre3. Last Pumpkinhead row changes47 output pixels confined to one row in three real frames; all449 PNG inputs unchanged; exact ZIP reproduces corrected pixels. Separate premium/device coverage remains limited; no edits to approved artwork."
+        },
+        {
+          "at": "2026-11-01T23:09:03.805211+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-27T18:48:05.984482+00:00"
@@ -13090,7 +13095,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:08:54.027546+00:00",
+  "updated_at": "2026-11-01T23:09:03.805211+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13750,6 +13755,16 @@
       "from_owner": "codex-artifact-freshness",
       "to_owner": "claude-v22",
       "expected_commit": "9953f1b65752201003f77af1eb2454b228f20d31",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:09:03.805211+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "card-key-hilt-black-microfix",
+      "from_owner": "codex-card-microfix",
+      "to_owner": "claude-v22",
+      "expected_commit": "4c01aa761eb741d20bcdd81c7ebd144f5542998b",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
