@@ -1470,10 +1470,10 @@
     "catalogo-retratos59": {
       "id": "catalogo-retratos59",
       "piece": "Catalogo actual: retratos de dialogo Sora y Riku",
-      "status": "pr_abierto",
-      "owner": "claude-integrador",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:34:49.200664+00:00",
-      "updated_at": "2026-10-25T07:22:52.512473+00:00",
+      "updated_at": "2026-11-01T22:56:31.494236+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/101",
       "approval": null,
@@ -1498,6 +1498,11 @@
           "at": "2026-10-25T07:22:52.512473+00:00",
           "owner": "claude-integrador",
           "detail": "cerrado como no recuperable (ARTE_HISTORICO, PR #101)"
+        },
+        {
+          "at": "2026-11-01T22:56:31.494236+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T16:35:00.794556+00:00",
@@ -12746,7 +12751,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:56:20.887715+00:00",
+  "updated_at": "2026-11-01T22:56:31.494236+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13236,6 +13241,16 @@
       "from_owner": "claude-integrador",
       "to_owner": "claude-v22",
       "expected_commit": "ab7ec12b645e0a8202085b575f9bbf5d19db3432",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:56:31.494236+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "catalogo-retratos59",
+      "from_owner": "claude-integrador",
+      "to_owner": "claude-v22",
+      "expected_commit": "68544003df73c0973c5f10f8a14ad25480a23f99",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
