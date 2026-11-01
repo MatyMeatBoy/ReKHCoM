@@ -1470,13 +1470,13 @@
     "catalogo-retratos59": {
       "id": "catalogo-retratos59",
       "piece": "Catalogo actual: retratos de dialogo Sora y Riku",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-24T16:34:49.200664+00:00",
-      "updated_at": "2026-11-01T22:56:44.857543+00:00",
+      "updated_at": "2026-11-01T23:26:47.066118+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/101",
-      "approval": null,
+      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "test_portrait_clipping.py; RETRATOS_59_LOGICA.md",
       "evidence": [
         {
@@ -1511,6 +1511,11 @@
         },
         {
           "at": "2026-11-01T22:56:44.857543+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #101 integrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:26:47.066118+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #101 integrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -13538,7 +13543,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:26:03.559320+00:00",
+  "updated_at": "2026-11-01T23:26:47.066118+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
