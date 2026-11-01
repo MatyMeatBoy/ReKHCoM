@@ -2407,6 +2407,9 @@ static void Present(void) {
             SDL_FRect src = { 0, 0, (float)nw, 14 };
             SDL_FRect nd = { 4 * f, 4 * f, nw * f, 14 * f };
 
+            if (gCurrentMode == &gModeVsbattle) /* a link battle: between the two HP gauges, not over the player's */
+                nd.x = SDL_floorf((outW - nw * f) / 2);
+
             if (sNoticeTex == NULL) {
                 sNoticeTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 256, 14);
                 if (sNoticeTex != NULL) {

@@ -11,14 +11,14 @@ for p in p1 p2; do cp $BUILD/khcom.exe $BUILD/SDL3.dll $B/$p/; printf 'config_ve
 printf 'online_name=Sora\n' >> $B/p1/kh_com.ini
 printf 'online_name=Riku\n' >> $B/p2/kh_com.ini
 F=$1; K=${2:-$(py -3 -c "print(','.join(f'{f}-{f+3}:A' for f in range(200, 1400, 40)))")}
-# player 1: confirm on "Open a public room" at tick 40 and its offered name at 60; player 2: down to the first room
-# and confirm at tick 400. The lobby opens on Versus (a file loaded).
+# player 1: confirm on "Open a public room" at tick 40 and its offered name at 60; player 2: confirm the first room
+# (the focus follows the list) at tick 400. The lobby opens after Load.
 run() { (cd $B/$1 && env $LINK_ENV SDL_VIDEO_DRIVER=dummy SDL_AUDIO_DRIVER=dummy KHCOM_LOBBY=lobby:127.0.0.1:47801 \
     KHCOM_NETLINK_TRACE=1 KHCOM_MODE=60:mode_sio_battle:1 KHCOM_KEYS="$K" KHCOM_LOBBY_KEYS="$2" \
     KHCOM_LOBBY_SHOTS="$3" KHCOM_QUIT=$F timeout 300 ./khcom.exe --language es --rom "$R/roms/B8CP.gba" \
     >/dev/null 2>&1; echo "$1 exit $?"); }
 py -3 port/tools/netlink_relay.py --port 47801 > $B/relay.log 2>&1 & RELAY=$!
 sleep 1
-run p1 "40:3,60:3" "20,50" & sleep 2; run p2 "400:1,410:3" "20,390" & wait %2 %3
+run p1 "40:3,60:3" "20,50" & sleep 2; run p2 "400:3" "20,390" & wait %2 %3
 kill $RELAY 2>/dev/null
 for p in p1 p2; do echo "== $p"; grep -a "lobby\|netlink: \(connected\|the lobby\|vs seed\|battle \|relay room\)\|mode:\|DESYNC\|checks" $B/$p/kh_com.log | head -16; done

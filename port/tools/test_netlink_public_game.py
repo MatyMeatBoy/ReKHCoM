@@ -59,7 +59,7 @@ def main():
             if a.lobby:
                 env.pop('KHCOM_NETLINK')
                 env.update(KHCOM_LOBBY='lobby:%s:%d' % (a.server, a.port),
-                           KHCOM_LOBBY_KEYS='40:3,60:3' if i == 0 else '400:1,410:3',  # open, its offered name
+                           KHCOM_LOBBY_KEYS='40:3,60:3' if i == 0 else '400:3',  # open, its offered name
                            KHCOM_LOBBY_SHOTS='20,390')
             output = (work/'stdout.txt').open('w')
             outputs.append(output)

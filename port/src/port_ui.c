@@ -2231,7 +2231,8 @@ void PortUiOpenModeChoice(void) {
 /* The online lobby (port_lobby.c), before the link battle's menu: the public rooms, open one, enter one, or the
    cable. The game waits under it as under the options. */
 static int sLobbyCursor;
-static int sLobbyNaming; /* "Open a room": its name is being written */
+static int sLobbyNaming; /* "Create room": its name is being written */
+static int sLobbyOnBar, sLobbyButton, sLobbyMoved, sLobbyScroll;
 static void LobbyKey(int key);
 static void LobbyNameEnd(void);
 static void LobbyNameAppend(const char* text);
@@ -2242,6 +2243,9 @@ void PortUiOpenLobby(void) {
     sOpenSound = 0; /* the game's own confirm has just sounded */
     sPage = PAGE_LOBBY;
     sLobbyCursor = 0;
+    sLobbyMoved = sLobbyScroll = 0;
+    sLobbyOnBar = 1;
+    sLobbyButton = 0;
     LobbyNameEnd();
     PortLobbyRefresh();
 }
@@ -2529,6 +2533,8 @@ int PortUiHandleEvent(const void* p) {
             switch (ev->key.key) {
                 case SDLK_UP: case SDLK_W: key = 0; break;
                 case SDLK_DOWN: case SDLK_S: key = 1; break;
+                case SDLK_LEFT: case SDLK_A: key = 5; break;
+                case SDLK_RIGHT: case SDLK_D: key = 6; break;
                 case SDLK_RETURN: case SDLK_SPACE: case SDLK_X: case SDLK_K: key = ev->key.repeat ? -1 : 3; break;
                 case SDLK_ESCAPE: case SDLK_BACKSPACE: case SDLK_Z: case SDLK_J: key = ev->key.repeat ? -1 : 4; break;
             }
@@ -2536,6 +2542,8 @@ int PortUiHandleEvent(const void* p) {
             switch (UiPadButton(ev)) {
                 case SDL_GAMEPAD_BUTTON_DPAD_UP: key = 0; break;
                 case SDL_GAMEPAD_BUTTON_DPAD_DOWN: key = 1; break;
+                case SDL_GAMEPAD_BUTTON_DPAD_LEFT: key = 5; break;
+                case SDL_GAMEPAD_BUTTON_DPAD_RIGHT: key = 6; break;
                 case SDL_GAMEPAD_BUTTON_SOUTH: case SDL_GAMEPAD_BUTTON_START: key = 3; break;
                 case SDL_GAMEPAD_BUTTON_EAST: key = 4; break;
             }
@@ -3917,6 +3925,8 @@ void PortLobbyFrame(void);
 int PortLobbyRoomCount(void);
 const char* PortLobbyRoomName(int i);
 int PortLobbyRoomRegion(int i);
+int PortLobbyRoomLevel(int i);
+int PortLobbyMyLevel(void);
 int PortLobbyRegion(void);
 const char* PortLobbyPlayerName(void);
 void PortLobbyCreate(const char* room);
@@ -3924,19 +3934,30 @@ void PortLobbyJoin(int i);
 void PortLobbyCable(void);
 void PortLobbyCancel(void);
 
-enum { LROW_CREATE = -1, LROW_REFRESH = -2, LROW_RETRY = -3, LROW_CABLE = -4 }; /* >= 0: a room */
-static const char* const sLobbyTitle[LANG_COUNT] = { "Online battle", "Combat en ligne", "Online-Kampf",
-                                                     "Battaglia online", "Batalla en línea", "Online battle" };
-static const char* const sLobbyCreate[LANG_COUNT] = { "Open a public room", "Ouvrir une salle publique",
-                                                      "Öffentlichen Raum öffnen", "Apri una stanza pubblica",
-                                                      "Abrir una sala pública", "Open a public room" };
-static const char* const sLobbyRefresh[LANG_COUNT] = { "Refresh", "Actualiser", "Aktualisieren", "Aggiorna",
-                                                       "Actualizar", "Refresh" };
-static const char* const sLobbyRetry[LANG_COUNT] = { "Try again", "Réessayer", "Erneut versuchen", "Riprova",
-                                                     "Reintentar", "Try again" };
-static const char* const sLobbyCable[LANG_COUNT] = { "Play by cable (local)", "Jouer par câble (local)",
-                                                     "Per Kabel spielen (lokal)", "Gioca via cavo (locale)",
-                                                     "Jugar por cable (local)", "Play by cable (local)" };
+/* the buttons under the list */
+enum { LBTN_CREATE, LBTN_FILTER, LBTN_REFRESH, LBTN_CABLE, LBTN_COUNT };
+static const char* const sLobbyTitle[LANG_COUNT] = { "Online rooms", "Salles en ligne", "Online-Räume",
+                                                     "Stanze online", "Salas en línea", "Online rooms" };
+static const char* const sLobbyColumns[4][LANG_COUNT] = {
+    { "Room", "Salle", "Raum", "Stanza", "Sala", "Room" },
+    { "Level", "Niveau", "Stufe", "Livello", "Nivel", "Level" },
+    { "Region", "Région", "Region", "Regione", "Región", "Region" },
+    { "Players", "Joueurs", "Spieler", "Giocatori", "Jugadores", "Players" },
+};
+static const char* const sLobbyButtons[LBTN_COUNT][LANG_COUNT] = {
+    { "Create room", "Créer", "Erstellen", "Crea stanza", "Crear sala", "Create room" },
+    { "Filter", "Filtre", "Filter", "Filtro", "Filtro", "Filter" },
+    { "Refresh", "Actualiser", "Aktualisieren", "Aggiorna", "Actualizar", "Refresh" },
+    { "Cable", "Câble", "Kabel", "Cavo", "Cable", "Cable" },
+};
+static const char* const sLobbyFilterNames[2][LANG_COUNT] = {
+    { "all regions", "toutes régions", "alle Regionen", "tutte le regioni", "todas las regiones", "all regions" },
+    { "my region", "ma région", "meine Region", "la mia regione", "mi región", "my region" },
+};
+static const char* const sLobbyShowing[LANG_COUNT] = { "%d of %d rooms, %s", "%d sur %d salles, %s",
+                                                       "%d von %d Räumen, %s", "%d di %d stanze, %s",
+                                                       "%d de %d salas, %s", "%d of %d rooms, %s" };
+static const char* const sLobbyLevelShort[LANG_COUNT] = { "Lv", "Niv", "St", "Liv", "Nv", "Lv" };
 static const char* const sLobbyRoom[LANG_COUNT] = { "%s's room", "Salle de %s", "Raum von %s", "Stanza di %s",
                                                     "Sala de %s", "%s's room" };
 static const char* const sLobbyLogin[LANG_COUNT] = {
@@ -3953,13 +3974,13 @@ static const char* const sLobbyEmpty[LANG_COUNT] = {
     "No public rooms right now: open one.", "Aucune salle publique : ouvrez-en une.",
     "Gerade keine öffentlichen Räume: öffne einen.", "Nessuna stanza pubblica: aprine una.",
     "No hay salas públicas ahora: abre una.", "No public rooms right now: open one." };
-static const char* const sLobbyAs[LANG_COUNT] = { "Playing as %s", "Joueur : %s", "Spieler: %s", "Giocatore: %s",
-                                                  "Jugando como %s", "Playing as %s" };
-static const char* const sLobbyOther[LANG_COUNT] = { "another version", "autre version", "andere Version",
-                                                     "altra versione", "otra versión", "another version" };
-static const char* const sLobbyHelp[LANG_COUNT] = { "Confirm: choose   Back: return", "Valider : choisir   Retour : revenir",
-                                                    "Bestätigen: wählen   Zurück: zurück", "Conferma: scegli   Indietro: torna",
-                                                    "Confirmar: elegir   Atrás: volver", "Confirm: choose   Back: return" };
+static const char* const sLobbyHelp[LANG_COUNT] = {
+    "Up/Down: rooms   Left/Right: buttons   Confirm: enter   Back: title",
+    "Haut/Bas : salles   Gauche/Droite : boutons   Valider : entrer   Retour : titre",
+    "Hoch/Runter: Räume   Links/Rechts: Tasten   Bestätigen: betreten   Zurück: Titel",
+    "Su/Giù: stanze   Sinistra/Destra: pulsanti   Conferma: entra   Indietro: titolo",
+    "Arriba/Abajo: salas   Izq./Der.: botones   Confirmar: entrar   Atrás: título",
+    "Up/Down: rooms   Left/Right: buttons   Confirm: enter   Back: title" };
 static const char* const sLobbyNameTitle[LANG_COUNT] = { "Room name", "Nom de la salle", "Name des Raums",
                                                          "Nome della stanza", "Nombre de la sala", "Room name" };
 static const char* const sLobbyNameNote[LANG_COUNT] = {
@@ -3975,7 +3996,7 @@ static const char* const sLobbyNameHelp[LANG_COUNT] = { "Confirm: open the room 
 
 /* "Open a room" asks its name: "<player>'s room" offered (Confirm takes it), the keyboard writes another. 24 bytes
    of UTF-8, as the room servers list it; letters the menu font draws (Latin-1). */
-#define LOBBY_NAME_MAX 24
+#define LOBBY_NAME_MAX 20 /* and "~<level>" after it, 24 in all */
 static char sLobbyName[LOBBY_NAME_MAX + 1];
 static int sLobbyNameOffered; /* still the offered name: the first letter typed replaces it */
 
@@ -4035,24 +4056,39 @@ static void LobbyNameStart(int l) {
         SDL_StartTextInput(window); /* phones and the Deck show their keyboard */
 }
 
-/* the rows: open a room, the rooms, refresh, the cable; signed out or no server: try again, the cable */
-static int LobbyRows(int* rows) {
-    int n = 0, i, ready = PortLobbyReady(), count = PortLobbyRoomCount();
-    if (ready < 0) {
-        rows[n++] = LROW_RETRY;
-        rows[n++] = LROW_CABLE;
-        return n;
-    }
-    rows[n++] = LROW_CREATE;
-    for (i = 0; i < count && n < 10; i++)
-        rows[n++] = i;
-    rows[n++] = LROW_REFRESH;
-    rows[n++] = LROW_CABLE;
+/* The lobby's browser: the rooms in a table (name, the host's level, region, players), the buttons under it.
+   The focus is a room or a button; until the player moves it, it follows the list (the first room, or Create). */
+#define LOBBY_VISIBLE 8
+static int sLobbyFilter; /* 1: only this cartridge's region */
+
+/* the rooms shown, in the filter's order: indices into the lobby's list */
+static int LobbyShown(int* shown) {
+    int n = 0, i, count = PortLobbyReady() > 0 ? PortLobbyRoomCount() : 0;
+    for (i = 0; i < count && n < 20; i++)
+        if (!sLobbyFilter || PortLobbyRoomRegion(i) == PortLobbyRegion())
+            shown[n++] = i;
     return n;
 }
 
+static void LobbyFocus(int n) {
+    if (!sLobbyMoved) {
+        sLobbyOnBar = n == 0;
+        if (n > 0)
+            sLobbyCursor = 0;
+    }
+    if (!n)
+        sLobbyOnBar = 1;
+    sLobbyCursor = SDL_clamp(sLobbyCursor, 0, SDL_max(n - 1, 0));
+    if (sLobbyCursor < sLobbyScroll)
+        sLobbyScroll = sLobbyCursor;
+    if (sLobbyCursor >= sLobbyScroll + LOBBY_VISIBLE)
+        sLobbyScroll = sLobbyCursor - LOBBY_VISIBLE + 1;
+    sLobbyScroll = SDL_clamp(sLobbyScroll, 0, SDL_max(n - LOBBY_VISIBLE, 0));
+}
+
+/* keys: 0 up, 1 down, 3 confirm, 4 back, 5 left, 6 right */
 static void LobbyKey(int key) {
-    int rows[16], n = LobbyRows(rows), row;
+    int shown[20], n = LobbyShown(shown);
     if (sLobbyNaming) {
         const char* p = sLobbyName;
         while (*p == ' ')
@@ -4067,29 +4103,62 @@ static void LobbyKey(int key) {
         }
         return;
     }
-    sLobbyCursor = SDL_clamp(sLobbyCursor, 0, n - 1);
+    LobbyFocus(n);
     if (key == 0 || key == 1) {
-        sLobbyCursor = (sLobbyCursor + (key == 0 ? n - 1 : 1)) % n;
+        sLobbyMoved = 1;
+        if (sLobbyOnBar) {
+            if (n > 0) { /* up from the buttons: the last room; down: the first */
+                sLobbyOnBar = 0;
+                sLobbyCursor = key == 0 ? n - 1 : 0;
+            }
+        } else if (key == 0 && sLobbyCursor == 0) {
+            sLobbyOnBar = 1;
+        } else if (key == 1 && sLobbyCursor == n - 1) {
+            sLobbyOnBar = 1;
+        } else {
+            sLobbyCursor += key == 0 ? -1 : 1;
+        }
+        LobbyFocus(n);
         return;
     }
-    if (key == 4) { /* back to the Link menu */
+    if (key == 5 || key == 6) {
+        sLobbyMoved = 1;
+        if (sLobbyOnBar)
+            sLobbyButton = (sLobbyButton + (key == 5 ? LBTN_COUNT - 1 : 1)) % LBTN_COUNT;
+        sLobbyOnBar = 1;
+        return;
+    }
+    if (key == 4) { /* back to the title */
         PortLobbyCancel();
         Close();
         return;
     }
     if (key != 3)
         return;
-    row = rows[sLobbyCursor];
-    if (row == LROW_CABLE) {
-        PortLobbyCable();
-        Close();
-    } else if (row == LROW_REFRESH || row == LROW_RETRY) {
-        PortLobbyRefresh();
-    } else if (row == LROW_CREATE) {
-        LobbyNameStart(Lang());
-    } else if (row >= 0 && PortLobbyRoomRegion(row) == PortLobbyRegion()) {
-        PortLobbyJoin(row);
-        Close();
+    if (!sLobbyOnBar) {
+        int room = shown[sLobbyCursor];
+        if (PortLobbyRoomRegion(room) == PortLobbyRegion()) {
+            PortLobbyJoin(room);
+            Close();
+        }
+        return;
+    }
+    switch (sLobbyButton) {
+        case LBTN_CREATE:
+            if (PortLobbyReady() > 0)
+                LobbyNameStart(Lang());
+            break;
+        case LBTN_FILTER:
+            sLobbyFilter = !sLobbyFilter;
+            sLobbyCursor = sLobbyScroll = 0;
+            break;
+        case LBTN_REFRESH:
+            PortLobbyRefresh();
+            break;
+        case LBTN_CABLE:
+            PortLobbyCable();
+            Close();
+            break;
     }
 }
 
@@ -4115,56 +4184,109 @@ static void DrawLobbyName(int l, int width, int height) {
 }
 
 static void DrawLobby(int l, int width, int height) {
-    int rows[16], n, i, panelW = SDL_min(width - 24, 250), x0, y0, h, y, ready, count;
-    char status[160], label[96];
+    static const char* const regions[3] = { "EU", "US", "JP" };
+    int shown[20], n, i, panelW = SDL_min(width - 16, 400), x0, y0, h, y, x, ready, count, rowH = 13;
+    int colLevel, colRegion, colPlayers, tableTop, tableH = LOBBY_VISIBLE * rowH, barW;
+    char status[160], text[96];
     PortLobbyFrame();
     if (sLobbyNaming) {
         DrawLobbyName(l, width, height);
         return;
     }
-    n = LobbyRows(rows);
-    sLobbyCursor = SDL_clamp(sLobbyCursor, 0, n - 1);
+    n = LobbyShown(shown);
+    LobbyFocus(n);
     ready = PortLobbyReady();
     count = PortLobbyRoomCount();
+    h = 22 + 12 + 13 + tableH + 6 + 16 + 6 + 12;
+    x0 = (width - panelW) / 2;
+    y0 = SDL_max(2, (height - h) / 2);
+    /* the columns as wide as their header (the values fit under it) */
+    colPlayers = x0 + panelW - 12 - TextWidth(sLobbyColumns[3][l]);
+    colRegion = colPlayers - 10 - SDL_max(TextWidth(sLobbyColumns[2][l]), TextWidth("EU"));
+    colLevel = colRegion - 10 - SDL_max(TextWidth(sLobbyColumns[1][l]), TextWidth("99"));
+    Fill(0, 0, width, height, 0xFF000000u);
+    Fill(x0 - 2, y0 - 2, panelW + 4, h + 4, MENU_GREY);
+    Fill(x0, y0, panelW, h, 0xFFFFFFFFu);
+    DrawText(sLobbyTitle[l], x0 + 8, y0 + 4, MENU_RED_DARK, 0xFFD8D8D8u);
+    /* who plays: the name and the loaded file's level, on the title's line */
+    if (PortLobbyMyLevel() > 0)
+        SDL_snprintf(text, sizeof(text), "%s  %s %d", PortLobbyPlayerName(), sLobbyLevelShort[l], PortLobbyMyLevel());
+    else
+        SDL_strlcpy(text, PortLobbyPlayerName(), sizeof(text));
+    DrawText(text, x0 + panelW - 8 - TextWidth(text), y0 + 4, MENU_DIM, 0xFFFFFFFFu);
+    Fill(x0 + 8, y0 + 17, panelW - 16, 1, MENU_GREY);
+    y = y0 + 21;
+    /* the state line: signed out, no server, asking, or what the list holds */
     if (ready == -1)
         SDL_strlcpy(status, sLobbyLogin[l], sizeof(status));
     else if (ready == -2)
         SDL_strlcpy(status, sLobbyNoServer[l], sizeof(status));
     else if (count < 0)
         SDL_strlcpy(status, sLobbyAsking[l], sizeof(status));
-    else if (count == 0)
-        SDL_strlcpy(status, sLobbyEmpty[l], sizeof(status));
     else
-        SDL_snprintf(status, sizeof(status), sLobbyAs[l], PortLobbyPlayerName());
-    h = 22 + DrawWrapped(status, 0, 0, panelW - 16, 0, 0) * 11 + 4 + n * 14 + 16;
-    x0 = (width - panelW) / 2;
-    y0 = SDL_max(2, (height - h) / 2);
-    Fill(0, 0, width, height, 0xFF000000u);
-    Fill(x0 - 2, y0 - 2, panelW + 4, h + 4, MENU_GREY);
-    Fill(x0, y0, panelW, h, 0xFFFFFFFFu);
-    DrawText(sLobbyTitle[l], x0 + 8, y0 + 4, MENU_RED_DARK, 0xFFD8D8D8u);
-    Fill(x0 + 8, y0 + 17, panelW - 16, 1, MENU_GREY);
-    y = y0 + 22;
-    y += DrawWrapped(status, x0 + 8, y, panelW - 16, ready < 0 ? MENU_RED_DARK : MENU_DIM, 1) * 11 + 4;
-    for (i = 0; i < n; i++) {
-        int sel = i == sLobbyCursor, row = rows[i], other = 0;
-        const char* text = label;
-        if (row == LROW_CREATE) text = sLobbyCreate[l];
-        else if (row == LROW_REFRESH) text = sLobbyRefresh[l];
-        else if (row == LROW_RETRY) text = sLobbyRetry[l];
-        else if (row == LROW_CABLE) text = sLobbyCable[l];
-        else {
-            static const char* const regions[3] = { "EU", "US", "JP" };
-            int region = PortLobbyRoomRegion(row);
-            other = region != PortLobbyRegion();
-            SDL_strlcpy(label, PortLobbyRoomName(row), sizeof(label));
-            if (other)
-                SDL_snprintf(label + SDL_strlen(label), sizeof(label) - SDL_strlen(label), " (%s, %s)",
-                             region >= 0 && region < 3 ? regions[region] : "?", sLobbyOther[l]);
+        SDL_snprintf(status, sizeof(status), sLobbyShowing[l], n, count, sLobbyFilterNames[sLobbyFilter][l]);
+    DrawText(status, x0 + 8, y, ready < 0 ? MENU_RED_DARK : MENU_DIM, 0xFFFFFFFFu);
+    y += 12;
+    /* the table: its header, then the rooms */
+    Fill(x0 + 8, y, panelW - 16, 12, MENU_INK);
+    DrawText(sLobbyColumns[0][l], x0 + 12, y + 1, 0xFFFFFFFFu, MENU_INK);
+    DrawText(sLobbyColumns[1][l], colLevel, y + 1, 0xFFFFFFFFu, MENU_INK);
+    DrawText(sLobbyColumns[2][l], colRegion, y + 1, 0xFFFFFFFFu, MENU_INK);
+    DrawText(sLobbyColumns[3][l], colPlayers, y + 1, 0xFFFFFFFFu, MENU_INK);
+    y += 13;
+    tableTop = y;
+    Fill(x0 + 8, tableTop, panelW - 16, tableH, 0xFFF4F2F2u);
+    for (i = 0; i < 4; i++) /* the column rules */
+        Fill(i == 0 ? x0 + 8 : (i == 1 ? colLevel : i == 2 ? colRegion : colPlayers) - 4, tableTop, 1, tableH,
+             MENU_GREY);
+    Fill(x0 + panelW - 9, tableTop, 1, tableH, MENU_GREY);
+    Fill(x0 + 8, tableTop + tableH, panelW - 16, 1, MENU_GREY);
+    if (ready > 0 && n == 0 && count >= 0)
+        DrawText(sLobbyEmpty[l], x0 + (panelW - TextWidth(sLobbyEmpty[l])) / 2, tableTop + tableH / 2 - 6, MENU_DIM,
+                 0xFFFFFFFFu);
+    for (i = 0; i < LOBBY_VISIBLE && sLobbyScroll + i < n; i++) {
+        int index = sLobbyScroll + i, room = shown[index], region = PortLobbyRoomRegion(room);
+        int sel = !sLobbyOnBar && index == sLobbyCursor, other = region != PortLobbyRegion();
+        uint32_t ink = sel ? 0xFFFFFFFFu : other ? MENU_DIM : MENU_INK, shade = sel ? MENU_INK : 0xFFF4F2F2u;
+        int ry = tableTop + i * rowH;
+        if (sel)
+            Fill(x0 + 9, ry, panelW - 18, rowH, MENU_RED_DARK);
+        else if (i & 1)
+            Fill(x0 + 9, ry, panelW - 18, rowH, 0xFFE9E6E6u);
+        if (!sel)
+            for (x = 1; x < 4; x++) /* the rules again over the stripe */
+                Fill((x == 1 ? colLevel : x == 2 ? colRegion : colPlayers) - 4, ry, 1, rowH, MENU_GREY);
+        shade = sel ? MENU_RED_DARK : (i & 1) ? 0xFFE9E6E6u : 0xFFF4F2F2u;
+        SDL_strlcpy(text, PortLobbyRoomName(room), sizeof(text));
+        DrawText(text, x0 + 12, ry + 1, ink, shade);
+        if (PortLobbyRoomLevel(room) > 0) {
+            SDL_snprintf(text, sizeof(text), "%d", PortLobbyRoomLevel(room));
+            DrawText(text, colLevel, ry + 1, ink, shade);
         }
-        MenuBar(x0 + 8, y + 2, panelW - 16, sel);
-        DrawText(text, x0 + 24, y, other ? MENU_DIM : MENU_INK, 0xFFD8D8D8u);
-        y += 14;
+        /* another region's room is dimmed: it cannot be entered */
+        DrawText(region >= 0 && region < 3 ? regions[region] : "?", colRegion, ry + 1, ink, shade);
+        DrawText("1/2", colPlayers, ry + 1, ink, shade);
+    }
+    if (n > LOBBY_VISIBLE) { /* the scroll bar */
+        int track = tableH - 2, thumb = SDL_max(6, track * LOBBY_VISIBLE / n);
+        int at = (track - thumb) * sLobbyScroll / SDL_max(1, n - LOBBY_VISIBLE);
+        Fill(x0 + panelW - 13, tableTop + 1 + at, 3, thumb, MENU_GREY);
+    }
+    /* the buttons */
+    y = tableTop + tableH + 6;
+    barW = (panelW - 16 - (LBTN_COUNT - 1) * 4) / LBTN_COUNT;
+    for (i = 0; i < LBTN_COUNT; i++) {
+        int bx = x0 + 8 + i * (barW + 4), sel = sLobbyOnBar && i == sLobbyButton;
+        int off = (i == LBTN_CREATE && ready <= 0);
+        const char* label = sLobbyButtons[i][l];
+        if (i == LBTN_FILTER) {
+            SDL_snprintf(text, sizeof(text), "%s", sLobbyFilter ? sLobbyFilterNames[1][l] : sLobbyButtons[i][l]);
+            label = text;
+        }
+        Fill(bx, y, barW, 16, sel ? MENU_INK : MENU_GREY);
+        Fill(bx + 1, y + 1, barW - 2, 14, sel ? MENU_RED_DARK : 0xFFEDEDEDu);
+        DrawText(label, bx + (barW - TextWidth(label)) / 2, y + 2, sel ? 0xFFFFFFFFu : off ? MENU_DIM : MENU_INK,
+                 sel ? MENU_INK : 0xFFD8D8D8u);
     }
     DrawText(sLobbyHelp[l], x0 + 8, y0 + h - 12, MENU_DIM, 0xFFFFFFFFu);
 }

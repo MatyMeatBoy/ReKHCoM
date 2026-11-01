@@ -29,7 +29,11 @@ static uint64_t sIds[LOBBY_ROOMS];
 static int sRegions[LOBBY_ROOMS];
 static uint32_t sAskedAt;
 static char sMyCode[17];
-static int sCancelled;
+static int sChoice;   /* LOBBY_CHOICE_*: what the lobby ended with, for mode_sio.c */
+static int sMyLevel;  /* the loaded file's level, shown with the room */
+static int sLevels[LOBBY_ROOMS];
+
+enum { LOBBY_CHOICE_NONE, LOBBY_CHOICE_ROOM, LOBBY_CHOICE_CABLE, LOBBY_CHOICE_BACK };
 
 static const char* Setting(void) {
     const char* env = SDL_getenv("KHCOM_LOBBY");
@@ -112,8 +116,29 @@ void PortLobbyFrame(void) {
         n = PortSteamlinkLobbyRooms(sIds, sNames, sRegions, LOBBY_ROOMS);
     else if (sBackend == 2)
         n = PortNetlinkLobbyRead(sCodes, sNames, sRegions, LOBBY_ROOMS);
-    if (n >= 0)
+    if (n >= 0) {
+        int i, kept = 0;
+        for (i = 0; i < n; i++) /* our own room, closed a moment ago, stays listed a few seconds on the server */
+            if (sBackend != 2 || !sMyCode[0] || SDL_strcmp(sCodes[i], sMyCode) != 0) {
+                if (kept != i) {
+                    SDL_memcpy(sCodes[kept], sCodes[i], sizeof(sCodes[0]));
+                    SDL_memcpy(sNames[kept], sNames[i], sizeof(sNames[0]));
+                    sRegions[kept] = sRegions[i];
+                }
+                kept++;
+            }
+        n = kept;
         sCount = n;
+        for (i = 0; i < n; i++) { /* "<room>~<level>": the host's level after its room's name */
+            char* tilde = SDL_strrchr(sNames[i], '~');
+            const char* d = tilde ? tilde + 1 : NULL;
+            sLevels[i] = 0;
+            if (d && d[0] >= '0' && d[0] <= '9' && (!d[1] || (d[1] >= '0' && d[1] <= '9' && !d[2]))) {
+                sLevels[i] = SDL_atoi(d);
+                *tilde = 0;
+            }
+        }
+    }
     if (sAskedAt && SDL_GetTicks() - sAskedAt > 4000 && PortLobbyReady() != -1)
         PortLobbyRefresh();
 }
@@ -127,6 +152,19 @@ const char* PortLobbyRoomName(int i) {
     return i >= 0 && i < sCount ? sNames[i] : "";
 }
 
+/* the host's level (0 unknown) */
+int PortLobbyRoomLevel(int i) {
+    return i >= 0 && i < sCount ? sLevels[i] : 0;
+}
+
+void PortLobbySetLevel(int level) {
+    sMyLevel = level;
+}
+
+int PortLobbyMyLevel(void) {
+    return sMyLevel;
+}
+
 int PortLobbyRoomRegion(int i) {
     return i >= 0 && i < sCount ? sRegions[i] : -1;
 }
@@ -138,9 +176,14 @@ const char* PortLobbyMyCode(void) {
 
 /* a room is listed under its own name (lobby version 5; the screen offers "<player>'s room") */
 void PortLobbyCreate(const char* room) {
-    char spec[200];
+    char spec[200], listed[40];
+    sChoice = LOBBY_CHOICE_ROOM;
+    if (sMyLevel > 0 && sMyLevel < 100)
+        SDL_snprintf(listed, sizeof(listed), "%s~%d", room, sMyLevel);
+    else
+        SDL_strlcpy(listed, room, sizeof(listed));
     if (sBackend == 1) {
-        PortSteamlinkRoomName(room);
+        PortSteamlinkRoomName(listed);
         PortSteamlinkTarget(0, Region());
         PortNetlinkUse("steam:host");
         return;
@@ -157,13 +200,14 @@ void PortLobbyCreate(const char* room) {
     }
     SDL_snprintf(spec, sizeof(spec), "relay:%s:%d:%s:host", sServer, sServerPort, sMyCode);
     PortNetlinkUse(spec);
-    PortNetlinkAnnounce(LOBBY_VERSION, Region(), room);
+    PortNetlinkAnnounce(LOBBY_VERSION, Region(), listed);
 }
 
 void PortLobbyJoin(int i) {
     char spec[200];
     if (i < 0 || i >= sCount)
         return;
+    sChoice = LOBBY_CHOICE_ROOM;
     if (sBackend == 1) {
         PortSteamlinkTarget(sIds[i], Region());
         PortNetlinkUse("steam:join");
@@ -175,18 +219,20 @@ void PortLobbyJoin(int i) {
 
 void PortLobbyCable(void) {
     PortNetlinkUse(NULL);
+    sChoice = LOBBY_CHOICE_CABLE;
 }
 
-/* Back out of the lobby: the game returns to its Link menu (mode_sio.c takes it once) */
+/* Back out of the lobby: the game returns to the title (mode_sio.c takes it once) */
 void PortLobbyCancel(void) {
     PortNetlinkUse(NULL);
-    sCancelled = 1;
+    sChoice = LOBBY_CHOICE_BACK;
 }
 
-int PortLobbyTakeCancel(void) {
-    int cancelled = sCancelled;
-    sCancelled = 0;
-    return cancelled;
+/* once the lobby closed: a room (the link is set), the cable, or Back (also the overlay closed some other way) */
+int PortLobbyTakeChoice(void) {
+    int choice = sChoice;
+    sChoice = LOBBY_CHOICE_NONE;
+    return choice;
 }
 
 /* the connect screen cancelled (or the lobby did): an open room stops being listed */

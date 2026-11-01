@@ -151,6 +151,68 @@ enum SioBattleMenu {
     SIO_BATTLE_MENU_LOAD
 };
 
+#ifdef PLATFORM_PC
+/* Online with a lobby (port_lobby.c): the Link entry runs the game's own screens without its menu. Load picks the
+   file (the deck and level the rooms show), the lobby lists the rooms, and picking one goes straight to the
+   connect screen; cancelling the wait comes back to the lobby, and Back in the lobby to the title. The lobby's
+   cable choice shows the cartridge's menu as before. */
+enum { SIO_LOBBY_OFF, SIO_LOBBY_START, SIO_LOBBY_LOADING, SIO_LOBBY_OPEN, SIO_LOBBY_ROOM, SIO_LOBBY_TITLE };
+enum { LOBBY_CHOICE_NONE, LOBBY_CHOICE_ROOM, LOBBY_CHOICE_CABLE, LOBBY_CHOICE_BACK }; /* PortLobbyTakeChoice */
+extern int PortLobbyWanted(void);
+extern void PortUiOpenLobby(void);
+extern int PortLobbyTakeChoice(void);
+extern void PortLobbySetLevel(int level);
+extern void PortLobbyLeave(void);
+extern int NetLinkConnected(void);
+static u8 sSioLobbyFlow;
+
+static void SioLobbyEnter(s32 arg) {
+    if (!PortLobbyWanted() || NetLinkConnected()) {
+        sSioLobbyFlow = SIO_LOBBY_OFF;
+    } else if (gSioBattleFileLoaded == TRUE) {
+        PortLobbySetLevel(gGameState.progression.level);
+        sSioLobbyFlow = SIO_LOBBY_OPEN;
+        PortUiOpenLobby();
+    } else if (sSioLobbyFlow == SIO_LOBBY_LOADING && arg == SIO_BATTLE_ENTRY_OPEN) {
+        sSioLobbyFlow = SIO_LOBBY_TITLE; /* Load left without a file */
+    } else {
+        sSioLobbyFlow = SIO_LOBBY_START;
+    }
+}
+
+/* the Link menu's frame while the lobby leads: TRUE when it acted instead of the menu */
+static s32 SioLobbyStep(void) {
+    switch (sSioLobbyFlow) {
+    case SIO_LOBBY_START:
+        sSioLobbyFlow = SIO_LOBBY_LOADING;
+        ModeRequest(&gModeMenuLoad, 1);
+        return TRUE;
+    case SIO_LOBBY_OPEN:
+        switch (PortLobbyTakeChoice()) {
+        case LOBBY_CHOICE_ROOM:
+            sSioLobbyFlow = SIO_LOBBY_ROOM;
+            ModeRequest(&gModeSioBtlConnect, 0);
+            return TRUE;
+        case LOBBY_CHOICE_CABLE:
+            sSioLobbyFlow = SIO_LOBBY_OFF;
+            return FALSE;
+        default:
+            break;
+        }
+        /* fallthrough: Back */
+    case SIO_LOBBY_TITLE:
+        sSioLobbyFlow = SIO_LOBBY_OFF;
+        m4aSongNumStart(SONG_SYS_CLOSE);
+        sSioBattleWork->state = SIO_BATTLE_STATE_SLIDE_OUT_HORIZONTAL;
+        return TRUE;
+    case SIO_LOBBY_LOADING:
+    case SIO_LOBBY_ROOM:
+        return TRUE; /* the mode is changing */
+    }
+    return FALSE;
+}
+#endif
+
 void mode_sio_battle_0(s32 arg) {
     SioBattleWork* work;
     void* gfx;
@@ -347,6 +409,9 @@ void mode_sio_battle_0(s32 arg) {
 
     gLinkDecksAllocated = FALSE;
     gSioDebugMode = FALSE;
+#ifdef PLATFORM_PC
+    SioLobbyEnter(arg);
+#endif
 }
 
 void mode_sio_battle_1() {
@@ -388,6 +453,11 @@ void mode_sio_battle_1() {
         sSioBattleWork->state = SIO_BATTLE_STATE_MENU;
         break;
     case SIO_BATTLE_STATE_MENU:
+#ifdef PLATFORM_PC
+        if (SioLobbyStep()) {
+            break;
+        }
+#endif
         if (gSioBattleFileLoaded == TRUE) {
             if (GetKeysPressed() & DPAD_UP) {
                 m4aSongNumStart(SONG_SYS_CLICK);
@@ -499,6 +569,11 @@ void mode_sio_battle_1() {
     DrawSprite(sSioBattleWork->x >> 8, 0, sSioBattleWork->gfx2[0], sSioBattleWork->tiles, sSioBattleWork->palette, NULL, SPRITE_PRIORITY(1), -16);
     DrawSprite(128, sSioBattleWork->topBarY >> 8, sSioBattleWork->gfx2[1], sSioBattleWork->tiles, sSioBattleWork->palette, NULL, SPRITE_PRIORITY(1), -1);
     DrawSprite(128, sSioBattleWork->bottomBarY >> 8, sSioBattleWork->gfx2[2], sSioBattleWork->tiles, sSioBattleWork->palette, NULL, SPRITE_PRIORITY(1), -1);
+#ifdef PLATFORM_PC
+    if (sSioLobbyFlow != SIO_LOBBY_OFF) {
+        return; /* the lobby leads: the LINK bars without the menu */
+    }
+#endif
     DrawSprite(72, 48, sSioBattleWork->gfx3, sSioBattleWork->tiles2, sSioBattleWork->palette2, NULL, SPRITE_PRIORITY(1), -32);
     DrawSprite(72, 48, sSioBattleWork->gfx4, sSioBattleWork->tiles3, sSioBattleWork->palette3, NULL, SPRITE_PRIORITY(1), -32);
     ApproachValueHalf(&sSioBattleWork->cursorY, sSioBattleWork->cursor * 7 * 1024 + 0x3300);
@@ -519,6 +594,9 @@ void mode_sio_battle_2() {
 
 void ClearSioBattleFileLoaded() {
     gSioBattleFileLoaded = FALSE;
+#ifdef PLATFORM_PC
+    sSioLobbyFlow = SIO_LOBBY_OFF; /* the title's Link entry */
+#endif
 }
 
 enum SioBtlConnectState {
@@ -527,15 +605,6 @@ enum SioBtlConnectState {
     SIO_BTL_CONNECT_STATE_EXCHANGE,
     SIO_BTL_CONNECT_STATE_START_OPTIONS
 };
-
-#ifdef PLATFORM_PC
-extern int PortLobbyWanted(void);
-extern void PortUiOpenLobby(void);
-extern int PortLobbyTakeCancel(void);
-extern void PortLobbyLeave(void);
-extern int NetLinkConnected(void);
-static u8 sSioLobbyPending; /* the lobby is open over the connect screen: the link starts when it closes */
-#endif
 
 void mode_sio_btl_connect_0(s32 arg) {
     sSioBtlConnectWork = EwramAlloc(sizeof(SioBtlConnectWork));
@@ -559,15 +628,6 @@ void mode_sio_btl_connect_0(s32 arg) {
     sSioBtlConnectWork->textSlotCount = LoadTextSlots(LOCALIZED_STRING(gSioBtlConnectText), sSioBtlConnectWork->textSlots);
     sSioBtlConnectWork->palette = LoadObjPalette(gSioCursorPalette, sizeof(gSioCursorPalette));
 
-#ifdef PLATFORM_PC
-    /* online with a lobby (port_lobby.c): Versus opens the rooms, a file already loaded, and the link starts once
-       one is picked (connect_1); not when a link is already going (back from a battle) */
-    sSioLobbyPending = PortLobbyWanted() && !NetLinkConnected();
-    if (sSioLobbyPending) {
-        PortUiOpenLobby();
-        return;
-    }
-#endif
 #ifdef VERSION_EU
     if (!gSioDebugMode) {
         SioReset();
@@ -586,25 +646,7 @@ void mode_sio_btl_connect_1() {
 #ifdef VERSION_EU
     s16 width;
     s16 x;
-#endif
 
-#ifdef PLATFORM_PC
-    if (sSioLobbyPending) {
-        sSioLobbyPending = FALSE;
-        if (PortLobbyTakeCancel()) { /* Back in the lobby: the menu again, as the connect screen's cancel */
-            SioBtlConnectOnCancel();
-            return;
-        }
-#ifdef VERSION_EU
-        if (!gSioDebugMode)
-#endif
-        {
-            SioReset();
-            SioConnectInit(SioBtlConnectOnConnect, SioBtlConnectOnCancel, SIO_CONNECT_MODE_BATTLE);
-        }
-    }
-#endif
-#ifdef VERSION_EU
     if (!gSioDebugMode) {
 #endif
     switch (sSioBtlConnectWork->state) {
