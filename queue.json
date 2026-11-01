@@ -12615,10 +12615,10 @@
     "issue515-map-card-tutorial-actors": {
       "id": "issue515-map-card-tutorial-actors",
       "piece": "P1 issue515: Sora and door disappear during Map card tutorial after selecting Moments Reprieve in HD, Linux test479 and Windows; reproduce exact tutorial/message overlay and repair shared composition without regressions",
-      "status": "en_revision",
-      "owner": "codex-issue515",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T17:41:20.731775+00:00",
-      "updated_at": "2026-10-29T19:30:23.847404+00:00",
+      "updated_at": "2026-11-01T23:12:18.675972+00:00",
       "branch": "release/v23-test515",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/519",
       "approval": "Root integrator: human-authorized code review; ddcfa009f50a6073e5f40de84e7269b6c4a66671",
@@ -12658,6 +12658,11 @@
           "at": "2026-10-29T19:30:23.847404+00:00",
           "owner": "codex-issue515",
           "detail": "Fix integrado y test publico Windows/Linux verificado; comentario6506360527 enviado. Solo falta confirmacion del reportero; no build ni trabajo local activo. Root retoma P1 issue517."
+        },
+        {
+          "at": "2026-11-01T23:12:18.675972+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-29T17:41:28.545364+00:00"
@@ -13196,7 +13201,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:11:59.249024+00:00",
+  "updated_at": "2026-11-01T23:12:18.675972+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13896,6 +13901,16 @@
       "from_owner": "sol-low-diverse-saves",
       "to_owner": "claude-v22",
       "expected_commit": "02da8017ebdda5dfdf17b2fc664f2ccae0088e6c",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T23:12:18.675972+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "issue515-map-card-tutorial-actors",
+      "from_owner": "codex-issue515",
+      "to_owner": "claude-v22",
+      "expected_commit": "e6edcd52146e7e00762bcf5b0e0f2d9d0ab89031",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
