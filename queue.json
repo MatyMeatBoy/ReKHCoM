@@ -9308,9 +9308,9 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-28T11:12:10.305821+00:00",
-      "updated_at": "2026-11-01T22:19:07.270365+00:00",
-      "branch": "audit/arm-wasm-division-parity",
-      "pr": null,
+      "updated_at": "2026-11-01T22:19:44.623456+00:00",
+      "branch": "fix/arm32-division-v26",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/543",
       "approval": "Root delegated post2.2 critical parity audit under user authorization; preserve released bytes and original RNG/remainder semantics",
       "reference": null,
       "evidence": [
@@ -9323,6 +9323,11 @@
           "at": "2026-11-01T22:19:07.270365+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo; el usuario pidió a Claude terminar todo (02/11)."
+        },
+        {
+          "at": "2026-11-01T22:19:44.623456+00:00",
+          "owner": "claude-v22",
+          "detail": "Integrado en main e453de5cd (#543): full build Anbernic, 391 divisiones con guarda; tests 2/4/192 OK; sin QEMU/dispositivo."
         }
       ],
       "claimed_at": "2026-10-28T11:12:15.199987+00:00"
@@ -12688,7 +12693,7 @@
     "created_at": "2026-11-01T22:06:09.075538+00:00",
     "updated_at": "2026-11-01T22:06:09.075538+00:00"
   },
-  "updated_at": "2026-11-01T22:19:38.468430+00:00",
+  "updated_at": "2026-11-01T22:19:44.623456+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
