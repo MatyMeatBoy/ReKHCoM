@@ -1521,10 +1521,10 @@
     "catalogo-titulo60": {
       "id": "catalogo-titulo60",
       "piece": "Catalogo actual: titulo original y barras",
-      "status": "pr_abierto",
-      "owner": "claude-integrador",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:35:09.541342+00:00",
-      "updated_at": "2026-10-25T07:23:02.479685+00:00",
+      "updated_at": "2026-11-01T22:56:58.561894+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/101",
       "approval": null,
@@ -1549,6 +1549,11 @@
           "at": "2026-10-25T07:23:02.479685+00:00",
           "owner": "claude-integrador",
           "detail": "cerrado como no recuperable (ARTE_HISTORICO, PR #101)"
+        },
+        {
+          "at": "2026-11-01T22:56:58.561894+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T16:35:20.105695+00:00",
@@ -12761,7 +12766,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:56:44.857543+00:00",
+  "updated_at": "2026-11-01T22:56:58.561894+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13261,6 +13266,16 @@
       "from_owner": "claude-integrador",
       "to_owner": "claude-v22",
       "expected_commit": "68544003df73c0973c5f10f8a14ad25480a23f99",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:56:58.561894+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "catalogo-titulo60",
+      "from_owner": "claude-integrador",
+      "to_owner": "claude-v22",
+      "expected_commit": "bb307c8a32d7a07661c66872e5fa67a370624c94",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
