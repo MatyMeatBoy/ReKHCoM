@@ -151,6 +151,11 @@ enum SioBattleMenu {
     SIO_BATTLE_MENU_LOAD
 };
 
+#ifdef PLATFORM_PC
+/* the lobby is shown once per visit from the title: coming back from Load keeps the room picked there */
+static u8 sSioLobbyShown;
+#endif
+
 void mode_sio_battle_0(s32 arg) {
     SioBattleWork* work;
     void* gfx;
@@ -163,8 +168,10 @@ void mode_sio_battle_0(s32 arg) {
         extern int PortLobbyWanted(void);
         extern void PortUiOpenLobby(void);
         extern int NetLinkConnected(void);
-        if (PortLobbyWanted() && !NetLinkConnected())
+        if (PortLobbyWanted() && !NetLinkConnected() && !sSioLobbyShown) {
+            sSioLobbyShown = TRUE;
             PortUiOpenLobby();
+        }
     }
 #endif
     FadeStartIn(FADE_MODE_BLACK, 16);
@@ -529,6 +536,9 @@ void mode_sio_battle_2() {
 
 void ClearSioBattleFileLoaded() {
     gSioBattleFileLoaded = FALSE;
+#ifdef PLATFORM_PC
+    sSioLobbyShown = FALSE; /* the title's Link entry: a new visit */
+#endif
 }
 
 enum SioBtlConnectState {
