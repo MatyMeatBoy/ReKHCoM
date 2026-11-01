@@ -210,6 +210,11 @@ u32 VsBattleStateHash(void) {
         return 0;
     bySide[gSioPlayerId == SIO_PLAYER_PARENT ? 0 : 1] = gBtlWork;
     bySide[gSioPlayerId == SIO_PLAYER_PARENT ? 1 : 0] = gRikuBtlWork;
+    /* a fighter down: the battle is decided, and each game plays its own side of the result (win or loss), which
+       draws on the random numbers differently; the next battle starts again from the seed both games share */
+    if ((bySide[0]->actor != NULL && (s16)bySide[0]->actor->hp <= 0) ||
+        (bySide[1]->actor != NULL && (s16)bySide[1]->actor->hp <= 0))
+        return 0;
     for (i = 0; i < 2; i++) {
         const BtlObj* a = bySide[i]->actor;
         if (a == NULL)
