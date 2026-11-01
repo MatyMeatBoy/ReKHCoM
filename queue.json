@@ -4289,10 +4289,10 @@
     "achievements-trigger-key-centre": {
       "id": "achievements-trigger-key-centre",
       "piece": "Logros: gatillos progresivos y guía L2/R2; letra GBA centrada también HD",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:42:48.991972+00:00",
-      "updated_at": "2026-11-01T23:04:19.737566+00:00",
+      "updated_at": "2026-11-01T23:04:26.149087+00:00",
       "branch": "codex/achievement-triggers-gba-key",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/243",
       "approval": null,
@@ -4310,6 +4310,11 @@
         },
         {
           "at": "2026-11-01T23:04:19.737566+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #243 integrado — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-01T23:04:26.149087+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #243 integrado — limpieza de cola 02/11, main db978bac6."
         }
@@ -12970,7 +12975,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:04:19.737566+00:00",
+  "updated_at": "2026-11-01T23:04:26.149087+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
