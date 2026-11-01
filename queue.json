@@ -2192,10 +2192,10 @@
     "issue83-jafar-recogida": {
       "id": "issue83-jafar-recogida",
       "piece": "Jafar Android #83: reproducir recogida de carta y corregir crash",
-      "status": "pr_abierto",
-      "owner": "claude-integrador",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T05:44:39.164448+00:00",
-      "updated_at": "2026-10-25T13:11:11.982982+00:00",
+      "updated_at": "2026-11-01T22:58:43.660758+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/115",
       "approval": null,
@@ -2215,6 +2215,11 @@
           "at": "2026-10-25T13:11:11.982982+00:00",
           "owner": "claude-integrador",
           "detail": "BIOS_PTR en AddPickedCardToSoraDeck/CycleSoraCardList"
+        },
+        {
+          "at": "2026-11-01T22:58:43.660758+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-25T05:44:44.944777+00:00",
@@ -12802,7 +12807,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:58:32.933331+00:00",
+  "updated_at": "2026-11-01T22:58:43.660758+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -13312,6 +13317,16 @@
       "from_owner": "claude-integrador",
       "to_owner": "claude-v22",
       "expected_commit": "bb307c8a32d7a07661c66872e5fa67a370624c94",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-01T22:58:43.660758+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "issue83-jafar-recogida",
+      "from_owner": "claude-integrador",
+      "to_owner": "claude-v22",
+      "expected_commit": "e067bcd0d4d690a7e630283de656279a082c8729",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
