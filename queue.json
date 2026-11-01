@@ -1908,7 +1908,7 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-24T19:47:09.121895+00:00",
-      "updated_at": "2026-11-01T22:57:49.904607+00:00",
+      "updated_at": "2026-11-01T22:57:57.127528+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
@@ -1943,6 +1943,11 @@
           "at": "2026-10-27T21:18:00.834621+00:00",
           "owner": "claude-v22",
           "detail": "released: Diagnosed: wide-view defects come from BG0/BG1 256px map wrap in the overlay (screen layer); PortBgClip ignored there. Needs render decision (overlay clip + side ground, or authored margin columns). pruebas/diario/DIAGNOSTICO.md + captures; no source change."
+        },
+        {
+          "at": "2026-11-01T22:57:57.127528+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): #511/#508/#495/#498 integrados — limpieza de cola 02/11, main db978bac6."
         }
       ],
       "claimed_at": "2026-11-01T22:57:49.904607+00:00"
@@ -12781,7 +12786,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T22:57:49.904607+00:00",
+  "updated_at": "2026-11-01T22:57:57.127528+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
