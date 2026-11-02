@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.7
+
+- HD room synthesis no longer stutters as its list opens or scrolls: the room cards load one a frame from the moment its banner appears (opening loaded 7 pictures in one frame, up to 55 ms from a cold disk; now 2, about 3 ms).
+- The used world card no longer flashes a dark ball for one frame as it reaches the door in Auto view.
+- Options: even HD letter spacing ("Zoom", "LCD", "Cinemáticas HD" ran together); the selection light no longer jumps from dim to full after a hitch while the menu stays open; a brief fade between menu pages (controls, achievements, scenes...).
+- The title menu's HD words fade in smoothly every frame instead of in the cartridge's 12-a-second steps (the title already presents at a steady 60 Hz).
+- The scene gallery unlocks the scenes of the worlds already behind a loaded game (Agrabah, Coliseum...), not only the hall's.
+- Deck editor: the dodge button places the held card before the cursor's and pushes the rest; the stock button closes the deck's gaps (by maxikbch, #432).
+- Experimental, off by default: gold frames for premium cards in the deck menu.
+- Clearer HD movie voices page (English/Japanese voices, how to get the other dub) and Linux launcher HD HUD import wording.
+- Android: the launcher and game handle language, font size and layout direction changes without being recreated (#443).
+- Audio through the intro skip, title, menu, opening movie and Moogle shop measured at real speed without underruns; a regression test keeps it so.
+
 ## v2.6
 
 - Online lobby browser in place of the Link menu: Link opens Load (your file), then a table of public rooms with name, host level, region and players, and Create room, region Filter, Refresh and Cable buttons. Rooms take a typed name or the offered "<player>'s room"; picking a room goes straight to the connect screen, cancelling the wait returns to the list and Back returns to the title.
