@@ -33,7 +33,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | escena-118 | Escena 118 | integrado | codex-arte-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/96 | Atlas exact 09dcd37573df49b88edbd71f79e06b82; approved; revision 2; sha256 5e8ad3ed43fe5c696f67f6efa528aaf99c82ad6dd27be36438fc01f0d1bae476; decision 2026-10-25T05:51:17.873634+00:00 | 2026-10-27T17:11:09.181245+00:00 |
 | escena-120 | Escena 120 | pr_abierto | claude-sonnet-w2 | https://github.com/MatyMeatBoy/ReKHCoM/pull/71 | sin valoracion; parcial | 2026-10-24T20:36:18.921958+00:00 |
 | malefica-01 | Maléfica 01 · ala recortada | en_revision | codex-malefica01 | — | — | 2026-10-24T22:25:15.044405+00:00 |
-| malefica-arena | Maléfica · arena y contexto | pr_abierto | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b | Usuario 02/11: "sigue hasta acabar con las 54 tareas" | 2026-11-02T06:04:41.784139+00:00 |
+| malefica-arena | Maléfica · arena y contexto | integrado | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b | Usuario 02/11: "sigue hasta acabar con las 54 tareas" | 2026-11-02T06:04:48.726315+00:00 |
 | oogie-arena | Oogie Boogie · arena | integrado | codex-oogie-arena | https://github.com/MatyMeatBoy/ReKHCoM/pull/88 | pending-human | 2026-10-25T04:20:12.410411+00:00 |
 | trickmaster-arena | Trickmaster · arena | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/105 | Autorizacion directa del usuario25/10 para integrar aprobados; registro del merge existente | 2026-10-25T13:54:35.734495+00:00 |
 | integrar-darkside-01 | Activar Darkside 01 con honores tras resolver arena/contexto | bloqueado | cola-dependencias | — | b7b6839a2cbc448fbcec91996c9bbb45 | 2026-10-24T16:25:04.486968+00:00 |
