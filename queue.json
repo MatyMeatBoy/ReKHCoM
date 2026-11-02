@@ -8496,10 +8496,10 @@
     "gallery64-repeat-title-restore": {
       "id": "gallery64-repeat-title-restore",
       "piece": "Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso",
-      "status": "en_revision",
-      "owner": "codex-gallery64",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T19:01:46.452296+00:00",
-      "updated_at": "2026-10-27T19:22:54.820356+00:00",
+      "updated_at": "2026-11-02T01:15:15.615145+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -8509,6 +8509,11 @@
           "at": "2026-10-27T19:22:54.820356+00:00",
           "owner": "codex-gallery64",
           "detail": "pruebas/gallery64-repeat-title-restore/REPORT.md;exactpre1;32natural0gallerypinkbaseline;6list+3HD32+1HD64complete/SRAMsame/pinkROI0difference;nativeevent0firstrestorePASSsecondboundedcutPARTIAL;noProductfix;futurevisualTITLEbugNOTclosed"
+        },
+        {
+          "at": "2026-11-02T01:15:15.615145+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo"
         }
       ],
       "claimed_at": "2026-10-27T19:01:53.090704+00:00"
@@ -14710,7 +14715,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:56:07.516110+00:00",
+  "updated_at": "2026-11-02T01:15:15.615145+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15751,6 +15756,16 @@
       "to_owner": "claude-v22",
       "expected_commit": "94ef0524af5668a9b726561e8ce9463d0b09261b",
       "evidence": "Codex inactivo; duplicado de tarea integrada"
+    },
+    {
+      "at": "2026-11-02T01:15:15.615145+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "gallery64-repeat-title-restore",
+      "from_owner": "codex-gallery64",
+      "to_owner": "claude-v22",
+      "expected_commit": "c06c5e9330c466cc03554e4674cb540f32163010",
+      "evidence": "Codex inactivo"
     }
   ]
 }
