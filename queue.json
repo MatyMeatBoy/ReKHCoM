@@ -13870,15 +13870,16 @@
     "hd-menu-font-spacing": {
       "id": "hd-menu-font-spacing",
       "piece": "User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T07:09:46.486758+00:00",
-      "updated_at": "2026-10-29T07:09:46.486758+00:00",
+      "updated_at": "2026-11-02T01:54:31.675510+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "user screenshots 6f93dae3,5bf4f923,03b9e1ad",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T01:54:31.675510+00:00"
     },
     "hd-audio-language-ux": {
       "id": "hd-audio-language-ux",
@@ -14752,7 +14753,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:30:21.879552+00:00",
+  "updated_at": "2026-11-02T01:54:31.675510+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
