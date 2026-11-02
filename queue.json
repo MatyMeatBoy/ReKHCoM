@@ -8802,13 +8802,13 @@
     "claude-retoma-prioridades-20261027": {
       "id": "claude-retoma-prioridades-20261027",
       "piece": "Reparto para Claude: tomar primero diario-subentradas; después diario-entradas, hud-polish-visibility-contours, synthesis-hd-gray-digits-coverage, audio-intro-title-underrun, menus-fade-transitions y optimización HD medida. Es un traspaso, no una reserva: reclamar cada tarea libre individualmente. Crashes nuevos desplazan cosmética. Codex conserva revisión/integración PR385/390, cierre combinado386 y pre2; no duplicar builds ni tocar checkouts activos.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-27T20:04:39.914172+00:00",
-      "updated_at": "2026-11-02T00:49:52.209139+00:00",
+      "updated_at": "2026-11-02T00:49:58.953614+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": "CLAUDE_COLA_ACTUAL.md; autoridad coordination/art-queue; no Atlas para UI vigente",
       "evidence": [
         {
@@ -8820,9 +8820,15 @@
           "at": "2026-11-02T00:49:52.209139+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: nota de traspaso; sus puntos estan hechos\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:49:58.953614+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: nota de traspaso; sus puntos estan hechos\r)"
         }
       ],
-      "claimed_at": "2026-11-01T23:46:20.941418+00:00"
+      "claimed_at": "2026-11-01T23:46:20.941418+00:00",
+      "completed_at": "2026-11-02T00:49:58.953614+00:00"
     },
     "hd-gameplay-lossless-load-budget": {
       "id": "hd-gameplay-lossless-load-budget",
@@ -14584,7 +14590,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:49:52.209139+00:00",
+  "updated_at": "2026-11-02T00:49:58.953614+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
