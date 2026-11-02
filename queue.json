@@ -10961,10 +10961,10 @@
     "pr432-deck-management-review": {
       "id": "pr432-deck-management-review",
       "piece": "Post-v2.2 review and QA of external PR432 deck insert/compact; do not change author code or include in current release. Validate99slots, end-gap, IDs/value0, multiset/order, save/load, remapped input/repeat and UI labels.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T10:49:24.403895+00:00",
-      "updated_at": "2026-10-28T11:04:47.082169+00:00",
+      "updated_at": "2026-11-02T05:59:52.439788+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/432",
       "approval": null,
@@ -10986,7 +10986,7 @@
           "detail": "released: ReviewpostedCOMMENTEDhttps://github.com/MatyMeatBoy/ReKHCoM/pull/432#pullrequestreview-5681600252 exacthead1e45a50;39208CPUcasesPASS; authorclarification needed forward99tail/combinedqueuedactions; realmenu/save/inputQA pending; receiptspruebas/v22-issue-delivery/review432/PUBLIC-REVIEW-RECEIPT.json; no productchanges, stable2.2untouched; handedbackwithoutreservingotherwork"
         }
       ],
-      "claimed_at": "2026-10-28T10:49:38.457252+00:00"
+      "claimed_at": "2026-11-02T05:59:52.439788+00:00"
     },
     "optiport-v22-postrelease-lessons": {
       "id": "optiport-v22-postrelease-lessons",
@@ -14772,7 +14772,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T05:57:14.830579+00:00",
+  "updated_at": "2026-11-02T05:59:52.439788+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
