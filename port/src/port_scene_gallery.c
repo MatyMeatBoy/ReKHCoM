@@ -10,6 +10,7 @@
 #include "map_api.h"
 #include "port/port_state.h"
 #include "evt/event_ids.h"
+#include "menu/world_types.h"
 #include "evt/evt_types.h"
 #include "port/port_scene_gallery.h"
 #include "port/port_hd_poster.h"
@@ -588,14 +589,38 @@ static void FromSaves(void) {
     }
 }
 
+/* Sora's worlds' own scenes (their event ids, event_ids.h), by world id (world_types.h): the hall's ids above follow
+   the floors, these the world the player picked for each floor. Monstro's failure and retry scenes are left out. */
+static int FromWorld(int world) {
+    switch (world) {
+    case WORLD_MONSTRO: return Mark(EVENT_074_MONSTORO_E0, EVENT_083_MONSTORO_E3_FAILURE_1) |
+                               Mark(EVENT_086_MONSTORO_E3_END, EVENT_086_MONSTORO_E3_END + 1);
+    case WORLD_HALLOWEEN_TOWN: return Mark(EVENT_087_HALLOWEEN_TOWN_E0, EVENT_094_WONDERLAND_E0);
+    case WORLD_WONDERLAND: return Mark(EVENT_094_WONDERLAND_E0, EVENT_101_ATLANTICA_E0);
+    case WORLD_ATLANTICA: return Mark(EVENT_101_ATLANTICA_E0, EVENT_107_AGRABAH_E0);
+    case WORLD_AGRABAH: return Mark(EVENT_107_AGRABAH_E0, EVENT_115_NEVERLAND_E0);
+    case WORLD_NEVER_LAND: return Mark(EVENT_115_NEVERLAND_E0, EVENT_120_COLISEUM_E0);
+    case WORLD_OLYMPUS_COLISEUM: return Mark(EVENT_120_COLISEUM_E0, EVENT_126_COLISEUM_END + 1);
+    case WORLD_HOLLOW_BASTION: return Mark(EVENT_129_HOLLOWBASTION_E0, EVENT_134_100ACREWOOD_START);
+    default: return 0;
+    }
+}
+
 /* save.c: a game was loaded: its floors' own marks too (the current floor's entrance, its end) */
 void PortScenesFromGame(void) {
-    int floor = gGameState.floor;
+    int floor = gGameState.floor, f, added;
     if (PortSceneGalleryActive()) return;
     Load();
     /* the floor being played keeps its marks in the map's state (saved with it); floors[] has them once left */
-    if (FromProgress((gGameState.flags & GAME_FLAG_RIKU) != 0, 0, floor,
-                     floor >= 0 && floor < 13 ? gMapFloorState.flags | gGameState.floors[floor].flags : -1))
+    added = FromProgress((gGameState.flags & GAME_FLAG_RIKU) != 0, 0, floor,
+                         floor >= 0 && floor < 13 ? gMapFloorState.flags | gGameState.floors[floor].flags : -1);
+    /* the worlds of the floors Sora already left (or cleared): saves from before the gallery got only the hall's
+       scenes back, so a game past Agrabah had none of Agrabah's (gallery-save-progress) */
+    if (!(gGameState.flags & GAME_FLAG_RIKU))
+        for (f = 0; f < 13; f++)
+            if (f < floor || (gGameState.flags & GAME_FLAG_SORA_CLEAR) || (gGameState.floors[f].flags & FLOOR_FLAG_CLEARED))
+                added |= FromWorld(gGameState.floors[f].world);
+    if (added)
         Save();
 }
 
