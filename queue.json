@@ -14323,12 +14323,12 @@
     "worldcard-door-center-oneframe-artifact": {
       "id": "worldcard-door-center-oneframe-artifact",
       "piece": "User29Oct: HD door synthesis mostly correct, but as the used map/world card reaches screen center a dark ball/texture flashes for one frame. Reproduce exact animation frame-by-frame; isolate native underlay, HD readiness, affine/blend/foreground before changing only this defect. Distinct from selector glow517 until proven related.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-29T23:01:48.870989+00:00",
-      "updated_at": "2026-11-02T01:19:27.387250+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-02T01:30:14.638138+00:00",
+      "branch": "fix/worldcard-door",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/549",
       "approval": null,
       "reference": "Latest human report in root chat; no screenshot needed to start, existing synthesis/tutorial harness and full915import available",
       "evidence": [
@@ -14746,7 +14746,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:26:36.594382+00:00",
+  "updated_at": "2026-11-02T01:30:14.638138+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
