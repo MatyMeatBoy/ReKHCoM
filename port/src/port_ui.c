@@ -580,8 +580,8 @@ static const char* const sHdMediaHelp[LANG_COUNT] = { /* no address here: "Get t
     "Las voces de los vídeos HD: el doblaje inglés o japonés de Re:CoM, aparte del texto, los subtítulos y el Undub de "
     "GBA. Auto los usa tal como se importaron. En gris: aún no importado; pon tu juego de PC en ese idioma, vuelve a "
     "importar sus vídeos HD desde el launcher y elige Buscar voces de nuevo.",
-    "HDムービーの音声です（Re:CoMの英語版か日本語版）。文字・じまく・GBA Undubとは別です。自動は取り込んだままです。"
-    "グレーはまだ取り込まれていません。PC版の言語を変えて、ランチャーでHDムービーを取り込み直し、音声を再確認してください。"
+    "HDムービーの音声です（Re:CoMの英語か日本語）。文字・じまく・GBA Undubとは別です。自動は取り込んだままです。"
+    "グレーはまだ取り込まれていません。PCのゲームの言語を変えて、ランチャーでHDムービーを取り込み直し、音声を再確認してください。"
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
 static const char* const sCheatsHelp[LANG_COUNT] = {
