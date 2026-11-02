@@ -13274,12 +13274,12 @@
     "v23-p3-audio-transitions": {
       "id": "v23-p3-audio-transitions",
       "piece": "2.3 P3: complete audio stutter review, intro skip to title and opening Moogle shop submenu",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T23:03:04.621579+00:00",
-      "updated_at": "2026-11-02T05:57:02.121236+00:00",
-      "branch": "fix/v23-audio-transition-review",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/516",
+      "updated_at": "2026-11-02T05:57:08.750029+00:00",
+      "branch": "test/audio-transitions",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/552",
       "approval": "Root integrator: human-authorized code review; cc849d3cd38a2b31441bc52bf49f9fb479be47b7",
       "reference": "Owner20261028 confirms still unpleasant audio despite existing continuity fixes. Treat as fresh transition reproductions; compare producer/consumer PCM and actual queues, avoid hiding missing audio behind positive queued count. After priorities1/2 and2.2.5release.",
       "evidence": [
@@ -14766,7 +14766,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T05:57:02.121236+00:00",
+  "updated_at": "2026-11-02T05:57:08.752239+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
