@@ -10396,13 +10396,13 @@
     "v22-ps5-offline-build": {
       "id": "v22-ps5-offline-build",
       "piece": "Build PS5 v2.2 all regions+PPSA98511.zip offline existingSDK/Lapy/snapshot512MiB1CPU own768MiBjob; record realguestmem/swap",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T05:31:12.035167+00:00",
-      "updated_at": "2026-11-01T23:42:17.400021+00:00",
+      "updated_at": "2026-11-02T00:42:17.578915+00:00",
       "branch": null,
-      "pr": null,
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
+      "approval": "Usuario 02/11: limpia la cola compartida",
       "reference": "SourceHUD5ccb; inventory2SDKLapyallverified; appversionnormalizes2.2.0",
       "evidence": [
         {
@@ -10424,6 +10424,11 @@
           "at": "2026-11-01T23:42:17.400021+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:42:17.578915+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: build v2.2 ya publicada) — limpieza 02/11"
         }
       ],
       "claimed_at": "2026-10-28T05:31:17.507098+00:00"
@@ -14211,7 +14216,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-01T23:56:05.554640+00:00",
+  "updated_at": "2026-11-02T00:42:17.578915+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
