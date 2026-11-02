@@ -2916,11 +2916,18 @@ extern const uint16_t gDebugMenuCursorAnim0[];
 extern const uint16_t* gDebugMenuCursorFrames[];
 extern const uint8_t gDebugMenuCursorTiles[];
 extern const uint16_t gDebugMenuCursorPalette[];
-static Uint64 sMenuLightStart, sMenuLightDrawClock;
+static Uint64 sMenuLightStart, sMenuLightDrawClock, sMenuLightClock;
 static int sMenuLightFocus = -1;
 
+/* the lights' clock: real time, but at most two ticks between two looks at it, so a stall (a busy disk, the window
+   losing focus) does not jump a light from dim to full on the next frame (options-menu-idle-blink) */
 static Uint64 MenuLightNow(void) {
-    return SDL_getenv("KHCOM_MENU_FRAMECLOCK") ? sMenuLightDrawClock : SDL_GetTicks() * 60 / 1000;
+    static Uint64 lastReal;
+    Uint64 real = SDL_GetTicks() * 60 / 1000;
+    if (lastReal && real > lastReal)
+        sMenuLightClock += SDL_min(real - lastReal, (Uint64)2);
+    lastReal = real;
+    return SDL_getenv("KHCOM_MENU_FRAMECLOCK") ? sMenuLightDrawClock : sMenuLightClock;
 }
 uint64_t PortUiMenuLightTicks(void) { return MenuLightNow(); }
 
