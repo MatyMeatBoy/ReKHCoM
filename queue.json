@@ -12030,12 +12030,12 @@
     "v23-release-builds": {
       "id": "v23-release-builds",
       "piece": "Prepare v2.3 release matrix, surviving cache inventory and exact Windows32/64 baseline; final platform packaging after root source freeze",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T21:26:25.921019+00:00",
-      "updated_at": "2026-11-01T23:43:53.416417+00:00",
+      "updated_at": "2026-11-02T00:48:12.916663+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
@@ -12058,6 +12058,11 @@
           "at": "2026-11-01T23:43:53.416417+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:48:12.916663+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-28T21:26:35.019576+00:00"
@@ -14491,7 +14496,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:48:06.376632+00:00",
+  "updated_at": "2026-11-02T00:48:12.916663+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
