@@ -14437,13 +14437,13 @@
     "local-v23-pretest-20261030": {
       "id": "local-v23-pretest-20261030",
       "piece": "Prebuild Windows local2.3 EU32/64 para probar escenas antes de publicacion",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-30T18:50:04.560237+00:00",
-      "updated_at": "2026-11-02T00:49:39.984869+00:00",
+      "updated_at": "2026-11-02T00:49:46.221292+00:00",
       "branch": "feat/v23-scene-three-modes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": "main43cf94156, PR533 escenas3modos; no publicar ni reemplazar pre1 existente",
       "evidence": [
         {
@@ -14470,9 +14470,15 @@
           "at": "2026-11-02T00:49:39.984869+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:49:46.221292+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r)"
         }
       ],
-      "claimed_at": "2026-10-30T18:50:33.425400+00:00"
+      "claimed_at": "2026-10-30T18:50:33.425400+00:00",
+      "completed_at": "2026-11-02T00:49:46.221292+00:00"
     },
     "v23-release-scene-experimental": {
       "id": "v23-release-scene-experimental",
@@ -14573,7 +14579,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:49:39.984869+00:00",
+  "updated_at": "2026-11-02T00:49:46.221292+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
