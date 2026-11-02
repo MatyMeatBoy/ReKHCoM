@@ -7698,13 +7698,13 @@
     "optiport-v22-soak": {
       "id": "optiport-v22-soak",
       "piece": "OptiPort 2.2: soak acotado de recursos modificados y gameplay paquetes Linux/Android",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-27T17:32:40.926521+00:00",
-      "updated_at": "2026-11-02T00:44:11.395191+00:00",
+      "updated_at": "2026-11-02T00:44:17.329267+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": "PLAN_V22.md",
       "evidence": [
         {
@@ -7721,9 +7721,15 @@
           "at": "2026-11-02T00:44:11.395191+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:44:17.329267+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r)"
         }
       ],
-      "claimed_at": "2026-11-01T23:14:00.289328+00:00"
+      "claimed_at": "2026-11-01T23:14:00.289328+00:00",
+      "completed_at": "2026-11-02T00:44:17.329267+00:00"
     },
     "v22-premium-digit-gpu-qa": {
       "id": "v22-premium-digit-gpu-qa",
@@ -14293,7 +14299,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:44:11.395191+00:00",
+  "updated_at": "2026-11-02T00:44:17.329267+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
