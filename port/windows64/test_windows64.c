@@ -12,6 +12,7 @@ static const uint16_t sActionBits[PORT_ACT_COUNT] = { 1, 8 };
 static uint16_t sKeyboard;
 static int sBattleMenuKeys, sBattleMenuChord, sZoomSelect, sZoomEat;
 static int sDodgeHeld, sDodgePending, sUnstockHeld, sUnstockPending;
+static int sDeckPlaceHeld, sDeckPlacePending, sDeckCompactHeld, sDeckCompactPending; /* the deck editor's buttons (#432) */
 #define gPortConfig testInputConfig
 /* Guest SDL subset defines this canonical event value used on the wire. */
 #define SDL_EVENT_WINDOW_FOCUS_LOST 0x20c
@@ -88,6 +89,7 @@ int main(void) {
         held.key.key = SDLK_RETURN; PortInputHandleEvent(&held);
         assert(sKeyboard == 9);
         sDodgeHeld = sDodgePending = sUnstockHeld = sUnstockPending = 1;
+        sDeckPlaceHeld = sDeckPlacePending = sDeckCompactHeld = sDeckCompactPending = 1;
         DropPendingInput(); /* movie entry: guest is blocked until movie return */
         held.type = SDL_EVENT_KEY_UP;
         held.key.key = SDLK_X; assert(SDL_PushEvent(&held));
@@ -102,6 +104,7 @@ int main(void) {
         SDL_Event guestReset = {0}; guestReset.type = eventType;
         PortInputHandleEvent(&guestReset);
         assert(!sKeyboard && !sDodgeHeld && !sDodgePending && !sUnstockHeld && !sUnstockPending);
+        assert(!sDeckPlaceHeld && !sDeckPlacePending && !sDeckCompactHeld && !sDeckCompactPending);
         assert(B_getenv("KHCOM_HOST_KEY_EVENT", eventText, sizeof(eventText)) == 0);
         int old = B_tex_create(pixels, 2, 2, 0);
         assert(old >= 0 && HostTextureSlot(old) >= 0);
