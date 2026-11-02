@@ -13996,12 +13996,12 @@
     "v23-hd-synthesis-image-loads": {
       "id": "v23-hd-synthesis-image-loads",
       "piece": "User29/10: stutters in HD room synthesis (codex-clipboard-20a09ffb-6d92-4001-a435-6e49ac06ca4c.png). Profile read/decode/upload/cache/RAM and related image-heavy scenes, quality preserved. Evidence before resolution/compression changes.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-29T15:58:54.410184+00:00",
-      "updated_at": "2026-11-02T01:26:11.765236+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-02T01:26:30.740287+00:00",
+      "branch": "fix/queue-bugs-2",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/548",
       "approval": "User29/10 explicit request; no assumption of bug cause",
       "reference": null,
       "evidence": [],
@@ -14739,7 +14739,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:26:11.765236+00:00",
+  "updated_at": "2026-11-02T01:26:30.740287+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
