@@ -13850,12 +13850,12 @@
     "options-menu-idle-blink": {
       "id": "options-menu-idle-blink",
       "piece": "User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-29T07:04:15.251315+00:00",
-      "updated_at": "2026-11-02T02:00:51.111785+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-02T02:00:57.828863+00:00",
+      "branch": "fix/menu-light-clock",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/551",
       "approval": null,
       "reference": null,
       "evidence": [
@@ -14760,7 +14760,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T02:00:51.111785+00:00",
+  "updated_at": "2026-11-02T02:00:57.828863+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
