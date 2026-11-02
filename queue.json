@@ -4636,10 +4636,10 @@
     "settings-roundtrip-20261026": {
       "id": "settings-roundtrip-20261026",
       "piece": "Prueba real de persistencia settings juego-launcher y reset controles",
-      "status": "pr_abierto",
-      "owner": "codex-batteries",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T16:46:44.593543+00:00",
-      "updated_at": "2026-10-26T16:47:47.000063+00:00",
+      "updated_at": "2026-11-02T00:52:35.009388+00:00",
       "branch": "codex/settings-roundtrip-regression",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/245",
       "approval": null,
@@ -4649,6 +4649,11 @@
           "at": "2026-10-26T16:47:47.000063+00:00",
           "owner": "codex-batteries",
           "detail": "380e335e7; production C++ INI round-trip 4 scenarios PASS, game-only+future+online CRLF, concurrent edits, pending-capture reset; check_sources OK"
+        },
+        {
+          "at": "2026-11-02T00:52:35.009388+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo; duplicado de tarea integrada"
         }
       ],
       "claimed_at": "2026-10-26T16:46:52.454140+00:00"
@@ -14661,7 +14666,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:52:25.031387+00:00",
+  "updated_at": "2026-11-02T00:52:35.009388+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15681,6 +15686,16 @@
       "from_owner": "codex-batteries",
       "to_owner": "claude-v22",
       "expected_commit": "3c7e51c545f87d022bc55fea38b1de7312039f27",
+      "evidence": "Codex inactivo; duplicado de tarea integrada"
+    },
+    {
+      "at": "2026-11-02T00:52:35.009388+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "settings-roundtrip-20261026",
+      "from_owner": "codex-batteries",
+      "to_owner": "claude-v22",
+      "expected_commit": "f40f164f93143aeff7610c54fa9b7a8a8214a5df",
       "evidence": "Codex inactivo; duplicado de tarea integrada"
     }
   ]
