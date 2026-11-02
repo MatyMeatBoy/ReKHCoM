@@ -10722,15 +10722,16 @@
     "debug-hd-override-long-path": {
       "id": "debug-hd-override-long-path",
       "piece": "Development KHCOM_HD_SPRITES absolute override: PortHdSpritePath callers160-byte buffers silentlytruncate valid PNGpaths; default relative runtime route unaffected. Repro actual stable/pre3 software fixtures differ2pathchars, five HDcards fallbacknative. Future bounded/dynamic pathjoin and distinct diagnostics; retain validrelative workflow and nativefallback, boundary/UTF8 tests.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T05:32:35.116691+00:00",
-      "updated_at": "2026-10-28T05:32:35.116691+00:00",
+      "updated_at": "2026-11-02T00:51:09.927451+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "pruebas/card-final-horizontal-line/v22-stable-exact-software/COMPARISON.json",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T00:51:09.927451+00:00"
     },
     "v22-final-release-notes": {
       "id": "v22-final-release-notes",
@@ -14627,7 +14628,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:51:02.930957+00:00",
+  "updated_at": "2026-11-02T00:51:09.927451+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
