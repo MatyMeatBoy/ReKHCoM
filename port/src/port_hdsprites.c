@@ -188,6 +188,56 @@ static int SpriteTextureReady(SDL_Texture* texture) {
 #endif
 }
 
+/* Families a menu shows many of at once (the room cards of the room synthesis list): once one is loaded, the rest of
+   its family follows, one picture a frame on frames that loaded nothing else, so scrolling the list does not read and
+   decode a whole row of them in one frame (v23-hd-synthesis-image-loads: 7 room cards, 54.8 ms from a cold disk). */
+#define WARM_FAMILY_MAX 40
+static char sWarmFamily[48];
+static uint32_t sWarmFrame, sLoadFrame;
+
+/* "gCardRoom07Tiles" -> "gCardRoom": the name without its number and Tiles */
+static void FamilyOf(const char* name, char* out, size_t size) {
+    size_t n = SDL_strlen(name);
+    if (n >= 5 && !SDL_strcmp(name + n - 5, "Tiles"))
+        n -= 5;
+    while (n > 0 && name[n - 1] >= '0' && name[n - 1] <= '9')
+        n--;
+    SDL_strlcpy(out, name, SDL_min(size, n + 1));
+}
+
+static void WarmStart(int i) {
+    char family[sizeof(sWarmFamily)], other[sizeof(sWarmFamily)];
+    int k, members = 0;
+    FamilyOf(kHdSprites[i].name, family, sizeof(family));
+    if (!family[0] || SDL_strlen(family) == SDL_strlen(kHdSprites[i].name) || !SDL_strcmp(family, sWarmFamily))
+        return; /* no number in the name, or this family is warming already */
+    for (k = 0; k < HD_SPRITE_COUNT && members <= WARM_FAMILY_MAX; k++) {
+        FamilyOf(kHdSprites[k].name, other, sizeof(other));
+        members += !SDL_strcmp(other, family);
+    }
+    if (members > 1 && members <= WARM_FAMILY_MAX)
+        SDL_strlcpy(sWarmFamily, family, sizeof(sWarmFamily));
+}
+
+static void WarmStep(void) {
+    char other[sizeof(sWarmFamily)];
+    int k;
+    if (!sWarmFamily[0] || sWarmFrame == PortFrameCount() || sLoadFrame == PortFrameCount())
+        return;
+    sWarmFrame = PortFrameCount();
+    for (k = 0; k < HD_SPRITE_COUNT; k++) {
+        if (sState[k].image || sState[k].present == 1)
+            continue;
+        FamilyOf(kHdSprites[k].name, other, sizeof(other));
+        if (!SDL_strcmp(other, sWarmFamily)) {
+            if (LoadCounted(k))
+                sState[k].lastUsed = PortFrameCount();
+            return;
+        }
+    }
+    sWarmFamily[0] = 0; /* all of it loaded */
+}
+
 /* Find runs in game/OAM setup and Queue runs outside the PPU row workers.
    Promise only a usable base image; Queue also checks white when requested.
    Pin it now: later queues must not evict an image after its native pixels were omitted. */
@@ -200,8 +250,14 @@ static int SpriteReady(int i) {
 #endif
     /* Freestanding guests use the SDL shim without thread introspection.
        Their game/OAM setup and Queue callers run outside the PPU row workers. */
-    if (!sState[i].image && !LoadCounted(i))
-        return 0;
+    if (!sState[i].image) {
+        if (!LoadCounted(i))
+            return 0;
+        sLoadFrame = PortFrameCount();
+        WarmStart(i);
+    } else {
+        WarmStep();
+    }
     if (!SpriteTextureReady(sState[i].image))
         return 0;
     sState[i].present = 2;
@@ -310,6 +366,9 @@ static int LoadCounted(int i) {
         gPortStutter.worstLoadTicks = spent;
         gPortStutter.worstLoad = kHdSprites[i].name;
     }
+    if (SDL_getenv("KHCOM_HDLOADLOG")) /* which pictures a stutter loaded: with KHCOM_FRAMELOG */
+        PortLog("hd load: frame %u %s %.1f ms", (unsigned)PortFrameCount(), kHdSprites[i].name,
+                spent * 1000.0 / SDL_GetPerformanceFrequency());
     return ok;
 }
 
