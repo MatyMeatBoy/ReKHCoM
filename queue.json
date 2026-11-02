@@ -12435,12 +12435,12 @@
     "v225-android-web-delivery": {
       "id": "v225-android-web-delivery",
       "piece": "Frozen f28b884a Android3regions beta and Web3regions serial closure; hashes/cert/assets/manifest gates, no emulator; root publishes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:07:50.955630+00:00",
-      "updated_at": "2026-11-01T23:44:12.538876+00:00",
+      "updated_at": "2026-11-02T00:48:25.276501+00:00",
       "branch": "release/v225-web-final",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
@@ -12463,6 +12463,11 @@
           "at": "2026-11-01T23:44:12.538876+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:48:25.276501+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-28T22:08:16.399020+00:00"
@@ -14502,7 +14507,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:48:18.898948+00:00",
+  "updated_at": "2026-11-02T00:48:25.276501+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
