@@ -12527,13 +12527,13 @@
     "v225-ps4-build": {
       "id": "v225-ps4-build",
       "piece": "Build final PS4 beta2.2.5 from frozenf28b884 using owncache/shared SDK, close PKG/hash/SFO02.25 audit",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:11:16.164878+00:00",
-      "updated_at": "2026-11-02T00:48:49.899388+00:00",
+      "updated_at": "2026-11-02T00:48:55.980694+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": null,
       "evidence": [
         {
@@ -12560,9 +12560,15 @@
           "at": "2026-11-02T00:48:49.899388+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:48:55.980694+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r)"
         }
       ],
-      "claimed_at": "2026-10-28T22:11:21.888165+00:00"
+      "claimed_at": "2026-10-28T22:11:21.888165+00:00",
+      "completed_at": "2026-11-02T00:48:55.980694+00:00"
     },
     "android-official-java-first": {
       "id": "android-official-java-first",
@@ -14529,7 +14535,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:48:49.899388+00:00",
+  "updated_at": "2026-11-02T00:48:55.980694+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
