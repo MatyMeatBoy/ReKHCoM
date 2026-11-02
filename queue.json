@@ -11325,10 +11325,10 @@
     "android-launcher-lifecycle-contract": {
       "id": "android-launcher-lifecycle-contract",
       "piece": "Android SDLActivity lifecycle: missing configChanges contract; source/CPU + isolated runtime, preserve :game and default launchMode",
-      "status": "bloqueado",
-      "owner": "codex-android-lifecycle",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T14:11:49.519871+00:00",
-      "updated_at": "2026-10-28T14:37:58.964001+00:00",
+      "updated_at": "2026-11-02T06:01:09.699721+00:00",
       "branch": "fix/android-lifecycle-config",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/443",
       "approval": "Usuario autoriza OptiPort riesgos preventivos; root asigna carril independiente",
@@ -11343,6 +11343,11 @@
           "at": "2026-10-28T14:37:58.964001+00:00",
           "owner": "codex-android-lifecycle",
           "detail": "USER STOP via root: no more QA/VM/code; preserve branch be03d2ca79f32dbc6ec4bc263867743c390153c8 and source/CPU/aapt evidence. Framework runtime NOT executed; own wait_handoff PIDs5456/34756 stopped, no own VM started, no ADB called. Root will close443 UNMERGED; NOT integrated."
+        },
+        {
+          "at": "2026-11-02T06:01:09.699721+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios días; usuario autorizó tomar todo (01/11). PR443 reabierto e integrado 854b3966b"
         }
       ],
       "claimed_at": "2026-10-28T14:12:13.566932+00:00"
@@ -14778,7 +14783,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:00:05.102668+00:00",
+  "updated_at": "2026-11-02T06:01:09.699721+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15829,6 +15834,16 @@
       "to_owner": "claude-v22",
       "expected_commit": "c06c5e9330c466cc03554e4674cb540f32163010",
       "evidence": "Codex inactivo"
+    },
+    {
+      "at": "2026-11-02T06:01:09.699721+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "android-launcher-lifecycle-contract",
+      "from_owner": "codex-android-lifecycle",
+      "to_owner": "claude-v22",
+      "expected_commit": "47016d7d5bc139d632155333768285d5379e0929",
+      "evidence": "Codex inactivo varios días; usuario autorizó tomar todo (01/11). PR443 reabierto e integrado 854b3966b"
     }
   ]
 }
