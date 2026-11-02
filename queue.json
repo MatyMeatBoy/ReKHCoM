@@ -13599,15 +13599,16 @@
     "monstro-objective-adaptive-hud": {
       "id": "monstro-objective-adaptive-hud",
       "piece": "User screenshot29Oct: Monstro monster symbol plus objective gauge must dock together to adaptive HUD; current gauge stays in playfield",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T06:25:50.416958+00:00",
-      "updated_at": "2026-10-29T06:25:50.416958+00:00",
+      "updated_at": "2026-11-02T00:50:49.792052+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "user screenshot codex-clipboard-2bc6dc16-0f62-4ff2-9562-825c7d0f29a1.png",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T00:50:49.792052+00:00"
     },
     "v23-startup-copyright-hd": {
       "id": "v23-startup-copyright-hd",
@@ -14614,7 +14615,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:50:41.649103+00:00",
+  "updated_at": "2026-11-02T00:50:49.792052+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
