@@ -139,10 +139,10 @@
     "botones-tactiles": {
       "id": "botones-tactiles",
       "piece": "Botones táctiles · editor de posición",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-24T16:24:35.327412+00:00",
-      "updated_at": "2026-11-02T06:03:13.033099+00:00",
+      "updated_at": "2026-11-02T06:03:19.033464+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b",
       "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
@@ -167,9 +167,15 @@
           "at": "2026-11-02T06:03:13.033099+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): duplicada de botones-editor (#59 integrado) — limpieza de cola 02/11, main 854b3966b."
+        },
+        {
+          "at": "2026-11-02T06:03:19.033464+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): duplicada de botones-editor (#59 integrado) — limpieza de cola 02/11, main 854b3966b."
         }
       ],
-      "claimed_at": "2026-10-24T16:24:44.939865+00:00"
+      "claimed_at": "2026-10-24T16:24:44.939865+00:00",
+      "completed_at": "2026-11-02T06:03:19.033464+00:00"
     },
     "primer-arranque": {
       "id": "primer-arranque",
@@ -14804,7 +14810,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:03:13.033099+00:00",
+  "updated_at": "2026-11-02T06:03:19.033464+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
