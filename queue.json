@@ -3715,15 +3715,16 @@
     "steam-banner": {
       "id": "steam-banner",
       "piece": "Banner de Steam: captura de combate en arena a x3 entero + logo mejorado KH Chain of Memories del titulo HD (no el Re:CoM) (usuario 25/10)",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T23:15:32.344463+00:00",
-      "updated_at": "2026-10-25T23:15:32.344463+00:00",
+      "updated_at": "2026-11-02T07:00:18.055004+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T07:00:18.055004+00:00"
     },
     "darkside-aprobados-runtime": {
       "id": "darkside-aprobados-runtime",
@@ -15086,7 +15087,7 @@
     "created_at": "2026-11-02T06:50:42.172947+00:00",
     "updated_at": "2026-11-02T06:50:42.172947+00:00"
   },
-  "updated_at": "2026-11-02T06:56:18.436996+00:00",
+  "updated_at": "2026-11-02T07:00:18.055004+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
