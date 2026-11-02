@@ -2089,6 +2089,7 @@ void PortUiTouchEdit(int on) {
    reverse on closing (MENU_FADE frames each way). */
 #define MENU_FADE 8
 #define MENU_FADE_COLOR 0xFF000000u
+#define MENU_PAGE_FADE 6 /* frames a page change fades in */
 static int sFade;    /* frames since the menu opened */
 static int sClosing; /* frames left of the menu fading to black */
 static int sReturn;  /* frames left of the black fading back to the game */
@@ -5531,6 +5532,21 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
     DrawMenu(l, width, height);
     if (harnessShot)
         HarnessOptionsShot(frame, width, height);
+    {
+        /* another page (controls, achievements, scenes...): it comes in from half black, briefly, as the menu does
+           when it opens (menus-fade-transitions) */
+        static int shownPage = -1, pageFade;
+        if (sPage != shownPage) {
+            pageFade = shownPage >= 0 && sFade >= MENU_FADE * 2 && !SDL_getenv("KHCOM_OPTIONS_SHOT") ? MENU_PAGE_FADE : 0;
+            shownPage = sPage;
+        }
+        if (sFade < MENU_FADE * 2)
+            pageFade = 0;
+        if (pageFade > 0) {
+            Shade(0, 0, width, height, MENU_FADE_COLOR, pageFade * 128 / MENU_PAGE_FADE);
+            pageFade--;
+        }
+    }
     if (sFade < MENU_FADE * 2) { /* the menu in from black */
         Shade(0, 0, width, height, MENU_FADE_COLOR, (MENU_FADE * 2 - sFade) * 256 / MENU_FADE - 32);
         sFade++;
