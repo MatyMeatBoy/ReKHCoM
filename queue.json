@@ -699,9 +699,9 @@
       "id": "escena-097",
       "piece": "Escena 097",
       "status": "en_curso",
-      "owner": "codex-arte",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-24T22:45:22.168654+00:00",
+      "updated_at": "2026-11-02T06:03:30.020220+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -711,6 +711,11 @@
           "at": "2026-10-24T20:56:37.047208+00:00",
           "owner": "r4",
           "detail": "released: Gato debe ocultarse fuera de escena hasta la escena real del GBA: cambio de logica de objeto por escena especifica; contradice regla 'sin objetos propios del port' sin decision del usuario."
+        },
+        {
+          "at": "2026-11-02T06:03:30.020220+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T22:45:22.168654+00:00"
@@ -14810,7 +14815,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:03:19.033464+00:00",
+  "updated_at": "2026-11-02T06:03:30.020220+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15880,6 +15885,16 @@
       "from_owner": "claude-funciones",
       "to_owner": "claude-v22",
       "expected_commit": "a48160de89bf222e300c341f5d0eb6254081942f",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:03:30.020220+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "escena-097",
+      "from_owner": "codex-arte",
+      "to_owner": "claude-v22",
+      "expected_commit": "b8a4b37cee46dc3acfe5e2a7256f9307ea9ef613",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
