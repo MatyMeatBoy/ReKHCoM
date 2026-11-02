@@ -14318,12 +14318,18 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-29T23:01:48.870989+00:00",
-      "updated_at": "2026-11-02T01:19:21.039959+00:00",
+      "updated_at": "2026-11-02T01:19:27.387250+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Latest human report in root chat; no screenshot needed to start, existing synthesis/tutorial harness and full915import available",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-02T01:19:27.387250+00:00",
+          "owner": "claude-v22",
+          "detail": "02/11 Claude REPRO determinista (main f4896955b, EU 32-bit): KHCOM_MODE='60:room:10901,120:fieldfreeze,200:doorpose:0' KHCOM_KEYS='240-242:A,420-422:A,480-482:A,540-542:A' KHCOM_WINDOW=1280x720 FAST offscreen. Frame presentado 544: el brillo de la carta usada sobre Sora sale con halo NEGRO (bola oscura); 543/545 blanco normal. Aparece igual con HD apagado; NO aparece en view_mode=0 (GBA). En la capa de juego (KHCOM_SHOTS) 543 es negro (frame en blanco de la transicion) y 544 no tiene brillo. Mecanismo probable: cambio de encuadre auto (sintesis estrecha -> campo ancho, UpdateSceneNarrow/sLastFrameBlank en port_ppu.c) en el frame en blanco: el sprite semitransparente se mezcla contra negro en la composicion ancha y se presenta sobre la escena retenida. Siguiente paso: A/B de PortPpuRenderFrame alrededor de 543-545 con PortSceneNarrow."
+        }
+      ],
       "claimed_at": "2026-11-02T01:19:21.039959+00:00"
     },
     "rekhcom-vps-online-beta": {
@@ -14732,7 +14738,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:19:21.039959+00:00",
+  "updated_at": "2026-11-02T01:19:27.387250+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
