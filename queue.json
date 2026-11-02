@@ -4377,10 +4377,10 @@
     "atlas-start-values-evidence": {
       "id": "atlas-start-values-evidence",
       "piece": "Menú START: cifras HD actuales",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T08:07:36.682250+00:00",
-      "updated_at": "2026-10-26T08:11:09.029483+00:00",
+      "updated_at": "2026-11-02T07:03:26.387046+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -4392,7 +4392,7 @@
           "detail": "released: Captura actual en build/atlas-menus-20261026/menu/review.png: nivel, VIT y puntos moguri siguen raster. Origen src/map/map.c MapMenuWriteDigits3/5, DMA sobre OBJ_VRAM0 y paneles compuestos. No se subió hija sin mejora ni se marcó la petición atendida. Requiere render HD de esas celdas OBJ, conservando posición, paleta, fade y oclusión."
         }
       ],
-      "claimed_at": "2026-10-26T08:07:41.756611+00:00"
+      "claimed_at": "2026-11-02T07:03:26.387046+00:00"
     },
     "atlas-maleficent-lomo-r2": {
       "id": "atlas-maleficent-lomo-r2",
@@ -15094,7 +15094,7 @@
     "created_at": "2026-11-02T06:50:42.172947+00:00",
     "updated_at": "2026-11-02T06:50:42.172947+00:00"
   },
-  "updated_at": "2026-11-02T07:00:24.675506+00:00",
+  "updated_at": "2026-11-02T07:03:26.387046+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
