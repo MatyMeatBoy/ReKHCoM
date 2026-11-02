@@ -2441,16 +2441,21 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-25T05:58:29.431264+00:00",
-      "updated_at": "2026-11-02T06:06:55.282808+00:00",
+      "updated_at": "2026-11-02T06:07:01.560482+00:00",
       "branch": null,
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b",
+      "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
       "reference": "Usuario 25/10: todas las comprobaciones en cargas o entre escenas, evaluar residencia RAM/GPU con bajo costo",
       "evidence": [
         {
           "at": "2026-11-02T06:06:55.282808+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-02T06:07:01.560482+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (sustituida por #381/#391/#400/#516/#548 (precargas y caches acotadas)) — limpieza de cola 02/11, main 854b3966b."
         }
       ],
       "claimed_at": "2026-10-25T05:58:34.495227+00:00"
@@ -14963,7 +14968,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:06:55.282808+00:00",
+  "updated_at": "2026-11-02T06:07:01.560482+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
