@@ -8484,12 +8484,12 @@
     "v22-64bit-crash-pattern-ledger": {
       "id": "v22-64bit-crash-pattern-ledger",
       "piece": "Registro acotado de reportes64, causas probadas, fixes, artefactos y regresiones pendientes; referencia carril386 existente",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:14:29.491816+00:00",
-      "updated_at": "2026-11-01T23:39:17.938338+00:00",
+      "updated_at": "2026-11-02T00:45:01.390959+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
       "evidence": [
@@ -8512,6 +8512,11 @@
           "at": "2026-11-01T23:39:17.938338+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:45:01.390959+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-27T19:14:45.129018+00:00"
@@ -14332,7 +14337,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:44:55.154876+00:00",
+  "updated_at": "2026-11-02T00:45:01.390959+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
