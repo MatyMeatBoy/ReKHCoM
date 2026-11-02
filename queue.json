@@ -13987,15 +13987,16 @@
     "v23-startup-copyright-hd": {
       "id": "v23-startup-copyright-hd",
       "piece": "Before2.3: copyright/legal startup screens HD only with HD enabled; audit startup-to-title audio stutters including skip transitions",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T06:31:32.313804+00:00",
-      "updated_at": "2026-10-29T06:31:32.313804+00:00",
+      "updated_at": "2026-11-02T06:25:46.178883+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "User29Oct request; preserve original when HD off; audio continuity part ofP3",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T06:25:46.178883+00:00"
     },
     "halloween-arena-floor-perspective": {
       "id": "halloween-arena-floor-perspective",
@@ -15047,7 +15048,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:25:39.304952+00:00",
+  "updated_at": "2026-11-02T06:25:46.178883+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
