@@ -7734,12 +7734,12 @@
     "v22-premium-digit-gpu-qa": {
       "id": "v22-premium-digit-gpu-qa",
       "piece": "P1 preparar y verificar comparación GPU dígitos premium/modificados con fixture real y arte completo/parcial; serializar con profiling Claude",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T17:36:27.340479+00:00",
-      "updated_at": "2026-11-01T23:38:19.645697+00:00",
+      "updated_at": "2026-11-02T00:44:24.015064+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
@@ -7767,6 +7767,11 @@
           "at": "2026-11-01T23:38:19.645697+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:44:24.015064+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-27T17:36:34.643773+00:00"
@@ -14299,7 +14304,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:44:17.329267+00:00",
+  "updated_at": "2026-11-02T00:44:24.015064+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
