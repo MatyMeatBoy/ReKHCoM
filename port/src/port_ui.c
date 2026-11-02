@@ -554,20 +554,31 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Confirm/cancel preset...", "Préréglage valider/retour...", "Bestätigen/Zurück-Vorgabe...", "Conferma/annulla...",
       "Preset confirmar/cancelar...", "決定・キャンセルのプリセット..." },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
-    { "Auto: legacy import", "Auto : ancien import", "Auto: alter Import", "Auto: vecchio import", "Auto: importación antigua", "自動: 以前のデータ" },
-    { "HD audio: EN", "Audio HD : EN", "HD-Audio: EN", "Audio HD: EN", "Audio HD: EN", "HD音声: EN" },
-    { "HD audio: JP", "Audio HD : JP", "HD-Audio: JP", "Audio HD: JP", "Audio HD: JP", "HD音声: JP" },
-    { "Check imported variants", "Vérifier les variantes", "Varianten prüfen", "Controlla varianti", "Revisar variantes importadas", "データを再確認" },
-    { "Steam language guide", "Guide des langues Steam", "Steam-Sprachhilfe", "Guida lingue Steam", "Guía de idiomas de Steam", "Steam言語ガイド" },
+    { "Auto: as imported", "Auto : tel qu'importé", "Auto: wie importiert", "Auto: come importato", "Auto: como se importó", "自動: 取り込んだまま" },
+    { "English voices", "Voix anglaises", "Englische Stimmen", "Voci inglesi", "Voces en inglés", "英語の音声" },
+    { "Japanese voices", "Voix japonaises", "Japanische Stimmen", "Voci giapponesi", "Voces en japonés", "日本語の音声" },
+    { "Look for voices again", "Rechercher les voix", "Stimmen neu suchen", "Cerca di nuovo le voci", "Buscar voces de nuevo", "音声を再確認" },
+    { "Get the other voices (Steam)", "Autres voix (Steam)", "Andere Stimmen (Steam)", "Altre voci (Steam)", "Conseguir otras voces (Steam)", "ほかの音声（Steam）" },
     { "Back", "Retour", "Zurück", "Indietro", "Volver", "戻る" },
 };
-static const char* const sHdMediaHelp[LANG_COUNT] = {
-    "User-labelled audio, separate from text/subtitles and GBA Undub. Grey: complete import missing. Use your Steam copy: Properties > Language, then import/copy HD and check again. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "Audio déclaré par l'utilisateur, séparé du texte et de l'Undub GBA. Gris : import complet absent. Steam : Propriétés > Langue, puis importer/copier HD et vérifier. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "Audio vom Benutzer zugeordnet, unabhängig von Text und GBA-Undub. Grau: vollständiger Import fehlt. Steam: Eigenschaften > Sprache; HD importieren/kopieren und erneut prüfen. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "Audio dichiarato dall'utente, separato da testo e Undub GBA. Grigio: import completo assente. Steam: Proprietà > Lingua, poi importa/copia HD e ricontrolla. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "Audio declarado por el usuario, independiente del texto/subtítulos y Undub GBA. Gris: falta importación completa. En tu Steam: Propiedades > Idioma, importa/copia HD y revisa. help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2",
-    "音声ラベルはユーザー指定です。文字・じまく・GBA Undubとは別です。グレーはデータ不足。Steamのプロパティで言語を選び、HDをコピーして再確認してください。help.steampowered.com/en/faqs/view/4984-C127-121D-B3F2"
+static const char* const sHdMediaHelp[LANG_COUNT] = { /* no address here: "Get the other voices" opens it */
+    "The voices of the HD movies: Re:CoM's English or Japanese dub, apart from the text, subtitles and GBA Undub. Auto "
+    "plays them as imported. A grey one is not imported yet: switch your PC game to that language, import its HD "
+    "movies again from the launcher, then Look for voices again.",
+    "Les voix des vidéos HD : doublage anglais ou japonais de Re:CoM, à part du texte, des sous-titres et de l'Undub "
+    "GBA. Auto les lit telles qu'importées. Gris : pas encore importé ; passe ton jeu PC dans cette langue, réimporte "
+    "ses vidéos HD depuis le lanceur, puis Rechercher les voix.",
+    "Die Stimmen der HD-Videos: englische oder japanische Synchro von Re:CoM, getrennt von Text, Untertiteln und GBA-"
+    "Undub. Auto spielt sie wie importiert. Grau: noch nicht importiert; stelle dein PC-Spiel auf diese Sprache, "
+    "importiere seine HD-Videos im Launcher erneut, dann Stimmen neu suchen.",
+    "Le voci dei video HD: doppiaggio inglese o giapponese di Re:CoM, a parte testo, sottotitoli e Undub GBA. Auto le "
+    "usa come importate. Grigio: non ancora importato; passa il gioco PC a quella lingua, reimporta i video HD dal "
+    "launcher, poi Cerca di nuovo le voci.",
+    "Las voces de los vídeos HD: el doblaje inglés o japonés de Re:CoM, aparte del texto, los subtítulos y el Undub de "
+    "GBA. Auto los usa tal como se importaron. En gris: aún no importado; pon tu juego de PC en ese idioma, vuelve a "
+    "importar sus vídeos HD desde el launcher y elige Buscar voces de nuevo.",
+    "HDムービーの音声です（Re:CoMの英語版か日本語版）。文字・じまく・GBA Undubとは別です。自動は取り込んだままです。"
+    "グレーはまだ取り込まれていません。PC版の言語を変えて、ランチャーでHDムービーを取り込み直し、音声を再確認してください。"
 };
 static const char* const sCheatsTitle[LANG_COUNT] = { "Cheats", "Codes", "Cheats", "Trucchi", "Trucos", "チート" };
 static const char* const sCheatsHelp[LANG_COUNT] = {
