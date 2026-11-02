@@ -2483,10 +2483,10 @@
     "escena-097-respuesta": {
       "id": "escena-097-respuesta",
       "piece": "Escena 097: verificar y responder nube del gato fuera de camara",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T08:21:10.592466+00:00",
-      "updated_at": "2026-10-25T08:24:41.734435+00:00",
+      "updated_at": "2026-11-02T06:03:58.521874+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -2496,6 +2496,11 @@
           "at": "2026-10-25T08:24:41.734435+00:00",
           "owner": "codex-atlas",
           "detail": "Arreglo ya en main verificado con actor frame off/on. 3440x1440 zoom6, 300/600, GBA identico ambos; gato fuera de camara oculto, fondo V1 conservado. Sin cambios de codigo."
+        },
+        {
+          "at": "2026-11-02T06:03:58.521874+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-25T08:21:16.727352+00:00",
@@ -14831,7 +14836,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:03:48.564357+00:00",
+  "updated_at": "2026-11-02T06:03:58.521874+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15911,6 +15916,16 @@
       "from_owner": "codex-arte",
       "to_owner": "claude-v22",
       "expected_commit": "b8a4b37cee46dc3acfe5e2a7256f9307ea9ef613",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:03:58.521874+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "escena-097-respuesta",
+      "from_owner": "codex-atlas",
+      "to_owner": "claude-v22",
+      "expected_commit": "031fc24ff076dfd8ba80f9fc9654a358fa84b165",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
