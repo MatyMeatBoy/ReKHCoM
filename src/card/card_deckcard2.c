@@ -152,7 +152,19 @@ void DeckCard2LoadGfx(DeckCard2Work* work) {
 
     work->palette2 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
     work->tiles = LoadObjTiles(work->cardDef->tiles2, 0x200);
+#ifdef PLATFORM_PC
+    {
+        /* Options > Experimental > gold premium cards: the premium card's frame in gold (port_ui.c) */
+        extern int PortGoldPremiumPalette(const void* tiles, const void* palette, u16* out);
+        u16 gold[16];
+        if (work->premium && PortGoldPremiumPalette(work->cardDef->tiles2, work->cardDef->palette2, gold))
+            work->palette = LoadObjPalette(gold, 32);
+        else
+            work->palette = LoadObjPalette(work->cardDef->palette2, 32);
+    }
+#else
     work->palette = LoadObjPalette(work->cardDef->palette2, 32);
+#endif
     work->tiles2 = LoadObjTiles(gCardValueDigitTiles, sizeof(gCardValueDigitTiles));
 
     if (work->tiles != NULL && work->palette != NULL) {
