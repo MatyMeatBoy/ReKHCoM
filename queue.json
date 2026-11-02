@@ -1112,10 +1112,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-11-02T06:04:28.276640+00:00",
+      "updated_at": "2026-11-02T06:04:34.399063+00:00",
       "branch": "claude/arte-w3",
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b",
+      "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
       "reference": "{\"family_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"submissions\": [{\"submission\": \"20261024-053355-5d5bcf\", \"created\": \"2026-10-24T08:33:56.427759+00:00\", \"image_id\": \"ae681fffa79a4feea3b4ea1ef137a512\", \"version\": \"Preliminar V2 · entrega disponible\", \"clouds\": 0, \"cloud_ids\": [], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-053355-5d5bcf\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -1142,6 +1142,11 @@
           "at": "2026-11-02T06:04:28.276640+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-02T06:04:34.399063+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): arena aprobada se conserva; sprites siguen en malefica-01 — limpieza de cola 02/11, main 854b3966b."
         }
       ],
       "claimed_at": "2026-10-24T22:25:27.238544+00:00",
@@ -14857,7 +14862,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:04:28.276640+00:00",
+  "updated_at": "2026-11-02T06:04:34.399063+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
