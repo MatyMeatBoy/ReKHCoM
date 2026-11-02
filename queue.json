@@ -8725,12 +8725,12 @@
     "sol-low-linux-import": {
       "id": "sol-low-linux-import",
       "piece": "QA Linux SteamMachine HD importer fixtures",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:25:44.435091+00:00",
-      "updated_at": "2026-11-01T23:40:11.094415+00:00",
+      "updated_at": "2026-11-02T00:45:38.791784+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "pruebas/sol-low-linux-import/INFORME.md",
       "evidence": [
@@ -8753,6 +8753,11 @@
           "at": "2026-11-01T23:40:11.094415+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:45:38.791784+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-27T19:25:50.958311+00:00"
@@ -14365,7 +14370,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:45:32.796563+00:00",
+  "updated_at": "2026-11-02T00:45:38.791784+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
