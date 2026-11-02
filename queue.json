@@ -2439,14 +2439,20 @@
       "id": "transiciones-cargas",
       "piece": "Auditar cargas y comprobaciones; precarga durante arranque/fundidos y caches acotadas RAM/GPU",
       "status": "en_curso",
-      "owner": "codex-transiciones",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T05:58:29.431264+00:00",
-      "updated_at": "2026-10-25T05:58:34.495227+00:00",
+      "updated_at": "2026-11-02T06:06:55.282808+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Usuario 25/10: todas las comprobaciones en cargas o entre escenas, evaluar residencia RAM/GPU con bajo costo",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-02T06:06:55.282808+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        }
+      ],
       "claimed_at": "2026-10-25T05:58:34.495227+00:00"
     },
     "darkside-arena-revision": {
@@ -14957,7 +14963,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:06:45.219550+00:00",
+  "updated_at": "2026-11-02T06:06:55.282808+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16097,6 +16103,16 @@
       "from_owner": "claude-sonnet-w2",
       "to_owner": "claude-v22",
       "expected_commit": "821187eb262940a9c5136fe142ef50b53c4d3a2f",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:06:55.282808+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "transiciones-cargas",
+      "from_owner": "codex-transiciones",
+      "to_owner": "claude-v22",
+      "expected_commit": "ef530175dcc6f58bf64cd1588bad712bd5717fef",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
