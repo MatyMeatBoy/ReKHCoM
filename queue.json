@@ -11364,10 +11364,10 @@
     "android412-compat-options": {
       "id": "android412-compat-options",
       "piece": "Optional diagnostic Android startup profiles: default intact, HIDAPI off before SDL main, Java-only report; exact native2.2, no fix claim",
-      "status": "bloqueado",
-      "owner": "codex-android-options",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-28T13:50:56.070738+00:00",
-      "updated_at": "2026-10-28T14:43:23.801709+00:00",
+      "updated_at": "2026-11-02T06:05:28.826188+00:00",
       "branch": "feat/android-startup-options",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/442",
       "approval": null,
@@ -11387,6 +11387,11 @@
           "at": "2026-10-28T14:43:23.801709+00:00",
           "owner": "codex-android-options",
           "detail": "Explicit owner STOP2026-10-28: PR442closedwithoutmerge, branch/headc55preserved. APK106dfpublishedexperimentaltest412-options and sent412/374 with nativeblack/Backincomplete/HIDAPIoffunverified limits; notstable/nofix. FINAL-STOP-RECEIPT.json."
+        },
+        {
+          "at": "2026-11-02T06:05:28.826188+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-28T13:51:04.092045+00:00"
@@ -14894,7 +14899,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:05:19.067871+00:00",
+  "updated_at": "2026-11-02T06:05:28.826188+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16004,6 +16009,16 @@
       "from_owner": "codex-atlas",
       "to_owner": "claude-v22",
       "expected_commit": "b63b5641934e51fb6b2dc77cc61dd53ee92084a9",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:05:28.826188+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "android412-compat-options",
+      "from_owner": "codex-android-options",
+      "to_owner": "claude-v22",
+      "expected_commit": "dc93bf5c4607c3d0aece2c62b430012004e051fc",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
