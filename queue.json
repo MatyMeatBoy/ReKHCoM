@@ -4547,10 +4547,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:31:46.640074+00:00",
-      "updated_at": "2026-11-02T00:52:06.343508+00:00",
+      "updated_at": "2026-11-02T00:52:12.976451+00:00",
       "branch": "codex/controller-reset-triggers",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/241",
-      "approval": null,
+      "approval": "Usuario 02/11: limpia la cola compartida",
       "reference": "Ultimo mensaje usuario a Claude: reset no funciona, Nintendo por defecto apagado, gatillos L2/R2 raros",
       "evidence": [
         {
@@ -4562,6 +4562,11 @@
           "at": "2026-11-02T00:52:06.343508+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo; duplicado de tarea integrada"
+        },
+        {
+          "at": "2026-11-02T00:52:12.976451+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA: duplicado; #241 integrado en main."
         }
       ],
       "claimed_at": "2026-10-26T16:32:00.440154+00:00"
@@ -14645,7 +14650,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:52:06.343508+00:00",
+  "updated_at": "2026-11-02T00:52:12.976451+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
