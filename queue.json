@@ -12941,16 +12941,23 @@
     "linux-launcher-hd-hud-wording": {
       "id": "linux-launcher-hd-hud-wording",
       "piece": "Identify HD HUD import clearly in native Linux dialog; existing sprites action is present",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:16:36.542064+00:00",
-      "updated_at": "2026-11-02T06:09:27.836342+00:00",
+      "updated_at": "2026-11-02T06:09:34.641022+00:00",
       "branch": "feat/linux-launcher-wording",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/553",
-      "approval": null,
+      "approval": "Usuario 01/11: acabar pendientes/PRs útiles",
       "reference": "Issue459 missing HUD option observation; current rekhcom_launcher.py exposes sprites but zenity raw action IDs, kdialog technical label. Preserve action IDs/import logic; startup priority and2.2.5freeze first.",
-      "evidence": [],
-      "claimed_at": "2026-11-02T06:09:18.687325+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-02T06:09:34.641022+00:00",
+          "owner": "claude-v22",
+          "detail": "merge PR553: kdialog/zenity con descripciones claras del HUD HD"
+        }
+      ],
+      "claimed_at": "2026-11-02T06:09:18.687325+00:00",
+      "completed_at": "2026-11-02T06:09:34.641022+00:00"
     },
     "v225-vita-build": {
       "id": "v225-vita-build",
@@ -14991,7 +14998,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:09:27.836342+00:00",
+  "updated_at": "2026-11-02T06:09:34.641022+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
