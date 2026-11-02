@@ -144,6 +144,7 @@ enum {
     ITEM_SMOOTHAUDIO,
     ITEM_SAVE_SLOT_EXPERIMENTAL,
     ITEM_MOOGLE_NOTICE,
+    ITEM_GOLD_PREMIUM,
     ITEM_UNSTOCK,
     ITEM_FRAMESKIP,
     ITEM_HEAD_MORE, /* section heading, not selectable */
@@ -462,6 +463,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Elegir ranura en puntos de guardado", "セーブポイントでスロットを選択" },
     { "Moogle points notice", "Avis des points mog", "Mogry-Punkte anzeigen", "Avviso punti moguri",
       "Aviso de puntos moguri", "モーグリポイント通知" },
+    { "Gold premium cards in decks", "Cartes premium dorées (decks)", "Goldene Premiumkarten (Decks)",
+      "Carte premium dorate (mazzi)", "Naipes premium dorados (barajas)", "プレミアカードを金色に（デッキ）" },
     { "Return stocked cards", "Rendre les cartes en réserve", "Vorratskarten zurücknehmen",
       "Riprendi carte accumulate", "Devolver cartas acumuladas", "ストックをてふだに戻す" },
     { "Skip frames when slow", "Sauter des images si lent", "Bilder überspringen wenn langsam",
@@ -1293,6 +1296,37 @@ static int BankCopy(const char* from, const char* to) {
     return out != NULL;
 }
 
+/* Options > Experimental > gold premium cards (off): the deck menu's small premium cards get a gold frame. The
+   frame is found in the card's own 32x32 picture: the colours near the edge of its shape (two pixels from a transparent
+   one) that most of that edge is made of; they keep their light and dark, in gold. 0 when off or nothing was found. */
+int PortGoldPremiumPalette(const void* tiles, const void* palette, uint16_t* out) {
+    const uint8_t* t = (const uint8_t*)tiles;
+    int edge[16] = {0}, most = 0, i, x, y, found = 0;
+    if (!gPortConfig.goldPremium || !tiles || !palette)
+        return 0;
+    for (i = 0; i < 16; i++) /* 16 tiles of 8x8, 4 bits a pixel */
+        for (y = 0; y < 8; y++)
+            for (x = 0; x < 8; x++) {
+                int c = (t[i * 32 + y * 4 + x / 2] >> ((x & 1) * 4)) & 15, d, near = 0;
+                if (!c) continue;
+                for (d = -2; d <= 2; d++) /* within two pixels of the outside, along the row */
+                    if (d && x + d >= 0 && x + d < 8 && !((t[i * 32 + y * 4 + (x + d) / 2] >> (((x + d) & 1) * 4)) & 15))
+                        near = 1;
+                edge[c] += near;
+            }
+    for (i = 1; i < 16; i++) most = SDL_max(most, edge[i]);
+    SDL_memcpy(out, palette, 32);
+    for (i = 1; i < 16 && most > 0; i++)
+        if (edge[i] * 4 >= most) {
+            int c = out[i], r = c & 31, g = (c >> 5) & 31, b = (c >> 10) & 31;
+            int v = SDL_max(r, SDL_max(g, b)); /* the frame's own light and dark, as gold */
+            int gr = v, gg = v * 13 / 16, gb = v / 4;
+            out[i] = (uint16_t)(gr | gg << 5 | gb << 10);
+            found = 1;
+        }
+    return found;
+}
+
 static int HdMediaSelectionEnabled(int mode) {
     return mode == 0 || (mode > 0 && mode < 3 &&
            (PortHdMediaVariantAvailable(mode, 0) || PortHdMediaVariantAvailable(mode, 1)));
@@ -1498,6 +1532,9 @@ static void ValueText(int item, char* out, size_t size) {
             break;
         case ITEM_MOOGLE_NOTICE:
             SDL_strlcpy(out, sOnOff[gPortConfig.moogleNotice != 0][l], size);
+            break;
+        case ITEM_GOLD_PREMIUM:
+            SDL_strlcpy(out, sOnOff[gPortConfig.goldPremium != 0][l], size);
             break;
         case ITEM_CHEAT_TITLE_BRIGHTNESS:
             SDL_strlcpy(out, sOnOff[gPortConfig.titleBrightnessButton != 0][l], size);
@@ -1816,6 +1853,9 @@ static void Change(int item, int dir) {
             return;
         case ITEM_INVERT_CARD_SCROLL:
             gPortConfig.invertCardScroll = !gPortConfig.invertCardScroll;
+            break;
+        case ITEM_GOLD_PREMIUM:
+            gPortConfig.goldPremium = !gPortConfig.goldPremium;
             break;
         case ITEM_MOOGLE_NOTICE:
             gPortConfig.moogleNotice = !gPortConfig.moogleNotice;

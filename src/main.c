@@ -371,6 +371,14 @@ int PortHarnessMode(const char* name, int arg) {
         return 1;
     }
 
+    /* Gold premium cards (Options > Experimental): the active deck's card at that index turns premium, as a Moogle
+       shop conversion does. Fixtures only. */
+    if (strcmp(name, "premiumcard") == 0) {
+        extern void ConvertActiveDeckCardToPremium(u16 index);
+        ConvertActiveDeckCardToPremium((u16)arg);
+        return 1;
+    }
+
     if (strcmp(name, "progress") == 0) {
         extern void PortLog(const char* format, ...);
         PortLog("harness: progress flags=%u floor=%u world=%u room=%u story=%u level=%u mode=%s",

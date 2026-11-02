@@ -165,6 +165,7 @@ static const Key sKeys[] = {
     { "invert_card_scroll", &gPortConfig.invertCardScroll, 0, 1 },
     { "game_language", &gPortConfig.gameLanguage, 0, 5 },
     { "experimental_moogle_notice", &gPortConfig.moogleNotice, 0, 1 },
+    { "experimental_gold_premium", &gPortConfig.goldPremium, 0, 1 },
     { "debug_gba_map_logic", &gPortConfig.gbaMapLogic, 0, 2 },
     { "experimental_unstock", &gPortConfig.unstockButton, 0, 1 },
     { "hd_text", &gPortConfig.hdText, 0, 1 },
