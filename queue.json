@@ -13850,10 +13850,10 @@
     "options-menu-idle-blink": {
       "id": "options-menu-idle-blink",
       "piece": "User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T07:04:15.251315+00:00",
-      "updated_at": "2026-11-02T00:56:07.516110+00:00",
+      "updated_at": "2026-11-02T02:00:51.111785+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -13865,7 +13865,7 @@
           "detail": "released: 02/11 Claude: no reproducido en 32-bit EU main f4896955b, menu de opciones abierto 11300 frames (FAST, offscreen 1280x720, ajustes por defecto): solo el fade de apertura (frames 710-970) y la luz normal; 0 saltos despues. Falta probar con menus HD y 64 bits, o una captura del usuario."
         }
       ],
-      "claimed_at": "2026-11-02T00:56:00.092099+00:00"
+      "claimed_at": "2026-11-02T02:00:51.111785+00:00"
     },
     "hd-menu-font-spacing": {
       "id": "hd-menu-font-spacing",
@@ -14760,7 +14760,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:54:44.815217+00:00",
+  "updated_at": "2026-11-02T02:00:51.111785+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
