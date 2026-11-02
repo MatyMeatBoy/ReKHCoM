@@ -142,10 +142,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-24T16:24:35.327412+00:00",
-      "updated_at": "2026-11-02T06:02:58.039182+00:00",
+      "updated_at": "2026-11-02T06:03:05.365952+00:00",
       "branch": null,
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b",
+      "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
       "reference": "ca689d6c9b5e41a3a029aab9d345096b / envío 20261024-131133-57e115",
       "evidence": [
         {
@@ -157,6 +157,11 @@
           "at": "2026-11-02T06:02:58.039182+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-02T06:03:05.365952+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): duplicada de botones-editor (#59 integrado) — limpieza de cola 02/11, main 854b3966b."
         }
       ],
       "claimed_at": "2026-10-24T16:24:44.939865+00:00"
@@ -14794,7 +14799,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:02:58.039182+00:00",
+  "updated_at": "2026-11-02T06:03:05.365952+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
