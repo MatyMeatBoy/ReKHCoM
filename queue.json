@@ -12663,13 +12663,13 @@
     "v225-switch-build": {
       "id": "v225-switch-build",
       "piece": "Build final Switch beta2.2.5 guest3regions then offline snapshotSDKhost after rootVMlease, close NRO/NACP/debug",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:32:27.186177+00:00",
-      "updated_at": "2026-11-02T00:49:15.389528+00:00",
+      "updated_at": "2026-11-02T00:49:21.588657+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": null,
       "evidence": [
         {
@@ -12696,9 +12696,15 @@
           "at": "2026-11-02T00:49:15.389528+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:49:21.588657+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r)"
         }
       ],
-      "claimed_at": "2026-10-28T22:32:32.232255+00:00"
+      "claimed_at": "2026-10-28T22:32:32.232255+00:00",
+      "completed_at": "2026-11-02T00:49:21.588657+00:00"
     },
     "v225-ps5-build": {
       "id": "v225-ps5-build",
@@ -14551,7 +14557,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:49:15.389528+00:00",
+  "updated_at": "2026-11-02T00:49:21.588657+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
