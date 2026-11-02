@@ -13829,15 +13829,16 @@
     "options-menu-idle-blink": {
       "id": "options-menu-idle-blink",
       "piece": "User29Oct: intermittent blinking after staying in options menu; reproduce prolonged idle, trace light animation/render state, fix without changing intended glow",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T07:04:15.251315+00:00",
-      "updated_at": "2026-10-29T07:04:15.251315+00:00",
+      "updated_at": "2026-11-02T00:56:00.092099+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T00:56:00.092099+00:00"
     },
     "hd-menu-font-spacing": {
       "id": "hd-menu-font-spacing",
@@ -14703,7 +14704,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:53:23.639156+00:00",
+  "updated_at": "2026-11-02T00:56:00.092099+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
