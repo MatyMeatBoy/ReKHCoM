@@ -14115,10 +14115,10 @@
     "hd-menu-light-line-origin": {
       "id": "hd-menu-light-line-origin",
       "piece": "User29Oct: selected HD menu divider line must originate at its lit indicator; compare owned ReCoM1.5HD reference and apply consistently across port menus",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-29T07:03:45.560567+00:00",
-      "updated_at": "2026-11-02T06:26:07.400421+00:00",
+      "updated_at": "2026-11-02T06:56:11.945179+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -14130,7 +14130,7 @@
           "detail": "released: 02/11 Claude: en el port la linea seleccionada nace bajo el cuadro de la luz (MenuBarBase). Cambiar su origen es decision visual: falta la referencia ReCoM1.5HD del usuario -> propuesta para la app de revision."
         }
       ],
-      "claimed_at": "2026-11-02T06:25:59.320283+00:00"
+      "claimed_at": "2026-11-02T06:56:11.945179+00:00"
     },
     "options-menu-idle-blink": {
       "id": "options-menu-idle-blink",
@@ -15080,7 +15080,7 @@
     "created_at": "2026-11-02T06:50:42.172947+00:00",
     "updated_at": "2026-11-02T06:50:42.172947+00:00"
   },
-  "updated_at": "2026-11-02T06:54:50.845414+00:00",
+  "updated_at": "2026-11-02T06:56:11.945179+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
