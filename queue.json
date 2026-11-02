@@ -2483,10 +2483,10 @@
     "escena-097-respuesta": {
       "id": "escena-097-respuesta",
       "piece": "Escena 097: verificar y responder nube del gato fuera de camara",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-25T08:21:10.592466+00:00",
-      "updated_at": "2026-11-02T06:04:05.119537+00:00",
+      "updated_at": "2026-11-02T06:04:11.404751+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/854b3966b",
       "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
@@ -2504,6 +2504,11 @@
         },
         {
           "at": "2026-11-02T06:04:05.119537+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main): arreglo ya en main verificado, sin cambios de codigo — limpieza de cola 02/11, main 854b3966b."
+        },
+        {
+          "at": "2026-11-02T06:04:11.404751+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): arreglo ya en main verificado, sin cambios de codigo — limpieza de cola 02/11, main 854b3966b."
         }
@@ -14841,7 +14846,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:04:05.119537+00:00",
+  "updated_at": "2026-11-02T06:04:11.404751+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
