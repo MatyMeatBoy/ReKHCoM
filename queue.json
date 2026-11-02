@@ -8499,10 +8499,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:01:46.452296+00:00",
-      "updated_at": "2026-11-02T01:15:15.615145+00:00",
+      "updated_at": "2026-11-02T01:15:22.442829+00:00",
       "branch": null,
-      "pr": null,
-      "approval": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.6",
+      "approval": "Usuario 02/11: sigue con fallos hasta acabar",
       "reference": "user-screenshot-fb1ad35b-7aaa-4edf-92e5-33cd8e9054e6",
       "evidence": [
         {
@@ -8514,6 +8514,11 @@
           "at": "2026-11-02T01:15:15.615145+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo"
+        },
+        {
+          "at": "2026-11-02T01:15:22.442829+00:00",
+          "owner": "claude-v22",
+          "detail": "02/11 Claude: no se reproduce en main f4896955b (v2.6+): Windows64 EU, 5 visitas seguidas a la galeria (evento 12, saltado) volviendo al titulo; el titulo queda completo e igual tras cada visita (solo cambia la luz del cursor). 32-bit de control igual. Harness KHCOM_GALLERY_PLAY ahora acepta varias visitas."
         }
       ],
       "claimed_at": "2026-10-27T19:01:53.090704+00:00"
@@ -14715,7 +14720,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:15:15.615145+00:00",
+  "updated_at": "2026-11-02T01:15:22.442829+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
