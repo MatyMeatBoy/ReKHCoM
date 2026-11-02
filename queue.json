@@ -4636,10 +4636,10 @@
     "settings-roundtrip-20261026": {
       "id": "settings-roundtrip-20261026",
       "piece": "Prueba real de persistencia settings juego-launcher y reset controles",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:46:44.593543+00:00",
-      "updated_at": "2026-11-02T00:52:48.357481+00:00",
+      "updated_at": "2026-11-02T00:52:54.852635+00:00",
       "branch": "codex/settings-roundtrip-regression",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/245",
       "approval": "Usuario 02/11: limpia la cola compartida",
@@ -4664,9 +4664,15 @@
           "at": "2026-11-02T00:52:48.357481+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA: duplicado; #245 integrado en main."
+        },
+        {
+          "at": "2026-11-02T00:52:54.852635+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA: duplicado; #245 integrado en main."
         }
       ],
-      "claimed_at": "2026-10-26T16:46:52.454140+00:00"
+      "claimed_at": "2026-10-26T16:46:52.454140+00:00",
+      "completed_at": "2026-11-02T00:52:54.852635+00:00"
     },
     "options-input-audit-20261026": {
       "id": "options-input-audit-20261026",
@@ -14676,7 +14682,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:52:48.357481+00:00",
+  "updated_at": "2026-11-02T00:52:54.852635+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
