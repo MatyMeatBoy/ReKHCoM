@@ -8496,10 +8496,10 @@
     "gallery64-repeat-title-restore": {
       "id": "gallery64-repeat-title-restore",
       "piece": "Reproducir corrupciónTITLE trasentradas/salidasgalería64exactpre1;32control; preservarviewport/renderstateyprogreso",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T19:01:46.452296+00:00",
-      "updated_at": "2026-11-02T01:15:22.442829+00:00",
+      "updated_at": "2026-11-02T01:15:28.445216+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.6",
       "approval": "Usuario 02/11: sigue con fallos hasta acabar",
@@ -8517,6 +8517,11 @@
         },
         {
           "at": "2026-11-02T01:15:22.442829+00:00",
+          "owner": "claude-v22",
+          "detail": "02/11 Claude: no se reproduce en main f4896955b (v2.6+): Windows64 EU, 5 visitas seguidas a la galeria (evento 12, saltado) volviendo al titulo; el titulo queda completo e igual tras cada visita (solo cambia la luz del cursor). 32-bit de control igual. Harness KHCOM_GALLERY_PLAY ahora acepta varias visitas."
+        },
+        {
+          "at": "2026-11-02T01:15:28.445216+00:00",
           "owner": "claude-v22",
           "detail": "02/11 Claude: no se reproduce en main f4896955b (v2.6+): Windows64 EU, 5 visitas seguidas a la galeria (evento 12, saltado) volviendo al titulo; el titulo queda completo e igual tras cada visita (solo cambia la luz del cursor). 32-bit de control igual. Harness KHCOM_GALLERY_PLAY ahora acepta varias visitas."
         }
@@ -14720,7 +14725,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:15:22.442829+00:00",
+  "updated_at": "2026-11-02T01:15:28.445216+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
