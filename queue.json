@@ -12709,13 +12709,13 @@
     "v225-ps5-build": {
       "id": "v225-ps5-build",
       "piece": "Build final PS5 beta2.2.5: closed native x32guests plus real SDK host-only package in offline snapshotVM; close ZIPcontentVersion/debug evidence",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T22:45:50.658475+00:00",
-      "updated_at": "2026-11-02T00:49:27.553503+00:00",
+      "updated_at": "2026-11-02T00:49:33.916439+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
-      "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
+      "approval": "Usuario 02/11: limpia la cola compartida igualmente",
       "reference": null,
       "evidence": [
         {
@@ -12742,9 +12742,15 @@
           "at": "2026-11-02T00:49:27.553503+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
+        },
+        {
+          "at": "2026-11-02T00:49:33.916439+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r)"
         }
       ],
-      "claimed_at": "2026-10-28T22:45:55.516531+00:00"
+      "claimed_at": "2026-10-28T22:45:55.516531+00:00",
+      "completed_at": "2026-11-02T00:49:33.916439+00:00"
     },
     "web-bg-world-call-abi": {
       "id": "web-bg-world-call-abi",
@@ -14562,7 +14568,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:49:27.553503+00:00",
+  "updated_at": "2026-11-02T00:49:33.916439+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
