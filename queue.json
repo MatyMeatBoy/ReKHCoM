@@ -13870,16 +13870,23 @@
     "hd-menu-font-spacing": {
       "id": "hd-menu-font-spacing",
       "piece": "User29Oct: inconsistent HD options glyph spacing, Cinema/HD/LCD examples; compare row metrics and fractional raster placement, fix affected runs without changing good rows",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-29T07:09:46.486758+00:00",
-      "updated_at": "2026-11-02T01:54:38.715169+00:00",
+      "updated_at": "2026-11-02T01:54:44.815217+00:00",
       "branch": "fix/hd-font-spacing",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/550",
-      "approval": null,
+      "approval": "Detalle pequeño verificado (autoaprobación); usuario: acabar pendientes (01/11)",
       "reference": "user screenshots 6f93dae3,5bf4f923,03b9e1ad",
-      "evidence": [],
-      "claimed_at": "2026-11-02T01:54:31.675510+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-02T01:54:44.815217+00:00",
+          "owner": "claude-v22",
+          "detail": "merge PR550: k0 nunca <1 + espaciado óptico; A/B opciones 1920x1080"
+        }
+      ],
+      "claimed_at": "2026-11-02T01:54:31.675510+00:00",
+      "completed_at": "2026-11-02T01:54:44.815217+00:00"
     },
     "hd-audio-language-ux": {
       "id": "hd-audio-language-ux",
@@ -14753,7 +14760,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T01:54:38.715169+00:00",
+  "updated_at": "2026-11-02T01:54:44.815217+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
