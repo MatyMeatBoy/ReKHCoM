@@ -60,6 +60,9 @@ static int sDodgePending;
 static int sLinkTap, sLinkTapKey; /* link battles: the dodge's d-pad double tap, frames left and its direction */
 static int sUnstockHeld;
 static int sUnstockPending;
+/* The deck editor's buttons (the dodge and stock bindings): a press is kept a few frames, as the dodge's. */
+static int sDeckPlaceHeld, sDeckPlacePending;
+static int sDeckCompactHeld, sDeckCompactPending;
 /* Activity is event-driven: axis noise must not switch away from keyboard.
    Keep only an ID, never a gamepad pointer across hotplug. */
 static SDL_JoystickID sPromptPad;
@@ -205,6 +208,7 @@ void PortInputSuppressUntilRelease(void) {
     sZoomSelect = sZoomEat = 0;
     sDodgeHeld = sDodgePending = 0;
     sUnstockHeld = sUnstockPending = 0;
+    sDeckPlaceHeld = sDeckPlacePending = sDeckCompactHeld = sDeckCompactPending = 0;
 }
 
 void PortInputResetBindings(void) {
@@ -304,6 +308,7 @@ void PortInputHandleEvent(const void* p) {
             sBattleMenuKeys = sBattleMenuChord = sZoomSelect = sZoomEat = 0;
             sDodgeHeld = sDodgePending = 0;
             sUnstockHeld = sUnstockPending = 0;
+            sDeckPlaceHeld = sDeckPlacePending = sDeckCompactHeld = sDeckCompactPending = 0;
             break;
     }
 }
@@ -611,6 +616,15 @@ static uint16_t ZoomChord(uint16_t keys) {
     return keys;
 }
 
+/* A press of one of the deck editor's buttons: pending for a few frames, until the editor takes it. */
+static void DeckButton(int down, int* held, int* pending) {
+    if (down && !*held)
+        *pending = DODGE_PENDING_FRAMES;
+    else if (*pending > 0)
+        (*pending)--;
+    *held = down;
+}
+
 uint16_t PortInputResolve(uint16_t keys) {
     int dodge;
 
@@ -665,6 +679,9 @@ uint16_t PortInputResolve(uint16_t keys) {
         sLinkTap = 0;
     }
     sDodgeHeld = dodge;
+    /* The deck editor reads the same two bindings, with or without their battle options. */
+    DeckButton((keys & KEY_DODGE) != 0, &sDeckPlaceHeld, &sDeckPlacePending);
+    DeckButton((keys & KEY_STOCK) != 0, &sDeckCompactHeld, &sDeckCompactPending);
     /* Return-stocked-cards button: acts once when held long enough. */
     if ((keys & KEY_UNSTOCK) && gPortConfig.unstockButton) {
         if (sUnstockHeld <= UNSTOCK_HOLD_FRAMES && ++sUnstockHeld == UNSTOCK_HOLD_FRAMES)
@@ -691,6 +708,22 @@ int PortTakeDodge(int held, int facingLeft) {
     if (held & KEY_RIGHT)
         return KEY_RIGHT;
     return facingLeft ? KEY_LEFT : KEY_RIGHT;
+}
+
+/* Deck editor: 1 once per press of the dodge binding (place the held card). */
+int PortTakeDeckPlace(void) {
+    int pending = sDeckPlacePending > 0;
+
+    sDeckPlacePending = 0;
+    return pending;
+}
+
+/* Deck editor: 1 once per press of the stock binding (close the deck's gaps). */
+int PortTakeDeckCompact(void) {
+    int pending = sDeckCompactPending > 0;
+
+    sDeckCompactPending = 0;
+    return pending;
 }
 
 /* Battle code: 1 once after the return-stocked-cards button was held. */
