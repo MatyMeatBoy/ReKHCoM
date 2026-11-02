@@ -10961,13 +10961,13 @@
     "pr432-deck-management-review": {
       "id": "pr432-deck-management-review",
       "piece": "Post-v2.2 review and QA of external PR432 deck insert/compact; do not change author code or include in current release. Validate99slots, end-gap, IDs/value0, multiset/order, save/load, remapped input/repeat and UI labels.",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T10:49:24.403895+00:00",
-      "updated_at": "2026-11-02T05:59:58.564169+00:00",
+      "updated_at": "2026-11-02T06:00:05.102668+00:00",
       "branch": "feat/deck-management-utilities",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/432",
-      "approval": null,
+      "approval": "Usuario 01/11: acabar PRs con algo útil",
       "reference": "head1e45a50b4aea66b68a02a215b7122d67737a90e4; post-v2.2, no author edits or release scope expansion",
       "evidence": [
         {
@@ -10984,9 +10984,15 @@
           "at": "2026-10-28T11:04:47.082169+00:00",
           "owner": "codex-deck-qol-review",
           "detail": "released: ReviewpostedCOMMENTEDhttps://github.com/MatyMeatBoy/ReKHCoM/pull/432#pullrequestreview-5681600252 exacthead1e45a50;39208CPUcasesPASS; authorclarification needed forward99tail/combinedqueuedactions; realmenu/save/inputQA pending; receiptspruebas/v22-issue-delivery/review432/PUBLIC-REVIEW-RECEIPT.json; no productchanges, stable2.2untouched; handedbackwithoutreservingotherwork"
+        },
+        {
+          "at": "2026-11-02T06:00:05.102668+00:00",
+          "owner": "claude-v22",
+          "detail": "merge be89ae6de; harness Mode_Deck: colocar/compactar OK, 15/99 intacto"
         }
       ],
-      "claimed_at": "2026-11-02T05:59:52.439788+00:00"
+      "claimed_at": "2026-11-02T05:59:52.439788+00:00",
+      "completed_at": "2026-11-02T06:00:05.102668+00:00"
     },
     "optiport-v22-postrelease-lessons": {
       "id": "optiport-v22-postrelease-lessons",
@@ -14772,7 +14778,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T05:59:58.564169+00:00",
+  "updated_at": "2026-11-02T06:00:05.102668+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
