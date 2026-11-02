@@ -4544,10 +4544,10 @@
     "controls-reset-triggers-20261026": {
       "id": "controls-reset-triggers-20261026",
       "piece": "Controles: restaurar bindings y layout automático, gatillos progresivos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-26T16:31:46.640074+00:00",
-      "updated_at": "2026-11-02T00:52:18.961279+00:00",
+      "updated_at": "2026-11-02T00:52:25.031387+00:00",
       "branch": "codex/controller-reset-triggers",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/241",
       "approval": "Usuario 02/11: limpia la cola compartida",
@@ -4572,9 +4572,15 @@
           "at": "2026-11-02T00:52:18.961279+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA: duplicado; #241 integrado en main."
+        },
+        {
+          "at": "2026-11-02T00:52:25.031387+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA: duplicado; #241 integrado en main."
         }
       ],
-      "claimed_at": "2026-10-26T16:32:00.440154+00:00"
+      "claimed_at": "2026-10-26T16:32:00.440154+00:00",
+      "completed_at": "2026-11-02T00:52:25.031387+00:00"
     },
     "achievements-trigger-key-centre": {
       "id": "achievements-trigger-key-centre",
@@ -14655,7 +14661,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:52:18.961279+00:00",
+  "updated_at": "2026-11-02T00:52:25.031387+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
