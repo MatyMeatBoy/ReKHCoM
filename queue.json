@@ -8663,16 +8663,23 @@
     "menus-fade-transitions": {
       "id": "menus-fade-transitions",
       "piece": "Fundidos breves coherentes en todos los menús propios y previews listas, prioridad después de cuelgues",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:56:17.299483+00:00",
-      "updated_at": "2026-11-02T06:12:22.170878+00:00",
+      "updated_at": "2026-11-02T06:12:28.263574+00:00",
       "branch": "feat/menu-page-fade",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/554",
-      "approval": "Usuario 2026-10-27: agregar fading a todos menús nuestros, controles, logros, escenas; cuelgues y bugs primero",
+      "approval": "Usuario 01/11: acabar pendientes/PRs útiles",
       "reference": "Conversación actual; conservar inputs y preview previa hasta recurso listo",
-      "evidence": [],
-      "claimed_at": "2026-11-02T06:12:16.001981+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-02T06:12:28.263574+00:00",
+          "owner": "claude-v22",
+          "detail": "merge PR554: fundido de página 6 frames en menús del port (medido 231->119->239)"
+        }
+      ],
+      "claimed_at": "2026-11-02T06:12:16.001981+00:00",
+      "completed_at": "2026-11-02T06:12:28.263574+00:00"
     },
     "gallery64-repeat-title-restore": {
       "id": "gallery64-repeat-title-restore",
@@ -14999,7 +15006,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:12:22.170878+00:00",
+  "updated_at": "2026-11-02T06:12:28.263574+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
