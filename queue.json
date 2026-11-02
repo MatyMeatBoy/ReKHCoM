@@ -8379,12 +8379,12 @@
     "harness-menus-architecture": {
       "id": "harness-menus-architecture",
       "piece": "Validar arquitectura real y hashes en arnés de menús 32/64",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T18:55:54.503567+00:00",
-      "updated_at": "2026-11-01T23:39:00.464337+00:00",
+      "updated_at": "2026-11-02T00:44:49.002903+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/386",
       "evidence": [
@@ -8402,6 +8402,11 @@
           "at": "2026-11-01T23:39:00.464337+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:44:49.002903+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-27T18:56:00.770854+00:00"
@@ -14321,7 +14326,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:44:42.920102+00:00",
+  "updated_at": "2026-11-02T00:44:49.002903+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
