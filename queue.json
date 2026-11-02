@@ -1063,10 +1063,10 @@
     "escena-120": {
       "id": "escena-120",
       "piece": "Escena 120",
-      "status": "pr_abierto",
-      "owner": "claude-sonnet-w2",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:25:04.486463+00:00",
-      "updated_at": "2026-10-24T20:36:18.921958+00:00",
+      "updated_at": "2026-11-02T06:06:26.247508+00:00",
       "branch": "claude/arte-w2",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/71",
       "approval": "sin valoracion; parcial",
@@ -1081,6 +1081,11 @@
           "at": "2026-10-24T20:36:18.921958+00:00",
           "owner": "claude-sonnet-w2",
           "detail": "limpieza 24/10: hija antes/despues enviada, parcial, PR #71 no integrar"
+        },
+        {
+          "at": "2026-11-02T06:06:26.247508+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T19:19:11.451668+00:00",
@@ -14936,7 +14941,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:06:15.564615+00:00",
+  "updated_at": "2026-11-02T06:06:26.247508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16066,6 +16071,16 @@
       "from_owner": "claude-sonnet-w2",
       "to_owner": "claude-v22",
       "expected_commit": "891d406e1bb06663d4744d28a2e12029fa665087",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:06:26.247508+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "escena-120",
+      "from_owner": "claude-sonnet-w2",
+      "to_owner": "claude-v22",
+      "expected_commit": "821187eb262940a9c5136fe142ef50b53c4d3a2f",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
