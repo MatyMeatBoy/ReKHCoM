@@ -5266,11 +5266,34 @@ static int TitleBarWordsReady(void) {
     return 1;
 }
 
+/* The HD sprites' blend weight, smoothed across the game's own steps: a fade the cartridge runs one 16th every few
+   frames (the title menu's words: every 5, 12 steps a second) moves its HD pictures a little every frame instead,
+   reaching each step as the next one comes. Only a single 16th at a steady pace is smoothed; anything else (a jump,
+   a pause) shows at once. In 255ths. */
+static int SmoothedHdAlpha(int eva) {
+    static int last = -1, from, period = 1;
+    static uint32_t changed;
+    uint32_t now = PortFrameCount();
+    int since;
+    if (eva > 16) eva = 16;
+    if (eva != last) {
+        int gap = (int)(now - changed);
+        period = last >= 0 && (eva - last == 1 || last - eva == 1) && gap >= 2 && gap <= 8 ? gap : 1;
+        from = last < 0 ? eva : last;
+        last = eva;
+        changed = now;
+    }
+    since = (int)(now - changed) + 1;
+    if (since >= period)
+        return eva * 255 / 16;
+    return (from * 255 * (period - since) + eva * 255 * since) / (16 * period);
+}
+
 static void QueueMainHdParts(void) {
     for (int k = 0; k < sHdPieceCount; k++) /* this pass's pieces start anew (TrimHdPiece) */
         if (sHdPieces[k].layer != 1) sHdPieces[k--] = sHdPieces[--sHdPieceCount];
     uint16_t bldcnt = IO16(0x50);
-    int i, eva = IO16(0x52) & 31;
+    int i, eva = IO16(0x52) & 31, smoothAlpha = SmoothedHdAlpha(eva);
     PortHdSpritesBegin(0);
     PortHdSpritesBegin(2);
     memset(sMainHdPart, 0, sizeof(sMainHdPart));
@@ -5356,7 +5379,7 @@ static void QueueMainHdParts(void) {
         }
         /* a semi-transparent sprite blends with the first target's weight */
         if (mode == 1 || (((bldcnt >> 6) & 3) == 1 && (bldcnt & 0x10)))
-            alpha = (eva > 16 ? 16 : eva) * 255 / 16;
+            alpha = smoothAlpha;
         if (SpriteOnScreen(sOamTag[i].screen)) {
             /* a menu's sprite: on the screen layer, the GBA's lines centred in its width */
             int sx = ox + (gPortOverlayW - GBA_SCREEN_W) / 2;
