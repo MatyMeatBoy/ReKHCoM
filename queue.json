@@ -11325,13 +11325,13 @@
     "android-launcher-lifecycle-contract": {
       "id": "android-launcher-lifecycle-contract",
       "piece": "Android SDLActivity lifecycle: missing configChanges contract; source/CPU + isolated runtime, preserve :game and default launchMode",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T14:11:49.519871+00:00",
-      "updated_at": "2026-11-02T06:01:35.763090+00:00",
+      "updated_at": "2026-11-02T06:01:42.484397+00:00",
       "branch": "fix/android-lifecycle-config",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/443",
-      "approval": "Usuario autoriza OptiPort riesgos preventivos; root asigna carril independiente",
+      "approval": "Usuario 01/11: acabar pendientes/PRs útiles",
       "reference": "pruebas/astra-android16-startup/FINDINGS.md",
       "evidence": [
         {
@@ -11348,9 +11348,15 @@
           "at": "2026-11-02T06:01:09.699721+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios días; usuario autorizó tomar todo (01/11). PR443 reabierto e integrado 854b3966b"
+        },
+        {
+          "at": "2026-11-02T06:01:42.484397+00:00",
+          "owner": "claude-v22",
+          "detail": "merge 854b3966b; test_android_manifest_lifecycle + test_android_test_package OK sobre main"
         }
       ],
-      "claimed_at": "2026-10-28T14:12:13.566932+00:00"
+      "claimed_at": "2026-10-28T14:12:13.566932+00:00",
+      "completed_at": "2026-11-02T06:01:42.484397+00:00"
     },
     "optiport-android-startup-contracts": {
       "id": "optiport-android-startup-contracts",
@@ -14783,7 +14789,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:01:35.763090+00:00",
+  "updated_at": "2026-11-02T06:01:42.484397+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
