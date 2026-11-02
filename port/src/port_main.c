@@ -3191,7 +3191,7 @@ static void VBlankCycle(void) {
            keep the layer one frame longer so they never land in the world */
         static int sPrevMark;
         int mark = PortTakeScreenMark();
-        gPortScreenLayer = (mark || sPrevMark) && gPortConfig.viewMode == PORT_VIEW_AUTO;
+        gPortScreenLayer = gPortConfig.viewMode != PORT_VIEW_AUTO ? 0 : mark ? 1 : sPrevMark ? 2 : 0;
         sPrevMark = mark;
     }
     int skip;
