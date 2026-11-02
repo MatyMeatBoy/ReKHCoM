@@ -13987,15 +13987,21 @@
     "v23-startup-copyright-hd": {
       "id": "v23-startup-copyright-hd",
       "piece": "Before2.3: copyright/legal startup screens HD only with HD enabled; audit startup-to-title audio stutters including skip transitions",
-      "status": "en_curso",
-      "owner": "claude-v22",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-29T06:31:32.313804+00:00",
-      "updated_at": "2026-11-02T06:25:46.178883+00:00",
+      "updated_at": "2026-11-02T06:25:52.936067+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "User29Oct request; preserve original when HD off; audio continuity part ofP3",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-02T06:25:52.936067+00:00",
+          "owner": "claude-v22",
+          "detail": "released: 02/11 Claude: audio arranque->titulo medido a tiempo real (PR552, 0 underruns). Las pantallas de copyright siempre son las del cartucho (sin HD en ningun modo); hacerlas HD requiere arte nuevo (logos/textos legales) -> app de revision."
+        }
+      ],
       "claimed_at": "2026-11-02T06:25:46.178883+00:00"
     },
     "halloween-arena-floor-perspective": {
@@ -15048,7 +15054,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:25:46.178883+00:00",
+  "updated_at": "2026-11-02T06:25:52.936067+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
