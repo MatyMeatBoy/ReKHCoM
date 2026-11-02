@@ -2452,10 +2452,10 @@
     "malefica-arena-respuesta": {
       "id": "malefica-arena-respuesta",
       "piece": "Malefica arena: responder aprobacion de fondo y separar sprites pendientes",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-25T08:05:47.679397+00:00",
-      "updated_at": "2026-10-25T08:06:29.173632+00:00",
+      "updated_at": "2026-11-02T06:04:59.391032+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -2465,6 +2465,11 @@
           "at": "2026-10-25T08:06:29.173632+00:00",
           "owner": "codex-atlas",
           "detail": "Comentario general interpretado literalmente: fondo aprobado se conserva; sprites 01-03 pendientes por separado, sin declararlos resueltos. Respuesta hija de contexto en Atlas, sin cambios de arte."
+        },
+        {
+          "at": "2026-11-02T06:04:59.391032+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-25T08:05:54.347032+00:00"
@@ -14873,7 +14878,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:04:48.726315+00:00",
+  "updated_at": "2026-11-02T06:04:59.391032+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15973,6 +15978,16 @@
       "from_owner": "codex-malefica-arena",
       "to_owner": "claude-v22",
       "expected_commit": "d3f99a46b69b87c9b1b732c36464801a6b8b4aa0",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T06:04:59.391032+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "malefica-arena-respuesta",
+      "from_owner": "codex-atlas",
+      "to_owner": "claude-v22",
+      "expected_commit": "b63b5641934e51fb6b2dc77cc61dd53ee92084a9",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
