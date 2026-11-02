@@ -209,6 +209,9 @@ static void WarmStart(int i) {
     char family[sizeof(sWarmFamily)], other[sizeof(sWarmFamily)];
     int k, members = 0;
     FamilyOf(kHdSprites[i].name, family, sizeof(family));
+    /* the room synthesis' banner comes 15 frames before its list of room cards: they start warming with it */
+    if (!SDL_strncmp(kHdSprites[i].name, "gMapSelectTitle", 15))
+        SDL_strlcpy(family, "gCardRoom", sizeof(family));
     if (!family[0] || SDL_strlen(family) == SDL_strlen(kHdSprites[i].name) || !SDL_strcmp(family, sWarmFamily))
         return; /* no number in the name, or this family is warming already */
     for (k = 0; k < HD_SPRITE_COUNT && members <= WARM_FAMILY_MAX; k++) {
