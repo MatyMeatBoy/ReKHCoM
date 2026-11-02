@@ -9669,15 +9669,16 @@
     "combat-erra-spanish-hd": {
       "id": "combat-erra-spanish-hd",
       "piece": "Aviso ERRA en combate sinHD: identificar MISS/localeEspañol y consumidor real, emparejar avisos contranaipe, receta/import/mapping vigentes y fallback seguro",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-27T22:16:54.811930+00:00",
-      "updated_at": "2026-10-27T22:16:54.811930+00:00",
+      "updated_at": "2026-11-02T06:25:33.073241+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10 solicita ERRA HD despuesprioridades1pixeles2audio3HP",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-02T06:25:33.073241+00:00"
     },
     "card-native-crown-corners": {
       "id": "card-native-crown-corners",
@@ -15040,7 +15041,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:23:30.939684+00:00",
+  "updated_at": "2026-11-02T06:25:33.073241+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
