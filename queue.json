@@ -836,10 +836,10 @@
       "status": "en_curso",
       "owner": "claude-v22",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-11-02T06:05:57.417704+00:00",
+      "updated_at": "2026-11-02T06:06:03.438697+00:00",
       "branch": "claude/arte-w2",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/71",
-      "approval": "sin valoracion; parcial",
+      "approval": "Usuario 02/11: \"sigue hasta acabar con las 54 tareas\"",
       "reference": "{\"family_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"submissions\": [{\"submission\": \"20261024-054012-207689\", \"created\": \"2026-10-24T08:40:13.196096+00:00\", \"image_id\": \"1dafd826b81c4c8f8df99ff28bfbe4f3\", \"version\": \"Preliminar V1 · entrega disponible\", \"clouds\": 4, \"cloud_ids\": [\"0485a8a5-4a1d-43bd-9d32-29c26b2df5d6\", \"40ef4c05-f677-4ff6-97b8-871488d1b80c\", \"31fcf3cd-d3b9-430f-ae52-956eaa97fe9f\", \"1b8a37dc-7181-4202-840a-ce783a185ebe\"], \"status_then\": \"pending\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261024-054012-207689\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -856,6 +856,11 @@
           "at": "2026-11-02T06:05:57.417704+00:00",
           "owner": "claude-v22",
           "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+        },
+        {
+          "at": "2026-11-02T06:06:03.438697+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (sustituida por atlas-remates-112-r20261025 (PR71 cerrado)) — limpieza de cola 02/11, main 854b3966b."
         }
       ],
       "claimed_at": "2026-10-24T19:18:10.495489+00:00",
@@ -14920,7 +14925,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:05:57.417704+00:00",
+  "updated_at": "2026-11-02T06:06:03.438697+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
