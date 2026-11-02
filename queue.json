@@ -9669,10 +9669,10 @@
     "combat-erra-spanish-hd": {
       "id": "combat-erra-spanish-hd",
       "piece": "Aviso ERRA en combate sinHD: identificar MISS/localeEspañol y consumidor real, emparejar avisos contranaipe, receta/import/mapping vigentes y fallback seguro",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "claude-v22",
       "created_at": "2026-10-27T22:16:54.811930+00:00",
-      "updated_at": "2026-11-02T06:54:44.375566+00:00",
+      "updated_at": "2026-11-02T06:54:50.845414+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario27/10 solicita ERRA HD despuesprioridades1pixeles2audio3HP",
@@ -9682,9 +9682,15 @@
           "at": "2026-11-02T06:25:39.304952+00:00",
           "owner": "claude-v22",
           "detail": "released: 02/11 Claude: el HUD de Re:CoM (FO0002 *_Cockpit, 5 idiomas) no tiene texto MISS/ERRA (solo Cortanaipe, Bloqueo, Recupera, Resiste, PULSA, Golpe final, Reto). Sin fuente oficial: requiere arte nuevo en su estilo, propuesta para la app de revision; los demas avisos ya tienen receta."
+        },
+        {
+          "at": "2026-11-02T06:54:50.845414+00:00",
+          "owner": "claude-v22",
+          "detail": "Atlas 3f243411: propuesta Erra/Miss con KHMenu en estilo del HUD; pendiente de valoración"
         }
       ],
-      "claimed_at": "2026-11-02T06:54:44.375566+00:00"
+      "claimed_at": "2026-11-02T06:54:44.375566+00:00",
+      "sent": "3f2434116ede41ff901cb549a1b10714"
     },
     "card-native-crown-corners": {
       "id": "card-native-crown-corners",
@@ -15074,7 +15080,7 @@
     "created_at": "2026-11-02T06:50:42.172947+00:00",
     "updated_at": "2026-11-02T06:50:42.172947+00:00"
   },
-  "updated_at": "2026-11-02T06:54:44.375566+00:00",
+  "updated_at": "2026-11-02T06:54:50.845414+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
