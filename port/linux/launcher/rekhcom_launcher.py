@@ -197,8 +197,8 @@ def main():
     if not action:
         if not tool or not (os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY')):
             p.print_help();print('No desktop dialog available. Use the CLI options above; Play directly with ReKHCoM.sh.');return 0
-        if tool=='kdialog':args=['kdialog','--menu','Basic native launcher: close the game before importing. Progress/cancel: this terminal.', 'play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import owned PC music/movies','sprites','Import owned PC sprites (optional numpy/Pillow)']
-        else:args=['zenity','--list','--title','ReKHCoM native launcher','--column','Action','play','online-beta','online-off','prepared','source','sprites']
+        if tool=='kdialog':args=['kdialog','--menu','Basic native launcher: close the game before importing. Progress/cancel: this terminal.', 'play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import HD music, movies and scenes from your PC game','sprites','Import HD HUD, cards and sprites from your PC game (needs numpy/Pillow)']
+        else:args=['zenity','--list','--title','ReKHCoM native launcher','--hide-column','1','--column','Action','--column','','play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import HD music, movies and scenes from your PC game','sprites','Import HD HUD, cards and sprites from your PC game (needs numpy/Pillow)']
         result=subprocess.run(args,text=True,stdout=subprocess.PIPE)
         if result.returncode:return 0
         action=result.stdout.strip()
@@ -230,7 +230,7 @@ def main():
     try:
         if action=='prepared' and (source/'hd').is_dir():source=source/'hd'
         backup=transaction(a.data,source,None if action=='prepared' else source_producer(action=='sprites'))
-        message='HD import complete. Legacy imports remain language unknown.'+(' Previous HD retained at '+str(backup) if backup else '')
+        message='HD import complete.'+(' Previous HD retained at '+str(backup) if backup else '')
         print(message)
         if tool and a.gui:dialog(tool,'info',message)
         return 0
