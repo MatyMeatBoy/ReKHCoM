@@ -11325,10 +11325,10 @@
     "android-launcher-lifecycle-contract": {
       "id": "android-launcher-lifecycle-contract",
       "piece": "Android SDLActivity lifecycle: missing configChanges contract; source/CPU + isolated runtime, preserve :game and default launchMode",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-28T14:11:49.519871+00:00",
-      "updated_at": "2026-11-02T06:01:09.699721+00:00",
+      "updated_at": "2026-11-02T06:01:35.763090+00:00",
       "branch": "fix/android-lifecycle-config",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/443",
       "approval": "Usuario autoriza OptiPort riesgos preventivos; root asigna carril independiente",
@@ -14783,7 +14783,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:01:09.699721+00:00",
+  "updated_at": "2026-11-02T06:01:35.763090+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
