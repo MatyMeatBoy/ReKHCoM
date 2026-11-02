@@ -4544,10 +4544,10 @@
     "controls-reset-triggers-20261026": {
       "id": "controls-reset-triggers-20261026",
       "piece": "Controles: restaurar bindings y layout automático, gatillos progresivos",
-      "status": "pr_abierto",
-      "owner": "codex-batteries",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T16:31:46.640074+00:00",
-      "updated_at": "2026-10-26T16:35:08.180110+00:00",
+      "updated_at": "2026-11-02T00:52:06.343508+00:00",
       "branch": "codex/controller-reset-triggers",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/241",
       "approval": null,
@@ -4557,6 +4557,11 @@
           "at": "2026-10-26T16:35:08.180110+00:00",
           "owner": "codex-batteries",
           "detail": "f9d087f41; real C reset regression red/green, SDL input/remap/trigger probe PASS, check_sources OK, launcher syntax OK; settings_keys pre-existing touch/assets omission fails"
+        },
+        {
+          "at": "2026-11-02T00:52:06.343508+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo; duplicado de tarea integrada"
         }
       ],
       "claimed_at": "2026-10-26T16:32:00.440154+00:00"
@@ -14640,7 +14645,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:51:21.840365+00:00",
+  "updated_at": "2026-11-02T00:52:06.343508+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15651,6 +15656,16 @@
       "to_owner": "claude-v22",
       "expected_commit": "c4430d9d44e0edcb190d47e3f145911564db4ea9",
       "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
+    },
+    {
+      "at": "2026-11-02T00:52:06.343508+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "controls-reset-triggers-20261026",
+      "from_owner": "codex-batteries",
+      "to_owner": "claude-v22",
+      "expected_commit": "3c7e51c545f87d022bc55fea38b1de7312039f27",
+      "evidence": "Codex inactivo; duplicado de tarea integrada"
     }
   ]
 }
