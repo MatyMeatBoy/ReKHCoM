@@ -928,11 +928,25 @@ int PortUiHdArtUnder(SDL_Renderer* renderer, float x, float y, float scale) {
 }
 
 /* a queued glyph's HD advance; the cartridge font's (scaled) for the arrows and kana, which the HD face draws
-   full-width (an em each), and where it has none */
+   full-width (an em each), and where it has none; and for spaces: KHMenu's is a third of the pixel font's, which
+   ran words together ("Colores LCD", "Cinemáticas HD") once each text was fitted to its box */
 static float Advance(SDL_Renderer* renderer, int i, float scale) {
     extern float PortHdTextUiAdvance(SDL_Renderer*, int, float);
-    float a = sHdUiGlyphs[i].code > 255 ? 0 : PortHdTextUiAdvance(renderer, sHdUiGlyphs[i].code, scale);
+    extern int PortHdTextUiInk(SDL_Renderer*, int, float, int*);
+    int left, ink = sHdUiGlyphs[i].code == ' ' ? 0 : PortHdTextUiInk(renderer, sHdUiGlyphs[i].code, scale, &left);
+    float a = sHdUiGlyphs[i].code > 255 || sHdUiGlyphs[i].code == ' ' ? 0
+              : PortHdTextUiAdvance(renderer, sHdUiGlyphs[i].code, scale);
+    if (ink > 0) /* optical spacing: its ink and the pixel font's one-pixel gap (KHMenu's own side bearings are
+                    uneven: a wide L, a tight C, "LCD" read as "L CD") */
+        return ink + scale;
     return a > 0 ? a : sHdUiGlyphs[i].pw * scale;
+}
+
+/* where a glyph's pen goes so its ink starts at x (Advance's optical spacing) */
+static float InkPen(SDL_Renderer* renderer, int i, float scale, float x) {
+    extern int PortHdTextUiInk(SDL_Renderer*, int, float, int*);
+    int left;
+    return sHdUiGlyphs[i].code != ' ' && PortHdTextUiInk(renderer, sHdUiGlyphs[i].code, scale, &left) > 0 ? x - left : x;
 }
 
 void PortUiHdDraw(SDL_Renderer* renderer, float x, float y, float scale) {
@@ -971,11 +985,13 @@ void PortUiHdDraw(SDL_Renderer* renderer, float x, float y, float scale) {
                     (j == i || sHdUiGlyphs[j].x == sHdUiGlyphs[j - 1].x + sHdUiGlyphs[j - 1].pw); j++)
             natural += Advance(renderer, j, scale);
         box = sHdUiGlyphs[j - 1].x + sHdUiGlyphs[j - 1].pw - sHdUiGlyphs[i].x;
-        k0 = natural > 0 && box > 0 ? box * scale / natural : 1.0f;
+        /* stretched only: tightening moved the pens but not the glyphs, and letters ran into each other ("Zoom",
+           "LCD", "HD" at k0 0.93); a text a little wider than its pixel one just ends a few pixels further */
+        k0 = natural > 0 && box > 0 ? SDL_max(box * scale / natural, 1.0f) : 1.0f;
         pen = x + sHdUiGlyphs[i].x * scale;
         for (k = i; k < j; k++) {
             if (sHdUiGlyphs[k].alive)
-                PortHdTextUiGlyph(renderer, sHdUiGlyphs[k].code, pen, y + sHdUiGlyphs[k].y * scale, scale,
+                PortHdTextUiGlyph(renderer, sHdUiGlyphs[k].code, InkPen(renderer, k, scale, pen), y + sHdUiGlyphs[k].y * scale, scale,
                                   Advance(renderer, k, scale) * k0,
                                   sHdUiGlyphs[k].face, sHdUiGlyphs[k].shadow);
             pen += Advance(renderer, k, scale) * k0;
@@ -5009,6 +5025,21 @@ static void HarnessFadeShot(int width, int height) {
 static int HarnessOptionsAction(void) {
     const char* route = SDL_getenv("KHCOM_OPTIONS_ACTIONS");
     int changed = 0;
+    if (SDL_getenv("KHCOM_OPTIONS_SHOTS")) { /* menu frame list: the window's picture as options_<n>.bmp */
+        static int frames;
+        const char* t = SDL_getenv("KHCOM_OPTIONS_SHOTS");
+        frames++;
+        while (t && *t) {
+            if (SDL_atoi(t) == frames) {
+                extern void PortHarnessShot(const char* name);
+                char name[32];
+                SDL_snprintf(name, sizeof(name), "options_%d.bmp", frames);
+                PortHarnessShot(name);
+            }
+            t = SDL_strchr(t, ',');
+            if (t) t++;
+        }
+    }
     if (!route && SDL_getenv("KHCOM_OPTIONS_KEYS")) {
         const char* input = SDL_getenv("KHCOM_OPTIONS_KEYS");
         ++sHarnessTick;

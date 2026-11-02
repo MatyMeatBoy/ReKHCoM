@@ -43,6 +43,19 @@ void PortHdTextUiGlyph(SDL_Renderer* renderer, int code, float x, float y, float
 #endif
 }
 
+/* A glyph's ink (output pixels): where it starts from the pen and how wide it is; 0 for none (a space). */
+int PortHdTextUiInk(SDL_Renderer* renderer, int code, float scale, int* left) {
+    HdFont* font;
+    HdGlyph* glyph;
+    if (!gPortConfig.hdTitle || scale <= 0 || code > 255) return 0;
+    font = FontForScale(scale, 3);
+    if (!font->font) return 0;
+    glyph = Glyph(renderer, font, code);
+    if (!glyph || glyph->w <= 0) return 0;
+    *left = glyph->left;
+    return glyph->w;
+}
+
 /* A glyph's advance (output pixels) in the port panels' HD face, for laying their texts out (port_ui.c). */
 float PortHdTextUiAdvance(SDL_Renderer* renderer, int code, float scale) {
     HdFont* font;
