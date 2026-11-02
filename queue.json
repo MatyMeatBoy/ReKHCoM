@@ -4608,22 +4608,28 @@
     "gallery-save-progress": {
       "id": "gallery-save-progress",
       "piece": "Galería de escenas: migrar desbloqueos desde progreso guardado Agrabah",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-26T10:56:05.232289+00:00",
-      "updated_at": "2026-11-02T06:15:21.364264+00:00",
+      "updated_at": "2026-11-02T06:15:28.484857+00:00",
       "branch": "feat/gallery-world-progress",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/555",
-      "approval": null,
+      "approval": "Usuario 01/11: acabar pendientes/PRs útiles",
       "reference": "Usuario26/10: partida antigua no muestra escenas; verificar progreso y desbloqueo incremental",
       "evidence": [
         {
           "at": "2026-11-02T06:15:14.685309+00:00",
           "owner": "claude-v22",
           "detail": "Dueño inactivo; usuario autorizó a Claude acabar toda la cola (01/11)"
+        },
+        {
+          "at": "2026-11-02T06:15:28.484857+00:00",
+          "owner": "claude-v22",
+          "detail": "merge PR555: copia de partida 4F desbloquea 107-114 y 120-126"
         }
       ],
-      "claimed_at": "2026-10-26T10:56:11.198439+00:00"
+      "claimed_at": "2026-10-26T10:56:11.198439+00:00",
+      "completed_at": "2026-11-02T06:15:28.484857+00:00"
     },
     "android-battery-validity-20261026": {
       "id": "android-battery-validity-20261026",
@@ -15012,7 +15018,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:15:21.365876+00:00",
+  "updated_at": "2026-11-02T06:15:28.484857+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
