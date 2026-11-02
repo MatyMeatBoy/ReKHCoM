@@ -10396,10 +10396,10 @@
     "v22-ps5-offline-build": {
       "id": "v22-ps5-offline-build",
       "piece": "Build PS5 v2.2 all regions+PPSA98511.zip offline existingSDK/Lapy/snapshot512MiB1CPU own768MiBjob; record realguestmem/swap",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-v22",
       "created_at": "2026-10-28T05:31:12.035167+00:00",
-      "updated_at": "2026-11-02T00:42:17.578915+00:00",
+      "updated_at": "2026-11-02T00:42:24.138499+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: limpia la cola compartida",
@@ -10429,9 +10429,15 @@
           "at": "2026-11-02T00:42:17.578915+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: build v2.2 ya publicada) — limpieza 02/11"
+        },
+        {
+          "at": "2026-11-02T00:42:24.138499+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: build v2.2 ya publicada) — limpieza 02/11"
         }
       ],
-      "claimed_at": "2026-10-28T05:31:17.507098+00:00"
+      "claimed_at": "2026-10-28T05:31:17.507098+00:00",
+      "completed_at": "2026-11-02T00:42:24.138499+00:00"
     },
     "debug-hd-override-long-path": {
       "id": "debug-hd-override-long-path",
@@ -14216,7 +14222,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:42:17.578915+00:00",
+  "updated_at": "2026-11-02T00:42:24.138499+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
