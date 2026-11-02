@@ -127,7 +127,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-110-folded-wall | Escena 110: pared reflejada hasta arriba | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/216 | approved exact aa5c68ac68e948deaa006b2dfec38897 | 2026-10-26T09:45:47.988254+00:00 |
 | atlas-095-castle | Escena 095: recuperar un único castillo; no cerrado por árbol y flores | pendiente | — | — | — | 2026-10-26T08:02:05.044114+00:00 |
 | atlas-menu-font-evidence | Ver barajas: fuente solicitada y opciones actuales | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/217 | Documentación y evidencia de código previamente integrado; no activa arte pendiente. | 2026-10-26T08:11:43.307349+00:00 |
-| atlas-start-values-evidence | Menú START: cifras HD actuales | en_curso | claude-v22 | — | — | 2026-11-02T07:03:26.387046+00:00 |
+| atlas-start-values-evidence | Menú START: cifras HD actuales | pendiente | — | — | — | 2026-11-02T07:03:32.875940+00:00 |
 | atlas-maleficent-lomo-r2 | Maléfica: tres recortes, lomo y estilo KHCoM | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/222 | approved exact 2f93c47e6dad42d1b61a96ca3d8e7083; approved exact d44b24262467494cbe3fc454ed5df1f5; approved exact 47658cfa72ee4785b2469abec62eddd0 | 2026-10-26T09:46:11.515404+00:00 |
 | atlas-world-header-seam | Naipes mundo: unión del borde HD con el margen | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/226 | approved exact 3cdc76d68be745b09d5c1bf4eba0c011 | 2026-10-26T09:46:34.403240+00:00 |
 | atlas-115-hatch-spacing | Escena 115: menos escotillas y limpiar borde | pendiente | — | — | — | 2026-10-26T09:40:18.552327+00:00 |
