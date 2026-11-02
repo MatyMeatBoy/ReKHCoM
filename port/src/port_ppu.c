@@ -708,7 +708,7 @@ int gPortTextStyle;
  */
 uint32_t gPortOverlay[PORT_MAX_W * GBA_SCREEN_H];
 int gPortOverlayW = GBA_SCREEN_W;
-int gPortScreenLayer; /* this frame uses the screen layer (set by the presenter) */
+int gPortScreenLayer; /* this frame uses the screen layer (set by the presenter); 2: only lingering a frame */
 static int sScreenDepth, sScreenMark, sOverlay;
 static int sScreenBg[4];
 /* Synthesis presents its spotlight at menu scale and clears the world pass.
@@ -4099,7 +4099,9 @@ void PortPpuBeginFrame(void) {
         memset(sOccBgLayer, 4, (size_t)gPortScreen.width * gPortScreen.height);
         memset(sOccObj, 0xFF, (size_t)gPortScreen.width * gPortScreen.height * 2);
     }
-    sOverlay = gPortScreenLayer;
+    /* the frame the layer only lingers (2): once the door's spotlight hands its floor (BG1) back to the world, its
+       light blends with that floor there; on the empty screen layer its dark halo showed as a black ball */
+    sOverlay = gPortScreenLayer && !(gPortScreenLayer == 2 && sSpotlight && !(sScreenBgMask & 2u));
     for (b = 0; b < 4; b++) {
         int m = dispcnt & 7;
         int arena = (m == 2 || (m == 1 && b == 2)) && b >= 2 && (IO16(0x08 + b * 2) >> 14) >= 2;
