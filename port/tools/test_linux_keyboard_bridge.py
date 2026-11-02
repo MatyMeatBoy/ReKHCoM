@@ -63,6 +63,9 @@ bool SDL_SetWindowFullscreen(SDL_Window* w,bool on){fullscreen++;return true;}
 Uint64 SDL_GetWindowFlags(SDL_Window* w){return 0;}
 static const char* PortDeviceHostQuery(const char* n){return NULL;}
 static int HostGpuQuery(const char* n,char* out,int cap){return -2;}
+static int HostTextQuery(const char* n,char* out,int cap){return -2;} /* the online text channel (host_text.h) */
+static void HostTextQueue(const char* t){}
+static SDL_Window* sWindows[2];
 #define SDL_PollEvent HostPoll
 #define SDL_GetKeyboardState HostKeyboard
 #define SDL_GamepadConnected HostConnected
@@ -104,6 +107,7 @@ ACTION_BITS
 static struct {int keys[13][2],pad[13],padLayout,dodgeButton,stockButton,unstockButton;} gPortConfig;
 static uint16_t sKeyboard;static int sSuppress;
 static int sBattleMenuKeys,sBattleMenuChord,sZoomSelect,sZoomEat,sDodgeHeld,sDodgePending,sUnstockHeld,sUnstockPending;
+static int sDeckPlaceHeld,sDeckPlacePending,sDeckCompactHeld,sDeckCompactPending;
 static bool KhPadButtonDown(SDL_Gamepad* p,int binding,int layout){return SDL_GetGamepadButton(p,(SDL_GamepadButton)binding);}
 static void VirtualPadUpdate(void){}
 INPUT_EVENT
