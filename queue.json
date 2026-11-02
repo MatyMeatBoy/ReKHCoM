@@ -139,10 +139,10 @@
     "botones-tactiles": {
       "id": "botones-tactiles",
       "piece": "Botones táctiles · editor de posición",
-      "status": "bloqueado",
-      "owner": "claude-funciones",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-24T16:24:35.327412+00:00",
-      "updated_at": "2026-10-24T16:26:31.887864+00:00",
+      "updated_at": "2026-11-02T06:02:58.039182+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -152,6 +152,11 @@
           "at": "2026-10-24T16:26:31.887864+00:00",
           "owner": "claude-funciones",
           "detail": "Duplicada de botones-editor (misma pieza, envío 20261024-131133-57e115); el trabajo sigue en botones-editor"
+        },
+        {
+          "at": "2026-11-02T06:02:58.039182+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
         }
       ],
       "claimed_at": "2026-10-24T16:24:44.939865+00:00"
@@ -14789,7 +14794,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T06:01:42.484397+00:00",
+  "updated_at": "2026-11-02T06:02:58.039182+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15850,6 +15855,16 @@
       "to_owner": "claude-v22",
       "expected_commit": "47016d7d5bc139d632155333768285d5379e0929",
       "evidence": "Codex inactivo varios días; usuario autorizó tomar todo (01/11). PR443 reabierto e integrado 854b3966b"
+    },
+    {
+      "at": "2026-11-02T06:02:58.039182+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "botones-tactiles",
+      "from_owner": "claude-funciones",
+      "to_owner": "claude-v22",
+      "expected_commit": "a48160de89bf222e300c341f5d0eb6254081942f",
+      "evidence": "Codex inactivo varios dias; limpieza de cola pedida por el usuario 02/11"
     }
   ]
 }
