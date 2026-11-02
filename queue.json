@@ -9294,12 +9294,12 @@
     "mapinspect-grid-hd-original-frame": {
       "id": "mapinspect-grid-hd-original-frame",
       "piece": "Miniaturas menu naipesmapa siguen nativas: aplicar ilustracionesHD actuales preservando marcoGBA y esquinas cierre. Separar mappingBG de OAM e importfaltante; no retocar resto aprobado.",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-27T22:21:41.806505+00:00",
-      "updated_at": "2026-11-01T23:36:41.683252+00:00",
+      "updated_at": "2026-11-02T00:43:20.482257+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": null,
       "evidence": [
@@ -9312,6 +9312,11 @@
           "at": "2026-11-01T23:36:41.683252+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (hecha en main): #493 y trabajo HD de cartas de mapa — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:43:20.482257+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (hecha en main: #493 y trabajo HD de cartas de mapa\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-11-01T23:11:53.436503+00:00"
@@ -14244,7 +14249,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:43:12.947199+00:00",
+  "updated_at": "2026-11-02T00:43:20.483826+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
