@@ -2765,12 +2765,18 @@ static void HarnessFrame(void) {
         }
     }
     {
-        /* KHCOM_GALLERY_PLAY=<frame>:<event>: Options > Scenes > GBA plays that event from the title */
+        /* KHCOM_GALLERY_PLAY=<frame>:<event>[,<frame>:<event>...]: Options > Scenes > GBA plays that event from the
+           title (several: repeated visits) */
         const char* gallery = SDL_getenv("KHCOM_GALLERY_PLAY");
-        if (gallery && (uint32_t)SDL_atoi(gallery) == sFrameCount && SDL_strchr(gallery, ':')) {
-            extern int PortSceneGalleryPlay(int eventId);
-            PortLog("harness: gallery play %d: %s", SDL_atoi(SDL_strchr(gallery, ':') + 1),
-                    PortSceneGalleryPlay(SDL_atoi(SDL_strchr(gallery, ':') + 1)) ? "started" : "refused");
+        while (gallery && *gallery) {
+            const char* colon = SDL_strchr(gallery, ':');
+            const char* comma = SDL_strchr(gallery, ',');
+            if (colon && (!comma || colon < comma) && (uint32_t)SDL_atoi(gallery) == sFrameCount) {
+                extern int PortSceneGalleryPlay(int eventId);
+                PortLog("harness: gallery play %d: %s", SDL_atoi(colon + 1),
+                        PortSceneGalleryPlay(SDL_atoi(colon + 1)) ? "started" : "refused");
+            }
+            gallery = comma ? comma + 1 : NULL;
         }
     }
     {
