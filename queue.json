@@ -4769,12 +4769,12 @@
     "trailer-v20-production": {
       "id": "trailer-v20-production",
       "piece": "Producir y exportar trailer real v2.0",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-v22",
       "created_at": "2026-10-26T21:33:57.968735+00:00",
-      "updated_at": "2026-11-01T23:37:23.000821+00:00",
+      "updated_at": "2026-11-02T00:43:46.221789+00:00",
       "branch": "trailer/v20-production",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6",
       "approval": "Usuario 02/11: \"limpia la cola compartida igualmente, de seguro muchas cosas ya las tenemos\"",
       "reference": "port/progress/TRAILER_V20.md",
       "evidence": [
@@ -4802,6 +4802,11 @@
           "at": "2026-11-01T23:37:23.000821+00:00",
           "owner": "claude-v22",
           "detail": "CERRADA (obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada) — limpieza de cola 02/11, main db978bac6."
+        },
+        {
+          "at": "2026-11-02T00:43:46.221789+00:00",
+          "owner": "claude-v22",
+          "detail": "CERRADA (obsoleta: obsoleta: entrega/QA de version anterior (v2.0-v2.3) ya publicada\r) — limpieza de cola 02/11, main db978bac6"
         }
       ],
       "claimed_at": "2026-10-26T21:34:06.805996+00:00"
@@ -14266,7 +14271,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:43:39.206681+00:00",
+  "updated_at": "2026-11-02T00:43:46.221789+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
