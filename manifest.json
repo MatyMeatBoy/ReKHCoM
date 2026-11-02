@@ -1,12 +1,12 @@
 {
-  "version": "v2.6-web-alpha",
-  "source_commit": "49900e4c91cf0f965da6f222385f21998e41514a",
+  "version": "v2.7-web-alpha",
+  "source_commit": "778361c870f2a61fc9b870636c95cdcb15825463",
   "source_dirty": false,
-  "built_utc": "2026-11-01T23:46:41.854260+00:00",
+  "built_utc": "2026-11-02T08:18:15.997587+00:00",
   "files": {
     "index.html": {
       "bytes": 16978,
-      "sha256": "b62323f694b8c3dcab3190a6b7f00128231bcf5568b381c621ab7a017c5c702b"
+      "sha256": "0c25df4ef0e826fdce24cb23ca50fc8df602d23c9df266d47017b278362743c2"
     },
     "web.css": {
       "bytes": 14481,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "49b2fa1f7d34f79eadc5a3d1f7a28bf7e2bf7b5e2f71c6177d4179f1d17d9287"
+      "sha256": "383a6cc11157375639917d720b4f37bbf55ba34642d33747ecd3b6e5d2168ca3"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9546451,
-      "sha256": "6439af1ea39d5017f3c0e6b1dea7641c1692123409ba26897dfdff00c9e6c520"
+      "bytes": 9556800,
+      "sha256": "b798d9df8bfa367ef054e2c7f04bb6a87ac3668f2678b0b9f75971a0a3594c72"
     },
     "rekhcom-us.js": {
       "bytes": 208832,
-      "sha256": "679389d96b308afccc604b74a065a9f7d30fdef31b5d81b2755124f196cfc5de"
+      "sha256": "bf3bbc3180ea8ae951213d780027d4bb8e4f72057b3ec10bd8db463ddac509ff"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9600930,
-      "sha256": "1a74df301021d63b12c447fe30f553bec7b3d9903931230098b473c7fd16d435"
+      "bytes": 9611030,
+      "sha256": "3d2b7e632874a09e20b8c99d7425942fc25773a4e035c806eee413c86bb4646b"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "e5e995ea8c4bb7b88113db850afdfce898a772ddd9684fa24a4a7816b893d16e"
+      "sha256": "6de3c5af1ac5b1161884ae9d824f41e3d15573e368b8f82355674b7b44be9686"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9456595,
-      "sha256": "2c17f71ce186a74afbba4c926bdc1671a4c6db4672f79bc72d86562172ba2dec"
+      "bytes": 9466558,
+      "sha256": "a7e1c983c928ebbd62102a23578c2007dc1ba0b19c0c3509887a3c3b6cae5009"
     }
   }
 }
