@@ -4677,10 +4677,10 @@
     "options-input-audit-20261026": {
       "id": "options-input-audit-20261026",
       "piece": "Opciones: ejes A/B, tecla pegada tras overlay y auditoria lifecycle",
-      "status": "pr_abierto",
-      "owner": "codex-batteries",
+      "status": "en_curso",
+      "owner": "claude-v22",
       "created_at": "2026-10-26T17:37:20.956612+00:00",
-      "updated_at": "2026-10-26T17:37:33.600219+00:00",
+      "updated_at": "2026-11-02T00:53:04.790173+00:00",
       "branch": "codex/options-matrix-audit",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/248",
       "approval": null,
@@ -4690,6 +4690,11 @@
           "at": "2026-10-26T17:37:33.600219+00:00",
           "owner": "codex-batteries",
           "detail": "a38b634b8; 11 real runtime cases PASS incl100field+100event open/close serialpaired/progression; stale-key C red/green; check_sources OK"
+        },
+        {
+          "at": "2026-11-02T00:53:04.790173+00:00",
+          "owner": "claude-v22",
+          "detail": "Codex inactivo; duplicado de tarea integrada"
         }
       ],
       "claimed_at": "2026-10-26T17:37:26.747488+00:00"
@@ -14682,7 +14687,7 @@
     "created_at": "2026-11-01T22:54:30.949117+00:00",
     "updated_at": "2026-11-01T22:54:30.949117+00:00"
   },
-  "updated_at": "2026-11-02T00:52:54.852635+00:00",
+  "updated_at": "2026-11-02T00:53:04.790173+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -15712,6 +15717,16 @@
       "from_owner": "codex-batteries",
       "to_owner": "claude-v22",
       "expected_commit": "f40f164f93143aeff7610c54fa9b7a8a8214a5df",
+      "evidence": "Codex inactivo; duplicado de tarea integrada"
+    },
+    {
+      "at": "2026-11-02T00:53:04.790173+00:00",
+      "actor": "claude-v22",
+      "operation": "recover-task",
+      "task": "options-input-audit-20261026",
+      "from_owner": "codex-batteries",
+      "to_owner": "claude-v22",
+      "expected_commit": "94ef0524af5668a9b726561e8ce9463d0b09261b",
       "evidence": "Codex inactivo; duplicado de tarea integrada"
     }
   ]
