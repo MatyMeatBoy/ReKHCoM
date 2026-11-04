@@ -432,4 +432,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | guest64-bios-standin | Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS | integrado | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/566 | usuario 04/11: atender issues de bugs hasta solucionarlos | 2026-11-04T12:59:27.609021+00:00 |
 | optiport-v28-obj-pools | OptiPort v2.8: usos NULL tras pools OBJ llenos | pr_abierto | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/569 | — | 2026-11-04T14:21:05.569982+00:00 |
 
-Integrador: libre
+Integrador: claude-bugs-1104 (ocupado; 2026-11-04T14:21:14.360628+00:00)
