@@ -285,7 +285,7 @@ void CreateCardBattleState() {
     gCardBattleState->tiles7 = LoadObjTiles(gCardModifiedValueDigitTiles, sizeof(gCardModifiedValueDigitTiles));
     gCardBattleState->palette = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
     gCardBattleState->palette2 = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-    FadeSetPaletteExcluded(((ObjPaletteHeader*)gCardBattleState->palette)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR((ObjPaletteHeader*)gCardBattleState->palette)->index + 16, TRUE);
     LoadPremiumCardGfx(gCardBattleState);
 }
 

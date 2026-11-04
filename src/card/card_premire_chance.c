@@ -196,9 +196,9 @@ void LoadPremireChanceCardGfx(PremireChanceCardWork* work) {
         work->tiles3 = LoadObjTiles(gCardValueDigitTiles, sizeof(gCardValueDigitTiles));
         work->tiles5 = LoadObjTiles(gCardPremiumValueDigitTiles, sizeof(gCardPremiumValueDigitTiles));
         work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-        FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
-        FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
         work->gfxLoaded = TRUE;
     }
 }

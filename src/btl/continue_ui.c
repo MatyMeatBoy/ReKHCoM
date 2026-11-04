@@ -120,7 +120,7 @@ void ContinueSora_0(ContinueWork* work) {
     FadeStartIn(FADE_MODE_WHITE, 24);
 
     for (i = 0; i < 5; i++) {
-        FadeSetPaletteExcluded(work->palette->index + i, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + i, FALSE);
     }
 
     work->blendAlpha = 0x1000;
@@ -190,7 +190,7 @@ void ContinueRiku_0(ContinueWork* work) {
     FadeStartIn(FADE_MODE_WHITE, 24);
 
     for (i = 0; i < 5; i++) {
-        FadeSetPaletteExcluded(work->palette->index + i, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + i, FALSE);
     }
 
     work->blendAlpha = 0x1000;

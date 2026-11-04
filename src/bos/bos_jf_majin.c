@@ -1633,7 +1633,7 @@ u8 task_bos_jf_rock_1(JfRockWork* work) {
                 work->paletteFrame = 0;
             }
 
-            LoadObjPaletteBank(work->palette->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
         }
 
         if (work->riseSteps > 0) {
@@ -1705,7 +1705,7 @@ u8 task_bos_jf_rock_1(JfRockWork* work) {
                 work->paletteFrame = 0;
             }
 
-            LoadObjPaletteBank(work->palette->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
         }
 
         work->throwTimer++;
@@ -1749,7 +1749,7 @@ u8 task_bos_jf_rock_1(JfRockWork* work) {
                 work->paletteFrame = 0;
             }
 
-            LoadObjPaletteBank(work->palette->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index + 2, gBosJfRockPalettes + (work->paletteFrame << 4));
         }
 
         work->body.x += work->vx;
@@ -1933,7 +1933,7 @@ void task_bos_jf_borderline_0(JfBorderlineWork* work, JfWork* arg) {
     AnimInit(&work->anim5, gBosJfObjAnims, gBosJfObjFrames);
     AnimStart(&work->anim5, 6, ANIM_FLAG_LOOP);
     work->gfx5 = AnimGetGfx(&work->anim5);
-    SetBtlPaletteFadeExcluded(work->palette->index + 16, FALSE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
 }
 
 u8 task_bos_jf_borderline_1(JfBorderlineWork* work) {

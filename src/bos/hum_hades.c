@@ -91,7 +91,7 @@ void HadesEndAttack(HadesWork* work) {
     BtlObj* act = &work->base.actor;
 
     if (work->angryAttacks > 2) {
-        LoadObjPaletteBank(work->base.palette->index, gHadesPalette);
+        LoadObjPaletteBank(BIOS_PTR(work->base.palette)->index, gHadesPalette);
         work->base.paletteData = gHadesPalette;
         work->flags &= ~HADES_FLAG_ANGRY;
         work->base.stockMoves = sHumHadesStockMoves;
@@ -264,7 +264,7 @@ u8 task_hum_hades_1(HadesWork* work) {
         }
 
         if (AnimGetFrame(&work->base.anim) == 5 && work->base.anim.timer == 0) {
-            LoadObjPaletteBank(work->base.palette->index, gHadesAngryPalette);
+            LoadObjPaletteBank(BIOS_PTR(work->base.palette)->index, gHadesAngryPalette);
             work->base.paletteData = gHadesAngryPalette;
             w->flags |= HADES_FLAG_ANGRY;
             work->base.stockMoves = sHumHadesAngryStockMoves;

@@ -57,7 +57,7 @@ void task_sroll_b_char_0(SrollBCharWork* work, EvtObjParam* arg) {
     anim = &work->anim;
     AnimInit(anim, NULL, NULL);
     work->obj->anim = anim;
-    work->obj->paletteIndex = work->palette->index;
+    work->obj->paletteIndex = BIOS_PTR(work->palette)->index;
     SrollBCharChangeAnim(work);
     TaskPoolInit(&work->tasks, 4);
 }
@@ -70,9 +70,9 @@ s32 task_sroll_b_char_1(SrollBCharWork* work) {
     }
 
     if ((work->obj->drawFlags & SPRITE_FLAG_BLEND) == 0) {
-        FadeSetPaletteExcluded((work->palette->index & 15) + 16, FALSE);
+        FadeSetPaletteExcluded((BIOS_PTR(work->palette)->index & 15) + 16, FALSE);
     } else {
-        FadeSetPaletteExcluded((work->palette->index & 15) + 16, TRUE);
+        FadeSetPaletteExcluded((BIOS_PTR(work->palette)->index & 15) + 16, TRUE);
     }
 
     AnimUpdate(&work->anim);

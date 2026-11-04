@@ -530,7 +530,12 @@ void task_bos_tm_foot_0(TmFootWork* work, TmWork* arg) {
     work->gfx3 = gBosTmShoe0Frames[0];
     work->gfx4 = gBosTmShoe1Frames[0];
     work->tm = arg;
+#ifdef PLATFORM_PC
+    /* tiles a full pool did not give add none (OptiPort v2.8) */
+    work->tm->tileCount += (PORT_TILES_OK(work->tiles2) ? work->tiles2->count : 0) + (PORT_TILES_OK(work->tiles3) ? work->tiles3->count : 0);
+#else
     work->tm->tileCount += work->tiles2->count + work->tiles3->count;
+#endif
     work->footFrame = 0;
     work->footFrame2 = 0;
     work->unk_000 = 0;
@@ -1095,7 +1100,8 @@ void task_bos_tm_arm_0(TmArmWork* work, TmArmSrc* arg) {
     work->joints.arms[0][3].gfx = gBosTmHandFrame0;
     work->joints.arms[1][3].gfx = gBosTmHandFrame0;
     work->tiles2 = AllocObjTiles(0x140, gBosTmClubTiles);
-    work->src->tm->tileCount += work->tiles2->count;
+    if (PORT_TILES_OK(work->tiles2))
+        work->src->tm->tileCount += work->tiles2->count;
     AnimInit(&work->anim, gBosTmClubAnims, gBosTmClubFrames);
     AnimStart(&work->anim, 0, ANIM_FLAG_LOOP);
     work->clb.tiles = work->tiles2;
@@ -1674,7 +1680,7 @@ u8 task_bos_tm_arm_1(TmArmWork* work) {
         work->clb2.gfx = gfx;
 
         if (gFrameCounter % 5 == 0) {
-            LoadObjPaletteBank(work->palette->index + 1, gBosTmClubPalettes + work->paletteStep * 16);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index + 1, gBosTmClubPalettes + work->paletteStep * 16);
             work->paletteStep = (work->paletteStep + 1) & 7;
         }
     }

@@ -866,7 +866,7 @@ void task_hum_vixen_ice_0(VixenIceWork* work, VixenSub* args) {
 u8 task_hum_vixen_ice_1(VixenIceWork* work) {
     if (!work->sub->active) {
         if (work->sub->pending) {
-            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
             work->sub->pending = FALSE;
             ColliderSetDisabled(&work->collider, TRUE);
         }
@@ -875,7 +875,7 @@ u8 task_hum_vixen_ice_1(VixenIceWork* work) {
     }
 
     if (work->sub->pending) {
-        FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
         work->sub->pending = FALSE;
         work->state = HUM_VIXEN_ICE_STATE_GROW;
         work->stateTimer = 0;

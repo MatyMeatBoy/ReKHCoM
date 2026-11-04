@@ -42,10 +42,13 @@ extern unsigned char gPortBiosArea[];
    decoded as the GBA bus does (port/src/port_bus.c); a real pointer into the GBA space is left as it is. */
 void* PortBusPtr(__UINTPTR_TYPE__ p);
 #define BUS_PTR(type, p) ((type)PortBusPtr((__UINTPTR_TYPE__)(p)))
+/* PLTT_MIRROR(addr): a palette RAM address as the GBA bus mirrors it (every 1 KiB), for an index read through BIOS_PTR */
+#define PLTT_MIRROR(addr) (PLTT + (((addr) - PLTT) & 0x3FF)) /* PLTT: gba/defines.h at the use site */
 #else
 #define BIOS_PTR(p) (p)
 #define BIOS_LOW_PTR(p) (p)
 #define BUS_PTR(type, p) ((type)(p))
+#define PLTT_MIRROR(addr) (addr)
 #endif
 
 /*

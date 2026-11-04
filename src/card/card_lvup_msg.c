@@ -66,7 +66,7 @@ void Lvup_msg_0(LvupMsgWork* work, StatIncreaseDisplayArgs* arg) {
     work->textSlotCount3 = LoadTextSlots(gLvupMsgIncreasedText, work->textSlots3);
 #endif
     work->textPalette = LoadTextPalette(1);
-    FadeSetPaletteExcluded(work->textPalette->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->textPalette)->index + 16, TRUE);
     work->x = 0x1000;
     work->x2 = 0x3000;
     work->x3 = 0x4200;

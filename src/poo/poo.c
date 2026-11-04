@@ -3240,14 +3240,14 @@ u8 task_poo_gauge_1(PooGaugeWork* work) {
 
     if (work->warning) {
         if (work->paletteSrc != gPoohGaugePalettes[1]) {
-            LoadObjPaletteBank(work->palette->index, gPoohGaugePalettes[1]);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gPoohGaugePalettes[1]);
             work->paletteSrc = gPoohGaugePalettes[1];
         }
     }
 
     if (!work->warning) {
         if (work->paletteSrc != gPoohGaugePalettes[0]) {
-            LoadObjPaletteBank(work->palette->index, gPoohGaugePalettes[0]);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gPoohGaugePalettes[0]);
             work->paletteSrc = gPoohGaugePalettes[0];
         }
     }

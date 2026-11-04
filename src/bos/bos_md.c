@@ -1081,9 +1081,9 @@ void task_bos_md_0(MdWork* work, void* arg) {
     SetBtlPaletteFadeExcluded(0, TRUE);
     work->bgPalette = gBosMdPalette;
     work->palette = LoadObjPalette(gBosMdPalette, sizeof(gBosMdPalette));
-    SetBtlPaletteFadeExcluded(work->palette->index + 16, TRUE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     work->palette2 = LoadObjPalette(gHitFlashPalette, sizeof(gHitFlashPalette));
-    SetBtlPaletteFadeExcluded(work->palette2->index + 16, TRUE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
     TaskPoolInit(&work->tasks, 6);
     TaskPoolInit(&work->tasks2, 1);
     TaskPoolInit(&work->tasks3, 8);

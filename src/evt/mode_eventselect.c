@@ -527,7 +527,7 @@ void Exclamation_0(EffectWork* work, EventCharaWork* chara) {
     work->palette = LoadObjPalette(gCommonObjPalette, sizeof(gCommonObjPalette));
 
     if (!FadeIsActive()) {
-        FadeSetPaletteExcluded(((ObjPaletteHeader*)work->palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR((ObjPaletteHeader*)work->palette)->index + 16, TRUE);
     }
 
     SetObjTileSource(work->tiles, gFEventTiles);

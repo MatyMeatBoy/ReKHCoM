@@ -692,8 +692,8 @@ void AllmapDoorinfoLoadDoors(AllmapDoorinfoWork* work) {
             work->doors[i].sprite.tiles2 = LoadObjTiles(gCardOutlineWhiteTiles, sizeof(gCardOutlineWhiteTiles));
             work->doors[i].sprite.palette2 = LoadObjPalette(gDoorCardPalette, sizeof(gDoorCardPalette));
             work->doors[i].sprite.gfx2 = gCardOutlineWhiteFrames[0];
-            FadeSetPaletteExcluded(work->doors[i].sprite.palette->index + 16, TRUE);
-            FadeSetPaletteExcluded(work->doors[i].sprite.palette2->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->doors[i].sprite.palette)->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->doors[i].sprite.palette2)->index + 16, TRUE);
             work->gfx2[i] = gAllmapDoorinfoArrowFrames[i];
             work->count++;
         } else {
@@ -704,11 +704,11 @@ void AllmapDoorinfoLoadDoors(AllmapDoorinfoWork* work) {
     if (work->count != 0) {
         work->tiles = LoadObjTiles(gAllmapDoorinfoArrowTiles, sizeof(gAllmapDoorinfoArrowTiles));
         work->palette = LoadObjPalette(gAllmapObjPalette, sizeof(gAllmapObjPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
         work->tiles2 = LoadObjTiles(gAllmapRoomTiles, sizeof(gAllmapRoomTiles));
         work->gfx = gAllmapRoomFrames[0];
         InitObjPaletteAtSlot(work->palette2, 15, gAllmapRoomPalettes[0], sizeof(gAllmapRoomPalettes[0]));
-        FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
     }
 }
 
@@ -748,15 +748,15 @@ void AllmapDoorinfoLoadKeys(AllmapDoorinfoWork* work) {
         SetLayeredCardSpritePos(GetAllmapKeyCardX(work->count, i), 0x6800, &card->sprite);
 
         if (work->doors[i].sprite.palette != NULL) {
-            FadeSetPaletteExcluded(work->doors[i].sprite.palette->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->doors[i].sprite.palette)->index + 16, TRUE);
         }
 
         if (work->doors[i].sprite.palette2 != NULL) {
-            FadeSetPaletteExcluded(work->doors[i].sprite.palette2->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->doors[i].sprite.palette2)->index + 16, TRUE);
         }
 
         if (work->doors[i].sprite.palette3 != NULL) {
-            FadeSetPaletteExcluded(work->doors[i].sprite.palette3->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->doors[i].sprite.palette3)->index + 16, TRUE);
         }
     }
 
@@ -770,7 +770,7 @@ void AllmapDoorinfoLoadKeys(AllmapDoorinfoWork* work) {
         InitObjPaletteAtSlot(work->palette2, 15, gAllmapRoomPalettes[0], sizeof(gAllmapRoomPalettes[0]));
     }
 
-    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 }
 
 void task_allmap_doorinfo_0(AllmapDoorinfoWork* work, AllmapCursorPos* arg) {

@@ -32,8 +32,8 @@ void WorldSel_Before_0(WorldSelBeforeWork* work, WorldSelBeforeArgs* args) {
     work->animTimer = 0;
     work->risenCount = 0;
     UpdateAllocatedObjPalette(work->palette2, &gWorldSelBeforeRingPalettes[gWorldSelAnims[work->animStep].palette << 4]);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 
     for (i = 0; i < work->spriteCount; i++) {
         work->angle[i] = 0x80;

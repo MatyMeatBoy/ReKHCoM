@@ -106,7 +106,7 @@ void task_evt_obj_0(EvtObjWork* work, EvtObjParam* param) {
     work->palette = LoadObjPalette(res->palette, 32);
     AnimInit(&work->anim, NULL, NULL);
     work->obj->anim = &work->anim;
-    work->obj->paletteIndex = work->palette->index;
+    work->obj->paletteIndex = BIOS_PTR(work->palette)->index;
     EvtObjChangeAnim(work);
     TaskPoolInit(&work->tasks, 1);
     TaskCreate(&work->tasks, &gTaskDescEvtShadow, work->obj);

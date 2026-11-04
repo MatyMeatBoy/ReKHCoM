@@ -3842,7 +3842,7 @@ void SioChgCardShowInfo() {
     def = &defs[n];
     off = def->category << 4;
     LoadPalette(gSioChgCardCategoryPalettes + off, (void*)(BG_PLTT + 5 * PLTT_SIZE_4BPP), 32);
-    LoadObjPaletteBank(sSioChgCardWork->palette->index, gSioChgCardHighlightPalette + off);
+    LoadObjPaletteBank(BIOS_PTR(sSioChgCardWork->palette)->index, gSioChgCardHighlightPalette + off);
     nameId = def->kind;
     defs = (CardDef*)&defs->name;
     sSioChgCardWork->textSlotCount2 = LoadTextSlots(defs[n].gfx, sSioChgCardWork->textSlots2);

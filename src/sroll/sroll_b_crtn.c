@@ -65,7 +65,7 @@ void task_sroll_b_crtn_0(SrollBCrtnWork* work, SrollBCrtnArg* arg) {
         break;
     }
 
-    FadeSetPaletteExcluded((work->palette->index & 15) + 16, FALSE);
+    FadeSetPaletteExcluded((BIOS_PTR(work->palette)->index & 15) + 16, FALSE);
 }
 
 u8 task_sroll_b_crtn_1(SrollBCrtnWork* work) {

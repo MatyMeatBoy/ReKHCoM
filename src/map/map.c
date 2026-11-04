@@ -3747,9 +3747,9 @@ void NewGameSlotMenuSelectSlot(u8 slot) {
         sNewGameSlotMenuWork->textSlotCount = LoadTextSlots(GetMapWorldName(summary->world), sNewGameSlotMenuWork->textSlots);
 
         if (sNewGameSlotMenuWork->isRiku == 0) {
-            LoadObjPaletteBank(sNewGameSlotMenuWork->palette8->index, gSaveFloorSoraPalette);
+            LoadObjPaletteBank(BIOS_PTR(sNewGameSlotMenuWork->palette8)->index, gSaveFloorSoraPalette);
         } else {
-            LoadObjPaletteBank(sNewGameSlotMenuWork->palette8->index, gSaveFloorRikuPalette);
+            LoadObjPaletteBank(BIOS_PTR(sNewGameSlotMenuWork->palette8)->index, gSaveFloorRikuPalette);
         }
     } else {
         NewGameSlotMenuLoadFloorTiles(fileIndex, TRUE, 13);
@@ -4246,9 +4246,9 @@ void LoadGameMenuSelectSlot(u8 slot) {
         sLoadGameMenuWork->textSlotCount = LoadTextSlots(GetMapWorldName(summary->world), sLoadGameMenuWork->textSlots);
 
         if (slot <= 1) {
-            LoadObjPaletteBank(sLoadGameMenuWork->palette7->index, gSaveFloorSoraPalette);
+            LoadObjPaletteBank(BIOS_PTR(sLoadGameMenuWork->palette7)->index, gSaveFloorSoraPalette);
         } else {
-            LoadObjPaletteBank(sLoadGameMenuWork->palette7->index, gSaveFloorRikuPalette);
+            LoadObjPaletteBank(BIOS_PTR(sLoadGameMenuWork->palette7)->index, gSaveFloorRikuPalette);
         }
     } else {
         LoadGameMenuLoadFloorTiles(slot, TRUE, 13);
@@ -5000,8 +5000,8 @@ u8 MapDoorWaitHit(MapDoorWork* work) {
         work->update = MapDoorWaitCard;
         gMapRoomState->doorRoom = door->room;
         gMapRoomState->doorSide = door->side;
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-        FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
         TaskCreate(pool, &gTaskDescRoomcreate, NULL);
     }
 
@@ -5024,8 +5024,8 @@ u8 MapDoorWaitCard(MapDoorWork* work) {
 
     if (!(gFieldState->flags & FIELD_FLAG_ROOM_CREATE)) {
         gMapRoomState->flags &= ~ROOM_FLAG_ATTACK_HIT;
-        FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
-        FadeSetPaletteExcluded(work->palette2->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, FALSE);
         work->update = MapDoorWaitHit;
     }
 
@@ -5244,7 +5244,7 @@ void MapMenuSetPanelPalettesExcluded(MapMenuWork* work, u8 excluded) {
 
     for (i = 0; i < 3; i++) {
         if (work->palette9[i] != NULL) {
-            FadeSetPaletteExcluded(work->palette9[i]->index + 0x10, excluded);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette9[i])->index + 0x10, excluded);
         }
     }
 }
@@ -5771,7 +5771,7 @@ void Task_MapMenu_0(MapMenuWork* work) {
         work->palette6 = LoadObjPalette(gSoraPalette, sizeof(gSoraPalette));
     }
 
-    FadeSetPaletteExcluded(work->palette6->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette6)->index + 0x10, TRUE);
 #ifdef PLATFORM_PC
     /* Task_MapMenu_1 tests panelsVisible before MapMenuOpen clears it, and the
        work comes from the heap uncleared: with leftovers (often the deck

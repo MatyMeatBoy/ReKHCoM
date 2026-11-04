@@ -653,9 +653,11 @@ void task_bos_tm_body_0(TmBodyWork* work, TmWork* arg) {
     work->gfx3 = gBosTmBodyPart2Frames[0];
     work->gfx4 = gBosTmBodyPart3Frames[0];
     work->tm = arg;
-    work->tm->tileIndex = work->tiles->index;
-    work->tm->tileCount += work->tiles->count;
-    work->tm->paletteIndex = work->palette->index;
+    if (PORT_TILES_OK(work->tiles)) { /* tiles a full pool did not give: none to count (OptiPort v2.8) */
+        work->tm->tileIndex = work->tiles->index;
+        work->tm->tileCount += work->tiles->count;
+    }
+    work->tm->paletteIndex = BIOS_PTR(work->palette)->index;
     work->unk_480 = 0;
     work->angleStep = 0;
     work->angleTimer = 0;

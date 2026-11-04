@@ -712,8 +712,8 @@ void PrizeBoss_2(BossPrizeWork* work) {
 }
 
 void PrizeBoss_3(BossPrizeWork* work) {
-    FadeSetPaletteExcluded(work->palette2->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
     ColliderUnregister(&work->collider);
     ReleaseObjTiles(work->tiles);
     ReleaseObjTiles(work->tiles2);

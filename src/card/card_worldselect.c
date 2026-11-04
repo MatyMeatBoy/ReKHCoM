@@ -161,20 +161,22 @@ void MapSelect_0(MapSelectWork* work, u8* status) {
         } else {
             work->tiles4 = AllocSpriteFrameTiles(0x180);
             UpdateSpriteFrameTiles(work->tiles4, gKeyValueFrames[1], gMapSelectRequirementTiles);
-            RequestDma3Copy(work->tiles4->src + (work->requiredValue << 7),
-                           (void*)(OBJ_VRAM0 + ((work->tiles4->index + 4) << 5)), 0x80);
-            RequestDma3Copy(work->tiles4->src + 0x500,
-                           (void*)(OBJ_VRAM0 + (work->tiles4->index << 5)), 0x80);
+            if (PORT_TILES_OK(work->tiles4)) {
+                RequestDma3Copy(work->tiles4->src + (work->requiredValue << 7),
+                               (void*)(OBJ_VRAM0 + ((work->tiles4->index + 4) << 5)), 0x80);
+                RequestDma3Copy(work->tiles4->src + 0x500,
+                               (void*)(OBJ_VRAM0 + (work->tiles4->index << 5)), 0x80);
+            }
         }
 
         work->tiles2 = LoadObjTiles(gCardBacks[CARD_BACK_WHITE].tiles2, 0x300);
         work->palette = LoadObjPalette(gDoorCardPalette, sizeof(gDoorCardPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     } else {
         work->tiles4 = NULL;
         work->tiles2 = NULL;
         work->palette = LoadObjPalette(gDoorCardPalette, sizeof(gDoorCardPalette));
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     }
 
     gMapCardUiResources.tiles = AllocObjTiles(0x280, NULL);
@@ -255,10 +257,10 @@ void MapSelect_0(MapSelectWork* work, u8* status) {
     }
 
     work->nameY = 0x19100;
-    FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
-    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
     FadeSetPaletteExcluded(15, TRUE);
-    FadeSetPaletteExcluded(work->palette4->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
     work->unk_1E4 = NULL;
     work->mosaicX = 9;
     work->mosaicY = 9;
@@ -947,10 +949,10 @@ void MapSelect_3(MapSelectWork* work) {
         EwramFree(work->kindEntries);
     }
 
-    FadeSetPaletteExcluded(work->palette3->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette2->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, FALSE);
     FadeSetPaletteExcluded(15, FALSE);
-    FadeSetPaletteExcluded(work->palette4->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, FALSE);
     ReleaseObjTiles(work->tiles5);
     ReleaseObjPalette(work->palette3);
     ReleaseObjTiles(work->tiles);
