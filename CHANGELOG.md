@@ -6,6 +6,7 @@
 - Android: an HD scene no longer closes the game on phones whose video decoder hands over incomplete frames (Traverse Town floor exit, #563); such frames are skipped and, if none is usable, the original scene plays.
 - Stability pass (OptiPort): every place the original game uses a sprite or palette slot it failed to get now behaves as on the GBA instead of risking a crash on Android, the web, Linux ARM and consoles; found by forcing those failures across every battle and story event.
 - Windows HD movies: a short or empty decoded frame is skipped instead of being read.
+- HD menus: the selected row's line now carries on the lamp square's bottom edge instead of starting halfway up the light.
 - Test suite: stale test probes repaired.
 
 ## v2.7
