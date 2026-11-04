@@ -15095,19 +15095,20 @@
     "issue564-colosseum-battle-crash64": {
       "id": "issue564-colosseum-battle-crash64",
       "piece": "Windows64 v2.7 crash c0000005 null+0x28 en batalla Coliseo",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-bugs-1104",
       "created_at": "2026-11-04T12:12:10.201868+00:00",
-      "updated_at": "2026-11-04T12:12:10.201868+00:00",
+      "updated_at": "2026-11-04T12:12:18.308456+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/564",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-04T12:12:18.308456+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-04T12:12:10.201868+00:00",
+  "updated_at": "2026-11-04T12:12:18.308456+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
