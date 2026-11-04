@@ -44,5 +44,11 @@ def main():
         subprocess.check_call(flags + [str(HERE / 'test_windows64.c'), str(HERE / 'test_preserved.S'), '-lSDL3', '-lm', '-o', str(test)])
         subprocess.check_call([str(test)], cwd=OUT)
         subprocess.check_call([sys.executable, str(HERE / "test_boot_status.py"), str(OUT / "rekhcom64.exe")])
+        bios = OUT / 'test_guest_biosfault.exe'  # the game's NULL accesses read the BIOS stand-in (#564)
+        subprocess.check_call([str(tc / 'clang.exe'), '--target=x86_64-w64-mingw32', '-O2', f'-I{ROOT}',
+                               str(ROOT / 'port/tools/test_guest_biosfault.c'), '-o', str(bios)])
+        subprocess.check_call([str(bios)], cwd=OUT)
+        if subprocess.run([str(bios), '--host-null'], cwd=OUT, capture_output=True).returncode != 3:
+            raise SystemExit('a host NULL read outside the guest text must still crash')
     print(OUT)
 if __name__ == '__main__': main()

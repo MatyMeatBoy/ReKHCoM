@@ -31,6 +31,7 @@
 #include "linux64_args.h"
 #ifndef PORT_LINUXARM64
 #include "guest_divzero_linux.h"
+#include "guest_biosfault_linux.h"
 #endif
 #include "../include/port/port_device_profile_host.h"
 
@@ -101,7 +102,14 @@ static void StartupDeadlineExpired(void) {
 static FILE* sFiles[64];
 static DIR* sDirs[16];
 static void H_log(const char* s) { fprintf(stderr, "%s\n", s); }
-static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
+static void H_exit(int code) {
+#ifndef PORT_LINUXARM64
+    if (sGuestBiosRedirects)
+        Log("guest BIOS accesses redirected: %ld, first at guest+%08llx", (long)sGuestBiosRedirects,
+            (unsigned long long)(sGuestBiosFirstRip - PS5G_BASE));
+#endif
+    fflush(NULL); SDL_Quit(); _exit(code);
+}
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 /* Optional event channel over getenv keeps the fixed bridge table compatible with old hosts. */
@@ -484,6 +492,13 @@ int main(int argc, char** argv) {
             (unsigned long long)sGuestDivision.end);
     else
         Log("guest DIV0 compatibility unavailable: missing text metadata or handler");
+    /* the game's NULL accesses read a BIOS stand-in as on the GBA (issue #564) */
+    if (sGuestDivision.begin && MapFixed(PORT_GUEST_BIOS_STANDIN, PORT_GUEST_BIOS_SIZE)) {
+        PortGuestBiosFill();
+        if (GuestBiosInstall())
+            Log("guest BIOS compatibility: NULL-page accesses of game code read the BIOS stand-in");
+    } else
+        Log("guest BIOS compatibility unavailable: missing text metadata or stand-in mapping");
     StartupStage("image-scratch-release", "begin");
     free(tmp);
     StartupStage("image-scratch-release", "done");
