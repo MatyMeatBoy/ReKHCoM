@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.8
+
+- 64-bit (Windows, Linux/Steam Deck): no more crash when a battle runs out of sprite memory, as in the Colosseum (#564). The 64-bit game now handles the original game's stray reads the way the GBA and the 32-bit game do, instead of closing.
+- Android: an HD scene no longer closes the game on phones whose video decoder hands over incomplete frames (Traverse Town floor exit, #563); such frames are skipped and, if none is usable, the original scene plays.
+- Stability pass (OptiPort): every place the original game uses a sprite or palette slot it failed to get now behaves as on the GBA instead of risking a crash on Android, the web, Linux ARM and consoles; found by forcing those failures across every battle and story event.
+- Windows HD movies: a short or empty decoded frame is skipped instead of being read.
+- Test suite: stale test probes repaired.
+
 ## v2.7
 
 - HD room synthesis no longer stutters as its list opens or scrolls: the room cards load one a frame from the moment its banner appears (opening loaded 7 pictures in one frame, up to 55 ms from a cold disk; now 2, about 3 ms).
