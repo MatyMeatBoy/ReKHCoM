@@ -3047,7 +3047,9 @@ static void MenuBarBase(int x, int t, int w, int selected, int height) {
 }
 
 static void MenuBar(int x, int t, int w, int selected) {
-    MenuBarBase(x, t, w, selected, 10);
+    /* The HD lamp is eleven rows: the bar shares the square's base, one clean black edge carried on from it, never
+       starting halfway up the light (user 04/11, Atlas 7b8b7f83; as the title's Select sign, #261). GBA keeps 10. */
+    MenuBarBase(x, t, w, selected, sHdUiFrame && sFb == sHdUiFrame ? 11 : 10);
 }
 
 /* One selected row on its own (the skip prompt, notices, hints): the bar
