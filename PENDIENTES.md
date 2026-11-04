@@ -431,4 +431,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue563-tt-boss-goldcard-android | Android v2.2.5: sin carta dorada tras jefe Ciudad de Paso con escena saltada; crash al entrar sala jefe | bloqueado | claude-bugs-1104 | — | — | 2026-11-04T12:29:48.025384+00:00 |
 | guest64-bios-standin | Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS | pendiente | — | — | — | 2026-11-04T12:58:20.326210+00:00 |
 
-Integrador: claude-bugs-1104 (ocupado; 2026-11-04T12:57:54.617556+00:00)
+Integrador: libre
