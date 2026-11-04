@@ -417,6 +417,21 @@ static void Feed(Track* t) {
     }
 }
 
+/* Every byte the upload reads lies inside its plane: rows of the crop, Y one byte a pixel, U and V one sample (pu
+   bytes apart) per pixel pair. A decoder that hands NULL or short planes skips the frame instead of crashing (#563). */
+static int PlanesUsable(const HdCrop* crop, const uint8_t* y, int ly, int32_t sy, const uint8_t* u, int lu, int32_t su,
+                        const uint8_t* v, int lv, int32_t sv, int32_t pu) {
+    int64_t lastRow, lastChromaRow, lastChroma;
+    if (!y || !u || !v || sy <= 0 || su <= 0 || sv <= 0 || pu <= 0 || ly <= 0 || lu <= 0 || lv <= 0 ||
+        crop->left < 0 || crop->top < 0 || crop->right <= crop->left || crop->bottom <= crop->top)
+        return 0;
+    lastRow = crop->bottom - 1;
+    lastChromaRow = lastRow / 2;
+    lastChroma = (crop->right - 1) / 2;
+    return lastRow * sy + crop->right <= ly && lastChromaRow * su + lastChroma * pu + 1 <= lu &&
+           lastChromaRow * sv + lastChroma * pu + 1 <= lv;
+}
+
 /* The frame is converted to RGB here (BT.709, studio range) and uploaded as a plain texture, the default: SDL's YUV
    textures (KHCOM_HDMOVIE_YUV=1) hang some GPUs while their shader is built (the Android 14 emulator, 21/10) */
 static int YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy, const uint8_t* u, const uint8_t* v,
@@ -478,7 +493,7 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
     int64_t audioPushed = 0, pendingPts = 0, start = 0; /* microseconds */
     Uint64 lastShown = 0; /* when a frame last went to the screen */
     ssize_t pending = -1;
-    int fd, quit = 0, played = 0, shown = 0, dropped = 0, audioOn, rgb = SDL_getenv("KHCOM_HDMOVIE_YUV") == NULL;
+    int fd, quit = 0, played = 0, shown = 0, dropped = 0, badPlanes = 0, audioOn, rgb = SDL_getenv("KHCOM_HDMOVIE_YUV") == NULL;
     struct stat st;
     Subs subs;
 
@@ -666,6 +681,22 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
                    goes through NV21 */
                 int w = crop.right - crop.left, h = crop.bottom - crop.top;
                 int nv = rgb ? 3 : pu == 2 ? (v == u + 1 ? 1 : u == v + 1 ? 2 : 0) : 0;
+                /* Issue #563: a Xiaomi decoder (Android 16) handed frames whose chroma plane was NULL although
+                   AImage_getPlaneData succeeded, and the conversion read it. Every plane must hold the rows read. */
+                if (!PlanesUsable(&crop, y, ly, sy, u, lu, su, v, lv, sv, pu)) {
+                    if (!badPlanes++)
+                        HdMovieLog("hd movie: unusable frame planes (y %p/%d u %p/%d v %p/%d, rows %d %d %d, pixel %d, crop %d,%d-%d,%d)",
+                                   (void*)y, ly, (void*)u, lu, (void*)v, lv, (int)sy, (int)su, (int)sv, (int)pu,
+                                   crop.left, crop.top, crop.right, crop.bottom);
+                    w = 0; /* this frame is not shown */
+                    if (!played && badPlanes >= 30) {
+                        /* the decoder gives nothing usable: the cartridge's scene plays instead */
+                        HdMovieLog("hd movie: %s gives no usable frames, the cartridge's scene plays", path);
+                        M.imageDelete(image);
+                        played = 0;
+                        goto done;
+                    }
+                }
                 if (w > 0 && h > 0 && (pu == 1 || nv)) {
                     if (!texture || texW != w || texH != h || texNv12 != nv) {
                         SDL_PropertiesID props = SDL_CreateProperties();
