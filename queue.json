@@ -15126,8 +15126,13 @@
       "evidence": []
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-04T12:21:28.295897+00:00",
+  "integrator": {
+    "owner": "claude-bugs-1104",
+    "token": "c7b78c7d85e220650fa5ad728500349ffc9dab91b9cdfa95",
+    "created_at": "2026-11-04T12:21:58.954282+00:00",
+    "updated_at": "2026-11-04T12:21:58.954282+00:00"
+  },
+  "updated_at": "2026-11-04T12:21:58.954282+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
