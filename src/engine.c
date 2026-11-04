@@ -1192,6 +1192,13 @@ u8 UpdateSpriteFrameTiles(ObjTiles* tiles, u16* sprite, void* src) {
     u16 tileOffset;
     u16 tileCount;
 
+#ifdef PLATFORM_PC
+    /* @bug AllocSpriteFrameTiles returns NULL when the OBJ tiles are full and callers such as the sleight name
+       (StockNameSora_0) pass it on: the GBA reads the BIOS there, its type is no frame and nothing is drawn, as
+       DrawSprite and ReleaseObjTiles already skip a NULL. The 64-bit hosts faulted on it (issue #564). */
+    if (tiles == NULL)
+        return FALSE;
+#endif
     if (sprite != NULL && src != NULL && tiles->type == OBJ_TILES_TYPE_FRAME) {
         if (tiles->sprite != sprite || tiles->src != src) {
             tiles->src = src;
