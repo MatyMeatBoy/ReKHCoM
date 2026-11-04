@@ -328,8 +328,8 @@ static void PrizeCard_2(PrizeCardWork* work) {
 }
 
 static void PrizeCard_3(PrizeCardWork* work) {
-    FadeSetPaletteExcluded(work->palette2->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
     ColliderUnregister(&work->collider);
     ReleaseObjTiles(work->tiles);
     ReleaseObjTiles(work->tiles2);

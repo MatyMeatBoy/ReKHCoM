@@ -6341,7 +6341,7 @@ static u8 msgwin_1(MsgWinWork* work, void* task) {
                         work->palette = LoadObjPalette(gTextWhitePalette, sizeof(gTextWhitePalette));
 
                         if ((entry->flags & MSG_SCRIPT_FLAG_NO_FADE) != 0) {
-                            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+                            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
                         }
                     }
 
@@ -6397,7 +6397,7 @@ static u8 msgwin_1(MsgWinWork* work, void* task) {
                 work->palette = LoadObjPalette(gTextWhitePalette, sizeof(gTextWhitePalette));
 
                 if ((entry->flags & MSG_SCRIPT_FLAG_NO_FADE) != 0) {
-                FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+                FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
                 }
             }
 
@@ -6891,9 +6891,9 @@ u8 msgface_1(MsgFaceWork* work, void* task) {
     }
 
     if (gEventState->ending == TRUE) {
-        FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
     } else {
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     }
 
     work->gfx = AnimUpdate(&work->anim);
@@ -7104,8 +7104,8 @@ void msgwait_0(MsgWaitWork* work, u8* arg) {
     work->nextPosition = arg[0];
     work->tiles = AllocObjTiles(64, NULL);
     work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-    LoadObjPaletteBank(work->palette->index, gBStatesPalette);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+    LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gBStatesPalette);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     SetObjTileSource(work->tiles, gFEventTiles);
     AnimInit(&work->anim, gFEventAnims, gFEventFrames);
     AnimStart(&work->anim, 2, ANIM_FLAG_LOOP);
@@ -7165,7 +7165,7 @@ void msgwait_2(MsgWaitWork* work) {
 }
 
 void msgwait_3(MsgWaitWork* work) {
-    FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
     ReleaseObjTiles(work->tiles);
     ReleaseObjPalette(work->palette);
 }
@@ -7174,23 +7174,23 @@ void msgwait_yesno_0(MsgWaitWork* work, u8* arg) {
     work->nextPosition = *arg;
     work->tiles = AllocObjTiles(64, NULL);
     work->palette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-    LoadObjPaletteBank(work->palette->index, gBStatesPalette);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+    LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gBStatesPalette);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     SetObjTileSource(work->tiles, gFEventTiles);
     AnimInit(&work->anim, gFEventAnims, gFEventFrames);
     AnimStart(&work->anim, 2, ANIM_FLAG_LOOP);
     work->timer = 0;
     work->tiles2 = AllocObjTiles(288, NULL);
     work->palette2 = LoadObjPalette(gDialogBoxPalette, sizeof(gDialogBoxPalette));
-    LoadObjPaletteBank(work->palette2->index, gDialogBoxPalette);
+    LoadObjPaletteBank(BIOS_PTR(work->palette2)->index, gDialogBoxPalette);
     SetObjTileSource(work->tiles2, gHandCursorTiles);
     AnimInit(&work->anim2, gHandCursorAnims, gHandCursorFrames);
     AnimStart(&work->anim2, 2, ANIM_FLAG_LOOP);
     work->gfx2 = AnimGetGfx(&work->anim2);
     work->tiles3 = LoadObjTiles(gMsgBoxTiles, sizeof(gMsgBoxTiles));
     work->palette3 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-    LoadObjPaletteBank(work->palette3->index, gCard00Palette);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+    LoadObjPaletteBank(BIOS_PTR(work->palette3)->index, gCard00Palette);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     InitTextSlots(work->textSlots, ARRAY_COUNT(work->textSlots));
     InitTextSlots(work->textSlots2, ARRAY_COUNT(work->textSlots2));
     work->palette4 = LoadTextPalette(1);

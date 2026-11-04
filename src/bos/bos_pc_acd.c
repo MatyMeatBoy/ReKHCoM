@@ -65,8 +65,8 @@ u8 task_bos_pc_acd_1(PcAcdWork* work) {
     AnimState* anim;
     s32 animId;
 
-    FadeSetPaletteExcluded(work->palette->index + 17, FALSE);
-    FadeSetPaletteExcluded(work->palette->index + 18, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 17, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 18, FALSE);
     anim = &work->anim;
     AnimUpdate(anim);
 

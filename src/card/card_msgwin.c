@@ -406,7 +406,7 @@ u8 UpdateCardMsgwinWaitInput(CardMsgWinWork* work, void* task) {
             work->tiles = AllocObjTiles(0x120, NULL);
             pal = gDialogBoxPalette;
             work->palette3 = LoadObjPalette(pal, 32);
-            LoadObjPaletteBank(work->palette3->index, pal);
+            LoadObjPaletteBank(BIOS_PTR(work->palette3)->index, pal);
             SetObjTileSource(work->tiles, gHandCursorTiles);
             AnimInit(&work->anim3, gHandCursorAnims, gHandCursorFrames);
             AnimStart(&work->anim3, 2, ANIM_FLAG_LOOP);

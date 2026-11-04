@@ -391,7 +391,7 @@ u8 FldSoraWaitRoomCreate(FldWork* work, void* task) {
     }
 
     if ((gFieldState->flags & FIELD_FLAG_ROOM_CREATE) == 0) {
-        FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
         work->state = FLD_STATE_GROUND;
         work->timer = 0;
         SetTaskUpdate(task, (TaskUpdateFunc)task_fld_sora_1);
@@ -400,7 +400,7 @@ u8 FldSoraWaitRoomCreate(FldWork* work, void* task) {
         timer = &work->timer;
 
         if (*timer == 0) {
-            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
             act->speed = 0;
             work->onCollider = FALSE;
         }
@@ -1151,7 +1151,7 @@ u8 FldSoraWalkOut(FldWork* work, void* task) {
     case FLD_STATE_WORLD_SELECT_POSE:
         if (work->timer == 0) {
             FldSoraSetAnim(work, 12, 0);
-            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
         }
 
         if (work->timer == 40) {
@@ -1587,7 +1587,7 @@ u8 task_fld_sora_1(FldWork* work, void* task) {
                 }
             } else {
                 if (FldSoraCheckDoorAhead(act)) {
-                    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+                    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
                     gFieldState->flags |= FIELD_FLAG_EXIT_ROOM;
                     return 1;
                 }

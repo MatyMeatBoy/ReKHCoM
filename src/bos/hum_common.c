@@ -737,17 +737,17 @@ void HumDraw(HumWork* work) {
 
         if (work->stateTimer & 1) {
             work->flags |= HUM_FLAG_FLASH_PALETTE;
-            LoadObjPaletteBank(work->palette->index, gHumFlashPalettes[sHumReloadPaletteCycle[idx]]);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gHumFlashPalettes[sHumReloadPaletteCycle[idx]]);
         } else {
             work->flags &= ~HUM_FLAG_FLASH_PALETTE;
-            LoadObjPaletteBank(work->palette->index, work->paletteData);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, work->paletteData);
         }
     } else if (StepHitFlash(actor)) {
         work->flags |= HUM_FLAG_FLASH_PALETTE;
-        LoadObjPaletteBank(work->palette->index, gHitFlashPalette);
+        LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gHitFlashPalette);
     } else if (work->flags & HUM_FLAG_FLASH_PALETTE) {
         work->flags &= ~HUM_FLAG_FLASH_PALETTE;
-        LoadObjPaletteBank(work->palette->index, work->paletteData);
+        LoadObjPaletteBank(BIOS_PTR(work->palette)->index, work->paletteData);
     }
 
     DrawSprite(x, y, work->gfx, work->tiles, work->palette, affine, attr, (-0x1004 - (actor->y >> 8) * 4) | 3);

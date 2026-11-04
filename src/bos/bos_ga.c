@@ -2479,8 +2479,13 @@ u8 BosGaUpdateDefeat(GaWork* work) {
                 }
             }
 
-            param.paletteAddr = OBJ_PLTT + (work->palette->index << 5);
+            param.paletteAddr = PLTT_MIRROR(OBJ_PLTT + (BIOS_PTR(work->palette)->index << 5));
+#ifdef PLATFORM_PC
+            /* no palette from a full pool: nothing to fade (the BIOS's count would size a copy past palette RAM) */
+            param.paletteSize = work->palette != NULL ? work->palette->count << 5 : 0;
+#else
             param.paletteSize = work->palette->count << 5;
+#endif
             param.tilesAddr4 = 0;
             param.tileCount4 = 0;
             param.paletteAddr2 = 0;
@@ -2868,8 +2873,8 @@ void task_bos_ga_0(GaWork* work, s32 arg) {
     SetBtlObjUnhittable(&work->entries[BOS_GA_PART_HEAD].actor, TRUE);
     work->palette = LoadObjPalette(gBoss01objPalette, sizeof(gBoss01objPalette));
     work->palette2 = LoadObjPalette(gHitFlashPalette, sizeof(gHitFlashPalette));
-    SetBtlPaletteFadeExcluded(work->palette->index + 16, TRUE);
-    SetBtlPaletteFadeExcluded(work->palette2->index + 16, TRUE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
     RequestBossCardValue(GetRandom() % 4 + 1);
 }
 

@@ -305,6 +305,23 @@ void DrawSpriteUnsortedAffine(u16 x, u16 y, void* sprite, void* tiles, void* pal
     work->sortLo += 1;
 }
 
+#ifdef PLATFORM_PC
+/* Harness fault injection (OptiPort v2.8, issue #564): KHCOM_OBJ_FAIL_TILES=N / KHCOM_OBJ_FAIL_PAL=N make every N-th
+   new OBJ tile / palette allocation fail as a full pool does, so the original's NULL uses after an exhausted pool show
+   up in the desktop fault logs (debug_kit.py) before they close Android, the web or Linux ARM. Unset: no effect. */
+static int PortObjAllocFails(int palette) {
+    static int every[2] = { -1, -1 }, count[2];
+    if (every[palette] < 0) {
+        const char* e = getenv(palette ? "KHCOM_OBJ_FAIL_PAL" : "KHCOM_OBJ_FAIL_TILES");
+        every[palette] = e ? atoi(e) : 0;
+    }
+    return every[palette] > 0 && ++count[palette] % every[palette] == 0;
+}
+#define PORT_OBJ_ALLOC_FAILS(palette) PortObjAllocFails(palette)
+#else
+#define PORT_OBJ_ALLOC_FAILS(palette) 0
+#endif
+
 ObjTiles* LoadObjTiles(const void* src, u16 size) {
     ObjTiles* node;
     ObjTiles* cur;
@@ -331,6 +348,8 @@ ObjTiles* LoadObjTiles(const void* src, u16 size) {
         cur = ListPoolNext(&cur->node);
     }
 
+    if (PORT_OBJ_ALLOC_FAILS(0))
+        return NULL;
     node = ListPoolFirstFree(&gSpriteWork->tilePool);
 
     if (node == NULL) {
@@ -449,6 +468,8 @@ ObjTiles* AllocObjTiles(u16 size, const void* owner) {
         return NULL;
     }
 
+    if (PORT_OBJ_ALLOC_FAILS(0))
+        return NULL;
     node = ListPoolFirstFree(&gSpriteWork->tilePool);
 
     if (node == NULL) {
@@ -539,6 +560,8 @@ ObjPalette* LoadObjPalette(const void* src, u16 size) {
         }
     }
 
+    if (PORT_OBJ_ALLOC_FAILS(1))
+        return NULL;
     node = ListPoolFirstFree(&gSpriteWork->palettePool);
 
     if (node == NULL) {
@@ -599,7 +622,13 @@ ObjPalette* LoadObjPalette(const void* src, u16 size) {
 }
 
 void LoadObjPaletteBank(u16 bank, void* src) {
+#ifdef PLATFORM_PC
+    /* a bank read through a palette a full pool did not give (BIOS_PTR) is the BIOS's value: the GBA's palette RAM
+       mirrors every 1 KiB, so the write lands inside it as there (OptiPort v2.8) */
+    LoadPalette(src, (void*)(PLTT + ((0x200u + bank * PLTT_SIZE_4BPP) & 0x3FFu)), 32);
+#else
     LoadPalette(src, (void*)(OBJ_PLTT + bank * PLTT_SIZE_4BPP), 32);
+#endif
 }
 
 void ReleaseObjPaletteRef(ObjPalette* palette) {
@@ -975,16 +1004,16 @@ void UpdateSpriteOam() {
             PortOamSetPosition(emitted, x, y);
             PortOamSetSource(emitted, (int)(entry - gSpriteWork->entries));
             PortOamSetHdPart(emitted, ((ObjTiles*)entry->tiles)->src, entry->sprite, partX, partY, partW, partH,
-                             affine != NULL ? 0 : entry->flags, ((ObjPalette*)entry->palette)->src, attr2 >> 12);
+                             affine != NULL ? 0 : entry->flags, entry->palette != NULL ? ((ObjPalette*)entry->palette)->src : NULL, attr2 >> 12);
 #endif
             tiles = entry->tiles;
 
             if (tiles->allocated) {
-                palette = (attr2 >> 12) + ((ObjPalette*)entry->palette)->index;
+                palette = (attr2 >> 12) + BIOS_PTR((ObjPalette*)entry->palette)->index; /* a palette a full pool did not give: the GBA reads its BIOS */
                 oam[2] = (attr2 & SPRITE_PRIORITY_MASK) | (tileOffset + tiles->index) | (palette << 12);
                 tileOffset += GetObjTileCount(oam[0], oam[1]);
             } else {
-                palette = (attr2 >> 12) + ((ObjPalette*)entry->palette)->index;
+                palette = (attr2 >> 12) + BIOS_PTR((ObjPalette*)entry->palette)->index; /* a palette a full pool did not give: the GBA reads its BIOS */
                 oam[2] = ((attr2 & ~OAM_PALETTE_MASK) + tiles->index) | (palette << 12);
             }
 
@@ -1234,6 +1263,8 @@ ObjPalette* AllocObjPalette(u16 size) {
     s32 avail;
     s16 gap;
 
+    if (PORT_OBJ_ALLOC_FAILS(1))
+        return NULL;
     node = ListPoolFirstFree(&gSpriteWork->palettePool);
 
     if (node == NULL) {
@@ -1291,6 +1322,10 @@ ObjPalette* AllocObjPalette(u16 size) {
 }
 
 void UpdateAllocatedObjPalette(ObjPalette* palette, void* src) {
+#ifdef PLATFORM_PC
+    if (palette == NULL) /* a full pool gave none: the BIOS's type is no allocated palette (OptiPort v2.8) */
+        return;
+#endif
     if (palette->type == OBJ_PALETTE_TYPE_ALLOCATED) {
         LoadPalette(src, (void*)(OBJ_PLTT + palette->index * PLTT_SIZE_4BPP), palette->count << 5);
     }

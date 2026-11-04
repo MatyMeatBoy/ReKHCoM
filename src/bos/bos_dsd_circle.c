@@ -70,7 +70,7 @@ u8 task_bos_dsd_circle_1(DsdCircleWork* work) {
                 work->paletteFrame = 0;
             }
 
-            LoadObjPaletteBank(work->dsd->palette->index,
+            LoadObjPaletteBank(BIOS_PTR(work->dsd->palette)->index,
                                &gBosDsdCircleCyclePalettes[work->paletteFrame * 16]);
         }
 
@@ -82,7 +82,7 @@ u8 task_bos_dsd_circle_1(DsdCircleWork* work) {
         work->summonTimer++;
         break;
     case BOS_DSD_SUMMON_STEP_STOP_SPAWN:
-        LoadObjPaletteBank(work->dsd->palette->index, gBosDsdCircleCyclePalettes);
+        LoadObjPaletteBank(BIOS_PTR(work->dsd->palette)->index, gBosDsdCircleCyclePalettes);
         work->frame = work->dsd->bgFrame - 21;
         break;
     case BOS_DSD_SUMMON_STEP_CLOSE:

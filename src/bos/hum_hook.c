@@ -808,7 +808,7 @@ void task_hum_hook_moon_0(HookMoonWork* work) {
     PushPaletteEffect(0);
     work->palette = LoadObjPalette(gHumHookMoonPalette, sizeof(gHumHookMoonPalette));
     PopPaletteEffect();
-    SetBtlPaletteFadeExcluded(work->palette->index + 16, FALSE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
     work->backdropSet = FALSE;
     work->angle = 0;
 }

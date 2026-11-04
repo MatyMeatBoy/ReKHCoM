@@ -449,11 +449,11 @@ void InitMooglePackOpening(s16 x, s16 y) {
         sMooglePackCards[i].revealed = FALSE;
         id &= CARD_ID_MASK;
         sMooglePackCards[i].palette = LoadObjPalette(gCardDefs[id].palette, 0x20);
-        FadeSetPaletteExcluded(sMooglePackCards[i].palette->index + 0x10, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette)->index + 0x10, TRUE);
         sMooglePackCards[i].tiles = LoadObjTiles(gCardDefs[id].tiles, 0x200);
         sMooglePackCards[i].gfx = gCardDefs[id].gfx;
         sMooglePackCards[i].palette2 = LoadObjPalette(gMooglePackCardSpinPalettes + gCardDefs[id].category * 16, 0x20);
-        FadeSetPaletteExcluded(sMooglePackCards[i].palette2->index + 0x10, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette2)->index + 0x10, TRUE);
         sMooglePackCards[i].tiles2 = LoadObjTiles(gMooglePackCardSpinTiles, sizeof(gMooglePackCardSpinTiles));
         sMooglePackCards[i].backSprite = NULL;
         AnimInit(&sMooglePackCards[i].anim, gMooglePackCardSpinAnims, gMooglePackCardSpinFrames);
@@ -467,18 +467,18 @@ void InitMooglePackOpening(s16 x, s16 y) {
     }
 
     sMooglePackCard00Palette = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-    FadeSetPaletteExcluded(sMooglePackCard00Palette->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCard00Palette)->index + 0x10, TRUE);
     sMooglePackValueTiles = LoadObjTiles(gCardValueDigitTiles, sizeof(gCardValueDigitTiles));
     sMooglePackPremiumValuePalette = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
-    FadeSetPaletteExcluded(sMooglePackPremiumValuePalette->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackPremiumValuePalette)->index + 0x10, TRUE);
     sMooglePackPremiumValueTiles = LoadObjTiles(gCardPremiumValueDigitTiles, sizeof(gCardPremiumValueDigitTiles));
     sMooglePackCursorPalette = LoadObjPalette(gMoogleShopCursorPalette, sizeof(gMoogleShopCursorPalette));
     sMooglePackCursorTiles = LoadObjTiles(gMoogleShopCursorTiles, sizeof(gMoogleShopCursorTiles));
     AnimInit(&sMooglePackCursorAnim, gMoogleShopCursorAnims, gMoogleShopCursorFrames);
     AnimStart(&sMooglePackCursorAnim, 0, ANIM_FLAG_LOOP);
-    FadeSetPaletteExcluded(sMooglePackCursorPalette->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCursorPalette)->index + 0x10, TRUE);
     sMooglePackCategoryPalette = LoadObjPalette(gMooglePackCategoryPalettes, 0x20);
-    FadeSetPaletteExcluded(sMooglePackCategoryPalette->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCategoryPalette)->index + 0x10, TRUE);
     textPtr = &sMooglePackNameText;
     *textPtr = EwramAlloc(0x24 * sizeof(TextSlot));
     InitTextSlots(sMooglePackNameText, 0x24);
@@ -500,27 +500,27 @@ void ReleaseMooglePackOpening() {
     s16 i;
 
     for (i = 0; i < 5; i++) {
-        FadeSetPaletteExcluded(sMooglePackCards[i].palette->index + 0x10, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette)->index + 0x10, FALSE);
         ReleaseObjPalette(sMooglePackCards[i].palette);
         ReleaseObjTiles(sMooglePackCards[i].tiles);
-        FadeSetPaletteExcluded(sMooglePackCards[i].palette2->index + 0x10, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette2)->index + 0x10, FALSE);
         ReleaseObjPalette(sMooglePackCards[i].palette2);
         ReleaseObjTiles(sMooglePackCards[i].tiles2);
     }
 
-    FadeSetPaletteExcluded(sMooglePackCursorPalette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCursorPalette)->index + 0x10, FALSE);
     ReleaseObjPalette(sMooglePackCursorPalette);
     ReleaseObjTiles(sMooglePackCursorTiles);
-    FadeSetPaletteExcluded(sMooglePackCategoryPalette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCategoryPalette)->index + 0x10, FALSE);
     ReleaseObjPalette(sMooglePackCategoryPalette);
     FreeTextSlots(sMooglePackNameText, 0x24);
     EwramFree(sMooglePackNameText);
     FreeTextSlots(sMooglePackDescText, 0x5A);
     EwramFree(sMooglePackDescText);
-    FadeSetPaletteExcluded(sMooglePackCard00Palette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCard00Palette)->index + 0x10, FALSE);
     ReleaseObjPalette(sMooglePackCard00Palette);
     ReleaseObjTiles(sMooglePackValueTiles);
-    FadeSetPaletteExcluded(sMooglePackPremiumValuePalette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackPremiumValuePalette)->index + 0x10, FALSE);
     ReleaseObjPalette(sMooglePackPremiumValuePalette);
     ReleaseObjTiles(sMooglePackPremiumValueTiles);
     ReleaseObjTiles(sMooglePackPremiumTiles);
@@ -641,7 +641,7 @@ u8 UpdateMooglePackOpening(u16 freePack) {
                     ReleaseObjPalette(sMooglePackCards[i].palette2);
                     ReleaseObjTiles(sMooglePackCards[i].tiles2);
                     sMooglePackCards[i].palette2 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-                    FadeSetPaletteExcluded(sMooglePackCards[i].palette2->index + 0x10, TRUE);
+                    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette2)->index + 0x10, TRUE);
                     sMooglePackCards[i].tiles2 = LoadObjTiles(gCardBacks[gCardDefs[sMooglePackCardIds[i] & CARD_ID_MASK].category].tiles, 0x300);
                     sMooglePackCards[i].backSprite = gCardBacks[gCardDefs[sMooglePackCardIds[i] & CARD_ID_MASK].category].gfx;
                     sMooglePackCards[i].flipAngle = 0x40;
@@ -696,7 +696,7 @@ u8 UpdateMooglePackOpening(u16 freePack) {
                     ReleaseObjPalette(sMooglePackCards[i].palette2);
                     ReleaseObjTiles(sMooglePackCards[i].tiles2);
                     sMooglePackCards[i].palette2 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-                    FadeSetPaletteExcluded(sMooglePackCards[i].palette2->index + 0x10, TRUE);
+                    FadeSetPaletteExcluded(BIOS_PTR(sMooglePackCards[i].palette2)->index + 0x10, TRUE);
                     sMooglePackCards[i].tiles2 = LoadObjTiles(gCardBacks[gCardDefs[sMooglePackCardIds[i] & CARD_ID_MASK].category].tiles, 0x300);
                     sMooglePackCards[i].backSprite = gCardBacks[gCardDefs[sMooglePackCardIds[i] & CARD_ID_MASK].category].gfx;
                     sMooglePackCards[i].flipAngle = 0x40;
@@ -785,7 +785,7 @@ u8 UpdateMooglePackOpening(u16 freePack) {
                     LoadPalette(gMooglePackCardInfoPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16, (void*)(BG_PLTT + 13 * PLTT_SIZE_4BPP), 0x20);
                     sMooglePackNameTextCount = LoadTextSlots(LANGSEL(gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].name), sMooglePackNameText);
                     sMooglePackDescTextCount = LoadTextSlots((void*)LANGSTR(gCardKindDescriptions[gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].kind]), sMooglePackDescText);
-                    LoadObjPaletteBank(sMooglePackCategoryPalette->index, gMooglePackCategoryPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16);
+                    LoadObjPaletteBank(BIOS_PTR(sMooglePackCategoryPalette)->index, gMooglePackCategoryPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16);
                     EnableBg(3);
                     sMooglePackCards[i].state = MOOGLE_PACK_CARD_STATE_BROWSE;
                 }
@@ -830,7 +830,7 @@ u8 UpdateMooglePackOpening(u16 freePack) {
                 LoadPalette(gMooglePackCardInfoPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16, (void*)(BG_PLTT + 13 * PLTT_SIZE_4BPP), 0x20);
                 sMooglePackNameTextCount = LoadTextSlots(LANGSEL(gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].name), sMooglePackNameText);
                 sMooglePackDescTextCount = LoadTextSlots((void*)LANGSTR(gCardKindDescriptions[gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].kind]), sMooglePackDescText);
-                LoadObjPaletteBank(sMooglePackCategoryPalette->index, gMooglePackCategoryPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16);
+                LoadObjPaletteBank(BIOS_PTR(sMooglePackCategoryPalette)->index, gMooglePackCategoryPalettes + gCardDefs[sMooglePackCardIds[sMooglePackCardCursor] & CARD_ID_MASK].category * 16);
                 m4aSongNumStart(SONG_SYS_CLICK);
             }
 

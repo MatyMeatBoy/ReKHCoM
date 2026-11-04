@@ -268,7 +268,7 @@ u8 task_bos_boogie_1(BoogieWork* work) {
         case BOS_BOOGIE_DEFEAT_STEP_START_DEATH_FX:
             if (!FadeIsActive()) {
                 BgFxStartBossDeath(actor->x, actor->y + actor->z - ((s16)sBosBoogieEmyKind.centerHeight << 8));
-                SetBtlPaletteFadeExcluded(work->palette->index + 16, FALSE);
+                SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
                 FadeToAmount(FADE_MODE_BLACK, gBtlWork->fadeAmount, 8);
                 work->defeatStep = BOS_BOOGIE_DEFEAT_STEP_DEATH_FX;
                 work->timer = 0;

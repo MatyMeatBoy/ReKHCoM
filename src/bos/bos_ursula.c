@@ -845,7 +845,7 @@ void task_bos_ursula_map_3() {
 void task_bos_ursula_border_0(UrsulaBorderWork* work) {
     work->tiles = LoadObjTiles(gBosUrsulaBorderTiles, sizeof(gBosUrsulaBorderTiles));
     work->palette = LoadObjPalette(gBosUrsulaBorderPalette, sizeof(gBosUrsulaBorderPalette));
-    SetBtlPaletteFadeExcluded(work->palette->index + 16, FALSE);
+    SetBtlPaletteFadeExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
 }
 
 s32 task_bos_ursula_border_1() {

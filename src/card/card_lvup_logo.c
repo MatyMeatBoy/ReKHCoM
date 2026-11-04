@@ -281,7 +281,7 @@ void Lvup_Logo_0(LevelUpEffectWork* work, LevelUpEffectArgs* args) {
     LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
     work->tiles = args->tiles;
     work->palette = args->palette;
-    FadeSetPaletteExcluded(args->palette->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(args->palette)->index + 16, TRUE);
     work->frame = 0;
     work->timer = 0;
     work->vy[0] = -0x280;
@@ -383,7 +383,7 @@ u8 Ev_mapObj_1(EventMapObjectWork* work) {
     entries = def->placements;
 
     for (i = 0; i < def->placementCount; i++) {
-        FadeSetPaletteExcluded(work->palettes[entries[i].spriteIndex]->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palettes[entries[i].spriteIndex])->index + 16, FALSE);
     }
 
     return 1;

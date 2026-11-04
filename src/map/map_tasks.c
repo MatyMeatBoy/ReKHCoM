@@ -2248,7 +2248,7 @@ u8 MapGmkTutorialWaitHit(MapGmkTutorialWork* work) {
             work->update = MapGmkTutorialWaitCard;
             gMapRoomState->doorRoom = 0;
             gMapRoomState->doorSide = MAP_DOOR_SIDE_UP_RIGHT;
-            FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
             TaskCreate(pool, &gTaskDescRoomcreate, NULL);
         }
     }
@@ -2266,7 +2266,7 @@ u8 MapGmkTutorialWaitCard(MapGmkTutorialWork* work) {
 
     if ((gFieldState->flags & FIELD_FLAG_ROOM_CREATE) == 0) {
         gMapRoomState->flags &= ~ROOM_FLAG_ATTACK_HIT;
-        FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
         work->update = MapGmkTutorialWaitHit;
     }
 
@@ -4565,8 +4565,8 @@ void Task_MapPrzCard_2(MapPrzCardWork* work) {
 }
 
 void Task_MapPrzCard_3(MapPrzCardWork* work) {
-    FadeSetPaletteExcluded(work->palette2->index + 0x10, FALSE);
-    FadeSetPaletteExcluded(work->palette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 0x10, FALSE);
     ColliderUnregister(&work->collider);
     ReleaseObjTiles(work->tiles);
     ReleaseObjTiles(work->tiles2);
@@ -4630,7 +4630,7 @@ void MapMsgInit(MapMsgWork* work, void* text) {
     InitTextSlots(work->textSlots, ARRAY_COUNT(work->textSlots));
     work->textSlotCount = LoadTextSlots(text, work->textSlots);
     work->palette = LoadTextPalette(1);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
     work->textX = (DISPLAY_WIDTH - GetTextSlotsWidth(work->textSlots, work->textSlotCount)) / 2;
     work->timer = 0;
 }
@@ -4648,7 +4648,7 @@ void MapMsgDestroy(MapMsgWork* work) {
         DisableBg(0);
     }
 
-    FadeSetPaletteExcluded(work->palette->index + 0x10, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 0x10, FALSE);
     ReleaseObjPalette(work->palette);
     FreeTextSlots(work->textSlots, ARRAY_COUNT(work->textSlots));
 }

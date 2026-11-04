@@ -357,7 +357,8 @@ void task_btl_hpply_2(BtlHpplyWork* work) {
            from gauge.lad, so nothing of the cartridge's gauge is drawn */
         if (actor != NULL && PortHdGauge(actor->hp, actor->maxHp, (gGameState.flags & GAME_FLAG_RIKU) != 0))
             return;
-        if (PortHdHpRing(((ObjTiles*)work->tiles)->src, work->gfx, ratio)) {
+        /* a full tile pool leaves the gauge without tiles (OptiPort v2.8): nothing to ring */
+        if (work->tiles != NULL && PortHdHpRing(((ObjTiles*)work->tiles)->src, work->gfx, ratio)) {
             DrawSprite(14, 15, work->gfx, work->tiles, work->palette, NULL, SPRITE_PRIORITY(1) | SPRITE_FLAG_NO_MOSAIC, 1);
             return;
         }

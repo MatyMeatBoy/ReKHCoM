@@ -1581,7 +1581,7 @@ void mode_jiminy_0() {
     sJiminyWork->tiles = LoadObjTiles(gJiminyTitleTiles, sizeof(gJiminyTitleTiles));
 #endif
     sJiminyWork->palette = LoadObjPalette(gJiminyTitlePalette, sizeof(gJiminyTitlePalette));
-    FadeSetPaletteExcluded(sJiminyWork->palette->index + 0x10, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(sJiminyWork->palette)->index + 0x10, TRUE);
     sJiminyWork->tiles2 = LoadObjTiles(gJiminyBinderRingTiles, sizeof(gJiminyBinderRingTiles));
     sJiminyWork->palette2 = LoadObjPalette(gJiminyBinderRingPalette, sizeof(gJiminyBinderRingPalette));
     sJiminyWork->palette3 = LoadObjPalette(gJiminyRootListPalette, sizeof(gJiminyRootListPalette));
@@ -1785,11 +1785,11 @@ void mode_jiminy_1() {
                 LoadBgMap(1, openEntry->map, 0x800);
             }
 
-            LoadObjPaletteBank(sJiminyWork->palette3->index, gJiminyRootListPalette);
+            LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette3)->index, gJiminyRootListPalette);
             JiminyOpenList(3, openEntry->count, openEntry->names, openEntry->flags, openEntry->children, 0x80, 0x40, 0x18);
         } else {
             LoadBgMap(1, openEntry->map, 0x800);
-            LoadObjPaletteBank(sJiminyWork->palette3->index, gJiminyListPalette);
+            LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette3)->index, gJiminyListPalette);
 #ifdef VERSION_JP
             JiminyOpenList(8, openEntry->count, openEntry->names, openEntry->flags, openEntry->children, 0x70, 0x1A, 0x10);
 #else
@@ -2362,19 +2362,19 @@ void JiminyDetailUpdate() {
         if (sJiminyWork->detail->tiles != NULL) {
 #ifdef VERSION_EU
             if (sJiminyWork->detail->palette == gWorldImage100AcreWoodPalette && IsPooAltImageActive()) {
-                LoadObjPaletteBank(sJiminyWork->palette8->index, gPooAltImagePalettes[0]);
-                LoadObjPaletteBank(sJiminyWork->palette8->index + 1, gPooAltImagePalettes[1]);
+                LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette8)->index, gPooAltImagePalettes[0]);
+                LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette8)->index + 1, gPooAltImagePalettes[1]);
                 SetObjTileSource(sJiminyWork->tiles7, gPooAltImageTiles);
             } else
 #endif
             {
-                LoadObjPaletteBank(sJiminyWork->palette8->index, sJiminyWork->detail->palette);
+                LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette8)->index, sJiminyWork->detail->palette);
                 SetObjTileSource(sJiminyWork->tiles7, sJiminyWork->detail->tiles);
             }
         }
 
         if (sJiminyWork->detail->tiles2 != NULL) {
-            LoadObjPaletteBank(sJiminyWork->palette9->index, sJiminyWork->detail->palette2);
+            LoadObjPaletteBank(BIOS_PTR(sJiminyWork->palette9)->index, sJiminyWork->detail->palette2);
             SetObjTileSource(sJiminyWork->tiles8, sJiminyWork->detail->tiles2);
         }
 

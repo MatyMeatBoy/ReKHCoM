@@ -1069,7 +1069,9 @@ static int PlayFile(const char* name) {
                         if (pitch > 0 && SUCCEEDED(IMFMediaBuffer_GetCurrentLength(buffer, &length)) &&
                             length / 3 * 2 / (DWORD)pitch > rows)
                             rows = length / 3 * 2 / (DWORD)pitch;
-                        if (pitch > 0)
+                        /* both planes inside the buffer the decoder reports (a short or NULL one is skipped, as the
+                           Android player does since #563) */
+                        if (pitch > 0 && scan0 && (length == 0 || (size_t)length >= (size_t)pitch * rows / 2 * 3))
                             SDL_UpdateNVTexture(texture, NULL, scan0, pitch, scan0 + (size_t)pitch * rows, pitch);
                         IMF2DBuffer_Unlock2D(buffer2d);
                     } else {
@@ -1095,7 +1097,9 @@ static int PlayFile(const char* name) {
                     LONG pitch;
                     if (SUCCEEDED(IMFMediaBuffer_QueryInterface(buffer, &IID_IMF2DBuffer, (void**)&buffer2d)) &&
                         SUCCEEDED(IMF2DBuffer_Lock2D(buffer2d, &scan0, &pitch))) {
-                        if (pitch >= 0) {
+                        if (!scan0) {
+                            /* no rows: the frame is skipped */
+                        } else if (pitch >= 0) {
                             SDL_UpdateTexture(texture, NULL, scan0, pitch);
                         } else { /* bottom-up rows */
                             void* pixels;

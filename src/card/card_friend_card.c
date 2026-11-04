@@ -1081,7 +1081,7 @@ void StockNameRiku_2(StockNameWork* work) {
     if (gRikuBtlWork->hcEffect != HC_EFFECT_SLEIGHTBLIND && work->visible) {
 #ifdef PLATFORM_PC
         int PortHdHudStockNameX(int x, const u16* frame, int stockCount);
-        DrawSprite(PortHdHudStockNameX(120, work->tiles->sprite, gCardBattleState->rikuStockCount), 14, NULL, work->tiles,
+        DrawSprite(PortHdHudStockNameX(120, work->tiles != NULL ? work->tiles->sprite : NULL, gCardBattleState->rikuStockCount), 14, NULL, work->tiles,
                    work->palette, NULL, 0, 10);
 #else
         DrawSprite(120, 14, NULL, work->tiles, work->palette, NULL, 0, 10);
@@ -1160,10 +1160,10 @@ void Premire_Chance_0(PremireChanceWork* work) {
     work->tiles4 = LoadObjTiles(gAButtonIconTiles, sizeof(gAButtonIconTiles));
     work->palette4 = LoadObjPalette(gBStatesPalette, sizeof(gBStatesPalette));
     FadeToAmount(FADE_MODE_BLACK, 16, 16);
-    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-    FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
-    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
-    FadeSetPaletteExcluded(work->palette4->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
 
 #ifdef VERSION_EU
     for (i = 0, n = 0; i < DECK_SIZE; i++) {
@@ -1396,10 +1396,10 @@ void Premire_Chance_3(PremireChanceWork* work) {
     ReleaseObjTiles(work->tiles4);
     ReleaseObjTiles(work->tiles);
     ReleaseObjTiles(work->tiles5);
-    FadeSetPaletteExcluded(work->palette->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette3->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette2->index + 16, FALSE);
-    FadeSetPaletteExcluded(work->palette4->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, FALSE);
+    FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, FALSE);
     ReleaseObjPalette(work->palette2);
     ReleaseObjPalette(work->palette3);
     ReleaseObjPalette(work->palette4);

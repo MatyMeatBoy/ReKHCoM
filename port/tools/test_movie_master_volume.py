@@ -31,7 +31,7 @@ static int checks;
 #define CHECK(x) do { checks++; if(!(x)){fprintf(stderr,"failed line %d: %s\n",__LINE__,#x);return 1;} }while(0)
 static int oldHost, calls, actualMaster, outcome=1, refreshed;
 static struct {int masterVolume,hdSubtitles;} gPortConfig;
-static int sStartAt;
+static int sStartAt, sStopAt; /* the scene clip's bounds (#539) */
 static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){
  return oldHost ? oldHost-1 : HostAudioCommand(op,a,b,c,d);
 }

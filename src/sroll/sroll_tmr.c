@@ -58,7 +58,7 @@ u8 task_sroll_tmr_1(SrollTmrWork* work) {
         }
     }
 
-    FadeSetPaletteExcluded((work->palette->index & 15) + 16, TRUE);
+    FadeSetPaletteExcluded((BIOS_PTR(work->palette)->index & 15) + 16, TRUE);
     work->frameCount++;
     return alive;
 }

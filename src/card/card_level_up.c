@@ -143,7 +143,7 @@ void Level_Up_0(LevelUpWork* work) {
     work->tiles5[2] = AllocSpriteFrameTiles(0x500);
 #endif
     work->tilesPalettes[7] = LoadObjPalette(gLevelUpHeaderPalette, sizeof(gLevelUpHeaderPalette));
-    FadeSetPaletteExcluded(((ObjPalette*)work->tilesPalettes[7])->index + 16, TRUE);
+    FadeSetPaletteExcluded(BIOS_PTR(((ObjPalette*)work->tilesPalettes[7]))->index + 16, TRUE);
     work->tiles2 = LoadObjTiles(gLevelUpBarTiles, sizeof(gLevelUpBarTiles));
     TaskPoolInit(&work->pool, 10);
 
@@ -151,7 +151,7 @@ void Level_Up_0(LevelUpWork* work) {
         work->tiles4 = AllocObjTiles(0x500, NULL);
         work->palette5 = AllocObjPalette(32);
         UpdateAllocatedObjPalette(work->palette5, gSoraPalette);
-        FadeSetPaletteExcluded(work->palette5->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette5)->index + 16, TRUE);
         WorldToScreen(&x, &y, gBtlWork->actor->x,
                       gBtlWork->actor->y,
                       gBtlWork->actor->z);
@@ -162,7 +162,7 @@ void Level_Up_0(LevelUpWork* work) {
         work->tiles4 = AllocObjTiles(0x800, NULL);
         work->palette5 = AllocObjPalette(32);
         UpdateAllocatedObjPalette(work->palette5, gRikuPalette);
-        FadeSetPaletteExcluded(work->palette5->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette5)->index + 16, TRUE);
         WorldToScreen(&x, &y, gBtlWork->actor->x,
                       gBtlWork->actor->y,
                       gBtlWork->actor->z);
@@ -522,12 +522,12 @@ u8 Level_Up_1(LevelUpWork* work, void* task) {
             work->tiles3 = LoadObjTiles(gLvupLogoTiles, sizeof(gLvupLogoTiles));
 #endif
             work->palette4 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-            FadeSetPaletteExcluded(((ObjPalette*)work->tilesPalettes[4])->index + 16, TRUE);
-            FadeSetPaletteExcluded(((ObjPalette*)work->tilesPalettes[5])->index + 16, TRUE);
-            FadeSetPaletteExcluded(work->palette4->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(((ObjPalette*)work->tilesPalettes[4]))->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(((ObjPalette*)work->tilesPalettes[5]))->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
             work->tiles = AllocObjTiles(0x3C0, NULL);
             work->palette3 = LoadObjPalette(gSmallHandCursorPalette, sizeof(gSmallHandCursorPalette));
-            FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
             SetObjTileSource(work->tiles, gSmallHandCursorTiles);
             AnimInit(&work->anim, gSmallHandCursorAnims, gSmallHandCursorFrames);
             AnimStart(&work->anim, 2, ANIM_FLAG_LOOP);
@@ -747,8 +747,8 @@ u8 Level_Up_1(LevelUpWork* work, void* task) {
                         work->palette2 = LoadObjPalette(gLevelUpRikuOptionPalette, sizeof(gLevelUpRikuOptionPalette));
                     }
 
-                    FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-                    FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+                    FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+                    FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 
                     for (i = 0; i < ARRAY_COUNT(work->optionEnabled); i++) {
                         if (work->optionEnabled[i] == 1) {
@@ -855,7 +855,7 @@ u8 UpdateLevelUpSelect(LevelUpWork* work, void* task) {
         ReleaseObjPalette(work->palette3);
         work->tiles = AllocObjTiles(128, NULL);
         work->palette3 = LoadObjPalette(gLevelUpChosenCursorPalette, sizeof(gLevelUpChosenCursorPalette));
-        FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
         SetObjTileSource(work->tiles, gLevelUpChosenCursorTiles);
         AnimInit(&work->anim, gLevelUpChosenCursorAnims, gLevelUpChosenCursorFrames);
         AnimStart(&work->anim, 0, ANIM_FLAG_LOOP);
@@ -1582,12 +1582,12 @@ u8 UpdateLevelUpNextSlideIn(LevelUpWork* work, void* task) {
             work->tiles3 = LoadObjTiles(gLvupLogoTiles, sizeof(gLvupLogoTiles));
 #endif
             work->palette4 = LoadObjPalette(gCard00Palette, sizeof(gCard00Palette));
-            FadeSetPaletteExcluded(((ObjPalette*)work->tilesPalettes[4])->index + 16, TRUE);
-            FadeSetPaletteExcluded(((ObjPalette*)work->tilesPalettes[5])->index + 16, TRUE);
-            FadeSetPaletteExcluded(work->palette4->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(((ObjPalette*)work->tilesPalettes[4]))->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(((ObjPalette*)work->tilesPalettes[5]))->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette4)->index + 16, TRUE);
             work->tiles = AllocObjTiles(0x3C0, NULL);
             work->palette3 = LoadObjPalette(gSmallHandCursorPalette, sizeof(gSmallHandCursorPalette));
-            FadeSetPaletteExcluded(work->palette3->index + 16, TRUE);
+            FadeSetPaletteExcluded(BIOS_PTR(work->palette3)->index + 16, TRUE);
             SetObjTileSource(work->tiles, gSmallHandCursorTiles);
             AnimInit(&work->anim, gSmallHandCursorAnims, gSmallHandCursorFrames);
             AnimStart(&work->anim, 2, ANIM_FLAG_LOOP);
@@ -1770,8 +1770,8 @@ u8 UpdateLevelUpNextSlideIn(LevelUpWork* work, void* task) {
             work->palette2 = LoadObjPalette(gLevelUpRikuOptionPalette, sizeof(gLevelUpRikuOptionPalette));
         }
 
-        FadeSetPaletteExcluded(work->palette->index + 16, TRUE);
-        FadeSetPaletteExcluded(work->palette2->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(work->palette2)->index + 16, TRUE);
 
         for (i = 0; i < ARRAY_COUNT(work->optionEnabled); i++) {
             if (work->optionEnabled[i] == 1) {

@@ -905,7 +905,7 @@ u16 SwapBtlRikuKeyBits(u16 keys, u16 bitA, u16 bitB) {
 void EndRikuDarkMode(BtlRikuWork* work) {
     if (gBtlWork->flags & BTL_FLAG_DARK_MODE) {
         work->paletteData = gRikuPalette;
-        LoadObjPaletteBank(work->palette->index, gRikuPalette);
+        LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gRikuPalette);
         gBtlWork->flags &= ~BTL_FLAG_DARK_MODE;
         gBtlWork->flags |= BTL_FLAG_DARK_MODE_CHANGED;
     }
@@ -2877,7 +2877,7 @@ s32 task_btl_riku_1(BtlRikuWork* work) {
         if (work->stateTimer == 0) {
             SetBtlRikuAnimation(work, 24, 0);
             work->paletteData = gBtlRikuDarkModePalette;
-            LoadObjPaletteBank(work->palette->index, gBtlRikuDarkModePalette);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gBtlRikuDarkModePalette);
             gBtlWork->flags |= BTL_FLAG_DARK_MODE;
             gBtlWork->flags |= BTL_FLAG_DARK_MODE_CHANGED;
             gBtlWork->darkPoints = gGameState.progression.dp;
@@ -4768,16 +4768,16 @@ void task_btl_riku_2(BtlRikuWork* work) {
         u16 flags = work->flags | BTL_RIKU_FLAG_HIT_FLASH;
 
         work->flags = flags;
-        LoadObjPaletteBank(work->palette->index, gHitFlashPalette);
+        LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gHitFlashPalette);
     } else if (work->flags & BTL_RIKU_FLAG_HIT_FLASH) {
         u16 flags = work->flags & ~BTL_RIKU_FLAG_HIT_FLASH;
 
         work->flags = flags;
 
         if (work->mainSide) {
-            LoadObjPaletteBank(work->palette->index, work->paletteData);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, work->paletteData);
         } else {
-            LoadObjPaletteBank(work->palette->index, gBtlOtherSidePalette);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gBtlOtherSidePalette);
         }
     }
 

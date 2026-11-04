@@ -123,11 +123,11 @@ u8 task_wlogo_mons_1(WlogoMonsWork* work) {
             work->timer = 0;
 
             if (work->paletteStep <= 4) {
-                LoadObjPaletteBank(work->palette->index, &gWlogoMonsPalettes[work->paletteStep * 16]);
+                LoadObjPaletteBank(BIOS_PTR(work->palette)->index, &gWlogoMonsPalettes[work->paletteStep * 16]);
                 LoadPaletteWithEffect(&gWlogoMonsPalettes[work->paletteStep * 16], (void*)(BG_PLTT + 14 * PLTT_SIZE_4BPP), 0x20);
             } else if (work->paletteStep > 11) {
                 if (work->paletteStep <= 15) {
-                    LoadObjPaletteBank(work->palette->index, &gWlogoMonsPalettes[(15 - work->paletteStep) * 16]);
+                    LoadObjPaletteBank(BIOS_PTR(work->palette)->index, &gWlogoMonsPalettes[(15 - work->paletteStep) * 16]);
                     LoadPaletteWithEffect(&gWlogoMonsPalettes[(15 - work->paletteStep) * 16], (void*)(BG_PLTT + 14 * PLTT_SIZE_4BPP), 0x20);
                 } else if (work->paletteStep == 20) {
                     work->visible = FALSE;
@@ -1764,7 +1764,7 @@ void task_wlogo_tt_0(WlogoTtWork* work) {
     work->tiles4 = AllocObjTiles(0x3C0, gWlogoTtGlowTiles);
     work->tiles5 = LoadObjTiles(gWlogoTtObjTiles, sizeof(gWlogoTtObjTiles));
     work->palette = LoadObjPalette(gWlogoTtPalette, sizeof(gWlogoTtPalette));
-    LoadObjPaletteBank(work->palette->index, gWlogoTtPalettes[work->paletteStep]);
+    LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gWlogoTtPalettes[work->paletteStep]);
     AnimInit(&work->anim[0], gWlogoTtGlowAnims, gWlogoTtGlowFrames);
     AnimStart(&work->anim[0], 1, 0);
     work->gfx = AnimGetGfx(&work->anim[0]);
@@ -1935,7 +1935,7 @@ u8 task_wlogo_tt_1(WlogoTtWork* work) {
                 work->state++;
             }
 
-            LoadObjPaletteBank(work->palette->index, gWlogoTtPalettes[work->paletteStep]);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gWlogoTtPalettes[work->paletteStep]);
         } else {
             work->subStep++;
         }
@@ -1951,7 +1951,7 @@ u8 task_wlogo_tt_1(WlogoTtWork* work) {
             if (work->paletteStep > 8) {
                 work->state++;
             } else {
-                LoadObjPaletteBank(work->palette->index, gWlogoTtPalettes[work->paletteStep]);
+                LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gWlogoTtPalettes[work->paletteStep]);
             }
         } else {
             work->subStep++;

@@ -36,7 +36,7 @@ void task_sroll_b_logo_0(SrollBLogoWork* work, SrollBLogoArg* arg) {
     AnimStart(anim, arg->animId, 0);
 
     for (i = 0; i < 2; i++) {
-        FadeSetPaletteExcluded((work->palette->index + i) % 16 + 16, TRUE);
+        FadeSetPaletteExcluded((BIOS_PTR(work->palette)->index + i) % 16 + 16, TRUE);
     }
 }
 

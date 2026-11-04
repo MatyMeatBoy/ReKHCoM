@@ -6253,16 +6253,16 @@ void task_btl_sora_2(BtlSoraWork* work) {
         u16 flags = work->flags | BTL_SORA_FLAG_HIT_FLASH;
 
         work->flags = flags;
-        LoadObjPaletteBank(work->palette->index, gHitFlashPalette);
+        LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gHitFlashPalette);
     } else if (work->flags & BTL_SORA_FLAG_HIT_FLASH) {
         u16 flags = work->flags & ~BTL_SORA_FLAG_HIT_FLASH;
 
         work->flags = flags;
 
         if (work->mainSide) {
-            LoadObjPaletteBank(work->palette->index, gSoraPalette);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gSoraPalette);
         } else {
-            LoadObjPaletteBank(work->palette->index, gBtlOtherSidePalette);
+            LoadObjPaletteBank(BIOS_PTR(work->palette)->index, gBtlOtherSidePalette);
         }
     }
 

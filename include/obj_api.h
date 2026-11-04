@@ -31,6 +31,13 @@ u16 GetMaxSpriteTileBytes(void** sprites, u16 count);
 u16 GetSpriteTileBytes(u16* sprite);
 struct ObjTiles* AllocSpriteFrameTiles(u16 size);
 u8 UpdateSpriteFrameTiles(struct ObjTiles* tiles, u16* sprite, void* src);
+/* PORT_TILES_OK(t): tiles a full pool did not give (NULL) are not copied to: the GBA DMAs from what its BIOS reads
+   and draws nothing of it (DrawSprite skips NULL); the PC would read through NULL (OptiPort v2.8, issue #564). */
+#ifdef PLATFORM_PC
+#define PORT_TILES_OK(t) ((t) != NULL)
+#else
+#define PORT_TILES_OK(t) 1
+#endif
 
 void InitObjTilesAtSlot(struct ObjTiles* tiles, u16 slot, void* src, u16 size);
 void InitObjPaletteAtSlot(struct ObjPalette* palette, u16 slot, void* src, u16 size);

@@ -994,7 +994,7 @@ void FreeSpriteTextSlots() {
             }
         }
 
-        FadeSetPaletteExcluded(sSpriteTextLines[i].palette->index, FALSE);
+        FadeSetPaletteExcluded(BIOS_PTR(sSpriteTextLines[i].palette)->index, FALSE);
         ReleaseObjPalette(sSpriteTextLines[i].palette);
     }
 
@@ -1412,11 +1412,11 @@ u16 InitMsgGlyphSprites(s32 mode) {
             break;
         }
 
-        FadeSetPaletteExcluded(sMsgGlyphSprites[i].palette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMsgGlyphSprites[i].palette)->index + 16, TRUE);
     }
 
     sTextEntryCount = 0;
-    return sMsgGlyphSprites->palette->index;
+    return BIOS_PTR(sMsgGlyphSprites->palette)->index;
 }
 
 u16 InitMsgGlyphSpritesAltPalette5(s32 mode) {
@@ -1446,12 +1446,12 @@ u16 InitMsgGlyphSpritesAltPalette5(s32 mode) {
         }
 
         sMsgGlyphSprites[i].alternatePalette = LoadTextPalette(5);
-        FadeSetPaletteExcluded(sMsgGlyphSprites[i].palette->index + 16, TRUE);
-        FadeSetPaletteExcluded(sMsgGlyphSprites[i].alternatePalette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMsgGlyphSprites[i].palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMsgGlyphSprites[i].alternatePalette)->index + 16, TRUE);
     }
 
     sTextEntryCount = 0;
-    return sMsgGlyphSprites->palette->index;
+    return BIOS_PTR(sMsgGlyphSprites->palette)->index;
 }
 
 u16 InitMsgGlyphSpritesAltPalette3(s32 mode) {
@@ -1481,12 +1481,12 @@ u16 InitMsgGlyphSpritesAltPalette3(s32 mode) {
         }
 
         sMsgGlyphSprites[i].alternatePalette = LoadTextPalette(3);
-        FadeSetPaletteExcluded(sMsgGlyphSprites[i].palette->index + 16, TRUE);
-        FadeSetPaletteExcluded(sMsgGlyphSprites[i].alternatePalette->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMsgGlyphSprites[i].palette)->index + 16, TRUE);
+        FadeSetPaletteExcluded(BIOS_PTR(sMsgGlyphSprites[i].alternatePalette)->index + 16, TRUE);
     }
 
     sTextEntryCount = 0;
-    return sMsgGlyphSprites->palette->index;
+    return BIOS_PTR(sMsgGlyphSprites->palette)->index;
 }
 
 s32 GetMsgTextWidth(const TextChar* text) {
