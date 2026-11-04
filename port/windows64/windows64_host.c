@@ -73,6 +73,7 @@ static FILE* Utf8Open(const char* path, const char* mode) {
    port/ps5/build/guest-<r>/guest.map), the registers and the code addresses found on the stack. */
 #include "crash_report.h"
 #include "guest_divzero_windows.h"
+#include "guest_biosfault_windows.h"
 static void CrashReportNote(const char* fmt, ...) {
     size_t n = strlen(sMachine);
     va_list ap;
@@ -88,7 +89,12 @@ static FILE* sFiles[64];
 typedef struct { HANDLE handle; WIN32_FIND_DATAW entry; int first; } HostDir;
 static HostDir sDirs[16];
 static void H_log(const char* s) { fprintf(stderr, "%s\n", s); }
-static void H_exit(int code) { fflush(NULL); SDL_Quit(); _exit(code); }
+static void H_exit(int code) {
+    if (sGuestBiosRedirects)
+        Log("guest BIOS accesses redirected: %ld, first at guest+%08llx", (long)sGuestBiosRedirects,
+            (unsigned long long)(sGuestBiosFirstRip - PS5G_BASE));
+    fflush(NULL); SDL_Quit(); _exit(code);
+}
 static uint64_t H_ticks_us(void) { return SDL_GetTicksNS() / 1000; }
 static void H_sleep_us(uint32_t us) { SDL_DelayNS((Uint64)us * 1000); }
 /* Optional event channel over getenv keeps the fixed bridge table compatible with old hosts. */
@@ -573,6 +579,13 @@ int main(int argc, char** argv) {
             (unsigned long long)sGuestDivision.end);
     else
         Log("guest DIV0 compatibility unavailable: missing text metadata or handler");
+    /* the game's NULL accesses read a BIOS stand-in as on the GBA (issue #564) */
+    if (sGuestDivision.begin && MapFixed(PORT_GUEST_BIOS_STANDIN, PORT_GUEST_BIOS_SIZE)) {
+        PortGuestBiosFill();
+        if (AddVectoredExceptionHandler(1, GuestBiosHandler))
+            Log("guest BIOS compatibility: NULL-page accesses of game code read the BIOS stand-in");
+    } else
+        Log("guest BIOS compatibility unavailable: missing text metadata or stand-in mapping");
     sGuestEnd = h.regionEnd;
     CrashReportNote("guest %s, %ld bytes", image, size);
     free(tmp);
