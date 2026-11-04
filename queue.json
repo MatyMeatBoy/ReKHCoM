@@ -15141,12 +15141,12 @@
     "guest64-bios-standin": {
       "id": "guest64-bios-standin",
       "piece": "Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-bugs-1104",
       "created_at": "2026-11-04T12:58:20.326210+00:00",
-      "updated_at": "2026-11-04T12:58:52.488921+00:00",
+      "updated_at": "2026-11-04T12:59:13.673994+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/566",
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/566",
       "evidence": [],
@@ -15154,7 +15154,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-04T12:59:06.675057+00:00",
+  "updated_at": "2026-11-04T12:59:13.673994+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
