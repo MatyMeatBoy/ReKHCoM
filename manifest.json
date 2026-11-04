@@ -1,12 +1,12 @@
 {
-  "version": "v2.7-web-alpha",
-  "source_commit": "778361c870f2a61fc9b870636c95cdcb15825463",
+  "version": "v2.8-web-alpha",
+  "source_commit": "315db1e45cbfacb54c1786786917045c0100b2eb",
   "source_dirty": false,
-  "built_utc": "2026-11-02T08:18:15.997587+00:00",
+  "built_utc": "2026-11-04T15:54:37.057197+00:00",
   "files": {
     "index.html": {
       "bytes": 16978,
-      "sha256": "0c25df4ef0e826fdce24cb23ca50fc8df602d23c9df266d47017b278362743c2"
+      "sha256": "ee97d293b82939c8f00d91b4648b08e5cd38fb3b03ccb17e9d009aa254b9b6ac"
     },
     "web.css": {
       "bytes": 14481,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "383a6cc11157375639917d720b4f37bbf55ba34642d33747ecd3b6e5d2168ca3"
+      "sha256": "aeefb89722ceb1dca3fb9ed40f501952822e17841e28c17ea30aba0cd77e3419"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9556800,
-      "sha256": "b798d9df8bfa367ef054e2c7f04bb6a87ac3668f2678b0b9f75971a0a3594c72"
+      "bytes": 9559308,
+      "sha256": "218997776aa0b25dc53e58b38840ecf148e30bdc814409381194b79a29fa7f3c"
     },
     "rekhcom-us.js": {
       "bytes": 208832,
-      "sha256": "bf3bbc3180ea8ae951213d780027d4bb8e4f72057b3ec10bd8db463ddac509ff"
+      "sha256": "5d346a96603910fb206dfca6b6a7aa97298d8cd7c584b35eea1a9d8063e933fa"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9611030,
-      "sha256": "3d2b7e632874a09e20b8c99d7425942fc25773a4e035c806eee413c86bb4646b"
+      "bytes": 9613436,
+      "sha256": "95fd1ab15e515ed5b4b568252475a0cca7311f614eca527a57cac595bb6d3703"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "6de3c5af1ac5b1161884ae9d824f41e3d15573e368b8f82355674b7b44be9686"
+      "sha256": "17391a69c76f161c57d45708f6fabf102105210e006f807b197e0c5ba4cea639"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9466558,
-      "sha256": "a7e1c983c928ebbd62102a23578c2007dc1ba0b19c0c3509887a3c3b6cae5009"
+      "bytes": 9468984,
+      "sha256": "5b3765b3f7f065951e17564bdc92b1bc8ad25594836f9258f7d00e8805857425"
     }
   }
 }
