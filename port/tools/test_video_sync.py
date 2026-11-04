@@ -30,6 +30,7 @@ static int IDXGISwapChain_GetDesc(IDXGISwapChain* p,DXGI_SWAP_CHAIN_DESC* d) {
 }
 static int SDL_SetRenderVSync(void* p,int value) { (void)p;calls[count++]=value;return !(failZero && value==0); }
 static void PortLog(const char* f,...) { (void)f; }
+static const char* SDL_getenv(const char* n) { (void)n; return 0; } /* KHCOM_FAST (test override) unset */
 """
 cases=r"""
 static void check(int requested,int driver,int full,int capable,int query,int fail,int expected,int retry) {

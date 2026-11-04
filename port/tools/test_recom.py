@@ -15,6 +15,8 @@ PortConfig gPortConfig;
 const char* PortConfigPath(const char* name) { return name; }
 void PortVideoApplyConfig(void) {}
 void PortLog(const char* fmt, ...) {}
+int PortCheatDamage(int damage, int player) { (void)player; return damage; } /* cheats module not linked: neutral */
+void PortScenesFromGame(void) {} /* scene gallery not linked */
 int PortScaleDamage(int damage, int player);
 int PortFastText(void);
 void PortRecomSaved(int file);

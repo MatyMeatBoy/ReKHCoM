@@ -61,7 +61,7 @@ int main(int argc,char**argv){
 
  def test_game_movie3_in_both_basic_catalogs(self):
   game=(ROOT/'port/src/port_hdmovie.c').read_text(encoding='utf-8')
-  self.assertRegex(game,r'case 3: \*startAt = 170; return "zz_event_123"')
+  self.assertRegex(game,r'case 3: \*startAt = 170; name = "zz_event_123"')
   self.assertIn('zz_event_123',khhd_import.BASE_MOVIES)
   cpp=(ROOT/'port/decompui/hd_import.inc').read_text(encoding='utf-8')
   bases=cpp.split('kBaseMovies[] = {',1)[1].split('};',1)[0]

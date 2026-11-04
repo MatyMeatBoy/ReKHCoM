@@ -27,6 +27,8 @@ static uint64_t sRendererGeneration;
 static int sTexW,sTexH,sMainOverW,sMainOverH,sOverlayTexW,sScreenOverTexW,sHudTexW,sHudTexH,sHudOverW,sHudOverH,sBorderShown;
 static int sMenuSideW[2],sFadeSideW[2],sSkipBufW,sSkipBufH,sHd2dW,sHd2dH,sMenuAlphaW,sMenuAlphaH;
 static SDL_Texture*sMenuSideTex[2],*sFadeSideTex[2];
+/* port_screen_world_blend.h's renderer-owned scratch: the 18th texture the reset releases */
+static struct{SDL_Texture*texture;int width,height,blockedWidth,blockedHeight,failed;}sWorldLight;
 static int SDL_IsMainThread(void){return mainThread;}
 static int SDL_SetRenderTarget(SDL_Renderer*r,void*t){(void)r;(void)t;return detach;}
 static void SDL_DestroyTexture(SDL_Texture*t){assert(detach);assert(t&&t->generation==1);destroyed++;free(t);}
@@ -44,19 +46,21 @@ int main(void){
 '''+''.join(n+'=old();\n' for n in NAMES)+r'''
  for(int i=0;i<2;i++){sMenuSideTex[i]=old();sFadeSideTex[i]=old();sMenuSideW[i]=sFadeSideW[i]=16;}
  sTexW=sTexH=sSkipBufW=sSkipBufH=sMenuAlphaW=sMenuAlphaH=100;
+ sWorldLight.texture=old();sWorldLight.width=sWorldLight.height=sWorldLight.failed=sWorldLight.blockedWidth=sWorldLight.blockedHeight=5;
  assert(PortRendererHandleReset(SDL_EVENT_RENDER_TARGETS_RESET));assert(!destroyed&&!modules&&!sRendererGeneration);
  mainThread=0;assert(!PortRendererHandleReset(SDL_EVENT_RENDER_DEVICE_RESET));assert(!destroyed);mainThread=1;
  detach=0;assert(PortRendererHandleReset(SDL_EVENT_RENDER_DEVICE_RESET));assert(sRendererResetPending&&!destroyed&&!modules);
- detach=1;assert(RendererResetService());assert(!sRendererResetPending&&sRendererGeneration==1&&destroyed==17&&modules==6);
+ detach=1;assert(RendererResetService());assert(!sRendererResetPending&&sRendererGeneration==1&&destroyed==18&&modules==6);
 '''+''.join('assert(!'+n+');\n' for n in NAMES)+r'''
+ assert(!sWorldLight.texture&&!sWorldLight.width&&!sWorldLight.height&&!sWorldLight.failed&&!sWorldLight.blockedWidth&&!sWorldLight.blockedHeight);
  assert(!sTexW&&!sTexH&&!sSkipBufW&&!sSkipBufH&&!sMenuAlphaW&&!sMenuAlphaH);
  for(int i=0;i<2;i++)assert(!sMenuSideTex[i]&&!sFadeSideTex[i]&&!sMenuSideW[i]&&!sFadeSideW[i]);
- assert(RendererResetService());assert(destroyed==17&&modules==6);
+ assert(RendererResetService());assert(destroyed==18&&modules==6);
  /* A later device loss re-arms owner modules even if optional loading previously failed. */
- assert(PortRendererHandleReset(SDL_EVENT_RENDER_DEVICE_RESET));assert(sRendererGeneration==2&&destroyed==17&&modules==12);
+ assert(PortRendererHandleReset(SDL_EVENT_RENDER_DEVICE_RESET));assert(sRendererGeneration==2&&destroyed==18&&modules==12);
  assert(!PortRendererHandleReset(999));
  (void)redraw;
- puts("PASS production native reset: all 17 main textures, module owners, generation, targets-only, thread affinity, deferred target detach");return 0;
+ puts("PASS production native reset: all 18 main textures, module owners, generation, targets-only, thread affinity, deferred target detach");return 0;
 }
 '''
 core=(function('static int RendererResetService(')+function('int PortRendererHandleReset(')) if 'static int RendererResetService(' in s else 'static int RendererResetService(void){return 1;}\nint PortRendererHandleReset(uint32_t type){(void)type;return 0;}\n'

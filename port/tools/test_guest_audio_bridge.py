@@ -50,6 +50,7 @@ static SDL_AudioStream *sAudio;
 static int sGameRate=48000;
 static int16_t lastSample;
 '''+hostopen+'\n'+hostqueued+'\n'+hostratio+'\n'+function(host,'static void GamePush(')+'\n'+function(host,'static void H_audio_clear(')+'\n'+function((ROOT/'port/windows64/hdmovie_windows.inc').read_text(),'static void PortAudioMovieHold(')+r'''
+static int HostOutputCommand(int o,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -2;}
 static int HostGpuCommand(int o,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -2;}
 static int H_thread_legacy(int o,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return 0;}
 '''+function(host,'static int H_thread(')+r'''

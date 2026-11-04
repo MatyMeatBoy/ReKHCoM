@@ -29,6 +29,8 @@ static int gPortHudScale=1,gPortHudW=240,gPortHudH=160,gPortWorldScale=2,activeH
 static SDL_Renderer renderer=1,*sRenderer=&renderer;
 static uint32_t *sHudBuf;static size_t sHudCapacity;
 #define MENU_FADE 8
+#define MENU_PAGE_FADE 6
+static int sPage;
 #define MENU_FADE_COLOR 0
 #define LANG_COUNT 6
 #define GBA_SCREEN_W 240

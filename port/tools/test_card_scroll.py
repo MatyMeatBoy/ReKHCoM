@@ -31,6 +31,8 @@ uint32_t PortFrameCount(void) { return sFrame; }
 void PortLog(const char* fmt, ...) { (void)fmt; }
 int PortUiMenuCanvas(void) { return 0; }
 int PortUndubAvailable(void) { return 0; }
+int PortRollbackResimulating(void) { return 0; } /* netplay/versus modules are outside this config/input fixture */
+int VsBattleLocalFacingLeft(void) { return 0; }
 void PortSetQolButtons(int on) { (void)on; }
 void PortHdMovieInvalidatePaths(void) {} /* movie module is outside this config/input fixture */
 static int sZoomSteps[2];

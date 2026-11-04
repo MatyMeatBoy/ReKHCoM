@@ -15,7 +15,11 @@ unit=r'''#include <SDL3/SDL.h>
 #include <stdio.h>
 static uint32_t sPreview[640*360],canvas[640*360];
 static int sPreviewReady=1,sPreviewW=640,sPreviewH=360,sPreviewHd=1,sPreviewSerial=1,sTextureSerial=-1,sTextureW,sTextureH;
-static int sPreviewEvent=10;
+static int sPreviewEvent=10,sPreviewFallback,sPreviewTracePending;
+/* preview_trace.h is the optional observer (disabled by default): no-ops here */
+static void PreviewTrace(const char*s){(void)s;}
+static void PreviewTraceDraw(int accepted){(void)accepted;}
+static void PreviewTraceUnderlay(void){}
 static SDL_Texture* sPreviewTexture;
 static SDL_Renderer* sPreviewRenderer;
 static uint32_t *sFb=canvas,*sHdUiFrame=canvas;
@@ -24,12 +28,13 @@ static struct {int hdTitle;} gPortConfig={1};
 static struct { int code,x,y,alive,pw,run;uint32_t face,shadow;} sHdUiGlyphs[2048];
 static void PortSceneGalleryPreviewPoll(void) {}
 float PortHdTextUiAdvance(SDL_Renderer*r,int c,float s){return s;}
+int PortHdTextUiInk(SDL_Renderer*r,int c,float s,int*left){(void)r;(void)c;(void)s;*left=0;return 0;} /* no optical ink offset in this fixture */
 void PortHdTextUiGlyph(SDL_Renderer*r,int c,float x,float y,float s,float a,uint32_t f,uint32_t b){glyphCalls++;}
 int PortHdMenuLightDraw(SDL_Renderer*r,float x,float y,float z,uint64_t t,float s,float w){return 1;}
 uint64_t PortUiMenuLightTicks(void){return 0;}
 '''
 for signature in ('int PortSceneGalleryPreviewDraw(','void PortSceneGalleryPreviewCancel('):unit+=function(gallery,signature)+'\n'
-for signature in ('static void Pixel(','static uint32_t Mix(','static float Advance(','void PortUiHdDraw(','static void Shade(','static void Fill('):unit+=function(ui,signature)+'\n'
+for signature in ('static void Pixel(','static uint32_t Mix(','static float InkPen(','static float Advance(','void PortUiHdDraw(','static void Shade(','static void Fill('):unit+=function(ui,signature)+'\n'
 unit+=r'''
 static unsigned pixel(SDL_Renderer*r,int x,int y){SDL_Surface*a=SDL_RenderReadPixels(r,NULL);assert(a);SDL_Surface*b=SDL_ConvertSurface(a,SDL_PIXELFORMAT_ARGB8888);assert(b);unsigned c=((unsigned*)((char*)b->pixels+y*b->pitch))[x]&0xFFFFFF;SDL_DestroySurface(b);SDL_DestroySurface(a);return c;}
 static void queue(void){sHdUiCount=2;sHdUiGlyphs[0]=(typeof(sHdUiGlyphs[0])){-2,0,0,1,640,360,0xFFFFFFFF,0xFF000000};sHdUiGlyphs[1]=(typeof(sHdUiGlyphs[0])){'X',30,30,1,8,99,0xFF000000,0xFFFFFFFF};glyphCalls=0;}
