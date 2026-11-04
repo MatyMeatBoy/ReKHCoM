@@ -45,7 +45,7 @@ static void SDL_DestroyTexture(SDL_Texture* p){if(p){live--;free(p);}}
 #define HD_SPRITE_COUNT 2
 static struct {SDL_Texture *image,*white;size_t bytes;int present;} sState[2];
 static size_t sBytes;
-static SDL_Texture *sRingFull,*sRingEmpty,*sArt,*sArtWhite,*sMenuLightImage,*sMenuLightWhite;
+static SDL_Texture *sRingFull,*sRingEmpty,*sArt,*sArtWhite,*sMenuLightImage,*sMenuLightWhite,*sJiminyForeground;
 static unsigned char *sMenuLightSamples,*sMenuLightPixels;
 static int sMenuLightTried,sMenuLightPhase,sRingTried,sArtTried,sArtW,sArtH,sArtCount,sBarCount,sDrawCount[3];
 static void* sRenderer;
@@ -55,11 +55,11 @@ static void* sRenderer;
     unit += r'''
 int main(void){
  sArt=texture();sArtWhite=texture();sRingFull=texture();sRingEmpty=texture();
- sMenuLightImage=texture();sMenuLightWhite=texture();
+ sMenuLightImage=texture();sMenuLightWhite=texture();sJiminyForeground=texture();
  sMenuLightSamples=malloc(4);sMenuLightPixels=malloc(4);
  sArtTried=sArtW=sArtH=sArtCount=sBarCount=1;sRenderer=(void*)1;
  PortHdSpritesShutdown();
- assert(live==0 && !sArt && !sArtWhite && !sRenderer && !sArtTried && !sArtCount && !sBarCount);
+ assert(live==0 && !sArt && !sArtWhite && !sJiminyForeground && !sRenderer && !sArtTried && !sArtCount && !sBarCount);
  PortHdSpritesShutdown();assert(live==0);
  puts("PASS poster/light shutdown releases and resets; repeat shutdown safe");return 0;
 }

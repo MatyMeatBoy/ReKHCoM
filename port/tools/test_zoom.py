@@ -12,6 +12,11 @@ code = r"""
 extern float gPortAutoScaleF;
 static int menuCanvas;
 int PortUiMenuCanvas(void) { return menuCanvas; }
+/* port_config.c's links into modules this fixture does not build */
+void PortLog(const char* fmt, ...) { (void)fmt; }
+int PortUndubAvailable(void) { return 0; }
+void PortSetQolButtons(int on) { (void)on; }
+void PortHdMovieInvalidatePaths(void) {}
 int main(void) {
  int sizes[][2]={{320,180},{960,540},{1280,720},{1280,800},{1920,1080},{2880,1800},{3440,1440},{5120,1440},{7680,2160}};
  int i,z,w,h,s,k,only,prev,cases=0;
@@ -125,4 +130,6 @@ cc=(args.toolchain/'bin/i686-w64-mingw32-clang.exe') if args.toolchain else next
 sdl=args.sdl/'i686-w64-mingw32' if args.sdl else next((ROOT.parent/'toolchain').glob('SDL3-*/i686-w64-mingw32'))
 shutil.copy2(sdl/'bin/SDL3.dll',OUT/'SDL3.dll')
 subprocess.run([str(cc),'-std=gnu11','-I'+str(ROOT/'port/include'),'-I'+str(sdl/'include'),str(OUT/'zoom.c'),str(ROOT/'port/src/port_config.c'),'-L'+str(sdl/'lib'),'-lSDL3','-o',str(OUT/'zoom.exe')],check=True)
-subprocess.run([str(OUT/'zoom.exe')],cwd=OUT,check=True)
+# Auto view stretches tall (16:10, 4:3) outputs to a 16:9 row count since 24/10 (PortConfigAutoView); this test checks the plain scale ladder.
+import os
+subprocess.run([str(OUT/'zoom.exe')],cwd=OUT,check=True,env=dict(os.environ,KHCOM_TALL_FIT='0'))

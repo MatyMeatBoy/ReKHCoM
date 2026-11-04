@@ -82,7 +82,7 @@ static void h_tex_free(int id){H_tex_free(id);}
   android=(ROOT/'port/android64/host/android64_host.c').read_text(encoding='utf-8')
   movie_bridge=r'''
 #define SDL_snprintf snprintf
-static int sQuit,sStartAt;
+static int sQuit,sStartAt,sStopAt;
 static struct {int hdSubtitles,masterVolume;}gPortConfig;
 static void MoviePath(const char*n,char*p,int cap){snprintf(p,cap,"%s",n);}
 static void MovieSubtitlePath(const char*n,const char*l,char*p,int cap){snprintf(p,cap,"%s.%s.txt",n,l);}

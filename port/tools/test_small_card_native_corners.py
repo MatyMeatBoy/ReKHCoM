@@ -31,12 +31,19 @@ pre=r'''
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include "'''+(ROOT/'port/include/port/port_oam.h').as_posix()+r'''"
 typedef struct {int id,x,y,w,h;} OamHdPart;
-static OamHdPart sOamHd[128];
-static unsigned char sMainHdPart[128],sMainHdScreen[128];
-static int16_t sMainHdBox[128][4];
+static OamHdPart sOamHd[PORT_OAM_CAPACITY];
+static unsigned char sMainHdPart[PORT_OAM_CAPACITY],sMainHdScreen[PORT_OAM_CAPACITY];
+static int16_t sMainHdBox[PORT_OAM_CAPACITY][4];
 static uint16_t oam[512];
 #define OAM16 oam
+/* the renderer's OAM view and the world-blend state HdOverLayer consults: native slots only, no additive world here */
+static int OamCount(void){return PORT_OAM_NATIVE;}
+static uint16_t OamAttr(int slot,int attr){return oam[slot*4+attr];}
+static int PortHdSpriteGroup(int id){(void)id;return 0;}
+static int sWorldBlendActive,sWorldBlendScreen;
+static uint32_t* sWorldBlendAdd;
 static int PortHdSpriteKeepsCartridge(int id){return id==1;}
 static uint8_t cover[32*64],*sHdCover=cover;
 static size_t sHdCoverSize=sizeof(cover);
@@ -72,7 +79,7 @@ int main(void){
    oam[1]=(flip&1?0x1000:0)|(flip&2?0x2000:0);
    memset(bg,4,sizeof(bg));memset(owner,0,sizeof(owner));memset(over,0,sizeof(over));
    for(int y=0;y<32;y++)for(int x=0;x<16;x++)picture[y*16+x]=colors[card][x==14];
-   int used=0;HdOverLayer(screen,16,32,bg,owner,picture,over,&used);
+   int used=0;HdOverLayer(screen,16,32,bg,owner,picture,over,&used,0);
    for(int y=0;y<32;y++)for(int x=0;x<16;x++) {
      int tx=flip&1?15-x:x,ty=flip&2?31-y:y;
      int corner=ready&&group&&ty==16&&(tx==1||tx==14);
@@ -90,7 +97,7 @@ int main(void){
    oam[0]=0x300;oam[3]=oam[15]=transform==1?128:transform==2?(uint16_t)-256:256;
    memset(bg,4,sizeof(bg));memset(owner,0,sizeof(owner));memset(over,0,sizeof(over));
    for(int k=0;k<32*64;k++)picture[k]=0xff123400u+k;
-   int used=0;HdOverLayer(0,32,64,bg,owner,picture,over,&used);
+   int used=0;HdOverLayer(0,32,64,bg,owner,picture,over,&used,0);
    for(int y=0;y<64;y++)for(int x=0;x<32;x++) {
      int expected=transform==0?(y==32&&(x==9||x==22)):
                   transform==1?((y==32||y==33)&&(x==2||x==3||x==28||x==29)):
@@ -99,13 +106,13 @@ int main(void){
    }
    /* A different visible OAM owner cannot donate the hidden card's corner. */
    memset(owner,0xff,sizeof(owner));memset(over,0,sizeof(over));used=0;
-   HdOverLayer(0,32,64,bg,owner,picture,over,&used);assert(!used);
+   HdOverLayer(0,32,64,bg,owner,picture,over,&used,0);assert(!used);
  }
  /* A partial OAM piece contains only the right corner. */
  memset(oam,0,sizeof(oam));sOamHd[0]=(OamHdPart){1,0,-4,8,8};
  sMainHdBox[0][2]=sMainHdBox[0][3]=8;
  memset(owner,0,sizeof(owner));memset(over,0,sizeof(over));
- int used=0;HdOverLayer(0,8,8,bg,owner,picture,over,&used);
+ int used=0;HdOverLayer(0,8,8,bg,owner,picture,over,&used,0);
  for(int k=0;k<64;k++)assert(over[k]==(k==6?picture[k]:0));
  /* Real back-to-front HUD ordering: a lower card's preserved corner must
     not remain above the illustration of the next visible HD card. */

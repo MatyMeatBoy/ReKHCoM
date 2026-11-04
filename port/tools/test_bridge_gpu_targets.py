@@ -67,6 +67,8 @@ static void SDL_RenderGeometry(void*r,SDL_Texture*t,const SDL_Vertex*v,int n,voi
 static int SDL_GetRendererProperties(void*r){(void)r;return 1;}
 static Sint64 SDL_GetNumberProperty(int p,const char*n,Sint64 d){(void)p;(void)n;(void)d;return 8192;}
 static const char* SDL_GetRendererName(void*r){(void)r;return software?"software":"direct3d";}
+/* windows64/sdl_quad.h needs the real SDL; its axis-aligned copy path is covered by test_windows64_scene_quad.py. */
+static int HostDrawSdlQuad(SDL_Texture*t,const HostVertex*v,int n,float shift){(void)t;(void)v;(void)n;(void)shift;return 0;}
 static SDL_Texture* SDL_GetRenderTarget(void*r){(void)r;return bound;}
 static bool SDL_SetRenderTarget(void*r,SDL_Texture*t){(void)r;if(failBind)return false;bound=t;return true;}
 static void SDL_SetRenderDrawColor(void*r,unsigned a,unsigned b,unsigned c,unsigned d){(void)r;clearColor=(d<<24)|(a<<16)|(b<<8)|c;}

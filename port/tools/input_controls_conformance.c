@@ -15,6 +15,8 @@ PortConfig gPortConfig = {
           SDL_GAMEPAD_BUTTON_NORTH,SDL_GAMEPAD_BUTTON_WEST,SDL_GAMEPAD_BUTTON_RIGHT_STICK}
 };
 uint32_t PortFrameCount(void){return 0;}
+int PortRollbackResimulating(void){return 0;} /* netplay link is outside this input fixture */
+int VsBattleLocalFacingLeft(void){return 0;}
 /* the game's side port_input.c reaches (the battle's card scroll, the zoom hotkeys): outside a battle here */
 Mode* gCurrentMode;
 Mode gModeBattle, gModeVsbattle;

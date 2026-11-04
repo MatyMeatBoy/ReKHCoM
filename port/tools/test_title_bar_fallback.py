@@ -71,6 +71,15 @@ static uint16_t Blend(uint16_t c,uint16_t p,int a,int b){return c;}
 static uint16_t Brighten(uint16_t c,int n){return c;}
 static uint16_t Darken(uint16_t c,int n){return c;}
 static void PortHdTitleBarRow(int y,int x,int n,const uint32_t*p){rows++;}
+/* the renderer's OAM view and additive world-blend state (no world light in the title) */
+static int OamCount(void){return 128;}
+static uint16_t OamAttr(int slot,int attr){return oam[slot*4+attr];}
+static int PortHdSpriteGroup(int id){(void)id;return 0;}
+static int sWorldBlendActive,sWorldBlendScreen,sWorldBlendW,sWorldBlendH;
+static uint8_t* sWorldBlendMask;
+static int WorldBlendWanted(void){return 0;}
+static void WorldBlendPrepare(void){}
+static int SmoothedHdAlpha(int eva){return eva;}
 '''
 
 MAIN = r'''

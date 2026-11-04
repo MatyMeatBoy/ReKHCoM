@@ -6,10 +6,10 @@ r=Path(__file__).resolve().parents[2];
 import os
 os.chdir(r)
 cc=next((r.parent/'toolchain').glob('llvm-mingw-*/bin/i686-w64-mingw32-clang.exe'))
-c=[str(cc),'-O2','-std=gnu11','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-DPLATFORM_PC','-DVERSION_EU','-Iport/include']
+c=[str(cc),'-O2','-std=gnu11','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-DPLATFORM_PC','-DVERSION_EU','-Iport/include','-I'+str(r.parent/'toolchain/SDL3-3.4.18/i686-w64-mingw32/include')]
 for p in [Path('include')]+[p for p in Path('include').iterdir() if p.is_dir() and p.name!='gba']:c+=['-iquote',str(p)]
 subprocess.run(c+['port/tools/mixer_conformance.c','-o','build/mixer_conformance.exe'],check=True)
-subprocess.run(['build/mixer_conformance.exe'],check=True)
+subprocess.run([str(r/'build/mixer_conformance.exe')],check=True) # absolute: Windows CreateProcess does not resolve a forward-slash relative path
 
 # Integrate the duty waveform independently, one eighth at a time.
 source=(r/'port/src/port_audio.c').read_text()

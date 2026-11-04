@@ -32,7 +32,7 @@ def main():
 '''+''.join(structure(src,n) for n in ('HdSpriteDef','HdSpriteState','HdSpriteDraw'))+r'''
 static SDL_Renderer*sRenderer;static SDL_Texture* sArt=(SDL_Texture*)1,*sArtWhite=(SDL_Texture*)2;
 static HdSpriteDef kHdSprites[1]={{.name="probe",.w=16,.h=16}};
-static HdSpriteState sState[1];static HdSpriteDraw sDraws[3][1],sArtDraws[1];
+static HdSpriteState sState[1];static HdSpriteDraw sDraws[3][1],sArtDraws[1];static int sWorldBlendFallback;
 static int sDrawCount[3],sArtCount,sBarCount,sRingRatio=-1,gPortHudW=1,gPortHudH=1;
 enum{RING_FACE_X=0,RING_FACE_Y=0};
 static void PortHdGaugeDraw(SDL_Renderer*r,float a,float b,float c,float d){}

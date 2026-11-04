@@ -16,7 +16,7 @@ def main():
     original = (ROOT / 'src/map/map_cell.c').read_text()
     def function(name):
         import re
-        match = re.search(r'^(?:static )?[^\n;]+\b' + name + r'\([^\n]*\) \{', original, re.M)
+        match = re.search(r'^(?:static )?[A-Za-z_][^\n;=]*\b' + name + r'\([^\n]*\) \{', original, re.M)
         assert match, name
         end, depth = match.end(), 1
         while depth:
@@ -25,6 +25,8 @@ def main():
         return original[match.start():end] + '\n'
     # Exact production bodies, no synthetic reimplementation of the reader.
     bodies = original[:original.index('#ifdef PLATFORM_PC')]
+    # the PC-only helpers MapWorldTile uses (top-edge close, edge strip, plain base tiles; KHCOM_TOPCLOSE gate)
+    bodies += '#include <stdlib.h>\n#include <stdio.h>\n' + original[original.index('static int sMapTopClose'):original.index('static int MapWorldTile(')]
     bodies += ''.join(function(name) for name in ('MapGetCell', 'MapWorldTile', 'MapBuildBgRow', 'MapBuildBgColumn'))
     source.write_text(bodies + r'''
 #include <stdio.h>

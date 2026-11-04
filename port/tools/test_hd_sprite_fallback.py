@@ -154,6 +154,11 @@ unit = preamble + backend + source[a:b] + '\nstatic HdSpriteDraw sDraws[3][128];
 # regional helper; the dedicated EU lookup test exercises its eleven mappings.
 unit += '#include "' + (ROOT/'port/include/port/port_eu_boss_stock_alias.h').as_posix() + '"\n'
 unit += function('static void Unload(') + function('static int Load(')
+if 'static void WarmStep(' in source:  # SpriteReady starts the loaded picture's family warming (v23-hd-synthesis-image-loads)
+    unit += '\n#define WARM_FAMILY_MAX 40\nstatic char sWarmFamily[48];\nstatic uint32_t sWarmFrame, sLoadFrame;\n'
+    unit += '#define SDL_strlen strlen\n#define SDL_strcmp strcmp\n#define SDL_strncmp strncmp\n'
+    unit += 'static void SDL_strlcpy(char* d, const char* s, size_t n){snprintf(d, n, "%s", s);}\n'
+    unit += function('static void FamilyOf(') + '\n' + function('static void WarmStart(') + '\n' + function('static void WarmStep(') + '\n'
 if 'static int SpriteReady(' in source:
     unit += function('static int SpriteTextureReady(')
     unit += function('static int SpriteReady(')

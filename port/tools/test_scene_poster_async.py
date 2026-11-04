@@ -17,6 +17,7 @@ static bool DiscardPng(SDL_Surface*s,const char*p){return true;}
 #define SDL_SavePNG DiscardPng
 static const char* PortConfigPath(const char*n){return "Z:/poster-probe-never-created/";}
 static void PortLog(const char*format,...){(void)format;}
+static uint32_t PortFrameCount(void){return 0;} /* preview_trace.h stamps its records with the frame */
 const char* PortHdGalleryMovieName(int id){return id==10?"first":"latest";}
 int PortHdGalleryMovieOffset(int id){return 0;}
 static int generation;

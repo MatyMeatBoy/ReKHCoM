@@ -37,7 +37,7 @@ static uint16_t OamAttr(int slot,int attr){assert(slot>=0&&slot<PORT_OAM_CAPACIT
 '''
 backend=r'''
 typedef struct {SDL_Texture*image,*white;uint32_t lastUsed;} HdSpriteState;
-static HdSpriteState sState[2];static HdSpriteDraw sDraws[3][128];static int sDrawCount[3],sArtCount,sBarCount;
+static HdSpriteState sState[2];static HdSpriteDraw sDraws[3][128];static int sDrawCount[3],sArtCount,sBarCount,sWorldBlendFallback;
 static struct {const char*name;}kHdSprites[2]={{"gReloadCounterWhiteTiles_0"},{"gRevCountRedTiles"}};
 static SDL_Renderer*sRenderer;static SDL_Rect clip;static int clipped,draws,ink[64*64];static float lastAlpha,lastShade;
 static int Load(int id){(void)id;return 0;}

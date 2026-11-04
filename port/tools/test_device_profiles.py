@@ -64,6 +64,7 @@ static void PortLog(const char* fmt, ...) { (void)fmt; logs++; }
 static const char* PortConfigPath(const char* file) { return file; }
 static char* Trim(char* text) { text[strcspn(text,"\r\n")] = 0; return text; }
 static int sUpgradedSettings;
+static int gPortSceneFraming; /* port.h's scene-framing choice, parsed by PortConfigLoadFile */
 static struct { int fullscreen, padLayout, hdText, discordPresence, assetsSeen, netStats, hdSubtitles, hdMovies, hdMusic; char onlineName[64]; } gPortConfig;
 typedef struct { const char* name; int* value; int min,max; } Key;
 static const Key sKeys[] = {
@@ -178,6 +179,15 @@ RELAY_PREAMBLE = r"""
 #include <stdio.h>
 #include <string.h>
 static unsigned sRendererGeneration = 7;
+/* the optional bridge channels H_getenv asks first / serves itself: none active in this relay test */
+typedef struct { unsigned type, key, mod, repeat; } SDL_KeyboardEvent;
+#define SDL_EVENT_WINDOW_FOCUS_LOST 0x20c
+static SDL_KeyboardEvent sHostKeys[64];
+static unsigned sHostKeyRead, sHostKeyWrite;
+static int sKeyboardEventsActive;
+static int HostGpuQuery(const char* n, char* o, int c) { (void)n; (void)o; (void)c; return -2; }
+static int HostGamepadInfoQuery(const char* n, char* o, int c) { (void)n; (void)o; (void)c; return -2; }
+static int HostTextQuery(const char* n, char* o, int c) { (void)n; (void)o; (void)c; return -2; }
 static const char* PortDeviceHostQuery(const char* name) {
     return strcmp(name,"KHCOM_HOST_DEVICE_PROFILE") == 0 ? "steam-deck:valve-dmi" : NULL;
 }
