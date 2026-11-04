@@ -10,7 +10,7 @@ def fn(s,name):
  return s[a:e]
 main=(ROOT/'port/src/port_main.c').read_text(encoding='utf8')
 ppu=(ROOT/'port/src/port_ppu.c').read_text(encoding='utf8')
-start=ppu.index('    sHudLayer = gPortScreen.wide')
+start=ppu.index('    sHudLayer = (gPortScreen.wide') # since the scene camera (gPortSceneCameraAdjusted) also opens the HUD layer
 select=ppu[start:ppu.index('    sHdText =',start)]
 core=''
 if 'int PortHudCanvasReady(' in main:
@@ -44,7 +44,7 @@ static int allocs,texCreates,texDestroys,logs,failAlloc,failTex,draws;
 static int gPortHudW=240,gPortHudH=160,gPortHudScale=1,gPortWorldScale=2;
 static struct{int wide;}gPortScreen={1};
 static struct{int hdHud,hdText;}gPortConfig={1,1};
-static int sHudLayer,sHdText=1,sHudCanvasFallback;
+static int sHudLayer,sHdText=1,sHudCanvasFallback,gPortSceneCameraAdjusted;
 static int sHudFrameW,sHudFrameH,sHudFrameScale,sHudFrameWorldScale;
 static unsigned char VRAM8[0x18000];static uint16_t PLTT16[512];
 static uint16_t IO16(int i){(void)i;return 0;}
