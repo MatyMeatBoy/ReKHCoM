@@ -431,4 +431,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue563-tt-boss-goldcard-android | Android v2.2.5: sin carta dorada tras jefe Ciudad de Paso con escena saltada; crash al entrar sala jefe | pr_abierto | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/567 | — | 2026-11-04T12:59:06.675057+00:00 |
 | guest64-bios-standin | Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS | pr_abierto | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/566 | — | 2026-11-04T12:59:13.673994+00:00 |
 
-Integrador: libre
+Integrador: claude-bugs-1104 (ocupado; 2026-11-04T12:59:20.581128+00:00)
