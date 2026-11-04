@@ -15141,16 +15141,23 @@
     "guest64-bios-standin": {
       "id": "guest64-bios-standin",
       "piece": "Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-bugs-1104",
       "created_at": "2026-11-04T12:58:20.326210+00:00",
-      "updated_at": "2026-11-04T12:59:13.673994+00:00",
-      "branch": null,
+      "updated_at": "2026-11-04T12:59:27.609021+00:00",
+      "branch": "fix/guest64-bios-standin",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/566",
-      "approval": null,
+      "approval": "usuario 04/11: atender issues de bugs hasta solucionarlos",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/566",
-      "evidence": [],
-      "claimed_at": "2026-11-04T12:58:52.488921+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-04T12:59:27.609021+00:00",
+          "owner": "claude-bugs-1104",
+          "detail": "merge d2291f005; tests Windows+VM Debian; batalla NULL forzado 61 redirecciones"
+        }
+      ],
+      "claimed_at": "2026-11-04T12:58:52.488921+00:00",
+      "completed_at": "2026-11-04T12:59:27.609021+00:00"
     }
   },
   "integrator": {
@@ -15159,7 +15166,7 @@
     "created_at": "2026-11-04T12:59:20.581128+00:00",
     "updated_at": "2026-11-04T12:59:20.581128+00:00"
   },
-  "updated_at": "2026-11-04T12:59:20.581128+00:00",
+  "updated_at": "2026-11-04T12:59:27.609021+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
