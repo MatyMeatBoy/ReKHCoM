@@ -15095,22 +15095,28 @@
     "issue564-colosseum-battle-crash64": {
       "id": "issue564-colosseum-battle-crash64",
       "piece": "Windows64 v2.7 crash c0000005 null+0x28 en batalla Coliseo",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "claude-bugs-1104",
       "created_at": "2026-11-04T12:12:10.201868+00:00",
-      "updated_at": "2026-11-04T12:21:28.295897+00:00",
+      "updated_at": "2026-11-04T12:22:52.636524+00:00",
       "branch": "fix/issue564-frame-tiles-null",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/565",
-      "approval": null,
+      "approval": "usuario 04/11: atender issues de bugs hasta solucionarlos",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/564",
       "evidence": [
         {
           "at": "2026-11-04T12:21:28.295897+00:00",
           "owner": "claude-bugs-1104",
           "detail": "6b9c28921: rojo crash reading 0x28 en UpdateSpriteFrameTiles con NULL forzado; verde 6000 frames batalla exit0; windows64 --test PASS. pruebas/issue564"
+        },
+        {
+          "at": "2026-11-04T12:22:52.636524+00:00",
+          "owner": "claude-bugs-1104",
+          "detail": "merge 07843fec6 en main"
         }
       ],
-      "claimed_at": "2026-11-04T12:12:18.308456+00:00"
+      "claimed_at": "2026-11-04T12:12:18.308456+00:00",
+      "completed_at": "2026-11-04T12:22:52.636524+00:00"
     },
     "issue563-tt-boss-goldcard-android": {
       "id": "issue563-tt-boss-goldcard-android",
@@ -15132,7 +15138,7 @@
     "created_at": "2026-11-04T12:22:46.044466+00:00",
     "updated_at": "2026-11-04T12:22:46.044466+00:00"
   },
-  "updated_at": "2026-11-04T12:22:46.044466+00:00",
+  "updated_at": "2026-11-04T12:22:52.636524+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
