@@ -15121,20 +15121,26 @@
     "issue563-tt-boss-goldcard-android": {
       "id": "issue563-tt-boss-goldcard-android",
       "piece": "Android v2.2.5: sin carta dorada tras jefe Ciudad de Paso con escena saltada; crash al entrar sala jefe",
-      "status": "en_curso",
+      "status": "bloqueado",
       "owner": "claude-bugs-1104",
       "created_at": "2026-11-04T12:12:25.024883+00:00",
-      "updated_at": "2026-11-04T12:23:40.395965+00:00",
+      "updated_at": "2026-11-04T12:29:48.025384+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/563",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-04T12:29:48.025384+00:00",
+          "owner": "claude-bugs-1104",
+          "detail": "v2.7 64-bit EU eventos TT 0:7..0:11 sin crash (pruebas/issue563). Crash Android v2.2.5 al iniciar EVENT_010_1F_GOAL_1 depende del estado: pedida partida exportada y prueba APK v2.7 (comentario 6630625391)"
+        }
+      ],
       "claimed_at": "2026-11-04T12:23:40.395965+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-04T12:23:40.395965+00:00",
+  "updated_at": "2026-11-04T12:29:48.025384+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
