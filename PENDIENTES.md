@@ -427,5 +427,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | local-v23-pretest-20261030 | Prebuild Windows local2.3 EU32/64 para probar escenas antes de publicacion | integrado | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/commit/db978bac6 | Usuario 02/11: limpia la cola compartida igualmente | 2026-11-02T00:49:46.221292+00:00 |
 | v23-release-scene-experimental | Salida2.3: quitar selector escenasGBA, altura fija y encuadreexperimental; paquetes limpios verificados y publicacion autorizada | integrado | codex-release23 | https://github.com/MatyMeatBoy/ReKHCoM/pull/534 | Usuario30Oct pide altura siempre, quitar escenasGBA, encuadreexperimental y salir con2.3 | 2026-10-30T21:38:08.585962+00:00 |
 | online-salas-esquiva-link | Online: lobby en Retar con salas con nombre, texto en 64 bits, esquiva en link (version 5), barra del rival anclada en ancho | integrado | claude-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/540 | Usuario 01/11: pidio sistema de salas con nombre por defecto, esquiva con cuadrado en link y ajustar ancho P1/P2 | 2026-11-01T22:06:51.157831+00:00 |
+| issue564-colosseum-battle-crash64 | Windows64 v2.7 crash c0000005 null+0x28 en batalla Coliseo | pendiente | — | — | — | 2026-11-04T12:12:10.201868+00:00 |
 
 Integrador: libre
