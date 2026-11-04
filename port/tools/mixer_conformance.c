@@ -15,6 +15,10 @@ u32 MidiKeyToFreq(WaveData* w, u8 k, u8 f) { abort(); }
 void FadeOutBody(MusicPlayerInfo* m) { abort(); }
 void Clear64byte(void* x) { abort(); }
 void PortLog(const char* fmt, ...) { abort(); }
+/* the music-player table (m4a_port.c's playback check) and SDL's environment lookup are outside this mixer fixture */
+const MusicPlayer gMPlayTable[1] = {{0}};
+char gNumMusicPlayers[1] = {0};
+const char* SDL_getenv(const char* name) { (void)name; return NULL; }
 static void render(int smooth, int fixed, int length, int loop, int poison, int32_t* out) {
     unsigned char storage[64];
     WaveData* wav = (WaveData*)storage;
