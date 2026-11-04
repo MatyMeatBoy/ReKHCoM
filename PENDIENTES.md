@@ -430,4 +430,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue564-colosseum-battle-crash64 | Windows64 v2.7 crash c0000005 null+0x28 en batalla Coliseo | integrado | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/565 | usuario 04/11: atender issues de bugs hasta solucionarlos | 2026-11-04T12:22:52.636524+00:00 |
 | issue563-tt-boss-goldcard-android | Android v2.2.5: sin carta dorada tras jefe Ciudad de Paso con escena saltada; crash al entrar sala jefe | bloqueado | claude-bugs-1104 | — | — | 2026-11-04T12:29:48.025384+00:00 |
 
-Integrador: libre
+Integrador: claude-bugs-1104 (ocupado; 2026-11-04T12:57:54.617556+00:00)
