@@ -418,9 +418,9 @@
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
       "status": "en_curso",
-      "owner": "codex-atlas",
+      "owner": "codex-atlas-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T20:28:37.619591+00:00",
+      "updated_at": "2026-11-05T12:35:41.166696+00:00",
       "branch": "codex/atlas061-turbo-current",
       "pr": null,
       "approval": null,
@@ -470,6 +470,11 @@
           "at": "2026-10-25T20:28:37.619591+00:00",
           "owner": "codex-atlas",
           "detail": "Hija dc231096 modulo16 suelo conEU3440frames300/600. Nube2 propuesta entregada; nube1 detalle pequeno aunpendiente."
+        },
+        {
+          "at": "2026-11-05T12:35:41.166696+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Usuario05/11 ordena terminar toda revisión. Apps list_threads: único chatKH activo este; procesosKH sólo servidorAtlas; worktrees061 retirados, ramasbackup conservadas; PR215 merged f244c947 y comentario posterior26/10 pide repetir candelabros. Retoma en worktree nuevo sin tocar WIP."
         }
       ],
       "claimed_at": "2026-10-25T04:21:34.782875+00:00",
@@ -15305,7 +15310,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:33:12.403850+00:00",
+  "updated_at": "2026-11-05T12:35:41.166696+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16476,6 +16481,16 @@
       "to_owner": "claude-v22",
       "expected_commit": "6eb718f9621c622dce3115766fad11feee060a99",
       "evidence": "Dueño inactivo; usuario autorizó a Claude acabar toda la cola (01/11)"
+    },
+    {
+      "at": "2026-11-05T12:35:41.166696+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "escena-061",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas-final",
+      "expected_commit": "16e38b8a85d2d6d2c0df60712c8118e034653bb9",
+      "evidence": "Usuario05/11 ordena terminar toda revisión. Apps list_threads: único chatKH activo este; procesosKH sólo servidorAtlas; worktrees061 retirados, ramasbackup conservadas; PR215 merged f244c947 y comentario posterior26/10 pide repetir candelabros. Retoma en worktree nuevo sin tocar WIP."
     }
   ]
 }

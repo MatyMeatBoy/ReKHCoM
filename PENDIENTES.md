@@ -17,7 +17,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | darkside-arena | Darkside · arena y contexto | integrado | claude-sonnet-w3 | https://github.com/MatyMeatBoy/ReKHCoM/pull/70 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:43.491600+00:00 |
 | escena-004 | Escena 004 · integrada | integrado | r3c | https://github.com/MatyMeatBoy/ReKHCoM/pull/75 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:10:10.127915+00:00 |
 | escena-057 | Escena 057 · integrada | en_revision | codex-atlas | codex/atlas057-turbo-current | — | 2026-10-25T20:35:00.272396+00:00 |
-| escena-061 | Escena 061 · integrada | en_curso | codex-atlas | codex/atlas061-turbo-current | — | 2026-10-25T20:28:37.619591+00:00 |
+| escena-061 | Escena 061 · integrada | en_curso | codex-atlas-final | codex/atlas061-turbo-current | — | 2026-11-05T12:35:41.166696+00:00 |
 | escena-074 | Escena 074 · integrada | integrado | codex-atlas-patrones | https://github.com/MatyMeatBoy/ReKHCoM/pull/153 | approved exact bc670454666c47f986d068eeb45e79ad | 2026-10-27T17:09:25.057524+00:00 |
 | escena-081 | Escena 081 | integrado | codex-arte | https://github.com/MatyMeatBoy/ReKHCoM/pull/89 | pending-human | 2026-10-25T04:20:17.798719+00:00 |
 | escena-087 | Escena 087 | integrado | r4 | https://github.com/MatyMeatBoy/ReKHCoM/pull/76 | orden del usuario en el chat 24/10: integrar todos los PR | 2026-10-24T22:09:57.187038+00:00 |
