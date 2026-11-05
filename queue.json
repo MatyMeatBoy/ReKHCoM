@@ -336,10 +336,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas057-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-11-05T16:58:09.566743+00:00",
+      "updated_at": "2026-11-05T17:31:54.013210+00:00",
       "branch": "art/atlas-scene057-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/585",
       "approval": null,
@@ -429,10 +429,15 @@
           "at": "2026-11-05T16:58:09.566743+00:00",
           "owner": "codex-atlas-057",
           "detail": "Root explicit handoff20261105 latestfeedback492cc13fdc804300bda522bb466db5e4rev6. Ceded checkout atlas-scene057-final clean at9abc6efbb, previous lane inactive confirmed root, preserve PR585draft unmerged and allAtlaspriorversions. Recover own single task for nativegrass/right-side correction, noheavy untilrootwindow."
+        },
+        {
+          "at": "2026-11-05T17:31:54.013210+00:00",
+          "owner": "codex-atlas057-final",
+          "detail": "057final30eab44a4: whole native96x64tufts in128x96cells/nativecleanpadding; rightpartial1024/1024match; rightcaps12tiles continuous2y+x. RED/GREEN actualC10427ground+576caps+28donor+25restored+1472native.2PPU+4runs EU0:57 frames300/600 Extendedvisible/coreexact; Originalfullexact. Atlaspendingchild ee7aa74a63ef4b1e905f64828190f38d parent492cc13fdc804300bda522bb466db5e4 rev6 SHA5971f1bf95f3e4d5a4d8ffe3e35eabe08b924f5acb46fa569f8709163e080132; real BEFORE/SOLUTION. PR585draftupdated, ownhumanvalorationpending/noapproval/nointegration. Evidence pruebas/atlas-final-20261105/057-final-followup."
         }
       ],
       "claimed_at": "2026-11-05T13:59:15.940036+00:00",
-      "sent": "492cc13fdc804300bda522bb466db5e4"
+      "sent": "ee7aa74a63ef4b1e905f64828190f38d"
     },
     "escena-061": {
       "id": "escena-061",
@@ -15832,7 +15837,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:21:11.749090+00:00",
+  "updated_at": "2026-11-05T17:31:54.013210+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
