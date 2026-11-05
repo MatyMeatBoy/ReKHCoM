@@ -16007,8 +16007,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-darkside06-nobuild",
       "created_at": "2026-11-05T17:40:14.925679+00:00",
-      "updated_at": "2026-11-05T20:42:32.517070+00:00",
-      "branch": "art/atlas-darkside06-left-detail",
+      "updated_at": "2026-11-05T20:49:26.233302+00:00",
+      "branch": "art/atlas-darkside06-nobuild",
       "pr": null,
       "approval": "Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena",
       "reference": "Exact latest asset export20261025-130635-c0c34f /60f90456598249ecb1e691c51dd2434e rev2 approved image686a6576e4ee1cc085f4fffb10fc09c36954f90fcebefb739a6696e99a26a3ad /cloud72f6d65b-36e4-47b2-8f2c-d94a9f2ec26d",
@@ -16022,6 +16022,11 @@
           "at": "2026-11-05T18:39:30.096433+00:00",
           "owner": "codex-atlas-darkside06-final",
           "detail": "released: STOP por orden humana 2026-11-05. WIP conservado en kh-worktrees/atlas-darkside06-final, base30e1f47fefb6bf1f358018597f16e869fbc40b2d. C RED2/GREEN2 y preview PASS. Wide BEFORE/AFTER604 ambos exit0; sin revisión comparativa, controles Original ni entrega Atlas/PR. Evidencia pruebas/atlas-final-20261105/darkside06-final. No terminado; brazo aprobado intacto y limitación preexistente de desplazamiento documentada. Sin procesos propios activos."
+        },
+        {
+          "at": "2026-11-05T20:49:26.233302+00:00",
+          "owner": "codex-atlas-darkside06-nobuild",
+          "detail": "STOP humano05/11: intento rechazado interno por degradado en peine/franjas y puntasnegras al ampliar captura300. Freshcheckout0e82 yoldWIP9filesambosbackups/hash/diff preservados en pruebas/atlas-siguiente-20261105/darkside06. NoAtlas/PRnuevo ni nube respondida; queda refinamiento/QA."
         }
       ],
       "claimed_at": "2026-11-05T20:42:32.517070+00:00"
@@ -16314,7 +16319,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:49:10.248262+00:00",
+  "updated_at": "2026-11-05T20:49:26.233302+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
