@@ -4622,13 +4622,13 @@
     "atlas-116-hull-edge": {
       "id": "atlas-116-hull-edge",
       "piece": "Escena 116: limpiar tile saliente del casco",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:39.919108+00:00",
-      "updated_at": "2026-11-05T13:49:47.572692+00:00",
+      "updated_at": "2026-11-05T15:37:43.387469+00:00",
       "branch": "art/atlas-scene116-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/577",
-      "approval": null,
+      "approval": "Atlas05/11 exactversion 70f9813c59f54b7bbea891732a8d8d6a approvedrevision1 withoutnewnotes",
       "reference": "20261025-025038-6d4bd5",
       "evidence": [
         {
@@ -4645,10 +4645,16 @@
           "at": "2026-11-05T13:49:47.572692+00:00",
           "owner": "codex-atlas-final",
           "detail": "Runtime EVENT116(menu0:115)4pares zoom3/2 frames300/600 PASSnúcleo GBAidéntico; previewPPU EU32compilada enlazada ycontrolintacto. Atlas70f9813c59f54b7bbea891732a8d8d6a capturareal pendientehumano. PR577draft."
+        },
+        {
+          "at": "2026-11-05T15:37:43.387469+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Mergefa536054fe2bfad96179608b2ce37b9d5228776c sourcebf6dac92fc852d5481f4440e2be44f997f62cd9f; imagenexactaaprobada/sourcechecksumsreviewFOUR-PR-REVIEW-20261105.json. CtestsPASS,runtimeOriginal/núcleointacto. Conflictosúnicamentedocumentalespreservadasambasreglas; otrosparchesupstreamaprobadosconservados. No release/instalación."
         }
       ],
       "claimed_at": "2026-11-05T12:08:22.039425+00:00",
-      "sent": "70f9813c59f54b7bbea891732a8d8d6a"
+      "sent": "70f9813c59f54b7bbea891732a8d8d6a",
+      "completed_at": "2026-11-05T15:37:43.387469+00:00"
     },
     "atlas-maleficent-continuity": {
       "id": "atlas-maleficent-continuity",
@@ -15663,7 +15669,7 @@
     "created_at": "2026-11-05T15:32:44.508501+00:00",
     "updated_at": "2026-11-05T15:32:44.508501+00:00"
   },
-  "updated_at": "2026-11-05T15:37:35.432214+00:00",
+  "updated_at": "2026-11-05T15:37:43.387469+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
