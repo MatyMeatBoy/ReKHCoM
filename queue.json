@@ -15645,8 +15645,13 @@
       "completed_at": "2026-11-05T15:22:06.461532+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-05T15:26:40.962978+00:00",
+  "integrator": {
+    "owner": "codex-atlas-final",
+    "token": "d1ebaed4cae72a9cef52ba6260b3fe58a3d24e1e748f1982",
+    "created_at": "2026-11-05T15:32:44.508501+00:00",
+    "updated_at": "2026-11-05T15:32:44.508501+00:00"
+  },
+  "updated_at": "2026-11-05T15:32:44.508501+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
