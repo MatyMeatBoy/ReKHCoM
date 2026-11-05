@@ -16057,15 +16057,16 @@
     "atlas-followup-ab344422-r5": {
       "id": "atlas-followup-ab344422-r5",
       "piece": "Escena 095: seguimiento posterior a aprobación; patron A; completar resto con patron A; completar resto con patron A",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas095-patternA",
       "created_at": "2026-11-05T19:23:04.599335+00:00",
-      "updated_at": "2026-11-05T19:23:04.599335+00:00",
+      "updated_at": "2026-11-05T20:09:21.109017+00:00",
       "branch": null,
       "pr": null,
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"ab3444223b854341afa9ae521a0d2860\", \"revision\": 5, \"sha256\": \"c2aa6e93995400df66c41e894a6865b8ac140cdfea470d8bd3c812b7e87978fd\", \"submissions\": [{\"submission\": \"20261105-160609-47f012\", \"created\": \"2026-11-05T19:06:10.060626+00:00\", \"image_id\": \"ab3444223b854341afa9ae521a0d2860\", \"version\": \"Propuesta05/11 - remate continuo - ANTES / SOLUCION - PR580 draft\", \"clouds\": 3, \"cloud_ids\": [\"1c4adf23-115a-4d09-a547-1c2ddbdc4ec7\", \"388118ae-6acf-4020-9d3a-097212cfe6ce\", \"b680a64d-09bb-42bc-92d4-da441f3887f2\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160609-47f012\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-05T20:09:21.109017+00:00"
     },
     "atlas-followup-9f28568f-r5": {
       "id": "atlas-followup-9f28568f-r5",
@@ -16160,7 +16161,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T19:27:23.597331+00:00",
+  "updated_at": "2026-11-05T20:09:21.109017+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
