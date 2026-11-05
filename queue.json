@@ -417,12 +417,12 @@
     "escena-061": {
       "id": "escena-061",
       "piece": "Escena 061 · integrada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-11-05T12:35:41.166696+00:00",
-      "branch": "codex/atlas061-turbo-current",
-      "pr": null,
+      "updated_at": "2026-11-05T12:49:42.314664+00:00",
+      "branch": "art/atlas-scene061-final",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/579",
       "approval": null,
       "reference": "f31927d3f7014eb3a51e52fcf7323003; envío 20261024-131809-942e10",
       "evidence": [
@@ -475,10 +475,15 @@
           "at": "2026-11-05T12:35:41.166696+00:00",
           "owner": "codex-atlas-final",
           "detail": "Usuario05/11 ordena terminar toda revisión. Apps list_threads: único chatKH activo este; procesosKH sólo servidorAtlas; worktrees061 retirados, ramasbackup conservadas; PR215 merged f244c947 y comentario posterior26/10 pide repetir candelabros. Retoma en worktree nuevo sin tocar WIP."
+        },
+        {
+          "at": "2026-11-05T12:49:42.314664+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "0cafa8dfb. Runtime candidato Atlas13c87f6282a540f5a71e623a1e7a39b8; Cdraw regression+compilación unidad+enlacepreviewPASS;8pares A/B x3/x2 300/600: núcleo idéntico,4Ajuste idénticos,4Extendido cambia sólo márgenes,8salida0. Draft espera valoración."
         }
       ],
       "claimed_at": "2026-10-25T04:21:34.782875+00:00",
-      "sent": "dc231096ab3e411584cb4e49bcce20ec"
+      "sent": "13c87f6282a540f5a71e623a1e7a39b8"
     },
     "escena-074": {
       "id": "escena-074",
@@ -15310,7 +15315,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:35:41.166696+00:00",
+  "updated_at": "2026-11-05T12:49:42.314664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
