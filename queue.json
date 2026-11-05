@@ -15820,13 +15820,13 @@
     "atlas087-final-border-patterns": {
       "id": "atlas087-final-border-patterns",
       "piece": "Escena087: completar patrones del borde superior tras revision33dd78",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas087-final",
       "created_at": "2026-11-05T14:22:52.310431+00:00",
-      "updated_at": "2026-11-05T16:27:15.507818+00:00",
+      "updated_at": "2026-11-05T19:26:44.245452+00:00",
       "branch": "art/atlas-scene087-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/591",
-      "approval": "Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion",
+      "approval": "Atlas 31800ebcfc224078bb623ab2b5f846a8 revision2 approved SHA256 0a1df96a51d0d9eff17992818e62d5aef62948d422d306898d42b67576cbf0e6; build_version accepted; usuario05/11 integra todos",
       "reference": "20261026-063322-54de6a padre33dd78c3e05f44648d70624c52ae2cf0 nubes8903fc3e/caac56f2/92573031",
       "evidence": [
         {
@@ -15848,10 +15848,16 @@
           "at": "2026-11-05T16:27:15.507818+00:00",
           "owner": "codex-atlas087-final",
           "detail": "PR591 DRAFT head8a5bae68db133f20e9447782861c13104af36ec7 sobre maincbdb90b20. Hija Atlas31800ebcfc224078bb623ab2b5f846a8 parent33dd78c3e05f44648d70624c52ae2cf0 pendiente, SHA0a1df96a51d0d9eff17992818e62d5aef62948d422d306898d42b67576cbf0e6, responde3nubes del envio20261026-063322-54de6a. Comparativa REAL ANTES+SOLUCION mismoencuadre; no referencia nativa visible. V3 piedra2:1 yborde superior completo/apoyado inspeccionados en ambos extremos; V1/V2 rechazadas internas. C RED4->GREEN7,131072coords centro y31185runs; check_sources/diffcheck yrevisionindependientePASS. 2PPU+4runsEU32 menu0:86 3440x1440 frames300/600: cambio visible fueraGBA, core0diff2/2, Originalfull0diff2/2. Storeactivo verificado turnoHUMANO/unanswered[] yapproved/build33dd78 intactos. Evidencia087-native/{RUNTIME-V3-BUILDS,RUNTIME-V3-CHECKS,CODE-REVIEW-V3,DELIVERY,ATLAS-VERIFIED}.json. Sin aprobacion nueva ni integracion."
+        },
+        {
+          "at": "2026-11-05T19:26:44.245452+00:00",
+          "owner": "codex-atlas087-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR591 MERGED por ancestria exacta source8a5bae68db133f20e9447782861c13104af36ec7. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-31800ebc-r2; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T14:23:10.393470+00:00",
-      "sent": "31800ebcfc224078bb623ab2b5f846a8"
+      "sent": "31800ebcfc224078bb623ab2b5f846a8",
+      "completed_at": "2026-11-05T19:26:44.245452+00:00"
     },
     "atlas110-upper-right-20261105": {
       "id": "atlas110-upper-right-20261105",
@@ -16141,7 +16147,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:37.122903+00:00",
+  "updated_at": "2026-11-05T19:26:44.245452+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
