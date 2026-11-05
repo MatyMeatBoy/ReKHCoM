@@ -15862,13 +15862,13 @@
     "atlas110-upper-right-20261105": {
       "id": "atlas110-upper-right-20261105",
       "piece": "Escena110 patron extremo superior derecho posterior PR216",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas110-final",
       "created_at": "2026-11-05T14:53:45.403434+00:00",
-      "updated_at": "2026-11-05T16:20:53.778452+00:00",
+      "updated_at": "2026-11-05T19:26:51.534962+00:00",
       "branch": "art/atlas-scene110-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/590",
-      "approval": null,
+      "approval": "Atlas e0826ddfad754b44952ae7b386e86f9c revision1 approved SHA256 b2d15297d0e81856133a34bc4bca15729147c4713f586de04a44b1552629c4c7; build_version accepted; usuario05/11 integra todos",
       "reference": "Atlasaa5c68ac68e948deaa006b2dfec38897 nubee9d84772-0847-47d6-9943-1278168f059a todo bien excepto patron aca; comentario posterior PR216. Mandato usuario procesar Atlas05/11",
       "evidence": [
         {
@@ -15885,10 +15885,16 @@
           "at": "2026-11-05T16:20:53.778452+00:00",
           "owner": "codex-atlas110-final",
           "detail": "QA110/111 TERMINADA:6/6procesos exit0 (resume sin repetircontroles). Original110fullidentico2frames, Extended110soloextremomuro2877,0..3440,585, Extended111fullimagenidentica300/600;6parescorenativoidéntico. SCENE110-EVENT110-RUNTIME-CHECKS.json, SCENE110-EVENT111-RUNTIME-CHECKS.json ySCENE110-SOURCE-PROVENANCE.json. HijaAtlas e0826ddfad754b44952ae7b386e86f9c suplemento técnicoCAS añadido sin tocarimagen/statuspending/revision0/comentarios; StoreLIVE preserva refsocultas. PR590draftactualizado; queda valoraciónhumana,no aprobación heredada. Heavy110libre."
+        },
+        {
+          "at": "2026-11-05T19:26:51.534962+00:00",
+          "owner": "codex-atlas110-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR590 MERGED por ancestria exacta sourcee8eb97fe8b768d2ceb65fd958f20c4c39a6c20bb. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento sin comentarios nuevos; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T14:53:53.755666+00:00",
-      "sent": "e0826ddfad754b44952ae7b386e86f9c"
+      "sent": "e0826ddfad754b44952ae7b386e86f9c",
+      "completed_at": "2026-11-05T19:26:51.534962+00:00"
     },
     "atlas-synthesis-outline-reference-20261105": {
       "id": "atlas-synthesis-outline-reference-20261105",
@@ -16147,7 +16153,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:44.245452+00:00",
+  "updated_at": "2026-11-05T19:26:51.534962+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
