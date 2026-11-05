@@ -563,6 +563,14 @@ static inline int PortPreliminar099Floor(int wx, int wy, int* sx, int* sy) {
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
     if (p && p->v[0]==87 && (wx<0 || wx>=256 || wy<0 || wy>=256)) {
         int diagonal=2*wy+wx;
+        if (p->v[1]==2 && diagonal>=96 && diagonal<144) {
+            /* Complete the upper landing's vine as well as its stone.
+             * This clean 32-pixel module is below the native pumpkins;
+             * keep its 2:1 pixel phase at both map edges. */
+            *sx=PortSceneTileMod(wx,32);
+            *sy=(diagonal-*sx)/2;
+            return 1;
+        }
         if (p->v[1]==3 && diagonal<128) {
             /* The upper landing uses the same 2:1 slope as its source.
              * A pixel donor preserves the half-tile phase at either edge. */
