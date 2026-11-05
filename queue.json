@@ -15619,10 +15619,10 @@
     "atlas-battle-field-missing-coverage": {
       "id": "atlas-battle-field-missing-coverage",
       "piece": "Atlas: 20 fondos combate y 13 familias campo ausentes",
-      "status": "en_revision",
-      "owner": "codex-atlas-coverage",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-05T13:49:55.685514+00:00",
-      "updated_at": "2026-11-05T15:20:11.017622+00:00",
+      "updated_at": "2026-11-05T19:02:24.770532+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte",
@@ -15637,6 +15637,11 @@
           "at": "2026-11-05T15:20:11.017622+00:00",
           "owner": "codex-atlas-coverage",
           "detail": "Correccion expresa del usuario05/11: las arenas YA ESTAN HECHAS. El20 del snapshot significa sin ficha inequivoca, NO20 artes faltantes ni permiso de crear referencias visibles. Referencias nativas son internas; coordinador internaliza61 fichas conservando fuentes/IDs. coverage.json yREADME corregidos, informe previo conservado historico, scripts de registrar refs desactivados. reference-deliveries.json conserva33 IDs para trazabilidad. Proxima labor pertinente: auditar mejoras de perspectiva de arenas existentes usando Trickmaster y otras ya aplicadas; propuestas con ANTES+SOLUCION. No aprobar ni integrar por estos conteos."
+        },
+        {
+          "at": "2026-11-05T19:02:24.770532+00:00",
+          "owner": "codex-atlas-coverage",
+          "detail": "released: STOP humano05/11: inventario interno concluido, referencias nativas ocultas por PR589 conservando datos; conteo20/13 NO indica artes ausentes. Arenas existentes preservadas. Oogie mejora entregada PR593/Atlasf3a2 pendiente. Auditoria de otras mejoras por perspectiva queda pendiente sin reserva; no continuar tras STOP. No es cierre de extensiones ni aprobacion de arte."
         }
       ],
       "claimed_at": "2026-11-05T13:50:11.805397+00:00"
@@ -15960,7 +15965,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T19:01:18.379377+00:00",
+  "updated_at": "2026-11-05T19:02:24.770532+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
