@@ -117,14 +117,21 @@ class Store:
     def internalize_reference(self, asset_id, refresh_queue=True):
         """Keep an unreviewed source record and its image, outside the review workflow."""
         with self.lock:
-            item = self.get(asset_id)
-            info = item.get('revision_info', {})
-            if not info.get('reference_only') or item['revision'] or item['status'] != 'pending':
-                raise ValueError('Only unreviewed native references can be internalized')
-            info['internal_reference'] = True
-            item['revision_info'] = info
             with self.db() as db:
-                db.execute('UPDATE assets SET data=? WHERE id=?', (json.dumps(item, ensure_ascii=False), asset_id))
+                row = db.execute('SELECT data FROM assets WHERE id=?', (asset_id,)).fetchone()
+                if not row:
+                    raise ValueError('Imagen inexistente')
+                observed = row[0]
+                item = json.loads(observed)
+                info = item.get('revision_info', {})
+                if not info.get('reference_only') or item['revision'] or item['status'] != 'pending':
+                    raise ValueError('Only unreviewed native references can be internalized')
+                info['internal_reference'] = True
+                item['revision_info'] = info
+                changed = db.execute('UPDATE assets SET data=? WHERE id=? AND data=?',
+                                     (json.dumps(item, ensure_ascii=False), asset_id, observed))
+                if changed.rowcount != 1:
+                    raise ValueError('Cambió la referencia; se conserva la revisión más reciente.')
                 self.event(db, 'reference_internalized', dict(id=asset_id))
             if refresh_queue:
                 self.write_queue()
@@ -613,12 +620,12 @@ def handler(store, editor=None):
                     raise ValueError('Solicitud demasiado grande o vacía')
                 data = json.loads(self.rfile.read(length))
                 if self.path == '/api/editor/art':
-                    asset = next(a for a in store.all() if a['id'] == data['parent_id'])
+                    asset = store.get(data['parent_id'])
                     return self.reply(200, dict(project=editor.art_project(data['scene'], asset['id'])))
                 if self.path == '/api/editor/publish':
                     project = editor.load_project(data['id'])
                     parent_id = editor.art_parent(project['id'])
-                    parent = next(a for a in store.all() if a['id'] == parent_id)
+                    parent = store.get(parent_id)
                     image = io.BytesIO()
                     editor.render_project(project).save(image, format='PNG')
                     return self.reply(200, store.add(image.getvalue(), parent['title'],
