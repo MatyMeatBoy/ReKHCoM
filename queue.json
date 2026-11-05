@@ -16084,12 +16084,12 @@
     "atlas-followup-9f28568f-r5": {
       "id": "atlas-followup-9f28568f-r5",
       "piece": "Escena 120: seguimiento posterior a aprobación; diagonal ok, completar grabado; A; completar con patron A",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas120-engraving",
       "created_at": "2026-11-05T19:23:11.611938+00:00",
-      "updated_at": "2026-11-05T20:14:05.556834+00:00",
+      "updated_at": "2026-11-05T20:17:29.375544+00:00",
       "branch": "art/atlas120-engraving-nobuild",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/601",
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"9f28568fabd94b7c8526615a7b2b6abf\", \"revision\": 5, \"sha256\": \"206dfb152f5ee54ba94e1e6c9796b228755fc2aeb465df112a99ab1efc37e050\", \"submissions\": [{\"submission\": \"20261105-160839-40fd46\", \"created\": \"2026-11-05T19:08:40.180232+00:00\", \"image_id\": \"9f28568fabd94b7c8526615a7b2b6abf\", \"version\": \"Propuesta05/11 \\u00b7 diagonal propia muro derecho \\u00b7 ANTES/PROPUESTA EU\", \"clouds\": 3, \"cloud_ids\": [\"65a0a5d0-2f82-4195-bcd2-8d52fbd5a59e\", \"5e3d3637-92fd-453d-938c-982f4d26a93a\", \"2157b004-8ed8-4d46-9791-996ba56951a9\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160839-40fd46\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -16097,9 +16097,15 @@
           "at": "2026-11-05T20:14:05.556834+00:00",
           "owner": "codex-atlas120-engraving",
           "detail": "Estudio sin build: moduloA mamposteria64x32 nativo, dos nubes A; grabado figurativo sigue pendiente. No compiler ni juego. Fuente localizada y modelo Python conserva65536coordsnativas y BG1/BG2 en291840coords por capa."
+        },
+        {
+          "at": "2026-11-05T20:17:29.375544+00:00",
+          "owner": "codex-atlas120-engraving",
+          "detail": "Parcial dos nubesA, fuente66a619c3538f06d75c10dfd4b6535e20eb77cb88, hija pending sinheredaraprobacion. ESTUDIO SINBUILD Python capasROM, no runtime ni compiler. Modulo64x32 conserva juntas32px ymaterial, diagonal176/208 y BG1/BG2 intactos. ROM3capasexactas;65536nativecoords;291840coordsBG1/BG2;18009donantesCinterpretadosPythonexactos;diffcheckPASS. Nube65a0a5d0 grabadofigurativo NOrespondida: tareaindependiente atlas120-figure-engraving-r5 pendiente. Ctests añadidosNOejecutados; build/runtime/plataformaspendientes. Evidencia pruebas/atlas-siguiente-20261105/scene120."
         }
       ],
-      "claimed_at": "2026-11-05T20:09:44.698217+00:00"
+      "claimed_at": "2026-11-05T20:09:44.698217+00:00",
+      "sent": "bb3edb8844bb4a3aae251151b7c120fe"
     },
     "atlas-followup-ee7aa74a-r2": {
       "id": "atlas-followup-ee7aa74a-r2",
@@ -16195,7 +16201,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:16:10.349692+00:00",
+  "updated_at": "2026-11-05T20:17:29.375544+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
