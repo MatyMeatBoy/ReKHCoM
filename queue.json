@@ -15671,19 +15671,24 @@
     "atlas-title-hd-words-20261105": {
       "id": "atlas-title-hd-words-20261105",
       "piece": "Atlas título: verificar carga de textos HD en versión actual",
-      "status": "en_revision",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-11-05T14:11:02.017486+00:00",
-      "updated_at": "2026-11-05T14:55:24.875243+00:00",
+      "updated_at": "2026-11-05T18:44:59.700292+00:00",
       "branch": null,
-      "pr": null,
-      "approval": "Usuario05/11 procesar todacola. Nube e4197d14-a75c-4806-822a-406122db3221 pide cargartextosHD.",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/315db1e45cbfacb54c1786786917045c0100b2eb",
+      "approval": "Atlas0957335d20aa4ce796a029000f21940d approved rev1 sin notas; textos existentes verificados",
       "reference": "d31ab43ebc4244e793d84b7a140ba11a",
       "evidence": [
         {
           "at": "2026-11-05T14:55:24.875243+00:00",
           "owner": "codex-atlas-final",
           "detail": "Controlactualv2.8 EU/es ya dibuja palabrasHD; runtimeexit0,frames9001150 loggTitlePressStartSpanishFrameyDevelopedBySpanish embebidos/dibujados. Atlas0957335d20aa4ce796a029000f21940d pendinghuman, sincambiofuente niaprobaciónheredada. TITLE-CURRENT-CHECKS.json."
+        },
+        {
+          "at": "2026-11-05T18:44:59.700292+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Conciliacion STOP: verificacion sin codigo/PR nuevo. v2.8 carga y dibuja PressStartSpanish/DevelopedBySpanish en900/1150, captura propia aprobada sin notas. Fuente ya integrada315db, no afirmar todas pantallas/idiomas. ImagenSHA420ae147c16985e58ba6e34c00ea48c2a267f3115659d306fb1c2fc4149f6b79."
         }
       ],
       "claimed_at": "2026-11-05T14:11:10.874356+00:00",
@@ -15949,7 +15954,7 @@
     "created_at": "2026-11-05T18:43:20.494522+00:00",
     "updated_at": "2026-11-05T18:43:20.494522+00:00"
   },
-  "updated_at": "2026-11-05T18:44:25.879580+00:00",
+  "updated_at": "2026-11-05T18:44:59.700292+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
