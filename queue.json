@@ -10123,10 +10123,10 @@
     "monstro-story-atlas-coverage": {
       "id": "monstro-story-atlas-coverage",
       "piece": "Cobertura Atlas por tramosMonstro: Geppetto barco dialogos y Pinocho plataformas shot e7bb35a0/266fcaa4 no vistosporusuario; identificar eventos/estadoscamara y completar bordes respetando zoom/HUD, no marcarcapturainicial comoescenacompleta.",
-      "status": "en_curso",
-      "owner": "codex-atlas-monstro-nobuild",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-27T22:24:52.168606+00:00",
-      "updated_at": "2026-11-05T20:48:57.115197+00:00",
+      "updated_at": "2026-11-05T20:49:10.248262+00:00",
       "branch": "art/atlas-monstro-story-nobuild",
       "pr": null,
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
@@ -10161,6 +10161,11 @@
           "at": "2026-11-05T20:48:57.115197+00:00",
           "owner": "codex-atlas-monstro-nobuild",
           "detail": "STOP humano: intento fuente puroPython guardado, 2RED/131156GREEN AST latch075 firmado soloBG2/3. Nuevo checkout0e82ea15a WIPport_ppu.c sincommit; oldWIP/testMonstro intactoyrespaldado. No compiler/juego/build/imports/PR/hijaAtlas. Tresreportes075/076 siguen pendientes de cobertura portramos, camara/UI. Ver pruebas/atlas-siguiente-20261105/monstro/STOP-HANDOFF.md yFINAL.json."
+        },
+        {
+          "at": "2026-11-05T20:49:10.248262+00:00",
+          "owner": "codex-atlas-monstro-nobuild",
+          "detail": "released: STOP humano: WIP nuevo atlas-monstro-story-nobuild/art/atlas-monstro-story-nobuild base0e82ea15a guardado sincommit, unicoport_ppu.c firmado075BG2/3;2RED+131156GREEN interpretacionAST puraPython. NO resuelto: camara cercana/alejamiento y caja/texto/retrato/iconos alzoomelegido exigenQA real posterior autorizada, recetas075/076 siguen estudiosinternos y1023noesdonor. Ninguncompilador/game/build/import/PR/hijaAtlas. Oldatlas-monstro-story-final/testuntracked intactoSHArespaldado. Evidencia pruebas/atlas-siguiente-20261105/monstro/FINAL.json,STOP-HANDOFF.md,SIGNED-LATCH-WIP.patch. No nueva tarea."
         }
       ],
       "claimed_at": "2026-11-05T20:42:54.848825+00:00"
@@ -16309,7 +16314,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:48:57.115197+00:00",
+  "updated_at": "2026-11-05T20:49:10.248262+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
