@@ -22,6 +22,9 @@ static PortJiminyPageRow rows[160];
 static int ready=1,count,attempt,failAt,restored;
 static uint32_t color,paint[4096];static SDL_FRect rectangles[4096];
 #define SDL_floorf floorf
+#define SDL_ceilf ceilf
+#define SDL_sqrtf sqrtf
+#define SDL_clamp(v,a,b) ((v)<(a)?(a):(v)>(b)?(b):(v))
 static const PortJiminyPageRow* PortPpuJiminyPageRows(void){return ready?rows:0;}
 static int SDL_SetRenderDrawColor(SDL_Renderer*r,int red,int green,int blue,int alpha){(void)r;assert(alpha==255);color=0xff000000u|(red<<16)|(green<<8)|blue;return 1;}
 static int SDL_RenderFillRect(SDL_Renderer*r,const SDL_FRect*rect){
@@ -48,6 +51,17 @@ int main(void){
  assert(pixel(950,400)==0xffefeff7); /* old vertical guide erased only on BG1 */
  assert(!pixel(950,340)&&!pixel(954,344)); /* object and composite edit survive */
  assert(pixel(1385,400)==0xffd6d6d6&&pixel(1395,400)==0xff9cc65a);
+ assert(pixel(1383,654)==0xffd6d6d6); /* circular outer corner, not a 45-degree cut */
+ reset();for(int y=16;y<160;y++)rows[y].leftOwned=7;
+ composite[80*240+1]=0xff123456;rows[81].leftOwned&=~4;
+ assert(RepairJiminyPageMargin(&src,&dst,1400));
+ assert(pixel(12,342)==0xff9cc65a); /* outside the left paper becomes its live green */
+ assert(!pixel(16,342)&&!pixel(20,346)); /* composite/object and non-BG1 pixels survive */
+ assert(sizeof(PortJiminyPageRow)==20); /* new mask uses old alignment padding */
+ reset();rows[71].fill=0xffa5adb5;dst.w=840;dst.h=560; /* fractional3.5x */
+ assert(RepairJiminyPageMargin(&src,&dst,1400));
+ assert(pixel(1000,268)==0xffefeff7&&pixel(1000,269)==0xffa5adb5); /* same PixelEdge as native rule */
+ dst.w=960;dst.h=640;
  reset();ready=0;assert(!RepairJiminyPageMargin(&src,&dst,1400)&&!count&&!restored);
  reset();rows[90].fill=0;assert(!RepairJiminyPageMargin(&src,&dst,1400)&&!count&&!restored);
  reset();assert(!RepairJiminyPageMargin(&src,&dst,970)&&!count&&!restored);

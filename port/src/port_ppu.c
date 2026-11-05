@@ -3218,6 +3218,9 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         top = objFront ? sObjLine[x] : bg < 0 ? bd : sBgLine[bg][x];
         blend = (objFront && sObjSemi[x]) ||
                 ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+        if (sJiminyDetailCapture && objects && gx >= 0 && gx < 3 &&
+            PortJiminyPaperPixel(topLayer, blend, gx, gyLine))
+            sJiminyPageRows[gyLine].leftOwned |= (uint8_t)(1u << gx);
         if (sJiminyDetailCapture && objects && gx >= 200 && gx < 240 && gyLine >= 16 && gyLine < 160) {
             PortJiminyPageRow* row = &sJiminyPageRows[gyLine];
             /* PAGE ends above row20; rows20..23 already contain the

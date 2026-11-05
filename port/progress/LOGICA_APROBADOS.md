@@ -676,3 +676,16 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Diario: footer y esquinas, estudio posterior a367 revisión5
+
+El exterior izquierdo del papel no hereda propiedad de una franja entera:
+capturar sólo las tres columnas de BG1 opaco presentadas y conservar los
+píxeles de objetos, BG0, blends o edición posterior. Su verde viene de la
+misma fila presentada. El extremo derecho necesita una curva exterior e
+interior con grosor consistente, no un corte diagonal de cuatro escalones.
+Al escalar fraccionalmente, el índice de color debe invertir exactamente la
+regla de medio píxel de `PixelEdge`; el centro geométrico sigue siendo continuo.
+La propuesta conserva ABI20 y agrupa áreas planas. El estudio controlado
+explica las cuatro nubes, pero no prueba las máscaras del frame humano ni
+autoriza afirmar que el footer del juego ya pasó QA. Sin build; pendiente.
