@@ -435,4 +435,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-final-library130 | Biblioteca Bella 130: extensión real y entrega hija | en_revision | codex-atlas-final | — | Usuario 05/11 terminar todos los artes y faltantes | 2026-11-05T12:00:44.184680+00:00 |
 | atlas-final-missing-coverage | Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias | integrado | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/578 | Usuario05/11 incluir faltantes reconocidos y detectar más | 2026-11-05T12:33:04.345560+00:00 |
 
-Integrador: codex-atlas-final-integrator (ocupado; 2026-11-05T12:32:03.812497+00:00)
+Integrador: libre
