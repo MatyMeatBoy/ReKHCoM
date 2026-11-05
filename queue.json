@@ -15475,19 +15475,20 @@
     "atlas-title-hd-words-20261105": {
       "id": "atlas-title-hd-words-20261105",
       "piece": "Atlas título: verificar carga de textos HD en versión actual",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-final",
       "created_at": "2026-11-05T14:11:02.017486+00:00",
-      "updated_at": "2026-11-05T14:11:02.017486+00:00",
+      "updated_at": "2026-11-05T14:11:10.874356+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario05/11 procesar todacola. Nube e4197d14-a75c-4806-822a-406122db3221 pide cargartextosHD.",
       "reference": "d31ab43ebc4244e793d84b7a140ba11a",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-05T14:11:10.874356+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:11:02.018541+00:00",
+  "updated_at": "2026-11-05T14:11:10.874356+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
