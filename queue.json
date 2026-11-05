@@ -3053,10 +3053,10 @@
     "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03": {
       "id": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
       "piece": "Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-atlas107-final",
       "created_at": "2026-10-25T16:03:24.879479+00:00",
-      "updated_at": "2026-10-25T19:17:08.799218+00:00",
+      "updated_at": "2026-11-05T17:34:15.926538+00:00",
       "branch": "codex/atlas-escenas-107-108",
       "pr": null,
       "approval": null,
@@ -3076,6 +3076,11 @@
           "at": "2026-10-25T19:17:08.799218+00:00",
           "owner": "codex-atlas",
           "detail": "Pasada turbo: Patron de primer plano y diagonal con fase de pixel correcta, en las dos escenas. Capturas en candidato local combinado, sin activar honores ni abrir PR publico pendiente de valoracion."
+        },
+        {
+          "at": "2026-11-05T17:34:15.926538+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Retoma explicita05/11 tras concluir112PR594. No agente107/108 ni checkout asociado activo; rama historica y evidencia conservadas. Padre humano34f9930rev3 roof/cornice; consultar aprobadoe077 y controlesactuales antes modificar. Nuevo checkout main30e1f47fe."
         }
       ],
       "claimed_at": "2026-10-25T16:03:30.914656+00:00",
@@ -15842,7 +15847,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:33:07.093058+00:00",
+  "updated_at": "2026-11-05T17:34:15.926538+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -17143,6 +17148,16 @@
       "to_owner": "codex-atlas120-final",
       "expected_commit": "fadc887d2dced2505a2ce58f132e73c93c3f70c5",
       "evidence": "Parentexplicitresume cededowncheckoutatlas-scene120-final; sameagentlane resumesitsPR584 notanotherworker. Currentclaimcodex-atlas120-final pr_abierto. Humanfeedbacke50805fc25d04bcda7a259b2fee2848b revision8 generalfalta la diagonal aun +4doodles. Noother120lane; parentauthorizesresume, preserveallWIPandpriorreviews. CorrectionnativeROMrightplane176onlyoutsidecore,208frontretained."
+    },
+    {
+      "at": "2026-11-05T17:34:15.926538+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas107-final",
+      "expected_commit": "af0d0a14d9d5b8d989e17f878625e21277a5e0ed",
+      "evidence": "Retoma explicita05/11 tras concluir112PR594. No agente107/108 ni checkout asociado activo; rama historica y evidencia conservadas. Padre humano34f9930rev3 roof/cornice; consultar aprobadoe077 y controlesactuales antes modificar. Nuevo checkout main30e1f47fe."
     }
   ]
 }
