@@ -16004,10 +16004,10 @@
     "atlas-darkside06-left-detail": {
       "id": "atlas-darkside06-left-detail",
       "piece": "Darkside06: dibujo y difuminado lateral solicitado en nube72f6d65b",
-      "status": "en_curso",
-      "owner": "codex-atlas-darkside06-nobuild",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-05T17:40:14.925679+00:00",
-      "updated_at": "2026-11-05T20:49:26.233302+00:00",
+      "updated_at": "2026-11-05T20:50:10.802321+00:00",
       "branch": "art/atlas-darkside06-nobuild",
       "pr": null,
       "approval": "Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena",
@@ -16027,6 +16027,11 @@
           "at": "2026-11-05T20:49:26.233302+00:00",
           "owner": "codex-atlas-darkside06-nobuild",
           "detail": "STOP humano05/11: intento rechazado interno por degradado en peine/franjas y puntasnegras al ampliar captura300. Freshcheckout0e82 yoldWIP9filesambosbackups/hash/diff preservados en pruebas/atlas-siguiente-20261105/darkside06. NoAtlas/PRnuevo ni nube respondida; queda refinamiento/QA."
+        },
+        {
+          "at": "2026-11-05T20:50:10.802321+00:00",
+          "owner": "codex-atlas-darkside06-nobuild",
+          "detail": "released: STOP humano: RECHAZADOinterno, NO terminado. Detalle790px tiene franjas/peine/puntasnegras en ampliacioncaptura300, necesita redibujar/fundir. OldWIP9archivos atlas-darkside06-final INTACTOS; nuevoWIP9files/diff/SHAs checkoutatlas-darkside06-nobuild ramaart/atlas-darkside06-nobuild base0e82ea15a preservados. GeneratorROMreadonlyexacto+9seams,126400ASTselectorPASS y4funcionesantiguasíntegras.10paresHISTORICOSbase30e1/escala2 con nucleo720,380..1200,700 idéntico; sólo300/380cambian. NOOriginal ni mainactualruntime afirmados. Brazo1842 intacto y limitacionestaticaaldescender conservada. NOAtlasnuevo/PR/response_to; nube siguependiente. Ninguncompiler/build/game/importregen/paquete; evidencia pruebas/atlas-siguiente-20261105/darkside06/RESULTADO.md yOLD/NEW-WIP-MANIFEST.json."
         }
       ],
       "claimed_at": "2026-11-05T20:42:32.517070+00:00"
@@ -16319,7 +16324,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:49:26.233302+00:00",
+  "updated_at": "2026-11-05T20:50:10.802321+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
