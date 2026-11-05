@@ -15545,12 +15545,18 @@
       "status": "en_curso",
       "owner": "codex-atlas130-staging",
       "created_at": "2026-11-05T14:21:36.019135+00:00",
-      "updated_at": "2026-11-05T14:53:08.293677+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T15:34:51.689760+00:00",
+      "branch": "fix/atlas-library130-extension",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
       "approval": "Usuario terminar todos los artes; parent solicita registrar defecto exacto 05/11",
       "reference": "pruebas/atlas-final-20261105/SCENE130-MALEFICENT-STAGING.md",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T15:34:51.689760+00:00",
+          "owner": "codex-atlas130-staging",
+          "detail": "WIP source only plus tested preview. Realpalette gMarefPalette; role5 arrays6; exactregional EVENT130enum(EU128); shadowassociation via sameSpriteEntryanchor capturedinPortOamSetSource, not proximity/recycledslot. InitialextractedCtestsPASS; fullPPUspill/state+206i686oraclesPASS; preview130staging356readonlyobjsPASS. Clockprobe3000done; finalWideBEFORE18frames done exactclock seq1099/1100/1101 etc, firstnativeinkaboutseq1160. FinalSOLUTION andOriginal pendingRAMguard1400, notclaimedruntimefixed or final. Evidence pruebas/atlas-final-20261105/SCENE130-STAGING-WIP.md. NoAtlasnewdeliveryyet; mustuseACTIVEStorecode_dir toretaininternalrefs policy andNEWchild ofe58f861b8d1e44248852242d2f437d36 before+solution."
+        }
+      ],
       "claimed_at": "2026-11-05T14:53:08.293677+00:00"
     },
     "atlas087-final-border-patterns": {
@@ -15651,7 +15657,7 @@
     "created_at": "2026-11-05T15:32:44.508501+00:00",
     "updated_at": "2026-11-05T15:32:44.508501+00:00"
   },
-  "updated_at": "2026-11-05T15:32:44.508501+00:00",
+  "updated_at": "2026-11-05T15:34:51.689760+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
