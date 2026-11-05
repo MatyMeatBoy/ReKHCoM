@@ -648,9 +648,9 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else if (p->v[1]==3) {
             if (wx>=0 && wx<32 && wy<0) {
                 *sx=wx; *sy=PortSceneTileMod(wy,16); /* the original corner shaft, once */
-            } else if (2*wy+wx<192) {
+            } else if (2*wy+wx<208) {
                 *sx=32+PortSceneTileMod(wx-32,16);
-                *sy=16+PortSceneTileMod(wy-16,16); /* plain masonry, no repeated shafts */
+                *sy=16+PortSceneTileMod(wy-16,16); /* masonry reaches the authored footing at 2*y+x=208 */
             } else {
                 *sx=64+PortSceneTileMod(wx-64,32);
                 *sy=160+PortSceneTileMod(wy-160,32); /* the room's clean ground */

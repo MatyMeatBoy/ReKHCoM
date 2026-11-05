@@ -144,6 +144,17 @@ ladrillos limpios y un único pilar original; BG2 sólo prolonga el zócalo
 por su diagonal, sin copiar lámparas ni adornos. Los actores siguen la
 regla del rectángulo GBA (Pepito fuera de escena no se anticipa).
 
+Propuesta 05/11, comentarios posteriores de `1c523468e4fb4d83965c0ef8ba292842`:
+el zócalo nativo empieza en `2*y+x=208`; prolongar la mampostería hasta
+esa misma diagonal evita la franja de suelo de ocho píxeles anterior.
+Los barriles son OBJ compuestos, no donantes BG: no deben pasar por el
+filtro de actores que esperan fuera del cuadro. En evento 120 sólo Pepito
+(track 3, `gJiminyPalette`) y las sombras comparten su estado de entrada,
+independiente de la reutilización de slots OAM. Las sombras comunes no
+desbloquean su entrada. Capturas EU reales Original/Extendido en cuadros
+180/300/600/900: Original completo y núcleo GBA sin cambios. Hija pendiente
+de revisión; no hereda la aprobación de la versión anterior.
+
 ## Corrección vigente 29/10: Oogie aprobado sí activo
 
 Atlas aprobó exactamente `aa913fe773c4446eb5412c3115e222c7`; esa versión
