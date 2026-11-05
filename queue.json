@@ -16019,10 +16019,10 @@
     "atlas-journal-inner-footer-20261105": {
       "id": "atlas-journal-inner-footer-20261105",
       "piece": "Diario interior: cuatro nubes de footer y esquinas a367 rev5",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-journal-nobuild",
       "created_at": "2026-11-05T17:58:43.854516+00:00",
-      "updated_at": "2026-11-05T18:41:17.995453+00:00",
+      "updated_at": "2026-11-05T20:42:17.331029+00:00",
       "branch": "art/atlas-journal-final",
       "pr": null,
       "approval": "Usuario05/11 procesar cola; root delega Diario antes START y Ver barajas, uno por uno",
@@ -16039,7 +16039,7 @@
           "detail": "released: STOP humano05/11: WIP preservado, NO terminado. Checkoutatlas-journal-final/art/atlas-journal-final main30e1 con4modificados+test_jiminy_ground_capture.py nuevo;4Ccontroles previosPASS. Pendientes tests nuevos3.5x/capturaBG1, build/runtime/Atlas/PR. HD posterior909PNG+2LAD inmutable. Ver pruebas/atlas-final-20261105/journal-final."
         }
       ],
-      "claimed_at": "2026-11-05T17:58:50.443097+00:00"
+      "claimed_at": "2026-11-05T20:42:17.331029+00:00"
     },
     "atlas-followup-1bf2e47a-r4": {
       "id": "atlas-followup-1bf2e47a-r4",
@@ -16290,7 +16290,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:40:02.239602+00:00",
+  "updated_at": "2026-11-05T20:42:17.331029+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
