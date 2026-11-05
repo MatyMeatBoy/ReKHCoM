@@ -180,17 +180,26 @@ class TileEditor:
         return folder
 
     def _atlas(self, layer, background):
-        # Only native tile/palette pairs actually referenced by this layer. No
-        # fabricated colours or blank placeholder entries are appended.
+        # Preserve every native tile/palette identity, including the last slot
+        # that some ROM maps reference without loading. This slot is rendered
+        # only as initial cleared VRAM, never as a ROM donor tile.
         variants = sorted({(entry & 1023, entry >> 12) for entry in layer['entries']})
         identity = layer['tiles'] + json.dumps([variants, background['palette_words']]).encode()
         key = digest(identity)
         columns, tilecount = 32, len(variants)
         atlas = Image.new('RGBA', (columns * 8, math.ceil(tilecount / columns) * 8))
-        indices = []
+        indices, non_donor_tileids = [], []
         for local_id, (tile, bank) in enumerate(variants):
             tile_pixels = []
             raw = layer['tiles'][tile * 32:(tile + 1) * 32]
+            storage = 'rom'
+            if not raw and tile == 1023:
+                # ClearSystemMemory/RESET_ALL initializes VRAM to zero. The
+                # background loader copies only the supplied bytes; there is
+                # no special engine sentinel. Keep this assumption explicit,
+                # without padding the bank or claiming warm-state equivalence.
+                raw, storage = bytes(32), 'initial-cleared-vram'
+                non_donor_tileids.append(local_id)
             if len(raw) != 32:
                 raise ValueError('Tile index exceeds its native tile bank')
             for y in range(8):
@@ -202,7 +211,7 @@ class TileEditor:
                     rgba = (*background['palette'][color], 255 if index else 0)
                     atlas.putpixel((local_id % columns * 8 + x, local_id // columns * 8 + y), rgba)
                     tile_pixels.append(index)
-            indices.append(dict(tileid=local_id, native_tile=tile, palette_bank=bank, pixels=tile_pixels))
+            indices.append(dict(tileid=local_id, native_tile=tile, palette_bank=bank, pixels=tile_pixels, storage=storage))
         folder = self._assets(key)
         atlas.save(folder / 'atlas.png')
         write_json(folder / 'indices.json', dict(format='GBA-4bpp', tilewidth=8, tileheight=8,
@@ -212,6 +221,10 @@ class TileEditor:
             image=f'/editor-assets/{key}/atlas.png', imagewidth=atlas.width, imageheight=atlas.height,
             source_sha256=key, palette=background['palette'], indices_url=f'/editor-assets/{key}/indices.json',
             properties=[dict(name='native_source_sha256', type='string', value=key)])
+        if non_donor_tileids:
+            tileset['non_donor_tileids'] = non_donor_tileids
+            tileset['initial_vram_note'] = ('Tile 1023 is not loaded by this ROM background; shown transparent '
+                'from initial cleared VRAM. Warm runtime VRAM may differ. This slot is not a ROM donor.')
         self.known_tilesets[key] = copy.deepcopy(tileset)
         write_json(folder / 'tileset.json', tileset)
         return tileset, {(tile, bank):i for i, (tile, bank) in enumerate(variants)}, atlas
