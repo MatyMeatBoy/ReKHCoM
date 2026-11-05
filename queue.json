@@ -15270,10 +15270,10 @@
     "atlas-final-missing-coverage": {
       "id": "atlas-final-missing-coverage",
       "piece": "Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-final",
       "created_at": "2026-11-05T12:06:12.167832+00:00",
-      "updated_at": "2026-11-05T12:31:54.755365+00:00",
+      "updated_at": "2026-11-05T12:33:04.345560+00:00",
       "branch": "fix/atlas-native-reference-turn",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/578",
       "approval": "Usuario05/11 incluir faltantes reconocidos y detectar más",
@@ -15293,9 +15293,15 @@
           "at": "2026-11-05T12:31:54.755365+00:00",
           "owner": "codex-atlas-final",
           "detail": "Cruce posterior197eventos/62fondos/0sin enlace;28referencias cubren30fondos, aprobaciones preservadas. PR578 corrige turno agente para referencias aún sin extender.15pruebasPASS. Además auditar28fondos combate no equivale209artes."
+        },
+        {
+          "at": "2026-11-05T12:33:04.345560+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "PR578 merged;86ab709e0;15testsPASS. Descubrimiento/catalogación conciliado197/62/0huecos;28referencias30fondos explícitamente turnoagente. Sólo inventario+cola completados; artes y runtime NO completados."
         }
       ],
-      "claimed_at": "2026-11-05T12:06:19.084903+00:00"
+      "claimed_at": "2026-11-05T12:06:19.084903+00:00",
+      "completed_at": "2026-11-05T12:33:04.345560+00:00"
     }
   },
   "integrator": {
@@ -15304,7 +15310,7 @@
     "created_at": "2026-11-05T12:32:03.812497+00:00",
     "updated_at": "2026-11-05T12:32:03.812497+00:00"
   },
-  "updated_at": "2026-11-05T12:32:41.372329+00:00",
+  "updated_at": "2026-11-05T12:33:04.345560+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
