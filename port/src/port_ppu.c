@@ -28,6 +28,7 @@
 #include "port/port_hdlayout.h"
 #include "engine.h"
 #include "mode.h"
+#include "evt/event_ids.h"
 #include "port/jiminy_paper.h"
 #include "sprite.h"
 #include "port/port_state.h"
@@ -47,7 +48,7 @@ static int sHalloweenFloor;
 
 extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
-extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[];
+extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[], gMarefPalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
 /* PORT_PPU_THREADS (the desktop builds, configure_pc.py): the canvas rows above and below the GBA picture are drawn
@@ -560,6 +561,8 @@ typedef struct SpriteTag {
     uint8_t digit;
     int16_t ayq; /* ay 3 only */
     int16_t clipX0, clipX1; /* x0==x1: no clip; coordinates include docking shift */
+    int16_t anchorX, anchorY; /* exact emitted SpriteEntry origin, before part offsets */
+    uint8_t anchorValid;
 } SpriteTag;
 static SpriteTag sEntryTag[128];
 static SpriteTag sOamTag[PORT_OAM_CAPACITY];
@@ -1008,8 +1011,14 @@ void PortOamSetText(int oamIndex, int code, int style) {
 }
 
 void PortOamSetSource(int oamIndex, int entry) {
-    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY && entry >= 0 && entry < 128)
+    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY && entry >= 0 && entry < 128) {
         sOamTag[oamIndex] = sEntryTag[entry];
+        if (gSpriteWork && entry < gSpriteWork->entryCount) {
+            sOamTag[oamIndex].anchorX=(int16_t)gSpriteWork->entries[entry].x;
+            sOamTag[oamIndex].anchorY=(int16_t)gSpriteWork->entries[entry].y;
+            sOamTag[oamIndex].anchorValid=1;
+        }
+    }
 }
 
 int PortPpuOverlayActive(void) {
@@ -2578,10 +2587,25 @@ static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
    walks out into the wide view; one crossing the frame's edge is never cut (user 25/10: Agrabah's barrels lost half,
    Sora and friends vanished leaving). Reset per scene (PortPpuRender). */
 static unsigned char sActorEntered[PORT_OAM_CAPACITY];
-static unsigned sStagedActorFirstSeen[4];
-static unsigned char sStagedActorEntered[4]; /* Cheshire, Aladdin, Genie, Hook: independent of recycled OAM slots. */
+static unsigned sStagedActorFirstSeen[6];
+static unsigned char sStagedActorEntered[6]; /* Roles 0..2 existing actors, 3 Hook, 4 Jiminy, 5 Maleficent. */
 static int sActorSceneKey = -1;
 static unsigned sActorSceneFrames;
+
+/* Track 4's human Maleficent and her ground-level shadow share the exact
+ * emitted SpriteEntry origin (z == groundZ == 0 throughout event 130).
+ * Never infer ownership from a nearby actor or a recycled OAM slot. */
+static int Preliminar130Shadow(int i) {
+    int j;
+    if (!sOamTag[i].anchorValid) return 0;
+    for (j=0;j<OamCount();j++) {
+        if (sOamHd[j].palette!=gMarefPalette || sOamTag[j].screen ||
+            sOamTag[j].hud || sOamTag[j].text || !sOamTag[j].anchorValid) continue;
+        if (sOamTag[i].anchorX==sOamTag[j].anchorX &&
+            sOamTag[i].anchorY==sOamTag[j].anchorY) return 1;
+    }
+    return 0;
+}
 
 static void DrawObjs(int gy, uint16_t dispcnt) {
     int i, w = gPortScreen.width;
@@ -2590,6 +2614,12 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
        enter and leave through the original frame as authored. */
     int sceneActorFrame = gPortScreen.wide && sEventBackdropProfile == 97 && !sEnvActorFrameOff;
     int sceneActorId = sceneActorFrame ? 97 : 0;
+    /* Use the regional enum: EU's runtime id is 128, not the logical 130.
+     * This staging fix also applies without the opt-in background recipe. */
+    if (gPortScreen.wide && !sEnvActorFrameOff && sActorSceneKey == EVENT_130_HOLLOWBASTION_E1) {
+        sceneActorFrame=1;
+        sceneActorId=130;
+    }
     /* Jafar: a view wider than the 512-pixel sprite space showed each sprite twice, 512 apart (his attacks
        mirrored in the margin, user 24/10); his fight's sprites live in the 512 columns around the picture */
     int objLeft = sJafarFight && sLeft < GBA_SCREEN_W / 2 - 256 ? GBA_SCREEN_W / 2 - 256 : sLeft;
@@ -2680,9 +2710,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             continue;
 
         if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&
-            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || prio > 0) &&
-            /* Event shadows use the common palette, not the actor palette.
-             * Their own OAM must wait at the authored camera edge too. */
+            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || sceneActorId == 130 || prio > 0) &&
             (sceneActorId != 97 || sOamHd[i].palette == gCheshirePalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
@@ -2691,25 +2719,28 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sOamHd[i].tiles == gBtlShadowSmallTiles || sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
-                sOamHd[i].tiles == gBtlShadowLargeTiles)) {
+                sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+            (sceneActorId != 130 || sOamHd[i].palette == gMarefPalette ||
+                ((sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                  sOamHd[i].tiles == gBtlShadowLargeTiles) && Preliminar130Shadow(i)))) {
             int hookShadow = sceneActorId == 118 &&
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
+            int maleficentShadow=sceneActorId==130 && sOamHd[i].palette!=gMarefPalette;
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
-                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 : -1;
+                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 :
+                sceneActorId == 130 ? 5 : -1;
             unsigned char* entered = actor >= 0 ? &sStagedActorEntered[actor] : &sActorEntered[i];
-            /* Shared party shadows must neither unlock Hook nor inherit an
-             * OAM slot that a party member already brought into the frame. */
-            if (!hookShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
+            /* Shared shadows neither unlock their actor nor inherit a party slot. */
+            if (!hookShadow && !maleficentShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0) {
-                /* The first render can precede the authored camera placement.
-                 * Preserve its native pixels without unlocking a staged actor. */
-                if (!hookShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
+                /* Preserve native pixels without unlocking from the initial camera. */
+                if (!hookShadow && !maleficentShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
             }
             else if (!*entered)
-                continue; /* a different actor previously using this OAM slot does not grant entry */
+                continue;
         }
         line = gy - oy;
         /* Reject lines outside the sprite before mosaic quantisation:
