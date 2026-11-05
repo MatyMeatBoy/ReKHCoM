@@ -3190,10 +3190,10 @@
     "atlas-remates-112-r20261025": {
       "id": "atlas-remates-112-r20261025",
       "piece": "Escena 112 comentarios posteriores",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-atlas112-final",
       "created_at": "2026-10-25T16:06:25.602720+00:00",
-      "updated_at": "2026-10-25T19:16:54.885135+00:00",
+      "updated_at": "2026-11-05T16:56:15.068880+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -3208,6 +3208,11 @@
           "at": "2026-10-25T19:16:54.885135+00:00",
           "owner": "codex-atlas",
           "detail": "Pasada turbo: Tono completo de la jamba exterior prolongado hasta arriba. Capturas en candidato local combinado, sin activar honores ni abrir PR publico pendiente de valoracion."
+        },
+        {
+          "at": "2026-11-05T16:56:15.068880+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Retoma explicita05/11: no agente112 ni checkout previo activo, PR214MERGED no resuelve las dos nubes posteriores994a5761rev3; nuevo checkout limpio30e1f47fe, no producto editado antes de claim."
         }
       ],
       "claimed_at": "2026-10-25T16:06:30.735751+00:00",
@@ -15780,7 +15785,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:55:32.612050+00:00",
+  "updated_at": "2026-11-05T16:56:15.068880+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -17041,6 +17046,16 @@
       "to_owner": "codex-atlas095-final",
       "expected_commit": "7d2259c4c6e2b616d991bd426b9bce1182bfca8f",
       "evidence": "Cesion explicita del coordinador05/11: checkout095clean@7496e484a yPR580 pasan al carrilcodex-atlas095-final; parentnoeditafuentesdespues. Reabrir QA cap blanco/remateunion bajo feedbackaltura823f...nube0f9..., conservar hija pendiente64e973..., nueva comparativa real antes/solucion ysinheredaraprobacion. Sinheavyhastaventana."
+    },
+    {
+      "at": "2026-11-05T16:56:15.068880+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "atlas-remates-112-r20261025",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas112-final",
+      "expected_commit": "9b667f0e7a216744977b4f8acd3c8be19efb43d6",
+      "evidence": "Retoma explicita05/11: no agente112 ni checkout previo activo, PR214MERGED no resuelve las dos nubes posteriores994a5761rev3; nuevo checkout limpio30e1f47fe, no producto editado antes de claim."
     }
   ]
 }
