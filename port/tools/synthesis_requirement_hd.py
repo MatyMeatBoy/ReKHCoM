@@ -214,14 +214,20 @@ def recom_body(box, color):
     sy = (cy1 - cy0) / (RECOM_CARD[3] - RECOM_CARD[1])
     ow = round((RECOM_OUTLINE[2] - RECOM_OUTLINE[0]) * sx)
     oh = round((RECOM_OUTLINE[3] - RECOM_OUTLINE[1]) * sy)
+    # Strengthen the existing bevel by a quarter GBA pixel (2px at recipe8x),
+    # keeping the silhouette ratio and the tinted35% glass fill unchanged.
+    outlines = []
+    for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2), (0, 0)):
+        outlines.append(f'blit={",".join(map(str, RECOM_OUTLINE))},'
+                        f'{cx0 + dx},{cy0 + dy},{cx0 + ow + dx},{cy0 + oh + dy}')
     return (f'canvas={w * K},{h * K};ink={RECOM_GLASS[color]};fade=35;'
             f'blit={",".join(map(str, RECOM_CARD))},{cx0},{cy0},{cx1},{cy1};fade=100;ink=FFFFFF,E6E6EE;'
-            f'blit={",".join(map(str, RECOM_OUTLINE))},{cx0},{cy0},{cx0 + ow},{cy0 + oh};scale={K}')
+            + ';'.join(outlines) + f';scale={K}')
 
 
 def recom_requirement(box, rule, value):
     x, y, w, h = box
-    glyph_h = 11 * K
+    glyph_h = 12 * K
     parts = []
     for ch in str(value):
         d = RECOM_DIGITS[int(ch)]
@@ -230,11 +236,11 @@ def recom_requirement(box, rule, value):
         parts.append(('op', rule, 6 * K))
     gap = K
     width = sum(p[2] for p in parts) + gap * (len(parts) - 1)
-    f = min(1.0, 22 * K / width)
+    f = min(1.0, 23 * K / width)
     gh = round(glyph_h * f)
     left = round((0 - x) * K - width * f / 2)
     top = round((3 - y) * K - gh / 2)
-    shadow = max(2, round(K * f / 2))
+    shadow = max(2, round(K * f * .75))
     ops = [f'canvas={w * K},{h * K}']
     for layer in ('shadow', 'face'):
         ink = '14142A' if layer == 'shadow' else 'FFFFFF,E8E8F0'
@@ -277,8 +283,11 @@ def write_tsv():
     tsv = ROOT / 'port/data/hd_sprites.tsv'
     lines = tsv.read_text(encoding='utf-8').splitlines()
     if TSV_BEGIN in lines:
-        lines = lines[:lines.index(TSV_BEGIN)] + lines[lines.index(TSV_END) + 1:]
-    tsv.write_text('\n'.join(lines + recipe_rows()) + '\n', encoding='utf-8', newline='\n')
+        start, end = lines.index(TSV_BEGIN), lines.index(TSV_END)
+        lines[start:end + 1] = recipe_rows()
+    else:
+        lines.extend(recipe_rows())
+    tsv.write_text('\n'.join(lines) + '\n', encoding='utf-8', newline='\n')
     print(f'{len(recipe_rows()) - 2} synthesis recipes -> {tsv}')
 
 
