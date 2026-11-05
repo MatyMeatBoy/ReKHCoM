@@ -1,0 +1,15 @@
+# Síntesis: proporción y contorno de requisitos HD
+
+Responde al general de `823cdf38241144b1b282bcf3f2532120`, revisión12, envío `20261025-160926-638293`: contorno demasiado fino o números pequeños; estudiar el estilo1.5. La valoración aprobada conserva ese comentario pendiente y no se hereda a la nueva hija.
+
+Referencia: [manual oficial KHHD1.5ReMIX PS3, español](https://cdn.sqexeu.com/files/gamemanuals/kingdomhearts/KH1.5_PS3_digital_MAN_ES.pdf), página PDF21, impresas40/41. Presenta2↑,3↓,7= yTOTAL20. Los ejemplos extraídos sólo tienen45x55/57px: sirven para comparar estilo/proporción, no para afirmar una medición exacta de layout ni una captura PC sin mods.
+
+Cambian sólo las405recetas importadas Re:CoM. Los glifos conservan la proporción de la textura: altura11→12GBApx y límite del grupo22→23, con sombra0.5→0.75. El bevel blanco recibe cuatro pasadas±2px a escala8x (0.25GBApx), sin alterar la geometría base, vidrio35%, colores ni selección dinámica. El fallback de código conserva sus405PNG. El generador actualiza su bloque TSV en el mismo lugar; las otras525filas conservan orden y contenido. Los imports existentes requieren regenerar las405piezas mediante las recetas del importador.
+
+Tests sin ROM: `py -3 port/tools/test_synthesis_recom_outline.py`, RED7fallos con las recetas anteriores, GREEN4tests. Abarcan tamaño/sombra, cinco colores con vidrio intacto, cuatro reglas0..99 dentro de cajaOAM y margen de carta, y actualización TSV en sitio. `synthesis_requirement_hd.py --check` también pasa para las405identidades/fallback/cajas.
+
+El staging privado parte de los899HD actuales (897PNG y2LAD), más un archivo de metadatos. Se conservan los900originales por hash; antes es copia exacta y después sólo sustituye405piezas desde la textura local autorizada. Los otros494HD y metadatos permanecen idénticos. Nada de Re:CoM ni del manual se añade a los assets del repositorio.
+
+Evidencia privada bajo `pruebas/atlas-final-20261105/synthesis-reference/`: `SOURCE-PROVENANCE.json`, `RECIPE-TEST-RESULTS.json`, `STAGED-CANDIDATE-CHECKS.json`, `CANONICAL-FILES-PRESERVED.json`. La plancha de assets es interna. Diez procesos EU seriales (natural, HD off y tres fixtures, antes/después), cuadros300/380/470/510, exit0. Cuarenta pares: HD off coincide en toda la imagen; con HD on sólo cambia el ROI del requisito805,210–1125,530. Cada par usa el mismo binario y encuadre/zoom8. Los fixtures ejecutan InitEventKeyCard y la actualizaciónTOTAL10→9 real; fuerzan el saldo, no prueban pago natural. El binario QA recompila sólo card_worldselect.o con el define de fixture existente y reutiliza356objetos en lectura; no es un fullbuild ni un import nativo completo. No cambia C de producto. Referencia Python del importador con12diferencias antiguas de redondeo (máximo1canal) documentadas; el antes usa los PNG canónicos exactos, no su regeneración.
+
+Entrega Atlas: contexto natural y detalles antes/solución sin rescalar, con referencia oficial pequeña acreditada. Propuesta pendiente de valoración e integración; no hereda la aprobación anterior. `RUNTIME-VERIFIED.json` y `PRESERVATION-AFTER-RUNTIME.json` completan la evidencia.

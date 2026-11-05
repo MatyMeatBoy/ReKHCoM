@@ -115,6 +115,21 @@ de condición en el contorno y el interior abierto para que pase la luz,
 sin convertir la base en una masa roja/verde/azul. Corregir sólo estas dos
 nubes; conservar identidad dinámica, TOTAL y recorrido de oclusión existentes.
 
+Síntesis, corrección05/11 sobre `823cdf38241144b1b282bcf3f2532120`,
+revisión12, envío `20261025-160926-638293`: investigar tamaño/ratio y contorno.
+La referencia oficial usada es el manual español KH1.5PS3, página PDF21
+(páginas impresas40/41), ejemplos2↑,3↓,7= yTOTAL20. Es una referencia impresa
+pequeña, no una captura PC sin mods ni una medición exacta de su layout.
+En las recetas actuales Re:CoM: subir altura de11a12, máximo de grupo22a23 y
+sombra0.5a0.75GBApx, siempre escalando número/operador como grupo y conservando
+el aspecto de sus glifos. Reforzar el bevel blanco con cuatro pasadas de
+0.25GBApx alrededor del contorno existente; mantener vidrio35%, silueta OAM,
+colores y selecciónTOTAL. Sólo recetas importadas: fallback original intacto.
+La comparativa debe usar runtime real antes/solución con las405piezas Re:CoM
+actuales y una referencia oficial pequeña acreditada. Nunca regenerar esas
+405 con el fallback al preparar una captura; conservar el resto del HD por hash.
+La hija y el cambio siguen pendientes de valoración propia.
+
 Trickmaster, envío `20261025-052021-8546de`: «todo bien», sólo completar
 el muro hacia arriba. Prolongar el período vertical del papel rosa, no la
 franja beige del techo. Conservar suelo y objetos ya aceptados; la única
