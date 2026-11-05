@@ -389,6 +389,18 @@ Montañas: tres crestas en 32 columnas, incluyendo todas sus sombras y excluyend
 El lado izquierdo conserva su diagonal; luna y puerta siguen unicas. Hija `37a6f9b61f0e427988c96890ce9b4f09`.
 Propuesta preliminar pendiente de valoracion: no hereda honores. Evidencia en ESCENA090_REVISION_CODEX.md.
 
+Revisión 05/11, aún pendiente: envío `20261026-063246-b66a30`, padre exacto
+`6458681037fd4bdc91688842b9369560`, nubes `551d5459-c31b-465a-a87f-ec9454b9c122`
+y `f223ac9d-bfad-4a36-82de-dbd35b96e979`. Para terminar la base horizontal,
+continuar las filas 25..27 de las columnas 48..49 en las tres filas nuevas.
+Son mampostería y su borde inferior original, sin ataúd ni lápidas; las columnas
+46..47 de fila 26 incluyen parte gris de una lápida y no sirven como donante.
+No reciclar filas 21..23: reproduciría la coronación del muro en la base.
+El suelo comienza después de la fila 31; centro nativo y objetos únicos intactos.
+PR210 anterior cerrado sin merge: no equivale a corrección integrada ni aprobada.
+Prueba acotada: `port/tools/test_scene090_wall_base.py`. Evidencia nativa y comparativa:
+`pruebas/atlas-final-20261105/090-native/`. La nueva versión requiere valoración propia.
+
 ## Medición: workers vs. trabajo solo (24-25/10/2026)
 
 | Modo | Agentes | Piezas de arte entregadas a la app | Aprobadas | Costo aprox. |
@@ -520,3 +532,14 @@ Comentario `645a6367-a9da-41c7-8744-3c9912a507ea`: repetir los candelabros con e
 ### Escena118: entrada de Garfio y su sombra, aprobada05/11
 
 La versión69387af132a14bbeb8c92d136cf02d44 fue aprobada sin notas nuevas. Garfio usa su paleta y rol independiente3, no un slotOAM reciclado por el grupo; la sombra común sigue su estado y no puede desbloquearlo. Sólo se oculta estando entero fuera antes de entrar: conservar Original completo y permitir continuidad tras entrada. Ocho pares runtime confirmados EVENT118 menú0:117, no el control descartado de119. Esta regla no da por aprobadas las propuestas de otros actores o escenas.
+
+### Escena090: base del muro aprobada05/11
+
+Atlas `cae48e668e0740549ff3c7d3dc240527`, revisión1, aprobado sin notas
+ni trazos pendientes. Imagen SHA256
+`98c3ebf611505007e24f9cfef584b8022d4da4f63ebe1ef30d0226fb8d5e5624`;
+fuente `3bf6dd67275cad9332e35d2283a2cedba2c9db54`. Las filas externas
+29..31 usan BG3 columnas48/49, filas25..27: mampostería y base originales
+sin lápidas ni otra coronación. El rebase conserva el bloque090 exacto.
+Cuatro pares runtime conservan el núcleo; Original completo idéntico.
+La aprobación corresponde exclusivamente a esta versión.
