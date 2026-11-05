@@ -1,0 +1,43 @@
+{
+  "id": "dbe9d6b92ba846cdad63111c28b3f3d8",
+  "parent_id": "2935ad4bfddd42c886b86e3c90211827",
+  "status": "pending",
+  "sha256": "cc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73",
+  "revision": 0,
+  "source_sha": "a0245899fe88f1c95aecf2220ae11aa26ad8e9bf",
+  "source_ppu_sha256": "18b23fdd833d8bc72360c95f402202ed7ce34500fb2407b81769f716e6ce5cb4",
+  "source_header_sha256": "701789d56e479f154095f8a226cb4b5431b9d9d85e7de53e7778cc1468163557",
+  "review_reference": {
+    "id": "e58f861b8d1e44248852242d2f437d36",
+    "revision": 3,
+    "doodle": "bf2652d8-8382-4cac-ba8f-55a7808e6656"
+  },
+  "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
+  "before_solution": "pruebas/atlas-final-20261105/library130-remate-before-solution.png",
+  "checks": {
+    "c_red_observed": true,
+    "c_green": 1,
+    "nearby_c_coordinates": 1920,
+    "changed_native_pixels": 476,
+    "changed_physical_pixels": 1904,
+    "all_other_wide_pixels_exact": true,
+    "wide_and_original_native_core_exact": true,
+    "original_complete_game_viewport_exact": true,
+    "rom_donors_loaded": true,
+    "virtual_unloaded_donors_used": false,
+    "release_objects_unchanged": true,
+    "final_runtime_frame": 600
+  },
+  "limitations": "Nueva hija pending, sin aprobacion heredada y sin cerrar feedback. El remate final se comprueba a600; secuencia2430..2500 y206oraculos son evidencia anterior, con cuatro bloques de actor/render conservados porSHA, no nuevos runs fullband. Original compara todo el viewport del juego: el baseline tiene icono diagnostico fuera del juego y no se afirma igualdad de toda la presentacion fisica. Referencias ROM puras internas. Sin cambios de ROM/SAV/instalacion/releases.",
+  "response_to": [
+    {
+      "submission": "20261105-120308-9a7ee3",
+      "image_id": "e58f861b8d1e44248852242d2f437d36",
+      "cloud_id": "bf2652d8-8382-4cac-ba8f-55a7808e6656",
+      "reviewed_image_sha256": "fe37246e59dd2e239fa2d9ff851a348d8dab73b01ce9589270cce23734972eaa",
+      "reviewed_revision": 3,
+      "review_export_sha256": "59cbcb58ca895e09bb1aba5934dc8e2210861a4557f1ce0a21411bbc7e13851c"
+    }
+  ],
+  "traceability_note": "Exact asset snapshot in latest export assets; metadata-only CAS, pending/revision0/image unchanged, no inherited approval."
+}
