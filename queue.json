@@ -15388,10 +15388,10 @@
     "atlas-native-scene-sentinel": {
       "id": "atlas-native-scene-sentinel",
       "piece": "Atlas native editor scene130/076/117 map tile1023 diagnosis and exact handling",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-native-fix",
       "created_at": "2026-11-05T13:45:44.936151+00:00",
-      "updated_at": "2026-11-05T13:55:15.279621+00:00",
+      "updated_at": "2026-11-05T13:58:07.541154+00:00",
       "branch": "fix/atlas-native-scene-sentinel",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/583",
       "approval": "User requests actual ROM tiles per art; parent independent bugfix lane 2026-11-05",
@@ -15401,9 +15401,15 @@
           "at": "2026-11-05T13:55:15.279621+00:00",
           "owner": "codex-atlas-native-fix",
           "detail": "SHA0bc94e0fc1ad1d0c609605ed852b9d796162af69 draftPR583; 19AtlasPython+Node donor selection+JSsyntax+diffcheck PASS; EUROM130/076/117 render PASS exact mapwords/export-importpixels/movedcell restart identity; rawROM hashunchanged. Explicit initial-cleared-VRAM lastslot1023 only, no engine sentinel or warmstateclaim; nonROMslot excludedfrombrush. Evidence pruebas/atlas-final-20261105/native-editor-fix/ROM-VERIFICATION.json. No build/game/liveAtlas mutations."
+        },
+        {
+          "at": "2026-11-05T13:58:07.541154+00:00",
+          "owner": "codex-atlas-native-fix",
+          "detail": "Merge6ccada5bf57b18aa94ce8666889753552fe80cbc fuente0bc94e0fc; revisiónindependiente sinissues,19Python+Node donorPASS porautoryrevisor; ROM130076117 mapas/roundtrip/celdamovidaexactos yROMinalterada. Noarteaprobado; arregloeditor,initialclearedVRAMexplicitnoinventardonantes."
         }
       ],
-      "claimed_at": "2026-11-05T13:45:54.846965+00:00"
+      "claimed_at": "2026-11-05T13:45:54.846965+00:00",
+      "completed_at": "2026-11-05T13:58:07.541154+00:00"
     },
     "atlas-battle-field-missing-coverage": {
       "id": "atlas-battle-field-missing-coverage",
@@ -15432,7 +15438,7 @@
     "created_at": "2026-11-05T13:57:33.141691+00:00",
     "updated_at": "2026-11-05T13:57:33.141691+00:00"
   },
-  "updated_at": "2026-11-05T13:57:33.141691+00:00",
+  "updated_at": "2026-11-05T13:58:07.542154+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
