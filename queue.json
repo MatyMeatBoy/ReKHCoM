@@ -4006,10 +4006,10 @@
     "rev-six-oogie": {
       "id": "rev-six-oogie",
       "piece": "Oogie alfombra yfantasmas",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-atlas-final",
       "created_at": "2026-10-26T00:07:38.304381+00:00",
-      "updated_at": "2026-10-26T00:39:00.726357+00:00",
+      "updated_at": "2026-11-05T16:01:34.984824+00:00",
       "branch": "codex/atlas-rev-six-turbo",
       "pr": null,
       "approval": null,
@@ -4019,6 +4019,11 @@
           "at": "2026-10-26T00:39:00.726357+00:00",
           "owner": "codex-atlas",
           "detail": "Primer pase con capturas reales. Remates pendientes explícitos en ficha Atlas."
+        },
+        {
+          "at": "2026-11-05T16:01:34.984824+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Usuario05/11 arenasYAHECHAS pideproponermejorasperspectivaTrickmasterdonde falte. Tarea26/10sinworktreeactivo, gitworktreelistúnicoscarriles087110130parent095115; antiguasramasbackupconservadas. PR130CLOSEDsinmerge confirmado; aa913baseaprobadaactivaPR510 sepreserva. Retomarsólofeedbackpendiente677876e57b1441dc856caa8847f84487/doodles flancosverdes ybordes, conantes/solución; sinreferenciasAtlasnuevas."
         }
       ],
       "claimed_at": "2026-10-26T00:07:43.596948+00:00",
@@ -15691,7 +15696,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T15:58:17.993231+00:00",
+  "updated_at": "2026-11-05T16:01:34.984824+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16922,6 +16927,16 @@
       "to_owner": "codex-atlas-090",
       "expected_commit": "b118e100f64f55d6782d0358a66f501fb7d96000",
       "evidence": "05/11 coordinador confirma carril090 abandonado y autoriza retoma; sesiones activas057 y biblioteca ajenas. PR210 verificado CLOSED mergedAt null head925c5afa: no resuelto. Comentarios nuevos551d5459 y f223ac9d en padreAtlas6458681037fd4bdc91688842b9369560. Nuevo checkoutatlas-scene090-final desdeorigin/main6ccada5bf."
+    },
+    {
+      "at": "2026-11-05T16:01:34.984824+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "rev-six-oogie",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas-final",
+      "expected_commit": "2fc6421c5ef195a2265ae8b017101c9012c51c0d",
+      "evidence": "Usuario05/11 arenasYAHECHAS pideproponermejorasperspectivaTrickmasterdonde falte. Tarea26/10sinworktreeactivo, gitworktreelistúnicoscarriles087110130parent095115; antiguasramasbackupconservadas. PR130CLOSEDsinmerge confirmado; aa913baseaprobadaactivaPR510 sepreserva. Retomarsólofeedbackpendiente677876e57b1441dc856caa8847f84487/doodles flancosverdes ybordes, conantes/solución; sinreferenciasAtlasnuevas."
     }
   ]
 }
