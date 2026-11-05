@@ -10126,8 +10126,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-monstro-nobuild",
       "created_at": "2026-10-27T22:24:52.168606+00:00",
-      "updated_at": "2026-11-05T20:42:54.848825+00:00",
-      "branch": "art/atlas-monstro-story-final",
+      "updated_at": "2026-11-05T20:48:57.115197+00:00",
+      "branch": "art/atlas-monstro-story-nobuild",
       "pr": null,
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
       "reference": null,
@@ -10156,6 +10156,11 @@
           "at": "2026-11-05T18:41:09.309964+00:00",
           "owner": "codex-atlas-monstro-final",
           "detail": "released: STOP humano05/11: WIP preservado, NO resuelto. Checkoutatlas-monstro-story-final main30e1, test_monstro_story.py no seguido y candidatos privados. Baselines075/076 exit0/11frames+canvas; pendientes RED/GREEN, latch65535 a-1 solo075BG2/3, conservar composicion cercana/dialogo3x, receta/QA. Ver pruebas/atlas-final-20261105/monstro-story-final. No Atlas/PR nuevos."
+        },
+        {
+          "at": "2026-11-05T20:48:57.115197+00:00",
+          "owner": "codex-atlas-monstro-nobuild",
+          "detail": "STOP humano: intento fuente puroPython guardado, 2RED/131156GREEN AST latch075 firmado soloBG2/3. Nuevo checkout0e82ea15a WIPport_ppu.c sincommit; oldWIP/testMonstro intactoyrespaldado. No compiler/juego/build/imports/PR/hijaAtlas. Tresreportes075/076 siguen pendientes de cobertura portramos, camara/UI. Ver pruebas/atlas-siguiente-20261105/monstro/STOP-HANDOFF.md yFINAL.json."
         }
       ],
       "claimed_at": "2026-11-05T20:42:54.848825+00:00"
@@ -16304,7 +16309,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:46:42.157470+00:00",
+  "updated_at": "2026-11-05T20:48:57.115197+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
