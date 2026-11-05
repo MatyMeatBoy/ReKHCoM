@@ -445,4 +445,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-synthesis-outline-reference-20261105 | Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5 | pendiente | — | — | Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline | 2026-11-05T15:06:20.228495+00:00 |
 | atlas-internal-references-before-after | Atlas: referencias nativas internas y extensiones antes/solución | integrado | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/589 | Usuario05/11 corrección explícita: referenciasnativasinternas,norevision; arenasyahechas,proponermejorasperspectivaTrickmaster | 2026-11-05T15:22:06.461532+00:00 |
 
-Integrador: codex-atlas-final (ocupado; 2026-11-05T15:32:44.508501+00:00)
+Integrador: libre
