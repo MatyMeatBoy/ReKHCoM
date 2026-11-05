@@ -15708,19 +15708,20 @@
     "atlas-scene081-final-review": {
       "id": "atlas-scene081-final-review",
       "piece": "Escena081: respetar negro y borde original de cueva; mejorar actores sincorazón del último feedback",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas081-final",
       "created_at": "2026-11-05T16:15:37.610692+00:00",
-      "updated_at": "2026-11-05T16:15:37.610692+00:00",
+      "updated_at": "2026-11-05T16:15:45.494072+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario continuar toda cola 05/11; latest Atlas b39c0c96f13c45319956f1b5269c5b89 annotations incld70050a2; parent lane assignment",
       "reference": "Atlas parent b39c0c96f13c45319956f1b5269c5b89 / pruebas/atlas-final-20261105/scene081-final",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-05T16:15:45.494072+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:15:37.610692+00:00",
+  "updated_at": "2026-11-05T16:15:45.494072+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
