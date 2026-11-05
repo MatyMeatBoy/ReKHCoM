@@ -661,12 +661,38 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else return 0;
         return 1;
     }
-    if (p && p->v[0]==117 && p->v[1]==2 && wy<0 && wy>=-56 && wx>=40 && wx<152) {
-        /* Complete the top-cut crate from the matching cap at (152,8).
-         * Its last eight pixels cross the donor map's right edge: reflect
-         * the cap's intact left tip, including the within-tile pixel phase. */
-        *sx=wx+112; *sy=wy+56;
-        if (*sx>=256) *sx=415-*sx;
+    if (p && p->v[0]==117 && p->v[1]==2) {
+        if (wx>=-48 && wx<0 && wy>=104 && wy<220) {
+            /* Front crate matches the top crate at (-88,+152). Its cap
+             * comes directly from the intact left half of the right crate. */
+            if (wy>=152) { *sx=wx+88; *sy=wy-152; }
+            else { *sx=wx+208; *sy=wy-96; }
+            return 1;
+        }
+        if (wy<0 && wy>=-56 && wx>=40 && wx<152) {
+            /* Matching crates differ by (120,56), not (112,56).
+             * Reflect only the donor's missing cap tip from its intact left. */
+            *sx=wx+120; *sy=wy+56;
+            if (*sx>=256) { *sx=431-*sx; *sy-=8; }
+            return 1;
+        }
+        if (wx>=256 && wx<272 && wy>=8 && wy<124) {
+            if (wy>=56) { *sx=wx-120; *sy=wy-56; }
+            else { *sx=431-wx; *sy=wy-8; }
+            return 1;
+        }
+    }
+    if (p && p->v[0]==117 && p->v[1]==3 &&
+        (wx<0 || wx>=256 || wy<0 || wy>=256)) {
+        int diagonal=2*wy-wx;
+        if (diagonal < -64) {
+            *sx=224+PortSceneTileMod(wx-224,32);
+            *sy=(diagonal+*sx)/2;
+            if (*sy<0) { *sx=240; *sy=0; }
+        } else {
+            *sx=128+PortSceneTileMod(wx-128,64);
+            *sy=192+PortSceneTileMod(wy+(*sx-wx)/2-192,32);
+        }
         return 1;
     }
     if (p && p->v[0]==118 && (wx<0 || wx>=512 || wy<0 || wy>=512 ||
