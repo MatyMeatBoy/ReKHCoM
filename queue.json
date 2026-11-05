@@ -4461,10 +4461,10 @@
     "atlas-095-castle": {
       "id": "atlas-095-castle",
       "piece": "Escena 095: recuperar un único castillo; no cerrado por árbol y flores",
-      "status": "pr_abierto",
-      "owner": "codex-atlas-final",
+      "status": "en_curso",
+      "owner": "codex-atlas095-final",
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T15:41:01.920066+00:00",
+      "updated_at": "2026-11-05T16:31:15.794248+00:00",
       "branch": "art/atlas-scene095-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/580",
       "approval": null,
@@ -4499,6 +4499,11 @@
           "at": "2026-11-05T15:41:01.920066+00:00",
           "owner": "codex-atlas-final",
           "detail": "Nuevashafuente7496e484a, antes/soluciónmapaROM64e973f29bda496380c43d786ffc773b responde0f9bde82...envío20261105-115954-c697de. CRED/GREEN: frente originalderecho72px vsdonante120causaba40pxcaída; d-128..16,+656. Capturareal nueva PENDIENTE RAM, nofinalniaprobadohija."
+        },
+        {
+          "at": "2026-11-05T16:31:15.794248+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Cesion explicita del coordinador05/11: checkout095clean@7496e484a yPR580 pasan al carrilcodex-atlas095-final; parentnoeditafuentesdespues. Reabrir QA cap blanco/remateunion bajo feedbackaltura823f...nube0f9..., conservar hija pendiente64e973..., nueva comparativa real antes/solucion ysinheredaraprobacion. Sinheavyhastaventana."
         }
       ],
       "claimed_at": "2026-11-05T12:49:51.945888+00:00",
@@ -15753,7 +15758,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:27:15.507818+00:00",
+  "updated_at": "2026-11-05T16:31:15.794248+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -17004,6 +17009,16 @@
       "to_owner": "codex-atlas-oogie-final",
       "expected_commit": "8b6606e8596509dcd9aedcf8cc4d735aa7583ad4",
       "evidence": "Handoff explicito parent05/11: cede checkout limpio atlas-oogie-perspective/art/atlas-oogie-perspective sin fuenteseditadas. Reasignacion autorizada ownercodex-atlas-final a codex-atlas-oogie-final para mejorarflancos677876 preservandorojoaa913; unicoheavyporventana, refs internas y antes/solucion."
+    },
+    {
+      "at": "2026-11-05T16:31:15.794248+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "atlas-095-castle",
+      "from_owner": "codex-atlas-final",
+      "to_owner": "codex-atlas095-final",
+      "expected_commit": "7d2259c4c6e2b616d991bd426b9bce1182bfca8f",
+      "evidence": "Cesion explicita del coordinador05/11: checkout095clean@7496e484a yPR580 pasan al carrilcodex-atlas095-final; parentnoeditafuentesdespues. Reabrir QA cap blanco/remateunion bajo feedbackaltura823f...nube0f9..., conservar hija pendiente64e973..., nueva comparativa real antes/solucion ysinheredaraprobacion. Sinheavyhastaventana."
     }
   ]
 }
