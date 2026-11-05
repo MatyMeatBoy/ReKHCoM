@@ -15356,12 +15356,12 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-library",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T14:00:31.772987+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T14:22:34.990629+00:00",
+      "branch": "fix/atlas-library130-extension",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
       "reference": null,
       "evidence": [
@@ -15374,10 +15374,15 @@
           "at": "2026-11-05T13:59:27.150065+00:00",
           "owner": "codex-atlas-final",
           "detail": "released: Repartoexplicito a agentededicatedlibrary130pararecetarpropuestaofflinee0a2151657fa4f15a4b9b7dc798fd28a. SinWIPproductoclaimed; extend_library.py ypropuesta preservados. Agentclaimanteseditar,noaprobacionheredada."
+        },
+        {
+          "at": "2026-11-05T14:22:34.990629+00:00",
+          "owner": "codex-atlas-library",
+          "detail": "Source113a7cdd565b52462fd78742c7a1dde8902448e3 draftPR587. Runtimependingchild e58f861b8d1e44248852242d2f437d36 parentofflinee0a2151657fa4f15a4b9b7dc798fd28a intact; originalc1ab45945afe471fb5f3f6f4b089e1e6. CfixturePASS; Cresolver1024x768offlinepixelidentity139324authoredpreserved/alldonorsresidentPASS; onePPUbuild356readonlyobjsPASS; 4Widepairs2scalesframes300600nativecoreexact,2Originalpairsfullimageexact,defaultinactivePASS. Evidence pruebas/atlas-final-20261105/LIBRARY130-RUNTIME-CHECKS.json andLIBRARY130-C-RESOLVER-CHECKS.json. Candidateoptinonly/nohumanapproval. Authoredgreenmuescapreserved. PreexistingMaleficentstagingexactsourceandbefore/Originalcapturesrecordedseparatelytaskatlas-scene130-maleficent-stagingpending; nofullscenefinalclaim. Heavyfinished; noinstall/ROM/SAVoriginal mutations."
         }
       ],
       "claimed_at": "2026-11-05T14:00:31.772987+00:00",
-      "sent": "c1ab45945afe471fb5f3f6f4b089e1e6"
+      "sent": "e58f861b8d1e44248852242d2f437d36"
     },
     "atlas-final-missing-coverage": {
       "id": "atlas-final-missing-coverage",
@@ -15525,7 +15530,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:21:36.019135+00:00",
+  "updated_at": "2026-11-05T14:22:34.990629+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
