@@ -4188,8 +4188,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-090",
       "created_at": "2026-10-26T07:29:06.376809+00:00",
-      "updated_at": "2026-11-05T14:03:02.547664+00:00",
-      "branch": "codex/atlas-090-wall-base",
+      "updated_at": "2026-11-05T14:04:40.076319+00:00",
+      "branch": "art/atlas-scene090-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/210",
       "approval": null,
       "reference": "20261024-183313-23736c",
@@ -4203,6 +4203,11 @@
           "at": "2026-11-05T14:03:02.547664+00:00",
           "owner": "codex-coordinacion",
           "detail": "05/11 coordinador confirma carril090 abandonado y autoriza retoma; sesiones activas057 y biblioteca ajenas. PR210 verificado CLOSED mergedAt null head925c5afa: no resuelto. Comentarios nuevos551d5459 y f223ac9d en padreAtlas6458681037fd4bdc91688842b9369560. Nuevo checkoutatlas-scene090-final desdeorigin/main6ccada5bf."
+        },
+        {
+          "at": "2026-11-05T14:04:40.076319+00:00",
+          "owner": "codex-atlas-090",
+          "detail": "PR210 cerrado sin merge verificado. Padre exacto6458681037fd4bdc91688842b9369560, envio20261026-063246-b66a30, nubes551d5459-c31b-465a-a87f-ec9454b9c122 y f223ac9d-bfad-4a36-82de-dbd35b96e979: base de muro recto bajo ataud. Worktree nuevo origin/main6ccada5bf; sin compilar hasta ventana coordinada."
         }
       ],
       "claimed_at": "2026-10-26T07:29:11.695693+00:00",
@@ -15462,7 +15467,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:03:17.242109+00:00",
+  "updated_at": "2026-11-05T14:04:40.076319+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
