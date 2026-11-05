@@ -460,4 +460,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-queue-partial-response-20261105 | Atlas cola: conservar envíos parcialmente respondidos por response_to explícito | integrado | codex-atlas-partialqueue | https://github.com/MatyMeatBoy/ReKHCoM/pull/607 | Fix de cola solicitado implicitamente al procesar pendientes; backend no arte ni nueva valoracion | 2026-11-05T20:39:08.393542+00:00 |
 | atlas-historical-response-reconciliation-20261105 | Atlas: conciliar respuestas históricas reveladas por fix de cola parcial, conservar comentarios y aprobaciones | integrado | codex-atlas-history | https://github.com/MatyMeatBoy/ReKHCoM/pull/607 | Auditoria datos28vinculos documentados; no modifica grado ni aprobacion dearte | 2026-11-05T20:52:03.286462+00:00 |
 
-Integrador: codex-atlas-history-integrator (ocupado; 2026-11-05T20:50:53.454099+00:00)
+Integrador: libre
