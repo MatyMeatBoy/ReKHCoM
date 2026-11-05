@@ -3249,12 +3249,12 @@
     "atlas-remates-118-r20261025": {
       "id": "atlas-remates-118-r20261025",
       "piece": "Escena 118 comentarios posteriores",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-25T16:07:32.202891+00:00",
-      "updated_at": "2026-11-05T13:14:34.980698+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T13:41:28.846942+00:00",
+      "branch": "art/atlas-scene118-final",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/582",
       "approval": null,
       "reference": "familia 3aede4dd4bd2445bb06d1743baf06529; envio 20261025-025132-cc777b; parent 09dcd37573df49b88edbd71f79e06b82",
       "evidence": [
@@ -3262,9 +3262,15 @@
           "at": "2026-11-05T13:14:34.980698+00:00",
           "owner": "codex-atlas-final",
           "detail": "Retoma global05/11; único chatKH activo este/procesos sóloAtlas; checkout remates retirado y ramasbackup preservadas. Revisar si Hook118 debe verse enGBA antes de cambiarlo; fuentes cámara/actor identificadas, falta comparación física."
+        },
+        {
+          "at": "2026-11-05T13:41:28.846942+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Commit9d570b09f. C RED/GREEN; EU32 PPU build y runtime8 pares PASS: Original idéntico, núcleo intacto, Garfio+sombra esperan entrada;600/900 idénticos. EVENT118 menú0:117 confirmado, EVENT119 descartado. Atlas pendiente humano, no integrado."
         }
       ],
-      "claimed_at": "2026-10-25T16:07:40.240022+00:00"
+      "claimed_at": "2026-10-25T16:07:40.240022+00:00",
+      "sent": "69387af132a14bbeb8c92d136cf02d44"
     },
     "atlas-remates-120-r20261025": {
       "id": "atlas-remates-120-r20261025",
@@ -15344,7 +15350,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:14:34.980698+00:00",
+  "updated_at": "2026-11-05T13:41:28.846942+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
