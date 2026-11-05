@@ -33,6 +33,7 @@ static int Eligible(int sceneActorId,const void*p,const void*t,int owner){
  return ''' + condition + r''';}
 int main(void){
  assert(!Eligible(112,0,gBtlShadowTiles,0)); /* Jafar/party shadow must draw normally */
+ assert(!Eligible(112,0,gBtlShadowTiles,255)); /* old checkpoint padding is not a role */
  assert(Eligible(112,0,gBtlShadowTiles,3));
  assert(Eligible(112,0,gBtlShadowSmallTiles,2));
  assert(Eligible(112,gGeniePalette,0,0));
@@ -128,6 +129,7 @@ int main(void){
  assert(!Visible(0,gBtlShadowSmallTiles,2,300,18)); /* independent Aladdin */
  assert(!sStagedActorEntered[1]);
  assert(Visible(0,gBtlShadowTiles,0,300,19)); /* unowned party keeps its slot */
+ assert(Visible(0,gBtlShadowTiles,255,300,20)); /* invalid restored tag stays unowned */
  return 0;
 }
 '''

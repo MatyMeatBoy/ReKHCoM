@@ -2665,14 +2665,18 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 112 || sOamHd[i].palette == gAladdinPalette ||
-                sOamHd[i].palette == gGeniePalette || sOamTag[i].eventShadowActor) &&
+                sOamHd[i].palette == gGeniePalette ||
+                (sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3)) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles)) {
             int hookShadow = sceneActorId == 118 &&
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
-            int eventShadow = sceneActorId == 112 && sOamTag[i].eventShadowActor;
+            /* This byte occupied padding in old checkpoints. Only the two
+             * emitted roles are valid; never index actor state with padding. */
+            int eventShadow = sceneActorId == 112 &&
+                sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3;
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
