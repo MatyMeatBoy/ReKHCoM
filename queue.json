@@ -3328,10 +3328,10 @@
     "atlas-remates-120-r20261025": {
       "id": "atlas-remates-120-r20261025",
       "piece": "Escena 120 comentarios posteriores",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-atlas120-final",
       "created_at": "2026-10-25T16:07:46.868932+00:00",
-      "updated_at": "2026-11-05T13:56:17.275768+00:00",
+      "updated_at": "2026-11-05T17:08:45.502974+00:00",
       "branch": "art/atlas-scene120-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/584",
       "approval": null,
@@ -3346,6 +3346,11 @@
           "at": "2026-11-05T13:56:17.275768+00:00",
           "owner": "codex-atlas120-final",
           "detail": "8a16a2d5a PR584 draft; Atlas hija e50805fc25d04bcda7a259b2fee2848b padre1c523468e4fb4d83965c0ef8ba292842, nubes barriles y diagonal. PreviewEU PASS, testC bloque real PASS;4runs serial exit0 Original fullpixel+centroGBA identicos180/300/600/900; pruebas/atlas-final-20261105/SCENE120-RUNTIME-CHECKS.json. Pendiente revision/coordinacion PR582 Hookrol3 y Jiminyrol4; no aprobado/integrado."
+        },
+        {
+          "at": "2026-11-05T17:08:45.502974+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Parentexplicitresume cededowncheckoutatlas-scene120-final; sameagentlane resumesitsPR584 notanotherworker. Currentclaimcodex-atlas120-final pr_abierto. Humanfeedbacke50805fc25d04bcda7a259b2fee2848b revision8 generalfalta la diagonal aun +4doodles. Noother120lane; parentauthorizesresume, preserveallWIPandpriorreviews. CorrectionnativeROMrightplane176onlyoutsidecore,208frontretained."
         }
       ],
       "claimed_at": "2026-10-25T16:07:55.659622+00:00",
@@ -15817,7 +15822,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:07:27.247103+00:00",
+  "updated_at": "2026-11-05T17:08:45.502974+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -17108,6 +17113,16 @@
       "to_owner": "codex-atlas130-final",
       "expected_commit": "1e0b31082a95db5397be4711fc5a1ed3fe2e35e0",
       "evidence": "Parent authorized same-agent continuation after live e58 rev3 approved with general falta solo el cachito marcado and doodlebf2652d8. Listed current owner codex-atlas-library PR587. Own prior checkout atlas-library130-final remains clean atcd8420bf, no external worker; preserved staging owner/PR587, no merge. Narrow 92 authored flatgreen pixels are obstruction of continued shelf baseboard; offline native and runtime inspection only so far, no production edits before recovery."
+    },
+    {
+      "at": "2026-11-05T17:08:45.502974+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "atlas-remates-120-r20261025",
+      "from_owner": "codex-atlas120-final",
+      "to_owner": "codex-atlas120-final",
+      "expected_commit": "fadc887d2dced2505a2ce58f132e73c93c3f70c5",
+      "evidence": "Parentexplicitresume cededowncheckoutatlas-scene120-final; sameagentlane resumesitsPR584 notanotherworker. Currentclaimcodex-atlas120-final pr_abierto. Humanfeedbacke50805fc25d04bcda7a259b2fee2848b revision8 generalfalta la diagonal aun +4doodles. Noother120lane; parentauthorizesresume, preserveallWIPandpriorreviews. CorrectionnativeROMrightplane176onlyoutsidecore,208frontretained."
     }
   ]
 }
