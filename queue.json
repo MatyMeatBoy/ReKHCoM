@@ -16066,6 +16066,19 @@
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"f3a2a2d29bdd45b5b040a9cca851edb4\", \"revision\": 5, \"sha256\": \"ece4d12629f6ea98b8b88b56a09ce0043961fd7987ea5f6f4e5a4ccfc4bb32cd\", \"submissions\": [{\"submission\": \"20261105-160839-40fd46\", \"created\": \"2026-11-05T19:08:40.180232+00:00\", \"image_id\": \"f3a2a2d29bdd45b5b040a9cca851edb4\", \"version\": \"Propuesta05/11 \\u00b7 flancos verdes y figuras \\u00b7 ANTES/PROPUESTA EU\", \"clouds\": 4, \"cloud_ids\": [\"3bfd86d4-8cc8-4c17-99b1-66c7cfc88bc7\", \"551a7b44-fa9f-4d17-9338-d904db680807\", \"adf595aa-0c1e-4ad8-8365-1f7c32a6c453\", \"63b16940-aa8e-42c7-8f31-a476eda91a13\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160839-40fd46\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": []
+    },
+    "atlas-followup-7e56559f-r4": {
+      "id": "atlas-followup-7e56559f-r4",
+      "piece": "Agrabah 107 / 108: seguimiento posterior a aprobación; falto poquito de la diagonal solamnete; falta completar ventana y patron hacia arriba de muro en generla; completar patron de muro hacia bien arriba, en esta escena luego se ve la parte de arriba",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T19:23:56.889193+00:00",
+      "updated_at": "2026-11-05T19:23:56.889193+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "reference": "{\"image_id\": \"7e56559f87b1402da2fe92e2eafe256c\", \"revision\": 4, \"sha256\": \"6e67d42b2eb23e94b0a4707e3a3244c329a9ccb8a7a727cd73deca918a65cffa\", \"submissions\": [{\"submission\": \"20261105-160948-6ea77f\", \"created\": \"2026-11-05T19:09:48.672615+00:00\", \"image_id\": \"7e56559f87b1402da2fe92e2eafe256c\", \"version\": \"Antes / soluci\\u00f3n propuesta: fachadas 107/108 y techo aprobado conservado\", \"clouds\": 3, \"cloud_ids\": [\"9f77b73a-393b-4587-b9f0-f9e249156fae\", \"affec2d4-753a-402a-b87b-05d5e8a6c941\", \"7df4f788-f57e-4841-aaaf-368cc0c3701b\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160948-6ea77f\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
     }
   },
   "integrator": {
@@ -16074,7 +16087,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:23:49.930051+00:00",
+  "updated_at": "2026-11-05T19:23:56.889193+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
