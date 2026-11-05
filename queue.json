@@ -4021,12 +4021,12 @@
     "rev-six-oogie": {
       "id": "rev-six-oogie",
       "piece": "Oogie alfombra yfantasmas",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-oogie-final",
       "created_at": "2026-10-26T00:07:38.304381+00:00",
-      "updated_at": "2026-11-05T16:24:44.077236+00:00",
+      "updated_at": "2026-11-05T17:04:55.568573+00:00",
       "branch": "art/atlas-oogie-perspective",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/593",
       "approval": null,
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
       "evidence": [
@@ -4049,10 +4049,15 @@
           "at": "2026-11-05T16:24:44.077236+00:00",
           "owner": "codex-atlas-oogie-final",
           "detail": "Handoffe842b9af confirmado checkoutlimpiocbdb90b2; foco flancosverdes + bordesblancos677876, rojoPathIndexaa913intacto. V1/V2prototype parent internos rechazados(noAtlas): aperturaexcesiva y rellenoporscanline produce dientes. Resolucion/paleta se infieren ROM32x?native8px,green159; producir antes/solucion coherente sinmirrorghosts. Heavyespera095115, solooffline/source."
+        },
+        {
+          "at": "2026-11-05T17:04:55.568573+00:00",
+          "owner": "codex-atlas-oogie-final",
+          "detail": "HEAD18b7c2c8a5aa8bd30233319e9d815b345c80ca82; pending child exactparent677876e57b1441dc856caa8847f84487 revision8 submission20261025-214551-252c9d responds4doodles+general. Before/solution same runtimeframe300scale3. MiniCRED old(230,500),GREEN new.4serialEUprocessesexit0 Original/Extended before-after300600; Originalfullidentical, NativeRoomfullidentical and allvisiblePathIndex52/60rows identical. Builds substituteonlyport_oogie.o and reuse356readonlyobjects; notfullmainbuild. OOGIE-SOURCE-PROVENANCE.json and OOGIE-NATIVE-AND-PATH-CHECKS.json under pruebas/atlas-final-20261105. Parent source/visual review no blockers. Draft only, humanrating/integration pending; no inheritedapproval."
         }
       ],
       "claimed_at": "2026-10-26T00:07:43.596948+00:00",
-      "sent": "677876e57b1441dc856caa8847f84487"
+      "sent": "f3a2a2d29bdd45b5b040a9cca851edb4"
     },
     "atlas-pixel-painter": {
       "id": "atlas-pixel-painter",
@@ -15807,7 +15812,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:02:52.070045+00:00",
+  "updated_at": "2026-11-05T17:04:55.568573+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

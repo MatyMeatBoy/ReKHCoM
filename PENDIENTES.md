@@ -111,7 +111,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | rev-six-110 | Escena110 muro superior | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/193 | approved exact f9e35dbc32104fa68202b8eeb9fe5dc6 | 2026-10-26T00:47:26.327651+00:00 |
 | rev-six-112 | Escena112 actores y detallepuerta | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/193 | approved exact d6a5374f53b443e6a964d349d3c73cf9 | 2026-10-26T00:47:32.013439+00:00 |
 | rev-six-agrabah | Agrabah107108 cornisas ytecho | en_revision | codex-atlas | codex/atlas-rev-six-turbo | — | 2026-10-26T00:38:55.579066+00:00 |
-| rev-six-oogie | Oogie alfombra yfantasmas | en_curso | codex-atlas-oogie-final | art/atlas-oogie-perspective | — | 2026-11-05T16:24:44.077236+00:00 |
+| rev-six-oogie | Oogie alfombra yfantasmas | pr_abierto | codex-atlas-oogie-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/593 | — | 2026-11-05T17:04:55.568573+00:00 |
 | atlas-pixel-painter | Atlas: pintor de píxeles y respuestas generales conjuntas | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/192 | Solicitud explícita del usuario de integrar el pintor en Atlas | 2026-10-26T00:42:21.673078+00:00 |
 | core-fonts-clean | Fuentes core: KHMenu en ejecutables y paquetes clean | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/194 | Pedido explícito de fuentes core embebidas en todas las builds futuras | 2026-10-26T01:13:03.597995+00:00 |
 | code-options-missing | Opciones: aviso rojo unificado de HD y ROM japonesa no instalados | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/195 | Pedido explícito del usuario de cerrar pendientes de código | 2026-10-26T01:19:36.461192+00:00 |
