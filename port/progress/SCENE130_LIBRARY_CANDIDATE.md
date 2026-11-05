@@ -37,7 +37,7 @@ Verificación EU32:
   No se afirma que se repitieran206después del merge: el guard1400MiB lo
   impidió. Cuatro funciones130/tagger conservaron SHAexacto al combinar main;
   la interacción de roles118/130 se probó directamente en C combinado.
--18paresExtendida y18paresOriginal, desde render300hasta2500, con reloj y
+- 18 pares Extendida y 18 pares Original, desde render300hasta2500, con reloj y
   posición de actor iguales entre variantes.36recortes centrales idénticos.
   Las18imágenes COMPLETAS DEL JUEGO Original (viewport240,60..1680,1020 en
   salida1920×1080) son idénticas. Sólo el icono animado del guardado diagnóstico,
