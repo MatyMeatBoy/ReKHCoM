@@ -676,3 +676,12 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Escena057: unión sobre la enredadera, revisión2 posterior a aceptación
+
+La nube «mejorar» está sobre la copia incompleta de ventana/cornisa encima de
+la enredadera única. Propuesta: dejar la madera existente de BG3 en ese relleno
+superior, suprimiendo únicamente BG2 x20..27/y-8..-1. Conservar todos los píxeles
+de y0 en adelante y el ritmo derecho desde x28. Es una interpretación visual
+acotada, no una orden de inventar otra ventana. Estudio sin build pendiente de
+valoración y ejecución real; no hereda aceptación de la versión anterior.
