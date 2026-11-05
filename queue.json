@@ -15531,19 +15531,20 @@
     "atlas087-final-border-patterns": {
       "id": "atlas087-final-border-patterns",
       "piece": "Escena087: completar patrones del borde superior tras revision33dd78",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas087-final",
       "created_at": "2026-11-05T14:22:52.310431+00:00",
-      "updated_at": "2026-11-05T14:22:52.310431+00:00",
+      "updated_at": "2026-11-05T14:23:10.393470+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion",
       "reference": "20261026-063322-54de6a padre33dd78c3e05f44648d70624c52ae2cf0 nubes8903fc3e/caac56f2/92573031",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-05T14:23:10.393470+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:22:52.310431+00:00",
+  "updated_at": "2026-11-05T14:23:10.393470+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
