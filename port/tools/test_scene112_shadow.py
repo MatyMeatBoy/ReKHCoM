@@ -1,6 +1,7 @@
 """Run the actual actor gate with a shadow whose OAM slot belonged to the party."""
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -43,8 +44,12 @@ int main(void){
         self.run_c(code)
 
     def run_c(self, code):
-        compiler = os.environ.get('CC') or str(ROOT.parent.parent /
-            'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/x86_64-w64-mingw32-gcc.exe')
+        compiler = os.environ.get('CC') or shutil.which('gcc') or shutil.which('cc')
+        local = ROOT.parent.parent / 'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/x86_64-w64-mingw32-gcc.exe'
+        if not compiler and os.name == 'nt' and local.is_file():
+            compiler = str(local)
+        if not compiler:
+            self.skipTest('Set CC to a native C compiler')
         with tempfile.TemporaryDirectory() as directory:
             src = Path(directory) / 'gate.c'
             exe = Path(directory) / 'gate.exe'
