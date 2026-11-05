@@ -21,6 +21,10 @@ int main(void){
  p.v[1]=3;
  assert(PortPreliminarPixelSource(&p,256,-40,&sx,&sy));assert(sy>=160);
  assert(PortPreliminarPixelSource(&p,256,-48,&sx,&sy));assert(sy<32);
+ /* Full masonry A above the native map: do not collapse its64px patch
+  * back to the first16px, which repeated half bricks. */
+ assert(PortPreliminarPixelSource(&p,64,-32,&sx,&sy));assert(sx==64&&sy==0);
+ assert(PortPreliminarPixelSource(&p,96,-16,&sx,&sy));assert(sx==32&&sy==16);
  assert(PortPreliminarPixelSource(&p,-16,112,&sx,&sy));assert(sy>=160);
  return 0;
 }
