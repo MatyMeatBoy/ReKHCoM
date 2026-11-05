@@ -676,3 +676,13 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Biblioteca130: bajar la banda completa del muro
+
+La nube384e2436 y el trazo071834f9 sobre dbe9d6b9 revisión3 solicitan que el
+zócalo continúe a la izquierda del remate completo. La banda ornamental
+592<=2*y+x<624 debe elegirse antes de la alfombra, que empieza desde592.
+Para x<24 prolongar el módulo nativo64px con la misma diagonal; conservar
+la excepción aprobada de476píxeles y todos los píxeles ya autorados. No basta
+que la librería continúe si su base desaparece al resolver el suelo. Esta
+propuesta es un estudio sin build y no hereda la aceptación del padre.
