@@ -499,3 +499,22 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Actores que esperan fuera de la cámara (25/10)
 
 En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).
+
+## Escena117, propuesta05/11: tres cajas y cubierta
+
+Las cajas equivalentes del mapa coinciden por traslación(120,56), no(112,56):4948píxeles de cuerpo coinciden. La punta reflejada de la tapa necesita además ocho píxeles de desplazamiento vertical por la asimetría de su paralelogramo. Completar el extremo derecho con la cara intacta de la caja superior. Se detectó además la caja frontal cortada:3372píxeles coinciden con la superior por(-88,152), que permite completar su mitad izquierda con donantes originales. Cubierta BG3: seguir diagonal2y-x, madera de módulo64x32 y pared sin cortar en el borde rectangular. Propuesta offline en Atlas; pendiente runtime y valoración. Sólo muestreo fuera del cuadro GBA, sin heredar aprobación.
+## Escena116, propuesta05/11: limpiar escalón rojo bajo el zócalo
+
+Respuesta a `8bb0eee7-1c4d-4cc8-ae58-fd99d59ce3f4`. Sólo fuera del mapa32x32, la franja de cubierta entre pared y baranda toma madera limpia de columnas0..7/filas20..23 con fase diagonal. Umbrales diferentes a izquierda32 y derecha48 conservan el muro del fondo. Mapa original intacto. Propuesta offline en Atlas; pendiente valoración y captura runtime, no hereda aprobación.
+## Escena061, propuesta05/11: candelabros en márgenes
+
+Comentario `645a6367-a9da-41c7-8744-3c9912a507ea`: repetir los candelabros con el mismo espaciado. La ROM define cuatro objetos en(16,160),(80,192),(144,224),(208,256), no tiles del fondo. Continuar sólo la decoración por(64,32), con clips fuera del cuadro GBA. Los cuatro originales, actores, BG, paletas y lógica del evento no cambian. Ocho pares runtime x3/x2 con Ajuste/Extendido: núcleo idéntico; sólo cambian márgenes de Extendido. Propuesta en Atlas pendiente de valoración; no hereda aprobación.
+
+05/11 valoración posterior:061/13c87f6282a540f5a71e623a1e7a39b8 y116/70f9813c59f54b7bbea891732a8d8d6a aprobadas sin comentarios nuevos. Capturas runtime verificadas y fuentes exactas preservadas; las notas de propuesta offline anteriores son históricas. La activación sigue la política accepted/build_version vigente de Atlas (regla25/10: aprobado o con honores encendido).
+
+05/11 valoración117:135be7d86bf949128c6d0d407b4b6433 aprobada sin notas nuevas. Tres cajas completas y cubierta diagonal verificadas en cuatro pares runtime; se conserva exactamente la receta mostrada, sin extender esta aprobación a otros candidatos.
+
+
+### Escena118: entrada de Garfio y su sombra, aprobada05/11
+
+La versión69387af132a14bbeb8c92d136cf02d44 fue aprobada sin notas nuevas. Garfio usa su paleta y rol independiente3, no un slotOAM reciclado por el grupo; la sombra común sigue su estado y no puede desbloquearlo. Sólo se oculta estando entero fuera antes de entrar: conservar Original completo y permitir continuidad tras entrada. Ocho pares runtime confirmados EVENT118 menú0:117, no el control descartado de119. Esta regla no da por aprobadas las propuestas de otros actores o escenas.
