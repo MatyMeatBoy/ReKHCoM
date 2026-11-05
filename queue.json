@@ -15336,10 +15336,10 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "en_revision",
-      "owner": "codex-atlas-final",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T12:00:44.184680+00:00",
+      "updated_at": "2026-11-05T13:59:27.150065+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
@@ -15349,6 +15349,11 @@
           "at": "2026-11-05T12:00:44.184680+00:00",
           "owner": "codex-atlas-final",
           "detail": "Propuesta biblioteca extendida1024x768 entregada en Atlas; píxeles originales no-fondo verificados intactos; estanterías diagonales y alfombra96x48. Offline; runtime/cámaras pendientes."
+        },
+        {
+          "at": "2026-11-05T13:59:27.150065+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "released: Repartoexplicito a agentededicatedlibrary130pararecetarpropuestaofflinee0a2151657fa4f15a4b9b7dc798fd28a. SinWIPproductoclaimed; extend_library.py ypropuesta preservados. Agentclaimanteseditar,noaprobacionheredada."
         }
       ],
       "claimed_at": "2026-11-05T11:57:33.886561+00:00",
@@ -15438,7 +15443,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:59:15.940036+00:00",
+  "updated_at": "2026-11-05T13:59:27.150065+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
