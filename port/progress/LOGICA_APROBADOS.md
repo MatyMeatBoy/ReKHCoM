@@ -487,3 +487,7 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Actores que esperan fuera de la cámara (25/10)
 
 En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).
+
+## Escena115, propuesta05/11: madera limpia y menor densidad
+
+Respuesta a `7e56767b-7fb9-4adc-a6b1-214effa7d1d4` y al comentario de reducir escotillas. Sólo fuera del mapa nativo32x32: BG3 usa las cuatro filas de madera20..23 cuando está bajo el muro (`2y+x>=36`), evitando copiar el escalón rojo. BG2 omite filas alternas de módulos completos de escotillas. El bloque original conserva todos sus tiles. Propuesta pendiente de valoración humana y captura del juego; no hereda aprobación.

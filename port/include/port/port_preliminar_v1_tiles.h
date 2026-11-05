@@ -77,7 +77,8 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         if (v[1]==3) {
             /* A plank has four rows, not the old two-row upper swatch.
              * Keep its diagonal phase and avoid copying wall pixels. */
-            if (sy<0 || sy>=32) sy=20+PortSceneTileMod(sy-20,4);
+            if (2*oy+ox>=36 || sy<0 || sy>=32)
+                sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
             if (2*oy+ox>=32) {
                 int cx=ox+4-PortSceneTileMod(ox+4,8);
@@ -90,6 +91,8 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
                 /* Complete hatch diamonds on their staggered (16,-8),
                  * (0,8) lattice instead of wrapping clipped edge shards. */
                 sx=8+PortSceneTileMod(ox-8,16);
+                /* Thin whole exterior hatch rows; authored cells stay intact. */
+                if (PortSceneTileMod(oy+(ox-sx)/2-16,16)>=8) return 0;
                 sy=16+PortSceneTileMod(oy+(ox-sx)/2-16,8);
             } else if (sy<0 || sy>=32) return 0;
         }
