@@ -15590,23 +15590,29 @@
     "atlas099-wallpattern-20261105": {
       "id": "atlas099-wallpattern-20261105",
       "piece": "Escena099 patron mural comentarios posteriores PR152",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas099-final",
       "created_at": "2026-11-05T14:13:56.737301+00:00",
-      "updated_at": "2026-11-05T14:24:35.973225+00:00",
+      "updated_at": "2026-11-05T16:53:32.836809+00:00",
       "branch": "art/atlas-scene099-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/588",
-      "approval": null,
+      "approval": "Atlas896b586257fe4b32a3a83272a0023f78 approved revision1 sin notas; SHAexacto verificado05/11",
       "reference": "Atlas f092a251c3e44a56b1b4727eb3183855 envio20261025-161834-618105 nubesdb9422b6/a02878c3; PR152 deja expresamente ambas pendientes. Mandato usuario procesar Atlas05/11",
       "evidence": [
         {
           "at": "2026-11-05T14:24:35.973225+00:00",
           "owner": "codex-atlas099-final",
           "detail": "92839a736 PR588 draft; Atlas hija896b586257fe4b32a3a83272a0023f78 exactparentf092a251c3e44a56b1b4727eb3183855/envio20261025-161834-618105 respondeambasnubesdb9422b6/a02878c3. Segundo poste224..239 con veta nativa24..55. CRED/GREENPASS,previewEU PASS,4runs3440x1440exit0 Originalfull+centroGBAidenticos8pares180/300/600/900; bboxextendido2031,0..2079,288. pruebas/atlas-final-20261105/SCENE099-RUNTIME-CHECKS.json. Propuesta noaprobada/nointegrada."
+        },
+        {
+          "at": "2026-11-05T16:53:32.836809+00:00",
+          "owner": "codex-atlas099-final",
+          "detail": "PR588 MERGED e36363a04fd802310c8b654214ed1b1a0040fc8f; fuente099 intacta tras main; C1PASS; runtime8pares previos, Original completo y centro intactos. APPROVAL-099-INTEGRATION.json."
         }
       ],
       "claimed_at": "2026-11-05T14:14:03.430997+00:00",
-      "sent": "896b586257fe4b32a3a83272a0023f78"
+      "sent": "896b586257fe4b32a3a83272a0023f78",
+      "completed_at": "2026-11-05T16:53:32.836809+00:00"
     },
     "atlas-scene130-maleficent-staging": {
       "id": "atlas-scene130-maleficent-staging",
@@ -15768,7 +15774,7 @@
     "created_at": "2026-11-05T16:52:45.761269+00:00",
     "updated_at": "2026-11-05T16:52:45.761269+00:00"
   },
-  "updated_at": "2026-11-05T16:52:45.761269+00:00",
+  "updated_at": "2026-11-05T16:53:32.837869+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
