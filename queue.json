@@ -15189,20 +15189,26 @@
     "atlas-per-art-tile-edit": {
       "id": "atlas-per-art-tile-edit",
       "piece": "Editar tiles desde la revisión de cada arte",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-tiles",
       "created_at": "2026-11-05T11:50:32.381838+00:00",
-      "updated_at": "2026-11-05T11:50:40.578827+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T11:55:21.333398+00:00",
+      "branch": "feat/atlas-per-art-tiles",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/575",
       "approval": "Usuario 05/11: hazlo; opción por arte, edición manual y versión hija",
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T11:55:21.333398+00:00",
+          "owner": "codex-atlas-tiles",
+          "detail": "ca51a97f1; 13 tests PASS; JS syntax; ROM EU real hash intact; HTTP temp create/edit/save/publish pending child parent intact; local launcher active."
+        }
+      ],
       "claimed_at": "2026-11-05T11:50:40.578827+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T11:50:40.578827+00:00",
+  "updated_at": "2026-11-05T11:55:21.333398+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
