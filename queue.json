@@ -15553,13 +15553,13 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas130-final",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T17:34:41.580872+00:00",
+      "updated_at": "2026-11-05T19:26:29.319081+00:00",
       "branch": "fix/atlas-library130-extension",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
-      "approval": "Usuario 05/11 terminar todos los artes y faltantes",
+      "approval": "Atlas dbe9d6b92ba846cdad63111c28b3f3d8 revision3 approved SHA256 cc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73; build_version accepted; usuario05/11 integra todos",
       "reference": "Atlas new pending child dbe9d6b92ba846cdad63111c28b3f3d8 of2935ad4bfddd42c886b86e3c90211827; feedbacke58rev3 doodlebf2652d8-8382-4cac-ba8f-55a7808e6656; no approval inherited, parents unchanged",
       "evidence": [
         {
@@ -15591,10 +15591,16 @@
           "at": "2026-11-05T17:34:41.580872+00:00",
           "owner": "codex-atlas130-final",
           "detail": "HEAD d76219ac6; implementation a0245899fe88f1c95aecf2220ae11aa26ad8e9bf; final476flatgreen/BG2empty mask, native shift64,-32 full baseboard; donor banks8352bytes,max203BG3/75BG2allROMloaded; C RED/GREEN1 on1920coords plus opaqueBG2/textured guards; fullband previewPASS356readonly objects; Wide604/Original604 at600PASS exactly1904physical pixels changed, all otherWide/core/completeOriginalgame viewport exact; no physical letterbox identity claim; actor4blocksSHAunchanged, prior2430..2500/206premerge notrerunfinal; old92candidate rejected beforeAtlas; imagecc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73; pruebas/atlas-final-20261105/LIBRARY130-FULLBAND-* and library130-remate-before-solution.png; no moreheavy"
+        },
+        {
+          "at": "2026-11-05T19:26:29.319081+00:00",
+          "owner": "codex-atlas130-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR587 MERGED por ancestria exacta source03a87b03443359df68627e123ebb45fa8039afc0. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-dbe9d6b9-r3; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T14:00:31.772987+00:00",
-      "sent": "dbe9d6b92ba846cdad63111c28b3f3d8"
+      "sent": "dbe9d6b92ba846cdad63111c28b3f3d8",
+      "completed_at": "2026-11-05T19:26:29.319081+00:00"
     },
     "atlas-final-missing-coverage": {
       "id": "atlas-final-missing-coverage",
@@ -16129,7 +16135,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:21.710587+00:00",
+  "updated_at": "2026-11-05T19:26:29.319081+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
