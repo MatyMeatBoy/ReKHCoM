@@ -15791,12 +15791,12 @@
     "atlas-synthesis-outline-reference-20261105": {
       "id": "atlas-synthesis-outline-reference-20261105",
       "piece": "Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-synthesis-final",
       "created_at": "2026-11-05T14:55:35.794311+00:00",
-      "updated_at": "2026-11-05T17:36:35.433564+00:00",
+      "updated_at": "2026-11-05T17:55:32.707059+00:00",
       "branch": "art/atlas-synthesis-outline-final",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/595",
       "approval": "Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline",
       "reference": "823cdf38241144b1b282bcf3f2532120",
       "evidence": [
@@ -15814,9 +15814,15 @@
           "at": "2026-11-05T17:36:35.433564+00:00",
           "owner": "codex-atlas-synthesis-final",
           "detail": "4PythonROMfree tests RED7failures→GREEN4/4;405recipes changed only, allother525TSVrows orderpreserved, fallback405checkPASS. Private405ReComrenderPASS, canonical900files unchanged;897PNG+2LAD=899HD and1metadata;495nonsynthesisfiles preserved. baselineexactcanonical,12oldrecipe-rounding differences maxchannel1 documented. Source/proof synthesis-reference/SOURCE-PROVENANCE.json andSTAGED-CANDIDATE-CHECKS.json. Runtime/fixturecompileNOTSTARTED:guard1169then756MiB below1400;noactivekhcom/clang/ninja. Pendingactualbefore/solution+officialsmallref inAtlas, noPRyet."
+        },
+        {
+          "at": "2026-11-05T17:55:32.707059+00:00",
+          "owner": "codex-atlas-synthesis-final",
+          "detail": "HEAD dd8bf656d2f3306cf637e92908ffd740b80c5fe6. Pending child rev0 responds to exact parent823cdf38241144b1b282bcf3f2532120 rev12, submission20261025-160926-638293 general. Runtime ANTES/PROPUESTA with small credited official PS3HD manual reference (PDF21,40/41), no exact PC layout claim. Tests RED7->GREEN4 and405fallback check PASS. Private405ReCom stage, canonical900unchanged and495otherfiles unchanged.10serialEUprocesses exit0,40pairs: HDofffullidentical; HDon changes only requirementROI. Natural normalexe; controlled red/green/blue fixture InitEventKeyCard and TOTAL10->9; no natural payment claim. Single QA object and356readonly releaseobjects, nofullbuild/nativeimport/otherplatform claim. SOURCE-PROVENANCE.json,RUNTIME-VERIFIED.json,PRESERVATION-AFTER-RUNTIME.json under synthesis-reference. Draft pending human rating/integration; parent unchanged, no inherited approval."
         }
       ],
-      "claimed_at": "2026-11-05T17:20:11.189599+00:00"
+      "claimed_at": "2026-11-05T17:20:11.189599+00:00",
+      "sent": "8fc06e77f2494657ae11c5437d1e1845"
     },
     "atlas-internal-references-before-after": {
       "id": "atlas-internal-references-before-after",
@@ -15887,7 +15893,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:48:03.400683+00:00",
+  "updated_at": "2026-11-05T17:55:32.707059+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
