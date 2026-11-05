@@ -487,7 +487,12 @@ columnas y cortaba la veta que aparece en la nube inferior. Usar su propia
 banda de veta nativa y=24..55, recorrida en ambos sentidos para unir los
 extremos sin salto, manteniendo x. No copiar el travesaño lateral de abajo,
 ni añadir otra chimenea, reloj o florero. El suelo elogiado sigue intacto.
-La hija queda pendiente de revisión; las aprobaciones anteriores no la cubren.
+La hija `896b586257fe4b32a3a83272a0023f78` fue aprobada expresamente el
+05/11/2026, revisión 1, sin notas ni trazos pendientes. SHA256 de la imagen:
+`fadf93894d25c15599b98e776490c6900cce1b56bff75d12bf62f326fe847492`.
+La fuente aprobada es `92839a736357e052861f717dac6d7862d5a6728a`;
+la incorporación de main conserva exactamente su bloque 099. Esta aprobación
+corresponde a esa versión y no se transmite a futuras hijas.
 
 ### Trickmaster: postes completos y travesaño recto (revisión25/10)
 
