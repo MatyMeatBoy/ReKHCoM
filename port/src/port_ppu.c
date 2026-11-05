@@ -38,6 +38,7 @@
 #include "port/port_agrabah_tiles.h"
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
+#include "port/port_scene130_library.h"
 #include "port/port_halloween_floor.h"
 
 extern const uint8_t gBtlBgHalloweenTownTiles[16384];
@@ -1728,6 +1729,30 @@ static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
     }
     return 0;
 }
+/* This candidate never changes the native viewport. Outside it, preserve
+ * every authored library pixel before extending the empty map background.
+ * Palette indices remain live for fades; OBJ furniture/actors stay unique. */
+static int Preliminar130Authored(int x,int y) {
+    int floor,books,base;
+    if (x<0 || y<0 || x>=512 || y>=512) return 0;
+    floor=SinglePanelIndex(&sBgLatch[3],IO16(14),x,y);
+    books=SinglePanelIndex(&sBgLatch[2],IO16(12),x,y);
+    base=SinglePanelIndex(&sBgLatch[3],IO16(14),0,0);
+    return (books>=0 && (books&15)) ||
+        (floor>=0 && base>=0 && (PLTT16[floor]&0x7fff)!=(PLTT16[base]&0x7fff));
+}
+static int Preliminar130Pixel(int bg,int x,int y,uint16_t* color) {
+    int sx=x,sy=y,index;
+    if (!sPreliminarRecipe[2] || !sPreliminarRecipe[3] ||
+        sPreliminarRecipe[2]->v[0]!=130 || sPreliminarRecipe[3]->v[0]!=130) return 0;
+    if (!Preliminar130Authored(x,y)) {
+        int carpet=PortScene130LibrarySource(x,y,&sx,&sy);
+        if (!carpet && !Preliminar130Authored(sx,sy)) { sx=x<240?64:480; sy=64; }
+    }
+    index=SinglePanelIndex(&sBgLatch[bg],IO16(8+bg*2),sx,sy);
+    *color=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
+    return 1;
+}
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
     int white = SinglePanelIndex(l, cnt, 0, 0);
@@ -2023,8 +2048,12 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                  sPreliminarRecipe[bg]->v[0]==81 || sPreliminarRecipe[bg]->v[0]==95 || sPreliminarRecipe[bg]->v[0]==99 || (bg==2 && sPreliminarRecipe[bg]->v[0]==104) ||
                  sPreliminarRecipe[bg]->v[0]==110 || sPreliminarRecipe[bg]->v[0]==112 || (bg==2 && sPreliminarRecipe[bg]->v[0]==117) || sPreliminarRecipe[bg]->v[0]==118 ||
                  sPreliminarRecipe[bg]->v[0]==120 || sPreliminarRecipe[bg]->v[0]==121 || sPreliminarRecipe[bg]->v[0]==122 ||
-                 sPreliminarRecipe[bg]->v[0]==124)) {
+                 sPreliminarRecipe[bg]->v[0]==124 || sPreliminarRecipe[bg]->v[0]==130)) {
                 int sx,sy;
+                if (sPreliminarRecipe[bg]->v[0]==130 && Preliminar130Pixel(bg,wx,wy,&out[x])) {
+                    sInWorld[x]=1;
+                    continue;
+                }
                 if (sPreliminarRecipe[bg]->v[0]==45 && PreliminarFirPixel(wx,wy,&out[x])) {
                     sInWorld[x]=1;
                     continue;
