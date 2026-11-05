@@ -15879,10 +15879,10 @@
     "atlas-darkside06-left-detail": {
       "id": "atlas-darkside06-left-detail",
       "piece": "Darkside06: dibujo y difuminado lateral solicitado en nube72f6d65b",
-      "status": "en_curso",
-      "owner": "codex-atlas-darkside06-final",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-05T17:40:14.925679+00:00",
-      "updated_at": "2026-11-05T17:48:03.400683+00:00",
+      "updated_at": "2026-11-05T18:39:30.096433+00:00",
       "branch": "art/atlas-darkside06-left-detail",
       "pr": null,
       "approval": "Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena",
@@ -15892,6 +15892,11 @@
           "at": "2026-11-05T17:48:03.400683+00:00",
           "owner": "codex-atlas-darkside06-final",
           "detail": "ClaimOK7e61c2f3b133c246ec5fff03fba99a088acde91c; fresh worktreeatlas-darkside06-final frommain30e1f47fefb6bf1f358018597f16e869fbc40b2d; all historicalDarkside tasks integrated, preserved; only06currentleftdetail, noarena reserved. Approvedr8 matches currentinc fce1799e73d7d25ba2196e62367672f6bc0af295a32bc3669acc06bc95e3a64e. Native11982pixels plusapproved1842addedarm; cloud maps tocutbodyx253..262,y123..206. Source/offline only, no compiler/game dueparentRAMwindow. Need separate detail guard since oldBodyPixel can run insideGBA; preserve approvedarm/arena/allnative."
+        },
+        {
+          "at": "2026-11-05T18:39:30.096433+00:00",
+          "owner": "codex-atlas-darkside06-final",
+          "detail": "released: STOP por orden humana 2026-11-05. WIP conservado en kh-worktrees/atlas-darkside06-final, base30e1f47fefb6bf1f358018597f16e869fbc40b2d. C RED2/GREEN2 y preview PASS. Wide BEFORE/AFTER604 ambos exit0; sin revisión comparativa, controles Original ni entrega Atlas/PR. Evidencia pruebas/atlas-final-20261105/darkside06-final. No terminado; brazo aprobado intacto y limitación preexistente de desplazamiento documentada. Sin procesos propios activos."
         }
       ],
       "claimed_at": "2026-11-05T17:40:27.026048+00:00"
@@ -15918,7 +15923,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T18:03:19.565906+00:00",
+  "updated_at": "2026-11-05T18:39:30.096433+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
