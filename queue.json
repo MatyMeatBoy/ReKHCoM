@@ -4085,13 +4085,13 @@
     "rev-six-oogie": {
       "id": "rev-six-oogie",
       "piece": "Oogie alfombra yfantasmas",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-oogie-final",
       "created_at": "2026-10-26T00:07:38.304381+00:00",
-      "updated_at": "2026-11-05T17:04:55.568573+00:00",
+      "updated_at": "2026-11-05T19:26:03.756820+00:00",
       "branch": "art/atlas-oogie-perspective",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/593",
-      "approval": null,
+      "approval": "Atlas f3a2a2d29bdd45b5b040a9cca851edb4 revision5 approved SHA256 ece4d12629f6ea98b8b88b56a09ce0043961fd7987ea5f6f4e5a4ccfc4bb32cd; build_version accepted; usuario05/11 integra todos",
       "reference": "Prioridad humana tabRev6; briefs build/atlas-rev-six-briefs.json",
       "evidence": [
         {
@@ -4118,10 +4118,16 @@
           "at": "2026-11-05T17:04:55.568573+00:00",
           "owner": "codex-atlas-oogie-final",
           "detail": "HEAD18b7c2c8a5aa8bd30233319e9d815b345c80ca82; pending child exactparent677876e57b1441dc856caa8847f84487 revision8 submission20261025-214551-252c9d responds4doodles+general. Before/solution same runtimeframe300scale3. MiniCRED old(230,500),GREEN new.4serialEUprocessesexit0 Original/Extended before-after300600; Originalfullidentical, NativeRoomfullidentical and allvisiblePathIndex52/60rows identical. Builds substituteonlyport_oogie.o and reuse356readonlyobjects; notfullmainbuild. OOGIE-SOURCE-PROVENANCE.json and OOGIE-NATIVE-AND-PATH-CHECKS.json under pruebas/atlas-final-20261105. Parent source/visual review no blockers. Draft only, humanrating/integration pending; no inheritedapproval."
+        },
+        {
+          "at": "2026-11-05T19:26:03.756820+00:00",
+          "owner": "codex-atlas-oogie-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR593 MERGED por ancestria exacta source18b7c2c8a5aa8bd30233319e9d815b345c80ca82. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-f3a2a2d2-r5; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-10-26T00:07:43.596948+00:00",
-      "sent": "f3a2a2d29bdd45b5b040a9cca851edb4"
+      "sent": "f3a2a2d29bdd45b5b040a9cca851edb4",
+      "completed_at": "2026-11-05T19:26:03.756820+00:00"
     },
     "atlas-pixel-painter": {
       "id": "atlas-pixel-painter",
@@ -16111,7 +16117,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:25:53.325609+00:00",
+  "updated_at": "2026-11-05T19:26:03.756820+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
