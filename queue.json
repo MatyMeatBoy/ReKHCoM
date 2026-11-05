@@ -16265,22 +16265,28 @@
     "atlas-queue-partial-response-20261105": {
       "id": "atlas-queue-partial-response-20261105",
       "piece": "Atlas cola: conservar envíos parcialmente respondidos por response_to explícito",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-partialqueue",
       "created_at": "2026-11-05T20:32:14.556399+00:00",
-      "updated_at": "2026-11-05T20:36:23.138471+00:00",
+      "updated_at": "2026-11-05T20:39:08.393542+00:00",
       "branch": "fix/atlas-queue-partial-response",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/607",
-      "approval": "Usuario05/11 seguir procesando cola sinbuild; root autoriza bugfix funcional Python puro",
+      "approval": "Fix de cola solicitado implicitamente al procesar pendientes; backend no arte ni nueva valoracion",
       "reference": "Store.queue: child con response_to parcial oculta nubes restantes por fallback legacy indiscriminado",
       "evidence": [
         {
           "at": "2026-11-05T20:36:23.138471+00:00",
           "owner": "codex-atlas-partialqueue",
           "detail": "Bugfixfuncional Store.queue source822d29d71: fallbackchildposterior sólo si falta keyresponse_to. TDDRED4casos con2fallosparcial/vacio, legacy/fullpasaban; GREENsuitePythonPillow test_review16PASS. No rediseñopayload/count/general/SHA. Originalreviewsintactos, fixturesHTTPtemporalescerrados, NO persistentserverrestart/Ccompiler/game/build/imports. diffcheckPASS. Evidencia pruebas/atlas-siguiente-20261105/queue-partial/RED.log yVERIFICATION.json. Root revisa/integra."
+        },
+        {
+          "at": "2026-11-05T20:39:08.393542+00:00",
+          "owner": "codex-atlas-partialqueue",
+          "detail": "PR607 merged0e82ea15aab4e1c0fb7fa47f6b087bb53e904d41;16PythonPASS verificados porautor/root/revisor. AtlasactivecheckoutFF limpio, auto-reiniciooculto usa nuevoPython appbuild=diskbuild. Caso120live conserva grabado65a0...pendiente trasresponder2A; imágenes/IDs/reviewsoriginalesintactos. NO C compiler/game/importregeneration. pruebas/atlas-siguiente-20261105/queue-partial/LIVE-VERIFIED.json"
         }
       ],
-      "claimed_at": "2026-11-05T20:32:44.369333+00:00"
+      "claimed_at": "2026-11-05T20:32:44.369333+00:00",
+      "completed_at": "2026-11-05T20:39:08.393542+00:00"
     }
   },
   "integrator": {
@@ -16289,7 +16295,7 @@
     "created_at": "2026-11-05T20:36:56.826884+00:00",
     "updated_at": "2026-11-05T20:36:56.826884+00:00"
   },
-  "updated_at": "2026-11-05T20:38:58.160377+00:00",
+  "updated_at": "2026-11-05T20:39:08.393542+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
