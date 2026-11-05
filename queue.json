@@ -15452,7 +15452,7 @@
       "status": "en_revision",
       "owner": "codex-atlas-coverage",
       "created_at": "2026-11-05T13:49:55.685514+00:00",
-      "updated_at": "2026-11-05T13:55:27.527723+00:00",
+      "updated_at": "2026-11-05T15:20:11.017622+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte",
@@ -15462,6 +15462,11 @@
           "at": "2026-11-05T13:55:27.527723+00:00",
           "owner": "codex-atlas-coverage",
           "detail": "33 referencias nativas nuevas verificadas:20 fondos combate y13 familias campo. pending/reference_only/parent null/turno agente/SHA33de33. IDs SHA fuentes: pruebas/atlas-final-20261105/coverage-audit/reference-deliveries.json; verificacion reference-verification.json. Campo00 muestra640celdas1023 fuera tileset enmagenta sininventar; resto32sin unresolved. ModePooh comparte fuentes congEventBg134/141/142 ficha092982aa04fb4c51a7e8932566659621;0artes nuevas,no duplicar. No runtime,build,game,aprobacion ni integracion. Arte siguependiente."
+        },
+        {
+          "at": "2026-11-05T15:20:11.017622+00:00",
+          "owner": "codex-atlas-coverage",
+          "detail": "Correccion expresa del usuario05/11: las arenas YA ESTAN HECHAS. El20 del snapshot significa sin ficha inequivoca, NO20 artes faltantes ni permiso de crear referencias visibles. Referencias nativas son internas; coordinador internaliza61 fichas conservando fuentes/IDs. coverage.json yREADME corregidos, informe previo conservado historico, scripts de registrar refs desactivados. reference-deliveries.json conserva33 IDs para trazabilidad. Proxima labor pertinente: auditar mejoras de perspectiva de arenas existentes usando Trickmaster y otras ya aplicadas; propuestas con ANTES+SOLUCION. No aprobar ni integrar por estos conteos."
         }
       ],
       "claimed_at": "2026-11-05T13:50:11.805397+00:00"
@@ -15635,7 +15640,7 @@
     "created_at": "2026-11-05T15:19:55.911106+00:00",
     "updated_at": "2026-11-05T15:19:55.911106+00:00"
   },
-  "updated_at": "2026-11-05T15:19:55.911106+00:00",
+  "updated_at": "2026-11-05T15:20:11.017622+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
