@@ -446,4 +446,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-internal-references-before-after | Atlas: referencias nativas internas y extensiones antes/solución | integrado | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/589 | Usuario05/11 corrección explícita: referenciasnativasinternas,norevision; arenasyahechas,proponermejorasperspectivaTrickmaster | 2026-11-05T15:22:06.461532+00:00 |
 | atlas-scene081-final-review | Escena081: respetar negro y borde original de cueva; mejorar actores sincorazón del último feedback | en_curso | codex-atlas081-final | — | Usuario continuar toda cola 05/11; latest Atlas b39c0c96f13c45319956f1b5269c5b89 annotations incld70050a2; parent lane assignment | 2026-11-05T16:15:45.494072+00:00 |
 
-Integrador: codex-atlas-final (ocupado; 2026-11-05T16:52:45.761269+00:00)
+Integrador: libre
