@@ -459,4 +459,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas120-figure-engraving-r5 | Escena120: completar grabado figurativo de nube65a0a5d0; diagonal aceptada y mamposteriaA tratada aparte | pendiente | — | — | Padre aprobado; grabado figura sigue pendiente, no respondido por propuesta parcial del moduloA. Sin build autorizado. | 2026-11-05T20:16:00.640798+00:00 |
 | atlas-queue-partial-response-20261105 | Atlas cola: conservar envíos parcialmente respondidos por response_to explícito | integrado | codex-atlas-partialqueue | https://github.com/MatyMeatBoy/ReKHCoM/pull/607 | Fix de cola solicitado implicitamente al procesar pendientes; backend no arte ni nueva valoracion | 2026-11-05T20:39:08.393542+00:00 |
 
-Integrador: codex-atlas-partial-integrator (ocupado; 2026-11-05T20:36:56.826884+00:00)
+Integrador: libre
