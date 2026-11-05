@@ -4475,7 +4475,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas095-final",
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T16:55:32.612050+00:00",
+      "updated_at": "2026-11-05T16:57:43.734441+00:00",
       "branch": "art/atlas-scene095-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/580",
       "approval": null,
@@ -4520,6 +4520,11 @@
           "at": "2026-11-05T16:55:32.612050+00:00",
           "owner": "codex-atlas095-final",
           "detail": "095 final ce19ca2a7: native straight cap464..479 d[-144,-96), flower face56px d[-96,16), base+656; no recolor. C RED/GREEN221184 interiorpoints;2PPU+4serialruns Extended/nativecore exact and Originalfull exact300/600. Approved823sameframe before coreexact. Atlaschild ab3444223b854341afa9ae521a0d2860 parent64e973f29bda496380c43d786ffc773b pending SHA256c2aa6e93995400df66c41e894a6865b8ac140cdfea470d8bd3c812b7e87978fd; real BEFORE/SOLUTION. Evidence pruebas/atlas-final-20261105/095-rim-final. PR580draft updated; pending own human grade, no approval/integration."
+        },
+        {
+          "at": "2026-11-05T16:57:43.734441+00:00",
+          "owner": "codex-atlas095-final",
+          "detail": "Rebased PR580 onto main30e1f47fe: headcda6c1b54c6f7fadc3e7fabb4c4e7a00dd25f0da. Scene095 sourceblocks exact vsruntimece19; miniC PASSagain. PPU main-only117/118 changes,095gate unchanged. Existing pendingAtlasab3444223b854341afa9ae521a0d2860 preserved. REBASE-CHECKS.json evidence. Noapproval/integration."
         }
       ],
       "claimed_at": "2026-11-05T12:49:51.945888+00:00",
@@ -15785,7 +15790,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:56:15.068880+00:00",
+  "updated_at": "2026-11-05T16:57:43.734441+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
