@@ -4466,12 +4466,12 @@
     "atlas-115-hatch-spacing": {
       "id": "atlas-115-hatch-spacing",
       "piece": "Escena 115: menos escotillas y limpiar borde",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:29.570680+00:00",
-      "updated_at": "2026-11-05T12:01:24.736371+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T12:06:04.854298+00:00",
+      "branch": "art/atlas-scene115-final",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/576",
       "approval": null,
       "reference": "20261025-025012-8a510c",
       "evidence": [
@@ -4479,9 +4479,15 @@
           "at": "2026-10-26T09:40:18.552327+00:00",
           "owner": "codex-atlas",
           "detail": "released: Sin cambios aún. Nueva prioridad del usuario: aprobados nuevos primero; después submenús de tienda moguri."
+        },
+        {
+          "at": "2026-11-05T12:06:04.854298+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "31a1fc7a2, propuesta Atlas c0ba23b067c2424dba5cf0db6e552c3e, C RED/GREEN y native identity. Draft: falta valoración y captura runtime."
         }
       ],
-      "claimed_at": "2026-11-05T12:01:24.736371+00:00"
+      "claimed_at": "2026-11-05T12:01:24.736371+00:00",
+      "sent": "c0ba23b067c2424dba5cf0db6e552c3e"
     },
     "atlas-116-hull-edge": {
       "id": "atlas-116-hull-edge",
@@ -15229,7 +15235,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:01:24.736371+00:00",
+  "updated_at": "2026-11-05T12:06:04.854298+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
