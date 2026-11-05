@@ -18,6 +18,7 @@
 
 #include "port/port.h"
 #include "port/port_oam.h"
+#include "evt/event_ids.h"
 
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -46,6 +47,8 @@ static int sHalloweenFloor;
 
 extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
+extern const uint16_t gEmy00Palette[];
+extern const unsigned char gEmy00L00Tiles[];
 extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
@@ -2648,6 +2651,15 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 ox -= 512;
         }
         if (ox >= objRight || ox + bw <= objLeft)
+            continue;
+
+        /* Event 081 preloads both Shadow waves in their idle pose. Keep only
+         * that waiting pose outside the native camera hidden; the walking
+         * bank enters independently, without releasing the second wave. */
+        if (gPortScreen.wide && !sEnvActorFrameOff && sActorSceneKey == EVENT_081_MONSTORO_E3 &&
+            !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&
+            sOamHd[i].palette == gEmy00Palette && sOamHd[i].tiles == gEmy00L00Tiles &&
+            !(ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0))
             continue;
 
         if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&

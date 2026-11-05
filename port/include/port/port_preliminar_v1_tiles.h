@@ -589,9 +589,15 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
     }
 
     if (p && p->v[0]==81) {
+        /* Keep the cartridge's finite cave cap and its opaque black mask.
+         * The already reviewed corridor on the right keeps its sampling. */
+        if (wx<128) {
+            *sx=wx>=0 && wy>=0 && wy<512 ? wx : 0;
+            *sy=wx>=0 && wy>=0 && wy<512 ? wy : 0;
+            return 1;
+        }
         if (p->v[1]==1 || p->v[1]==3) {
-            /* Replace the cartridge's finite left cap with the same smooth
-             * corridor module, including the native rectangle's corner. */
+            /* Preserve the approved right-hand corridor module. */
             *sx=128+PortSceneTileMod(wx-128,64);*sy=wy+(wx-*sx)/2;
             if (*sy<0 || *sy>=256) {*sx=0;*sy=0;}
             return 1;
