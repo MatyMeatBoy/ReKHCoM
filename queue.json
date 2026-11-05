@@ -336,12 +336,12 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-057",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-11-05T13:59:15.940036+00:00",
-      "branch": "codex/atlas057-turbo-current",
-      "pr": null,
+      "updated_at": "2026-11-05T14:12:25.789360+00:00",
+      "branch": "art/atlas-scene057-final",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/585",
       "approval": null,
       "reference": "e49d2f465f9346d28ba013d9a81de938; envío 20261024-131858-65bb72",
       "evidence": [
@@ -419,10 +419,15 @@
           "at": "2026-11-05T13:58:42.075891+00:00",
           "owner": "codex-atlas-final",
           "detail": "released: Reparto explícito a agente120yaentregado para continuar057 en carril dedicado. Checkout atlas-scene057-final creado limpio desdeorigin/main90fa, sinediciones. Fuentesnativas decodificadas ycomentarios dos subidas preservados enpruebas/atlas-final-20261105. Nuevoagente debeclaimokanteseditar."
+        },
+        {
+          "at": "2026-11-05T14:12:25.789360+00:00",
+          "owner": "codex-atlas-057",
+          "detail": "9abc6efbb PR585 draft; Atlas hija492cc13fdc804300bda522bb466db5e4 exactparent853a5ffc4f8c4a7fb4b4e74567f12551 respondeambasnubes. Subida localderecha mediantecapsBG2nativos conserva2*y+x. CRED/GREENPASS,previewEU PASS,4runs exit0 Originalfull+centroGBA identicos8pares180/300/600/900. EVENT057 menu0:57 confirmado; controles0:56 descartados. pruebas/atlas-final-20261105/SCENE057-CONFIRMED-CHECKS.json. Pendientevaloracion,noaprobado/integrado."
         }
       ],
       "claimed_at": "2026-11-05T13:59:15.940036+00:00",
-      "sent": "853a5ffc4f8c4a7fb4b4e74567f12551"
+      "sent": "492cc13fdc804300bda522bb466db5e4"
     },
     "escena-061": {
       "id": "escena-061",
@@ -15488,7 +15493,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:11:10.874356+00:00",
+  "updated_at": "2026-11-05T14:12:25.789360+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
