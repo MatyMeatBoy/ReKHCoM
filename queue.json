@@ -16258,20 +16258,26 @@
     "atlas-queue-partial-response-20261105": {
       "id": "atlas-queue-partial-response-20261105",
       "piece": "Atlas cola: conservar envíos parcialmente respondidos por response_to explícito",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-partialqueue",
       "created_at": "2026-11-05T20:32:14.556399+00:00",
-      "updated_at": "2026-11-05T20:32:44.369333+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T20:36:23.138471+00:00",
+      "branch": "fix/atlas-queue-partial-response",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/607",
       "approval": "Usuario05/11 seguir procesando cola sinbuild; root autoriza bugfix funcional Python puro",
       "reference": "Store.queue: child con response_to parcial oculta nubes restantes por fallback legacy indiscriminado",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T20:36:23.138471+00:00",
+          "owner": "codex-atlas-partialqueue",
+          "detail": "Bugfixfuncional Store.queue source822d29d71: fallbackchildposterior sólo si falta keyresponse_to. TDDRED4casos con2fallosparcial/vacio, legacy/fullpasaban; GREENsuitePythonPillow test_review16PASS. No rediseñopayload/count/general/SHA. Originalreviewsintactos, fixturesHTTPtemporalescerrados, NO persistentserverrestart/Ccompiler/game/build/imports. diffcheckPASS. Evidencia pruebas/atlas-siguiente-20261105/queue-partial/RED.log yVERIFICATION.json. Root revisa/integra."
+        }
+      ],
       "claimed_at": "2026-11-05T20:32:44.369333+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:32:44.369333+00:00",
+  "updated_at": "2026-11-05T20:36:23.138471+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
