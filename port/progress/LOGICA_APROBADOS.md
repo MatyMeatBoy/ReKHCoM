@@ -377,6 +377,16 @@ Regla general que sale de las cuatro: medir el período de cada estructura en **
 **en todas las direcciones** hasta los bordes de la pantalla más ancha, y no dar por terminado un lado sin revisar
 los demás. Las escenas hermanas que usaron estas recetas se revisan con estas reglas al tocarlas.
 
+Propuesta 05/11 para 057, padre `853a5ffc4f8c4a7fb4b4e74567f12551`,
+envío `20261025-174207-290518`: «subida» se refiere al escalón local de las
+ventanas junto a la enredadera, con la contraparte que asciende hacia la
+derecha. No invertir la diagonal global. BG2 reutiliza un panel bajo de
+las columnas nativas 8..11 y luego el remate alto de las columnas 4..6,
+con desplazamientos que conservan `2*y+x`. Excluir la ventana pequeña
+aislada situada encima del donante bajo. La regla se aplica sólo a los
+píxeles adicionales del viewport; la cámara GBA usa sus entradas originales.
+La hija nueva queda pendiente de revisión y no hereda aprobación.
+
 
 ## Comentarios nuevos sobre arenas y Darkside 06 (usuario 24/10, 05:33-13:07 Chile; worker claude-sonnet-w3)
 
@@ -574,3 +584,7 @@ El usuario confirma: «me equivoque no habia castillo pero hacer bien el patron�
 ### Escena095: altura del seto derecho (revisión05/11)
 
 La valoración de823f028144a3479790a25691662112ec acepta el patrón pero pide unirlo a su altura. La medición nativa separa remate y frente: el frente floral mide56px, entre2y-x=-96y16; conservar los56pxinferiores del donante izquierdo (2sy+sx=2y-x+656) alinea base y flores. La banda superior2y-x=[-144,-96) continúa el remate recto nativo desdex464..479, preservando2sy-sx; excluirx496+ evita repetir la esquina de retorno. No cambiar las paletas nativas. Debajo de diagonal16 sigue el selector de suelo previo. No desplazar objetos únicos ni el centroGBA. La nueva propuesta muestra antes y solución en el mismo encuadre.
+
+### Escena057: matas completas y ritmo derecho (revisión05/11, rev6)
+
+El envío20261105-120210-7e4099 de492cc13fdc804300bda522bb466db5e4 indica «falta mitad de los pastos aun y la derecha aun». Las franjas estrechas cortaban otras matas aunque completasen una. Probar un bloque nativo completo96x64 (x0..95,y184..247) dentro de celdas128x96; sus bordes no contienen núcleo verde. Espacios con suelo limpio nativo16x16; omitir una mata cuyo núcleo cruzase la unión diagonal de pared. Conservar el mapa interior y retirar el traslado izquierdo que cortaba otra mata. El fragmento derecho original coincide1024/1024píxeles con x200..231,y128..159; completar desde la mata nativa de x192..255,y120..175. Ventanas derechas: repetir módulo12columnas bajo→alto con2y+x constante; excluir la ventana aislada superior y conservar enredadera, puerta, panel único y actores. Capturas EU0:57 en300/600 verifican las matas completas y el ritmo derecho; centro GBA y modo Original completo idénticos. Pendiente de valoración propia; referencias y simulación son internas.
