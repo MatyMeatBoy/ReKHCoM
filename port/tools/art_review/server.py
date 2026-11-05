@@ -184,6 +184,8 @@ class Store:
                           and not (n['cloud_ids'] and set(n['cloud_ids']) <= answered)]  # a general comment alone waits for a child
             if unanswered:
                 who, todo = 'agente', 'Responder cada envío con una versión hija (parent_id = image_id del envío) y su ficha'
+            elif latest.get('revision_info', {}).get('reference_only'):
+                who, todo = 'agente', 'Crear y verificar el arte desde la referencia nativa; todavía no está extendida'
             elif latest['status'] == 'pending':
                 who, todo = 'humano', 'Revisar la última versión'
             elif fam['build_version']:

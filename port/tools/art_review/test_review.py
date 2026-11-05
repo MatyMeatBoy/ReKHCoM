@@ -45,6 +45,14 @@ class ReviewTest(unittest.TestCase):
         self.store.save(child)
         self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
 
+    def test_native_reference_waits_for_artist(self):
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        self.store.add(raw.getvalue(), 'Escena nueva', 'Referencia nativa',
+                       revision_info={'reference_only': True})
+        row = next(row for row in self.store.queue() if row['title'] == 'Escena nueva')
+        self.assertEqual(row['turn'], 'agente')
+
     def test_reference_child_does_not_answer_requested_art(self):
         self.a['general'] = 'Completar extensión'
         self.a = self.store.save(self.a)
