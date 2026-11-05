@@ -3376,13 +3376,13 @@
     "atlas-remates-120-r20261025": {
       "id": "atlas-remates-120-r20261025",
       "piece": "Escena 120 comentarios posteriores",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas120-final",
       "created_at": "2026-10-25T16:07:46.868932+00:00",
-      "updated_at": "2026-11-05T17:19:18.025164+00:00",
+      "updated_at": "2026-11-05T19:25:53.325609+00:00",
       "branch": "art/atlas-scene120-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/584",
-      "approval": null,
+      "approval": "Atlas 9f28568fabd94b7c8526615a7b2b6abf revision5 approved SHA256 206dfb152f5ee54ba94e1e6c9796b228755fc2aeb465df112a99ab1efc37e050; build_version accepted; usuario05/11 integra todos",
       "reference": "familia e15f20f324a742eaa9b98cde42603751; envio 20261025-053259-028e37; parent 1c523468e4fb4d83965c0ef8ba292842",
       "evidence": [
         {
@@ -3404,10 +3404,16 @@
           "at": "2026-11-05T17:19:18.025164+00:00",
           "owner": "codex-atlas120-final",
           "detail": "HEAD68bf519507916cb4ec70a93781a08a5e60b35420; exactparente50805fc25d04bcda7a259b2fee2848b rev8 envio20261105-120135-20af7d general+4doodles, childpendingrev0. NativeROMdistinctrightplane176 vsfront208; rightdonor128..143 onlyoutside256x256. Before/solutionruntime900sameScale3. MiniCREDoldrightdonor then3GREEN diagonal+Jiminy4+Hook3.4serialEUprocessesexit0,8pairs180300600900 Originalfullidentical/ExtendedGBAcoreidentical. Onlyrightupperwallbboxchanges. Builds samecurrentPPUwithheaderA/B;reuse356readonlyobjects,notfullmainbuild. SCENE120-DIAGONAL-SOURCE-PROVENANCE.json and SCENE120-DIAGONAL-RUNTIME-CHECKS.json. PR584draftupdated, pendinghumanrating/integration; no inheritedapproval."
+        },
+        {
+          "at": "2026-11-05T19:25:53.325609+00:00",
+          "owner": "codex-atlas120-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR584 MERGED por ancestria exacta source68bf519507916cb4ec70a93781a08a5e60b35420. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-9f28568f-r5; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-10-25T16:07:55.659622+00:00",
-      "sent": "9f28568fabd94b7c8526615a7b2b6abf"
+      "sent": "9f28568fabd94b7c8526615a7b2b6abf",
+      "completed_at": "2026-11-05T19:25:53.325609+00:00"
     },
     "malefica-01-feedback-revision": {
       "id": "malefica-01-feedback-revision",
@@ -16105,7 +16111,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:25:45.241592+00:00",
+  "updated_at": "2026-11-05T19:25:53.325609+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
