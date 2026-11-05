@@ -501,3 +501,8 @@ Comentario `645a6367-a9da-41c7-8744-3c9912a507ea`: repetir los candelabros con e
 05/11 valoración posterior:061/13c87f6282a540f5a71e623a1e7a39b8 y116/70f9813c59f54b7bbea891732a8d8d6a aprobadas sin comentarios nuevos. Capturas runtime verificadas y fuentes exactas preservadas; las notas de propuesta offline anteriores son históricas. La activación sigue la política accepted/build_version vigente de Atlas (regla25/10: aprobado o con honores encendido).
 
 05/11 valoración117:135be7d86bf949128c6d0d407b4b6433 aprobada sin notas nuevas. Tres cajas completas y cubierta diagonal verificadas en cuatro pares runtime; se conserva exactamente la receta mostrada, sin extender esta aprobación a otros candidatos.
+
+
+### Escena118: entrada de Garfio y su sombra, aprobada05/11
+
+La versión69387af132a14bbeb8c92d136cf02d44 fue aprobada sin notas nuevas. Garfio usa su paleta y rol independiente3, no un slotOAM reciclado por el grupo; la sombra común sigue su estado y no puede desbloquearlo. Sólo se oculta estando entero fuera antes de entrar: conservar Original completo y permitir continuidad tras entrada. Ocho pares runtime confirmados EVENT118 menú0:117, no el control descartado de119. Esta regla no da por aprobadas las propuestas de otros actores o escenas.
