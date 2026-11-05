@@ -11,6 +11,20 @@
 static inline int PortScene057TileSource(int bg, int* x, int* y) {
     if (bg != 2 && bg != 3)
         return 0;
+    /* Counterpart to the authored left-hand window step. Keep the short
+     * panel beside the vine, then raise its cap toward the right. These
+     * strips share 2*y+x with their donors; no global slope is reversed.
+     * ExtendedWorldEntry applies this only to the extra viewport pixels. */
+    if (bg == 2 && *x >= 28 && *x < 32 && *y >= -8 && *y < 8) {
+        int sy = *y + 10;
+        if (sy < 8) { *x = 0; *y = 0; } /* exclude the donor's isolated upper window */
+        else { *x -= 20; *y = sy; }
+        return 1;
+    }
+    if (bg == 2 && *x >= 32 && *x < 35 && *y >= -8 && *y < 8) {
+        *x -= 28; *y += 14;
+        return 1;
+    }
     if (*y < 0) {
         if (bg == 2 && 2 * *y + *x < 16) {
             /* Upper padding is clear: never repeat a partial window/vine. */

@@ -362,6 +362,16 @@ Regla general que sale de las cuatro: medir el período de cada estructura en **
 **en todas las direcciones** hasta los bordes de la pantalla más ancha, y no dar por terminado un lado sin revisar
 los demás. Las escenas hermanas que usaron estas recetas se revisan con estas reglas al tocarlas.
 
+Propuesta 05/11 para 057, padre `853a5ffc4f8c4a7fb4b4e74567f12551`,
+envío `20261025-174207-290518`: «subida» se refiere al escalón local de las
+ventanas junto a la enredadera, con la contraparte que asciende hacia la
+derecha. No invertir la diagonal global. BG2 reutiliza un panel bajo de
+las columnas nativas 8..11 y luego el remate alto de las columnas 4..6,
+con desplazamientos que conservan `2*y+x`. Excluir la ventana pequeña
+aislada situada encima del donante bajo. La regla se aplica sólo a los
+píxeles adicionales del viewport; la cámara GBA usa sus entradas originales.
+La hija nueva queda pendiente de revisión y no hereda aprobación.
+
 
 ## Comentarios nuevos sobre arenas y Darkside 06 (usuario 24/10, 05:33-13:07 Chile; worker claude-sonnet-w3)
 
