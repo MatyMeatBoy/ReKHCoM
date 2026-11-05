@@ -624,3 +624,12 @@ La valoración de823f028144a3479790a25691662112ec acepta el patrón pero pide un
 ### Escena057: matas completas y ritmo derecho (revisión05/11, rev6)
 
 El envío20261105-120210-7e4099 de492cc13fdc804300bda522bb466db5e4 indica «falta mitad de los pastos aun y la derecha aun». Las franjas estrechas cortaban otras matas aunque completasen una. Probar un bloque nativo completo96x64 (x0..95,y184..247) dentro de celdas128x96; sus bordes no contienen núcleo verde. Espacios con suelo limpio nativo16x16; omitir una mata cuyo núcleo cruzase la unión diagonal de pared. Conservar el mapa interior y retirar el traslado izquierdo que cortaba otra mata. El fragmento derecho original coincide1024/1024píxeles con x200..231,y128..159; completar desde la mata nativa de x192..255,y120..175. Ventanas derechas: repetir módulo12columnas bajo→alto con2y+x constante; excluir la ventana aislada superior y conservar enredadera, puerta, panel único y actores. Capturas EU0:57 en300/600 verifican las matas completas y el ritmo derecho; centro GBA y modo Original completo idénticos. Pendiente de valoración propia; referencias y simulación son internas.
+
+### Escena112: dueño de la sombra, propuesta05/11
+
+La sombra de espera de Aladdín/Genio debe usar el dueño real de su tarea de
+dibujo, no el espacio OAM reutilizable ni proximidad al cuerpo flotante.
+Etiquetar sólo EVENT112 tracks3/4, restableciendo el contexto tras la emisión.
+La sombra nunca desbloquea al actor; las sombras del resto del grupo se dibujan
+normalmente. El marco actual conserva su donante y80 y se comprueba durante los
+cambios de cámara. Propuesta nueva pendiente, sin aprobación heredada.

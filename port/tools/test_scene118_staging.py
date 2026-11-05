@@ -26,6 +26,7 @@ static int sceneActorId=118;static unsigned sActorSceneFrames;static unsigned ch
 #define GBA_SCREEN_W 240
 #define GBA_SCREEN_H 160
 static struct {const void*palette;const void*tiles;}sOamHd[1];
+static struct {unsigned char eventShadowActor;}sOamTag[1];
 '''+arrays+r'''
 static int Role(const void*p){int i=0;sOamHd[0].palette=p;
 '''+role+r'''

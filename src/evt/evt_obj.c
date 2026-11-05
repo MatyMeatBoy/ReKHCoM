@@ -18,6 +18,9 @@
 #include "taskpool.h"
 #include "types.h"
 #include "sprite_palettes.h"
+#ifdef PLATFORM_PC
+#include "event_ids.h"
+#endif
 #include "engine_math.h"
 
 static TaskDesc sTaskDescEvtObj = {
@@ -202,7 +205,19 @@ void task_evt_shadow_2(EvtShadowWork* work) {
 
     x = (obj->x >> 8) - (gEventState->x >> 8);
     y = (obj->y >> 8) + (obj->groundZ >> 8) - (gEventState->y >> 8);
+#ifdef PLATFORM_PC
+    /* The floating Genie's body and ground shadow have different Y origins.
+     * Carry the real owner through emission rather than guessing from OAM
+     * slots or nearby sprites. Other event shadows keep their existing rule. */
+    PortSpriteEventShadowOwner(
+        (gEventState->eventId & 0x7FFF) != EVENT_112_AGRABAH_E3 ? 0 :
+        obj == gEventState->charaObjs[3] ? 2 :
+        obj == gEventState->charaObjs[4] ? 3 : 0);
+#endif
     DrawSprite(x, y, gfx, vram, work->palette, sprite, obj->drawFlags, 0xFFF0);
+#ifdef PLATFORM_PC
+    PortSpriteEventShadowOwner(0);
+#endif
 }
 
 void task_evt_shadow_3(EvtShadowWork* work) {

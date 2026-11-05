@@ -562,6 +562,7 @@ typedef struct SpriteTag {
     uint8_t header; /* a menu header (DrawMenuHeader) */
     uint8_t hdHudPart; /* HD enemy panel: frame, cap, live bar */
     uint8_t digit;
+    uint8_t eventShadowActor; /* exact owner supplied by the event shadow task */
     int16_t ayq; /* ay 3 only */
     int16_t clipX0, clipX1; /* x0==x1: no clip; coordinates include docking shift */
     int16_t anchorX, anchorY; /* exact emitted SpriteEntry origin, before part offsets */
@@ -570,6 +571,11 @@ typedef struct SpriteTag {
 static SpriteTag sEntryTag[128];
 static SpriteTag sOamTag[PORT_OAM_CAPACITY];
 static int sSpriteClipX0, sSpriteClipX1;
+static uint8_t sEventShadowActor;
+
+void PortSpriteEventShadowOwner(int role) {
+    sEventShadowActor = role >= 1 && role <= 3 ? (uint8_t)role : 0;
+}
 
 void PortSpriteClipX(int x0, int x1) {
     sSpriteClipX0 = x0;
@@ -789,6 +795,7 @@ void PortSpriteTag(int entry) {
         sEntryTag[entry].header = gPortHeaderDraw != 0;
         sEntryTag[entry].hdHudPart = (uint8_t)gPortHdHudPart;
         sEntryTag[entry].digit = (uint8_t)gPortHudDigit;
+        sEntryTag[entry].eventShadowActor = sEventShadowActor;
         sEntryTag[entry].clipX0 = (int16_t)sSpriteClipX0;
         sEntryTag[entry].clipX1 = (int16_t)sSpriteClipX1;
     }
@@ -2735,8 +2742,8 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 112 || sOamHd[i].palette == gAladdinPalette ||
-                sOamHd[i].palette == gGeniePalette || sOamHd[i].tiles == gBtlShadowTiles ||
-                sOamHd[i].tiles == gBtlShadowSmallTiles || sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+                sOamHd[i].palette == gGeniePalette ||
+                (sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3)) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
@@ -2754,20 +2761,25 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
             int maleficentShadow=sceneActorId==130 && sOamHd[i].palette!=gMarefPalette;
+            /* This byte occupied padding in old checkpoints. Only the two
+             * emitted roles are valid; never index actor state with padding. */
+            int eventShadow = sceneActorId == 112 &&
+                sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3;
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
+                eventShadow ? sOamTag[i].eventShadowActor - 1 :
                 sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 :
                 sceneActorId == 120 && (sOamHd[i].palette == gJiminyPalette || jiminyShadow) ? 4 :
                 sceneActorId == 130 ? 5 : -1;
             unsigned char* entered = actor >= 0 ? &sStagedActorEntered[actor] : &sActorEntered[i];
             /* Shared party shadows must neither unlock Hook nor inherit an
              * OAM slot that a party member already brought into the frame. */
-            if (!hookShadow && !jiminyShadow && !maleficentShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
+            if (!hookShadow && !jiminyShadow && !maleficentShadow && !eventShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0) {
                 /* The first render can precede the authored camera placement.
                  * Preserve its native pixels without unlocking a staged actor. */
-                if (!hookShadow && !jiminyShadow && !maleficentShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
+                if (!hookShadow && !jiminyShadow && !maleficentShadow && !eventShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
             }
             else if (!*entered)
                 continue;
