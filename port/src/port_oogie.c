@@ -9,13 +9,14 @@
  *    ledge and panel of the gap between two counters);
  *  - above, the pillars and the two plain brick rows go on up;
  *  - in front, complete one cut green motif beside each edge, then leave an abyss. The authored half supplies
- *    its reflected missing tip; no green field is tiled across the margins;
+ *    hand-drawn missing contour inside widening green planes; the abyss stays outside;
  *  - below, the path: its white lines go on along their slopes (measured on rows 408..470), the black teeth of the
- *    red follow their line, the carpet continues in plain red; the two green tips taper down into shadow.
+ *    red follow their line and the carpet continues in plain red. Side planes use the live native green.
  * Source tiles stay in the user's ROM; palette indices resolved live (the game's fades are kept). */
 #include <stdlib.h>
 #include "port/port.h"
 #include "port/port_battle_backdrop.h"
+#include "port/port_oogie_motifs.h"
 
 extern const uint16_t gBosBoogieBgMaps[]; /* [0]: the room's lower block, [1] (0x400 entries on): its upper block */
 extern const uint8_t gBosBoogieBgTiles[];
@@ -85,26 +86,49 @@ static int PathIndex(int x, int y) {
     return RoomIndex(sx, ys);
 }
 
-/* Complete one motif beside each edge of the authored floor, then void.
- * Reflect the cut half only once; never tile the green field across the abyss. */
+/* The two side planes widen independently of the approved central path.
+ * Their outer white rims use the clean native rail ramp, never a reflected figure. */
 static int FloorMotifIndex(int x, int y) {
-    int sx = x, sy = y;
-    if (y >= 472) {
-        int depth = y - 472, centre = x < 376 ? 272 : 479;
-        int half = 48 - depth;
-        if (half <= 0 || abs(x - centre) >= half)
-            return 0;
-        sx = centre + (x - centre) * 48 / half;
-        sy = 471 - depth;
+    float depth, left, right, width, t;
+    int sx, offset, packed, index;
+    if (y < 408) {
+        /* Preserve the authored upper cap beside the room. */
+        sx = x;
+        if (sx < ROOM_X) {
+            if (sx < ROOM_X - 32) return 0;
+            sx = 2 * ROOM_X - 1 - sx;
+        } else if (sx >= ROOM_X + ROOM_COLS * 8) {
+            if (sx >= ROOM_X + ROOM_COLS * 8 + 32) return 0;
+            sx = 2 * (ROOM_X + ROOM_COLS * 8) - 1 - sx;
+        }
+        return RoomIndex(sx, y);
     }
-    if (sx < ROOM_X) {
-        if (sx < ROOM_X - 32) return 0;
-        sx = 2 * ROOM_X - 1 - sx;
-    } else if (sx >= ROOM_X + ROOM_COLS * 8) {
-        if (sx >= ROOM_X + ROOM_COLS * 8 + 32) return 0;
-        sx = 2 * (ROOM_X + ROOM_COLS * 8) - 1 - sx;
+    depth = (float)(y - 408);
+    left = 239.0f - 0.57f * depth;
+    right = 751.0f - left;
+    width = 14.0f + 0.1f * depth;
+    if ((float)x < left - width * 0.5f || (float)x > right + width * 0.5f)
+        return 0;
+    if ((float)x <= left + width * 0.5f || (float)x >= right - width * 0.5f) {
+        t = (float)x <= left + width * 0.5f ?
+            ((float)x - (left - width * 0.5f)) / width :
+            (right + width * 0.5f - (float)x) / width;
+        sx = (int)(t * 20.0f);
+        if (sx < 0) sx = 0;
+        if (sx > 19) sx = 19;
+        return RoomIndex(295 + sx, 456);
     }
-    return RoomIndex(sx, sy);
+    if (y < 488 && ((x >= 224 && x < 296) || (x >= 456 && x < 528))) {
+        int isLeft = x < 376;
+        offset = (y - 408) * 72 + x - (isLeft ? 224 : 456);
+        packed = (isLeft ? kOogieLeftMotif : kOogieRightMotif)[offset / 2];
+        index = (packed >> ((offset & 1) * 4)) & 15;
+        if (index) return 144 + index;
+    }
+    if (y == 408) return 146;
+    if (y == 409) return 157;
+    if (y == 410) return 158;
+    return 159;
 }
 
 static int HallIndex(int x, int y) {
@@ -141,15 +165,5 @@ int PortOogieHallPixel(int x, int y, int cx, int cy, uint16_t* color) {
         return 0; /* the room as the cartridge draws it */
     index = HallIndex(mx, my);
     *color = index ? ((const uint16_t*)(uintptr_t)GBA_PLTT)[index] & 0x7FFF : 0x8000;
-    if (index && my >= 472 && PathIndex(mx, my) < 0) {
-        /* The two completed tips descend into shadow, rather than exposing
-         * another band of patterned floor below the room. */
-        int light = 48 - (my - 472);
-        unsigned c = *color;
-        if (light < 0) light = 0;
-        *color = (uint16_t)(((c & 31) * light / 48) |
-            ((((c >> 5) & 31) * light / 48) << 5) |
-            ((((c >> 10) & 31) * light / 48) << 10));
-    }
     return 1;
 }
