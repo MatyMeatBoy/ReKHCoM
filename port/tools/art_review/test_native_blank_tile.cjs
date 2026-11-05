@@ -1,0 +1,21 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const source = fs.readFileSync(__dirname + '/web/editor.js', 'utf8');
+const prefix = source.slice(0, source.indexOf('function drawTile'));
+const selection = source.slice(source.indexOf('function selectBrush()'), source.indexOf('pal.onpointerdown'));
+vm.runInNewContext(prefix + selection + `
+const ts = {firstgid:1, tilecount:3, columns:3, non_donor_tileids:[2]};
+state.project = {map:{tilesets:[ts]}};
+assert.equal(isRomDonor(1), true);
+assert.equal(isRomDonor(3), false);
+assert.equal(isRomDonor((3 | FLIP_H) >>> 0), false);
+state.brush = {w:1,h:1,data:[1]};
+state.sel = {x0:2,y0:0,x1:2,y1:0,ts};
+selectBrush();
+assert.deepEqual(state.brush.data, [1]);
+state.sel = {x0:0,y0:0,x1:1,y1:0,ts};
+selectBrush();
+assert.deepEqual(state.brush.data, [1,2]);
+`, {assert, document:{getElementById:()=>({})}, setTool:()=>{}, renderBrush:()=>{}, renderPalette:()=>{}});
+console.log('ROM donor palette selection: PASS');
