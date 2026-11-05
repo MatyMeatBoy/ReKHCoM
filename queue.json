@@ -4740,13 +4740,13 @@
     "atlas-115-hatch-spacing": {
       "id": "atlas-115-hatch-spacing",
       "piece": "Escena 115: menos escotillas y limpiar borde",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:29.570680+00:00",
-      "updated_at": "2026-11-05T16:42:17.749363+00:00",
+      "updated_at": "2026-11-05T19:26:21.710587+00:00",
       "branch": "art/atlas-scene115-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/576",
-      "approval": null,
+      "approval": "Atlas 1bf2e47af7fa4b2fa02599248052a27a revision4 approved SHA256 78f75648b1f8c3189084e75bd81f8e703e7feb62ca6514d83346a79e5f425a29; build_version accepted; usuario05/11 integra todos",
       "reference": "20261025-025012-8a510c",
       "evidence": [
         {
@@ -4778,10 +4778,16 @@
           "at": "2026-11-05T16:42:17.749363+00:00",
           "owner": "codex-atlas-final",
           "detail": "Nueva receta7e90f8cc0YAverificadaEU32:2runs zoom3/2 y4pares300600 núcleoigual. ComparativaREALANTES/SOLUCIÓN1bf2e47af7fa4b2fa02599248052a27a exacthija32da... Storeactivo. Donante64x40entero, C/DLL1402fallosanteriores->0,sinfragmentosinterioresporwrap,píxelesnativosmapa/solapesexactos. Pendientevaloración,sinintegrar,nocertificarotrosdefectosniplataformas."
+        },
+        {
+          "at": "2026-11-05T19:26:21.710587+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR576 MERGED por ancestria exacta source7e90f8cc0d56ff311e4a7eaa11e9946a3c53120d. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-1bf2e47a-r4; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T12:01:24.736371+00:00",
-      "sent": "1bf2e47af7fa4b2fa02599248052a27a"
+      "sent": "1bf2e47af7fa4b2fa02599248052a27a",
+      "completed_at": "2026-11-05T19:26:21.710587+00:00"
     },
     "atlas-116-hull-edge": {
       "id": "atlas-116-hull-edge",
@@ -16123,7 +16129,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:12.073693+00:00",
+  "updated_at": "2026-11-05T19:26:21.710587+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
