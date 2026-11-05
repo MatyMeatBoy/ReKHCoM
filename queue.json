@@ -4007,9 +4007,9 @@
       "id": "rev-six-oogie",
       "piece": "Oogie alfombra yfantasmas",
       "status": "en_curso",
-      "owner": "codex-atlas-final",
+      "owner": "codex-atlas-oogie-final",
       "created_at": "2026-10-26T00:07:38.304381+00:00",
-      "updated_at": "2026-11-05T16:01:34.984824+00:00",
+      "updated_at": "2026-11-05T16:24:19.462970+00:00",
       "branch": "codex/atlas-rev-six-turbo",
       "pr": null,
       "approval": null,
@@ -4024,6 +4024,11 @@
           "at": "2026-11-05T16:01:34.984824+00:00",
           "owner": "codex-atlas-final",
           "detail": "Usuario05/11 arenasYAHECHAS pideproponermejorasperspectivaTrickmasterdonde falte. Tarea26/10sinworktreeactivo, gitworktreelistúnicoscarriles087110130parent095115; antiguasramasbackupconservadas. PR130CLOSEDsinmerge confirmado; aa913baseaprobadaactivaPR510 sepreserva. Retomarsólofeedbackpendiente677876e57b1441dc856caa8847f84487/doodles flancosverdes ybordes, conantes/solución; sinreferenciasAtlasnuevas."
+        },
+        {
+          "at": "2026-11-05T16:24:19.462970+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Handoff explicito parent05/11: cede checkout limpio atlas-oogie-perspective/art/atlas-oogie-perspective sin fuenteseditadas. Reasignacion autorizada ownercodex-atlas-final a codex-atlas-oogie-final para mejorarflancos677876 preservandorojoaa913; unicoheavyporventana, refs internas y antes/solucion."
         }
       ],
       "claimed_at": "2026-10-26T00:07:43.596948+00:00",
@@ -15737,7 +15742,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:20:53.778452+00:00",
+  "updated_at": "2026-11-05T16:24:19.462970+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16978,6 +16983,16 @@
       "to_owner": "codex-atlas-final",
       "expected_commit": "2fc6421c5ef195a2265ae8b017101c9012c51c0d",
       "evidence": "Usuario05/11 arenasYAHECHAS pideproponermejorasperspectivaTrickmasterdonde falte. Tarea26/10sinworktreeactivo, gitworktreelistúnicoscarriles087110130parent095115; antiguasramasbackupconservadas. PR130CLOSEDsinmerge confirmado; aa913baseaprobadaactivaPR510 sepreserva. Retomarsólofeedbackpendiente677876e57b1441dc856caa8847f84487/doodles flancosverdes ybordes, conantes/solución; sinreferenciasAtlasnuevas."
+    },
+    {
+      "at": "2026-11-05T16:24:19.462970+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "rev-six-oogie",
+      "from_owner": "codex-atlas-final",
+      "to_owner": "codex-atlas-oogie-final",
+      "expected_commit": "8b6606e8596509dcd9aedcf8cc4d735aa7583ad4",
+      "evidence": "Handoff explicito parent05/11: cede checkout limpio atlas-oogie-perspective/art/atlas-oogie-perspective sin fuenteseditadas. Reasignacion autorizada ownercodex-atlas-final a codex-atlas-oogie-final para mejorarflancos677876 preservandorojoaa913; unicoheavyporventana, refs internas y antes/solucion."
     }
   ]
 }
