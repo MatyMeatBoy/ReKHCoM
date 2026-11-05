@@ -336,10 +336,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_revision",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-atlas-final",
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-10-25T20:35:00.272396+00:00",
+      "updated_at": "2026-11-05T13:53:04.543468+00:00",
       "branch": "codex/atlas057-turbo-current",
       "pr": null,
       "approval": null,
@@ -409,6 +409,11 @@
           "at": "2026-10-25T20:35:00.272396+00:00",
           "owner": "codex-atlas",
           "detail": "Seisnubes atendidas con propuesta de modulosmadera8filas ypastocompleto8columnas. CapturasEU3440x1440 frames300/600; pendientevaloracion."
+        },
+        {
+          "at": "2026-11-05T13:53:04.543468+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Usuario05/11 ordena procesar toda cola Atlas. Carril histórico atlas057-turbo-current sin worktree vigente; gitworktreelist comprobado, PRnoasignadoencola; conserva backupbranch. ÚnicochatKHtrabajoactual, agentes actuales118/120/editor/coverage coordinados, ninguno057. Recuperación explícita del pendiente de dos subidas aún sin respuesta."
         }
       ],
       "claimed_at": "2026-10-24T22:04:36.748590+00:00",
@@ -15404,7 +15409,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:52:18.993480+00:00",
+  "updated_at": "2026-11-05T13:53:04.543468+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16615,6 +16620,16 @@
       "to_owner": "codex-atlas120-final",
       "expected_commit": "9a328c69c9844d1dd1b8b788b7d694cbe3015d2f",
       "evidence": "Handoff autorizado coordinador 2026-11-05: auditoria previa confirma unica sesion KH activa; git worktree list actual sin remates120 y gh pr list sin PR120 abierto. Ramas backup preservadas; carril propio barrels+diagonal sin builds simultaneas."
+    },
+    {
+      "at": "2026-11-05T13:53:04.543468+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "escena-057",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas-final",
+      "expected_commit": "7a4cdb3cef57854fbe5bedb5c58346a1b5d39261",
+      "evidence": "Usuario05/11 ordena procesar toda cola Atlas. Carril histórico atlas057-turbo-current sin worktree vigente; gitworktreelist comprobado, PRnoasignadoencola; conserva backupbranch. ÚnicochatKHtrabajoactual, agentes actuales118/120/editor/coverage coordinados, ninguno057. Recuperación explícita del pendiente de dos subidas aún sin respuesta."
     }
   ]
 }
