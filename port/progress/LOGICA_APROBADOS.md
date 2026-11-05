@@ -553,3 +553,7 @@ fuente `3bf6dd67275cad9332e35d2283a2cedba2c9db54`. Las filas externas
 sin lápidas ni otra coronación. El rebase conserva el bloque090 exacto.
 Cuatro pares runtime conservan el núcleo; Original completo idéntico.
 La aprobación corresponde exclusivamente a esta versión.
+
+### Escena057: matas completas y ritmo derecho (revisión05/11, rev6)
+
+El envío20261105-120210-7e4099 de492cc13fdc804300bda522bb466db5e4 indica «falta mitad de los pastos aun y la derecha aun». Las franjas estrechas cortaban otras matas aunque completasen una. Probar un bloque nativo completo96x64 (x0..95,y184..247) dentro de celdas128x96; sus bordes no contienen núcleo verde. Espacios con suelo limpio nativo16x16; omitir una mata cuyo núcleo cruzase la unión diagonal de pared. Conservar el mapa interior y retirar el traslado izquierdo que cortaba otra mata. El fragmento derecho original coincide1024/1024píxeles con x200..231,y128..159; completar desde la mata nativa de x192..255,y120..175. Ventanas derechas: repetir módulo12columnas bajo→alto con2y+x constante; excluir la ventana aislada superior y conservar enredadera, puerta, panel único y actores. Propuesta pendiente de runtime y valoración propia; referencias y simulación son internas.
