@@ -15586,10 +15586,10 @@
     "atlas-scene130-maleficent-staging": {
       "id": "atlas-scene130-maleficent-staging",
       "piece": "Escena130 Maléfica visible en márgenes antes de entrada: staging separado de extensión BG",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas130-staging",
       "created_at": "2026-11-05T14:21:36.019135+00:00",
-      "updated_at": "2026-11-05T15:34:51.689760+00:00",
+      "updated_at": "2026-11-05T16:12:21.751523+00:00",
       "branch": "fix/atlas-library130-extension",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
       "approval": "Usuario terminar todos los artes; parent solicita registrar defecto exacto 05/11",
@@ -15599,9 +15599,15 @@
           "at": "2026-11-05T15:34:51.689760+00:00",
           "owner": "codex-atlas130-staging",
           "detail": "WIP source only plus tested preview. Realpalette gMarefPalette; role5 arrays6; exactregional EVENT130enum(EU128); shadowassociation via sameSpriteEntryanchor capturedinPortOamSetSource, not proximity/recycledslot. InitialextractedCtestsPASS; fullPPUspill/state+206i686oraclesPASS; preview130staging356readonlyobjsPASS. Clockprobe3000done; finalWideBEFORE18frames done exactclock seq1099/1100/1101 etc, firstnativeinkaboutseq1160. FinalSOLUTION andOriginal pendingRAMguard1400, notclaimedruntimefixed or final. Evidence pruebas/atlas-final-20261105/SCENE130-STAGING-WIP.md. NoAtlasnewdeliveryyet; mustuseACTIVEStorecode_dir toretaininternalrefs policy andNEWchild ofe58f861b8d1e44248852242d2f437d36 before+solution."
+        },
+        {
+          "at": "2026-11-05T16:12:21.751523+00:00",
+          "owner": "codex-atlas130-staging",
+          "detail": "Final source cd8420bfa210230ad0615e5f931c1754165e7d8b, draft PR587. New pending Atlas child 2935ad4bfddd42c886b86e3c90211827 of e58f861b8d1e44248852242d2f437d36; clean Before/Solution frames600/2500, same scale; active Store used and served image hash exact. 36 central cuts and 18 complete Original game viewports exact, sequence clocks/positions exact; only diagnostic badge in physical letterbox differed in probe, NOT whole presentation equality. Five clean pairs300/600/2430/2435/2500 pass; only actor/shadow region changed vs prior recipe at300/600. Stable role5 arrays6, exact SpriteEntry owner anchor, Hook3 preserved after main merge. Combined4tests130/118/registry and PPU build PASS; 206 native oracles PASS PREMERGE ONLY, repeat blocked by1400MiB guard. Four captured130/tag functions SHA exact after main merge. Evidence pruebas/atlas-final-20261105/LIBRARY130-STAGING-NATIVE-CHECKS.json,LIBRARY130-CLEAN-SOLUTION-CHECKS.json,LIBRARY130-BLOCKS-COMBINED.json. Human rating pending; no merge/install/releases/original mutations."
         }
       ],
-      "claimed_at": "2026-11-05T14:53:08.293677+00:00"
+      "claimed_at": "2026-11-05T14:53:08.293677+00:00",
+      "sent": "2935ad4bfddd42c886b86e3c90211827"
     },
     "atlas087-final-border-patterns": {
       "id": "atlas087-final-border-patterns",
@@ -15696,7 +15702,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:01:34.984824+00:00",
+  "updated_at": "2026-11-05T16:12:21.751523+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
