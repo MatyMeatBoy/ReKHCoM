@@ -3056,11 +3056,11 @@
       "status": "en_curso",
       "owner": "codex-atlas107-final",
       "created_at": "2026-10-25T16:03:24.879479+00:00",
-      "updated_at": "2026-11-05T17:34:15.926538+00:00",
-      "branch": "codex/atlas-escenas-107-108",
+      "updated_at": "2026-11-05T17:35:18.200518+00:00",
+      "branch": "art/atlas-agrabah107-final",
       "pr": null,
       "approval": null,
-      "reference": "../khcom-claude-int/build/atlas-all-briefs.json; parent=e0779d8a9f5f4eea9eb73e9586505a03; cloud=c52f925b-a3e9-4b93-91de-0278ce105866",
+      "reference": "Atlas34f9930dc77e48dabb91cd71e453e1f2 rev3; envio20261025-214640-5760ac; comparar aprobadoe0779d8a9f5f4eea9eb73e9586505a03",
       "evidence": [
         {
           "at": "2026-10-25T16:05:16.065210+00:00",
@@ -3081,6 +3081,11 @@
           "at": "2026-11-05T17:34:15.926538+00:00",
           "owner": "codex-atlas-final",
           "detail": "Retoma explicita05/11 tras concluir112PR594. No agente107/108 ni checkout asociado activo; rama historica y evidencia conservadas. Padre humano34f9930rev3 roof/cornice; consultar aprobadoe077 y controlesactuales antes modificar. Nuevo checkout main30e1f47fe."
+        },
+        {
+          "at": "2026-11-05T17:35:18.200518+00:00",
+          "owner": "codex-atlas107-final",
+          "detail": "Checkout propio main30e1f47fe limpio; lectura pendiente de 3 nubes de techo/cornisa, preservar pilastras/ventana Genio ya aprobadas. Ninguna edicion de producto antes diagnosticoROM/capturas. Solo ligero durante sintesis."
         }
       ],
       "claimed_at": "2026-10-25T16:03:30.914656+00:00",
@@ -15852,7 +15857,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:34:41.580872+00:00",
+  "updated_at": "2026-11-05T17:35:18.200518+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
