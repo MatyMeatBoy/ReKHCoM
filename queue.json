@@ -15899,13 +15899,13 @@
     "atlas-synthesis-outline-reference-20261105": {
       "id": "atlas-synthesis-outline-reference-20261105",
       "piece": "Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-synthesis-final",
       "created_at": "2026-11-05T14:55:35.794311+00:00",
-      "updated_at": "2026-11-05T17:55:32.707059+00:00",
+      "updated_at": "2026-11-05T19:26:59.315471+00:00",
       "branch": "art/atlas-synthesis-outline-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/595",
-      "approval": "Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline",
+      "approval": "Atlas 8fc06e77f2494657ae11c5437d1e1845 revision1 approved SHA256 4559ae919d5edc6795d32372eb2ba628c028ee5514f7699bdd4bbc849c888198; build_version accepted; usuario05/11 integra todos",
       "reference": "823cdf38241144b1b282bcf3f2532120",
       "evidence": [
         {
@@ -15927,10 +15927,16 @@
           "at": "2026-11-05T17:55:32.707059+00:00",
           "owner": "codex-atlas-synthesis-final",
           "detail": "HEAD dd8bf656d2f3306cf637e92908ffd740b80c5fe6. Pending child rev0 responds to exact parent823cdf38241144b1b282bcf3f2532120 rev12, submission20261025-160926-638293 general. Runtime ANTES/PROPUESTA with small credited official PS3HD manual reference (PDF21,40/41), no exact PC layout claim. Tests RED7->GREEN4 and405fallback check PASS. Private405ReCom stage, canonical900unchanged and495otherfiles unchanged.10serialEUprocesses exit0,40pairs: HDofffullidentical; HDon changes only requirementROI. Natural normalexe; controlled red/green/blue fixture InitEventKeyCard and TOTAL10->9; no natural payment claim. Single QA object and356readonly releaseobjects, nofullbuild/nativeimport/otherplatform claim. SOURCE-PROVENANCE.json,RUNTIME-VERIFIED.json,PRESERVATION-AFTER-RUNTIME.json under synthesis-reference. Draft pending human rating/integration; parent unchanged, no inherited approval."
+        },
+        {
+          "at": "2026-11-05T19:26:59.315471+00:00",
+          "owner": "codex-atlas-synthesis-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR595 MERGED por ancestria exacta sourcedd8bf656d2f3306cf637e92908ffd740b80c5fe6. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento sin comentarios nuevos; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T17:20:11.189599+00:00",
-      "sent": "8fc06e77f2494657ae11c5437d1e1845"
+      "sent": "8fc06e77f2494657ae11c5437d1e1845",
+      "completed_at": "2026-11-05T19:26:59.315471+00:00"
     },
     "atlas-internal-references-before-after": {
       "id": "atlas-internal-references-before-after",
@@ -16153,7 +16159,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:51.534962+00:00",
+  "updated_at": "2026-11-05T19:26:59.315471+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
