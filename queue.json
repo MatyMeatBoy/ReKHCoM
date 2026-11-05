@@ -16014,6 +16014,19 @@
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"ee7aa74a63ef4b1e905f64828190f38d\", \"revision\": 2, \"sha256\": \"5971f1bf95f3e4d5a4d8ffe3e35eabe08b924f5acb46fa569f8709163e080132\", \"submissions\": [{\"submission\": \"20261105-160856-c7a1f6\", \"created\": \"2026-11-05T19:08:56.321143+00:00\", \"image_id\": \"ee7aa74a63ef4b1e905f64828190f38d\", \"version\": \"Propuesta05/11 - matas completas y ritmo derecho - ANTES / SOLUCION - PR585 draft\", \"clouds\": 1, \"cloud_ids\": [\"b9d8aa2c-e247-476b-8157-c87f7dd31cac\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160856-c7a1f6\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": []
+    },
+    "atlas-followup-dbe9d6b9-r3": {
+      "id": "atlas-followup-dbe9d6b9-r3",
+      "piece": "Escena 130 · Bastión Hueco · Biblioteca de Bella: seguimiento posterior a aprobación; falta completar diagonal de bajada de muro",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T19:23:26.000471+00:00",
+      "updated_at": "2026-11-05T19:23:26.000471+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "reference": "{\"image_id\": \"dbe9d6b92ba846cdad63111c28b3f3d8\", \"revision\": 3, \"sha256\": \"cc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73\", \"submissions\": [{\"submission\": \"20261105-161054-5d8ad4\", \"created\": \"2026-11-05T19:10:54.523072+00:00\", \"image_id\": \"dbe9d6b92ba846cdad63111c28b3f3d8\", \"version\": \"Propuesta 05/11 - antes y solucion - remate completo del zocalo\", \"clouds\": 1, \"cloud_ids\": [\"384e2436-5372-43be-bf60-f8039fa76afd\", \"071834f9-627b-4f20-b765-3210451ba487\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-161054-5d8ad4\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
     }
   },
   "integrator": {
@@ -16022,7 +16035,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:23:18.710880+00:00",
+  "updated_at": "2026-11-05T19:23:26.000471+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
