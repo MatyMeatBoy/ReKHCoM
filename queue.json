@@ -15988,6 +15988,19 @@
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"ab3444223b854341afa9ae521a0d2860\", \"revision\": 5, \"sha256\": \"c2aa6e93995400df66c41e894a6865b8ac140cdfea470d8bd3c812b7e87978fd\", \"submissions\": [{\"submission\": \"20261105-160609-47f012\", \"created\": \"2026-11-05T19:06:10.060626+00:00\", \"image_id\": \"ab3444223b854341afa9ae521a0d2860\", \"version\": \"Propuesta05/11 - remate continuo - ANTES / SOLUCION - PR580 draft\", \"clouds\": 3, \"cloud_ids\": [\"1c4adf23-115a-4d09-a547-1c2ddbdc4ec7\", \"388118ae-6acf-4020-9d3a-097212cfe6ce\", \"b680a64d-09bb-42bc-92d4-da441f3887f2\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160609-47f012\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": []
+    },
+    "atlas-followup-9f28568f-r5": {
+      "id": "atlas-followup-9f28568f-r5",
+      "piece": "Escena 120: seguimiento posterior a aprobación; diagonal ok, completar grabado; A; completar con patron A",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T19:23:11.611938+00:00",
+      "updated_at": "2026-11-05T19:23:11.611938+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "reference": "{\"image_id\": \"9f28568fabd94b7c8526615a7b2b6abf\", \"revision\": 5, \"sha256\": \"206dfb152f5ee54ba94e1e6c9796b228755fc2aeb465df112a99ab1efc37e050\", \"submissions\": [{\"submission\": \"20261105-160839-40fd46\", \"created\": \"2026-11-05T19:08:40.180232+00:00\", \"image_id\": \"9f28568fabd94b7c8526615a7b2b6abf\", \"version\": \"Propuesta05/11 \\u00b7 diagonal propia muro derecho \\u00b7 ANTES/PROPUESTA EU\", \"clouds\": 3, \"cloud_ids\": [\"65a0a5d0-2f82-4195-bcd2-8d52fbd5a59e\", \"5e3d3637-92fd-453d-938c-982f4d26a93a\", \"2157b004-8ed8-4d46-9791-996ba56951a9\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160839-40fd46\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
     }
   },
   "integrator": {
@@ -15996,7 +16009,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:23:04.599335+00:00",
+  "updated_at": "2026-11-05T19:23:11.611938+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
