@@ -4557,13 +4557,13 @@
     "atlas-095-castle": {
       "id": "atlas-095-castle",
       "piece": "Escena 095: recuperar un único castillo; no cerrado por árbol y flores",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas095-final",
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T16:57:43.734441+00:00",
+      "updated_at": "2026-11-05T19:26:12.073693+00:00",
       "branch": "art/atlas-scene095-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/580",
-      "approval": null,
+      "approval": "Atlas ab3444223b854341afa9ae521a0d2860 revision5 approved SHA256 c2aa6e93995400df66c41e894a6865b8ac140cdfea470d8bd3c812b7e87978fd; build_version accepted; usuario05/11 integra todos",
       "reference": "20261024-183308-2313ad",
       "evidence": [
         {
@@ -4610,10 +4610,16 @@
           "at": "2026-11-05T16:57:43.734441+00:00",
           "owner": "codex-atlas095-final",
           "detail": "Rebased PR580 onto main30e1f47fe: headcda6c1b54c6f7fadc3e7fabb4c4e7a00dd25f0da. Scene095 sourceblocks exact vsruntimece19; miniC PASSagain. PPU main-only117/118 changes,095gate unchanged. Existing pendingAtlasab3444223b854341afa9ae521a0d2860 preserved. REBASE-CHECKS.json evidence. Noapproval/integration."
+        },
+        {
+          "at": "2026-11-05T19:26:12.073693+00:00",
+          "owner": "codex-atlas095-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR580 MERGED por ancestria exacta sourcecda6c1b54c6f7fadc3e7fabb4c4e7a00dd25f0da. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento atlas-followup-ab344422-r5; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-11-05T12:49:51.945888+00:00",
-      "sent": "ab3444223b854341afa9ae521a0d2860"
+      "sent": "ab3444223b854341afa9ae521a0d2860",
+      "completed_at": "2026-11-05T19:26:12.073693+00:00"
     },
     "atlas-menu-font-evidence": {
       "id": "atlas-menu-font-evidence",
@@ -16117,7 +16123,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:26:03.756820+00:00",
+  "updated_at": "2026-11-05T19:26:12.073693+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
