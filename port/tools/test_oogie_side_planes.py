@@ -46,6 +46,9 @@ int main(void) {
     assert(PortOogieHallPixel(187,500,376,332,&color)&&color>=150&&color<=153);
     assert(PortOogieHallPixel(250,420,376,332,&color)&&color==146);
     assert(PortOogieHallPixel(503,445,376,332,&color)&&color==146);
+    /* The reviewed straight front rim reaches both viewport edges. */
+    for(y=400;y<408;y++)for(x=-1000;x<2000;x++)
+        assert(FloorMotifIndex(x,y)==RoomIndex(ROOM_X,y));
     for(y=408;y<800;y++) {
         assert(PortOogieHallPixel(-1000,y,376,332,&color)&&color==0x8000);
         assert(PortOogieHallPixel(2000,y,376,332,&color)&&color==0x8000);

@@ -676,3 +676,14 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Oogie: remates posteriores, propuesta sin build
+
+La revisión5 de `f3a2a2d29bdd45b5b040a9cca851edb4` conserva la arena y pide
+completar sólo media máscara, punta del fantasma y franja hacia los extremos.
+Los contornos anteriores no son modelo final de esas dos siluetas: la mandíbula
+izquierda necesita su continuidad y hueco; la punta exterior no debe cortarse.
+Las ocho filas400..407 son una franja horizontal nativa uniforme por fila, no
+parte de la figura: continuarlas con su índice vivo hacia los bordes en vez de
+cortarlas en el antiguo cap de32píxeles. Conservar cuarto, camino rojo y planos
+verdes. Nueva imagen etiquetada simulación sin build; falta valoración/runtime.
