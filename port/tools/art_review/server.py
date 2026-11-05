@@ -171,9 +171,9 @@ class Store:
         return result
 
     def queue(self):
-        """What every piece waits for, for whoever picks the work up: a submission whose image has no child version
-        created after it is unanswered (the agent's turn); a pending latest version is the human's turn; an ordinary
-        approval waits for the human's honours; an honours version is the one to integrate."""
+        """Explicit response_to entries answer only the named feedback; legacy children without that key
+        answer their whole parent submission. Pending versions wait for human review; accepted build_version
+        waits for integration if its exact recipe has not yet entered the game."""
         assets = self.all()
         by_id = {a['id']: a for a in assets}
         children = {}
@@ -203,7 +203,8 @@ class Store:
             versions = [by_id[i] for i in fam['version_ids'] if i in by_id]
             latest = versions[-1]
             unanswered = [n for i in fam['version_ids'] if (n := newest.get(i))
-                          and not any(c['created'] > n['created'] and not c.get('revision_info', {}).get('reference_only') for c in children.get(i, []))
+                          and not any(c['created'] > n['created'] and not c.get('revision_info', {}).get('reference_only')
+                                      and 'response_to' not in c.get('revision_info', {}) for c in children.get(i, []))
                           and not (not n['cloud_ids'] and (i,n['submission']) in answered_general)
                           and not (n['cloud_ids'] and set(n['cloud_ids']) <= answered)]  # a general comment alone waits for a child
             if unanswered:
