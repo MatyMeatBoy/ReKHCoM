@@ -16136,12 +16136,12 @@
     "atlas-followup-dbe9d6b9-r3": {
       "id": "atlas-followup-dbe9d6b9-r3",
       "piece": "Escena 130 · Bastión Hueco · Biblioteca de Bella: seguimiento posterior a aprobación; falta completar diagonal de bajada de muro",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas130-diagonal",
       "created_at": "2026-11-05T19:23:26.000471+00:00",
-      "updated_at": "2026-11-05T20:21:56.653679+00:00",
+      "updated_at": "2026-11-05T20:25:38.428381+00:00",
       "branch": "art/atlas130-diagonal-nobuild",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/604",
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"dbe9d6b92ba846cdad63111c28b3f3d8\", \"revision\": 3, \"sha256\": \"cc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73\", \"submissions\": [{\"submission\": \"20261105-161054-5d8ad4\", \"created\": \"2026-11-05T19:10:54.523072+00:00\", \"image_id\": \"dbe9d6b92ba846cdad63111c28b3f3d8\", \"version\": \"Propuesta 05/11 - antes y solucion - remate completo del zocalo\", \"clouds\": 1, \"cloud_ids\": [\"384e2436-5372-43be-bf60-f8039fa76afd\", \"071834f9-627b-4f20-b765-3210451ba487\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-161054-5d8ad4\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
@@ -16149,9 +16149,15 @@
           "at": "2026-11-05T20:21:56.653679+00:00",
           "owner": "codex-atlas130-diagonal",
           "detail": "Diagnostico y estudioPython sinbuild: la banda delzocalo592<=2y+x<624 pasa a alfombra fuera del mapa. Continuarpara x<24 desde modulo nativo64px antes de resolveralfombra. Remate476 y138848pixeles autorados preservados; staging/activacion sin cambios. Modelo comparativo listo; falta verificacionfuente yentrega."
+        },
+        {
+          "at": "2026-11-05T20:25:38.428381+00:00",
+          "owner": "codex-atlas130-diagonal",
+          "detail": "Fuente10e44a3f46379c7b1d6d3b956b159125df6c6b0e; Atlas hija pending sinaprobacionheredada, antes/solucionESTUDIO SINBUILD misma camara/escala sinactores. Responde384e2436+trazo071834f9 revision3 envio20261105-161054-5d8ad4 SHAexactos. Banda zocalo592<=2y+x<624/x<24 resueltaantesalfombra, donante64pxROM. Remate476 exacto;138848autorados conservados;5504cambiosmodelosolobanda.39424donanteshelperCinterpretadosPythonexactos, capasROMreadonlyredecodificadasiguales, diffcheckPASS. No compiler/game/import/build; Cfixtureaserciones noejecutadas yQA runtimecombinado/plataformaspendiente. Evidencia pruebas/atlas-siguiente-20261105/scene130."
         }
       ],
-      "claimed_at": "2026-11-05T20:18:41.535387+00:00"
+      "claimed_at": "2026-11-05T20:18:41.535387+00:00",
+      "sent": "e94de270ac4f4273bd8d5a874bd808ba"
     },
     "atlas-followup-31800ebc-r2": {
       "id": "atlas-followup-31800ebc-r2",
@@ -16237,7 +16243,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:24:18.907076+00:00",
+  "updated_at": "2026-11-05T20:25:38.428381+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
