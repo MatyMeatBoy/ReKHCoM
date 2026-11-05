@@ -5,8 +5,18 @@
 /* The library's source coordinates only. Bookcases translate by (64,+/-32)
  * and the complete carpet diamond repeats on (96,48)/(96,-48). No furniture
  * belongs to the donor rectangles. Authored pixels are retained by the caller. */
+/* The 05/11 review circled this 476-pixel flat-green interruption of the
+ * left baseboard. Only its empty BG2/flat-floor pixels may be resampled. */
+static inline int PortScene130LibraryRemate(int x,int y) {
+    return x>=24 && x<48 && y>=272 && y<300 &&
+        (x>=32 || y>=280) && x+2*y<624;
+}
+
 static inline int PortScene130LibrarySource(int x, int y, int* sx, int* sy) {
     int distance = x < 240 ? 240-x : x-240;
+    if (PortScene130LibraryRemate(x,y)) {
+        *sx=x+64; *sy=y-32; return 0; /* complete original baseboard band */
+    }
     if (y >= 176 + distance/2) {
         int u=PortSceneTileMod(x+2*y-832,192);
         int v=PortSceneTileMod(x-2*y+448,192);

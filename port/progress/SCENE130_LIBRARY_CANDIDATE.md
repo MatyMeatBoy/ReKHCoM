@@ -61,6 +61,42 @@ Evidencia privada `pruebas/atlas-final-20261105/`:
 `SCENE130combined-PREVIEW-BUILD.json`, `SCENE130-STAGING-PPU-REGRESSION.json`
 y `library130-final-before-solution.png`.
 
-Pendiente valoración humana. Se conserva la muesca verde original de la
-propuesta. No certifica todos los fotogramas, otras plataformas ni cambios en
+La entrega2935 sigue pendiente de valoración humana. Conservaba la muesca
+verde original; la revisión nueva del parent e58 pide completar ese remate.
+No certifica todos los fotogramas, otras plataformas ni cambios en
 la instalación/release. ROM/SAV originales y revisiones anteriores intactos.
+
+
+## Remate marcado 05/11
+
+Parent `e58f861b8d1e44248852242d2f437d36`, revisión3 aprobada con general
+«falta solo el cachito marcado», doodle `bf2652d8-8382-4cac-ba8f-55a7808e6656`.
+La hija2935 no lo cubría ni hereda esa aprobación. Recuperación CAS de
+`atlas-final-library130` a `codex-atlas130-final`, `fadc887d2dced2505a2ce58f132e73c93c3f70c5`.
+
+La máscara contiene476píxeles originales de piso verde plano con BG2
+transparente. El donante(64,-32) continúa toda la banda del zócalo; se elige
+antes de la frontera de alfombra para conservar su ornamento completo. Los476
+píxeles cambian en el estudio offline y todo el resto permanece idéntico.
+Todos los donantes están cargados desde ROM: banco8352bytes, máximos tile203
+BG3 ytile75 BG2; no usa ningún slot virtual o desconocido. Esta excepción
+expresamente pedida conserva los otros138848de139324píxeles autorados.
+El escritorio, otros muebles y el staging de Maléfica no cambian.
+
+La primera variante92 fue descartada como solución: completaba sólo el
+listón de madera y dejaba la banda ornamental cortada. Nunca se publicó en
+Atlas. El fixture final reprodujo RED en47,272 y quedó GREEN para1920
+coordenadas cercanas, BG2 opaco y otra textura. Preview final EU32 compila y
+enlaza sin alterar objetos release; PortOamSetSource, Preliminar130Shadow,
+Preliminar130Pixel yDrawObjs conservan SHAexacto. El guard nativo no cambia.
+Dos runs finales604 (Wide/Original) PASS. A600 cambian exactamente1904
+píxeles físicos (476nativos a escala2); todo el resto de Wide, incluido
+escritorio/actores, es idéntico al before2935. Núcleo GBA idéntico en ambos
+modos y viewport completo del juego Original idéntico al control. El baseline
+Original contenía icono diagnóstico fuera del juego; no se afirma igualdad
+de toda la presentación física. La variante final se verificó a600; los
+oráculos206 y secuencia2430..2500 siguen siendo evidencia anterior, con los
+cuatro bloques de actor/render conservados por SHA, no nuevos runs fullband.
+El montaje público muestra ANTES/SOLUCIÓN reales y detalle completo del
+tramo. Se entrega como nueva hija pendiente de2935, sin reescribir previas
+ni heredar aprobación. Fuente ROM/SAV/instalación permanecen intactos.

@@ -1739,7 +1739,8 @@ static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
     return 0;
 }
 /* This candidate never changes the native viewport. Outside it, preserve
- * every authored library pixel before extending the empty map background.
+ * authored library pixels except the reviewed flat-green notch, then extend
+ * the empty map background.
  * Palette indices remain live for fades; OBJ furniture/actors stay unique. */
 static int Preliminar130Authored(int x,int y) {
     int floor,books,base;
@@ -1747,6 +1748,10 @@ static int Preliminar130Authored(int x,int y) {
     floor=SinglePanelIndex(&sBgLatch[3],IO16(14),x,y);
     books=SinglePanelIndex(&sBgLatch[2],IO16(12),x,y);
     base=SinglePanelIndex(&sBgLatch[3],IO16(14),0,0);
+    /* Explicitly reviewed exception to authored-pixel preservation: finish
+     * the shelf baseboard through its original flat-green notch only. */
+    if (PortScene130LibraryRemate(x,y) && books>=0 && !(books&15) && floor>=0 &&
+        floor==SinglePanelIndex(&sBgLatch[3],IO16(14),32,280)) return 0;
     return (books>=0 && (books&15)) ||
         (floor>=0 && base>=0 && (PLTT16[floor]&0x7fff)!=(PLTT16[base]&0x7fff));
 }
