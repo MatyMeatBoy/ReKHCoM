@@ -89,7 +89,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-115-r20261025 | Escena 115 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:55.925715+00:00 |
 | atlas-remates-116-r20261025 | Escena 116 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:08.317688+00:00 |
 | atlas-remates-117-r20261025 | Escena 117 comentarios posteriores | pr_abierto | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/581 | — | 2026-11-05T13:11:31.874873+00:00 |
-| atlas-remates-118-r20261025 | Escena 118 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:40.240022+00:00 |
+| atlas-remates-118-r20261025 | Escena 118 comentarios posteriores | en_curso | codex-atlas-final | — | — | 2026-11-05T13:14:34.980698+00:00 |
 | atlas-remates-120-r20261025 | Escena 120 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:55.659622+00:00 |
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
 | escena-087-52879b0b9b9a4d578adcc36ce568601f | Escena 087 revision Atlas 52879b0b9b9a4d578adcc36ce568601f | integrado | codex-atlas | https://github.com/MatyMeatBoy/ReKHCoM/pull/206 | approved exact 33dd78c3e05f44648d70624c52ae2cf0 | 2026-10-26T09:43:42.297774+00:00 |
