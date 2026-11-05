@@ -437,4 +437,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-native-scene-sentinel | Atlas native editor scene130/076/117 map tile1023 diagnosis and exact handling | integrado | codex-atlas-native-fix | https://github.com/MatyMeatBoy/ReKHCoM/pull/583 | User requests actual ROM tiles per art; parent independent bugfix lane 2026-11-05 | 2026-11-05T13:58:07.541154+00:00 |
 | atlas-battle-field-missing-coverage | Atlas: 20 fondos combate y 13 familias campo ausentes | en_revision | codex-atlas-coverage | — | Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte | 2026-11-05T13:55:27.527723+00:00 |
 
-Integrador: codex-atlas-final (ocupado; 2026-11-05T13:57:33.141691+00:00)
+Integrador: libre
