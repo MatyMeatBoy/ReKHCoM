@@ -15486,14 +15486,14 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas130-final",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T17:07:27.247103+00:00",
+      "updated_at": "2026-11-05T17:34:41.580872+00:00",
       "branch": "fix/atlas-library130-extension",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
-      "reference": null,
+      "reference": "Atlas new pending child dbe9d6b92ba846cdad63111c28b3f3d8 of2935ad4bfddd42c886b86e3c90211827; feedbacke58rev3 doodlebf2652d8-8382-4cac-ba8f-55a7808e6656; no approval inherited, parents unchanged",
       "evidence": [
         {
           "at": "2026-11-05T12:00:44.184680+00:00",
@@ -15519,10 +15519,15 @@
           "at": "2026-11-05T17:07:27.247103+00:00",
           "owner": "codex-atlas130-final",
           "detail": "Parent authorized same-agent continuation after live e58 rev3 approved with general falta solo el cachito marcado and doodlebf2652d8. Listed current owner codex-atlas-library PR587. Own prior checkout atlas-library130-final remains clean atcd8420bf, no external worker; preserved staging owner/PR587, no merge. Narrow 92 authored flatgreen pixels are obstruction of continued shelf baseboard; offline native and runtime inspection only so far, no production edits before recovery."
+        },
+        {
+          "at": "2026-11-05T17:34:41.580872+00:00",
+          "owner": "codex-atlas130-final",
+          "detail": "HEAD d76219ac6; implementation a0245899fe88f1c95aecf2220ae11aa26ad8e9bf; final476flatgreen/BG2empty mask, native shift64,-32 full baseboard; donor banks8352bytes,max203BG3/75BG2allROMloaded; C RED/GREEN1 on1920coords plus opaqueBG2/textured guards; fullband previewPASS356readonly objects; Wide604/Original604 at600PASS exactly1904physical pixels changed, all otherWide/core/completeOriginalgame viewport exact; no physical letterbox identity claim; actor4blocksSHAunchanged, prior2430..2500/206premerge notrerunfinal; old92candidate rejected beforeAtlas; imagecc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73; pruebas/atlas-final-20261105/LIBRARY130-FULLBAND-* and library130-remate-before-solution.png; no moreheavy"
         }
       ],
       "claimed_at": "2026-11-05T14:00:31.772987+00:00",
-      "sent": "2935ad4bfddd42c886b86e3c90211827"
+      "sent": "dbe9d6b92ba846cdad63111c28b3f3d8"
     },
     "atlas-final-missing-coverage": {
       "id": "atlas-final-missing-coverage",
@@ -15847,7 +15852,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:34:15.926538+00:00",
+  "updated_at": "2026-11-05T17:34:41.580872+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
