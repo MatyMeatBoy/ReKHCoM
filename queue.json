@@ -4573,7 +4573,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:39.919108+00:00",
-      "updated_at": "2026-11-05T12:11:12.140604+00:00",
+      "updated_at": "2026-11-05T13:49:47.572692+00:00",
       "branch": "art/atlas-scene116-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/577",
       "approval": null,
@@ -4588,10 +4588,15 @@
           "at": "2026-11-05T12:11:12.140604+00:00",
           "owner": "codex-atlas-final",
           "detail": "f7570d3b9, propuesta offline Atlas cfd99d3446444f61b3149896bc5da0b2. C RED/GREEN e identidad nativa. Draft: aprobación y captura runtime pendientes."
+        },
+        {
+          "at": "2026-11-05T13:49:47.572692+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Runtime EVENT116(menu0:115)4pares zoom3/2 frames300/600 PASSnúcleo GBAidéntico; previewPPU EU32compilada enlazada ycontrolintacto. Atlas70f9813c59f54b7bbea891732a8d8d6a capturareal pendientehumano. PR577draft."
         }
       ],
       "claimed_at": "2026-11-05T12:08:22.039425+00:00",
-      "sent": "cfd99d3446444f61b3149896bc5da0b2"
+      "sent": "70f9813c59f54b7bbea891732a8d8d6a"
     },
     "atlas-maleficent-continuity": {
       "id": "atlas-maleficent-continuity",
@@ -15380,7 +15385,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:48:03.038983+00:00",
+  "updated_at": "2026-11-05T13:49:47.572692+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
