@@ -16159,13 +16159,8 @@
       "evidence": []
     }
   },
-  "integrator": {
-    "owner": "codex-atlas-v285",
-    "token": "6ed1c80822687741f1a317b22beadcc3bc35dd035bbc61ad",
-    "created_at": "2026-11-05T19:14:53.581367+00:00",
-    "updated_at": "2026-11-05T19:27:15.558771+00:00"
-  },
-  "updated_at": "2026-11-05T19:27:15.558771+00:00",
+  "integrator": null,
+  "updated_at": "2026-11-05T19:27:23.597331+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
