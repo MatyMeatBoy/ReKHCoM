@@ -144,16 +144,20 @@ ladrillos limpios y un único pilar original; BG2 sólo prolonga el zócalo
 por su diagonal, sin copiar lámparas ni adornos. Los actores siguen la
 regla del rectángulo GBA (Pepito fuera de escena no se anticipa).
 
-Propuesta 05/11, comentarios posteriores de `1c523468e4fb4d83965c0ef8ba292842`:
-el zócalo nativo empieza en `2*y+x=208`; prolongar la mampostería hasta
-esa misma diagonal evita la franja de suelo de ocho píxeles anterior.
-Los barriles son OBJ compuestos, no donantes BG: no deben pasar por el
-filtro de actores que esperan fuera del cuadro. En evento 120 sólo Pepito
-(track 3, `gJiminyPalette`) y las sombras comparten su estado de entrada,
-independiente de la reutilización de slots OAM. Las sombras comunes no
-desbloquean su entrada. Capturas EU reales Original/Extendido en cuadros
-180/300/600/900: Original completo y núcleo GBA sin cambios. Hija pendiente
-de revisión; no hereda la aprobación de la versión anterior.
+Propuesta05/11: los barriles son OBJ compuestos y no deben pasar por el
+filtro de actores que esperan fuera del cuadro. En evento120 sólo Pepito
+(`gJiminyPalette`, track autor3, rol estable4) y sus sombras comparten estado;
+Hook conserva su rol3. Las sombras comunes no desbloquean entradas.
+
+Corrección posterior de `e50805fc25d04bcda7a259b2fee2848b`, envío
+`20261105-120135-20af7d`, revisión8: «falta la diagonal aun», cuatro trazos.
+Hay dos planos nativos distintos: el frontal arranca en `2*y+x=208`,
+pero el derecho en176. No aplicar el donante frontal64..79 al muro derecho:
+continuar allí la franja176..208 con el donante original128..143 y la
+mampostería hasta176. La regla actúa sólo fuera del mapa256x256 y conserva
+el zócalo frontal y el centro GBA. Mantener los barriles ya completos.
+Una valoración con feedback vigente no cierra esa corrección; la nueva hija
+requiere su propia revisión y comparación runtime antes/propuesta.
 
 ## Corrección vigente 29/10: Oogie aprobado sí activo
 
