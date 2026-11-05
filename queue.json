@@ -15509,10 +15509,23 @@
       "reference": "Atlas f092a251c3e44a56b1b4727eb3183855 envio20261025-161834-618105 nubesdb9422b6/a02878c3; PR152 deja expresamente ambas pendientes. Mandato usuario procesar Atlas05/11",
       "evidence": [],
       "claimed_at": "2026-11-05T14:14:03.430997+00:00"
+    },
+    "atlas-scene130-maleficent-staging": {
+      "id": "atlas-scene130-maleficent-staging",
+      "piece": "Escena130 Maléfica visible en márgenes antes de entrada: staging separado de extensión BG",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T14:21:36.019135+00:00",
+      "updated_at": "2026-11-05T14:21:36.019135+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario terminar todos los artes; parent solicita registrar defecto exacto 05/11",
+      "reference": "pruebas/atlas-final-20261105/SCENE130-MALEFICENT-STAGING.md",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:21:13.530590+00:00",
+  "updated_at": "2026-11-05T14:21:36.019135+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
