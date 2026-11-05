@@ -15650,7 +15650,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas110-final",
       "created_at": "2026-11-05T14:53:45.403434+00:00",
-      "updated_at": "2026-11-05T16:17:52.997196+00:00",
+      "updated_at": "2026-11-05T16:20:53.778452+00:00",
       "branch": "art/atlas-scene110-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/590",
       "approval": null,
@@ -15665,6 +15665,11 @@
           "at": "2026-11-05T16:17:52.997196+00:00",
           "owner": "codex-atlas110-final",
           "detail": "PR590 draft HEAD e8eb97fe8 (rebase de36794ef9b,bloque110identico). Atlas e0826ddfad754b44952ae7b386e86f9c comparaANTES/PROPUESTA runtime EVENT1103440x1440frame300escala3 exactparentaa5c68ac68e948deaa006b2dfec38897; StoredecodedirLIVE. CRED/GREEN+previewPASS; Original110full+core4pares300/600identicos,Extendedcambio2877,0..3440,585.5/6runs exit0; ultimo111AFTERPENDIENTEguardRAM1400(latest1091MiB),before111guardado no repetir. NOintegrarhastaQA111yvaloracion. pruebas/atlas-final-20261105/SCENE110-SOURCE-PROVENANCE.json ySCENE110-EVENT110-RUNTIME-CHECKS.json."
+        },
+        {
+          "at": "2026-11-05T16:20:53.778452+00:00",
+          "owner": "codex-atlas110-final",
+          "detail": "QA110/111 TERMINADA:6/6procesos exit0 (resume sin repetircontroles). Original110fullidentico2frames, Extended110soloextremomuro2877,0..3440,585, Extended111fullimagenidentica300/600;6parescorenativoidéntico. SCENE110-EVENT110-RUNTIME-CHECKS.json, SCENE110-EVENT111-RUNTIME-CHECKS.json ySCENE110-SOURCE-PROVENANCE.json. HijaAtlas e0826ddfad754b44952ae7b386e86f9c suplemento técnicoCAS añadido sin tocarimagen/statuspending/revision0/comentarios; StoreLIVE preserva refsocultas. PR590draftactualizado; queda valoraciónhumana,no aprobación heredada. Heavy110libre."
         }
       ],
       "claimed_at": "2026-11-05T14:53:53.755666+00:00",
@@ -15732,7 +15737,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:17:52.997196+00:00",
+  "updated_at": "2026-11-05T16:20:53.778452+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
