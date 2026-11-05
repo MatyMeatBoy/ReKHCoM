@@ -15894,19 +15894,20 @@
     "atlas-journal-inner-footer-20261105": {
       "id": "atlas-journal-inner-footer-20261105",
       "piece": "Diario interior: cuatro nubes de footer y esquinas a367 rev5",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-journal-final",
       "created_at": "2026-11-05T17:58:43.854516+00:00",
-      "updated_at": "2026-11-05T17:58:43.854516+00:00",
+      "updated_at": "2026-11-05T17:58:50.443097+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario05/11 procesar cola; root delega Diario antes START y Ver barajas, uno por uno",
       "reference": "Padre a36793f6231a4c55b3ca636305aea2b7 revision5, cuatro nubes. Hijo acotado de atlas-menus-current-review; no reclama START ni barajas. PR511 integrado no certifica feedback visual actual.",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-05T17:58:50.443097+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:58:43.854516+00:00",
+  "updated_at": "2026-11-05T17:58:50.443097+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
