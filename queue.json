@@ -3328,10 +3328,10 @@
     "atlas-remates-120-r20261025": {
       "id": "atlas-remates-120-r20261025",
       "piece": "Escena 120 comentarios posteriores",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas120-final",
       "created_at": "2026-10-25T16:07:46.868932+00:00",
-      "updated_at": "2026-11-05T17:08:45.502974+00:00",
+      "updated_at": "2026-11-05T17:19:18.025164+00:00",
       "branch": "art/atlas-scene120-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/584",
       "approval": null,
@@ -3351,10 +3351,15 @@
           "at": "2026-11-05T17:08:45.502974+00:00",
           "owner": "codex-atlas-final",
           "detail": "Parentexplicitresume cededowncheckoutatlas-scene120-final; sameagentlane resumesitsPR584 notanotherworker. Currentclaimcodex-atlas120-final pr_abierto. Humanfeedbacke50805fc25d04bcda7a259b2fee2848b revision8 generalfalta la diagonal aun +4doodles. Noother120lane; parentauthorizesresume, preserveallWIPandpriorreviews. CorrectionnativeROMrightplane176onlyoutsidecore,208frontretained."
+        },
+        {
+          "at": "2026-11-05T17:19:18.025164+00:00",
+          "owner": "codex-atlas120-final",
+          "detail": "HEAD68bf519507916cb4ec70a93781a08a5e60b35420; exactparente50805fc25d04bcda7a259b2fee2848b rev8 envio20261105-120135-20af7d general+4doodles, childpendingrev0. NativeROMdistinctrightplane176 vsfront208; rightdonor128..143 onlyoutside256x256. Before/solutionruntime900sameScale3. MiniCREDoldrightdonor then3GREEN diagonal+Jiminy4+Hook3.4serialEUprocessesexit0,8pairs180300600900 Originalfullidentical/ExtendedGBAcoreidentical. Onlyrightupperwallbboxchanges. Builds samecurrentPPUwithheaderA/B;reuse356readonlyobjects,notfullmainbuild. SCENE120-DIAGONAL-SOURCE-PROVENANCE.json and SCENE120-DIAGONAL-RUNTIME-CHECKS.json. PR584draftupdated, pendinghumanrating/integration; no inheritedapproval."
         }
       ],
       "claimed_at": "2026-10-25T16:07:55.659622+00:00",
-      "sent": "e50805fc25d04bcda7a259b2fee2848b"
+      "sent": "9f28568fabd94b7c8526615a7b2b6abf"
     },
     "malefica-01-feedback-revision": {
       "id": "malefica-01-feedback-revision",
@@ -15822,7 +15827,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:08:45.502974+00:00",
+  "updated_at": "2026-11-05T17:19:18.025164+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
