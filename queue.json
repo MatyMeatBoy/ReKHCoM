@@ -15336,10 +15336,10 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-library",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T13:59:27.150065+00:00",
+      "updated_at": "2026-11-05T14:00:31.772987+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
@@ -15356,7 +15356,7 @@
           "detail": "released: Repartoexplicito a agentededicatedlibrary130pararecetarpropuestaofflinee0a2151657fa4f15a4b9b7dc798fd28a. SinWIPproductoclaimed; extend_library.py ypropuesta preservados. Agentclaimanteseditar,noaprobacionheredada."
         }
       ],
-      "claimed_at": "2026-11-05T11:57:33.886561+00:00",
+      "claimed_at": "2026-11-05T14:00:31.772987+00:00",
       "sent": "c1ab45945afe471fb5f3f6f4b089e1e6"
     },
     "atlas-final-missing-coverage": {
@@ -15443,7 +15443,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:59:27.150065+00:00",
+  "updated_at": "2026-11-05T14:00:31.772987+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
