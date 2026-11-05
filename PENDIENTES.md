@@ -442,6 +442,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-scene130-maleficent-staging | Escena130 Maléfica visible en márgenes antes de entrada: staging separado de extensión BG | en_curso | codex-atlas130-staging | — | Usuario terminar todos los artes; parent solicita registrar defecto exacto 05/11 | 2026-11-05T14:53:08.293677+00:00 |
 | atlas087-final-border-patterns | Escena087: completar patrones del borde superior tras revision33dd78 | en_curso | codex-atlas087-final | art/atlas-scene087-final | Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion | 2026-11-05T14:36:40.992420+00:00 |
 | atlas110-upper-right-20261105 | Escena110 patron extremo superior derecho posterior PR216 | en_curso | codex-atlas110-final | — | — | 2026-11-05T14:53:53.755666+00:00 |
-| atlas-synthesis-outline-reference-20261105 | Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5 | en_curso | codex-atlas-final | — | Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline | 2026-11-05T14:55:43.447473+00:00 |
+| atlas-synthesis-outline-reference-20261105 | Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5 | pendiente | — | — | Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline | 2026-11-05T15:06:20.228495+00:00 |
 
 Integrador: libre
