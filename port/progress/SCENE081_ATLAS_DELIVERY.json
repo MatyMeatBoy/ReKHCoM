@@ -1,0 +1,20 @@
+{
+  "atlas_id": "0bac2ac10b81462e910b3705bd3c6740",
+  "parent_id": "b39c0c96f13c45319956f1b5269c5b89",
+  "status": "pending",
+  "image_sha256": "7ce45e84dae059c922d5dfb44b388a577320f4824928d8c7bfd736720abb2502",
+  "source_sha": "a3ef971788430796e7d1ede79ed500ca883e2a80",
+  "source_ppu_sha256": "ead340b8ccbfe95a93e9414d58e01e7b1fd38e989bc7416e3812ef44ace03cbb",
+  "source_header_sha256": "bd6a464c1ca8b80ca0ffae736b7432510ccb1e1f9e4691001fb12e5440014022",
+  "review_submission": "20261029-134334-6efc5a",
+  "before_solution": "pruebas/atlas-final-20261105/scene081-final/scene081-before-solution.png",
+  "reference_only": false,
+  "checks": {
+    "c_red": 2,
+    "c_green": 2,
+    "wide_native_core_pairs": 12,
+    "original_full_frames": 5,
+    "raw_left_cap_pixels": 2459520
+  },
+  "unresolved": "The authored small lower decoration fragment is retained, including the part mentioned by cloud4; no human feedback is marked answered and no approval inherited."
+}

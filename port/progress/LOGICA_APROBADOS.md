@@ -3,8 +3,9 @@
 Reglas que se repiten en todo lo que el usuario ha aprobado. Aplicarlas antes
 de proponer algo nuevo; ante un caso nuevo, derivar la solución de ellas.
 
-**Regla vigente de entrega (24/10):** aprender de todas las valoraciones aceptadas, pero activar arte nuevo para
-jugadores solo desde la versión **con honores** (`build_version`) de la app. Cada entrega entra por PR y la
+**Regla vigente de entrega (usuario 25/10, ratificada 05/11):** activar la versión exacta más reciente
+aceptada por Atlas (`build_version`: Aprobado, Aprobado/mejorar u Honores). Los comentarios siguen pendientes
+de respuesta aunque la versión aprobada ya entre en el juego. Cada entrega entra por PR y la
 fusiona un integrador reservado; ver [COLA_COLABORATIVA.md](COLA_COLABORATIVA.md). Las menciones históricas a
 "aprobado" o "Claude integra" no sustituyen esta regla. No elevar valoraciones ni heredar ★ a una versión hija.
 
@@ -115,6 +116,21 @@ de condición en el contorno y el interior abierto para que pase la luz,
 sin convertir la base en una masa roja/verde/azul. Corregir sólo estas dos
 nubes; conservar identidad dinámica, TOTAL y recorrido de oclusión existentes.
 
+Síntesis, corrección05/11 sobre `823cdf38241144b1b282bcf3f2532120`,
+revisión12, envío `20261025-160926-638293`: investigar tamaño/ratio y contorno.
+La referencia oficial usada es el manual español KH1.5PS3, página PDF21
+(páginas impresas40/41), ejemplos2↑,3↓,7= yTOTAL20. Es una referencia impresa
+pequeña, no una captura PC sin mods ni una medición exacta de su layout.
+En las recetas actuales Re:CoM: subir altura de11a12, máximo de grupo22a23 y
+sombra0.5a0.75GBApx, siempre escalando número/operador como grupo y conservando
+el aspecto de sus glifos. Reforzar el bevel blanco con cuatro pasadas de
+0.25GBApx alrededor del contorno existente; mantener vidrio35%, silueta OAM,
+colores y selecciónTOTAL. Sólo recetas importadas: fallback original intacto.
+La comparativa debe usar runtime real antes/solución con las405piezas Re:CoM
+actuales y una referencia oficial pequeña acreditada. Nunca regenerar esas
+405 con el fallback al preparar una captura; conservar el resto del HD por hash.
+La hija y el cambio siguen pendientes de valoración propia.
+
 Trickmaster, envío `20261025-052021-8546de`: «todo bien», sólo completar
 el muro hacia arriba. Prolongar el período vertical del papel rosa, no la
 franja beige del techo. Conservar suelo y objetos ya aceptados; la única
@@ -143,6 +159,21 @@ flotante con base horizontal cortada. El muro de BG3 continúa con sus
 ladrillos limpios y un único pilar original; BG2 sólo prolonga el zócalo
 por su diagonal, sin copiar lámparas ni adornos. Los actores siguen la
 regla del rectángulo GBA (Pepito fuera de escena no se anticipa).
+
+Propuesta05/11: los barriles son OBJ compuestos y no deben pasar por el
+filtro de actores que esperan fuera del cuadro. En evento120 sólo Pepito
+(`gJiminyPalette`, track autor3, rol estable4) y sus sombras comparten estado;
+Hook conserva su rol3. Las sombras comunes no desbloquean entradas.
+
+Corrección posterior de `e50805fc25d04bcda7a259b2fee2848b`, envío
+`20261105-120135-20af7d`, revisión8: «falta la diagonal aun», cuatro trazos.
+Hay dos planos nativos distintos: el frontal arranca en `2*y+x=208`,
+pero el derecho en176. No aplicar el donante frontal64..79 al muro derecho:
+continuar allí la franja176..208 con el donante original128..143 y la
+mampostería hasta176. La regla actúa sólo fuera del mapa256x256 y conserva
+el zócalo frontal y el centro GBA. Mantener los barriles ya completos.
+Una valoración con feedback vigente no cierra esa corrección; la nueva hija
+requiere su propia revisión y comparación runtime antes/propuesta.
 
 ## Corrección vigente 29/10: Oogie aprobado sí activo
 
@@ -362,6 +393,16 @@ Regla general que sale de las cuatro: medir el período de cada estructura en **
 **en todas las direcciones** hasta los bordes de la pantalla más ancha, y no dar por terminado un lado sin revisar
 los demás. Las escenas hermanas que usaron estas recetas se revisan con estas reglas al tocarlas.
 
+Propuesta 05/11 para 057, padre `853a5ffc4f8c4a7fb4b4e74567f12551`,
+envío `20261025-174207-290518`: «subida» se refiere al escalón local de las
+ventanas junto a la enredadera, con la contraparte que asciende hacia la
+derecha. No invertir la diagonal global. BG2 reutiliza un panel bajo de
+las columnas nativas 8..11 y luego el remate alto de las columnas 4..6,
+con desplazamientos que conservan `2*y+x`. Excluir la ventana pequeña
+aislada situada encima del donante bajo. La regla se aplica sólo a los
+píxeles adicionales del viewport; la cámara GBA usa sus entradas originales.
+La hija nueva queda pendiente de revisión y no hereda aprobación.
+
 
 ## Comentarios nuevos sobre arenas y Darkside 06 (usuario 24/10, 05:33-13:07 Chile; worker claude-sonnet-w3)
 
@@ -374,10 +415,35 @@ los demás. Las escenas hermanas que usaron estas recetas se revisan con estas r
 | Oogie arena / `b7df95116b0543719423d2b29c7aa17f` | «no debería seguir un patrón, sino dibujar como pixel artist las puntas que faltan en el GBA de los botones del suelo, a ambos lados; dejar en penumbras el resto como un vacío»; los fondos y otro patrón «quedaron geniales» | Pendiente (bloqueado, arte nuevo): los botones del suelo se completan dibujando sus puntas faltantes en pixel art, no repitiendo patrón; fuera de eso, penumbra/vacío. Los patrones de fondo marcados «geniales» se conservan. |
 | Trickmaster arena / `bcf3aec4ee7f40748959a87960d4ed5d` | «solo debe haber una chimenea en el patrón como en la escena preliminar» | Conservar la chimenea del mapa original y prolongar únicamente los paneles limpios de pared en los márgenes. El mapa de 256 px contiene una chimenea con dos bocas, no dos chimeneas: repetir el mapa duplica todo ese objeto. El suelo conserva un único punto de fuga, sin reiniciar la perspectiva cada 256 px. |
 
-| Oogie arena / `7420dbb247c440e2b70a1285ce21dbe8` | Alfombra «solo rojo», completar una máscara a la izquierda y un fantasma a la derecha, luego abismo; abajo dar profundidad | Una figura por borde, nunca repetir el campo verde. La propuesta completa el recorte con un reflejo limitado de 32 px, estrecha sus dos puntas inferiores y las oscurece hacia el vacío. Bajo el mapa la alfombra continúa roja, sin estirar el antebrazo. El fondo superior y el centro GBA se conservan. Evaluar la silueta de la propuesta en la captura real; un cambio de algoritmo no basta para dar por aprobado el arte. |
+| Oogie arena / `7420dbb247c440e2b70a1285ce21dbe8` → `677876e57b1441dc856caa8847f84487` | Alfombra «solo rojo»; completar máscara izquierda y fantasma derecho; después cuatro trazos piden bordes blancos nuevos y verde igual a los bloques | Corrección05/11, propuesta pendiente: conservar el recinto nativo y PathIndex rojo aprobado exactos. Dibujar los contornos faltantes sin reflejar mitades; una figura por lado. Los flancos verdes159 se ensanchan entre bordes blancos de perspectiva propia, con vacío fuera; no estrecharlos en puntas negras ni repetir motivos. El ribete blanco usa sólo la rampa limpia del rail nativo y la paleta se resuelve en vivo. Comparativa runtime antes/propuesta del mismo cuadro; hija sin aprobación heredada. |
 | Trickmaster arena / `bcf3aec4ee7f40748959a87960d4ed5d` | «solo debe haber una chimenea en el patrón como en la escena preliminar» | Pendiente de aclarar cuál se conserva (el mapa trae dos chimeneas por período de 256 px). |
 | Maléfica 01 / `25aa0ffe25b14be5855a107bd882b6f6` | «terminar de dibujar a Maléfica hasta la cola; ver si está en los archivos o dibujar como artista pixel art» | Pendiente (bloqueado, arte nuevo): buscar el resto del sprite en la ROM; si no existe, dibujar. |
 | Maléfica arena / `ae681fffa79a4feea3b4ea1ef137a512` | «arena bien» (aprobada); sprites se comentan por separado | Sin cambios: la arena de Maléfica queda tal cual. |
+
+## Escena 087: enredadera del borde superior (propuesta 05/11)
+
+Referencia exacta: `33dd78c3e05f44648d70624c52ae2cf0`, envío
+`20261026-063322-54de6a`; nubes `8903fc3e-1e3c-444d-b8cc-7beed5cdea18`,
+`caac56f2-acfa-4c7b-a4e2-36a5b0aad33c` y `92573031-95b8-470a-90b0-0c8608424c7e`.
+Las dos primeras señalan el patrón incompleto; la tercera identifica el borde
+original que debe continuar arriba. Los PR76/206 integrados no responden a
+estos comentarios posteriores.
+
+La piedra superior de BG3 debe seguir la pendiente 2:1 del borde original,
+no el antiguo corte 3:1 que separaba el ornamento de su apoyo. Para el plano
+de piedra usar el módulo interior completo de tiles x4..7, y0..1, sin repetir
+el remate del extremo izquierdo. La enredadera vive en BG2.
+En la franja `96 <= 2*y+x < 144` exterior al mapa nativo de 256x256,
+BG2/BG3 comparten el módulo original de 32 píxeles y la fase diagonal 2:1.
+Donantes de la unión: píxeles x0..31, y32..71; excluyen las calabazas superiores.
+Centro, objetos únicos y borde inferior conservan sus coordenadas.
+El despacho PPU de escena87 se limita a la unión superior y los runs de 8 píxeles
+que la cruzan. Fuera de ella se conserva el camino de tiles, sin activar el helper
+inferior legado. La primera captura detectó el despacho omitido; la segunda,
+la pendiente discordante de la piedra. Ambas propuestas se rechazaron antes de Atlas.
+La nueva hija queda pendiente de valoración propia; no hereda la aprobación
+del padre. Evidencia: `pruebas/atlas-final-20261105/087-native/` y prueba
+`port/tools/test_scene087_upper_border.py`.
 
 ## Escena 090: reja recta y montañas completas (respuesta Codex, 24/10)
 
@@ -445,6 +511,17 @@ Esta entrega es una propuesta pendiente de valoración; no hereda honores ni hab
 ## Escena 099: muro superior, corrección del 25/10
 
 El envío `20261024-183353-ceb621` sobre `ae36f45ef10e45cc809620075f0c8626` rechaza prolongar el ajedrez beige hacia arriba: corresponde al muro de una casa. La regla anterior de casillas de28px queda sustituida. Usar el mismo muro rosa de la arena de Trickmaster; los postes de madera y el fuste único de piedra mantienen su x. El período de48px excluye el travesaño; el panel derecho limpio evita reloj y ventana duplicados. Conservar el suelo elogiado y la chimenea original. La captura hija es una propuesta sin honores heredados ni activación automática para jugadores.
+
+## Escena110: esquina superior derecha (propuesta05/11)
+
+Padre `aa5c68ac68e948deaa006b2dfec38897`, envío `20261026-063012-d73629`,
+nube `e9d84772-0847-47d6-9943-1278168f059a`: conservar el plegado vertical
+aprobado, pero plegar también la franja completa x=160..511 al alcanzar
+el borde derecho. El módulo de352px no debe saltar de511 a160: devolver
+511,510... hasta el otro extremo y volver a plegar. Mantener esta misma
+fase en toda la cara superior hasta su base recta y=72 evita una junta
+horizontal en y=0. Terraza, suelo, pilares y objetos únicos conservados.
+Propuesta pendiente de revisión propia; la aprobación del padre no se hereda.
 
 ## Agrabah 107/108: subida del Genio (comentario posterior, 24/10)
 
@@ -543,3 +620,59 @@ fuente `3bf6dd67275cad9332e35d2283a2cedba2c9db54`. Las filas externas
 sin lápidas ni otra coronación. El rebase conserva el bloque090 exacto.
 Cuatro pares runtime conservan el núcleo; Original completo idéntico.
 La aprobación corresponde exclusivamente a esta versión.
+## Escena115, propuesta05/11: madera limpia y menor densidad
+
+Respuesta a `7e56767b-7fb9-4adc-a6b1-214effa7d1d4` y al comentario de reducir escotillas. Sólo fuera del mapa nativo32x32: BG3 usa las cuatro filas de madera20..23 cuando está bajo el muro (`2y+x>=36`), evitando copiar el escalón rojo. BG2 omite filas alternas de módulos completos de escotillas. El bloque original conserva todos sus tiles. Propuesta pendiente de valoración humana y captura del juego; no hereda aprobación.
+
+
+### Escena115: escotillas completas, corrección05/11
+
+La revisión174807eb61b84dca853d8c0c05434fda señala que se pierde el patrón y sobran fragmentos. El recorte rectangular anterior cruzaba tres escotillas distintas. Cada motivo nuevo toma una plantilla nativa entera de8x5tiles, columnas6..13/filas17..21, centro(80,152); su retícula avanza(64,-32),(0,64). Completar también las escotillas recortadas por los límites originales: sus1920y640píxeles compartidos coinciden exactamente con la plantilla. Reducir sólo filas enteras alejadas del mapa, sin partir diamantes ni inventar motivos en celdas originales vacías. NúcleoGBA y madera aprobada intactos. Mostrar ANTES/SOLUCIÓN y distinguir mapa de receta de captura runtime.
+## Escena095, aclaración y propuesta05/11
+
+El usuario confirma: «me equivoque no habia castillo pero hacer bien el patron». No crear ni buscar un castillo. La cara izquierda del seto llega a diagonal672; cortarla en576 truncaba flores. Usar el módulo96px completo y sustituir los retornos de los extremos (izquierda48px/derecha32px) sólo cuando el PPU dibuja fuera del cuadro GBA. Derecha: incluir hasta diagonal96 para completar su base. Propuesta offline entregada con las tres nubes de valla/uniones vinculadas; pendiente captura runtime y valoración humana. No hereda honores.
+
+
+### Escena095: altura del seto derecho (revisión05/11)
+
+La valoración de823f028144a3479790a25691662112ec acepta el patrón pero pide unirlo a su altura. La medición nativa separa remate y frente: el frente floral mide56px, entre2y-x=-96y16; conservar los56pxinferiores del donante izquierdo (2sy+sx=2y-x+656) alinea base y flores. La banda superior2y-x=[-144,-96) continúa el remate recto nativo desdex464..479, preservando2sy-sx; excluirx496+ evita repetir la esquina de retorno. No cambiar las paletas nativas. Debajo de diagonal16 sigue el selector de suelo previo. No desplazar objetos únicos ni el centroGBA. La nueva propuesta muestra antes y solución en el mismo encuadre.
+
+### Escena057: matas completas y ritmo derecho (revisión05/11, rev6)
+
+El envío20261105-120210-7e4099 de492cc13fdc804300bda522bb466db5e4 indica «falta mitad de los pastos aun y la derecha aun». Las franjas estrechas cortaban otras matas aunque completasen una. Probar un bloque nativo completo96x64 (x0..95,y184..247) dentro de celdas128x96; sus bordes no contienen núcleo verde. Espacios con suelo limpio nativo16x16; omitir una mata cuyo núcleo cruzase la unión diagonal de pared. Conservar el mapa interior y retirar el traslado izquierdo que cortaba otra mata. El fragmento derecho original coincide1024/1024píxeles con x200..231,y128..159; completar desde la mata nativa de x192..255,y120..175. Ventanas derechas: repetir módulo12columnas bajo→alto con2y+x constante; excluir la ventana aislada superior y conservar enredadera, puerta, panel único y actores. Capturas EU0:57 en300/600 verifican las matas completas y el ritmo derecho; centro GBA y modo Original completo idénticos. Pendiente de valoración propia; referencias y simulación son internas.
+
+### Escena112: dueño de la sombra, propuesta05/11
+
+La sombra de espera de Aladdín/Genio debe usar el dueño real de su tarea de
+dibujo, no el espacio OAM reutilizable ni proximidad al cuerpo flotante.
+Etiquetar sólo EVENT112 tracks3/4, restableciendo el contexto tras la emisión.
+La sombra nunca desbloquea al actor; las sombras del resto del grupo se dibujan
+normalmente. El marco actual conserva su donante y80 y se comprueba durante los
+cambios de cámara. Propuesta nueva pendiente, sin aprobación heredada.
+
+## Valoración e integración del 05/11: doce entregas aceptadas
+
+La tabla de versiones exactas está en `ATLAS_V285_PREPARATION.md`. Sus doce
+aprobaciones sustituyen el estado histórico de propuesta pendiente, sin cerrar
+comentarios nuevos. 110,112 y los requisitos/contornos de síntesis se aprobaron
+sin notas; las otras nueve entregas conservan seguimiento propio en la cola.
+
+Los nuevos comentarios corrigen qué puede tomarse como modelo: 087 conserva
+una pequeña zona por mejorar; 115 aún tiene un tile rojo flotante, una punta
+incompleta y restos de escotilla; 095 debe repetir el módulo marcado A en todo
+el resto del seto; 081 aún necesita negro en el sector señalado. En Oogie quedan
+la punta del fantasma, media máscara y los remates exteriores; no dar por
+completas esas figuras porque sus planos verdes hayan sido aceptados. 120
+aprueba la diagonal pero pide completar el grabado con el patrón A. 057 aún
+tiene el sector marcado por mejorar. 130 necesita completar la diagonal de
+bajada del muro. 107/108 conserva un tramo de diagonal y debe completar ventana
+y patrón del muro hacia arriba, visible más tarde en la escena. Ninguna de estas
+notas autoriza a alterar las zonas no señaladas ni se considera respondida por
+la integración de su versión aprobada.
+
+Al reunir staging, conservar roles independientes0..5 y todos los predicados
+de sombra: cada escena mantiene su elegibilidad y rol originales. Una sombra
+no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
+La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
+su apagado explícito para comparación y el modo Original. Preparación para
+una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.

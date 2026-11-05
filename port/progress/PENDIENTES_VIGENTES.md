@@ -1,5 +1,14 @@
 # Pendientes tras publicar 2.2
 
+## Actualización Atlas: 05/11/2026
+
+El usuario autorizó integrar las doce entregas aprobadas y repasar la cola para
+una futura pre de2.8.5, **sin compilar ni publicar nada**. La tabla exacta de
+imágenes, revisiones y nueve seguimientos está en [ATLAS_V285_PREPARATION.md](ATLAS_V285_PREPARATION.md).
+Las notas históricas de abajo no autorizan nuevos paquetes. Darkside06, Monstro
+y Diario conservan sus WIP y tareas pendientes. Referencias nativas internas;
+arenas existentes preservadas. La autoridad de estados sigue siendo la cola CAS.
+
 ## Estado vigente: 29/10/2026 UTC
 
 **Prioridad: bugs; trabajo en solitario, sin workers.** La estable pública es

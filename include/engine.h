@@ -60,6 +60,8 @@ int PortSpriteShiftY(int entry, int y);
 /* Bookkeeping for the HUD layer: the sprite entry just queued, and which
    entry an OAM slot was built from. */
 void PortSpriteTag(int entry);
+/* Transient event-shadow role: 0 none, otherwise staged actor index + 1. */
+void PortSpriteEventShadowOwner(int role);
 void PortOamSetSource(int oamIndex, int entry);
 /* The title's logo is on BG2 (title, end of the credits): with the HD title it is drawn HD (port_ppu.c). */
 void PortTitleLogoBg(int on);

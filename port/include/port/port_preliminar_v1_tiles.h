@@ -82,20 +82,22 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         if (v[1]==3) {
             /* A plank has four rows, not the old two-row upper swatch.
              * Keep its diagonal phase and avoid copying wall pixels. */
-            if (sy<0 || sy>=32) sy=20+PortSceneTileMod(sy-20,4);
+            if (2*oy+ox>=36 || sy<0 || sy>=32)
+                sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
             if (2*oy+ox>=32) {
-                int cx=ox+4-PortSceneTileMod(ox+4,8);
-                int base=22-cx/2;
-                int cy=oy+1-PortSceneTileMod(oy+1-base,8);
-                /* A candidate centred in an authored empty cell must not
-                 * leave a half hatch outside that cell's map edge. */
-                if (cx>=0 && cx<32 && cy>=0 && cy<32 &&
-                    (cy>=29 || 2*cy+cx>=76)) return 0;
-                /* Complete hatch diamonds on their staggered (16,-8),
-                 * (0,8) lattice instead of wrapping clipped edge shards. */
-                sx=8+PortSceneTileMod(ox-8,16);
-                sy=16+PortSceneTileMod(oy+(ox-sx)/2-16,8);
+                int k=(ox-6-PortSceneTileMod(ox-6,8))/8;
+                int cx=10+8*k, base=19-4*k;
+                int j=(oy-base+2-PortSceneTileMod(oy-base+2,8))/8;
+                int cy=base+8*j;
+                int overlapsMap=cx-4<32 && cx+4>0 && cy-2<32 && cy+3>0;
+                /* One intact 8x5 tile stamp, centred at (80,152). Wrapping
+                 * the old rectangular swatch spliced three different hatches.
+                 * Complete authored clipped motifs at the map boundary;
+                 * thin whole rows only farther away, never half a diamond. */
+                if (j<0 || oy-cy< -2 || oy-cy>=3 ||
+                    (overlapsMap ? j>=2 : PortSceneTileMod(j,2))) return 0;
+                sx=10+ox-cx; sy=19+oy-cy;
             } else if (sy<0 || sy>=32) return 0;
         }
         *x=sx; *y=sy; return 1;
@@ -265,7 +267,7 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         int phase=PortSceneTileMod(chunk*3,8);
         /* the room's own structures go on too (user 24/10): the brick wall
          * on the right (columns 24..31 from row 18), the stone step at the
-         * bottom along 2y+x=56, the stone landing at the top along 3y+x=12 */
+         * bottom along 2y+x=56, the stone landing at the top along 2y+x=12 */
         if (ox>=24 && oy>=18) {
             *x=24+PortSceneTileMod(ox-24,8); *y=oy<32?oy:22+PortSceneTileMod(oy-22,10); return 1;
         }
@@ -274,8 +276,8 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
             if (sy>=32) sy=28+PortSceneTileMod(sy-28,4);
             *x=sx; *y=sy; return 1;
         }
-        if (3*oy+ox<12) { /* only the landing's stone (rows 0..1, columns 0..5) */
-            *x=PortSceneTileMod(ox,6); *y=PortSceneTileMod(oy,2); return 1;
+        if (2*oy+ox<12) { /* complete interior stone module, no cut left cap */
+            *x=4+PortSceneTileMod(ox-4,4); *y=PortSceneTileMod(oy,2); return 1;
         }
         *x=PortSceneTileMod(ox,w);
         *y=8+PortSceneTileMod(oy-8+phase,8);
@@ -564,26 +566,24 @@ static inline int PortPreliminar099Floor(int wx, int wy, int* sx, int* sy) {
     return 1;
 }
 
+static inline int PortPreliminar087VineRun(int wx, int wy) {
+    int diagonal=2*wy+wx;
+    /* The tile fast path can consume eight pixels. Enter the pixel path
+     * before a run crosses the border, without scalar-sampling whole layers. */
+    return diagonal<144 && diagonal+7>=96;
+}
+
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
     if (p && p->v[0]==87 && (wx<0 || wx>=256 || wy<0 || wy>=256)) {
         int diagonal=2*wy+wx;
-        if (p->v[1]==3 && diagonal<128) {
-            /* The upper landing uses the same 2:1 slope as its source.
-             * A pixel donor preserves the half-tile phase at either edge. */
-            *sx=PortSceneTileMod(wx,16);
+        if ((p->v[1]==2 || p->v[1]==3) && diagonal>=96 && diagonal<144) {
+            /* Stone and vine share the same authored 2:1 transition.
+             * This clean 32-pixel module is below the native pumpkins. */
+            *sx=PortSceneTileMod(wx,32);
             *sy=(diagonal-*sx)/2;
-            if (*sy>=0 && *sy<64) return 1;
-            *sx=PortSceneTileMod(wx,32); *sy=0;
             return 1;
         }
-        if ((p->v[1]==2 || p->v[1]==3) && wx<192 && diagonal>=400) {
-            /* Repeat a complete 16x8 diagonal module, including its lit lip,
-             * instead of restarting the donor on each eight-pixel row. */
-            *sx=32+PortSceneTileMod(wx-32,16);
-            *sy=(diagonal-*sx)/2;
-            if (*sy>=192 && *sy<256) return 1;
-            if (p->v[1]==2) { *sx=0; *sy=120; return 1; }
-        }
+        return 0; /* retain the authored tile path outside the upper border */
     }
 
     if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<352) {
@@ -593,9 +593,15 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
     }
 
     if (p && p->v[0]==81) {
+        /* Keep the cartridge's finite cave cap and its opaque black mask.
+         * The already reviewed corridor on the right keeps its sampling. */
+        if (wx<128) {
+            *sx=wx>=0 && wy>=0 && wy<512 ? wx : 0;
+            *sy=wx>=0 && wy>=0 && wy<512 ? wy : 0;
+            return 1;
+        }
         if (p->v[1]==1 || p->v[1]==3) {
-            /* Replace the cartridge's finite left cap with the same smooth
-             * corridor module, including the native rectangle's corner. */
+            /* Preserve the approved right-hand corridor module. */
             *sx=128+PortSceneTileMod(wx-128,64);*sy=wy+(wx-*sx)/2;
             if (*sy<0 || *sy>=256) {*sx=0;*sy=0;}
             return 1;
@@ -648,18 +654,19 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else if (p->v[1]==3) {
             if (wx>=0 && wx<32 && wy<0) {
                 *sx=wx; *sy=PortSceneTileMod(wy,16); /* the original corner shaft, once */
-            } else if (2*wy+wx<192) {
+            } else if (2*wy+wx < (wx>=96 ? 176 : 208)) {
                 *sx=32+PortSceneTileMod(wx-32,16);
-                *sy=16+PortSceneTileMod(wy-16,16); /* plain masonry, no repeated shafts */
+                *sy=16+PortSceneTileMod(wy-16,16); /* Native return: right footing176, front footing208. */
             } else {
                 *sx=64+PortSceneTileMod(wx-64,32);
                 *sy=160+PortSceneTileMod(wy-160,32); /* the room's clean ground */
             }
         } else if (p->v[1]==2) {
-            int diagonal=2*wy+wx;
+            int diagonal=2*wy+wx, right=wx>=96;
             *sx=255; *sy=255; /* unique lamps, sign and barrels remain in their authored positions */
-            if (diagonal>=208 && diagonal<256) {
-                *sx=64+PortSceneTileMod(wx-64,16);
+            if (diagonal >= (right ? 176 : 208) && diagonal < (right ? 208 : 256)) {
+                int donor=right ? 128 : 64;
+                *sx=donor+PortSceneTileMod(wx-donor,16);
                 *sy=wy+(wx-*sx)/2; /* plain footing, along the wall's diagonal */
             }
         } else return 0;
@@ -734,20 +741,32 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else return 0;
         return 1;
     }
-    if (p && p->v[0]==95 && p->v[1]==3 && (wx<0 || wx>=512 || wy<0 || wy>=512)) {
+    if (p && p->v[0]==95 && p->v[1]==3 && (wx<48 || wx>=480 || wy<0 || wy>=512)) {
         int tx=wx>>3, ty=wy>>3;
-        if (wy>=48 && wy<96) {
-            /* Only the mountain side of the skyline repeats; the castle
-             * silhouette in the authored map must not gain extra copies. */
+        if ((wx<0 || wx>=512) && wy>=48 && wy<96) {
+            /* Continue the mountain skyline without duplicating props. */
             int phase=PortSceneTileMod(wx,64);
             *sx=96+(phase<32?phase:63-phase); *sy=wy; return 1;
         }
-        if (wx>=512 && 2*wy-wx>=-128 && 2*wy-wx<64) {
-            /* Reflect the whole left hedge bay, including its flowers, rather
-             * than chopping the right hedge into four-column stair steps. */
+        if (wx<48 && 2*wy+wx>=432 && 2*wy+wx<672) {
+            /* The complete left hedge face ends at diagonal672, not576:
+             * the shorter band cut every flower cluster into a stair tooth. */
+            *sx=64+PortSceneTileMod(wx-64,96);
+            *sy=(2*wy+wx-*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-144 && 2*wy-wx< -96) {
+            /* Continue the straight native cap, excluding its return corner. */
+            *sx=464+PortSceneTileMod(wx-464,16);
+            *sy=(2*wy-wx+*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
+            /* The face below the cap is 56px tall and ends at diagonal16.
+             * Keep the lower flower-bearing 56px of the left bay. */
             int reflected=559-wx;
             *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+576-*sx)/2; /* align the flower row, not just the blank hedge */
+            *sy=(2*wy-wx+656-*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;
@@ -788,11 +807,18 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
                      * each new edge: the user's rolling-mirror continuation.
                      * Keep its full texture instead of a short repeated sliver. */
                     int phase=PortSceneTileMod(-wy-1,128);
-                    *sx=160+PortSceneTileMod(wx-160,352);
+                    int horizontal=PortSceneTileMod(wx-160,704);
+                    *sx=160+(horizontal<352?horizontal:703-horizontal);
                     *sy=phase<64?phase:127-phase;
                 }
             } else {
-                *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
+                if (wy<72) {
+                    /* Keep the same folded phase through the entire upper
+                     * wall face, down to its straight base. A plain modulo
+                     * here would introduce a horizontal cut at y=0. */
+                    int horizontal=PortSceneTileMod(wx-160,704);
+                    *sx=160+(horizontal<352?horizontal:703-horizontal);
+                } else *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
                 *sy=wy;
             }
         } else return 0;

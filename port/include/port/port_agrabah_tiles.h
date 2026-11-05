@@ -49,4 +49,30 @@ static inline int PortAgrabahTileSource(int bg, int* x, int* y, int topPreview) 
     *y = sy < 0 ? 12 + PortSceneTileMod(oy, 4) : 60 + PortSceneTileMod(oy, 4);
     return 1;
 }
+/* Pixel-phase continuation of the three foreground roofs. The last face
+ * leaves the map below y512; its complete counterpart starts at (200,368),
+ * hence 2*y-x==536. Switching donors earlier samples the street instead. */
+static inline int PortAgrabahPixelSource(int bg, int wx, int wy, int* sx, int* sy) {
+    int diagonal=2*wy-wx, donor;
+    /* The last two-by-two BG2 tiles are transparent padding. Complete
+     * their missing facade overlay as well; BG3 and authored ink stay put. */
+    if (bg==2 && wx>=496 && wx<512 && wy>=496 && wy<512) {
+        *sx=wx-32; *sy=wy-16; return 1;
+    }
+    if (wx<0 || (wx<512 && wy<512) || diagonal<56 || diagonal>=576) return 0;
+    /* The same facade continues under the bottom/right corner. Painting
+     * roof below y512 but wall right of x512 leaves a rectangular bite. */
+    donor=diagonal<536 ? 448 : 256;
+    *sx=donor+PortSceneTileMod(wx-donor,32);
+    *sy=wy+(*sx-wx)/2;
+    return 1;
+}
+
+/* Preserve the tile-run fast path unless any pixel in its next run needs
+ * the facade resolver. The invariant decreases by one as X advances. */
+static inline int PortAgrabahPixelRunNeeded(int bg, int wx, int wy) {
+    int diagonal=2*wy-wx, run=8-PortSceneTileMod(wx,8);
+    if (bg==2 && wx>=496 && wx<512 && wy>=496 && wy<512) return 1;
+    return wx>=0 && (wx>=512 || wy>=512) && diagonal>=56 && diagonal-run+1<576;
+}
 #endif

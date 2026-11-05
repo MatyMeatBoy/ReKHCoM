@@ -18,7 +18,7 @@ class Scene118StagingTest(unittest.TestCase):
   arrays='\n'.join(line for line in source.splitlines() if line.startswith('static unsigned sStagedActorFirstSeen[') or line.startswith('static unsigned char sStagedActorEntered['))
   code=r'''#include <assert.h>
 #include <stddef.h>
-static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gHookPalette[1];
+static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gHookPalette[1],gJiminyPalette[1],gMarefPalette[1];
 static struct{int wide;}gPortScreen={1};static int sEnvActorFrameOff;
 static struct Recipe{int v[22];} recipe,*sPreliminarRecipe[4];
 static int gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
@@ -26,6 +26,7 @@ static int sceneActorId=118;static unsigned sActorSceneFrames;static unsigned ch
 #define GBA_SCREEN_W 240
 #define GBA_SCREEN_H 160
 static struct {const void*palette;const void*tiles;}sOamHd[1];
+static struct {unsigned char eventShadowActor;}sOamTag[1];
 '''+arrays+r'''
 static int Role(const void*p){int i=0;sOamHd[0].palette=p;
 '''+role+r'''

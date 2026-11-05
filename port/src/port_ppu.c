@@ -18,6 +18,7 @@
 
 #include "port/port.h"
 #include "port/port_oam.h"
+#include "evt/event_ids.h"
 
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -28,6 +29,7 @@
 #include "port/port_hdlayout.h"
 #include "engine.h"
 #include "mode.h"
+#include "evt/event_ids.h"
 #include "port/jiminy_paper.h"
 #include "sprite.h"
 #include "port/port_state.h"
@@ -38,6 +40,7 @@
 #include "port/port_agrabah_tiles.h"
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
+#include "port/port_scene130_library.h"
 #include "port/port_halloween_floor.h"
 
 extern const uint8_t gBtlBgHalloweenTownTiles[16384];
@@ -46,7 +49,9 @@ static int sHalloweenFloor;
 
 extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
-extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[];
+extern const uint16_t gEmy00Palette[];
+extern const unsigned char gEmy00L00Tiles[];
+extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[], gJiminyPalette[], gMarefPalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
 /* PORT_PPU_THREADS (the desktop builds, configure_pc.py): the canvas rows above and below the GBA picture are drawn
@@ -147,7 +152,7 @@ static int sPreliminarApprovedOnly; /* only the Preliminar V1 scenes approved wi
 /* every scene accepted in Atlas (Aprobado (mejorar), Aprobado, Honores: all go into the game, user 25/10) that has a
    recipe; KHCOM_SCENEnnn_WIDE=0 turns one off */
 static const int kPreliminarApproved[] = {4, 7, 44, 45, 53, 54, 55, 81, 87, 90, 95, 97, 98, 99, 102, 104, 110, 112, 115, 116, 117, 118,
-                                          120, 121, 122, 124};
+                                          120, 121, 122, 124, 130};
 static int sPreliminarApprovedOn[sizeof(kPreliminarApproved)/sizeof(kPreliminarApproved[0])];
 /* harness switches, read once per frame on the main thread: getenv in the per-row/per-pixel drawing is slow on
    Windows (a frame a second at 32:9) and not safe to call while the cores draw */
@@ -557,12 +562,20 @@ typedef struct SpriteTag {
     uint8_t header; /* a menu header (DrawMenuHeader) */
     uint8_t hdHudPart; /* HD enemy panel: frame, cap, live bar */
     uint8_t digit;
+    uint8_t eventShadowActor; /* exact owner supplied by the event shadow task */
     int16_t ayq; /* ay 3 only */
     int16_t clipX0, clipX1; /* x0==x1: no clip; coordinates include docking shift */
+    int16_t anchorX, anchorY; /* exact emitted SpriteEntry origin, before part offsets */
+    uint8_t anchorValid;
 } SpriteTag;
 static SpriteTag sEntryTag[128];
 static SpriteTag sOamTag[PORT_OAM_CAPACITY];
 static int sSpriteClipX0, sSpriteClipX1;
+static uint8_t sEventShadowActor;
+
+void PortSpriteEventShadowOwner(int role) {
+    sEventShadowActor = role >= 1 && role <= 3 ? (uint8_t)role : 0;
+}
 
 void PortSpriteClipX(int x0, int x1) {
     sSpriteClipX0 = x0;
@@ -782,6 +795,7 @@ void PortSpriteTag(int entry) {
         sEntryTag[entry].header = gPortHeaderDraw != 0;
         sEntryTag[entry].hdHudPart = (uint8_t)gPortHdHudPart;
         sEntryTag[entry].digit = (uint8_t)gPortHudDigit;
+        sEntryTag[entry].eventShadowActor = sEventShadowActor;
         sEntryTag[entry].clipX0 = (int16_t)sSpriteClipX0;
         sEntryTag[entry].clipX1 = (int16_t)sSpriteClipX1;
     }
@@ -1007,8 +1021,14 @@ void PortOamSetText(int oamIndex, int code, int style) {
 }
 
 void PortOamSetSource(int oamIndex, int entry) {
-    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY && entry >= 0 && entry < 128)
+    if (oamIndex >= 0 && oamIndex < PORT_OAM_CAPACITY && entry >= 0 && entry < 128) {
         sOamTag[oamIndex] = sEntryTag[entry];
+        if (gSpriteWork && entry < gSpriteWork->entryCount) {
+            sOamTag[oamIndex].anchorX=(int16_t)gSpriteWork->entries[entry].x;
+            sOamTag[oamIndex].anchorY=(int16_t)gSpriteWork->entries[entry].y;
+            sOamTag[oamIndex].anchorValid=1;
+        }
+    }
 }
 
 int PortPpuOverlayActive(void) {
@@ -1728,6 +1748,35 @@ static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
     }
     return 0;
 }
+/* This candidate never changes the native viewport. Outside it, preserve
+ * authored library pixels except the reviewed flat-green notch, then extend
+ * the empty map background.
+ * Palette indices remain live for fades; OBJ furniture/actors stay unique. */
+static int Preliminar130Authored(int x,int y) {
+    int floor,books,base;
+    if (x<0 || y<0 || x>=512 || y>=512) return 0;
+    floor=SinglePanelIndex(&sBgLatch[3],IO16(14),x,y);
+    books=SinglePanelIndex(&sBgLatch[2],IO16(12),x,y);
+    base=SinglePanelIndex(&sBgLatch[3],IO16(14),0,0);
+    /* Explicitly reviewed exception to authored-pixel preservation: finish
+     * the shelf baseboard through its original flat-green notch only. */
+    if (PortScene130LibraryRemate(x,y) && books>=0 && !(books&15) && floor>=0 &&
+        floor==SinglePanelIndex(&sBgLatch[3],IO16(14),32,280)) return 0;
+    return (books>=0 && (books&15)) ||
+        (floor>=0 && base>=0 && (PLTT16[floor]&0x7fff)!=(PLTT16[base]&0x7fff));
+}
+static int Preliminar130Pixel(int bg,int x,int y,uint16_t* color) {
+    int sx=x,sy=y,index;
+    if (!sPreliminarRecipe[2] || !sPreliminarRecipe[3] ||
+        sPreliminarRecipe[2]->v[0]!=130 || sPreliminarRecipe[3]->v[0]!=130) return 0;
+    if (!Preliminar130Authored(x,y)) {
+        int carpet=PortScene130LibrarySource(x,y,&sx,&sy);
+        if (!carpet && !Preliminar130Authored(sx,sy)) { sx=x<240?64:480; sy=64; }
+    }
+    index=SinglePanelIndex(&sBgLatch[bg],IO16(8+bg*2),sx,sy);
+    *color=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
+    return 1;
+}
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
     int white = SinglePanelIndex(l, cnt, 0, 0);
@@ -2020,11 +2069,16 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
             if (sPreliminarRecipe[bg] &&
                 ((bg==2 && (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) ||
+                 ((bg==2 || bg==3) && sPreliminarRecipe[bg]->v[0]==87 && PortPreliminar087VineRun(wx,wy)) ||
                  sPreliminarRecipe[bg]->v[0]==81 || sPreliminarRecipe[bg]->v[0]==95 || sPreliminarRecipe[bg]->v[0]==99 || (bg==2 && sPreliminarRecipe[bg]->v[0]==104) ||
                  sPreliminarRecipe[bg]->v[0]==110 || sPreliminarRecipe[bg]->v[0]==112 || sPreliminarRecipe[bg]->v[0]==117 || sPreliminarRecipe[bg]->v[0]==118 ||
                  sPreliminarRecipe[bg]->v[0]==120 || sPreliminarRecipe[bg]->v[0]==121 || sPreliminarRecipe[bg]->v[0]==122 ||
-                 sPreliminarRecipe[bg]->v[0]==124)) {
+                 sPreliminarRecipe[bg]->v[0]==124 || sPreliminarRecipe[bg]->v[0]==130)) {
                 int sx,sy;
+                if (sPreliminarRecipe[bg]->v[0]==130 && Preliminar130Pixel(bg,wx,wy,&out[x])) {
+                    sInWorld[x]=1;
+                    continue;
+                }
                 if (sPreliminarRecipe[bg]->v[0]==45 && PreliminarFirPixel(wx,wy,&out[x])) {
                     sInWorld[x]=1;
                     continue;
@@ -2032,6 +2086,16 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                 if (PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
                     int index=SinglePanelIndex(l,cnt,sx,sy);
                     out[x]=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
+                    sInWorld[x]=1;
+                    continue;
+                }
+                goto scalar_world;
+            }
+            if (sAgrabahLayer[bg] && PortAgrabahPixelRunNeeded(sAgrabahLayer[bg],wx,wy)) {
+                int sx,sy;
+                if (PortAgrabahPixelSource(sAgrabahLayer[bg],wx,wy,&sx,&sy)) {
+                    int index=SinglePanelIndex(l,cnt,sx,sy);
+                    out[x]=index>=0 && (index&15) ? PLTT16[index]&0x7fff : TRANSPARENT;
                     sInWorld[x]=1;
                     continue;
                 }
@@ -2549,10 +2613,25 @@ static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
    walks out into the wide view; one crossing the frame's edge is never cut (user 25/10: Agrabah's barrels lost half,
    Sora and friends vanished leaving). Reset per scene (PortPpuRender). */
 static unsigned char sActorEntered[PORT_OAM_CAPACITY];
-static unsigned sStagedActorFirstSeen[4];
-static unsigned char sStagedActorEntered[4]; /* Cheshire, Aladdin, Genie, Hook: independent of recycled OAM slots. */
+static unsigned sStagedActorFirstSeen[6];
+static unsigned char sStagedActorEntered[6]; /* Roles 0..2 existing actors, 3 Hook, 4 Jiminy, 5 Maleficent. */
 static int sActorSceneKey = -1;
 static unsigned sActorSceneFrames;
+
+/* Track 4's human Maleficent and her ground-level shadow share the exact
+ * emitted SpriteEntry origin (z == groundZ == 0 throughout event 130).
+ * Never infer ownership from a nearby actor or a recycled OAM slot. */
+static int Preliminar130Shadow(int i) {
+    int j;
+    if (!sOamTag[i].anchorValid) return 0;
+    for (j=0;j<OamCount();j++) {
+        if (sOamHd[j].palette!=gMarefPalette || sOamTag[j].screen ||
+            sOamTag[j].hud || sOamTag[j].text || !sOamTag[j].anchorValid) continue;
+        if (sOamTag[i].anchorX==sOamTag[j].anchorX &&
+            sOamTag[i].anchorY==sOamTag[j].anchorY) return 1;
+    }
+    return 0;
+}
 
 static void DrawObjs(int gy, uint16_t dispcnt) {
     int i, w = gPortScreen.width;
@@ -2561,6 +2640,12 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
        enter and leave through the original frame as authored. */
     int sceneActorFrame = gPortScreen.wide && sEventBackdropProfile == 97 && !sEnvActorFrameOff;
     int sceneActorId = sceneActorFrame ? 97 : 0;
+    /* Use the regional enum: EU's runtime id is 128, not the logical 130.
+     * This staging fix also applies without the opt-in background recipe. */
+    if (gPortScreen.wide && !sEnvActorFrameOff && sActorSceneKey == EVENT_130_HOLLOWBASTION_E1) {
+        sceneActorFrame=1;
+        sceneActorId=130;
+    }
     /* Jafar: a view wider than the 512-pixel sprite space showed each sprite twice, 512 apart (his attacks
        mirrored in the margin, user 24/10); his fight's sprites live in the 512 columns around the picture */
     int objLeft = sJafarFight && sLeft < GBA_SCREEN_W / 2 - 256 ? GBA_SCREEN_W / 2 - 256 : sLeft;
@@ -2650,37 +2735,64 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         if (ox >= objRight || ox + bw <= objLeft)
             continue;
 
+        /* Event 081 preloads both Shadow waves in their idle pose. Keep only
+         * that waiting pose outside the native camera hidden; the walking
+         * bank enters independently, without releasing the second wave. */
+        if (gPortScreen.wide && !sEnvActorFrameOff && sActorSceneKey == EVENT_081_MONSTORO_E3 &&
+            !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&
+            sOamHd[i].palette == gEmy00Palette && sOamHd[i].tiles == gEmy00L00Tiles &&
+            !(ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0))
+            continue;
+
         if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&
-            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || prio > 0) &&
+            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || sceneActorId == 120 || sceneActorId == 130 || prio > 0) &&
             /* Event shadows use the common palette, not the actor palette.
              * Their own OAM must wait at the authored camera edge too. */
             (sceneActorId != 97 || sOamHd[i].palette == gCheshirePalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 112 || sOamHd[i].palette == gAladdinPalette ||
-                sOamHd[i].palette == gGeniePalette || sOamHd[i].tiles == gBtlShadowTiles ||
-                sOamHd[i].tiles == gBtlShadowSmallTiles || sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+                sOamHd[i].palette == gGeniePalette ||
+                (sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3)) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
-                sOamHd[i].tiles == gBtlShadowLargeTiles)) {
+                sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+            (sceneActorId != 120 || sOamHd[i].palette == gJiminyPalette ||
+                sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+
+            (sceneActorId != 130 || sOamHd[i].palette == gMarefPalette ||
+                ((sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                  sOamHd[i].tiles == gBtlShadowLargeTiles) && Preliminar130Shadow(i)))) {
             int hookShadow = sceneActorId == 118 &&
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
+            int jiminyShadow = sceneActorId == 120 &&
+                (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                 sOamHd[i].tiles == gBtlShadowLargeTiles);
+            int maleficentShadow=sceneActorId==130 && sOamHd[i].palette!=gMarefPalette;
+            /* This byte occupied padding in old checkpoints. Only the two
+             * emitted roles are valid; never index actor state with padding. */
+            int eventShadow = sceneActorId == 112 &&
+                sOamTag[i].eventShadowActor>=2 && sOamTag[i].eventShadowActor<=3;
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
-                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 : -1;
+                eventShadow ? sOamTag[i].eventShadowActor - 1 :
+                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 :
+                sceneActorId == 120 && (sOamHd[i].palette == gJiminyPalette || jiminyShadow) ? 4 :
+                sceneActorId == 130 ? 5 : -1;
             unsigned char* entered = actor >= 0 ? &sStagedActorEntered[actor] : &sActorEntered[i];
             /* Shared party shadows must neither unlock Hook nor inherit an
              * OAM slot that a party member already brought into the frame. */
-            if (!hookShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
+            if (!hookShadow && !jiminyShadow && !maleficentShadow && !eventShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0) {
                 /* The first render can precede the authored camera placement.
                  * Preserve its native pixels without unlocking a staged actor. */
-                if (!hookShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
+                if (!hookShadow && !jiminyShadow && !maleficentShadow && !eventShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
             }
             else if (!*entered)
-                continue; /* a different actor previously using this OAM slot does not grant entry */
+                continue;
         }
         line = gy - oy;
         /* Reject lines outside the sprite before mosaic quantisation:
