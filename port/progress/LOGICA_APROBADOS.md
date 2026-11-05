@@ -676,3 +676,13 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Escena115: detalles posteriores a la aceptación, revisión4
+
+Los tres recortes requieren alinear la frontera de madera limpia con el fin
+de BG2 (diagonal32), completar la punta que cae en relleno transparente del
+mapa y omitir una escotilla cuyo resto interior no existe. Un sello puede
+cruzar el borde del mapa sin que su punta quede fuera: conservar identidad de
+todo el mapa dejaba ese extremo sin dibujar. La excepción sólo se aplica al
+muestreo exterior al cuadro GBA y no borra tinta original de BG2. Propuesta
+sin build; no dar por validadas otras cámaras o plataformas con la simulación.
