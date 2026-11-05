@@ -676,3 +676,14 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Agrabah107/108: continuación superior y escalón, revisión4
+
+El sampler superior existente debe estar activo en la ruta normal de Agrabah,
+no depender del flag de preview general: las pilastras conservan sus columnas
+y la ventana cortada toma su contraparte completa(-8columnas,+4filas). El
+pequeño escalón señalado usa la traslación BG2(-32,-16) en x496..511/y288..303,
+incluyendo su gate de corridas; el BG3 del techo/calle aceptados no se cambia.
+Todas estas selecciones siguen fuera del cuadro GBA. La simulación responde
+a las tres nubes sin afirmar nueva cámara o ejecución del juego. Pendiente
+de valoración propia y QA real; no hereda la aceptación del padre.
