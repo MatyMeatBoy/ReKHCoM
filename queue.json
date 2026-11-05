@@ -16329,8 +16329,13 @@
       "claimed_at": "2026-11-05T20:46:42.157470+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-05T20:50:33.532259+00:00",
+  "integrator": {
+    "owner": "codex-atlas-history-integrator",
+    "token": "ebae119a5041dc56ea8d4247b3359ded29c8789764159469",
+    "created_at": "2026-11-05T20:50:53.454099+00:00",
+    "updated_at": "2026-11-05T20:50:53.454099+00:00"
+  },
+  "updated_at": "2026-11-05T20:50:53.454099+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
