@@ -10123,10 +10123,10 @@
     "monstro-story-atlas-coverage": {
       "id": "monstro-story-atlas-coverage",
       "piece": "Cobertura Atlas por tramosMonstro: Geppetto barco dialogos y Pinocho plataformas shot e7bb35a0/266fcaa4 no vistosporusuario; identificar eventos/estadoscamara y completar bordes respetando zoom/HUD, no marcarcapturainicial comoescenacompleta.",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-monstro-nobuild",
       "created_at": "2026-10-27T22:24:52.168606+00:00",
-      "updated_at": "2026-11-05T18:41:09.309964+00:00",
+      "updated_at": "2026-11-05T20:42:54.848825+00:00",
       "branch": "art/atlas-monstro-story-final",
       "pr": null,
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
@@ -10158,7 +10158,7 @@
           "detail": "released: STOP humano05/11: WIP preservado, NO resuelto. Checkoutatlas-monstro-story-final main30e1, test_monstro_story.py no seguido y candidatos privados. Baselines075/076 exit0/11frames+canvas; pendientes RED/GREEN, latch65535 a-1 solo075BG2/3, conservar composicion cercana/dialogo3x, receta/QA. Ver pruebas/atlas-final-20261105/monstro-story-final. No Atlas/PR nuevos."
         }
       ],
-      "claimed_at": "2026-11-05T17:36:09.876162+00:00"
+      "claimed_at": "2026-11-05T20:42:54.848825+00:00"
     },
     "scene-background-coverage-x3-integer2": {
       "id": "scene-background-coverage-x3-integer2",
@@ -16290,7 +16290,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:42:32.517070+00:00",
+  "updated_at": "2026-11-05T20:42:54.848825+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
