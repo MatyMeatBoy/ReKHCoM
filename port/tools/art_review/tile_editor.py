@@ -322,6 +322,19 @@ class TileEditor:
         project['id'] = uuid.uuid4().hex
         return self.save_project(project, 0)
 
+    def art_project(self, scene, parent_id):
+        if not isinstance(parent_id, str) or not re.fullmatch('[a-f0-9]{32}', parent_id):
+            raise ValueError('Invalid Atlas parent')
+        project = self.new_project(scene)
+        links = self.root / 'atlas-links'
+        links.mkdir(exist_ok=True)
+        write_json(links / (project['id'] + '.json'), dict(parent_id=parent_id))
+        return project
+
+    def art_parent(self, project_id):
+        self._project_path(project_id)
+        return json.loads((self.root / 'atlas-links' / (project_id + '.json')).read_text(encoding='utf-8'))['parent_id']
+
     def load_project(self, project_id):
         with self.lock:
             path = self._project_path(project_id)

@@ -490,6 +490,11 @@ def handler(store, editor=None):
             query = {key:values[0] for key, values in parse_qs(urlparse(self.path).query).items()}
             if route.startswith('/api/editor/') or route.startswith('/editor-assets/'):
                 try:
+                    if route == '/api/editor/art-projects':
+                        parent_id = query.get('parent_id', '')
+                        links = editor.root / 'atlas-links'
+                        ids = [p.stem for p in sorted(links.glob('*.json')) if json.loads(p.read_text(encoding='utf-8')).get('parent_id') == parent_id]
+                        return self.reply(200, dict(ids=ids))
                     if route == '/api/editor/scenes':
                         return self.reply(200, editor.scene_list())
                     if route == '/api/editor/scene':
@@ -582,6 +587,17 @@ def handler(store, editor=None):
                 if not 0 < length <= 42 * 1024 * 1024:
                     raise ValueError('Solicitud demasiado grande o vacía')
                 data = json.loads(self.rfile.read(length))
+                if self.path == '/api/editor/art':
+                    asset = next(a for a in store.all() if a['id'] == data['parent_id'])
+                    return self.reply(200, dict(project=editor.art_project(data['scene'], asset['id'])))
+                if self.path == '/api/editor/publish':
+                    project = editor.load_project(data['id'])
+                    parent_id = editor.art_parent(project['id'])
+                    parent = next(a for a in store.all() if a['id'] == parent_id)
+                    image = io.BytesIO()
+                    editor.render_project(project).save(image, format='PNG')
+                    return self.reply(200, store.add(image.getvalue(), parent['title'],
+                        'Edición manual de tiles ROM', 'Editor de tiles Atlas · proyecto ' + project['id'] + ' · revisión ' + str(project['revision']) + ' · escena ' + project['scene'] + ' · ROM SHA256 ' + project['source']['rom_sha256'], parent_id=parent['id']))
                 if self.path == '/api/editor/project/new':
                     return self.reply(200, dict(project=editor.new_project(data['scene'])))
                 if self.path == '/api/editor/project':
