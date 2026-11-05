@@ -16053,6 +16053,19 @@
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"0bac2ac10b81462e910b3705bd3c6740\", \"revision\": 2, \"sha256\": \"7ce45e84dae059c922d5dfb44b388a577320f4824928d8c7bfd736720abb2502\", \"submissions\": [{\"submission\": \"20261105-160504-935b5f\", \"created\": \"2026-11-05T19:05:05.068180+00:00\", \"image_id\": \"0bac2ac10b81462e910b3705bd3c6740\", \"version\": \"Propuesta 05/11 \\u00b7 Antes y soluci\\u00f3n \\u00b7 cueva y sincorazones\", \"clouds\": 1, \"cloud_ids\": [\"0dda90ce-59b5-48ef-a420-1d4e08bdfe9d\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160504-935b5f\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": []
+    },
+    "atlas-followup-f3a2a2d2-r5": {
+      "id": "atlas-followup-f3a2a2d2-r5",
+      "piece": "Oogie Boogie · arena: seguimiento posterior a aprobación; falta dibujar punta del fantasma solamente; falta completar mitad de la mascara solameente; completar hasta derecha; completar hasta izquierda",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T19:23:49.930051+00:00",
+      "updated_at": "2026-11-05T19:23:49.930051+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "reference": "{\"image_id\": \"f3a2a2d29bdd45b5b040a9cca851edb4\", \"revision\": 5, \"sha256\": \"ece4d12629f6ea98b8b88b56a09ce0043961fd7987ea5f6f4e5a4ccfc4bb32cd\", \"submissions\": [{\"submission\": \"20261105-160839-40fd46\", \"created\": \"2026-11-05T19:08:40.180232+00:00\", \"image_id\": \"f3a2a2d29bdd45b5b040a9cca851edb4\", \"version\": \"Propuesta05/11 \\u00b7 flancos verdes y figuras \\u00b7 ANTES/PROPUESTA EU\", \"clouds\": 4, \"cloud_ids\": [\"3bfd86d4-8cc8-4c17-99b1-66c7cfc88bc7\", \"551a7b44-fa9f-4d17-9338-d904db680807\", \"adf595aa-0c1e-4ad8-8365-1f7c32a6c453\", \"63b16940-aa8e-42c7-8f31-a476eda91a13\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160839-40fd46\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
     }
   },
   "integrator": {
@@ -16061,7 +16074,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:23:42.151063+00:00",
+  "updated_at": "2026-11-05T19:23:49.930051+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
