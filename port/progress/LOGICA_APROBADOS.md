@@ -434,6 +434,17 @@ Esta entrega es una propuesta pendiente de valoración; no hereda honores ni hab
 
 El envío `20261024-183353-ceb621` sobre `ae36f45ef10e45cc809620075f0c8626` rechaza prolongar el ajedrez beige hacia arriba: corresponde al muro de una casa. La regla anterior de casillas de28px queda sustituida. Usar el mismo muro rosa de la arena de Trickmaster; los postes de madera y el fuste único de piedra mantienen su x. El período de48px excluye el travesaño; el panel derecho limpio evita reloj y ventana duplicados. Conservar el suelo elogiado y la chimenea original. La captura hija es una propuesta sin honores heredados ni activación automática para jugadores.
 
+## Escena110: esquina superior derecha (propuesta05/11)
+
+Padre `aa5c68ac68e948deaa006b2dfec38897`, envío `20261026-063012-d73629`,
+nube `e9d84772-0847-47d6-9943-1278168f059a`: conservar el plegado vertical
+aprobado, pero plegar también la franja completa x=160..511 al alcanzar
+el borde derecho. El módulo de352px no debe saltar de511 a160: devolver
+511,510... hasta el otro extremo y volver a plegar. Mantener esta misma
+fase en toda la cara superior hasta su base recta y=72 evita una junta
+horizontal en y=0. Terraza, suelo, pilares y objetos únicos conservados.
+Propuesta pendiente de revisión propia; la aprobación del padre no se hereda.
+
 ## Agrabah 107/108: subida del Genio (comentario posterior, 24/10)
 
 El usuario señala que, aunque la calle tiene honores, al aparecer el Genio la cámara sube y los pilares
