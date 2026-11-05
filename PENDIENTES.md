@@ -443,6 +443,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas087-final-border-patterns | Escena087: completar patrones del borde superior tras revision33dd78 | en_curso | codex-atlas087-final | art/atlas-scene087-final | Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion | 2026-11-05T14:36:40.992420+00:00 |
 | atlas110-upper-right-20261105 | Escena110 patron extremo superior derecho posterior PR216 | en_curso | codex-atlas110-final | art/atlas-scene110-final | — | 2026-11-05T15:09:53.814210+00:00 |
 | atlas-synthesis-outline-reference-20261105 | Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5 | pendiente | — | — | Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline | 2026-11-05T15:06:20.228495+00:00 |
-| atlas-internal-references-before-after | Atlas: referencias nativas internas y extensiones antes/solución | en_curso | codex-atlas-final | — | Usuario05/11 corrección explícita: referenciasnativasinternas,norevision; arenasyahechas,proponermejorasperspectivaTrickmaster | 2026-11-05T15:08:08.358886+00:00 |
+| atlas-internal-references-before-after | Atlas: referencias nativas internas y extensiones antes/solución | pr_abierto | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/589 | Usuario05/11 corrección explícita: referenciasnativasinternas,norevision; arenasyahechas,proponermejorasperspectivaTrickmaster | 2026-11-05T15:19:34.931556+00:00 |
 
 Integrador: libre
