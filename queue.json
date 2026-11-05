@@ -16044,15 +16044,21 @@
     "atlas-followup-1bf2e47a-r4": {
       "id": "atlas-followup-1bf2e47a-r4",
       "piece": "Escena 115: seguimiento posterior a aprobación; tile flotando rojo; falta punta; sobras de escotilla",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas115-details",
       "created_at": "2026-11-05T19:22:55.785039+00:00",
-      "updated_at": "2026-11-05T20:09:33.437268+00:00",
-      "branch": null,
+      "updated_at": "2026-11-05T20:21:47.073056+00:00",
+      "branch": "art/atlas115-details-nobuild",
       "pr": null,
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"1bf2e47af7fa4b2fa02599248052a27a\", \"revision\": 4, \"sha256\": \"78f75648b1f8c3189084e75bd81f8e703e7feb62ca6514d83346a79e5f425a29\", \"submissions\": [{\"submission\": \"20261105-160659-04c4bb\", \"created\": \"2026-11-05T19:06:59.436659+00:00\", \"image_id\": \"1bf2e47af7fa4b2fa02599248052a27a\", \"version\": \"Antes / soluci\\u00f3n propuesta \\u00b7 escotillas completas en el juego\", \"clouds\": 3, \"cloud_ids\": [\"1d5a8402-c717-4f55-a459-9aa2db215dc6\", \"deb2d1e1-72e4-485a-8270-ebe1cb5986f7\", \"02aab237-24ea-4dc4-9e38-7effec67c187\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160659-04c4bb\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T20:21:47.073056+00:00",
+          "owner": "codex-atlas115-details",
+          "detail": "Tres defectos reproducidos por modelo Python calibrado a captura historica600; nuevos cambios sin build. C AST RED3/GREEN3 y35840coordenadas modelo, tres recortes before exactos. Fuente ypropuesta en preparacion; no runtime nuevo ni aprobacion heredada."
+        }
+      ],
       "claimed_at": "2026-11-05T20:09:33.437268+00:00"
     },
     "atlas-followup-ab344422-r5": {
@@ -16203,7 +16209,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:18:41.535387+00:00",
+  "updated_at": "2026-11-05T20:21:47.073056+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
