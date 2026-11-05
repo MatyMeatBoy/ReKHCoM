@@ -91,6 +91,11 @@ static int PathIndex(int x, int y) {
 static int FloorMotifIndex(int x, int y) {
     float depth, left, right, width, t;
     int sx, offset, packed, index;
+    /* Complete the straight front rim to both viewport edges using its
+     * clean outer-row indices. The native room keeps the two central path
+     * joins; the outer rows must not stop at the old reflected side caps. */
+    if (y >= 400 && y < 408)
+        return RoomIndex(ROOM_X, y);
     if (y < 408) {
         /* Preserve the authored upper cap beside the room. */
         sx = x;
