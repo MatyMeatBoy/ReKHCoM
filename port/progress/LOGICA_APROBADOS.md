@@ -543,3 +543,12 @@ fuente `3bf6dd67275cad9332e35d2283a2cedba2c9db54`. Las filas externas
 sin lápidas ni otra coronación. El rebase conserva el bloque090 exacto.
 Cuatro pares runtime conservan el núcleo; Original completo idéntico.
 La aprobación corresponde exclusivamente a esta versión.
+
+### Escena112: dueño de la sombra, propuesta05/11
+
+La sombra de espera de Aladdín/Genio debe usar el dueño real de su tarea de
+dibujo, no el espacio OAM reutilizable ni proximidad al cuerpo flotante.
+Etiquetar sólo EVENT112 tracks3/4, restableciendo el contexto tras la emisión.
+La sombra nunca desbloquea al actor; las sombras del resto del grupo se dibujan
+normalmente. El marco actual conserva su donante y80 y se comprueba durante los
+cambios de cámara. Propuesta nueva pendiente, sin aprobación heredada.

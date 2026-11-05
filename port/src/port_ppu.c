@@ -557,12 +557,18 @@ typedef struct SpriteTag {
     uint8_t header; /* a menu header (DrawMenuHeader) */
     uint8_t hdHudPart; /* HD enemy panel: frame, cap, live bar */
     uint8_t digit;
+    uint8_t eventShadowActor; /* exact owner supplied by the event shadow task */
     int16_t ayq; /* ay 3 only */
     int16_t clipX0, clipX1; /* x0==x1: no clip; coordinates include docking shift */
 } SpriteTag;
 static SpriteTag sEntryTag[128];
 static SpriteTag sOamTag[PORT_OAM_CAPACITY];
 static int sSpriteClipX0, sSpriteClipX1;
+static uint8_t sEventShadowActor;
+
+void PortSpriteEventShadowOwner(int role) {
+    sEventShadowActor = role >= 1 && role <= 3 ? (uint8_t)role : 0;
+}
 
 void PortSpriteClipX(int x0, int x1) {
     sSpriteClipX0 = x0;
@@ -782,6 +788,7 @@ void PortSpriteTag(int entry) {
         sEntryTag[entry].header = gPortHeaderDraw != 0;
         sEntryTag[entry].hdHudPart = (uint8_t)gPortHdHudPart;
         sEntryTag[entry].digit = (uint8_t)gPortHudDigit;
+        sEntryTag[entry].eventShadowActor = sEventShadowActor;
         sEntryTag[entry].clipX0 = (int16_t)sSpriteClipX0;
         sEntryTag[entry].clipX1 = (int16_t)sSpriteClipX1;
     }
@@ -2658,26 +2665,27 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 112 || sOamHd[i].palette == gAladdinPalette ||
-                sOamHd[i].palette == gGeniePalette || sOamHd[i].tiles == gBtlShadowTiles ||
-                sOamHd[i].tiles == gBtlShadowSmallTiles || sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+                sOamHd[i].palette == gGeniePalette || sOamTag[i].eventShadowActor) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles)) {
             int hookShadow = sceneActorId == 118 &&
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
+            int eventShadow = sceneActorId == 112 && sOamTag[i].eventShadowActor;
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
+                eventShadow ? sOamTag[i].eventShadowActor - 1 :
                 sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 : -1;
             unsigned char* entered = actor >= 0 ? &sStagedActorEntered[actor] : &sActorEntered[i];
             /* Shared party shadows must neither unlock Hook nor inherit an
              * OAM slot that a party member already brought into the frame. */
-            if (!hookShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
+            if (!hookShadow && !eventShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0) {
                 /* The first render can precede the authored camera placement.
                  * Preserve its native pixels without unlocking a staged actor. */
-                if (!hookShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
+                if (!hookShadow && !eventShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
             }
             else if (!*entered)
                 continue; /* a different actor previously using this OAM slot does not grant entry */
