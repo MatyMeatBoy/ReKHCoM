@@ -676,3 +676,14 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Escena095: revisión posterior del patrón A, propuesta sin build
+
+La valoración `ab3444223b854341afa9ae521a0d2860` revisión5 marca como A el
+tramo nativo oscuro junto al trono y pide repetirlo en toda la derecha. La
+regla anterior de copiar el frente floral izquierdo conserva altura, pero no
+es modelo válido de textura/sombra para este nuevo pedido. Propuesta: usar la
+cara derecha original x448..479 con2y-x constante entre-96y16; mantener remate,
+base, lado izquierdo y props únicos. No recolorear el donante de otro plano.
+La imagen nueva se etiqueta simulación sobre captura previa, sin build; su
+aprobación y runtime siguen pendientes. Ver `ATLAS_SCENE095_PATTERN_A.md`.
