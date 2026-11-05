@@ -15994,10 +15994,10 @@
     "atlas-darkside06-left-detail": {
       "id": "atlas-darkside06-left-detail",
       "piece": "Darkside06: dibujo y difuminado lateral solicitado en nube72f6d65b",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas-darkside06-nobuild",
       "created_at": "2026-11-05T17:40:14.925679+00:00",
-      "updated_at": "2026-11-05T18:39:30.096433+00:00",
+      "updated_at": "2026-11-05T20:42:32.517070+00:00",
       "branch": "art/atlas-darkside06-left-detail",
       "pr": null,
       "approval": "Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena",
@@ -16014,7 +16014,7 @@
           "detail": "released: STOP por orden humana 2026-11-05. WIP conservado en kh-worktrees/atlas-darkside06-final, base30e1f47fefb6bf1f358018597f16e869fbc40b2d. C RED2/GREEN2 y preview PASS. Wide BEFORE/AFTER604 ambos exit0; sin revisión comparativa, controles Original ni entrega Atlas/PR. Evidencia pruebas/atlas-final-20261105/darkside06-final. No terminado; brazo aprobado intacto y limitación preexistente de desplazamiento documentada. Sin procesos propios activos."
         }
       ],
-      "claimed_at": "2026-11-05T17:40:27.026048+00:00"
+      "claimed_at": "2026-11-05T20:42:32.517070+00:00"
     },
     "atlas-journal-inner-footer-20261105": {
       "id": "atlas-journal-inner-footer-20261105",
@@ -16290,7 +16290,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:42:17.331029+00:00",
+  "updated_at": "2026-11-05T20:42:32.517070+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
