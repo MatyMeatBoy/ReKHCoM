@@ -465,3 +465,9 @@ entry.onclick=async()=>{if(!current)return toast('Elige una imagen para pintar.'
 q('pixelDownload').onclick=()=>canvas.toBlob(blob=>{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(parent?.title||'atlas')+'-pixeles.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/png');
 q('pixelSave').onclick=async()=>{finish();if(!dirty)return toast('Pinta la mejora antes de guardar.');const b=q('pixelSave');b.disabled=true;try{const base64=canvas.toDataURL('image/png').split(',')[1];const a=await api('/api/import',{base64,title:parent.title,version:'Edición manual de píxeles',parent_id:parent.id,provenance:'Pintor de píxeles de Atlas · copia exacta con trazos manuales'});if(!assets.some(x=>x.id===a.id))assets.push(a);dirty=false;dialog.close();await choose(a.id);toast('Nueva versión de píxeles guardada en Atlas.');}catch(e){toast(e.message);}finally{b.disabled=false;}};
 })();
+
+/* The action follows the exact revision currently displayed. */
+const editArtTiles = document.createElement('button');
+editArtTiles.id='editArtTiles';editArtTiles.textContent='Editar tiles';
+$('title').after(editArtTiles);
+editArtTiles.onclick=()=>{if(current)location.href='/editor?art='+encodeURIComponent(current.id);};

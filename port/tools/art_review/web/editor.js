@@ -199,6 +199,8 @@ function setTool(t) {
 }
 
 async function open(project) {
+  $('publish').hidden=!new URLSearchParams(location.search).get('art');
+  $('publish').disabled=false;
   state.project = project; state.layer = 0; state.undo = []; state.redo = []; state.sel = null;
   await Promise.all(project.map.tilesets.map(async ts => { ts.img = await loadImage(ts.image); }));
   const first = project.map.layers[0].data.find(g => g & GID_MASK) || 1;
@@ -215,7 +217,9 @@ function stripImages(project) {
 async function refreshProjects(selected) {
   const { projects } = await api('/api/editor/projects'), sel = $('project');
   sel.innerHTML = '<option value="">—</option>';
-  projects.forEach(p => {
+  const art=new URLSearchParams(location.search).get('art');
+  const links=art?await api('/api/editor/art-projects?parent_id='+encodeURIComponent(art)):null;
+  projects.filter(p=>!links||links.ids.includes(p.id)).forEach(p => {
     const o = document.createElement('option');
     o.value = p.id; o.textContent = `${p.scene} · r${p.revision} · ${(p.updated_at || '').slice(0, 16).replace('T', ' ')}`;
     sel.append(o);
@@ -236,14 +240,25 @@ async function init() {
     sel.append(o);
   });
   await refreshProjects();
-  status(`${list.scenes.length} escenas del cartucho local`);
+  const art=new URLSearchParams(location.search).get('art');
+  if(art){
+    document.querySelector('.back').href='/?image='+encodeURIComponent(art)+'&view=history';
+    $('publish').hidden=false;$('publish').disabled=true;
+    status('Elige la escena de la ROM para este arte y pulsa Nuevo proyecto.');
+    // Keep only projects linked to this exact artwork revision.
+    const links=await api('/api/editor/art-projects?parent_id='+encodeURIComponent(art));
+    const ids=new Set(links.ids);
+    for(const option of [...$('project').options])if(option.value&&!ids.has(option.value))option.remove();
+    if(links.ids.length){$('project').value=links.ids.at(-1);$('project').dispatchEvent(new Event('change'));}
+  }else status(`${list.scenes.length} escenas del cartucho local`);
 }
 
 $('new').onclick = async () => {
   if (!confirmLeave()) return;
   try {
     status('Creando…');
-    const { project } = await api('/api/editor/project/new', { scene: $('scene').value });
+    const art=new URLSearchParams(location.search).get('art');
+    const { project } = await api(art?'/api/editor/art':'/api/editor/project/new', { scene: $('scene').value, parent_id:art });
     await open(project); await refreshProjects(project.id);
     status(`Proyecto nuevo de la escena ${project.scene}`);
   } catch (e) { status(e.message, true); }
@@ -265,6 +280,14 @@ $('save').onclick = async () => {
     markDirty(false); await refreshProjects(project.id);
     status(`Guardado r${project.revision}`);
   } catch (e) { status(e.message, true); }
+};
+$('publish').onclick = async () => {
+  const button=$('publish');button.disabled=true;
+  try {
+    if(state.dirty) { await $('save').onclick(); if(state.dirty) return; }
+    const child=await api('/api/editor/publish',{id:state.project.id});
+    location.href='/?image='+encodeURIComponent(child.id)+'&view=history';
+  } catch(e) { status(e.message,true); } finally {button.disabled=false;}
 };
 $('export').onclick = () => { location.href = '/api/editor/export?format=zip&id=' + state.project.id; };
 $('undo').onclick = () => replay(state.undo, state.redo, 1);
