@@ -15581,10 +15581,23 @@
       "reference": "Atlasaa5c68ac68e948deaa006b2dfec38897 nubee9d84772-0847-47d6-9943-1278168f059a todo bien excepto patron aca; comentario posterior PR216. Mandato usuario procesar Atlas05/11",
       "evidence": [],
       "claimed_at": "2026-11-05T14:53:53.755666+00:00"
+    },
+    "atlas-synthesis-outline-reference-20261105": {
+      "id": "atlas-synthesis-outline-reference-20261105",
+      "piece": "Atlas síntesis: tamaño y contorno de requisito HD con referencia oficial1.5",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T14:55:35.794311+00:00",
+      "updated_at": "2026-11-05T14:55:35.794311+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario05/11 todacola; generalreview823cdf38241144b1b282bcf3f2532120 pideinvestigar1.5ratiooutline",
+      "reference": "823cdf38241144b1b282bcf3f2532120",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:55:24.875243+00:00",
+  "updated_at": "2026-11-05T14:55:35.794311+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
