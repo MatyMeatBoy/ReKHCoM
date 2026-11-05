@@ -4185,10 +4185,10 @@
     "atlas-090-wall-base": {
       "id": "atlas-090-wall-base",
       "piece": "Escena 090: base del muro",
-      "status": "pr_abierto",
-      "owner": "codex-atlas",
+      "status": "en_curso",
+      "owner": "codex-atlas-090",
       "created_at": "2026-10-26T07:29:06.376809+00:00",
-      "updated_at": "2026-10-26T07:33:14.196252+00:00",
+      "updated_at": "2026-11-05T14:03:02.547664+00:00",
       "branch": "codex/atlas-090-wall-base",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/210",
       "approval": null,
@@ -4198,6 +4198,11 @@
           "at": "2026-10-26T07:33:14.196252+00:00",
           "owner": "codex-atlas",
           "detail": "Dos capturas EU; compilación y check_sources correctos; propuesta pendiente de valoración."
+        },
+        {
+          "at": "2026-11-05T14:03:02.547664+00:00",
+          "owner": "codex-coordinacion",
+          "detail": "05/11 coordinador confirma carril090 abandonado y autoriza retoma; sesiones activas057 y biblioteca ajenas. PR210 verificado CLOSED mergedAt null head925c5afa: no resuelto. Comentarios nuevos551d5459 y f223ac9d en padreAtlas6458681037fd4bdc91688842b9369560. Nuevo checkoutatlas-scene090-final desdeorigin/main6ccada5bf."
         }
       ],
       "claimed_at": "2026-10-26T07:29:11.695693+00:00",
@@ -15443,7 +15448,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:00:31.772987+00:00",
+  "updated_at": "2026-11-05T14:03:02.547664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16664,6 +16669,16 @@
       "to_owner": "codex-atlas-final",
       "expected_commit": "7a4cdb3cef57854fbe5bedb5c58346a1b5d39261",
       "evidence": "Usuario05/11 ordena procesar toda cola Atlas. Carril histórico atlas057-turbo-current sin worktree vigente; gitworktreelist comprobado, PRnoasignadoencola; conserva backupbranch. ÚnicochatKHtrabajoactual, agentes actuales118/120/editor/coverage coordinados, ninguno057. Recuperación explícita del pendiente de dos subidas aún sin respuesta."
+    },
+    {
+      "at": "2026-11-05T14:03:02.547664+00:00",
+      "actor": "codex-coordinacion",
+      "operation": "recover-task",
+      "task": "atlas-090-wall-base",
+      "from_owner": "codex-atlas",
+      "to_owner": "codex-atlas-090",
+      "expected_commit": "b118e100f64f55d6782d0358a66f501fb7d96000",
+      "evidence": "05/11 coordinador confirma carril090 abandonado y autoriza retoma; sesiones activas057 y biblioteca ajenas. PR210 verificado CLOSED mergedAt null head925c5afa: no resuelto. Comentarios nuevos551d5459 y f223ac9d en padreAtlas6458681037fd4bdc91688842b9369560. Nuevo checkoutatlas-scene090-final desdeorigin/main6ccada5bf."
     }
   ]
 }
