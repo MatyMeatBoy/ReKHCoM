@@ -15897,17 +15897,23 @@
       "status": "en_curso",
       "owner": "codex-atlas-journal-final",
       "created_at": "2026-11-05T17:58:43.854516+00:00",
-      "updated_at": "2026-11-05T17:58:50.443097+00:00",
-      "branch": null,
+      "updated_at": "2026-11-05T18:02:07.351336+00:00",
+      "branch": "art/atlas-journal-final",
       "pr": null,
       "approval": "Usuario05/11 procesar cola; root delega Diario antes START y Ver barajas, uno por uno",
-      "reference": "Padre a36793f6231a4c55b3ca636305aea2b7 revision5, cuatro nubes. Hijo acotado de atlas-menus-current-review; no reclama START ni barajas. PR511 integrado no certifica feedback visual actual.",
-      "evidence": [],
+      "reference": "a36793f6231a4c55b3ca636305aea2b7 revision5; envio20261025-194437-6b5b90; cuatro nubes 18a3da00,28ff5c94,d9f79db0,4cf0b39e",
+      "evidence": [
+        {
+          "at": "2026-11-05T18:02:07.351336+00:00",
+          "owner": "codex-atlas-journal-final",
+          "detail": "Claim f2a50a9e123d5b9d19d3cc9a24ed0dad142bd7f5. Fresh own checkout from main30e1f47fe. Historical diario tasks andPR511 integrated; dedicated new child isolates latest exact feedback, not all menus. Read live4clouds and source jiminy_footer/margin/layout. Current v28 baseline already has14rowfooter and partial corner cleanup; must preserve improvements and demonstrate remaining exact defect before editing. No product edit or compile/game yet. Root107 native window; START/barajas not reserved."
+        }
+      ],
       "claimed_at": "2026-11-05T17:58:50.443097+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:58:50.443097+00:00",
+  "updated_at": "2026-11-05T18:02:07.351336+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
