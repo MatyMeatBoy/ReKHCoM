@@ -676,3 +676,12 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### 081: negro bajo la cueva, seguimiento posterior a aprobación
+
+La nube0dda90ce sobre0bac2ac1rev2 pide ocultar el arco flotante que se había
+conservado por ser original. Su origen es Platform03, separado del fondo. La
+propuesta omite sólo ese banco decorativo y sólo sobre el sector vacío inferior
+del remate, fuera del viewport GBA. Conservar actores, resto de decoración,
+paleta/fundidos y todas las escenas hermanas. La aprobación anterior no da
+por aprobado este recorte: estudio sin build, pendiente de runtime y valoración.
