@@ -4608,10 +4608,10 @@
     "atlas-115-hatch-spacing": {
       "id": "atlas-115-hatch-spacing",
       "piece": "Escena 115: menos escotillas y limpiar borde",
-      "status": "pr_abierto",
+      "status": "en_curso",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:29.570680+00:00",
-      "updated_at": "2026-11-05T13:48:03.038983+00:00",
+      "updated_at": "2026-11-05T15:41:10.016621+00:00",
       "branch": "art/atlas-scene115-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/576",
       "approval": null,
@@ -4631,6 +4631,11 @@
           "at": "2026-11-05T13:48:03.038983+00:00",
           "owner": "codex-atlas-final",
           "detail": "Runtime EVENT115(menu0:114) 4pares zoom3/2 frames300/600 PASS núcleo GBA idéntico; previewPPU enlazada con356objetoscontrol inmutables. Atlas runtime174807eb61b84dca853d8c0c05434fda hijo offline, pendiente humano. Defectos preexistentes fuera del fondo no cerrados."
+        },
+        {
+          "at": "2026-11-05T15:41:10.016621+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Revisiónhumana05/11 nueva: parent174807eb61b84dca853d8c0c05434fda pendiente, nubec5b632a4-4bfc-4ea4-97f8-ae868cc66e67 se pierde patrón muchos pedazosescotillas,envío20261105-120336-443f39. Corregir piezasenteras yritmo; antes/soluciónmismoencuadre, sinrefsAtlas."
         }
       ],
       "claimed_at": "2026-11-05T12:01:24.736371+00:00",
@@ -15681,7 +15686,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T15:41:01.920066+00:00",
+  "updated_at": "2026-11-05T15:41:10.016621+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
