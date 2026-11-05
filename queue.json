@@ -15620,7 +15620,7 @@
       "status": "en_curso",
       "owner": "codex-atlas087-final",
       "created_at": "2026-11-05T14:22:52.310431+00:00",
-      "updated_at": "2026-11-05T14:36:40.992420+00:00",
+      "updated_at": "2026-11-05T16:17:11.908702+00:00",
       "branch": "art/atlas-scene087-final",
       "pr": null,
       "approval": "Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion",
@@ -15635,6 +15635,11 @@
           "at": "2026-11-05T14:36:40.992420+00:00",
           "owner": "codex-atlas087-final",
           "detail": "Handoff05/11: propuesta offline nativa upper-period32.png lista, source/DONOR-PROVENANCE/review.json ybuild_runtime.py/capture_runtime.py/deliver.py preparados en087-native. TestC nuevo port/tools/test_scene087_upper_border.py preparado, sin ejecutarlo; produccion sin cambios hasta observarRED. Falta ventana explicita de compilacion/juego: coordinadorroot reportaerror modelo atcapacity, otroscarriles130/099completed; no se asume concesion. Reanudar con RED, añadirregla87 BG2 fuera256x256 franja96<=2y+x<144 sx=mod(wx,32) sy=(2wy+wx-sx)/2, GREEN, builds/runtimes, hijaexactparent33dd78 yPRdraft. Sin publicacion parcial ni aprobacionesmutadas."
+        },
+        {
+          "at": "2026-11-05T16:17:11.908702+00:00",
+          "owner": "codex-atlas087-final",
+          "detail": "V3 preparada head8a5bae68db133f20e9447782861c13104af36ec7 sobre maincbdb90b20. RED4fallos geometria/fallback->GREEN7/7; check_sources ydiffcheckPASS. Piedra superior BG3 cambia3:1a2:1 y usa modulo interior4..7; BG2/BG3 comparten union96<=2y+x<144 conrun8 acotado yfallbackinferior intacto. Revisionindependiente sinbloqueantes CODE-REVIEW-V3.json. Offlinev3-upper-period32.png apoyado, no flotante. V1sin cambio yV2flotante rechazadas, preservadas internas. Pendiente ventana runtimev3 final con controlesOriginal/core antes depublicar. Entrega sera captura realANTES+SOLUCION; ninguna referencia nativa visible, ninguna aprobacion heredada."
         }
       ],
       "claimed_at": "2026-11-05T14:23:10.393470+00:00"
@@ -15721,7 +15726,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:15:45.494072+00:00",
+  "updated_at": "2026-11-05T16:17:11.908702+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
