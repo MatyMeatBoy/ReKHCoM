@@ -6,6 +6,7 @@ import threading
 import unittest
 import urllib.request
 import urllib.error
+from unittest.mock import Mock
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from PIL import Image
@@ -44,6 +45,124 @@ class ReviewTest(unittest.TestCase):
         child['status'] = 'approved'
         self.store.save(child)
         self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
+
+    def test_native_reference_is_internal_not_a_review(self):
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        ref = self.store.add(raw.getvalue(), 'Escena nueva', 'Referencia nativa',
+                             revision_info={'reference_only': True})
+        self.assertNotIn(ref['id'], [a['id'] for a in self.store.all()])
+        self.assertNotIn('Escena nueva', [r['title'] for r in self.store.queue()])
+        self.assertEqual(self.store.get(ref['id'])['sha256'], ref['sha256'])
+        self.assertIn(ref['id'], [a['id'] for a in self.store.all(include_internal=True)])
+        with self.assertRaises(ValueError):
+            self.store.save(ref)
+        with self.assertRaises(ValueError):
+            self.store.submit([ref['id']])
+
+    def test_legacy_reference_internalization_preserves_review_and_image(self):
+        self.a['status'] = 'approved'
+        self.a = self.store.save(self.a)
+        before = self.store.approvals()
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        ref = self.store.add(raw.getvalue(), 'Referencia', 'Nativa',
+                             parent_id=self.a['id'], revision_info={'reference_only': True})
+        # Model the reference records imported before this policy existed.
+        ref['revision_info'].pop('internal_reference', None)
+        with self.store.db() as db:
+            db.execute('UPDATE assets SET data=? WHERE id=?', (json.dumps(ref), ref['id']))
+        path = self.store.root / 'images' / (ref['id'] + '.png')
+        image = path.read_bytes()
+        self.store.internalize_reference(ref['id'])
+        self.assertEqual(path.read_bytes(), image)
+        self.assertEqual(self.store.get(self.a['id']), self.a)
+        self.assertEqual(self.store.approvals(), before)
+        self.assertNotIn(ref['id'], [a['id'] for a in self.store.all()])
+        with self.assertRaises(ValueError):
+            self.store.internalize_reference(self.a['id'])
+
+    def test_reference_child_does_not_answer_requested_art(self):
+        self.a['general'] = 'Completar extensión'
+        self.a = self.store.save(self.a)
+        self.store.submit([self.a['id']], {self.a['id']: self.a['revision']})
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        self.store.add(raw.getvalue(), 'Referencia', 'Referencia nativa',
+                       parent_id=self.a['id'], revision_info={'reference_only': True})
+        self.assertEqual(len(self.store.queue()[0]['unanswered']), 1)
+
+    def test_internal_reference_keeps_linked_tile_project_publishable(self):
+        raw = io.BytesIO()
+        Image.new('RGB', (16, 16), '#335544').save(raw, 'PNG')
+        ref = self.store.add(raw.getvalue(), 'Fuente', 'Interna', revision_info={'reference_only': True})
+        editor = Mock()
+        project = dict(id='a'*32, revision=0, scene='054', source={'rom_sha256': 'test'})
+        editor.art_project.return_value = editor.load_project.return_value = project
+        editor.art_parent.return_value = ref['id']
+        editor.render_project.return_value = Image.new('RGBA', (16, 16), '#556677')
+        server = ThreadingHTTPServer(('127.0.0.1', 0), handler(self.store, editor))
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        url = 'http://127.0.0.1:' + str(server.server_port)
+        def post(route, data):
+            request = urllib.request.Request(url + route, json.dumps(data).encode(),
+                {'Content-Type': 'application/json', 'X-Art-Review': 'local'})
+            return json.load(urllib.request.urlopen(request))
+        try:
+            self.assertEqual(post('/api/editor/art', dict(parent_id=ref['id'], scene='054'))['project'], project)
+            child = post('/api/editor/publish', {'id': project['id']})
+            self.assertEqual(child['parent_id'], ref['id'])
+            self.assertIn(child['id'], [a['id'] for a in self.store.all()])
+            self.assertNotIn(ref['id'], [a['id'] for a in self.store.all()])
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+    def test_reference_internalization_preserves_concurrent_human_review(self):
+        from contextlib import contextmanager
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        ref = self.store.add(raw.getvalue(), 'Referencia concurrente', 'Nativa',
+                             revision_info={'reference_only': True})
+        ref['revision_info'].pop('internal_reference')
+        with self.store.db() as db:
+            db.execute('UPDATE assets SET data=? WHERE id=?', (json.dumps(ref), ref['id']))
+        image = (self.store.root / 'images' / (ref['id'] + '.png')).read_bytes()
+        other = Store(self.temp.name)
+        original_db = self.store.db
+        saved = []
+
+        class InterleavedConnection:
+            def __init__(self, db):
+                self.db = db
+
+            def execute(connection, sql, parameters=()):
+                if sql.startswith('UPDATE assets SET data=') and not saved:
+                    review = other.get(ref['id'])
+                    review.update(general='Conservar este comentario humano',
+                                  annotations=[self.note()], status='approved')
+                    saved.append(other.save(review))
+                return connection.db.execute(sql, parameters)
+
+        @contextmanager
+        def interleaved_db():
+            with original_db() as db:
+                yield InterleavedConnection(db)
+
+        self.store.db = interleaved_db
+        try:
+            with self.assertRaisesRegex(ValueError, 'Cambió la referencia'):
+                self.store.internalize_reference(ref['id'])
+        finally:
+            self.store.db = original_db
+        self.assertEqual(other.get(ref['id']), saved[0])
+        self.assertEqual(saved[0]['revision'], 1)
+        self.assertNotIn('internal_reference', saved[0]['revision_info'])
+        self.assertEqual((self.store.root / 'images' / (ref['id'] + '.png')).read_bytes(), image)
+        with self.store.db() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM events WHERE kind='reference_internalized'").fetchone()[0], 0)
 
     def test_general_reply_can_cover_an_older_sibling(self):
         raw=io.BytesIO();Image.new('RGB',(100,80),'#335544').save(raw,'PNG')

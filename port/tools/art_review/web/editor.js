@@ -28,6 +28,10 @@ function tilesetOf(gid) {
   const v = gid & GID_MASK;
   return map().tilesets.find(t => t.firstgid <= v && v < t.firstgid + t.tilecount);
 }
+function isRomDonor(gid) {
+  const ts = tilesetOf(gid);
+  return !!ts && !(ts.non_donor_tileids || []).includes((gid & GID_MASK) - ts.firstgid);
+}
 /* The palette shows the active layer's own tileset (the first one its cells use). */
 function layerTileset() {
   const used = layer().data.find(g => g & GID_MASK);
@@ -75,6 +79,11 @@ function renderPalette() {
   const ctx = c.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(ts.img, 0, 0, ts.img.width * z, ts.img.height * z);
+  (ts.non_donor_tileids || []).forEach(local => {
+    const x = local % ts.columns * T * z, y = Math.floor(local / ts.columns) * T * z;
+    ctx.fillStyle = '#777'; ctx.fillRect(x, y, T * z, T * z);
+    ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + T * z, y + T * z); ctx.stroke();
+  });
   $('tsName').textContent = ts.name;
   if (state.sel && state.sel.ts === ts) {
     const { x0, y0, x1, y1 } = state.sel;
@@ -166,6 +175,7 @@ function apply(stroke, cell) {
   const m = map(), l = layer();
   if (state.tool === 'pick') {
     const gid = l.data[cell.y * m.width + cell.x];
+    if (gid && !isRomDonor(gid)) return status('Celda sin tile cargado: no es un donante de la ROM.', true);
     state.brush = { w: 1, h: 1, data: [(gid & GID_MASK) >>> 0] };
     state.flipH = !!(gid & FLIP_H); state.flipV = !!(gid & FLIP_V);
     syncFlips(); renderBrush();
@@ -199,9 +209,13 @@ function setTool(t) {
 }
 
 async function open(project) {
+  $('publish').hidden=!new URLSearchParams(location.search).get('art');
+  $('publish').disabled=false;
   state.project = project; state.layer = 0; state.undo = []; state.redo = []; state.sel = null;
   await Promise.all(project.map.tilesets.map(async ts => { ts.img = await loadImage(ts.image); }));
-  const first = project.map.layers[0].data.find(g => g & GID_MASK) || 1;
+  $('nativeNote').textContent = project.map.tilesets.some(ts => ts.non_donor_tileids?.length)
+    ? 'La ROM referencia el tile 1023 sin cargarlo. Se muestra transparente como VRAM inicial limpia; la VRAM de una partida en curso puede diferir. Las celdas conservan su identidad y no se ofrecen como donantes.' : '';
+  const first = project.map.layers[0].data.find(g => isRomDonor(g)) || 0;
   state.brush = { w: 1, h: 1, data: [(first & GID_MASK) >>> 0] };
   markDirty(false); renderLayers(); render(); renderPalette(); renderBrush();
   $('scene').value = project.scene;
@@ -215,7 +229,9 @@ function stripImages(project) {
 async function refreshProjects(selected) {
   const { projects } = await api('/api/editor/projects'), sel = $('project');
   sel.innerHTML = '<option value="">—</option>';
-  projects.forEach(p => {
+  const art=new URLSearchParams(location.search).get('art');
+  const links=art?await api('/api/editor/art-projects?parent_id='+encodeURIComponent(art)):null;
+  projects.filter(p=>!links||links.ids.includes(p.id)).forEach(p => {
     const o = document.createElement('option');
     o.value = p.id; o.textContent = `${p.scene} · r${p.revision} · ${(p.updated_at || '').slice(0, 16).replace('T', ' ')}`;
     sel.append(o);
@@ -236,14 +252,25 @@ async function init() {
     sel.append(o);
   });
   await refreshProjects();
-  status(`${list.scenes.length} escenas del cartucho local`);
+  const art=new URLSearchParams(location.search).get('art');
+  if(art){
+    document.querySelector('.back').href='/?image='+encodeURIComponent(art)+'&view=history';
+    $('publish').hidden=false;$('publish').disabled=true;
+    status('Elige la escena de la ROM para este arte y pulsa Nuevo proyecto.');
+    // Keep only projects linked to this exact artwork revision.
+    const links=await api('/api/editor/art-projects?parent_id='+encodeURIComponent(art));
+    const ids=new Set(links.ids);
+    for(const option of [...$('project').options])if(option.value&&!ids.has(option.value))option.remove();
+    if(links.ids.length){$('project').value=links.ids.at(-1);$('project').dispatchEvent(new Event('change'));}
+  }else status(`${list.scenes.length} escenas del cartucho local`);
 }
 
 $('new').onclick = async () => {
   if (!confirmLeave()) return;
   try {
     status('Creando…');
-    const { project } = await api('/api/editor/project/new', { scene: $('scene').value });
+    const art=new URLSearchParams(location.search).get('art');
+    const { project } = await api(art?'/api/editor/art':'/api/editor/project/new', { scene: $('scene').value, parent_id:art });
     await open(project); await refreshProjects(project.id);
     status(`Proyecto nuevo de la escena ${project.scene}`);
   } catch (e) { status(e.message, true); }
@@ -265,6 +292,14 @@ $('save').onclick = async () => {
     markDirty(false); await refreshProjects(project.id);
     status(`Guardado r${project.revision}`);
   } catch (e) { status(e.message, true); }
+};
+$('publish').onclick = async () => {
+  const button=$('publish');button.disabled=true;
+  try {
+    if(state.dirty) { await $('save').onclick(); if(state.dirty) return; }
+    const child=await api('/api/editor/publish',{id:state.project.id});
+    location.href='/?image='+encodeURIComponent(child.id)+'&view=history';
+  } catch(e) { status(e.message,true); } finally {button.disabled=false;}
 };
 $('export').onclick = () => { location.href = '/api/editor/export?format=zip&id=' + state.project.id; };
 $('undo').onclick = () => replay(state.undo, state.redo, 1);
@@ -312,6 +347,10 @@ function selectBrush() {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const local = (ay + y) * ts.columns + ax + x;
     data.push(local < ts.tilecount ? ts.firstgid + local : 0);
+  }
+  if (data.some(gid => gid && !isRomDonor(gid))) {
+    status('La selección incluye una celda sin tile cargado; elige sólo tiles de la ROM.', true);
+    return;
   }
   state.brush = { w, h, data };
   if (state.tool !== 'fill') setTool('pencil');

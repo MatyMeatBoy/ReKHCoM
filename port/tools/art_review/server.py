@@ -109,9 +109,33 @@ class Store:
     def event(self, db, kind, data):
         db.execute('INSERT INTO events(at,kind,data) VALUES(?,?,?)', (now(), kind, json.dumps(data, ensure_ascii=False)))
 
-    def all(self):
+    def all(self, include_internal=False):
         with self.db() as db:
-            return [json.loads(row[0]) for row in db.execute('SELECT data FROM assets ORDER BY rowid')]
+            assets = [json.loads(row[0]) for row in db.execute('SELECT data FROM assets ORDER BY rowid')]
+        return assets if include_internal else [a for a in assets if not a.get('revision_info', {}).get('internal_reference')]
+
+    def internalize_reference(self, asset_id, refresh_queue=True):
+        """Keep an unreviewed source record and its image, outside the review workflow."""
+        with self.lock:
+            with self.db() as db:
+                row = db.execute('SELECT data FROM assets WHERE id=?', (asset_id,)).fetchone()
+                if not row:
+                    raise ValueError('Imagen inexistente')
+                observed = row[0]
+                item = json.loads(observed)
+                info = item.get('revision_info', {})
+                if not info.get('reference_only') or item['revision'] or item['status'] != 'pending':
+                    raise ValueError('Only unreviewed native references can be internalized')
+                info['internal_reference'] = True
+                item['revision_info'] = info
+                changed = db.execute('UPDATE assets SET data=? WHERE id=? AND data=?',
+                                     (json.dumps(item, ensure_ascii=False), asset_id, observed))
+                if changed.rowcount != 1:
+                    raise ValueError('Cambió la referencia; se conserva la revisión más reciente.')
+                self.event(db, 'reference_internalized', dict(id=asset_id))
+            if refresh_queue:
+                self.write_queue()
+            return item
 
     def history(self, asset_id):
         self.get(asset_id)
@@ -179,11 +203,13 @@ class Store:
             versions = [by_id[i] for i in fam['version_ids'] if i in by_id]
             latest = versions[-1]
             unanswered = [n for i in fam['version_ids'] if (n := newest.get(i))
-                          and not any(c['created'] > n['created'] for c in children.get(i, []))
+                          and not any(c['created'] > n['created'] and not c.get('revision_info', {}).get('reference_only') for c in children.get(i, []))
                           and not (not n['cloud_ids'] and (i,n['submission']) in answered_general)
                           and not (n['cloud_ids'] and set(n['cloud_ids']) <= answered)]  # a general comment alone waits for a child
             if unanswered:
                 who, todo = 'agente', 'Responder cada envío con una versión hija (parent_id = image_id del envío) y su ficha'
+            elif latest.get('revision_info', {}).get('reference_only'):
+                who, todo = 'agente', 'Crear y verificar el arte desde la referencia nativa; todavía no está extendida'
             elif latest['status'] == 'pending':
                 who, todo = 'humano', 'Revisar la última versión'
             elif fam['build_version']:
@@ -234,7 +260,7 @@ class Store:
         raw_sha = hashlib.sha256(raw).hexdigest()
         pixel_sha = hashlib.sha256(out.getvalue()).hexdigest()
         with self.lock:
-            for existing in self.all():
+            for existing in self.all(include_internal=True):
                 if existing['sha256'] == pixel_sha and existing['version'] == version and existing['title'] == title:
                     return existing
             if parent_id:
@@ -247,7 +273,9 @@ class Store:
                         source_sha256=raw_sha, width=size[0], height=size[1], created=now(), updated=now(),
                         revision=0, status=status if status in STATUSES else 'pending', annotations=[], doodles=[],
                         general='', submitted_revision=None, image_url='/images/' + asset_id + '.png',
-                        revision_info=revision_info or {})
+                        revision_info=dict(revision_info or {}))
+            if item['revision_info'].get('reference_only'):
+                item['revision_info']['internal_reference'] = True
             with self.db() as db:
                 db.execute('INSERT INTO assets VALUES(?,?)', (asset_id, json.dumps(item, ensure_ascii=False)))
                 self.event(db, 'image_imported', item)
@@ -257,6 +285,8 @@ class Store:
     def save(self, data):
         with self.lock:
             item = self.get(data['id'])
+            if item.get('revision_info', {}).get('internal_reference'):
+                raise ValueError('La referencia es interna; la revisión corresponde al antes y la solución.')
             if data.get('revision') != item['revision']:
                 raise ValueError('Hay cambios desde otra pestaña. Recarga antes de editar.')
             if data.get('status') not in STATUSES:
@@ -300,6 +330,8 @@ class Store:
             if not isinstance(ids, list) or not 1 <= len(ids) <= 100 or len(set(ids)) != len(ids):
                 raise ValueError('Selecciona entre 1 y 100 imágenes diferentes')
             assets = [self.get(i) for i in ids]
+            if any(a.get('revision_info', {}).get('internal_reference') for a in assets):
+                raise ValueError('Las referencias internas no se envían a revisión.')
             if expected_revisions and any(expected_revisions.get(a['id']) != a['revision'] for a in assets):
                 raise ValueError('Cambió una revisión. Recarga y vuelve a enviar.')
             if not any(a['annotations'] or a.get('doodles') or a['general'].strip() or a['status'] != 'pending' for a in assets):
@@ -490,6 +522,11 @@ def handler(store, editor=None):
             query = {key:values[0] for key, values in parse_qs(urlparse(self.path).query).items()}
             if route.startswith('/api/editor/') or route.startswith('/editor-assets/'):
                 try:
+                    if route == '/api/editor/art-projects':
+                        parent_id = query.get('parent_id', '')
+                        links = editor.root / 'atlas-links'
+                        ids = [p.stem for p in sorted(links.glob('*.json')) if json.loads(p.read_text(encoding='utf-8')).get('parent_id') == parent_id]
+                        return self.reply(200, dict(ids=ids))
                     if route == '/api/editor/scenes':
                         return self.reply(200, editor.scene_list())
                     if route == '/api/editor/scene':
@@ -582,6 +619,17 @@ def handler(store, editor=None):
                 if not 0 < length <= 42 * 1024 * 1024:
                     raise ValueError('Solicitud demasiado grande o vacía')
                 data = json.loads(self.rfile.read(length))
+                if self.path == '/api/editor/art':
+                    asset = store.get(data['parent_id'])
+                    return self.reply(200, dict(project=editor.art_project(data['scene'], asset['id'])))
+                if self.path == '/api/editor/publish':
+                    project = editor.load_project(data['id'])
+                    parent_id = editor.art_parent(project['id'])
+                    parent = store.get(parent_id)
+                    image = io.BytesIO()
+                    editor.render_project(project).save(image, format='PNG')
+                    return self.reply(200, store.add(image.getvalue(), parent['title'],
+                        'Edición manual de tiles ROM', 'Editor de tiles Atlas · proyecto ' + project['id'] + ' · revisión ' + str(project['revision']) + ' · escena ' + project['scene'] + ' · ROM SHA256 ' + project['source']['rom_sha256'], parent_id=parent['id']))
                 if self.path == '/api/editor/project/new':
                     return self.reply(200, dict(project=editor.new_project(data['scene'])))
                 if self.path == '/api/editor/project':
