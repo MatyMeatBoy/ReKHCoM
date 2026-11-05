@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — preparation for a future 2.8.5 prerelease
+
+- Atlas-approved wide art updates for scenes057,081,087,095,107/108,110,112,115,120 and130, plus Oogie Boogie's side planes. Scene130's accepted extension is enabled without preview flags.
+- Approved HD synthesis import recipes improve requirement digits and card edges. Existing imports need regeneration in a later authorized pass.
+- Source integration only: no new binaries or packages have been built. Follow-up comments on nine approved deliveries remain open; see `port/progress/ATLAS_V285_PREPARATION.md`.
+
 ## v2.8
 
 - 64-bit (Windows, Linux/Steam Deck): no more crash when a battle runs out of sprite memory, as in the Colosseum (#564). The 64-bit game now handles the original game's stray reads the way the GBA and the 32-bit game do, instead of closing.

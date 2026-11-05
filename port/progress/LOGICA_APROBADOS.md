@@ -3,8 +3,9 @@
 Reglas que se repiten en todo lo que el usuario ha aprobado. Aplicarlas antes
 de proponer algo nuevo; ante un caso nuevo, derivar la solución de ellas.
 
-**Regla vigente de entrega (24/10):** aprender de todas las valoraciones aceptadas, pero activar arte nuevo para
-jugadores solo desde la versión **con honores** (`build_version`) de la app. Cada entrega entra por PR y la
+**Regla vigente de entrega (usuario 25/10, ratificada 05/11):** activar la versión exacta más reciente
+aceptada por Atlas (`build_version`: Aprobado, Aprobado/mejorar u Honores). Los comentarios siguen pendientes
+de respuesta aunque la versión aprobada ya entre en el juego. Cada entrega entra por PR y la
 fusiona un integrador reservado; ver [COLA_COLABORATIVA.md](COLA_COLABORATIVA.md). Las menciones históricas a
 "aprobado" o "Claude integra" no sustituyen esta regla. No elevar valoraciones ni heredar ★ a una versión hija.
 
@@ -648,3 +649,30 @@ Etiquetar sólo EVENT112 tracks3/4, restableciendo el contexto tras la emisión.
 La sombra nunca desbloquea al actor; las sombras del resto del grupo se dibujan
 normalmente. El marco actual conserva su donante y80 y se comprueba durante los
 cambios de cámara. Propuesta nueva pendiente, sin aprobación heredada.
+
+## Valoración e integración del 05/11: doce entregas aceptadas
+
+La tabla de versiones exactas está en `ATLAS_V285_PREPARATION.md`. Sus doce
+aprobaciones sustituyen el estado histórico de propuesta pendiente, sin cerrar
+comentarios nuevos. 110,112 y los requisitos/contornos de síntesis se aprobaron
+sin notas; las otras nueve entregas conservan seguimiento propio en la cola.
+
+Los nuevos comentarios corrigen qué puede tomarse como modelo: 087 conserva
+una pequeña zona por mejorar; 115 aún tiene un tile rojo flotante, una punta
+incompleta y restos de escotilla; 095 debe repetir el módulo marcado A en todo
+el resto del seto; 081 aún necesita negro en el sector señalado. En Oogie quedan
+la punta del fantasma, media máscara y los remates exteriores; no dar por
+completas esas figuras porque sus planos verdes hayan sido aceptados. 120
+aprueba la diagonal pero pide completar el grabado con el patrón A. 057 aún
+tiene el sector marcado por mejorar. 130 necesita completar la diagonal de
+bajada del muro. 107/108 conserva un tramo de diagonal y debe completar ventana
+y patrón del muro hacia arriba, visible más tarde en la escena. Ninguna de estas
+notas autoriza a alterar las zonas no señaladas ni se considera respondida por
+la integración de su versión aprobada.
+
+Al reunir staging, conservar roles independientes0..5 y todos los predicados
+de sombra: cada escena mantiene su elegibilidad y rol originales. Una sombra
+no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
+La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
+su apagado explícito para comparación y el modo Original. Preparación para
+una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.

@@ -29,10 +29,10 @@ class LibraryStagingTest(unittest.TestCase):
 #include <stdint.h>
 #define GBA_SCREEN_W 240
 #define GBA_SCREEN_H 160
-static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gMarefPalette[1],gHookPalette[1],partyPalette[1];
+static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gMarefPalette[1],gHookPalette[1],gJiminyPalette[1],partyPalette[1];
 static int gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
 static struct {const void*palette;const void*tiles;}sOamHd[4];
-typedef struct {int screen,hud,text,anchorX,anchorY,anchorValid;} Tag;
+typedef struct {int screen,hud,text,anchorX,anchorY,anchorValid,eventShadowActor;} Tag;
 static Tag sOamTag[4],sEntryTag[128];
 #define PORT_OAM_CAPACITY 4
 static struct {int entryCount;struct {int x,y;}entries[128];} work,*gSpriteWork=&work;

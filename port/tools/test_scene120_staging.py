@@ -13,10 +13,11 @@ class Scene120Test(unittest.TestCase):
 #include <stddef.h>
 #define GBA_SCREEN_W 240
 #define GBA_SCREEN_H 160
-static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gHookPalette[1],gJiminyPalette[1];
+static int gCheshirePalette[1],gAladdinPalette[1],gGeniePalette[1],gHookPalette[1],gJiminyPalette[1],gMarefPalette[1];
 static int gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
 static struct {const void*palette;const void*tiles;}sOamHd[1];
-static struct{int screen,hud,text;}sOamTag[1];
+static struct{int screen,hud,text,eventShadowActor;}sOamTag[1];
+static int Preliminar130Shadow(int i){(void)i;return 0;}
 static unsigned sActorSceneFrames;static unsigned char sActorEntered[1];
 '''+arrays+r'''
 static int Visible(const void*p,const void*t,int ox,int oy,unsigned age){int i,visible=0,bw=32,bh=64,sceneActorFrame=1,sceneActorId=120,prio=1;sOamHd[0].palette=p;sOamHd[0].tiles=t;sActorSceneFrames=age;for(i=0;i<1;i++){

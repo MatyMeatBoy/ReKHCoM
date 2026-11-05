@@ -24,7 +24,8 @@ class Scene112Shadow(unittest.TestCase):
         condition = source[start:end-1]
         code = r'''
 #include <assert.h>
-static int gAladdinPalette[1],gGeniePalette[1],gCheshirePalette[1],gHookPalette[1];
+static int gAladdinPalette[1],gGeniePalette[1],gCheshirePalette[1],gHookPalette[1],gJiminyPalette[1],gMarefPalette[1];
+static int Preliminar130Shadow(int i){(void)i;return 0;}
 static int gBtlShadowTiles[1],gBtlShadowSmallTiles[1],gBtlShadowLargeTiles[1];
 static struct{int screen,hud,text,eventShadowActor;}sOamTag[1];
 static struct{const void*palette,*tiles;}sOamHd[1];
