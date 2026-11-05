@@ -3226,7 +3226,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-25T16:07:15.563505+00:00",
-      "updated_at": "2026-11-05T13:11:31.874873+00:00",
+      "updated_at": "2026-11-05T13:52:18.993480+00:00",
       "branch": "art/atlas-scene117-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/581",
       "approval": null,
@@ -3241,10 +3241,15 @@
           "at": "2026-11-05T13:11:31.874873+00:00",
           "owner": "codex-atlas-final",
           "detail": "9b89c290d. Atlas0b2d40ff26ca48cb8c7957beb428c70d: cajas2marcadas+frontalnueva completas, cubierta diagonal. Donantes120x56/(-88,152) verificados4948/3372px. C RED/GREEN. Offline/runtime espera margenRAM."
+        },
+        {
+          "at": "2026-11-05T13:52:18.993480+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "RuntimeEVENT117(menu0:116)4pares zoom3/2 frames300600 PASSnúcleo GBAidéntico. Trescajascompletas ycubiertadiagonal. Atlas135be7d86bf949128c6d0d407b4b6433 capturareal pendientehumano; PR581draft sinintegrar."
         }
       ],
       "claimed_at": "2026-10-25T16:07:24.405574+00:00",
-      "sent": "0b2d40ff26ca48cb8c7957beb428c70d"
+      "sent": "135be7d86bf949128c6d0d407b4b6433"
     },
     "atlas-remates-118-r20261025": {
       "id": "atlas-remates-118-r20261025",
@@ -15399,7 +15404,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:50:11.805397+00:00",
+  "updated_at": "2026-11-05T13:52:18.993480+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

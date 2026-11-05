@@ -88,7 +88,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-remates-112-r20261025 | Escena 112 comentarios posteriores | en_revision | codex-atlas | — | — | 2026-10-25T19:16:54.885135+00:00 |
 | atlas-remates-115-r20261025 | Escena 115 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:06:55.925715+00:00 |
 | atlas-remates-116-r20261025 | Escena 116 comentarios posteriores | en_curso | codex-atlas-remates | — | — | 2026-10-25T16:07:08.317688+00:00 |
-| atlas-remates-117-r20261025 | Escena 117 comentarios posteriores | pr_abierto | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/581 | — | 2026-11-05T13:11:31.874873+00:00 |
+| atlas-remates-117-r20261025 | Escena 117 comentarios posteriores | pr_abierto | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/581 | — | 2026-11-05T13:52:18.993480+00:00 |
 | atlas-remates-118-r20261025 | Escena 118 comentarios posteriores | pr_abierto | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/582 | — | 2026-11-05T13:41:28.846942+00:00 |
 | atlas-remates-120-r20261025 | Escena 120 comentarios posteriores | en_curso | codex-atlas120-final | — | — | 2026-11-05T13:46:46.153338+00:00 |
 | malefica-01-feedback-revision | Malefica01 frame nativo distinto antes despues | en_curso | codex-atlas-jefes | — | — | 2026-10-25T16:08:28.714601+00:00 |
