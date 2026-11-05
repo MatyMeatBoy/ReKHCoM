@@ -3501,8 +3501,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-25T20:35:22.062254+00:00",
-      "updated_at": "2026-11-05T12:16:58.298576+00:00",
-      "branch": "codex/atlas-pepito-nested-current",
+      "updated_at": "2026-11-05T12:23:08.020651+00:00",
+      "branch": "feat/atlas-per-art-tiles",
       "pr": null,
       "approval": "Usuario27/10: diario de Pepito entre primeros; redondear borde derecho y limpiar subentradas, sin Atlas; coordinador verifica capturas reales",
       "reference": "Envios24/10 titulo,barajas,START,diario; usuario pide acabarcola modo turbo",
@@ -3526,10 +3526,15 @@
           "at": "2026-10-27T18:54:14.331114+00:00",
           "owner": "codex-diary-audit",
           "detail": "released: Returned to current pending queue with explicit user priority and no-Atlas instruction. No source work represented as completed; old claims and proposal evidence preserved."
+        },
+        {
+          "at": "2026-11-05T12:23:08.020651+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Capturas reales v2.8 EU32 menu/diario/detalle/barajas/opciones, salida0. Opciones línea en base cuadrado verificada y respuesta Atlas0bf18d43bdcb48d09418f62570c04a9b al envío04/11. Resto menus no cerrado: valores START siguen nativos; diario esquina/extremos pendientes."
         }
       ],
       "claimed_at": "2026-11-05T12:16:58.298576+00:00",
-      "sent": "a36793f6231a4c55b3ca636305aea2b7"
+      "sent": "0bf18d43bdcb48d09418f62570c04a9b"
     },
     "pre19-clean": {
       "id": "pre19-clean",
@@ -15268,7 +15273,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:16:58.298576+00:00",
+  "updated_at": "2026-11-05T12:23:08.020651+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
