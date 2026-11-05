@@ -448,4 +448,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-darkside06-left-detail | Darkside06: dibujo y difuminado lateral solicitado en nube72f6d65b | pendiente | — | art/atlas-darkside06-left-detail | Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena | 2026-11-05T18:39:30.096433+00:00 |
 | atlas-journal-inner-footer-20261105 | Diario interior: cuatro nubes de footer y esquinas a367 rev5 | pendiente | — | art/atlas-journal-final | Usuario05/11 procesar cola; root delega Diario antes START y Ver barajas, uno por uno | 2026-11-05T18:41:17.995453+00:00 |
 
-Integrador: codex-atlas-final (ocupado; 2026-11-05T18:43:20.494522+00:00)
+Integrador: libre
