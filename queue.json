@@ -10074,8 +10074,8 @@
       "status": "en_curso",
       "owner": "codex-atlas-monstro-final",
       "created_at": "2026-10-27T22:24:52.168606+00:00",
-      "updated_at": "2026-11-05T17:36:09.876162+00:00",
-      "branch": "fix/v23-monstro-atlas-coverage",
+      "updated_at": "2026-11-05T17:37:23.166383+00:00",
+      "branch": "art/atlas-monstro-story-final",
       "pr": null,
       "approval": "Usuario27/10 reportaescenasfaltantesAtlas",
       "reference": null,
@@ -10094,6 +10094,11 @@
           "at": "2026-11-05T12:32:41.371787+00:00",
           "owner": "codex-atlas-final",
           "detail": "released: 05/11 identificados fondos075barco/076plataformas y mapa075 completo1024. Intento real extensión contilesROM: estudio INCOMPLETO enviadoAtlas, propuesta local monstro75-extension-proposal.png; quedan transiciones/contorno,076 rechaza celda fuera banco, cámara portramos/zoom/UI sincertificar. NO cerrado ni marcados reportes respondidos. Fuente y estudio conservados pruebas/atlas-final-20261105."
+        },
+        {
+          "at": "2026-11-05T17:37:23.166383+00:00",
+          "owner": "codex-atlas-monstro-final",
+          "detail": "Claim667b8e8b confirmed free task. Fresh own checkout atlas-monstro-story-final frommain30e1f47fe; old fix/v23-monstro-atlas-coverage branch contains no taskdiff and preserved. Readlive three user reports ae325b3ebd854803ab77d524ab6a17e7,d2645f2d17da4063a7a958734597df8d,ca01f58e0b284fbc9bfdc855c8f12977 revision1/submission20261027-192745-53829f, exactSHA verified. Investigate story events/camera only, native studies internal, Monstroarena preserved. Noheavy while synthesiswindow."
         }
       ],
       "claimed_at": "2026-11-05T17:36:09.876162+00:00"
@@ -15862,7 +15867,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:36:35.433564+00:00",
+  "updated_at": "2026-11-05T17:37:23.166383+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
