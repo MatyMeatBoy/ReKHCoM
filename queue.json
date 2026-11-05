@@ -4384,7 +4384,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T12:59:02.943761+00:00",
+      "updated_at": "2026-11-05T13:46:20.276028+00:00",
       "branch": "art/atlas-scene095-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/580",
       "approval": null,
@@ -4404,10 +4404,15 @@
           "at": "2026-11-05T12:59:02.943761+00:00",
           "owner": "codex-atlas-final",
           "detail": "79a23e787. Usuario aclara no castillo; propuesta Atlas91fa9b8ddfc446c9bc9421b3fced7022 flores completas y uniones. C RED/GREEN; offline. Runtime espera RAM>=1400MiB y valoración. No cerrar por sólo completar catálogo."
+        },
+        {
+          "at": "2026-11-05T13:46:20.276028+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Prueba runtime EXACTA EVENT095 menu0:94 frames300/600 núcleo idéntico; cuatro pares extra EVENT096 fondo095 zoom3/2 núcleo intacto. Atlas823f028144a3479790a25691662112ec imagen real pendiente; castillo descartado por usuario, patrón corregido. PR580 sigue draft."
         }
       ],
       "claimed_at": "2026-11-05T12:49:51.945888+00:00",
-      "sent": "91fa9b8ddfc446c9bc9421b3fced7022"
+      "sent": "823f028144a3479790a25691662112ec"
     },
     "atlas-menu-font-evidence": {
       "id": "atlas-menu-font-evidence",
@@ -15364,7 +15369,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:45:54.846965+00:00",
+  "updated_at": "2026-11-05T13:46:20.276028+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
