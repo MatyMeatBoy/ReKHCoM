@@ -267,7 +267,7 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         int phase=PortSceneTileMod(chunk*3,8);
         /* the room's own structures go on too (user 24/10): the brick wall
          * on the right (columns 24..31 from row 18), the stone step at the
-         * bottom along 2y+x=56, the stone landing at the top along 3y+x=12 */
+         * bottom along 2y+x=56, the stone landing at the top along 2y+x=12 */
         if (ox>=24 && oy>=18) {
             *x=24+PortSceneTileMod(ox-24,8); *y=oy<32?oy:22+PortSceneTileMod(oy-22,10); return 1;
         }
@@ -276,8 +276,8 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
             if (sy>=32) sy=28+PortSceneTileMod(sy-28,4);
             *x=sx; *y=sy; return 1;
         }
-        if (3*oy+ox<12) { /* only the landing's stone (rows 0..1, columns 0..5) */
-            *x=PortSceneTileMod(ox,6); *y=PortSceneTileMod(oy,2); return 1;
+        if (2*oy+ox<12) { /* complete interior stone module, no cut left cap */
+            *x=4+PortSceneTileMod(ox-4,4); *y=PortSceneTileMod(oy,2); return 1;
         }
         *x=PortSceneTileMod(ox,w);
         *y=8+PortSceneTileMod(oy-8+phase,8);
@@ -566,26 +566,24 @@ static inline int PortPreliminar099Floor(int wx, int wy, int* sx, int* sy) {
     return 1;
 }
 
+static inline int PortPreliminar087VineRun(int wx, int wy) {
+    int diagonal=2*wy+wx;
+    /* The tile fast path can consume eight pixels. Enter the pixel path
+     * before a run crosses the border, without scalar-sampling whole layers. */
+    return diagonal<144 && diagonal+7>=96;
+}
+
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
     if (p && p->v[0]==87 && (wx<0 || wx>=256 || wy<0 || wy>=256)) {
         int diagonal=2*wy+wx;
-        if (p->v[1]==3 && diagonal<128) {
-            /* The upper landing uses the same 2:1 slope as its source.
-             * A pixel donor preserves the half-tile phase at either edge. */
-            *sx=PortSceneTileMod(wx,16);
+        if ((p->v[1]==2 || p->v[1]==3) && diagonal>=96 && diagonal<144) {
+            /* Stone and vine share the same authored 2:1 transition.
+             * This clean 32-pixel module is below the native pumpkins. */
+            *sx=PortSceneTileMod(wx,32);
             *sy=(diagonal-*sx)/2;
-            if (*sy>=0 && *sy<64) return 1;
-            *sx=PortSceneTileMod(wx,32); *sy=0;
             return 1;
         }
-        if ((p->v[1]==2 || p->v[1]==3) && wx<192 && diagonal>=400) {
-            /* Repeat a complete 16x8 diagonal module, including its lit lip,
-             * instead of restarting the donor on each eight-pixel row. */
-            *sx=32+PortSceneTileMod(wx-32,16);
-            *sy=(diagonal-*sx)/2;
-            if (*sy>=192 && *sy<256) return 1;
-            if (p->v[1]==2) { *sx=0; *sy=120; return 1; }
-        }
+        return 0; /* retain the authored tile path outside the upper border */
     }
 
     if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<352) {

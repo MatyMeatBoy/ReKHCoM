@@ -404,6 +404,31 @@ La hija nueva queda pendiente de revisión y no hereda aprobación.
 | Maléfica 01 / `25aa0ffe25b14be5855a107bd882b6f6` | «terminar de dibujar a Maléfica hasta la cola; ver si está en los archivos o dibujar como artista pixel art» | Pendiente (bloqueado, arte nuevo): buscar el resto del sprite en la ROM; si no existe, dibujar. |
 | Maléfica arena / `ae681fffa79a4feea3b4ea1ef137a512` | «arena bien» (aprobada); sprites se comentan por separado | Sin cambios: la arena de Maléfica queda tal cual. |
 
+## Escena 087: enredadera del borde superior (propuesta 05/11)
+
+Referencia exacta: `33dd78c3e05f44648d70624c52ae2cf0`, envío
+`20261026-063322-54de6a`; nubes `8903fc3e-1e3c-444d-b8cc-7beed5cdea18`,
+`caac56f2-acfa-4c7b-a4e2-36a5b0aad33c` y `92573031-95b8-470a-90b0-0c8608424c7e`.
+Las dos primeras señalan el patrón incompleto; la tercera identifica el borde
+original que debe continuar arriba. Los PR76/206 integrados no responden a
+estos comentarios posteriores.
+
+La piedra superior de BG3 debe seguir la pendiente 2:1 del borde original,
+no el antiguo corte 3:1 que separaba el ornamento de su apoyo. Para el plano
+de piedra usar el módulo interior completo de tiles x4..7, y0..1, sin repetir
+el remate del extremo izquierdo. La enredadera vive en BG2.
+En la franja `96 <= 2*y+x < 144` exterior al mapa nativo de 256x256,
+BG2/BG3 comparten el módulo original de 32 píxeles y la fase diagonal 2:1.
+Donantes de la unión: píxeles x0..31, y32..71; excluyen las calabazas superiores.
+Centro, objetos únicos y borde inferior conservan sus coordenadas.
+El despacho PPU de escena87 se limita a la unión superior y los runs de 8 píxeles
+que la cruzan. Fuera de ella se conserva el camino de tiles, sin activar el helper
+inferior legado. La primera captura detectó el despacho omitido; la segunda,
+la pendiente discordante de la piedra. Ambas propuestas se rechazaron antes de Atlas.
+La nueva hija queda pendiente de valoración propia; no hereda la aprobación
+del padre. Evidencia: `pruebas/atlas-final-20261105/087-native/` y prueba
+`port/tools/test_scene087_upper_border.py`.
+
 ## Escena 090: reja recta y montañas completas (respuesta Codex, 24/10)
 
 Referencia humana: `0551fbab97804de9802ed1b48160e278`, envio `20261024-130932-cd374d`.
