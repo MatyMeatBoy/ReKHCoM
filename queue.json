@@ -16039,12 +16039,12 @@
     "atlas-journal-inner-footer-20261105": {
       "id": "atlas-journal-inner-footer-20261105",
       "piece": "Diario interior: cuatro nubes de footer y esquinas a367 rev5",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-journal-nobuild",
       "created_at": "2026-11-05T17:58:43.854516+00:00",
-      "updated_at": "2026-11-05T20:42:17.331029+00:00",
-      "branch": "art/atlas-journal-final",
-      "pr": null,
+      "updated_at": "2026-11-05T20:56:55.913340+00:00",
+      "branch": "art/atlas-journal-nobuild",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/609",
       "approval": "Usuario05/11 procesar cola; root delega Diario antes START y Ver barajas, uno por uno",
       "reference": "a36793f6231a4c55b3ca636305aea2b7 revision5; envio20261025-194437-6b5b90; cuatro nubes 18a3da00,28ff5c94,d9f79db0,4cf0b39e",
       "evidence": [
@@ -16057,9 +16057,15 @@
           "at": "2026-11-05T18:41:17.995453+00:00",
           "owner": "codex-atlas-journal-final",
           "detail": "released: STOP humano05/11: WIP preservado, NO terminado. Checkoutatlas-journal-final/art/atlas-journal-final main30e1 con4modificados+test_jiminy_ground_capture.py nuevo;4Ccontroles previosPASS. Pendientes tests nuevos3.5x/capturaBG1, build/runtime/Atlas/PR. HD posterior909PNG+2LAD inmutable. Ver pruebas/atlas-final-20261105/journal-final."
+        },
+        {
+          "at": "2026-11-05T20:56:55.913340+00:00",
+          "owner": "codex-atlas-journal-nobuild",
+          "detail": "STOP humano tras estaentrega. Fuente078d93b86e5329e2a78e06b85c7db67337d3d9d0, Atlas0f89b2fa9a1443df99343bf8047f9a1a pending: estudioGEOMETRICO/OWNERSHIPCONTROLADA, NO captura ni dump framehumano ni4nubesresueltasruntime. Propone4zonas a367rev5/SHA338b9c20.../envio20261025-194437-6b5b90. WIPviejo protegido backupdiff+5SHAintactos,3waynuevo0e82. ASTrenderer13536filas+2016ownership,ABI20offset18,39..74cmds<100fixture,11rechazosrestauran,fraccional3.5RED/GREEN. SinCcompiler/DLL/game/importregen/paquete. Faltaownershipreal SDLfloat32 navegacionOriginalplataformasQA yrevision. No merge niotra tarea. Evidencia pruebas/atlas-siguiente-20261105/journal."
         }
       ],
-      "claimed_at": "2026-11-05T20:42:17.331029+00:00"
+      "claimed_at": "2026-11-05T20:42:17.331029+00:00",
+      "sent": "0f89b2fa9a1443df99343bf8047f9a1a"
     },
     "atlas-followup-1bf2e47a-r4": {
       "id": "atlas-followup-1bf2e47a-r4",
@@ -16336,7 +16342,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T20:52:17.266380+00:00",
+  "updated_at": "2026-11-05T20:56:55.913340+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
