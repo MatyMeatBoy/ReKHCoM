@@ -16040,6 +16040,19 @@
       "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
       "reference": "{\"image_id\": \"31800ebcfc224078bb623ab2b5f846a8\", \"revision\": 2, \"sha256\": \"0a1df96a51d0d9eff17992818e62d5aef62948d422d306898d42b67576cbf0e6\", \"submissions\": [{\"submission\": \"20261105-160534-5107fb\", \"created\": \"2026-11-05T19:05:34.452263+00:00\", \"image_id\": \"31800ebcfc224078bb623ab2b5f846a8\", \"version\": \"Propuesta 05/11 - piedra y borde superior completos - antes / solucion - pendiente de PR\", \"clouds\": 1, \"cloud_ids\": [\"10650370-27a8-42d1-b303-019e95f2bca1\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160534-5107fb\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": []
+    },
+    "atlas-followup-0bac2ac1-r2": {
+      "id": "atlas-followup-0bac2ac1-r2",
+      "piece": "Escena 081: seguimiento posterior a aprobación; falta tapar con negro",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T19:23:42.149555+00:00",
+      "updated_at": "2026-11-05T19:23:42.149555+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "reference": "{\"image_id\": \"0bac2ac10b81462e910b3705bd3c6740\", \"revision\": 2, \"sha256\": \"7ce45e84dae059c922d5dfb44b388a577320f4824928d8c7bfd736720abb2502\", \"submissions\": [{\"submission\": \"20261105-160504-935b5f\", \"created\": \"2026-11-05T19:05:05.068180+00:00\", \"image_id\": \"0bac2ac10b81462e910b3705bd3c6740\", \"version\": \"Propuesta 05/11 \\u00b7 Antes y soluci\\u00f3n \\u00b7 cueva y sincorazones\", \"clouds\": 1, \"cloud_ids\": [\"0dda90ce-59b5-48ef-a420-1d4e08bdfe9d\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160504-935b5f\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
+      "evidence": []
     }
   },
   "integrator": {
@@ -16048,7 +16061,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:23:34.073558+00:00",
+  "updated_at": "2026-11-05T19:23:42.151063+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
