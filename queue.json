@@ -4631,7 +4631,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:29.570680+00:00",
-      "updated_at": "2026-11-05T15:58:17.993231+00:00",
+      "updated_at": "2026-11-05T16:42:17.749363+00:00",
       "branch": "art/atlas-scene115-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/576",
       "approval": null,
@@ -4661,10 +4661,15 @@
           "at": "2026-11-05T15:58:17.993231+00:00",
           "owner": "codex-atlas-final",
           "detail": "Fuente7e90f8cc0:donantecompleto8x5tilecentro80,152; retícula64,-32/0,64; filasenterasespaciadaslejosmapa. CtestGREEN/DLLreal1402baselinefail->0nuevo,mapaC/prototypeigual,sourcelap1920/640exactos. Atlas32da72b1bd514572a7b91091d2e88449antes/soluciónmaparecipeC,responde20261105-120336-443f39/c5b632a4. NuevoruntimePENDIENTERAM,nofinal."
+        },
+        {
+          "at": "2026-11-05T16:42:17.749363+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Nueva receta7e90f8cc0YAverificadaEU32:2runs zoom3/2 y4pares300600 núcleoigual. ComparativaREALANTES/SOLUCIÓN1bf2e47af7fa4b2fa02599248052a27a exacthija32da... Storeactivo. Donante64x40entero, C/DLL1402fallosanteriores->0,sinfragmentosinterioresporwrap,píxelesnativosmapa/solapesexactos. Pendientevaloración,sinintegrar,nocertificarotrosdefectosniplataformas."
         }
       ],
       "claimed_at": "2026-11-05T12:01:24.736371+00:00",
-      "sent": "32da72b1bd514572a7b91091d2e88449"
+      "sent": "1bf2e47af7fa4b2fa02599248052a27a"
     },
     "atlas-116-hull-edge": {
       "id": "atlas-116-hull-edge",
@@ -15758,7 +15763,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T16:31:15.794248+00:00",
+  "updated_at": "2026-11-05T16:42:17.749363+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
