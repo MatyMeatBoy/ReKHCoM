@@ -435,5 +435,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-final-library130 | Biblioteca Bella 130: extensión real y entrega hija | en_revision | codex-atlas-final | — | Usuario 05/11 terminar todos los artes y faltantes | 2026-11-05T12:00:44.184680+00:00 |
 | atlas-final-missing-coverage | Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias | integrado | codex-atlas-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/578 | Usuario05/11 incluir faltantes reconocidos y detectar más | 2026-11-05T12:33:04.345560+00:00 |
 | atlas-native-scene-sentinel | Atlas native editor scene130/076/117 map tile1023 diagnosis and exact handling | en_curso | codex-atlas-native-fix | — | User requests actual ROM tiles per art; parent independent bugfix lane 2026-11-05 | 2026-11-05T13:45:54.846965+00:00 |
+| atlas-battle-field-missing-coverage | Atlas: 20 fondos combate y 13 familias campo ausentes | pendiente | — | — | Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte | 2026-11-05T13:49:55.685514+00:00 |
 
 Integrador: libre
