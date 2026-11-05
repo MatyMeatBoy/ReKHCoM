@@ -15213,10 +15213,10 @@
     "atlas-per-art-tile-edit": {
       "id": "atlas-per-art-tile-edit",
       "piece": "Editar tiles desde la revisión de cada arte",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-tiles",
       "created_at": "2026-11-05T11:50:32.381838+00:00",
-      "updated_at": "2026-11-05T11:55:21.333398+00:00",
+      "updated_at": "2026-11-05T12:24:39.991894+00:00",
       "branch": "feat/atlas-per-art-tiles",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/575",
       "approval": "Usuario 05/11: hazlo; opción por arte, edición manual y versión hija",
@@ -15226,9 +15226,15 @@
           "at": "2026-11-05T11:55:21.333398+00:00",
           "owner": "codex-atlas-tiles",
           "detail": "ca51a97f1; 13 tests PASS; JS syntax; ROM EU real hash intact; HTTP temp create/edit/save/publish pending child parent intact; local launcher active."
+        },
+        {
+          "at": "2026-11-05T12:24:39.991894+00:00",
+          "owner": "codex-atlas-tiles",
+          "detail": "PR575 merged verified; head4d9951299. 14Python tests, JS syntax, real ROM EU189scenes/hashunchanged and headlessChrome per-art->scene054->erase->save->pending child PASS in temporary store; original intact. Includes reference-only queue regression."
         }
       ],
-      "claimed_at": "2026-11-05T11:50:40.578827+00:00"
+      "claimed_at": "2026-11-05T11:50:40.578827+00:00",
+      "completed_at": "2026-11-05T12:24:39.991894+00:00"
     },
     "atlas-final-library130": {
       "id": "atlas-final-library130",
@@ -15278,7 +15284,7 @@
     "created_at": "2026-11-05T12:24:08.728836+00:00",
     "updated_at": "2026-11-05T12:24:08.728836+00:00"
   },
-  "updated_at": "2026-11-05T12:24:08.730204+00:00",
+  "updated_at": "2026-11-05T12:24:39.992899+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
