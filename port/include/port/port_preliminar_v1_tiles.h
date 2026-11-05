@@ -829,6 +829,13 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             if (wx>=120 && wx<144) {
                 *sx=wx; *sy=24+PortSceneTileMod(wy-24,16);
             }
+            if (wx>=224 && wx<240) {
+                /* The second right-hand timber continues above its authored
+                 * top, too. Retain its own grain, excluding the crosspiece
+                 * below y=56; reflecting the clean band joins without a cut. */
+                int phase=PortSceneTileMod(23-wy,64);
+                *sx=wx; *sy=24+(phase<32 ? phase : 63-phase);
+            }
             return 1;
         }
         if ((wx<0 || wx>=256) && wy>=24 && wy<176) {
