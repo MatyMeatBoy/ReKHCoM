@@ -734,15 +734,21 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else return 0;
         return 1;
     }
-    if (p && p->v[0]==95 && p->v[1]==3 && (wx<0 || wx>=512 || wy<0 || wy>=512)) {
+    if (p && p->v[0]==95 && p->v[1]==3 && (wx<48 || wx>=480 || wy<0 || wy>=512)) {
         int tx=wx>>3, ty=wy>>3;
-        if (wy>=48 && wy<96) {
-            /* Only the mountain side of the skyline repeats; the castle
-             * silhouette in the authored map must not gain extra copies. */
+        if ((wx<0 || wx>=512) && wy>=48 && wy<96) {
+            /* Continue the mountain skyline without duplicating props. */
             int phase=PortSceneTileMod(wx,64);
             *sx=96+(phase<32?phase:63-phase); *sy=wy; return 1;
         }
-        if (wx>=512 && 2*wy-wx>=-128 && 2*wy-wx<64) {
+        if (wx<48 && 2*wy+wx>=432 && 2*wy+wx<672) {
+            /* The complete left hedge face ends at diagonal672, not576:
+             * the shorter band cut every flower cluster into a stair tooth. */
+            *sx=64+PortSceneTileMod(wx-64,96);
+            *sy=(2*wy+wx-*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-128 && 2*wy-wx<96) {
             /* Reflect the whole left hedge bay, including its flowers, rather
              * than chopping the right hedge into four-column stair steps. */
             int reflected=559-wx;
