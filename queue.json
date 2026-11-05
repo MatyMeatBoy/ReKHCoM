@@ -336,10 +336,10 @@
     "escena-057": {
       "id": "escena-057",
       "piece": "Escena 057 · integrada",
-      "status": "en_curso",
-      "owner": "codex-atlas-final",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-24T16:25:04.485456+00:00",
-      "updated_at": "2026-11-05T13:53:04.543468+00:00",
+      "updated_at": "2026-11-05T13:58:42.075891+00:00",
       "branch": "codex/atlas057-turbo-current",
       "pr": null,
       "approval": null,
@@ -414,6 +414,11 @@
           "at": "2026-11-05T13:53:04.543468+00:00",
           "owner": "codex-atlas-final",
           "detail": "Usuario05/11 ordena procesar toda cola Atlas. Carril histórico atlas057-turbo-current sin worktree vigente; gitworktreelist comprobado, PRnoasignadoencola; conserva backupbranch. ÚnicochatKHtrabajoactual, agentes actuales118/120/editor/coverage coordinados, ninguno057. Recuperación explícita del pendiente de dos subidas aún sin respuesta."
+        },
+        {
+          "at": "2026-11-05T13:58:42.075891+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "released: Reparto explícito a agente120yaentregado para continuar057 en carril dedicado. Checkout atlas-scene057-final creado limpio desdeorigin/main90fa, sinediciones. Fuentesnativas decodificadas ycomentarios dos subidas preservados enpruebas/atlas-final-20261105. Nuevoagente debeclaimokanteseditar."
         }
       ],
       "claimed_at": "2026-10-24T22:04:36.748590+00:00",
@@ -15433,7 +15438,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:58:14.435948+00:00",
+  "updated_at": "2026-11-05T13:58:42.075891+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
