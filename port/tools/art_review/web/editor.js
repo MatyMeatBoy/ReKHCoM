@@ -28,6 +28,10 @@ function tilesetOf(gid) {
   const v = gid & GID_MASK;
   return map().tilesets.find(t => t.firstgid <= v && v < t.firstgid + t.tilecount);
 }
+function isRomDonor(gid) {
+  const ts = tilesetOf(gid);
+  return !!ts && !(ts.non_donor_tileids || []).includes((gid & GID_MASK) - ts.firstgid);
+}
 /* The palette shows the active layer's own tileset (the first one its cells use). */
 function layerTileset() {
   const used = layer().data.find(g => g & GID_MASK);
@@ -75,6 +79,11 @@ function renderPalette() {
   const ctx = c.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(ts.img, 0, 0, ts.img.width * z, ts.img.height * z);
+  (ts.non_donor_tileids || []).forEach(local => {
+    const x = local % ts.columns * T * z, y = Math.floor(local / ts.columns) * T * z;
+    ctx.fillStyle = '#777'; ctx.fillRect(x, y, T * z, T * z);
+    ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + T * z, y + T * z); ctx.stroke();
+  });
   $('tsName').textContent = ts.name;
   if (state.sel && state.sel.ts === ts) {
     const { x0, y0, x1, y1 } = state.sel;
@@ -166,6 +175,7 @@ function apply(stroke, cell) {
   const m = map(), l = layer();
   if (state.tool === 'pick') {
     const gid = l.data[cell.y * m.width + cell.x];
+    if (gid && !isRomDonor(gid)) return status('Celda sin tile cargado: no es un donante de la ROM.', true);
     state.brush = { w: 1, h: 1, data: [(gid & GID_MASK) >>> 0] };
     state.flipH = !!(gid & FLIP_H); state.flipV = !!(gid & FLIP_V);
     syncFlips(); renderBrush();
@@ -203,7 +213,9 @@ async function open(project) {
   $('publish').disabled=false;
   state.project = project; state.layer = 0; state.undo = []; state.redo = []; state.sel = null;
   await Promise.all(project.map.tilesets.map(async ts => { ts.img = await loadImage(ts.image); }));
-  const first = project.map.layers[0].data.find(g => g & GID_MASK) || 1;
+  $('nativeNote').textContent = project.map.tilesets.some(ts => ts.non_donor_tileids?.length)
+    ? 'La ROM referencia el tile 1023 sin cargarlo. Se muestra transparente como VRAM inicial limpia; la VRAM de una partida en curso puede diferir. Las celdas conservan su identidad y no se ofrecen como donantes.' : '';
+  const first = project.map.layers[0].data.find(g => isRomDonor(g)) || 0;
   state.brush = { w: 1, h: 1, data: [(first & GID_MASK) >>> 0] };
   markDirty(false); renderLayers(); render(); renderPalette(); renderBrush();
   $('scene').value = project.scene;
@@ -335,6 +347,10 @@ function selectBrush() {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const local = (ay + y) * ts.columns + ax + x;
     data.push(local < ts.tilecount ? ts.firstgid + local : 0);
+  }
+  if (data.some(gid => gid && !isRomDonor(gid))) {
+    status('La selección incluye una celda sin tile cargado; elige sólo tiles de la ROM.', true);
+    return;
   }
   state.brush = { w, h, data };
   if (state.tool !== 'fill') setTool('pencil');
