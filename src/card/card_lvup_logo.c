@@ -25,6 +25,12 @@
 #include <stddef.h>
 #include "sprite_palettes.h"
 #include "macros.h"
+#ifdef PLATFORM_PC
+#include "engine.h"
+#include "port/port_scene061_props.h"
+extern EventBackgroundDef gEventBg061;
+#endif
+
 
 static u8 sLvupLogoActive;
 
@@ -402,6 +408,30 @@ void Ev_mapObj_2(EventMapObjectWork* work) {
         entry = &entries[i];
         DrawSprite(entry->x - (gEventState->x >> 8), entry->y - (gEventState->y >> 8), def->sprites[entry->spriteIndex], work->tiles[entry->spriteIndex], work->palettes[entry->spriteIndex], NULL, SPRITE_PRIORITY(2), -0x1004 - entry->y * 4);
     }
+#ifdef PLATFORM_PC
+    /* Static scene decoration only. Actors and the cartridge picture keep
+     * their original calls; new copies are clipped to the wide margins. */
+    if (gEventBackgroundDefs[work->background] == &gEventBg061 &&
+        def->placementCount == 4 && PortWideMarginX() > 0) {
+        int slot, margin = PortWideMarginX(), vertical = PortWideMarginY();
+        int cameraX = gEventState->x >> 8, cameraY = gEventState->y >> 8;
+        for (slot = -64; slot <= 64; slot++) {
+            int wx, wy, x, y;
+            if (!PortScene061PropPosition(slot, &wx, &wy)) continue;
+            x = wx - cameraX; y = wy - cameraY;
+            if (x < -margin-32 || x > 240+margin+32 ||
+                y < -vertical-64 || y > 160+vertical+64) continue;
+            if (x < 32) PortSpriteClipX(-margin, 0);
+            else if (x > 208) PortSpriteClipX(240, 240+margin);
+            else continue;
+            entry = &entries[0];
+            DrawSprite(x, y, def->sprites[entry->spriteIndex],
+                work->tiles[entry->spriteIndex], work->palettes[entry->spriteIndex],
+                NULL, SPRITE_PRIORITY(2), -0x1004 - wy * 4);
+        }
+        PortSpriteClipX(0, 0);
+    }
+#endif
 }
 
 void Ev_mapObj_3(EventMapObjectWork* work) {

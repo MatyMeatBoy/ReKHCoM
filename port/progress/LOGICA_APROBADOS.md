@@ -487,3 +487,7 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Actores que esperan fuera de la cámara (25/10)
 
 En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).
+
+## Escena061, propuesta05/11: candelabros en márgenes
+
+Comentario `645a6367-a9da-41c7-8744-3c9912a507ea`: repetir los candelabros con el mismo espaciado. La ROM define cuatro objetos en(16,160),(80,192),(144,224),(208,256), no tiles del fondo. Continuar sólo la decoración por(64,32), con clips fuera del cuadro GBA. Los cuatro originales, actores, BG, paletas y lógica del evento no cambian. Ocho pares runtime x3/x2 con Ajuste/Extendido: núcleo idéntico; sólo cambian márgenes de Extendido. Propuesta en Atlas pendiente de valoración; no hereda aprobación.
