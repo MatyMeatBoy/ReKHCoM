@@ -3224,14 +3224,20 @@
       "id": "atlas-remates-117-r20261025",
       "piece": "Escena 117 comentarios posteriores",
       "status": "en_curso",
-      "owner": "codex-atlas-remates",
+      "owner": "codex-atlas-final",
       "created_at": "2026-10-25T16:07:15.563505+00:00",
-      "updated_at": "2026-10-25T16:07:24.405574+00:00",
+      "updated_at": "2026-11-05T12:59:38.841055+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "familia 36884a8a1d154965aac5f8955d59b753; envio 20261025-025109-a6d61f; parent ff9f8d6e16a149708fb8a08c5c80d431",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T12:59:38.841055+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Retoma global pedida05/11; list_threads únicoKHactivo este y procesosKH sóloAtlas; checkout atlas-remates retirado, ramasbackup/khcom-atlas-remates-20261026 conservadas. Leer nubes exactas117 y crear checkout propio, sin pisar WIP."
+        }
+      ],
       "claimed_at": "2026-10-25T16:07:24.405574+00:00"
     },
     "atlas-remates-118-r20261025": {
@@ -15326,7 +15332,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:59:02.943761+00:00",
+  "updated_at": "2026-11-05T12:59:38.841055+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -16507,6 +16513,16 @@
       "to_owner": "codex-atlas-final",
       "expected_commit": "16e38b8a85d2d6d2c0df60712c8118e034653bb9",
       "evidence": "Usuario05/11 ordena terminar toda revisión. Apps list_threads: único chatKH activo este; procesosKH sólo servidorAtlas; worktrees061 retirados, ramasbackup conservadas; PR215 merged f244c947 y comentario posterior26/10 pide repetir candelabros. Retoma en worktree nuevo sin tocar WIP."
+    },
+    {
+      "at": "2026-11-05T12:59:38.841055+00:00",
+      "actor": "codex-atlas-final",
+      "operation": "recover-task",
+      "task": "atlas-remates-117-r20261025",
+      "from_owner": "codex-atlas-remates",
+      "to_owner": "codex-atlas-final",
+      "expected_commit": "312d0948dffa2d886df5358eaea1e764c22adba1",
+      "evidence": "Retoma global pedida05/11; list_threads únicoKHactivo este y procesosKH sóloAtlas; checkout atlas-remates retirado, ramasbackup/khcom-atlas-remates-20261026 conservadas. Leer nubes exactas117 y crear checkout propio, sin pisar WIP."
     }
   ]
 }
