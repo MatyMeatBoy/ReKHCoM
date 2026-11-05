@@ -438,6 +438,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-battle-field-missing-coverage | Atlas: 20 fondos combate y 13 familias campo ausentes | en_revision | codex-atlas-coverage | — | Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte | 2026-11-05T13:55:27.527723+00:00 |
 | atlas-moguri-bottom-fade-20261105 | Atlas Canjear Moguri: recuperar fading inferior sin estirar margen | en_revision | codex-atlas-final | — | Usuario05/11 procesar toda cola; nubeaac6c968-8cd2-4c00-a4a2-694fd0c619c6 pendiente | 2026-11-05T14:09:53.982988+00:00 |
 | atlas-title-hd-words-20261105 | Atlas título: verificar carga de textos HD en versión actual | en_curso | codex-atlas-final | — | Usuario05/11 procesar todacola. Nube e4197d14-a75c-4806-822a-406122db3221 pide cargartextosHD. | 2026-11-05T14:11:10.874356+00:00 |
-| atlas099-wallpattern-20261105 | Escena099 patron mural comentarios posteriores PR152 | pendiente | — | — | — | 2026-11-05T14:13:56.737301+00:00 |
+| atlas099-wallpattern-20261105 | Escena099 patron mural comentarios posteriores PR152 | en_curso | codex-atlas099-final | — | — | 2026-11-05T14:14:03.430997+00:00 |
 
 Integrador: libre
