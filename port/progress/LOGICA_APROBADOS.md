@@ -487,3 +487,7 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Actores que esperan fuera de la cámara (25/10)
 
 En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).
+
+## Escena117, propuesta05/11: tres cajas y cubierta
+
+Las cajas equivalentes del mapa coinciden por traslación(120,56), no(112,56):4948píxeles de cuerpo coinciden. La punta reflejada de la tapa necesita además ocho píxeles de desplazamiento vertical por la asimetría de su paralelogramo. Completar el extremo derecho con la cara intacta de la caja superior. Se detectó además la caja frontal cortada:3372píxeles coinciden con la superior por(-88,152), que permite completar su mitad izquierda con donantes originales. Cubierta BG3: seguir diagonal2y-x, madera de módulo64x32 y pared sin cortar en el borde rectangular. Propuesta offline en Atlas; pendiente runtime y valoración. Sólo muestreo fuera del cuadro GBA, sin heredar aprobación.
