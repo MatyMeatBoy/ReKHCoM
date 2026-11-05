@@ -15671,10 +15671,10 @@
     "atlas-title-hd-words-20261105": {
       "id": "atlas-title-hd-words-20261105",
       "piece": "Atlas título: verificar carga de textos HD en versión actual",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-final",
       "created_at": "2026-11-05T14:11:02.017486+00:00",
-      "updated_at": "2026-11-05T18:44:59.700292+00:00",
+      "updated_at": "2026-11-05T18:45:08.081328+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/commit/315db1e45cbfacb54c1786786917045c0100b2eb",
       "approval": "Atlas0957335d20aa4ce796a029000f21940d approved rev1 sin notas; textos existentes verificados",
@@ -15689,10 +15689,16 @@
           "at": "2026-11-05T18:44:59.700292+00:00",
           "owner": "codex-atlas-final",
           "detail": "Conciliacion STOP: verificacion sin codigo/PR nuevo. v2.8 carga y dibuja PressStartSpanish/DevelopedBySpanish en900/1150, captura propia aprobada sin notas. Fuente ya integrada315db, no afirmar todas pantallas/idiomas. ImagenSHA420ae147c16985e58ba6e34c00ea48c2a267f3115659d306fb1c2fc4149f6b79."
+        },
+        {
+          "at": "2026-11-05T18:45:08.081328+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Verificacion aprobada cerrada sobre implementacion315db ya integrada; no nueva release ni sustitucion de archivos publicados. Restantes textos/menu siguen sus tareas."
         }
       ],
       "claimed_at": "2026-11-05T14:11:10.874356+00:00",
-      "sent": "0957335d20aa4ce796a029000f21940d"
+      "sent": "0957335d20aa4ce796a029000f21940d",
+      "completed_at": "2026-11-05T18:45:08.081328+00:00"
     },
     "atlas099-wallpattern-20261105": {
       "id": "atlas099-wallpattern-20261105",
@@ -15954,7 +15960,7 @@
     "created_at": "2026-11-05T18:43:20.494522+00:00",
     "updated_at": "2026-11-05T18:43:20.494522+00:00"
   },
-  "updated_at": "2026-11-05T18:44:59.700292+00:00",
+  "updated_at": "2026-11-05T18:45:08.081328+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
