@@ -3053,12 +3053,12 @@
     "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03": {
       "id": "agrabah-107-108-e0779d8a9f5f4eea9eb73e9586505a03",
       "piece": "Agrabah 107/108 feedback Atlas e0779d8a9f5f4eea9eb73e9586505a03",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas107-final",
       "created_at": "2026-10-25T16:03:24.879479+00:00",
-      "updated_at": "2026-11-05T17:35:18.200518+00:00",
+      "updated_at": "2026-11-05T19:01:18.379377+00:00",
       "branch": "art/atlas-agrabah107-final",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/597",
       "approval": null,
       "reference": "Atlas34f9930dc77e48dabb91cd71e453e1f2 rev3; envio20261025-214640-5760ac; comparar aprobadoe0779d8a9f5f4eea9eb73e9586505a03",
       "evidence": [
@@ -3086,10 +3086,15 @@
           "at": "2026-11-05T17:35:18.200518+00:00",
           "owner": "codex-atlas107-final",
           "detail": "Checkout propio main30e1f47fe limpio; lectura pendiente de 3 nubes de techo/cornisa, preservar pilastras/ventana Genio ya aprobadas. Ninguna edicion de producto antes diagnosticoROM/capturas. Solo ligero durante sintesis."
+        },
+        {
+          "at": "2026-11-05T19:01:18.379377+00:00",
+          "owner": "codex-atlas107-final",
+          "detail": "STOP humano: terminada entrega actual107/108, commit b770de3ddff373461c44d96feb353f63e314a5ba; Atlas antes/solucion responde3nubes revision3, pendiente sin heredar aprobacion. C PASS, preview PASS,20pares area nativa exacta con margen3px,10Original completos identicos, modelo esquina exacto. Techo aprobado conservado. PR597 draft, no merge/release. WIP Darkside/Monstro/Diario preservados y claims devueltos; no tomar siguiente tarea."
         }
       ],
       "claimed_at": "2026-10-25T16:03:30.914656+00:00",
-      "sent": "9369d2d01a954fc5bd2a36a46dd484c4"
+      "sent": "7e56559f87b1402da2fe92e2eafe256c"
     },
     "darkside-arena-feedback-revision": {
       "id": "darkside-arena-feedback-revision",
@@ -15955,7 +15960,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T18:45:15.324093+00:00",
+  "updated_at": "2026-11-05T19:01:18.379377+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
