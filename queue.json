@@ -15347,10 +15347,23 @@
       ],
       "claimed_at": "2026-11-05T12:06:19.084903+00:00",
       "completed_at": "2026-11-05T12:33:04.345560+00:00"
+    },
+    "atlas-native-scene-sentinel": {
+      "id": "atlas-native-scene-sentinel",
+      "piece": "Atlas native editor scene130/076/117 map tile1023 diagnosis and exact handling",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T13:45:44.936151+00:00",
+      "updated_at": "2026-11-05T13:45:44.936151+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "User requests actual ROM tiles per art; parent independent bugfix lane 2026-11-05",
+      "reference": "pruebas/atlas-final-20261105/native-editor-fix",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:41:28.846942+00:00",
+  "updated_at": "2026-11-05T13:45:44.936151+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
