@@ -433,6 +433,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | optiport-v28-obj-pools | OptiPort v2.8: usos NULL tras pools OBJ llenos | integrado | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/569 | usuario 04/11: arreglar todo lo roto/bug y salir con 2.8 | 2026-11-04T14:21:27.941839+00:00 |
 | atlas-per-art-tile-edit | Editar tiles desde la revisión de cada arte | integrado | codex-atlas-tiles | https://github.com/MatyMeatBoy/ReKHCoM/pull/575 | Usuario 05/11: hazlo; opción por arte, edición manual y versión hija | 2026-11-05T12:24:39.991894+00:00 |
 | atlas-final-library130 | Biblioteca Bella 130: extensión real y entrega hija | en_revision | codex-atlas-final | — | Usuario 05/11 terminar todos los artes y faltantes | 2026-11-05T12:00:44.184680+00:00 |
-| atlas-final-missing-coverage | Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias | en_revision | codex-atlas-final | — | Usuario05/11 incluir faltantes reconocidos y detectar más | 2026-11-05T12:08:08.349342+00:00 |
+| atlas-final-missing-coverage | Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias | en_curso | codex-atlas-final | — | Usuario05/11 incluir faltantes reconocidos y detectar más | 2026-11-05T12:28:28.574480+00:00 |
 
 Integrador: libre
