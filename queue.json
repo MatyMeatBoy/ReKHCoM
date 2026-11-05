@@ -15402,20 +15402,26 @@
     "atlas-battle-field-missing-coverage": {
       "id": "atlas-battle-field-missing-coverage",
       "piece": "Atlas: 20 fondos combate y 13 familias campo ausentes",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas-coverage",
       "created_at": "2026-11-05T13:49:55.685514+00:00",
-      "updated_at": "2026-11-05T13:50:11.805397+00:00",
+      "updated_at": "2026-11-05T13:55:27.527723+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11: reconocer faltantes y añadir nuevos en Atlas para revisión; referencia sin aprobación de arte",
       "reference": "pruebas/atlas-final-20261105/coverage-audit/coverage.json",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T13:55:27.527723+00:00",
+          "owner": "codex-atlas-coverage",
+          "detail": "33 referencias nativas nuevas verificadas:20 fondos combate y13 familias campo. pending/reference_only/parent null/turno agente/SHA33de33. IDs SHA fuentes: pruebas/atlas-final-20261105/coverage-audit/reference-deliveries.json; verificacion reference-verification.json. Campo00 muestra640celdas1023 fuera tileset enmagenta sininventar; resto32sin unresolved. ModePooh comparte fuentes congEventBg134/141/142 ficha092982aa04fb4c51a7e8932566659621;0artes nuevas,no duplicar. No runtime,build,game,aprobacion ni integracion. Arte siguependiente."
+        }
+      ],
       "claimed_at": "2026-11-05T13:50:11.805397+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T13:55:15.279621+00:00",
+  "updated_at": "2026-11-05T13:55:27.527723+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
