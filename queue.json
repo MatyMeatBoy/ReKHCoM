@@ -15541,7 +15541,7 @@
       "status": "en_curso",
       "owner": "codex-atlas087-final",
       "created_at": "2026-11-05T14:22:52.310431+00:00",
-      "updated_at": "2026-11-05T14:30:49.697362+00:00",
+      "updated_at": "2026-11-05T14:36:40.992420+00:00",
       "branch": "art/atlas-scene087-final",
       "pr": null,
       "approval": "Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion",
@@ -15551,13 +15551,18 @@
           "at": "2026-11-05T14:30:49.697362+00:00",
           "owner": "codex-atlas087-final",
           "detail": "PR76 y206 integrados historicos, se conservan. Nuevas3nubes8903fc3e/caac56f2/92573031 envio20261026-063322-54de6a padre33dd78c3e05f44648d70624c52ae2cf0 SHA95bcb2dca7750a90669c245bc69286d07fe4572a1ff5c82db53c1d1be58dab86 aprobado con comentarios nuevos. Nuevo worktree main6ccada5bf. Hallazgo: BG2 no extiende enredadera superior; BG3 piedra si. PreviewROMmodulo32px limpio franja96<=2y+x<144; sin alterar calabazas ni centro. TestC preparado RED pendiente ventana. MenuEVENT087 confirmado0:86. Evidencia087-native/upper-period32.png yreview.json."
+        },
+        {
+          "at": "2026-11-05T14:36:40.992420+00:00",
+          "owner": "codex-atlas087-final",
+          "detail": "Handoff05/11: propuesta offline nativa upper-period32.png lista, source/DONOR-PROVENANCE/review.json ybuild_runtime.py/capture_runtime.py/deliver.py preparados en087-native. TestC nuevo port/tools/test_scene087_upper_border.py preparado, sin ejecutarlo; produccion sin cambios hasta observarRED. Falta ventana explicita de compilacion/juego: coordinadorroot reportaerror modelo atcapacity, otroscarriles130/099completed; no se asume concesion. Reanudar con RED, añadirregla87 BG2 fuera256x256 franja96<=2y+x<144 sx=mod(wx,32) sy=(2wy+wx-sx)/2, GREEN, builds/runtimes, hijaexactparent33dd78 yPRdraft. Sin publicacion parcial ni aprobacionesmutadas."
         }
       ],
       "claimed_at": "2026-11-05T14:23:10.393470+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:30:49.697362+00:00",
+  "updated_at": "2026-11-05T14:36:40.992420+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

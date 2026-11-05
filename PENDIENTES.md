@@ -440,6 +440,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-title-hd-words-20261105 | Atlas título: verificar carga de textos HD en versión actual | en_curso | codex-atlas-final | — | Usuario05/11 procesar todacola. Nube e4197d14-a75c-4806-822a-406122db3221 pide cargartextosHD. | 2026-11-05T14:11:10.874356+00:00 |
 | atlas099-wallpattern-20261105 | Escena099 patron mural comentarios posteriores PR152 | pr_abierto | codex-atlas099-final | https://github.com/MatyMeatBoy/ReKHCoM/pull/588 | — | 2026-11-05T14:24:35.973225+00:00 |
 | atlas-scene130-maleficent-staging | Escena130 Maléfica visible en márgenes antes de entrada: staging separado de extensión BG | pendiente | — | — | Usuario terminar todos los artes; parent solicita registrar defecto exacto 05/11 | 2026-11-05T14:21:36.019135+00:00 |
-| atlas087-final-border-patterns | Escena087: completar patrones del borde superior tras revision33dd78 | en_curso | codex-atlas087-final | art/atlas-scene087-final | Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion | 2026-11-05T14:30:49.697362+00:00 |
+| atlas087-final-border-patterns | Escena087: completar patrones del borde superior tras revision33dd78 | en_curso | codex-atlas087-final | art/atlas-scene087-final | Usuario05/11 procesar toda la cola Atlas, proponer hijos nuevos para valoracion; sin heredar aprobacion | 2026-11-05T14:36:40.992420+00:00 |
 
 Integrador: libre
