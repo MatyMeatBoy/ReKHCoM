@@ -491,3 +491,8 @@ En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 
 ## Escena115, propuesta05/11: madera limpia y menor densidad
 
 Respuesta a `7e56767b-7fb9-4adc-a6b1-214effa7d1d4` y al comentario de reducir escotillas. Sólo fuera del mapa nativo32x32: BG3 usa las cuatro filas de madera20..23 cuando está bajo el muro (`2y+x>=36`), evitando copiar el escalón rojo. BG2 omite filas alternas de módulos completos de escotillas. El bloque original conserva todos sus tiles. Propuesta pendiente de valoración humana y captura del juego; no hereda aprobación.
+
+
+### Escena115: escotillas completas, corrección05/11
+
+La revisión174807eb61b84dca853d8c0c05434fda señala que se pierde el patrón y sobran fragmentos. El recorte rectangular anterior cruzaba tres escotillas distintas. Cada motivo nuevo toma una plantilla nativa entera de8x5tiles, columnas6..13/filas17..21, centro(80,152); su retícula avanza(64,-32),(0,64). Completar también las escotillas recortadas por los límites originales: sus1920y640píxeles compartidos coinciden exactamente con la plantilla. Reducir sólo filas enteras alejadas del mapa, sin partir diamantes ni inventar motivos en celdas originales vacías. NúcleoGBA y madera aprobada intactos. Mostrar ANTES/SOLUCIÓN y distinguir mapa de receta de captura runtime.

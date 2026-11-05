@@ -81,19 +81,18 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
                 sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
             if (2*oy+ox>=32) {
-                int cx=ox+4-PortSceneTileMod(ox+4,8);
-                int base=22-cx/2;
-                int cy=oy+1-PortSceneTileMod(oy+1-base,8);
-                /* A candidate centred in an authored empty cell must not
-                 * leave a half hatch outside that cell's map edge. */
-                if (cx>=0 && cx<32 && cy>=0 && cy<32 &&
-                    (cy>=29 || 2*cy+cx>=76)) return 0;
-                /* Complete hatch diamonds on their staggered (16,-8),
-                 * (0,8) lattice instead of wrapping clipped edge shards. */
-                sx=8+PortSceneTileMod(ox-8,16);
-                /* Thin whole exterior hatch rows; authored cells stay intact. */
-                if (PortSceneTileMod(oy+(ox-sx)/2-16,16)>=8) return 0;
-                sy=16+PortSceneTileMod(oy+(ox-sx)/2-16,8);
+                int k=(ox-6-PortSceneTileMod(ox-6,8))/8;
+                int cx=10+8*k, base=19-4*k;
+                int j=(oy-base+2-PortSceneTileMod(oy-base+2,8))/8;
+                int cy=base+8*j;
+                int overlapsMap=cx-4<32 && cx+4>0 && cy-2<32 && cy+3>0;
+                /* One intact 8x5 tile stamp, centred at (80,152). Wrapping
+                 * the old rectangular swatch spliced three different hatches.
+                 * Complete authored clipped motifs at the map boundary;
+                 * thin whole rows only farther away, never half a diamond. */
+                if (j<0 || oy-cy< -2 || oy-cy>=3 ||
+                    (overlapsMap ? j>=2 : PortSceneTileMod(j,2))) return 0;
+                sx=10+ox-cx; sy=19+oy-cy;
             } else if (sy<0 || sy>=32) return 0;
         }
         *x=sx; *y=sy; return 1;

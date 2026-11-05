@@ -20,6 +20,22 @@ for(bg=2;bg<=3;bg++){
   if(x>=0&&x<32&&y>=0&&y<32){assert(ok&&sx==x&&sy==y);}
   else if(bg==3&&2*y+x>=36){assert(ok&&sy>=20&&sy<24);}
  }
+}
+{
+ const PortPreliminarRecipe* p=0;int k,j,dx,dy;
+ for(i=0;i<sizeof(kPreliminarRecipes)/sizeof(kPreliminarRecipes[0]);i++)if(kPreliminarRecipes[i].v[0]==115&&kPreliminarRecipes[i].v[1]==2){p=&kPreliminarRecipes[i];break;}
+ assert(p);
+ for(k=-8;k<=12;k++)for(j=0;j<6;j++){
+  int cx=10+8*k,cy=19-4*k+8*j;
+  int overlap=cx-4<32&&cx+4>0&&cy-2<32&&cy+3>0;
+  if(overlap?j>=2:j%2)continue;
+  for(dy=-2;dy<3;dy++)for(dx=-4;dx<4;dx++){
+   int wx=cx+dx,wy=cy+dy,sx=wx,sy=wy;
+   if(wx>=0&&wx<32&&wy>=0&&wy<32)continue;
+   assert(PortPreliminarTileSource(p,&sx,&sy));
+   assert(sx==10+dx&&sy==19+dy);
+  }
+ }
 }return 0;}
 '''
   with tempfile.TemporaryDirectory() as d:
