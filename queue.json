@@ -4337,15 +4337,21 @@
     "atlas-095-castle": {
       "id": "atlas-095-castle",
       "piece": "Escena 095: recuperar un único castillo; no cerrado por árbol y flores",
-      "status": "en_curso",
-      "owner": "codex-atlas-final",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T12:11:51.161841+00:00",
+      "updated_at": "2026-11-05T12:16:51.547901+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "20261024-183308-2313ad",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-05T12:16:51.547901+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "released: Intento05/11: decodificado mapa ROM EU completo095 y comparado con revisión063184/c53dec. El mapa ROM no contiene castillo; fuente exacta pendiente de identificar. Imagen estudio pruebas/atlas-final-20261105/095-native.png; pregunta al usuario enviada. No cerrado por PR211 ni por valla/flores."
+        }
+      ],
       "claimed_at": "2026-11-05T12:11:51.161841+00:00"
     },
     "atlas-menu-font-evidence": {
@@ -15262,7 +15268,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:11:51.161841+00:00",
+  "updated_at": "2026-11-05T12:16:51.547901+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
