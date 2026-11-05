@@ -3213,7 +3213,7 @@
       "status": "pr_abierto",
       "owner": "codex-atlas112-final",
       "created_at": "2026-10-25T16:06:25.602720+00:00",
-      "updated_at": "2026-11-05T17:33:07.093058+00:00",
+      "updated_at": "2026-11-05T18:03:19.565906+00:00",
       "branch": "art/atlas-scene112-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/594",
       "approval": null,
@@ -3243,6 +3243,11 @@
           "at": "2026-11-05T17:33:07.093058+00:00",
           "owner": "codex-atlas112-final",
           "detail": "PR594 DRAFT e37d7628058e7cefb000b30c31fb47fd9f1639f4. Atlas pending exactparent994arev3; before/solution300/900sameview. C3GREEN +118PASS;2unitpreview;9Wide3440nativecoresidentical, waitingGenieshadowremoved/bodyandpartyshadowskept. Original8 priorvariant distinguished; finalchangeonlyWidegate. Intermediaterejected. See SCENE112-WIDE-V2-CHECKS.json and ATLAS_112_SHADOW_20261105.md."
+        },
+        {
+          "at": "2026-11-05T18:03:19.565906+00:00",
+          "owner": "codex-atlas112-final",
+          "detail": "Guard posterior2e805af5d422bc9c7a221c9694e34f9aa4f5d9df: rango2/3 para padding de checkpoints; dos RED con255, luego C3+118PASS. Solo productor0/2/3, misma imagen renderizadae37, no nuevas capturas atribuidas. Revision independiente inicial sin bloqueos; delta adicional enviado a reviewer."
         }
       ],
       "claimed_at": "2026-10-25T16:06:30.735751+00:00",
@@ -15913,7 +15918,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T18:02:07.351336+00:00",
+  "updated_at": "2026-11-05T18:03:19.565906+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
