@@ -15461,10 +15461,10 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "pr_abierto",
-      "owner": "codex-atlas-library",
+      "status": "en_curso",
+      "owner": "codex-atlas130-final",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T16:12:29.205982+00:00",
+      "updated_at": "2026-11-05T17:07:27.247103+00:00",
       "branch": "fix/atlas-library130-extension",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/587",
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
@@ -15489,6 +15489,11 @@
           "at": "2026-11-05T16:12:29.205982+00:00",
           "owner": "codex-atlas-library",
           "detail": "Superseding clean Before/Solution pending child2935ad4bfddd42c886b86e3c90211827 of e58f861b8d1e44248852242d2f437d36 delivered via ACTIVE Store; old versions unchanged. Source cd8420bfa210230ad0615e5f931c1754165e7d8b PR587 draft now includes library extension plus exact-owner Maleficent/shadow staging fix; no inherited human approval. Combined4actor/registration tests+PPU build PASS, 36central/18Originalgameviewport pairs exact, five clean pairs;206oracles PREMERGE only. Atlas image served SHA a87923eb7797e1b89bb9e07f7c729a4462da23d14a9ee2206b52334c7dd8983f. Extension remains opt-in; original green notch preserved. Complete details/limits in port/progress/SCENE130_LIBRARY_CANDIDATE.md and pruebas/atlas-final-20261105/library130-final-delivery.json. No merge before new image rating. No heavy active."
+        },
+        {
+          "at": "2026-11-05T17:07:27.247103+00:00",
+          "owner": "codex-atlas130-final",
+          "detail": "Parent authorized same-agent continuation after live e58 rev3 approved with general falta solo el cachito marcado and doodlebf2652d8. Listed current owner codex-atlas-library PR587. Own prior checkout atlas-library130-final remains clean atcd8420bf, no external worker; preserved staging owner/PR587, no merge. Narrow 92 authored flatgreen pixels are obstruction of continued shelf baseboard; offline native and runtime inspection only so far, no production edits before recovery."
         }
       ],
       "claimed_at": "2026-11-05T14:00:31.772987+00:00",
@@ -15812,7 +15817,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T17:04:55.568573+00:00",
+  "updated_at": "2026-11-05T17:07:27.247103+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
@@ -17093,6 +17098,16 @@
       "to_owner": "codex-atlas057-final",
       "expected_commit": "0d80d56ba6dc45c5d613f10d600cb03651ecd846",
       "evidence": "Root explicit handoff20261105 latestfeedback492cc13fdc804300bda522bb466db5e4rev6. Ceded checkout atlas-scene057-final clean at9abc6efbb, previous lane inactive confirmed root, preserve PR585draft unmerged and allAtlaspriorversions. Recover own single task for nativegrass/right-side correction, noheavy untilrootwindow."
+    },
+    {
+      "at": "2026-11-05T17:07:27.247103+00:00",
+      "actor": "codex-atlas130-final",
+      "operation": "recover-task",
+      "task": "atlas-final-library130",
+      "from_owner": "codex-atlas-library",
+      "to_owner": "codex-atlas130-final",
+      "expected_commit": "1e0b31082a95db5397be4711fc5a1ed3fe2e35e0",
+      "evidence": "Parent authorized same-agent continuation after live e58 rev3 approved with general falta solo el cachito marcado and doodlebf2652d8. Listed current owner codex-atlas-library PR587. Own prior checkout atlas-library130-final remains clean atcd8420bf, no external worker; preserved staging owner/PR587, no merge. Narrow 92 authored flatgreen pixels are obstruction of continued shelf baseboard; offline native and runtime inspection only so far, no production edits before recovery."
     }
   ]
 }
