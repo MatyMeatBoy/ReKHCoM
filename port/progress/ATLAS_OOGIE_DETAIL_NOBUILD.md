@@ -12,7 +12,8 @@ pequeño remate propio. Sin espejo de figuras, colores fijos ni copia de píxele
 del cartucho al repositorio: las máscaras usan los índices activos146/157/158.
 
 Los extremos señalados son las ocho filas400..407 de la franja frontal. Esas
-filas nativas usan un índice uniforme por fila (131/132/133). La receta previa
+filas usan índices uniformes en sus tramos exteriores limpios (131/132/133);
+la última conserva dos uniones al camino central dentro del cuarto. La receta previa
 las cortaba al superar32píxeles fuera del cuarto. Ahora continúan hacia ambos
 bordes con `RoomIndex(ROOM_X,y)`, manteniendo la paleta/fundido actuales. No se
 cambia el cuarto original, `PathIndex`, perspectiva ni anchura de planos verdes.
