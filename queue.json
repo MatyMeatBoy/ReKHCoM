@@ -15490,16 +15490,23 @@
     "atlas-title-hd-words-20261105": {
       "id": "atlas-title-hd-words-20261105",
       "piece": "Atlas título: verificar carga de textos HD en versión actual",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas-final",
       "created_at": "2026-11-05T14:11:02.017486+00:00",
-      "updated_at": "2026-11-05T14:11:10.874356+00:00",
+      "updated_at": "2026-11-05T14:55:24.875243+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario05/11 procesar todacola. Nube e4197d14-a75c-4806-822a-406122db3221 pide cargartextosHD.",
       "reference": "d31ab43ebc4244e793d84b7a140ba11a",
-      "evidence": [],
-      "claimed_at": "2026-11-05T14:11:10.874356+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-05T14:55:24.875243+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Controlactualv2.8 EU/es ya dibuja palabrasHD; runtimeexit0,frames9001150 loggTitlePressStartSpanishFrameyDevelopedBySpanish embebidos/dibujados. Atlas0957335d20aa4ce796a029000f21940d pendinghuman, sincambiofuente niaprobaciónheredada. TITLE-CURRENT-CHECKS.json."
+        }
+      ],
+      "claimed_at": "2026-11-05T14:11:10.874356+00:00",
+      "sent": "0957335d20aa4ce796a029000f21940d"
     },
     "atlas099-wallpattern-20261105": {
       "id": "atlas099-wallpattern-20261105",
@@ -15577,7 +15584,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:53:53.755666+00:00",
+  "updated_at": "2026-11-05T14:55:24.875243+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
