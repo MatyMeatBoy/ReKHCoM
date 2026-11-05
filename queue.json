@@ -15232,10 +15232,23 @@
       ],
       "claimed_at": "2026-11-05T11:57:33.886561+00:00",
       "sent": "c1ab45945afe471fb5f3f6f4b089e1e6"
+    },
+    "atlas-final-missing-coverage": {
+      "id": "atlas-final-missing-coverage",
+      "piece": "Cruzar y registrar fondos sin referencia Atlas, sin duplicar familias",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-05T12:06:12.167832+00:00",
+      "updated_at": "2026-11-05T12:06:12.167832+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario05/11 incluir faltantes reconocidos y detectar más",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T12:06:04.854298+00:00",
+  "updated_at": "2026-11-05T12:06:12.167832+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
