@@ -487,3 +487,7 @@ Envío `20261025-125448-4ee67a`: continuar la madera hasta arriba sin repetir su
 ### Actores que esperan fuera de la cámara (25/10)
 
 En las escenas con actores que esperan más allá del cuadro de 240x160 (evento 097, Preliminar 112 y 120) solo se oculta un sprite mientras no ha entrado al cuadro y está entero fuera. Una vez dentro se dibuja entero, también al salir hacia la vista ancha; nunca se corta un sprite en el borde del cuadro (barriles de Agrabah, Sora y amigos al irse).
+
+## Escena116, propuesta05/11: limpiar escalón rojo bajo el zócalo
+
+Respuesta a `8bb0eee7-1c4d-4cc8-ae58-fd99d59ce3f4`. Sólo fuera del mapa32x32, la franja de cubierta entre pared y baranda toma madera limpia de columnas0..7/filas20..23 con fase diagonal. Umbrales diferentes a izquierda32 y derecha48 conservan el muro del fondo. Mapa original intacto. Propuesta offline en Atlas; pendiente valoración y captura runtime, no hereda aprobación.

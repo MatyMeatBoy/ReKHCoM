@@ -60,7 +60,12 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
             } else if (ox>=28) {
                 sx=28+PortSceneTileMod(ox-28,4); sy=oy+(ox-sx)/2;
             }
-            if (sy<0 && ox>=8 && ox<28) {
+            /* Exterior deck donors must not carry the wall's red staircase
+             * below its trim. Keep four full wood rows and diagonal phase. */
+            if (2*oy+ox >= (ox>=28 ? 48 : 32) && 2*oy+ox<60) {
+                sx=PortSceneTileMod(ox,8);
+                sy=20+PortSceneTileMod(oy+(ox-sx)/2-20,4);
+            } else if (sy<0 && ox>=8 && ox<28) {
                 sx=8+PortSceneTileMod(ox-8,8); sy=PortSceneTileMod(oy,2);
             } else if (sy<0 || sy>=32) {
                 /* Clean diagonal red hull beyond either horizontal map end. */
