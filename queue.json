@@ -3227,13 +3227,13 @@
     "atlas-remates-112-r20261025": {
       "id": "atlas-remates-112-r20261025",
       "piece": "Escena 112 comentarios posteriores",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas112-final",
       "created_at": "2026-10-25T16:06:25.602720+00:00",
-      "updated_at": "2026-11-05T18:03:19.565906+00:00",
+      "updated_at": "2026-11-05T19:25:45.241592+00:00",
       "branch": "art/atlas-scene112-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/594",
-      "approval": null,
+      "approval": "Atlas 51bde4b6b4774c4291c8f50f4e83d8b1 revision1 approved SHA256 057b693c75a4d67d4df6fdba319b647908c1373d70601a1d08928570693e5b9e; build_version accepted; usuario05/11 integra todos",
       "reference": "Atlas994a5761f7f042deaba72d7e716ee14e rev3; sombras12561401 y marcof94109ca",
       "evidence": [
         {
@@ -3265,10 +3265,16 @@
           "at": "2026-11-05T18:03:19.565906+00:00",
           "owner": "codex-atlas112-final",
           "detail": "Guard posterior2e805af5d422bc9c7a221c9694e34f9aa4f5d9df: rango2/3 para padding de checkpoints; dos RED con255, luego C3+118PASS. Solo productor0/2/3, misma imagen renderizadae37, no nuevas capturas atribuidas. Revision independiente inicial sin bloqueos; delta adicional enviado a reviewer."
+        },
+        {
+          "at": "2026-11-05T19:25:45.241592+00:00",
+          "owner": "codex-atlas112-final",
+          "detail": "Integrado por PR599 merge60133ab696596336bc5ac777b70d6114d0c44593; original PR594 MERGED por ancestria exacta sourceaf576ffb4a061cfa24d8f62bd3193c448e859ab9. Preparacion futura pre2.8.5 sin build/compilador/runtime/importregen ni release. Imagen/revision/SHA seleccionados verificados antesmerge. Seguimiento sin comentarios nuevos; integrar NO responde nubes. Pruebas individuales anteriores historicas, combinado pendiente build/QA. Evidencia pruebas/atlas-integracion-20261105."
         }
       ],
       "claimed_at": "2026-10-25T16:06:30.735751+00:00",
-      "sent": "51bde4b6b4774c4291c8f50f4e83d8b1"
+      "sent": "51bde4b6b4774c4291c8f50f4e83d8b1",
+      "completed_at": "2026-11-05T19:25:45.241592+00:00"
     },
     "atlas-remates-115-r20261025": {
       "id": "atlas-remates-115-r20261025",
@@ -16099,7 +16105,7 @@
     "created_at": "2026-11-05T19:14:53.581367+00:00",
     "updated_at": "2026-11-05T19:20:14.898802+00:00"
   },
-  "updated_at": "2026-11-05T19:25:38.037344+00:00",
+  "updated_at": "2026-11-05T19:25:45.241592+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
