@@ -15504,16 +15504,23 @@
     "atlas099-wallpattern-20261105": {
       "id": "atlas099-wallpattern-20261105",
       "piece": "Escena099 patron mural comentarios posteriores PR152",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas099-final",
       "created_at": "2026-11-05T14:13:56.737301+00:00",
-      "updated_at": "2026-11-05T14:14:03.430997+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-05T14:24:35.973225+00:00",
+      "branch": "art/atlas-scene099-final",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/588",
       "approval": null,
       "reference": "Atlas f092a251c3e44a56b1b4727eb3183855 envio20261025-161834-618105 nubesdb9422b6/a02878c3; PR152 deja expresamente ambas pendientes. Mandato usuario procesar Atlas05/11",
-      "evidence": [],
-      "claimed_at": "2026-11-05T14:14:03.430997+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-05T14:24:35.973225+00:00",
+          "owner": "codex-atlas099-final",
+          "detail": "92839a736 PR588 draft; Atlas hija896b586257fe4b32a3a83272a0023f78 exactparentf092a251c3e44a56b1b4727eb3183855/envio20261025-161834-618105 respondeambasnubesdb9422b6/a02878c3. Segundo poste224..239 con veta nativa24..55. CRED/GREENPASS,previewEU PASS,4runs3440x1440exit0 Originalfull+centroGBAidenticos8pares180/300/600/900; bboxextendido2031,0..2079,288. pruebas/atlas-final-20261105/SCENE099-RUNTIME-CHECKS.json. Propuesta noaprobada/nointegrada."
+        }
+      ],
+      "claimed_at": "2026-11-05T14:14:03.430997+00:00",
+      "sent": "896b586257fe4b32a3a83272a0023f78"
     },
     "atlas-scene130-maleficent-staging": {
       "id": "atlas-scene130-maleficent-staging",
@@ -15544,7 +15551,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:23:10.393470+00:00",
+  "updated_at": "2026-11-05T14:24:35.973225+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
