@@ -2020,6 +2020,7 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             int wy = l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs);
             if (sPreliminarRecipe[bg] &&
                 ((bg==2 && (sPreliminarRecipe[bg]->v[0]==44 || sPreliminarRecipe[bg]->v[0]==45)) ||
+                 ((bg==2 || bg==3) && sPreliminarRecipe[bg]->v[0]==87 && PortPreliminar087VineRun(wx,wy)) ||
                  sPreliminarRecipe[bg]->v[0]==81 || sPreliminarRecipe[bg]->v[0]==95 || sPreliminarRecipe[bg]->v[0]==99 || (bg==2 && sPreliminarRecipe[bg]->v[0]==104) ||
                  sPreliminarRecipe[bg]->v[0]==110 || sPreliminarRecipe[bg]->v[0]==112 || sPreliminarRecipe[bg]->v[0]==117 || sPreliminarRecipe[bg]->v[0]==118 ||
                  sPreliminarRecipe[bg]->v[0]==120 || sPreliminarRecipe[bg]->v[0]==121 || sPreliminarRecipe[bg]->v[0]==122 ||

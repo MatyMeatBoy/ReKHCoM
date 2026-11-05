@@ -388,11 +388,18 @@ Las dos primeras señalan el patrón incompleto; la tercera identifica el borde
 original que debe continuar arriba. Los PR76/206 integrados no responden a
 estos comentarios posteriores.
 
-La piedra superior ya continúa en BG3, pero su enredadera vive en BG2.
-Prolongar sólo el módulo original limpio de 32 píxeles, con fase diagonal 2:1,
-en la franja `96 <= 2*y+x < 144` exterior al mapa nativo de 256x256.
-Donantes: píxeles x0..31 y y32..71; excluyen las calabazas de las filas superiores.
+La piedra superior de BG3 debe seguir la pendiente 2:1 del borde original,
+no el antiguo corte 3:1 que separaba el ornamento de su apoyo. Para el plano
+de piedra usar el módulo interior completo de tiles x4..7, y0..1, sin repetir
+el remate del extremo izquierdo. La enredadera vive en BG2.
+En la franja `96 <= 2*y+x < 144` exterior al mapa nativo de 256x256,
+BG2/BG3 comparten el módulo original de 32 píxeles y la fase diagonal 2:1.
+Donantes de la unión: píxeles x0..31, y32..71; excluyen las calabazas superiores.
 Centro, objetos únicos y borde inferior conservan sus coordenadas.
+El despacho PPU de escena87 se limita a la unión superior y los runs de 8 píxeles
+que la cruzan. Fuera de ella se conserva el camino de tiles, sin activar el helper
+inferior legado. La primera captura detectó el despacho omitido; la segunda,
+la pendiente discordante de la piedra. Ambas propuestas se rechazaron antes de Atlas.
 La nueva hija queda pendiente de valoración propia; no hereda la aprobación
 del padre. Evidencia: `pruebas/atlas-final-20261105/087-native/` y prueba
 `port/tools/test_scene087_upper_border.py`.
