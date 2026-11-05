@@ -389,6 +389,18 @@ Montañas: tres crestas en 32 columnas, incluyendo todas sus sombras y excluyend
 El lado izquierdo conserva su diagonal; luna y puerta siguen unicas. Hija `37a6f9b61f0e427988c96890ce9b4f09`.
 Propuesta preliminar pendiente de valoracion: no hereda honores. Evidencia en ESCENA090_REVISION_CODEX.md.
 
+Revisión 05/11, aún pendiente: envío `20261026-063246-b66a30`, padre exacto
+`6458681037fd4bdc91688842b9369560`, nubes `551d5459-c31b-465a-a87f-ec9454b9c122`
+y `f223ac9d-bfad-4a36-82de-dbd35b96e979`. Para terminar la base horizontal,
+continuar las filas 25..27 de las columnas 48..49 en las tres filas nuevas.
+Son mampostería y su borde inferior original, sin ataúd ni lápidas; las columnas
+46..47 de fila 26 incluyen parte gris de una lápida y no sirven como donante.
+No reciclar filas 21..23: reproduciría la coronación del muro en la base.
+El suelo comienza después de la fila 31; centro nativo y objetos únicos intactos.
+PR210 anterior cerrado sin merge: no equivale a corrección integrada ni aprobada.
+Prueba acotada: `port/tools/test_scene090_wall_base.py`. Evidencia nativa y comparativa:
+`pruebas/atlas-final-20261105/090-native/`. La nueva versión requiere valoración propia.
+
 ## Medición: workers vs. trabajo solo (24-25/10/2026)
 
 | Modo | Agentes | Piezas de arte entregadas a la app | Aprobadas | Costo aprox. |
