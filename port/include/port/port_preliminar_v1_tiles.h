@@ -748,10 +748,15 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             *sy=(2*wy+wx-*sx)/2;
             return 1;
         }
-        if (wx>=480 && 2*wy-wx>=-128 && 2*wy-wx<16) {
-            /* The authored right face is 72px tall and ends at diagonal16.
-             * Use the lower flower-bearing 72px of the left bay; copying its
-             * full height lowered the extension forty pixels into the lawn. */
+        if (wx>=480 && 2*wy-wx>=-144 && 2*wy-wx< -96) {
+            /* Continue the straight native cap, excluding its return corner. */
+            *sx=464+PortSceneTileMod(wx-464,16);
+            *sy=(2*wy-wx+*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
+            /* The face below the cap is 56px tall and ends at diagonal16.
+             * Keep the lower flower-bearing 56px of the left bay. */
             int reflected=559-wx;
             *sx=64+PortSceneTileMod(reflected-64,96);
             *sy=(2*wy-wx+656-*sx)/2;

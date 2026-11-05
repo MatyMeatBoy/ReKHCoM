@@ -17,8 +17,19 @@ for(wx=-192;wx<48;wx++)for(wy=260;wy<420;wy++){
  assert(PortPreliminarPixelSource(p,wx,wy,&sx,&sy));assert(sx>=64&&sx<160);assert(2*sy+sx==d||2*sy+sx==d-1);
 }
 for(wx=480;wx<704;wx++)for(wy=176;wy<420;wy++){
- int d=2*wy-wx;if(d< -128||d>=16)continue;
+ int d=2*wy-wx;if(d< -96||d>=16)continue;
  assert(PortPreliminarPixelSource(p,wx,wy,&sx,&sy));assert(sx>=64&&sx<160);assert(2*sy+sx==d+656||2*sy+sx==d+655);
+}
+/* Keep the native top/white rim, never the x496+ return corner or a
+ * flower-face donor inside the last eight pixels of that rim. */
+for(wx=480;wx<800;wx++)for(wy=150;wy<440;wy++){
+ int d=2*wy-wx;if(d< -144||d>=-96)continue;
+ assert(PortPreliminarPixelSource(p,wx,wy,&sx,&sy));
+ assert(sx>=464&&sx<480);assert(2*sy-sx==d);
+}
+/* Interior art and the unique stage remain on their original path. */
+for(wx=48;wx<480;wx++)for(wy=0;wy<512;wy++){
+ sx=wx;sy=wy;assert(!PortPreliminarPixelSource(p,wx,wy,&sx,&sy));assert(sx==wx&&sy==wy);
 }
 /* The original right face ends at diagonal16: no 40px drop into the lawn. */
 for(wx=480;wx<704;wx++)for(wy=248;wy<420;wy++){
