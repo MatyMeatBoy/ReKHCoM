@@ -144,6 +144,21 @@ ladrillos limpios y un único pilar original; BG2 sólo prolonga el zócalo
 por su diagonal, sin copiar lámparas ni adornos. Los actores siguen la
 regla del rectángulo GBA (Pepito fuera de escena no se anticipa).
 
+Propuesta05/11: los barriles son OBJ compuestos y no deben pasar por el
+filtro de actores que esperan fuera del cuadro. En evento120 sólo Pepito
+(`gJiminyPalette`, track autor3, rol estable4) y sus sombras comparten estado;
+Hook conserva su rol3. Las sombras comunes no desbloquean entradas.
+
+Corrección posterior de `e50805fc25d04bcda7a259b2fee2848b`, envío
+`20261105-120135-20af7d`, revisión8: «falta la diagonal aun», cuatro trazos.
+Hay dos planos nativos distintos: el frontal arranca en `2*y+x=208`,
+pero el derecho en176. No aplicar el donante frontal64..79 al muro derecho:
+continuar allí la franja176..208 con el donante original128..143 y la
+mampostería hasta176. La regla actúa sólo fuera del mapa256x256 y conserva
+el zócalo frontal y el centro GBA. Mantener los barriles ya completos.
+Una valoración con feedback vigente no cierra esa corrección; la nueva hija
+requiere su propia revisión y comparación runtime antes/propuesta.
+
 ## Corrección vigente 29/10: Oogie aprobado sí activo
 
 Atlas aprobó exactamente `aa913fe773c4446eb5412c3115e222c7`; esa versión

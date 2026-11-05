@@ -46,7 +46,7 @@ static int sHalloweenFloor;
 
 extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
-extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[];
+extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[], gJiminyPalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
 /* PORT_PPU_THREADS (the desktop builds, configure_pc.py): the canvas rows above and below the GBA picture are drawn
@@ -2549,8 +2549,8 @@ static int ObjCoversGlyph(uint16_t occ, int prio, int i) {
    walks out into the wide view; one crossing the frame's edge is never cut (user 25/10: Agrabah's barrels lost half,
    Sora and friends vanished leaving). Reset per scene (PortPpuRender). */
 static unsigned char sActorEntered[PORT_OAM_CAPACITY];
-static unsigned sStagedActorFirstSeen[4];
-static unsigned char sStagedActorEntered[4]; /* Cheshire, Aladdin, Genie, Hook: independent of recycled OAM slots. */
+static unsigned sStagedActorFirstSeen[5];
+static unsigned char sStagedActorEntered[5]; /* Cheshire, Aladdin, Genie, Hook3, Jiminy4: stable actor roles. */
 static int sActorSceneKey = -1;
 static unsigned sActorSceneFrames;
 
@@ -2651,7 +2651,7 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             continue;
 
         if (sceneActorFrame && !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text &&
-            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || prio > 0) &&
+            (sceneActorId == 97 || sceneActorId == 112 || sceneActorId == 118 || sceneActorId == 120 || prio > 0) &&
             /* Event shadows use the common palette, not the actor palette.
              * Their own OAM must wait at the authored camera edge too. */
             (sceneActorId != 97 || sOamHd[i].palette == gCheshirePalette ||
@@ -2662,22 +2662,29 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 sOamHd[i].tiles == gBtlShadowSmallTiles || sOamHd[i].tiles == gBtlShadowLargeTiles) &&
             (sceneActorId != 118 || sOamHd[i].palette == gHookPalette ||
                 sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                sOamHd[i].tiles == gBtlShadowLargeTiles) &&
+            (sceneActorId != 120 || sOamHd[i].palette == gJiminyPalette ||
+                sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                 sOamHd[i].tiles == gBtlShadowLargeTiles)) {
             int hookShadow = sceneActorId == 118 &&
+                (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
+                 sOamHd[i].tiles == gBtlShadowLargeTiles);
+            int jiminyShadow = sceneActorId == 120 &&
                 (sOamHd[i].tiles == gBtlShadowTiles || sOamHd[i].tiles == gBtlShadowSmallTiles ||
                  sOamHd[i].tiles == gBtlShadowLargeTiles);
             int actor = sOamHd[i].palette == gCheshirePalette ? 0 :
                 sOamHd[i].palette == gAladdinPalette ? 1 :
                 sOamHd[i].palette == gGeniePalette ? 2 :
-                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 : -1;
+                sceneActorId == 118 && (sOamHd[i].palette == gHookPalette || hookShadow) ? 3 :
+                sceneActorId == 120 && (sOamHd[i].palette == gJiminyPalette || jiminyShadow) ? 4 : -1;
             unsigned char* entered = actor >= 0 ? &sStagedActorEntered[actor] : &sActorEntered[i];
             /* Shared party shadows must neither unlock Hook nor inherit an
              * OAM slot that a party member already brought into the frame. */
-            if (!hookShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
+            if (!hookShadow && !jiminyShadow && actor >= 0 && !sStagedActorFirstSeen[actor]) sStagedActorFirstSeen[actor] = sActorSceneFrames + 1;
             if (ox < GBA_SCREEN_W && ox + bw > 0 && oy < GBA_SCREEN_H && oy + bh > 0) {
                 /* The first render can precede the authored camera placement.
                  * Preserve its native pixels without unlocking a staged actor. */
-                if (!hookShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
+                if (!hookShadow && !jiminyShadow && (actor >= 0 ? sActorSceneFrames + 1 - sStagedActorFirstSeen[actor] >= 3 : sActorSceneFrames >= 3)) *entered = 1;
             }
             else if (!*entered)
                 continue; /* a different actor previously using this OAM slot does not grant entry */

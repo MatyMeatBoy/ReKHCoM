@@ -650,18 +650,19 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else if (p->v[1]==3) {
             if (wx>=0 && wx<32 && wy<0) {
                 *sx=wx; *sy=PortSceneTileMod(wy,16); /* the original corner shaft, once */
-            } else if (2*wy+wx<192) {
+            } else if (2*wy+wx < (wx>=96 ? 176 : 208)) {
                 *sx=32+PortSceneTileMod(wx-32,16);
-                *sy=16+PortSceneTileMod(wy-16,16); /* plain masonry, no repeated shafts */
+                *sy=16+PortSceneTileMod(wy-16,16); /* Native return: right footing176, front footing208. */
             } else {
                 *sx=64+PortSceneTileMod(wx-64,32);
                 *sy=160+PortSceneTileMod(wy-160,32); /* the room's clean ground */
             }
         } else if (p->v[1]==2) {
-            int diagonal=2*wy+wx;
+            int diagonal=2*wy+wx, right=wx>=96;
             *sx=255; *sy=255; /* unique lamps, sign and barrels remain in their authored positions */
-            if (diagonal>=208 && diagonal<256) {
-                *sx=64+PortSceneTileMod(wx-64,16);
+            if (diagonal >= (right ? 176 : 208) && diagonal < (right ? 208 : 256)) {
+                int donor=right ? 128 : 64;
+                *sx=donor+PortSceneTileMod(wx-donor,16);
                 *sy=wy+(wx-*sx)/2; /* plain footing, along the wall's diagonal */
             }
         } else return 0;
