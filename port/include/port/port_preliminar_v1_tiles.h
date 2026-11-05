@@ -803,11 +803,18 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
                      * each new edge: the user's rolling-mirror continuation.
                      * Keep its full texture instead of a short repeated sliver. */
                     int phase=PortSceneTileMod(-wy-1,128);
-                    *sx=160+PortSceneTileMod(wx-160,352);
+                    int horizontal=PortSceneTileMod(wx-160,704);
+                    *sx=160+(horizontal<352?horizontal:703-horizontal);
                     *sy=phase<64?phase:127-phase;
                 }
             } else {
-                *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
+                if (wy<72) {
+                    /* Keep the same folded phase through the entire upper
+                     * wall face, down to its straight base. A plain modulo
+                     * here would introduce a horizontal cut at y=0. */
+                    int horizontal=PortSceneTileMod(wx-160,704);
+                    *sx=160+(horizontal<352?horizontal:703-horizontal);
+                } else *sx=wy>=144 && wy<264?320+PortSceneTileMod(wx-320,160):320+PortSceneTileMod(wx-320,192);
                 *sy=wy;
             }
         } else return 0;
