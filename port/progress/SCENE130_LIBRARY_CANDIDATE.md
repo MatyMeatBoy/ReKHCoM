@@ -100,3 +100,7 @@ cuatro bloques de actor/render conservados por SHA, no nuevos runs fullband.
 El montaje público muestra ANTES/SOLUCIÓN reales y detalle completo del
 tramo. Se entrega como nueva hija pendiente de2935, sin reescribir previas
 ni heredar aprobación. Fuente ROM/SAV/instalación permanecen intactos.
+
+Nueva hija final del remate: `dbe9d6b92ba846cdad63111c28b3f3d8`, parent2935, pending; PNG SHA256
+`cc0d3f49f8bd665d7e53a651b10a4fa772f5cab78ba841d3d447f1c246395b73`. Fuente `a0245899fe88f1c95aecf2220ae11aa26ad8e9bf`.
+Ambos parents2935/e58 permanecen idénticos al añadir la hija.
