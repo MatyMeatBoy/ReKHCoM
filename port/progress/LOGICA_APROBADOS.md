@@ -518,3 +518,14 @@ Comentario `645a6367-a9da-41c7-8744-3c9912a507ea`: repetir los candelabros con e
 ### Escena118: entrada de Garfio y su sombra, aprobada05/11
 
 La versión69387af132a14bbeb8c92d136cf02d44 fue aprobada sin notas nuevas. Garfio usa su paleta y rol independiente3, no un slotOAM reciclado por el grupo; la sombra común sigue su estado y no puede desbloquearlo. Sólo se oculta estando entero fuera antes de entrar: conservar Original completo y permitir continuidad tras entrada. Ocho pares runtime confirmados EVENT118 menú0:117, no el control descartado de119. Esta regla no da por aprobadas las propuestas de otros actores o escenas.
+
+### Escena090: base del muro aprobada05/11
+
+Atlas `cae48e668e0740549ff3c7d3dc240527`, revisión1, aprobado sin notas
+ni trazos pendientes. Imagen SHA256
+`98c3ebf611505007e24f9cfef584b8022d4da4f63ebe1ef30d0226fb8d5e5624`;
+fuente `3bf6dd67275cad9332e35d2283a2cedba2c9db54`. Las filas externas
+29..31 usan BG3 columnas48/49, filas25..27: mampostería y base originales
+sin lápidas ni otra coronación. El rebase conserva el bloque090 exacto.
+Cuatro pares runtime conservan el núcleo; Original completo idéntico.
+La aprobación corresponde exclusivamente a esta versión.
