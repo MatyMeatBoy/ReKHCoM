@@ -4608,10 +4608,10 @@
     "atlas-115-hatch-spacing": {
       "id": "atlas-115-hatch-spacing",
       "piece": "Escena 115: menos escotillas y limpiar borde",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T09:36:29.570680+00:00",
-      "updated_at": "2026-11-05T15:41:10.016621+00:00",
+      "updated_at": "2026-11-05T15:58:17.993231+00:00",
       "branch": "art/atlas-scene115-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/576",
       "approval": null,
@@ -4636,10 +4636,15 @@
           "at": "2026-11-05T15:41:10.016621+00:00",
           "owner": "codex-atlas-final",
           "detail": "Revisiónhumana05/11 nueva: parent174807eb61b84dca853d8c0c05434fda pendiente, nubec5b632a4-4bfc-4ea4-97f8-ae868cc66e67 se pierde patrón muchos pedazosescotillas,envío20261105-120336-443f39. Corregir piezasenteras yritmo; antes/soluciónmismoencuadre, sinrefsAtlas."
+        },
+        {
+          "at": "2026-11-05T15:58:17.993231+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Fuente7e90f8cc0:donantecompleto8x5tilecentro80,152; retícula64,-32/0,64; filasenterasespaciadaslejosmapa. CtestGREEN/DLLreal1402baselinefail->0nuevo,mapaC/prototypeigual,sourcelap1920/640exactos. Atlas32da72b1bd514572a7b91091d2e88449antes/soluciónmaparecipeC,responde20261105-120336-443f39/c5b632a4. NuevoruntimePENDIENTERAM,nofinal."
         }
       ],
       "claimed_at": "2026-11-05T12:01:24.736371+00:00",
-      "sent": "174807eb61b84dca853d8c0c05434fda"
+      "sent": "32da72b1bd514572a7b91091d2e88449"
     },
     "atlas-116-hull-edge": {
       "id": "atlas-116-hull-edge",
@@ -15686,7 +15691,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T15:41:10.016621+00:00",
+  "updated_at": "2026-11-05T15:58:17.993231+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
