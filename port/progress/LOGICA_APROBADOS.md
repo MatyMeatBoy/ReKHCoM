@@ -546,3 +546,8 @@ La aprobación corresponde exclusivamente a esta versión.
 ## Escena095, aclaración y propuesta05/11
 
 El usuario confirma: «me equivoque no habia castillo pero hacer bien el patron». No crear ni buscar un castillo. La cara izquierda del seto llega a diagonal672; cortarla en576 truncaba flores. Usar el módulo96px completo y sustituir los retornos de los extremos (izquierda48px/derecha32px) sólo cuando el PPU dibuja fuera del cuadro GBA. Derecha: incluir hasta diagonal96 para completar su base. Propuesta offline entregada con las tres nubes de valla/uniones vinculadas; pendiente captura runtime y valoración humana. No hereda honores.
+
+
+### Escena095: altura del seto derecho (revisión05/11)
+
+La valoración de823f028144a3479790a25691662112ec acepta el patrón pero pide unirlo a su altura. El frente derecho original mide72px, entre2y-x=-128y16; el donante izquierdo mide120px. Copiarlo entero bajaba40pxla base exterior. Alinear el extremo inferior usando sólo sus72pxinferiores (2sy+sx=2y-x+656), conservando las flores completas. Debajo de diagonal16 debe seguir el selector de suelo previo, sin tapar césped. No compensar un error de altura desplazando el objeto único ni el centroGBA. La nueva propuesta debe mostrar antes y solución en el mismo encuadre.

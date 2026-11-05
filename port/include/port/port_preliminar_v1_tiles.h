@@ -748,12 +748,13 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             *sy=(2*wy+wx-*sx)/2;
             return 1;
         }
-        if (wx>=480 && 2*wy-wx>=-128 && 2*wy-wx<96) {
-            /* Reflect the whole left hedge bay, including its flowers, rather
-             * than chopping the right hedge into four-column stair steps. */
+        if (wx>=480 && 2*wy-wx>=-128 && 2*wy-wx<16) {
+            /* The authored right face is 72px tall and ends at diagonal16.
+             * Use the lower flower-bearing 72px of the left bay; copying its
+             * full height lowered the extension forty pixels into the lawn. */
             int reflected=559-wx;
             *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+576-*sx)/2; /* align the flower row, not just the blank hedge */
+            *sy=(2*wy-wx+656-*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;
