@@ -4446,10 +4446,10 @@
     "atlas-095-castle": {
       "id": "atlas-095-castle",
       "piece": "Escena 095: recuperar un único castillo; no cerrado por árbol y flores",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-final",
       "created_at": "2026-10-26T08:02:05.044114+00:00",
-      "updated_at": "2026-11-05T15:26:40.962978+00:00",
+      "updated_at": "2026-11-05T15:41:01.920066+00:00",
       "branch": "art/atlas-scene095-final",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/580",
       "approval": null,
@@ -4479,10 +4479,15 @@
           "at": "2026-11-05T15:26:40.962978+00:00",
           "owner": "codex-atlas-final",
           "detail": "Nueva revisiónhumana05/11 submission20261105-115954-c697de,parent823f028144a3479790a25691662112ec approved+nota0f9bde82-78f5-4c92-a3a3-86c93baaa0ca uniralaalturacorrespondienteparacontinuidad. Reabrirunióndelsetoderecho,antes/soluciónobligatorio,conservarvaloraciónanterior."
+        },
+        {
+          "at": "2026-11-05T15:41:01.920066+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Nuevashafuente7496e484a, antes/soluciónmapaROM64e973f29bda496380c43d786ffc773b responde0f9bde82...envío20261105-115954-c697de. CRED/GREEN: frente originalderecho72px vsdonante120causaba40pxcaída; d-128..16,+656. Capturareal nueva PENDIENTE RAM, nofinalniaprobadohija."
         }
       ],
       "claimed_at": "2026-11-05T12:49:51.945888+00:00",
-      "sent": "823f028144a3479790a25691662112ec"
+      "sent": "64e973f29bda496380c43d786ffc773b"
     },
     "atlas-menu-font-evidence": {
       "id": "atlas-menu-font-evidence",
@@ -15676,7 +15681,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T15:38:06.300895+00:00",
+  "updated_at": "2026-11-05T15:41:01.920066+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
