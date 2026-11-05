@@ -655,8 +655,16 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             if (wx>=0 && wx<32 && wy<0) {
                 *sx=wx; *sy=PortSceneTileMod(wy,16); /* the original corner shaft, once */
             } else if (2*wy+wx < (wx>=96 ? 176 : 208)) {
-                *sx=32+PortSceneTileMod(wx-32,16);
-                *sy=16+PortSceneTileMod(wy-16,16); /* Native return: right footing176, front footing208. */
+                /* Keep the complete masonry module marked A: the old16x16
+                 * donor repeated half bricks. The64x32 native patch is all
+                 * wall and keeps its32px joints plus material variation. */
+                if (wx>=32) {
+                    *sx=32+PortSceneTileMod(wx-32,64);
+                    *sy=PortSceneTileMod(wy,32);
+                } else {
+                    *sx=32+PortSceneTileMod(wx-32,16);
+                    *sy=16+PortSceneTileMod(wy-16,16);
+                } /* Native return: right footing176, front footing208. */
             } else {
                 *sx=64+PortSceneTileMod(wx-64,32);
                 *sy=160+PortSceneTileMod(wy-160,32); /* the room's clean ground */

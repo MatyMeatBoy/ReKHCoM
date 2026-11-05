@@ -676,3 +676,13 @@ no desbloquea al actor; un byte de padding antiguo no puede ser un índice.
 La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
+
+### Escena120, seguimiento del módulo A sin build
+
+El patrón A señalado en la revisión5 de9f28568f contiene ladrillos completos,
+no la repetición de un fragmento16x16. Extender la mampostería con el bloque
+nativo64x32 de x32..95/y0..31 conserva juntas y variación, sólo fuera del mapa
+y a la derecha de la columna. La diagonal176/208 y las capas decorativas no
+cambian. El grabado figurativo es otro problema: no declararlo completado por
+arreglar los ladrillos. Estudio antes/solución sin build, pendiente de valoración
+y de QA real; la aceptación del padre no se hereda a esta propuesta parcial.
