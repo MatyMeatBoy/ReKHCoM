@@ -551,3 +551,11 @@ Respuesta a `7e56767b-7fb9-4adc-a6b1-214effa7d1d4` y al comentario de reducir es
 ### Escena115: escotillas completas, corrección05/11
 
 La revisión174807eb61b84dca853d8c0c05434fda señala que se pierde el patrón y sobran fragmentos. El recorte rectangular anterior cruzaba tres escotillas distintas. Cada motivo nuevo toma una plantilla nativa entera de8x5tiles, columnas6..13/filas17..21, centro(80,152); su retícula avanza(64,-32),(0,64). Completar también las escotillas recortadas por los límites originales: sus1920y640píxeles compartidos coinciden exactamente con la plantilla. Reducir sólo filas enteras alejadas del mapa, sin partir diamantes ni inventar motivos en celdas originales vacías. NúcleoGBA y madera aprobada intactos. Mostrar ANTES/SOLUCIÓN y distinguir mapa de receta de captura runtime.
+## Escena095, aclaración y propuesta05/11
+
+El usuario confirma: «me equivoque no habia castillo pero hacer bien el patron». No crear ni buscar un castillo. La cara izquierda del seto llega a diagonal672; cortarla en576 truncaba flores. Usar el módulo96px completo y sustituir los retornos de los extremos (izquierda48px/derecha32px) sólo cuando el PPU dibuja fuera del cuadro GBA. Derecha: incluir hasta diagonal96 para completar su base. Propuesta offline entregada con las tres nubes de valla/uniones vinculadas; pendiente captura runtime y valoración humana. No hereda honores.
+
+
+### Escena095: altura del seto derecho (revisión05/11)
+
+La valoración de823f028144a3479790a25691662112ec acepta el patrón pero pide unirlo a su altura. La medición nativa separa remate y frente: el frente floral mide56px, entre2y-x=-96y16; conservar los56pxinferiores del donante izquierdo (2sy+sx=2y-x+656) alinea base y flores. La banda superior2y-x=[-144,-96) continúa el remate recto nativo desdex464..479, preservando2sy-sx; excluirx496+ evita repetir la esquina de retorno. No cambiar las paletas nativas. Debajo de diagonal16 sigue el selector de suelo previo. No desplazar objetos únicos ni el centroGBA. La nueva propuesta muestra antes y solución en el mismo encuadre.

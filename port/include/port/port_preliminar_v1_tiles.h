@@ -736,20 +736,32 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         } else return 0;
         return 1;
     }
-    if (p && p->v[0]==95 && p->v[1]==3 && (wx<0 || wx>=512 || wy<0 || wy>=512)) {
+    if (p && p->v[0]==95 && p->v[1]==3 && (wx<48 || wx>=480 || wy<0 || wy>=512)) {
         int tx=wx>>3, ty=wy>>3;
-        if (wy>=48 && wy<96) {
-            /* Only the mountain side of the skyline repeats; the castle
-             * silhouette in the authored map must not gain extra copies. */
+        if ((wx<0 || wx>=512) && wy>=48 && wy<96) {
+            /* Continue the mountain skyline without duplicating props. */
             int phase=PortSceneTileMod(wx,64);
             *sx=96+(phase<32?phase:63-phase); *sy=wy; return 1;
         }
-        if (wx>=512 && 2*wy-wx>=-128 && 2*wy-wx<64) {
-            /* Reflect the whole left hedge bay, including its flowers, rather
-             * than chopping the right hedge into four-column stair steps. */
+        if (wx<48 && 2*wy+wx>=432 && 2*wy+wx<672) {
+            /* The complete left hedge face ends at diagonal672, not576:
+             * the shorter band cut every flower cluster into a stair tooth. */
+            *sx=64+PortSceneTileMod(wx-64,96);
+            *sy=(2*wy+wx-*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-144 && 2*wy-wx< -96) {
+            /* Continue the straight native cap, excluding its return corner. */
+            *sx=464+PortSceneTileMod(wx-464,16);
+            *sy=(2*wy-wx+*sx)/2;
+            return 1;
+        }
+        if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
+            /* The face below the cap is 56px tall and ends at diagonal16.
+             * Keep the lower flower-bearing 56px of the left bay. */
             int reflected=559-wx;
             *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+576-*sx)/2; /* align the flower row, not just the blank hedge */
+            *sy=(2*wy-wx+656-*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;
