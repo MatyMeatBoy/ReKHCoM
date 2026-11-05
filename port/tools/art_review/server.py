@@ -109,9 +109,26 @@ class Store:
     def event(self, db, kind, data):
         db.execute('INSERT INTO events(at,kind,data) VALUES(?,?,?)', (now(), kind, json.dumps(data, ensure_ascii=False)))
 
-    def all(self):
+    def all(self, include_internal=False):
         with self.db() as db:
-            return [json.loads(row[0]) for row in db.execute('SELECT data FROM assets ORDER BY rowid')]
+            assets = [json.loads(row[0]) for row in db.execute('SELECT data FROM assets ORDER BY rowid')]
+        return assets if include_internal else [a for a in assets if not a.get('revision_info', {}).get('internal_reference')]
+
+    def internalize_reference(self, asset_id, refresh_queue=True):
+        """Keep an unreviewed source record and its image, outside the review workflow."""
+        with self.lock:
+            item = self.get(asset_id)
+            info = item.get('revision_info', {})
+            if not info.get('reference_only') or item['revision'] or item['status'] != 'pending':
+                raise ValueError('Only unreviewed native references can be internalized')
+            info['internal_reference'] = True
+            item['revision_info'] = info
+            with self.db() as db:
+                db.execute('UPDATE assets SET data=? WHERE id=?', (json.dumps(item, ensure_ascii=False), asset_id))
+                self.event(db, 'reference_internalized', dict(id=asset_id))
+            if refresh_queue:
+                self.write_queue()
+            return item
 
     def history(self, asset_id):
         self.get(asset_id)
@@ -236,7 +253,7 @@ class Store:
         raw_sha = hashlib.sha256(raw).hexdigest()
         pixel_sha = hashlib.sha256(out.getvalue()).hexdigest()
         with self.lock:
-            for existing in self.all():
+            for existing in self.all(include_internal=True):
                 if existing['sha256'] == pixel_sha and existing['version'] == version and existing['title'] == title:
                     return existing
             if parent_id:
@@ -249,7 +266,9 @@ class Store:
                         source_sha256=raw_sha, width=size[0], height=size[1], created=now(), updated=now(),
                         revision=0, status=status if status in STATUSES else 'pending', annotations=[], doodles=[],
                         general='', submitted_revision=None, image_url='/images/' + asset_id + '.png',
-                        revision_info=revision_info or {})
+                        revision_info=dict(revision_info or {}))
+            if item['revision_info'].get('reference_only'):
+                item['revision_info']['internal_reference'] = True
             with self.db() as db:
                 db.execute('INSERT INTO assets VALUES(?,?)', (asset_id, json.dumps(item, ensure_ascii=False)))
                 self.event(db, 'image_imported', item)
@@ -259,6 +278,8 @@ class Store:
     def save(self, data):
         with self.lock:
             item = self.get(data['id'])
+            if item.get('revision_info', {}).get('internal_reference'):
+                raise ValueError('La referencia es interna; la revisión corresponde al antes y la solución.')
             if data.get('revision') != item['revision']:
                 raise ValueError('Hay cambios desde otra pestaña. Recarga antes de editar.')
             if data.get('status') not in STATUSES:
@@ -302,6 +323,8 @@ class Store:
             if not isinstance(ids, list) or not 1 <= len(ids) <= 100 or len(set(ids)) != len(ids):
                 raise ValueError('Selecciona entre 1 y 100 imágenes diferentes')
             assets = [self.get(i) for i in ids]
+            if any(a.get('revision_info', {}).get('internal_reference') for a in assets):
+                raise ValueError('Las referencias internas no se envían a revisión.')
             if expected_revisions and any(expected_revisions.get(a['id']) != a['revision'] for a in assets):
                 raise ValueError('Cambió una revisión. Recarga y vuelve a enviar.')
             if not any(a['annotations'] or a.get('doodles') or a['general'].strip() or a['status'] != 'pending' for a in assets):

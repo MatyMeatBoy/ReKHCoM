@@ -45,13 +45,41 @@ class ReviewTest(unittest.TestCase):
         self.store.save(child)
         self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
 
-    def test_native_reference_waits_for_artist(self):
+    def test_native_reference_is_internal_not_a_review(self):
         raw = io.BytesIO()
         Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
-        self.store.add(raw.getvalue(), 'Escena nueva', 'Referencia nativa',
-                       revision_info={'reference_only': True})
-        row = next(row for row in self.store.queue() if row['title'] == 'Escena nueva')
-        self.assertEqual(row['turn'], 'agente')
+        ref = self.store.add(raw.getvalue(), 'Escena nueva', 'Referencia nativa',
+                             revision_info={'reference_only': True})
+        self.assertNotIn(ref['id'], [a['id'] for a in self.store.all()])
+        self.assertNotIn('Escena nueva', [r['title'] for r in self.store.queue()])
+        self.assertEqual(self.store.get(ref['id'])['sha256'], ref['sha256'])
+        self.assertIn(ref['id'], [a['id'] for a in self.store.all(include_internal=True)])
+        with self.assertRaises(ValueError):
+            self.store.save(ref)
+        with self.assertRaises(ValueError):
+            self.store.submit([ref['id']])
+
+    def test_legacy_reference_internalization_preserves_review_and_image(self):
+        self.a['status'] = 'approved'
+        self.a = self.store.save(self.a)
+        before = self.store.approvals()
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        ref = self.store.add(raw.getvalue(), 'Referencia', 'Nativa',
+                             parent_id=self.a['id'], revision_info={'reference_only': True})
+        # Model the reference records imported before this policy existed.
+        ref['revision_info'].pop('internal_reference', None)
+        with self.store.db() as db:
+            db.execute('UPDATE assets SET data=? WHERE id=?', (json.dumps(ref), ref['id']))
+        path = self.store.root / 'images' / (ref['id'] + '.png')
+        image = path.read_bytes()
+        self.store.internalize_reference(ref['id'])
+        self.assertEqual(path.read_bytes(), image)
+        self.assertEqual(self.store.get(self.a['id']), self.a)
+        self.assertEqual(self.store.approvals(), before)
+        self.assertNotIn(ref['id'], [a['id'] for a in self.store.all()])
+        with self.assertRaises(ValueError):
+            self.store.internalize_reference(self.a['id'])
 
     def test_reference_child_does_not_answer_requested_art(self):
         self.a['general'] = 'Completar extensión'
