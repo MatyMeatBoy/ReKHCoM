@@ -4190,12 +4190,12 @@
     "atlas-090-wall-base": {
       "id": "atlas-090-wall-base",
       "piece": "Escena 090: base del muro",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas-090",
       "created_at": "2026-10-26T07:29:06.376809+00:00",
-      "updated_at": "2026-11-05T14:04:40.076319+00:00",
+      "updated_at": "2026-11-05T14:21:13.530590+00:00",
       "branch": "art/atlas-scene090-final",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/210",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/586",
       "approval": null,
       "reference": "20261024-183313-23736c",
       "evidence": [
@@ -4213,10 +4213,15 @@
           "at": "2026-11-05T14:04:40.076319+00:00",
           "owner": "codex-atlas-090",
           "detail": "PR210 cerrado sin merge verificado. Padre exacto6458681037fd4bdc91688842b9369560, envio20261026-063246-b66a30, nubes551d5459-c31b-465a-a87f-ec9454b9c122 y f223ac9d-bfad-4a36-82de-dbd35b96e979: base de muro recto bajo ataud. Worktree nuevo origin/main6ccada5bf; sin compilar hasta ventana coordinada."
+        },
+        {
+          "at": "2026-11-05T14:21:13.530590+00:00",
+          "owner": "codex-atlas-090",
+          "detail": "PR586 DRAFT head3bf6dd67275cad9332e35d2283a2cedba2c9db54 sustituye PR210 CLOSED sin merge. HijaAtlas cae48e668e0740549ff3c7d3dc240527 parent6458681037fd4bdc91688842b9369560 pending SHA98c3ebf611505007e24f9cfef584b8022d4da4f63ebe1ef30d0226fb8d5e5624 responde ambas nubes551d5459/f223ac9d. TilesROM48/49 rows25..27 completan base sin lapidas. C RED18/GREEN4tests; check_sources y diffcheck PASS. RuntimeEU32 menu0:89 3440x1440 frames300/600 Extendido core0diff2/2 yOriginal full0diff2/2. Evidencia pruebas/atlas-final-20261105/090-native/{DONOR-PROVENANCE,RUNTIME-BUILDS,RUNTIME-CHECKS,DELIVERY}.json. Sin aprobacion nueva ni integracion; esperar valoracion exacta."
         }
       ],
       "claimed_at": "2026-10-26T07:29:11.695693+00:00",
-      "sent": "6458681037fd4bdc91688842b9369560"
+      "sent": "cae48e668e0740549ff3c7d3dc240527"
     },
     "atlas-095-garden": {
       "id": "atlas-095-garden",
@@ -15507,7 +15512,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T14:14:03.430997+00:00",
+  "updated_at": "2026-11-05T14:21:13.530590+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
