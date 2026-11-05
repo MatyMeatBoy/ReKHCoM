@@ -45,6 +45,16 @@ class ReviewTest(unittest.TestCase):
         self.store.save(child)
         self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
 
+    def test_reference_child_does_not_answer_requested_art(self):
+        self.a['general'] = 'Completar extensión'
+        self.a = self.store.save(self.a)
+        self.store.submit([self.a['id']], {self.a['id']: self.a['revision']})
+        raw = io.BytesIO()
+        Image.new('RGB', (120, 90), '#335544').save(raw, 'PNG')
+        self.store.add(raw.getvalue(), 'Referencia', 'Referencia nativa',
+                       parent_id=self.a['id'], revision_info={'reference_only': True})
+        self.assertEqual(len(self.store.queue()[0]['unanswered']), 1)
+
     def test_general_reply_can_cover_an_older_sibling(self):
         raw=io.BytesIO();Image.new('RGB',(100,80),'#335544').save(raw,'PNG')
         old=self.store.add(raw.getvalue(),'Prueba','older',parent_id=self.a['id'])

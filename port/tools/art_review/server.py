@@ -179,7 +179,7 @@ class Store:
             versions = [by_id[i] for i in fam['version_ids'] if i in by_id]
             latest = versions[-1]
             unanswered = [n for i in fam['version_ids'] if (n := newest.get(i))
-                          and not any(c['created'] > n['created'] for c in children.get(i, []))
+                          and not any(c['created'] > n['created'] and not c.get('revision_info', {}).get('reference_only') for c in children.get(i, []))
                           and not (not n['cloud_ids'] and (i,n['submission']) in answered_general)
                           and not (n['cloud_ids'] and set(n['cloud_ids']) <= answered)]  # a general comment alone waits for a child
             if unanswered:
