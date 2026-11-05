@@ -15209,20 +15209,27 @@
     "atlas-final-library130": {
       "id": "atlas-final-library130",
       "piece": "Biblioteca Bella 130: extensión real y entrega hija",
-      "status": "en_curso",
+      "status": "en_revision",
       "owner": "codex-atlas-final",
       "created_at": "2026-11-05T11:57:26.534898+00:00",
-      "updated_at": "2026-11-05T11:57:33.886561+00:00",
+      "updated_at": "2026-11-05T12:00:44.184680+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 05/11 terminar todos los artes y faltantes",
       "reference": null,
-      "evidence": [],
-      "claimed_at": "2026-11-05T11:57:33.886561+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-05T12:00:44.184680+00:00",
+          "owner": "codex-atlas-final",
+          "detail": "Propuesta biblioteca extendida1024x768 entregada en Atlas; píxeles originales no-fondo verificados intactos; estanterías diagonales y alfombra96x48. Offline; runtime/cámaras pendientes."
+        }
+      ],
+      "claimed_at": "2026-11-05T11:57:33.886561+00:00",
+      "sent": "c1ab45945afe471fb5f3f6f4b089e1e6"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-05T11:57:33.886561+00:00",
+  "updated_at": "2026-11-05T12:00:44.184680+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

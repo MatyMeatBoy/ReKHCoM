@@ -432,6 +432,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | guest64-bios-standin | Hosts Windows64/Linux64: lecturas NULL del juego a replica BIOS | integrado | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/566 | usuario 04/11: atender issues de bugs hasta solucionarlos | 2026-11-04T12:59:27.609021+00:00 |
 | optiport-v28-obj-pools | OptiPort v2.8: usos NULL tras pools OBJ llenos | integrado | claude-bugs-1104 | https://github.com/MatyMeatBoy/ReKHCoM/pull/569 | usuario 04/11: arreglar todo lo roto/bug y salir con 2.8 | 2026-11-04T14:21:27.941839+00:00 |
 | atlas-per-art-tile-edit | Editar tiles desde la revisión de cada arte | pr_abierto | codex-atlas-tiles | https://github.com/MatyMeatBoy/ReKHCoM/pull/575 | Usuario 05/11: hazlo; opción por arte, edición manual y versión hija | 2026-11-05T11:55:21.333398+00:00 |
-| atlas-final-library130 | Biblioteca Bella 130: extensión real y entrega hija | en_curso | codex-atlas-final | — | Usuario 05/11 terminar todos los artes y faltantes | 2026-11-05T11:57:33.886561+00:00 |
+| atlas-final-library130 | Biblioteca Bella 130: extensión real y entrega hija | en_revision | codex-atlas-final | — | Usuario 05/11 terminar todos los artes y faltantes | 2026-11-05T12:00:44.184680+00:00 |
 
 Integrador: libre
