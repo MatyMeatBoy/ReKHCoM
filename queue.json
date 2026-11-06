@@ -16076,13 +16076,13 @@
     "atlas-followup-1bf2e47a-r4": {
       "id": "atlas-followup-1bf2e47a-r4",
       "piece": "Escena 115: seguimiento posterior a aprobación; tile flotando rojo; falta punta; sobras de escotilla",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas115-details",
       "created_at": "2026-11-05T19:22:55.785039+00:00",
-      "updated_at": "2026-11-05T20:23:10.641292+00:00",
+      "updated_at": "2026-11-06T12:57:04.276326+00:00",
       "branch": "art/atlas115-details-nobuild",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/602",
-      "approval": "Versión base aceptada en Atlas; estos comentarios siguen pendientes, sin aprobación heredada a futura hija. Usuario05/11 integra aprobados sin build y repasa cola.",
+      "approval": "Atlasbb7866a6068d4e478a3e19fc98bc423b rev3 approved SHA256c10b3e934562fcba7eb49a36a5d6c236e04e541ee5ba6997193a178e8d94b819;build_version exacta aceptada",
       "reference": "{\"image_id\": \"1bf2e47af7fa4b2fa02599248052a27a\", \"revision\": 4, \"sha256\": \"78f75648b1f8c3189084e75bd81f8e703e7feb62ca6514d83346a79e5f425a29\", \"submissions\": [{\"submission\": \"20261105-160659-04c4bb\", \"created\": \"2026-11-05T19:06:59.436659+00:00\", \"image_id\": \"1bf2e47af7fa4b2fa02599248052a27a\", \"version\": \"Antes / soluci\\u00f3n propuesta \\u00b7 escotillas completas en el juego\", \"clouds\": 3, \"cloud_ids\": [\"1d5a8402-c717-4f55-a459-9aa2db215dc6\", \"deb2d1e1-72e4-485a-8270-ebe1cb5986f7\", \"02aab237-24ea-4dc4-9e38-7effec67c187\"], \"status_then\": \"approved\", \"read\": \"C:\\\\Users\\\\MP\\\\Documents\\\\00 Claude\\\\KHCoMPC\\\\khcom-codex\\\\build\\\\art-review\\\\envios\\\\20261105-160659-04c4bb\\\\COMENTARIOS_PARA_CODEX.txt\"}]}",
       "evidence": [
         {
@@ -16094,10 +16094,16 @@
           "at": "2026-11-05T20:23:10.641292+00:00",
           "owner": "codex-atlas115-details",
           "detail": "Fuente bc901d6f5b6ba4d5a0a9c890a9417fec7b52a7d7. Atlas hija bb7866a6068d4e478a3e19fc98bc423b pending, responde3nubes de1bf2rev4/envio20261105-160659-04c4bb SHA78f75648... SIMULACION SINBUILD claramente rotulada, tres antes recortados coinciden con captura historica600. Actual C AST3RED/3GREEN,35840source/modelcoords,GBAguard y640BG2transparent PASS. No compilador/DLL/juego/importregen/paquete. QA runtime nueva receta, otrascamaras/Original/plataformas y revision humana pendientes. Evidencia pruebas/atlas-siguiente-20261105/scene115. No merge."
+        },
+        {
+          "at": "2026-11-06T12:57:04.276326+00:00",
+          "owner": "codex-atlas115-details",
+          "detail": "PR611 MERGED c4bc3298357ea4da3f4a8041e6ceaf51be50b9f4 contieneheadPR602=bc901d6f5b6ba4d5a0a9c890a9417fec7b52a7d7. SinCcompiler/game/imports/build/paquetes. AceptacionNOresponde nuevasnotas; seguimientosaparte. Fuenteexactaverificada y4PythonPASS; estudiosprevios noacreditanruntimecombinado. pruebas/atlas-20261106/ACCEPTED.json"
         }
       ],
       "claimed_at": "2026-11-05T20:09:33.437268+00:00",
-      "sent": "bb7866a6068d4e478a3e19fc98bc423b"
+      "sent": "bb7866a6068d4e478a3e19fc98bc423b",
+      "completed_at": "2026-11-06T12:57:04.276326+00:00"
     },
     "atlas-followup-ab344422-r5": {
       "id": "atlas-followup-ab344422-r5",
@@ -16367,7 +16373,7 @@
     "created_at": "2026-11-06T12:55:12.156720+00:00",
     "updated_at": "2026-11-06T12:55:12.156720+00:00"
   },
-  "updated_at": "2026-11-06T12:56:57.781536+00:00",
+  "updated_at": "2026-11-06T12:57:04.276326+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
