@@ -461,4 +461,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-historical-response-reconciliation-20261105 | Atlas: conciliar respuestas históricas reveladas por fix de cola parcial, conservar comentarios y aprobaciones | integrado | codex-atlas-history | https://github.com/MatyMeatBoy/ReKHCoM/pull/607 | Auditoria datos28vinculos documentados; no modifica grado ni aprobacion dearte | 2026-11-05T20:52:03.286462+00:00 |
 | atlas-journal-left-0f89-r2-20261106 | Diario: extender verde hasta borde izquierdo del viewport, nube16d72bc8 sobre estudio0f89rev2 | en_curso | codex-atlas-journal-left | — | Usuario06/11 continuarcola con un worker y mostrar Pepito nuevo; base aprobada no aprueba hija | 2026-11-06T12:52:49.909704+00:00 |
 
-Integrador: libre
+Integrador: codex-atlas-20261106 (ocupado; 2026-11-06T12:55:12.156720+00:00)
