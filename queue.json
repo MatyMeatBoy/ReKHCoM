@@ -16940,10 +16940,10 @@
     "v29-launcher-synthesis-recipe-sync": {
       "id": "v29-launcher-synthesis-recipe-sync",
       "piece": "Synchronize launcher embedded recipe with approved current synthesis TSV; source check stale405 rows",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-recipes",
       "created_at": "2026-11-06T21:40:46.112332+00:00",
-      "updated_at": "2026-11-06T21:42:06.030265+00:00",
+      "updated_at": "2026-11-06T21:44:58.667807+00:00",
       "branch": "fix/v29-launcher-synthesis-recipes",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/634",
       "approval": "Usuario integra todosaprobados ypublica2.9 todasplataformas",
@@ -16953,9 +16953,15 @@
           "at": "2026-11-06T21:42:06.030265+00:00",
           "owner": "codex-v29-recipes",
           "detail": "Head8a15ac197 exactly405synthesisstringupdates fromapprovedTSV, all915decodedrecipeequivalencePASS. GeneratorcheckRED/GREEN, runtimehd_sprites.inc unchanged; privateimportsunmodified. FinalpackagednativeCLIinventorytestprepared."
+        },
+        {
+          "at": "2026-11-06T21:44:58.667807+00:00",
+          "owner": "codex-v29-recipes",
+          "detail": "PR634 merged4703e630c03b73cfbfb4297d269527f23742bd83 source8a15ac197b698f532d95e851a619f82743e64f58; independentREVIEW634PASS, all915recipeequivalence/405synthesisdiffonly/generatedcheckREDGREEN. FinalnativepackageCLIinventorypending. No privateinput/importschanged."
         }
       ],
-      "claimed_at": "2026-11-06T21:40:56.501679+00:00"
+      "claimed_at": "2026-11-06T21:40:56.501679+00:00",
+      "completed_at": "2026-11-06T21:44:58.667807+00:00"
     }
   },
   "integrator": {
@@ -16964,7 +16970,7 @@
     "created_at": "2026-11-06T21:44:24.476736+00:00",
     "updated_at": "2026-11-06T21:44:24.476736+00:00"
   },
-  "updated_at": "2026-11-06T21:44:24.476736+00:00",
+  "updated_at": "2026-11-06T21:44:58.668157+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
