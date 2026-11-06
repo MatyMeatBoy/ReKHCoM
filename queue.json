@@ -16004,13 +16004,13 @@
     "atlas-darkside06-left-detail": {
       "id": "atlas-darkside06-left-detail",
       "piece": "Darkside06: dibujo y difuminado lateral solicitado en nube72f6d65b",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-darkside06-polish",
       "created_at": "2026-11-05T17:40:14.925679+00:00",
-      "updated_at": "2026-11-06T16:25:34.073290+00:00",
+      "updated_at": "2026-11-06T17:25:55.489091+00:00",
       "branch": "art/atlas-darkside06-polish-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/622",
-      "approval": "Usuario05/11 continuar toda cola de artes; parent delegation Darkside06 only, no arena",
+      "approval": "Atlas 9a47fba18d7749a2a54d4b9ccc8da65b rev3 approved",
       "reference": "Exact latest asset export20261025-130635-c0c34f /60f90456598249ecb1e691c51dd2434e rev2 approved image686a6576e4ee1cc085f4fffb10fc09c36954f90fcebefb739a6696e99a26a3ad /cloud72f6d65b-36e4-47b2-8f2c-d94a9f2ec26d",
       "evidence": [
         {
@@ -16042,10 +16042,16 @@
           "at": "2026-11-06T16:25:34.073290+00:00",
           "owner": "codex-darkside06-polish",
           "detail": "Fuente b9bec50c1948c4944d790d0362c7ea786c5fd3f8 desde27ad033d; Atlas9a47fba18d7749a2a54d4b9ccc8da65b pending SHA4dd531a598ae2977f2bd2de1e3fe686a133e1e3caebeb96e894a6df269d70f38 response_to nube72f6d65b padre60f90456rev2 envio20261025-130635-c0c34f.211pixels sombraflanco8max indices1..4/y>=180sinextension;1842arm+native+9WIPpreservados.3Pythonunit/126400AST/1097gatePASS yreviewroot sinbloqueos; diffcheckPASS. Optin KHCOM_DARKSIDE06_FLANK=1 defaultOFF pendientevaloracion, no cuerpoterminado niQA. SIN compiler/build/game/importregen; modeloofflinepose13 no runtime. Evidencia pruebas/atlas-20261106/darkside06-polish/"
+        },
+        {
+          "at": "2026-11-06T17:25:55.489091+00:00",
+          "owner": "codex-darkside06-polish",
+          "detail": "PR624 MERGED d9f5930fe117b90a78b28ba0173a4a430ea128c9 incluye head original; fixtures C/Python conjuntos y diffcheck PASS. Darkside exacto activo; nuevos comentarios095/todos frames Darkside siguen QA, no cierre global."
         }
       ],
       "claimed_at": "2026-11-06T16:10:48.521940+00:00",
-      "sent": "9a47fba18d7749a2a54d4b9ccc8da65b"
+      "sent": "9a47fba18d7749a2a54d4b9ccc8da65b",
+      "completed_at": "2026-11-06T17:25:55.489091+00:00"
     },
     "atlas-journal-inner-footer-20261105": {
       "id": "atlas-journal-inner-footer-20261105",
@@ -16703,7 +16709,7 @@
     "created_at": "2026-11-06T17:20:48.515853+00:00",
     "updated_at": "2026-11-06T17:20:48.515853+00:00"
   },
-  "updated_at": "2026-11-06T17:25:48.892808+00:00",
+  "updated_at": "2026-11-06T17:25:55.489091+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
