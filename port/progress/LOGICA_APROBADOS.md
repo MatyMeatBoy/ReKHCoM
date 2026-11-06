@@ -696,3 +696,11 @@ cruzar el borde del mapa sin que su punta quede fuera: conservar identidad de
 todo el mapa dejaba ese extremo sin dibujar. La excepción sólo se aplica al
 muestreo exterior al cuadro GBA y no borra tinta original de BG2. Propuesta
 sin build; no dar por validadas otras cámaras o plataformas con la simulación.
+### 081: negro bajo la cueva, seguimiento posterior a aprobación
+
+La nube0dda90ce sobre0bac2ac1rev2 pide ocultar el arco flotante que se había
+conservado por ser original. Su origen es Platform03, separado del fondo. La
+propuesta omite sólo ese banco decorativo y sólo sobre el sector vacío inferior
+del remate, fuera del viewport GBA. Conservar actores, resto de decoración,
+paleta/fundidos y todas las escenas hermanas. La aprobación anterior no da
+por aprobado este recorte: estudio sin build, pendiente de runtime y valoración.
