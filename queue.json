@@ -17000,10 +17000,23 @@
       ],
       "claimed_at": "2026-11-06T21:40:56.501679+00:00",
       "completed_at": "2026-11-06T21:44:58.667807+00:00"
+    },
+    "v29-web-shadow-prototype": {
+      "id": "v29-web-shadow-prototype",
+      "piece": "Web Wasm link: explicit event-shadow owner declaration matches void producer",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-06T23:24:36.417120+00:00",
+      "updated_at": "2026-11-06T23:24:36.417120+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario pidepublicar2.9porplataformaslistas; corregirbuildsrestantessinpisarpublicados",
+      "reference": "Wasmf05linkRED PortSpriteEventShadowOwner inferredint inevt_obj vsvoid producerppu",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T23:22:04.122924+00:00",
+  "updated_at": "2026-11-06T23:24:36.417120+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
