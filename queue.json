@@ -16811,7 +16811,7 @@
       "status": "en_curso",
       "owner": "codex-v29-release",
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-06T22:36:58.091587+00:00",
+      "updated_at": "2026-11-06T23:03:41.514802+00:00",
       "branch": "release/v2.9-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
@@ -16846,6 +16846,11 @@
           "at": "2026-11-06T22:36:58.091587+00:00",
           "owner": "codex-v29-release",
           "detail": "Frozenf05f0d3d matrixrun20261106T215034Z: Windows32EUUSJP PASS701.5s,64PASS407.2s ABIboot+BIOS, ZIPpackagePASS35.4s; Linuxdesktopx86/x64+armhf allregionsPASS, Androidnowrunning onejobBelowNormal. FinalZIPread-onlyCLIrecipeinventoryPASS actual915 currentstrings/newmissing/legacy cases (no ROM/game); finalpackagedgame6bootsstillpending. Sourceclean. Reporter610confirmedAndroid andhasZIP; reply6697511314 explainsGitHubattachment; lognotyetreceived, issueseparateopen. No publication; CPUroot, workeridle,lockFREE."
+        },
+        {
+          "at": "2026-11-06T23:03:41.514802+00:00",
+          "owner": "codex-v29-release",
+          "detail": "Usuario pidepublicarporplataformaslistas: WINDOWS2.9PUBLICOLATEST https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.9 tagf05f0d3d; ZIPsha5dd1906cf32cbb7d271e2a1c607c3768caf5a9a0fa80fa5c92202b1f0a6b4a5b. ExactZIP6boots32/64EUUSJP8corepixelverify+actualCLIrecipeinventoryPASS; cleancopyversions/PE/hash+publicredownloadPASS. ImmutableWindowsmanifest/checksumwith-windows suffixpublished. Linuxdesktop/armhfpackagesclean+ELFverified/staged, VMpackaged6bootsactive512MiB1CPU; noLinuxpublicyet. Androidbuildownmatrix37368suspendedtree10foroneheavytestload, resumeafterLinuxsmoke. Otherplatformscontinue after; neverclobberpublishedfiles. Sourcecleanf05fixed, userinstructionincremental overrides oldall-at-oncegate. Reporter610AndroidZIPpending upload."
         }
       ],
       "claimed_at": "2026-11-06T20:59:03.912953+00:00"
@@ -16993,7 +16998,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T22:36:58.091587+00:00",
+  "updated_at": "2026-11-06T23:03:41.514802+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
