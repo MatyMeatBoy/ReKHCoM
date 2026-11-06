@@ -16757,7 +16757,7 @@
       "status": "pr_abierto",
       "owner": "codex-v29-border",
       "created_at": "2026-11-06T17:43:39.391915+00:00",
-      "updated_at": "2026-11-06T19:25:32.346705+00:00",
+      "updated_at": "2026-11-06T20:10:36.781176+00:00",
       "branch": "feat/v29-adaptive-gba-border",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/627",
       "approval": "Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde",
@@ -16772,6 +16772,11 @@
           "at": "2026-11-06T19:25:32.346705+00:00",
           "owner": "codex-v29-border",
           "detail": "PR627 followupb767338079e02d1808f7f54ca08dbc6639f8d2a7 fixes reviewer cachefail2/cached1/retry2. ActualC-prefixPython RED/GREEN,6PASS; nativeC32/64 fullfixtures rerunPASS inclretry. OwnWindows64EUfullbuild--testPASS ABI/mixedargs/fixedmapping/syntheticboot/BIOS; guest17a51adeebc6aa29245403acd213526dde1c8cf8d6eca613d058263b0b7b4a07. ROM/privateinputs/output confinedowncheckout; no realgame under lowRAM.3PNGs all38400holepixelsalpha0, byteidentical8f04 confirmsLegacyaftergame cannotcoverCore. EVIDENCE.json/EU64-BUILD.json updated. Checkoutclean. Pending rootreview+GPU/HDmenu/CRT/reset/combinedcore runtime; no merge."
+        },
+        {
+          "at": "2026-11-06T20:10:36.781176+00:00",
+          "owner": "codex-v29-border",
+          "detail": "Head14a52a690f90f5d4d987f6f35a2b28807236ecd2 rebased main d2254cc0. Fix actual picture aperture and complete native ornament alpha cache, all UI/journal footer viewport preserved.7 Python PASS; C32/64 off576/on1008/transitions288 PASS; full EU64--test PASS guest8b986669. Five real unedited D3D11 field captures exit0/511presents in pruebas/v29-adaptive-gba-border/visual-*/field-x2, EVIDENCE.json. Root reviewing exact Original/full UI; no physicalCRT/device-reset/performance certification. PNG/ROM/SAV/import/Atlas originals unchanged. CPU released to root; no merge."
         }
       ],
       "claimed_at": "2026-11-06T18:38:41.136268+00:00"
@@ -16816,7 +16821,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T20:04:41.719467+00:00",
+  "updated_at": "2026-11-06T20:10:36.781176+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
