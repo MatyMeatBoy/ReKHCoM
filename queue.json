@@ -16671,10 +16671,10 @@
     "win28-field-row-fastpath-20261106": {
       "id": "win28-field-row-fastpath-20261106",
       "piece": "Windows2.8: fastpath exacto para filas4bpp vacias de extensiones mundo",
-      "status": "en_revision",
-      "owner": "codex-win28-ppu",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-06T17:02:37.695167+00:00",
-      "updated_at": "2026-11-06T17:12:21.024446+00:00",
+      "updated_at": "2026-11-06T17:33:28.974043+00:00",
       "branch": "perf/win28-field-row-fastpath-20261106",
       "pr": null,
       "approval": "Subtask root source/tests only, no compiler/build/game/imports; no FPS gains claim",
@@ -16684,6 +16684,11 @@
           "at": "2026-11-06T17:12:21.024446+00:00",
           "owner": "codex-win28-ppu",
           "detail": "Fuente5c839d5ef3c8d1e958d589e0b2f51d2a140db3ba desde27ad; PPU4bppfila0 exacttransparente bajo guards existentes.3Pythonunit73584AST+544guards/18450ROMbefore-afterPASS/diffcheckPASS. SourceprepCmicrobench0/50/90/100%mezclas5roundschecksum; aun no compilado/ejecutado, esperando ventana unica root tras autorizacionhumana nueva. NingunFPSgainmedido; noPRniintegracionhasta reviewroot. Evidencia pruebas/pacing-v28-6900xt-20261106/; noAtlas."
+        },
+        {
+          "at": "2026-11-06T17:33:28.974043+00:00",
+          "owner": "codex-win28-ppu",
+          "detail": "released: 5c839d5e preservado, Cmicrobench sólo mejora con filas vacías; perfil real fieldx2 sin ganancia clara/omisiones persisten. Candidato retirado del branch raíz; no integrarlo como solución fluidez. Bench/ROMcorrectness conservados enpruebas/pacing-v28-6900xt-20261106."
         }
       ],
       "claimed_at": "2026-11-06T17:02:51.846885+00:00"
@@ -16704,7 +16709,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T17:26:02.798801+00:00",
+  "updated_at": "2026-11-06T17:33:28.974043+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
