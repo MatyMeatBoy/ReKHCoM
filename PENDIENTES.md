@@ -476,4 +476,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue610-platform-confirmation-v29 | 2.9 QA issue610: confirmar plataforma/version reportero y validar cierre real tras guard shake NULL integrado626 | pendiente | — | — | Usuario exige pendientescuelgues antes2.9; no confundirfixdefecto demostrado con confirmacionreporte | 2026-11-06T18:04:05.651797+00:00 |
 | v29-release-performance-gates-20261106 | Release2.9: final performance/stability and adaptive-border runtime gates; eight published platform packages and allregions; publish only after verification | en_curso | codex-v29-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/629 | Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos | 2026-11-06T20:04:41.719467+00:00 |
 
-Integrador: libre
+Integrador: codex-v29-integrador (ocupado; 2026-11-06T20:44:53.736778+00:00)
