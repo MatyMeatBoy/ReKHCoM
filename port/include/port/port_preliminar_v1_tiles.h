@@ -90,6 +90,12 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
             if (2*oy+ox>=32 || sy<0 || sy>=32)
                 sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
+            /* The wall's lower trim occupies this full native diagonal
+             * band. Continue it on both sides before selecting hatches;
+             * otherwise its bottom edge stops at the authored map ends. */
+            if (2*oy+ox>=32 && 2*oy+ox<36) {
+                *x=sx; *y=sy; return 1;
+            }
             if (2*oy+ox>=32) {
                 int k=(ox-6-PortSceneTileMod(ox-6,8))/8;
                 int cx=10+8*k, base=19-4*k;

@@ -11,6 +11,12 @@ class Scene115RecipeTest(unittest.TestCase):
   code=r'''#include <assert.h>
 #include "port_preliminar_v1_tiles.h"
 int main(void){ unsigned i; int x,y,bg;
+{
+ const PortPreliminarRecipe* p=0;int sx=-1,sy=17;
+ for(i=0;i<sizeof(kPreliminarRecipes)/sizeof(kPreliminarRecipes[0]);i++)if(kPreliminarRecipes[i].v[0]==115&&kPreliminarRecipes[i].v[1]==2){p=&kPreliminarRecipes[i];break;}
+ assert(p&&PortPreliminarTileSource(p,&sx,&sy));assert(sx==7&&sy==13);
+ sx=33;sy=0;assert(PortPreliminarTileSource(p,&sx,&sy));assert(sx==1&&sy==16);
+}
 for(bg=2;bg<=3;bg++){
  const PortPreliminarRecipe* p=0;
  for(i=0;i<sizeof(kPreliminarRecipes)/sizeof(kPreliminarRecipes[0]);i++)if(kPreliminarRecipes[i].v[0]==115&&kPreliminarRecipes[i].v[1]==bg){p=&kPreliminarRecipes[i];break;}

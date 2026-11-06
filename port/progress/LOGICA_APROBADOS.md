@@ -755,3 +755,12 @@ estudio anterior pero pide llenar hasta la izquierda. Estas notas corrigen
 el alcance de lo que puede tomarse como modelo: no darlas por resueltas al
 integrar la versión aceptada ni heredar su grado a una nueva hija. Sin nueva
 compilación o captura, la verificación real del compositor sigue pendiente.
+
+### Escena115: diagonales derecha e izquierda, revisión3 del estudio aceptado
+
+La banda inferior del zócalo BG2 no pertenece al patrón de escotillas: debe
+continuar en32<=2ty+tx<36 antes de seleccionar esos sellos. Repetir sólo las
+columnas0..7 con sy=ty+(tx-sx)/2 conserva fase, altura y color del remate en
+ambos extremos. Conservar todas las selecciones nativas y las correcciones
+anteriores aceptadas de punta, módulo huérfano y piso. Estudio nuevo del código,
+no captura de juego; no hereda aprobación y queda pendiente de QA real.
