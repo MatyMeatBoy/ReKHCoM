@@ -35,6 +35,7 @@ extern int PortBridgeVideoCaps(void);
 #include "mode.h"
 #include "port/port_aspect.h"
 #include "port/gba_border_layout.h"
+#include "port/lcd_grid.h"
 #include "port/port_hd2d.h"
 #include "port/port_hdlayout.h"
 #include "port/port_hdsprites.h"
@@ -565,6 +566,9 @@ static void UpdateResolution(void) {
 static SDL_Texture* sBorderTex;
 static SDL_Texture* sBorderMaterialTex;
 static SDL_Texture* sBorderAdaptiveTex;
+static SDL_Texture *sLcdGridXTex, *sLcdGridYTex;
+static PortLcdGridKey sLcdGridKey, sLcdGridAttemptKey;
+static int sLcdGridReady, sLcdGridAttempted;
 static int sBorderShown; /* which border sBorderTex holds */
 static int sBorderAttempted; /* Do not retry a failed selection every frame. */
 
@@ -735,6 +739,8 @@ static void DrawScanlines(const SDL_FRect* dst, int outW) {
     SDL_RenderFillRects(sRenderer, rects, n);
 }
 
+
+#include "port_lcd_grid.inc"
 
 void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float originY, float scale);
 
@@ -1703,7 +1709,7 @@ static int RendererResetService(void) {
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
     if (!sRendererResetPending) return 1;
     SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex, &sWorldLight.texture,
-        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBorderAdaptiveTex, &sBlurTex, &sSkipTexture,
+        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBorderAdaptiveTex, &sLcdGridXTex, &sLcdGridYTex, &sBlurTex, &sSkipTexture,
         &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
         &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
     unsigned i;
@@ -1718,6 +1724,7 @@ static int RendererResetService(void) {
     sWorldLight.blockedWidth = sWorldLight.blockedHeight = 0;
     sHudTexW = sHudTexH = sHudOverW = sHudOverH = sBorderShown = 0;
     sBorderAttempted = 0;
+    sLcdGridReady = sLcdGridAttempted = 0;
     sSkipBufW = sSkipBufH = sHd2dW = sHd2dH = sMenuAlphaW = sMenuAlphaH = 0;
     for (i = 0; i < 2; i++) sMenuSideW[i] = sFadeSideW[i] = 0;
     PortHdHudInvalidate();
@@ -1831,6 +1838,7 @@ static void Present(int paced) {
     int borderOn = 0;
     uint32_t uniform = 0;
     float worldX, worldY, worldScale;
+    float lcdSourceW = (float)gPortScreen.width, lcdSourceH = (float)gPortScreen.height;
     int moviePrompt;
     /* Snapshot the phase before PortUiDraw advances the fade: canvas, game
      * layers and presentation must all use the same phase for this frame. */
@@ -2093,6 +2101,7 @@ static void Present(int paced) {
             for (i = 0; i < 4; i++) if (margins[i].w > 0 && margins[i].h > 0)
                 SDL_RenderFillRect(sRenderer, &margins[i]);
         }
+        lcdSourceW = src.w; lcdSourceH = src.h;
         worldScale = scale;
         worldX = dst.x - src.x * scale;
         worldY = dst.y - src.y * scale;
@@ -2407,6 +2416,10 @@ static void Present(int paced) {
         PortUiJournalFooter(sRenderer, outW, journalLayout.footerY, journalLayout.footerHeight,
                              journalLayout.scale, sSideStyle == 12, dark, white);
     }
+    if (gPortConfig.lcdGrid > 0)
+        DrawLcdGrid(outW, outH, worldX, worldY, dst.w / lcdSourceW, dst.h / lcdSourceH);
+    else
+        sLcdGridAttempted = 0;
     {
         /* state / slot notices: topmost, at the window's scale */
         static uint32_t sNoticeBuf[256 * 14];

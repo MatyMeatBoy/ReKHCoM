@@ -40,7 +40,7 @@ PORT_PATCHES = {
                   ('static const char* const sTitleHint[LANG_COUNT]', '};', 'SELECT  ', 'TOUCH  '),
                   # the MMPX 3.2 filter: a row above Scanlines, off / on / on without edge blending (gPortMmpx, saved as mmpx=)
                   ('#include "port/port_ui.h"\n', '#include "port/port_ui.h"\nextern int gPortMmpx;\n'),
-                  ('    ITEM_SCANLINES,\n    ITEM_LCD,', '    ITEM_MMPX,\n    ITEM_SCANLINES,\n    ITEM_LCD,'),
+                  ('    ITEM_SCANLINES,\n', '    ITEM_MMPX,\n    ITEM_SCANLINES,\n'),
                   ('    { "Scanlines", "Lignes de balayage",',
                    '    { "MMPX 3.2 filter", "Filtre MMPX 3.2", "MMPX-3.2-Filter", "Filtro MMPX 3.2", "Filtro MMPX 3.2", "MMPX 3.2フィルター" },\n'
                    '    { "Scanlines", "Lignes de balayage",'),

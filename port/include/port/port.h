@@ -191,6 +191,7 @@ typedef struct PortConfig {
     int hdMediaLanguage;       /* appended: 0 legacy/Auto, 1 user-labelled EN, 2 user-labelled JP; not text/Undub */
     int goldPremium;           /* appended, experimental, off: premium cards with a gold frame in the deck menu */
     int hideTitleHint;         /* appended, off: hide SELECT OPTIONS text; SELECT still opens options */
+    int lcdGrid;               /* appended, 0..100: source-pixel LCD grid intensity; off by default */
 } PortConfig;
 
 extern PortConfig gPortConfig;
