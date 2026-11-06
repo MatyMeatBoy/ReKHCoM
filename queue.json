@@ -16421,10 +16421,23 @@
       "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
       "reference": "{\"image_id\": \"bb7866a6068d4e478a3e19fc98bc423b\", \"revision\": 3, \"sha256\": \"c10b3e934562fcba7eb49a36a5d6c236e04e541ee5ba6997193a178e8d94b819\", \"submission\": [\"20261105-203509-8870c7\"]}",
       "evidence": []
+    },
+    "atlas-followup-9224a996-r3": {
+      "id": "atlas-followup-9224a996-r3",
+      "piece": "Escena 081: mejorar patron; mejorar patron",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-06T12:59:03.366288+00:00",
+      "updated_at": "2026-11-06T12:59:03.366288+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
+      "reference": "{\"image_id\": \"9224a996d76947d48204e2501ede8e80\", \"revision\": 3, \"sha256\": \"a9fb8e06da9b26b8ac2e4a50b4640250f5f726065318bb2ead6724f75d7d7059\", \"submission\": [\"20261105-203443-b677be\"]}",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T12:58:55.547866+00:00",
+  "updated_at": "2026-11-06T12:59:03.366288+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

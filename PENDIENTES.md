@@ -462,5 +462,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-journal-left-0f89-r2-20261106 | Diario: extender verde hasta borde izquierdo del viewport, nube16d72bc8 sobre estudio0f89rev2 | en_curso | codex-atlas-journal-left | — | Usuario06/11 continuarcola con un worker y mostrar Pepito nuevo; base aprobada no aprueba hija | 2026-11-06T12:52:49.909704+00:00 |
 | atlas-followup-e78f689c-r2 | Escena 095: verificar que el arbol del inicio de la escena no este solo su mitad | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:58:48.186599+00:00 |
 | atlas-followup-bb7866a6-r3 | Escena 115: falta extender esta diagonal a derecha; falta extender esta diagonal a izquierda | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:58:55.547866+00:00 |
+| atlas-followup-9224a996-r3 | Escena 081: mejorar patron; mejorar patron | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:59:03.366288+00:00 |
 
 Integrador: libre
