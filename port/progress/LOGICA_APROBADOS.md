@@ -755,3 +755,12 @@ estudio anterior pero pide llenar hasta la izquierda. Estas notas corrigen
 el alcance de lo que puede tomarse como modelo: no darlas por resueltas al
 integrar la versión aceptada ni heredar su grado a una nueva hija. Sin nueva
 compilación o captura, la verificación real del compositor sigue pendiente.
+### Diario/Pepito: relleno hasta la izquierda, nueva nube del06/11
+
+Limpiar tres columnas nativas no garantiza que el margen exterior haya tomado
+el mismo verde: también debe rellenarse desde x0 del viewport hasta el borde
+nativo con el fondo presentado de cada fila. Conservar las máscaras dentro
+de la imagen y dibujar encabezado/rótulos después. La recuperación de un dibujo
+rechazado debe limpiar ambos márgenes para no dejar una reparación parcial.
+La nube se interpreta como extender el verde, sin ensanchar el papel blanco.
+Estudio nuevo del renderer, no captura o máscara real; valoración y QA pendientes.

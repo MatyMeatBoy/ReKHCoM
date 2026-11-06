@@ -57,11 +57,12 @@ static int DrawJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, int 
     const PortJiminyPageRow* rows = PortPpuJiminyPageRows();
     uint16_t masks[160] = {0};
     uint8_t leftMasks[160] = {0};
-    float scale = dst->w / 240, oldRight, right, guide;
+    float scale = dst->w / 240, oldRight, right, guide, left;
     int y, x, ox = (int)src->x, oy = (int)src->y;
     if (!rows || scale <= 0 || ox < 0 || oy < 0 ||
         ox > gPortScreen.width - 240 || oy > gPortScreen.height - 160) return 1;
     oldRight = PixelEdge(dst->x, 240, scale);
+    left = SDL_clamp(PixelEdge(dst->x,0,scale),0.0f,(float)outW);
     if (outW - oldRight <= 12 * scale) return 1;
     for (y = 16; y < 160; y++)
         if (!rows[y].fill || !rows[y].guide || !rows[y].border || !rows[y].ground) return 1;
@@ -88,6 +89,11 @@ static int DrawJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, int 
                rows[end].fill == r->fill && rows[end].guide == r->guide &&
                rows[end].border == r->border && rows[end].ground == r->ground) end++;
         height = PixelEdge(dst->y, end, scale) - top;
+        /* The style12 side sampler can still carry an old footer colour
+         * beyond the native picture. Fill that margin to viewport x0 using
+         * this presented row's ground. Native pixels retain their ownership
+         * masks below; header/name margins are drawn after this repair. */
+        if (!PaintJiminyRect(0,top,left,height,r->ground)) return 0;
         /* The three native columns outside the left page still contain old
            frame bars. Clear only their opaque BG1 winner, never a name plate,
            object, blend or later UI edit. The paper starts at native x3. */
@@ -125,11 +131,13 @@ static int RepairJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, in
     if (!result) {
         const PortJiminyPageRow* rows = PortPpuJiminyPageRows();
         float scale = dst->w / 240, right = PixelEdge(dst->x,240,scale);
+        float left = SDL_clamp(PixelEdge(dst->x,0,scale),0.0f,(float)outW);
         int y;
         DrawJournalPicture(src,dst); /* complete native picture survives a partial repair */
         if (rows)
             for (y = 16; y < 160; y++) {
                 float top = PixelEdge(dst->y,y,scale);
+                PaintJiminyRect(0,top,left,PixelEdge(dst->y,y+1,scale)-top,rows[y].ground);
                 PaintJiminyRect(right,top,outW-right,PixelEdge(dst->y,y+1,scale)-top,rows[y].ground);
             }
     }

@@ -52,6 +52,7 @@ int main(void){
  assert(!pixel(950,340)&&!pixel(954,344)); /* object and composite edit survive */
  assert(pixel(1385,400)==0xffd6d6d6&&pixel(1395,400)==0xff9cc65a);
  assert(pixel(1383,654)==0xffd6d6d6); /* circular outer corner, not a 45-degree cut */
+ assert(pixel(1,400)==0xff9cc65a); /* live ground continues to viewport left edge */
  reset();for(int y=16;y<160;y++)rows[y].leftOwned=7;
  composite[80*240+1]=0xff123456;rows[81].leftOwned&=~4;
  assert(RepairJiminyPageMargin(&src,&dst,1400));
