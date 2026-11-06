@@ -473,4 +473,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | win28-field-row-fastpath-20261106 | Windows2.8: fastpath exacto para filas4bpp vacias de extensiones mundo | en_revision | codex-win28-ppu | perf/win28-field-row-fastpath-20261106 | Subtask root source/tests only, no compiler/build/game/imports; no FPS gains claim | 2026-11-06T17:12:21.024446+00:00 |
 | issue610-pooh-tree-crash-v29 | Issue610: crash Pooh al chocar arboles antes de caer cola de Eeyore | pendiente | — | — | Usuario prioriza cuelgues antes2.9; source primero, runtime positivo requerido; ventana compilacion coordinada root | 2026-11-06T17:20:37.075153+00:00 |
 
-Integrador: libre
+Integrador: codex-v29-integrador (ocupado; 2026-11-06T17:20:48.515853+00:00)
