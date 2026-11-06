@@ -16914,20 +16914,26 @@
     "v29-darkside-cold-cache": {
       "id": "v29-darkside-cold-cache",
       "piece": "Darkside cold-cache publication before PPU worker dispatch: avoid concurrent shoreline preparation",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v29-darkside",
       "created_at": "2026-11-06T21:29:12.521912+00:00",
-      "updated_at": "2026-11-06T21:29:21.782644+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T21:33:32.833272+00:00",
+      "branch": "fix/v29-darkside-cold-cache",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/633",
       "approval": "Usuario pide reducir picosms en arenas y cerrar estabilidad v2.9",
       "reference": "port_darkside Prepare lazy mutabletables called by PPUworker; main PortDarksideLayer latch before dispatch",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T21:33:32.833272+00:00",
+          "owner": "codex-v29-darkside",
+          "detail": "Head3770c4117 actualPrepare/Layer REDcoldpublication/GREENwarm8workers. Independentreview confirmedbothPortDarksideLayer callerslatchmainbeforeparallel; no palette/artdatachange. EU64fullbuildABIbootPASS; actualDarkside650framesdoublePPUverifierinprogress, notperformancebenchunderhostload."
+        }
+      ],
       "claimed_at": "2026-11-06T21:29:21.782644+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:29:21.782644+00:00",
+  "updated_at": "2026-11-06T21:33:32.833272+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
