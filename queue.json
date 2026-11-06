@@ -16743,15 +16743,21 @@
     "v29-adaptive-gba-border-all-modes": {
       "id": "v29-adaptive-gba-border-all-modes",
       "piece": "2.9: borde GBA adaptable a ratios y seleccionable en cualquier modo/zoom, preservando proporcion GBA sin estirar",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v29-border",
       "created_at": "2026-11-06T17:43:39.391915+00:00",
-      "updated_at": "2026-11-06T18:38:41.136268+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T19:06:43.683182+00:00",
+      "branch": "feat/v29-adaptive-gba-border",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/627",
       "approval": "Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde",
       "reference": "Chat06/11 objetivo2.9; implementar despuesdelpresupuestoframe",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T19:06:43.683182+00:00",
+          "owner": "codex-v29-border",
+          "detail": "PR627 draft source9b6a6f1dfae7483eabc0917acd0b286234638639 base8f04. Border existing0..3 anyview/HD, ratioAspectRect/GBA3:2 andzoomconfig/defaults preserved; usefulviewport20/27, uniformnocrop. Original1920exact1200x800 at360,140 and1legacydraw. ExistingPNG3 byteidentical, runtimeROMcardsunchanged. Cachematerial1x216+nativeuniformpanels,2geometrysubmissionsmax. PythonactualC-AST5PASS; actualC32/64 OutputRectoff576 bitidentical/on1008 containeduniform cases +cache/decode/texturefail. SDL/decoder mocked. Private pruebas/v29-adaptive-gba-border/EVIDENCE.json. FullTUcompile/GPU/HDUI/CRT/reset runtime pending parentwindow and review; NO merge, no build/runtimeclaim."
+        }
+      ],
       "claimed_at": "2026-11-06T18:38:41.136268+00:00"
     },
     "issue610-platform-confirmation-v29": {
@@ -16769,7 +16775,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T18:38:41.136268+00:00",
+  "updated_at": "2026-11-06T19:06:43.684179+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
