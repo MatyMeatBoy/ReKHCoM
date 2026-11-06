@@ -599,9 +599,10 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         return 0; /* retain the authored tile path outside the upper border */
     }
 
-    if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<352) {
+    if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<384) {
         /* Only the topiary cut at the map seam: complete its missing half
-         * using the original crown, without cloning the whole foreground. */
+         * using the original crown and trunk through row382. Ending at352
+         * cut its lower crown; do not clone the rest of the foreground. */
         *sx=-1-wx; *sy=wy; return 1;
     }
 
