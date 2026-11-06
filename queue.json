@@ -16412,15 +16412,16 @@
     "atlas-followup-e78f689c-r2": {
       "id": "atlas-followup-e78f689c-r2",
       "piece": "Escena 095: verificar que el arbol del inicio de la escena no este solo su mitad",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas095-tree",
       "created_at": "2026-11-06T12:58:48.186599+00:00",
-      "updated_at": "2026-11-06T12:58:48.186599+00:00",
+      "updated_at": "2026-11-06T15:35:19.847560+00:00",
       "branch": null,
       "pr": null,
       "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
       "reference": "{\"image_id\": \"e78f689cba2e46548b67cff57c10f444\", \"revision\": 2, \"sha256\": \"08f5ea9ea3065e3f7770c41c1bcb82aea4c3ac0a48e6071036195c7393063aa7\", \"submission\": [\"20261105-204012-31a5b7\"]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-06T15:35:19.847560+00:00"
     },
     "atlas-followup-bb7866a6-r3": {
       "id": "atlas-followup-bb7866a6-r3",
@@ -16538,7 +16539,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T15:34:48.540474+00:00",
+  "updated_at": "2026-11-06T15:35:19.847560+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
