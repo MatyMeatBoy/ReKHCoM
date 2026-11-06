@@ -17004,20 +17004,26 @@
     "v29-web-shadow-prototype": {
       "id": "v29-web-shadow-prototype",
       "piece": "Web Wasm link: explicit event-shadow owner declaration matches void producer",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v29-webcontract",
       "created_at": "2026-11-06T23:24:36.417120+00:00",
-      "updated_at": "2026-11-06T23:24:43.961414+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T23:32:34.131872+00:00",
+      "branch": "fix/v29-web-shadow-prototype",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/636",
       "approval": "Usuario pidepublicar2.9porplataformaslistas; corregirbuildsrestantessinpisarpublicados",
       "reference": "Wasmf05linkRED PortSpriteEventShadowOwner inferredint inevt_obj vsvoid producerppu",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T23:32:34.131872+00:00",
+          "owner": "codex-v29-webcontract",
+          "detail": "Head64015fb88 fromfrozenf05;2productionlines void Owner(int) header+PCcallerinclude. Actual SDKWasm includes/calls+productionfunc REDsignaturemismatch baselinef05->GREENcurrent. Completeevt_obj strictimplicitdeclPASS. Actualnative32EU before/afterobjbyteidentical; x32NOTidenticalunprototypedcallcodegen, no runtimeclaim. No fullbuild/game/art/ROM/SAV/import/publishedpayload/tagchanges. Evidence pruebas/release-v29/web-shadow-prototype/GREEN/RESULT.json. CPUreturnedroot, owncheckoutclean, PR636draftreviewpending."
+        }
+      ],
       "claimed_at": "2026-11-06T23:24:43.961414+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T23:24:43.961414+00:00",
+  "updated_at": "2026-11-06T23:32:34.131872+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
