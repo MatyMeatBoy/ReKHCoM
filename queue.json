@@ -16914,10 +16914,10 @@
     "v29-darkside-cold-cache": {
       "id": "v29-darkside-cold-cache",
       "piece": "Darkside cold-cache publication before PPU worker dispatch: avoid concurrent shoreline preparation",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-darkside",
       "created_at": "2026-11-06T21:29:12.521912+00:00",
-      "updated_at": "2026-11-06T21:33:32.833272+00:00",
+      "updated_at": "2026-11-06T21:35:00.068036+00:00",
       "branch": "fix/v29-darkside-cold-cache",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/633",
       "approval": "Usuario pide reducir picosms en arenas y cerrar estabilidad v2.9",
@@ -16927,9 +16927,15 @@
           "at": "2026-11-06T21:33:32.833272+00:00",
           "owner": "codex-v29-darkside",
           "detail": "Head3770c4117 actualPrepare/Layer REDcoldpublication/GREENwarm8workers. Independentreview confirmedbothPortDarksideLayer callerslatchmainbeforeparallel; no palette/artdatachange. EU64fullbuildABIbootPASS; actualDarkside650framesdoublePPUverifierinprogress, notperformancebenchunderhostload."
+        },
+        {
+          "at": "2026-11-06T21:35:00.068036+00:00",
+          "owner": "codex-v29-darkside",
+          "detail": "PR633 mergedc336a9c504960881c6d6baba8ea455bda5b166b2 head3770c4117881688c4877298c958eef751ae3e947. ActualC RED/GREEN +EU64buildABIboot +DarksideHD650frames8coreverified noMISMATCHexit0 PASS; independentreviewPASS. Highhostload/FASTdoublePPU excludesperformanceclaim. pruebas/release-v29/DARKSIDE-COLD-CACHE-VERIFIED.json."
         }
       ],
-      "claimed_at": "2026-11-06T21:29:21.782644+00:00"
+      "claimed_at": "2026-11-06T21:29:21.782644+00:00",
+      "completed_at": "2026-11-06T21:35:00.068036+00:00"
     }
   },
   "integrator": {
@@ -16938,7 +16944,7 @@
     "created_at": "2026-11-06T21:34:18.538126+00:00",
     "updated_at": "2026-11-06T21:34:18.538126+00:00"
   },
-  "updated_at": "2026-11-06T21:34:18.538126+00:00",
+  "updated_at": "2026-11-06T21:35:00.069053+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
