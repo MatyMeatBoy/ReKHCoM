@@ -713,3 +713,11 @@ Para x<24 prolongar el módulo nativo64px con la misma diagonal; conservar
 la excepción aprobada de476píxeles y todos los píxeles ya autorados. No basta
 que la librería continúe si su base desaparece al resolver el suelo. Esta
 propuesta es un estudio sin build y no hereda la aceptación del padre.
+### Escena057: unión sobre la enredadera, revisión2 posterior a aceptación
+
+La nube «mejorar» está sobre la copia incompleta de ventana/cornisa encima de
+la enredadera única. Propuesta: dejar la madera existente de BG3 en ese relleno
+superior, suprimiendo únicamente BG2 x20..27/y-8..-1. Conservar todos los píxeles
+de y0 en adelante y el ritmo derecho desde x28. Es una interpretación visual
+acotada, no una orden de inventar otra ventana. Estudio sin build pendiente de
+valoración y ejecución real; no hereda aceptación de la versión anterior.
