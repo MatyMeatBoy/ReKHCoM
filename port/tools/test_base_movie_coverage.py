@@ -1,4 +1,4 @@
-"""Semantic movie3 coverage, actual CLI copy and full-profile de-duplication.
+"""Semantic movie2/movie3 coverage, actual CLI copy and full-profile de-duplication.
 
 Only generated MP4-box fixtures; no decoder, proprietary assets or game runtime.
 """
@@ -33,10 +33,10 @@ BLOCK
 return list;}
 int main(int argc,char**argv){
  assert(argc==2);fs::path root=argv[1];fs::create_directories(root);
- for(const char*name:{"ROP","RSE","RRE","zz_event_123","zz_event_151","zz_event_621","zz_event_631","zz_event_001","noise"})std::ofstream(root/(std::string(name)+".mp4"))<<"owned collector fixture";
- auto basic=Collect(root,true,false);assert(basic.size()==7);
- auto scenes=Collect(root,false,true);assert(scenes.size()==5);
- auto all=Collect(root,true,true);assert(all.size()==8);
+ for(const char*name:{"ROP","RSE","RRE","zz_event_062","zz_event_123","zz_event_151","zz_event_621","zz_event_631","zz_event_001","noise"})std::ofstream(root/(std::string(name)+".mp4"))<<"owned collector fixture";
+ auto basic=Collect(root,true,false);assert(basic.size()==8);
+ auto scenes=Collect(root,false,true);assert(scenes.size()==6);
+ auto all=Collect(root,true,true);assert(all.size()==9);
  std::sort(all.begin(),all.end());assert(std::adjacent_find(all.begin(),all.end())==all.end());
 }
 '''.replace('BASES',bases).replace('BLOCK',block)
@@ -59,6 +59,14 @@ int main(int argc,char**argv){
     localized=json.loads((ROOT/f'port/decompui/i18n/{lang}.json').read_text(encoding='utf-8'))
     self.assertTrue(localized[key]);self.assertNotIn(key.replace('movies','intros'),localized)
 
+ def test_game_movie2_in_both_basic_catalogs(self):
+  game=(ROOT/'port/src/port_hdmovie.c').read_text(encoding='utf-8')
+  self.assertRegex(game,r'case 2: \*startAt = 83; \*stopAt = 88; name = "zz_event_062"')
+  self.assertIn('zz_event_062',khhd_import.BASE_MOVIES)
+  cpp=(ROOT/'port/decompui/hd_import.inc').read_text(encoding='utf-8')
+  bases=cpp.split('kBaseMovies[] = {',1)[1].split('};',1)[0]
+  self.assertIn('"zz_event_062"',bases)
+
  def test_game_movie3_in_both_basic_catalogs(self):
   game=(ROOT/'port/src/port_hdmovie.c').read_text(encoding='utf-8')
   self.assertRegex(game,r'case 3: \*startAt = 170; name = "zz_event_123"')
@@ -70,7 +78,7 @@ int main(int argc,char**argv){
 
  def test_cli_basic_and_full_keep_scene_bytes_and_deduplicate(self):
   # Independent expected set: deriving this from BASE_MOVIES would hide omissions.
-  names=('ROP','RSE','RRE','zz_event_123','zz_event_151','zz_event_621','zz_event_631')
+  names=('ROP','RSE','RRE','zz_event_062','zz_event_123','zz_event_151','zz_event_621','zz_event_631')
   box=lambda tag,payload=b'':struct.pack('>I4s',len(payload)+8,tag)+payload
   plain=box(b'ftyp',b'isom'+bytes(4)+b'isom')+box(b'moov')+box(b'mdat',bytes(range(256))*2)
   with tempfile.TemporaryDirectory(prefix='base movie coverage ') as td:
@@ -83,10 +91,11 @@ int main(int argc,char**argv){
    for label,extra in [('basic',[]),('full',['--scenes'])]:
     data=root/label
     p=subprocess.run([sys.executable,str(ROOT/'port/tools/khhd_import.py'),str(source),str(data),'--no-music',*extra],env=dict(os.environ,PATH=''),capture_output=True,text=True,check=True,timeout=10)
-    self.assertEqual(p.stdout.splitlines().count('movie zz_event_123'),1)
-    self.assertEqual((data/'hd/scenes/zz_event_123.mp4').read_bytes(),plain)
-    self.assertFalse((data/'hd/movies/zz_event_123.mp4').exists())
-    self.assertEqual(len(list((data/'hd').rglob('*.mp4'))),7)
+    for scene in ('zz_event_062','zz_event_123'):
+     self.assertEqual(p.stdout.splitlines().count('movie '+scene),1)
+     self.assertEqual((data/('hd/scenes/'+scene+'.mp4')).read_bytes(),plain)
+     self.assertFalse((data/('hd/movies/'+scene+'.mp4')).exists())
+    self.assertEqual(len(list((data/'hd').rglob('*.mp4'))),8)
    self.assertEqual(original,{p.name:p.read_bytes() for p in movies.iterdir()})
 
 if __name__=='__main__':unittest.main()

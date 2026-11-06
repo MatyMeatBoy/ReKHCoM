@@ -31,8 +31,8 @@ namespace hd {
 
 static const unsigned char kMovieKey[16] = { 0x3f, 0x1e, 0xc1, 0x93, 0x26, 0x42, 0x58, 0xb8,
                                              0xaa, 0x9d, 0x53, 0x75, 0xbf, 0x62, 0x9a, 0x97 };
-/* Basic movie coverage includes movie3's floor12 scene and the ending scenes. */
-static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_123", "zz_event_151", "zz_event_621", "zz_event_631" };
+/* Basic movies include movie2's floor6 scene, movie3's floor12 scene and the endings. */
+static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_062", "zz_event_123", "zz_event_151", "zz_event_621", "zz_event_631" };
 static const char* const kTracks[] = {
     "01F_Town_B", "01F_Town_F", "03F_Hercul", "03F_Hercules_B", "12_Event_Yuttari", "13_Event_Namine",
     "14_Event_Odayaka", "15_Event_XIII", "16_XIIIBoss1", "17_Halloween_F", "18_Helloween_B", "19_Alice_Field",
