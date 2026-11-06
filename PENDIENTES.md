@@ -479,4 +479,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue596-title-hint-toggle-v29 | Issue596: opcionpersistente para ocultar SELECT OPTIONS en titulo conservando accesoSELECT ydefaultvisible | integrado | codex-v29-titlehint | https://github.com/MatyMeatBoy/ReKHCoM/pull/632 | Usuario autoriza resolverissuescon2.9; root asigna596 tras entrega573 | 2026-11-06T21:27:43.489395+00:00 |
 | issue598-lcd-grid-v29 | Issue598: optional source-pixel aligned LCD grid following zoom/aspect, GPU-rendered cached axes with no per-frame regeneration | en_curso | codex-v29-lcd | — | Usuario06/11 pide revisar/cerrar todosissues con2.9; prioridadmaximosmsbajos todasversiones,defaultsinmodificar, unworkerextra/jobs1BelowNormal | 2026-11-06T21:21:02.190476+00:00 |
 
-Integrador: codex-v29-integrator (ocupado; 2026-11-06T21:26:49.738038+00:00)
+Integrador: libre
