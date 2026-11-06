@@ -804,3 +804,12 @@ Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
 sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
 a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
 AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+### Escena081: patrones de los dos bordes, revisión3, 06/11
+
+El módulo de máscara64px no cierra consigo mismo. Conservar el remate y el
+primer módulo; desde192 repetir sólo160..191, el ciclo diagonal32px completo.
+Las celdas vacías superiores BG3 que ahora quedan expuestas usan el tile opaco
+original16filas debajo; no se modifica ninguna muestra del piso ya opaco.
+Conservar props, actores y omisión decorativa. ANTES/PROPUESTA es un modelo
+de receta sin build al mismo encuadre; hija pendiente, sin aprobación heredada.

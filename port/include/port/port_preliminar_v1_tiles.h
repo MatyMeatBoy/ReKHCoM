@@ -32,7 +32,13 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         /* Keep the smooth corridor mask and floor on one diagonal module;
          * the decorative props are unique, not cut donor-strip repeats. */
         if (v[1]==2) return 0;
-        sx=16+PortSceneTileMod(ox-16,8);sy=oy+(ox-sx)/2;
+        if (v[1]==1 && ox>=24) sx=20+PortSceneTileMod(ox-20,4);
+        else sx=16+PortSceneTileMod(ox-16,8);
+        sy=oy+(ox-sx)/2;
+        if (v[1]==3 && ox>=24 &&
+            ((sx<18 && sy>=4 && sy<6) ||
+             (sx>=18 && sx<22 && sy>=2 && sy<4) ||
+             (sx>=22 && sy>=0 && sy<2))) sy+=2;
         if (sy<0 || sy>=32) return 0;
         *x=sx;*y=sy;return 1;
     }
@@ -615,8 +621,20 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             return 1;
         }
         if (p->v[1]==1 || p->v[1]==3) {
-            /* Preserve the approved right-hand corridor module. */
-            *sx=128+PortSceneTileMod(wx-128,64);*sy=wy+(wx-*sx)/2;
+            /* The full mask's first half does not meet its far end: a64px
+             * repeat jumps both contours by14rows. Its second32px half is
+             * a complete diagonal wave. Keep the finite cap/first module
+             * and repeat only that wave for BG1; BG3 retains its floor. */
+            int width=p->v[1]==1 && wx>=192 ? 32 : 64;
+            int start=width==32 ? 160 : 128;
+            *sx=start+PortSceneTileMod(wx-start,width);*sy=wy+(wx-*sx)/2;
+            /* Those upper BG3 cells are empty in the ROM because the old
+             * finite mask hid them. Continue the adjacent native wall tile
+             * underneath the now-complete contour, never over opaque floor. */
+            if (p->v[1]==3 && wx>=192 &&
+                ((*sx<144 && *sy>=32 && *sy<48) ||
+                 (*sx>=144 && *sx<176 && *sy>=16 && *sy<32) ||
+                 (*sx>=176 && *sy>=0 && *sy<16))) *sy+=16;
             if (*sy<0 || *sy>=256) {*sx=0;*sy=0;}
             return 1;
         }
