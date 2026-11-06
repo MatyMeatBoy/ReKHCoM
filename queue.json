@@ -16385,23 +16385,29 @@
     "atlas-journal-left-0f89-r2-20261106": {
       "id": "atlas-journal-left-0f89-r2-20261106",
       "piece": "Diario: extender verde hasta borde izquierdo del viewport, nube16d72bc8 sobre estudio0f89rev2",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas-journal-left",
       "created_at": "2026-11-06T12:52:32.383323+00:00",
-      "updated_at": "2026-11-06T13:00:43.545582+00:00",
+      "updated_at": "2026-11-06T13:52:47.990765+00:00",
       "branch": "art/journal-left-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/612",
-      "approval": "Usuario06/11 continuarcola con un worker y mostrar Pepito nuevo; base aprobada no aprueba hija",
+      "approval": "approved e3edc03e9794474391052414c977aedc rev7 SHA256404586f175ad2155a52708c49215508863ac609bef8dc59101a1b8e2b9119831; usuariochat06/11 ratifica",
       "reference": "Atlas0f89b2fa9a1443df99343bf8047f9a1a revision2 SHA8a65d8f7191f7e83a1211048d8532b44729a2908c66f3930e674fe6ee7b92d9a cloud16d72bc8-6fb9-4c9d-9a9f-5dcddd50ce47 envio20261105-203916-ac796c",
       "evidence": [
         {
           "at": "2026-11-06T13:00:43.545582+00:00",
           "owner": "codex-atlas-journal-left",
           "detail": "Fuente881d50d7b93308c2f872d3d22de53ec0cfce997d rebase mainc4bc3298 contiene609, sinconflictocodigo. Atlas e3edc03e9794474391052414c977aedc pending respondecloud16d72bc8 de0f89rev2/SHA8a65d8f7/envio20261105-203916-ac796c. EstudioNUEVO SINBUILD, verde vivo hasta x0 exterior sinampliarpapel ni3columnasmask. AST6fixtures RED609/GREENactual: secuencianativa/derechaexacta,40..75cmd<100,coloresporfila,rollback11 limpiaizq,headerABIigual/rótulosdespués. Barrainicial esfixturecontrolado NOdump framehumano ni screenshotnuevo. FaltaSDLfloat32 ownershipreal navegacionOriginalplataformas yvaloracionhija. NO compiler/DLL/game/importregen/paquetes. Imageninline pruebas/atlas-20261106/journal-left/pepito-left-new-inline.png. No merge/nueva tarea."
+        },
+        {
+          "at": "2026-11-06T13:52:47.990765+00:00",
+          "owner": "codex-atlas-journal-left",
+          "detail": "PR612 MERGED c1b37fe162135f5eeaa4652bb389ccd8ba11d996 source881d50d7b93308c2f872d3d22de53ec0cfce997d.6fixturesPythonCAST reejecutadasPASS yreviewindependiente sinbloqueos, guardnative/right/rollback11/ABIintacto. Sincompiler/game/imports/build/paquetes. VistaCOMPLETAPRIVADA pepito-complete-new.png esSIMULACIONsobre capturaanterior/coloresyownershipinferidos, NO nueva captura runtime, no certificaSDLfloat32. Fuenteaprobadaexacta; pruebas/atlas-20261106/journal-left/COMPLETE-PREVIEW.json"
         }
       ],
       "claimed_at": "2026-11-06T12:52:49.909704+00:00",
-      "sent": "e3edc03e9794474391052414c977aedc"
+      "sent": "e3edc03e9794474391052414c977aedc",
+      "completed_at": "2026-11-06T13:52:47.990765+00:00"
     },
     "atlas-followup-e78f689c-r2": {
       "id": "atlas-followup-e78f689c-r2",
@@ -16478,7 +16484,7 @@
     "created_at": "2026-11-06T13:49:14.211109+00:00",
     "updated_at": "2026-11-06T13:49:14.211109+00:00"
   },
-  "updated_at": "2026-11-06T13:49:14.211109+00:00",
+  "updated_at": "2026-11-06T13:52:47.991767+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
