@@ -16702,12 +16702,12 @@
     "issue610-pooh-tree-crash-v29": {
       "id": "issue610-pooh-tree-crash-v29",
       "piece": "Issue610: crash Pooh al chocar arboles antes de caer cola de Eeyore",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v29-pooh",
       "created_at": "2026-11-06T17:20:37.075153+00:00",
-      "updated_at": "2026-11-06T17:39:26.761225+00:00",
+      "updated_at": "2026-11-06T17:45:57.841892+00:00",
       "branch": "fix/v29-pooh-tree-crash",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/626",
       "approval": "Usuario prioriza cuelgues antes2.9; source primero, runtime positivo requerido; ventana compilacion coordinada root",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/610",
       "evidence": [
@@ -16715,6 +16715,11 @@
           "at": "2026-11-06T17:39:26.761225+00:00",
           "owner": "codex-v29-pooh",
           "detail": "Shared BtlMapUpdateShake NULL battle camera reproduced C32/C64: RED C0000005 tick32, GREEN four cases each. Real EU64 collision/tail/shake before+after exit0 because host BIOS write compatibility masks NULL. Native32 EU deterministic checkpoint build/QA in progress, private logs pruebas/issue610-pooh-tree-crash-v29; not reporter confirmed."
+        },
+        {
+          "at": "2026-11-06T17:45:57.841892+00:00",
+          "owner": "codex-v29-pooh",
+          "detail": "PR626 draft source3324bbe76e1cae45e7c5f8e49712d2a346a05c8b. C32/C64 RED C0000005 tick32 -> GREEN all4, controls byte-identical. Real EU before+after32/64 collision/tail30..0/shakeNULL exit0 under existing BIOS masking; native32 bios write0x18 removed. NOT reporter crash reproduction; issue610 stays open for platform/version/log. Android32/64 LinuxARM no recovery by source, physicalQA unverified. pruebas/issue610-pooh-tree-crash-v29/VERIFICATION.json. No C/game load active."
         }
       ],
       "claimed_at": "2026-11-06T17:21:05.289913+00:00"
@@ -16734,7 +16739,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T17:43:39.391915+00:00",
+  "updated_at": "2026-11-06T17:45:57.841892+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
