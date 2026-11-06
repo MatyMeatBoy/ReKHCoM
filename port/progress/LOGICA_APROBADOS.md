@@ -764,3 +764,20 @@ de la imagen y dibujar encabezado/rótulos después. La recuperación de un dibu
 rechazado debe limpiar ambos márgenes para no dejar una reparación parcial.
 La nube se interpreta como extender el verde, sin ensanchar el papel blanco.
 Estudio nuevo del renderer, no captura o máscara real; valoración y QA pendientes.
+
+### Biblioteca130, seguimiento del06/11: friso derecho
+
+La aceptación con honores del friso izquierdo no termina el lado derecho:
+nube13f12aa1 pide prolongarlo también allí. Conservar su diagonal propia
+2y-x en112..143 y resolver antes de la alfombra, con módulo completo de64px
+del mismo plano. Retener toda tinta autorada y el remate476. Propuesta nueva
+sin build, pendiente de valoración y de comprobar en el juego.
+
+### Escena115: diagonales derecha e izquierda, revisión3 del estudio aceptado
+
+La banda inferior del zócalo BG2 no pertenece al patrón de escotillas: debe
+continuar en32<=2ty+tx<36 antes de seleccionar esos sellos. Repetir sólo las
+columnas0..7 con sy=ty+(tx-sx)/2 conserva fase, altura y color del remate en
+ambos extremos. Conservar todas las selecciones nativas y las correcciones
+anteriores aceptadas de punta, módulo huérfano y piso. Estudio nuevo del código,
+no captura de juego; no hereda aprobación y queda pendiente de QA real.

@@ -25,6 +25,14 @@ static inline int PortScene130LibrarySource(int x, int y, int* sx, int* sy) {
         *sy=y+(x-*sx)/2;
         return 0;
     }
+    /* The matching right wall has its own diagonal,112..143. Keep its
+     * complete native ornament ahead of the carpet here too. The caller
+     * retains authored pixels, so original shelves and furniture stay put. */
+    if (x>456 && 2*y-x>=112 && 2*y-x<144) {
+        *sx=400+PortSceneTileMod(x-400,64);
+        *sy=y-(x-*sx)/2;
+        return 0;
+    }
     if (y >= 176 + distance/2) {
         int u=PortSceneTileMod(x+2*y-832,192);
         int v=PortSceneTileMod(x-2*y+448,192);
