@@ -743,3 +743,15 @@ regla de medio píxel de `PixelEdge`; el centro geométrico sigue siendo continu
 La propuesta conserva ABI20 y agrupa áreas planas. El estudio controlado
 explica las cuatro nubes, pero no prueba las máscaras del frame humano ni
 autoriza afirmar que el footer del juego ya pasó QA. Sin build; pendiente.
+
+
+## Valoraciones06/11: siete versiones aceptadas, sin build
+
+Ver ATLAS_ACCEPTED_20261106.md para IDs/revisiones exactas. 057 y107/108 no
+tienen nuevas notas; conservar sus recetas. 095 aún pide verificar el árbol
+al inicio;115 pide prolongar las diagonales a ambos lados;081 pide mejorar
+dos patrones;130 pide ahora continuación hacia la derecha. Pepito acepta el
+estudio anterior pero pide llenar hasta la izquierda. Estas notas corrigen
+el alcance de lo que puede tomarse como modelo: no darlas por resueltas al
+integrar la versión aceptada ni heredar su grado a una nueva hija. Sin nueva
+compilación o captura, la verificación real del compositor sigue pendiente.
