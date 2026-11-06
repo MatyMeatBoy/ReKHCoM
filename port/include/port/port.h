@@ -420,8 +420,10 @@ typedef struct PortTextGlyph {
     uint32_t face, shadow;
 } PortTextGlyph;
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud);
-/* Frames presented since start (port_main.c). */
+/* VBlank cycles since start, including skipped drawing (port_main.c). */
 uint32_t PortFrameCount(void);
+/* A committed state load restores game time; begin a fresh FPS/Hz window. */
+void PortFpsResetAfterStateLoad(void);
 /* OptiPort's deep view of a slow frame: the one-off costs each frame paid besides its usual work, reset by the
    frame log every frame. HD sprite decodes/uploads (port_hdsprites.c) and HD glyph renders. Only counted while
    KHCOM_FRAMELOG is on (on); otherwise no clock is read. */
