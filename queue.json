@@ -16594,16 +16594,23 @@
     "atlas097-tree-actor-followup-20261106": {
       "id": "atlas097-tree-actor-followup-20261106",
       "piece": "Escena097: completar arbol y conservar arboles sin adelantar aparicion del gato respecto GBA",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas097-tree",
       "created_at": "2026-11-06T16:18:18.927602+00:00",
-      "updated_at": "2026-11-06T16:18:26.991633+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T16:29:59.857836+00:00",
+      "branch": "art/atlas097-tree-20261106",
+      "pr": "623",
       "approval": "Seguimiento de3nubes sin respuesta del envio20261025-053422-73235d; baseactualaprobada b8283. Usuario06/11continua cola, sin builds",
       "reference": "ec8c60b820a847aeabe9778e8dce033d",
-      "evidence": [],
-      "claimed_at": "2026-11-06T16:18:26.991633+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-06T16:29:59.857836+00:00",
+          "owner": "codex-atlas097-tree",
+          "detail": "Source89e129bd7c3f1d4e54dbf5abdee6814df12e17a9; pendingAtlas7892636812af4dc99606e95397f547a4 responds ONLYtreecloud7f9b6ee0 ec8rev3 envio20261025-053422-73235d. 391ROMpixels leaves/trunk,18818ASTPASS/ROMindependentreview, alltilesloaded; BG3/PPU/actorpolicy unchanged. MODEL BEFORE/PROPOSAL noactors/capture/build. Remaining2actorclouds split to pendingatlas097-cheshire-timing-qa-20261106, notansweredbyinference. No compiler/game/imports/pack; realQA/camera/Original pending. pruebas/atlas-20261106/scene097-tree/"
+        }
+      ],
+      "claimed_at": "2026-11-06T16:18:26.991633+00:00",
+      "sent": "7892636812af4dc99606e95397f547a4"
     },
     "atlas097-cheshire-timing-qa-20261106": {
       "id": "atlas097-cheshire-timing-qa-20261106",
@@ -16620,7 +16627,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T16:26:46.867274+00:00",
+  "updated_at": "2026-11-06T16:29:59.857836+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
