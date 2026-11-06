@@ -360,7 +360,9 @@ void BtlMapUpdateShake() {
         if (sBtlMapShakeStep > 0x1F) {
             sBtlMapShakeActive = FALSE;
             sBtlMapShakeOffset = 0;
-            gBtlWork->rotation = 0;
+            /* Pooh also uses this shake without an allocated battle camera. */
+            if (gBtlWork != NULL)
+                gBtlWork->rotation = 0;
         }
     }
 }
