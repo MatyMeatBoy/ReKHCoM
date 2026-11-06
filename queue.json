@@ -16705,17 +16705,23 @@
       "status": "en_curso",
       "owner": "codex-v29-pooh",
       "created_at": "2026-11-06T17:20:37.075153+00:00",
-      "updated_at": "2026-11-06T17:21:05.289913+00:00",
-      "branch": null,
+      "updated_at": "2026-11-06T17:39:26.761225+00:00",
+      "branch": "fix/v29-pooh-tree-crash",
       "pr": null,
       "approval": "Usuario prioriza cuelgues antes2.9; source primero, runtime positivo requerido; ventana compilacion coordinada root",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/610",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T17:39:26.761225+00:00",
+          "owner": "codex-v29-pooh",
+          "detail": "Shared BtlMapUpdateShake NULL battle camera reproduced C32/C64: RED C0000005 tick32, GREEN four cases each. Real EU64 collision/tail/shake before+after exit0 because host BIOS write compatibility masks NULL. Native32 EU deterministic checkpoint build/QA in progress, private logs pruebas/issue610-pooh-tree-crash-v29; not reporter confirmed."
+        }
+      ],
       "claimed_at": "2026-11-06T17:21:05.289913+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T17:36:08.947221+00:00",
+  "updated_at": "2026-11-06T17:39:26.761225+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
