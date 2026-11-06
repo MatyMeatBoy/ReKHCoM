@@ -5,6 +5,8 @@
 - Windows64/Linux64: render eligible picture and margin rows on several CPU cores with isolated worker stacks and thread-local buffers. Native Windows32 also uses its existing picture-row pool by default. Scanline-dependent effects retain their serial path; game speed, zoom and picture quality are preserved.
 - Pace images immediately before submission at the original GBA rate (approximately59.7275Hz). The FPS counter counts successful submissions instead of counting skipped drawing as a rendered frame. Menu exit, late wakeups and link waiting preserve their timing contracts.
 - Windows64: expose the VRR option through the host's video capabilities. Unsupported paths retain VSync fallback; monitor VRR activation still depends on the display and driver.
+- Loading a quickstate begins a fresh FPS/Hz measurement window after commit, avoiding a false logical-rate spike when the saved game counter is restored. Rejected states leave the previous measurement intact.
+- Allow the existing three optional GBA borders in every view/zoom and selected aspect. Keep map cards and decorations proportional, fit the picture and its UI together, and preserve the original legacy frame exactly. Borders remain optional and their default is unchanged.
 - Guard the battle-only camera state when Pooh's tree-collision screen shake ends. This removes an invalid access; matching reporter-device confirmation for issue610 remains separate.
 - Jiminy: carry the extended page edges, rounded corners and footer layout across cover, list and detail pages, with HD cards on or off. Original GBA rendering retains its original layout.
 
