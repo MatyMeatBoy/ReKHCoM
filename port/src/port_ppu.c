@@ -2053,6 +2053,12 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                 sInWorld[x] = 1;
                 continue;
             }
+            if (sDarksideLayer[bg]==2 && (outside || gx<0 || gx>=GBA_SCREEN_W) &&
+                PortDarksidePunchFlankPixel((const void* const*)l->map,wx,wy,
+                    l->x+GBA_SCREEN_W/2,l->y+GBA_SCREEN_H/2,&out[x])) {
+                sInWorld[x]=1;
+                continue;
+            }
         }
         if (bg == sSinglePanelBg && sBgLatch[bg].valid &&
             (outside || gx < 0 || gx >= GBA_SCREEN_W)) {

@@ -565,6 +565,18 @@ píxeles ROM alterados. Captura runtime pendiente del turno de RAM del usuario;
 cuando se autorice: SDL controller `0xffff/0xffff`, vídeo/audio dummy, PPU=1,
 BACKGROUND_TEST=1 y Ninja `-j1` en serie.
 
+### Darkside06 — flanco y difuminado local, seguimiento06/11
+
+La versión r8 `60f90456598249ecb1e691c51dd2434e` está aceptada en Atlas,
+revisión2, y su nube `72f6d65b-36e4-47b2-8f2c-d94a9f2ec26d` aún pide dibujo
+y difuminado lateral. El intento posterior en peine no es un modelo válido.
+Proponer una sombra curva estrecha, adherida al torso, sin otro lóbulo/pie
+iluminado:211píxeles, ancho máximo8, índices vivos1..4. No alterar el taper
+nativo desde y180 ni los1842píxeles del brazo aprobado. La difusión sólo
+afecta al píxel fraccional del contorno; ninguna fila añadida deja islotes.
+Propuesta independiente opt-in y pending, sin aprobación heredada; no implica
+cuerpo terminado ni animación/QA real. Ver `DARKSIDE06_FLANK_NOBUILD.md`.
+
 ### Escena099: módulo lateral de la arena (25/10)
 
 Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.
