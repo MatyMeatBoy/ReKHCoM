@@ -16900,8 +16900,13 @@
       "claimed_at": "2026-11-06T21:21:02.190476+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-06T21:21:02.190476+00:00",
+  "integrator": {
+    "owner": "codex-v29-integrator",
+    "token": "d29723f3b0f6ae47c7e9debc2dabba9adad89b2d58f871eb",
+    "created_at": "2026-11-06T21:26:49.738038+00:00",
+    "updated_at": "2026-11-06T21:26:49.738038+00:00"
+  },
+  "updated_at": "2026-11-06T21:26:49.738038+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
