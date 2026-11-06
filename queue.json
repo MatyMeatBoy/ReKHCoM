@@ -16320,15 +16320,16 @@
     "atlas120-figure-engraving-r5": {
       "id": "atlas120-figure-engraving-r5",
       "piece": "Escena120: completar grabado figurativo de nube65a0a5d0; diagonal aceptada y mamposteriaA tratada aparte",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas120-figure",
       "created_at": "2026-11-05T20:16:00.640798+00:00",
-      "updated_at": "2026-11-05T20:16:00.640798+00:00",
+      "updated_at": "2026-11-06T15:56:36.714733+00:00",
       "branch": null,
       "pr": null,
       "approval": "Padre aprobado; grabado figura sigue pendiente, no respondido por propuesta parcial del moduloA. Sin build autorizado.",
       "reference": "Atlas9f28568fabd94b7c8526615a7b2b6abf revision5 SHA206dfb152f5ee54ba94e1e6c9796b228755fc2aeb465df112a99ab1efc37e050 envio20261105-160839-40fd46 cloud65a0a5d0-2f82-4195-bcd2-8d52fbd5a59e",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-06T15:56:36.714733+00:00"
     },
     "atlas-queue-partial-response-20261105": {
       "id": "atlas-queue-partial-response-20261105",
@@ -16553,7 +16554,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T15:55:27.781110+00:00",
+  "updated_at": "2026-11-06T15:56:36.715732+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
