@@ -473,5 +473,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | win28-field-row-fastpath-20261106 | Windows2.8: fastpath exacto para filas4bpp vacias de extensiones mundo | pendiente | — | perf/win28-field-row-fastpath-20261106 | Subtask root source/tests only, no compiler/build/game/imports; no FPS gains claim | 2026-11-06T17:33:28.974043+00:00 |
 | issue610-pooh-tree-crash-v29 | Issue610: crash Pooh al chocar arboles antes de caer cola de Eeyore | integrado | codex-v29-pooh | https://github.com/MatyMeatBoy/ReKHCoM/pull/626 | Usuario06/11 autoriza solucionar cuelgues antes2.9; reviewrootguardNULLsinbloqueos | 2026-11-06T17:59:09.595575+00:00 |
 | v29-adaptive-gba-border-all-modes | 2.9: borde GBA adaptable a ratios y seleccionable en cualquier modo/zoom, preservando proporcion GBA sin estirar | pendiente | — | — | Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde | 2026-11-06T17:43:39.391915+00:00 |
+| issue610-platform-confirmation-v29 | 2.9 QA issue610: confirmar plataforma/version reportero y validar cierre real tras guard shake NULL integrado626 | pendiente | — | — | Usuario exige pendientescuelgues antes2.9; no confundirfixdefecto demostrado con confirmacionreporte | 2026-11-06T18:04:05.651797+00:00 |
 
 Integrador: libre
