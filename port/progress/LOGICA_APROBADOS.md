@@ -764,3 +764,11 @@ de la imagen y dibujar encabezado/rótulos después. La recuperación de un dibu
 rechazado debe limpiar ambos márgenes para no dejar una reparación parcial.
 La nube se interpreta como extender el verde, sin ensanchar el papel blanco.
 Estudio nuevo del renderer, no captura o máscara real; valoración y QA pendientes.
+
+### Biblioteca130, seguimiento del06/11: friso derecho
+
+La aceptación con honores del friso izquierdo no termina el lado derecho:
+nube13f12aa1 pide prolongarlo también allí. Conservar su diagonal propia
+2y-x en112..143 y resolver antes de la alfombra, con módulo completo de64px
+del mismo plano. Retener toda tinta autorada y el remate476. Propuesta nueva
+sin build, pendiente de valoración y de comprobar en el juego.
