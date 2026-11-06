@@ -16660,10 +16660,10 @@
       "status": "en_curso",
       "owner": "codex-win28-pacing",
       "created_at": "2026-11-06T16:53:19.316146+00:00",
-      "updated_at": "2026-11-06T17:59:17.658750+00:00",
+      "updated_at": "2026-11-06T18:03:57.290131+00:00",
       "branch": "perf/x32-ppu-threads-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/625",
-      "approval": "Usuario06/11 detuvoAtlas y solicita corregirfluidezgameplay. ConservarvelocidadGBA59.7275, imagen/calidad/vistaampliada; restriccionesprevias sinbuild/juego/imports no revocadas explicitamente. Investigar/implementarfuentes yverificacioncompatible antesQA física.",
+      "approval": "Usuario06/11 revoca expresamente sinbuild: hacer todo lo necesario para fluidez todosmodosHD/noHD/todasplataformas y salir2.9 traspendientesrendimiento/cuelgues; borde adaptable después deperf; MAX1workerextra,una carga/jobs1/BELOW_NORMAL",
       "reference": "v2.8 commit315db1e45cbfacb54c1786786917045c0100b2eb",
       "evidence": [
         {
@@ -16675,6 +16675,11 @@
           "at": "2026-11-06T17:59:17.658750+00:00",
           "owner": "codex-win28-pacing",
           "detail": "PR625MERGED74c4237a569bd5df1b523f67910a7b6f479fc18c, VRR/FPSfixintegrado; perfpadresigueabierto. Prototipox32pool+TLSalias+INNER8 medidoD3D11campo1440p/x2PPU7.7msvs18.6, 59.74present/logic, QAexactpixels/modos/plataformasencurso, nofluidezglobaldeclarada."
+        },
+        {
+          "at": "2026-11-06T18:03:57.290131+00:00",
+          "owner": "codex-win28-pacing",
+          "detail": "RefreshAtlasLATESTsin nuevosbuild_versionaceptados;4nuevosya624/d9f5930f.625VRR/FPSmain74c4237a y626guardPoohmain8f04d2b9. Locklibre6882024. Pruebas prototipoPPU17casosVERIFYpassing, pacing todavíaoutliersenestudio, no2.9publicada."
         }
       ],
       "claimed_at": "2026-11-06T16:53:27.417846+00:00"
@@ -16750,7 +16755,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T17:59:24.709429+00:00",
+  "updated_at": "2026-11-06T18:03:57.291126+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
