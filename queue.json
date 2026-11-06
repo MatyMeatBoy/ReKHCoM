@@ -16478,13 +16478,8 @@
       "sent": "feaa377c92a54fc3a6341c9c5ab2dae5"
     }
   },
-  "integrator": {
-    "owner": "codex-pepito-approved",
-    "token": "601121428cd994a3aaf7e86cbca8725b40be62580475bf6a",
-    "created_at": "2026-11-06T13:49:14.211109+00:00",
-    "updated_at": "2026-11-06T13:49:14.211109+00:00"
-  },
-  "updated_at": "2026-11-06T13:52:47.991767+00:00",
+  "integrator": null,
+  "updated_at": "2026-11-06T13:52:54.391750+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

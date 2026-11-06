@@ -465,4 +465,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-followup-9224a996-r3 | Escena 081: mejorar patron; mejorar patron | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:59:03.366288+00:00 |
 | atlas-followup-e94de270-r2 | Escena 130 · Bastión Hueco · Biblioteca de Bella: ahora falta extender este a la derecha si | pr_abierto | codex-atlas130-right | https://github.com/MatyMeatBoy/ReKHCoM/pull/613 | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T13:06:17.616440+00:00 |
 
-Integrador: codex-pepito-approved (ocupado; 2026-11-06T13:49:14.211109+00:00)
+Integrador: libre
