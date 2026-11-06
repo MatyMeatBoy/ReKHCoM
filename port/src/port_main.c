@@ -431,7 +431,21 @@ static int GbaBorderReady(void);
  * share this useful viewport, so the frame cannot cover their text. */
 static SDL_Rect ContentArea(int outW, int outH) {
     SDL_Rect area = AspectRect(outW, outH);
-    PortGbaBorderArea inside = PortGbaBorderViewport(area.w, area.h, GbaBorderReady());
+    int framed = GbaBorderReady();
+    PortGbaBorderArea inside = PortGbaBorderViewport(area.w, area.h, framed);
+    if (framed && gPortConfig.viewMode != PORT_VIEW_AUTO) {
+        int canvasW, canvasH;
+        PortGbaBorderArea picture;
+        /* Config only: UpdateResolution may call this before the previous
+         * frame's gPortScreen/fit/auto state has been replaced. */
+        PortConfigView(gPortConfig.viewMode, &canvasW, &canvasH);
+        picture = PortGbaBorderPictureArea(inside.w, inside.h, canvasW, canvasH,
+                                          gPortConfig.scaleMode == PORT_SCALE_INTEGER);
+        inside.x += picture.x;
+        inside.y += picture.y;
+        inside.w = picture.w;
+        inside.h = picture.h;
+    }
     area.x += inside.x;
     area.y += inside.y;
     area.w = inside.w;
@@ -550,6 +564,7 @@ static void UpdateResolution(void) {
 #define BORDER_H 216
 static SDL_Texture* sBorderTex;
 static SDL_Texture* sBorderMaterialTex;
+static SDL_Texture* sBorderAdaptiveTex;
 static int sBorderShown; /* which border sBorderTex holds */
 static int sBorderAttempted; /* Do not retry a failed selection every frame. */
 
@@ -1688,7 +1703,7 @@ static int RendererResetService(void) {
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
     if (!sRendererResetPending) return 1;
     SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex, &sWorldLight.texture,
-        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBlurTex, &sSkipTexture,
+        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBorderAdaptiveTex, &sBlurTex, &sSkipTexture,
         &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
         &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
     unsigned i;
@@ -2425,8 +2440,9 @@ static void Present(int paced) {
     if (borderOn) {
         PortGbaBorderRect aperture = { (float)(contentArea.x - borderOuter.x),
             (float)(contentArea.y - borderOuter.y), (float)contentArea.w, (float)contentArea.h };
-        if (gPortConfig.viewMode == PORT_VIEW_ORIGINAL &&
-            gPortScreen.width == GBA_SCREEN_W && gPortScreen.height == GBA_SCREEN_H) {
+        /* Fixed views share the picture-sized viewport above. Auto's
+         * extended UI/paper/footer layers may genuinely fill its canvas. */
+        if (!menuCanvas && !journalShown && !PortPpuHudActive() && !PortPpuOverlayActive()) {
             aperture.x += dst.x;
             aperture.y += dst.y;
             aperture.w = dst.w;

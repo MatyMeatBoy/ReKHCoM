@@ -5,7 +5,7 @@ from pathlib import Path
 import argparse,ctypes,hashlib,json,os,re,subprocess
 ROOT=Path(__file__).resolve().parents[2]
 def function(s,name):
-    m=re.search(r'(?:static )?(?:void|int) '+name+r'\([^;{}]*\)\s*\{',s);assert m,name
+    m=re.search(r'(?:static )?(?:void|int|SDL_Rect) '+name+r'\([^;{}]*\)\s*\{',s);assert m,name
     a=m.start();b=m.end();depth=1
     while depth:depth+=(s[b]=='{')-(s[b]=='}');b+=1
     return s[a:b]
@@ -14,7 +14,7 @@ def main():
     s=(ROOT/'port/src/port_main.c').read_text(encoding='utf8')
     baseline=subprocess.check_output(['git','show','8f04d2b9:port/src/port_main.c'],cwd=ROOT).decode('utf8')
     config=(ROOT/'port/src/port_config.c').read_text(encoding='utf8')
-    code=function(s,'CrtScale')+'\n'+function(s,'OutputRect')+'\n'+function(config,'PortConfigView')+'\n'
+    code=function(config,'PortConfigView')+'\n'+function(s,'AspectRect')+'\n'+function(s,'ContentArea')+'\n'+function(s,'CrtScale')+'\n'+function(s,'OutputRect')+'\n'
     code+=function(baseline,'ClassicBorder').replace('ClassicBorder','OldClassicBorder')+'\n'
     code+=function(baseline,'OutputRect').replace('OutputRect','OldOutputRect').replace('ClassicBorder','OldClassicBorder')+'\n'
     args.output.mkdir(parents=True,exist_ok=True)

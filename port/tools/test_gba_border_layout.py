@@ -82,6 +82,15 @@ class BorderGeometry(unittest.TestCase):
             ap=dict(x=72.*scale,y=28.*scale,w=240.*scale,h=160.*scale)
             self.assertTrue(self.c.call('PortGbaBorderLegacy',384*scale,216*scale,ap))
             self.assertFalse(self.c.call('PortGbaBorderLegacy',385*scale,216*scale,ap))
+    def test_fixed_viewport_matches_real_picture(self):
+        for w,h,cw,ch,integer in ((948,711,320,180,1),(1422,800,240,160,1),(1422,800,284,160,1),(237,177,320,240,1),(948,711,320,180,0)):
+            r=self.c.call('PortGbaBorderPictureArea',w,h,cw,ch,integer)
+            fit=min(w/cw,h/ch)
+            if integer and fit>=1:fit=int(fit)
+            self.assertLessEqual(cw*fit,r['w']+.0001)
+            self.assertLessEqual(ch*fit,r['h']+.0001)
+            self.assertLess(r['w']-cw*fit,1.001)
+            self.assertLess(r['h']-ch*fit,1.001)
     def test_uniform_native_decoration_fits_available_bands(self):
         for w,h in ((1920,1080),(640,480),(3440,1440),(5120,1440),(1080,1920),(1620,1080),(240,160),(17,31)):
             ap={k:float(v) for k,v in self.c.call('PortGbaBorderViewport',w,h,1).items()}
@@ -106,7 +115,7 @@ class BorderGeometry(unittest.TestCase):
         prefix=re.sub(r'/\*.*?\*/','',source[a:b],flags=re.S).replace('BORDER_H','216')
         tree=c_parser.CParser().parse('typedef int SDL_Texture;\n'+prefix+'return 2; }')
         body=tree.ext[-1].body
-        state=dict(gPortConfig=dict(gbaBorder=1),sRenderer=1,sBorderShown=1,sBorderTex=1,sBorderMaterialTex=1,sBorderAttempted=2)
+        state=dict(gPortConfig=dict(gbaBorder=1),sRenderer=1,sBorderShown=1,sBorderTex=1,sBorderMaterialTex=1,sBorderAdaptiveTex=1,sBorderAttempted=2)
         def cache_prefix():
             try:self.c.run(body,state)
             except Returned as r:return r.value

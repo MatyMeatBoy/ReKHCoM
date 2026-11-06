@@ -24,14 +24,15 @@ typedef struct { float x,y; } SDL_FPoint;
 typedef struct { float r,g,b,a; } SDL_FColor;
 typedef struct { SDL_FPoint position; SDL_FColor color; SDL_FPoint tex_coord; } SDL_Vertex;
 typedef struct { float x,y,w,h; } SDL_FRect;
+typedef struct { int x,y,w,h; } SDL_Rect;
 typedef struct { int w,h; const unsigned char* pixels; } SDL_Surface;
 typedef struct { int w,h; } SDL_Texture;
 static int renderer;
 static int rendererHeight;
 static int* sRenderer=&renderer;
-static SDL_Texture *sBorderTex,*sBorderMaterialTex;
+static SDL_Texture *sBorderTex,*sBorderMaterialTex,*sBorderAdaptiveTex;
 static int sBorderShown,sBorderAttempted,sRendererResetPending,sFitScale,sAutoScale;
-static struct { int gbaBorder,viewMode,crtOutput,scaleMode; } gPortConfig;
+static struct { int gbaBorder,viewMode,crtOutput,scaleMode,aspect; } gPortConfig;
 static struct { int width,height; } gPortScreen;
 float gPortAutoScaleF;
 static unsigned char dummy;
@@ -92,13 +93,14 @@ static int SDL_RenderGeometry(int* r,SDL_Texture* t,const SDL_Vertex* v,int nv,c
 static void Clear(void){
     if(sBorderTex)SDL_DestroyTexture(sBorderTex);
     if(sBorderMaterialTex)SDL_DestroyTexture(sBorderMaterialTex);
-    sBorderTex=sBorderMaterialTex=NULL;sBorderShown=sBorderAttempted=0;
+    if(sBorderAdaptiveTex)SDL_DestroyTexture(sBorderAdaptiveTex);
+    sBorderTex=sBorderMaterialTex=sBorderAdaptiveTex=NULL;sBorderShown=sBorderAttempted=0;
     failDecode=failTexture=failGeometry=decoded=created=draws=cards=sRendererResetPending=0;
 }
 static void Equal(SDL_FRect a,SDL_FRect b){assert(memcmp(&a,&b,sizeof(a))==0);}
 int main(void){
     static const int sizes[][2]={{1920,1080},{640,480},{3440,1440},{5120,1440},{1080,1920},{1620,1080},{240,160},{17,31}};
-    int v,m,aspect,size,zoom,offCases=0,onCases=0;
+    int v,m,aspect,size,zoom,previous,offCases=0,onCases=0,transitions=0;
     SDL_FRect actual,old;
     /* Actual old/new OutputRect must remain bit-identical with Border0. */
     for(v=0;v<6;v++)for(m=0;m<3;m++)for(size=0;size<8;size++)for(zoom=0;zoom<4;zoom++){
@@ -107,12 +109,23 @@ int main(void){
         sAutoScale=v==4?2:0;sFitScale=zoom==3?2:0;
         OutputRect(sizes[size][0],sizes[size][1],&actual);OldOutputRect(sizes[size][0],sizes[size][1],&old);Equal(actual,old);offCases++;
     }
-    sFitScale=sAutoScale=0;gPortConfig.gbaBorder=1;assert(GbaBorderReady()&&decoded==1&&created==2&&alive==2&&cards==1);
-    assert(GbaBorderReady()&&decoded==1&&created==2);
+    sFitScale=sAutoScale=0;gPortConfig.gbaBorder=1;assert(GbaBorderReady()&&decoded==1&&created==3&&alive==3&&cards==2);
+    assert(GbaBorderReady()&&decoded==1&&created==3);
+    /* ContentArea must not inherit the last frame's canvas or fit/auto scale. */
+    for(previous=0;previous<6;previous++)for(v=0;v<6;v++)for(size=0;size<8;size++){
+        SDL_Rect stale,clean;
+        gPortConfig.viewMode=v;gPortConfig.aspect=PORT_ASPECT_GBA;gPortConfig.scaleMode=0;
+        PortConfigView(previous,&gPortScreen.width,&gPortScreen.height);sFitScale=99;sAutoScale=77;
+        stale=ContentArea(sizes[size][0],sizes[size][1]);
+        PortConfigView(v,&gPortScreen.width,&gPortScreen.height);sFitScale=sAutoScale=0;
+        clean=ContentArea(sizes[size][0],sizes[size][1]);assert(memcmp(&stale,&clean,sizeof(clean))==0);transitions++;
+    }
     for(v=0;v<6;v++)for(m=0;m<3;m++)for(size=0;size<8;size++)for(aspect=0;aspect<PORT_ASPECT_COUNT;aspect++){
         PortAspectBounds outer=PortAspectFit(sizes[size][0],sizes[size][1],aspect);
-        PortGbaBorderArea a=PortGbaBorderViewport(outer.w,outer.h,1);
+        PortGbaBorderArea a;
         gPortConfig.viewMode=v;gPortConfig.scaleMode=m;gPortConfig.crtOutput=0;
+        gPortConfig.aspect=aspect;
+        {SDL_Rect actualArea=ContentArea(sizes[size][0],sizes[size][1]);a=(PortGbaBorderArea){actualArea.x-outer.x,actualArea.y-outer.y,actualArea.w,actualArea.h};}
         PortConfigView(v,&gPortScreen.width,&gPortScreen.height);
         sAutoScale=v==4?2:0;gPortAutoScaleF=2.5f;
         if(v==4){gPortScreen.width=(int)ceilf(a.w/2.5f);gPortScreen.height=(int)ceilf(a.h/2.5f);
@@ -120,6 +133,7 @@ int main(void){
         OutputRect(a.w,a.h,&actual);
         assert(actual.x>=0&&actual.y>=0&&actual.x+actual.w<=a.w+.01f&&actual.y+actual.h<=a.h+.01f);
         assert(fabsf(actual.w/gPortScreen.width-actual.h/gPortScreen.height)<.001f);
+        if(v!=PORT_VIEW_AUTO)assert(a.w-actual.w<1.001f&&a.h-actual.h<1.001f);
         protectedArea=(PortGbaBorderRect){a.x,a.y,a.w,a.h};renderer=outer.w;rendererHeight=outer.h;draws=0;
         DrawGbaBorder(outer.w,outer.h,&protectedArea);assert(draws<=2);onCases++;
     }
@@ -131,7 +145,7 @@ int main(void){
      assert(PortGbaBorderLegacy(1920,1080,&protectedArea));draws=0;DrawGbaBorder(1920,1080,&protectedArea);assert(draws==1);}
     Clear();assert(alive==0);
     /* Failed decode/each texture creation preserves the normal full viewport. */
-    for(m=0;m<3;m++){
+    for(m=0;m<4;m++){
         gPortConfig.gbaBorder=1;failDecode=m==0;failTexture=m;
         assert(!GbaBorderReady());assert(alive==0);
         {int c=created,d=decoded;assert(!GbaBorderReady()&&created==c&&decoded==d);}
@@ -139,9 +153,9 @@ int main(void){
         Clear();
     }
     gPortConfig.gbaBorder=1;assert(GbaBorderReady());gPortConfig.gbaBorder=2;failTexture=created+2;
-    assert(!GbaBorderReady()&&alive==2&&sBorderShown==1);gPortConfig.gbaBorder=1;assert(GbaBorderReady());
-    gPortConfig.gbaBorder=2;failTexture=0;assert(GbaBorderReady()&&alive==2&&sBorderShown==2);
+    assert(!GbaBorderReady()&&alive==3&&sBorderShown==1);gPortConfig.gbaBorder=1;assert(GbaBorderReady());
+    gPortConfig.gbaBorder=2;failTexture=0;assert(GbaBorderReady()&&alive==3&&sBorderShown==2);
     Clear();assert(alive==0);
-    printf("PASS actual border cache/geometry/OutputRect: off%d bit-identical, on%d uniform/no crop, legacy and allocation fallback\n",offCases,onCases);
+    printf("PASS actual border cache/geometry/OutputRect: off%d bit-identical, on%d uniform/no crop/no letterbox, transitions%d, legacy and allocation fallback\n",offCases,onCases,transitions);
     return 0;
 }

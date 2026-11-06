@@ -24,6 +24,28 @@ static inline PortGbaBorderArea PortGbaBorderViewport(int width, int height, int
 static inline float PortGbaBorderMin(float a, float b) { return a < b ? a : b; }
 static inline int PortGbaBorderClose(float a, float b) { return a - b < .01f && b - a < .01f; }
 
+static inline int PortGbaBorderCeilBound(float value, int limit) {
+    int n;
+    if (value >= (float)limit) return limit;
+    n = (int)value;
+    return n + (n < value);
+}
+
+/* Fixed views keep their nominal canvas and chosen integer/fit scale. Give
+ * every overlay the real picture viewport, rather than its old letterbox. */
+static inline PortGbaBorderArea PortGbaBorderPictureArea(int width, int height, int canvasW, int canvasH, int integer) {
+    PortGbaBorderArea r = { 0, 0, 0, 0 };
+    float scale;
+    if (width <= 0 || height <= 0 || canvasW <= 0 || canvasH <= 0) return r;
+    scale = PortGbaBorderMin((float)width / canvasW, (float)height / canvasH);
+    if (integer && scale >= 1) scale = (float)(int)scale;
+    r.w = PortGbaBorderCeilBound(canvasW * scale, width);
+    r.h = PortGbaBorderCeilBound(canvasH * scale, height);
+    r.x = (width - r.w) / 2;
+    r.y = (height - r.h) / 2;
+    return r;
+}
+
 static inline int PortGbaBorderLegacy(int width, int height, const PortGbaBorderRect* ap) {
     float s = ap->w / 240.0f;
     return s > 0 && PortGbaBorderClose(width, 384 * s) && PortGbaBorderClose(height, 216 * s) &&
