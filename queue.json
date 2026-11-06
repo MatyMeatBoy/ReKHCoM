@@ -16460,16 +16460,23 @@
     "atlas-followup-9224a996-r3": {
       "id": "atlas-followup-9224a996-r3",
       "piece": "Escena 081: mejorar patron; mejorar patron",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas081-patterns",
       "created_at": "2026-11-06T12:59:03.366288+00:00",
-      "updated_at": "2026-11-06T15:34:48.540474+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T15:55:27.781110+00:00",
+      "branch": "art/atlas081-patterns-20261106",
+      "pr": "619",
       "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
       "reference": "{\"image_id\": \"9224a996d76947d48204e2501ede8e80\", \"revision\": 3, \"sha256\": \"a9fb8e06da9b26b8ac2e4a50b4640250f5f726065318bb2ead6724f75d7d7059\", \"submission\": [\"20261105-203443-b677be\"]}",
-      "evidence": [],
-      "claimed_at": "2026-11-06T15:34:48.540474+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-06T15:55:27.781110+00:00",
+          "owner": "codex-atlas081-patterns",
+          "detail": "Source8a82e8d94dee72255880f424f4d1b654d36d53b4; newpending Atlasd724dc86778f4d10877ffce94cb07952 exact2clouds parent9224rev3/SHAa9fb8e06/envio20261105-203443-b677be. ROMrecipe model before/proposal, samebox/scale noactors notcapture. 69222AST/10146tilelattice,1024empty->opaque donors verified; source review/diffcheckPASS. Only BG1wave/BG3transparentwall after192; nativecap/opaqueFloor/props/actors/clip intact. No compiler/build/game/imports; actualQA/Original/camera pending. pruebas/atlas-20261106/scene081-patterns/"
+        }
+      ],
+      "claimed_at": "2026-11-06T15:34:48.540474+00:00",
+      "sent": "d724dc86778f4d10877ffce94cb07952"
     },
     "atlas-followup-e94de270-r2": {
       "id": "atlas-followup-e94de270-r2",
@@ -16546,7 +16553,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T15:43:27.196320+00:00",
+  "updated_at": "2026-11-06T15:55:27.781110+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
