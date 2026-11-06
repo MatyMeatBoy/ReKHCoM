@@ -474,4 +474,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue610-pooh-tree-crash-v29 | Issue610: crash Pooh al chocar arboles antes de caer cola de Eeyore | integrado | codex-v29-pooh | https://github.com/MatyMeatBoy/ReKHCoM/pull/626 | Usuario06/11 autoriza solucionar cuelgues antes2.9; reviewrootguardNULLsinbloqueos | 2026-11-06T17:59:09.595575+00:00 |
 | v29-adaptive-gba-border-all-modes | 2.9: borde GBA adaptable a ratios y seleccionable en cualquier modo/zoom, preservando proporcion GBA sin estirar | pendiente | — | — | Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde | 2026-11-06T17:43:39.391915+00:00 |
 
-Integrador: codex-v29-integrador (ocupado; 2026-11-06T17:57:22.104042+00:00)
+Integrador: libre
