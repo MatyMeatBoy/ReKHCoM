@@ -463,6 +463,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-followup-e78f689c-r2 | Escena 095: verificar que el arbol del inicio de la escena no este solo su mitad | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:58:48.186599+00:00 |
 | atlas-followup-bb7866a6-r3 | Escena 115: falta extender esta diagonal a derecha; falta extender esta diagonal a izquierda | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:58:55.547866+00:00 |
 | atlas-followup-9224a996-r3 | Escena 081: mejorar patron; mejorar patron | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:59:03.366288+00:00 |
-| atlas-followup-e94de270-r2 | Escena 130 · Bastión Hueco · Biblioteca de Bella: ahora falta extender este a la derecha si | pendiente | — | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T12:59:10.930902+00:00 |
+| atlas-followup-e94de270-r2 | Escena 130 · Bastión Hueco · Biblioteca de Bella: ahora falta extender este a la derecha si | en_curso | codex-atlas130-right | — | Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija | 2026-11-06T13:00:08.476730+00:00 |
 
 Integrador: libre

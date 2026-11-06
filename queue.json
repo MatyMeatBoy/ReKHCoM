@@ -16438,19 +16438,20 @@
     "atlas-followup-e94de270-r2": {
       "id": "atlas-followup-e94de270-r2",
       "piece": "Escena 130 · Bastión Hueco · Biblioteca de Bella: ahora falta extender este a la derecha si",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-atlas130-right",
       "created_at": "2026-11-06T12:59:10.930902+00:00",
-      "updated_at": "2026-11-06T12:59:10.930902+00:00",
+      "updated_at": "2026-11-06T13:00:08.476730+00:00",
       "branch": null,
       "pr": null,
       "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
       "reference": "{\"image_id\": \"e94de270ac4f4273bd8d5a874bd808ba\", \"revision\": 2, \"sha256\": \"eacd6d72033a4a69a67ab4f7bf87f0f4bafd288399b4d1bf55d51e89ee198a53\", \"submission\": [\"20261105-203851-af3ffd\"]}",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-06T13:00:08.476730+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T12:59:10.930902+00:00",
+  "updated_at": "2026-11-06T13:00:08.476730+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
