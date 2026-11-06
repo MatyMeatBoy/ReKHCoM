@@ -16425,23 +16425,29 @@
     "atlas-followup-bb7866a6-r3": {
       "id": "atlas-followup-bb7866a6-r3",
       "piece": "Escena 115: falta extender esta diagonal a derecha; falta extender esta diagonal a izquierda",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas115-diagonals",
       "created_at": "2026-11-06T12:58:55.547866+00:00",
-      "updated_at": "2026-11-06T13:09:09.561153+00:00",
+      "updated_at": "2026-11-06T14:34:30.667541+00:00",
       "branch": "art/scene115-diagonals-20261106",
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/614",
-      "approval": "Base aceptada e integrada611; nuevas notas pendientes, no aprobacion de futura hija",
+      "pr": "614",
+      "approval": "Atlas 997b4759367e491a9eacbe55652cf10a approved revision1 SHA aa002505bf69d61896bfa2446e2439d071f7ac8ada6483f0a5ec53ad985a7aa7",
       "reference": "{\"image_id\": \"bb7866a6068d4e478a3e19fc98bc423b\", \"revision\": 3, \"sha256\": \"c10b3e934562fcba7eb49a36a5d6c236e04e541ee5ba6997193a178e8d94b819\", \"submission\": [\"20261105-203509-8870c7\"]}",
       "evidence": [
         {
           "at": "2026-11-06T13:09:09.561153+00:00",
           "owner": "codex-atlas115-diagonals",
           "detail": "Fuente91099de48a56e4c8cb013dfe6a641bd71025a1a7. Atlas997b4759367e491a9eacbe55652cf10a pending responde2nubes de bb7866rev3/SHA c10b3e93.../envio20261105-203509-8870c7. PropuestaNUEVA SINBUILD: bandaBG2exterior32<=2ty+tx<36 prolonga zocalo izquierda/derecha con faseexacta. Conserva640tip/orphan/BG3umbral32/mapanativo/GBA. ASTRED/GREEN39424coords y262seleccionesacotadasPASS; panelantes coincideexactamenteconpanelaceptadopadre mismaescala. Sincompiler/DLL/game/importregen/paquete; CfixtureactualizadoNOejecutado. Faltanruntime nuevoreceta otrascamarasOriginalplataformas yvaloracionhija. No merge/otra tarea. Evidencia pruebas/atlas-20261106/scene115-diagonals."
+        },
+        {
+          "at": "2026-11-06T14:34:30.667541+00:00",
+          "owner": "codex-atlas115-diagonals",
+          "detail": "PR615 merge c3e633dd847832b9ee524c000eae5c96066000a2 contains original source 91099de48a56e4c8cb013dfe6a641bd71025a1a7; exact blobs checked; model/AST only; NO BUILD; runtime QA pending"
         }
       ],
       "claimed_at": "2026-11-06T13:02:01.487899+00:00",
-      "sent": "997b4759367e491a9eacbe55652cf10a"
+      "sent": "997b4759367e491a9eacbe55652cf10a",
+      "completed_at": "2026-11-06T14:34:30.667541+00:00"
     },
     "atlas-followup-9224a996-r3": {
       "id": "atlas-followup-9224a996-r3",
@@ -16504,7 +16510,7 @@
     "created_at": "2026-11-06T14:29:16.953226+00:00",
     "updated_at": "2026-11-06T14:29:16.953226+00:00"
   },
-  "updated_at": "2026-11-06T14:34:23.869309+00:00",
+  "updated_at": "2026-11-06T14:34:30.667541+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
