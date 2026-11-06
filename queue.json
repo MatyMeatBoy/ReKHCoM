@@ -16790,13 +16790,8 @@
       "evidence": []
     }
   },
-  "integrator": {
-    "owner": "codex-v29-integrador",
-    "token": "e7074169a070e54ec931fe62759e2652cabe75fda7dbe6c4",
-    "created_at": "2026-11-06T19:42:07.156995+00:00",
-    "updated_at": "2026-11-06T19:42:07.156995+00:00"
-  },
-  "updated_at": "2026-11-06T19:42:51.520042+00:00",
+  "integrator": null,
+  "updated_at": "2026-11-06T19:42:58.525091+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

@@ -475,4 +475,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v29-adaptive-gba-border-all-modes | 2.9: borde GBA adaptable a ratios y seleccionable en cualquier modo/zoom, preservando proporcion GBA sin estirar | pr_abierto | codex-v29-border | https://github.com/MatyMeatBoy/ReKHCoM/pull/627 | Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde | 2026-11-06T19:25:32.346705+00:00 |
 | issue610-platform-confirmation-v29 | 2.9 QA issue610: confirmar plataforma/version reportero y validar cierre real tras guard shake NULL integrado626 | pendiente | — | — | Usuario exige pendientescuelgues antes2.9; no confundirfixdefecto demostrado con confirmacionreporte | 2026-11-06T18:04:05.651797+00:00 |
 
-Integrador: codex-v29-integrador (ocupado; 2026-11-06T19:42:07.156995+00:00)
+Integrador: libre
