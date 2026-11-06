@@ -16512,10 +16512,10 @@
     "atlas-journal-all-modes-rounding-20261106": {
       "id": "atlas-journal-all-modes-rounding-20261106",
       "piece": "Pepito: redondeado, margenes y footer extendido en todas las paginas y HUD HD on/off; Original GBA intacto",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-journal-all-modes",
       "created_at": "2026-11-06T15:08:35.950981+00:00",
-      "updated_at": "2026-11-06T15:27:29.671548+00:00",
+      "updated_at": "2026-11-06T15:28:02.109851+00:00",
       "branch": "fix/journal-all-modes-20261106",
       "pr": "617",
       "approval": "Usuario06/11: redondeado, margenes y pie completos en todas las paginas y ambos HUD; Original GBA intacto. Correccion de cobertura de renderer del libro previamente aprobado; sin arte nuevo ni build",
@@ -16525,9 +16525,15 @@
           "at": "2026-11-06T15:27:29.671548+00:00",
           "owner": "codex-journal-all-modes",
           "detail": "Source ce65324e6; 128 selection cases;32 ROM/capture/renderer fixtures; detail commands exact6; foreground3profiles/33rollback; ABI20offset19; independent review; no compiler/game/imports. pruebas/atlas-20261106/journal-all-modes/"
+        },
+        {
+          "at": "2026-11-06T15:28:02.109851+00:00",
+          "owner": "codex-journal-all-modes",
+          "detail": "MERGED PR617/main27ad033de9c104eb4cc0cd3ad16ea0eb509c88c9 includes exact sourcece65324e645f997cdfb3c079e0dabfd3c594b1ec. 128 ASTselection/32ROMrenderer/6detailidentical/3foreground/33rollback PASS; no compiler/build/game/importregen. Runtime visual remains pending."
         }
       ],
-      "claimed_at": "2026-11-06T15:08:43.708969+00:00"
+      "claimed_at": "2026-11-06T15:08:43.708969+00:00",
+      "completed_at": "2026-11-06T15:28:02.109851+00:00"
     }
   },
   "integrator": {
@@ -16536,7 +16542,7 @@
     "created_at": "2026-11-06T15:27:12.035328+00:00",
     "updated_at": "2026-11-06T15:27:12.035328+00:00"
   },
-  "updated_at": "2026-11-06T15:27:29.671548+00:00",
+  "updated_at": "2026-11-06T15:28:02.109851+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
