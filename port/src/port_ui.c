@@ -122,6 +122,7 @@ enum {
     ITEM_HEAD_GENERAL, /* section heading, not selectable */
     ITEM_SAVEBANK,
     ITEM_DISCORD,
+    ITEM_HIDE_TITLE_HINT,
     ITEM_HIDE_TOUCH,
     ITEM_TOUCH_THEME,  /* the touch buttons' look: Clear, Dark, Color */
     ITEM_TOUCH_EDIT,   /* the layout editor: drag the touch buttons where the player wants them */
@@ -433,6 +434,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Save bank", "Banque de sauvegarde", "Speicherbank", "Banco di salvataggio", "Banco de partidas",
       "セーブバンク" },
     { "Discord status", "Statut Discord", "Discord-Status", "Stato Discord", "Estado en Discord", "Discordステータス" },
+    { "Hide title hint", "Masquer l'aide du titre", "Titelhinweis ausblenden", "Nascondi aiuto del titolo",
+      "Ocultar aviso del título", "タイトルの案内を非表示" },
     { "Hide touch controls", "Masquer les commandes tactiles", "Touch-Steuerung ausblenden",
       "Nascondi controlli touch", "Ocultar controles táctiles", "タッチボタンを非表示" },
     { "Touch button theme", "Thème des boutons tactiles", "Design der Touch-Tasten", "Tema dei tasti touch",
@@ -1466,6 +1469,9 @@ static void ValueText(int item, char* out, size_t size) {
             else
                 SDL_snprintf(out, size, "%d px", gPortConfig.cardHudRaise);
             break;
+        case ITEM_HIDE_TITLE_HINT:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hideTitleHint != 0][l], size);
+            break;
         case ITEM_FPS:
             SDL_strlcpy(out, sOnOff[gPortConfig.showFps != 0][l], size);
             break;
@@ -1783,6 +1789,9 @@ static void Change(int item, int dir) {
             break;
         case ITEM_FRAMESKIP:
             gPortConfig.frameSkip = !gPortConfig.frameSkip;
+            break;
+        case ITEM_HIDE_TITLE_HINT:
+            gPortConfig.hideTitleHint = !gPortConfig.hideTitleHint;
             break;
         case ITEM_DISCORD:
             gPortConfig.discordPresence = !gPortConfig.discordPresence;
@@ -2432,7 +2441,7 @@ void PortMoogleNotice(unsigned amount, unsigned total) {
 }
 
 void PortUiTitleHint(void) {
-    sTitleHintFrames = 2;
+    sTitleHintFrames = gPortConfig.hideTitleHint ? 0 : 2;
 }
 
 static void Move(int dir) {
@@ -5553,7 +5562,7 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
             DrawSkipPrompt(l);
         if (sTitleHintFrames > 0) {
             sTitleHintFrames--;
-            DrawTitleHint(l);
+            if (!gPortConfig.hideTitleHint) DrawTitleHint(l);
         }
         return;
     }
