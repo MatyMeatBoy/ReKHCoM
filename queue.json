@@ -16843,19 +16843,20 @@
     "issue573-basic-movie062-v29": {
       "id": "issue573-basic-movie062-v29",
       "piece": "Issue573: incluir movie2 zz_event_062 en importacion basica Python y launcher C++ con cobertura semantica y deduplicacion",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-v29-movie062",
       "created_at": "2026-11-06T21:05:57.325198+00:00",
-      "updated_at": "2026-11-06T21:05:57.325198+00:00",
+      "updated_at": "2026-11-06T21:06:08.460355+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario autoriza resolver pendientes y lanzar2.9; root asigna573 un carril",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/573",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-06T21:06:08.460355+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:05:57.325198+00:00",
+  "updated_at": "2026-11-06T21:06:08.460355+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
