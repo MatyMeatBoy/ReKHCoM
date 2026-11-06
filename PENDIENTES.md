@@ -482,4 +482,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v29-launcher-synthesis-recipe-sync | Synchronize launcher embedded recipe with approved current synthesis TSV; source check stale405 rows | integrado | codex-v29-recipes | https://github.com/MatyMeatBoy/ReKHCoM/pull/634 | Usuario integra todosaprobados ypublica2.9 todasplataformas | 2026-11-06T21:44:58.667807+00:00 |
 | v29-web-shadow-prototype | Web Wasm link: explicit event-shadow owner declaration matches void producer | integrado | codex-v29-webcontract | https://github.com/MatyMeatBoy/ReKHCoM/pull/636 | Usuario pidepublicar2.9porplataformaslistas; corregirbuildsrestantessinpisarpublicados | 2026-11-06T23:33:27.587718+00:00 |
 
-Integrador: codex-v29-integrator (ocupado; 2026-11-06T23:32:42.994773+00:00)
+Integrador: libre
