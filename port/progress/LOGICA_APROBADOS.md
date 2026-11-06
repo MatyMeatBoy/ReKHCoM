@@ -781,3 +781,14 @@ columnas0..7 con sy=ty+(tx-sx)/2 conserva fase, altura y color del remate en
 ambos extremos. Conservar todas las selecciones nativas y las correcciones
 anteriores aceptadas de punta, módulo huérfano y piso. Estudio nuevo del código,
 no captura de juego; no hereda aprobación y queda pendiente de QA real.
+
+### Pepito: aplicar la reparación completa a todas las páginas, 06/11
+
+El usuario exige redondeado, márgenes y pie extendido tanto con HUD HD como
+sin él, conservando Original GBA. La reparación del detalle aprobado permanece
+exacta; se completa su cobertura para listas y portadas Sora/Riku. No confundir
+la cubierta azul con papel ni repetir la guía del detalle en las listas.
+Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
+sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
+a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
+AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.

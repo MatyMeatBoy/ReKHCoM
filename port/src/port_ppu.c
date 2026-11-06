@@ -364,6 +364,8 @@ static uint8_t sJiminyPaperMask[240 * 160];
 static uint32_t sJiminyNameEdges[2 * 24];
 static int sJiminyPaperCapture;
 static int sJiminyDetailCapture;
+static int sJiminyPageCapture;
+static int sJiminyCoverCapture;
 static PortJiminyPageRow sJiminyPageRows[160];
 static const void* sJiminyBookFrame;
 
@@ -378,7 +380,7 @@ const uint32_t* PortPpuJiminyNameEdges(void) {
 }
 
 const PortJiminyPageRow* PortPpuJiminyPageRows(void) {
-    return sJiminyDetailCapture ? sJiminyPageRows : NULL;
+    return sJiminyPageCapture ? sJiminyPageRows : NULL;
 }
 /* Sample every menu extension before VBlank changes its rendering inputs. */
 static void CaptureMenuMarginPixels(void);
@@ -3235,23 +3237,33 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         if (sJiminyDetailCapture && objects && gx >= 0 && gx < 3 &&
             PortJiminyPaperPixel(topLayer, blend, gx, gyLine))
             sJiminyPageRows[gyLine].leftOwned |= (uint8_t)(1u << gx);
-        if (sJiminyDetailCapture && objects && gx >= 200 && gx < 240 && gyLine >= 16 && gyLine < 160) {
+        if (sJiminyPageCapture && !sJiminyDetailCapture && objects && gx == 0 && gyLine >= 16 && gyLine < 160 &&
+            bgOn[1] && (mask & WIN_BG(1))) {
+            uint32_t left = JiminyBgColor(sBgLine[1][x], mask & WIN_SFX, bldcnt, effect, evy);
+            sJiminyPageRows[gyLine].guide = left;
+            if (sJiminyCoverCapture) sJiminyPageRows[gyLine].ground = left;
+        }
+        if (sJiminyPageCapture && objects && gx >= 200 && gx < 240 && gyLine >= 16 && gyLine < 160) {
             PortJiminyPageRow* row = &sJiminyPageRows[gyLine];
+            row->kind = sJiminyCoverCapture ? PORT_JIMINY_COVER :
+                sJiminyDetailCapture ? PORT_JIMINY_DETAIL : PORT_JIMINY_LIST;
             /* PAGE ends above row20; rows20..23 already contain the
-               shaded paper edge in all three native detail maps. */
+               shaded paper edge in the native list and detail maps. */
             if (gyLine >= 20 && gx >= 224 && topLayer == 1 && !blend)
                 row->owned |= (uint16_t)(1u << (gx - 224));
             if (bgOn[1] && (mask & WIN_BG(1))) {
                 if (gx == 200) { /* native paper/rules, safely inside the shaded edge */
                     /* PAGE occupies BG1 above row24; it is foreground, not
                        paper to repeat into the new page. */
-                    uint16_t paper = gyLine < 24 ? PLTT16[63] & 0x7FFF :
-                        gyLine == 159 ? PLTT16[136] & 0x7FFF : sBgLine[1][x];
+                    int border = sJiminyCoverCapture ? 24 : 136;
+                    uint16_t paper = sJiminyDetailCapture && gyLine < 24 ? PLTT16[63] & 0x7FFF :
+                        gyLine == 159 ? PLTT16[border] & 0x7FFF : sBgLine[1][x];
                     row->fill = JiminyBgColor(paper, mask & WIN_SFX, bldcnt, effect, evy);
-                    row->border = JiminyBgColor(PLTT16[136] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
-                    row->ground = JiminyBgColor(PLTT16[31] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
+                    row->border = JiminyBgColor(PLTT16[border] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
+                    if (!sJiminyCoverCapture)
+                        row->ground = JiminyBgColor(PLTT16[31] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy);
                 }
-                if (gx == 232) row->guide = gyLine >= 24 && sBgLine[1][x] == (PLTT16[133] & 0x7FFF) ?
+                if (gx == 232 && sJiminyDetailCapture) row->guide = gyLine >= 24 && sBgLine[1][x] == (PLTT16[133] & 0x7FFF) ?
                     JiminyBgColor(PLTT16[59] & 0x7FFF, mask & WIN_SFX, bldcnt, effect, evy) : row->fill;
             }
         }
@@ -4671,6 +4683,7 @@ void PortPpuRenderFrame(void) {
     extern const uint16_t gJiminyStoryDetailMap[];
     extern const uint16_t gJiminyCardDetailMap[], gJiminyCharacterDetailMap[];
     extern const uint16_t gJiminyCardListMap[];
+    extern const uint16_t gJiminyRootMap[], gJiminyRikuRootMap[];
     const uint16_t* shownMap = (const uint16_t*)(VRAM8 + ((IO16(0xA) >> 8) & 31) * 2048);
     int journalFrame = gCurrentMode == &gModeJiminy &&
         (IO16(0) & 0x287) == 0x200 && !(IO16(0xA) & 0xC000) &&
@@ -4683,12 +4696,16 @@ void PortPpuRenderFrame(void) {
         (PortJiminyDetailMap(shownMap, gJiminyStoryDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCardDetailMap) ||
          PortJiminyDetailMap(shownMap, gJiminyCharacterDetailMap));
+    /* The native right sheet also belongs to every list. Geometry repair
+       is independent of optional HD cards, HUD and font resources. */
+    sJiminyCoverCapture = journalFrame &&
+        (PortJiminyDetailMap(shownMap, gJiminyRootMap) ||
+         PortJiminyDetailMap(shownMap, gJiminyRikuRootMap));
+    sJiminyPageCapture = journalFrame && (sJiminyBookFrame || sJiminyDetailCapture || sJiminyCoverCapture);
     sJiminyPaperCapture = gPortConfig.hdCards && journalFrame && (sJiminyBookFrame || sJiminyDetailCapture);
     if (sJiminyPaperCapture) memset(sJiminyPaperMask, 0, sizeof(sJiminyPaperMask));
-    if (sJiminyDetailCapture) {
-        memset(sJiminyNameEdges, 0, sizeof(sJiminyNameEdges));
-        memset(sJiminyPageRows, 0, sizeof(sJiminyPageRows));
-    }
+    if (sJiminyDetailCapture) memset(sJiminyNameEdges, 0, sizeof(sJiminyNameEdges));
+    if (sJiminyPageCapture) memset(sJiminyPageRows, 0, sizeof(sJiminyPageRows));
 
     memcpy(sTextObjPalette, PLTT16 + 256, sizeof(sTextObjPalette));
     sTextBld[0] = IO16(0x50);
