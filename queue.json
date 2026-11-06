@@ -16431,13 +16431,13 @@
     "atlas-followup-e78f689c-r2": {
       "id": "atlas-followup-e78f689c-r2",
       "piece": "Escena 095: verificar que el arbol del inicio de la escena no este solo su mitad",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-atlas095-tree",
       "created_at": "2026-11-06T12:58:48.186599+00:00",
-      "updated_at": "2026-11-06T17:24:59.874972+00:00",
+      "updated_at": "2026-11-06T17:25:35.389425+00:00",
       "branch": "art/atlas095-tree-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/618",
-      "approval": "Atlas2f580f52f9ae47d29ea0670711ec5062 rev2 approved, nueva nube muro/pasto sigue abierta",
+      "approval": "Atlas 2f580f52f9ae47d29ea0670711ec5062 rev2 approved",
       "reference": "{\"image_id\": \"e78f689cba2e46548b67cff57c10f444\", \"revision\": 2, \"sha256\": \"08f5ea9ea3065e3f7770c41c1bcb82aea4c3ac0a48e6071036195c7393063aa7\", \"submission\": [\"20261105-204012-31a5b7\"]}",
       "evidence": [
         {
@@ -16449,10 +16449,16 @@
           "at": "2026-11-06T17:24:59.874972+00:00",
           "owner": "codex-atlas095-tree",
           "detail": "PR624 combina head985e822a exacto, fixtures C095 PASS y review; sin heredar aprobación nueva"
+        },
+        {
+          "at": "2026-11-06T17:25:35.389425+00:00",
+          "owner": "codex-atlas095-tree",
+          "detail": "PR624 MERGED d9f5930fe117b90a78b28ba0173a4a430ea128c9 incluye head original; fixtures C/Python conjuntos y diffcheck PASS. Darkside exacto activo; nuevos comentarios095/todos frames Darkside siguen QA, no cierre global."
         }
       ],
       "claimed_at": "2026-11-06T15:35:19.847560+00:00",
-      "sent": "2f580f52f9ae47d29ea0670711ec5062"
+      "sent": "2f580f52f9ae47d29ea0670711ec5062",
+      "completed_at": "2026-11-06T17:25:35.389425+00:00"
     },
     "atlas-followup-bb7866a6-r3": {
       "id": "atlas-followup-bb7866a6-r3",
@@ -16685,7 +16691,7 @@
     "created_at": "2026-11-06T17:20:48.515853+00:00",
     "updated_at": "2026-11-06T17:20:48.515853+00:00"
   },
-  "updated_at": "2026-11-06T17:24:59.874972+00:00",
+  "updated_at": "2026-11-06T17:25:35.389936+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
