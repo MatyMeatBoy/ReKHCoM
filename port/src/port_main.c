@@ -1828,11 +1828,12 @@ static void PrepareHudAfterOptions(int menuCanvas) {
 }
 
 
-static void Present(void) {
+static void Present(int paced) {
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
     uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
+    uint64_t hdProfileWaitStart = sPresentWaitTotal;
     int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
     SDL_FRect dst, normal;
@@ -2522,9 +2523,6 @@ static void Present(void) {
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
     PortAndroidTouchDraw(sRenderer);
 #endif
-#ifdef PORT_LINUX
-    PortFbPresent(sRenderer);
-#endif
     {
         /* KHCOM_PRESENTSHOTS=a-b[/step] (harness): the window as shown, frames a..b (present_<frame>.bmp) */
         const char* range = SDL_getenv("KHCOM_PRESENTSHOTS");
@@ -2544,7 +2542,10 @@ static void Present(void) {
         extern void PortSceneGalleryPreviewPresented(int accepted);
         /* Finish rendering first, then submit the image on its fixed deadline.
            Sleeping only afterwards let variable draw cost become image jitter. */
-        PaceBeforePresent();
+        if (paced) PaceBeforePresent();
+#ifdef PORT_LINUX
+        PortFbPresent(sRenderer);
+#endif
         int presented=SDL_RenderPresent(sRenderer);
         if (presented) {
             uint64_t acceptedAt = SDL_GetPerformanceCounter();
@@ -2557,7 +2558,7 @@ static void Present(void) {
     }
     if (hdProfile)
         PortLog("hd-menu-perf: frame=%u menu=%d ms=%.3f alloc_delta=%d allocations=%d", (unsigned)sFrameCount,
-                menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart) * 1000.0 / SDL_GetPerformanceFrequency(),
+                menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart - (sPresentWaitTotal - hdProfileWaitStart)) * 1000.0 / SDL_GetPerformanceFrequency(),
                 hdProfileAlloc >= 0 ? HdMenuAllocations() - hdProfileAlloc : -1, HdMenuAllocations());
 }
 
@@ -2722,7 +2723,7 @@ static uint16_t HarnessKeys(uint32_t frame) {
     return keys;
 }
 
-static void Present(void);
+static void Present(int paced);
 
 /* the window's renderer, for what draws outside the game's frame (port_hdmovie.c) */
 SDL_Renderer* PortRenderer(void) {
@@ -2890,7 +2891,7 @@ static void HarnessFrame(void) {
         PortUiOpenOptions();
         UpdateResolution(); /* as the menu's own loop does */
         PortPpuRenderFrame();
-        Present();
+        Present(1);
         s = SDL_CreateSurfaceFrom(gPortScreen.width, gPortScreen.height, SDL_PIXELFORMAT_XRGB8888, sComposite,
                                   gPortScreen.width * 4);
         if (s) {
@@ -3294,7 +3295,7 @@ static void VBlankCycle(void) {
         uint64_t p0 = SDL_GetPerformanceCounter();
         uint64_t waitStart = sPresentWaitTotal, waited;
         if (!skip)
-            Present();
+            Present(1);
         waited = sPresentWaitTotal - waitStart;
         sPresentTicks = SDL_GetPerformanceCounter() - p0 - waited;
         {
@@ -3349,7 +3350,7 @@ static void VBlankCycle(void) {
         UpdateResolution();
         if (w != gPortScreen.width || h != gPortScreen.height)
             PortPpuRenderFrame();
-        Present();
+        Present(1);
         PumpEvents();
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
         while (sAndroidBackground) { SDL_Delay(50); PumpEvents(); }
@@ -3456,7 +3457,14 @@ static void VBlankCycle(void) {
 /* The network link's lockstep (src/sio/sio.c): while the other player's packet for this link frame is on its way the
    game waits inside the frame; the last picture stays on screen (with the waiting notice) and the window answers. */
 void PortLinkIdle(void) {
-    Present();
+    static uint64_t nextRefresh;
+    uint64_t now = SDL_GetPerformanceCounter();
+    /* Poll network/input every millisecond as before. Refreshing the waiting
+       image must not block the next NetReceive on a presentation deadline. */
+    if (!nextRefresh || now >= nextRefresh || SDL_getenv("KHCOM_FAST")) {
+        nextRefresh = now + (uint64_t)(sPerfFreq / GBA_FPS);
+        Present(0);
+    }
     PumpEvents();
     SDL_Delay(1);
 }
