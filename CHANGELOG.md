@@ -1,10 +1,24 @@
 # Changelog
 
-## Unreleased — preparation for a future 2.8.5 prerelease
+## v2.9
+
+- Windows64/Linux64: render eligible picture and margin rows on several CPU cores with isolated worker stacks and thread-local buffers. Native Windows32 also uses its existing picture-row pool by default. Scanline-dependent effects retain their serial path; game speed, zoom and picture quality are preserved.
+- Pace images immediately before submission at the original GBA rate (approximately59.7275Hz). The FPS counter counts successful submissions instead of counting skipped drawing as a rendered frame. Menu exit, late wakeups and link waiting preserve their timing contracts.
+- Windows64: expose the VRR option through the host's video capabilities. Unsupported paths retain VSync fallback; monitor VRR activation still depends on the display and driver.
+- Loading a quickstate begins a fresh FPS/Hz measurement window after commit, avoiding a false logical-rate spike when the saved game counter is restored. Rejected states leave the previous measurement intact.
+- Allow the existing three optional GBA borders in every view/zoom and selected aspect. Keep map cards and decorations proportional, fit the picture and its UI together, and preserve the original legacy frame exactly. Borders remain optional and their default is unchanged.
+- Guard the battle-only camera state when Pooh's tree-collision screen shake ends. This removes an invalid access; matching reporter-device confirmation for issue610 remains separate.
+- Prepare Darkside's beach cache before dispatching picture rows, preventing parallel first readers from rebuilding or reading unfinished shoreline tables.
+- Basic HD imports now include the floor6 movie replacement (`zz_event_062`), without requiring all story scenes.
+- Add General → Hide title hint to hide the added SELECT OPTIONS label while keeping SELECT access to Options. The hint remains visible by default.
+- Add an optional LCD pixel grid aligned to the GBA pixel pitch across zoom and aspect changes. Cached one-dimensional GPU masks keep steady frames free of mask regeneration; the grid is off by default and leaves decorative borders clear.
+- Jiminy: carry the extended page edges, rounded corners and footer layout across cover, list and detail pages, with HD cards on or off. Original GBA rendering retains its original layout.
 
 - Atlas-approved wide art updates for scenes057,081,087,095,107/108,110,112,115,120 and130, plus Oogie Boogie's side planes. Scene130's accepted extension is enabled without preview flags.
-- Approved HD synthesis import recipes improve requirement digits and card edges. Existing imports need regeneration in a later authorized pass.
-- Source integration only: no new binaries or packages have been built. Follow-up comments on nine approved deliveries remain open; see `port/progress/ATLAS_V285_PREPARATION.md`.
+- Follow-up accepted versions refine scenes081,095,115,120 and130, plus Darkside's punch flank. Later review comments remain open; approval of one version does not accept its future replacements.
+- Approved HD synthesis import recipes improve requirement digits and card edges. HD replacements are generated from the player's owned source during import; personal imports are not overwritten by the release workflow.
+- Synchronize the native launcher's embedded synthesis recipes with the accepted source, so its imports and update detection use the same 405 refreshed recipes as the Python importer.
+- Existing Atlas review records and outstanding art comments are retained. The original source-only preparation is documented in `port/progress/ATLAS_V285_PREPARATION.md`.
 
 ## v2.8
 
