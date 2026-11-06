@@ -792,3 +792,11 @@ Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
 sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
 a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
 AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+### Escena097: no recortar los árboles por el patrón de césped
+
+BG2 conserva su mapa finito completo; sólo el césped BG3 se repite dentro de
+su rectángulo reducido. Así se recuperan391píxeles ROM de hojas y tronco sin
+clonar árboles ni adelantar actores. El modelo responde sólo a completar árbol;
+las dos notas sobre el momento del gato siguen abiertas para QA temporal.
+Sin captura nueva, compilación ni aprobación heredada.
