@@ -110,6 +110,7 @@ enum {
     ITEM_VSYNC,
     ITEM_FILTER,
     ITEM_SCANLINES,
+    ITEM_LCD_GRID,
     ITEM_LCD,
     ITEM_GBA_BORDER,   /* Decorative border, independent of view/aspect/zoom. */
     ITEM_MODE_RESET,   /* a graphics mode's defaults (PortApplyGraphicsMode), confirmed twice */
@@ -419,6 +420,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR" },
     { "Filter", "Filtre", "Filter", "Filtro", "Filtro", "フィルター" },
     { "Scanlines", "Lignes de balayage", "Scanlines", "Linee di scansione", "Scanlines", "スキャンライン" },
+    { "LCD pixel grid", "Grille LCD", "LCD-Pixelraster", "Griglia pixel LCD", "Cuadrícula LCD", "LCDピクセルグリッド" },
     { "GBA LCD colours", "Couleurs LCD GBA", "GBA-LCD-Farben", "Colori LCD GBA", "Colores LCD GBA", "GBAカラー" },
     { "Border", "Bordure", "Rahmen", "Cornice", "Borde", "わく" },
     { "Reset to a mode's defaults", "Réglages d'un mode", "Standard eines Modus", "Predefiniti di una modalità",
@@ -1448,6 +1450,12 @@ static void ValueText(int item, char* out, size_t size) {
             else
                 SDL_snprintf(out, size, "%d%%", gPortConfig.scanlines);
             break;
+        case ITEM_LCD_GRID:
+            if (gPortConfig.lcdGrid == 0)
+                SDL_strlcpy(out, sOnOff[0][l], size);
+            else
+                SDL_snprintf(out, size, "%d%%", gPortConfig.lcdGrid);
+            break;
         case ITEM_LCD:
             SDL_strlcpy(out, sOnOff[gPortConfig.colorCorrection != 0][l], size);
             break;
@@ -1771,6 +1779,9 @@ static void Change(int item, int dir) {
             break;
         case ITEM_SCANLINES:
             gPortConfig.scanlines = Wrap(gPortConfig.scanlines / 25 + dir, 5) * 25;
+            break;
+        case ITEM_LCD_GRID:
+            gPortConfig.lcdGrid = Wrap(gPortConfig.lcdGrid / 25 + dir, 5) * 25;
             break;
         case ITEM_LCD:
             gPortConfig.colorCorrection = !gPortConfig.colorCorrection;
