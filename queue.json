@@ -16811,7 +16811,7 @@
       "status": "en_curso",
       "owner": "codex-v29-release",
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-06T23:03:41.514802+00:00",
+      "updated_at": "2026-11-06T23:22:04.122924+00:00",
       "branch": "release/v2.9-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
@@ -16851,6 +16851,11 @@
           "at": "2026-11-06T23:03:41.514802+00:00",
           "owner": "codex-v29-release",
           "detail": "Usuario pidepublicarporplataformaslistas: WINDOWS2.9PUBLICOLATEST https://github.com/MatyMeatBoy/ReKHCoM/releases/tag/v2.9 tagf05f0d3d; ZIPsha5dd1906cf32cbb7d271e2a1c607c3768caf5a9a0fa80fa5c92202b1f0a6b4a5b. ExactZIP6boots32/64EUUSJP8corepixelverify+actualCLIrecipeinventoryPASS; cleancopyversions/PE/hash+publicredownloadPASS. ImmutableWindowsmanifest/checksumwith-windows suffixpublished. Linuxdesktop/armhfpackagesclean+ELFverified/staged, VMpackaged6bootsactive512MiB1CPU; noLinuxpublicyet. Androidbuildownmatrix37368suspendedtree10foroneheavytestload, resumeafterLinuxsmoke. Otherplatformscontinue after; neverclobberpublishedfiles. Sourcecleanf05fixed, userinstructionincremental overrides oldall-at-oncegate. Reporter610AndroidZIPpending upload."
+        },
+        {
+          "at": "2026-11-06T23:22:04.122924+00:00",
+          "owner": "codex-v29-release",
+          "detail": "PARTIALPUBLICATIONREQUESTfulfilled4platformpackages: WindowsZIP5dd1906c, Linuxdesktop44085c98, Linuxarmhfca0bae46, AndroidAPK19153455. Publicdownloads+phasesources/checksums allHASHverifiedLatesttagf05f0d3d immutable. Linuxpackaged6boots512MiB/1CPU PASS everypayloadidentical; firstprivateCRLFfixturefailurepreserved. AndroidbothABIs/3regions, compiledJavaEntry/code102090099/cert2.8equal verifiedstatic, physicaluntestedbeta. 616answered+closed6698115541;573/596/598releasefollowups;610AndroidnewAPKoffered6698253290stillopenZIP/resultpending. MatrixRESUMED root37368; Webinprogress,4consolesstillpending; noallplatformcompleteclaim. Oneworkeridle,CPUrootjobs1BelowNormal."
         }
       ],
       "claimed_at": "2026-11-06T20:59:03.912953+00:00"
@@ -16998,7 +17003,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T23:03:41.514802+00:00",
+  "updated_at": "2026-11-06T23:22:04.122924+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
