@@ -792,3 +792,12 @@ Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
 sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
 a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
 AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+### Escena120: grabado figurativo completo, nube65a0a5d0
+
+Las partes superiores existen en el banco ROM cargado, sobre la fila visible
+692..699. Recuperar sólo la tinta8/10/11/12 de esos tiles, paleta4, fuera del
+borde superior del mapa; no inventar cabezas, clonar otros grabados ni copiar
+los fragmentos de marcos o ladrillos adyacentes del atlas. Mantener la reparación
+de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
+hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.

@@ -41,6 +41,7 @@
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
 #include "port/port_scene130_library.h"
+#include "port/port_scene120_engraving.h"
 #include "port/port_scene081_clip.h"
 #include "port/port_halloween_floor.h"
 
@@ -1689,6 +1690,16 @@ static int SinglePanelIndex(const BgLatch* l, uint16_t cnt, int x, int y) {
     return (entry >> 12) * 16 + value;
 }
 
+static int Preliminar120EngravingPixel(uint16_t cnt, int x, int y, uint16_t* color) {
+    int entry = PortScene120EngravingEntry(x,y), off, value;
+    if (entry < 0 || (cnt & 128)) return 0; /* this native bank is4bpp */
+    off = ((cnt >> 2) & 3) * 0x4000 + (entry & 1023) * 32 + (y & 7) * 4 + ((x & 7) >> 1);
+    if (off >= 0x10000) return 0;
+    value = (VRAM8[off] >> ((x & 1) * 4)) & 15;
+    *color = PortScene120EngravingInk(value) ? PLTT16[(entry >> 12) * 16 + value] & 0x7FFF : TRANSPARENT;
+    return 1;
+}
+
 /* Reconstruct one complete, original fir from its overlapping occurrences.
  * Work in palette indices, then keep the component attached to its tip.
  * No raster art is stored in the repository or extra game objects created.
@@ -2079,6 +2090,11 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                  sPreliminarRecipe[bg]->v[0]==120 || sPreliminarRecipe[bg]->v[0]==121 || sPreliminarRecipe[bg]->v[0]==122 ||
                  sPreliminarRecipe[bg]->v[0]==124 || sPreliminarRecipe[bg]->v[0]==130)) {
                 int sx,sy;
+                if (sPreliminarRecipe[bg]->v[0]==120 && bg==2 &&
+                    Preliminar120EngravingPixel(cnt,wx,wy,&out[x])) {
+                    sInWorld[x]=1;
+                    continue;
+                }
                 if (sPreliminarRecipe[bg]->v[0]==130 && Preliminar130Pixel(bg,wx,wy,&out[x])) {
                     sInWorld[x]=1;
                     continue;
