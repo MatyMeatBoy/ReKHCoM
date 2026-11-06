@@ -813,3 +813,11 @@ Las celdas vacías superiores BG3 que ahora quedan expuestas usan el tile opaco
 original16filas debajo; no se modifica ninguna muestra del piso ya opaco.
 Conservar props, actores y omisión decorativa. ANTES/PROPUESTA es un modelo
 de receta sin build al mismo encuadre; hija pendiente, sin aprobación heredada.
+### Escena120: grabado figurativo completo, nube65a0a5d0
+
+Las partes superiores existen en el banco ROM cargado, sobre la fila visible
+692..699. Recuperar sólo la tinta8/10/11/12 de esos tiles, paleta4, fuera del
+borde superior del mapa; no inventar cabezas, clonar otros grabados ni copiar
+los fragmentos de marcos o ladrillos adyacentes del atlas. Mantener la reparación
+de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
+hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.
