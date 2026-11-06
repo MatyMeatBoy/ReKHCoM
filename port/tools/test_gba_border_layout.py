@@ -99,5 +99,21 @@ class BorderGeometry(unittest.TestCase):
         # Selecting the existing setting must not assign aspect/zoom or HD flags.
         body=re.search(r'case ITEM_GBA_BORDER:\s*gPortConfig.gbaBorder =.*?break;',ui,re.S)[0]
         self.assertNotRegex(body,r'gPortConfig\.(?:aspect|zoom|hd\w+)\s*=')
+    def test_retry_after_failed_selection_and_cached_return(self):
+        source=(ROOT/'port/src/port_gba_border.inc').read_text()
+        a=source.index('static int GbaBorderReady(void) {')
+        b=source.index('    pixels = stbi_load_from_memory(',a)
+        prefix=re.sub(r'/\*.*?\*/','',source[a:b],flags=re.S).replace('BORDER_H','216')
+        tree=c_parser.CParser().parse('typedef int SDL_Texture;\n'+prefix+'return 2; }')
+        body=tree.ext[-1].body
+        state=dict(gPortConfig=dict(gbaBorder=1),sRenderer=1,sBorderShown=1,sBorderTex=1,sBorderMaterialTex=1,sBorderAttempted=2)
+        def cache_prefix():
+            try:self.c.run(body,state)
+            except Returned as r:return r.value
+        self.assertEqual(cache_prefix(),1) # Cached1 after failed2.
+        self.assertEqual(state['sBorderAttempted'],1,'Returning to a usable cached choice resets failed-choice suppression')
+        state['gPortConfig']['gbaBorder']=2
+        self.assertEqual(cache_prefix(),2,'An explicit later2 selection must reach decoding again')
+        self.assertEqual(state['sBorderAttempted'],2)
 
 if __name__=='__main__':unittest.main()

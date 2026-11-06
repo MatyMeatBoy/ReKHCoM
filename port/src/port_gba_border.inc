@@ -23,7 +23,10 @@ static int GbaBorderReady(void) {
         return 0;
     }
     if (!sRenderer) return 0;
-    if (sBorderShown == selected && sBorderTex && sBorderMaterialTex) return 1;
+    if (sBorderShown == selected && sBorderTex && sBorderMaterialTex) {
+        sBorderAttempted = selected;
+        return 1;
+    }
     if (sBorderAttempted == selected) return 0;
     sBorderAttempted = selected;
     pixels = stbi_load_from_memory(kGbaBorders[selected - 1], (int)kGbaBorderSizes[selected - 1],

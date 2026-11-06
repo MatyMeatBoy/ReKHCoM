@@ -28,7 +28,8 @@ def main():
     assert c.returncode==0,c.stderr.decode(errors='replace')
     p=subprocess.run([str(exe)],capture_output=True,creationflags=flags)
     (args.output/'stdout.log').write_bytes(p.stdout);(args.output/'stderr.log').write_bytes(p.stderr)
-    result={'source_sha256':hashlib.sha256(s.encode()).hexdigest(),'extracted_sha256':hashlib.sha256(code.encode()).hexdigest(),'compile_command':command,'compile_exit':c.returncode,'exit':p.returncode,'stdout':p.stdout.decode(errors='replace'),'scope':'actual production geometry/cache/output code with mock SDL, no GPU/game/ROM runtime'}
+    inputs={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in ('port/src/port_gba_border.inc','port/include/port/gba_border_layout.h','port/tools/gba_border_conformance.c')}
+    result={'source_sha256':hashlib.sha256(s.encode()).hexdigest(),'input_sha256':inputs,'extracted_sha256':hashlib.sha256(code.encode()).hexdigest(),'compile_command':command,'compile_exit':c.returncode,'exit':p.returncode,'stdout':p.stdout.decode(errors='replace'),'scope':'actual production geometry/cache/output code with mock SDL, no GPU/game/ROM runtime'}
     (args.output/'RESULT.json').write_text(json.dumps(result,indent=2));print(json.dumps(result))
     assert p.returncode==0
 if __name__=='__main__':main()

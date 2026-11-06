@@ -140,6 +140,7 @@ int main(void){
     }
     gPortConfig.gbaBorder=1;assert(GbaBorderReady());gPortConfig.gbaBorder=2;failTexture=created+2;
     assert(!GbaBorderReady()&&alive==2&&sBorderShown==1);gPortConfig.gbaBorder=1;assert(GbaBorderReady());
+    gPortConfig.gbaBorder=2;failTexture=0;assert(GbaBorderReady()&&alive==2&&sBorderShown==2);
     Clear();assert(alive==0);
     printf("PASS actual border cache/geometry/OutputRect: off%d bit-identical, on%d uniform/no crop, legacy and allocation fallback\n",offCases,onCases);
     return 0;

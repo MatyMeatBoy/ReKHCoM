@@ -35,7 +35,7 @@ Atlas data or bitmap assets are changed.
 
 ## Validation so far
 
-- Five Python tests execute the actual geometry-header C AST and UI contracts;
+- Six Python tests execute the actual geometry-header/cache-prefix C AST and UI contracts;
   RED recorded before implementation, then GREEN. Requires test-only pycparser.
 - Explicitly authorized actual C fixtures passed with native Windows32/64:
   576 Border0 OutputRect cases bit-identical to baseline8f04d2b9;
@@ -45,6 +45,15 @@ Atlas data or bitmap assets are changed.
 - Actual cache code with mocked SDL passes decode/first and second texture
   allocation failures, bounded retries, native material colours, old-cache
   preservation and complete release. These are not real GPU/device-loss tests.
+- Review found failed2 -> cached1 ->2 was suppressed until Off/reset. The cache
+  hit now records its selected choice; the actual C-prefix Python test failed
+  before and passes after. A matching C transition fixture is prepared; its
+  rerun passed on native32/64 in the next authorized window.
+- Isolated Windows64 EU full build with --test passed: actual translation
+  units, ABI/mixed arguments/fixed mapping, synthetic boot-marker contract
+  and BIOS decoder/handler. Inputs were private copies and outputs stayed in
+  this checkout. No real game/runtime screenshots were run. Build guest hash
+  17a51adeebc6aa29245403acd213526dde1c8cf8d6eca613d058263b0b7b4a07.
 - Diff whitespace checks pass. Private outputs/hashes/claim receipt are under
   pruebas/v29-adaptive-gba-border outside the repository.
 
@@ -53,7 +62,7 @@ port/tools/test_gba_border_renderer.py. It extracts actual OutputRect/CrtScale,
 PortConfigView and baseline8f04's implementation; the renderer/cache inc and
 geometry header are included directly, not copied as a stale model.
 
-Full translation-unit compilation, SDL GPU screenshots, HD HUD/journal/menu
-layering, CRT physical output and device reset/failure runtime remain pending
+Other target compilation, SDL GPU screenshots, HD HUD/journal/menu layering,
+CRT physical output and device reset/failure runtime remain pending
 the parent's coordinated CPU window. No gameplay or performance claim follows
 from mocked SDL fixtures. Do not merge before that review/QA.
