@@ -16811,7 +16811,7 @@
       "status": "en_curso",
       "owner": "codex-v29-release",
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-06T21:50:08.416902+00:00",
+      "updated_at": "2026-11-06T22:36:58.091587+00:00",
       "branch": "release/v2.9-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
@@ -16841,6 +16841,11 @@
           "at": "2026-11-06T21:50:08.416902+00:00",
           "owner": "codex-v29-release",
           "detail": "Finalsourcef05f0d3d14eccab20bf6951017610944b217097d main629merged, clean. Includes633coldcache/634all915launcherrecipes/635optionalLCDoff,631/632. Combinedsourcecheck+version/AndroididentityPASS; independentmetadatareviewPASS. Freezeandserialmatrix8packages+Webnowstarting, no publicationyet. AtlasnewLCDcomparisonpending; old4proposalsstaypending;610devicefollowupopen. Oneextraidle;CPUrootjobs1BelowNormal."
+        },
+        {
+          "at": "2026-11-06T22:36:58.091587+00:00",
+          "owner": "codex-v29-release",
+          "detail": "Frozenf05f0d3d matrixrun20261106T215034Z: Windows32EUUSJP PASS701.5s,64PASS407.2s ABIboot+BIOS, ZIPpackagePASS35.4s; Linuxdesktopx86/x64+armhf allregionsPASS, Androidnowrunning onejobBelowNormal. FinalZIPread-onlyCLIrecipeinventoryPASS actual915 currentstrings/newmissing/legacy cases (no ROM/game); finalpackagedgame6bootsstillpending. Sourceclean. Reporter610confirmedAndroid andhasZIP; reply6697511314 explainsGitHubattachment; lognotyetreceived, issueseparateopen. No publication; CPUroot, workeridle,lockFREE."
         }
       ],
       "claimed_at": "2026-11-06T20:59:03.912953+00:00"
@@ -16988,7 +16993,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:50:19.764925+00:00",
+  "updated_at": "2026-11-06T22:36:58.091587+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
