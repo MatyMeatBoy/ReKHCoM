@@ -687,6 +687,18 @@ cara derecha original x448..479 con2y-x constante entre-96y16; mantener remate,
 base, lado izquierdo y props únicos. No recolorear el donante de otro plano.
 La imagen nueva se etiqueta simulación sobre captura previa, sin build; su
 aprobación y runtime siguen pendientes. Ver `ATLAS_SCENE095_PATTERN_A.md`.
+
+### Escena095: árbol del inicio completo, seguimiento06/11
+
+La aceptación de `e78f689cba2e46548b67cff57c10f444` revisión2 conserva el
+patrón A y pide comprobar que el árbol inicial no quede por mitades. Su copa
+inferior y tronco BG1 llegan hasta la fila382; el reflejo de la costura
+izquierda terminaba en351. Extender solamente ese mismo donante hasta383,
+manteniendo x=-16..-1, completa248píxeles opacos originales. No repetir todo
+BG1 ni tocar el mapa nativo, otros árboles, actores o el patrón A. La nueva
+hija es un estudio de receta antes/propuesta SIN BUILD, pendiente propio;
+no hereda aprobación. Ver `ATLAS_SCENE095_TREE.md`.
+
 ### Escena115: detalles posteriores a la aceptación, revisión4
 
 Los tres recortes requieren alinear la frontera de madera limpia con el fin
