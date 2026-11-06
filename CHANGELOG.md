@@ -11,11 +11,13 @@
 - Prepare Darkside's beach cache before dispatching picture rows, preventing parallel first readers from rebuilding or reading unfinished shoreline tables.
 - Basic HD imports now include the floor6 movie replacement (`zz_event_062`), without requiring all story scenes.
 - Add General → Hide title hint to hide the added SELECT OPTIONS label while keeping SELECT access to Options. The hint remains visible by default.
+- Add an optional LCD pixel grid aligned to the GBA pixel pitch across zoom and aspect changes. Cached one-dimensional GPU masks keep steady frames free of mask regeneration; the grid is off by default and leaves decorative borders clear.
 - Jiminy: carry the extended page edges, rounded corners and footer layout across cover, list and detail pages, with HD cards on or off. Original GBA rendering retains its original layout.
 
 - Atlas-approved wide art updates for scenes057,081,087,095,107/108,110,112,115,120 and130, plus Oogie Boogie's side planes. Scene130's accepted extension is enabled without preview flags.
 - Follow-up accepted versions refine scenes081,095,115,120 and130, plus Darkside's punch flank. Later review comments remain open; approval of one version does not accept its future replacements.
 - Approved HD synthesis import recipes improve requirement digits and card edges. HD replacements are generated from the player's owned source during import; personal imports are not overwritten by the release workflow.
+- Synchronize the native launcher's embedded synthesis recipes with the accepted source, so its imports and update detection use the same 405 refreshed recipes as the Python importer.
 - Existing Atlas review records and outstanding art comments are retained. The original source-only preparation is documented in `port/progress/ATLAS_V285_PREPARATION.md`.
 
 ## v2.8
