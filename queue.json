@@ -16320,16 +16320,23 @@
     "atlas120-figure-engraving-r5": {
       "id": "atlas120-figure-engraving-r5",
       "piece": "Escena120: completar grabado figurativo de nube65a0a5d0; diagonal aceptada y mamposteriaA tratada aparte",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-atlas120-figure",
       "created_at": "2026-11-05T20:16:00.640798+00:00",
-      "updated_at": "2026-11-06T15:56:36.714733+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T16:11:01.650859+00:00",
+      "branch": "art/atlas120-figure-20261106",
+      "pr": "621",
       "approval": "Padre aprobado; grabado figura sigue pendiente, no respondido por propuesta parcial del moduloA. Sin build autorizado.",
       "reference": "Atlas9f28568fabd94b7c8526615a7b2b6abf revision5 SHA206dfb152f5ee54ba94e1e6c9796b228755fc2aeb465df112a99ab1efc37e050 envio20261105-160839-40fd46 cloud65a0a5d0-2f82-4195-bcd2-8d52fbd5a59e",
-      "evidence": [],
-      "claimed_at": "2026-11-06T15:56:36.714733+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-06T16:11:01.650859+00:00",
+          "owner": "codex-atlas120-figure",
+          "detail": "Source7dc670f5e32fb90ffa21ef808c1a217a482237d9; pendingAtlasb3d60c58be8f4f209a4f67243ec8e3c6 responds onlycloud65a0a5d0 parent9f285rev5. Original loaded960tilebank containsmissingheads above692..699; descriptor+4bppVRAMboundedreader onlyscene120BG2/outsideGBA/wy<0;696nativeinkpixels,20480ASTPASS independentROMreview. Model before/proposal samebox/scale, noactors/capture. MamposteriaA601 remains separate. No compiler/build/game/imports; realQA/Original/cameras pending. pruebas/atlas-20261106/scene120-figure/"
+        }
+      ],
+      "claimed_at": "2026-11-06T15:56:36.714733+00:00",
+      "sent": "b3d60c58be8f4f209a4f67243ec8e3c6"
     },
     "atlas-queue-partial-response-20261105": {
       "id": "atlas-queue-partial-response-20261105",
@@ -16575,7 +16582,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T16:10:48.521940+00:00",
+  "updated_at": "2026-11-06T16:11:01.650859+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
