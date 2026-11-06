@@ -16524,8 +16524,13 @@
       "claimed_at": "2026-11-06T15:08:43.708969+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-06T15:08:43.708969+00:00",
+  "integrator": {
+    "owner": "codex-journal-all-modes-integrator",
+    "token": "2b1be8ead58a269ece2f789f7afc52afab7a14e2f8916c54",
+    "created_at": "2026-11-06T15:27:12.035328+00:00",
+    "updated_at": "2026-11-06T15:27:12.035328+00:00"
+  },
+  "updated_at": "2026-11-06T15:27:12.035328+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
