@@ -16936,10 +16936,23 @@
       ],
       "claimed_at": "2026-11-06T21:29:21.782644+00:00",
       "completed_at": "2026-11-06T21:35:00.068036+00:00"
+    },
+    "v29-launcher-synthesis-recipe-sync": {
+      "id": "v29-launcher-synthesis-recipe-sync",
+      "piece": "Synchronize launcher embedded recipe with approved current synthesis TSV; source check stale405 rows",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-06T21:40:46.112332+00:00",
+      "updated_at": "2026-11-06T21:40:46.112332+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario integra todosaprobados ypublica2.9 todasplataformas",
+      "reference": "check_sources staleport/decompui/hd_sprites_recipe.inc while TSV currentapproveddd8bf656d; no personalimports",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:35:09.620173+00:00",
+  "updated_at": "2026-11-06T21:40:46.112332+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
