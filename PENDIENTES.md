@@ -466,4 +466,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-followup-e94de270-r2 | Escena 130 · Bastión Hueco · Biblioteca de Bella: ahora falta extender este a la derecha si | integrado | codex-atlas130-right | 613 | Atlas feaa377c92a54fc3a6341c9c5ab2dae5 approved revision1 SHA f4df3a1bc10db73d61de709e2ca60c2cec3761fd6ea74b811490fd7df81c4929 | 2026-11-06T14:34:23.869309+00:00 |
 | atlas-journal-gba-footer-audit-20261106 | Diario: comprobar footer inferior frente al GBA original sin build | en_curso | codex-journal-footer-audit | — | Usuario06/11 pide verificar si se perdió footer frente originalGBA. Auditoría readonly de ROM/fuentes/capturas; no compiler/build/game/importregen. | 2026-11-06T14:29:06.947408+00:00 |
 
-Integrador: codex-approved-613-614 (ocupado; 2026-11-06T14:29:16.953226+00:00)
+Integrador: libre
