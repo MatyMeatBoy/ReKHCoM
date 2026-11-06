@@ -520,6 +520,10 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *x=sx; *y=sy; return 1;
     }
     if (v[0] == 97) {
+        /* Trees belong to the finite BG2 map, not the grass's smaller
+         * repeat rectangle. Keep their outer leaves and bottom trunks;
+         * never repeat unique props or couple them to OBJ actor staging. */
+        if (v[1]==2) return ox>=0 && oy>=0 && ox<v[2]*32 && oy<v[3]*32;
         if (ox >= 8 && ox < 48 && oy >= 0 && oy < 40) return 1;
         if (!v[20]) return 0;
         *x=8+PortSceneTileMod(ox-8,40); *y=PortSceneTileMod(oy,40); return 1;
