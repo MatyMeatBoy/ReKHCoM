@@ -3,7 +3,7 @@ import os, shutil, subprocess, tempfile, unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 class Scene095HedgeTest(unittest.TestCase):
- def test_whole_flower_face_in_both_extensions(self):
+ def test_left_flower_face_and_reviewed_right_pattern_a(self):
   compiler=os.environ.get('CC') or shutil.which('gcc')
   local=ROOT.parent.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/x86_64-w64-mingw32-gcc.exe'
   if not compiler and local.is_file():compiler=str(local)
@@ -18,7 +18,7 @@ for(wx=-192;wx<48;wx++)for(wy=260;wy<420;wy++){
 }
 for(wx=480;wx<704;wx++)for(wy=176;wy<420;wy++){
  int d=2*wy-wx;if(d< -96||d>=16)continue;
- assert(PortPreliminarPixelSource(p,wx,wy,&sx,&sy));assert(sx>=64&&sx<160);assert(2*sy+sx==d+656||2*sy+sx==d+655);
+ assert(PortPreliminarPixelSource(p,wx,wy,&sx,&sy));assert(sx>=448&&sx<480);assert(2*sy-sx==d);
 }
 /* Keep the native top/white rim, never the x496+ return corner or a
  * flower-face donor inside the last eight pixels of that rim. */

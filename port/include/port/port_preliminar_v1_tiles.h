@@ -76,13 +76,18 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *x=sx; *y=sy; return 1;
     }
     if (v[0]==115) {
+        /* Only sampled outside the native GBA viewport. The accepted top
+         * exterior hatch crosses into transparent map padding at its tip. */
+        if (v[1]==2 && ox>=30 && ox<32 && oy>=5 && oy<10) {
+            *x=ox-24; *y=oy+12; return 1;
+        }
         if (ox>=0 && ox<w && oy>=0 && oy<h) return 1;
         sx=PortSceneTileMod(ox,8);
         sy=oy+(ox-sx)/2;
         if (v[1]==3) {
             /* A plank has four rows, not the old two-row upper swatch.
              * Keep its diagonal phase and avoid copying wall pixels. */
-            if (2*oy+ox>=36 || sy<0 || sy>=32)
+            if (2*oy+ox>=32 || sy<0 || sy>=32)
                 sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
             if (2*oy+ox>=32) {
@@ -95,7 +100,9 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
                  * the old rectangular swatch spliced three different hatches.
                  * Complete authored clipped motifs at the map boundary;
                  * thin whole rows only farther away, never half a diamond. */
-                if (j<0 || oy-cy< -2 || oy-cy>=3 ||
+                /* This stamp's centre is below the authored map. Its native
+                 * remainder is empty, so the left exterior was an orphan. */
+                if ((cx==2 && cy==31) || j<0 || oy-cy< -2 || oy-cy>=3 ||
                     (overlapsMap ? j>=2 : PortSceneTileMod(j,2))) return 0;
                 sx=10+ox-cx; sy=19+oy-cy;
             } else if (sy<0 || sy>=32) return 0;
@@ -762,11 +769,11 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             return 1;
         }
         if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
-            /* The face below the cap is 56px tall and ends at diagonal16.
-             * Keep the lower flower-bearing 56px of the left bay. */
-            int reflected=559-wx;
-            *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+656-*sx)/2;
+            /* Review pattern A is the dark native right face, not the
+             * reflected flower-bearing left face. Repeat its complete
+             * 32px strip with its own diagonal, including the bottom edge. */
+            *sx=448+PortSceneTileMod(wx-448,32);
+            *sy=(2*wy-wx+*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;

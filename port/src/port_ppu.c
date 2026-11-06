@@ -41,6 +41,7 @@
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
 #include "port/port_scene130_library.h"
+#include "port/port_scene081_clip.h"
 #include "port/port_halloween_floor.h"
 
 extern const uint8_t gBtlBgHalloweenTownTiles[16384];
@@ -51,6 +52,7 @@ extern const void* gMsgwinMapBlocks[4];
 extern const unsigned char gStockValueTiles[];
 extern const uint16_t gEmy00Palette[];
 extern const unsigned char gEmy00L00Tiles[];
+extern const unsigned char gMapGmkMonstro03Tiles[];
 extern const uint16_t gCheshirePalette[], gAladdinPalette[], gGeniePalette[], gHookPalette[], gJiminyPalette[], gMarefPalette[];
 extern const unsigned char gBtlShadowTiles[], gBtlShadowSmallTiles[], gBtlShadowLargeTiles[];
 
@@ -1440,7 +1442,7 @@ static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
         return ok ? MapTile(l, tx, ty) : -1;
     }
     if (sAgrabahLayer[bg]) {
-        ok = PortAgrabahTileSource(sAgrabahLayer[bg], &tx, &ty, sPreliminarV1);
+        ok = PortAgrabahTileSource(sAgrabahLayer[bg], &tx, &ty, 1);
         return ok ? MapTile(l, tx, ty) : -1;
     }
     if (!sBattleView && l->map && sUseSceneProfiles) {
@@ -2863,6 +2865,18 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             }
             if (col < 0)
                 continue;
+            /* 081: the authored platform leaves a detached lower OBJ arc
+             * over the empty map cap. Keep the real backdrop, only outside
+             * the native frame; actors and the other decorations bypass it. */
+            if (gPortScreen.wide && sActorSceneKey == EVENT_081_MONSTORO_E3 &&
+                sBgLatch[1].valid && sPreliminarRecipe[1] && sPreliminarRecipe[1]->v[0] == 81 &&
+                sOamHd[i].tiles == gMapGmkMonstro03Tiles &&
+                !sOamTag[i].screen && !sOamTag[i].hud && !sOamTag[i].text) {
+                const BgLatch* l = &sBgLatch[1];
+                int wx = l->x + gx + ((IO16(0x14) & 0x1ff) - l->hofs);
+                int wy = l->y + gy + ((IO16(0x16) & 0x1ff) - l->vofs);
+                if (PortScene081DecorBelowCap(gx,gy,wx,wy)) continue;
+            }
             if (sMainHdPart[i])
                 col = SmallCardNativeColor(i, tx, ty, col);
             if (bandOnly) {
@@ -3218,6 +3232,9 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         top = objFront ? sObjLine[x] : bg < 0 ? bd : sBgLine[bg][x];
         blend = (objFront && sObjSemi[x]) ||
                 ((mask & WIN_SFX) && effect == 1 && (bldcnt & (1 << topLayer)));
+        if (sJiminyDetailCapture && objects && gx >= 0 && gx < 3 &&
+            PortJiminyPaperPixel(topLayer, blend, gx, gyLine))
+            sJiminyPageRows[gyLine].leftOwned |= (uint8_t)(1u << gx);
         if (sJiminyDetailCapture && objects && gx >= 200 && gx < 240 && gyLine >= 16 && gyLine < 160) {
             PortJiminyPageRow* row = &sJiminyPageRows[gyLine];
             /* PAGE ends above row20; rows20..23 already contain the

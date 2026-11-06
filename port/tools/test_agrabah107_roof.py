@@ -34,6 +34,10 @@ int main(void){int sx,sy;
  Resolve(3,500,512,&sx,&sy);assert(sx==468&&sy==496);
  /* The last BG2 block is transparent padding, not a complete facade. */
  Resolve(2,500,500,&sx,&sy);assert(sx==468&&sy==484);
+ /* The reviewed middle-facade step uses the same parallel donor. */
+ Resolve(2,500,300,&sx,&sy);assert(sx==468&&sy==284);
+ {int tx=53,ty=-3;assert(PortAgrabahTileSource(2,&tx,&ty,1));assert(tx==45&&ty==1);}
+ {int tx=17,ty=-20;assert(PortAgrabahTileSource(2,&tx,&ty,1));assert(tx==17&&ty==4);}
  for(int x=512;x<1536;x++)for(int d=536+(x&1);d<576;d+=2){
   int y=(x+d)/2;
   Resolve(2,x,y,&sx,&sy);
@@ -50,7 +54,7 @@ int main(void){int sx,sy;
   assert(!!PortAgrabahPixelRunNeeded(bg,x,y)==!!expected);
  }
  for(int bg=2;bg<=3;bg++)for(int y=0;y<512;y++)for(int x=0;x<512;x++){
-  int padding=bg==2&&x>=496&&y>=496;
+  int padding=bg==2&&x>=496&&((y>=288&&y<304)||y>=496);
   assert(!!PortAgrabahPixelRunNeeded(bg,x,y)==!!padding);
   Resolve(bg,x,y,&sx,&sy);
   assert(sx==x-(padding?32:0)&&sy==y-(padding?16:0));
