@@ -3063,6 +3063,13 @@ static void PumpEvents(void) {
 
 /* Keep the original GBA simulation clock. Present calls are counted where
    they actually occur; a skipped draw is not a displayed game frame. */
+void PortFpsResetAfterStateLoad(void) {
+    extern volatile uint32_t gFrameCounter;
+    sLogicLast = gFrameCounter;
+    sFpsTime = SDL_GetPerformanceCounter();
+    sFpsFrames = 0;
+}
+
 static uint64_t AdvanceFrameDeadline(void) {
 #ifdef __EMSCRIPTEN__
     int yielded = 0;

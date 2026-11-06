@@ -42,11 +42,12 @@ static char sPendingPath[MAX_PATH];
 static int sPendingLoad, gPortStateSlot=3;
 static unsigned char memory[16];
 static FILE* sFile;
-static int sOk, failure, resets, achievements, oversized;
+static int sOk, failure, resets, fpsResets, achievements, oversized;
 static uint32_t BuildId(void){return 123;}
 static void MakeParentDir(const char*p){(void)p;}
 static void PortLog(const char*p,...){(void)p;}
 static void PortAudioReset(void){resets++;}
+static void PortFpsResetAfterStateLoad(void){fpsResets++;assert(memory[0]==42&&memory[15]==42);}
 void PortAchievementsInvalidate(const char*p){(void)p;achievements++;}
 static FILE* Open(const char*p,const char*m){if(failure==1&&strchr(m,'w'))return NULL;return fopen(p,m);}
 static size_t Write(const void*p,size_t a,size_t b,FILE*f){if(failure==2)return fwrite(p,a,b/2,f);return fwrite(p,a,b,f);}
@@ -81,15 +82,15 @@ int main(void){
  memset(memory,42,16);assert(Save(sPendingPath)==1);
  assert(Save(PortStatePath(3))==1);
  PortStateRequestLoad(NULL);assert(!strcmp(sPendingPath,"states/NAMESPACE/slot3.khst"));
- memset(memory,0,16);assert(Load("states/slot3.khst")==1&&memory[0]==42);
+ memset(memory,0,16);assert(Load("states/slot3.khst")==1&&memory[0]==42);assert(fpsResets==resets&&fpsResets==1);
  memset(memory,42,16);assert(Save("state.khst")==1);
  f=fopen("state.khst","rb");assert(fread(old,1,28,f)==28);fclose(f);
  for(n=1;n<=4;n++){failure=n;memset(memory,99,16);assert(Save("state.khst")==0);failure=0;f=fopen("state.khst","rb");assert(fread(now,1,28,f)==28);fclose(f);assert(!memcmp(old,now,28));}
- memset(memory,0,16);assert(Load("state.khst")==1);assert(memory[0]==42&&memory[15]==42);
- for(n=0;n<28;n++){f=fopen("broken.khst","wb");assert(fwrite(old,1,n,f)==(size_t)n);fclose(f);memset(memory,77,16);resets=achievements=0;assert(Load("broken.khst")<=0);assert(memory[0]==77&&memory[15]==77);assert(!resets&&!achievements);}
- for(n=3;n<=6;n++){if(n==4)continue;failure=n;memset(memory,77,16);resets=achievements=0;assert(Load("state.khst")<=0);assert(memory[0]==77&&!resets&&!achievements);}failure=0;
- oversized=1;assert(Load("state.khst")==0);assert(memory[0]==77);oversized=0;
- old[8]^=1;f=fopen("broken.khst","wb");fwrite(old,1,28,f);fclose(f);assert(Load("broken.khst")==-1);assert(memory[0]==77);
+ memset(memory,0,16);assert(Load("state.khst")==1);assert(memory[0]==42&&memory[15]==42);assert(fpsResets==resets&&fpsResets==2);
+ for(n=0;n<28;n++){f=fopen("broken.khst","wb");assert(fwrite(old,1,n,f)==(size_t)n);fclose(f);memset(memory,77,16);resets=fpsResets=achievements=0;assert(Load("broken.khst")<=0);assert(memory[0]==77&&memory[15]==77);assert(!resets&&!fpsResets&&!achievements);}
+ for(n=3;n<=6;n++){if(n==4)continue;failure=n;memset(memory,77,16);resets=fpsResets=achievements=0;assert(Load("state.khst")<=0);assert(memory[0]==77&&!resets&&!fpsResets&&!achievements);}failure=0;
+ oversized=1;assert(Load("state.khst")==0);assert(memory[0]==77&&!fpsResets);oversized=0;
+ old[8]^=1;f=fopen("broken.khst","wb");fwrite(old,1,28,f);fclose(f);assert(Load("broken.khst")==-1);assert(memory[0]==77&&!fpsResets);
  return 0;
 }
 '''
