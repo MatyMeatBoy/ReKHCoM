@@ -16788,10 +16788,23 @@
       "approval": "Usuario exige pendientescuelgues antes2.9; no confundirfixdefecto demostrado con confirmacionreporte",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/610; fuente626 main8f04d2b9; VERIFICATION enpruebas/issue610-pooh-tree-crash-v29",
       "evidence": []
+    },
+    "v29-release-performance-gates-20261106": {
+      "id": "v29-release-performance-gates-20261106",
+      "piece": "Release2.9: final performance/stability and adaptive-border runtime gates; eight published platform packages and allregions; publish only after verification",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-06T19:43:05.358774+00:00",
+      "updated_at": "2026-11-06T19:43:05.358774+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
+      "reference": "PR628 d2254cc0; PR627 borde pendiente QA; issue610 confirmacion plataforma separada",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T19:42:58.525091+00:00",
+  "updated_at": "2026-11-06T19:43:05.358774+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
