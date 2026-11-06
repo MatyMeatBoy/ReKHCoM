@@ -480,4 +480,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue598-lcd-grid-v29 | Issue598: optional source-pixel aligned LCD grid following zoom/aspect, GPU-rendered cached axes with no per-frame regeneration | en_curso | codex-v29-lcd | — | Usuario06/11 pide revisar/cerrar todosissues con2.9; prioridadmaximosmsbajos todasversiones,defaultsinmodificar, unworkerextra/jobs1BelowNormal | 2026-11-06T21:21:02.190476+00:00 |
 | v29-darkside-cold-cache | Darkside cold-cache publication before PPU worker dispatch: avoid concurrent shoreline preparation | pr_abierto | codex-v29-darkside | https://github.com/MatyMeatBoy/ReKHCoM/pull/633 | Usuario pide reducir picosms en arenas y cerrar estabilidad v2.9 | 2026-11-06T21:33:32.833272+00:00 |
 
-Integrador: libre
+Integrador: codex-v29-integrator (ocupado; 2026-11-06T21:34:18.538126+00:00)
