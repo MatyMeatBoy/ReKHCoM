@@ -111,7 +111,7 @@ enum {
     ITEM_FILTER,
     ITEM_SCANLINES,
     ITEM_LCD,
-    ITEM_GBA_BORDER,   /* GBA classic: the decorative border around the GBA picture (Original view) */
+    ITEM_GBA_BORDER,   /* Decorative border, independent of view/aspect/zoom. */
     ITEM_MODE_RESET,   /* a graphics mode's defaults (PortApplyGraphicsMode), confirmed twice */
     ITEM_FPS,
     ITEM_HEAD_AUDIO, /* section heading, not selectable */
@@ -363,7 +363,7 @@ static int ItemVisible(int item) {
         case ITEM_UNDUB: return 0; /* already Japanese */
 #endif
         case ITEM_HD_TITLE: return 0; /* part of HD HUD (ITEM_HD_CARDS) since 23/10 */
-        case ITEM_GBA_BORDER: return gPortConfig.viewMode == PORT_VIEW_ORIGINAL;
+        case ITEM_GBA_BORDER: return 1;
         /* the version and its difficulty are chosen at New Game and stay
            with the save, as in the original: no switch for them here */
         case ITEM_PS2_MODE:
@@ -419,8 +419,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Filter", "Filtre", "Filter", "Filtro", "Filtro", "フィルター" },
     { "Scanlines", "Lignes de balayage", "Scanlines", "Linee di scansione", "Scanlines", "スキャンライン" },
     { "GBA LCD colours", "Couleurs LCD GBA", "GBA-LCD-Farben", "Colori LCD GBA", "Colores LCD GBA", "GBAカラー" },
-    { "Border (Original view)", "Bordure (vue originale)", "Rahmen (Originalansicht)", "Cornice (vista originale)",
-      "Borde (vista Original)", "わく（オリジナル表示）" },
+    { "Border", "Bordure", "Rahmen", "Cornice", "Borde", "わく" },
     { "Reset to a mode's defaults", "Réglages d'un mode", "Standard eines Modus", "Predefiniti di una modalità",
       "Restablecer según el modo", "モードの初期値に戻す" },
     { "Show FPS", "Afficher FPS", "FPS anzeigen", "Mostra FPS", "Mostrar FPS", "FPS表示" },

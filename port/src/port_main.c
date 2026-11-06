@@ -34,6 +34,7 @@ extern int PortBridgeVideoCaps(void);
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
+#include "port/gba_border_layout.h"
 #include "port/port_hd2d.h"
 #include "port/port_hdlayout.h"
 #include "port/port_hdsprites.h"
@@ -91,6 +92,7 @@ void PortWebApplyResize(int w,int h) {
 }
 #endif
 static SDL_Renderer* sRenderer;
+static int sRendererResetPending;
 static SDL_Texture* sTexture;
 static int sTexW, sTexH;
 static jmp_buf sResetJmp;
@@ -424,6 +426,33 @@ static SDL_Rect AspectRect(int outW, int outH) {
     return r;
 }
 
+static int GbaBorderReady(void);
+/* The selected aspect remains the outer frame's shape. All image/UI layers
+ * share this useful viewport, so the frame cannot cover their text. */
+static SDL_Rect ContentArea(int outW, int outH) {
+    SDL_Rect area = AspectRect(outW, outH);
+    int framed = GbaBorderReady();
+    PortGbaBorderArea inside = PortGbaBorderViewport(area.w, area.h, framed);
+    if (framed && gPortConfig.viewMode != PORT_VIEW_AUTO) {
+        int canvasW, canvasH;
+        PortGbaBorderArea picture;
+        /* Config only: UpdateResolution may call this before the previous
+         * frame's gPortScreen/fit/auto state has been replaced. */
+        PortConfigView(gPortConfig.viewMode, &canvasW, &canvasH);
+        picture = PortGbaBorderPictureArea(inside.w, inside.h, canvasW, canvasH,
+                                          gPortConfig.scaleMode == PORT_SCALE_INTEGER);
+        inside.x += picture.x;
+        inside.y += picture.y;
+        inside.w = picture.w;
+        inside.h = picture.h;
+    }
+    area.x += inside.x;
+    area.y += inside.y;
+    area.w = inside.w;
+    area.h = inside.h;
+    return area;
+}
+
 /* A shared integer UI scale: about 216 logical lines at desktop sizes.
    1080p uses x5 (was x6.75), 1440p x6 (was x9). Keep it independent
    of world zoom, and fit small windows without cropping their UI. */
@@ -463,7 +492,7 @@ static void UpdateResolution(void) {
         if (!SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH) || outW <= 0 || outH <= 0)
             return;
         {
-            SDL_Rect area = AspectRect(outW, outH);
+            SDL_Rect area = ContentArea(outW, outH);
             outW = area.w;
             outH = area.h;
         }
@@ -534,12 +563,10 @@ static void UpdateResolution(void) {
 #define BORDER_W 384
 #define BORDER_H 216
 static SDL_Texture* sBorderTex;
+static SDL_Texture* sBorderMaterialTex;
+static SDL_Texture* sBorderAdaptiveTex;
 static int sBorderShown; /* which border sBorderTex holds */
-
-static int ClassicBorder(void) {
-    return gPortConfig.viewMode == PORT_VIEW_ORIGINAL && gPortConfig.gbaBorder >= 1 && gPortConfig.gbaBorder <= 3 &&
-           gPortScreen.width == GBA_SCREEN_W && gPortScreen.height == GBA_SCREEN_H && sFitScale == 0 && sAutoScale == 0;
-}
+static int sBorderAttempted; /* Do not retry a failed selection every frame. */
 
 /* Border 1's sides: six of the game's map cards (illustration over its colour's border), drawn from the ROM. */
 extern const unsigned char gMapCardBorderPalettes[];
@@ -611,42 +638,7 @@ static void BorderMapCards(unsigned char* px, int w, int h) {
     }
 }
 
-static void DrawClassicBorder(const SDL_FRect* picture) {
-    float s = picture->w / GBA_SCREEN_W;
-    SDL_FRect r;
-    if (!ClassicBorder())
-        return;
-    if (!sBorderTex || sBorderShown != gPortConfig.gbaBorder) {
-        int w, h, n, i = gPortConfig.gbaBorder - 1;
-        unsigned char* px = stbi_load_from_memory(kGbaBorders[i], (int)kGbaBorderSizes[i], &w, &h, &n, 4);
-        if (sBorderTex)
-            SDL_DestroyTexture(sBorderTex);
-        sBorderTex = NULL;
-        if (px) {
-            SDL_Surface* surf;
-            if (i == 0)
-                BorderMapCards(px, w, h);
-            surf = SDL_CreateSurfaceFrom(w, h, SDL_PIXELFORMAT_RGBA32, px, w * 4);
-            if (surf) {
-                sBorderTex = SDL_CreateTextureFromSurface(sRenderer, surf);
-                SDL_DestroySurface(surf);
-            }
-            stbi_image_free(px);
-        }
-        if (sBorderTex) {
-            SDL_SetTextureScaleMode(sBorderTex, SDL_SCALEMODE_NEAREST);
-            SDL_SetTextureBlendMode(sBorderTex, SDL_BLENDMODE_BLEND);
-        }
-        sBorderShown = gPortConfig.gbaBorder;
-    }
-    if (!sBorderTex)
-        return;
-    r.x = picture->x - 72 * s;
-    r.y = picture->y - 28 * s;
-    r.w = BORDER_W * s;
-    r.h = BORDER_H * s;
-    SDL_RenderTexture(sRenderer, sBorderTex, NULL, &r);
-}
+#include "port_gba_border.inc"
 
 /* the CRT view's exact scale (#202): x and y pixels per canvas pixel */
 static void CrtScale(int* sx, int* sy) {
@@ -659,8 +651,9 @@ static void CrtScale(int* sx, int* sy) {
 static void OutputRect(int outW, int outH, SDL_FRect* dst) {
     float sw = (float)gPortScreen.width, sh = (float)gPortScreen.height;
     float scale;
+    int framed = GbaBorderReady();
 
-    if (gPortConfig.viewMode == PORT_VIEW_CRT) { /* exactly that scale, centred: no fit, no zoom */
+    if (gPortConfig.viewMode == PORT_VIEW_CRT && !framed) { /* exactly that scale, centred: no fit, no zoom */
         int sx, sy;
         CrtScale(&sx, &sy);
         dst->w = sw * sx;
@@ -670,18 +663,10 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
         return;
     }
 
-    if (ClassicBorder() && outW >= BORDER_W && outH >= BORDER_H) {
-        scale = (float)(int)SDL_min(outW / (float)BORDER_W, outH / (float)BORDER_H);
+    if (sFitScale > 0) {
+        scale = framed ? SDL_min(sFitScale, SDL_min(outW / sw, outH / sh)) : (float)sFitScale;
         dst->w = sw * scale;
         dst->h = sh * scale;
-        dst->x = (float)(int)((outW - BORDER_W * scale) / 2 + 72 * scale);
-        dst->y = (float)(int)((outH - BORDER_H * scale) / 2 + 28 * scale);
-        return;
-    }
-
-    if (sFitScale > 0) {
-        dst->w = sw * sFitScale;
-        dst->h = sh * sFitScale;
         dst->x = (float)(int)((outW - dst->w) / 2);
         dst->y = (float)(int)((outH - dst->h) / 2);
         return;
@@ -691,8 +676,9 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
            may overhang the window by < 1 pixel */
         extern float gPortAutoScaleF;
         float f = gPortAutoScaleF > 0 ? gPortAutoScaleF : (float)sAutoScale;
-        dst->w = SDL_roundf(sw * f);
-        dst->h = SDL_roundf(sh * f);
+        if (framed) f = SDL_min(f, SDL_min(outW / sw, outH / sh));
+        dst->w = framed ? sw * f : SDL_roundf(sw * f);
+        dst->h = framed ? sh * f : SDL_roundf(sh * f);
         dst->x = (float)((outW - (int)dst->w) / 2);
         dst->y = (float)((outH - (int)dst->h) / 2);
         return;
@@ -700,6 +686,10 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
 
     switch (gPortConfig.scaleMode) {
         case PORT_SCALE_STRETCH:
+            if (framed) {
+                scale = SDL_min(outW / sw, outH / sh);
+                break; /* A frame never changes the source pixel proportions. */
+            }
             dst->x = 0;
             dst->y = 0;
             dst->w = (float)outW;
@@ -1708,13 +1698,12 @@ static int HdMenuAllocations(void) {
 
 /* Device-loss recovery runs only between renderer passes. Pending detach keeps
    presentation suppressed until the previous target can be released safely. */
-static int sRendererResetPending;
 static uint64_t sRendererGeneration;
 static int RendererResetService(void) {
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
     if (!sRendererResetPending) return 1;
     SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex, &sWorldLight.texture,
-        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBlurTex, &sSkipTexture,
+        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBorderAdaptiveTex, &sBlurTex, &sSkipTexture,
         &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
         &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
     unsigned i;
@@ -1728,6 +1717,7 @@ static int RendererResetService(void) {
     sWorldLight.width = sWorldLight.height = sWorldLight.failed = 0;
     sWorldLight.blockedWidth = sWorldLight.blockedHeight = 0;
     sHudTexW = sHudTexH = sHudOverW = sHudOverH = sBorderShown = 0;
+    sBorderAttempted = 0;
     sSkipBufW = sSkipBufH = sHd2dW = sHd2dH = sMenuAlphaW = sMenuAlphaH = 0;
     for (i = 0; i < 2; i++) sMenuSideW[i] = sFadeSideW[i] = 0;
     PortHdHudInvalidate();
@@ -1837,6 +1827,8 @@ static void Present(int paced) {
     int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
     SDL_FRect dst, normal;
+    SDL_Rect borderOuter = { 0, 0, 0, 0 }, contentArea = { 0, 0, 0, 0 };
+    int borderOn = 0;
     uint32_t uniform = 0;
     float worldX, worldY, worldScale;
     int moviePrompt;
@@ -1894,7 +1886,10 @@ static void Present(int paced) {
     {
         /* Aspect ratio option: draw into the chosen rectangle; the rest of
            the window stays black */
-        SDL_Rect area = AspectRect(outW, outH);
+        SDL_Rect area = ContentArea(outW, outH);
+        borderOuter = AspectRect(outW, outH);
+        contentArea = area;
+        borderOn = GbaBorderReady();
         SDL_SetRenderViewport(sRenderer, area.x || area.y || area.w != outW || area.h != outH ? &area : NULL);
         outW = area.w;
         outH = area.h;
@@ -1908,6 +1903,7 @@ static void Present(int paced) {
                       : sSideStyle == 10 ? SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                                          : MenuScale(outW, outH);
         scale = PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, scale);
+        if (borderOn) scale = SDL_min(scale, SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H));
         dst.w = GBA_SCREEN_W * scale;
         dst.h = GBA_SCREEN_H * scale;
         dst.x = (float)(int)((outW - dst.w) / 2);
@@ -2135,7 +2131,6 @@ static void Present(int paced) {
                                    GBA_SCREEN_W, GBA_SCREEN_H };
             DrawBlurredReflection(&backdrop, outW, outH);
         }
-        DrawClassicBorder(&dst);
         {
             /* the Options panel's HD picture under its canvas, which leaves it clear (port_ui.c): the canvas then goes
                up with its alpha, in a texture of its own (the frame's has none) */
@@ -2442,6 +2437,21 @@ static void Present(int paced) {
         }
     }
     SDL_SetRenderViewport(sRenderer, NULL);
+    if (borderOn) {
+        PortGbaBorderRect aperture = { (float)(contentArea.x - borderOuter.x),
+            (float)(contentArea.y - borderOuter.y), (float)contentArea.w, (float)contentArea.h };
+        /* Fixed views share the picture-sized viewport above. Auto's
+         * extended UI/paper/footer layers may genuinely fill its canvas. */
+        if (!menuCanvas && !journalShown && !PortPpuHudActive() && !PortPpuOverlayActive()) {
+            aperture.x += dst.x;
+            aperture.y += dst.y;
+            aperture.w = dst.w;
+            aperture.h = dst.h;
+        }
+        SDL_SetRenderViewport(sRenderer, &borderOuter);
+        DrawGbaBorder(borderOuter.w, borderOuter.h, &aperture);
+        SDL_SetRenderViewport(sRenderer, NULL);
+    }
     {
         int fullW = 0, fullH = 0;
         SDL_GetCurrentRenderOutputSize(sRenderer, &fullW, &fullH);
@@ -3736,7 +3746,7 @@ int main(int argc, char** argv) {
         SDL_FRect at;
         uint64_t start = SDL_GetPerformanceCounter();
         SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
-        SDL_Rect area = AspectRect(w, h);
+        SDL_Rect area = ContentArea(w, h);
         UpdateResolution();
         OutputRect(area.w, area.h, &at);
         float uiScale = at.w / gPortScreen.width;
@@ -3758,7 +3768,7 @@ int main(int argc, char** argv) {
         SDL_FRect at;
         uint64_t start = SDL_GetPerformanceCounter();
         SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
-        SDL_Rect area = AspectRect(w, h);
+        SDL_Rect area = ContentArea(w, h);
         UpdateResolution();
         OutputRect(area.w, area.h, &at);
         PortHdTextWarmGame(sRenderer, at.w / gPortScreen.width, MenuScale(area.w, area.h));
