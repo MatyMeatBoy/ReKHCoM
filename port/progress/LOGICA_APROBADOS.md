@@ -804,3 +804,5 @@ Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
 sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
 a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
 AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+Aceptación06/11: activar Darkside06 flanco exacto9a47fba18d7749a2a54d4b9ccc8da65b rev3. Sin alterar211píxeles, brazo o cuerpo. El comentario exige todos los frames del combate: seguimiento temporal separado, no inferido de pose13.

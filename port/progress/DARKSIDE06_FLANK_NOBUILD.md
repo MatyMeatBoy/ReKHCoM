@@ -1,3 +1,5 @@
+Actualización06/11: Atlas9a47fba18d7749a2a54d4b9ccc8da65b revisión3 approved: activar por defecto el mismo dibujo211píxeles. KHCOM_DARKSIDE06_FLANK=0 restaura ruta previa. QA de todos los frames del combate pendiente; la pose13 no certifica movimiento. Usuario autoriza builds para2.9. Registro histórico siguiente conservado.
+
 # Darkside06: propuesta de flanco estrecho y sombra local, sin build
 
 Padre Atlas `60f90456598249ecb1e691c51dd2434e`, versión r8, revisión2

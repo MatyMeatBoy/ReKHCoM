@@ -304,14 +304,14 @@ int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy,
     return 1;
 }
 
-/* Pending local flank shadow, separate from the approved arm/body. The
+/* Atlas 9a47fba18d7749a2a54d4b9ccc8da65b revision3 approved this flank.
  * caller only requests it outside the GBA viewport, after approved pixels. */
 int PortDarksidePunchFlankPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color) {
     const char* enabled;
     uintptr_t offset=(uintptr_t)maps-(uintptr_t)gBosDsdFrameMaps;
     int slot,v;
     PORT_ENV_ONCE(enabled,getenv,"KHCOM_DARKSIDE06_FLANK");
-    if (!enabled || atoi(enabled)!=1 || offset>=sizeof(gBosDsdFrameMaps) ||
+    if ((enabled && atoi(enabled)!=1) || offset>=sizeof(gBosDsdFrameMaps) ||
         offset%sizeof(gBosDsdFrameMaps[0])) return 0;
     if (2*(x-cx)<-512 || 2*(x-cx)>=512 || 2*(y-cy)<-512 || 2*(y-cy)>=512) return 0;
     slot=(int)(offset/sizeof(gBosDsdFrameMaps[0]));
