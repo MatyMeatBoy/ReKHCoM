@@ -36,7 +36,22 @@ ps5_boot:
     .type __host_call,@function
 __host_call:
     movq %rsp, %r11
+#ifdef PORT_LINUX64_GUEST
+    /* Each low worker stack selects its own native host stack. Main is0. */
+    movq %r11, %r10
+    subq $rk_tstacks, %r10
+    cmpq $3670016, %r10 /* seven512KiB stacks */
+    jae .Lhost_main_stack
+    shrq $19, %r10
+    incq %r10
+    movq gHostRsp(,%r10,8), %rsp
+    jmp .Lhost_stack_ready
+.Lhost_main_stack:
+#endif
     movq gHostRsp, %rsp
+#ifdef PORT_LINUX64_GUEST
+.Lhost_stack_ready:
+#endif
     pushq %r11
     pushq %r11
     movl %eax, %eax
@@ -45,6 +60,47 @@ __host_call:
     popq %r11
     movq %r11, %rsp
     ret
+
+#ifdef PORT_LINUX64_GUEST
+/* SysV native callback: enter fn(arg) on its aligned low guest stack. */
+    .globl ps5_thread
+    .type ps5_thread,@function
+ps5_thread:
+    pushq %rbx
+    pushq %rbp
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+    subq $8, %rsp
+    movl %edi, %r12d
+    movl %esi, %r13d
+    movl %edx, %r15d
+    subl $1, %r15d
+    subl $rk_tstacks, %r15d
+    cmpl $3670016, %r15d
+    jae .Lthread_invalid
+    shrl $19, %r15d
+    incl %r15d
+    movq %rsp, gHostRsp(,%r15,8)
+    movl %edx, %esp
+    xorl %ebp, %ebp
+    movl %r13d, %edi
+    call *%r12
+    movq gHostRsp(,%r15,8), %rsp
+    jmp .Lthread_restore
+.Lthread_invalid:
+    movl $-1, %eax
+.Lthread_restore:
+    addq $8, %rsp
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %rbp
+    popq %rbx
+    ret
+#endif
 
     .globl setjmp
     .type setjmp,@function

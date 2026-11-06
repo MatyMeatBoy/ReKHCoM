@@ -42,6 +42,12 @@ void PortPs5LockSettings(void) {
 
 /* Called on the guest stack by ps5_boot. */
 int guest_main(void) {
+#ifdef PORT_LINUX64_GUEST
+    if (getenv("KHCOM_PPU_THREAD_TEST")) {
+        extern int PortGuestThreadSelfTest(void);
+        return PortGuestThreadSelfTest();
+    }
+#endif
     static char name[] = "ReKHCoM";
     static char langArg[] = "--language";
     static char language[32];

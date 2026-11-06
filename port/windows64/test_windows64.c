@@ -45,7 +45,7 @@ int main(void) {
     assert(result == 25.75);
     assert(fabs(B_pow(2.0, 5.0) - 32.0) < 0.000001);
     assert(fabsf(B_powf(3.0f, 2.0f) - 9.0f) < 0.000001f);
-    assert(B_thread(0, 1, 2, 3, 4) == 1);
+    assert(B_thread(0, 1, 2, 3, 4) == H_thread(0, 1, 2, 3, 4));
     {
         char path[MAX_PATH], value[32];
         assert(GetTempPathA(sizeof(path), path));

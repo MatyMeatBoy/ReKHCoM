@@ -11,4 +11,8 @@
 #undef X
 
 uint64_t gHostTable[HF_COUNT];
+#ifdef PORT_LINUX64_GUEST
+uint64_t gHostRsp[8]; /* main + seven low-stack PPU workers */
+#else
 uint64_t gHostRsp;
+#endif
