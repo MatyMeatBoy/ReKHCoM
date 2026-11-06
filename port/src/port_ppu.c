@@ -40,6 +40,7 @@
 #include "port/port_agrabah_tiles.h"
 #include "port/port_agrabah109_tiles.h"
 #include "port/port_preliminar_v1_tiles.h"
+#include "port/port_ppu_tile_row.h"
 #include "port/port_scene130_library.h"
 #include "port/port_scene081_clip.h"
 #include "port/port_halloween_floor.h"
@@ -2150,9 +2151,13 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                             }
                         } else {
                             const uint16_t* colors = PLTT16 + palette;
-                            for (j = 0; j < run; j++, xx += step) {
-                                int c = (pixels[xx >> 1] >> ((xx & 1) * 4)) & 15;
-                                out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+                            if (PortPpu4bppRowEmpty(pixels)) {
+                                for (j = 0; j < run; j++) out[x + j] = TRANSPARENT;
+                            } else {
+                                for (j = 0; j < run; j++, xx += step) {
+                                    int c = (pixels[xx >> 1] >> ((xx & 1) * 4)) & 15;
+                                    out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+                                }
                             }
                         }
                     }
