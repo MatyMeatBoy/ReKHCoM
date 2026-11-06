@@ -565,6 +565,18 @@ píxeles ROM alterados. Captura runtime pendiente del turno de RAM del usuario;
 cuando se autorice: SDL controller `0xffff/0xffff`, vídeo/audio dummy, PPU=1,
 BACKGROUND_TEST=1 y Ninja `-j1` en serie.
 
+### Darkside06 — flanco y difuminado local, seguimiento06/11
+
+La versión r8 `60f90456598249ecb1e691c51dd2434e` está aceptada en Atlas,
+revisión2, y su nube `72f6d65b-36e4-47b2-8f2c-d94a9f2ec26d` aún pide dibujo
+y difuminado lateral. El intento posterior en peine no es un modelo válido.
+Proponer una sombra curva estrecha, adherida al torso, sin otro lóbulo/pie
+iluminado:211píxeles, ancho máximo8, índices vivos1..4. No alterar el taper
+nativo desde y180 ni los1842píxeles del brazo aprobado. La difusión sólo
+afecta al píxel fraccional del contorno; ninguna fila añadida deja islotes.
+Propuesta independiente opt-in y pending, sin aprobación heredada; no implica
+cuerpo terminado ni animación/QA real. Ver `DARKSIDE06_FLANK_NOBUILD.md`.
+
 ### Escena099: módulo lateral de la arena (25/10)
 
 Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.
@@ -687,6 +699,18 @@ cara derecha original x448..479 con2y-x constante entre-96y16; mantener remate,
 base, lado izquierdo y props únicos. No recolorear el donante de otro plano.
 La imagen nueva se etiqueta simulación sobre captura previa, sin build; su
 aprobación y runtime siguen pendientes. Ver `ATLAS_SCENE095_PATTERN_A.md`.
+
+### Escena095: árbol del inicio completo, seguimiento06/11
+
+La aceptación de `e78f689cba2e46548b67cff57c10f444` revisión2 conserva el
+patrón A y pide comprobar que el árbol inicial no quede por mitades. Su copa
+inferior y tronco BG1 llegan hasta la fila382; el reflejo de la costura
+izquierda terminaba en351. Extender solamente ese mismo donante hasta383,
+manteniendo x=-16..-1, completa248píxeles opacos originales. No repetir todo
+BG1 ni tocar el mapa nativo, otros árboles, actores o el patrón A. La nueva
+hija es un estudio de receta antes/propuesta SIN BUILD, pendiente propio;
+no hereda aprobación. Ver `ATLAS_SCENE095_TREE.md`.
+
 ### Escena115: detalles posteriores a la aceptación, revisión4
 
 Los tres recortes requieren alinear la frontera de madera limpia con el fin
@@ -792,3 +816,21 @@ Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
 sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
 a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
 AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+### Escena081: patrones de los dos bordes, revisión3, 06/11
+
+El módulo de máscara64px no cierra consigo mismo. Conservar el remate y el
+primer módulo; desde192 repetir sólo160..191, el ciclo diagonal32px completo.
+Las celdas vacías superiores BG3 que ahora quedan expuestas usan el tile opaco
+original16filas debajo; no se modifica ninguna muestra del piso ya opaco.
+Conservar props, actores y omisión decorativa. ANTES/PROPUESTA es un modelo
+de receta sin build al mismo encuadre; hija pendiente, sin aprobación heredada.
+### Escena120: grabado figurativo completo, nube65a0a5d0
+
+Las partes superiores existen en el banco ROM cargado, sobre la fila visible
+692..699. Recuperar sólo la tinta8/10/11/12 de esos tiles, paleta4, fuera del
+borde superior del mapa; no inventar cabezas, clonar otros grabados ni copiar
+los fragmentos de marcos o ladrillos adyacentes del atlas. Mantener la reparación
+de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
+hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.
+Aceptación06/11: activar Darkside06 flanco exacto9a47fba18d7749a2a54d4b9ccc8da65b rev3. Sin alterar211píxeles, brazo o cuerpo. El comentario exige todos los frames del combate: seguimiento temporal separado, no inferido de pose13.
