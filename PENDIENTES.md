@@ -467,4 +467,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | atlas-journal-gba-footer-audit-20261106 | Diario: comprobar footer inferior frente al GBA original sin build | pendiente | — | — | Usuario06/11 pide verificar si se perdió footer frente originalGBA. Auditoría readonly de ROM/fuentes/capturas; no compiler/build/game/importregen. | 2026-11-06T14:40:25.825180+00:00 |
 | atlas-journal-all-modes-rounding-20261106 | Pepito: redondeado, margenes y footer extendido en todas las paginas y HUD HD on/off; Original GBA intacto | integrado | codex-journal-all-modes | 617 | Usuario06/11: redondeado, margenes y pie completos en todas las paginas y ambos HUD; Original GBA intacto. Correccion de cobertura de renderer del libro previamente aprobado; sin arte nuevo ni build | 2026-11-06T15:28:02.109851+00:00 |
 
-Integrador: codex-journal-all-modes-integrator (ocupado; 2026-11-06T15:27:12.035328+00:00)
+Integrador: libre
