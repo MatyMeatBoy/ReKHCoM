@@ -16884,10 +16884,23 @@
         }
       ],
       "claimed_at": "2026-11-06T21:11:15.917165+00:00"
+    },
+    "issue598-lcd-grid-v29": {
+      "id": "issue598-lcd-grid-v29",
+      "piece": "Issue598: optional source-pixel aligned LCD grid following zoom/aspect, GPU-rendered cached axes with no per-frame regeneration",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-06T21:20:43.227763+00:00",
+      "updated_at": "2026-11-06T21:20:43.227763+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario06/11 pide revisar/cerrar todosissues con2.9; prioridadmaximosmsbajos todasversiones,defaultsinmodificar, unworkerextra/jobs1BelowNormal",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/598",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:16:37.347685+00:00",
+  "updated_at": "2026-11-06T21:20:43.227763+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
