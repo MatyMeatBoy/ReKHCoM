@@ -16754,10 +16754,10 @@
     "v29-adaptive-gba-border-all-modes": {
       "id": "v29-adaptive-gba-border-all-modes",
       "piece": "2.9: borde GBA adaptable a ratios y seleccionable en cualquier modo/zoom, preservando proporcion GBA sin estirar",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-border",
       "created_at": "2026-11-06T17:43:39.391915+00:00",
-      "updated_at": "2026-11-06T20:14:54.267637+00:00",
+      "updated_at": "2026-11-06T20:32:05.201364+00:00",
       "branch": "feat/v29-adaptive-gba-border",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/627",
       "approval": "Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde",
@@ -16782,9 +16782,15 @@
           "at": "2026-11-06T20:14:54.267637+00:00",
           "owner": "codex-v29-border",
           "detail": "Followup a373d2c0e5132549e907800cbfb6c5812cab4e80 TEST ONLY. Root reset inventory RED corrected to20 texture owners plus all3border pointers/Shown/Attempted reset assertions. Extracted production C reset GREEN;4 owner fixtures GREEN; BelowNormal serial. Evidence renderer-reset-GREEN.log,renderer-reset-owners-GREEN.log,EVIDENCE.json. Product and guest8b986669 unchanged from14a52a690; no extra build/runtime. CPU returned root; PR627 still draft pending final UI/Original QA. Checkout clean."
+        },
+        {
+          "at": "2026-11-06T20:32:05.201364+00:00",
+          "owner": "codex-v29-border",
+          "detail": "PR627 MERGED d34783a6d4311841cf8aa3ada72d378088df96a2 heada373d2c0e after current-config viewport/motif fix. Root real Original full1920x1080 BEFORE/AFTER pixelidentical; six new view pixelchecks and six actual journalcaptures PASS, HDfootercomplete and Original noaddedfooter. C32/64 off576/on1008/transitions288; reset20/textures+4owners PASS. Bounded2GPUbatches,3cachedtextures, PNGsunchanged; no personalimports. BORDER-ROOT-REVIEW.json. Final2.9 paced/platform/package gates remain separate; no publication."
         }
       ],
-      "claimed_at": "2026-11-06T18:38:41.136268+00:00"
+      "claimed_at": "2026-11-06T18:38:41.136268+00:00",
+      "completed_at": "2026-11-06T20:32:05.201364+00:00"
     },
     "issue610-platform-confirmation-v29": {
       "id": "issue610-platform-confirmation-v29",
@@ -16831,7 +16837,7 @@
     "created_at": "2026-11-06T20:31:05.748298+00:00",
     "updated_at": "2026-11-06T20:31:05.748298+00:00"
   },
-  "updated_at": "2026-11-06T20:31:05.748298+00:00",
+  "updated_at": "2026-11-06T20:32:05.202362+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
