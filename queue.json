@@ -16795,9 +16795,9 @@
       "status": "en_curso",
       "owner": "codex-v29-release",
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-06T19:44:19.329612+00:00",
-      "branch": "qa/v29-perf-border-20261106",
-      "pr": null,
+      "updated_at": "2026-11-06T20:04:41.719467+00:00",
+      "branch": "release/v2.9-20261106",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
       "reference": "PR628 d2254cc0; PR627 borde pendiente QA; issue610 confirmacion plataforma separada",
       "evidence": [
@@ -16805,13 +16805,18 @@
           "at": "2026-11-06T19:44:19.329612+00:00",
           "owner": "codex-v29-release",
           "detail": "Core628 integrated main d2254cc0d with CAS lock released. Linux64 VM TLS/bridge+field+battle and native32 17pixels+ABBA controls PASS. Root isolated QA branch combines main and border627 b767338079; fullEU64 build in progress jobs1/BELOW_NORMAL oneheavy. No release/version bump/publication yet. Physicalplatform/6900XT/VRR scanout not certified. Protected inputs unchanged."
+        },
+        {
+          "at": "2026-11-06T20:04:41.719467+00:00",
+          "owner": "codex-v29-release",
+          "detail": "Core628 integrated d2254cc0. Version629 DRAFT f15798e5a updates four metadata/changelog files; source/WindowsRC/Web3labels/Androidupgrade102090099 checks PASS. Border627 currently fixing actual visual blackbars/cut ornaments in its own checkout; one worker holds CPU token, root has no build/game. Six combined views pixelverify PASS but first geometry captures are NOT accepted as final. Serial2.9 pipeline prepared with explicit source-freeze guard, NOT RUN. Source freeze/package/publication pending. Three ROM privatecopies verified; protectedoriginals/imports untouched."
         }
       ],
       "claimed_at": "2026-11-06T19:43:12.510730+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T19:44:19.329612+00:00",
+  "updated_at": "2026-11-06T20:04:41.719467+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
