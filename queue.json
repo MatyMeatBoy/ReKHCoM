@@ -16868,20 +16868,26 @@
     "issue596-title-hint-toggle-v29": {
       "id": "issue596-title-hint-toggle-v29",
       "piece": "Issue596: opcionpersistente para ocultar SELECT OPTIONS en titulo conservando accesoSELECT ydefaultvisible",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-v29-titlehint",
       "created_at": "2026-11-06T21:10:53.116965+00:00",
-      "updated_at": "2026-11-06T21:11:15.917165+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T21:16:37.346683+00:00",
+      "branch": "fix/v29-title-hint-toggle",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/632",
       "approval": "Usuario autoriza resolverissuescon2.9; root asigna596 tras entrega573",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/596",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T21:16:37.346683+00:00",
+          "owner": "codex-v29-titlehint",
+          "detail": "Head998b8b9e9 append hideTitleHint default0+INI0/1+General6idiomas; arm/drawgated onlytitlehint, SELECTpathunchanged.4ASTRED/GREEN incl131x6labels+stalehint+actualtoggle. Native32realconfig/inputC PASS INIroundtrip/clamp/legacy/shortcuts SDLdummy tempdata, BelowNormal singleload. No ROM/SAV/import/game/fullbuild; UIcompile finalmatrixpending. Evidence pruebas/release-v29/issue596. CPUreturnedroot, checkoutclean, PRdraftreviewpending; no merge/issueclose."
+        }
+      ],
       "claimed_at": "2026-11-06T21:11:15.917165+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:11:15.917165+00:00",
+  "updated_at": "2026-11-06T21:16:37.347685+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
