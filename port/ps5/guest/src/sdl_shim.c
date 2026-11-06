@@ -264,6 +264,14 @@ struct SDL_Renderer {
     bool outputBlocked;
 };
 #include "bridge_output.h"
+/* OUT1 is optional: old/other hosts must not acquire Windows capabilities
+ * merely because the same non-Win32 guest binary also runs on Windows. */
+int PortBridgeVideoCaps(void) {
+    int caps;
+    if (h_thread(BRIDGE_OUTPUT_PROBE,0,0,0,0)!=BRIDGE_OUTPUT_MAGIC) return 0;
+    caps=h_thread(BRIDGE_OUTPUT_CAPS,0,0,0,0);
+    return caps>0 ? caps : 0;
+}
 static int OutputCapability(int capability) {
     return h_thread(BRIDGE_OUTPUT_PROBE, 0, 0, 0, 0) == BRIDGE_OUTPUT_MAGIC &&
         (!capability || (h_thread(BRIDGE_OUTPUT_CAPS, 0, 0, 0, 0) & capability) == capability);

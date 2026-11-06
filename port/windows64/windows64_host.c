@@ -21,6 +21,7 @@
 #include <winsock2.h> /* before windows.h: the network link's socket (udp_host.h) */
 #include <ws2tcpip.h>
 #include <windows.h>
+#include "../include/port/video_vrr_windows.h"
 #include <intrin.h>
 #include <direct.h>
 #include <io.h>
@@ -324,6 +325,8 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #define H_thread H_thread_legacy
 #include "thread_host.h"
 #undef H_thread
+#define HOST_OUTPUT_VRR_CAPS() (BRIDGE_OUTPUT_VRR_CONTROL_CAP | \
+    (PortWindowsVrrEligible(sRenderer) ? BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP : 0))
 #include "host_output_sdl.h"
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     int result = HostOutputCommand(op, a, b, c, d);

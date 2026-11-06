@@ -11,9 +11,14 @@
 #include "port/cursor_idle.h"
 static PortCursorIdle sCursorIdle;
 #endif
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
 #define COBJMACROS
 #include <dxgi1_5.h>
+#include "port/video_vrr_windows.h"
+#endif
+#ifdef PORT_SDL_BRIDGE
+#include "bridge_output.h"
+extern int PortBridgeVideoCaps(void);
 #endif
 
 #include "port/pad_layout.h"
@@ -208,17 +213,22 @@ static int sFbW, sFbH;
  * This proves eligibility, not that the user enabled VRR in the driver/monitor.
  * Never infer VRR from refresh rate or GPU brand, or use adaptive VSync (-1). */
 static int VrrPresentEligible(void) {
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
-    SDL_PropertiesID properties=SDL_GetRendererProperties(sRenderer);
-    IDXGISwapChain* chain=(IDXGISwapChain*)SDL_GetPointerProperty(properties,
-        SDL_PROP_RENDERER_D3D11_SWAPCHAIN_POINTER,NULL);
-    DXGI_SWAP_CHAIN_DESC desc;
-    if (!chain) chain=(IDXGISwapChain*)SDL_GetPointerProperty(properties,
-        SDL_PROP_RENDERER_D3D12_SWAPCHAIN_POINTER,NULL);
-    if (chain && SUCCEEDED(IDXGISwapChain_GetDesc(chain,&desc)))
-        return desc.Windowed && (desc.Flags & DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING)!=0;
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
+    return PortWindowsVrrEligible(sRenderer);
+#elif defined(PORT_SDL_BRIDGE)
+    return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP)!=0;
 #endif
     return 0;
+}
+
+int PortVideoVrrOptionAvailable(void) {
+#ifdef PORT_SDL_BRIDGE
+    return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_CONTROL_CAP)!=0;
+#elif defined(_WIN32)
+    return 1;
+#else
+    return 0;
+#endif
 }
 
 static void ApplyVideoSync(int force) {
@@ -234,7 +244,9 @@ static void ApplyVideoSync(int force) {
         eligible=0; interval=1;
         applied=SDL_SetRenderVSync(sRenderer,interval);
     }
-    cachedRequested=requested; cachedCapability=capability; cachedApplied=applied;
+    /* A successful VSync fallback must not cache a failed VRR attempt as
+       eligible: the periodic capability poll should retry the recovered path. */
+    cachedRequested=requested; cachedCapability=eligible; cachedApplied=applied;
     static int lastRequested=-1,lastInterval=-1,lastEligible=-1,lastApplied=-1;
     if (lastRequested!=requested || lastInterval!=interval || lastEligible!=eligible || lastApplied!=applied) {
         PortLog("video-sync: requested=%d interval=%d applied=%d VRR-path=%s%s",requested,
@@ -2525,7 +2537,9 @@ static void Present(void) {
     }
     {
         extern void PortSceneGalleryPreviewPresented(int accepted);
-        PortSceneGalleryPreviewPresented(SDL_RenderPresent(sRenderer));
+        int presented=SDL_RenderPresent(sRenderer);
+        if (presented) sFpsFrames++;
+        PortSceneGalleryPreviewPresented(presented);
     }
     if (hdProfile)
         PortLog("hd-menu-perf: frame=%u menu=%d ms=%.3f alloc_delta=%d allocations=%d", (unsigned)sFrameCount,
@@ -3022,9 +3036,8 @@ static void PumpEvents(void) {
 #endif
 }
 
-/* The frame timer always paces the game; vsync only removes tearing. On a
-   display within ~1.5 Hz of the GBA's rate the game follows the display so
-   every refresh shows exactly one frame (audio is resampled to match). */
+/* Keep the original GBA simulation clock. Present calls are counted where
+   they actually occur; a skipped draw is not a displayed game frame. */
 static void Pace(void) {
 #ifdef __EMSCRIPTEN__
     int yielded = 0;
@@ -3061,7 +3074,6 @@ static void Pace(void) {
     /* Always yield, even when rendering took longer than the frame budget. */
     if (!yielded) emscripten_sleep(0);
 #endif
-    sFpsFrames++;
     if (now - sFpsTime >= sPerfFreq) {
         extern volatile uint32_t gFrameCounter; /* main-loop updates (main.c) */
         uint32_t logic = gFrameCounter;
