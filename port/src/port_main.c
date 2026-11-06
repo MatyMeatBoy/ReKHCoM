@@ -127,6 +127,11 @@ static float sLogicFps;      /* game main-loop updates per second */
 static uint32_t sLogicLast;
 static uint64_t sFpsTime;
 static uint32_t sFpsFrames;
+/* Accepted SDL presentation calls, not physical GPU scanout. Timestamp is
+ * sampled immediately after successful RenderPresent; failed calls do not advance. */
+static uint64_t sPresentSerial, sPresentAcceptedAt, sPresentGapTicks;
+static uint64_t sPresentPaceEpoch, sPresentWaitTotal;
+static void PaceBeforePresent(void);
 
 void PortLog(const char* fmt, ...) {
     va_list ap;
@@ -2537,8 +2542,17 @@ static void Present(void) {
     }
     {
         extern void PortSceneGalleryPreviewPresented(int accepted);
+        /* Finish rendering first, then submit the image on its fixed deadline.
+           Sleeping only afterwards let variable draw cost become image jitter. */
+        PaceBeforePresent();
         int presented=SDL_RenderPresent(sRenderer);
-        if (presented) sFpsFrames++;
+        if (presented) {
+            uint64_t acceptedAt = SDL_GetPerformanceCounter();
+            sPresentGapTicks = sPresentSerial ? acceptedAt - sPresentAcceptedAt : 0;
+            sPresentAcceptedAt = acceptedAt;
+            sPresentSerial++;
+            sFpsFrames++;
+        }
         PortSceneGalleryPreviewPresented(presented);
     }
     if (hdProfile)
@@ -3038,25 +3052,28 @@ static void PumpEvents(void) {
 
 /* Keep the original GBA simulation clock. Present calls are counted where
    they actually occur; a skipped draw is not a displayed game frame. */
-static void Pace(void) {
+static uint64_t AdvanceFrameDeadline(void) {
 #ifdef __EMSCRIPTEN__
     int yielded = 0;
 #endif
     uint64_t now = SDL_GetPerformanceCounter();
+    uint64_t begin = now;
     double hz = GBA_FPS;
     uint64_t period;
 
     if (SDL_getenv("KHCOM_FAST")) {
         sNextFrame = 0;
-        return;
+        return 0;
     }
     sPacedByVsync = 0;
     period = (uint64_t)(sPerfFreq / hz);
 
     /* Exact GBA rate (59.7275 Hz) whatever the display does: sleep most of
        the wait, then spin for the last fraction of a millisecond. */
-    if (sNextFrame == 0 || now > sNextFrame + period * 4)
+    if (sNextFrame == 0)
         sNextFrame = now;
+    else if (now > sNextFrame + period * 4)
+        sNextFrame = now - period; /* resume now, without another full-frame stall */
     sNextFrame += period;
     while ((now = SDL_GetPerformanceCounter()) < sNextFrame) {
         uint64_t leftNs = (sNextFrame - now) * 1000000000ull / sPerfFreq;
@@ -3073,7 +3090,26 @@ static void Pace(void) {
 #ifdef __EMSCRIPTEN__
     /* Always yield, even when rendering took longer than the frame budget. */
     if (!yielded) emscripten_sleep(0);
+    now = SDL_GetPerformanceCounter();
 #endif
+    return now - begin;
+}
+
+static void PaceBeforePresent(void) {
+    sPresentWaitTotal += AdvanceFrameDeadline();
+    sPresentPaceEpoch++;
+}
+
+static void Pace(int idleAdvance) {
+    static uint64_t consumedPresentEpoch;
+    uint64_t now;
+    /* A presented attempt already consumed its deadline, including failed
+       renderer calls. A skipped draw still advances the simulation clock. */
+    if (idleAdvance && consumedPresentEpoch == sPresentPaceEpoch)
+        (void)AdvanceFrameDeadline();
+    consumedPresentEpoch = sPresentPaceEpoch;
+    if (SDL_getenv("KHCOM_FAST")) return;
+    now = SDL_GetPerformanceCounter();
     if (now - sFpsTime >= sPerfFreq) {
         extern volatile uint32_t gFrameCounter; /* main-loop updates (main.c) */
         uint32_t logic = gFrameCounter;
@@ -3191,6 +3227,9 @@ static void TimingLine(int skip, uint64_t cycleStart, uint64_t workEnd) {
 
 static void VBlankCycle(void) {
     uint64_t cycleStart = SDL_GetPerformanceCounter();
+    uint64_t presentSerialStart = sPresentSerial;
+    uint64_t presentPaceStart = sPresentPaceEpoch;
+    uint64_t presentWaitStart = sPresentWaitTotal;
     const char* frameLogPath = SDL_getenv("KHCOM_FRAMELOG");
     uint64_t frameLogStart = frameLogPath ? SDL_GetPerformanceCounter() : 0;
     uint64_t frameLogWork = 0;
@@ -3251,30 +3290,35 @@ static void VBlankCycle(void) {
     {
         /* KHCOM_PROFILE: mean PPU and present time every 240 frames */
         static uint64_t ppuSum, presSum;
-        static int n;
+        static int n, drawn;
         uint64_t p0 = SDL_GetPerformanceCounter();
+        uint64_t waitStart = sPresentWaitTotal, waited;
         if (!skip)
             Present();
-        sPresentTicks = SDL_GetPerformanceCounter() - p0;
+        waited = sPresentWaitTotal - waitStart;
+        sPresentTicks = SDL_GetPerformanceCounter() - p0 - waited;
         {
             extern void PortMenuLatch(void);
             PortMenuLatch(); /* this frame's menu sprites show from the next one */
         }
         if (SDL_getenv("KHCOM_PROFILE")) {
-            presSum += SDL_GetPerformanceCounter() - p0;
-            ppuSum += sPpuTicks;
+            if (!skip) {
+                presSum += SDL_GetPerformanceCounter() - p0 - waited;
+                ppuSum += sPpuTicks;
+                drawn++;
+            }
             if (++n == 240) {
-                double f = 1000.0 / SDL_GetPerformanceFrequency() / n;
+                double f = 1000.0 / SDL_GetPerformanceFrequency() / (drawn ? drawn : 1);
                 extern void PortPpuTakeStats(int out[5]);
                 int st[5] = { 0 };
 #ifdef PORT_PPU_THREADS
                 PortPpuTakeStats(st);
 #endif
                 PortLog("profile: canvas %dx%d ppu %.2f ms present %.2f ms | outer rows multi-core %d (iso floor %d), one core: "
-                        "mosaic %d header %d small %d", gPortScreen.width, gPortScreen.height, ppuSum * f, presSum * f,
-                        st[0], st[1], st[2], st[3], st[4]);
+                        "mosaic %d header %d small %d | drawn %d of %d", gPortScreen.width, gPortScreen.height, ppuSum * f, presSum * f,
+                        st[0], st[1], st[2], st[3], st[4], drawn, n);
                 ppuSum = presSum = 0;
-                n = 0;
+                n = drawn = 0;
             }
         }
     }
@@ -3310,7 +3354,7 @@ static void VBlankCycle(void) {
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
         while (sAndroidBackground) { SDL_Delay(50); PumpEvents(); }
 #endif
-        Pace();
+        Pace(1);
         /* Harness: with KHCOM_VPAD the menu frames count too, so the
            virtual pad can drive the overlay and KHCOM_RECORD films it. */
         if (SDL_getenv("KHCOM_VPAD")) {
@@ -3332,9 +3376,11 @@ static void VBlankCycle(void) {
         extern int gPortInMainLoop;
         PortRollbackBoundary(gPortInMainLoop); /* the network link: a wrong guess taken back, this frame kept */
     }
-    if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter();
-    TimingLine(skip, cycleStart, SDL_GetPerformanceCounter());
-    Pace();
+    if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart);
+    TimingLine(skip, cycleStart, SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart));
+    /* Closing a menu already consumed its image deadlines in that loop.
+       Only an entirely unpresented cycle needs an additional clock tick. */
+    Pace(sPresentPaceEpoch == presentPaceStart);
     sCycleEnd = SDL_GetPerformanceCounter();
 
     if (++sFrameCount % 60 == 0)
@@ -3350,7 +3396,7 @@ static void VBlankCycle(void) {
             frameLog = fopen(frameLogPath, "w");
             gPortStutter.on = 1;
             if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
-                                            "hd_loads,hd_load_ms,glyphs,glyph_ms\n");
+                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped\n");
         }
         {
             /* the deep view of each frame: logic_ms is the time from the end of the previous frame's log to this
@@ -3364,10 +3410,12 @@ static void VBlankCycle(void) {
             double ppu = skip ? 0 : sPpuTicks * ms, present = skip ? 0 : sPresentTicks * ms;
             const char* limit = SDL_getenv("KHCOM_STUTTER");
             if (frameLog && previous)
-                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f\n", (unsigned)sFrameCount,
+                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d\n", (unsigned)sFrameCount,
                         interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
                         (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
-                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
+                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms,
+                        sPresentSerial != presentSerialStart,
+                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip);
             if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
                         "decode %.1f, upload %.1f; slowest %s %.1f ms), glyphs %u (%.1f ms)", (unsigned)sFrameCount,
