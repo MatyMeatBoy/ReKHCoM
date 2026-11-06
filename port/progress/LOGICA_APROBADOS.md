@@ -755,3 +755,11 @@ estudio anterior pero pide llenar hasta la izquierda. Estas notas corrigen
 el alcance de lo que puede tomarse como modelo: no darlas por resueltas al
 integrar la versión aceptada ni heredar su grado a una nueva hija. Sin nueva
 compilación o captura, la verificación real del compositor sigue pendiente.
+
+### Biblioteca130, seguimiento del06/11: friso derecho
+
+La aceptación con honores del friso izquierdo no termina el lado derecho:
+nube13f12aa1 pide prolongarlo también allí. Conservar su diagonal propia
+2y-x en112..143 y resolver antes de la alfombra, con módulo completo de64px
+del mismo plano. Retener toda tinta autorada y el remate476. Propuesta nueva
+sin build, pendiente de valoración y de comprobar en el juego.
