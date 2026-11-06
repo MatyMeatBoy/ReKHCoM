@@ -16660,12 +16660,18 @@
       "status": "en_curso",
       "owner": "codex-win28-pacing",
       "created_at": "2026-11-06T16:53:19.316146+00:00",
-      "updated_at": "2026-11-06T16:53:27.417846+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-06T17:36:08.947221+00:00",
+      "branch": "perf/x32-ppu-threads-20261106",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/625",
       "approval": "Usuario06/11 detuvoAtlas y solicita corregirfluidezgameplay. ConservarvelocidadGBA59.7275, imagen/calidad/vistaampliada; restriccionesprevias sinbuild/juego/imports no revocadas explicitamente. Investigar/implementarfuentes yverificacioncompatible antesQA física.",
       "reference": "v2.8 commit315db1e45cbfacb54c1786786917045c0100b2eb",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T17:36:08.947221+00:00",
+          "owner": "codex-win28-pacing",
+          "detail": "VRR/FPS PR625 fuente2fb2763cf revisión independiente sinbloqueos; C4perfiles+output PASS. Build real previoPASS, pendiente finalguard. Perf realD3D11 campo1440p/x2~41presents vs59.7logic; PPU18.6ms/19skip60. Smallrowcandidate5c839d5e sin ganancia clara retirado. Siguiente portear poolPPU existente a x32 con stacks/TLS propios, exactpixels/clock/fallback, plan docs/superpowers/plans/2026-11-06-x32-ppu-threads.md. Borderadaptable después deperf. Usuarioautoriza builds y objetivo2.9todasplataformas."
+        }
+      ],
       "claimed_at": "2026-11-06T16:53:27.417846+00:00"
     },
     "win28-field-row-fastpath-20261106": {
@@ -16709,7 +16715,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T17:33:28.974043+00:00",
+  "updated_at": "2026-11-06T17:36:08.947221+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
