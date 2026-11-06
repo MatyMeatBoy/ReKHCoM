@@ -16808,10 +16808,10 @@
     "v29-release-performance-gates-20261106": {
       "id": "v29-release-performance-gates-20261106",
       "piece": "Release2.9: final performance/stability and adaptive-border runtime gates; eight published platform packages and allregions; publish only after verification",
-      "status": "en_curso",
-      "owner": "codex-v29-release",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-06T20:45:31.208203+00:00",
+      "updated_at": "2026-11-06T20:57:41.957509+00:00",
       "branch": "release/v2.9-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
@@ -16831,13 +16831,18 @@
           "at": "2026-11-06T20:45:31.208203+00:00",
           "owner": "codex-v29-release",
           "detail": "PR627 MERGED d34783a6 border with fullOriginal RGB pixelidentity,6views+6journalcaptures andreset20ownershipPASS. New real counterbug reproduced save/loaddisplay57.11Hzlogic254.06; PR630 MERGED35ba94cfd53bbbd4a3aebef9b5e693265942e87a head64ee0038e. Native32 andEU64 fullbuilds+actualsave/load PASS (normalHz), actualSamplerRED/GREEN andbothLoadIOfailurecontracts+deadline/linkPASS; reviewno blockers. Release629 versionprep remainsDRAFT; sourcefreeze/fullmatrix/physicalperformancebounds/packagepublication stillpending. No activeheavyrootnow; oneworkeridle. Personaloriginals/imports untouched."
+        },
+        {
+          "at": "2026-11-06T20:57:41.957509+00:00",
+          "owner": "codex-v29-release",
+          "detail": "released: Usuario retiro objetivo automatico duranteconsultaestado; trabajo preservado pararetomar. Main35ba94cfd incluye628perf,627borde y630counterstate;629DRAFT e3c797db1 versionmetadata enrelease/v2.9-20261106, checkoutwin28-vrr-pacing-20261106 limpio. Windows64 cinco331/331sinomitir, Native32ABBA+17pixels, Linux64VMtls/campo/combate, borde6views+6journals ylegacyfullframeigual PASS. StateFPS bug real254Hz corregidoyactualEU32/64PASS. Darksidefullmotion forcedVERIFY termino por limite240s bajoRAM~0.5GiB/cargaajena; CSVfinaltruncado rompeanalisis, NOcertificar esaprueba niperframerate deeseFAST/doblePPU. Siguiente: repetirgateboss enrecursosadecuados, cerrar629/sourcefreeze y ejecutar matriz8paquetes+Web verificaciones. Pipelineprivado preparadoNOiniciado, SOURCE-FROZEN.jsonausente bloquea prematuro. Sinpublicacion niimportregen; Erraaprobado sigueClaude sinfuente localizada. Ninguna cargaQA/buildpropia activa,locklibre2eebcba8. Originales/instalacion/ROM/SAV/Atlas intactos."
         }
       ],
       "claimed_at": "2026-11-06T19:43:12.510730+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T20:46:01.102518+00:00",
+  "updated_at": "2026-11-06T20:57:41.957509+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
