@@ -4587,8 +4587,9 @@ static void PpuRunBatch(const OuterRows* job, int y0, int y1) {
  * The result is the line-by-line one, pixel for pixel: KHCOM_PPU_VERIFY=1 also draws each frame line by line and
  * logs any difference. Frames with state carried from row to row stay line by line (PpuRowsIndependent, the title's
  * faded art); a vertical mosaic switched on halfway draws the rows kept so far and goes on line by line.
- * On by default on the Switch (PORT_SWITCH: at 1280x720 the picture is 160 of the canvas's 180 rows), elsewhere with
- * KHCOM_PPU_INNER=1; KHCOM_PPU_INNER=0 turns it off. */
+ * On by default on Switch and Windows/native or desktop x32 (at1280x720 the
+ * picture is160 of the canvas's180 rows). KHCOM_PPU_INNER=0 turns it off;
+ * other threaded targets may opt in with KHCOM_PPU_INNER=1. */
 typedef struct PpuLineState {
     uint8_t io[PPU_IO_KEPT];
     int32_t affX[2], affY[2];
@@ -4615,7 +4616,7 @@ static void PpuInnerRow(int y) {
 static int PpuInnerBegin(void) {
     if (sPpuInnerOn < 0) {
         const char* env = SDL_getenv("KHCOM_PPU_INNER");
-#if defined(PORT_SWITCH) || defined(PORT_LINUX64_GUEST)
+#if defined(PORT_SWITCH) || defined(PORT_LINUX64_GUEST) || defined(_WIN32)
         sPpuInnerOn = !env || SDL_atoi(env) != 0;
 #else
         sPpuInnerOn = env && SDL_atoi(env) != 0;
