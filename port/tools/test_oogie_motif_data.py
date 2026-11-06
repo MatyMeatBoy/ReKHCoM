@@ -8,9 +8,18 @@ class OogieMotifData(unittest.TestCase):
         header=Path(__file__).resolve().parents[1]/'include/port/port_oogie_motifs.h'
         self.assertEqual(header.read_text(),motifs.generate())
 
-    def test_missing_cheek_and_ghost_point_have_ink(self):
+    def test_missing_cheek_and_ghost_body_have_ink(self):
         self.assertEqual(motifs.art(240,457),146)
-        self.assertEqual(motifs.art(519,449),146)
+        self.assertEqual(motifs.art(503,445),146)
+
+    def test_reviewed_mask_join_and_excess_tip(self):
+        self.assertEqual(motifs.art(256,472),146) # join the cut jaw, not a green gap
+        self.assertEqual(motifs.art(281,478),0) # no extra lobe beneath the native right cheek
+
+    def test_reviewed_ghost_arm_and_skirt(self):
+        self.assertEqual(motifs.art(516,445),146) # a short arm with a defined tip
+        self.assertEqual(motifs.art(519,449),0) # remove the old oversized point
+        self.assertEqual(motifs.art(496,461),146) # skirt joins the native body at the seam
 
     def test_masks_exclude_the_native_room_and_use_live_palette_offsets(self):
         for y in range(408,488):

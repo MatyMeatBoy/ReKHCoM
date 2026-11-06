@@ -687,3 +687,16 @@ Las ocho filas400..407 son una franja horizontal nativa con tramos exteriores li
 parte de la figura: continuarlas con su índice vivo hacia los bordes en vez de
 cortarlas en el antiguo cap de32píxeles. Conservar cuarto, camino rojo y planos
 verdes. Nueva imagen etiquetada simulación sin build; falta valoración/runtime.
+
+### Oogie: conexión y siluetas, revisión posterior06/11
+
+La revisión3 de `85b1e5551e224f3893cf44fcc9cf5739`, envío
+`20261105-203951-55f838`, corrige esa propuesta todavía pendiente: la máscara
+no conecta a la izquierda y sobra un saliente derecho; revisar brazo y falda
+derechos del fantasma. No alargar una punta sólo por completar el dibujo:
+conectar primero la mandíbula en la costura y recoger su lóbulo inferior;
+el brazo debe tener una punta corta definida y la falda debe unirse al cuerpo.
+Mantener los índices vivos146/157/158 y las exclusiones del cuarto nativo,
+camino y planos verdes. Nueva simulación pending sin aprobación heredada;
+PR606 se conserva pendiente hasta valorar su sustitución. Ver
+`ATLAS_OOGIE_SHAPES_NOBUILD.md`.
