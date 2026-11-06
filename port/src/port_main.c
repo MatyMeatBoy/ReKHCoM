@@ -2004,10 +2004,10 @@ static void Present(void) {
                 }
             }
             sBandGround = n ? colors[best] : 0;
-            if (journalShown && sSideStyle == 12) pageExpanded = RepairJiminyPageMargin(&src,&dst,outW);
+            if (journalShown) pageExpanded = RepairJiminyPageMargin(&src,&dst,outW);
             DrawEdgeBands(&src, &dst, outW, 6,
-                journalShown && sSideStyle == 12 ? 16 : GBA_SCREEN_H,
-                journalShown && sSideStyle == 12 ? 20 : GBA_SCREEN_H);
+                journalShown ? 16 : GBA_SCREEN_H,
+                journalShown ? 20 : GBA_SCREEN_H);
             sBandGround = 0;
             /* the frame's top and bottom bars run the whole width: where a
                panel covers one end on the GBA (the journal's notebook over
@@ -2019,7 +2019,7 @@ static void Present(void) {
                     const uint32_t* row = &sComposite[((int)src.y + yy) * gPortScreen.width + (int)src.x];
                     uint32_t lc = row[0], rc = row[GBA_SCREEN_W - 1];
                     int lrun = 0, rrun = 0;
-                    if (journalShown && sSideStyle == 12 && yy >= 16) continue;
+                    if (journalShown && yy >= 16) continue;
                     if (yy >= 24 && yy < GBA_SCREEN_H - 24)
                         continue;
                     for (k = 0; k < 120 && row[k] == lc; k++) lrun++;

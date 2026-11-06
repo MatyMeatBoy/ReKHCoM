@@ -59,6 +59,7 @@ int main(void){
  assert(pixel(12,342)==0xff9cc65a); /* outside the left paper becomes its live green */
  assert(!pixel(16,342)&&!pixel(20,346)); /* composite/object and non-BG1 pixels survive */
  assert(sizeof(PortJiminyPageRow)==20); /* new mask uses old alignment padding */
+ assert(offsetof(PortJiminyPageRow,kind)==19); /* per-layout profile uses the remaining byte */
  reset();rows[71].fill=0xffa5adb5;dst.w=840;dst.h=560; /* fractional3.5x */
  assert(RepairJiminyPageMargin(&src,&dst,1400));
  assert(pixel(1000,268)==0xffefeff7&&pixel(1000,269)==0xffa5adb5); /* same PixelEdge as native rule */

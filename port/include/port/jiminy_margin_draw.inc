@@ -10,10 +10,10 @@ static int PaintJiminyRect(float x, float y, float w, float h, uint32_t color) {
 /* The authored HD right sheet has outer radius4 and inner radius3.
  * Evaluate its contour at output-pixel centres, rather than four diagonal
  * native rows: it keeps the same curve at fractional presentation scales. */
-static float JiminyPageRight(float y, float right, float scale, int inner) {
-    float radius = inner ? 3.0f : 4.0f, dy;
-    if (inner && (y < 17.0f || y >= 159.0f)) return -1.0f;
-    dy = y < 20.0f ? 20.0f-y : y > 156.0f ? y-156.0f : 0.0f;
+static float JiminyPageRight(float y, float right, float scale, int inner, int kind) {
+    float radius = inner ? 3.0f : 4.0f, top = kind == PORT_JIMINY_DETAIL ? 16.0f : 19.0f, dy;
+    if (y < top || (inner && (y < top+1 || y >= 159.0f))) return -1.0f;
+    dy = y < top+4 ? top+4-y : y > 156.0f ? y-156.0f : 0.0f;
     if (dy > radius) dy = radius;
     return right - 4.0f*scale + SDL_sqrtf(radius*radius-dy*dy)*scale;
 }
@@ -32,7 +32,7 @@ static int PaintJiminySheet(const SDL_FRect* dst, const PortJiminyPageRow* rows,
     int y = (int)PixelEdge(dst->y,16,scale);
     while (y < bottom) {
         float gy = SDL_clamp((y+0.5f-dst->y)/scale,16.0f,159.999f);
-        float edge = JiminyPageRight(gy,right,scale,inner);
+        float edge = JiminyPageRight(gy,right,scale,inner,rows[16].kind);
         int row = JiminyPageRowAt((float)y,dst);
         uint32_t color = inner ? rows[row].fill : rows[row].border;
         int end = y+1;
@@ -40,7 +40,7 @@ static int PaintJiminySheet(const SDL_FRect* dst, const PortJiminyPageRow* rows,
         edge = SDL_floorf(edge+0.5f);
         while (end < bottom) {
             float nextY = SDL_clamp((end+0.5f-dst->y)/scale,16.0f,159.999f);
-            float nextEdge = JiminyPageRight(nextY,right,scale,inner);
+            float nextEdge = JiminyPageRight(nextY,right,scale,inner,rows[16].kind);
             int nextRow = JiminyPageRowAt((float)end,dst);
             uint32_t nextColor = inner ? rows[nextRow].fill : rows[nextRow].border;
             if (nextEdge < 0 || SDL_floorf(nextEdge+0.5f) != edge || nextColor != color) break;
@@ -89,11 +89,11 @@ static int DrawJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, int 
                rows[end].fill == r->fill && rows[end].guide == r->guide &&
                rows[end].border == r->border && rows[end].ground == r->ground) end++;
         height = PixelEdge(dst->y, end, scale) - top;
-        /* The style12 side sampler can still carry an old footer colour
-         * beyond the native picture. Fill that margin to viewport x0 using
-         * this presented row's ground. Native pixels retain their ownership
-         * masks below; header/name margins are drawn after this repair. */
-        if (!PaintJiminyRect(0,top,left,height,r->ground)) return 0;
+        /* Continue the actual exterior background to viewport x0. Detail
+         * uses its green ground; lists/covers keep their own left BG1,
+         * including the closed cover's dark footer. Native pixels retain
+         * their ownership masks; header/name margins are drawn afterwards. */
+        if (!PaintJiminyRect(0,top,left,height,r->kind == PORT_JIMINY_DETAIL ? r->ground : r->guide)) return 0;
         /* The three native columns outside the left page still contain old
            frame bars. Clear only their opaque BG1 winner, never a name plate,
            object, blend or later UI edit. The paper starts at native x3. */
@@ -115,7 +115,7 @@ static int DrawJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, int 
         y = end;
     }
     if (!PaintJiminySheet(dst,rows,oldRight,right,0) || !PaintJiminySheet(dst,rows,oldRight,right,1)) return 0;
-    for (y = 16; y < 160;) {
+    for (y = 16; rows[16].kind == PORT_JIMINY_DETAIL && y < 160;) {
         const PortJiminyPageRow* r = &rows[y];
         int end = y+1;
         while (end < 160 && rows[end].guide == r->guide && rows[end].fill == r->fill) end++;
@@ -137,7 +137,8 @@ static int RepairJiminyPageMargin(const SDL_FRect* src, const SDL_FRect* dst, in
         if (rows)
             for (y = 16; y < 160; y++) {
                 float top = PixelEdge(dst->y,y,scale);
-                PaintJiminyRect(0,top,left,PixelEdge(dst->y,y+1,scale)-top,rows[y].ground);
+                PaintJiminyRect(0,top,left,PixelEdge(dst->y,y+1,scale)-top,
+                    rows[y].kind == PORT_JIMINY_DETAIL ? rows[y].ground : rows[y].guide);
                 PaintJiminyRect(right,top,outW-right,PixelEdge(dst->y,y+1,scale)-top,rows[y].ground);
             }
     }

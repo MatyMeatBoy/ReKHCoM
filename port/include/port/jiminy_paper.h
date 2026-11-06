@@ -4,10 +4,13 @@
 #include <stdint.h>
 #include <string.h>
 
+enum { PORT_JIMINY_DETAIL, PORT_JIMINY_LIST, PORT_JIMINY_COVER };
+
 typedef struct PortJiminyPageRow {
-    uint32_t fill, guide, border, ground;
+    uint32_t fill, guide, border, ground; /* non-detail guide stores the left background */
     uint16_t owned; /* native BG1 ownership at shaded edge columns224..239 */
     uint8_t leftOwned; /* BG1-only old frame bars outside the left page, columns0..2. */
+    uint8_t kind; /* uses alignment padding: detail, list or closed cover */
 } PortJiminyPageRow;
 
 /* Header labels differ, but these three detail layouts share the body. A
