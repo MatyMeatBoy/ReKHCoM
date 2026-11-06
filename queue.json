@@ -16903,7 +16903,7 @@
       "status": "pr_abierto",
       "owner": "codex-v29-lcd",
       "created_at": "2026-11-06T21:20:43.227763+00:00",
-      "updated_at": "2026-11-06T21:45:36.725731+00:00",
+      "updated_at": "2026-11-06T21:46:46.465697+00:00",
       "branch": "feat/v29-lcd-grid",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/635",
       "approval": "Usuario06/11 pide revisar/cerrar todosissues con2.9; prioridadmaximosmsbajos todasversiones,defaultsinmodificar, unworkerextra/jobs1BelowNormal",
@@ -16913,9 +16913,15 @@
           "at": "2026-11-06T21:45:36.725731+00:00",
           "owner": "codex-v29-lcd",
           "detail": "Head4ce7015b9 frommainc336a9c50; lcd_grid0..100 default0,2cached1D masksO(w+h),2blits, steady/slider0uploads, existingAPIonly. C32/64each98304oracle+cachefailuresPASS; INIactualnative32PASS; reset22PASS; fullEU64ABIbootBIOSPASS guest143e9563.4D3DactualcapturesAuto x2/Original fractional off60exit0/511presents; comparativas rotuladasopcionales enpruebas/release-v29/issue598; root ingresaráAtlastrasreview,noherencia. sourcecheckúnicobaselinestale405recipes separadoPR634 reviewedPASS. No personalimports/ROM/SAV/gamecorechanges; no cleanperf/CRTphysicalclaim. CPUreturnedroot, owncheckoutclean, draftreviewpending."
+        },
+        {
+          "at": "2026-11-06T21:46:46.465697+00:00",
+          "owner": "codex-v29-lcd",
+          "detail": "FINAL head3215cea8038be96c16b34b27d5b8fea8b4900076 rebase main4703e630c incl634; productionLCD identicalto4ce7015b9 testedguest143e9563. generatedsource--check nowPASS(noC rerun). PriorC32/64 each98304oracle/cachePASS+INIactual/reset22/fullEU64ABI/boot/BIOSPASS.4actualD3Doff60cases visualPASS; rootreviewvisualPASS. Atlaspending92f10694910c42d99b3d0cb57e40a07e optionalfilter/default0 noacceptedartchanges; rootservedverified. Evidence pruebas/release-v29/issue598. Owncheckoutclean, CPUfree, no merge/userapprovalclaim."
         }
       ],
-      "claimed_at": "2026-11-06T21:21:02.190476+00:00"
+      "claimed_at": "2026-11-06T21:21:02.190476+00:00",
+      "sent": "92f10694910c42d99b3d0cb57e40a07e"
     },
     "v29-darkside-cold-cache": {
       "id": "v29-darkside-cold-cache",
@@ -16971,7 +16977,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:45:36.725731+00:00",
+  "updated_at": "2026-11-06T21:46:46.465697+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
