@@ -721,3 +721,13 @@ superior, suprimiendo únicamente BG2 x20..27/y-8..-1. Conservar todos los píxe
 de y0 en adelante y el ritmo derecho desde x28. Es una interpretación visual
 acotada, no una orden de inventar otra ventana. Estudio sin build pendiente de
 valoración y ejecución real; no hereda aceptación de la versión anterior.
+### Agrabah107/108: continuación superior y escalón, revisión4
+
+El sampler superior existente debe estar activo en la ruta normal de Agrabah,
+no depender del flag de preview general: las pilastras conservan sus columnas
+y la ventana cortada toma su contraparte completa(-8columnas,+4filas). El
+pequeño escalón señalado usa la traslación BG2(-32,-16) en x496..511/y288..303,
+incluyendo su gate de corridas; el BG3 del techo/calle aceptados no se cambia.
+Todas estas selecciones siguen fuera del cuadro GBA. La simulación responde
+a las tres nubes sin afirmar nueva cámara o ejecución del juego. Pendiente
+de valoración propia y QA real; no hereda la aceptación del padre.
