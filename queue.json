@@ -16555,19 +16555,20 @@
     "atlas-oogie-85b1-r3-20261106": {
       "id": "atlas-oogie-85b1-r3-20261106",
       "piece": "Oogie: conectar mascara y corregir brazo/falda fantasma, seguimiento85b1rev3",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-oogie-shapes",
       "created_at": "2026-11-06T15:56:51.967392+00:00",
-      "updated_at": "2026-11-06T15:56:51.967392+00:00",
+      "updated_at": "2026-11-06T15:57:15.276621+00:00",
       "branch": null,
       "pr": null,
       "approval": "Dos nubes nuevas pendientes; PR606 previo pending, ninguna aprobacion heredada",
       "reference": "Atlas85b1e5551e224f3893cf44fcc9cf5739 rev3 envio20261105-203951-55f838",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-06T15:57:15.276621+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T15:56:51.967392+00:00",
+  "updated_at": "2026-11-06T15:57:15.276621+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
