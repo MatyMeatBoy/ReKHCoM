@@ -1759,11 +1759,10 @@ static void Change(int item, int dir) {
             sFsPending = Wrap((sFsPending >= 0 ? sFsPending : ModeIndex()) + dir, sModeCount + 1);
             return;
         case ITEM_VSYNC:
-            #ifdef _WIN32
-            gPortConfig.vsync = Wrap(gPortConfig.vsync + dir, 3);
-#else
-            gPortConfig.vsync = !gPortConfig.vsync;
-#endif
+            if (PortVideoVrrOptionAvailable())
+                gPortConfig.vsync = Wrap(gPortConfig.vsync + dir, 3);
+            else
+                gPortConfig.vsync = !gPortConfig.vsync;
             break;
         case ITEM_SCANLINES:
             gPortConfig.scanlines = Wrap(gPortConfig.scanlines / 25 + dir, 5) * 25;

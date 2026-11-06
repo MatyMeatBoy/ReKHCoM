@@ -7,6 +7,9 @@
 #ifndef HOST_OUTPUT_WINDOW
 #define HOST_OUTPUT_WINDOW 1
 #endif
+#ifndef HOST_OUTPUT_VRR_CAPS
+#define HOST_OUTPUT_VRR_CAPS() 0
+#endif
 static int HostOutputCommand(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     int actual = 0, width = 0, height = 0;
     (void)c; (void)d;
@@ -15,7 +18,7 @@ static int HostOutputCommand(int op, uint32_t a, uint32_t b, uint32_t c, uint32_
         return sWindow && sRenderer ? BRIDGE_OUTPUT_MAGIC : 0;
     case BRIDGE_OUTPUT_CAPS:
         return sWindow && sRenderer ? BRIDGE_OUTPUT_VSYNC_CAP |
-            (HOST_OUTPUT_WINDOW ? BRIDGE_OUTPUT_WINDOW_CAP : 0) : 0;
+            (HOST_OUTPUT_WINDOW ? BRIDGE_OUTPUT_WINDOW_CAP : 0) | HOST_OUTPUT_VRR_CAPS() : 0;
     case BRIDGE_OUTPUT_WINDOW_SET:
         if (!HOST_OUTPUT_WINDOW || !sWindow || !a || !b || a > INT_MAX || b > INT_MAX)
             return 0;
