@@ -704,3 +704,12 @@ propuesta omite sólo ese banco decorativo y sólo sobre el sector vacío inferi
 del remate, fuera del viewport GBA. Conservar actores, resto de decoración,
 paleta/fundidos y todas las escenas hermanas. La aprobación anterior no da
 por aprobado este recorte: estudio sin build, pendiente de runtime y valoración.
+### Biblioteca130: bajar la banda completa del muro
+
+La nube384e2436 y el trazo071834f9 sobre dbe9d6b9 revisión3 solicitan que el
+zócalo continúe a la izquierda del remate completo. La banda ornamental
+592<=2*y+x<624 debe elegirse antes de la alfombra, que empieza desde592.
+Para x<24 prolongar el módulo nativo64px con la misma diagonal; conservar
+la excepción aprobada de476píxeles y todos los píxeles ya autorados. No basta
+que la librería continúe si su base desaparece al resolver el suelo. Esta
+propuesta es un estudio sin build y no hereda la aceptación del padre.

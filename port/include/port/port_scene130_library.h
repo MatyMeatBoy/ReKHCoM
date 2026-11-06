@@ -17,6 +17,14 @@ static inline int PortScene130LibrarySource(int x, int y, int* sx, int* sy) {
     if (PortScene130LibraryRemate(x,y)) {
         *sx=x+64; *sy=y-32; return 0; /* complete original baseboard band */
     }
+    /* Continue the same full baseboard below the repaired notch. It occupies
+     * diagonal592..623, although the carpet starts already at592. Resolve
+     * this band before carpet so the left extension keeps its ornament. */
+    if (x<24 && 2*y+x>=592 && 2*y+x<624) {
+        *sx=64+PortSceneTileMod(x-64,64);
+        *sy=y+(x-*sx)/2;
+        return 0;
+    }
     if (y >= 176 + distance/2) {
         int u=PortSceneTileMod(x+2*y-832,192);
         int v=PortSceneTileMod(x-2*y+448,192);
