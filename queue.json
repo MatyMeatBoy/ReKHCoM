@@ -16702,13 +16702,13 @@
     "issue610-pooh-tree-crash-v29": {
       "id": "issue610-pooh-tree-crash-v29",
       "piece": "Issue610: crash Pooh al chocar arboles antes de caer cola de Eeyore",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-pooh",
       "created_at": "2026-11-06T17:20:37.075153+00:00",
-      "updated_at": "2026-11-06T17:45:57.841892+00:00",
+      "updated_at": "2026-11-06T17:59:09.595575+00:00",
       "branch": "fix/v29-pooh-tree-crash",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/626",
-      "approval": "Usuario prioriza cuelgues antes2.9; source primero, runtime positivo requerido; ventana compilacion coordinada root",
+      "approval": "Usuario06/11 autoriza solucionar cuelgues antes2.9; reviewrootguardNULLsinbloqueos",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/610",
       "evidence": [
         {
@@ -16720,9 +16720,15 @@
           "at": "2026-11-06T17:45:57.841892+00:00",
           "owner": "codex-v29-pooh",
           "detail": "PR626 draft source3324bbe76e1cae45e7c5f8e49712d2a346a05c8b. C32/C64 RED C0000005 tick32 -> GREEN all4, controls byte-identical. Real EU before+after32/64 collision/tail30..0/shakeNULL exit0 under existing BIOS masking; native32 bios write0x18 removed. NOT reporter crash reproduction; issue610 stays open for platform/version/log. Android32/64 LinuxARM no recovery by source, physicalQA unverified. pruebas/issue610-pooh-tree-crash-v29/VERIFICATION.json. No C/game load active."
+        },
+        {
+          "at": "2026-11-06T17:59:09.595575+00:00",
+          "owner": "codex-v29-pooh",
+          "detail": "PR626 MERGED8f04d2b9ef6f51ef9c7161ae1ad4ec61ae7b94bc; sourcefix3324bbe exacto. C32/64RED/GREEN yEU32/64 choque/cola/shake beforeafterPASS; writeNULL0x18 desaparece. WindowscompatBIOS enmascara cierre: issue610 NO cerrado ni atribuible sinplataforma/versionreportero, followupQAexterno pendiente para2.9."
         }
       ],
-      "claimed_at": "2026-11-06T17:21:05.289913+00:00"
+      "claimed_at": "2026-11-06T17:21:05.289913+00:00",
+      "completed_at": "2026-11-06T17:59:09.595575+00:00"
     },
     "v29-adaptive-gba-border-all-modes": {
       "id": "v29-adaptive-gba-border-all-modes",
@@ -16744,7 +16750,7 @@
     "created_at": "2026-11-06T17:57:22.104042+00:00",
     "updated_at": "2026-11-06T17:57:22.104042+00:00"
   },
-  "updated_at": "2026-11-06T17:57:22.104042+00:00",
+  "updated_at": "2026-11-06T17:59:09.597079+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
