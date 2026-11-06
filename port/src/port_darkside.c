@@ -187,8 +187,12 @@ static void Prepare(void) {
 int PortDarksideLayer(const void* const* maps) {
     if (!maps || !PortDarksideBeachOn())
         return 0;
-    if (maps[0] == gBosDsdBgMap0 && maps[1] == gDefaultBgMap && maps[2] == gBosDsdBgMap2 && maps[3] == gDefaultBgMap)
+    if (maps[0] == gBosDsdBgMap0 && maps[1] == gDefaultBgMap && maps[2] == gBosDsdBgMap2 && maps[3] == gDefaultBgMap) {
+        /* Main identifies layers while latching, before dispatching PPU rows.
+         * Publish the shoreline cache here so workers only read finished tables. */
+        Prepare();
         return 1;
+    }
     if ((const void*)maps >= (const void*)gBosDsdFrameMaps[0] && (const void*)maps < (const void*)gBosDsdFrameMaps[47] &&
         maps[0] == gDefaultBgMap && maps[1] == gDefaultBgMap && maps[3] == gDefaultBgMap)
         return 2;
