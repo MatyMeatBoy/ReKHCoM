@@ -177,7 +177,7 @@ typedef struct PortConfig {
     int titleBrightnessButton; /* experimental: restore the cartridge's title brightness control outside Original view */
     int graphicsMode;          /* PORT_MODE_*: chosen on the first start (0 asks), each with its presets (PortApplyGraphicsMode) */
     int graphicsModeApplied;   /* the mode whose presets were last applied: the launcher only changes graphics_mode */
-    int gbaBorder;             /* GBA classic: the decorative border around the GBA picture (0 none, 1..3 designs) */
+    int gbaBorder;             /* Decorative border in any view (0 none, 1..3 existing designs). */
     int netDelay;              /* net_delay: the online link's input delay in frames (0 automatic, from the round trip) */
     int netStats;              /* net_stats: during an online link, the round trip, input delay and last rollback on screen */
     char onlineName[25];       /* online_name: the player's name on the lobby's rooms (relay servers; Steam uses its own) */
@@ -420,8 +420,10 @@ typedef struct PortTextGlyph {
     uint32_t face, shadow;
 } PortTextGlyph;
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud);
-/* Frames presented since start (port_main.c). */
+/* VBlank cycles since start, including skipped drawing (port_main.c). */
 uint32_t PortFrameCount(void);
+/* A committed state load restores game time; begin a fresh FPS/Hz window. */
+void PortFpsResetAfterStateLoad(void);
 /* OptiPort's deep view of a slow frame: the one-off costs each frame paid besides its usual work, reset by the
    frame log every frame. HD sprite decodes/uploads (port_hdsprites.c) and HD glyph renders. Only counted while
    KHCOM_FRAMELOG is on (on); otherwise no clock is read. */
