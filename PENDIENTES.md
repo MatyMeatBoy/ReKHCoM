@@ -481,4 +481,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v29-darkside-cold-cache | Darkside cold-cache publication before PPU worker dispatch: avoid concurrent shoreline preparation | integrado | codex-v29-darkside | https://github.com/MatyMeatBoy/ReKHCoM/pull/633 | Usuario pide reducir picosms en arenas y cerrar estabilidad v2.9 | 2026-11-06T21:35:00.068036+00:00 |
 | v29-launcher-synthesis-recipe-sync | Synchronize launcher embedded recipe with approved current synthesis TSV; source check stale405 rows | integrado | codex-v29-recipes | https://github.com/MatyMeatBoy/ReKHCoM/pull/634 | Usuario integra todosaprobados ypublica2.9 todasplataformas | 2026-11-06T21:44:58.667807+00:00 |
 
-Integrador: codex-v29-integrator (ocupado; 2026-11-06T21:44:24.476736+00:00)
+Integrador: libre
