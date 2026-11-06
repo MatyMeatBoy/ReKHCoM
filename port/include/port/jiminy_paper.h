@@ -7,6 +7,7 @@
 typedef struct PortJiminyPageRow {
     uint32_t fill, guide, border, ground;
     uint16_t owned; /* native BG1 ownership at shaded edge columns224..239 */
+    uint8_t leftOwned; /* BG1-only old frame bars outside the left page, columns0..2. */
 } PortJiminyPageRow;
 
 /* Header labels differ, but these three detail layouts share the body. A

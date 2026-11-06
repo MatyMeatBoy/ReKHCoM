@@ -731,3 +731,15 @@ incluyendo su gate de corridas; el BG3 del techo/calle aceptados no se cambia.
 Todas estas selecciones siguen fuera del cuadro GBA. La simulación responde
 a las tres nubes sin afirmar nueva cámara o ejecución del juego. Pendiente
 de valoración propia y QA real; no hereda la aceptación del padre.
+### Diario: footer y esquinas, estudio posterior a367 revisión5
+
+El exterior izquierdo del papel no hereda propiedad de una franja entera:
+capturar sólo las tres columnas de BG1 opaco presentadas y conservar los
+píxeles de objetos, BG0, blends o edición posterior. Su verde viene de la
+misma fila presentada. El extremo derecho necesita una curva exterior e
+interior con grosor consistente, no un corte diagonal de cuatro escalones.
+Al escalar fraccionalmente, el índice de color debe invertir exactamente la
+regla de medio píxel de `PixelEdge`; el centro geométrico sigue siendo continuo.
+La propuesta conserva ABI20 y agrupa áreas planas. El estudio controlado
+explica las cuatro nubes, pero no prueba las máscaras del frame humano ni
+autoriza afirmar que el footer del juego ya pasó QA. Sin build; pendiente.
