@@ -323,6 +323,7 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #define UDP_HOST_WINSOCK
 #include "udp_host.h"
 #define H_thread H_thread_legacy
+#define THREAD_HOST_SDL 1
 #include "thread_host.h"
 #undef H_thread
 #define HOST_OUTPUT_VRR_CAPS() (BRIDGE_OUTPUT_VRR_CONTROL_CAP | \

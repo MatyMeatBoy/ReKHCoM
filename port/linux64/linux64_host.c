@@ -304,6 +304,7 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #define UDP_HOST_POSIX
 #include "udp_host.h"
 #define H_thread H_thread_legacy
+#define THREAD_HOST_SDL 1
 #include "thread_host.h"
 #undef H_thread
 #include "host_output_sdl.h"
