@@ -16757,7 +16757,7 @@
       "status": "pr_abierto",
       "owner": "codex-v29-border",
       "created_at": "2026-11-06T17:43:39.391915+00:00",
-      "updated_at": "2026-11-06T20:10:36.781176+00:00",
+      "updated_at": "2026-11-06T20:14:54.267637+00:00",
       "branch": "feat/v29-adaptive-gba-border",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/627",
       "approval": "Usuario06/11 solicitaHD/noHD y borde para todoslosmodos; prioridad absoluta fluidez antesborde",
@@ -16777,6 +16777,11 @@
           "at": "2026-11-06T20:10:36.781176+00:00",
           "owner": "codex-v29-border",
           "detail": "Head14a52a690f90f5d4d987f6f35a2b28807236ecd2 rebased main d2254cc0. Fix actual picture aperture and complete native ornament alpha cache, all UI/journal footer viewport preserved.7 Python PASS; C32/64 off576/on1008/transitions288 PASS; full EU64--test PASS guest8b986669. Five real unedited D3D11 field captures exit0/511presents in pruebas/v29-adaptive-gba-border/visual-*/field-x2, EVIDENCE.json. Root reviewing exact Original/full UI; no physicalCRT/device-reset/performance certification. PNG/ROM/SAV/import/Atlas originals unchanged. CPU released to root; no merge."
+        },
+        {
+          "at": "2026-11-06T20:14:54.267637+00:00",
+          "owner": "codex-v29-border",
+          "detail": "Followup a373d2c0e5132549e907800cbfb6c5812cab4e80 TEST ONLY. Root reset inventory RED corrected to20 texture owners plus all3border pointers/Shown/Attempted reset assertions. Extracted production C reset GREEN;4 owner fixtures GREEN; BelowNormal serial. Evidence renderer-reset-GREEN.log,renderer-reset-owners-GREEN.log,EVIDENCE.json. Product and guest8b986669 unchanged from14a52a690; no extra build/runtime. CPU returned root; PR627 still draft pending final UI/Original QA. Checkout clean."
         }
       ],
       "claimed_at": "2026-11-06T18:38:41.136268+00:00"
@@ -16821,7 +16826,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T20:10:36.781176+00:00",
+  "updated_at": "2026-11-06T20:14:54.267637+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
