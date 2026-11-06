@@ -687,3 +687,12 @@ cara derecha original x448..479 con2y-x constante entre-96y16; mantener remate,
 base, lado izquierdo y props únicos. No recolorear el donante de otro plano.
 La imagen nueva se etiqueta simulación sobre captura previa, sin build; su
 aprobación y runtime siguen pendientes. Ver `ATLAS_SCENE095_PATTERN_A.md`.
+### Escena115: detalles posteriores a la aceptación, revisión4
+
+Los tres recortes requieren alinear la frontera de madera limpia con el fin
+de BG2 (diagonal32), completar la punta que cae en relleno transparente del
+mapa y omitir una escotilla cuyo resto interior no existe. Un sello puede
+cruzar el borde del mapa sin que su punta quede fuera: conservar identidad de
+todo el mapa dejaba ese extremo sin dibujar. La excepción sólo se aplica al
+muestreo exterior al cuadro GBA y no borra tinta original de BG2. Propuesta
+sin build; no dar por validadas otras cámaras o plataformas con la simulación.
