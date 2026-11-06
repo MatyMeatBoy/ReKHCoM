@@ -190,6 +190,7 @@ typedef struct PortConfig {
     int controllerPrompts;     /* experimental display only: 0 Original, 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation */
     int hdMediaLanguage;       /* appended: 0 legacy/Auto, 1 user-labelled EN, 2 user-labelled JP; not text/Undub */
     int goldPremium;           /* appended, experimental, off: premium cards with a gold frame in the deck menu */
+    int hideTitleHint;         /* appended, off: hide SELECT OPTIONS text; SELECT still opens options */
 } PortConfig;
 
 extern PortConfig gPortConfig;

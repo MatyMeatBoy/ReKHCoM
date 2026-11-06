@@ -136,6 +136,7 @@ static const Key sKeys[] = {
     { "narrow_fit", &gPortConfig.narrowFit, 1, 1 },
     { "scanlines", &gPortConfig.scanlines, 0, 100 },
     { "color_correction", &gPortConfig.colorCorrection, 0, 1 },
+    { "hide_title_hint", &gPortConfig.hideTitleHint, 0, 1 },
     { "show_fps", &gPortConfig.showFps, 0, 1 },
     { "experimental_frame_skip", &gPortConfig.frameSkip, 0, 1 },
     { "window_scale", &gPortConfig.windowScale, 1, 8 },
