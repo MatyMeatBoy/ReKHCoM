@@ -16846,7 +16846,7 @@
       "status": "pr_abierto",
       "owner": "codex-v29-movie062",
       "created_at": "2026-11-06T21:05:57.325198+00:00",
-      "updated_at": "2026-11-06T21:09:01.457107+00:00",
+      "updated_at": "2026-11-06T21:10:30.804838+00:00",
       "branch": "fix/v29-basic-movie062",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/631",
       "approval": "Usuario autoriza resolver pendientes y lanzar2.9; root asigna573 un carril",
@@ -16856,13 +16856,18 @@
           "at": "2026-11-06T21:09:01.457107+00:00",
           "owner": "codex-v29-movie062",
           "detail": "Source cd93084a6 frommain35ba94cfd adds062 to bothbasiccatalogs; semanticmovie2+syntheticCLI RED2/GREEN4 Python. C++collectorfixture8basic/6scenes/9union prepared, execution waitsrootCPUwindow. No imports personal/C/game/ffmpeg/fullbuild. Evidence pruebas/release-v29/issue573. Draftpendingreview; no issueclosed beforeintegration/release."
+        },
+        {
+          "at": "2026-11-06T21:10:30.804838+00:00",
+          "owner": "codex-v29-movie062",
+          "detail": "FINAL headcd93084a6aadd542bcdcaae719ee2767fc877a55. ALL5testsPASS inclactualC++collector8basic/6scenes/9union unique+Pythonsemanticmovie2/3+CLIbasic/fullcopy synthetic MP4 preservesbytes+input. RED2prior. SerialBelowNormal25s, CPUreturnedroot. No fullbuild/game/decoder/ffmpeg/importspersonal. Evidence pruebas/release-v29/issue573/EVIDENCE.json+ALL-GREEN.log. Checkoutclean; review/integrationpendingroot; PR631draft."
         }
       ],
       "claimed_at": "2026-11-06T21:06:08.460355+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-06T21:09:01.457107+00:00",
+  "updated_at": "2026-11-06T21:10:30.805851+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
