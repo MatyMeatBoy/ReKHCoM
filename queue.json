@@ -16512,15 +16512,21 @@
     "atlas-journal-all-modes-rounding-20261106": {
       "id": "atlas-journal-all-modes-rounding-20261106",
       "piece": "Pepito: redondeado, margenes y footer extendido en todas las paginas y HUD HD on/off; Original GBA intacto",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-journal-all-modes",
       "created_at": "2026-11-06T15:08:35.950981+00:00",
-      "updated_at": "2026-11-06T15:08:43.708969+00:00",
-      "branch": null,
-      "pr": null,
-      "approval": "Usuario06/11 exige arreglo completo de libro previamente aprobado en toda presentacion ampliada, ambos modos HUD, sin tocar Original; sin build vigente",
+      "updated_at": "2026-11-06T15:27:29.671548+00:00",
+      "branch": "fix/journal-all-modes-20261106",
+      "pr": "617",
+      "approval": "Usuario06/11: redondeado, margenes y pie completos en todas las paginas y ambos HUD; Original GBA intacto. Correccion de cobertura de renderer del libro previamente aprobado; sin arte nuevo ni build",
       "reference": "e3edc03e9794474391052414c977aedc",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-06T15:27:29.671548+00:00",
+          "owner": "codex-journal-all-modes",
+          "detail": "Source ce65324e6; 128 selection cases;32 ROM/capture/renderer fixtures; detail commands exact6; foreground3profiles/33rollback; ABI20offset19; independent review; no compiler/game/imports. pruebas/atlas-20261106/journal-all-modes/"
+        }
+      ],
       "claimed_at": "2026-11-06T15:08:43.708969+00:00"
     }
   },
@@ -16530,7 +16536,7 @@
     "created_at": "2026-11-06T15:27:12.035328+00:00",
     "updated_at": "2026-11-06T15:27:12.035328+00:00"
   },
-  "updated_at": "2026-11-06T15:27:12.035328+00:00",
+  "updated_at": "2026-11-06T15:27:29.671548+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
