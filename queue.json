@@ -16843,10 +16843,10 @@
     "issue573-basic-movie062-v29": {
       "id": "issue573-basic-movie062-v29",
       "piece": "Issue573: incluir movie2 zz_event_062 en importacion basica Python y launcher C++ con cobertura semantica y deduplicacion",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-movie062",
       "created_at": "2026-11-06T21:05:57.325198+00:00",
-      "updated_at": "2026-11-06T21:10:30.804838+00:00",
+      "updated_at": "2026-11-06T21:27:19.320365+00:00",
       "branch": "fix/v29-basic-movie062",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/631",
       "approval": "Usuario autoriza resolver pendientes y lanzar2.9; root asigna573 un carril",
@@ -16861,9 +16861,15 @@
           "at": "2026-11-06T21:10:30.804838+00:00",
           "owner": "codex-v29-movie062",
           "detail": "FINAL headcd93084a6aadd542bcdcaae719ee2767fc877a55. ALL5testsPASS inclactualC++collector8basic/6scenes/9union unique+Pythonsemanticmovie2/3+CLIbasic/fullcopy synthetic MP4 preservesbytes+input. RED2prior. SerialBelowNormal25s, CPUreturnedroot. No fullbuild/game/decoder/ffmpeg/importspersonal. Evidence pruebas/release-v29/issue573/EVIDENCE.json+ALL-GREEN.log. Checkoutclean; review/integrationpendingroot; PR631draft."
+        },
+        {
+          "at": "2026-11-06T21:27:19.320365+00:00",
+          "owner": "codex-v29-movie062",
+          "detail": "Root review diff+actual5tests evidence PASS. PR631 merged2fee63e9971f2b28067136ca22744a168e15e69a sourcecd93084a6 exact; final2.9 package verification pending, no personalimports regenerated."
         }
       ],
-      "claimed_at": "2026-11-06T21:06:08.460355+00:00"
+      "claimed_at": "2026-11-06T21:06:08.460355+00:00",
+      "completed_at": "2026-11-06T21:27:19.320365+00:00"
     },
     "issue596-title-hint-toggle-v29": {
       "id": "issue596-title-hint-toggle-v29",
@@ -16906,7 +16912,7 @@
     "created_at": "2026-11-06T21:26:49.738038+00:00",
     "updated_at": "2026-11-06T21:26:49.738038+00:00"
   },
-  "updated_at": "2026-11-06T21:26:49.738038+00:00",
+  "updated_at": "2026-11-06T21:27:19.320365+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
