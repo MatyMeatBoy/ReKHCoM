@@ -11,12 +11,12 @@
 #include "port/cursor_idle.h"
 static PortCursorIdle sCursorIdle;
 #endif
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
 #define COBJMACROS
 #include <dxgi1_5.h>
 #include "port/video_vrr_windows.h"
 #endif
-#ifdef PORT_GBA_RELOC
+#ifdef PORT_SDL_BRIDGE
 #include "bridge_output.h"
 extern int PortBridgeVideoCaps(void);
 #endif
@@ -213,16 +213,16 @@ static int sFbW, sFbH;
  * This proves eligibility, not that the user enabled VRR in the driver/monitor.
  * Never infer VRR from refresh rate or GPU brand, or use adaptive VSync (-1). */
 static int VrrPresentEligible(void) {
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
     return PortWindowsVrrEligible(sRenderer);
-#elif defined(PORT_GBA_RELOC)
+#elif defined(PORT_SDL_BRIDGE)
     return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP)!=0;
 #endif
     return 0;
 }
 
 int PortVideoVrrOptionAvailable(void) {
-#ifdef PORT_GBA_RELOC
+#ifdef PORT_SDL_BRIDGE
     return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_CONTROL_CAP)!=0;
 #elif defined(_WIN32)
     return 1;

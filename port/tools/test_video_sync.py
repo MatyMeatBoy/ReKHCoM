@@ -11,7 +11,11 @@ preamble=r"""
 #include <assert.h>
 #include <stdint.h>
 #include <stddef.h>
+#if defined(PORT_SDL_BRIDGE) || defined(TEST_OTHER_NATIVE)
+#undef _WIN32
+#else
 #define _WIN32 1
+#endif
 #define SDL_PROP_RENDERER_D3D11_SWAPCHAIN_POINTER "11"
 #define SDL_PROP_RENDERER_D3D12_SWAPCHAIN_POINTER "12"
 #define DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING 2048
@@ -48,6 +52,11 @@ static void check(int requested,int driver,int full,int capable,int query,int fa
 }
 int main(void) {
  sRenderer=&chain;
+#ifdef TEST_OTHER_NATIVE
+ assert(!PortVideoVrrOptionAvailable());
+ check(2,11,0,1,1,0,1,0);
+ return 0;
+#endif
  check(0,0,0,0,1,0,0,0);check(1,11,0,1,1,0,1,0);
  check(2,11,0,1,1,0,0,0);check(2,12,0,1,1,0,0,0);
  check(2,11,0,0,1,0,1,0);check(2,11,1,1,1,0,1,0);
@@ -57,7 +66,7 @@ int main(void) {
  check(2,11,0,1,1,0,0,0);count=0;ApplyVideoSync(0);assert(count==0);
  windowed=0;count=0;ApplyVideoSync(0);assert(count==1 && calls[0]==1);
  assert(PortVideoVrrOptionAvailable());
-#ifdef PORT_GBA_RELOC
+#ifdef PORT_SDL_BRIDGE
  hostControl=0;assert(!PortVideoVrrOptionAvailable());
  check(2,11,0,1,1,0,1,0);
 #endif
@@ -72,9 +81,10 @@ if not compiler:
 if not compiler:raise SystemExit('C compiler required')
 with tempfile.TemporaryDirectory(prefix='rekhcom-sync-') as d:
  d=Path(d);src=d/'sync.c';src.write_text(preamble+production+cases)
- for guest in (False,True):
-  exe=d/('sync-guest.exe' if guest else 'sync-native.exe')
-  flags=['-DPORT_GBA_RELOC'] if guest else []
+ for name,flags in [('native',[]),('native-reloc',['-DPORT_GBA_RELOC']),
+                    ('guest',['-DPORT_GBA_RELOC','-DPORT_SDL_BRIDGE']),
+                    ('other-native',['-DPORT_GBA_RELOC','-DTEST_OTHER_NATIVE'])]:
+  exe=d/('sync-'+name+'.exe')
   subprocess.run([compiler,'-std=c11',*flags,str(src),'-o',str(exe)],check=True)
   subprocess.run([str(exe)],check=True)
 print('PASS: native/guest production VRR selection, fallback and option availability')
