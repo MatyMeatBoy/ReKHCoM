@@ -762,11 +762,11 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             return 1;
         }
         if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
-            /* The face below the cap is 56px tall and ends at diagonal16.
-             * Keep the lower flower-bearing 56px of the left bay. */
-            int reflected=559-wx;
-            *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+656-*sx)/2;
+            /* Review pattern A is the dark native right face, not the
+             * reflected flower-bearing left face. Repeat its complete
+             * 32px strip with its own diagonal, including the bottom edge. */
+            *sx=448+PortSceneTileMod(wx-448,32);
+            *sy=(2*wy-wx+*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;
