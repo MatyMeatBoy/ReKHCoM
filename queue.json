@@ -17030,10 +17030,10 @@
     "v29-console-bridge-header-staging": {
       "id": "v29-console-bridge-header-staging",
       "piece": "Console host staging must include bridge_threads.h dependency of thread_host.h",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-consoleheaders",
       "created_at": "2026-11-07T00:28:43.290737+00:00",
-      "updated_at": "2026-11-07T00:32:30.929009+00:00",
+      "updated_at": "2026-11-07T00:34:11.964550+00:00",
       "branch": "fix/v29-console-bridge-header-staging",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/637",
       "approval": "Usuario exige2.9todasplataformas ypublicarlistas; correccionesnecesariasbuildrestantes sinreemplazarpublicados",
@@ -17043,9 +17043,15 @@
           "at": "2026-11-07T00:32:30.929009+00:00",
           "owner": "codex-v29-consoleheaders",
           "detail": "Head5614c2d30;3staginglistlines copybridge_threads.h Switchhost/Vitapackage/Vitatest-host. ActualSwitchbuild_host+Vitapackage tempstagingmockVM2REDmissingheader->2GREEN quotedflatincludeclosure+sourceheaderbytes. No C/VM/SDKinstall/game, no hostbody/guest/art/publishedpayloadchanges. Evidence pruebas/release-v29/console-bridge-header-staging/{RED,GREEN}.log. PR637draftreviewpending, owncheckoutclean, CPUreturnedroot."
+        },
+        {
+          "at": "2026-11-07T00:34:11.964550+00:00",
+          "owner": "codex-v29-consoleheaders",
+          "detail": "PR637 merged51edf7efa2c49c97a1c389ae2e4cd7e3b749448c head5614c2d30. Rootreview3staginglines/testactualSwitch+Vitacopyclosurebytes2RED/GREENPASS. ActualpriorVM512failuremissingbridge_threads header exit1recorded,noNRO/VMactive; noOOMclaim. Followupbuildonlysourcefor3remainingconsoles;5publishedpackages+Webimmutable. RealSDKretryparentgatepending."
         }
       ],
-      "claimed_at": "2026-11-07T00:28:54.840526+00:00"
+      "claimed_at": "2026-11-07T00:28:54.840526+00:00",
+      "completed_at": "2026-11-07T00:34:11.964550+00:00"
     }
   },
   "integrator": {
@@ -17054,7 +17060,7 @@
     "created_at": "2026-11-07T00:33:04.896577+00:00",
     "updated_at": "2026-11-07T00:33:04.896577+00:00"
   },
-  "updated_at": "2026-11-07T00:33:04.896577+00:00",
+  "updated_at": "2026-11-07T00:34:11.964550+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
