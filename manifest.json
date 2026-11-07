@@ -1,12 +1,12 @@
 {
-  "version": "v2.8-web-alpha",
-  "source_commit": "315db1e45cbfacb54c1786786917045c0100b2eb",
+  "version": "v2.9-web-alpha",
+  "source_commit": "86a5970720bca1c102f4a77cec1b8a59b2cadacf",
   "source_dirty": false,
-  "built_utc": "2026-11-04T15:54:37.057197+00:00",
+  "built_utc": "2026-11-07T00:02:23.122823+00:00",
   "files": {
     "index.html": {
       "bytes": 16978,
-      "sha256": "ee97d293b82939c8f00d91b4648b08e5cd38fb3b03ccb17e9d009aa254b9b6ac"
+      "sha256": "1d67d1560361bc24eb9a4026662112b71cda3d7320bc68d7b4975aeb01b05696"
     },
     "web.css": {
       "bytes": 14481,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "aeefb89722ceb1dca3fb9ed40f501952822e17841e28c17ea30aba0cd77e3419"
+      "sha256": "56604eae9924ed1fdb8da341b16e19d1f6e5c6b03a87fb2b173c5bcab5cd5529"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9559308,
-      "sha256": "218997776aa0b25dc53e58b38840ecf148e30bdc814409381194b79a29fa7f3c"
+      "bytes": 9590327,
+      "sha256": "9be8acd12ef01be02655329e2a50f222f95ee8548ca838b94c06df05d341d9ff"
     },
     "rekhcom-us.js": {
       "bytes": 208832,
-      "sha256": "5d346a96603910fb206dfca6b6a7aa97298d8cd7c584b35eea1a9d8063e933fa"
+      "sha256": "38de0248caca91aa9f4f134d2b4b8af48398947f713e14b9758dfa262db7a77c"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9613436,
-      "sha256": "95fd1ab15e515ed5b4b568252475a0cca7311f614eca527a57cac595bb6d3703"
+      "bytes": 9644410,
+      "sha256": "7f9c48feae0388b690bea7dc1d70a66d09414e47f51a7c6edc0eeed64f4ef4a0"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "17391a69c76f161c57d45708f6fabf102105210e006f807b197e0c5ba4cea639"
+      "sha256": "c61fe71fc2ae1ca0595601a4d4589dff2afbcd38783a3894c18722d228bd0a6b"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9468984,
-      "sha256": "5b3765b3f7f065951e17564bdc92b1bc8ad25594836f9258f7d00e8805857425"
+      "bytes": 9500082,
+      "sha256": "49b6fa3fd992cfef26ad6abf50c816edea72f3e8e16c50b19a4bad362e1d34f9"
     }
   }
 }
