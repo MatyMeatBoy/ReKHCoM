@@ -16808,10 +16808,10 @@
     "v29-release-performance-gates-20261106": {
       "id": "v29-release-performance-gates-20261106",
       "piece": "Release2.9: final performance/stability and adaptive-border runtime gates; eight published platform packages and allregions; publish only after verification",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-v29-release",
       "created_at": "2026-11-06T19:43:05.358774+00:00",
-      "updated_at": "2026-11-07T01:01:37.941825+00:00",
+      "updated_at": "2026-11-07T01:01:53.855327+00:00",
       "branch": "release/v2.9-20261106",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/629",
       "approval": "Usuario06/11 autoriza builds/pruebas necesarias e integrar aprobados y salir2.9 todasplataformas; prioridad sinralentizaciones, max1workerextra, una carga/jobs1/BELOW_NORMAL, datosprotegidos",
@@ -16866,9 +16866,15 @@
           "at": "2026-11-07T01:01:37.941825+00:00",
           "owner": "codex-v29-release",
           "detail": "PR629 version release integrated at f05; followups636/637 at86a/51edf. Publication all8 completed and finalpublicverification PASS; record reviewable delivered phase before integrated per queue transition contract."
+        },
+        {
+          "at": "2026-11-07T01:01:53.855327+00:00",
+          "owner": "codex-v29-release",
+          "detail": "v2.9 stable Latest PUBLIC COMPLETE eight packages Windows32+64 Linux32+64 desktop/Deck Anbernic ARM AndroidARM32+64 Switch Vita PS4 PS5 plus EU/US/JP Web. Final pruebas/release-v29/PUBLICATION-VERIFIED.json verifies exact24assetset, every public download SHA/size, Pages index/settings/3Wasm, immutable tagf05. PACKAGE-VERIFICATION.json full8 with actual perartifact producer f05/86a/51edf; no old asset replacement. Final clean source51edf. Switch NRO3embeddedinputhash/version/RomFS PASS; Vita3SELF ARM32+versions PASS; PS5bgexit0/3RKG5headers+helperhash PASS. Every selected serial build pass, no active build. Physical6900XT/Deck/mobile/consoles remain unverified; issue610 still awaits reporter ZIP/result. Atlas LCD newly approved already shipped PR635; no other frozen selection changes, Erra unresolved independently. Release delivery scope completed, not claim all historical art/issues fixed."
         }
       ],
-      "claimed_at": "2026-11-06T20:59:03.912953+00:00"
+      "claimed_at": "2026-11-06T20:59:03.912953+00:00",
+      "completed_at": "2026-11-07T01:01:53.855327+00:00"
     },
     "issue573-basic-movie062-v29": {
       "id": "issue573-basic-movie062-v29",
@@ -17070,7 +17076,7 @@
     "created_at": "2026-11-07T01:01:02.467060+00:00",
     "updated_at": "2026-11-07T01:01:02.467060+00:00"
   },
-  "updated_at": "2026-11-07T01:01:37.941825+00:00",
+  "updated_at": "2026-11-07T01:01:53.856327+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
