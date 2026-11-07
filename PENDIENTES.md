@@ -483,4 +483,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v29-web-shadow-prototype | Web Wasm link: explicit event-shadow owner declaration matches void producer | integrado | codex-v29-webcontract | https://github.com/MatyMeatBoy/ReKHCoM/pull/636 | Usuario pidepublicar2.9porplataformaslistas; corregirbuildsrestantessinpisarpublicados | 2026-11-06T23:33:27.587718+00:00 |
 | v29-console-bridge-header-staging | Console host staging must include bridge_threads.h dependency of thread_host.h | pr_abierto | codex-v29-consoleheaders | https://github.com/MatyMeatBoy/ReKHCoM/pull/637 | Usuario exige2.9todasplataformas ypublicarlistas; correccionesnecesariasbuildrestantes sinreemplazarpublicados | 2026-11-07T00:32:30.929009+00:00 |
 
-Integrador: libre
+Integrador: codex-v29-integrator (ocupado; 2026-11-07T00:33:04.896577+00:00)
