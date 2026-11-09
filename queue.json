@@ -17072,19 +17072,20 @@
     "sdl-global-custom-mappings": {
       "id": "sdl-global-custom-mappings",
       "piece": "Compatibilidad mappings globales SDL2 personalizados",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "Codex-v22",
       "created_at": "2026-11-09T17:49:48.983036+00:00",
-      "updated_at": "2026-11-09T17:49:48.983036+00:00",
+      "updated_at": "2026-11-09T17:49:57.686912+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario solicita arreglo y PR Pilotwings64 2026-11-09",
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-09T17:49:57.686912+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-09T17:49:48.983036+00:00",
+  "updated_at": "2026-11-09T17:49:57.686912+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
