@@ -482,6 +482,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v29-launcher-synthesis-recipe-sync | Synchronize launcher embedded recipe with approved current synthesis TSV; source check stale405 rows | integrado | codex-v29-recipes | https://github.com/MatyMeatBoy/ReKHCoM/pull/634 | Usuario integra todosaprobados ypublica2.9 todasplataformas | 2026-11-06T21:44:58.667807+00:00 |
 | v29-web-shadow-prototype | Web Wasm link: explicit event-shadow owner declaration matches void producer | integrado | codex-v29-webcontract | https://github.com/MatyMeatBoy/ReKHCoM/pull/636 | Usuario pidepublicar2.9porplataformaslistas; corregirbuildsrestantessinpisarpublicados | 2026-11-06T23:33:27.587718+00:00 |
 | v29-console-bridge-header-staging | Console host staging must include bridge_threads.h dependency of thread_host.h | integrado | codex-v29-consoleheaders | https://github.com/MatyMeatBoy/ReKHCoM/pull/637 | Usuario exige2.9todasplataformas ypublicarlistas; correccionesnecesariasbuildrestantes sinreemplazarpublicados | 2026-11-07T00:34:11.964550+00:00 |
-| sdl-global-custom-mappings | Compatibilidad mappings globales SDL2 personalizados | en_curso | Codex-v22 | — | Usuario solicita arreglo y PR Pilotwings64 2026-11-09 | 2026-11-09T17:49:57.686912+00:00 |
+| sdl-global-custom-mappings | Compatibilidad mappings globales SDL2 personalizados | en_curso | Codex-v22 | fix/sdl-global-mappings | Usuario solicita arreglo y PR Pilotwings64 2026-11-09 | 2026-11-09T17:51:26.540885+00:00 |
 
 Integrador: libre
