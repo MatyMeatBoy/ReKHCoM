@@ -17068,10 +17068,23 @@
       ],
       "claimed_at": "2026-11-07T00:28:54.840526+00:00",
       "completed_at": "2026-11-07T00:34:11.964550+00:00"
+    },
+    "sdl-global-custom-mappings": {
+      "id": "sdl-global-custom-mappings",
+      "piece": "Compatibilidad mappings globales SDL2 personalizados",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-09T17:49:48.983036+00:00",
+      "updated_at": "2026-11-09T17:49:48.983036+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario solicita arreglo y PR Pilotwings64 2026-11-09",
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-07T01:02:06.383293+00:00",
+  "updated_at": "2026-11-09T17:49:48.983036+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
