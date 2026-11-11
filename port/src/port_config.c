@@ -182,7 +182,7 @@ static const Key sKeys[] = {
     { "hd_hud", &gPortConfig.hdHud, 0, 1 },
     { "aspect", &gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1 },
     { "assets_seen", &gPortConfig.assetsSeen, -1, (1 << PORT_ASSET_COUNT) - 1 },
-#define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2 - 1 }
+#define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_BINDING_MAX }
     BIND("a", PORT_ACT_A), BIND("b", PORT_ACT_B), BIND("l", PORT_ACT_L), BIND("r", PORT_ACT_R),
     BIND("start", PORT_ACT_START), BIND("select", PORT_ACT_SELECT), BIND("up", PORT_ACT_UP),
     BIND("down", PORT_ACT_DOWN), BIND("left", PORT_ACT_LEFT), BIND("right", PORT_ACT_RIGHT),

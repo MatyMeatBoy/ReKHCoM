@@ -5,8 +5,9 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-cc = next((ROOT.parent / 'toolchain').glob('llvm-mingw-*/bin/i686-w64-mingw32-clang.exe'))
-sdl = ROOT.parent / 'toolchain/SDL3-3.4.18/i686-w64-mingw32'
+toolchain = Path(os.environ.get('KHCOM_TOOLCHAIN', ROOT.parent / 'toolchain'))
+cc = next(toolchain.glob('llvm-mingw-*/bin/i686-w64-mingw32-clang.exe'))
+sdl = toolchain / 'SDL3-3.4.18/i686-w64-mingw32'
 out = ROOT / 'build/controller-bindings-test'
 out.mkdir(parents=True, exist_ok=True)
 shutil.copy2(sdl / 'bin/SDL3.dll', out / 'SDL3.dll')

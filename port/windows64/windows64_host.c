@@ -10,6 +10,7 @@
 #include <SDL3/SDL_main.h>
 #include "../include/port/port_audio_continuity.h"
 #include "../include/port/cursor_idle.h"
+#include "../include/port/gamepad_mappings.h"
 
 #include <errno.h>
 #include <math.h>
@@ -598,6 +599,7 @@ int main(int argc, char** argv) {
         Log("SDL_Init: %s", SDL_GetError());
         return 4;
     }
+    KhLoadGamepadMappings();
     sWindow = SDL_CreateWindow("Kingdom Hearts: Chain of Memories", 1280, 720,
                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY |
                                (getenv("KHCOM_HOST_HIDDEN") ? SDL_WINDOW_HIDDEN : 0));

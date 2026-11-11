@@ -125,6 +125,9 @@ enum {
 #define PORT_PAD_RAW_BUTTON_COUNT 128
 #define PORT_PAD_RAW_AXIS_BASE 2000
 #define PORT_PAD_RAW_AXIS_COUNT 32
+#define PORT_PAD_RAW_HAT_BASE 3000
+#define PORT_PAD_RAW_HAT_COUNT 16
+#define PORT_PAD_BINDING_MAX (PORT_PAD_RAW_HAT_BASE + PORT_PAD_RAW_HAT_COUNT * 4 - 1)
 
 typedef struct PortConfig {
     int viewMode;
@@ -459,6 +462,10 @@ void PortAudioShutdown(void);
 /* ---- input (port_input.c) ------------------------------------------------ */
 
 void PortInputInit(void);
+int PortInputRawBinding(const void* sdlEvent); /* -1: not an unmapped joystick press */
+int PortInputRawMenuChord(const void* sdlEvent);
+int PortInputRawMenuEvent(const void* sdlEvent, void* mappedEvent); /* 0 unrelated, 1 consumed, 2 key */
+void PortInputResetRawMenu(void);
 /* Deferred to the event pump so normal shutdown also closes the desktop launcher. */
 void PortRequestQuitAll(void);
 void PortInputResetBindings(void); /* clear keys from the old mapping and suppress held pad buttons */

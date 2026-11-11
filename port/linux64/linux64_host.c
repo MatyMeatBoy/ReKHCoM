@@ -9,6 +9,7 @@
  */
 #define _GNU_SOURCE
 #include <SDL3/SDL.h>
+#include "../include/port/gamepad_mappings.h"
 #include <SDL3/SDL_main.h>
 #include "../include/port/port_audio_continuity.h"
 #include "../include/port/cursor_idle.h"
@@ -519,6 +520,7 @@ int main(int argc, char** argv) {
         return 4;
     }
     StartupStage("sdl-init", "done");
+    KhLoadGamepadMappings();
     Log("startup: SDL drivers video=%s audio=%s", SDL_GetCurrentVideoDriver() ? SDL_GetCurrentVideoDriver() : "none",
         SDL_GetCurrentAudioDriver() ? SDL_GetCurrentAudioDriver() : "none");
     StartupLibraries();

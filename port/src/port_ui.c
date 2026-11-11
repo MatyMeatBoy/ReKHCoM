@@ -37,6 +37,7 @@ static void ResetMenuAxes(void) {
     SDL_JoystickID* ids;
     int count, i, action;
     sUiAxisHeld[0] = sUiAxisHeld[1] = 0;
+    PortInputResetRawMenu();
     ids = SDL_GetGamepads(&count);
     for (i = 0; ids && i < count; i++) {
         SDL_Gamepad* pad = SDL_GetGamepadFromID(ids[i]);
@@ -1685,26 +1686,6 @@ static int Wrap(int v, int n) {
     return ((v % n) + n) % n;
 }
 
-static void ControlBindingName(int binding, int l, char* out, size_t size) {
-    (void)l;
-    if (binding < 0) {
-        SDL_strlcpy(out, "-", size);
-    } else if (binding >= PORT_PAD_RAW_BUTTON_BASE &&
-               binding < PORT_PAD_RAW_BUTTON_BASE + PORT_PAD_RAW_BUTTON_COUNT) {
-        SDL_snprintf(out, size, "Button %d", binding - PORT_PAD_RAW_BUTTON_BASE + 1);
-    } else if (binding >= PORT_PAD_RAW_AXIS_BASE &&
-               binding < PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2) {
-        int encoded = binding - PORT_PAD_RAW_AXIS_BASE;
-        SDL_snprintf(out, size, "Axis %d%s", encoded / 2 + 1, (encoded & 1) ? "-" : "+");
-    } else if (binding >= PORT_PAD_AXIS_BASE) {
-        int encoded = binding - PORT_PAD_AXIS_BASE;
-        SDL_snprintf(out, size, "Axis %d%s", encoded / 2 + 1, (encoded & 1) ? "-" : "+");
-    } else {
-        const char* name = SDL_GetGamepadStringForButton((SDL_GamepadButton)binding);
-        SDL_strlcpy(out, name ? name : "Button", size);
-    }
-}
-
 /* Opt-in audits distinguish a row which is hidden/disabled from one which failed.
    No game state is changed, and ordinary sessions produce no extra logging. */
 static void AuditOptions(const char* phase) {
@@ -2525,6 +2506,11 @@ int PortUiHandleEvent(const void* p) {
             mapped.key.key = UiMappedKey(ev->key.key);
             ev = &mapped;
         }
+        {
+            int raw = PortInputRawMenuEvent(ev, &mapped);
+            if (raw == 1) return 1;
+            if (raw == 2) ev = &mapped;
+        }
     }
 
     if (sScenePause)
@@ -2534,6 +2520,10 @@ int PortUiHandleEvent(const void* p) {
         return ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_KEY_UP ||
                ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_UP;
     if (!sOpen) {
+        if (PortInputRawMenuChord(ev)) {
+            PortUiOpenOptions();
+            return 1;
+        }
         if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat && (ev->key.key == SDLK_F1 || ev->key.key == SDLK_ESCAPE)) {
             PortUiOpenOptions();
             return 1;
@@ -2693,8 +2683,10 @@ int PortUiHandleEvent(const void* p) {
         }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) { gPortConfig.pad[action] = ev->gbutton.button; sControlCapture = 0; PortConfigSave(); return 1; }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value) > 16000) { gPortConfig.pad[action] = PORT_PAD_AXIS_BASE + ev->gaxis.axis * 2 + (ev->gaxis.value < 0); sControlCapture = 0; PortConfigSave(); return 1; }
-        if (sControlPad && ev->type == SDL_EVENT_JOYSTICK_BUTTON_DOWN && ev->jbutton.button < PORT_PAD_RAW_BUTTON_COUNT) { gPortConfig.pad[action] = PORT_PAD_RAW_BUTTON_BASE + ev->jbutton.button; sControlCapture = 0; PortConfigSave(); return 1; }
-        if (sControlPad && ev->type == SDL_EVENT_JOYSTICK_AXIS_MOTION && ev->jaxis.axis < PORT_PAD_RAW_AXIS_COUNT && SDL_abs(ev->jaxis.value) > 16000) { gPortConfig.pad[action] = PORT_PAD_RAW_AXIS_BASE + ev->jaxis.axis * 2 + (ev->jaxis.value < 0); sControlCapture = 0; PortConfigSave(); return 1; }
+        if (sControlPad) {
+            int binding = PortInputRawBinding(ev);
+            if (binding >= 0) { gPortConfig.pad[action] = binding; sControlCapture = 0; PortInputResetBindings(); PortConfigSave(); return 1; }
+        }
         /* waiting for a key with no keyboard (issue #37): a gamepad button, a tap or a click cancels it */
         if (!sControlPad && (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_MOUSE_BUTTON_DOWN || ev->type == SDL_EVENT_FINGER_DOWN))
             sControlCapture = 0;
