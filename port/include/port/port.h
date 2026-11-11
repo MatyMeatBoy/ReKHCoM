@@ -117,6 +117,17 @@ enum {
 /* pad_<action> values 0..BUTTON_COUNT-1 are buttons; this range encodes an
  * axis and sign so analog triggers can be captured and remapped. */
 #define PORT_PAD_AXIS_BASE 100
+/* Unmapped USB controllers (including many N64 adapters) appear in SDL as
+   joysticks, rather than SDL gamepads.  Keep their bindings distinct from
+   SDL's normalized gamepad buttons and axes so they can be configured in the
+   Controls screen without a per-device mapping database entry. */
+#define PORT_PAD_RAW_BUTTON_BASE 1000
+#define PORT_PAD_RAW_BUTTON_COUNT 128
+#define PORT_PAD_RAW_AXIS_BASE 2000
+#define PORT_PAD_RAW_AXIS_COUNT 32
+#define PORT_PAD_RAW_HAT_BASE 3000
+#define PORT_PAD_RAW_HAT_COUNT 16
+#define PORT_PAD_BINDING_MAX (PORT_PAD_RAW_HAT_BASE + PORT_PAD_RAW_HAT_COUNT * 4 - 1)
 
 typedef struct PortConfig {
     int viewMode;
@@ -153,7 +164,7 @@ typedef struct PortConfig {
     int aspect;          /* picture shape: 0 fills the window, 1 at most 16:9, 2 at most 21:9, 3 force 21:9, 4 force 32:9, 5 exact 4:3, 6 exact GBA 3:2 */
     int integerZoom;     /* 1: select only whole pixel scales (v1.4 numbering) */
     int keys[PORT_ACT_COUNT][2]; /* SDL keycodes, 0 = none */
-    int pad[PORT_ACT_COUNT];     /* SDL gamepad button or PORT_PAD_AXIS_BASE+axis*2+sign */
+    int pad[PORT_ACT_COUNT];     /* SDL gamepad, or raw joystick binding (PORT_PAD_RAW_*). */
     int cheatUnlockRiku;         /* opt-in title access; never marks Sora cleared */
     int undub;                  /* Japanese voices; applied when loading the ROM */
     int savePointSlotSelect;    /* experimental: choose the save slot at save points */
@@ -451,6 +462,10 @@ void PortAudioShutdown(void);
 /* ---- input (port_input.c) ------------------------------------------------ */
 
 void PortInputInit(void);
+int PortInputRawBinding(const void* sdlEvent); /* -1: not an unmapped joystick press */
+int PortInputRawMenuChord(const void* sdlEvent);
+int PortInputRawMenuEvent(const void* sdlEvent, void* mappedEvent); /* 0 unrelated, 1 consumed, 2 key */
+void PortInputResetRawMenu(void);
 /* Deferred to the event pump so normal shutdown also closes the desktop launcher. */
 void PortRequestQuitAll(void);
 void PortInputResetBindings(void); /* clear keys from the old mapping and suppress held pad buttons */

@@ -5,6 +5,9 @@
 
 #include "port/port.h"
 #include "port/pad_layout.h"
+#ifndef PORT_SDL_BRIDGE
+#include "port/gamepad_mappings.h"
+#endif
 #include "port/controller_prompts.h"
 #include "port/controller_prompt_glyphs.h"
 #include "port/port_ui.h"
@@ -221,6 +224,155 @@ void PortInputResetBindings(void) {
    BACK, LB, RB, LT, RT, UP, DOWN, LEFT, RIGHT, RS_LEFT, RS_RIGHT, RS_UP, RS_DOWN). */
 static SDL_Joystick* sVirtualPad;
 
+/* Keep raw devices open: SDL only delivers their button/axis/hat events
+   while an application owns a handle. Never cache a pointer across hotplug. */
+#ifndef PORT_SDL_BRIDGE
+static SDL_Joystick* RawJoystick(SDL_JoystickID id) {
+    SDL_Joystick* joystick = SDL_GetJoystickFromID(id);
+    if (!joystick && !SDL_IsGamepad(id)) {
+        joystick = SDL_OpenJoystick(id);
+        if (joystick) SDL_SetBooleanProperty(SDL_GetJoystickProperties(joystick), "khcom.raw_owned", true);
+    }
+    return joystick;
+}
+
+static void CloseRawJoystick(SDL_JoystickID id) {
+    SDL_Joystick* joystick = SDL_GetJoystickFromID(id);
+    if (joystick && SDL_GetBooleanProperty(SDL_GetJoystickProperties(joystick), "khcom.raw_owned", false)) {
+        SDL_SetBooleanProperty(SDL_GetJoystickProperties(joystick), "khcom.raw_owned", false);
+        SDL_CloseJoystick(joystick);
+    }
+}
+
+static int RawBindingDown(SDL_Joystick* joystick, int binding) {
+    if (binding >= PORT_PAD_RAW_BUTTON_BASE && binding < PORT_PAD_RAW_BUTTON_BASE + PORT_PAD_RAW_BUTTON_COUNT)
+        return SDL_GetJoystickButton(joystick, binding - PORT_PAD_RAW_BUTTON_BASE);
+    if (binding >= PORT_PAD_RAW_AXIS_BASE && binding < PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2) {
+        int encoded = binding - PORT_PAD_RAW_AXIS_BASE;
+        int value = SDL_GetJoystickAxis(joystick, encoded / 2);
+        return (encoded & 1) ? value < -TRIGGER_THRESHOLD : value > TRIGGER_THRESHOLD;
+    }
+    if (binding >= PORT_PAD_RAW_HAT_BASE && binding <= PORT_PAD_BINDING_MAX) {
+        int encoded = binding - PORT_PAD_RAW_HAT_BASE;
+        return (SDL_GetJoystickHat(joystick, encoded / 4) & (1 << (encoded % 4))) != 0;
+    }
+    return 0;
+}
+
+static SDL_JoystickID RawEventID(const SDL_Event* ev) {
+    switch (ev->type) {
+        case SDL_EVENT_JOYSTICK_BUTTON_DOWN: case SDL_EVENT_JOYSTICK_BUTTON_UP: return ev->jbutton.which;
+        case SDL_EVENT_JOYSTICK_AXIS_MOTION: return ev->jaxis.which;
+        case SDL_EVENT_JOYSTICK_HAT_MOTION: return ev->jhat.which;
+        default: return 0;
+    }
+}
+
+int PortInputRawBinding(const void* p) {
+    const SDL_Event* ev = p;
+    SDL_JoystickID id = RawEventID(ev);
+    int direction;
+    /* A mapped gamepad emits raw events too. Capture its normalized events
+       only, otherwise the binding stops working on the gamepad read path. */
+    if (!id || SDL_IsGamepad(id)) return -1;
+    if (ev->type == SDL_EVENT_JOYSTICK_BUTTON_DOWN && ev->jbutton.button < PORT_PAD_RAW_BUTTON_COUNT)
+        return PORT_PAD_RAW_BUTTON_BASE + ev->jbutton.button;
+    if (ev->type == SDL_EVENT_JOYSTICK_AXIS_MOTION && ev->jaxis.axis < PORT_PAD_RAW_AXIS_COUNT && SDL_abs(ev->jaxis.value) > TRIGGER_THRESHOLD)
+        return PORT_PAD_RAW_AXIS_BASE + ev->jaxis.axis * 2 + (ev->jaxis.value < 0);
+    if (ev->type == SDL_EVENT_JOYSTICK_HAT_MOTION && ev->jhat.hat < PORT_PAD_RAW_HAT_COUNT)
+        for (direction = 0; direction < 4; direction++)
+            if (ev->jhat.value & (1 << direction)) return PORT_PAD_RAW_HAT_BASE + ev->jhat.hat * 4 + direction;
+    return -1;
+}
+
+int PortInputRawMenuChord(const void* p) {
+    const SDL_Event* ev = p;
+    int binding = PortInputRawBinding(p);
+    int start = gPortConfig.pad[PORT_ACT_START], select = gPortConfig.pad[PORT_ACT_SELECT];
+    SDL_Joystick* joystick;
+    if (binding < 0 || start == select || (binding != start && binding != select)) return 0;
+    joystick = RawJoystick(RawEventID(ev));
+    return joystick && RawBindingDown(joystick, start) && RawBindingDown(joystick, select);
+}
+
+void PortInputResetRawMenu(void) {
+    int count, i, action;
+    SDL_JoystickID* ids = SDL_GetJoysticks(&count);
+    for (i = 0; ids && i < count; i++) {
+        SDL_Joystick* joystick;
+        if (SDL_IsGamepad(ids[i])) continue;
+        joystick = RawJoystick(ids[i]);
+        if (!joystick) continue;
+        for (action = 0; action < PORT_ACT_COUNT; action++) {
+            char property[32];
+            SDL_snprintf(property, sizeof(property), "khcom.menu.%d", action);
+            SDL_SetBooleanProperty(SDL_GetJoystickProperties(joystick), property, RawBindingDown(joystick, gPortConfig.pad[action]));
+        }
+    }
+    SDL_free(ids);
+}
+
+/* Apply only this event's physical control. Polling the current device here
+   loses a down/up tap if SDL queued both before the UI drains its events. */
+static int RawBindingEventState(const SDL_Event* ev, int binding, int was) {
+    if (binding >= PORT_PAD_RAW_BUTTON_BASE && binding < PORT_PAD_RAW_BUTTON_BASE + PORT_PAD_RAW_BUTTON_COUNT) {
+        if ((ev->type == SDL_EVENT_JOYSTICK_BUTTON_DOWN || ev->type == SDL_EVENT_JOYSTICK_BUTTON_UP) &&
+            ev->jbutton.button == binding - PORT_PAD_RAW_BUTTON_BASE)
+            return ev->type == SDL_EVENT_JOYSTICK_BUTTON_DOWN;
+    } else if (binding >= PORT_PAD_RAW_AXIS_BASE && binding < PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2) {
+        int encoded = binding - PORT_PAD_RAW_AXIS_BASE;
+        if (ev->type == SDL_EVENT_JOYSTICK_AXIS_MOTION && ev->jaxis.axis == encoded / 2)
+            return KhPadAxisHeld(ev->jaxis.value, encoded & 1, was);
+    } else if (binding >= PORT_PAD_RAW_HAT_BASE && binding <= PORT_PAD_BINDING_MAX) {
+        int encoded = binding - PORT_PAD_RAW_HAT_BASE;
+        if (ev->type == SDL_EVENT_JOYSTICK_HAT_MOTION && ev->jhat.hat == encoded / 4)
+            return (ev->jhat.value & (1 << (encoded % 4))) != 0;
+    }
+    return -1;
+}
+
+int PortInputRawMenuEvent(const void* p, void* out) {
+    const SDL_Event* ev = p;
+    SDL_Event* mapped = out;
+    SDL_JoystickID id = RawEventID(ev);
+    SDL_Joystick* joystick;
+    int action;
+    SDL_Keycode key = 0;
+    if (!id || SDL_IsGamepad(id)) return 0;
+    joystick = RawJoystick(id);
+    if (!joystick) return 1;
+    for (action = 0; action < PORT_ACT_COUNT; action++) {
+        char property[32];
+        int down, was;
+        SDL_snprintf(property, sizeof(property), "khcom.menu.%d", action);
+        was = SDL_GetBooleanProperty(SDL_GetJoystickProperties(joystick), property, false);
+        down = RawBindingEventState(ev, gPortConfig.pad[action], was);
+        if (down < 0) continue;
+        SDL_SetBooleanProperty(SDL_GetJoystickProperties(joystick), property, down);
+        if (!down || was || key) continue;
+        switch (action) {
+            case PORT_ACT_A: key = SDLK_RETURN; break;
+            case PORT_ACT_B: case PORT_ACT_START: case PORT_ACT_SELECT: key = SDLK_ESCAPE; break;
+            case PORT_ACT_UP: key = SDLK_UP; break;
+            case PORT_ACT_DOWN: key = SDLK_DOWN; break;
+            case PORT_ACT_LEFT: key = SDLK_LEFT; break;
+            case PORT_ACT_RIGHT: key = SDLK_RIGHT; break;
+        }
+    }
+    if (!key) return 1;
+    SDL_zero(*mapped);
+    mapped->type = SDL_EVENT_KEY_DOWN;
+    mapped->key.key = key;
+    return 2;
+}
+#else
+/* Bridge hosts expose normalized gamepads, not the SDL joystick API. */
+int PortInputRawBinding(const void* p) { (void)p; return -1; }
+int PortInputRawMenuChord(const void* p) { (void)p; return 0; }
+int PortInputRawMenuEvent(const void* p, void* out) { (void)p; (void)out; return 0; }
+void PortInputResetRawMenu(void) {}
+#endif
+
 static void VirtualPadUpdate(void) {
     static const struct { const char* name; int button; int axis; int sign; } kNames[] = {
         { "SOUTH", SDL_GAMEPAD_BUTTON_SOUTH, -1, 0 }, { "EAST", SDL_GAMEPAD_BUTTON_EAST, -1, 0 },
@@ -264,6 +416,18 @@ static void VirtualPadUpdate(void) {
 }
 
 void PortInputInit(void) {
+#ifndef PORT_SDL_BRIDGE
+    SDL_JoystickID* ids;
+    int count, i;
+    /* The SDL2 mapping text format is also accepted by SDL3. A local DB is
+       optional; environment mappings retain SDL's higher hint priority. */
+    KhLoadGamepadMappings();
+    SDL_SetJoystickEventsEnabled(true);
+    ids = SDL_GetJoysticks(&count);
+    for (i = 0; ids && i < count; i++)
+        if (!SDL_IsGamepad(ids[i])) RawJoystick(ids[i]);
+    SDL_free(ids);
+#endif
     SDL_SetGamepadEventsEnabled(true);
     if (SDL_getenv("KHCOM_VPAD")) {
         SDL_VirtualJoystickDesc desc;
@@ -289,7 +453,23 @@ void PortInputHandleEvent(const void* p) {
     switch (ev->type) {
         case SDL_EVENT_GAMEPAD_ADDED:
             SDL_OpenGamepad(ev->gdevice.which);
+#ifndef PORT_SDL_BRIDGE
+            CloseRawJoystick(ev->gdevice.which);
+#endif
             break;
+#ifndef PORT_SDL_BRIDGE
+        case SDL_EVENT_GAMEPAD_REMOVED: {
+            SDL_Gamepad* pad = SDL_GetGamepadFromID(ev->gdevice.which);
+            if (pad) SDL_CloseGamepad(pad);
+            break;
+        }
+        case SDL_EVENT_JOYSTICK_ADDED:
+            if (!SDL_IsGamepad(ev->jdevice.which)) RawJoystick(ev->jdevice.which);
+            break;
+        case SDL_EVENT_JOYSTICK_REMOVED:
+            CloseRawJoystick(ev->jdevice.which);
+            break;
+#endif
         case SDL_EVENT_KEY_DOWN:
         case SDL_EVENT_KEY_UP:
             if (ev->key.repeat)
@@ -370,6 +550,26 @@ static uint16_t GamepadKeys(SDL_Gamepad* pad) {
     return keys;
 }
 
+/* SDL only promotes devices with a known mapping to SDL_Gamepad.  Generic
+   USB N64 controllers are commonly left as plain joysticks, so read their
+   physical controls too.  Bindings intentionally apply to any unmapped
+   joystick: the Controls screen is where the player assigns the layout. */
+#ifndef PORT_SDL_BRIDGE
+static uint16_t RawJoystickKeys(SDL_Joystick* joystick) {
+    uint16_t keys = 0;
+    int i;
+    for (i = 0; i < PORT_ACT_COUNT; i++) {
+        int binding = gPortConfig.pad[i];
+        uint16_t bit = sActionBits[i];
+        if (!RawBindingDown(joystick, binding)) continue;
+        if (i == PORT_ACT_DODGE && !gPortConfig.dodgeButton) bit = KEY_B;
+        if (i == PORT_ACT_STOCK && !gPortConfig.stockButton) bit = KEY_A;
+        keys |= bit;
+    }
+    return keys;
+}
+#endif
+
 uint16_t PortInputKeys(void) {
     uint16_t keys = sKeyboard;
     SDL_JoystickID* ids;
@@ -390,6 +590,20 @@ uint16_t PortInputKeys(void) {
         }
         SDL_free(ids);
     }
+    /* SDL_GetGamepads excludes unrecognised USB controllers.  They remain
+       fully usable after remapping through the raw joystick path. */
+#ifndef PORT_SDL_BRIDGE
+    ids = SDL_GetJoysticks(&count);
+    if (ids != NULL) {
+        for (i = 0; i < count; i++) {
+            SDL_Joystick* joystick;
+            if (SDL_IsGamepad(ids[i])) continue;
+            joystick = RawJoystick(ids[i]);
+            if (joystick != NULL) keys |= RawJoystickKeys(joystick);
+        }
+        SDL_free(ids);
+    }
+#endif
     if (!gPortConfig.unstockButton)
         keys &= ~KEY_UNSTOCK;
     /* The hardware cannot report opposite directions at once. */

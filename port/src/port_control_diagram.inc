@@ -2,6 +2,21 @@
  * All edges, labels and highlights share the framebuffer's integer pixel grid.
  * No texture filtering, device-specific remapping, or input side effects. */
 static void ControlBindingName(int binding, int l, char* out, size_t size) {
+    if (binding >= PORT_PAD_RAW_BUTTON_BASE && binding < PORT_PAD_RAW_BUTTON_BASE + PORT_PAD_RAW_BUTTON_COUNT) {
+        SDL_snprintf(out, size, "Button %d", binding - PORT_PAD_RAW_BUTTON_BASE + 1);
+        return;
+    }
+    if (binding >= PORT_PAD_RAW_AXIS_BASE && binding < PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2) {
+        int encoded = binding - PORT_PAD_RAW_AXIS_BASE;
+        SDL_snprintf(out, size, "Axis %d%s", encoded / 2 + 1, (encoded & 1) ? "-" : "+");
+        return;
+    }
+    if (binding >= PORT_PAD_RAW_HAT_BASE && binding <= PORT_PAD_BINDING_MAX) {
+        static const char* const directions[] = {"Up", "Right", "Down", "Left"};
+        int encoded = binding - PORT_PAD_RAW_HAT_BASE;
+        SDL_snprintf(out, size, "Hat %d %s", encoded / 4 + 1, directions[encoded % 4]);
+        return;
+    }
     if (PortControllerBindingLabel(binding,out,size)) return;
     static const char* const names[] = {
         "A", "B", "X", "Y", "Back", "Guide", "Start", "LS", "RS", "LB", "RB"

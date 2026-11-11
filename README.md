@@ -216,6 +216,10 @@ Export a backup before clearing browser data.
 
 ## Running (Windows)
 
+Generic USB controllers and N64 adapters can use an imported SDL mapping;
+the direct SDL build also offers raw joystick bindings.
+See [controller setup and build-specific support](docs/controllers.md).
+
 1. Download the [latest stable ZIP](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest)
    and extract `ReKHCoM-v1.9.14-windows-x86.zip` into a writable folder of its own
    (for example `ReKHCoM`).
