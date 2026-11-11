@@ -111,6 +111,19 @@ int main(void){
     SDL_UpdateJoysticks();assert(PortInputKeys()==KEY_L);
     SDL_CloseGamepad(pad);SDL_CloseJoystick(joystick);SDL_DetachVirtualJoystick(id);
     SDL_UpdateJoysticks();assert(!PortInputKeys());
+    /* A generic USB controller with no SDL gamepad mapping remains usable
+       after assigning its physical button and axis in Controls. */
+    SDL_INIT_INTERFACE(&desc);
+    desc.type=SDL_JOYSTICK_TYPE_UNKNOWN;desc.naxes=2;desc.nbuttons=4;desc.name="Raw N64-style joystick";
+    id=SDL_AttachVirtualJoystick(&desc);assert(id && !SDL_IsGamepad(id));
+    joystick=SDL_OpenJoystick(id);assert(joystick);
+    gPortConfig.pad[PORT_ACT_A]=PORT_PAD_RAW_BUTTON_BASE+2;
+    assert(SDL_SetJoystickVirtualButton(joystick,2,true));SDL_UpdateJoysticks();assert(PortInputKeys()==KEY_A);
+    assert(SDL_SetJoystickVirtualButton(joystick,2,false));SDL_UpdateJoysticks();assert(!PortInputKeys());
+    gPortConfig.pad[PORT_ACT_R]=PORT_PAD_RAW_AXIS_BASE+1*2;
+    assert(SDL_SetJoystickVirtualAxis(joystick,1,32767));SDL_UpdateJoysticks();assert(PortInputKeys()==KEY_R);
+    assert(SDL_SetJoystickVirtualAxis(joystick,1,0));SDL_UpdateJoysticks();assert(!PortInputKeys());
+    SDL_CloseJoystick(joystick);SDL_DetachVirtualJoystick(id);SDL_UpdateJoysticks();
     SDL_Quit();puts("Input: 13 keys, experimental unstock OFF inert/ON one-shot hold, opposite directions, stock, dodge, focus/overlay reset, SDL virtual gamepad, LT/RT remapping/threshold/release/disconnect PASS");
     return 0;
 }

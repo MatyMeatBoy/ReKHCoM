@@ -370,6 +370,33 @@ static uint16_t GamepadKeys(SDL_Gamepad* pad) {
     return keys;
 }
 
+/* SDL only promotes devices with a known mapping to SDL_Gamepad.  Generic
+   USB N64 controllers are commonly left as plain joysticks, so read their
+   physical controls too.  Bindings intentionally apply to any unmapped
+   joystick: the Controls screen is where the player assigns the layout. */
+static uint16_t RawJoystickKeys(SDL_Joystick* joystick) {
+    uint16_t keys = 0;
+    int i;
+    for (i = 0; i < PORT_ACT_COUNT; i++) {
+        int binding = gPortConfig.pad[i], pressed = 0;
+        uint16_t bit = sActionBits[i];
+        if (binding >= PORT_PAD_RAW_BUTTON_BASE &&
+            binding < PORT_PAD_RAW_BUTTON_BASE + PORT_PAD_RAW_BUTTON_COUNT) {
+            pressed = SDL_GetJoystickButton(joystick, binding - PORT_PAD_RAW_BUTTON_BASE);
+        } else if (binding >= PORT_PAD_RAW_AXIS_BASE &&
+                   binding < PORT_PAD_RAW_AXIS_BASE + PORT_PAD_RAW_AXIS_COUNT * 2) {
+            int encoded = binding - PORT_PAD_RAW_AXIS_BASE;
+            int value = SDL_GetJoystickAxis(joystick, encoded / 2);
+            pressed = (encoded & 1) ? value < -TRIGGER_THRESHOLD : value > TRIGGER_THRESHOLD;
+        }
+        if (!pressed) continue;
+        if (i == PORT_ACT_DODGE && !gPortConfig.dodgeButton) bit = KEY_B;
+        if (i == PORT_ACT_STOCK && !gPortConfig.stockButton) bit = KEY_A;
+        keys |= bit;
+    }
+    return keys;
+}
+
 uint16_t PortInputKeys(void) {
     uint16_t keys = sKeyboard;
     SDL_JoystickID* ids;
@@ -387,6 +414,21 @@ uint16_t PortInputKeys(void) {
                 pad = SDL_OpenGamepad(ids[i]);
             if (pad != NULL)
                 keys |= GamepadKeys(pad);
+        }
+        SDL_free(ids);
+    }
+    /* SDL_GetGamepads excludes unrecognised USB controllers.  They remain
+       fully usable after remapping through the raw joystick path. */
+    ids = SDL_GetJoysticks(&count);
+    if (ids != NULL) {
+        for (i = 0; i < count; i++) {
+            SDL_Joystick* joystick;
+            if (SDL_IsGamepad(ids[i])) continue;
+            joystick = SDL_OpenJoystick(ids[i]);
+            if (joystick != NULL) {
+                keys |= RawJoystickKeys(joystick);
+                SDL_CloseJoystick(joystick);
+            }
         }
         SDL_free(ids);
     }
