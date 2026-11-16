@@ -1,11 +1,13 @@
 # ReKHCoM
 
-Native and browser ports of **Kingdom Hearts: Chain of Memories** (Game Boy Advance), built
-on top of the matching decompilation by [Pheenoh/khcom](https://github.com/Pheenoh/khcom).
+[![ReKHCoM project overview: native Chain of Memories, widescreen, optional HD enhancements and configurable controls.](docs/showcase/overview.png)](docs/showcase/overview.png)
 
-The decompiled game runs as a native program (Windows, Linux, Steam Deck, Android, the
-browser and the supported consoles), with its own renderer, audio and launcher, with widescreen and
-ultrawide support at the cartridge's original speed.
+**ReKHCoM** is a native port of **Kingdom Hearts: Chain of Memories** (Game Boy Advance),
+built from the [matching decompilation by Pheenoh/khcom](https://github.com/Pheenoh/khcom).
+It runs the game's own code on Windows, Linux, Steam Deck, Android and supported consoles,
+with a browser edition too. Widescreen and ultrawide views, optional HD text and imported
+ReMIX media, achievements and configurable controls expand the original presentation
+while preserving the cartridge's game pace.
 
 <p align="center">
   <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.2.5)</b></a>
@@ -19,14 +21,7 @@ included), in all five European languages, English (US) and Japanese.
 
 ## Project showcase
 
-[![Native Kingdom Hearts: Chain of Memories port: widescreen and ultrawide, optional HD text and media, achievements, scene gallery, remappable controls and EU/US/JP support.](docs/showcase/overview.png)](docs/showcase/overview.png)
-
-<details>
-<summary>Original game vs ReKHCoM</summary>
-
 [![Comparison of the original GBA game and ReKHCoM's optional presentation, media and control enhancements.](docs/showcase/comparison.png)](docs/showcase/comparison.png)
-
-</details>
 
 These are illustrated feature summaries; see the sections below for current platform and feature details.
 
@@ -60,9 +55,6 @@ The established v2 features remain available:
 - **Optional quick states:** off by default, with an explicit warning that achievements pause while enabled. [Achievements](#achievements).
 - **Portable HD packs:** export your imported mod for supported Android/console hosts; updated ports retain their beta labels. [Platform downloads](#downloads).
 - **Game-wide fixes:** battle, startup and audio fixes, synchronized deck transitions and better widescreen scene borders. [Changelog](CHANGELOG.md).
-
-<p align="center"><img src="docs/screenshots/v2-title.png" width="98%" alt="HD title screen with aligned SELECT and Press Start bars"></p>
-<p align="center"><em>HD title screen: aligned SELECT and Press Start bars, with their warm menu lights.</em></p>
 
 <p align="center"><img src="docs/screenshots/v2-gallery.png" width="49%" alt="Scene gallery with a clean GBA poster showing Sora, Donald and Goofy"> <img src="docs/screenshots/v2-options.png" width="49%" alt="Options panel with HD title artwork"></p>
 <p align="center"><em>Scene gallery with a clean character poster (left); Options with HD artwork (right). Real v2.0 feature captures, shown in Spanish.</em></p>
