@@ -17164,8 +17164,13 @@
       "sent": "codex-inline-image:rekhcom-header-preview.png"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-16T14:18:04.874048+00:00",
+  "integrator": {
+    "owner": "codex-readme-header",
+    "token": "41e5a4cb2015e5b92486fde72a550e27abfa2efd8c29e0b8",
+    "created_at": "2026-11-16T14:18:12.868248+00:00",
+    "updated_at": "2026-11-16T14:18:12.868248+00:00"
+  },
+  "updated_at": "2026-11-16T14:18:12.869760+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
