@@ -485,4 +485,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sdl-global-custom-mappings | Compatibilidad mappings globales SDL2 personalizados | en_curso | Codex-v22 | fix/sdl-global-mappings | Usuario solicita arreglo y PR Pilotwings64 2026-11-09 | 2026-11-09T17:51:26.540885+00:00 |
 | readme-project-showcase-20261116 | README project showcase and comparison graphics | pr_abierto | codex-readme-showcase | https://github.com/MatyMeatBoy/ReKHCoM/pull/644 | Owner requested matching Reddit graphics and README images for all three projects, no page numbering, 2026-11-16 | 2026-11-16T14:04:23.353258+00:00 |
 
-Integrador: libre
+Integrador: codex-readme-showcase (ocupado; 2026-11-16T14:06:03.557237+00:00)
