@@ -17092,19 +17092,20 @@
     "readme-project-showcase-20261116": {
       "id": "readme-project-showcase-20261116",
       "piece": "README project showcase and comparison graphics",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-readme-showcase",
       "created_at": "2026-11-16T13:57:29.041668+00:00",
-      "updated_at": "2026-11-16T13:57:29.041668+00:00",
+      "updated_at": "2026-11-16T13:57:41.810879+00:00",
       "branch": null,
       "pr": null,
       "approval": "Owner requested matching Reddit graphics and README images for all three projects, no page numbering, 2026-11-16",
       "reference": "Codex chat 01a1e484-0699-74f2-af4b-0eb6b3d110b1",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-16T13:57:41.810879+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-16T13:57:29.041668+00:00",
+  "updated_at": "2026-11-16T13:57:41.810879+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
