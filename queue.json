@@ -17092,10 +17092,10 @@
     "readme-project-showcase-20261116": {
       "id": "readme-project-showcase-20261116",
       "piece": "README project showcase and comparison graphics",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-readme-showcase",
       "created_at": "2026-11-16T13:57:29.041668+00:00",
-      "updated_at": "2026-11-16T14:04:23.353258+00:00",
+      "updated_at": "2026-11-16T14:06:32.574289+00:00",
       "branch": "codex/readme-showcase-20261116",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/644",
       "approval": "Owner requested matching Reddit graphics and README images for all three projects, no page numbering, 2026-11-16",
@@ -17105,10 +17105,16 @@
           "at": "2026-11-16T14:04:23.353258+00:00",
           "owner": "codex-readme-showcase",
           "detail": "Both exact marketing images were rendered inline in the Codex app for owner review in chat 01a1e484-0699-74f2-af4b-0eb6b3d110b1; these are README promotional pieces, not an Atlas in-game asset. Six PNG/path checks and diff checks pass."
+        },
+        {
+          "at": "2026-11-16T14:06:32.574289+00:00",
+          "owner": "codex-readme-showcase",
+          "detail": "PR644 merged after owner-requested README promotional graphics, inline rendering in Codex app, independent repository/markup review and six PNG/path validations. No source runtime or owner data changed."
         }
       ],
       "claimed_at": "2026-11-16T13:57:41.810879+00:00",
-      "sent": "codex-generated-image:exec-5e4d29e2-4112-4db2-b508-e79ca7496ea7.png"
+      "sent": "codex-generated-image:exec-5e4d29e2-4112-4db2-b508-e79ca7496ea7.png",
+      "completed_at": "2026-11-16T14:06:32.574289+00:00"
     }
   },
   "integrator": {
@@ -17117,7 +17123,7 @@
     "created_at": "2026-11-16T14:06:03.557237+00:00",
     "updated_at": "2026-11-16T14:06:03.557237+00:00"
   },
-  "updated_at": "2026-11-16T14:06:03.557237+00:00",
+  "updated_at": "2026-11-16T14:06:32.574289+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
