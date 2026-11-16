@@ -17143,13 +17143,8 @@
       "completed_at": "2026-11-16T14:13:09.622647+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-readme-layout",
-    "token": "e9811fa549aa1ba07ea27e58be979f0c3c5fb48c881e9f44",
-    "created_at": "2026-11-16T14:12:27.076195+00:00",
-    "updated_at": "2026-11-16T14:12:27.076195+00:00"
-  },
-  "updated_at": "2026-11-16T14:13:09.622647+00:00",
+  "integrator": null,
+  "updated_at": "2026-11-16T14:13:16.751656+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
