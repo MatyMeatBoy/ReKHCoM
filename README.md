@@ -1,4 +1,14 @@
-# ReKHCoM
+<p align="center">
+  <img src="docs/logo/rekhcom-logo.svg" alt="ReKHCoM: native source port, widescreen" width="560">
+</p>
+
+<p align="center">
+  <img alt="Platforms: desktop, Android, browser" src="https://img.shields.io/badge/platforms-Desktop%20%2F%20Android%20%2F%20Web-253958">
+  <img alt="Display: widescreen and ultrawide" src="https://img.shields.io/badge/display-Widescreen%20%2B%20Ultrawide-52689c">
+  <img alt="Cartridges: EU, US, JP" src="https://img.shields.io/badge/cartridges-EU%20%2F%20US%20%2F%20JP-a5b6cc">
+  <img alt="Status: active development" src="https://img.shields.io/badge/status-active%20development-253958">
+  <img alt="License: CC0" src="https://img.shields.io/badge/license-CC0-blue">
+</p>
 
 [![ReKHCoM project overview: native Chain of Memories, widescreen, optional HD enhancements and configurable controls.](docs/showcase/overview.png)](docs/showcase/overview.png)
 
