@@ -17145,10 +17145,10 @@
     "readme-brand-header-20261116": {
       "id": "readme-brand-header-20261116",
       "piece": "README vector brand header and badges matching NewSnap",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-readme-header",
       "created_at": "2026-11-16T14:15:27.978640+00:00",
-      "updated_at": "2026-11-16T14:18:04.874048+00:00",
+      "updated_at": "2026-11-16T14:19:05.891176+00:00",
       "branch": "codex/readme-brand-header",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/646",
       "approval": "Owner clarified screenshot: create NewSnap-style visual logo/header and badges for remaining two projects and remove duplicated text titles, 2026-11-16",
@@ -17158,10 +17158,16 @@
           "at": "2026-11-16T14:18:04.874048+00:00",
           "owner": "codex-readme-header",
           "detail": "Exact SVG rendered in Edge and preview image displayed in Codex chat; independent visual/XML/badge/path review ready. Original README vector header, no Atlas in-game assets. SVG explicitly tracked despite broad docs ignore."
+        },
+        {
+          "at": "2026-11-16T14:19:05.891176+00:00",
+          "owner": "codex-readme-header",
+          "detail": "PR646 merged after direct owner header request, rendered preview shown in Codex and independent review. Original SVG header/badges, no runtime or user data changes."
         }
       ],
       "claimed_at": "2026-11-16T14:15:36.521252+00:00",
-      "sent": "codex-inline-image:rekhcom-header-preview.png"
+      "sent": "codex-inline-image:rekhcom-header-preview.png",
+      "completed_at": "2026-11-16T14:19:05.891176+00:00"
     }
   },
   "integrator": {
@@ -17170,7 +17176,7 @@
     "created_at": "2026-11-16T14:18:12.868248+00:00",
     "updated_at": "2026-11-16T14:18:12.868248+00:00"
   },
-  "updated_at": "2026-11-16T14:18:12.869760+00:00",
+  "updated_at": "2026-11-16T14:19:05.944965+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
