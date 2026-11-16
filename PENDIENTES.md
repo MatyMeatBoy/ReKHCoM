@@ -485,5 +485,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | sdl-global-custom-mappings | Compatibilidad mappings globales SDL2 personalizados | en_curso | Codex-v22 | fix/sdl-global-mappings | Usuario solicita arreglo y PR Pilotwings64 2026-11-09 | 2026-11-09T17:51:26.540885+00:00 |
 | readme-project-showcase-20261116 | README project showcase and comparison graphics | integrado | codex-readme-showcase | https://github.com/MatyMeatBoy/ReKHCoM/pull/644 | Owner requested matching Reddit graphics and README images for all three projects, no page numbering, 2026-11-16 | 2026-11-16T14:06:32.574289+00:00 |
 | readme-showcase-layout-20261116 | README hero placement, visible comparison and project introduction | integrado | codex-readme-layout | https://github.com/MatyMeatBoy/ReKHCoM/pull/645 | Owner directly requested the same README layout and a NewSnap-style English introduction for ShiningSource and ReKHCoM, 2026-11-16 | 2026-11-16T14:13:09.622647+00:00 |
+| readme-brand-header-20261116 | README vector brand header and badges matching NewSnap | pendiente | — | — | Owner clarified screenshot: create NewSnap-style visual logo/header and badges for remaining two projects and remove duplicated text titles, 2026-11-16 | 2026-11-16T14:15:27.978640+00:00 |
 
 Integrador: libre
