@@ -17119,10 +17119,10 @@
     "readme-showcase-layout-20261116": {
       "id": "readme-showcase-layout-20261116",
       "piece": "README hero placement, visible comparison and project introduction",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-readme-layout",
       "created_at": "2026-11-16T14:10:49.108815+00:00",
-      "updated_at": "2026-11-16T14:12:17.776414+00:00",
+      "updated_at": "2026-11-16T14:13:09.622647+00:00",
       "branch": "codex/readme-showcase-layout",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/645",
       "approval": "Owner directly requested the same README layout and a NewSnap-style English introduction for ShiningSource and ReKHCoM, 2026-11-16",
@@ -17132,9 +17132,15 @@
           "at": "2026-11-16T14:12:17.776414+00:00",
           "owner": "codex-readme-layout",
           "detail": "Markdown-only follow-up requested by owner, no image bytes changed. Independent review ready; image paths, overview/comparison ordering and visible comparison verified; git diff --check passes."
+        },
+        {
+          "at": "2026-11-16T14:13:09.622647+00:00",
+          "owner": "codex-readme-layout",
+          "detail": "PR645 merged after independent review; README hero placement and visible comparison verified, opening English description checked against established features, no assets/runtime/owner data changed."
         }
       ],
-      "claimed_at": "2026-11-16T14:10:56.072121+00:00"
+      "claimed_at": "2026-11-16T14:10:56.072121+00:00",
+      "completed_at": "2026-11-16T14:13:09.622647+00:00"
     }
   },
   "integrator": {
@@ -17143,7 +17149,7 @@
     "created_at": "2026-11-16T14:12:27.076195+00:00",
     "updated_at": "2026-11-16T14:12:27.076195+00:00"
   },
-  "updated_at": "2026-11-16T14:12:27.076195+00:00",
+  "updated_at": "2026-11-16T14:13:09.622647+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
