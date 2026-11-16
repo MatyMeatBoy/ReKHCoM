@@ -17,6 +17,19 @@ ultrawide support at the cartridge's original speed.
 Works with the **European, US and Japanese** cartridges (your own dump; no ROM is
 included), in all five European languages, English (US) and Japanese.
 
+## Project showcase
+
+[![Native Kingdom Hearts: Chain of Memories port: widescreen and ultrawide, optional HD text and media, achievements, scene gallery, remappable controls and EU/US/JP support.](docs/showcase/overview.png)](docs/showcase/overview.png)
+
+<details>
+<summary>Original game vs ReKHCoM</summary>
+
+[![Comparison of the original GBA game and ReKHCoM's optional presentation, media and control enhancements.](docs/showcase/comparison.png)](docs/showcase/comparison.png)
+
+</details>
+
+These are illustrated feature summaries; see the sections below for current platform and feature details.
+
 ## What's new in v2.2.5
 
 The 2.2.5 update focuses on launcher font readiness, Android startup recovery,
