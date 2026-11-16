@@ -486,4 +486,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | readme-project-showcase-20261116 | README project showcase and comparison graphics | integrado | codex-readme-showcase | https://github.com/MatyMeatBoy/ReKHCoM/pull/644 | Owner requested matching Reddit graphics and README images for all three projects, no page numbering, 2026-11-16 | 2026-11-16T14:06:32.574289+00:00 |
 | readme-showcase-layout-20261116 | README hero placement, visible comparison and project introduction | pr_abierto | codex-readme-layout | https://github.com/MatyMeatBoy/ReKHCoM/pull/645 | Owner directly requested the same README layout and a NewSnap-style English introduction for ShiningSource and ReKHCoM, 2026-11-16 | 2026-11-16T14:12:17.776414+00:00 |
 
-Integrador: libre
+Integrador: codex-readme-layout (ocupado; 2026-11-16T14:12:27.076195+00:00)
