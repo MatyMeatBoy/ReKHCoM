@@ -1,4 +1,4 @@
-# Aprendizajes de ShiningSource 0.8.8–0.8.9 para Android y online
+# Aprendizajes de ShiningSource 0.8.8–0.8.10 para Android y online
 
 Fecha: 2026-11-16. Seguimiento documental de [#647](https://github.com/MatyMeatBoy/ReKHCoM/issues/647).
 No cambia el runtime, el protocolo ni los paquetes de ReKHCoM.
@@ -261,3 +261,61 @@ pruebas tiene SHA256
 Linux fue recompilado; esta actualización no aporta una nueva prueba de runtime
 Linux. Estos resultados se citaron desde la revisión publicada, no se volvieron
 a ejecutar para este PR documental.
+
+## Actualización 0.8.10: callbacks portables, no PCs del otro proceso
+
+Fuente fijada: [ShiningSource 0d29bf9](https://github.com/MatyMeatBoy/ShiningSource/tree/0d29bf92da71346e74565dcf4b8c4692d6e24cf4),
+[notas publicadas](https://github.com/MatyMeatBoy/ShiningSource/blob/0d29bf92da71346e74565dcf4b8c4692d6e24cf4/docs/RELEASE_0.8.10.md).
+Un log de Android 0.8.9 identificó el PC inválido `0x0A04D530`: era la entrada
+nativa Windows de `sub_0803E5D8`, recibida dentro del mensaje de escena A3.
+A4 compartía el mismo contrato defectuoso. Igualar arquitectura o versión no
+basta: ASLR y relocation también cambian direcciones dentro de una arquitectura.
+
+La corrección [codifica/decodifica callbacks](https://github.com/MatyMeatBoy/ShiningSource/blob/0d29bf92da71346e74565dcf4b8c4692d6e24cf4/runtime/core/netptr.c)
+mediante la [tabla de funciones original](https://github.com/MatyMeatBoy/ShiningSource/blob/0d29bf92da71346e74565dcf4b8c4692d6e24cf4/runtime/core/codeptr.c).
+El wire lleva la identidad GBA exacta, incluido el bit Thumb; sólo la copia de
+entrega final recupera el PC nativo del receptor, incluida la entrega propia.
+Las colas de orden/snapshot conservan IDs portables. Se valida tag, longitud y
+chunks de A3/A4; un callback desconocido termina la sesión con diagnóstico,
+sin saltar a un PC arbitrario ni convertir indiscriminadamente otros words.
+Argumentos y mensajes ajenos mantienen su representación. Las reglas suben a
+**7**: todos los pares deben actualizarse.
+
+**Prueba demostrada:** 42 regresiones automáticas y 42000 frames Windows/ARM64
+Android15 con páginas de 16 KiB, relocation y memfd forzados. Ambos mensajes se
+ejecutaron en ambos peers y el wire conservó el mismo ID. Se observaron también
+callbacks naturales en ambas direcciones y áreas `12:0 → 12:1 → 12:2`; esto no
+identifica inequívocamente «la primera mazmorra». El
+[fixture mixto](https://github.com/MatyMeatBoy/ShiningSource/blob/0d29bf92da71346e74565dcf4b8c4692d6e24cf4/tools/tests/android_callback_test.py)
+usa un callback de sonido observable como control positivo; las
+[pruebas C](https://github.com/MatyMeatBoy/ShiningSource/blob/0d29bf92da71346e74565dcf4b8c4692d6e24cf4/tools/tests/test_net_codeptr.py)
+comparan tablas nativas distintas, slides, bits Thumb, payloads y rechazos sin
+mutación. No es certificación de teléfonos físicos ni de cuatro jugadores.
+
+**Lección para revisar:** auditar semánticamente los mensajes que contienen
+funciones/objetos, no sólo su tamaño y endianness. Una identidad de sala estable
+no hace portable un puntero de un payload tardío. ReKHCoM mantiene su protocolo
+VS y sus mecanismos existentes: no se afirma que reproduzca este defecto.
+
+## Diagnóstico Android posterior: evidencia de terminación, no una cura
+
+La fuente [e74a183](https://github.com/MatyMeatBoy/ShiningSource/tree/e74a18344f83f3b7e61da934cf50f956de04a071)
+añade [diagnósticos locales y entrega opcional](https://github.com/MatyMeatBoy/ShiningSource/blob/e74a18344f83f3b7e61da934cf50f956de04a071/docs/AUTOMATIC_ANDROID_REPORTS.md)
+para una siguiente 0.8.11 todavía no publicada al registrar este traspaso.
+Un segundo log de sólo 846 bytes mostraba arranque/background, sin marcador de
+crash: ese archivo no permite determinar la causa del cierre posterior.
+
+En API30+, consultar la historia de salida del proceso propio, emparejando
+intento/timestamp/PID y sin anexar al log de un juego vivo, puede recuperar el
+motivo del sistema. `SIGKILL` por sí solo no demuestra falta de memoria; una
+salida correcta o un cierre solicitado por el usuario no deben acusarse como
+crash. API21–29 conserva logs nativos/Java y archivo local, sin esa historia OS.
+Antes del siguiente Play se guarda un tail acotado para no destruir la evidencia.
+
+El envío HTTPS opcional tiene opt-out, redacción, outbox privado acotado, hash
+del payload exacto, recibos idempotentes y reintentos con backoff. No es un canal
+de audio/red del juego ni un reparador automático. La fuente documenta una
+prueba emulada ARM64/API35 de SIGKILL propio, recuperación del motivo al volver,
+recibo HTTPS, preservación al siguiente Play y salida normal. Ese diagnóstico
+no explica retroactivamente el log truncado ni certifica el teléfono reportante.
+No se incluyen aquí endpoints, logs privados, partidas ni rutas del usuario.
