@@ -1,4 +1,4 @@
-# Aprendizajes de ShiningSource 0.8.8 para Android y online
+# Aprendizajes de ShiningSource 0.8.8–0.8.9 para Android y online
 
 Fecha: 2026-11-16. Seguimiento documental de [#647](https://github.com/MatyMeatBoy/ReKHCoM/issues/647).
 No cambia el runtime, el protocolo ni los paquetes de ReKHCoM.
@@ -33,10 +33,12 @@ mediciones retrospectivamente. No identifica el dispositivo del usuario como
 Galaxy A11 ni como el teléfono reportado por RobNick. La instalación/ejecución
 en esos teléfonos físicos continúa pendiente de confirmación identificada.
 
-Hay además un reporte nuevo de **golpes remotos que no se oyen** y una solicitud
-de un toggle experimental activado por defecto. Se está investigando en
-ShiningSource: no está resuelto ni verificado y no se presenta aquí como una
-mejora demostrada, una función publicada de 0.8.8 o un defecto de ReKHCoM.
+Al registrar el traspaso de 0.8.8, el reporte de **golpes remotos que no se
+oyen** y la solicitud de un toggle experimental activado por defecto estaban
+bajo investigación. ShiningSource 0.8.9 publicó la implementación y las pruebas
+acotadas descritas en el apéndice siguiente. No era una función de 0.8.8 ni se
+atribuye el defecto a ReKHCoM; la confirmación auditiva en dispositivos físicos
+continúa pendiente.
 
 ## Revisiones transferibles, con pruebas de aceptación
 
@@ -161,5 +163,101 @@ nueva conexión informada revalidan todos esos escenarios de recuperación.
 
 Este documento deja propuestas revisables, fuentes fijadas y límites conocidos.
 No aplica correcciones a ReKHCoM, no publica una release y no certifica teléfonos.
-La nueva confirmación Android/Windows es de conexión; el reporte de sonido
-remoto sigue abierto y necesita su propia corrección y verificación.
+La confirmación Android/Windows es de conexión. La implementación de audio
+remoto publicada después en ShiningSource 0.8.9 tiene pruebas específicas,
+detalladas a continuación, y conserva límites de validación física.
+
+## Actualización 0.8.9: callbacks, UI rebased y presentación de sonidos remotos
+
+Fuente de esta ampliación: ShiningSource `316a6bf691e9e905d9405f103497cded240f1035`,
+[registro de verificación](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/docs/ANDROID_0.8.9_VERIFICATION.md),
+la [release publicada](https://github.com/MatyMeatBoy/ShiningSource/releases/tag/v0.8.9)
+y [notas de la actualización](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/docs/RELEASE_0.8.9.md).
+Los resultados siguientes son de ShiningSource; no se ejecutó ni se cambió
+ReKHCoM como parte de este traspaso.
+
+### El callback inverso no debe reentrar en su bridge de servicios activo
+
+El host entra al guest para cambiar una opción mientras su servicio de vídeo
+todavía está activo. Los bridges que reutilizan un SP nativo guardado para
+atender servicios no son automáticamente reentrantes: un `getenv` o una
+impresión desde ese callback puede volver al mismo stack de servicios y pisar
+la llamada suspendida. Incluso un log de diagnóstico puede introducir el fallo.
+
+ShiningSource dejó el setter como asignación leaf y devuelve el valor ya
+cacheado; el host registra el acuse después de que el callback retorna. Su
+[fixture compilado](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/tools/tests/test_remote_sfx.py)
+marca como error llamadas a `getenv`/`fprintf` con el callback activo y cubre
+setter más getter. La implementación diagnóstica anterior fallaba esa prueba.
+Fuentes: [política](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/runtime/core/remote_sfx.c)
+y [dispatch del callback](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/runtime/guest/guest.c).
+
+**Para evaluar en ReKHCoM:** documentar la reentrancia real de cada bridge y los
+servicios permitidos en callbacks inversos. Si reutiliza un stack guardado,
+probar el límite con servicios instrumentados. No se afirma que ReKHCoM tenga
+el defecto ni que todo callback de cualquier arquitectura deba prohibir I/O.
+
+### La UI del host también debe abandonar las direcciones GBA fijas
+
+Un menú Android32 abrió correctamente y luego falló al leer `0x080000AC`.
+El juego ya estaba rebased, pero el renderizador de texto del host seguía
+leyendo la cabecera de la ROM en la dirección original. Que arranque y juegue
+el guest no verifica sus utilidades de UI, avisos o recursos.
+
+El [lector portable acotado](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/runtime/win32/font_rom.h)
+obtiene exclusivamente las celdas del archivo del usuario, valida código
+`AU2P`, archivo `SSDT`, sumas/offsets dentro de 16 MiB, lectura completa de
+32768 bytes y espacio vacío; cierra el archivo en todos los caminos abiertos.
+Android y hosts `SS_REBASED_HOST` usan ese camino; Windows con ROM fija conserva
+el anterior. En fallo se mantiene la fuente de puntos, sin leer la dirección
+GBA original. No se distribuyen ROM ni glifos extraídos.
+
+**Aceptación transferible:** abrir opciones/avisos con una imagen movida y sin
+mapear las direcciones históricas, no sólo completar un replay headless.
+[Nueve tests](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/tools/tests/test_font_rom.py)
+compilan el helper real con archivos sintéticos y comprueban contenido válido,
+cabeceras/offsets inválidos, overflow, truncados, espacio y archivo ausente.
+La comprobación final ARMv7 en Android11 por native bridge incluye 600 frames
+renderizados, cambios off/on persistidos entre procesos y revisión visual del
+menú con su fuente. ARM64 en Android15 con páginas de 16 KiB también pasa
+replay y menú/callback renderizado con imagen movida y memfd forzados. No
+certifica todos los renderizadores o teléfonos.
+
+### Audio remoto: cambiar gates de presentación, conservar deduplicación
+
+El reporte de golpes remotos motivó una opción experimental, activada por
+defecto y reversible localmente. La implementación relaja ocho gates de audio
+de acciones ya recibidas: no envía sonido, no añade mensajes, no cambia dueño
+de ataques ni protocolo y conserva los guards originales de transición y
+deduplicación. Preserva las capas de sonido por clase y espera mientras el reloj
+de animación del arco está congelado para evitar repeticiones del release.
+
+La lección es recorrer los consumidores de acciones existentes antes de añadir
+un protocolo de audio. Un toggle experimental debe tener default, override,
+acuse de callback y persistencia verificados. No trasladar los gates concretos
+de Shining Soul II a otro juego sin inspeccionar su lógica de presentación.
+
+**Evidencia acotada:** seis regresiones C compiladas usan ramas extraídas del
+juego y la política real; las cuatro pruebas de paths fallan con las ramas
+originales. Dos clientes Windows completan sesiones locales de 27000 frames
+con la opción off y on: 26509 labels comunes por sesión, sin diferencias del
+bloque registrado. En el encuentro inicial, las llamadas al cue de arma `0x14`
+suben de 8 a 18 sumando ambos clientes. Es observación del motor de sonido,
+no una escucha física ni garantía de un número exacto en todas las partidas.
+El [runner online](https://github.com/MatyMeatBoy/ShiningSource/blob/316a6bf691e9e905d9405f103497cded240f1035/tools/tests/remote_sfx_online_test.py)
+exige combate como control positivo: no puede pasar sólo por permanecer en lobby.
+
+El replay offline Windows/ARMv7/ARM64 conserva los 32000 frames, hash `5F1DB1A8` y
+audio de referencia. Las reglas online siguen siendo 6; clientes anteriores
+conservan su presentación local. No se modifica Start, Select ni scene-skip.
+Confirmar que otros jugadores se oyen en teléfonos físicos, todas las armas y
+sesiones de cuatro dispositivos continúa pendiente. La nueva implementación
+y sus tests no convierten la confirmación de conexión 0.8.8 en una prueba
+auditiva 0.8.9.
+
+El registro publicado informa 30 tests Python aprobados. El APK final de estas
+pruebas tiene SHA256
+`65bc3547cf20d0643b9a2909e3d20f0bb10eafee9ced6a22077d820ce3811b08`.
+Linux fue recompilado; esta actualización no aporta una nueva prueba de runtime
+Linux. Estos resultados se citaron desde la revisión publicada, no se volvieron
+a ejecutar para este PR documental.
