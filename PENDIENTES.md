@@ -495,4 +495,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | pr_abierto | codex-retoma-linux639 | https://github.com/MatyMeatBoy/ReKHCoM/pull/654 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:23:11.539949+00:00 |
 | issue647-android-lifecycle | Android: SDL3 lifecycle watcher for native game, bridge and HD playback | en_curso | codex-retoma-android647 | fix/android647-lifecycle-watch | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:22:41.580343+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:23:21.811320+00:00)
