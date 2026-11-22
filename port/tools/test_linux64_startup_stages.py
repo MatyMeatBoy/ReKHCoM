@@ -1,6 +1,6 @@
 """Fault/nonreturn tests of the actual Linux64 startup block; no SDL/device runtime."""
 from pathlib import Path
-import argparse,json,subprocess
+import argparse,json,os,subprocess
 ROOT=Path(__file__).resolve().parents[2]
 
 def main():
@@ -59,7 +59,7 @@ static void PortStartupDeadlineCancel(PortStartupDeadline*d){(void)d;}
 static void*SDL_CreateWindow(const char*n,int w,int h,int f){(void)n;(void)w;(void)h;if(f!=7)_Exit(96);error="original injected error";return operation("window")?(void*)1:NULL;}
 static bool SDL_ShowWindow(void*w){(void)w;error="original injected error";return operation("window-show");}
 static void*SDL_CreateRenderer(void*w,const char*n){(void)w;(void)n;error="original injected error";return operation("renderer")?(void*)2:NULL;}
-static bool SDL_SetRenderVSync(void*r,int v){(void)r;if(v!=1)_Exit(98);error="original injected error";return operation("vsync");}
+static bool SDL_SetRenderVSync(void*r,int v){(void)r;if(v!=(getenv("KHCOM_FAST")?0:1))_Exit(98);error="original injected error";return operation("vsync");}
 static const char*SDL_GetRendererName(void*r){(void)r;return "controlled-renderer";}
 '''
  code=pre+startup+helpers+r'''
@@ -75,8 +75,10 @@ BLOCK
          if (p/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe').is_file())
  subprocess.run([str(cc),'-O2',str(out/'probe.c'),'-o',str(out/'probe.exe')],check=True,capture_output=True)
  rows=[]
- for label,argv,expected in [('success',[],0),('init-false',['sdl-init'],4),('audio-init-false',['sdl-audio-init'],0),('deadline-false',['window-deadline'],4),('window-null',['window'],4),('show-false',['window-show'],4),('renderer-null',['renderer'],4),('vsync-false',['vsync'],0),*[(s+'-no-return',['-',s],77) for s in ('image-scratch-release','sdl-init','window','window-show','renderer','vsync')]]:
-  p=subprocess.run([str(out/'probe.exe'),*argv],capture_output=True,text=True,timeout=5);log=p.stderr
+ for label,argv,expected in [('success',[],0),('uncapped',[],0),('init-false',['sdl-init'],4),('audio-init-false',['sdl-audio-init'],0),('deadline-false',['window-deadline'],4),('window-null',['window'],4),('show-false',['window-show'],4),('renderer-null',['renderer'],4),('vsync-false',['vsync'],0),*[(s+'-no-return',['-',s],77) for s in ('image-scratch-release','sdl-init','window','window-show','renderer','vsync')]]:
+  env={k:v for k,v in os.environ.items() if k!='KHCOM_FAST'}
+  if label=='uncapped':env['KHCOM_FAST']='1'
+  p=subprocess.run([str(out/'probe.exe'),*argv],env=env,capture_output=True,text=True,timeout=5);log=p.stderr
   if p.returncode!=expected:raise RuntimeError((label,p.returncode,log))
   if label.endswith('no-return'):
    stage=argv[1]

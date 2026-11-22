@@ -39,3 +39,21 @@ python port/linux/r36s/package.py build/ReKHCoM-r36s-aarch64-alpha.zip \
 El builder usa los volcados locales verificados que requiere el proyecto para generar los tres invitados regionales. El empaquetador usa una lista explícita de ejecutables e incorpora los recursos comunes. El ZIP sólo incluye las instrucciones dentro de `roms/`. La auditoría revisa clase ELF, arquitectura, intérprete, dependencias y versiones de símbolos de glibc hasta 2.31, y la cabecera ARM64 ILP32 de cada invitado.
 
 La comparación de rendimiento sigue Opti36S. Usa el mismo volcado, escena, entradas y opciones, mide p95/p99 de presentación y memoria pico en frío y en caliente, y separa los resultados de QEMU y del equipo físico. Registra firmware, kernel, panel, backend SDL, renderer, dispositivo de sonido y SHA-256 del ZIP. [Opti36S](https://github.com/MatyMeatBoy/Opti36S) · [PortMaster](https://portmaster.games/contribute/porting/build-environments/)
+
+## Medición de capacidad
+
+En una copia aislada del port, puedes recorrer el mismo campo con el reloj
+normal y luego medir la capacidad sin espera y sin saltar cuadros. Usa el
+mismo firmware, backend y recursos en ambas pasadas.
+
+```sh
+KHCOM_MODE=60:room:10901 KHCOM_QUIT=1500 KHCOM_PROFILE=1 \
+  KHCOM_FRAMELOG=ritmo.csv bash './ReKHCoM R36S.sh' --region eu --language en
+KHCOM_MODE=60:room:10901 KHCOM_QUIT=1500 KHCOM_PROFILE=1 KHCOM_FAST=1 \
+  KHCOM_FRAMELOG=capacidad.csv bash './ReKHCoM R36S.sh' --region eu --language en
+```
+
+El CSV separa el intervalo de juego, el trabajo de la PPU y la presentación.
+Calcula la capacidad con el total de cuadros dividido por el tiempo de la
+ventana medida y revisa p95/p99. Una media de 100 cuadros/s corresponde a
+10 ms por cuadro de media. El ritmo normal de juego sigue siendo el del cartucho.

@@ -556,7 +556,8 @@ int main(int argc, char** argv) {
         return 4;
     }
     StartupStage("vsync", "begin");
-    if (SDL_SetRenderVSync(sRenderer, 1)) StartupStage("vsync", "done");
+    /* Keep the host uncapped when the guest runs the KHCOM_FAST benchmark. */
+    if (SDL_SetRenderVSync(sRenderer, getenv("KHCOM_FAST") ? 0 : 1)) StartupStage("vsync", "done");
     else StartupError("vsync"); /* original nonfatal policy */
     Log("renderer: %s (64-bit host)", SDL_GetRendererName(sRenderer));
     {
