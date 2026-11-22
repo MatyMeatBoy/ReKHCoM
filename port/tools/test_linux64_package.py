@@ -76,6 +76,9 @@ class Linux64PackageTests(unittest.TestCase):
             with zipfile.ZipFile(next(p for p in archives if p.name.endswith('.zip'))) as archive:
                 self.assertEqual(archive.getinfo('ReKHCoM.sh').external_attr >> 16 & 0o777, 0o755)
                 self.assertEqual(archive.read('rekhcom/ReKHCoM.version'), b'v2.1\n')
+                for name in ('binarmhf/khcom_eu', 'binarmhf/khcom_us', 'binarmhf/khcom_jp', 'libarmhf/rekhcom'):
+                    self.assertEqual(archive.getinfo('rekhcom/' + name).external_attr >> 16 & 0o777, 0o755)
+                self.assertNotIn('rekhcom/bin/khcom_eu', archive.namelist())
             # Run the production release stager against this fixture repository.
             write('port/tools/stage_release.py', (TOOLS / 'stage_release.py').read_bytes())
             write('build/releases/ReKHCoM-v2.1-android-beta.apk')

@@ -160,6 +160,9 @@ remain the normal launch path.
 
 ## ARM handhelds (`anbernic-beta`)
 
+The GA36 Allwinner handheld has its own [armhf Ports package](ga36/README.md).
+For the RK3326 R36S, see the [AArch64 Ports package](r36s/README.md).
+
 **Beta, not yet tested on a real handheld.** Aimed at the Anbernic RG34XX
 (H700) and similar devices with Knulli, muOS or ROCKNIX, in the PortMaster
 layout.

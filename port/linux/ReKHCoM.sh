@@ -232,6 +232,11 @@ case "$MACHINE" in
             echo 'ARM 32-bit runtime unavailable: this kernel may not support AArch32.' >&2
             exit 3
         fi
+        # Current ARM32 builds name libarmhf/rekhcom in PT_INTERP. The kernel
+        # places brk after the game when it loads that interpreter for us.
+        if [ -f "$ARM_LIB/native-interpreter" ]; then
+            LD_LIBRARY_PATH="$ARM_LIB/sys:$ARM_LIB" exec "$GAME" "$@"
+        fi
         exec "$ARM_LIB/rekhcom" --library-path "$ARM_LIB/sys:$ARM_LIB" "$GAME" "$@"
         ;;
     x86_64|i?86) ;;

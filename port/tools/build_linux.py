@@ -23,7 +23,7 @@ from workdir import WORK_DIR  # the heavy work folder (REKHCOM_WORK)
 from compile_cartridge_game import fingerprint as cartridge_compile_fingerprint
 
 # clang/lld/llvm-readelf from llvm-mingw and ninja from ../toolchain.
-_TC = ROOT.parent / 'toolchain'
+_TC = next((p / 'toolchain' for p in ROOT.parents if (p / 'toolchain').is_dir()), ROOT.parent / 'toolchain')
 os.environ['PATH'] = os.pathsep.join([str(p / 'bin') for p in sorted(_TC.glob('llvm-mingw-*'))[-1:]]
                                      + [str(_TC / 'bin'), os.environ.get('PATH', '')])
 
@@ -93,12 +93,13 @@ def configure(version, arch, base, out):
                    f'-I{rel(out)} -I{(sdl / "include").as_posix()} -I{(ft / "include/freetype2").as_posix()}')
     # Fixed image base above the GBA space (0x02000000-0x0E010000): quick
     # states hold raw pointers, as on Windows.
+    runtime_lib = 'libarmhf' if arch == 'armhf' else 'lib'
     ldflags = (f'{target} -fuse-ld=lld -no-pie -Wl,--image-base=0x10000000 -Wl,-z,nostart-stop-gc '
                # The bundled loader, relative to the game folder (the launcher
                # changes into it): run by the kernel as the interpreter, the
                # heap follows the executable instead of landing in the GBA
                # range (ARM64 kernels put a directly-run loader's brk there).
-               f"-Wl,--dynamic-linker=lib/rekhcom -Wl,-rpath,'$$ORIGIN/../lib' -L{(sdl / 'lib').as_posix()} -lSDL3 {(ft / 'lib/libfreetype.a').as_posix()} "
+               f"-Wl,--dynamic-linker={runtime_lib}/rekhcom -Wl,-rpath,'$$ORIGIN/../{runtime_lib}' -L{(sdl / 'lib').as_posix()} -lSDL3 {(ft / 'lib/libfreetype.a').as_posix()} "
                f'-lm -lpthread -ldl -Wl,--build-id')
     with open(out / 'build.ninja', 'w') as f:
         n = ninja_syntax.Writer(f)
@@ -256,7 +257,15 @@ def install_common_assets(dest):
 
 
 def executable(name):
-    return name.endswith('.sh') or any(f'/{folder}/' in name for folder in ('bin', 'lib', 'bin64', 'lib64', 'binarm64'))
+    return name.endswith('.sh') or any(f'/{folder}/' in name for folder in (
+        'bin', 'lib', 'bin64', 'lib64', 'binarm64', 'binarmhf', 'libarmhf'))
+
+
+def install_armhf_layout(dest):
+    """Keep the ARM32 executables and loader under the selector's ARM paths."""
+    (dest / 'bin').rename(dest / 'binarmhf')
+    (dest / 'lib').rename(dest / 'libarmhf')
+    (dest / 'libarmhf/native-interpreter').touch()
 
 
 def make_tar(src, archive):
@@ -347,6 +356,7 @@ def package(version, base_i386, base_armhf):
     # Anbernic (PortMaster layout): launcher + rekhcom/ with the armhf build.
     arm = stage / 'anbernic'
     bundle('armhf', base_armhf, ['eu', 'us', 'jp'], arm / 'rekhcom')
+    install_armhf_layout(arm / 'rekhcom')
     shutil.copyfile(ROOT / 'port/linux/LINUX.md', arm / 'rekhcom' / 'LINUX.md')
     (arm / 'ReKHCoM.sh').write_bytes((ROOT / 'port/linux/anbernic/ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
     archive = out / f'ReKHCoM-{version}-anbernic-beta.zip'
@@ -386,6 +396,8 @@ def main():
         print('built', rel(out / f'khcom_{version}'))
     if args.bundle:
         libs = bundle(args.arch, base, args.versions, args.bundle)
+        if args.arch == 'armhf':
+            install_armhf_layout(args.bundle)
         print('bundled', args.bundle, len(libs), 'libraries')
 
 
