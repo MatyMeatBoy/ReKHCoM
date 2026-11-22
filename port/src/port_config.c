@@ -134,8 +134,10 @@ static const Key sKeys[] = {
     { "vsync", &gPortConfig.vsync, 0, 2 },
     { "hud_size", &gPortConfig.hudSize, 0, 2 },
     { "narrow_fit", &gPortConfig.narrowFit, 1, 1 },
+    { "lcd_grid", &gPortConfig.lcdGrid, 0, 100 },
     { "scanlines", &gPortConfig.scanlines, 0, 100 },
     { "color_correction", &gPortConfig.colorCorrection, 0, 1 },
+    { "hide_title_hint", &gPortConfig.hideTitleHint, 0, 1 },
     { "show_fps", &gPortConfig.showFps, 0, 1 },
     { "experimental_frame_skip", &gPortConfig.frameSkip, 0, 1 },
     { "window_scale", &gPortConfig.windowScale, 1, 8 },
@@ -152,6 +154,9 @@ static const Key sKeys[] = {
     { "net_stats", &gPortConfig.netStats, 0, 1 },
     { "net_delay", &gPortConfig.netDelay, 0, 8 },
     { "hd_movies", &gPortConfig.hdMovies, 0, 1 },
+#if defined(__ANDROID__) || defined(PORT_ANDROID64)
+    { "hd_software_h264", &gPortConfig.hdSoftwareH264, 0, 1 },
+#endif
     { "hd_media_language", &gPortConfig.hdMediaLanguage, 0, 2 },
     { "hd_music", &gPortConfig.hdMusic, 0, 1 },
     { "hd_scenes", &gPortConfig.hdScenes, 0, 1 },
@@ -180,7 +185,7 @@ static const Key sKeys[] = {
     { "hd_hud", &gPortConfig.hdHud, 0, 1 },
     { "aspect", &gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1 },
     { "assets_seen", &gPortConfig.assetsSeen, -1, (1 << PORT_ASSET_COUNT) - 1 },
-#define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_AXIS_BASE + SDL_GAMEPAD_AXIS_COUNT * 2 - 1 }
+#define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_BINDING_MAX }
     BIND("a", PORT_ACT_A), BIND("b", PORT_ACT_B), BIND("l", PORT_ACT_L), BIND("r", PORT_ACT_R),
     BIND("start", PORT_ACT_START), BIND("select", PORT_ACT_SELECT), BIND("up", PORT_ACT_UP),
     BIND("down", PORT_ACT_DOWN), BIND("left", PORT_ACT_LEFT), BIND("right", PORT_ACT_RIGHT),
@@ -610,7 +615,7 @@ void PortApplyGraphicsMode(int mode) {
     gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS);
     gPortConfig.hdTitle = gPortConfig.hdCards;
     gPortConfig.hdMusic = hd && PortAssetPresent(PORT_ASSET_HD_MUSIC);
-    /* HD intros (opening, credits, endings): on unless GBA Original */
+    /* HD replacements for cartridge movies: on unless GBA Original */
     gPortConfig.hdMovies = !classic && PortAssetPresent(PORT_ASSET_HD_MOVIES);
     gPortConfig.hdSubtitles = 1; /* part of HD text now: the HD videos always carry their subtitles */
     gPortConfig.hdScenes = hd && PortAssetPresent(PORT_ASSET_HD_SCENES);

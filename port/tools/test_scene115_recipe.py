@@ -11,14 +11,21 @@ class Scene115RecipeTest(unittest.TestCase):
   code=r'''#include <assert.h>
 #include "port_preliminar_v1_tiles.h"
 int main(void){ unsigned i; int x,y,bg;
+{
+ const PortPreliminarRecipe* p=0;int sx=-1,sy=17;
+ for(i=0;i<sizeof(kPreliminarRecipes)/sizeof(kPreliminarRecipes[0]);i++)if(kPreliminarRecipes[i].v[0]==115&&kPreliminarRecipes[i].v[1]==2){p=&kPreliminarRecipes[i];break;}
+ assert(p&&PortPreliminarTileSource(p,&sx,&sy));assert(sx==7&&sy==13);
+ sx=33;sy=0;assert(PortPreliminarTileSource(p,&sx,&sy));assert(sx==1&&sy==16);
+}
 for(bg=2;bg<=3;bg++){
  const PortPreliminarRecipe* p=0;
  for(i=0;i<sizeof(kPreliminarRecipes)/sizeof(kPreliminarRecipes[0]);i++)if(kPreliminarRecipes[i].v[0]==115&&kPreliminarRecipes[i].v[1]==bg){p=&kPreliminarRecipes[i];break;}
  assert(p);
  for(y=-32;y<80;y++)for(x=-64;x<96;x++){
   int sx=x,sy=y,ok=PortPreliminarTileSource(p,&sx,&sy);
-  if(x>=0&&x<32&&y>=0&&y<32){assert(ok&&sx==x&&sy==y);}
-  else if(bg==3&&2*y+x>=36){assert(ok&&sy>=20&&sy<24);}
+  if(bg==2&&x>=30&&x<32&&y>=5&&y<10){assert(ok&&sx==x-24&&sy==y+12);}
+  else if(x>=0&&x<32&&y>=0&&y<32){assert(ok&&sx==x&&sy==y);}
+  else if(bg==3&&2*y+x>=32){assert(ok&&sy>=20&&sy<24);}
  }
 }
 {
@@ -28,7 +35,7 @@ for(bg=2;bg<=3;bg++){
  for(k=-8;k<=12;k++)for(j=0;j<6;j++){
   int cx=10+8*k,cy=19-4*k+8*j;
   int overlap=cx-4<32&&cx+4>0&&cy-2<32&&cy+3>0;
-  if(overlap?j>=2:j%2)continue;
+  if((cx==2&&cy==31)||(overlap?j>=2:j%2))continue;
   for(dy=-2;dy<3;dy++)for(dx=-4;dx<4;dx++){
    int wx=cx+dx,wy=cy+dy,sx=wx,sy=wy;
    if(wx>=0&&wx<32&&wy>=0&&wy<32)continue;
@@ -36,6 +43,7 @@ for(bg=2;bg<=3;bg++){
    assert(sx==10+dx&&sy==19+dy);
   }
  }
+  {int sx=-2,sy=29;assert(!PortPreliminarTileSource(p,&sx,&sy));}
 }return 0;}
 '''
   with tempfile.TemporaryDirectory() as d:

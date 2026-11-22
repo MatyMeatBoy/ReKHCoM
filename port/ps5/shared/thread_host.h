@@ -7,19 +7,34 @@
 #ifndef THREAD_HOST_H
 #define THREAD_HOST_H
 #include "audio_bridge.h"
+#include "bridge_threads.h"
 
-#if defined(THREAD_HOST_LIBNX) || defined(THREAD_HOST_POSIX)
+#if defined(THREAD_HOST_LIBNX) || defined(THREAD_HOST_POSIX) || defined(THREAD_HOST_SDL)
+#ifdef THREAD_HOST_SDL
+#define THREAD_HOST_MAX BRIDGE_X32_WORKERS
+#else
 #define THREAD_HOST_MAX 2  /* with the game's thread, the three cores an application has on the Switch */
+#endif
 #define THREAD_HOST_SEMS 16
 
+#if defined(THREAD_HOST_SDL) && defined(_WIN32) && defined(__x86_64__)
+typedef int (__attribute__((sysv_abi)) *ThreadHostEntry)(uint32_t fn, uint32_t arg, uint32_t stackTop);
+#else
 typedef int (*ThreadHostEntry)(uint32_t fn, uint32_t arg, uint32_t stackTop);
+#endif
 typedef struct {
     uint32_t entry, fn, arg, stackTop;
 } ThreadHostStart;
 static ThreadHostStart sThreadStarts[THREAD_HOST_MAX];
 static int sThreadCount, sSemCount;
 
-#ifdef THREAD_HOST_LIBNX
+#ifdef THREAD_HOST_SDL
+static SDL_Semaphore* sSems[THREAD_HOST_SEMS];
+static int SDLCALL ThreadHostMain(void* p) {
+    const ThreadHostStart* s = (const ThreadHostStart*)p;
+    return ((ThreadHostEntry)(uintptr_t)s->entry)(s->fn, s->arg, s->stackTop);
+}
+#elif defined(THREAD_HOST_LIBNX)
 static Thread sThreads[THREAD_HOST_MAX];
 static Semaphore sSems[THREAD_HOST_SEMS];
 static void ThreadHostMain(void* p) {
@@ -43,9 +58,18 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
         return THREAD_HOST_AUDIO_RATE(a);
 #endif
     switch (op) {
+#ifdef THREAD_HOST_SDL
+        case BRIDGE_THREADS_PROBE:
+            return BRIDGE_THREADS_MAGIC;
+#endif
         case 0: { /* the cores: KHCOM_PPU_THREADS=1 keeps the image on its own thread */
             const char* env = getenv("KHCOM_PPU_THREADS");
-            int n = env ? atoi(env) : 1 + THREAD_HOST_MAX;
+            int n = env ? atoi(env) :
+#ifdef THREAD_HOST_SDL
+                SDL_GetNumLogicalCPUCores();
+#else
+                1 + THREAD_HOST_MAX;
+#endif
             return n < 1 ? 1 : n > 1 + THREAD_HOST_MAX ? 1 + THREAD_HOST_MAX : n;
         }
         case 1: {
@@ -57,7 +81,13 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
             s->fn = b;
             s->arg = c;
             s->stackTop = d;
-#ifdef THREAD_HOST_LIBNX
+#ifdef THREAD_HOST_SDL
+            {
+                SDL_Thread* t = SDL_CreateThread(ThreadHostMain, "ppu", s);
+                if (!t) return 0;
+                SDL_DetachThread(t);
+            }
+#elif defined(THREAD_HOST_LIBNX)
             /* cores 1 and 2 (the game's thread is on core 0), the game's priority */
             if (R_FAILED(threadCreate(&sThreads[sThreadCount], ThreadHostMain, s, NULL, 0x10000, 0x2C, 1 + sThreadCount)) ||
                 R_FAILED(threadStart(&sThreads[sThreadCount]))) {
@@ -78,7 +108,10 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
         case 2:
             if (sSemCount >= THREAD_HOST_SEMS)
                 return 0;
-#ifdef THREAD_HOST_LIBNX
+#ifdef THREAD_HOST_SDL
+            sSems[sSemCount] = SDL_CreateSemaphore(a);
+            if (!sSems[sSemCount]) return 0;
+#elif defined(THREAD_HOST_LIBNX)
             semaphoreInit(&sSems[sSemCount], a);
 #else
             sem_init(&sSems[sSemCount], 0, a);
@@ -86,7 +119,9 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
             return ++sSemCount;
         case 3:
             if (a >= 1 && (int)a <= sSemCount) {
-#ifdef THREAD_HOST_LIBNX
+#ifdef THREAD_HOST_SDL
+                SDL_WaitSemaphore(sSems[a - 1]);
+#elif defined(THREAD_HOST_LIBNX)
                 semaphoreWait(&sSems[a - 1]);
 #else
                 while (sem_wait(&sSems[a - 1]) && errno == EINTR) {}
@@ -95,7 +130,9 @@ static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
             return 0;
         case 4:
             if (a >= 1 && (int)a <= sSemCount) {
-#ifdef THREAD_HOST_LIBNX
+#ifdef THREAD_HOST_SDL
+                SDL_SignalSemaphore(sSems[a - 1]);
+#elif defined(THREAD_HOST_LIBNX)
                 semaphoreSignal(&sSems[a - 1]);
 #else
                 sem_post(&sSems[a - 1]);

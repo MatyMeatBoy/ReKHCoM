@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200" role="img" aria-label="ReKHCoM: native source port, widescreen">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#253958"/>
+      <stop offset="1" stop-color="#17253e"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#849dcc"/>
+      <stop offset="1" stop-color="#52689c"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="632" height="192" rx="44" fill="url(#bg)"/>
+  <rect x="38" y="45" width="86" height="112" rx="14" fill="#a5b6cc" transform="rotate(-12 81 101)"/>
+  <rect x="60" y="39" width="86" height="118" rx="14" fill="#f3f0e8" transform="rotate(8 103 98)"/>
+  <path d="M103 126 79 102C63 84 86 69 103 87 120 69 143 84 127 102Z" fill="url(#heart)"/>
+  <path d="m89 66 3 10h22l3-10-9 5-5-9-5 9Z" fill="#a5b6cc"/>
+  <text x="194" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="70" font-weight="700" fill="#f3f0e8">Re<tspan fill="#a5b6cc">KHCoM</tspan></text>
+  <text x="198" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="2.2" fill="#a8bad0">NATIVE SOURCE PORT · WIDESCREEN</text>
+</svg>

@@ -197,8 +197,22 @@ def main():
     if not action:
         if not tool or not (os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY')):
             p.print_help();print('No desktop dialog available. Use the CLI options above; Play directly with ReKHCoM.sh.');return 0
-        if tool=='kdialog':args=['kdialog','--menu','Basic native launcher: close the game before importing. Progress/cancel: this terminal.', 'play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import HD music, movies and scenes from your PC game','sprites','Import HD HUD, cards and sprites from your PC game (needs numpy/Pillow)']
-        else:args=['zenity','--list','--title','ReKHCoM native launcher','--hide-column','1','--column','Action','--column','','play','Play','online-beta','ReKHCoM server - Beta (original multiplayer)','online-off','Disable network link','prepared','Import prepared HD folder','source','Import HD music, movies and scenes from your PC game','sprites','Import HD HUD, cards and sprites from your PC game (needs numpy/Pillow)']
+        prompt = ("HD is optional. To import it, close the game and select your own PC copy of "
+                  "KINGDOM HEARTS HD 1.5+2.5 ReMIX, or choose a prepared HD folder. "
+                  "The import terminal shows progress and accepts Ctrl+C.")
+        actions = [
+            'play', 'Play (HD optional)',
+            'online-beta', 'ReKHCoM server - Beta (original multiplayer)',
+            'online-off', 'Disable network link',
+            'prepared', 'Import a prepared HD folder',
+            'source', 'Import HD music, movies and scenes from your PC game',
+            'sprites', 'Import HD HUD, cards and sprites from your PC game (needs numpy/Pillow)',
+        ]
+        if tool == 'kdialog':
+            args = ['kdialog', '--title', 'ReKHCoM Launcher', '--menu', prompt, *actions]
+        else:
+            args = ['zenity', '--list', '--title', 'ReKHCoM Launcher', '--text', prompt,
+                    '--hide-column', '1', '--column', 'Action', '--column', '', *actions]
         result=subprocess.run(args,text=True,stdout=subprocess.PIPE)
         if result.returncode:return 0
         action=result.stdout.strip()

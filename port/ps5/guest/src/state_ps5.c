@@ -179,6 +179,7 @@ static int Load(const char* path) {
     free(sPayload);
     sPayload = NULL;
     PortAudioReset();
+    PortFpsResetAfterStateLoad();
     return 1;
 }
 

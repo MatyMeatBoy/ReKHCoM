@@ -6,6 +6,9 @@ CODE=r'''
 #include <assert.h>
 #include "port/port_scene057_tiles.h"
 int main(void){
+ for(int x=20;x<28;x++)for(int y=-8;y<0;y++){
+  int sx=x,sy=y;assert(PortScene057TileSource(2,&sx,&sy));assert(sx==0&&sy==0);
+ }
  for(int x=28;x<64;x++)for(int y=-8;y<8;y++){
   int sx=x,sy=y;assert(PortScene057TileSource(2,&sx,&sy));
   int phase=(x-28)%12,ex=phase<4?8+phase:phase-4,ey=y+(x-ex)/2;

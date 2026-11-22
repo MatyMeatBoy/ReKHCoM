@@ -7,13 +7,21 @@
  */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+#include "../android/native/android_lifecycle_events.h"
+#endif
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
 #include "port/cursor_idle.h"
 static PortCursorIdle sCursorIdle;
 #endif
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
 #define COBJMACROS
 #include <dxgi1_5.h>
+#include "port/video_vrr_windows.h"
+#endif
+#ifdef PORT_SDL_BRIDGE
+#include "bridge_output.h"
+extern int PortBridgeVideoCaps(void);
 #endif
 
 #include "port/pad_layout.h"
@@ -29,6 +37,8 @@ static PortCursorIdle sCursorIdle;
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
+#include "port/gba_border_layout.h"
+#include "port/lcd_grid.h"
 #include "port/port_hd2d.h"
 #include "port/port_hdlayout.h"
 #include "port/port_hdsprites.h"
@@ -86,6 +96,7 @@ void PortWebApplyResize(int w,int h) {
 }
 #endif
 static SDL_Renderer* sRenderer;
+static int sRendererResetPending;
 static SDL_Texture* sTexture;
 static int sTexW, sTexH;
 static jmp_buf sResetJmp;
@@ -122,6 +133,11 @@ static float sLogicFps;      /* game main-loop updates per second */
 static uint32_t sLogicLast;
 static uint64_t sFpsTime;
 static uint32_t sFpsFrames;
+/* Accepted SDL presentation calls, not physical GPU scanout. Timestamp is
+ * sampled immediately after successful RenderPresent; failed calls do not advance. */
+static uint64_t sPresentSerial, sPresentAcceptedAt, sPresentGapTicks;
+static uint64_t sPresentPaceEpoch, sPresentWaitTotal;
+static void PaceBeforePresent(void);
 
 void PortLog(const char* fmt, ...) {
     va_list ap;
@@ -208,17 +224,22 @@ static int sFbW, sFbH;
  * This proves eligibility, not that the user enabled VRR in the driver/monitor.
  * Never infer VRR from refresh rate or GPU brand, or use adaptive VSync (-1). */
 static int VrrPresentEligible(void) {
-#if defined(_WIN32) && !defined(PORT_GBA_RELOC)
-    SDL_PropertiesID properties=SDL_GetRendererProperties(sRenderer);
-    IDXGISwapChain* chain=(IDXGISwapChain*)SDL_GetPointerProperty(properties,
-        SDL_PROP_RENDERER_D3D11_SWAPCHAIN_POINTER,NULL);
-    DXGI_SWAP_CHAIN_DESC desc;
-    if (!chain) chain=(IDXGISwapChain*)SDL_GetPointerProperty(properties,
-        SDL_PROP_RENDERER_D3D12_SWAPCHAIN_POINTER,NULL);
-    if (chain && SUCCEEDED(IDXGISwapChain_GetDesc(chain,&desc)))
-        return desc.Windowed && (desc.Flags & DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING)!=0;
+#if defined(_WIN32) && !defined(PORT_SDL_BRIDGE)
+    return PortWindowsVrrEligible(sRenderer);
+#elif defined(PORT_SDL_BRIDGE)
+    return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP)!=0;
 #endif
     return 0;
+}
+
+int PortVideoVrrOptionAvailable(void) {
+#ifdef PORT_SDL_BRIDGE
+    return (PortBridgeVideoCaps() & BRIDGE_OUTPUT_VRR_CONTROL_CAP)!=0;
+#elif defined(_WIN32)
+    return 1;
+#else
+    return 0;
+#endif
 }
 
 static void ApplyVideoSync(int force) {
@@ -234,7 +255,9 @@ static void ApplyVideoSync(int force) {
         eligible=0; interval=1;
         applied=SDL_SetRenderVSync(sRenderer,interval);
     }
-    cachedRequested=requested; cachedCapability=capability; cachedApplied=applied;
+    /* A successful VSync fallback must not cache a failed VRR attempt as
+       eligible: the periodic capability poll should retry the recovered path. */
+    cachedRequested=requested; cachedCapability=eligible; cachedApplied=applied;
     static int lastRequested=-1,lastInterval=-1,lastEligible=-1,lastApplied=-1;
     if (lastRequested!=requested || lastInterval!=interval || lastEligible!=eligible || lastApplied!=applied) {
         PortLog("video-sync: requested=%d interval=%d applied=%d VRR-path=%s%s",requested,
@@ -407,6 +430,33 @@ static SDL_Rect AspectRect(int outW, int outH) {
     return r;
 }
 
+static int GbaBorderReady(void);
+/* The selected aspect remains the outer frame's shape. All image/UI layers
+ * share this useful viewport, so the frame cannot cover their text. */
+static SDL_Rect ContentArea(int outW, int outH) {
+    SDL_Rect area = AspectRect(outW, outH);
+    int framed = GbaBorderReady();
+    PortGbaBorderArea inside = PortGbaBorderViewport(area.w, area.h, framed);
+    if (framed && gPortConfig.viewMode != PORT_VIEW_AUTO) {
+        int canvasW, canvasH;
+        PortGbaBorderArea picture;
+        /* Config only: UpdateResolution may call this before the previous
+         * frame's gPortScreen/fit/auto state has been replaced. */
+        PortConfigView(gPortConfig.viewMode, &canvasW, &canvasH);
+        picture = PortGbaBorderPictureArea(inside.w, inside.h, canvasW, canvasH,
+                                          gPortConfig.scaleMode == PORT_SCALE_INTEGER);
+        inside.x += picture.x;
+        inside.y += picture.y;
+        inside.w = picture.w;
+        inside.h = picture.h;
+    }
+    area.x += inside.x;
+    area.y += inside.y;
+    area.w = inside.w;
+    area.h = inside.h;
+    return area;
+}
+
 /* A shared integer UI scale: about 216 logical lines at desktop sizes.
    1080p uses x5 (was x6.75), 1440p x6 (was x9). Keep it independent
    of world zoom, and fit small windows without cropping their UI. */
@@ -446,7 +496,7 @@ static void UpdateResolution(void) {
         if (!SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH) || outW <= 0 || outH <= 0)
             return;
         {
-            SDL_Rect area = AspectRect(outW, outH);
+            SDL_Rect area = ContentArea(outW, outH);
             outW = area.w;
             outH = area.h;
         }
@@ -517,12 +567,13 @@ static void UpdateResolution(void) {
 #define BORDER_W 384
 #define BORDER_H 216
 static SDL_Texture* sBorderTex;
+static SDL_Texture* sBorderMaterialTex;
+static SDL_Texture* sBorderAdaptiveTex;
+static SDL_Texture *sLcdGridXTex, *sLcdGridYTex;
+static PortLcdGridKey sLcdGridKey, sLcdGridAttemptKey;
+static int sLcdGridReady, sLcdGridAttempted;
 static int sBorderShown; /* which border sBorderTex holds */
-
-static int ClassicBorder(void) {
-    return gPortConfig.viewMode == PORT_VIEW_ORIGINAL && gPortConfig.gbaBorder >= 1 && gPortConfig.gbaBorder <= 3 &&
-           gPortScreen.width == GBA_SCREEN_W && gPortScreen.height == GBA_SCREEN_H && sFitScale == 0 && sAutoScale == 0;
-}
+static int sBorderAttempted; /* Do not retry a failed selection every frame. */
 
 /* Border 1's sides: six of the game's map cards (illustration over its colour's border), drawn from the ROM. */
 extern const unsigned char gMapCardBorderPalettes[];
@@ -594,42 +645,7 @@ static void BorderMapCards(unsigned char* px, int w, int h) {
     }
 }
 
-static void DrawClassicBorder(const SDL_FRect* picture) {
-    float s = picture->w / GBA_SCREEN_W;
-    SDL_FRect r;
-    if (!ClassicBorder())
-        return;
-    if (!sBorderTex || sBorderShown != gPortConfig.gbaBorder) {
-        int w, h, n, i = gPortConfig.gbaBorder - 1;
-        unsigned char* px = stbi_load_from_memory(kGbaBorders[i], (int)kGbaBorderSizes[i], &w, &h, &n, 4);
-        if (sBorderTex)
-            SDL_DestroyTexture(sBorderTex);
-        sBorderTex = NULL;
-        if (px) {
-            SDL_Surface* surf;
-            if (i == 0)
-                BorderMapCards(px, w, h);
-            surf = SDL_CreateSurfaceFrom(w, h, SDL_PIXELFORMAT_RGBA32, px, w * 4);
-            if (surf) {
-                sBorderTex = SDL_CreateTextureFromSurface(sRenderer, surf);
-                SDL_DestroySurface(surf);
-            }
-            stbi_image_free(px);
-        }
-        if (sBorderTex) {
-            SDL_SetTextureScaleMode(sBorderTex, SDL_SCALEMODE_NEAREST);
-            SDL_SetTextureBlendMode(sBorderTex, SDL_BLENDMODE_BLEND);
-        }
-        sBorderShown = gPortConfig.gbaBorder;
-    }
-    if (!sBorderTex)
-        return;
-    r.x = picture->x - 72 * s;
-    r.y = picture->y - 28 * s;
-    r.w = BORDER_W * s;
-    r.h = BORDER_H * s;
-    SDL_RenderTexture(sRenderer, sBorderTex, NULL, &r);
-}
+#include "port_gba_border.inc"
 
 /* the CRT view's exact scale (#202): x and y pixels per canvas pixel */
 static void CrtScale(int* sx, int* sy) {
@@ -642,8 +658,9 @@ static void CrtScale(int* sx, int* sy) {
 static void OutputRect(int outW, int outH, SDL_FRect* dst) {
     float sw = (float)gPortScreen.width, sh = (float)gPortScreen.height;
     float scale;
+    int framed = GbaBorderReady();
 
-    if (gPortConfig.viewMode == PORT_VIEW_CRT) { /* exactly that scale, centred: no fit, no zoom */
+    if (gPortConfig.viewMode == PORT_VIEW_CRT && !framed) { /* exactly that scale, centred: no fit, no zoom */
         int sx, sy;
         CrtScale(&sx, &sy);
         dst->w = sw * sx;
@@ -653,18 +670,10 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
         return;
     }
 
-    if (ClassicBorder() && outW >= BORDER_W && outH >= BORDER_H) {
-        scale = (float)(int)SDL_min(outW / (float)BORDER_W, outH / (float)BORDER_H);
+    if (sFitScale > 0) {
+        scale = framed ? SDL_min(sFitScale, SDL_min(outW / sw, outH / sh)) : (float)sFitScale;
         dst->w = sw * scale;
         dst->h = sh * scale;
-        dst->x = (float)(int)((outW - BORDER_W * scale) / 2 + 72 * scale);
-        dst->y = (float)(int)((outH - BORDER_H * scale) / 2 + 28 * scale);
-        return;
-    }
-
-    if (sFitScale > 0) {
-        dst->w = sw * sFitScale;
-        dst->h = sh * sFitScale;
         dst->x = (float)(int)((outW - dst->w) / 2);
         dst->y = (float)(int)((outH - dst->h) / 2);
         return;
@@ -674,8 +683,9 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
            may overhang the window by < 1 pixel */
         extern float gPortAutoScaleF;
         float f = gPortAutoScaleF > 0 ? gPortAutoScaleF : (float)sAutoScale;
-        dst->w = SDL_roundf(sw * f);
-        dst->h = SDL_roundf(sh * f);
+        if (framed) f = SDL_min(f, SDL_min(outW / sw, outH / sh));
+        dst->w = framed ? sw * f : SDL_roundf(sw * f);
+        dst->h = framed ? sh * f : SDL_roundf(sh * f);
         dst->x = (float)((outW - (int)dst->w) / 2);
         dst->y = (float)((outH - (int)dst->h) / 2);
         return;
@@ -683,6 +693,10 @@ static void OutputRect(int outW, int outH, SDL_FRect* dst) {
 
     switch (gPortConfig.scaleMode) {
         case PORT_SCALE_STRETCH:
+            if (framed) {
+                scale = SDL_min(outW / sw, outH / sh);
+                break; /* A frame never changes the source pixel proportions. */
+            }
             dst->x = 0;
             dst->y = 0;
             dst->w = (float)outW;
@@ -728,6 +742,8 @@ static void DrawScanlines(const SDL_FRect* dst, int outW) {
     SDL_RenderFillRects(sRenderer, rects, n);
 }
 
+
+#include "port_lcd_grid.inc"
 
 void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float originY, float scale);
 
@@ -1691,13 +1707,12 @@ static int HdMenuAllocations(void) {
 
 /* Device-loss recovery runs only between renderer passes. Pending detach keeps
    presentation suppressed until the previous target can be released safely. */
-static int sRendererResetPending;
 static uint64_t sRendererGeneration;
 static int RendererResetService(void) {
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
     if (!sRendererResetPending) return 1;
     SDL_Texture** textures[] = { &sTexture, &sMainOverTexture, &sOverlayTex, &sScreenOverTex, &sWorldLight.texture,
-        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBlurTex, &sSkipTexture,
+        &sHudTexture, &sHudOverTexture, &sBorderTex, &sBorderMaterialTex, &sBorderAdaptiveTex, &sLcdGridXTex, &sLcdGridYTex, &sBlurTex, &sSkipTexture,
         &sHd2dTex, &sMenuAlpha, &sSampleTex, &sNoticeTex,
         &sMenuSideTex[0], &sMenuSideTex[1], &sFadeSideTex[0], &sFadeSideTex[1] };
     unsigned i;
@@ -1711,6 +1726,8 @@ static int RendererResetService(void) {
     sWorldLight.width = sWorldLight.height = sWorldLight.failed = 0;
     sWorldLight.blockedWidth = sWorldLight.blockedHeight = 0;
     sHudTexW = sHudTexH = sHudOverW = sHudOverH = sBorderShown = 0;
+    sBorderAttempted = 0;
+    sLcdGridReady = sLcdGridAttempted = 0;
     sSkipBufW = sSkipBufH = sHd2dW = sHd2dH = sMenuAlphaW = sMenuAlphaH = 0;
     for (i = 0; i < 2; i++) sMenuSideW[i] = sFadeSideW[i] = 0;
     PortHdHudInvalidate();
@@ -1811,16 +1828,20 @@ static void PrepareHudAfterOptions(int menuCanvas) {
 }
 
 
-static void Present(void) {
+static void Present(int paced) {
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
     uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
+    uint64_t hdProfileWaitStart = sPresentWaitTotal;
     int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
     SDL_FRect dst, normal;
+    SDL_Rect borderOuter = { 0, 0, 0, 0 }, contentArea = { 0, 0, 0, 0 };
+    int borderOn = 0;
     uint32_t uniform = 0;
     float worldX, worldY, worldScale;
+    float lcdSourceW = (float)gPortScreen.width, lcdSourceH = (float)gPortScreen.height;
     int moviePrompt;
     /* Snapshot the phase before PortUiDraw advances the fade: canvas, game
      * layers and presentation must all use the same phase for this frame. */
@@ -1876,7 +1897,10 @@ static void Present(void) {
     {
         /* Aspect ratio option: draw into the chosen rectangle; the rest of
            the window stays black */
-        SDL_Rect area = AspectRect(outW, outH);
+        SDL_Rect area = ContentArea(outW, outH);
+        borderOuter = AspectRect(outW, outH);
+        contentArea = area;
+        borderOn = GbaBorderReady();
         SDL_SetRenderViewport(sRenderer, area.x || area.y || area.w != outW || area.h != outH ? &area : NULL);
         outW = area.w;
         outH = area.h;
@@ -1890,6 +1914,7 @@ static void Present(void) {
                       : sSideStyle == 10 ? SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                                          : MenuScale(outW, outH);
         scale = PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, scale);
+        if (borderOn) scale = SDL_min(scale, SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H));
         dst.w = GBA_SCREEN_W * scale;
         dst.h = GBA_SCREEN_H * scale;
         dst.x = (float)(int)((outW - dst.w) / 2);
@@ -2004,10 +2029,10 @@ static void Present(void) {
                 }
             }
             sBandGround = n ? colors[best] : 0;
-            if (journalShown && sSideStyle == 12) pageExpanded = RepairJiminyPageMargin(&src,&dst,outW);
+            if (journalShown) pageExpanded = RepairJiminyPageMargin(&src,&dst,outW);
             DrawEdgeBands(&src, &dst, outW, 6,
-                journalShown && sSideStyle == 12 ? 16 : GBA_SCREEN_H,
-                journalShown && sSideStyle == 12 ? 20 : GBA_SCREEN_H);
+                journalShown ? 16 : GBA_SCREEN_H,
+                journalShown ? 20 : GBA_SCREEN_H);
             sBandGround = 0;
             /* the frame's top and bottom bars run the whole width: where a
                panel covers one end on the GBA (the journal's notebook over
@@ -2019,7 +2044,7 @@ static void Present(void) {
                     const uint32_t* row = &sComposite[((int)src.y + yy) * gPortScreen.width + (int)src.x];
                     uint32_t lc = row[0], rc = row[GBA_SCREEN_W - 1];
                     int lrun = 0, rrun = 0;
-                    if (journalShown && sSideStyle == 12 && yy >= 16) continue;
+                    if (journalShown && yy >= 16) continue;
                     if (yy >= 24 && yy < GBA_SCREEN_H - 24)
                         continue;
                     for (k = 0; k < 120 && row[k] == lc; k++) lrun++;
@@ -2079,6 +2104,7 @@ static void Present(void) {
             for (i = 0; i < 4; i++) if (margins[i].w > 0 && margins[i].h > 0)
                 SDL_RenderFillRect(sRenderer, &margins[i]);
         }
+        lcdSourceW = src.w; lcdSourceH = src.h;
         worldScale = scale;
         worldX = dst.x - src.x * scale;
         worldY = dst.y - src.y * scale;
@@ -2117,7 +2143,6 @@ static void Present(void) {
                                    GBA_SCREEN_W, GBA_SCREEN_H };
             DrawBlurredReflection(&backdrop, outW, outH);
         }
-        DrawClassicBorder(&dst);
         {
             /* the Options panel's HD picture under its canvas, which leaves it clear (port_ui.c): the canvas then goes
                up with its alpha, in a texture of its own (the frame's has none) */
@@ -2394,6 +2419,10 @@ static void Present(void) {
         PortUiJournalFooter(sRenderer, outW, journalLayout.footerY, journalLayout.footerHeight,
                              journalLayout.scale, sSideStyle == 12, dark, white);
     }
+    if (gPortConfig.lcdGrid > 0)
+        DrawLcdGrid(outW, outH, worldX, worldY, dst.w / lcdSourceW, dst.h / lcdSourceH);
+    else
+        sLcdGridAttempted = 0;
     {
         /* state / slot notices: topmost, at the window's scale */
         static uint32_t sNoticeBuf[256 * 14];
@@ -2424,6 +2453,21 @@ static void Present(void) {
         }
     }
     SDL_SetRenderViewport(sRenderer, NULL);
+    if (borderOn) {
+        PortGbaBorderRect aperture = { (float)(contentArea.x - borderOuter.x),
+            (float)(contentArea.y - borderOuter.y), (float)contentArea.w, (float)contentArea.h };
+        /* Fixed views share the picture-sized viewport above. Auto's
+         * extended UI/paper/footer layers may genuinely fill its canvas. */
+        if (!menuCanvas && !journalShown && !PortPpuHudActive() && !PortPpuOverlayActive()) {
+            aperture.x += dst.x;
+            aperture.y += dst.y;
+            aperture.w = dst.w;
+            aperture.h = dst.h;
+        }
+        SDL_SetRenderViewport(sRenderer, &borderOuter);
+        DrawGbaBorder(borderOuter.w, borderOuter.h, &aperture);
+        SDL_SetRenderViewport(sRenderer, NULL);
+    }
     {
         int fullW = 0, fullH = 0;
         SDL_GetCurrentRenderOutputSize(sRenderer, &fullW, &fullH);
@@ -2505,9 +2549,6 @@ static void Present(void) {
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(PORT_ANDROID64) || defined(PORT_TOUCH)
     PortAndroidTouchDraw(sRenderer);
 #endif
-#ifdef PORT_LINUX
-    PortFbPresent(sRenderer);
-#endif
     {
         /* KHCOM_PRESENTSHOTS=a-b[/step] (harness): the window as shown, frames a..b (present_<frame>.bmp) */
         const char* range = SDL_getenv("KHCOM_PRESENTSHOTS");
@@ -2525,11 +2566,25 @@ static void Present(void) {
     }
     {
         extern void PortSceneGalleryPreviewPresented(int accepted);
-        PortSceneGalleryPreviewPresented(SDL_RenderPresent(sRenderer));
+        /* Finish rendering first, then submit the image on its fixed deadline.
+           Sleeping only afterwards let variable draw cost become image jitter. */
+        if (paced) PaceBeforePresent();
+#ifdef PORT_LINUX
+        PortFbPresent(sRenderer);
+#endif
+        int presented=SDL_RenderPresent(sRenderer);
+        if (presented) {
+            uint64_t acceptedAt = SDL_GetPerformanceCounter();
+            sPresentGapTicks = sPresentSerial ? acceptedAt - sPresentAcceptedAt : 0;
+            sPresentAcceptedAt = acceptedAt;
+            sPresentSerial++;
+            sFpsFrames++;
+        }
+        PortSceneGalleryPreviewPresented(presented);
     }
     if (hdProfile)
         PortLog("hd-menu-perf: frame=%u menu=%d ms=%.3f alloc_delta=%d allocations=%d", (unsigned)sFrameCount,
-                menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart) * 1000.0 / SDL_GetPerformanceFrequency(),
+                menuCanvas, (SDL_GetPerformanceCounter() - hdProfileStart - (sPresentWaitTotal - hdProfileWaitStart)) * 1000.0 / SDL_GetPerformanceFrequency(),
                 hdProfileAlloc >= 0 ? HdMenuAllocations() - hdProfileAlloc : -1, HdMenuAllocations());
 }
 
@@ -2694,7 +2749,7 @@ static uint16_t HarnessKeys(uint32_t frame) {
     return keys;
 }
 
-static void Present(void);
+static void Present(int paced);
 
 /* the window's renderer, for what draws outside the game's frame (port_hdmovie.c) */
 SDL_Renderer* PortRenderer(void) {
@@ -2862,7 +2917,7 @@ static void HarnessFrame(void) {
         PortUiOpenOptions();
         UpdateResolution(); /* as the menu's own loop does */
         PortPpuRenderFrame();
-        Present();
+        Present(1);
         s = SDL_CreateSurfaceFrom(gPortScreen.width, gPortScreen.height, SDL_PIXELFORMAT_XRGB8888, sComposite,
                                   gPortScreen.width * 4);
         if (s) {
@@ -2931,6 +2986,9 @@ static void Quit(void) {
     PortHdHudShutdown();
     PortHdSpritesShutdown();
     PortHdLayoutShutdown();
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+    PortAndroidLifecycleStop();
+#endif
     SDL_Quit();
     exit(gPortExitCode);
 }
@@ -3022,28 +3080,37 @@ static void PumpEvents(void) {
 #endif
 }
 
-/* The frame timer always paces the game; vsync only removes tearing. On a
-   display within ~1.5 Hz of the GBA's rate the game follows the display so
-   every refresh shows exactly one frame (audio is resampled to match). */
-static void Pace(void) {
+/* Keep the original GBA simulation clock. Present calls are counted where
+   they actually occur; a skipped draw is not a displayed game frame. */
+void PortFpsResetAfterStateLoad(void) {
+    extern volatile uint32_t gFrameCounter;
+    sLogicLast = gFrameCounter;
+    sFpsTime = SDL_GetPerformanceCounter();
+    sFpsFrames = 0;
+}
+
+static uint64_t AdvanceFrameDeadline(void) {
 #ifdef __EMSCRIPTEN__
     int yielded = 0;
 #endif
     uint64_t now = SDL_GetPerformanceCounter();
+    uint64_t begin = now;
     double hz = GBA_FPS;
     uint64_t period;
 
     if (SDL_getenv("KHCOM_FAST")) {
         sNextFrame = 0;
-        return;
+        return 0;
     }
     sPacedByVsync = 0;
     period = (uint64_t)(sPerfFreq / hz);
 
     /* Exact GBA rate (59.7275 Hz) whatever the display does: sleep most of
        the wait, then spin for the last fraction of a millisecond. */
-    if (sNextFrame == 0 || now > sNextFrame + period * 4)
+    if (sNextFrame == 0)
         sNextFrame = now;
+    else if (now > sNextFrame + period * 4)
+        sNextFrame = now - period; /* resume now, without another full-frame stall */
     sNextFrame += period;
     while ((now = SDL_GetPerformanceCounter()) < sNextFrame) {
         uint64_t leftNs = (sNextFrame - now) * 1000000000ull / sPerfFreq;
@@ -3060,8 +3127,26 @@ static void Pace(void) {
 #ifdef __EMSCRIPTEN__
     /* Always yield, even when rendering took longer than the frame budget. */
     if (!yielded) emscripten_sleep(0);
+    now = SDL_GetPerformanceCounter();
 #endif
-    sFpsFrames++;
+    return now - begin;
+}
+
+static void PaceBeforePresent(void) {
+    sPresentWaitTotal += AdvanceFrameDeadline();
+    sPresentPaceEpoch++;
+}
+
+static void Pace(int idleAdvance) {
+    static uint64_t consumedPresentEpoch;
+    uint64_t now;
+    /* A presented attempt already consumed its deadline, including failed
+       renderer calls. A skipped draw still advances the simulation clock. */
+    if (idleAdvance && consumedPresentEpoch == sPresentPaceEpoch)
+        (void)AdvanceFrameDeadline();
+    consumedPresentEpoch = sPresentPaceEpoch;
+    if (SDL_getenv("KHCOM_FAST")) return;
+    now = SDL_GetPerformanceCounter();
     if (now - sFpsTime >= sPerfFreq) {
         extern volatile uint32_t gFrameCounter; /* main-loop updates (main.c) */
         uint32_t logic = gFrameCounter;
@@ -3179,6 +3264,9 @@ static void TimingLine(int skip, uint64_t cycleStart, uint64_t workEnd) {
 
 static void VBlankCycle(void) {
     uint64_t cycleStart = SDL_GetPerformanceCounter();
+    uint64_t presentSerialStart = sPresentSerial;
+    uint64_t presentPaceStart = sPresentPaceEpoch;
+    uint64_t presentWaitStart = sPresentWaitTotal;
     const char* frameLogPath = SDL_getenv("KHCOM_FRAMELOG");
     uint64_t frameLogStart = frameLogPath ? SDL_GetPerformanceCounter() : 0;
     uint64_t frameLogWork = 0;
@@ -3239,30 +3327,35 @@ static void VBlankCycle(void) {
     {
         /* KHCOM_PROFILE: mean PPU and present time every 240 frames */
         static uint64_t ppuSum, presSum;
-        static int n;
+        static int n, drawn;
         uint64_t p0 = SDL_GetPerformanceCounter();
+        uint64_t waitStart = sPresentWaitTotal, waited;
         if (!skip)
-            Present();
-        sPresentTicks = SDL_GetPerformanceCounter() - p0;
+            Present(1);
+        waited = sPresentWaitTotal - waitStart;
+        sPresentTicks = SDL_GetPerformanceCounter() - p0 - waited;
         {
             extern void PortMenuLatch(void);
             PortMenuLatch(); /* this frame's menu sprites show from the next one */
         }
         if (SDL_getenv("KHCOM_PROFILE")) {
-            presSum += SDL_GetPerformanceCounter() - p0;
-            ppuSum += sPpuTicks;
+            if (!skip) {
+                presSum += SDL_GetPerformanceCounter() - p0 - waited;
+                ppuSum += sPpuTicks;
+                drawn++;
+            }
             if (++n == 240) {
-                double f = 1000.0 / SDL_GetPerformanceFrequency() / n;
+                double f = 1000.0 / SDL_GetPerformanceFrequency() / (drawn ? drawn : 1);
                 extern void PortPpuTakeStats(int out[5]);
                 int st[5] = { 0 };
 #ifdef PORT_PPU_THREADS
                 PortPpuTakeStats(st);
 #endif
                 PortLog("profile: canvas %dx%d ppu %.2f ms present %.2f ms | outer rows multi-core %d (iso floor %d), one core: "
-                        "mosaic %d header %d small %d", gPortScreen.width, gPortScreen.height, ppuSum * f, presSum * f,
-                        st[0], st[1], st[2], st[3], st[4]);
+                        "mosaic %d header %d small %d | drawn %d of %d", gPortScreen.width, gPortScreen.height, ppuSum * f, presSum * f,
+                        st[0], st[1], st[2], st[3], st[4], drawn, n);
                 ppuSum = presSum = 0;
-                n = 0;
+                n = drawn = 0;
             }
         }
     }
@@ -3293,12 +3386,12 @@ static void VBlankCycle(void) {
         UpdateResolution();
         if (w != gPortScreen.width || h != gPortScreen.height)
             PortPpuRenderFrame();
-        Present();
+        Present(1);
         PumpEvents();
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
         while (sAndroidBackground) { SDL_Delay(50); PumpEvents(); }
 #endif
-        Pace();
+        Pace(1);
         /* Harness: with KHCOM_VPAD the menu frames count too, so the
            virtual pad can drive the overlay and KHCOM_RECORD films it. */
         if (SDL_getenv("KHCOM_VPAD")) {
@@ -3320,9 +3413,11 @@ static void VBlankCycle(void) {
         extern int gPortInMainLoop;
         PortRollbackBoundary(gPortInMainLoop); /* the network link: a wrong guess taken back, this frame kept */
     }
-    if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter();
-    TimingLine(skip, cycleStart, SDL_GetPerformanceCounter());
-    Pace();
+    if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart);
+    TimingLine(skip, cycleStart, SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart));
+    /* Closing a menu already consumed its image deadlines in that loop.
+       Only an entirely unpresented cycle needs an additional clock tick. */
+    Pace(sPresentPaceEpoch == presentPaceStart);
     sCycleEnd = SDL_GetPerformanceCounter();
 
     if (++sFrameCount % 60 == 0)
@@ -3338,7 +3433,7 @@ static void VBlankCycle(void) {
             frameLog = fopen(frameLogPath, "w");
             gPortStutter.on = 1;
             if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
-                                            "hd_loads,hd_load_ms,glyphs,glyph_ms\n");
+                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped\n");
         }
         {
             /* the deep view of each frame: logic_ms is the time from the end of the previous frame's log to this
@@ -3352,10 +3447,12 @@ static void VBlankCycle(void) {
             double ppu = skip ? 0 : sPpuTicks * ms, present = skip ? 0 : sPresentTicks * ms;
             const char* limit = SDL_getenv("KHCOM_STUTTER");
             if (frameLog && previous)
-                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f\n", (unsigned)sFrameCount,
+                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d\n", (unsigned)sFrameCount,
                         interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
                         (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
-                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms);
+                        (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms,
+                        sPresentSerial != presentSerialStart,
+                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip);
             if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
                         "decode %.1f, upload %.1f; slowest %s %.1f ms), glyphs %u (%.1f ms)", (unsigned)sFrameCount,
@@ -3396,7 +3493,14 @@ static void VBlankCycle(void) {
 /* The network link's lockstep (src/sio/sio.c): while the other player's packet for this link frame is on its way the
    game waits inside the frame; the last picture stays on screen (with the waiting notice) and the window answers. */
 void PortLinkIdle(void) {
-    Present();
+    static uint64_t nextRefresh;
+    uint64_t now = SDL_GetPerformanceCounter();
+    /* Poll network/input every millisecond as before. Refreshing the waiting
+       image must not block the next NetReceive on a presentation deadline. */
+    if (!nextRefresh || now >= nextRefresh || SDL_getenv("KHCOM_FAST")) {
+        nextRefresh = now + (uint64_t)(sPerfFreq / GBA_FPS);
+        Present(0);
+    }
     PumpEvents();
     SDL_Delay(1);
 }
@@ -3570,6 +3674,10 @@ int main(int argc, char** argv) {
 #endif
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD | SDL_INIT_EVENTS))
         PortFatal("SDL_Init failed: %s", SDL_GetError());
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+    if (!PortAndroidLifecycleStart())
+        PortLog("Android lifecycle watch: %s", SDL_GetError());
+#endif
     PortConfigLoad();
 #ifdef _WIN32
     PortWindowsPerformance();
@@ -3652,8 +3760,12 @@ int main(int argc, char** argv) {
     sPerfFreq = SDL_GetPerformanceFrequency();
     sFpsTime = SDL_GetPerformanceCounter();
 
-    if (!PortRomLoad())
+    if (!PortRomLoad()) {
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+        PortAndroidLifecycleStop();
+#endif
         return 1;
+    }
     PortUndubApply();
     PortSramLoad();
     PortInputInit();
@@ -3668,7 +3780,7 @@ int main(int argc, char** argv) {
         SDL_FRect at;
         uint64_t start = SDL_GetPerformanceCounter();
         SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
-        SDL_Rect area = AspectRect(w, h);
+        SDL_Rect area = ContentArea(w, h);
         UpdateResolution();
         OutputRect(area.w, area.h, &at);
         float uiScale = at.w / gPortScreen.width;
@@ -3690,7 +3802,7 @@ int main(int argc, char** argv) {
         SDL_FRect at;
         uint64_t start = SDL_GetPerformanceCounter();
         SDL_GetCurrentRenderOutputSize(sRenderer, &w, &h);
-        SDL_Rect area = AspectRect(w, h);
+        SDL_Rect area = ContentArea(w, h);
         UpdateResolution();
         OutputRect(area.w, area.h, &at);
         PortHdTextWarmGame(sRenderer, at.w / gPortScreen.width, MenuScale(area.w, area.h));

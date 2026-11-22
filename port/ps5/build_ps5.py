@@ -40,7 +40,7 @@ PORT_PATCHES = {
                   ('static const char* const sTitleHint[LANG_COUNT]', '};', 'SELECT  ', 'TOUCH  '),
                   # the MMPX 3.2 filter: a row above Scanlines, off / on / on without edge blending (gPortMmpx, saved as mmpx=)
                   ('#include "port/port_ui.h"\n', '#include "port/port_ui.h"\nextern int gPortMmpx;\n'),
-                  ('    ITEM_SCANLINES,\n    ITEM_LCD,', '    ITEM_MMPX,\n    ITEM_SCANLINES,\n    ITEM_LCD,'),
+                  ('    ITEM_SCANLINES,\n', '    ITEM_MMPX,\n    ITEM_SCANLINES,\n'),
                   ('    { "Scanlines", "Lignes de balayage",',
                    '    { "MMPX 3.2 filter", "Filtre MMPX 3.2", "MMPX-3.2-Filter", "Filtro MMPX 3.2", "Filtro MMPX 3.2", "MMPX 3.2フィルター" },\n'
                    '    { "Scanlines", "Lignes de balayage",'),
@@ -176,12 +176,15 @@ def build_guest(region, jobs):
         if src.name in PORT_PATCHES:
             # the 64-bit Linux image (port/linux64) has a PC pad: no DualSense patches
             src = patched_source(src, out / 'patched', dualsense=os.environ.get('REKHCOM_GUEST_DUALSENSE', '1') != '0')
-        units.append((src, out / 'port' / (src.stem + '.o'), port_flags))
+        extra = ['-DPORT_PPU_THREADS','-femulated-tls'] if src.name in ('port_ppu.c','port_main.c') and os.environ.get('REKHCOM_GUEST_LINUX64') else []
+        units.append((src, out / 'port' / (src.stem + '.o'), [*port_flags,*extra]))
     units.append((pc / 'rom_relocs.c', out / 'port/rom_relocs.o', port_flags))
     for src in sorted((HERE / 'guest/src').glob('*.c')):
-        units.append((src, out / 'ps5' / (src.stem + '.o'), port_flags))
+        extra = ['-femulated-tls'] if src.name == 'threads_x32.c' else []
+        units.append((src, out / 'ps5' / (src.stem + '.o'), [*port_flags,*extra]))
     for src in (out / 'rom_symbols.S', out / 'fixed_symbols.S', HERE / 'guest/src/crt0.S'):
-        units.append((src, out / 'asm' / (src.stem + '.o'), [TARGET, '-c']))
+        extra = ['-DPORT_LINUX64_GUEST'] if os.environ.get('REKHCOM_GUEST_LINUX64') else []
+        units.append((src, out / 'asm' / (src.stem + '.o'), [TARGET, '-c',*extra]))
     compile_all(jobs, units)
     objects = [u[1] for u in units]
     elf = out / 'guest.elf'

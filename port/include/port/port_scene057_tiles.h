@@ -11,6 +11,13 @@
 static inline int PortScene057TileSource(int bg, int* x, int* y) {
     if (bg != 2 && bg != 3)
         return 0;
+    /* The unique vine reaches the top of the native map. Do not copy a
+     * partial window/cap into the padding immediately above it: keep BG3's
+     * complete wood planks visible. This sampler runs outside GBA only. */
+    if (bg == 2 && *x >= 20 && *x < 28 && *y >= -8 && *y < 0) {
+        *x = 0; *y = 0;
+        return 1;
+    }
     /* Counterpart to the authored left-hand window step. Keep the short
      * panel beside the vine, then raise its cap toward the right. These
      * strips share 2*y+x with their donors; no global slope is reversed.

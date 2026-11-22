@@ -21,5 +21,6 @@ static inline uint16_t* PortOamSlot(uint16_t* native, uint16_t* extra, int slot)
 
 uint16_t* PortOamPartBuffer(int slot);
 void PortOamTagsReset(void);
+void PortSpriteEventShadowOwner(int role);
 
 #endif

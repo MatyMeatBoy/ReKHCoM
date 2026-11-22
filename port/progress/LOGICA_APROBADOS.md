@@ -565,6 +565,18 @@ píxeles ROM alterados. Captura runtime pendiente del turno de RAM del usuario;
 cuando se autorice: SDL controller `0xffff/0xffff`, vídeo/audio dummy, PPU=1,
 BACKGROUND_TEST=1 y Ninja `-j1` en serie.
 
+### Darkside06 — flanco y difuminado local, seguimiento06/11
+
+La versión r8 `60f90456598249ecb1e691c51dd2434e` está aceptada en Atlas,
+revisión2, y su nube `72f6d65b-36e4-47b2-8f2c-d94a9f2ec26d` aún pide dibujo
+y difuminado lateral. El intento posterior en peine no es un modelo válido.
+Proponer una sombra curva estrecha, adherida al torso, sin otro lóbulo/pie
+iluminado:211píxeles, ancho máximo8, índices vivos1..4. No alterar el taper
+nativo desde y180 ni los1842píxeles del brazo aprobado. La difusión sólo
+afecta al píxel fraccional del contorno; ninguna fila añadida deja islotes.
+Propuesta independiente opt-in y pending, sin aprobación heredada; no implica
+cuerpo terminado ni animación/QA real. Ver `DARKSIDE06_FLANK_NOBUILD.md`.
+
 ### Escena099: módulo lateral de la arena (25/10)
 
 Envío `20261025-125411-7d1750`: seguir en los márgenes el mismo módulo completo de papel rosa de56px de la arena. No reflejar fragmentos de postes ni sustituir la pared lejana por un color plano. Postes de arriba continuos en sus x y travesaños rectos; conservar suelo y chimenea únicos.
@@ -677,13 +689,156 @@ La nueva extensión130 se activa en el listado normal de aceptadas, manteniendo
 su apagado explícito para comparación y el modo Original. Preparación para
 una futura pre2.8.5: sin compilación ni nuevo runtime por instrucción humana.
 
-### Oogie: remates posteriores, propuesta sin build
+### Escena095: revisión posterior del patrón A, propuesta sin build
 
-La revisión5 de `f3a2a2d29bdd45b5b040a9cca851edb4` conserva la arena y pide
-completar sólo media máscara, punta del fantasma y franja hacia los extremos.
-Los contornos anteriores no son modelo final de esas dos siluetas: la mandíbula
-izquierda necesita su continuidad y hueco; la punta exterior no debe cortarse.
-Las ocho filas400..407 son una franja horizontal nativa con tramos exteriores limpios, no
-parte de la figura: continuarlas con su índice vivo hacia los bordes en vez de
-cortarlas en el antiguo cap de32píxeles. Conservar cuarto, camino rojo y planos
-verdes. Nueva imagen etiquetada simulación sin build; falta valoración/runtime.
+La valoración `ab3444223b854341afa9ae521a0d2860` revisión5 marca como A el
+tramo nativo oscuro junto al trono y pide repetirlo en toda la derecha. La
+regla anterior de copiar el frente floral izquierdo conserva altura, pero no
+es modelo válido de textura/sombra para este nuevo pedido. Propuesta: usar la
+cara derecha original x448..479 con2y-x constante entre-96y16; mantener remate,
+base, lado izquierdo y props únicos. No recolorear el donante de otro plano.
+La imagen nueva se etiqueta simulación sobre captura previa, sin build; su
+aprobación y runtime siguen pendientes. Ver `ATLAS_SCENE095_PATTERN_A.md`.
+
+### Escena095: árbol del inicio completo, seguimiento06/11
+
+La aceptación de `e78f689cba2e46548b67cff57c10f444` revisión2 conserva el
+patrón A y pide comprobar que el árbol inicial no quede por mitades. Su copa
+inferior y tronco BG1 llegan hasta la fila382; el reflejo de la costura
+izquierda terminaba en351. Extender solamente ese mismo donante hasta383,
+manteniendo x=-16..-1, completa248píxeles opacos originales. No repetir todo
+BG1 ni tocar el mapa nativo, otros árboles, actores o el patrón A. La nueva
+hija es un estudio de receta antes/propuesta SIN BUILD, pendiente propio;
+no hereda aprobación. Ver `ATLAS_SCENE095_TREE.md`.
+
+### Escena115: detalles posteriores a la aceptación, revisión4
+
+Los tres recortes requieren alinear la frontera de madera limpia con el fin
+de BG2 (diagonal32), completar la punta que cae en relleno transparente del
+mapa y omitir una escotilla cuyo resto interior no existe. Un sello puede
+cruzar el borde del mapa sin que su punta quede fuera: conservar identidad de
+todo el mapa dejaba ese extremo sin dibujar. La excepción sólo se aplica al
+muestreo exterior al cuadro GBA y no borra tinta original de BG2. Propuesta
+sin build; no dar por validadas otras cámaras o plataformas con la simulación.
+### 081: negro bajo la cueva, seguimiento posterior a aprobación
+
+La nube0dda90ce sobre0bac2ac1rev2 pide ocultar el arco flotante que se había
+conservado por ser original. Su origen es Platform03, separado del fondo. La
+propuesta omite sólo ese banco decorativo y sólo sobre el sector vacío inferior
+del remate, fuera del viewport GBA. Conservar actores, resto de decoración,
+paleta/fundidos y todas las escenas hermanas. La aprobación anterior no da
+por aprobado este recorte: estudio sin build, pendiente de runtime y valoración.
+### Biblioteca130: bajar la banda completa del muro
+
+La nube384e2436 y el trazo071834f9 sobre dbe9d6b9 revisión3 solicitan que el
+zócalo continúe a la izquierda del remate completo. La banda ornamental
+592<=2*y+x<624 debe elegirse antes de la alfombra, que empieza desde592.
+Para x<24 prolongar el módulo nativo64px con la misma diagonal; conservar
+la excepción aprobada de476píxeles y todos los píxeles ya autorados. No basta
+que la librería continúe si su base desaparece al resolver el suelo. Esta
+propuesta es un estudio sin build y no hereda la aceptación del padre.
+### Escena057: unión sobre la enredadera, revisión2 posterior a aceptación
+
+La nube «mejorar» está sobre la copia incompleta de ventana/cornisa encima de
+la enredadera única. Propuesta: dejar la madera existente de BG3 en ese relleno
+superior, suprimiendo únicamente BG2 x20..27/y-8..-1. Conservar todos los píxeles
+de y0 en adelante y el ritmo derecho desde x28. Es una interpretación visual
+acotada, no una orden de inventar otra ventana. Estudio sin build pendiente de
+valoración y ejecución real; no hereda aceptación de la versión anterior.
+### Agrabah107/108: continuación superior y escalón, revisión4
+
+El sampler superior existente debe estar activo en la ruta normal de Agrabah,
+no depender del flag de preview general: las pilastras conservan sus columnas
+y la ventana cortada toma su contraparte completa(-8columnas,+4filas). El
+pequeño escalón señalado usa la traslación BG2(-32,-16) en x496..511/y288..303,
+incluyendo su gate de corridas; el BG3 del techo/calle aceptados no se cambia.
+Todas estas selecciones siguen fuera del cuadro GBA. La simulación responde
+a las tres nubes sin afirmar nueva cámara o ejecución del juego. Pendiente
+de valoración propia y QA real; no hereda la aceptación del padre.
+### Diario: footer y esquinas, estudio posterior a367 revisión5
+
+El exterior izquierdo del papel no hereda propiedad de una franja entera:
+capturar sólo las tres columnas de BG1 opaco presentadas y conservar los
+píxeles de objetos, BG0, blends o edición posterior. Su verde viene de la
+misma fila presentada. El extremo derecho necesita una curva exterior e
+interior con grosor consistente, no un corte diagonal de cuatro escalones.
+Al escalar fraccionalmente, el índice de color debe invertir exactamente la
+regla de medio píxel de `PixelEdge`; el centro geométrico sigue siendo continuo.
+La propuesta conserva ABI20 y agrupa áreas planas. El estudio controlado
+explica las cuatro nubes, pero no prueba las máscaras del frame humano ni
+autoriza afirmar que el footer del juego ya pasó QA. Sin build; pendiente.
+
+
+## Valoraciones06/11: siete versiones aceptadas, sin build
+
+Ver ATLAS_ACCEPTED_20261106.md para IDs/revisiones exactas. 057 y107/108 no
+tienen nuevas notas; conservar sus recetas. 095 aún pide verificar el árbol
+al inicio;115 pide prolongar las diagonales a ambos lados;081 pide mejorar
+dos patrones;130 pide ahora continuación hacia la derecha. Pepito acepta el
+estudio anterior pero pide llenar hasta la izquierda. Estas notas corrigen
+el alcance de lo que puede tomarse como modelo: no darlas por resueltas al
+integrar la versión aceptada ni heredar su grado a una nueva hija. Sin nueva
+compilación o captura, la verificación real del compositor sigue pendiente.
+### Diario/Pepito: relleno hasta la izquierda, nueva nube del06/11
+
+Limpiar tres columnas nativas no garantiza que el margen exterior haya tomado
+el mismo verde: también debe rellenarse desde x0 del viewport hasta el borde
+nativo con el fondo presentado de cada fila. Conservar las máscaras dentro
+de la imagen y dibujar encabezado/rótulos después. La recuperación de un dibujo
+rechazado debe limpiar ambos márgenes para no dejar una reparación parcial.
+La nube se interpreta como extender el verde, sin ensanchar el papel blanco.
+Estudio nuevo del renderer, no captura o máscara real; valoración y QA pendientes.
+
+### Biblioteca130, seguimiento del06/11: friso derecho
+
+La aceptación con honores del friso izquierdo no termina el lado derecho:
+nube13f12aa1 pide prolongarlo también allí. Conservar su diagonal propia
+2y-x en112..143 y resolver antes de la alfombra, con módulo completo de64px
+del mismo plano. Retener toda tinta autorada y el remate476. Propuesta nueva
+sin build, pendiente de valoración y de comprobar en el juego.
+
+### Escena115: diagonales derecha e izquierda, revisión3 del estudio aceptado
+
+La banda inferior del zócalo BG2 no pertenece al patrón de escotillas: debe
+continuar en32<=2ty+tx<36 antes de seleccionar esos sellos. Repetir sólo las
+columnas0..7 con sy=ty+(tx-sx)/2 conserva fase, altura y color del remate en
+ambos extremos. Conservar todas las selecciones nativas y las correcciones
+anteriores aceptadas de punta, módulo huérfano y piso. Estudio nuevo del código,
+no captura de juego; no hereda aprobación y queda pendiente de QA real.
+
+### Pepito: aplicar la reparación completa a todas las páginas, 06/11
+
+El usuario exige redondeado, márgenes y pie extendido tanto con HUD HD como
+sin él, conservando Original GBA. La reparación del detalle aprobado permanece
+exacta; se completa su cobertura para listas y portadas Sora/Riku. No confundir
+la cubierta azul con papel ni repetir la guía del detalle en las listas.
+Registrar el fondo BG1 izquierdo por fila conserva la cubierta y el pie oscuro,
+sin borrar píxeles nativos de texto/objetos. La ayuda adicional mantiene14filas
+a todo el ancho y su fallback. Sin cambios de arte/imports ni build; pruebas
+AST/ROM y revisión de fuente, pendiente de QA visual del ejecutable conjunto.
+
+### Escena081: patrones de los dos bordes, revisión3, 06/11
+
+El módulo de máscara64px no cierra consigo mismo. Conservar el remate y el
+primer módulo; desde192 repetir sólo160..191, el ciclo diagonal32px completo.
+Las celdas vacías superiores BG3 que ahora quedan expuestas usan el tile opaco
+original16filas debajo; no se modifica ninguna muestra del piso ya opaco.
+Conservar props, actores y omisión decorativa. ANTES/PROPUESTA es un modelo
+de receta sin build al mismo encuadre; hija pendiente, sin aprobación heredada.
+### Escena120: grabado figurativo completo, nube65a0a5d0
+
+Las partes superiores existen en el banco ROM cargado, sobre la fila visible
+692..699. Recuperar sólo la tinta8/10/11/12 de esos tiles, paleta4, fuera del
+borde superior del mapa; no inventar cabezas, clonar otros grabados ni copiar
+los fragmentos de marcos o ladrillos adyacentes del atlas. Mantener la reparación
+de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
+hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.
+Aceptación06/11: activar Darkside06 flanco exacto9a47fba18d7749a2a54d4b9ccc8da65b rev3. Sin alterar211píxeles, brazo o cuerpo. El comentario exige todos los frames del combate: seguimiento temporal separado, no inferido de pose13.
+
+### Oogie: vista previa de máscara, punta y franja
+
+La arena aprobada del PR593 conserva su salida predeterminada.
+`KHCOM_OOGIE_PREVIEW=detail` muestra la propuesta Atlas
+`85b1e5551e224f3893cf44fcc9cf5739` para seguir las cuatro nubes.
+El cuarto nativo y el camino rojo se mantienen. La propuesta sigue pendiente
+de valoración y de una nueva prueba en el juego.
