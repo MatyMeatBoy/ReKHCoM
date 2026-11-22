@@ -507,4 +507,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | r36s-uncapped-benchmark-20261122 | Medir capacidad real sin vsync del host Linux64 en KHCOM_FAST | pr_abierto | codex-r36s-integer | https://github.com/MatyMeatBoy/ReKHCoM/pull/660 | Solicitud 22/11/2026 | 2026-11-22T23:33:06.113354+00:00 |
 | linux-fbdev-direct-convert | Equivalent framebuffer pixels without an intermediate converted surface | en_curso | codex-retoma-fbdev | perf/linux-fbdev-direct-convert | Usuario 22/11/2026: optimizaciones compartidas verificadas | 2026-11-22T23:32:00.672111+00:00 |
 
-Integrador: libre
+Integrador: codex-r36s-integer (ocupado; 2026-11-22T23:33:16.376147+00:00)
