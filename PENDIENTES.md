@@ -495,6 +495,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | integrado | codex-retoma-linux639 | https://github.com/MatyMeatBoy/ReKHCoM/pull/654 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:24:48.107076+00:00 |
 | issue647-android-lifecycle | Android: SDL3 lifecycle watcher for native game, bridge and HD playback | pr_abierto | codex-retoma-android647 | https://github.com/MatyMeatBoy/ReKHCoM/pull/655 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:28:43.763067+00:00 |
 | issue641-riku-credits-audio | Reproducir y corregir la pista GBA de los créditos de Riku | en_curso | codex-retoma-audio641 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:24:23.896173+00:00 |
-| pr623-atlas097-preview | PR 623: conservar la propuesta exacta del arbol Atlas097 como vista previa | en_curso | codex-retoma-atlas097 | — | Integracion de PR solicitada el 22/11/2026, vista previa apagada por defecto. Atlas78926368 sigue pending. | 2026-11-22T14:28:56.990982+00:00 |
+| pr623-atlas097-preview | PR 623: conservar la propuesta exacta del arbol Atlas097 como vista previa | en_curso | codex-retoma-atlas097 | art/pr623-atlas097-preview-20261122 | Integracion de PR solicitada el 22/11/2026, vista previa apagada por defecto. Atlas78926368 sigue pending. | 2026-11-22T14:30:03.007458+00:00 |
 
 Integrador: libre
