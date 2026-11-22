@@ -208,26 +208,7 @@ def bundle(arch, base, versions, dest):
     (dest / 'lib' / LOADER[arch]).rename(dest / 'lib' / 'rekhcom')
     (dest / 'ReKHCoM.sh').write_bytes((ROOT / 'port/linux/ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
     install_runtime_version(dest)
-    for name in ('KHMenu.otf', 'ComicHearts.otf', 'NOTICE.md'):
-        (dest / 'assets/fonts').mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / 'port/assets/fonts' / name, dest / 'assets/fonts' / name)
-    (dest / 'assets/achievements').mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(ROOT / 'port/assets/achievements/badges.png', dest / 'assets/achievements/badges.png')
-    sys.path.insert(0, str(ROOT / 'port/tools'))
-    from core_assets import core_assets
-    for name, source in core_assets().items():
-        target = dest / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, target)
-    shutil.copytree(ROOT / 'port/assets/gallery', dest / 'assets/gallery', dirs_exist_ok=True)
-    # Window icon (set by the game) and a launcher entry for desktops/Steam Deck.
-    shutil.copyfile(ROOT / 'port/assets/icon.bmp', dest / 'assets/icon.bmp')
-    shutil.copyfile(ROOT / 'port/assets/icon.png', dest / 'ReKHCoM.png')
-    # Installation paths are only known after extraction. ReKHCoM.sh
-    # --install-desktop creates the application entry there, using /bin/sh and
-    # escaped absolute script, working-directory and icon paths (issue #49).
-    for name in ('README.md', 'CHANGELOG.md', 'LICENSE.md'):
-        shutil.copyfile(ROOT / name, dest / name)
+    install_common_assets(dest)
     # One desktop/Deck bundle selects its runtime; armhf remains a beta port.
     (dest / 'LEEME_LINUX.txt').write_text(
         ('ReKHCoM Linux desktop / Steam Deck: runtimes x86 y x64 en un paquete.\n'
@@ -255,8 +236,27 @@ def bundle(arch, base, versions, dest):
     return sorted(done)
 
 
+def install_common_assets(dest):
+    for name in ('KHMenu.otf', 'ComicHearts.otf', 'NOTICE.md'):
+        (dest / 'assets/fonts').mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / 'port/assets/fonts' / name, dest / 'assets/fonts' / name)
+    (dest / 'assets/achievements').mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / 'port/assets/achievements/badges.png', dest / 'assets/achievements/badges.png')
+    sys.path.insert(0, str(ROOT / 'port/tools'))
+    from core_assets import core_assets
+    for name, source in core_assets().items():
+        target = dest / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    shutil.copytree(ROOT / 'port/assets/gallery', dest / 'assets/gallery', dirs_exist_ok=True)
+    shutil.copyfile(ROOT / 'port/assets/icon.bmp', dest / 'assets/icon.bmp')
+    shutil.copyfile(ROOT / 'port/assets/icon.png', dest / 'ReKHCoM.png')
+    for name in ('README.md', 'CHANGELOG.md', 'LICENSE.md'):
+        shutil.copyfile(ROOT / name, dest / name)
+
+
 def executable(name):
-    return name.endswith('.sh') or '/bin/' in name or '/lib/' in name or '/bin64/' in name or '/lib64/' in name
+    return name.endswith('.sh') or any(f'/{folder}/' in name for folder in ('bin', 'lib', 'bin64', 'lib64', 'binarm64'))
 
 
 def make_tar(src, archive):
