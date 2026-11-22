@@ -488,6 +488,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | readme-brand-header-20261116 | README vector brand header and badges matching NewSnap | integrado | codex-readme-header | https://github.com/MatyMeatBoy/ReKHCoM/pull/646 | Owner clarified screenshot: create NewSnap-style visual logo/header and badges for remaining two projects and remove duplicated text titles, 2026-11-16 | 2026-11-16T14:19:05.891176+00:00 |
 | pr648-shiningsource-lessons | Integrar retorno documental de ShiningSource | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/648 | Usuario 22/11/2026: integrar PR abiertos verificados | 2026-11-22T14:07:27.993731+00:00 |
 | issue638-menu-launcher-copy | Corregir dificultad Riku y descripción de videos HD | en_curso | codex-retoma-20261122 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:07:53.111944+00:00 |
-| r36s-portmaster-aarch64-20261122 | ReKHCoM Linux ARM64 para R36S y launcher PortMaster | pendiente | — | — | Usuario 22/11/2026: port R36S con Opti36S | 2026-11-22T14:08:02.151172+00:00 |
+| r36s-portmaster-aarch64-20261122 | ReKHCoM Linux ARM64 para R36S y launcher PortMaster | en_curso | codex-retoma-r36s | — | Usuario 22/11/2026: port R36S con Opti36S | 2026-11-22T14:08:17.155824+00:00 |
 
 Integrador: libre
