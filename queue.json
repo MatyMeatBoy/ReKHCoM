@@ -17284,10 +17284,10 @@
     "issue640-riku-hd-portrait-source": {
       "id": "issue640-riku-hd-portrait-source",
       "piece": "Corregir fuente de retratos HD de Riku en batalla",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-20261122",
       "created_at": "2026-11-22T14:13:15.519598+00:00",
-      "updated_at": "2026-11-22T14:16:29.573193+00:00",
+      "updated_at": "2026-11-22T14:19:22.287427+00:00",
       "branch": "fix/issue640-riku-hd-portrait-source",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/651",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17297,9 +17297,15 @@
           "at": "2026-11-22T14:16:29.573193+00:00",
           "owner": "codex-retoma-20261122",
           "detail": "FO0062 original extraído: dos recortes Riku y atlas completo validados con receta Python; 915 filas correctas."
+        },
+        {
+          "at": "2026-11-22T14:19:22.287427+00:00",
+          "owner": "codex-retoma-20261122",
+          "detail": "Merge ffdd4a31f7afaa5a48e93626df95a6fa8dd2ef21. Reimportar HUD HD para actualizar imágenes existentes."
         }
       ],
-      "claimed_at": "2026-11-22T14:13:28.759828+00:00"
+      "claimed_at": "2026-11-22T14:13:28.759828+00:00",
+      "completed_at": "2026-11-22T14:19:22.287427+00:00"
     }
   },
   "integrator": {
@@ -17308,7 +17314,7 @@
     "created_at": "2026-11-22T14:17:54.299874+00:00",
     "updated_at": "2026-11-22T14:17:54.299874+00:00"
   },
-  "updated_at": "2026-11-22T14:17:54.299874+00:00",
+  "updated_at": "2026-11-22T14:19:22.297335+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
