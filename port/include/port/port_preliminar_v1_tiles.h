@@ -32,7 +32,13 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         /* Keep the smooth corridor mask and floor on one diagonal module;
          * the decorative props are unique, not cut donor-strip repeats. */
         if (v[1]==2) return 0;
-        sx=16+PortSceneTileMod(ox-16,8);sy=oy+(ox-sx)/2;
+        if (v[1]==1 && ox>=24) sx=20+PortSceneTileMod(ox-20,4);
+        else sx=16+PortSceneTileMod(ox-16,8);
+        sy=oy+(ox-sx)/2;
+        if (v[1]==3 && ox>=24 &&
+            ((sx<18 && sy>=4 && sy<6) ||
+             (sx>=18 && sx<22 && sy>=2 && sy<4) ||
+             (sx>=22 && sy>=0 && sy<2))) sy+=2;
         if (sy<0 || sy>=32) return 0;
         *x=sx;*y=sy;return 1;
     }
@@ -76,15 +82,26 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
         *x=sx; *y=sy; return 1;
     }
     if (v[0]==115) {
+        /* Only sampled outside the native GBA viewport. The accepted top
+         * exterior hatch crosses into transparent map padding at its tip. */
+        if (v[1]==2 && ox>=30 && ox<32 && oy>=5 && oy<10) {
+            *x=ox-24; *y=oy+12; return 1;
+        }
         if (ox>=0 && ox<w && oy>=0 && oy<h) return 1;
         sx=PortSceneTileMod(ox,8);
         sy=oy+(ox-sx)/2;
         if (v[1]==3) {
             /* A plank has four rows, not the old two-row upper swatch.
              * Keep its diagonal phase and avoid copying wall pixels. */
-            if (2*oy+ox>=36 || sy<0 || sy>=32)
+            if (2*oy+ox>=32 || sy<0 || sy>=32)
                 sy=20+PortSceneTileMod(sy-20,4);
         } else if (v[1]==2) {
+            /* The wall's lower trim occupies this full native diagonal
+             * band. Continue it on both sides before selecting hatches;
+             * otherwise its bottom edge stops at the authored map ends. */
+            if (2*oy+ox>=32 && 2*oy+ox<36) {
+                *x=sx; *y=sy; return 1;
+            }
             if (2*oy+ox>=32) {
                 int k=(ox-6-PortSceneTileMod(ox-6,8))/8;
                 int cx=10+8*k, base=19-4*k;
@@ -95,7 +112,9 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
                  * the old rectangular swatch spliced three different hatches.
                  * Complete authored clipped motifs at the map boundary;
                  * thin whole rows only farther away, never half a diamond. */
-                if (j<0 || oy-cy< -2 || oy-cy>=3 ||
+                /* This stamp's centre is below the authored map. Its native
+                 * remainder is empty, so the left exterior was an orphan. */
+                if ((cx==2 && cy==31) || j<0 || oy-cy< -2 || oy-cy>=3 ||
                     (overlapsMap ? j>=2 : PortSceneTileMod(j,2))) return 0;
                 sx=10+ox-cx; sy=19+oy-cy;
             } else if (sy<0 || sy>=32) return 0;
@@ -573,6 +592,15 @@ static inline int PortPreliminar087VineRun(int wx, int wy) {
     return diagonal<144 && diagonal+7>=96;
 }
 
+/* Atlas #601: the complete masonry module is a preview on scene 120 BG3. */
+static inline int PortPreliminar120MasonryPreview(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (!p || p->v[0]!=120 || p->v[1]!=3 || wx<32 ||
+        (wx<256 && wy>=0 && wy<256) || 2*wy+wx >= (wx>=96 ? 176 : 208)) return 0;
+    *sx=32+PortSceneTileMod(wx-32,64);
+    *sy=PortSceneTileMod(wy,32);
+    return 1;
+}
+
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
     if (p && p->v[0]==87 && (wx<0 || wx>=256 || wy<0 || wy>=256)) {
         int diagonal=2*wy+wx;
@@ -586,9 +614,10 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
         return 0; /* retain the authored tile path outside the upper border */
     }
 
-    if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<352) {
+    if (p && p->v[0]==95 && p->v[1]==1 && wx>=-16 && wx<0 && wy>=272 && wy<384) {
         /* Only the topiary cut at the map seam: complete its missing half
-         * using the original crown, without cloning the whole foreground. */
+         * using the original crown and trunk through row382. Ending at352
+         * cut its lower crown; do not clone the rest of the foreground. */
         *sx=-1-wx; *sy=wy; return 1;
     }
 
@@ -601,8 +630,20 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             return 1;
         }
         if (p->v[1]==1 || p->v[1]==3) {
-            /* Preserve the approved right-hand corridor module. */
-            *sx=128+PortSceneTileMod(wx-128,64);*sy=wy+(wx-*sx)/2;
+            /* The full mask's first half does not meet its far end: a64px
+             * repeat jumps both contours by14rows. Its second32px half is
+             * a complete diagonal wave. Keep the finite cap/first module
+             * and repeat only that wave for BG1; BG3 retains its floor. */
+            int width=p->v[1]==1 && wx>=192 ? 32 : 64;
+            int start=width==32 ? 160 : 128;
+            *sx=start+PortSceneTileMod(wx-start,width);*sy=wy+(wx-*sx)/2;
+            /* Those upper BG3 cells are empty in the ROM because the old
+             * finite mask hid them. Continue the adjacent native wall tile
+             * underneath the now-complete contour, never over opaque floor. */
+            if (p->v[1]==3 && wx>=192 &&
+                ((*sx<144 && *sy>=32 && *sy<48) ||
+                 (*sx>=144 && *sx<176 && *sy>=16 && *sy<32) ||
+                 (*sx>=176 && *sy>=0 && *sy<16))) *sy+=16;
             if (*sy<0 || *sy>=256) {*sx=0;*sy=0;}
             return 1;
         }
@@ -655,16 +696,8 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             if (wx>=0 && wx<32 && wy<0) {
                 *sx=wx; *sy=PortSceneTileMod(wy,16); /* the original corner shaft, once */
             } else if (2*wy+wx < (wx>=96 ? 176 : 208)) {
-                /* Keep the complete masonry module marked A: the old16x16
-                 * donor repeated half bricks. The64x32 native patch is all
-                 * wall and keeps its32px joints plus material variation. */
-                if (wx>=32) {
-                    *sx=32+PortSceneTileMod(wx-32,64);
-                    *sy=PortSceneTileMod(wy,32);
-                } else {
-                    *sx=32+PortSceneTileMod(wx-32,16);
-                    *sy=16+PortSceneTileMod(wy-16,16);
-                } /* Native return: right footing176, front footing208. */
+                *sx=32+PortSceneTileMod(wx-32,16);
+                *sy=16+PortSceneTileMod(wy-16,16); /* Native return: right footing176, front footing208. */
             } else {
                 *sx=64+PortSceneTileMod(wx-64,32);
                 *sy=160+PortSceneTileMod(wy-160,32); /* the room's clean ground */
@@ -770,11 +803,11 @@ static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int w
             return 1;
         }
         if (wx>=480 && 2*wy-wx>=-96 && 2*wy-wx<16) {
-            /* The face below the cap is 56px tall and ends at diagonal16.
-             * Keep the lower flower-bearing 56px of the left bay. */
-            int reflected=559-wx;
-            *sx=64+PortSceneTileMod(reflected-64,96);
-            *sy=(2*wy-wx+656-*sx)/2;
+            /* Review pattern A is the dark native right face, not the
+             * reflected flower-bearing left face. Repeat its complete
+             * 32px strip with its own diagonal, including the bottom edge. */
+            *sx=448+PortSceneTileMod(wx-448,32);
+            *sy=(2*wy-wx+*sx)/2;
             return 1;
         }
         if (!PortPreliminarTileSource(p,&tx,&ty)) return 0;

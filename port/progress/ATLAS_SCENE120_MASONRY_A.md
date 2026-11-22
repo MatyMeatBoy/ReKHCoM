@@ -26,3 +26,11 @@ la futura pasada autorizada, pero no se ejecutaron aquí.
 
 Evidencia privada `pruebas/atlas-siguiente-20261105/scene120/`. Pendientes:
 grabado figurativo, build y prueba real de la receta combinada, otras plataformas.
+
+## Seguimiento 22/11/2026
+
+El grabado figurativo entró por #621. Para previsualizar el módulo A de este PR
+usa `KHCOM_SCENE120_MASONRY_PREVIEW=1`. Sin ese ajuste se usa la mampostería
+aprobada. El fixture C comprueba el selector aprobado, los donantes de la
+propuesta y las 65.536 coordenadas interiores. Queda pendiente la revisión
+visual en juego de la propuesta.

@@ -37,6 +37,7 @@ static void ResetMenuAxes(void) {
     SDL_JoystickID* ids;
     int count, i, action;
     sUiAxisHeld[0] = sUiAxisHeld[1] = 0;
+    PortInputResetRawMenu();
     ids = SDL_GetGamepads(&count);
     for (i = 0; ids && i < count; i++) {
         SDL_Gamepad* pad = SDL_GetGamepadFromID(ids[i]);
@@ -110,8 +111,9 @@ enum {
     ITEM_VSYNC,
     ITEM_FILTER,
     ITEM_SCANLINES,
+    ITEM_LCD_GRID,
     ITEM_LCD,
-    ITEM_GBA_BORDER,   /* GBA classic: the decorative border around the GBA picture (Original view) */
+    ITEM_GBA_BORDER,   /* Decorative border, independent of view/aspect/zoom. */
     ITEM_MODE_RESET,   /* a graphics mode's defaults (PortApplyGraphicsMode), confirmed twice */
     ITEM_FPS,
     ITEM_HEAD_AUDIO, /* section heading, not selectable */
@@ -122,6 +124,7 @@ enum {
     ITEM_HEAD_GENERAL, /* section heading, not selectable */
     ITEM_SAVEBANK,
     ITEM_DISCORD,
+    ITEM_HIDE_TITLE_HINT,
     ITEM_HIDE_TOUCH,
     ITEM_TOUCH_THEME,  /* the touch buttons' look: Clear, Dark, Color */
     ITEM_TOUCH_EDIT,   /* the layout editor: drag the touch buttons where the player wants them */
@@ -363,7 +366,7 @@ static int ItemVisible(int item) {
         case ITEM_UNDUB: return 0; /* already Japanese */
 #endif
         case ITEM_HD_TITLE: return 0; /* part of HD HUD (ITEM_HD_CARDS) since 23/10 */
-        case ITEM_GBA_BORDER: return gPortConfig.viewMode == PORT_VIEW_ORIGINAL;
+        case ITEM_GBA_BORDER: return 1;
         /* the version and its difficulty are chosen at New Game and stay
            with the save, as in the original: no switch for them here */
         case ITEM_PS2_MODE:
@@ -418,9 +421,9 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR", "VSync / VRR" },
     { "Filter", "Filtre", "Filter", "Filtro", "Filtro", "フィルター" },
     { "Scanlines", "Lignes de balayage", "Scanlines", "Linee di scansione", "Scanlines", "スキャンライン" },
+    { "LCD pixel grid", "Grille LCD", "LCD-Pixelraster", "Griglia pixel LCD", "Cuadrícula LCD", "LCDピクセルグリッド" },
     { "GBA LCD colours", "Couleurs LCD GBA", "GBA-LCD-Farben", "Colori LCD GBA", "Colores LCD GBA", "GBAカラー" },
-    { "Border (Original view)", "Bordure (vue originale)", "Rahmen (Originalansicht)", "Cornice (vista originale)",
-      "Borde (vista Original)", "わく（オリジナル表示）" },
+    { "Border", "Bordure", "Rahmen", "Cornice", "Borde", "わく" },
     { "Reset to a mode's defaults", "Réglages d'un mode", "Standard eines Modus", "Predefiniti di una modalità",
       "Restablecer según el modo", "モードの初期値に戻す" },
     { "Show FPS", "Afficher FPS", "FPS anzeigen", "Mostra FPS", "Mostrar FPS", "FPS表示" },
@@ -434,6 +437,8 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
     { "Save bank", "Banque de sauvegarde", "Speicherbank", "Banco di salvataggio", "Banco de partidas",
       "セーブバンク" },
     { "Discord status", "Statut Discord", "Discord-Status", "Stato Discord", "Estado en Discord", "Discordステータス" },
+    { "Hide title hint", "Masquer l'aide du titre", "Titelhinweis ausblenden", "Nascondi aiuto del titolo",
+      "Ocultar aviso del título", "タイトルの案内を非表示" },
     { "Hide touch controls", "Masquer les commandes tactiles", "Touch-Steuerung ausblenden",
       "Nascondi controlli touch", "Ocultar controles táctiles", "タッチボタンを非表示" },
     { "Touch button theme", "Thème des boutons tactiles", "Design der Touch-Tasten", "Tema dei tasti touch",
@@ -442,7 +447,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Mover botones táctiles", "タッチボタンを移動" },
     { "HD", "HD", "HD", "HD", "HD", "HD" },
     { "HD text", "Texte HD", "HD-Text", "Testo HD", "Texto HD", "HDテキスト" },
-    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" }, /* opening, credits, endings */
+    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" }, /* replacements for the cartridge movies */
     { "HD music", "Musique HD", "HD-Musik", "Musica HD", "Música HD", "HDミュージック" },
     { "HD cutscenes", "Cinématiques HD", "HD-Zwischensequenzen", "Filmati HD", "Cinemáticas HD", "HDムービー" },
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
@@ -633,12 +638,12 @@ static const char* const sNgDescDifficulty[3][LANG_COUNT] = {
     { "As the original: the cartridge's damage.", "Comme l'original : les dégâts de la cartouche.",
       "Wie das Original: der Schaden des Moduls.", "Come l'originale: i danni della cartuccia.",
       "Como el original: el daño del cartucho.", "オリジナルと同じダメージ。" },
-    { "Sora takes 50% damage; enemies take 125%.", "Sora subit 50 % des dégâts ; les ennemis en subissent 125 %.",
-      "Sora erleidet 50 % Schaden; Gegner 125 %.", "Sora subisce il 50% dei danni; i nemici il 125%.",
-      "Sora recibe un 50 % de daño; los enemigos, un 125 %.", "ソラの被ダメージは50%、敵は125%。" },
-    { "Sora takes 150% damage; enemies take 80%.", "Sora subit 150 % des dégâts ; les ennemis en subissent 80 %.",
-      "Sora erleidet 150 % Schaden; Gegner 80 %.", "Sora subisce il 150% dei danni; i nemici l'80%.",
-      "Sora recibe un 150 % de daño; los enemigos, un 80 %.", "ソラの被ダメージは150%、敵は80%。" },
+    { "You take 50% damage; enemies take 125%.", "Vous subissez 50 % des dégâts ; les ennemis en subissent 125 %.",
+      "Du erleidest 50 % Schaden; Gegner 125 %.", "Subisci il 50% dei danni; i nemici il 125%.",
+      "Recibes un 50 % de daño; los enemigos, un 125 %.", "プレイヤーの被ダメージは50%、敵は125%。" },
+    { "You take 150% damage; enemies take 80%.", "Vous subissez 150 % des dégâts ; les ennemis en subissent 80 %.",
+      "Du erleidest 150 % Schaden; Gegner 80 %.", "Subisci il 150% dei danni; i nemici l'80%.",
+      "Recibes un 150 % de daño; los enemigos, un 80 %.", "プレイヤーの被ダメージは150%、敵は80%。" },
 };
 static const char* const sNgDescHd[LANG_COUNT] = {
     "Dialogue drawn with a crisp font at the window's resolution.",
@@ -657,12 +662,12 @@ static const char* const sNgDescHdMusic[LANG_COUNT] = {
     "カートリッジの音楽の代わりにKH HD 1.5+2.5のRe:チェイン オブ メモリーズのサウンドトラック。",
 };
 static const char* const sNgDescHdMovies[LANG_COUNT] = {
-    "The opening, the credits and the endings as the HD movies of your KH HD 1.5+2.5.",
-    "L'ouverture, le générique et les fins avec les vidéos HD de votre KH HD 1.5+2.5.",
-    "Intro, Abspann und Enden als HD-Videos aus deinem KH HD 1.5+2.5.",
-    "L'introduzione, i titoli di coda e i finali con i video HD del tuo KH HD 1.5+2.5.",
-    "La introducción, los créditos y los finales con los videos HD de tu KH HD 1.5+2.5.",
-    "オープニング、スタッフロール、エンディングをKH HD 1.5+2.5のHDムービーで。",
+    "Replaces GBA movies with Re:Chain of Memories' HD equivalents.",
+    "Remplace les vidéos GBA par leurs équivalents HD de Re:Chain of Memories.",
+    "Ersetzt die GBA-Videos durch ihre HD-Entsprechungen aus Re:Chain of Memories.",
+    "Sostituisce i video GBA con gli equivalenti HD di Re:Chain of Memories.",
+    "Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
+    "GBAのムービーをRe:チェイン オブ メモリーズの対応するHDムービーに置き換えます。",
 };
 static const char* const sNgDescHdScenes[LANG_COUNT] = {
     "Story scenes that Re:CoM has as movies play them instead (English voices, subtitles in your language).",
@@ -1446,6 +1451,12 @@ static void ValueText(int item, char* out, size_t size) {
             else
                 SDL_snprintf(out, size, "%d%%", gPortConfig.scanlines);
             break;
+        case ITEM_LCD_GRID:
+            if (gPortConfig.lcdGrid == 0)
+                SDL_strlcpy(out, sOnOff[0][l], size);
+            else
+                SDL_snprintf(out, size, "%d%%", gPortConfig.lcdGrid);
+            break;
         case ITEM_LCD:
             SDL_strlcpy(out, sOnOff[gPortConfig.colorCorrection != 0][l], size);
             break;
@@ -1466,6 +1477,9 @@ static void ValueText(int item, char* out, size_t size) {
                 SDL_strlcpy(out, sOnOff[0][l], size);
             else
                 SDL_snprintf(out, size, "%d px", gPortConfig.cardHudRaise);
+            break;
+        case ITEM_HIDE_TITLE_HINT:
+            SDL_strlcpy(out, sOnOff[gPortConfig.hideTitleHint != 0][l], size);
             break;
         case ITEM_FPS:
             SDL_strlcpy(out, sOnOff[gPortConfig.showFps != 0][l], size);
@@ -1759,14 +1773,16 @@ static void Change(int item, int dir) {
             sFsPending = Wrap((sFsPending >= 0 ? sFsPending : ModeIndex()) + dir, sModeCount + 1);
             return;
         case ITEM_VSYNC:
-            #ifdef _WIN32
-            gPortConfig.vsync = Wrap(gPortConfig.vsync + dir, 3);
-#else
-            gPortConfig.vsync = !gPortConfig.vsync;
-#endif
+            if (PortVideoVrrOptionAvailable())
+                gPortConfig.vsync = Wrap(gPortConfig.vsync + dir, 3);
+            else
+                gPortConfig.vsync = !gPortConfig.vsync;
             break;
         case ITEM_SCANLINES:
             gPortConfig.scanlines = Wrap(gPortConfig.scanlines / 25 + dir, 5) * 25;
+            break;
+        case ITEM_LCD_GRID:
+            gPortConfig.lcdGrid = Wrap(gPortConfig.lcdGrid / 25 + dir, 5) * 25;
             break;
         case ITEM_LCD:
             gPortConfig.colorCorrection = !gPortConfig.colorCorrection;
@@ -1785,6 +1801,9 @@ static void Change(int item, int dir) {
             break;
         case ITEM_FRAMESKIP:
             gPortConfig.frameSkip = !gPortConfig.frameSkip;
+            break;
+        case ITEM_HIDE_TITLE_HINT:
+            gPortConfig.hideTitleHint = !gPortConfig.hideTitleHint;
             break;
         case ITEM_DISCORD:
             gPortConfig.discordPresence = !gPortConfig.discordPresence;
@@ -2434,7 +2453,7 @@ void PortMoogleNotice(unsigned amount, unsigned total) {
 }
 
 void PortUiTitleHint(void) {
-    sTitleHintFrames = 2;
+    sTitleHintFrames = gPortConfig.hideTitleHint ? 0 : 2;
 }
 
 static void Move(int dir) {
@@ -2475,7 +2494,17 @@ int PortUiHandleEvent(const void* p) {
     const SDL_Event* ev = (const SDL_Event*)p;
     SDL_Event mapped;
 
-    if ((sOpen || sScenePause) && !(sPage == PAGE_CONTROLS && sControlCapture)) {
+    /* Device ownership lives in the input layer, including during capture. */
+    if (ev->type == SDL_EVENT_GAMEPAD_ADDED) return 0;
+#ifndef PORT_SDL_BRIDGE
+    if (ev->type == SDL_EVENT_GAMEPAD_REMOVED ||
+        ev->type == SDL_EVENT_JOYSTICK_ADDED || ev->type == SDL_EVENT_JOYSTICK_REMOVED) return 0;
+#endif
+
+    if ((sOpen || sScenePause) && sPage == PAGE_CONTROLS && sControlCapture) {
+        /* Track releases without turning the captured input into a menu key. */
+        PortInputRawMenuEvent(ev, &mapped);
+    } else if (sOpen || sScenePause) {
         /* List triggers remain shortcuts even when an axis is also bound to A/B. */
         int reserved = UiListTriggerReserved(ev);
         int axis = reserved ? 0 : KhPadMenuAxis(ev, gPortConfig.pad, sUiAxisHeld, &mapped);
@@ -2487,6 +2516,11 @@ int PortUiHandleEvent(const void* p) {
             mapped.key.key = UiMappedKey(ev->key.key);
             ev = &mapped;
         }
+        {
+            int raw = PortInputRawMenuEvent(ev, &mapped);
+            if (raw == 1) return 1;
+            if (raw == 2) ev = &mapped;
+        }
     }
 
     if (sScenePause)
@@ -2496,6 +2530,10 @@ int PortUiHandleEvent(const void* p) {
         return ev->type == SDL_EVENT_KEY_DOWN || ev->type == SDL_EVENT_KEY_UP ||
                ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_GAMEPAD_BUTTON_UP;
     if (!sOpen) {
+        if (PortInputRawMenuChord(ev)) {
+            PortUiOpenOptions();
+            return 1;
+        }
         if (ev->type == SDL_EVENT_KEY_DOWN && !ev->key.repeat && (ev->key.key == SDLK_F1 || ev->key.key == SDLK_ESCAPE)) {
             PortUiOpenOptions();
             return 1;
@@ -2655,6 +2693,17 @@ int PortUiHandleEvent(const void* p) {
         }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) { gPortConfig.pad[action] = ev->gbutton.button; sControlCapture = 0; PortConfigSave(); return 1; }
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value) > 16000) { gPortConfig.pad[action] = PORT_PAD_AXIS_BASE + ev->gaxis.axis * 2 + (ev->gaxis.value < 0); sControlCapture = 0; PortConfigSave(); return 1; }
+        if (sControlPad) {
+            int binding = PortInputRawBinding(ev);
+            if (binding >= 0) {
+                gPortConfig.pad[action] = binding;
+                sControlCapture = 0;
+                PortInputResetRawMenu();
+                PortInputResetBindings();
+                PortConfigSave();
+                return 1;
+            }
+        }
         /* waiting for a key with no keyboard (issue #37): a gamepad button, a tap or a click cancels it */
         if (!sControlPad && (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_MOUSE_BUTTON_DOWN || ev->type == SDL_EVENT_FINGER_DOWN))
             sControlCapture = 0;
@@ -3362,12 +3411,12 @@ static const char* const sAssetDesc[PORT_ASSET_COUNT][LANG_COUNT] = {
       "La colonna sonora di Re:Chain of Memories al posto della musica della cartuccia.",
       "La banda sonora de Re:Chain of Memories en lugar de la música del cartucho.",
       "カートリッジの音楽の代わりにRe:チェイン オブ メモリーズのサウンドトラック。" },
-    { "The opening, credits and endings as Re:Chain of Memories' HD movies.",
-      "L'ouverture, le générique et les fins en vidéos HD de Re:Chain of Memories.",
-      "Intro, Abspann und Enden als HD-Videos von Re:Chain of Memories.",
-      "Apertura, titoli di coda e finali come video HD di Re:Chain of Memories.",
-      "La intro, los créditos y los finales con los videos HD de Re:Chain of Memories.",
-      "オープニング、クレジット、エンディングをRe:チェイン オブ メモリーズのHDムービーで。" },
+    { "Replaces GBA movies with Re:Chain of Memories' HD equivalents.",
+      "Remplace les vidéos GBA par leurs équivalents HD de Re:Chain of Memories.",
+      "Ersetzt die GBA-Videos durch ihre HD-Entsprechungen aus Re:Chain of Memories.",
+      "Sostituisce i video GBA con gli equivalenti HD di Re:Chain of Memories.",
+      "Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
+      "GBAのムービーをRe:チェイン オブ メモリーズの対応するHDムービーに置き換えます。" },
     { "The story scenes as Re:Chain of Memories' HD movies, where one matches.",
       "Les scènes de l'histoire en vidéos HD de Re:Chain of Memories, quand il y en a une.",
       "Die Story-Szenen als HD-Videos von Re:Chain of Memories, wo es eins gibt.",
@@ -5555,7 +5604,7 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
             DrawSkipPrompt(l);
         if (sTitleHintFrames > 0) {
             sTitleHintFrames--;
-            DrawTitleHint(l);
+            if (!gPortConfig.hideTitleHint) DrawTitleHint(l);
         }
         return;
     }

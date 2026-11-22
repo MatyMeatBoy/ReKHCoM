@@ -215,7 +215,7 @@ def package(regions):
     shutil.copytree(ROOT / 'port/assets/gallery', assets / 'gallery', dirs_exist_ok=True)
     livearea(pkg / 'sce_sys')
     (share / 'src').mkdir()
-    for src in (SWITCH / 'host/switch_host.c', ROOT / 'port/include/port/port_logfile.h', ROOT / 'port/include/port/port_hd_media.h', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/hd_pack_host.h', ROOT / 'port/portable/hd_pack.c', *sorted((PS5 / 'third_party/miniz').glob('miniz*')), PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h',
+    for src in (SWITCH / 'host/switch_host.c', ROOT / 'port/include/port/port_logfile.h', ROOT / 'port/include/port/port_hd_media.h', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/hd_pack_host.h', ROOT / 'port/portable/hd_pack.c', *sorted((PS5 / 'third_party/miniz').glob('miniz*')), PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h', PS5 / 'shared/bridge_threads.h',
                 PS5 / 'shared/audio_bridge.h', ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     (share / 'guest.ld').write_text(GUEST_LD)
@@ -266,7 +266,7 @@ def test(region, env, shots):
     from core_assets import gallery_posters
     gallery_posters()
     shutil.copytree(ROOT / 'port/assets/gallery', share / 'assets/gallery', dirs_exist_ok=True)
-    for src in (SWITCH / 'host/switch_host.c', ROOT / 'port/include/port/port_logfile.h', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h',
+    for src in (SWITCH / 'host/switch_host.c', ROOT / 'port/include/port/port_logfile.h', PS5 / 'shared/bridge.h', PS5 / 'shared/bridge_list.h', PS5 / 'shared/hd_music_host.h', PS5 / 'shared/udp_host.h', PS5 / 'shared/thread_host.h', PS5 / 'shared/bridge_threads.h',
                 PS5 / 'shared/audio_bridge.h', ROOT / 'port/third_party/stb/stb_vorbis.c'):
         shutil.copy2(src, share / 'src' / src.name)
     (share / 'guest.ld').write_text(GUEST_LD)

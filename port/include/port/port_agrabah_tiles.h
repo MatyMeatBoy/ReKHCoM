@@ -54,9 +54,10 @@ static inline int PortAgrabahTileSource(int bg, int* x, int* y, int topPreview) 
  * hence 2*y-x==536. Switching donors earlier samples the street instead. */
 static inline int PortAgrabahPixelSource(int bg, int wx, int wy, int* sx, int* sy) {
     int diagonal=2*wy-wx, donor;
-    /* The last two-by-two BG2 tiles are transparent padding. Complete
-     * their missing facade overlay as well; BG3 and authored ink stay put. */
-    if (bg==2 && wx>=496 && wx<512 && wy>=496 && wy<512) {
+    /* Two clipped BG2 facade blocks share the complete parallel donor.
+     * Complete only their overlay; keep BG3's accepted roof and street. */
+    if (bg==2 && wx>=496 && wx<512 &&
+        ((wy>=288 && wy<304) || (wy>=496 && wy<512))) {
         *sx=wx-32; *sy=wy-16; return 1;
     }
     if (wx<0 || (wx<512 && wy<512) || diagonal<56 || diagonal>=576) return 0;
@@ -72,7 +73,8 @@ static inline int PortAgrabahPixelSource(int bg, int wx, int wy, int* sx, int* s
  * the facade resolver. The invariant decreases by one as X advances. */
 static inline int PortAgrabahPixelRunNeeded(int bg, int wx, int wy) {
     int diagonal=2*wy-wx, run=8-PortSceneTileMod(wx,8);
-    if (bg==2 && wx>=496 && wx<512 && wy>=496 && wy<512) return 1;
+    if (bg==2 && wx>=496 && wx<512 &&
+        ((wy>=288 && wy<304) || (wy>=496 && wy<512))) return 1;
     return wx>=0 && (wx>=512 || wy>=512) && diagonal>=56 && diagonal-run+1<576;
 }
 #endif

@@ -12,6 +12,14 @@ int main(int argc,char** argv) {
     int x,y,sx,sy,tx,ty;
     PortScene130LibrarySource(192,321,&sx,&sy);
     assert(sx==288 && sy==273); /* floor division when u-v is negative */
+    assert(!PortScene130LibrarySource(0,296,&sx,&sy));
+    assert(sx==64 && sy==264); /* complete left baseboard before carpet */
+    assert(!PortScene130LibrarySource(-8,304,&sx,&sy));
+    assert(sx==120 && sy==240);
+    assert(PortScene130LibrarySource(0,312,&sx,&sy)); /* diagonal624 is floor */
+    assert(!PortScene130LibrarySource(520,324,&sx,&sy));
+    assert(sx==456 && sy==292); /* right baseboard, invariant128 */
+    assert(PortScene130LibrarySource(520,332,&sx,&sy)); /* right diagonal144 is floor */
     for (y=0;y<200;y+=7) {
         PortScene130LibrarySource(-128,y,&sx,&sy);
         PortScene130LibrarySource(-192,y+32,&tx,&ty);

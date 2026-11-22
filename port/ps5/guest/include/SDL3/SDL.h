@@ -3,6 +3,7 @@
  * the configuration file (key codes, gamepad buttons). */
 #ifndef SDL_h_
 #define SDL_h_
+#define PORT_SDL_BRIDGE 1 /* APIs implemented by guest/src/sdl_shim.c */
 #define SDL_BRIDGE_GPU_TARGETS 1
 
 #include <stdint.h>
