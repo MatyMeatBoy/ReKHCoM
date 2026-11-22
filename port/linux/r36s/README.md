@@ -10,6 +10,8 @@ El paquete de prueba usa Linux AArch64 en el RK3326. Requiere un firmware de 64 
 
 Las partidas, preferencias y `ReKHCoM.log` quedan en `rekhcomr36s/`. Para un fallo de arranque, conserva ese registro junto con el modelo, panel y versión de firmware. `SDL_VIDEO_DRIVER` y `SDL_AUDIO_DRIVER` se pueden especificar para diagnósticos. El ZIP está preparado para instalación manual. La validación del panel, mandos, audio y rendimiento en la R36S física queda pendiente antes de enviar el port al catálogo.
 
+En una pantalla de 640×480, el perfil de juego usa un lienzo de 320×240 a 2× con filtro de vecino más próximo. La imagen de GBA ocupa 480×320 y el compositor amplía las escenas compatibles con los mismos fondos del modo 4:3. Los menús y las cinemáticas conservan su encuadre propio.
+
 ## Compilación
 
 Prepara un sysroot AArch64 Ubuntu 20.04 Focal con GCC 10, los paquetes de desarrollo de DRM, GBM, EGL/GLES y ALSA, y los archivos de `pkg-config` asociados. Usa la misma versión de SDL3 que el resto del proyecto y limita `pkg-config` al sysroot para que CMake detecte las bibliotecas de destino. La configuración de SDL debe indicar que KMSDRM, EGL/GLES y ALSA están habilitados. Las bibliotecas de esos backends deben resolverse durante la ejecución en el firmware.

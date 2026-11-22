@@ -23,9 +23,10 @@ done
 
 export SDL_VIDEO_DRIVER="${SDL_VIDEO_DRIVER:-kmsdrm}"
 export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-alsa}"
-# Keep the guest in fullscreen when it applies its settings after host startup.
+# At 640x480, the existing Auto compositor fills a 320x240 canvas at exactly 2x.
 export REKHCOM_FULLSCREEN=1
-export KHCOM_CONFIG="fullscreen=1${KHCOM_CONFIG:+;$KHCOM_CONFIG}"
+export KHCOM_TALL_FIT="${KHCOM_TALL_FIT:-0}"
+export KHCOM_CONFIG="fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0${KHCOM_CONFIG:+;$KHCOM_CONFIG}"
 
 if command -v pm_platform_helper >/dev/null 2>&1; then
     pm_platform_helper "$GAMEDIR/binarm64/rekhcom-arm64"
