@@ -17696,10 +17696,10 @@
     "linux-fbdev-direct-convert": {
       "id": "linux-fbdev-direct-convert",
       "piece": "Equivalent framebuffer pixels without an intermediate converted surface",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-fbdev",
       "created_at": "2026-11-22T23:31:41.493454+00:00",
-      "updated_at": "2026-11-22T23:37:10.305060+00:00",
+      "updated_at": "2026-11-22T23:37:51.396403+00:00",
       "branch": "perf/linux-fbdev-direct-convert",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/662",
       "approval": "Usuario 22/11/2026: optimizaciones compartidas verificadas",
@@ -17709,9 +17709,15 @@
           "at": "2026-11-22T23:37:10.305060+00:00",
           "owner": "codex-retoma-fbdev",
           "detail": "bd1c6e482; SDL six byte-equivalent cases and geometry, ARMv7/i686 syntax PASS; 615093 fewer SDL allocation bytes/frame at 640x480. No device timing."
+        },
+        {
+          "at": "2026-11-22T23:37:51.396403+00:00",
+          "owner": "codex-retoma-fbdev",
+          "detail": "Merge 2de3d2b559e4ce974c0d80cdb635d1fc18a34bdf. Equivalencia SDL y 615093 bytes menos de asignaciones solicitadas por cuadro 640x480 RGB565."
         }
       ],
-      "claimed_at": "2026-11-22T23:31:51.056520+00:00"
+      "claimed_at": "2026-11-22T23:31:51.056520+00:00",
+      "completed_at": "2026-11-22T23:37:51.396403+00:00"
     }
   },
   "integrator": {
@@ -17720,7 +17726,7 @@
     "created_at": "2026-11-22T23:37:39.997597+00:00",
     "updated_at": "2026-11-22T23:37:39.997597+00:00"
   },
-  "updated_at": "2026-11-22T23:37:39.997597+00:00",
+  "updated_at": "2026-11-22T23:37:51.396403+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
