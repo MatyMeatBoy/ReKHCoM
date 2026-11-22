@@ -17535,8 +17535,8 @@
       "status": "en_curso",
       "owner": "codex-retoma-source-check",
       "created_at": "2026-11-22T14:40:08.006727+00:00",
-      "updated_at": "2026-11-22T14:40:18.101578+00:00",
-      "branch": null,
+      "updated_at": "2026-11-22T14:40:27.556789+00:00",
+      "branch": "fix/check-sdl-bridge-native-guards",
       "pr": null,
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/642",
@@ -17545,7 +17545,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:40:18.101578+00:00",
+  "updated_at": "2026-11-22T14:40:27.556789+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
