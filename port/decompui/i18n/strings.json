@@ -1184,8 +1184,8 @@
   "es": "Las cartas, el HUD, la música, los videos y las escenas de Re:Chain of Memories, de tu KINGDOM HEARTS HD 1.5+2.5."
  },
  {
-  "en": "Re:Chain of Memories' opening, credits and Sora's and Riku's endings.",
-  "es": "La apertura, los créditos y los finales de Sora y Riku de Re:Chain of Memories."
+  "en": "Replaces GBA movies with Re:Chain of Memories' HD equivalents.",
+  "es": "Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories."
  },
  {
   "en": "Re:Chain of Memories' soundtrack in place of the GBA music.",
@@ -1392,6 +1392,10 @@
   "es": "Suave"
  },
  {
+  "en": "Software H.264 decoding",
+  "es": "Decodificación H.264 por software"
+ },
+ {
   "en": "Sora only: hold V, the right-stick button or right stick down for half a second to cancel the stock and return those cards to the hand. Cannot cancel a sleight in progress. Off by default.",
   "es": "Solo Sora: mantén V, pulsa el stick derecho o inclínalo hacia abajo durante medio segundo para cancelar la acumulación y devolver esas cartas a la mano. No cancela técnicas en curso. Desactivado por defecto."
  },
@@ -1594,6 +1598,10 @@
  {
   "en": "Turn the editor on...",
   "es": "Activar el editor..."
+ },
+ {
+  "en": "Turn this on if HD videos show green stripes. It takes effect the next time you start the game.",
+  "es": "Actívala si aparecen franjas verdes en los videos HD. Se aplica al volver a iniciar el juego."
  },
  {
   "en": "UDP port",

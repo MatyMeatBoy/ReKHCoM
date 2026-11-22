@@ -13,7 +13,12 @@ No se altera el código actual de staging de Cheshire, sombras ni viewportGBA.
 
 18.818casos AST del selector C real pasan; nuevas coordenadas BG2 son identidad
 finita dentro de64x64tiles y fuera devuelven vacío. BG3 idéntico. El estudio
-ROM antes/propuesta conserva encuadre/escala y no es captura nueva. Fixture C
-añadido, sin compilar ni ejecutar; falta QA real de la cámara/actores/Original.
-Sin build, juego, imports, ROM/SAV alterados ni paquetes.
+ROM antes/propuesta conserva encuadre y escala. Falta QA real de cámara,
+actores y Original.
+La propuesta se prueba con `KHCOM_SCENE097_TREE_PREVIEW=1`. La configuración
+predeterminada conserva la receta anterior. El fixture C comprueba el mapa
+finito y compara ambas configuraciones también en BG3. Sigue pendiente una
+captura runtime nueva.
+
+Sin build del juego, imports, ROM/SAV alterados ni paquetes.
 Evidencia: `pruebas/atlas-20261106/scene097-tree/`.

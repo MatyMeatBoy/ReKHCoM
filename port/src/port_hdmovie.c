@@ -1523,7 +1523,8 @@ int h_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 #else
 #include <stdarg.h>
 SDL_Renderer* PortRenderer(void);
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font, int masterVolume);
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2,
+                       const char* font, int masterVolume, bool softwareH264);
 void HdMovieLog(const char* fmt, ...) {
     char text[1024];
     va_list ap;
@@ -1560,6 +1561,10 @@ static int PlayFile(const char* name) {
         PortLog("hd movie: host lacks master volume control; using original movie");
         return 0;
     }
+#ifdef PORT_ANDROID64
+    if (gPortConfig.hdSoftwareH264 && h_thread(BRIDGE_MOVIE_ANDROID_SOFTWARE_H264, 1, 0, 0, 0) != 1)
+        PortLog("hd movie: host lacks software H.264 selection; using Android's default decoder");
+#endif
     played = h_hd_movie(path, gPortConfig.hdSubtitles ? subs[0] : NULL, gPortConfig.hdSubtitles ? subs[1] : NULL, font);
     {
         extern void PortBridgeRefreshTextureEpoch(void);
@@ -1570,7 +1575,7 @@ static int PlayFile(const char* name) {
         return 0;
     PortAudioMovieHold(1);
     played = HdMovieAndroidPlay(PortRenderer(), path, gPortConfig.hdSubtitles ? subs[0] : NULL,
-                                gPortConfig.hdSubtitles ? subs[1] : NULL, font, masterVolume);
+                                gPortConfig.hdSubtitles ? subs[1] : NULL, font, masterVolume, gPortConfig.hdSoftwareH264);
     PortAudioMovieHold(0);
 #endif
     if (played == 2) { /* the app was closed during the movie: the main loop closes the game as usual */

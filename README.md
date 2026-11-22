@@ -1,11 +1,23 @@
-# ReKHCoM
+<p align="center">
+  <img src="docs/logo/rekhcom-logo.svg" alt="ReKHCoM: native source port, widescreen" width="560">
+</p>
 
-Native and browser ports of **Kingdom Hearts: Chain of Memories** (Game Boy Advance), built
-on top of the matching decompilation by [Pheenoh/khcom](https://github.com/Pheenoh/khcom).
+<p align="center">
+  <img alt="Platforms: desktop, Android, browser" src="https://img.shields.io/badge/platforms-Desktop%20%2F%20Android%20%2F%20Web-253958">
+  <img alt="Display: widescreen and ultrawide" src="https://img.shields.io/badge/display-Widescreen%20%2B%20Ultrawide-52689c">
+  <img alt="Cartridges: EU, US, JP" src="https://img.shields.io/badge/cartridges-EU%20%2F%20US%20%2F%20JP-a5b6cc">
+  <img alt="Status: active development" src="https://img.shields.io/badge/status-active%20development-253958">
+  <img alt="License: CC0" src="https://img.shields.io/badge/license-CC0-blue">
+</p>
 
-The decompiled game runs as a native program (Windows, Linux, Steam Deck, Android, the
-browser and the supported consoles), with its own renderer, audio and launcher, with widescreen and
-ultrawide support at the cartridge's original speed.
+[![ReKHCoM project overview: native Chain of Memories, widescreen, optional HD enhancements and configurable controls.](docs/showcase/overview.png)](docs/showcase/overview.png)
+
+**ReKHCoM** is a native port of **Kingdom Hearts: Chain of Memories** (Game Boy Advance),
+built from the [matching decompilation by Pheenoh/khcom](https://github.com/Pheenoh/khcom).
+It runs the game's own code on Windows, Linux, Steam Deck, Android and supported consoles,
+with a browser edition too. Widescreen and ultrawide views, optional HD text and imported
+ReMIX media, achievements and configurable controls expand the original presentation
+while preserving the cartridge's game pace.
 
 <p align="center">
   <a href="https://github.com/MatyMeatBoy/ReKHCoM/releases/latest"><b>⬇ Download the latest release (v2.2.5)</b></a>
@@ -16,6 +28,12 @@ ultrawide support at the cartridge's original speed.
 
 Works with the **European, US and Japanese** cartridges (your own dump; no ROM is
 included), in all five European languages, English (US) and Japanese.
+
+## Project showcase
+
+[![Comparison of the original GBA game and ReKHCoM's optional presentation, media and control enhancements.](docs/showcase/comparison.png)](docs/showcase/comparison.png)
+
+These are illustrated feature summaries; see the sections below for current platform and feature details.
 
 ## What's new in v2.2.5
 
@@ -47,9 +65,6 @@ The established v2 features remain available:
 - **Optional quick states:** off by default, with an explicit warning that achievements pause while enabled. [Achievements](#achievements).
 - **Portable HD packs:** export your imported mod for supported Android/console hosts; updated ports retain their beta labels. [Platform downloads](#downloads).
 - **Game-wide fixes:** battle, startup and audio fixes, synchronized deck transitions and better widescreen scene borders. [Changelog](CHANGELOG.md).
-
-<p align="center"><img src="docs/screenshots/v2-title.png" width="98%" alt="HD title screen with aligned SELECT and Press Start bars"></p>
-<p align="center"><em>HD title screen: aligned SELECT and Press Start bars, with their warm menu lights.</em></p>
 
 <p align="center"><img src="docs/screenshots/v2-gallery.png" width="49%" alt="Scene gallery with a clean GBA poster showing Sora, Donald and Goofy"> <img src="docs/screenshots/v2-options.png" width="49%" alt="Options panel with HD title artwork"></p>
 <p align="center"><em>Scene gallery with a clean character poster (left); Options with HD artwork (right). Real v2.0 feature captures, shown in Spanish.</em></p>
@@ -215,6 +230,10 @@ Export a backup before clearing browser data.
 <p align="center"><img src="docs/screenshots/web-player.jpg" width="90%"></p>
 
 ## Running (Windows)
+
+Generic USB controllers and N64 adapters can use an imported SDL mapping;
+the direct SDL build also offers raw joystick bindings.
+See [controller setup and build-specific support](docs/controllers.md).
 
 1. Download the [latest stable ZIP](https://github.com/MatyMeatBoy/ReKHCoM/releases/latest)
    and extract `ReKHCoM-v1.9.14-windows-x86.zip` into a writable folder of its own

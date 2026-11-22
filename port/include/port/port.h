@@ -117,6 +117,17 @@ enum {
 /* pad_<action> values 0..BUTTON_COUNT-1 are buttons; this range encodes an
  * axis and sign so analog triggers can be captured and remapped. */
 #define PORT_PAD_AXIS_BASE 100
+/* Unmapped USB controllers (including many N64 adapters) appear in SDL as
+   joysticks, rather than SDL gamepads.  Keep their bindings distinct from
+   SDL's normalized gamepad buttons and axes so they can be configured in the
+   Controls screen without a per-device mapping database entry. */
+#define PORT_PAD_RAW_BUTTON_BASE 1000
+#define PORT_PAD_RAW_BUTTON_COUNT 128
+#define PORT_PAD_RAW_AXIS_BASE 2000
+#define PORT_PAD_RAW_AXIS_COUNT 32
+#define PORT_PAD_RAW_HAT_BASE 3000
+#define PORT_PAD_RAW_HAT_COUNT 16
+#define PORT_PAD_BINDING_MAX (PORT_PAD_RAW_HAT_BASE + PORT_PAD_RAW_HAT_COUNT * 4 - 1)
 
 typedef struct PortConfig {
     int viewMode;
@@ -153,7 +164,7 @@ typedef struct PortConfig {
     int aspect;          /* picture shape: 0 fills the window, 1 at most 16:9, 2 at most 21:9, 3 force 21:9, 4 force 32:9, 5 exact 4:3, 6 exact GBA 3:2 */
     int integerZoom;     /* 1: select only whole pixel scales (v1.4 numbering) */
     int keys[PORT_ACT_COUNT][2]; /* SDL keycodes, 0 = none */
-    int pad[PORT_ACT_COUNT];     /* SDL gamepad button or PORT_PAD_AXIS_BASE+axis*2+sign */
+    int pad[PORT_ACT_COUNT];     /* SDL gamepad, or raw joystick binding (PORT_PAD_RAW_*). */
     int cheatUnlockRiku;         /* opt-in title access; never marks Sora cleared */
     int undub;                  /* Japanese voices; applied when loading the ROM */
     int savePointSlotSelect;    /* experimental: choose the save slot at save points */
@@ -177,7 +188,7 @@ typedef struct PortConfig {
     int titleBrightnessButton; /* experimental: restore the cartridge's title brightness control outside Original view */
     int graphicsMode;          /* PORT_MODE_*: chosen on the first start (0 asks), each with its presets (PortApplyGraphicsMode) */
     int graphicsModeApplied;   /* the mode whose presets were last applied: the launcher only changes graphics_mode */
-    int gbaBorder;             /* GBA classic: the decorative border around the GBA picture (0 none, 1..3 designs) */
+    int gbaBorder;             /* Decorative border in any view (0 none, 1..3 existing designs). */
     int netDelay;              /* net_delay: the online link's input delay in frames (0 automatic, from the round trip) */
     int netStats;              /* net_stats: during an online link, the round trip, input delay and last rollback on screen */
     char onlineName[25];       /* online_name: the player's name on the lobby's rooms (relay servers; Steam uses its own) */
@@ -190,6 +201,11 @@ typedef struct PortConfig {
     int controllerPrompts;     /* experimental display only: 0 Original, 1 Auto, 2 Nintendo, 3 Xbox, 4 PlayStation */
     int hdMediaLanguage;       /* appended: 0 legacy/Auto, 1 user-labelled EN, 2 user-labelled JP; not text/Undub */
     int goldPremium;           /* appended, experimental, off: premium cards with a gold frame in the deck menu */
+    int hideTitleHint;         /* appended, off: hide SELECT OPTIONS text; SELECT still opens options */
+    int lcdGrid;               /* appended, 0..100: source-pixel LCD grid intensity; off by default */
+#if defined(__ANDROID__) || defined(PORT_ANDROID64)
+    int hdSoftwareH264;        /* prefer Android's software codec for HD AVC videos */
+#endif
 } PortConfig;
 
 extern PortConfig gPortConfig;
@@ -300,6 +316,7 @@ void PortGameSections(char** data, size_t* dataSize, char** bss, size_t* bssSize
 
 void PortFrame(void);
 void PortVideoApplyConfig(void);
+int PortVideoVrrOptionAvailable(void); /* actual host support, including Windows64 guest */
 /* SDL_SCALEMODE_LINEAR, or the pixel-art scaling on SDL's software renderer (its LINEAR stretch reads past the
    texture in fullscreen, port_main.c) */
 int PortSmoothScaleMode(void);
@@ -419,8 +436,10 @@ typedef struct PortTextGlyph {
     uint32_t face, shadow;
 } PortTextGlyph;
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud);
-/* Frames presented since start (port_main.c). */
+/* VBlank cycles since start, including skipped drawing (port_main.c). */
 uint32_t PortFrameCount(void);
+/* A committed state load restores game time; begin a fresh FPS/Hz window. */
+void PortFpsResetAfterStateLoad(void);
 /* OptiPort's deep view of a slow frame: the one-off costs each frame paid besides its usual work, reset by the
    frame log every frame. HD sprite decodes/uploads (port_hdsprites.c) and HD glyph renders. Only counted while
    KHCOM_FRAMELOG is on (on); otherwise no clock is read. */
@@ -446,6 +465,10 @@ void PortAudioShutdown(void);
 /* ---- input (port_input.c) ------------------------------------------------ */
 
 void PortInputInit(void);
+int PortInputRawBinding(const void* sdlEvent); /* -1: not an unmapped joystick press */
+int PortInputRawMenuChord(const void* sdlEvent);
+int PortInputRawMenuEvent(const void* sdlEvent, void* mappedEvent); /* 0 unrelated, 1 consumed, 2 key */
+void PortInputResetRawMenu(void);
 /* Deferred to the event pump so normal shutdown also closes the desktop launcher. */
 void PortRequestQuitAll(void);
 void PortInputResetBindings(void); /* clear keys from the old mapping and suppress held pad buttons */

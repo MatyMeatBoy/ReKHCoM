@@ -161,8 +161,8 @@ gTitleLogoBgTiles	2	-	gTitleLogoBgTiles	0	0	256	256	FORM/0505/FO0505.RTM:UK_titl
 gBtlHpSoraFaceTiles_0	3	gBtlHpSoraFaceFrame0	gBtlHpSoraFaceTiles	-10	-9	39	32	FORM/0060/FO0060.RTM:UK_gauge.imz#0	crop=5,1,126,115;place=2,0,36,32;scale=8	eu,us,jp
 gBtlHpSoraFaceTiles_1	3	gBtlHpSoraFaceFrame1	gBtlHpSoraFaceTiles	-10	-9	39	32	FORM/0060/FO0060.RTM:UK_gauge.imz#0	crop=133,1,255,115;place=2,0,38,32;scale=8	eu,us,jp
 gBtlHpSoraFaceTiles_2	3	gBtlHpSoraFaceFrame2	gBtlHpSoraFaceTiles	-10	-9	39	32	FORM/0060/FO0060.RTM:UK_gauge.imz#0	crop=1,132,126,243;place=2,0,39,32;scale=8	eu,us,jp
-gBtlHpRikuFaceTiles_0	3	gBtlHpRikuFaceFrame0	gBtlHpRikuFaceTiles	-12	-9	40	32	FORM/0061/FO0061.RTM:UK_gauge.imz#0	crop=4,1,125,115;place=3,1,36,32;scale=8	eu,us,jp
-gBtlHpRikuFaceTiles_1	3	gBtlHpRikuFaceFrame1	gBtlHpRikuFaceTiles	-12	-9	40	32	FORM/0061/FO0061.RTM:UK_gauge.imz#0	crop=133,1,255,115;place=7,2,39,32;scale=8	eu,us,jp
+gBtlHpRikuFaceTiles_0	3	gBtlHpRikuFaceFrame0	gBtlHpRikuFaceTiles	-12	-9	40	32	FORM/0062/FO0062.RTM:UK_gauge.imz#0	crop=0,1,121,115;place=3,1,36,32;scale=8	eu,us,jp
+gBtlHpRikuFaceTiles_1	3	gBtlHpRikuFaceFrame1	gBtlHpRikuFaceTiles	-12	-9	40	32	FORM/0062/FO0062.RTM:UK_gauge.imz#0	crop=133,1,255,115;place=7,2,39,32;scale=8	eu,us,jp
 gBtlPopCardBreakTiles	3	gBtlPopCardBreakFrame0	gBtlPopCardBreakTiles	-24	-8	48	16	FORM/0002/FO0002.RTM:UK_Cockpit.imz#0	pad=15,15;canvas=624,128;blit=600,107,847,140,8,20,607,100;scale=8	eu,us
 gBtlPopCardBreakGermanTiles	3	gBtlPopCardBreakGermanFrame0	gBtlPopCardBreakGermanTiles	-24	-8	48	16	FORM/0002/FO0002.RTM:GR_Cockpit.imz#0	pad=18,18;canvas=672,128;blit=591,107,856,140,15,20,657,100;scale=8	eu
 gBtlPopCardBreakItalianTiles	3	gBtlPopCardBreakItalianFrame0	gBtlPopCardBreakItalianTiles	-24	-8	48	16	FORM/0002/FO0002.RTM:IT_Cockpit.imz#0	pad=16,16;canvas=640,128;blit=598,107,849,140,12,20,620,100;scale=8	eu
@@ -262,7 +262,7 @@ gHudGaugeHdLad	3	-	-	0	0	1	1	FORM/0002/FO0002.SPR:UK_gauge.lad	raw
 gHudCockpitHdLad	3	-	-	0	0	1	1	FORM/0002/FO0002.SPR:UK_Cockpit.lad	raw
 gHudGaugeTex0	3	-	-	0	0	32	32	FORM/0060/FO0060.RTM:UK_gauge.imz#0	scale=8
 gHudGaugeTex1	3	-	-	0	0	64	64	FORM/0060/FO0060.RTM:UK_gauge.imz#1	scale=8
-gHudRikuGaugeTex0	3	-	-	0	0	32	32	FORM/0061/FO0061.RTM:UK_gauge.imz#0	scale=8
+gHudRikuGaugeTex0	3	-	-	0	0	32	32	FORM/0062/FO0062.RTM:UK_gauge.imz#0	scale=8
 gHudCockpitTex	3	-	-	0	0	128	128	FORM/0002/FO0002.RTM:UK_Cockpit.imz#0	scale=8
 gWorldIconTraverseTownHD	5	gWorldIconTraverseTownFrame0	gWorldIconTraverseTownTiles	-16	-16	32	39	FORM/0150/FO0150.RTM:world_icon.imz#0	crop=30,6,243,244;place=2,1,30,33;scale=8	eu,us,jp
 gWorldIconAgrabahHD	5	gWorldIconAgrabahFrame0	gWorldIconAgrabahTiles	-12	-20	31	39	FORM/0151/FO0151.RTM:world_icon.imz#0	crop=50,0,194,241;place=1,0,23,36;scale=8	eu,us,jp

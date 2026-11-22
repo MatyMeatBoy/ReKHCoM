@@ -354,8 +354,38 @@ typedef struct {
     int inputDone, outputDone;
 } Track;
 
+static AMediaCodec* StartDecoder(const char* name, const char* mime, AMediaFormat* format, ANativeWindow* window) {
+    AMediaCodec* codec = name ? M.codecByName(name) : M.codecNew(mime);
+    if (!codec)
+        return NULL;
+    if (M.codecConfigure(codec, format, window, NULL, 0) == AMEDIA_OK && M.codecStart(codec) == AMEDIA_OK)
+        return codec;
+    M.codecDelete(codec);
+    return NULL;
+}
+
+static AMediaCodec* OpenDecoder(const char* mime, AMediaFormat* format, ANativeWindow* window, bool softwareH264) {
+    /* The test harness can force a video codec, including one expected to fail. */
+    const char* forced = window ? SDL_getenv("KHCOM_HDMOVIE_DECODER") : NULL;
+    if (forced)
+        return StartDecoder(forced, mime, format, window);
+    if (window && softwareH264 && SDL_strcmp(mime, "video/avc") == 0) {
+        const char* names[] = { "c2.android.avc.decoder", "OMX.google.h264.decoder" };
+        for (size_t i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
+            AMediaCodec* codec = StartDecoder(names[i], mime, format, window);
+            if (codec) {
+                HdMovieLog("hd movie: using %s", names[i]);
+                return codec;
+            }
+        }
+        HdMovieLog("hd movie: software H.264 unavailable, trying Android's default decoder");
+    }
+    return StartDecoder(NULL, mime, format, window);
+}
+
 /* the first track whose type starts with kind ("video/", "audio/"): its own extractor and a decoder for it */
-static int OpenTrack(Track* t, int fd, off64_t size, const char* kind, ANativeWindow* window, AMediaFormat** formatOut) {
+static int OpenTrack(Track* t, int fd, off64_t size, const char* kind, ANativeWindow* window,
+                     bool softwareH264, AMediaFormat** formatOut) {
     size_t i, n;
     SDL_zerop(t);
     t->ex = M.extractorNew();
@@ -366,17 +396,12 @@ static int OpenTrack(Track* t, int fd, off64_t size, const char* kind, ANativeWi
         const char* mime = NULL;
         if (format && M.formatString(format, "mime", &mime) && mime && SDL_strncmp(mime, kind, 6) == 0) {
             M.extractorSelect(t->ex, i);
-            /* test harness: KHCOM_HDMOVIE_DECODER=<codec name> for the video (e.g. the software c2.android.avc.decoder) */
-            const char* forced = window ? SDL_getenv("KHCOM_HDMOVIE_DECODER") : NULL;
-            t->codec = forced ? M.codecByName(forced) : M.codecNew(mime);
-            if (t->codec && M.codecConfigure(t->codec, format, window, NULL, 0) == AMEDIA_OK && M.codecStart(t->codec) == AMEDIA_OK) {
+            t->codec = OpenDecoder(mime, format, window, softwareH264);
+            if (t->codec) {
                 *formatOut = format;
                 return 1;
             }
             HdMovieLog("hd movie: no %s decoder", mime);
-            if (t->codec)
-                M.codecDelete(t->codec);
-            t->codec = NULL;
             M.formatDelete(format);
             return 0;
         }
@@ -481,7 +506,8 @@ static int YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy
 /* Plays the movie at path to the end (or until skipped). subs, subs2: the subtitle file to show and the one to try
    if it is missing (NULL: none); font: the KHMenu face to try before the APK's. 0: it could not be opened, 1 played,
    2 played and the app was closed. */
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* fontPath, int masterVolume) {
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2,
+                       const char* fontPath, int masterVolume, bool softwareH264) {
     Track video, audioTrack;
     AMediaFormat *vFormat = NULL, *aFormat = NULL;
     AImageReader* reader = NULL;
@@ -527,11 +553,12 @@ int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* sub
         CloseTrack(&probe);
     }
     if (width <= 0 || height <= 0 || M.readerNew(width, height, HD_YUV_420_888, 4, &reader) != AMEDIA_OK ||
-        M.readerWindow(reader, &window) != AMEDIA_OK || !OpenTrack(&video, fd, st.st_size, "video/", window, &vFormat)) {
+        M.readerWindow(reader, &window) != AMEDIA_OK ||
+        !OpenTrack(&video, fd, st.st_size, "video/", window, softwareH264, &vFormat)) {
         HdMovieLog("hd movie: %s does not open (%dx%d)", path, (int)width, (int)height);
         goto done;
     }
-    audioOn = OpenTrack(&audioTrack, fd, st.st_size, "audio/", NULL, &aFormat);
+    audioOn = OpenTrack(&audioTrack, fd, st.st_size, "audio/", NULL, false, &aFormat);
     if (audioOn) {
         M.formatInt(aFormat, "sample-rate", &rate);
         M.formatInt(aFormat, "channel-count", &channels);

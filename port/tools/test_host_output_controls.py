@@ -17,7 +17,7 @@ def function(source,name):
 def run(out):
     out.mkdir(parents=True,exist_ok=True)
     source=(ROOT/'port/ps5/guest/src/sdl_shim.c').read_text()
-    names=['SDL_CreateWindow','SDL_SetWindowSize','SDL_SyncWindow','SDL_GetWindowSizeInPixels','SDL_SetRenderVSync','SDL_GetRenderVSync']
+    names=['PortBridgeVideoCaps','SDL_CreateWindow','SDL_SetWindowSize','SDL_SyncWindow','SDL_GetWindowSizeInPixels','SDL_SetRenderVSync','SDL_GetRenderVSync']
     parts=[function(source,name) for name in names]
     helper=function(source,'OutputCapability') if 'static int OutputCapability(' in source else ''
     protocol=(ROOT/'port/ps5/shared/bridge_output.h').exists()
@@ -32,6 +32,8 @@ typedef struct {int vsync;} SDL_Renderer;
 static SDL_Window hostObject={1280,720}, *hostWindow=&hostObject;
 static SDL_Renderer hostRendererObject, *hostRenderer=&hostRendererObject;
 static int failSetWindow,ignoreWindowSet,failSync,failGetWindow,failSetVsync,ignoreVsyncSet,failGetVsync,windowCalls,vsyncCalls,actualVsync=1;
+static int hostVrrControl,hostVrrEligible,badCaps;
+#define HOST_OUTPUT_VRR_CAPS() ((hostVrrControl?4:0) | (hostVrrEligible?8:0))
 static bool HostSDLSetWindowSize(SDL_Window*w,int a,int b){windowCalls++;if(failSetWindow)return false;if(!ignoreWindowSet){w->w=a;w->h=b;}return true;}
 static bool HostSDLSyncWindow(SDL_Window*w){(void)w;return !failSync;}
 static bool HostSDLGetWindowSize(SDL_Window*w,int*a,int*b){*a=w->w;*b=w->h;return !failGetWindow;}
@@ -57,7 +59,7 @@ HOST_HEADER
 #undef sWindow
 #undef sRenderer
 static int oldHost,wrongMagic;
-static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){if(oldHost)return wrongMagic?1:0;return HostOutputCommand(op,a,b,c,d);}
+static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){if(oldHost)return wrongMagic?1:0;if(badCaps&&op==BRIDGE_OUTPUT_CAPS)return -2;return HostOutputCommand(op,a,b,c,d);}
 static void h_gfx_size(int*a,int*b){*a=1280;*b=720;}
 static SDL_Window sWindow;
 bool SDL_SetWindowSize(SDL_Window*,int,int);
@@ -68,12 +70,18 @@ static int checks;
 int main(void){
  SDL_Renderer renderer={9};int value=123,a=0,b=0;
  oldHost=1;
+ CHECK(PortBridgeVideoCaps()==0);
  CHECK(!SDL_SetWindowSize(&sWindow,1920,1080));
  CHECK(!SDL_SetRenderVSync(&renderer,0)&&renderer.vsync==9);
  CHECK(!SDL_GetRenderVSync(&renderer,&value)&&value==123);
  CHECK(windowCalls==0&&vsyncCalls==0);
  CHECK(SDL_CreateWindow("legacy",1920,1080,0)==&sWindow);
  wrongMagic=1;CHECK(!SDL_SetRenderVSync(&renderer,0));oldHost=0;
+ CHECK(!(PortBridgeVideoCaps()&BRIDGE_OUTPUT_VRR_CONTROL_CAP));
+ hostVrrControl=1;CHECK(PortBridgeVideoCaps()&BRIDGE_OUTPUT_VRR_CONTROL_CAP);
+ CHECK(!(PortBridgeVideoCaps()&BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP));
+ hostVrrEligible=1;CHECK(PortBridgeVideoCaps()&BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP);
+ badCaps=1;CHECK(PortBridgeVideoCaps()==0);badCaps=0;hostVrrControl=hostVrrEligible=0;
  CHECK(HostOutputCommand(0x210,0,0,0,0)==-2);
  CHECK(HostOutputCommand(0x220,0,0,0,0)==-2);
  CHECK(HostOutputCommand(BRIDGE_OUTPUT_PROBE,0,0,0,0)==BRIDGE_OUTPUT_MAGIC);
