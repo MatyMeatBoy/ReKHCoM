@@ -15,6 +15,7 @@
 #include <SDL3/SDL_main.h>
 #include "../../android/native/android_lifecycle_events.h"
 #include "../../include/port/port_audio_continuity.h"
+#include "../../include/port/sdl_startup.h"
 #include <dirent.h>
 #include <errno.h>
 #include <math.h>
@@ -909,7 +910,7 @@ int main(int argc, char** argv) {
     Log("ReKHCoM (Android 64-bit) starting");
     HdPackInstall(sData, Log);
     LogDevice();
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD))
+    if (!PortSdlInit(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD, Log))
         Fatal(SDL_GetError());
     if (!PortAndroidLifecycleStart())
         Log("Android lifecycle watch: %s", SDL_GetError());
