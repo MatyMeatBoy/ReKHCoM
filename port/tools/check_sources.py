@@ -2,7 +2,7 @@
 """Source checks that take seconds and catch what otherwise only fails in a console or Android build.
 
 - The console guests (PS5, PS4, Switch, Vita, Android 64) build port/src with a small SDL shim
-  (port/ps5/guest/include/SDL3/SDL.h): every SDLK_/SDL_EVENT_/SDL_GAMEPAD_/SDL_SCANCODE_ constant the port uses must be
+  (port/ps5/guest/include/SDL3/SDL.h): each SDL constant reachable with PORT_SDL_BRIDGE must be
   defined there, with SDL's own value (21/10: SDLK_AC_BACK and SDL_EVENT_MOUSE_BUTTON_DOWN broke the Android 64 build).
 - Java string and char literals must close on their line (21/10: a script wrote real newlines into GameActivity's
   share-log strings and the APK did not build).
@@ -23,10 +23,52 @@ ROOT = Path(__file__).resolve().parents[2]
 SHIM = ROOT / 'port/ps5/guest/include/SDL3/SDL.h'
 SDL = ROOT.parent / 'toolchain/android/SDL3-3.4.18/include/SDL3'
 CONST = re.compile(r'\b(SDLK_\w+|SDL_EVENT_\w+|SDL_GAMEPAD_\w+|SDL_SCANCODE_\w+)\b')
+CONDITIONAL = re.compile(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b(.*)')
+BRIDGE_TEST = re.compile(r'(!?)\s*defined\s*(?:\(\s*PORT_SDL_BRIDGE\s*\)|\s+PORT_SDL_BRIDGE)')
+C_COMMENT_OR_LITERAL = re.compile(r"""(/\*.*?\*/|//[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')""", re.S)
 
 
 def guest_sources():
     return sorted((ROOT / 'port/src').glob('*.c')) + [ROOT / 'port/android/native/touch_android.c']
+
+
+def bridge_condition(directive, expression):
+    """Evaluate simple tests of the macro defined by the SDL shim."""
+    expression = expression.strip()
+    if directive == 'else':
+        return True
+    if directive in ('ifdef', 'ifndef'):
+        return (directive == 'ifdef') if expression == 'PORT_SDL_BRIDGE' else None
+    match = BRIDGE_TEST.fullmatch(expression)
+    return not match[1] if match else None
+
+
+def guest_constant_names(source):
+    """Keep the branches that could compile in any SDL shim guest."""
+    source = C_COMMENT_OR_LITERAL.sub(lambda m: m[2] or ' ', source.replace('\\\n', ''))
+    names = set()
+    active = True
+    frames = []
+    for line in source.splitlines():
+        match = CONDITIONAL.match(line)
+        if not match:
+            if active:
+                names.update(CONST.findall(line))
+            continue
+        directive, expression = match.groups()
+        if directive == 'endif':
+            active, _ = frames.pop()
+            continue
+
+        # An unresolved condition leaves both this branch and later alternatives
+        # possible. Keep scanning them so the per-target coverage is unchanged.
+        parent, available = frames.pop() if directive in ('elif', 'else') else (active, True)
+        condition = bridge_condition(directive, expression)
+        active = parent and available and condition is not False
+        frames.append((parent, available and condition is not True))
+        if parent and available:
+            names.update(CONST.findall(expression))
+    return names
 
 
 def shim_problems():
@@ -34,7 +76,8 @@ def shim_problems():
     defined = set(CONST.findall(shim))
     out = []
     for f in guest_sources():
-        for name in sorted(set(CONST.findall(f.read_text(encoding='utf-8', errors='replace'))) - defined):
+        names = guest_constant_names(f.read_text(encoding='utf-8', errors='replace'))
+        for name in sorted(names - defined):
             out.append(f'{f.relative_to(ROOT)}: {name} is not in the console SDL shim ({SHIM.relative_to(ROOT)})')
     # the shim's keycodes must be SDL's own: the hosts pass SDL's values through
     real = {}
