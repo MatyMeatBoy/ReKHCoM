@@ -498,4 +498,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr623-atlas097-preview | PR 623: conservar la propuesta exacta del arbol Atlas097 como vista previa | en_curso | codex-retoma-atlas097 | art/pr623-atlas097-preview-20261122 | Integracion de PR solicitada el 22/11/2026, vista previa apagada por defecto. Atlas78926368 sigue pending. | 2026-11-22T14:30:03.007458+00:00 |
 | issue647-optional-sdl-audio | Keep SDL gameplay available when optional audio initialization fails | en_curso | codex-retoma-audio647 | fix/issue647-optional-sdl-audio | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:30:35.401523+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:30:55.225254+00:00)
