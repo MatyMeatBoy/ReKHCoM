@@ -111,6 +111,12 @@ Diferencias para Android:
 - [x] Host Android de 64 bits (`port/android64/host/android64_host.c`): SDL3 con GPU (SDL_RenderGeometry),
   audio por stream SDL, mandos, toques, archivos normales o `apk:/` del APK, imagen reservada desde el
   constructor, capturas de prueba `KHCOM_HOST_SHOT`.
+- [x] Ciclo de vida SDL3 ([#647](https://github.com/MatyMeatBoy/ReKHCoM/issues/647)). SDL 3.4.18 entrega
+  segundo plano y vuelta al frente mediante un observador. El juego nativo y el host ARM64 reenvían una
+  notificación por transición a la cola SDL, para la partida y las cinemáticas. La entrada `app_state`
+  entrega primero la pausa si el host recibe una ida y vuelta en el mismo vaciado de la cola. La prueba
+  `test_android_lifecycle_events.py` usa el productor y la cola de SDL 3.4.18. Falta probar Home, reanudación,
+  audio y cierre de la actividad en Android con el APK integrado.
 - [x] APK único: armeabi-v7a (32 bits, teléfonos viejos) + arm64-v8a (host de 64 bits) + `assets/guest-*.macho`;
   `GameActivity` usa `rekhcom64` donde Android instaló las librerías de 64 bits. Misma firma y paquete:
   actualiza encima y conserva las partidas (verificado: certificado 3a5a17… igual al de v1.9.12).
