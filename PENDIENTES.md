@@ -492,7 +492,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | pr_abierto | codex-retoma-controllers | https://github.com/MatyMeatBoy/ReKHCoM/pull/642 | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:23:00.257847+00:00 |
 | issue643-android-software-h264 | Android H.264: preferencia de decodificacion por software | pr_abierto | codex-retoma-android643 | https://github.com/MatyMeatBoy/ReKHCoM/pull/652 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:20:43.960729+00:00 |
 | issue640-riku-hd-portrait-source | Corregir fuente de retratos HD de Riku en batalla | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/651 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:19:22.287427+00:00 |
-| issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | en_curso | codex-retoma-linux639 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:20:29.854301+00:00 |
+| issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | pr_abierto | codex-retoma-linux639 | https://github.com/MatyMeatBoy/ReKHCoM/pull/654 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:23:11.539949+00:00 |
 | issue647-android-lifecycle | Android: SDL3 lifecycle watcher for native game, bridge and HD playback | en_curso | codex-retoma-android647 | fix/android647-lifecycle-watch | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:22:41.580343+00:00 |
 
 Integrador: libre
