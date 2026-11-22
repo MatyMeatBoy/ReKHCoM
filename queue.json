@@ -17368,10 +17368,10 @@
     "issue647-android-lifecycle": {
       "id": "issue647-android-lifecycle",
       "piece": "Android: SDL3 lifecycle watcher for native game, bridge and HD playback",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-android647",
       "created_at": "2026-11-22T14:22:21.050132+00:00",
-      "updated_at": "2026-11-22T14:28:43.763067+00:00",
+      "updated_at": "2026-11-22T14:31:10.389369+00:00",
       "branch": "fix/android647-lifecycle-watch",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/655",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17381,9 +17381,15 @@
           "at": "2026-11-22T14:28:43.763067+00:00",
           "owner": "codex-retoma-android647",
           "detail": "5ba0212c4; SDL3.4.18 lifecycle producer RED/GREEN, rapid host state, quit and reset fixtures, NDK ARMv7/ARM64 and ILP32 syntax PASS. Pending APK/Android runtime."
+        },
+        {
+          "at": "2026-11-22T14:31:10.389369+00:00",
+          "owner": "codex-retoma-android647",
+          "detail": "Merge de73ba1010c47e0b11f3fe25f89f2d2df79ab932. SDL 3.4.18 real, regresión de película y sintaxis NDK; issue #647 sigue abierto para otros cambios."
         }
       ],
-      "claimed_at": "2026-11-22T14:22:30.850145+00:00"
+      "claimed_at": "2026-11-22T14:22:30.850145+00:00",
+      "completed_at": "2026-11-22T14:31:10.389369+00:00"
     },
     "issue641-riku-credits-audio": {
       "id": "issue641-riku-credits-audio",
@@ -17440,7 +17446,7 @@
     "created_at": "2026-11-22T14:30:55.225254+00:00",
     "updated_at": "2026-11-22T14:30:55.225254+00:00"
   },
-  "updated_at": "2026-11-22T14:30:55.225254+00:00",
+  "updated_at": "2026-11-22T14:31:10.391384+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
