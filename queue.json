@@ -17249,12 +17249,12 @@
     "pr642-controller-integration": {
       "id": "pr642-controller-integration",
       "piece": "PR 642: lifecycle y captura de mandos USB durante el menu",
-      "status": "en_curso",
+      "status": "listo_pr",
       "owner": "codex-retoma-controllers",
       "created_at": "2026-11-22T14:08:32.683070+00:00",
-      "updated_at": "2026-11-22T14:09:35.444564+00:00",
+      "updated_at": "2026-11-22T14:21:43.813950+00:00",
       "branch": "fix/pr642-controller-capture-20261122",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/642",
       "approval": "Pedido del 22/11/2026 de integrar todos los PR tras validarlos",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/642",
       "evidence": [
@@ -17262,6 +17262,11 @@
           "at": "2026-11-22T14:09:35.444564+00:00",
           "owner": "codex-retoma-controllers",
           "detail": "Review del head b6b0fc5d: forwarding de dispositivos, estado del menu durante captura y chord con sombrero diagonal."
+        },
+        {
+          "at": "2026-11-22T14:21:43.813950+00:00",
+          "owner": "codex-retoma-controllers",
+          "detail": "Candidato local 6df33f529c270bd56b391cfefa4de64144324837 sobre b6b0fc5d: RED SDL virtual (conexion consumida), GREEN ambos binarios test_controller_bindings.py, diff-check y merge-tree limpios. Pendiente aplicar al PR e integrar bajo lock; sin push, hardware o build completos."
         }
       ],
       "claimed_at": "2026-11-22T14:08:43.153463+00:00"
@@ -17333,7 +17338,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:21:35.162674+00:00",
+  "updated_at": "2026-11-22T14:21:43.813950+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
