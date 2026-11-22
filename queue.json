@@ -17392,10 +17392,23 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/641",
       "evidence": [],
       "claimed_at": "2026-11-22T14:24:23.896173+00:00"
+    },
+    "pr623-atlas097-preview": {
+      "id": "pr623-atlas097-preview",
+      "piece": "PR 623: conservar la propuesta exacta del arbol Atlas097 como vista previa",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-22T14:28:33.379820+00:00",
+      "updated_at": "2026-11-22T14:28:33.379820+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Integracion de PR solicitada el 22/11/2026, vista previa apagada por defecto. Atlas78926368 sigue pending.",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/623",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:24:58.525608+00:00",
+  "updated_at": "2026-11-22T14:28:33.379820+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
