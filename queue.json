@@ -17372,6 +17372,19 @@
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/647",
       "evidence": [],
       "claimed_at": "2026-11-22T14:22:30.850145+00:00"
+    },
+    "issue641-riku-credits-audio": {
+      "id": "issue641-riku-credits-audio",
+      "piece": "Reproducir y corregir la pista GBA de los créditos de Riku",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-22T14:24:09.399453+00:00",
+      "updated_at": "2026-11-22T14:24:09.399453+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/641",
+      "evidence": []
     }
   },
   "integrator": {
@@ -17380,7 +17393,7 @@
     "created_at": "2026-11-22T14:23:21.811320+00:00",
     "updated_at": "2026-11-22T14:23:21.811320+00:00"
   },
-  "updated_at": "2026-11-22T14:23:54.267109+00:00",
+  "updated_at": "2026-11-22T14:24:09.399453+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
