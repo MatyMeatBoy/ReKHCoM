@@ -20,14 +20,23 @@ HOST = 'binarm64/rekhcom-arm64'
 SDL = 'libarm64/libSDL3.so.0'
 GUESTS = tuple(f'binarm64/guest-{region}.macho' for region in ('eu', 'us', 'jp'))
 RUNTIME_FILES = (HOST, SDL, *GUESTS)
+SYSTEM_LIBS = {
+    'ld-linux-aarch64.so.1', 'libc.so.6', 'libm.so.6', 'libdl.so.2',
+    'libpthread.so.0', 'librt.so.1', 'libgcc_s.so.1',
+}
 
 
 def audit_elf(path, readelf, *, host):
     report = subprocess.check_output([str(readelf), '-h', '-l', '-d', '-V', str(path)], text=True)
-    if not re.search(r'Class:\s+ELF64', report) or not re.search(r'Machine:\s+AArch64', report):
-        raise ValueError(f'{path}: expected an AArch64 ELF64 binary')
+    if (not re.search(r'Class:\s+ELF64', report) or not re.search(r'Machine:\s+AArch64', report) or
+            not re.search(r"Data:.*little endian", report)):
+        raise ValueError(f'{path}: expected a little-endian AArch64 ELF64 binary')
+    dependencies = set(re.findall(r'\(NEEDED\).*\[([^]\n]+)\]', report))
+    allowed = SYSTEM_LIBS | {'libSDL3.so.0'} if host else SYSTEM_LIBS
+    if unexpected := dependencies - allowed:
+        raise ValueError(f'{path}: unexpected runtime libraries: {", ".join(sorted(unexpected))}')
     if host and ('[Requesting program interpreter: /lib/ld-linux-aarch64.so.1]' not in report or
-                 not re.search(r'\(NEEDED\).*\[libSDL3\.so\.0\]', report)):
+                 'libSDL3.so.0' not in dependencies):
         raise ValueError(f'{path}: expected the ARM64 system loader and libSDL3.so.0')
     if not host and not re.search(r'\(SONAME\).*\[libSDL3\.so\.0\]', report):
         raise ValueError(f'{path}: expected libSDL3.so.0 SONAME')

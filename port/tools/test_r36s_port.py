@@ -46,17 +46,21 @@ class R36SPortTest(unittest.TestCase):
 
     def test_elf_validator_rejects_wrong_architecture_and_newer_glibc(self):
         package = load('r36s_package', PORT / 'package.py')
-        report = ('Class: ELF64\nMachine: AArch64\n'
+        report = ('Class: ELF64\nMachine: AArch64\nData: 2\'s complement, little endian\n'
                   '[Requesting program interpreter: /lib/ld-linux-aarch64.so.1]\n'
                   '(NEEDED) Shared library: [libSDL3.so.0]\nName: GLIBC_2.31')
         with patch.object(package.subprocess, 'check_output', return_value=report) as readelf:
             package.audit_elf(Path('rekhcom-arm64'), 'llvm-readelf', host=True)
-            for old, new in (('AArch64', 'X86-64'), ('2.31', '2.34'), ('2.31', 'PRIVATE'),
+            for old, new in (('AArch64', 'X86-64'), ('little endian', 'big endian'),
+                             ('2.31', '2.34'), ('2.31', 'PRIVATE'),
                              ('/lib/ld-linux-aarch64.so.1', '/lib/ld-linux.so.2'),
                              ('libSDL3.so.0', 'libSDL2-2.0.so.0')):
                 readelf.return_value = report.replace(old, new)
                 with self.assertRaises(ValueError, msg=new):
                     package.audit_elf(Path('rekhcom-arm64'), 'llvm-readelf', host=True)
+            readelf.return_value = report + '\n(NEEDED) Shared library: [libgbm.so.1]'
+            with self.assertRaisesRegex(ValueError, 'libgbm.so.1'):
+                package.audit_elf(Path('rekhcom-arm64'), 'llvm-readelf', host=True)
 
     def test_package_contains_only_expected_runtime_entries(self):
         package = load('r36s_package', PORT / 'package.py')
