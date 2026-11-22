@@ -496,4 +496,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue647-android-lifecycle | Android: SDL3 lifecycle watcher for native game, bridge and HD playback | en_curso | codex-retoma-android647 | fix/android647-lifecycle-watch | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:22:41.580343+00:00 |
 | issue641-riku-credits-audio | Reproducir y corregir la pista GBA de los créditos de Riku | en_curso | codex-retoma-audio641 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:24:23.896173+00:00 |
 
-Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:23:21.811320+00:00)
+Integrador: libre
