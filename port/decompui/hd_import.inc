@@ -2967,6 +2967,12 @@ static bool HdModCard() {
     hdexport::Section(sRoot, haveTracks > 0 || haveSprites > 0);
 #endif
     ImGui::Separator();
+#ifdef LAUNCHER_ANDROID
+    changed |= ToggleRow(T("Decodificación H.264 por software", "Software H.264 decoding"),
+                         T("Actívala si aparecen franjas verdes en los videos HD. Se aplica al volver a iniciar el juego.",
+                           "Turn this on if HD videos show green stripes. It takes effect the next time you start the game."),
+                         Ini("hd_software_h264"));
+#endif
     int mediaLanguage = std::clamp(Ini("hd_media_language"), 0, 2);
     ImGui::TextWrapped("%s", T("Audio de vídeos HD (independiente del texto y Undub)", "HD movie audio (separate from text and Undub)"));
     if (ImGui::SmallButton(T("Revisar variantes importadas", "Check imported variants"))) variantsRead = false;

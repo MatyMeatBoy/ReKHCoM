@@ -83,7 +83,8 @@ static void h_tex_free(int id){H_tex_free(id);}
   movie_bridge=r'''
 #define SDL_snprintf snprintf
 static int sQuit,sStartAt,sStopAt;
-static struct {int hdSubtitles,masterVolume;}gPortConfig;
+static bool sMovieSoftwareH264;
+static struct {int hdSubtitles,masterVolume,hdSoftwareH264;}gPortConfig;
 static void MoviePath(const char*n,char*p,int cap){snprintf(p,cap,"%s",n);}
 static void MovieSubtitlePath(const char*n,const char*l,char*p,int cap){snprintf(p,cap,"%s.%s.txt",n,l);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
@@ -92,7 +93,7 @@ static void SDL_strlcpy(char*p,const char*s,int cap){snprintf(p,cap,"%s",s);}
 static void(*resetCallback)(void);
 static void RendererDeviceReset(void){HostTextureReset();}
 static void HdMovieAndroidSetRendererResetCallback(void(*cb)(void)){resetCallback=cb;}
-static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int volume){assert(resetCallback);assert(volume==gPortConfig.masterVolume);resetCallback();return 0;}
+static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int volume,bool software){assert(resetCallback);assert(volume==gPortConfig.masterVolume);assert(!software);resetCallback();return 0;}
 '''
   movie_bridge+=function(android,'static int H_hd_movie(')
   movie_bridge+='static int h_hd_movie(const char*m,const char*a,const char*b,const char*f){return H_hd_movie(m,a,b,f);}'
@@ -142,7 +143,8 @@ int main(void){
  return 0;
 }
 '''
- cc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
+ cc=next(p/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe' for p in ROOT.parents
+         if (p/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe').is_file())
  with tempfile.TemporaryDirectory(prefix='rekhcom-bridge-epoch-') as td:
   src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(code,encoding='utf-8')
   for target in (['PORT_ANDROID64'] if args.baseline else ['PORT_ANDROID64','PORT_LINUX64_GUEST']):

@@ -106,6 +106,13 @@ escenas del 1.5 según #25 (por confirmar mirando). RLP: bucle del menú de tít
   `KHCOM_HDMOVIE_YUV=1`. Verificado en el emulador Android 14 (host de 64 bits): la apertura ROP 1080p completa con
   subtítulos, colores correctos (`KHCOM_HDMOVIE_SHOT=20`); el emulador traduce ARM y descarta cuadros, un teléfono no.
   Prueba: `KHCOM_MOVIE=1` con `files/hd/movies/ROP.mp4`.
+
+  Si aparecen franjas verdes en videos HD como en el [reporte #643](https://github.com/MatyMeatBoy/ReKHCoM/issues/643),
+  activa **Decodificación H.264 por software** en la pestaña **HD** del launcher Android y vuelve a iniciar el juego.
+  El ajuste se guarda en `kh_com.ini` y está desactivado por defecto. El reproductor prueba los decodificadores
+  de software de Android para AVC. Si ninguno abre, configura e inicia el video, el log registra el retorno
+  al decodificador predeterminado. La selección de decodificador de audio sigue a cargo de Android.
+
 - [ ] Videos en consolas y Linux (documentado 22/10; no entra en la v2.0: sin hardware para verificar). En esas
   plataformas el juego pasa sus propios videos y las escenas siguen siendo las del cartucho; la música HD sí suena.
 
