@@ -490,5 +490,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue638-menu-launcher-copy | Corregir dificultad Riku y descripción de videos HD | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/650 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:11:17.620081+00:00 |
 | r36s-portmaster-aarch64-20261122 | ReKHCoM Linux ARM64 para R36S y launcher PortMaster | en_curso | codex-retoma-r36s | port/r36s-portmaster-20261122 | Usuario 22/11/2026: port R36S con Opti36S | 2026-11-22T14:09:10.157297+00:00 |
 | pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | en_curso | codex-retoma-controllers | fix/pr642-controller-capture-20261122 | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:09:35.444564+00:00 |
+| issue643-android-software-h264 | Android H.264: preferencia de decodificacion por software | pendiente | — | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:12:16.023873+00:00 |
 
 Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:10:44.678856+00:00)

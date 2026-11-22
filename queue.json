@@ -17260,6 +17260,19 @@
         }
       ],
       "claimed_at": "2026-11-22T14:08:43.153463+00:00"
+    },
+    "issue643-android-software-h264": {
+      "id": "issue643-android-software-h264",
+      "piece": "Android H.264: preferencia de decodificacion por software",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-22T14:12:16.023873+00:00",
+      "updated_at": "2026-11-22T14:12:16.023873+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/643",
+      "evidence": []
     }
   },
   "integrator": {
@@ -17268,7 +17281,7 @@
     "created_at": "2026-11-22T14:10:44.678856+00:00",
     "updated_at": "2026-11-22T14:10:44.678856+00:00"
   },
-  "updated_at": "2026-11-22T14:11:17.620081+00:00",
+  "updated_at": "2026-11-22T14:12:16.023873+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
