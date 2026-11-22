@@ -17224,10 +17224,10 @@
     "r36s-portmaster-aarch64-20261122": {
       "id": "r36s-portmaster-aarch64-20261122",
       "piece": "ReKHCoM Linux ARM64 para R36S y launcher PortMaster",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-r36s",
       "created_at": "2026-11-22T14:08:02.151172+00:00",
-      "updated_at": "2026-11-22T14:58:45.573613+00:00",
+      "updated_at": "2026-11-22T14:59:38.343702+00:00",
       "branch": "port/r36s-portmaster-20261122",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/653",
       "approval": "Usuario 22/11/2026: port R36S con Opti36S",
@@ -17247,9 +17247,15 @@
           "at": "2026-11-22T14:58:45.573613+00:00",
           "owner": "codex-retoma-r36s",
           "detail": "Ready head 09f9702a2; alpha1 QEMU EU/US/JP 240 presents exit0, JP relocated. Alpha2 composed QA d52082f1 EU title/fullscreen/audio fallback/90 presents exit0, transcript verified. AArch64 GLIBC_2.29, clean ZIP, KMSDRM/ALSA/pad/pace physical pending."
+        },
+        {
+          "at": "2026-11-22T14:59:38.343702+00:00",
+          "owner": "codex-retoma-r36s",
+          "detail": "Merge 0b50d598ba5da3a4bf68e61a5b838cc1424d88fe tree idéntico al QA d52082f1. Alpha1 EU/US/JP 240 presents exit0, JP reubicado; alpha2 EU título, fullscreen y 90 presents con driver audio inválido, exit0. Prueba física pendiente."
         }
       ],
-      "claimed_at": "2026-11-22T14:08:17.155824+00:00"
+      "claimed_at": "2026-11-22T14:08:17.155824+00:00",
+      "completed_at": "2026-11-22T14:59:38.343702+00:00"
     },
     "pr642-controller-integration": {
       "id": "pr642-controller-integration",
@@ -17597,7 +17603,7 @@
     "created_at": "2026-11-22T14:59:18.996845+00:00",
     "updated_at": "2026-11-22T14:59:18.996845+00:00"
   },
-  "updated_at": "2026-11-22T14:59:18.996845+00:00",
+  "updated_at": "2026-11-22T14:59:38.344700+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
