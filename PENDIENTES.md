@@ -487,5 +487,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | readme-showcase-layout-20261116 | README hero placement, visible comparison and project introduction | integrado | codex-readme-layout | https://github.com/MatyMeatBoy/ReKHCoM/pull/645 | Owner directly requested the same README layout and a NewSnap-style English introduction for ShiningSource and ReKHCoM, 2026-11-16 | 2026-11-16T14:13:09.622647+00:00 |
 | readme-brand-header-20261116 | README vector brand header and badges matching NewSnap | integrado | codex-readme-header | https://github.com/MatyMeatBoy/ReKHCoM/pull/646 | Owner clarified screenshot: create NewSnap-style visual logo/header and badges for remaining two projects and remove duplicated text titles, 2026-11-16 | 2026-11-16T14:19:05.891176+00:00 |
 | pr648-shiningsource-lessons | Integrar retorno documental de ShiningSource | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/648 | Usuario 22/11/2026: integrar PR abiertos verificados | 2026-11-22T14:07:27.993731+00:00 |
+| issue638-menu-launcher-copy | Corregir dificultad Riku y descripción de videos HD | pendiente | — | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:07:46.120178+00:00 |
 
 Integrador: libre
