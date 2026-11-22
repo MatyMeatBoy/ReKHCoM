@@ -17342,10 +17342,10 @@
     "issue639-linux-hd-import-guidance": {
       "id": "issue639-linux-hd-import-guidance",
       "piece": "Aclarar importación HD opcional en el launcher Linux",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-linux639",
       "created_at": "2026-11-22T14:20:08.725206+00:00",
-      "updated_at": "2026-11-22T14:23:11.539949+00:00",
+      "updated_at": "2026-11-22T14:24:48.107076+00:00",
       "branch": null,
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/654",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17355,9 +17355,15 @@
           "at": "2026-11-22T14:23:11.539949+00:00",
           "owner": "codex-retoma-linux639",
           "detail": "Dos diálogos simulados; 11 pruebas pasaron y una se omitió por permisos de symlink."
+        },
+        {
+          "at": "2026-11-22T14:24:48.107076+00:00",
+          "owner": "codex-retoma-linux639",
+          "detail": "Merge 32f5988ee09912358b0fda94db25483a4dfe8d70. Dos diálogos simulados; 11 pruebas pasaron y una se omitió por permisos de symlink."
         }
       ],
-      "claimed_at": "2026-11-22T14:20:29.854301+00:00"
+      "claimed_at": "2026-11-22T14:20:29.854301+00:00",
+      "completed_at": "2026-11-22T14:24:48.107076+00:00"
     },
     "issue647-android-lifecycle": {
       "id": "issue647-android-lifecycle",
@@ -17394,7 +17400,7 @@
     "created_at": "2026-11-22T14:23:21.811320+00:00",
     "updated_at": "2026-11-22T14:23:21.811320+00:00"
   },
-  "updated_at": "2026-11-22T14:24:23.896173+00:00",
+  "updated_at": "2026-11-22T14:24:48.107076+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
