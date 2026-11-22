@@ -500,4 +500,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr601-atlas120-preview | Adaptar propuesta #601 para previsualización de mampostería sin activarla por defecto | en_curso | codex-retoma-atlas120 | — | Usuario 22/11/2026: integrar PR verificados; propuesta Atlas permanece pendiente de valoración para activación | 2026-11-22T14:31:29.274526+00:00 |
 | pr606-620-oogie-preview | PR 606 y 620: ambas propuestas Oogie como vistas previas conservando arena aprobada | en_curso | codex-retoma-oogie | — | Integrar PR solicitado el 22/11/2026. Las propuestas exactas de Atlas siguen pendientes y apagadas por defecto. | 2026-11-22T14:34:53.231882+00:00 |
 
-Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:35:06.298328+00:00)
+Integrador: libre
