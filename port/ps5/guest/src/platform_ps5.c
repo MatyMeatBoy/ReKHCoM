@@ -42,7 +42,7 @@ void PortPs5LockSettings(void) {
 
 /* Called on the guest stack by ps5_boot. */
 int guest_main(void) {
-#ifdef PORT_LINUX64_GUEST
+#if defined(PORT_LINUX64_GUEST) && defined(__x86_64__)
     if (getenv("KHCOM_PPU_THREAD_TEST")) {
         extern int PortGuestThreadSelfTest(void);
         return PortGuestThreadSelfTest();

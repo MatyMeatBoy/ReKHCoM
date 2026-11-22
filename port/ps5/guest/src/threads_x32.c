@@ -1,6 +1,6 @@
 /* Low guest stacks and emulated TLS for the desktop x32 PPU. Host stacks and
  * native TLS remain owned by SDL/OS; no platform FS/GS register is changed. */
-#ifdef PORT_LINUX64_GUEST
+#if defined(PORT_LINUX64_GUEST) && defined(__x86_64__)
 #include <SDL3/SDL.h>
 #include <stdint.h>
 #include <stdlib.h>

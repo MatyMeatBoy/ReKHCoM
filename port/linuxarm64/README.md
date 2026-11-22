@@ -1,5 +1,7 @@
 # Linux ARM64 experimental bridge host
 
+For the R36S handheld build and manual Ports archive, see [R36S](../linux/r36s/README.md).
+
 The host is Linux AArch64 LP64; the game uses AArch64 instructions with 32-bit
 pointers (`arm64_32-apple-watchos`, Mach-O). This preserves existing guest data
 layouts. It requires a 64-bit ARM CPU and operating system. ARM32 remains a
