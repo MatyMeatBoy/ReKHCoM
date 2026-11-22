@@ -492,4 +492,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | en_curso | codex-retoma-controllers | fix/pr642-controller-capture-20261122 | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:09:35.444564+00:00 |
 | issue643-android-software-h264 | Android H.264: preferencia de decodificacion por software | pendiente | — | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:12:16.023873+00:00 |
 
-Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:10:44.678856+00:00)
+Integrador: libre
