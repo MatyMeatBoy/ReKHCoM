@@ -17465,16 +17465,23 @@
     "pr601-atlas120-preview": {
       "id": "pr601-atlas120-preview",
       "piece": "Adaptar propuesta #601 para previsualización de mampostería sin activarla por defecto",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-retoma-atlas120",
       "created_at": "2026-11-22T14:31:17.652219+00:00",
-      "updated_at": "2026-11-22T14:31:29.274526+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-22T14:37:21.418480+00:00",
+      "branch": "fix/pr601-atlas120-preview-20261122",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/601",
       "approval": "Usuario 22/11/2026: integrar PR verificados; propuesta Atlas permanece pendiente de valoración para activación",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/601",
-      "evidence": [],
-      "claimed_at": "2026-11-22T14:31:29.274526+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-22T14:37:21.418480+00:00",
+          "owner": "codex-retoma-atlas120",
+          "detail": "Variante exacta opt-in KHCOM_SCENE120_MASONRY_PREVIEW=1; donantes aprobados por defecto y fixture C 65536 coordenadas inclusivas."
+        }
+      ],
+      "claimed_at": "2026-11-22T14:31:29.274526+00:00",
+      "sent": "bb3edb8844bb4a3aae251151b7c120fe"
     },
     "pr606-620-oogie-preview": {
       "id": "pr606-620-oogie-preview",
@@ -17506,7 +17513,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:37:09.017834+00:00",
+  "updated_at": "2026-11-22T14:37:21.418480+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
