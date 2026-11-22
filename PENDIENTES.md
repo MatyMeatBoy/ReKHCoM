@@ -489,6 +489,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr648-shiningsource-lessons | Integrar retorno documental de ShiningSource | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/648 | Usuario 22/11/2026: integrar PR abiertos verificados | 2026-11-22T14:07:27.993731+00:00 |
 | issue638-menu-launcher-copy | Corregir dificultad Riku y descripción de videos HD | en_curso | codex-retoma-20261122 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:07:53.111944+00:00 |
 | r36s-portmaster-aarch64-20261122 | ReKHCoM Linux ARM64 para R36S y launcher PortMaster | en_curso | codex-retoma-r36s | port/r36s-portmaster-20261122 | Usuario 22/11/2026: port R36S con Opti36S | 2026-11-22T14:09:10.157297+00:00 |
-| pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | en_curso | codex-retoma-controllers | — | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:08:43.153463+00:00 |
+| pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | en_curso | codex-retoma-controllers | fix/pr642-controller-capture-20261122 | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:09:35.444564+00:00 |
 
 Integrador: libre
