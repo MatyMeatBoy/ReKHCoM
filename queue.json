@@ -17653,10 +17653,10 @@
     "r36s-uncapped-benchmark-20261122": {
       "id": "r36s-uncapped-benchmark-20261122",
       "piece": "Medir capacidad real sin vsync del host Linux64 en KHCOM_FAST",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-r36s-integer",
       "created_at": "2026-11-22T23:31:19.378764+00:00",
-      "updated_at": "2026-11-22T23:33:06.113354+00:00",
+      "updated_at": "2026-11-22T23:33:30.756553+00:00",
       "branch": "perf/linux-host-uncapped-20261122",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/660",
       "approval": "Solicitud 22/11/2026",
@@ -17666,9 +17666,15 @@
           "at": "2026-11-22T23:33:06.113354+00:00",
           "owner": "codex-r36s-integer",
           "detail": "15 casos del startup real; RED en modo sin límite antes del cambio."
+        },
+        {
+          "at": "2026-11-22T23:33:30.756553+00:00",
+          "owner": "codex-r36s-integer",
+          "detail": "Merge 26e7051b2b43677c6fe8d1d702bb59ce5d6ca368. VSync 0 en el benchmark, 1 al jugar."
         }
       ],
-      "claimed_at": "2026-11-22T23:31:29.671131+00:00"
+      "claimed_at": "2026-11-22T23:31:29.671131+00:00",
+      "completed_at": "2026-11-22T23:33:30.756553+00:00"
     },
     "linux-fbdev-direct-convert": {
       "id": "linux-fbdev-direct-convert",
@@ -17691,7 +17697,7 @@
     "created_at": "2026-11-22T23:33:16.376147+00:00",
     "updated_at": "2026-11-22T23:33:16.376147+00:00"
   },
-  "updated_at": "2026-11-22T23:33:16.376147+00:00",
+  "updated_at": "2026-11-22T23:33:30.756553+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
