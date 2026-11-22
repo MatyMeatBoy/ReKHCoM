@@ -23,6 +23,7 @@ const unsigned char gOlympiaSmallCardTiles[32]={11};
 const unsigned char gJiminyBinderRingTiles[32]={12},gJiminyBinderRingFrame0[8]={0};
 const uint16_t gJiminyCardDetailMap[1024]={0},gJiminyCardListMap[1024]={1};
 const uint16_t gJiminyCharacterDetailMap[1024]={2},gJiminyStoryDetailMap[1024]={3};
+const uint16_t gJiminyRootMap[1024]={4},gJiminyRikuRootMap[1024]={5};
 Mode gModeJiminy;Mode* gCurrentMode;
 const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT]={0};
 const unsigned char gTitlePressStartTiles[32]={0},gTitlePressStartFrenchTiles[32]={1};
@@ -68,6 +69,7 @@ int PortMarluxiaBodyEntry(int gx, int gy, int hofs, int vofs){return 0;}
 int PortDarksideTileSource(int layer, int* tx, int* ty, int cx, int cy){return 0;}
 int PortDarksideShorePixel(int x, int y, uint16_t* color){return 0;}
 int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color){return 0;}
+int PortDarksidePunchFlankPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color){return 0;}
 int PortMaleficentDragonPixel(const void* map, int x, int y, int cx, int cy, uint16_t* color){return 0;}
 const uint16_t gAladdinPalette[16]={0},gMarefPalette[16]={0},gHookPalette[16]={0};
 const uint16_t gJiminyPalette[16]={0},gEmy00Palette[16]={0};
@@ -321,11 +323,40 @@ static void wide_world(const char* name) {
         RenderLine(y, y - gPortScreen.originY);
 }
 
+static int CheckRgb555Blend(void) {
+    for (int ea = 0; ea <= 16; ++ea) {
+        for (int eb = 0; eb <= 16; ++eb) {
+            for (unsigned a = 0; a < 32; ++a) {
+                for (unsigned b = 0; b < 32; ++b) {
+                    /* Different values in adjacent lanes reveal cross-lane
+                       carry. Bit 15 is deliberately set on one input. */
+                    uint16_t first = (uint16_t)(0x8000 | (a << 10) | (b << 5) | (a ^ b));
+                    uint16_t second = (uint16_t)((b << 10) | (a << 5) | (31 - b));
+                    uint16_t expected = 0;
+                    for (unsigned shift = 0; shift <= 10; shift += 5) {
+                        unsigned value = ((((first >> shift) & 31u) * ea +
+                                           ((second >> shift) & 31u) * eb) >> 4);
+                        expected |= (uint16_t)((value > 31u ? 31u : value) << shift);
+                    }
+                    if (Blend(first, second, ea, eb) != expected) {
+                        fprintf(stderr, "RGB555 blend mismatch at %u/%u with EVA=%d EVB=%d\n", a, b, ea, eb);
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+    puts("RGB555 blend: 295936 reference comparisons passed");
+    return 0;
+}
+
 int main(int argc, char** argv) {
     const char* name;
     uint16_t* p;
     int i, forceWide;
     FILE* f;
+    if (argc == 2 && strcmp(argv[1], "rgb555-blend") == 0)
+        return CheckRgb555Blend();
     if(argc!=3 && argc!=4) return 2;
     name=argv[1];
     forceWide=!strncmp(name,"fast_",5);

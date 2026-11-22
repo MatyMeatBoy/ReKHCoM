@@ -9,6 +9,7 @@ import argparse
 from array import array
 import datetime
 import json
+import os
 from pathlib import Path
 import subprocess
 from PIL import Image, ImageDraw
@@ -151,7 +152,8 @@ def main():
     args=ap.parse_args()
     out=ROOT/'build/ppu-conformance'/datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
     out.mkdir(parents=True)
-    toolchain=sorted((ROOT.parent/'toolchain').glob('llvm-mingw-*'))[-1]
+    toolchain_root = Path(os.environ.get('KHCOM_TOOLCHAIN', ROOT.parent / 'toolchain'))
+    toolchain = sorted(toolchain_root.glob('llvm-mingw-*'))[-1]
     exe=out/'ppu_conformance.exe'
     includes=[ROOT/'include']+[p for p in (ROOT/'include').iterdir() if p.is_dir() and p.name!='gba']
     cmd=[str(toolchain/'bin/i686-w64-mingw32-clang.exe'),'-O2','-g','-std=gnu11',
@@ -160,6 +162,7 @@ def main():
     for p in includes: cmd+=['-iquote',str(p)]
     cmd += [str(ROOT/'port/tools/ppu_conformance.c'),'-o',str(exe)]
     subprocess.run(cmd,check=True)
+    subprocess.run([str(exe), 'rgb555-blend'], check=True)
     results=[]
     sheet=Image.new('RGB',(6*240,((len(args.cases)+5)//6)*180),'#222222')
     draw=ImageDraw.Draw(sheet)
