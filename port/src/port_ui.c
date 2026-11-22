@@ -446,7 +446,7 @@ static const char* const sLabels[ITEM_COUNT][LANG_COUNT] = {
       "Mover botones táctiles", "タッチボタンを移動" },
     { "HD", "HD", "HD", "HD", "HD", "HD" },
     { "HD text", "Texte HD", "HD-Text", "Testo HD", "Texto HD", "HDテキスト" },
-    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" }, /* opening, credits, endings */
+    { "HD movies", "Vidéos HD", "HD-Videos", "Video HD", "Videos HD", "HDムービー" }, /* replacements for the cartridge movies */
     { "HD music", "Musique HD", "HD-Musik", "Musica HD", "Música HD", "HDミュージック" },
     { "HD cutscenes", "Cinématiques HD", "HD-Zwischensequenzen", "Filmati HD", "Cinemáticas HD", "HDムービー" },
     { "HD HUD", "ATH HD", "HD-HUD", "HUD HD", "HUD HD", "HD HUD" }, /* cards, battle HUD and title logo together */
@@ -637,12 +637,12 @@ static const char* const sNgDescDifficulty[3][LANG_COUNT] = {
     { "As the original: the cartridge's damage.", "Comme l'original : les dégâts de la cartouche.",
       "Wie das Original: der Schaden des Moduls.", "Come l'originale: i danni della cartuccia.",
       "Como el original: el daño del cartucho.", "オリジナルと同じダメージ。" },
-    { "Sora takes 50% damage; enemies take 125%.", "Sora subit 50 % des dégâts ; les ennemis en subissent 125 %.",
-      "Sora erleidet 50 % Schaden; Gegner 125 %.", "Sora subisce il 50% dei danni; i nemici il 125%.",
-      "Sora recibe un 50 % de daño; los enemigos, un 125 %.", "ソラの被ダメージは50%、敵は125%。" },
-    { "Sora takes 150% damage; enemies take 80%.", "Sora subit 150 % des dégâts ; les ennemis en subissent 80 %.",
-      "Sora erleidet 150 % Schaden; Gegner 80 %.", "Sora subisce il 150% dei danni; i nemici l'80%.",
-      "Sora recibe un 150 % de daño; los enemigos, un 80 %.", "ソラの被ダメージは150%、敵は80%。" },
+    { "You take 50% damage; enemies take 125%.", "Vous subissez 50 % des dégâts ; les ennemis en subissent 125 %.",
+      "Du erleidest 50 % Schaden; Gegner 125 %.", "Subisci il 50% dei danni; i nemici il 125%.",
+      "Recibes un 50 % de daño; los enemigos, un 125 %.", "プレイヤーの被ダメージは50%、敵は125%。" },
+    { "You take 150% damage; enemies take 80%.", "Vous subissez 150 % des dégâts ; les ennemis en subissent 80 %.",
+      "Du erleidest 150 % Schaden; Gegner 80 %.", "Subisci il 150% dei danni; i nemici l'80%.",
+      "Recibes un 150 % de daño; los enemigos, un 80 %.", "プレイヤーの被ダメージは150%、敵は80%。" },
 };
 static const char* const sNgDescHd[LANG_COUNT] = {
     "Dialogue drawn with a crisp font at the window's resolution.",
@@ -661,12 +661,12 @@ static const char* const sNgDescHdMusic[LANG_COUNT] = {
     "カートリッジの音楽の代わりにKH HD 1.5+2.5のRe:チェイン オブ メモリーズのサウンドトラック。",
 };
 static const char* const sNgDescHdMovies[LANG_COUNT] = {
-    "The opening, the credits and the endings as the HD movies of your KH HD 1.5+2.5.",
-    "L'ouverture, le générique et les fins avec les vidéos HD de votre KH HD 1.5+2.5.",
-    "Intro, Abspann und Enden als HD-Videos aus deinem KH HD 1.5+2.5.",
-    "L'introduzione, i titoli di coda e i finali con i video HD del tuo KH HD 1.5+2.5.",
-    "La introducción, los créditos y los finales con los videos HD de tu KH HD 1.5+2.5.",
-    "オープニング、スタッフロール、エンディングをKH HD 1.5+2.5のHDムービーで。",
+    "Replaces GBA movies with Re:Chain of Memories' HD equivalents.",
+    "Remplace les vidéos GBA par leurs équivalents HD de Re:Chain of Memories.",
+    "Ersetzt die GBA-Videos durch ihre HD-Entsprechungen aus Re:Chain of Memories.",
+    "Sostituisce i video GBA con gli equivalenti HD di Re:Chain of Memories.",
+    "Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
+    "GBAのムービーをRe:チェイン オブ メモリーズの対応するHDムービーに置き換えます。",
 };
 static const char* const sNgDescHdScenes[LANG_COUNT] = {
     "Story scenes that Re:CoM has as movies play them instead (English voices, subtitles in your language).",
@@ -3380,12 +3380,12 @@ static const char* const sAssetDesc[PORT_ASSET_COUNT][LANG_COUNT] = {
       "La colonna sonora di Re:Chain of Memories al posto della musica della cartuccia.",
       "La banda sonora de Re:Chain of Memories en lugar de la música del cartucho.",
       "カートリッジの音楽の代わりにRe:チェイン オブ メモリーズのサウンドトラック。" },
-    { "The opening, credits and endings as Re:Chain of Memories' HD movies.",
-      "L'ouverture, le générique et les fins en vidéos HD de Re:Chain of Memories.",
-      "Intro, Abspann und Enden als HD-Videos von Re:Chain of Memories.",
-      "Apertura, titoli di coda e finali come video HD di Re:Chain of Memories.",
-      "La intro, los créditos y los finales con los videos HD de Re:Chain of Memories.",
-      "オープニング、クレジット、エンディングをRe:チェイン オブ メモリーズのHDムービーで。" },
+    { "Replaces GBA movies with Re:Chain of Memories' HD equivalents.",
+      "Remplace les vidéos GBA par leurs équivalents HD de Re:Chain of Memories.",
+      "Ersetzt die GBA-Videos durch ihre HD-Entsprechungen aus Re:Chain of Memories.",
+      "Sostituisce i video GBA con gli equivalenti HD di Re:Chain of Memories.",
+      "Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
+      "GBAのムービーをRe:チェイン オブ メモリーズの対応するHDムービーに置き換えます。" },
     { "The story scenes as Re:Chain of Memories' HD movies, where one matches.",
       "Les scènes de l'histoire en vidéos HD de Re:Chain of Memories, quand il y en a une.",
       "Die Story-Szenen als HD-Videos von Re:Chain of Memories, wo es eins gibt.",

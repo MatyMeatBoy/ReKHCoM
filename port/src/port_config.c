@@ -612,7 +612,7 @@ void PortApplyGraphicsMode(int mode) {
     gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS);
     gPortConfig.hdTitle = gPortConfig.hdCards;
     gPortConfig.hdMusic = hd && PortAssetPresent(PORT_ASSET_HD_MUSIC);
-    /* HD intros (opening, credits, endings): on unless GBA Original */
+    /* HD replacements for cartridge movies: on unless GBA Original */
     gPortConfig.hdMovies = !classic && PortAssetPresent(PORT_ASSET_HD_MOVIES);
     gPortConfig.hdSubtitles = 1; /* part of HD text now: the HD videos always carry their subtitles */
     gPortConfig.hdScenes = hd && PortAssetPresent(PORT_ASSET_HD_SCENES);
