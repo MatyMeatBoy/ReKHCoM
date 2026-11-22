@@ -3053,17 +3053,14 @@ static void BuildWindows(int gy, uint16_t dispcnt) {
 /* ---- composition ----------------------------------------------------------- */
 
 static uint16_t Blend(uint16_t a, uint16_t b, int ea, int eb) {
-    int r = ((a & 31) * ea + (b & 31) * eb) >> 4;
-    int g = (((a >> 5) & 31) * ea + ((b >> 5) & 31) * eb) >> 4;
-    int bl = (((a >> 10) & 31) * ea + ((b >> 10) & 31) * eb) >> 4;
-
-    if (r > 31)
-        r = 31;
-    if (g > 31)
-        g = 31;
-    if (bl > 31)
-        bl = 31;
-    return (uint16_t)(r | (g << 5) | (bl << 10));
+    /* The coefficients are clamped to 0..16. Each weighted channel sum is
+       at most 992, so red and blue occupy independent 10-bit lanes. */
+    uint32_t redBlue = ((a & 0x7c1fu) * ea + (b & 0x7c1fu) * eb) >> 4;
+    const uint32_t green = ((a & 0x03e0u) * ea + (b & 0x03e0u) * eb) >> 4;
+    /* After the shift, the sixth bit of each lane marks saturation at 31. */
+    const uint32_t overflow = redBlue & 0x8020u;
+    redBlue |= overflow - (overflow >> 5);
+    return (uint16_t)((redBlue & 0x7c1fu) | ((green & 0x0400u) ? 0x03e0u : (green & 0x03e0u)));
 }
 
 static uint16_t Brighten(uint16_t c, int ey) {
