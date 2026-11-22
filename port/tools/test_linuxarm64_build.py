@@ -1,6 +1,7 @@
 """Small configuration contract checks; no SDL/game compilation."""
 import importlib.util
 from pathlib import Path
+import subprocess
 import unittest
 import sys
 import tempfile
@@ -13,6 +14,19 @@ spec.loader.exec_module(build)
 
 
 class LinuxArm64BuildTest(unittest.TestCase):
+    def test_desktop_x32_thread_exports_stay_out_of_arm_guest(self):
+        guest = ROOT / 'port/ps5/guest'
+        clang = build.build_switch.CLANG
+        resource = subprocess.check_output([clang, '-print-resource-dir'], text=True).strip()
+        includes = [f'-I{guest / "include"}', f'-I{guest.parent / "shared"}',
+                    f'-I{ROOT / "port/include"}', '-isystem', resource + '/include']
+        for target, expected_count in (('arm64_32-apple-watchos', 0), ('x86_64-linux-gnux32', 3)):
+            exports = ''.join(subprocess.check_output([
+                clang, '--target=' + target, '-E', '-P', '-ffreestanding', '-nostdinc',
+                '-DPORT_LINUX64_GUEST', *includes, str(guest / 'src' / name),
+            ], text=True) for name in ('threads_x32.c', 'platform_ps5.c'))
+            self.assertEqual(exports.count('PortGuestThreadSelfTest'), expected_count, target)
+
     def test_linux_guest_configuration(self):
         original = build.build_switch.common_flags
         try:
