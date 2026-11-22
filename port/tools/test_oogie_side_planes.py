@@ -31,10 +31,12 @@ class OogieSidePlanes(unittest.TestCase):
 int main(void) {
     int x,y,oldWidth=0,newWidth=0;uint16_t color;
     const char* preview = getenv("KHCOM_OOGIE_PREVIEW");
+    int shapes = preview && strcmp(preview, "shapes") == 0;
     int detail = preview && strcmp(preview, "detail") == 0;
+    int expandedRim = detail || shapes;
     PortOogieSetPreview(preview);
     for(x=0;x<256;x++)testPalette[x]=(uint16_t)x;
-    /* Reference checksums from approved 18b7c2c8 and original PR606 head. */
+    /* Reference checksums from approved 18b7c2c8 and original PR606/620 heads. */
     uint64_t hash = UINT64_C(14695981039346656037);
     for (y = -32; y < 800; ++y)
         for (x = -128; x < 896; ++x) {
@@ -42,7 +44,12 @@ int main(void) {
             unsigned shown = PortOogieHallPixel(x, y, 376, 332, &color);
             hash = (hash ^ ((shown << 16) | color)) * UINT64_C(1099511628211);
         }
-    assert(hash == (detail ? UINT64_C(0x3481e282911ab0f1) : UINT64_C(0xb00c2d8746031916)));
+    if (shapes)
+        assert(hash == UINT64_C(0x49435dffb3d11bc7));
+    else if (detail)
+        assert(hash == UINT64_C(0x3481e282911ab0f1));
+    else
+        assert(hash == UINT64_C(0xb00c2d8746031916));
     for(y=192;y<472;y++)for(x=256;x<496;x++) {
         color=12345;assert(!PortOogieHallPixel(x,y,376,332,&color));assert(color==12345);
     }
@@ -60,7 +67,7 @@ int main(void) {
     assert(PortOogieHallPixel(503,445,376,332,&color)&&color==146);
     /* The reviewed straight front rim reaches both viewport edges. */
     for(y=400;y<408;y++) {
-        if (detail) {
+        if (expandedRim) {
             for(x=-1000;x<2000;x++)
                 assert(FloorMotifIndex(x,y)==RoomIndex(ROOM_X,y));
         } else {
@@ -85,7 +92,7 @@ int main(void) {
             check.write_text(source)
             executable = directory / ('check.exe' if os.name == 'nt' else 'check')
             subprocess.run([compiler,'-std=c11','-I',str(directory),'-I',str(ROOT/'port/include'),str(check),'-o',str(executable)],check=True,capture_output=True)
-            for value in (None, 'detail', '0', 'unknown'):
+            for value in (None, 'detail', 'shapes', '0', 'unknown'):
                 with self.subTest(preview=value):
                     env = dict(os.environ)
                     env.pop('KHCOM_OOGIE_PREVIEW', None)

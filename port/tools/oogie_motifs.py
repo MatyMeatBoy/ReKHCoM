@@ -9,14 +9,30 @@ right_holes=[] # Both native eyes and mouth already exist; complete only the cut
 left_polys += [[(257,472),(266,472),(268,474),(276,474),(281,472),(288,472),(283,477),(277,482),(270,483),(263,480),(257,475)]]
 left_holes += [[(266,472),(281,472),(277,476),(272,478),(269,477)]]
 right_polys += [[(464,472),(470,472),(472,474),(472,476),(470,476),(467,474)],[(483,472),(485,472),(486,474),(484,476),(483,475)]]
+
+outputs = {
+ 'approved': ('port_oogie_motifs.h', ''),
+ 'detail': ('port_oogie_motifs_detail_preview.h', 'DetailPreview'),
+ 'shapes': ('port_oogie_motifs_shapes_preview.h', 'ShapesPreview'),
+}
+
+
 def build_mask(variant):
  polys = left_polys + right_polys
  holes = left_holes + right_holes
- if variant == 'detail':
-  # Follow-up review: the lower left cheek/jaw and the ghost's outer point
-  # remained open. These contours continue the cut native ink independently.
+ if variant == 'shapes':
+  # Connect the jaw across the seam and replace the oversized ghost tip
+  # with a short arm and stepped skirt.
+  jaw = [(254,472),(266,472),(270,474),(274,474),(279,472),(284,472),(280,476),(274,480),(268,480),(261,478),(255,475)]
+  jaw_hole = [(266,472),(279,472),(274,476),(270,476)]
+  ghost = [(496,420),(499,419),(502,421),(504,425),(505,430),(505,434),(508,437),(509,442),(513,445),(517,443),(516,446),(513,449),(511,452),(508,455),(507,459),(504,461),(502,464),(499,462),(496,462)]
+  polys = left_polys[:-1] + [jaw, ghost] + right_polys[1:]
+  holes = left_holes[:-1] + [jaw_hole] + right_holes
+ if variant != 'approved':
+  # Both previews extend the lower left cheek with authored contours.
   polys += [[(244,443),(240,445),(236,451),(235,457),(237,463),(242,468),(249,471),(255,472),(255,464),(249,463),(245,460),(244,456),(246,451),(249,449)]]
   holes += [[(244,449),(241,453),(241,458),(244,462),(249,465),(255,465),(255,458),(250,456),(247,452)]]
+ if variant == 'detail':
   polys += [[(507,445),(514,448),(522,446),(519,452),(514,458),(508,462),(501,464),(497,460)]]
  mask = Image.new('1',(576,96))
  draw = ImageDraw.Draw(mask)
@@ -25,7 +41,7 @@ def build_mask(variant):
  return mask
 
 
-mask_by_variant = {variant: build_mask(variant) for variant in ('approved', 'detail')}
+mask_by_variant = {variant: build_mask(variant) for variant in outputs}
 
 
 def art(x,y,variant='approved'):
@@ -44,8 +60,8 @@ def art(x,y,variant='approved'):
 
 
 def generate(variant='approved'):
- suffix = {'approved': '', 'detail': 'DetailPreview'}[variant]
- guard = {'approved': 'PORT_OOGIE_MOTIFS_H', 'detail': 'PORT_OOGIE_MOTIFS_DETAIL_PREVIEW_H'}[variant]
+ filename, suffix = outputs[variant]
+ guard = filename.upper().replace('.', '_')
  lines=['/* Authored continuations of the two clipped floor figures. Native palette offsets:', ' * 0 = no overwrite, 2 = black146, 13/14 = green157/158. No cartridge pixels. */', '#ifndef '+guard, '#define '+guard]
  for side,x0 in [('Left',224),('Right',456)]:
   values=[art(x,y,variant) for y in range(408,488) for x in range(x0,x0+72)]
@@ -59,5 +75,5 @@ def generate(variant='approved'):
 
 if __name__=='__main__':
  include = Path(__file__).resolve().parents[1]/'include/port'
- (include/'port_oogie_motifs.h').write_text(generate())
- (include/'port_oogie_motifs_detail_preview.h').write_text(generate('detail'))
+ for variant, (filename, _) in outputs.items():
+  (include/filename).write_text(generate(variant))

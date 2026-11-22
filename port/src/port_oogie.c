@@ -19,6 +19,7 @@
 #include "port/port_battle_backdrop.h"
 #include "port/port_oogie_motifs.h"
 #include "port/port_oogie_motifs_detail_preview.h"
+#include "port/port_oogie_motifs_shapes_preview.h"
 
 extern const uint16_t gBosBoogieBgMaps[]; /* [0]: the room's lower block, [1] (0x400 entries on): its upper block */
 extern const uint8_t gBosBoogieBgTiles[];
@@ -31,13 +32,22 @@ extern const uint16_t gDefaultBgMap[];
 
 static const unsigned char* sOogieLeftMotif = kOogieLeftMotif;
 static const unsigned char* sOogieRightMotif = kOogieRightMotif;
-static int sOogieDetailPreview;
+static int sOogieExpandedRim;
 
 /* Called on the main thread before rendering any rows. */
 void PortOogieSetPreview(const char* value) {
-    sOogieDetailPreview = value && strcmp(value, "detail") == 0;
-    sOogieLeftMotif = sOogieDetailPreview ? kOogieLeftMotifDetailPreview : kOogieLeftMotif;
-    sOogieRightMotif = sOogieDetailPreview ? kOogieRightMotifDetailPreview : kOogieRightMotif;
+    sOogieExpandedRim = 1;
+    if (value && strcmp(value, "detail") == 0) {
+        sOogieLeftMotif = kOogieLeftMotifDetailPreview;
+        sOogieRightMotif = kOogieRightMotifDetailPreview;
+    } else if (value && strcmp(value, "shapes") == 0) {
+        sOogieLeftMotif = kOogieLeftMotifShapesPreview;
+        sOogieRightMotif = kOogieRightMotifShapesPreview;
+    } else {
+        sOogieExpandedRim = 0;
+        sOogieLeftMotif = kOogieLeftMotif;
+        sOogieRightMotif = kOogieRightMotif;
+    }
 }
 
 static int FloorDiv(int a, int b) {
@@ -106,7 +116,7 @@ static int FloorMotifIndex(int x, int y) {
     /* Complete the straight front rim to both viewport edges using its
      * clean outer-row indices. The native room keeps the two central path
      * joins; the outer rows must not stop at the old reflected side caps. */
-    if (sOogieDetailPreview && y >= 400 && y < 408)
+    if (sOogieExpandedRim && y >= 400 && y < 408)
         return RoomIndex(ROOM_X, y);
     if (y < 408) {
         /* Preserve the authored upper cap beside the room. */

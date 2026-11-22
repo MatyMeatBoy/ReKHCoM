@@ -863,3 +863,11 @@ La arena aprobada del PR593 conserva su salida predeterminada.
 `85b1e5551e224f3893cf44fcc9cf5739` para seguir las cuatro nubes.
 El cuarto nativo y el camino rojo se mantienen. La propuesta sigue pendiente
 de valoración y de una nueva prueba en el juego.
+
+### Oogie: vista previa de las siluetas revisadas
+
+`KHCOM_OOGIE_PREVIEW=shapes` muestra la propuesta Atlas
+`b81888f6523d407d8be9f0fa65f526fc` con mandíbula conectada, brazo más corto
+y falda escalonada. `detail` conserva la propuesta anterior con la misma
+franja frontal. La configuración predeterminada usa la arena aprobada
+del PR593. La nueva revisión sigue pendiente de valoración.
