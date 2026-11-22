@@ -17498,16 +17498,23 @@
     "pr606-620-oogie-preview": {
       "id": "pr606-620-oogie-preview",
       "piece": "PR 606 y 620: ambas propuestas Oogie como vistas previas conservando arena aprobada",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-retoma-oogie",
       "created_at": "2026-11-22T14:34:40.451562+00:00",
-      "updated_at": "2026-11-22T14:34:53.231882+00:00",
+      "updated_at": "2026-11-22T14:40:40.570698+00:00",
       "branch": null,
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/606",
       "approval": "Integrar PR solicitado el 22/11/2026. Las propuestas exactas de Atlas siguen pendientes y apagadas por defecto.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/606",
-      "evidence": [],
-      "claimed_at": "2026-11-22T14:34:53.231882+00:00"
+      "evidence": [
+        {
+          "at": "2026-11-22T14:40:40.570698+00:00",
+          "owner": "codex-retoma-oogie",
+          "detail": "Etapa 1: fixture valida la base aprobada y vista detail; #620 se registra al completar la etapa 2."
+        }
+      ],
+      "claimed_at": "2026-11-22T14:34:53.231882+00:00",
+      "sent": "85b1e5551e224f3893cf44fcc9cf5739"
     },
     "issue647-android-memfd-write": {
       "id": "issue647-android-memfd-write",
@@ -17545,7 +17552,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:40:27.556789+00:00",
+  "updated_at": "2026-11-22T14:40:40.570698+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
