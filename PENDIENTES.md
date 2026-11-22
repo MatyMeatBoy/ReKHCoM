@@ -499,4 +499,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue647-optional-sdl-audio | Keep SDL gameplay available when optional audio initialization fails | en_curso | codex-retoma-audio647 | fix/issue647-optional-sdl-audio | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:30:35.401523+00:00 |
 | pr601-atlas120-preview | Adaptar propuesta #601 para previsualización de mampostería sin activarla por defecto | en_curso | codex-retoma-atlas120 | — | Usuario 22/11/2026: integrar PR verificados; propuesta Atlas permanece pendiente de valoración para activación | 2026-11-22T14:31:29.274526+00:00 |
 
-Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:30:55.225254+00:00)
+Integrador: libre
