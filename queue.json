@@ -17628,7 +17628,7 @@
       "status": "pr_abierto",
       "owner": "codex-retoma-ga36",
       "created_at": "2026-11-22T23:28:06.249293+00:00",
-      "updated_at": "2026-11-22T23:39:22.343116+00:00",
+      "updated_at": "2026-11-22T23:45:29.121355+00:00",
       "branch": "port/ga36-armhf-20261122",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/663",
       "approval": "Usuario 22/11/2026: port GA36-MB V1.2",
@@ -17638,6 +17638,11 @@
           "at": "2026-11-22T23:39:22.343116+00:00",
           "owner": "codex-retoma-ga36",
           "detail": "567b8bfa0; packed platform smoke fixtures and Linux wrapper 31/31. EU/US linked, JP in progress. Will relink new PT_INTERP, audit closed ZIP and emulate Cortex-A7 framebuffer."
+        },
+        {
+          "at": "2026-11-22T23:45:29.121355+00:00",
+          "owner": "codex-retoma-ga36",
+          "detail": "Ready head 24c31bab: native armhf EU/US/JP closed ZIP checksum b782d5d9; actual QEMU Cortex-A7 512 MiB titles, mapped RGB565 and 90 presents/exit0 each. Linux wrapper 31/31 and packaging/ABI tests. #661/#662 integrated exact runtime. Physical GA36 pending."
         }
       ],
       "claimed_at": "2026-11-22T23:28:15.769586+00:00"
@@ -17727,7 +17732,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:39:22.343116+00:00",
+  "updated_at": "2026-11-22T23:45:29.121355+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
