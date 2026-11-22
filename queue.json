@@ -17342,8 +17342,8 @@
       "status": "en_curso",
       "owner": "codex-retoma-android647",
       "created_at": "2026-11-22T14:22:21.050132+00:00",
-      "updated_at": "2026-11-22T14:22:30.850145+00:00",
-      "branch": null,
+      "updated_at": "2026-11-22T14:22:41.580343+00:00",
+      "branch": "fix/android647-lifecycle-watch",
       "pr": null,
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/647",
@@ -17352,7 +17352,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:22:30.850145+00:00",
+  "updated_at": "2026-11-22T14:22:41.580343+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
