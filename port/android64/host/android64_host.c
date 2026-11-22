@@ -18,6 +18,7 @@
 #include "../../include/port/sdl_startup.h"
 #include <dirent.h>
 #include <errno.h>
+#include <limits.h>
 #include <math.h>
 #include <setjmp.h>
 #include <stdarg.h>
@@ -692,19 +693,45 @@ static uint32_t ClaimImageSpace(uint32_t linked, uint32_t size) {
     return 0;
 }
 
+static int WriteMemfdImage(int fd, const void* data, size_t remaining) {
+    enum { MAX_INTERRUPTED_WRITES = 16 };
+    const uint8_t* bytes = data;
+    unsigned interrupted = 0;
+    while (remaining) {
+        size_t request = remaining > (size_t)SSIZE_MAX ? (size_t)SSIZE_MAX : remaining;
+        ssize_t wrote = write(fd, bytes, request);
+        if (wrote < 0) {
+            if (errno == EINTR && ++interrupted < MAX_INTERRUPTED_WRITES)
+                continue;
+            return 0;
+        }
+        if (wrote == 0) {
+            errno = EIO;
+            return 0;
+        }
+        bytes += wrote;
+        remaining -= (size_t)wrote;
+        interrupted = 0;
+    }
+    return 1;
+}
+
 /* Where the system refuses to turn written memory executable (an SELinux policy without execmem), the code goes into
    an anonymous memory file mapped executable over the same addresses: what ART's JIT does. */
 static int ExecFromMemfd(void* p, size_t len) {
     int fd = (int)syscall(__NR_memfd_create, "rekhcom-code", 1u /* MFD_CLOEXEC */), ok = 0;
     if (fd < 0)
         return 0;
-    if (write(fd, p, len) == (ssize_t)len &&
+    if (WriteMemfdImage(fd, p, len) &&
         mmap(p, len, PROT_READ | PROT_EXEC, MAP_SHARED | MAP_FIXED, fd, 0) == p) {
         __builtin___clear_cache((char*)p, (char*)p + len);
         Log("game code mapped from a memory file (no execmem)");
         ok = 1;
     }
+    int error = errno;
     close(fd);
+    if (!ok)
+        errno = error;
     return ok;
 }
 
@@ -861,8 +888,9 @@ static int LoadImage(const char* region, Ps5GuestHeader* header) {
         if (MappedSegment(seg) && (seg->initprot & 4)) {
             __builtin___clear_cache(p, p + len);
             if (mprotect(p, len, PROT_READ | PROT_EXEC) && !ExecFromMemfd(p, len)) {
+                int error = errno;
                 SDL_free(file);
-                return ImageFail("the game's code cannot be made executable: %s", strerror(errno));
+                return ImageFail("the game's code cannot be made executable: %s", strerror(error));
             }
         }
     }
