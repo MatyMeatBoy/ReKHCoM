@@ -17556,10 +17556,10 @@
     "pr642-console-source-check": {
       "id": "pr642-console-source-check",
       "piece": "Restore console SDL source checks after native joystick support",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-source-check",
       "created_at": "2026-11-22T14:40:08.006727+00:00",
-      "updated_at": "2026-11-22T14:43:26.440803+00:00",
+      "updated_at": "2026-11-22T14:44:42.662757+00:00",
       "branch": "fix/check-sdl-bridge-native-guards",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/658",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17569,9 +17569,15 @@
           "at": "2026-11-22T14:43:26.440803+00:00",
           "owner": "codex-retoma-source-check",
           "detail": "16f5b4513; 10 false positives RED; check_sources and 4 focused tests PASS; actual Switch/Android64 preprocess and syntax PASS."
+        },
+        {
+          "at": "2026-11-22T14:44:42.662757+00:00",
+          "owner": "codex-retoma-source-check",
+          "detail": "Merge 8892d7f40c67802cc028b14caae3b096327093de. Check_sources, 4 fixtures y preprocesado/sintaxis Switch y Android64."
         }
       ],
-      "claimed_at": "2026-11-22T14:40:18.101578+00:00"
+      "claimed_at": "2026-11-22T14:40:18.101578+00:00",
+      "completed_at": "2026-11-22T14:44:42.662757+00:00"
     }
   },
   "integrator": {
@@ -17580,7 +17586,7 @@
     "created_at": "2026-11-22T14:44:26.497277+00:00",
     "updated_at": "2026-11-22T14:44:26.497277+00:00"
   },
-  "updated_at": "2026-11-22T14:44:26.497277+00:00",
+  "updated_at": "2026-11-22T14:44:42.663878+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
