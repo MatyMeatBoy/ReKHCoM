@@ -835,6 +835,14 @@ de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
 hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.
 Aceptación06/11: activar Darkside06 flanco exacto9a47fba18d7749a2a54d4b9ccc8da65b rev3. Sin alterar211píxeles, brazo o cuerpo. El comentario exige todos los frames del combate: seguimiento temporal separado, no inferido de pose13.
 
+### Escena097: vista previa del mapa completo de árboles
+
+La propuesta Atlas `7892636812af4dc99606e95397f547a4` conserva el mapa finito
+de BG2 y recupera 391 píxeles de hojas y tronco. `KHCOM_SCENE097_TREE_PREVIEW=1`
+permite revisarla. La receta predeterminada y el patrón de césped BG3
+conservan sus selecciones. El modelo responde a completar el árbol. Las dos
+notas sobre el momento de aparición del gato siguen en seguimiento.
+
 ### Escena120, seguimiento del módulo A sin build
 
 El patrón A señalado en la revisión5 de9f28568f contiene ladrillos completos,

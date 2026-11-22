@@ -558,6 +558,14 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
     }
 }
 
+static inline int PortPreliminarTileSourceForPreview(const PortPreliminarRecipe* p, int* x, int* y,
+                                                   int previewScene097Trees) {
+    /* Atlas 78926368: the expanded tree layer is finite and independent of BG3. */
+    if (previewScene097Trees && p->v[0] == 97 && p->v[1] == 2)
+        return *x >= 0 && *y >= 0 && *x < p->v[2] * 32 && *y < p->v[3] * 32;
+    return PortPreliminarTileSource(p, x, y);
+}
+
 /* Scene 099's checker floor in one-point perspective (user 24/10: "as Guard
  * Armor"): measured on the map, its cells are w(y)=0.1269*(y-33.8) wide,
  * one centred on x=128, and its rows end where 1/(y-33.8) steps by 0.000567

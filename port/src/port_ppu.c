@@ -150,6 +150,7 @@ int PortEventId(void); /* mode_event.c */
 static int sEventBackdropProfile = -1; /* derived at frame start, not saved */
 static int sUseSceneProfiles;
 static int sPreliminarV1;
+static int sPreviewScene097Trees;
 static int sPreliminarApprovedOnly; /* only the Preliminar V1 scenes approved with honours, for everyone */
 /* Preliminar V1 scenes approved with honours in the review app; KHCOM_SCENEnnn_WIDE=0 turns one off */
 /* every scene accepted in Atlas (Aprobado (mejorar), Aprobado, Honores: all go into the game, user 25/10) that has a
@@ -1433,7 +1434,7 @@ static int WorldEntry(const BgLatch* l, int wx, int wy) {
 static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
     int bg = (int)(l - sBgLatch), tx = wx >> 3, ty = wy >> 3, supported = 0, ok = 0;
     if (sPreliminarRecipe[bg]) {
-        ok = PortPreliminarTileSource(sPreliminarRecipe[bg], &tx, &ty);
+        ok = PortPreliminarTileSourceForPreview(sPreliminarRecipe[bg], &tx, &ty, sPreviewScene097Trees);
         return ok ? MapTile(l, tx, ty) : -1;
     }
     if (sDarksideLayer[bg]) {
@@ -4194,6 +4195,11 @@ void PortPpuBeginFrame(void) {
                 }
             }
         }
+    }
+    sPreviewScene097Trees = 0;
+    if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0] == 97) {
+        const char* preview = getenv("KHCOM_SCENE097_TREE_PREVIEW");
+        sPreviewScene097Trees = preview && strcmp(preview, "1") == 0;
     }
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
         PreparePreliminarFir();
