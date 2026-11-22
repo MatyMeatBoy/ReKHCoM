@@ -600,6 +600,15 @@ static inline int PortPreliminar087VineRun(int wx, int wy) {
     return diagonal<144 && diagonal+7>=96;
 }
 
+/* Atlas #601: the complete masonry module is a preview on scene 120 BG3. */
+static inline int PortPreliminar120MasonryPreview(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (!p || p->v[0]!=120 || p->v[1]!=3 || wx<32 ||
+        (wx<256 && wy>=0 && wy<256) || 2*wy+wx >= (wx>=96 ? 176 : 208)) return 0;
+    *sx=32+PortSceneTileMod(wx-32,64);
+    *sy=PortSceneTileMod(wy,32);
+    return 1;
+}
+
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
     if (p && p->v[0]==87 && (wx<0 || wx>=256 || wy<0 || wy>=256)) {
         int diagonal=2*wy+wx;

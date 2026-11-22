@@ -167,6 +167,7 @@ static int PortArtOn(const char* var) {
     return v == NULL || atoi(v) != 0;
 }
 static const PortPreliminarRecipe* sPreliminarRecipe[4];
+static int sPreviewScene120Masonry;
 static int sAgrabahLayer[4]; /* rebuilt from actual map data each frame */
 static int sAgrabah109Layer[4];
 static int sDarksideLayer[4]; /* port_darkside.c: 1 beach, 2 body; from the map blocks each frame */
@@ -2113,7 +2114,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     dtInWorld[x]=1;
                     continue;
                 }
-                if (PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
+                if ((sPreviewScene120Masonry && PortPreliminar120MasonryPreview(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) ||
+                    PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
                     int index=SinglePanelIndex(l,cnt,sx,sy);
                     out[x]=index>=0 && (index&15)?dtPalette[index]&0x7fff:TRANSPARENT;
                     dtInWorld[x]=1;
@@ -4201,6 +4203,11 @@ void PortPpuBeginFrame(void) {
     }
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
         PreparePreliminarFir();
+    sPreviewScene120Masonry = 0;
+    if (sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0]==120) {
+        const char* preview=getenv("KHCOM_SCENE120_MASONRY_PREVIEW");
+        sPreviewScene120Masonry = preview && strcmp(preview,"1")==0;
+    }
     if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
