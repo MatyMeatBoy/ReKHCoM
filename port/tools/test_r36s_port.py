@@ -102,12 +102,15 @@ class R36SPortTest(unittest.TestCase):
         (portmaster / 'control.txt').write_bytes(b'''get_controls() { sdl_controllerconfig=mapped; }
 pm_finish() { printf 'finished\\n' >> "$GAMEDIR/result"; }
 ''')
-        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$SDL_GAMECONTROLLERCONFIG" "$@" > result
+        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$SDL_GAMECONTROLLERCONFIG" "$KHCOM_CONFIG" "$@" > result
 exit 17
 ''')
-        for video, mapping, expected in (('', '', ['kmsdrm', 'alsa', 'mapped']),
-                                         ('dummy', 'override', ['dummy', 'alsa', 'override'])):
-            env = dict(os.environ, SDL_VIDEO_DRIVER=video, SDL_AUDIO_DRIVER='', SDL_GAMECONTROLLERCONFIG=mapping)
+        for video, mapping, settings, expected in (
+            ('', '', '', ['kmsdrm', 'alsa', 'mapped', 'fullscreen=1']),
+            ('dummy', 'override', 'fullscreen=0;fps=1', ['dummy', 'alsa', 'override', 'fullscreen=1;fullscreen=0;fps=1']),
+        ):
+            env = dict(os.environ, SDL_VIDEO_DRIVER=video, SDL_AUDIO_DRIVER='',
+                       SDL_GAMECONTROLLERCONFIG=mapping, KHCOM_CONFIG=settings)
             result = subprocess.run([str(bash), str(launcher), '--region', 'jp'], cwd=self.temp,
                                     env=env, capture_output=True, text=True)
             self.assertEqual(result.returncode, 17, result.stderr)

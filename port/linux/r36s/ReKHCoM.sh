@@ -23,7 +23,9 @@ done
 
 export SDL_VIDEO_DRIVER="${SDL_VIDEO_DRIVER:-kmsdrm}"
 export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-alsa}"
+# Keep the guest in fullscreen when it applies its settings after host startup.
 export REKHCOM_FULLSCREEN=1
+export KHCOM_CONFIG="fullscreen=1${KHCOM_CONFIG:+;$KHCOM_CONFIG}"
 
 if command -v pm_platform_helper >/dev/null 2>&1; then
     pm_platform_helper "$GAMEDIR/binarm64/rekhcom-arm64"
