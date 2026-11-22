@@ -17609,10 +17609,23 @@
       "reference": "Solicitud 22/11/2026",
       "evidence": [],
       "claimed_at": "2026-11-22T23:27:58.981274+00:00"
+    },
+    "ga36-armhf-framebuffer-20261122": {
+      "id": "ga36-armhf-framebuffer-20261122",
+      "piece": "GA36 Allwinner ARMv7: framebuffer, launcher y paquete",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-22T23:28:06.249293+00:00",
+      "updated_at": "2026-11-22T23:28:06.249293+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Usuario 22/11/2026: port GA36-MB V1.2",
+      "reference": "https://github.com/ricardomm7/ga36-bsp",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:27:58.981274+00:00",
+  "updated_at": "2026-11-22T23:28:06.249293+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
