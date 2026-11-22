@@ -17442,15 +17442,16 @@
     "pr601-atlas120-preview": {
       "id": "pr601-atlas120-preview",
       "piece": "Adaptar propuesta #601 para previsualización de mampostería sin activarla por defecto",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-retoma-atlas120",
       "created_at": "2026-11-22T14:31:17.652219+00:00",
-      "updated_at": "2026-11-22T14:31:17.652219+00:00",
+      "updated_at": "2026-11-22T14:31:29.274526+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 22/11/2026: integrar PR verificados; propuesta Atlas permanece pendiente de valoración para activación",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/601",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-22T14:31:29.274526+00:00"
     }
   },
   "integrator": {
@@ -17459,7 +17460,7 @@
     "created_at": "2026-11-22T14:30:55.225254+00:00",
     "updated_at": "2026-11-22T14:30:55.225254+00:00"
   },
-  "updated_at": "2026-11-22T14:31:17.652219+00:00",
+  "updated_at": "2026-11-22T14:31:29.274526+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
