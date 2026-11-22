@@ -502,4 +502,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue647-android-memfd-write | Android image loader: complete writes to the existing memfd before mapping | pr_abierto | codex-retoma-memfd647 | https://github.com/MatyMeatBoy/ReKHCoM/pull/657 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:39:06.232466+00:00 |
 | pr642-console-source-check | Restore console SDL source checks after native joystick support | en_curso | codex-retoma-source-check | fix/check-sdl-bridge-native-guards | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:40:27.556789+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:40:50.257007+00:00)
