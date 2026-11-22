@@ -493,4 +493,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue643-android-software-h264 | Android H.264: preferencia de decodificacion por software | en_curso | codex-retoma-android643 | fix/android643-software-h264 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:13:56.288603+00:00 |
 | issue640-riku-hd-portrait-source | Corregir fuente de retratos HD de Riku en batalla | pr_abierto | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/651 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:16:29.573193+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:17:54.299874+00:00)
