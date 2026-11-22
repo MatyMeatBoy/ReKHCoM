@@ -17639,12 +17639,12 @@
     "ppu-rgb555-handheld-20261122": {
       "id": "ppu-rgb555-handheld-20261122",
       "piece": "Medir mezcla RGB555 comun para R36S y GA36",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "codex-retoma-rgb555",
       "created_at": "2026-11-22T23:29:52.137744+00:00",
-      "updated_at": "2026-11-22T23:35:32.074433+00:00",
+      "updated_at": "2026-11-22T23:36:13.122287+00:00",
       "branch": "perf/handheld-rgb555-20261122",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/661",
       "approval": "Pedido de rendimiento en portatiles del 22/11/2026, optimizacion compartida con equivalencia",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/653",
       "evidence": [
@@ -17652,6 +17652,11 @@
           "at": "2026-11-22T23:35:32.074433+00:00",
           "owner": "codex-retoma-rgb555",
           "detail": "Commit local 9f669202d. 295936 comparaciones y 307200 pixeles PPU sin diferencia; mutante sin saturacion RED. Benchmark escalar Ryzen ABBA BAAB 29.93 a 15.52 ms por 8388608 mezclas (no FPS); A35 25 a 22, A7 29 a 20 instrucciones del kernel. Evidencia pruebas/handheld-rgb555-20261122. Sin push ni medicion fisica."
+        },
+        {
+          "at": "2026-11-22T23:36:13.122287+00:00",
+          "owner": "codex-retoma-rgb555",
+          "detail": "PR 661 abierto contra main, head exacto 9f669202d. Verificacion ROM-free y benchmark compartidos; pendiente integrar con lock."
         }
       ],
       "claimed_at": "2026-11-22T23:30:02.002939+00:00"
@@ -17698,7 +17703,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:35:32.075438+00:00",
+  "updated_at": "2026-11-22T23:36:13.122287+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
