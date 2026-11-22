@@ -16,7 +16,9 @@ static int sDeckPlaceHeld, sDeckPlacePending, sDeckCompactHeld, sDeckCompactPend
 #define gPortConfig testInputConfig
 /* Guest SDL subset defines this canonical event value used on the wire. */
 #define SDL_EVENT_WINDOW_FOCUS_LOST 0x20c
+#define PORT_SDL_BRIDGE 1
 #include "windows_input_event_test.inc"
+#undef PORT_SDL_BRIDGE
 #undef SDL_EVENT_WINDOW_FOCUS_LOST
 #undef gPortConfig
 
