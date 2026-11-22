@@ -17599,10 +17599,10 @@
     "r36s-integer-4x3-20261122": {
       "id": "r36s-integer-4x3-20261122",
       "piece": "Perfil R36S: lienzo 4:3, imagen GBA entera a 2x y bordes extendidos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-r36s-integer",
       "created_at": "2026-11-22T23:27:47.725867+00:00",
-      "updated_at": "2026-11-22T23:30:11.953664+00:00",
+      "updated_at": "2026-11-22T23:30:36.901338+00:00",
       "branch": "perf/r36s-integer-20261122",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/659",
       "approval": "Solicitud 22/11/2026",
@@ -17612,9 +17612,15 @@
           "at": "2026-11-22T23:30:11.953664+00:00",
           "owner": "codex-r36s-integer",
           "detail": "4 tests del lanzador y empaquetado; captura real de campo en el compositor común: 320x240, márgenes ocupados."
+        },
+        {
+          "at": "2026-11-22T23:30:36.901338+00:00",
+          "owner": "codex-r36s-integer",
+          "detail": "Merge ede267945adf39a04d49cfcd6542dc1ff3a5a874. Perfil 4:3 2x en launcher; verificación física pendiente."
         }
       ],
-      "claimed_at": "2026-11-22T23:27:58.981274+00:00"
+      "claimed_at": "2026-11-22T23:27:58.981274+00:00",
+      "completed_at": "2026-11-22T23:30:36.901338+00:00"
     },
     "ga36-armhf-framebuffer-20261122": {
       "id": "ga36-armhf-framebuffer-20261122",
@@ -17651,7 +17657,7 @@
     "created_at": "2026-11-22T23:30:21.619262+00:00",
     "updated_at": "2026-11-22T23:30:21.619262+00:00"
   },
-  "updated_at": "2026-11-22T23:30:21.619262+00:00",
+  "updated_at": "2026-11-22T23:30:36.926645+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
