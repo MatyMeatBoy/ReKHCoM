@@ -488,4 +488,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | readme-brand-header-20261116 | README vector brand header and badges matching NewSnap | integrado | codex-readme-header | https://github.com/MatyMeatBoy/ReKHCoM/pull/646 | Owner clarified screenshot: create NewSnap-style visual logo/header and badges for remaining two projects and remove duplicated text titles, 2026-11-16 | 2026-11-16T14:19:05.891176+00:00 |
 | pr648-shiningsource-lessons | Integrar retorno documental de ShiningSource | pr_abierto | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/648 | Usuario 22/11/2026: integrar PR abiertos verificados | 2026-11-22T14:07:08.289046+00:00 |
 
-Integrador: libre
+Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:07:15.391121+00:00)
