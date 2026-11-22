@@ -17408,10 +17408,10 @@
     "pr623-atlas097-preview": {
       "id": "pr623-atlas097-preview",
       "piece": "PR 623: conservar la propuesta exacta del arbol Atlas097 como vista previa",
-      "status": "listo_pr",
+      "status": "pr_abierto",
       "owner": "codex-retoma-atlas097",
       "created_at": "2026-11-22T14:28:33.379820+00:00",
-      "updated_at": "2026-11-22T14:33:41.333161+00:00",
+      "updated_at": "2026-11-22T14:34:32.861032+00:00",
       "branch": "art/pr623-atlas097-preview-20261122",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/623",
       "approval": "Integracion de PR solicitada el 22/11/2026, vista previa apagada por defecto. Atlas78926368 sigue pending.",
@@ -17426,9 +17426,15 @@
           "at": "2026-11-22T14:33:41.333161+00:00",
           "owner": "codex-retoma-atlas097",
           "detail": "Candidato local 1761b8980 FF de 89e129bd7; flag KHCOM_SCENE097_TREE_PREVIEW=1, Atlas78926368 pending. RED del default original; GREEN fixture C BG2/ambos modos y BG3; sintaxis EU32 PPU, diff-check y merge-tree limpios; sin build del juego ni push."
+        },
+        {
+          "at": "2026-11-22T14:34:32.861032+00:00",
+          "owner": "codex-retoma-atlas097",
+          "detail": "La propuesta sólo se activa con KHCOM_SCENE097_TREE_PREVIEW=1; 9409 coordenadas por caso y sintaxis Win32 EU."
         }
       ],
-      "claimed_at": "2026-11-22T14:28:56.990982+00:00"
+      "claimed_at": "2026-11-22T14:28:56.990982+00:00",
+      "sent": "7892636812af4dc99606e95397f547a4"
     },
     "issue647-optional-sdl-audio": {
       "id": "issue647-optional-sdl-audio",
@@ -17460,7 +17466,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:33:41.333161+00:00",
+  "updated_at": "2026-11-22T14:34:32.861032+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
