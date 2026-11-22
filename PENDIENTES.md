@@ -494,6 +494,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | issue640-riku-hd-portrait-source | Corregir fuente de retratos HD de Riku en batalla | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/651 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:19:22.287427+00:00 |
 | issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | pr_abierto | codex-retoma-linux639 | https://github.com/MatyMeatBoy/ReKHCoM/pull/654 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:23:11.539949+00:00 |
 | issue647-android-lifecycle | Android: SDL3 lifecycle watcher for native game, bridge and HD playback | en_curso | codex-retoma-android647 | fix/android647-lifecycle-watch | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:22:41.580343+00:00 |
-| issue641-riku-credits-audio | Reproducir y corregir la pista GBA de los créditos de Riku | pendiente | — | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:24:09.399453+00:00 |
+| issue641-riku-credits-audio | Reproducir y corregir la pista GBA de los créditos de Riku | en_curso | codex-retoma-audio641 | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:24:23.896173+00:00 |
 
 Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:23:21.811320+00:00)
