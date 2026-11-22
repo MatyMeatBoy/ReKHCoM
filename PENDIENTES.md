@@ -505,4 +505,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-armhf-framebuffer-20261122 | GA36 Allwinner ARMv7: framebuffer, launcher y paquete | en_curso | codex-retoma-ga36 | — | Usuario 22/11/2026: port GA36-MB V1.2 | 2026-11-22T23:28:15.769586+00:00 |
 | ppu-rgb555-handheld-20261122 | Medir mezcla RGB555 comun para R36S y GA36 | en_curso | codex-retoma-rgb555 | — | Pedido de rendimiento en portatiles del 22/11/2026, optimizacion compartida con equivalencia | 2026-11-22T23:30:02.002939+00:00 |
 
-Integrador: codex-r36s-integer (ocupado; 2026-11-22T23:30:21.619262+00:00)
+Integrador: libre
