@@ -17519,10 +17519,10 @@
     "issue647-android-memfd-write": {
       "id": "issue647-android-memfd-write",
       "piece": "Android image loader: complete writes to the existing memfd before mapping",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-memfd647",
       "created_at": "2026-11-22T14:36:48.082529+00:00",
-      "updated_at": "2026-11-22T14:39:06.232466+00:00",
+      "updated_at": "2026-11-22T14:41:06.320426+00:00",
       "branch": "fix/android647-memfd-write",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/657",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17532,9 +17532,15 @@
           "at": "2026-11-22T14:39:06.232466+00:00",
           "owner": "codex-retoma-memfd647",
           "detail": "3bbc3451f; production writer fault injection and NDK ARM64 syntax PASS. No map/APK/device tests."
+        },
+        {
+          "at": "2026-11-22T14:41:06.320426+00:00",
+          "owner": "codex-retoma-memfd647",
+          "detail": "Merge 10f4919fb421faa6e8c2726f456d914c3a18daef; fallos simulados y sintaxis ARM64."
         }
       ],
-      "claimed_at": "2026-11-22T14:36:58.430319+00:00"
+      "claimed_at": "2026-11-22T14:36:58.430319+00:00",
+      "completed_at": "2026-11-22T14:41:06.320426+00:00"
     },
     "pr642-console-source-check": {
       "id": "pr642-console-source-check",
@@ -17557,7 +17563,7 @@
     "created_at": "2026-11-22T14:40:50.257007+00:00",
     "updated_at": "2026-11-22T14:40:50.257007+00:00"
   },
-  "updated_at": "2026-11-22T14:40:50.257007+00:00",
+  "updated_at": "2026-11-22T14:41:06.320426+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
