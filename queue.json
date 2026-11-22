@@ -17215,12 +17215,18 @@
       "status": "en_curso",
       "owner": "codex-retoma-r36s",
       "created_at": "2026-11-22T14:08:02.151172+00:00",
-      "updated_at": "2026-11-22T14:08:17.155824+00:00",
-      "branch": null,
+      "updated_at": "2026-11-22T14:09:10.157297+00:00",
+      "branch": "port/r36s-portmaster-20261122",
       "pr": null,
       "approval": "Usuario 22/11/2026: port R36S con Opti36S",
       "reference": "https://github.com/MatyMeatBoy/Opti36S",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-22T14:09:10.157297+00:00",
+          "owner": "codex-retoma-r36s",
+          "detail": "Worktree aislado; base Opti36S 25617d2; ruta AArch64 LP64/guest ILP32, launcher PortMaster y gate Focal."
+        }
+      ],
       "claimed_at": "2026-11-22T14:08:17.155824+00:00"
     },
     "pr642-controller-integration": {
@@ -17239,7 +17245,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:08:43.153463+00:00",
+  "updated_at": "2026-11-22T14:09:10.157297+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
