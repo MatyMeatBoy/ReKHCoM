@@ -17623,10 +17623,23 @@
       "reference": "https://github.com/ricardomm7/ga36-bsp",
       "evidence": [],
       "claimed_at": "2026-11-22T23:28:15.769586+00:00"
+    },
+    "ppu-rgb555-handheld-20261122": {
+      "id": "ppu-rgb555-handheld-20261122",
+      "piece": "Medir mezcla RGB555 comun para R36S y GA36",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-22T23:29:52.137744+00:00",
+      "updated_at": "2026-11-22T23:29:52.137744+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": "Pedido de rendimiento en portatiles del 22/11/2026, optimizacion compartida con equivalencia",
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/653",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:28:15.769586+00:00",
+  "updated_at": "2026-11-22T23:29:52.137744+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
