@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "../src/port_input.c"
+#include "port/menu_input.h"
 PortConfig gPortConfig = {
     .dodgeButton=1,.stockButton=1,.unstockButton=1,
     .keys={{SDLK_X,SDLK_K},{SDLK_Z,SDLK_J},{SDLK_A,0},{SDLK_S,0},
@@ -22,6 +23,59 @@ Mode* gCurrentMode;
 Mode gModeBattle, gModeVsbattle;
 void PortUiZoomStep(int dir){(void)dir;}
 void PortLog(const char* fmt,...){(void)fmt;}
+void PortConfigSave(void) {}
+
+enum { PAGE_CONTROLS, PAGE_ACHIEVEMENTS, PAGE_SCENES, PAGE_LOBBY };
+enum { ITEM_CONTROL_A, ITEM_CONTROL_UNSTOCK = PORT_ACT_COUNT - 1 };
+static int sOpen = 1, sPage = PAGE_CONTROLS, sControlPad = 1, sControlCapture;
+static int sScenePause, sConfirm, sCursor;
+static unsigned char sUiAxisHeld[2];
+#include "ui_mapped_key.inc"
+#include "ui_control_capture.inc"
+
+/* Same forwarding rule as the game pump: actual capture must leave device
+   lifecycle events available to PortInputHandleEvent. */
+static void ui_then_input(const SDL_Event* event) {
+    if (!PortUiHandleEvent(event))
+        PortInputHandleEvent(event);
+}
+
+static void control_capture(const SDL_VirtualJoystickDesc* desc) {
+    SDL_JoystickID id = SDL_AttachVirtualJoystick(desc);
+    SDL_Event event = {0};
+    assert(id && !SDL_IsGamepad(id));
+    sControlCapture = 1;
+    event.type = SDL_EVENT_JOYSTICK_ADDED;
+    event.jdevice.which = id;
+    ui_then_input(&event);
+    assert(SDL_GetJoystickFromID(id));
+    assert(SDL_DetachVirtualJoystick(id));
+    event.type = SDL_EVENT_JOYSTICK_REMOVED;
+    ui_then_input(&event);
+    assert(!SDL_GetJoystickFromID(id));
+    assert(sControlCapture);
+}
+
+static void capture_releases(SDL_JoystickID id) {
+    SDL_Event event = {0};
+    event.type = SDL_EVENT_JOYSTICK_BUTTON_DOWN;
+    event.jbutton.which = id;
+    event.jbutton.button = 2; /* Raw A selects a control. */
+    sControlCapture = 0;
+    assert(PortUiHandleEvent(&event));
+    sCursor = ITEM_CONTROL_A + PORT_ACT_L;
+    sControlCapture = 1;
+    event.type = SDL_EVENT_JOYSTICK_BUTTON_UP;
+    assert(PortUiHandleEvent(&event)); /* Release A while waiting to assign L. */
+    event.type = SDL_EVENT_JOYSTICK_BUTTON_DOWN;
+    event.jbutton.button = 0;
+    assert(PortUiHandleEvent(&event));
+    assert(!sControlCapture && gPortConfig.pad[PORT_ACT_L] == PORT_PAD_RAW_BUTTON_BASE);
+    event.jbutton.button = 2;
+    SDL_Event mapped;
+    assert(PortInputRawMenuEvent(&event, &mapped) == 2 && mapped.key.key == SDLK_RETURN);
+}
+
 static void key(SDL_Keycode code,int down){
     SDL_Event e={0};e.type=down?SDL_EVENT_KEY_DOWN:SDL_EVENT_KEY_UP;
     e.key.key=code;PortInputHandleEvent(&e);
@@ -226,6 +280,29 @@ int main(void){
     assert(SDL_DetachVirtualJoystick(id));
     raw.type=SDL_EVENT_GAMEPAD_REMOVED;raw.gdevice.which=id;PortInputHandleEvent(&raw);
     SDL_UpdateJoysticks();assert(!PortInputKeys());
+    desc.name = "Independent raw capture joystick";
+    desc.product_id = 0x1234;
+    control_capture(&desc);
+    id = SDL_AttachVirtualJoystick(&desc);
+    assert(id && !SDL_IsGamepad(id));
+    joystick = SDL_OpenJoystick(id);
+    assert(joystick);
+    gPortConfig.pad[PORT_ACT_A] = PORT_PAD_RAW_BUTTON_BASE + 2;
+    capture_releases(id);
+
+    /* The first bit of a diagonal is Up, while the chord binds Right. */
+    gPortConfig.pad[PORT_ACT_START] = PORT_PAD_RAW_BUTTON_BASE;
+    gPortConfig.pad[PORT_ACT_SELECT] = PORT_PAD_RAW_HAT_BASE + 1;
+    assert(SDL_SetJoystickVirtualButton(joystick, 0, true));
+    assert(SDL_SetJoystickVirtualHat(joystick, 0, SDL_HAT_RIGHTUP));
+    SDL_UpdateJoysticks();
+    raw.type = SDL_EVENT_JOYSTICK_HAT_MOTION;
+    raw.jhat.which = id;
+    raw.jhat.hat = 0;
+    raw.jhat.value = SDL_HAT_RIGHTUP;
+    assert(PortInputRawMenuChord(&raw));
+    SDL_CloseJoystick(joystick);
+    assert(SDL_DetachVirtualJoystick(id));
     SDL_Quit();puts("Input: keys, normalized pads/triggers, raw buttons/axes/hats, diagonals, capture, menu/chord, hotplug/disconnect and SDL2-format mapping import PASS");
     return 0;
 }

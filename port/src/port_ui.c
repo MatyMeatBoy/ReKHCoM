@@ -2494,7 +2494,17 @@ int PortUiHandleEvent(const void* p) {
     const SDL_Event* ev = (const SDL_Event*)p;
     SDL_Event mapped;
 
-    if ((sOpen || sScenePause) && !(sPage == PAGE_CONTROLS && sControlCapture)) {
+    /* Device ownership lives in the input layer, including during capture. */
+    if (ev->type == SDL_EVENT_GAMEPAD_ADDED) return 0;
+#ifndef PORT_SDL_BRIDGE
+    if (ev->type == SDL_EVENT_GAMEPAD_REMOVED ||
+        ev->type == SDL_EVENT_JOYSTICK_ADDED || ev->type == SDL_EVENT_JOYSTICK_REMOVED) return 0;
+#endif
+
+    if ((sOpen || sScenePause) && sPage == PAGE_CONTROLS && sControlCapture) {
+        /* Track releases without turning the captured input into a menu key. */
+        PortInputRawMenuEvent(ev, &mapped);
+    } else if (sOpen || sScenePause) {
         /* List triggers remain shortcuts even when an axis is also bound to A/B. */
         int reserved = UiListTriggerReserved(ev);
         int axis = reserved ? 0 : KhPadMenuAxis(ev, gPortConfig.pad, sUiAxisHeld, &mapped);
@@ -2685,7 +2695,14 @@ int PortUiHandleEvent(const void* p) {
         if (sControlPad && ev->type == SDL_EVENT_GAMEPAD_AXIS_MOTION && SDL_abs(ev->gaxis.value) > 16000) { gPortConfig.pad[action] = PORT_PAD_AXIS_BASE + ev->gaxis.axis * 2 + (ev->gaxis.value < 0); sControlCapture = 0; PortConfigSave(); return 1; }
         if (sControlPad) {
             int binding = PortInputRawBinding(ev);
-            if (binding >= 0) { gPortConfig.pad[action] = binding; sControlCapture = 0; PortInputResetBindings(); PortConfigSave(); return 1; }
+            if (binding >= 0) {
+                gPortConfig.pad[action] = binding;
+                sControlCapture = 0;
+                PortInputResetRawMenu();
+                PortInputResetBindings();
+                PortConfigSave();
+                return 1;
+            }
         }
         /* waiting for a key with no keyboard (issue #37): a gamepad button, a tap or a click cancels it */
         if (!sControlPad && (ev->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || ev->type == SDL_EVENT_MOUSE_BUTTON_DOWN || ev->type == SDL_EVENT_FINGER_DOWN))

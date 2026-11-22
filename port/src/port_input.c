@@ -285,16 +285,6 @@ int PortInputRawBinding(const void* p) {
     return -1;
 }
 
-int PortInputRawMenuChord(const void* p) {
-    const SDL_Event* ev = p;
-    int binding = PortInputRawBinding(p);
-    int start = gPortConfig.pad[PORT_ACT_START], select = gPortConfig.pad[PORT_ACT_SELECT];
-    SDL_Joystick* joystick;
-    if (binding < 0 || start == select || (binding != start && binding != select)) return 0;
-    joystick = RawJoystick(RawEventID(ev));
-    return joystick && RawBindingDown(joystick, start) && RawBindingDown(joystick, select);
-}
-
 void PortInputResetRawMenu(void) {
     int count, i, action;
     SDL_JoystickID* ids = SDL_GetJoysticks(&count);
@@ -329,6 +319,18 @@ static int RawBindingEventState(const SDL_Event* ev, int binding, int was) {
             return (ev->jhat.value & (1 << (encoded % 4))) != 0;
     }
     return -1;
+}
+
+int PortInputRawMenuChord(const void* p) {
+    const SDL_Event* ev = p;
+    SDL_JoystickID id = RawEventID(ev);
+    int start = gPortConfig.pad[PORT_ACT_START], select = gPortConfig.pad[PORT_ACT_SELECT];
+    SDL_Joystick* joystick;
+    if (!id || SDL_IsGamepad(id) || start == select) return 0;
+    /* A diagonal contains two directions. Either can start the chord. */
+    if (RawBindingEventState(ev, start, 0) != 1 && RawBindingEventState(ev, select, 0) != 1) return 0;
+    joystick = RawJoystick(id);
+    return joystick && RawBindingDown(joystick, start) && RawBindingDown(joystick, select);
 }
 
 int PortInputRawMenuEvent(const void* p, void* out) {
