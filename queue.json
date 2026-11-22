@@ -17731,8 +17731,13 @@
       "completed_at": "2026-11-22T23:37:51.396403+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-22T23:45:29.121355+00:00",
+  "integrator": {
+    "owner": "codex-r36s-integer",
+    "token": "370adb3f57cd9e131d758efb4aeaec34e6b9bbdd38a53ed8",
+    "created_at": "2026-11-22T23:45:53.521196+00:00",
+    "updated_at": "2026-11-22T23:45:53.521196+00:00"
+  },
+  "updated_at": "2026-11-22T23:45:53.521196+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
