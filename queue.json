@@ -17264,12 +17264,12 @@
     "issue643-android-software-h264": {
       "id": "issue643-android-software-h264",
       "piece": "Android H.264: preferencia de decodificacion por software",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-retoma-android643",
       "created_at": "2026-11-22T14:12:16.023873+00:00",
-      "updated_at": "2026-11-22T14:13:56.288603+00:00",
+      "updated_at": "2026-11-22T14:20:43.960729+00:00",
       "branch": "fix/android643-software-h264",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/652",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/643",
       "evidence": [
@@ -17277,6 +17277,11 @@
           "at": "2026-11-22T14:13:56.288603+00:00",
           "owner": "codex-retoma-android643",
           "detail": "AVC software opt-in; validacion de la seleccion y fallback en el reproductor compartido."
+        },
+        {
+          "at": "2026-11-22T14:20:43.960729+00:00",
+          "owner": "codex-retoma-android643",
+          "detail": "5e71aabd9; decoder MediaCodec simulado, reset/bridge, generaciones de texturas y sintaxis NDK ARMv7/ARM64, launcher y guest ILP32 PASS. Pendiente APK y Xiaomi."
         }
       ],
       "claimed_at": "2026-11-22T14:12:51.844545+00:00"
@@ -17323,7 +17328,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:20:29.854301+00:00",
+  "updated_at": "2026-11-22T14:20:43.960729+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
