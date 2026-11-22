@@ -17670,8 +17670,8 @@
       "status": "en_curso",
       "owner": "codex-retoma-fbdev",
       "created_at": "2026-11-22T23:31:41.493454+00:00",
-      "updated_at": "2026-11-22T23:31:51.056520+00:00",
-      "branch": null,
+      "updated_at": "2026-11-22T23:32:00.672111+00:00",
+      "branch": "perf/linux-fbdev-direct-convert",
       "pr": null,
       "approval": "Usuario 22/11/2026: optimizaciones compartidas verificadas",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/tree/main/port/linux",
@@ -17680,7 +17680,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:31:51.056520+00:00",
+  "updated_at": "2026-11-22T23:32:00.672111+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
