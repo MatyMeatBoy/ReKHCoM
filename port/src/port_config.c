@@ -154,6 +154,9 @@ static const Key sKeys[] = {
     { "net_stats", &gPortConfig.netStats, 0, 1 },
     { "net_delay", &gPortConfig.netDelay, 0, 8 },
     { "hd_movies", &gPortConfig.hdMovies, 0, 1 },
+#if defined(__ANDROID__) || defined(PORT_ANDROID64)
+    { "hd_software_h264", &gPortConfig.hdSoftwareH264, 0, 1 },
+#endif
     { "hd_media_language", &gPortConfig.hdMediaLanguage, 0, 2 },
     { "hd_music", &gPortConfig.hdMusic, 0, 1 },
     { "hd_scenes", &gPortConfig.hdScenes, 0, 1 },

@@ -16,6 +16,7 @@
 #define BRIDGE_MOVIE_MAGIC 0x4D4F5631
 #define BRIDGE_MOVIE_PROBE 0x210
 #define BRIDGE_MOVIE_MASTER 0x211
+#define BRIDGE_MOVIE_ANDROID_SOFTWARE_H264 0x212 /* optional, one movie; Android only */
 typedef struct { unsigned percent; int pending; } PortMovieVolumeState;
 static inline float PortMovieGain(int percent, float fade) {
     if (percent < 0) percent = 0;

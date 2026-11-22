@@ -11,6 +11,7 @@ header=r'''
 #include <string.h>
 #include <assert.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include "audio_bridge.h"
 static PortMovieVolumeState sMovieVolume;
 #define PortLog(...) ((void)0)
@@ -29,15 +30,22 @@ static void RendererDeviceReset(void){callbacks++;}
 # Source-level producer return is tested separately by test_hd_movie_failures.
 # Run the actual Android64 wrapper with an internal reset already mapped to 0.
 host=(ROOT/'port/android64/host/android64_host.c').read_text(encoding='utf-8')
+a=host.index('static bool sMovieSoftwareH264;');b=host.index('\n}',a)+2
+thread_bridge=host[a:b]
 a=host.index('static int H_hd_movie(const char* movie,');b=host.index('\n}',a)+2
 wrapper=host[a:b]
 body=r'''
 static void*sRenderer;static int sQuit;
-static int publicResult;
-static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int masterVolume){
+static int publicResult, actualSoftware;
+static int HdMovieAndroidPlay(void*r,const char*p,const char*a,const char*b,const char*c,int masterVolume,bool software){
  assert(sRendererResetCallback==RendererDeviceReset);
+ actualSoftware=software;
  return publicResult; /* production internal-to-public mapping tested separately */
 }
+static int HostOutputCommand(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -2;}
+static int HostAudioCommand(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return PortMovieVolumeCommand(&sMovieVolume,op,a);}
+static int HostGpuCommand(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return -2;}
+static int H_thread_legacy(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return 0;}
 '''
 native=(ROOT/'port/src/port_hdmovie.c').read_text(encoding='utf-8')
 a=native.rindex('static int PlayFile(const char* name) {');b=native.index('\n}',a)+2
@@ -48,8 +56,8 @@ native_stubs=r'''
 #define SDL_zero(e) memset(&(e),0,sizeof(e))
 static int sStartAt;
 static void PortBridgeRefreshTextureEpoch(void){}
-static struct {int hdSubtitles,masterVolume;}gPortConfig;
-static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return PortMovieVolumeCommand(&sMovieVolume,op,a);}
+static struct {int hdSubtitles,masterVolume,hdSoftwareH264;}gPortConfig;
+static int h_thread(int op,uint32_t a,uint32_t b,uint32_t c,uint32_t d){return H_thread(op,a,b,c,d);}
 static void MoviePath(const char*n,char*p,int size){snprintf(p,size,"%s",n);}
 static void MovieSubtitlePath(const char*n,const char*l,char*p,int size){snprintf(p,size,"%s.%s.txt",n,l);}
 static void SubsOrder(const char**o){o[0]="en";o[1]="es";}
@@ -86,14 +94,19 @@ int main(void){
  at=0;events[0].type=SDL_EVENT_RENDER_TARGETS_RESET;assert(!MovieEvents(&skip));
  publicResult=1;
  HdMovieAndroidSetRendererResetCallback(RendererDeviceReset);
- assert(PlayFile("x")==1);
+ gPortConfig.hdSoftwareH264=1;
+ assert(PlayFile("x")==1&&actualSoftware&&!sMovieSoftwareH264);
+ HdMovieAndroidSetRendererResetCallback(RendererDeviceReset);
+ gPortConfig.hdSoftwareH264=0;
+ assert(PlayFile("x")==1&&!actualSoftware&&!sMovieSoftwareH264);
  assert(LinuxReturn(1,1,1)==0&&LinuxReturn(0,0,1)==1);
  return 0;
 }
 '''
-cc=ROOT.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe'
+cc=next(p/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe' for p in ROOT.parents
+        if (p/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe').is_file())
 with tempfile.TemporaryDirectory(prefix='rekhcom-movie-reset-') as td:
- src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(header+production+body+wrapper+native_stubs+native_wrapper+linux_stubs+linux_events+linux_return+cases,encoding='utf-8')
+ src=Path(td)/'test.c';exe=Path(td)/'test.exe';src.write_text(header+production+body+thread_bridge+'\n'+wrapper+native_stubs+native_wrapper+linux_stubs+linux_events+linux_return+cases,encoding='utf-8')
  subprocess.run([str(cc),str(src),'-I'+str(ROOT/'port/ps5/shared'),'-o',str(exe)],check=True)
  subprocess.run([str(exe)],check=True)
  subprocess.run([str(cc),'-DPORT_ANDROID64',str(src),'-I'+str(ROOT/'port/ps5/shared'),'-o',str(exe)],check=True)

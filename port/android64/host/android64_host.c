@@ -402,7 +402,12 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #undef H_thread
 #define HOST_OUTPUT_WINDOW 0 /* Android owns the fixed fullscreen surface. */
 #include "host_output_sdl.h"
+static bool sMovieSoftwareH264;
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
+    if (op == BRIDGE_MOVIE_ANDROID_SOFTWARE_H264) {
+        sMovieSoftwareH264 = a == 1;
+        return a <= 1;
+    }
     int result = HostOutputCommand(op, a, b, c, d);
     if (result != -2) return result;
     result = HostAudioCommand(op, a, b, c, d);
@@ -415,7 +420,8 @@ static void H_audio_push(const int16_t* frames, uint32_t count) { HdMusicPush(fr
 
 /* HD movies: played here to the end with the NDK's decoders (port/portable/hdmovie_android.c, as on 32-bit Android) */
 void HdMovieAndroidSetRendererResetCallback(void (*callback)(void));
-int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2, const char* font, int masterVolume);
+int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2,
+                       const char* font, int masterVolume, bool softwareH264);
 void HdMovieLog(const char* fmt, ...) {
     char text[1024];
     va_list ap;
@@ -426,8 +432,10 @@ void HdMovieLog(const char* fmt, ...) {
 }
 static int H_hd_movie(const char* movie, const char* subs1, const char* subs2, const char* font) {
     const int masterVolume = PortMovieVolumeTake(&sMovieVolume);
+    const bool softwareH264 = sMovieSoftwareH264;
+    sMovieSoftwareH264 = false;
     HdMovieAndroidSetRendererResetCallback(RendererDeviceReset);
-    int played = HdMovieAndroidPlay(sRenderer, movie, subs1, subs2, font, masterVolume);
+    int played = HdMovieAndroidPlay(sRenderer, movie, subs1, subs2, font, masterVolume, softwareH264);
     HdMovieAndroidSetRendererResetCallback(NULL);
     if (played == 2)
         sQuit = 1;
