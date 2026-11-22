@@ -558,6 +558,14 @@ static inline int PortPreliminarTileSource(const PortPreliminarRecipe* p, int* x
     }
 }
 
+static inline int PortPreliminarTileSourceForPreview(const PortPreliminarRecipe* p, int* x, int* y,
+                                                   int previewScene097Trees) {
+    /* Atlas 78926368: the expanded tree layer is finite and independent of BG3. */
+    if (previewScene097Trees && p->v[0] == 97 && p->v[1] == 2)
+        return *x >= 0 && *y >= 0 && *x < p->v[2] * 32 && *y < p->v[3] * 32;
+    return PortPreliminarTileSource(p, x, y);
+}
+
 /* Scene 099's checker floor in one-point perspective (user 24/10: "as Guard
  * Armor"): measured on the map, its cells are w(y)=0.1269*(y-33.8) wide,
  * one centred on x=128, and its rows end where 1/(y-33.8) steps by 0.000567
@@ -590,6 +598,15 @@ static inline int PortPreliminar087VineRun(int wx, int wy) {
     /* The tile fast path can consume eight pixels. Enter the pixel path
      * before a run crosses the border, without scalar-sampling whole layers. */
     return diagonal<144 && diagonal+7>=96;
+}
+
+/* Atlas #601: the complete masonry module is a preview on scene 120 BG3. */
+static inline int PortPreliminar120MasonryPreview(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {
+    if (!p || p->v[0]!=120 || p->v[1]!=3 || wx<32 ||
+        (wx<256 && wy>=0 && wy<256) || 2*wy+wx >= (wx>=96 ? 176 : 208)) return 0;
+    *sx=32+PortSceneTileMod(wx-32,64);
+    *sy=PortSceneTileMod(wy,32);
+    return 1;
 }
 
 static inline int PortPreliminarPixelSource(const PortPreliminarRecipe* p, int wx, int wy, int* sx, int* sy) {

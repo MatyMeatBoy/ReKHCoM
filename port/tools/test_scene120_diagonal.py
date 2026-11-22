@@ -21,6 +21,18 @@ int main(void){
  p.v[1]=3;
  assert(PortPreliminarPixelSource(&p,256,-40,&sx,&sy));assert(sy>=160);
  assert(PortPreliminarPixelSource(&p,256,-48,&sx,&sy));assert(sy<32);
+ /* Preserve the approved donors by default and exercise the optional patch. */
+ assert(PortPreliminarPixelSource(&p,64,-32,&sx,&sy));assert(sx==32&&sy==16);
+ assert(PortPreliminarPixelSource(&p,96,-16,&sx,&sy));assert(sx==32&&sy==16);
+ assert(PortPreliminar120MasonryPreview(&p,64,-32,&sx,&sy));assert(sx==64&&sy==0);
+ assert(PortPreliminar120MasonryPreview(&p,96,-16,&sx,&sy));assert(sx==32&&sy==16);
+ for(y=0;y<256;y++)for(x=0;x<256;x++)
+  assert(!PortPreliminar120MasonryPreview(&p,x,y,&sx,&sy));
+ assert(!PortPreliminar120MasonryPreview(&p,16,-32,&sx,&sy));
+ assert(!PortPreliminar120MasonryPreview(&p,256,-40,&sx,&sy));
+ p.v[1]=2;
+ assert(!PortPreliminar120MasonryPreview(&p,64,-32,&sx,&sy));
+ p.v[1]=3;
  assert(PortPreliminarPixelSource(&p,-16,112,&sx,&sy));assert(sy>=160);
  return 0;
 }

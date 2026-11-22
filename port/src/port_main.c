@@ -10,6 +10,9 @@
 #if defined(__ANDROID__) && !defined(PORT_ANDROID64)
 #include "../android/native/android_lifecycle_events.h"
 #endif
+#if !defined(PORT_SDL_BRIDGE) && !defined(__EMSCRIPTEN__)
+#include "port/sdl_startup.h"
+#endif
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
 #include "port/cursor_idle.h"
 static PortCursorIdle sCursorIdle;
@@ -3672,7 +3675,12 @@ int main(int argc, char** argv) {
     if (PortFbInit(&sFbW, &sFbH))
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "offscreen");
 #endif
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD | SDL_INIT_EVENTS))
+#if defined(PORT_SDL_BRIDGE) || defined(__EMSCRIPTEN__)
+    const bool sdlReady = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD | SDL_INIT_EVENTS);
+#else
+    const bool sdlReady = PortSdlInit(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_EVENTS, PortLog);
+#endif
+    if (!sdlReady)
         PortFatal("SDL_Init failed: %s", SDL_GetError());
 #if defined(__ANDROID__) && !defined(PORT_ANDROID64)
     if (!PortAndroidLifecycleStart())

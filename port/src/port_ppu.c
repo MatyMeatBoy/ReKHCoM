@@ -150,6 +150,7 @@ int PortEventId(void); /* mode_event.c */
 static int sEventBackdropProfile = -1; /* derived at frame start, not saved */
 static int sUseSceneProfiles;
 static int sPreliminarV1;
+static int sPreviewScene097Trees;
 static int sPreliminarApprovedOnly; /* only the Preliminar V1 scenes approved with honours, for everyone */
 /* Preliminar V1 scenes approved with honours in the review app; KHCOM_SCENEnnn_WIDE=0 turns one off */
 /* every scene accepted in Atlas (Aprobado (mejorar), Aprobado, Honores: all go into the game, user 25/10) that has a
@@ -166,6 +167,7 @@ static int PortArtOn(const char* var) {
     return v == NULL || atoi(v) != 0;
 }
 static const PortPreliminarRecipe* sPreliminarRecipe[4];
+static int sPreviewScene120Masonry;
 static int sAgrabahLayer[4]; /* rebuilt from actual map data each frame */
 static int sAgrabah109Layer[4];
 static int sDarksideLayer[4]; /* port_darkside.c: 1 beach, 2 body; from the map blocks each frame */
@@ -1432,7 +1434,7 @@ static int WorldEntry(const BgLatch* l, int wx, int wy) {
 static int ExtendedWorldEntry(const BgLatch* l, int wx, int wy) {
     int bg = (int)(l - sBgLatch), tx = wx >> 3, ty = wy >> 3, supported = 0, ok = 0;
     if (sPreliminarRecipe[bg]) {
-        ok = PortPreliminarTileSource(sPreliminarRecipe[bg], &tx, &ty);
+        ok = PortPreliminarTileSourceForPreview(sPreliminarRecipe[bg], &tx, &ty, sPreviewScene097Trees);
         return ok ? MapTile(l, tx, ty) : -1;
     }
     if (sDarksideLayer[bg]) {
@@ -2112,7 +2114,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     dtInWorld[x]=1;
                     continue;
                 }
-                if (PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
+                if ((sPreviewScene120Masonry && PortPreliminar120MasonryPreview(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) ||
+                    PortPreliminarPixelSource(sPreliminarRecipe[bg],wx,wy,&sx,&sy)) {
                     int index=SinglePanelIndex(l,cnt,sx,sy);
                     out[x]=index>=0 && (index&15)?dtPalette[index]&0x7fff:TRANSPARENT;
                     dtInWorld[x]=1;
@@ -4198,8 +4201,18 @@ void PortPpuBeginFrame(void) {
             }
         }
     }
+    sPreviewScene097Trees = 0;
+    if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0] == 97) {
+        const char* preview = getenv("KHCOM_SCENE097_TREE_PREVIEW");
+        sPreviewScene097Trees = preview && strcmp(preview, "1") == 0;
+    }
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
         PreparePreliminarFir();
+    sPreviewScene120Masonry = 0;
+    if (sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0]==120) {
+        const char* preview=getenv("KHCOM_SCENE120_MASONRY_PREVIEW");
+        sPreviewScene120Masonry = preview && strcmp(preview,"1")==0;
+    }
     if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];

@@ -835,6 +835,27 @@ de mamposteríaA como propuesta separada. Antes/propuesta de modelo sin build,
 hija pendiente, sin aprobación heredada y sin ejecutar el nuevo compositor.
 Aceptación06/11: activar Darkside06 flanco exacto9a47fba18d7749a2a54d4b9ccc8da65b rev3. Sin alterar211píxeles, brazo o cuerpo. El comentario exige todos los frames del combate: seguimiento temporal separado, no inferido de pose13.
 
+### Escena097: vista previa del mapa completo de árboles
+
+La propuesta Atlas `7892636812af4dc99606e95397f547a4` conserva el mapa finito
+de BG2 y recupera 391 píxeles de hojas y tronco. `KHCOM_SCENE097_TREE_PREVIEW=1`
+permite revisarla. La receta predeterminada y el patrón de césped BG3
+conservan sus selecciones. El modelo responde a completar el árbol. Las dos
+notas sobre el momento de aparición del gato siguen en seguimiento.
+
+### Escena120, seguimiento del módulo A sin build
+
+El patrón A señalado en la revisión5 de9f28568f contiene ladrillos completos,
+no la repetición de un fragmento16x16. Extender la mampostería con el bloque
+nativo64x32 de x32..95/y0..31 conserva juntas y variación, sólo fuera del mapa
+y a la derecha de la columna. La diagonal176/208 y las capas decorativas no
+cambian. El grabado figurativo es otro problema: no declararlo completado por
+arreglar los ladrillos. Estudio antes/solución sin build, pendiente de valoración
+y de QA real; la aceptación del padre no se hereda a esta propuesta parcial.
+El grabado se integró por separado en #621. La mampostería conserva la receta
+aprobada como valor predeterminado. La propuesta se puede probar con
+`KHCOM_SCENE120_MASONRY_PREVIEW=1`.
+
 ### Oogie: vista previa de máscara, punta y franja
 
 La arena aprobada del PR593 conserva su salida predeterminada.
