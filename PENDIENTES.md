@@ -501,4 +501,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr606-620-oogie-preview | PR 606 y 620: ambas propuestas Oogie como vistas previas conservando arena aprobada | en_curso | codex-retoma-oogie | — | Integrar PR solicitado el 22/11/2026. Las propuestas exactas de Atlas siguen pendientes y apagadas por defecto. | 2026-11-22T14:34:53.231882+00:00 |
 | issue647-android-memfd-write | Android image loader: complete writes to the existing memfd before mapping | en_curso | codex-retoma-memfd647 | fix/android647-memfd-write | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:37:09.017834+00:00 |
 
-Integrador: codex-retoma-20261122 (ocupado; 2026-11-22T14:37:31.294453+00:00)
+Integrador: libre
