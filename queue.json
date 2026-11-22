@@ -17501,9 +17501,9 @@
       "status": "pr_abierto",
       "owner": "codex-retoma-oogie",
       "created_at": "2026-11-22T14:34:40.451562+00:00",
-      "updated_at": "2026-11-22T14:40:40.570698+00:00",
-      "branch": null,
-      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/606",
+      "updated_at": "2026-11-22T14:42:40.143169+00:00",
+      "branch": "art/pr620-oogie-preview-20261122",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/620",
       "approval": "Integrar PR solicitado el 22/11/2026. Las propuestas exactas de Atlas siguen pendientes y apagadas por defecto.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/606",
       "evidence": [
@@ -17511,10 +17511,15 @@
           "at": "2026-11-22T14:40:40.570698+00:00",
           "owner": "codex-retoma-oogie",
           "detail": "Etapa 1: fixture valida la base aprobada y vista detail; #620 se registra al completar la etapa 2."
+        },
+        {
+          "at": "2026-11-22T14:42:40.143169+00:00",
+          "owner": "codex-retoma-oogie",
+          "detail": "Etapa 606 integrada a84b06ab83297b2b374d7cc321b7b1c78834946e; candidato local 620 d214c9b91 FF del head d955ab97. Default aprobado, detail y shapes exactos por 851968 muestras C por modo, 6 tests PASS, comparativa de 17280 bytes, sintaxis i686 y merge-tree limpios. Atlas b81888f6 pending y opt-in. Pendiente push/merge del coordinador y QA real."
         }
       ],
       "claimed_at": "2026-11-22T14:34:53.231882+00:00",
-      "sent": "85b1e5551e224f3893cf44fcc9cf5739"
+      "sent": "b81888f6523d407d8be9f0fa65f526fc"
     },
     "issue647-android-memfd-write": {
       "id": "issue647-android-memfd-write",
@@ -17558,7 +17563,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:41:22.681412+00:00",
+  "updated_at": "2026-11-22T14:42:40.143169+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
