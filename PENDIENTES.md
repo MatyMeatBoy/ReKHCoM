@@ -492,5 +492,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr642-controller-integration | PR 642: lifecycle y captura de mandos USB durante el menu | en_curso | codex-retoma-controllers | fix/pr642-controller-capture-20261122 | Pedido del 22/11/2026 de integrar todos los PR tras validarlos | 2026-11-22T14:09:35.444564+00:00 |
 | issue643-android-software-h264 | Android H.264: preferencia de decodificacion por software | en_curso | codex-retoma-android643 | fix/android643-software-h264 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:13:56.288603+00:00 |
 | issue640-riku-hd-portrait-source | Corregir fuente de retratos HD de Riku en batalla | integrado | codex-retoma-20261122 | https://github.com/MatyMeatBoy/ReKHCoM/pull/651 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:19:22.287427+00:00 |
+| issue639-linux-hd-import-guidance | Aclarar importación HD opcional en el launcher Linux | pendiente | — | — | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:20:08.725206+00:00 |
 
 Integrador: libre
