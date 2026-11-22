@@ -17172,19 +17172,20 @@
     "pr648-shiningsource-lessons": {
       "id": "pr648-shiningsource-lessons",
       "piece": "Integrar retorno documental de ShiningSource",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-retoma-20261122",
       "created_at": "2026-11-22T14:06:27.389275+00:00",
-      "updated_at": "2026-11-22T14:06:27.389275+00:00",
+      "updated_at": "2026-11-22T14:06:34.487023+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 22/11/2026: integrar PR abiertos verificados",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/647",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-22T14:06:34.487023+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:06:27.389275+00:00",
+  "updated_at": "2026-11-22T14:06:34.487023+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
