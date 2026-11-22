@@ -9,7 +9,9 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include "../include/port/port_audio_continuity.h"
+#include "../include/port/sdl_startup.h"
 #include "../include/port/cursor_idle.h"
+#include "../include/port/gamepad_mappings.h"
 
 #include <errno.h>
 #include <math.h>
@@ -21,6 +23,7 @@
 #include <winsock2.h> /* before windows.h: the network link's socket (udp_host.h) */
 #include <ws2tcpip.h>
 #include <windows.h>
+#include "../include/port/video_vrr_windows.h"
 #include <intrin.h>
 #include <direct.h>
 #include <io.h>
@@ -322,8 +325,11 @@ static void GamePush(const int16_t* frames, uint32_t count) {
 #define UDP_HOST_WINSOCK
 #include "udp_host.h"
 #define H_thread H_thread_legacy
+#define THREAD_HOST_SDL 1
 #include "thread_host.h"
 #undef H_thread
+#define HOST_OUTPUT_VRR_CAPS() (BRIDGE_OUTPUT_VRR_CONTROL_CAP | \
+    (PortWindowsVrrEligible(sRenderer) ? BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP : 0))
 #include "host_output_sdl.h"
 static int H_thread(int op, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
     int result = HostOutputCommand(op, a, b, c, d);
@@ -590,10 +596,11 @@ int main(int argc, char** argv) {
     CrashReportNote("guest %s, %ld bytes", image, size);
     free(tmp);
 
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
+    if (!PortSdlInit(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD, Log)) {
         Log("SDL_Init: %s", SDL_GetError());
         return 4;
     }
+    KhLoadGamepadMappings();
     sWindow = SDL_CreateWindow("Kingdom Hearts: Chain of Memories", 1280, 720,
                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY |
                                (getenv("KHCOM_HOST_HIDDEN") ? SDL_WINDOW_HIDDEN : 0));

@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include "port/port.h"
 #include "port/port_battle_backdrop.h"
+#include "port/port_darkside_punch_flank.h"
 
 extern const uint16_t gBosDsdBgMap0[], gBosDsdBgMap2[], gDefaultBgMap[];
 extern const uint8_t gBosDsdBgTiles[];
@@ -186,8 +187,12 @@ static void Prepare(void) {
 int PortDarksideLayer(const void* const* maps) {
     if (!maps || !PortDarksideBeachOn())
         return 0;
-    if (maps[0] == gBosDsdBgMap0 && maps[1] == gDefaultBgMap && maps[2] == gBosDsdBgMap2 && maps[3] == gDefaultBgMap)
+    if (maps[0] == gBosDsdBgMap0 && maps[1] == gDefaultBgMap && maps[2] == gBosDsdBgMap2 && maps[3] == gDefaultBgMap) {
+        /* Main identifies layers while latching, before dispatching PPU rows.
+         * Publish the shoreline cache here so workers only read finished tables. */
+        Prepare();
         return 1;
+    }
     if ((const void*)maps >= (const void*)gBosDsdFrameMaps[0] && (const void*)maps < (const void*)gBosDsdFrameMaps[47] &&
         maps[0] == gDefaultBgMap && maps[1] == gDefaultBgMap && maps[3] == gDefaultBgMap)
         return 2;
@@ -300,6 +305,23 @@ int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy,
     if (!v || ((x & 511) < BEACH_W && FramePixel(frame, tiles, x & 511, (y & 511) - 256)))
         return 0; /* the cartridge's own pixel stays */
     *color = ((const uint16_t*)(uintptr_t)GBA_PLTT)[v] & 0x7FFF; /* the body's bank 0, live */
+    return 1;
+}
+
+/* Atlas 9a47fba18d7749a2a54d4b9ccc8da65b revision3 approved this flank.
+ * caller only requests it outside the GBA viewport, after approved pixels. */
+int PortDarksidePunchFlankPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color) {
+    const char* enabled;
+    uintptr_t offset=(uintptr_t)maps-(uintptr_t)gBosDsdFrameMaps;
+    int slot,v;
+    PORT_ENV_ONCE(enabled,getenv,"KHCOM_DARKSIDE06_FLANK");
+    if ((enabled && atoi(enabled)!=1) || offset>=sizeof(gBosDsdFrameMaps) ||
+        offset%sizeof(gBosDsdFrameMaps[0])) return 0;
+    if (2*(x-cx)<-512 || 2*(x-cx)>=512 || 2*(y-cy)<-512 || 2*(y-cy)>=512) return 0;
+    slot=(int)(offset/sizeof(gBosDsdFrameMaps[0]));
+    v=PortDarksidePunchFlankIndex(slot,x&511,(y&511)-256);
+    if (!v) return 0;
+    *color=((const uint16_t*)(uintptr_t)GBA_PLTT)[v]&0x7fff;
     return 1;
 }
 

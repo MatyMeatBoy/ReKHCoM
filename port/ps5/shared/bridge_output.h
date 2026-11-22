@@ -14,4 +14,8 @@
 #define BRIDGE_OUTPUT_WINDOW_SYNC 0x237
 #define BRIDGE_OUTPUT_WINDOW_CAP 1
 #define BRIDGE_OUTPUT_VSYNC_CAP 2
+/* The actual host, not the guest compiler target, decides Windows support.
+ * Control stays selectable even if the current renderer requires fallback. */
+#define BRIDGE_OUTPUT_VRR_CONTROL_CAP 4
+#define BRIDGE_OUTPUT_VRR_ELIGIBLE_CAP 8
 #endif

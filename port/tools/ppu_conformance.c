@@ -58,6 +58,7 @@ int PortMaleficentDragonVisible(int x, int y, int cx, int cy){return 0;}
 int PortUrsulaLayer(const void* const* maps){return 0;}
 int PortUrsulaFloorPixel(int x, int y, int cy, uint16_t* color){return 0;}
 int PortOogieLayer(const void* const* maps){return 0;}
+void PortOogieSetPreview(const char* value){(void)value;}
 int PortOogieHallPixel(int x, int y, int cx, int cy, uint16_t* color){return 0;}
 int PortJafarHallPixel(int x, int y, int cx, int cy, uint16_t* color){return 0;}
 int PortJafarGenieCleared(int x, int y){return 0;}
@@ -71,6 +72,7 @@ int PortMaleficentDragonPixel(const void* map, int x, int y, int cx, int cy, uin
 const uint16_t gAladdinPalette[16]={0},gMarefPalette[16]={0},gHookPalette[16]={0};
 const uint16_t gJiminyPalette[16]={0},gEmy00Palette[16]={0};
 const unsigned char gEmy00L00Tiles[32]={0};
+const unsigned char gMapGmkMonstro03Tiles[32]={0};
 const unsigned char gBtlShadowSmallTiles[32]={0},gBtlShadowLargeTiles[32]={0};
 const uint16_t*PortLatinGlyphWidths(void){static uint16_t widths[256];return widths;}
 const unsigned char gBtlShadowTiles[32]={0},gMapGmkAgrabah00Tiles[32]={0},gMapGmkAgrabah09Tiles[32]={0};

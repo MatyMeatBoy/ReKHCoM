@@ -23,10 +23,9 @@ transformación(3,792,-492). Los8383píxeles mundo sustituidos coinciden exactam
 con la receta anterior antes de simular (75447píxeles físicos). El cuarto entero
 original es idéntico y el camino rojo no se sobreescribe. No es nuevo runtime.
 
-Verificación actual: tres pruebas Python de datos/máscaras y acuerdo del header
-generado PASS; índices válidos y máscara excluida de NativeRoom. Fixture C de
-franja ampliado pero **no compilado ni ejecutado**. `git diff --check` PASS.
-Sin build, compilador, juego, imports, paquetes ni release. Faltan build/QA real,
-Original y otras plataformas cuando el usuario autorice. Propuesta pendiente de
-valoración, sin aprobación heredada. Evidencia privada:
+La propuesta queda disponible con `KHCOM_OOGIE_PREVIEW=detail`. Sin esa opción
+se usa la receta aprobada del PR593. El fixture C compara los resultados
+del renderizador con las dos fuentes exactas sobre mapas y paletas sintéticos.
+Las pruebas Python comprueban ambas máscaras y su generación. Falta QA en
+el juego. La propuesta sigue pendiente de valoración. Evidencia privada:
 `pruebas/atlas-siguiente-20261105/oogie/`.

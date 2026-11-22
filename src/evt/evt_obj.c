@@ -20,6 +20,7 @@
 #include "sprite_palettes.h"
 #ifdef PLATFORM_PC
 #include "event_ids.h"
+#include "port/port_oam.h"
 #endif
 #include "engine_math.h"
 

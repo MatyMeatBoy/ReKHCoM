@@ -7,8 +7,9 @@ envío `20261105-203951-55f838`. Dos nubes: máscara
 `9afefae1-ae97-4699-a768-ed8531500807`.
 
 La propuesta PR606, fuente `5bc97737699c1962e769d1e81350cc3cb32aa180`,
-es la base de esta rama. Se conserva íntegra como propuesta pendiente; esta
-hija tampoco hereda aceptación y no autoriza por sí sola integrar606.
+es la base de esta rama y se conserva como vista previa `detail`.
+La hija sigue pendiente de valoración y se prueba con
+`KHCOM_OOGIE_PREVIEW=shapes`. La arena aprobada del PR593 es la predeterminada.
 
 La mandíbula exterior terminaba en x255 mientras su continuación inferior
 empezaba en257: el píxel256,472 sólo tenía la rampa verde. Se conecta en negro
@@ -25,7 +26,8 @@ no se ejecuta el importador ni se regeneran imports globales.
 Pruebas puras Python: cinco unittest PASS, incluyendo dos fallos previos de
 unión/silueta;24320coordenadas de máscara,15360píxeles internos excluidos y
 542entradas cambiadas. El header coincide exactamente con su generador.
-No se ejecutan los fixtures C de arenas ni pruebas que invoquen compilador.
+El fixture C compara el renderizador con las tres fuentes exactas y verifica
+la franja, el cuarto nativo y la paleta sobre datos sintéticos.
 
 Comparativa antes/propuesta: simulación selectiva sobre la imagen anterior
 de PR606, basada a su vez en la captura histórica300, escala3. Los512píxeles
@@ -34,8 +36,6 @@ anterior:4608píxeles físicos. Las30diferencias restantes de la máscara están
 ocultas por camino/ribete y se conservan. El cuarto entero permanece idéntico.
 Los recortes se amplían a escala entera para revisar ambas figuras.
 
-**SIN BUILD:** no es nueva ejecución ni captura del juego. Faltan valoración
-humana y QA real de oclusión, cámara, Original y plataformas cuando se
-autoricen builds. No compilador/juego, imports, paquetes, releases ni cambios
-en ROMs, partidas o instalación. Referencias ROM sólo internas.
+Faltan valoración humana y QA en el juego de oclusión, cámara, Original y
+plataformas. Las capturas de referencia continúan siendo simulaciones.
 Evidencia privada: `pruebas/atlas-20261106/oogie-shapes/`.

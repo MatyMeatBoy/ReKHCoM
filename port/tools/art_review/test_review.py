@@ -29,7 +29,7 @@ class ReviewTest(unittest.TestCase):
                     category='seam', priority='high', expected='Sin corte', lesson='Respetar plano')
 
     def test_queue_turns(self):
-        """a submission waits for the agent until a child version exists; an ordinary approval waits for honours"""
+        """A legacy child answers its parent; accepted versions wait for integration."""
         self.assertEqual(self.store.queue()[0]['turn'], 'humano')
         self.a['annotations'] = [self.note()]
         self.a = self.store.save(self.a)
@@ -45,6 +45,37 @@ class ReviewTest(unittest.TestCase):
         child['status'] = 'approved'
         self.store.save(child)
         self.assertIn('integrar build_version', self.store.queue()[0]['todo'])
+
+    def submitted_pair_and_child(self, answered_ids):
+        self.a['annotations'] = [self.note(), dict(self.note(), id='nube-dos', x=.5)]
+        self.a = self.store.save(self.a)
+        sent = self.store.submit([self.a['id']], {self.a['id']: self.a['revision']})
+        raw = io.BytesIO()
+        Image.new('RGB', (100, 80), '#335544').save(raw, 'PNG')
+        info = {} if answered_ids is None else {'response_to': [
+            dict(image_id=self.a['id'], submission=sent['id'], cloud_id=cloud_id)
+            for cloud_id in answered_ids]}
+        self.store.add(raw.getvalue(), self.a['title'], 'Respuesta',
+                       parent_id=self.a['id'], revision_info=info)
+        return self.store.queue()[0]
+
+    def test_explicit_partial_response_keeps_submission_unanswered(self):
+        row = self.submitted_pair_and_child(['nube-uno'])
+        self.assertEqual(row['turn'], 'agente')
+        self.assertEqual(len(row['unanswered']), 1)
+        self.assertEqual(row['unanswered'][0]['image_id'], self.a['id'])
+
+    def test_explicit_empty_response_does_not_hide_submission(self):
+        row = self.submitted_pair_and_child([])
+        self.assertEqual((row['turn'], len(row['unanswered'])), ('agente', 1))
+
+    def test_legacy_child_without_response_to_keeps_full_response_compatibility(self):
+        row = self.submitted_pair_and_child(None)
+        self.assertEqual((row['turn'], row['unanswered']), ('humano', []))
+
+    def test_explicit_full_response_answers_submission(self):
+        row = self.submitted_pair_and_child(['nube-uno', 'nube-dos'])
+        self.assertEqual((row['turn'], row['unanswered']), ('humano', []))
 
     def test_native_reference_is_internal_not_a_review(self):
         raw = io.BytesIO()

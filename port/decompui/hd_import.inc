@@ -31,8 +31,8 @@ namespace hd {
 
 static const unsigned char kMovieKey[16] = { 0x3f, 0x1e, 0xc1, 0x93, 0x26, 0x42, 0x58, 0xb8,
                                              0xaa, 0x9d, 0x53, 0x75, 0xbf, 0x62, 0x9a, 0x97 };
-/* Basic movie coverage includes movie3's floor12 scene and the ending scenes. */
-static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_123", "zz_event_151", "zz_event_621", "zz_event_631" };
+/* Basic movies include movie2's floor6 scene, movie3's floor12 scene and the endings. */
+static const char* const kBaseMovies[] = { "ROP", "RSE", "RRE", "zz_event_062", "zz_event_123", "zz_event_151", "zz_event_621", "zz_event_631" };
 static const char* const kTracks[] = {
     "01F_Town_B", "01F_Town_F", "03F_Hercul", "03F_Hercules_B", "12_Event_Yuttari", "13_Event_Namine",
     "14_Event_Odayaka", "15_Event_XIII", "16_XIIIBoss1", "17_Halloween_F", "18_Helloween_B", "19_Alice_Field",
@@ -2967,6 +2967,12 @@ static bool HdModCard() {
     hdexport::Section(sRoot, haveTracks > 0 || haveSprites > 0);
 #endif
     ImGui::Separator();
+#ifdef LAUNCHER_ANDROID
+    changed |= ToggleRow(T("Decodificación H.264 por software", "Software H.264 decoding"),
+                         T("Actívala si aparecen franjas verdes en los videos HD. Se aplica al volver a iniciar el juego.",
+                           "Turn this on if HD videos show green stripes. It takes effect the next time you start the game."),
+                         Ini("hd_software_h264"));
+#endif
     int mediaLanguage = std::clamp(Ini("hd_media_language"), 0, 2);
     ImGui::TextWrapped("%s", T("Audio de vídeos HD (independiente del texto y Undub)", "HD movie audio (separate from text and Undub)"));
     if (ImGui::SmallButton(T("Revisar variantes importadas", "Check imported variants"))) variantsRead = false;
@@ -2995,8 +3001,8 @@ static bool HdModCard() {
     bool selectedMovies = mediaLanguage ? variantMovies[mediaLanguage - 1] : haveBase;
     bool selectedScenes = mediaLanguage ? variantScenes[mediaLanguage - 1] : haveScenes > 0;
     changed |= GatedToggle(T("Videos HD", "HD movies"),
-                         T("La apertura, los créditos y los finales de Sora y Riku de Re:Chain of Memories.",
-                           "Re:Chain of Memories' opening, credits and Sora's and Riku's endings."), Ini("hd_movies"), selectedMovies);
+                         T("Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
+                           "Replaces GBA movies with Re:Chain of Memories' HD equivalents."), Ini("hd_movies"), selectedMovies);
     changed |= GatedToggle(T("Música HD", "HD music"),
                          T("La banda sonora orquestada de Re:Chain of Memories en lugar de la música de GBA.",
                            "Re:Chain of Memories' soundtrack in place of the GBA music."), Ini("hd_music"), !(haveTracks == 0));

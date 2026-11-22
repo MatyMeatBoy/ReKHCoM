@@ -1,4 +1,4 @@
-/* Oogie Boogie's hall in the wide view (Preliminar V2 of the boss arenas, waits for the user's approval).
+/* Oogie Boogie's approved hall in the wide view, with a separate Atlas preview.
  * BATTLE_SCENERY_AUDIT.md: a narrow room (exactly the GBA picture's 240 pixels) with black at its sides, and again
  * beside itself at 32:9.
  *
@@ -14,9 +14,12 @@
  *    red follow their line and the carpet continues in plain red. Side planes use the live native green.
  * Source tiles stay in the user's ROM; palette indices resolved live (the game's fades are kept). */
 #include <stdlib.h>
+#include <string.h>
 #include "port/port.h"
 #include "port/port_battle_backdrop.h"
 #include "port/port_oogie_motifs.h"
+#include "port/port_oogie_motifs_detail_preview.h"
+#include "port/port_oogie_motifs_shapes_preview.h"
 
 extern const uint16_t gBosBoogieBgMaps[]; /* [0]: the room's lower block, [1] (0x400 entries on): its upper block */
 extern const uint8_t gBosBoogieBgTiles[];
@@ -27,6 +30,25 @@ extern const uint16_t gDefaultBgMap[];
 #define ROW_TOP 24 /* tile rows 24..58 */
 #define ROW_BOTTOM 58
 
+static const unsigned char* sOogieLeftMotif = kOogieLeftMotif;
+static const unsigned char* sOogieRightMotif = kOogieRightMotif;
+static int sOogieExpandedRim;
+
+/* Called on the main thread before rendering any rows. */
+void PortOogieSetPreview(const char* value) {
+    sOogieExpandedRim = 1;
+    if (value && strcmp(value, "detail") == 0) {
+        sOogieLeftMotif = kOogieLeftMotifDetailPreview;
+        sOogieRightMotif = kOogieRightMotifDetailPreview;
+    } else if (value && strcmp(value, "shapes") == 0) {
+        sOogieLeftMotif = kOogieLeftMotifShapesPreview;
+        sOogieRightMotif = kOogieRightMotifShapesPreview;
+    } else {
+        sOogieExpandedRim = 0;
+        sOogieLeftMotif = kOogieLeftMotif;
+        sOogieRightMotif = kOogieRightMotif;
+    }
+}
 
 static int FloorDiv(int a, int b) {
     return a >= 0 ? a / b : -((-a + b - 1) / b);
@@ -94,7 +116,7 @@ static int FloorMotifIndex(int x, int y) {
     /* Complete the straight front rim to both viewport edges using its
      * clean outer-row indices. The native room keeps the two central path
      * joins; the outer rows must not stop at the old reflected side caps. */
-    if (y >= 400 && y < 408)
+    if (sOogieExpandedRim && y >= 400 && y < 408)
         return RoomIndex(ROOM_X, y);
     if (y < 408) {
         /* Preserve the authored upper cap beside the room. */
@@ -126,7 +148,7 @@ static int FloorMotifIndex(int x, int y) {
     if (y < 488 && ((x >= 224 && x < 296) || (x >= 456 && x < 528))) {
         int isLeft = x < 376;
         offset = (y - 408) * 72 + x - (isLeft ? 224 : 456);
-        packed = (isLeft ? kOogieLeftMotif : kOogieRightMotif)[offset / 2];
+        packed = (isLeft ? sOogieLeftMotif : sOogieRightMotif)[offset / 2];
         index = (packed >> ((offset & 1) * 4)) & 15;
         if (index) return 144 + index;
     }

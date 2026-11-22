@@ -178,7 +178,9 @@ it does not use the GPU). The log is written to `rekhcom/log.txt`.
 
 See `port/progress/LINUX.md` in the source repository.
 
-## Native HD import (issue336)
+## Native HD import (issues 336 and 639)
+
+HD is optional. Choose **Play** to use your cartridge dump on its own. For HD media or sprites, select the installation folder of your own PC copy of **KINGDOM HEARTS HD 1.5+2.5 ReMIX**, or import an `hd` folder already prepared from that copy.
 
 Open **ReKHCoM Launcher.sh** in Desktop Mode. KDE/kdialog is preferred, then
 Zenity; without either dialog the CLI help remains available. Imports open a
