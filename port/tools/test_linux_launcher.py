@@ -229,6 +229,22 @@ class LauncherTest(unittest.TestCase):
         self.assertTrue((self.game / 'arm32.txt').exists())
         self.assertFalse((self.game / 'ran64.txt').exists())
 
+    def test_armhf_kernel_loads_the_executable_after_verify(self):
+        self.fake_machine('armv7l')
+        (self.game / 'binarmhf').mkdir()
+        (self.game / 'libarmhf').mkdir()
+        game = self.game / 'binarmhf/khcom_eu'
+        game.write_text('#!/bin/sh\nprintf "%s\\n" "$LD_LIBRARY_PATH" > native-libs.txt\nexit 17\n')
+        game.chmod(0o755)
+        loader = self.game / 'libarmhf/rekhcom'
+        loader.write_text('#!/bin/sh\n[ "$1" = --verify ] || exit 1\nprintf checked > verified.txt\n')
+        loader.chmod(0o755)
+        (self.game / 'libarmhf/native-interpreter').touch()
+        self.assertEqual(self.run_script('--force32').returncode, 17)
+        self.assertEqual((self.game / 'verified.txt').read_text(), 'checked')
+        self.assertEqual((self.game / 'native-libs.txt').read_text().strip(),
+                         self.directory + '/libarmhf/sys:' + self.directory + '/libarmhf')
+
     def test_aarch64_failure_after_entry_never_starts_arm32(self):
         self.fake_machine('aarch64')
         self.fake_arm64(139, True)
