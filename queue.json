@@ -17493,19 +17493,20 @@
     "issue647-android-memfd-write": {
       "id": "issue647-android-memfd-write",
       "piece": "Android image loader: complete writes to the existing memfd before mapping",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-retoma-memfd647",
       "created_at": "2026-11-22T14:36:48.082529+00:00",
-      "updated_at": "2026-11-22T14:36:48.082529+00:00",
+      "updated_at": "2026-11-22T14:36:58.430319+00:00",
       "branch": null,
       "pr": null,
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/647",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-22T14:36:58.430319+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:36:48.083528+00:00",
+  "updated_at": "2026-11-22T14:36:58.430319+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
