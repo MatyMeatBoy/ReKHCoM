@@ -855,3 +855,11 @@ y de QA real; la aceptación del padre no se hereda a esta propuesta parcial.
 El grabado se integró por separado en #621. La mampostería conserva la receta
 aprobada como valor predeterminado. La propuesta se puede probar con
 `KHCOM_SCENE120_MASONRY_PREVIEW=1`.
+
+### Oogie: vista previa de máscara, punta y franja
+
+La arena aprobada del PR593 conserva su salida predeterminada.
+`KHCOM_OOGIE_PREVIEW=detail` muestra la propuesta Atlas
+`85b1e5551e224f3893cf44fcc9cf5739` para seguir las cuatro nubes.
+El cuarto nativo y el camino rojo se mantienen. La propuesta sigue pendiente
+de valoración y de una nueva prueba en el juego.

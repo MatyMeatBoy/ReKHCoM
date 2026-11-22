@@ -58,6 +58,7 @@ int PortMaleficentDragonVisible(int x, int y, int cx, int cy){return 0;}
 int PortUrsulaLayer(const void* const* maps){return 0;}
 int PortUrsulaFloorPixel(int x, int y, int cy, uint16_t* color){return 0;}
 int PortOogieLayer(const void* const* maps){return 0;}
+void PortOogieSetPreview(const char* value){(void)value;}
 int PortOogieHallPixel(int x, int y, int cx, int cy, uint16_t* color){return 0;}
 int PortJafarHallPixel(int x, int y, int cx, int cy, uint16_t* color){return 0;}
 int PortJafarGenieCleared(int x, int y){return 0;}

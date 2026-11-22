@@ -4100,6 +4100,7 @@ static void RegisterBgSlashes(uint16_t dispcnt) {
 }
 
 void PortPpuBeginFrame(void) {
+    static int oogiePreviewInitialized;
 #ifdef __EMSCRIPTEN__
     extern int gPortWebHdReady;
     if(!gPortWebHdReady)gPortConfig.hdText=0;
@@ -4127,6 +4128,10 @@ void PortPpuBeginFrame(void) {
     }
     sPreliminarV1 = getenv("KHCOM_PRELIMINAR_V1") != NULL;
     (void)PortArenasV2(); (void)PortArenasApproved(); /* its switch read here, on the main thread, before the cores draw (they ask it per row) */
+    if (!oogiePreviewInitialized) {
+        PortOogieSetPreview(getenv("KHCOM_OOGIE_PREVIEW"));
+        oogiePreviewInitialized = 1;
+    }
     sSinglePanelBg = PortEventBackdropPanel();
     {
         /* a new scene: its waiting actors have not come in yet (DrawObjs) */

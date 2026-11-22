@@ -9,10 +9,27 @@ right_holes=[] # Both native eyes and mouth already exist; complete only the cut
 left_polys += [[(257,472),(266,472),(268,474),(276,474),(281,472),(288,472),(283,477),(277,482),(270,483),(263,480),(257,475)]]
 left_holes += [[(266,472),(281,472),(277,476),(272,478),(269,477)]]
 right_polys += [[(464,472),(470,472),(472,474),(472,476),(470,476),(467,474)],[(483,472),(485,472),(486,474),(484,476),(483,475)]]
-mask=Image.new('1',(576,96));draw=ImageDraw.Draw(mask)
-for poly in left_polys+right_polys:draw.polygon([(x,y-400)for x,y in poly],fill=1)
-for poly in left_holes+right_holes:draw.polygon([(x,y-400)for x,y in poly],fill=0)
-def art(x,y):
+def build_mask(variant):
+ polys = left_polys + right_polys
+ holes = left_holes + right_holes
+ if variant == 'detail':
+  # Follow-up review: the lower left cheek/jaw and the ghost's outer point
+  # remained open. These contours continue the cut native ink independently.
+  polys += [[(244,443),(240,445),(236,451),(235,457),(237,463),(242,468),(249,471),(255,472),(255,464),(249,463),(245,460),(244,456),(246,451),(249,449)]]
+  holes += [[(244,449),(241,453),(241,458),(244,462),(249,465),(255,465),(255,458),(250,456),(247,452)]]
+  polys += [[(507,445),(514,448),(522,446),(519,452),(514,458),(508,462),(501,464),(497,460)]]
+ mask = Image.new('1',(576,96))
+ draw = ImageDraw.Draw(mask)
+ for poly in polys:draw.polygon([(x,y-400) for x,y in poly],fill=1)
+ for poly in holes:draw.polygon([(x,y-400) for x,y in poly],fill=0)
+ return mask
+
+
+mask_by_variant = {variant: build_mask(variant) for variant in ('approved', 'detail')}
+
+
+def art(x,y,variant='approved'):
+ mask = mask_by_variant[variant]
  if not 408<=y<488:return 0
  if y<472 and not(224<=x<256 or 496<=x<528):return 0
  if y>=472 and not(224<=x<296 or 456<=x<528):return 0
@@ -26,17 +43,21 @@ def art(x,y):
  return 0
 
 
-def generate():
- lines=['/* Authored continuations of the two clipped floor figures. Native palette offsets:', ' * 0 = no overwrite, 2 = black146, 13/14 = green157/158. No cartridge pixels. */', '#ifndef PORT_OOGIE_MOTIFS_H', '#define PORT_OOGIE_MOTIFS_H']
+def generate(variant='approved'):
+ suffix = {'approved': '', 'detail': 'DetailPreview'}[variant]
+ guard = {'approved': 'PORT_OOGIE_MOTIFS_H', 'detail': 'PORT_OOGIE_MOTIFS_DETAIL_PREVIEW_H'}[variant]
+ lines=['/* Authored continuations of the two clipped floor figures. Native palette offsets:', ' * 0 = no overwrite, 2 = black146, 13/14 = green157/158. No cartridge pixels. */', '#ifndef '+guard, '#define '+guard]
  for side,x0 in [('Left',224),('Right',456)]:
-  values=[art(x,y) for y in range(408,488) for x in range(x0,x0+72)]
+  values=[art(x,y,variant) for y in range(408,488) for x in range(x0,x0+72)]
   values=[v-144 if v else 0 for v in values]
   packed=[values[i]|values[i+1]<<4 for i in range(0,len(values),2)]
-  lines+=['static const unsigned char kOogie'+side+'Motif[2880] = {']
+  lines+=['static const unsigned char kOogie'+side+'Motif'+suffix+'[2880] = {']
   lines+=['    '+','.join('0x%02x'%v for v in packed[i:i+24])+',' for i in range(0,len(packed),24)]
   lines+=['};']
  lines+=['#endif','']
  return '\n'.join(lines)
 
 if __name__=='__main__':
- (Path(__file__).resolve().parents[1]/'include/port/port_oogie_motifs.h').write_text(generate())
+ include = Path(__file__).resolve().parents[1]/'include/port'
+ (include/'port_oogie_motifs.h').write_text(generate())
+ (include/'port_oogie_motifs_detail_preview.h').write_text(generate('detail'))

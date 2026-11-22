@@ -27,6 +27,7 @@ int PortUrsulaLayer(const void* const* maps);
 int PortUrsulaFloorPixel(int x, int y, int cy, uint16_t* color);
 
 /* Oogie Boogie's hall (port_oogie.c): the room goes on as one bay of a long hall, its path and green field in front */
+void PortOogieSetPreview(const char* value);
 int PortOogieLayer(const void* const* maps);
 int PortOogieHallPixel(int x, int y, int cx, int cy, uint16_t* color);
 
