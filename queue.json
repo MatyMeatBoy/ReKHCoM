@@ -17224,12 +17224,12 @@
     "r36s-portmaster-aarch64-20261122": {
       "id": "r36s-portmaster-aarch64-20261122",
       "piece": "ReKHCoM Linux ARM64 para R36S y launcher PortMaster",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-retoma-r36s",
       "created_at": "2026-11-22T14:08:02.151172+00:00",
-      "updated_at": "2026-11-22T14:09:10.157297+00:00",
+      "updated_at": "2026-11-22T14:21:35.162674+00:00",
       "branch": "port/r36s-portmaster-20261122",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/653",
       "approval": "Usuario 22/11/2026: port R36S con Opti36S",
       "reference": "https://github.com/MatyMeatBoy/Opti36S",
       "evidence": [
@@ -17237,6 +17237,11 @@
           "at": "2026-11-22T14:09:10.157297+00:00",
           "owner": "codex-retoma-r36s",
           "detail": "Worktree aislado; base Opti36S 25617d2; ruta AArch64 LP64/guest ILP32, launcher PortMaster y gate Focal."
+        },
+        {
+          "at": "2026-11-22T14:21:35.162674+00:00",
+          "owner": "codex-retoma-r36s",
+          "detail": "ccd2e3a51: tests ROM-free y controles Linux; host Focal y SDL3 KMSDRM/ALSA ELF64 GLIBC_2.29. Invitados/QA arm64 en ejecución; pending R36S física."
         }
       ],
       "claimed_at": "2026-11-22T14:08:17.155824+00:00"
@@ -17328,7 +17333,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T14:20:43.960729+00:00",
+  "updated_at": "2026-11-22T14:21:35.162674+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
