@@ -17445,10 +17445,10 @@
     "issue647-optional-sdl-audio": {
       "id": "issue647-optional-sdl-audio",
       "piece": "Keep SDL gameplay available when optional audio initialization fails",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-retoma-audio647",
       "created_at": "2026-11-22T14:30:14.152569+00:00",
-      "updated_at": "2026-11-22T14:35:17.771388+00:00",
+      "updated_at": "2026-11-22T14:37:46.561927+00:00",
       "branch": "fix/issue647-optional-sdl-audio",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/656",
       "approval": "Usuario 22/11/2026: resolver issues y verificar PR",
@@ -17458,9 +17458,15 @@
           "at": "2026-11-22T14:35:17.771388+00:00",
           "owner": "codex-retoma-audio647",
           "detail": "08a74207e; real SDL missing/dummy audio and bad video PASS, 14 startup cases, syntax Android, Win32/64, Linux x86/x64/AArch64. No package/game/device."
+        },
+        {
+          "at": "2026-11-22T14:37:46.561927+00:00",
+          "owner": "codex-retoma-audio647",
+          "detail": "Merge 269f8457f228007bfcaef9e4179eca9028d4ae11. SDL real driver inválido y control dummy, 14 casos de arranque Linux y sintaxis multiplataforma."
         }
       ],
-      "claimed_at": "2026-11-22T14:30:25.014368+00:00"
+      "claimed_at": "2026-11-22T14:30:25.014368+00:00",
+      "completed_at": "2026-11-22T14:37:46.561927+00:00"
     },
     "pr601-atlas120-preview": {
       "id": "pr601-atlas120-preview",
@@ -17518,7 +17524,7 @@
     "created_at": "2026-11-22T14:37:31.294453+00:00",
     "updated_at": "2026-11-22T14:37:31.294453+00:00"
   },
-  "updated_at": "2026-11-22T14:37:31.294453+00:00",
+  "updated_at": "2026-11-22T14:37:46.561927+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
