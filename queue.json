@@ -17599,19 +17599,20 @@
     "r36s-integer-4x3-20261122": {
       "id": "r36s-integer-4x3-20261122",
       "piece": "Perfil R36S: lienzo 4:3, imagen GBA entera a 2x y bordes extendidos",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-r36s-integer",
       "created_at": "2026-11-22T23:27:47.725867+00:00",
-      "updated_at": "2026-11-22T23:27:47.725867+00:00",
+      "updated_at": "2026-11-22T23:27:58.981274+00:00",
       "branch": null,
       "pr": null,
       "approval": "Solicitud 22/11/2026",
       "reference": "Solicitud 22/11/2026",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-22T23:27:58.981274+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-22T23:27:47.726377+00:00",
+  "updated_at": "2026-11-22T23:27:58.981274+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

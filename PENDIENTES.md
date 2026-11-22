@@ -501,6 +501,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | pr606-620-oogie-preview | PR 606 y 620: ambas propuestas Oogie como vistas previas conservando arena aprobada | integrado | codex-retoma-oogie | https://github.com/MatyMeatBoy/ReKHCoM/pull/620 | Integrar PR solicitado el 22/11/2026. Las propuestas exactas de Atlas siguen pendientes y apagadas por defecto. | 2026-11-22T14:43:40.933809+00:00 |
 | issue647-android-memfd-write | Android image loader: complete writes to the existing memfd before mapping | integrado | codex-retoma-memfd647 | https://github.com/MatyMeatBoy/ReKHCoM/pull/657 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:41:06.320426+00:00 |
 | pr642-console-source-check | Restore console SDL source checks after native joystick support | integrado | codex-retoma-source-check | https://github.com/MatyMeatBoy/ReKHCoM/pull/658 | Usuario 22/11/2026: resolver issues y verificar PR | 2026-11-22T14:44:42.662757+00:00 |
-| r36s-integer-4x3-20261122 | Perfil R36S: lienzo 4:3, imagen GBA entera a 2x y bordes extendidos | pendiente | — | — | Solicitud 22/11/2026 | 2026-11-22T23:27:47.725867+00:00 |
+| r36s-integer-4x3-20261122 | Perfil R36S: lienzo 4:3, imagen GBA entera a 2x y bordes extendidos | en_curso | codex-r36s-integer | — | Solicitud 22/11/2026 | 2026-11-22T23:27:58.981274+00:00 |
 
 Integrador: libre
