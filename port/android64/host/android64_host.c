@@ -13,6 +13,7 @@
  * "apk:/<name>" paths are the APK's assets. */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include "../../android/native/android_lifecycle_events.h"
 #include "../../include/port/port_audio_continuity.h"
 #include <dirent.h>
 #include <errno.h>
@@ -116,7 +117,7 @@ static void LogDevice(void) {
 
 /* ---- bridge: process, files ----------------------------------------------------------------------------------- */
 
-static int sQuit, sBackground;
+static int sQuit, sBackground, sBackgroundPending;
 static jmp_buf sExit; /* the game's exit returns to main: SDL's activity ends the process cleanly from there */
 static int sExitCode;
 
@@ -493,9 +494,11 @@ static void Pump(void) {
             case SDL_EVENT_RENDER_DEVICE_RESET: RendererDeviceReset(); break;
             case SDL_EVENT_QUIT: sQuit = 1; break;
             case SDL_EVENT_TEXT_INPUT: HostTextQueue(e.text.text); break;
-            case SDL_EVENT_WILL_ENTER_BACKGROUND:
-            case SDL_EVENT_DID_ENTER_BACKGROUND: sBackground = 1; break;
-            case SDL_EVENT_WILL_ENTER_FOREGROUND:
+            case SDL_EVENT_DID_ENTER_BACKGROUND:
+                sBackground = 1;
+                sBackgroundPending = 1;
+                sFingerCount = 0;
+                break;
             case SDL_EVENT_DID_ENTER_FOREGROUND: sBackground = 0; break;
             case SDL_EVENT_GAMEPAD_ADDED:
                 if (!sPad)
@@ -551,7 +554,15 @@ static int H_touch_poll(HostTouch* fingers, int max) {
     memcpy(fingers, sFingers, sizeof(HostTouch) * (size_t)n);
     return n;
 }
-static int H_app_state(void) { return sBackground; }
+static int H_app_state(void) {
+    /* A short background/foreground cycle may be drained by one Pump.
+       Let the guest process its pause before exposing the latest state. */
+    if (sBackgroundPending) {
+        sBackgroundPending = 0;
+        return 1;
+    }
+    return sBackground;
+}
 static int H_quit_requested(void) { return sQuit; }
 static void H_set_title(const char* s) { (void)s; }
 
@@ -900,6 +911,8 @@ int main(int argc, char** argv) {
     LogDevice();
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD))
         Fatal(SDL_GetError());
+    if (!PortAndroidLifecycleStart())
+        Log("Android lifecycle watch: %s", SDL_GetError());
     SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
     sWindow = SDL_CreateWindow("Kingdom Hearts: Chain of Memories", 1280, 720, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIGH_PIXEL_DENSITY);
     sRenderer = sWindow ? SDL_CreateRenderer(sWindow, NULL) : NULL;
@@ -953,6 +966,7 @@ int main(int argc, char** argv) {
         SDL_DestroyAudioStream(sAudio);
     SDL_DestroyRenderer(sRenderer);
     SDL_DestroyWindow(sWindow);
+    PortAndroidLifecycleStop();
     SDL_Quit();
     return sExitCode;
 }

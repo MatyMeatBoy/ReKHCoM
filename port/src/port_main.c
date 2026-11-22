@@ -7,6 +7,9 @@
  */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+#include "../android/native/android_lifecycle_events.h"
+#endif
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC)
 #include "port/cursor_idle.h"
 static PortCursorIdle sCursorIdle;
@@ -2983,6 +2986,9 @@ static void Quit(void) {
     PortHdHudShutdown();
     PortHdSpritesShutdown();
     PortHdLayoutShutdown();
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+    PortAndroidLifecycleStop();
+#endif
     SDL_Quit();
     exit(gPortExitCode);
 }
@@ -3668,6 +3674,10 @@ int main(int argc, char** argv) {
 #endif
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD | SDL_INIT_EVENTS))
         PortFatal("SDL_Init failed: %s", SDL_GetError());
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+    if (!PortAndroidLifecycleStart())
+        PortLog("Android lifecycle watch: %s", SDL_GetError());
+#endif
     PortConfigLoad();
 #ifdef _WIN32
     PortWindowsPerformance();
@@ -3750,8 +3760,12 @@ int main(int argc, char** argv) {
     sPerfFreq = SDL_GetPerformanceFrequency();
     sFpsTime = SDL_GetPerformanceCounter();
 
-    if (!PortRomLoad())
+    if (!PortRomLoad()) {
+#if defined(__ANDROID__) && !defined(PORT_ANDROID64)
+        PortAndroidLifecycleStop();
+#endif
         return 1;
+    }
     PortUndubApply();
     PortSramLoad();
     PortInputInit();
