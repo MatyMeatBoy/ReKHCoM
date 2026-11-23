@@ -517,4 +517,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ppu-sprite-row-cull-20261123 | PPU: descartar sprites fuera de la fila antes de consultar datos HD | integrado | codex-ga36-objcull | https://github.com/MatyMeatBoy/ReKHCoM/pull/673 | Usuario: ve sumando todas las mejoras que puedas y sigue a full speed con margen | 2026-11-23T04:13:28.798309+00:00 |
 | ga36-blur-packed-cache-20261123 | Reutilizar celdas de desenfoque y duplicar el grupo NEON, con validación ARMv7 | integrado | codex-ga36-blur-cache | https://github.com/MatyMeatBoy/ReKHCoM/pull/674 | Usuario autorizó integrar optimizaciones comprobadas comunes y de GA36 | 2026-11-23T04:19:30.056245+00:00 |
 
-Integrador: codex-ga36-blur-cache (ocupado; 2026-11-23T04:19:10.184050+00:00)
+Integrador: libre
