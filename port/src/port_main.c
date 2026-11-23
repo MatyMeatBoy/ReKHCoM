@@ -1981,7 +1981,6 @@ static void Present(int paced) {
     SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
     SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH);
     SDL_SetRenderDrawColor(sRenderer, 0, 0, 0, 255);
-    SDL_RenderClear(sRenderer);
     {
         /* Aspect ratio option: draw into the chosen rectangle; the rest of
            the window stays black */
@@ -1995,6 +1994,7 @@ static void Present(int paced) {
     }
     if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
         && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
+        SDL_RenderClear(sRenderer);
         /* Scene without a wide view: show the GBA picture at full height
            (bars only at the sides), sampled with the pixel-art filter. */
         SDL_FRect src = { (float)gPortScreen.originX, (float)gPortScreen.originY, GBA_SCREEN_W, GBA_SCREEN_H };
@@ -2198,6 +2198,7 @@ static void Present(int paced) {
         worldX = dst.x - src.x * scale;
         worldY = dst.y - src.y * scale;
     } else if (PortHd2dActive() && !menuCanvas) {
+        SDL_RenderClear(sRenderer);
         /* HD-2D build: the processed, larger picture, filtered to the window */
         static uint8_t* sMask;
         if (!sMask)
@@ -2224,6 +2225,14 @@ static void Present(int paced) {
         worldY = dst.y;
     } else {
         OutputRect(outW, outH, &dst);
+        bool drawn2x = false;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+        if (!menuCanvas && sFitScale <= 0 && PortFixedFullscreen() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH)
+            drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height);
+#endif
+        if (!drawn2x)
+            SDL_RenderClear(sRenderer);
         if (sFitScale > 0 && !menuCanvas) {
             /* Battle-entry animation stays at its authored aspect ratio.
                Fill the surrounding window with the same dim blur as movies. */
@@ -2258,7 +2267,7 @@ static void Present(int paced) {
                 }
             }
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
-            if (!(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            if (!drawn2x && !(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
                   PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height)))
 #endif
