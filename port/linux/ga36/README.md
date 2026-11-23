@@ -21,4 +21,11 @@ python port/tools/build_linux.py --arch armhf --versions eu us jp --jobs 1
 python port/linux/ga36/package.py build/ReKHCoM-ga36-armhf-alpha.zip
 ```
 
+Para perfilar el renderizado en varios núcleos, añade `--armhf-ppu-workers` a
+`build_linux.py`. En ese binario, `KHCOM_PPU_THREADS=4 KHCOM_PPU_INNER=1`
+activa el reparto de filas en una A33. `KHCOM_PPU_VERIFY=1` las vuelve a
+dibujar en serie y registra diferencias, así que se usa en una pasada
+separada del benchmark. La compilación del ZIP normal mantiene su perfil
+serial mientras falta la validación física.
+
 El instalador y el juego aceptan `SDL_AUDIO_DRIVER` y `KHCOM_FBDEV` para diagnósticos. `KHCOM_FBDEV` vacío habilita la prueba sin framebuffer junto a un driver SDL apropiado. Conserva el log de una sesión, el firmware, el nombre del dispositivo de entrada y el resultado de la prueba física al comparar rendimiento. [Opti36S](https://github.com/MatyMeatBoy/Opti36S)
