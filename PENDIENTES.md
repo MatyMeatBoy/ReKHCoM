@@ -507,7 +507,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | r36s-uncapped-benchmark-20261122 | Medir capacidad real sin vsync del host Linux64 en KHCOM_FAST | integrado | codex-r36s-integer | https://github.com/MatyMeatBoy/ReKHCoM/pull/660 | Solicitud 22/11/2026 | 2026-11-22T23:33:30.756553+00:00 |
 | linux-fbdev-direct-convert | Equivalent framebuffer pixels without an intermediate converted surface | integrado | codex-retoma-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/662 | Usuario 22/11/2026: optimizaciones compartidas verificadas | 2026-11-22T23:37:51.396403+00:00 |
 | ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | integrado | codex-ga36-60fps | https://github.com/MatyMeatBoy/ReKHCoM/pull/664 | Usuario: optimizalo para que funcione a 60fps en la consola; mandato vigente de integrar los PR | 2026-11-23T02:37:47.133194+00:00 |
-| handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | pr_abierto | codex-ga36-fullscreen | https://github.com/MatyMeatBoy/ReKHCoM/pull/666 | — | 2026-11-23T03:02:50.169758+00:00 |
+| handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | integrado | codex-ga36-fullscreen | https://github.com/MatyMeatBoy/ReKHCoM/pull/666 | Usuario: este port no debe ofrecer modo ventana | 2026-11-23T03:05:38.258278+00:00 |
 | ga36-armhf-ppu-workers-20261123 | GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate | en_curso | codex-ga36-ppu | — | — | 2026-11-23T03:03:09.943927+00:00 |
 
 Integrador: codex-ga36-fullscreen (ocupado; 2026-11-23T03:05:24.573969+00:00)
