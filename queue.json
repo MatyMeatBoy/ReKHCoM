@@ -17883,19 +17883,20 @@
     "improved-43-title-paper-20261123": {
       "id": "improved-43-title-paper-20261123",
       "piece": "Completar fondo del titulo y pantallas de color del perfil mejorado 4:3",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-ga36-title",
       "created_at": "2026-11-23T03:51:00.352426+00:00",
-      "updated_at": "2026-11-23T03:51:00.352426+00:00",
+      "updated_at": "2026-11-23T03:51:11.625460+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-23T03:51:11.625460+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T03:51:00.352426+00:00",
+  "updated_at": "2026-11-23T03:51:11.625460+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
