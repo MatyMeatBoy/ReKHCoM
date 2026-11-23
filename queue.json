@@ -18132,13 +18132,8 @@
       "completed_at": "2026-11-23T06:40:18.202873+00:00"
     }
   },
-  "integrator": {
-    "owner": "codex-ga36-title-workers",
-    "token": "c7673c73b4bf3ada858c427aa62e2a81d79ff661f7ce1aaa",
-    "created_at": "2026-11-23T06:39:53.755316+00:00",
-    "updated_at": "2026-11-23T06:39:53.755316+00:00"
-  },
-  "updated_at": "2026-11-23T06:40:18.202873+00:00",
+  "integrator": null,
+  "updated_at": "2026-11-23T06:40:28.806217+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
