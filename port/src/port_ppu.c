@@ -3227,6 +3227,8 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
 
 #ifdef __ARM_NEON
 static bool sNeonOpaqueCompose;
+static bool sNeonScreenCompose;
+static bool sNeonScreenRows[GBA_SCREEN_H];
 static bool sNeonOpaqueRows[PORT_MAX_H];
 static bool sProbeComposeGates;
 static uint16_t sComposeGates[PORT_MAX_H];
@@ -3234,6 +3236,15 @@ static uint16_t sComposeGates[PORT_MAX_H];
 static uint8x8_t ExpandColor5(uint16x8_t value) {
     value = vandq_u16(value, vdupq_n_u16(31));
     return vmovn_u16(vorrq_u16(vshlq_n_u16(value, 3), vshrq_n_u16(value, 2)));
+}
+
+static void StoreArgb8(uint32_t* dst, uint16x8_t pixel, uint8x8_t alpha) {
+    uint8x8x4_t channels;
+    channels.val[0] = ExpandColor5(vshrq_n_u16(pixel, 10));
+    channels.val[1] = ExpandColor5(vshrq_n_u16(pixel, 5));
+    channels.val[2] = ExpandColor5(pixel);
+    channels.val[3] = alpha;
+    vst4_u8((uint8_t*)dst, channels);
 }
 
 static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
@@ -3287,12 +3298,7 @@ static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int*
             const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
             pixel = vbslq_u16(front, color, pixel);
         }
-        uint8x8x4_t channels;
-        channels.val[0] = ExpandColor5(vshrq_n_u16(pixel, 10));
-        channels.val[1] = ExpandColor5(vshrq_n_u16(pixel, 5));
-        channels.val[2] = ExpandColor5(pixel);
-        channels.val[3] = vdup_n_u8(255);
-        vst4_u8((uint8_t*)(dst + x), channels);
+        StoreArgb8(dst + x, pixel, vdup_n_u8(255));
         if (collect) {
             uint16x8_t message = zero;
             for (int i = 0; i < dockedCount; i++) {
@@ -3615,6 +3621,59 @@ static void SplitBgLine(int b, int gy) {
 }
 
 /* The screen layer's line gy: menu layers only, transparent elsewhere. */
+#ifdef __ARM_NEON
+static void NeonScreenComposeRow(uint32_t* dst, int gy, int width, int start, int n,
+                                 const int* order, const int* priorities, unsigned eva) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const obj = sScrLine + start;
+    const uint8_t* const objPrio = sScrPrio + start;
+    const uint16_t* const objIndex = sScrIndex + start;
+    const uint8_t* const semi = sScrSemi + start;
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint8x8_t spriteAlpha = vdup_n_u8((uint8_t)SDL_min(eva * 16, 255u));
+    const bool collect = sHdText || sScreenHdAny;
+    const int row = gy * width;
+    uint16x8_t prioByLayer[4], layerIds[4];
+    for (int i = 0; i < n; i++) {
+        prioByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        layerIds[i] = vdupq_n_u16((uint16_t)order[i]);
+    }
+    if (!collect) {
+        memset(sScreenOccBg + row, 0, width);
+        memset(sScreenOccBgLayer + row, 0, width);
+        memset(sScreenOccObj + row, 0, (size_t)width * sizeof(*sScreenOccObj));
+    }
+    for (int x = 0; x < width; x += 8) {
+        uint16x8_t pixel = zero, hasBg = zero;
+        uint16x8_t bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + start + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            hasBg = vorrq_u16(hasBg, visible);
+            pixel = vbslq_u16(visible, color, pixel);
+            bgPrio = vbslq_u16(visible, prioByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, layerIds[i], bgLayer);
+        }
+        const uint16x8_t object = vld1q_u16(obj + x);
+        const uint16x8_t hasObj = vmvnq_u16(vceqq_u16(object, clear));
+        const uint16x8_t priority = vmovl_u8(vld1_u8(objPrio + x));
+        const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+        pixel = vbslq_u16(front, object, pixel);
+        const uint8x8_t semiFront = vand_u8(vmovn_u16(front), vcgt_u8(vld1_u8(semi + x), vdup_n_u8(0)));
+        const uint8x8_t alpha = vbsl_u8(semiFront, spriteAlpha, vmovn_u16(vorrq_u16(hasBg, hasObj)));
+        StoreArgb8(dst + x, pixel, alpha);
+        if (collect) {
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            vst1_u8(sScreenOccBg + row + x, vmovn_u16(bgPrio));
+            vst1_u8(sScreenOccBgLayer + row + x, vmovn_u16(bgLayer));
+            vst1q_u16(sScreenOccObj + row + x, vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX)));
+        }
+    }
+    sNeonScreenRows[gy] = true;
+}
+#endif
+
 static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, const int* bgPrio, int nativeWorld) {
     int wo = gPortOverlayW, w = gPortScreen.width;
     int originO = (wo - GBA_SCREEN_W) / 2;
@@ -3631,6 +3690,16 @@ static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, cons
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sScreenBg[b] && bgPrio[b] == p)
                 order[n++] = b;
+#ifdef __ARM_NEON
+    const int start = gPortScreen.originX - originO;
+    if (sNeonScreenCompose && !nativeWorld && !sWorldBlendActive && !sLutMode &&
+        w == 320 && !(wo & 7) && start >= 0 && start + wo <= w &&
+        -originO >= sLeft && wo - originO <= sRight &&
+        !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F))) {
+        NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva);
+        return;
+    }
+#endif
     for (ox = 0; ox < wo; ox++) {
         int gx = ox - originO, x = gx + gPortScreen.originX, i, found = 0, objDone = 0;
         int topLayer = LAYER_BD, secondLayer = LAYER_BD;
@@ -5031,6 +5100,9 @@ void PortPpuRenderFrame(void) {
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
     sNeonOpaqueCompose = neonOpaqueCompose != NULL;
+    const char* neonScreenCompose;
+    PORT_ENV_ONCE(neonScreenCompose, SDL_getenv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
+    sNeonScreenCompose = neonScreenCompose != NULL;
     const char* probeCompose;
     PORT_ENV_ONCE(probeCompose, SDL_getenv, "KHCOM_PPU_PROBE_COMPOSE");
     sProbeComposeGates = probeCompose && PortFrameCount() % 30 == 0;
@@ -5163,6 +5235,16 @@ void PortPpuRenderFrame(void) {
         PortLog("ppu gates: frame %u rows %u geometry %u windows %u sprites %u effects %u special %u layers %u correction %u second %u",
                 (unsigned)PortFrameCount(), gates[0], gates[1], gates[2], gates[3], gates[4],
                 gates[5], gates[6], gates[7], gates[8]);
+    }
+    static bool neonScreenLogged;
+    if (sNeonScreenCompose && !neonScreenLogged) {
+        for (int row = 0; row < GBA_SCREEN_H; row++) {
+            if (sNeonScreenRows[row]) {
+                PortLog("ppu: NEON screen composition active");
+                neonScreenLogged = true;
+                break;
+            }
+        }
     }
     static bool neonOpaqueLogged;
     if (sNeonOpaqueCompose && !neonOpaqueLogged) {
