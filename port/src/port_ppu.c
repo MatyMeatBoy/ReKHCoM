@@ -2780,20 +2780,11 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         int palBank = a2 >> 12;
         int16_t pa = 0x100, pb = 0, pc = 0, pd = 0x100;
         int objMosaic = (a0 >> 12) & 1;
-        int bandOnly = sMainHdPart[i] && !PortHdSpriteKeepsCartridge(sOamHd[i].id);
-        int blendTarget = sWorldBlendActive && bandOnly && SpriteOnScreen(sOamTag[i].screen) == sWorldBlendScreen &&
-            PortHdSpriteGroup(sOamHd[i].id) == 4;
 
         if (!affine && dbl)
             continue; /* disabled */
         if (shape == 3 || mode == 3)
             continue;
-        if (sHudLayer && sOamTag[i].hud)
-            continue; /* drawn by PortPpuRenderHud */
-        if (HdTextGlyph(i) && sOamTag[i].style != 2)
-            continue; /* drawn by port_hdtext.c */
-        if (bandOnly && !blendTarget && !(sTitleBarHd && gy >= 143))
-            continue; /* drawn by port_hdsprites.c over the picture */
         ow = sObjSize[shape][size][0];
         oh = sObjSize[shape][size][1];
         bw = ow << (affine && dbl);
@@ -2813,6 +2804,20 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
         }
         if (ox >= objRight || ox + bw <= objLeft)
             continue;
+        line = gy - oy;
+        /* Staged scenes update actor visibility even on rows outside an
+           object's vertical span. The normal path can reject those rows now. */
+        if (!sceneActorFrame && (line < 0 || line >= bh))
+            continue;
+        int bandOnly = sMainHdPart[i] && !PortHdSpriteKeepsCartridge(sOamHd[i].id);
+        int blendTarget = sWorldBlendActive && bandOnly && SpriteOnScreen(sOamTag[i].screen) == sWorldBlendScreen &&
+            PortHdSpriteGroup(sOamHd[i].id) == 4;
+        if (sHudLayer && sOamTag[i].hud)
+            continue; /* drawn by PortPpuRenderHud */
+        if (HdTextGlyph(i) && sOamTag[i].style != 2)
+            continue; /* drawn by port_hdtext.c */
+        if (bandOnly && !blendTarget && !(sTitleBarHd && gy >= 143))
+            continue; /* drawn by port_hdsprites.c over the picture */
 
         /* Event 081 preloads both Shadow waves in their idle pose. Keep only
          * that waiting pose outside the native camera hidden; the walking
@@ -2873,7 +2878,6 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             else if (!*entered)
                 continue;
         }
-        line = gy - oy;
         /* Reject lines outside the sprite before mosaic quantisation:
            truncating a negative remainder would turn -1 into line zero. */
         if (line < 0 || line >= bh)
