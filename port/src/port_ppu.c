@@ -2539,6 +2539,9 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     int mosH = mosaic ? (IO16(0x4C) & 15) + 1 : 1;
     int mosV = mosaic ? ((IO16(0x4C) >> 4) & 15) + 1 : 1;
     int32_t refX = sAffX[a], refY = sAffY[a];
+    const int origin = gPortScreen.originX;
+    const uint16_t* const palette = PLTT16;
+    uint8_t* const inWorld = sInWorld;
     int32_t rx, ry;
 
     (void)dispcnt;
@@ -2556,10 +2559,21 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
         DrawStraightAffine(bg, gy, cnt, refX, refY);
         return;
     }
-    rx = refX + (int32_t)pa * (-gPortScreen.originX);
-    ry = refY + (int32_t)pc * (-gPortScreen.originX);
-    for (x = 0; x < w; x++, rx += pa, ry += pc) {
-        int gx = x - gPortScreen.originX;
+    const int first = SDL_clamp(origin + sLeft, 0, w);
+    const int end = SDL_clamp(origin + sRight, first, w);
+    const bool arena = ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 && size >= 512;
+    const bool extendFloor = arena && sBattleView && gPortScreen.wide && gy >= GBA_SCREEN_H;
+    const bool extendBands = arena && sBattleView && sArenaBands[1];
+    const bool singleCopy = AffineSingleCopy(bg);
+    const int firstSource = refX >> 8;
+    const int lastSource = (refX + (int32_t)pa * (GBA_SCREEN_W - 1)) >> 8;
+    for (x = 0; x < first; x++) out[x] = TRANSPARENT;
+    for (x = end; x < w; x++) out[x] = TRANSPARENT;
+    rx = refX + (int32_t)pa * (first - origin);
+    ry = refY + (int32_t)pc * (first - origin);
+    for (x = first; x < end; x++, rx += pa, ry += pc) {
+        const int gx = x - origin;
+        const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
         int px, py;
         int tile, ci;
 
@@ -2572,15 +2586,10 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
             py = ry >> 8;
         }
 
-        if (gx < sLeft || gx >= sRight) {
-            out[x] = TRANSPARENT;
-            continue;
-        }
         /* Outside the original picture, continue the bottom of the arena
            in texture space. Composition still handles palette zero, fades,
            masks and sprites normally; no framebuffer colours are guessed. */
-        if (sBattleView && gPortScreen.wide && ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 && size >= 512 &&
-            gy >= GBA_SCREEN_H && py >= size) {
+        if (extendFloor && py >= size) {
             if (!(sHalloweenFloor && size == 512 && PortHalloweenFloorSource(&px, &py)))
                 py = size - 1;
         }
@@ -2588,9 +2597,7 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
            original hardware viewport, camera and collision remain exact.
            Reflecting each short side band joins its edge without bringing
            padding or unique centre landmarks into the added view. */
-        if (sBattleView && sArenaBands[1] && size >= 512 &&
-            ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 &&
-            (gx < 0 || gx >= GBA_SCREEN_W) && py >= 0 && py < size) {
+        if (extendBands && margin && py >= 0 && py < size) {
             if (px < sArenaBands[0])
                 px = ArenaBandPixel(sArenaBands[0] - 1 - px,
                                     sArenaBands[2], sArenaBands[3], 0);
@@ -2598,15 +2605,14 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
                 px = ArenaBandPixel(px - sArenaBands[1],
                                     sArenaBands[4], sArenaBands[5], 1);
         }
-        if (AffineSingleCopy(bg) && (gx < 0 || gx >= GBA_SCREEN_W) &&
-            !AffineCopyShown(px, refX >> 8, (refX + (int32_t)pa * (GBA_SCREEN_W - 1)) >> 8, size)) {
+        if (singleCopy && margin && !AffineCopyShown(px, firstSource, lastSource, size)) {
             out[x] = TRANSPARENT;
             continue;
         }
         if (wrap) {
             px &= size - 1;
             py &= size - 1;
-        } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && (gx < 0 || gx >= GBA_SCREEN_W)) {
+        } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && margin) {
             /* wide margins of a battle arena: the stage repeats sideways
                instead of ending in the void */
             px &= size - 1;
@@ -2614,10 +2620,10 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
             out[x] = TRANSPARENT;
             continue;
         }
-        sInWorld[x] = 1;
+        inWorld[x] = 1;
         tile = screen[(py >> 3) * tiles + (px >> 3)];
         ci = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
-        out[x] = ci ? (PLTT16[ci] & 0x7FFF) : TRANSPARENT;
+        out[x] = ci ? (palette[ci] & 0x7FFF) : TRANSPARENT;
     }
 }
 
