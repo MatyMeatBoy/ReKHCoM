@@ -4477,6 +4477,7 @@ static void OuterRow(const OuterRows* r, int y) {
 extern void MapWorldTilePrime(void); /* src/map/map_cell.c */
 static int sPpuWorkers = -1; /* other cores drawing with this one; -1 not started */
 static SDL_Semaphore *sPpuGo[PPU_MAX_THREADS], *sPpuDone;
+static bool sFusePictureBottom;
 static const OuterRows* sPpuJob; /* NULL: the GBA picture's rows (PpuInnerRow) */
 static int sPpuEnd, sPpuEdgeChunk = PPU_CHUNK;
 static SDL_AtomicInt sPpuNext;
@@ -4497,7 +4498,7 @@ static void PpuRows(int slot) {
             break;
         for (end = y + chunk < last ? y + chunk : last; y < end; y++) {
             sGlyphRow = y;
-            if (r)
+            if (r && y >= r->y0)
                 OuterRow(r, y);
             else
                 PpuInnerRow(y);
@@ -4722,6 +4723,7 @@ static void PpuInnerRow(int y) {
 static int PpuInnerBegin(void) {
     if (sPpuInnerOn < 0) {
         const char* env = SDL_getenv("KHCOM_PPU_INNER");
+        sFusePictureBottom = SDL_getenv("KHCOM_PPU_FUSE_PICTURE_BOTTOM") != NULL;
 #if defined(PORT_SWITCH) || defined(PORT_LINUX64_GUEST) || defined(_WIN32)
         sPpuInnerOn = !env || SDL_atoi(env) != 0;
 #else
@@ -4786,6 +4788,28 @@ static void PpuInnerDraw(int gy1) {
     sAffX[0] = affX[0]; sAffX[1] = affX[1]; /* this core drew rows too: the line events' reference goes on */
     sAffY[0] = affY[0]; sAffY[1] = affY[1];
     sPpuInnerFrom = gy1;
+}
+
+static bool PpuDrawPictureAndBottom(void) {
+    const int bottom = gPortScreen.originY + GBA_SCREEN_H;
+    if (!sFusePictureBottom || sPpuVerify || sPpuInnerFrom != 0 || bottom >= gPortScreen.height)
+        return false;
+    /* The last HBlank has run. Picture rows read their own snapshots and
+       bottom rows read the final state, with output committed in row order. */
+    OuterRows rows = {bottom, gPortScreen.height, 1,
+                      {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}};
+    PpuRunBatch(&rows, gPortScreen.originY, rows.y1);
+    const int drawn = SDL_clamp(sBottom - GBA_SCREEN_H, 0, rows.y1 - rows.y0);
+    for (int a = 0; a < 2; a++) {
+        sAffX[a] = rows.affX[a] + (int16_t)IO16(0x22 + a * 0x10) * drawn;
+        sAffY[a] = rows.affY[a] + (int16_t)IO16(0x26 + a * 0x10) * drawn;
+    }
+    static bool logged;
+    if (!logged) {
+        PortLog("ppu: fused picture and bottom batch active");
+        logged = true;
+    }
+    return true;
 }
 #endif
 
@@ -4909,6 +4933,7 @@ void PortPpuRenderFrame(void) {
     if (phaseStart) topStart = SDL_GetPerformanceCounter();
     RenderOuterRows(0, gPortScreen.originY, 0);
     if (phaseStart) pictureStart = SDL_GetPerformanceCounter();
+    bool bottomDrawn = false;
 
 #ifdef PORT_PPU_THREADS
     if (PpuInnerBegin()) {
@@ -4924,8 +4949,11 @@ void PortPpuRenderFrame(void) {
             StepAffine(1);
             memoryMayChange = HBlank(gy);
         }
-        if (kept)
-            PpuInnerDraw(GBA_SCREEN_H);
+        if (kept) {
+            bottomDrawn = PpuDrawPictureAndBottom();
+            if (!bottomDrawn)
+                PpuInnerDraw(GBA_SCREEN_H);
+        }
     } else
 #endif
     for (gy = 0; gy < GBA_SCREEN_H; gy++) {
@@ -4949,7 +4977,8 @@ void PortPpuRenderFrame(void) {
 
     if (phaseStart) bottomStart = SDL_GetPerformanceCounter();
     /* Lines below the original picture: state after line 159. */
-    RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
+    if (!bottomDrawn)
+        RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
     if (phaseStart) overlayStart = SDL_GetPerformanceCounter();
     MainHdOver();
     CaptureMenuMarginPixels();
