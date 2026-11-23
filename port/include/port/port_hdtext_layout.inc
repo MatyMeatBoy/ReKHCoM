@@ -18,6 +18,16 @@ static void DrawGlyph(SDL_Renderer* r, HdGlyph* g, float x, float y, uint32_t co
     d.y = SDL_floorf(y + 0.5f) - g->top;
     d.w = (float)g->w;
     d.h = (float)g->h;
+#ifdef PORT_FBDEV_GLYPH_ALPHA
+    if (sFbGlyphBatch) {
+        if (!cell->coverage && g->fbAlpha && alpha == 255) {
+            PortFbDrawGlyphMask(g->fbAlpha, (int)d.x, (int)d.y, g->w, g->h, color);
+            return;
+        }
+        /* Preserve draw order when a glyph requires SDL's general path. */
+        sFbGlyphBatch = false;
+    }
+#endif
     SDL_SetTextureColorMod(g->tex, (color >> 16) & 255, (color >> 8) & 255, color & 255);
     SDL_SetTextureAlphaMod(g->tex, (Uint8)alpha);
     if (!cell->coverage) {
@@ -246,6 +256,9 @@ void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float o
     n = PortPpuTextGlyphs(glyphs, HD_TEXT_MAX_GLYPHS, hudLayer);
     if (n == 0)
         return;
+#ifdef PORT_FBDEV_GLYPH_ALPHA
+    sFbGlyphBatch = hudLayer == 2 && WantFbGlyphMasks() && PortFbBeginGlyphBatch(renderer);
+#endif
     SDL_qsort(glyphs, n, sizeof(glyphs[0]), CompareGlyphs);
     /* style 0 first (in place), then the subtitles after them */
     {
@@ -279,6 +292,9 @@ void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float o
         if (smallCount > 0)
             DrawSmallNumbers(renderer, small, smallCount, originX, originY, scale);
     }
+#ifdef PORT_FBDEV_GLYPH_ALPHA
+    sFbGlyphBatch = false;
+#endif
 }
 
 /* Shift-JIS code of a Unicode character (two-byte codes only), 0 if none:

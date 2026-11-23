@@ -242,6 +242,65 @@ bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pi
 #endif
 }
 
+bool PortFbBeginGlyphBatch(SDL_Renderer* renderer) {
+    SDL_Rect viewport;
+    float sx, sy;
+    int logicalW, logicalH;
+    SDL_RendererLogicalPresentation logicalMode;
+    return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
+        !SDL_MUSTLOCK(sRenderSurface) && !SDL_GetRenderTarget(renderer) && !SDL_RenderClipEnabled(renderer) &&
+        SDL_GetRenderViewport(renderer, &viewport) && !viewport.x && !viewport.y &&
+        viewport.w == 640 && viewport.h == 480 &&
+        SDL_GetRenderScale(renderer, &sx, &sy) && sx == 1.f && sy == 1.f &&
+        SDL_GetRenderLogicalPresentation(renderer, &logicalW, &logicalH, &logicalMode) &&
+        logicalMode == SDL_LOGICAL_PRESENTATION_DISABLED && SDL_FlushRenderer(renderer);
+}
+
+static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor) {
+    const uint32_t rb = 0x00FF00FFu;
+    uint32_t redBlue = (rgb & rb) * factor + 0x00010001u;
+    uint32_t green = ((rgb >> 8) & 255u) * factor + 1;
+    redBlue += (redBlue >> 8) & rb;
+    green += green >> 8;
+    return ((redBlue >> 8) & rb) | (green & 0xFF00u);
+}
+
+static uint32_t BlendGlyphPixel(uint32_t rgb, uint32_t dst, unsigned opacity) {
+    /* The software blitter rounds each term separately when tinting.
+       White glyphs take its unmodulated, combined-sum blend instead. */
+    if (rgb != 0x00FFFFFFu)
+        return ScaleGlyphRgb(rgb, opacity) + ScaleGlyphRgb(dst, 255 - opacity);
+    const uint32_t rb = 0x00FF00FFu;
+    const uint32_t inv = 255 - opacity;
+    uint32_t redBlue = (rgb & rb) * opacity + (dst & rb) * inv + 0x00010001u;
+    uint32_t green = ((rgb >> 8) & 255u) * opacity + ((dst >> 8) & 255u) * inv + 1;
+    redBlue += (redBlue >> 8) & rb;
+    green += green >> 8;
+    return ((redBlue >> 8) & rb) | (green & 0xFF00u);
+}
+
+void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb) {
+    const int left = SDL_max(x, 0), right = SDL_min(x + w, 640);
+    const int top = SDL_max(y, 0), bottom = SDL_min(y + h, 480);
+    if (left >= right || top >= bottom)
+        return;
+    static bool logged;
+    if (!logged) {
+        PortLog("hd-text: direct alpha glyph active");
+        logged = true;
+    }
+    rgb &= 0x00FFFFFFu;
+    for (int row = top; row < bottom; row++) {
+        uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + row * sRenderSurface->pitch);
+        const uint8_t* coverage = alpha + (row - y) * w + left - x;
+        for (int col = left; col < right; col++) {
+            const unsigned opacity = *coverage++;
+            if (opacity)
+                dst[col] = opacity == 255 ? rgb : BlendGlyphPixel(rgb, dst[col], opacity);
+        }
+    }
+}
+
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {
     for (int y = 0; y < h; y++)
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);

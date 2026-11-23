@@ -10,7 +10,24 @@
 #define HD_TEXT_MAX_GLYPHS 256
 #define HD_TEXT_JP_CELL 10
 #define HD_TEXT_JP_CACHE 1024
-typedef struct HdGlyph { SDL_Texture* tex; int ready,w,h,left,top,advance; } HdGlyph;
+typedef struct HdGlyph {
+    SDL_Texture* tex;
+    int ready,w,h,left,top,advance;
+#ifdef PORT_LINUX
+    uint8_t* fbAlpha;
+#endif
+} HdGlyph;
+#ifdef PORT_LINUX
+#define PORT_FBDEV_GLYPH_ALPHA 1
+static bool sFbGlyphBatch;
+bool PortFbBeginGlyphBatch(SDL_Renderer* renderer);
+void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb);
+static bool WantFbGlyphMasks(void) {
+    const char* enabled;
+    PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_FBDEV_DIRECT_GLYPHS");
+    return enabled != NULL;
+}
+#endif
 typedef struct HdFont {
     FT_Face font;
     int key,style;
@@ -126,8 +143,18 @@ int PortPortableHdReady(void) {
 }
 static void Release(HdFont* f) {
     int i;
-    for(i=0;i<256;i++)SDL_DestroyTexture(f->glyphs[i].tex);
-    for(i=0;i<HD_TEXT_JP_CACHE;i++)SDL_DestroyTexture(f->jpGlyphs[i].tex);
+    for(i=0;i<256;i++) {
+        SDL_DestroyTexture(f->glyphs[i].tex);
+#ifdef PORT_LINUX
+        SDL_free(f->glyphs[i].fbAlpha);
+#endif
+    }
+    for(i=0;i<HD_TEXT_JP_CACHE;i++) {
+        SDL_DestroyTexture(f->jpGlyphs[i].tex);
+#ifdef PORT_LINUX
+        SDL_free(f->jpGlyphs[i].fbAlpha);
+#endif
+    }
     if(f->font)FT_Done_Face(f->font);
     SDL_memset(f,0,sizeof(*f));
 }
@@ -204,6 +231,14 @@ static void Raster(SDL_Renderer* renderer,HdFont* f,HdGlyph* g,int code,int jp) 
     if(g->tex && SDL_UpdateTexture(g->tex,NULL,rgba,g->w*4)) {
         SDL_SetTextureBlendMode(g->tex,SDL_BLENDMODE_BLEND);
         SDL_SetTextureScaleMode(g->tex,SDL_SCALEMODE_NEAREST);
+#ifdef PORT_LINUX
+        if (WantFbGlyphMasks()) {
+            g->fbAlpha = SDL_malloc((size_t)g->w * g->h);
+            if (g->fbAlpha)
+                for (int i = 0; i < g->w * g->h; i++)
+                    g->fbAlpha[i] = (uint8_t)(rgba[i] >> 24);
+        }
+#endif
     } else {
         if(g->tex)SDL_DestroyTexture(g->tex);
         g->tex=NULL;g->ready=0;ready=0;
