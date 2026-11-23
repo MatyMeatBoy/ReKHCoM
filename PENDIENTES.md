@@ -520,4 +520,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-skip-covered-clear-20261123 | Omitir el borrado redundante cuando NEON cubre toda la superficie | integrado | codex-ga36-clear | https://github.com/MatyMeatBoy/ReKHCoM/pull/676 | Usuario autorizó integrar optimizaciones del port | 2026-11-23T05:19:03.849408+00:00 |
 | ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | pr_abierto | codex-ppu-native-builds | https://github.com/MatyMeatBoy/ReKHCoM/pull/677 | Usuario autorizó integrar fixes y optimizaciones comunes | 2026-11-23T05:21:47.327565+00:00 |
 
-Integrador: libre
+Integrador: codex-ppu-native-builds (ocupado; 2026-11-23T05:21:56.472748+00:00)
