@@ -5059,6 +5059,13 @@ static int PpuInnerBegin(void) {
     if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80))
         return 0;
     const unsigned mosaicLayers = PpuStaticMosaicLayers();
+    const char* audit;
+    PORT_ENV_ONCE(audit, SDL_getenv, "KHCOM_PPU_MOSAIC_AUDIT");
+    if (audit && PpuAffineMosaicDependent()) {
+        PortLog("ppu mosaic: frame %u layers %u MOSAIC %04x DISPSTAT %04x DMA %04x %04x %04x %04x",
+                (unsigned)PortFrameCount(), mosaicLayers, IO16(0x4C), IO16(0x04),
+                IO16(0xBA), IO16(0xC6), IO16(0xD2), IO16(0xDE));
+    }
     if (!PpuRowsIndependent(mosaicLayers != 0))
         return 0;
     sPpuInnerMosaicLayers = mosaicLayers;
