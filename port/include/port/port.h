@@ -233,6 +233,7 @@ int PortEventBackdropPanel(void); /* single authored backdrop panel, or -1 */
 int PortEventTiledBackdrop(void); /* Riku scenery eligible for verified tile-band extension, or -1 */
 int PortEventBackdropProfile(void); /* current story event, -1 outside events */
 int PortFixedFullscreen(void);
+int PortFixed480p(void);
 void PortConfigLoad(void);
 int PortTitleBrightnessAllowed(void);
 void PortConfigSetDataPath(const char* path);

@@ -16,7 +16,7 @@ if [ -n "$KHCOM_FBDEV" ] && { [ ! -r "$KHCOM_FBDEV" ] || [ ! -w "$KHCOM_FBDEV" ]
 fi
 export SDL_VIDEO_DRIVER="${SDL_VIDEO_DRIVER:-offscreen}"
 export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-alsa}"
-export KHCOM_FIXED_FULLSCREEN=1
+export KHCOM_FIXED_FULLSCREEN=1 KHCOM_FIXED_480P=1
 export KHCOM_TALL_FIT="${KHCOM_TALL_FIT:-0}"
 export KHCOM_CONFIG="fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0${KHCOM_CONFIG:+;$KHCOM_CONFIG}"
 

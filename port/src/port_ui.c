@@ -330,6 +330,14 @@ static int SectionShown(int heading) {
 }
 
 static int ItemVisible(int item) {
+    if (PortFixed480p()) {
+        switch (item) {
+            case ITEM_VIEW: case ITEM_CRT_OUTPUT: case ITEM_ASPECT:
+            case ITEM_ZOOM: case ITEM_BATTLE_ZOOM: case ITEM_SCENE_FRAMING:
+            case ITEM_INTZOOM: case ITEM_SCALE: case ITEM_FILTER: case ITEM_MODE_RESET:
+                return 0;
+        }
+    }
     if ((item == ITEM_FULLSCREEN || item == ITEM_FS_RES) && PortFixedFullscreen())
         return 0;
     if (IsHeading(item) && item < ITEM_CLOSE)

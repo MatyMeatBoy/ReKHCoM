@@ -416,10 +416,19 @@ static void PortConfigDeviceDefaults(void) {
     PortLog("Device profile: %s", profile);
 }
 
+int PortFixed480p(void) {
+#if defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
+    const char* fixed = SDL_getenv("KHCOM_FIXED_480P");
+    return fixed && SDL_strcmp(fixed, "1") == 0;
+#else
+    return 0;
+#endif
+}
+
 int PortFixedFullscreen(void) {
 #if defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
     const char* fixed = SDL_getenv("KHCOM_FIXED_FULLSCREEN");
-    return fixed && SDL_strcmp(fixed, "1") == 0;
+    return PortFixed480p() || (fixed && SDL_strcmp(fixed, "1") == 0);
 #else
     return 0;
 #endif
@@ -429,6 +438,15 @@ void PortConfigLoad(void) {
     PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
+    if (PortFixed480p()) {
+        gPortConfig.viewMode = PORT_VIEW_AUTO;
+        gPortConfig.aspect = PORT_ASPECT_4_3;
+        gPortConfig.zoom = 4;
+        gPortConfig.battleZoom = 4;
+        gPortConfig.filter = PORT_FILTER_NEAREST;
+        gPortConfig.scaleMode = PORT_SCALE_INTEGER;
+        gPortSceneFraming = 0;
+    }
     if (PortFixedFullscreen()) {
         gPortConfig.fullscreen = 1;
         gPortConfig.fullscreenWidth = 0;
@@ -623,7 +641,7 @@ void PortApplyGraphicsMode(int mode) {
         return;
     }
     sUpgradedSettings = 0;
-    gPortConfig.viewMode = classic ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
+    gPortConfig.viewMode = classic && !PortFixed480p() ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
     /* the HD mod's parts only once imported: the new start offers them when the launcher brings them */
     gPortConfig.hdText = !classic; /* every mode but GBA classic (user 25/10) */
     gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS);

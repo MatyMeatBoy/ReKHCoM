@@ -87,7 +87,7 @@ class Ga36PortTest(unittest.TestCase):
         game.mkdir()
         launcher = self.temp / 'ReKHCoM GA36.sh'
         launcher.write_bytes((PORT / 'ReKHCoM.sh').read_bytes().replace(b'\r\n', b'\n'))
-        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$KHCOM_FBDEV" "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$KHCOM_TALL_FIT" "$KHCOM_FIXED_FULLSCREEN" "$KHCOM_CONFIG" "$@" > result
+        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$KHCOM_FBDEV" "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$KHCOM_TALL_FIT" "$KHCOM_FIXED_FULLSCREEN" "$KHCOM_FIXED_480P" "$KHCOM_CONFIG" "$@" > result
 exit 17
 ''')
         shim = self.temp / 'uname'
@@ -100,7 +100,7 @@ exit 17
                                  posix_temp, str(launcher), '--region', 'jp'], env=env, capture_output=True, text=True)
         self.assertEqual(result.returncode, 17, result.stderr)
         self.assertEqual((game / 'result').read_text().splitlines(), [
-            '', 'offscreen', 'alsa', '0', '1', 'fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0;zoom=6',
+            '', 'offscreen', 'alsa', '0', '1', '1', 'fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0;zoom=6',
             '--force32', '--region', 'jp',
         ])
         env['KHCOM_FBDEV'] = posix_temp + '/missing-fb'
