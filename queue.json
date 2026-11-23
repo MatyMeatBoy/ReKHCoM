@@ -17739,22 +17739,28 @@
     "ga36-render-surface-20261122": {
       "id": "ga36-render-surface-20261122",
       "piece": "GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-60fps",
       "created_at": "2026-11-23T02:30:54.347079+00:00",
-      "updated_at": "2026-11-23T02:35:52.701501+00:00",
+      "updated_at": "2026-11-23T02:37:47.133194+00:00",
       "branch": "perf/ga36-fbdev-surface",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/664",
-      "approval": null,
+      "approval": "Usuario: optimizalo para que funcione a 60fps en la consola; mandato vigente de integrar los PR",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T02:35:52.701501+00:00",
           "owner": "codex-ga36-60fps",
           "detail": "SDL pixels and ARMv7 field verified"
+        },
+        {
+          "at": "2026-11-23T02:37:47.133194+00:00",
+          "owner": "codex-ga36-60fps",
+          "detail": "72791459; ARMv7 y prueba fbdev exacta; QEMU A/B 9.99 a 12.63 FPS"
         }
       ],
-      "claimed_at": "2026-11-23T02:31:04.802053+00:00"
+      "claimed_at": "2026-11-23T02:31:04.802053+00:00",
+      "completed_at": "2026-11-23T02:37:47.133194+00:00"
     }
   },
   "integrator": {
@@ -17763,7 +17769,7 @@
     "created_at": "2026-11-23T02:37:37.179088+00:00",
     "updated_at": "2026-11-23T02:37:37.179088+00:00"
   },
-  "updated_at": "2026-11-23T02:37:37.179088+00:00",
+  "updated_at": "2026-11-23T02:37:47.133194+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
