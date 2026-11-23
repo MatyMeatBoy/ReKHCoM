@@ -2722,6 +2722,43 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
         }
     }
     const int mosaicOffset = mosH == 1 ? 0 : (((first - origin) % mosH) + mosH) % mosH;
+    const char* colorSpans;
+    PORT_ENV_ONCE(colorSpans, SDL_getenv, "KHCOM_PPU_AFFINE_COLOR_SPANS");
+    if (colorSpans && mosH > 1 && !extendBands && !extendFloor) {
+        /* A mosaic block and its viewport classification share one sample.
+           Split the block when it crosses either edge of the native picture. */
+        int sampleEnd = first + mosH - mosaicOffset;
+        int32_t sampleX = rx - (int32_t)pa * mosaicOffset;
+        int32_t sampleY = ry - (int32_t)pc * mosaicOffset;
+        for (x = first; x < end;) {
+            const int gx = x - origin;
+            const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
+            if (x == sampleEnd) {
+                sampleEnd += mosH;
+                sampleX += (int32_t)pa * mosH;
+                sampleY += (int32_t)pc * mosH;
+            }
+            int stop = PPU_MIN(end, sampleEnd);
+            if (gx < 0) stop = PPU_MIN(stop, origin);
+            else if (!margin) stop = PPU_MIN(stop, origin + GBA_SCREEN_W);
+            int px = sampleX >> 8, py = sampleY >> 8;
+            uint16_t color = TRANSPARENT;
+            if (!singleCopy || !margin || AffineCopyShown(px, firstSource, lastSource, size)) {
+                if (wrap || (margin && size >= 512 && (unsigned)py < (unsigned)size))
+                    px &= size - 1;
+                if (wrap)
+                    py &= size - 1;
+                if ((unsigned)px < (unsigned)size && (unsigned)py < (unsigned)size) {
+                    const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                    const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                    color = index ? palette[index] & 0x7FFF : TRANSPARENT;
+                    memset(inWorld + x, 1, stop - x);
+                }
+            }
+            while (x < stop) out[x++] = color;
+        }
+        return;
+    }
     int mosaicEnd = first + mosH - mosaicOffset;
     int32_t mosaicX = rx - (int32_t)pa * mosaicOffset;
     int32_t mosaicY = ry - (int32_t)pc * mosaicOffset;
