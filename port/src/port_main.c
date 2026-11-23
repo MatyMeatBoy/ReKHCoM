@@ -1936,6 +1936,37 @@ static bool ScreenOverlayEmpty(const uint32_t* pixels, int width) {
     return false;
 }
 
+/* Clip on source pixel boundaries before SDL allocates a scaled intermediate
+ * for a layer that extends beyond the fixed-size panel. */
+static bool DrawScreenOverlay(SDL_Texture* texture, const SDL_FRect* dest, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    const char* clipOverlay;
+    PORT_ENV_ONCE(clipOverlay, SDL_getenv, "KHCOM_FBDEV_CLIP_OVERLAY");
+    const int scale = (int)sOverlayScale;
+    if (clipOverlay && PortFbActive() && PortFixedFullscreen() && outW == 640 && outH == 480 &&
+        scale > 1 && sOverlayScale == scale) {
+        const int left = (int)dest->x, top = (int)dest->y;
+        const int right = left + width * scale, bottom = top + GBA_SCREEN_H * scale;
+        if (left < 0 || top < 0 || right > outW || bottom > outH) {
+            const int x0 = SDL_max(0, -left), y0 = SDL_max(0, -top);
+            const int x1 = SDL_min(outW, right) - left, y1 = SDL_min(outH, bottom) - top;
+            if (x0 >= x1 || y0 >= y1)
+                return true;
+            if (!(x0 % scale || y0 % scale || x1 % scale || y1 % scale)) {
+                const SDL_FRect source = {x0 / scale, y0 / scale, (x1 - x0) / scale, (y1 - y0) / scale};
+                const SDL_FRect visible = {left + x0, top + y0, x1 - x0, y1 - y0};
+                return SDL_RenderTexture(sRenderer, texture, &source, &visible);
+            }
+        }
+    }
+#else
+    (void)width;
+    (void)outW;
+    (void)outH;
+#endif
+    return SDL_RenderTexture(sRenderer, texture, NULL, dest);
+}
+
 static void Present(int paced) {
     if (!RendererResetService()) return;
     const char* hdProfile;
@@ -2424,7 +2455,7 @@ static void Present(int paced) {
         od.y = (float)(int)((outH - od.h) / 2);
         if (!ScreenOverlayEmpty(overlay, sOverlayTexW)) {
             SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
-            SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od);
+            DrawScreenOverlay(sOverlayTex, &od, sOverlayTexW, outW, outH);
         }
         PortHdSpritesWorldFallback(nativeWorld);
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */
@@ -2435,7 +2466,7 @@ static void Present(int paced) {
             overlay = PortPpuScreenNativeWorld();
             if (!ScreenOverlayEmpty(overlay, sOverlayTexW) &&
                 (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
-                 !SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od))) {
+                 !DrawScreenOverlay(sOverlayTex, &od, sOverlayTexW, outW, outH))) {
                 sRendererResetPending = 1;
                 return; /* Keep the last presented frame while audio/gameplay continue. */
             }
@@ -2456,7 +2487,7 @@ static void Present(int paced) {
             }
             if (sScreenOverTex != NULL) {
                 SDL_UpdateTexture(sScreenOverTex, NULL, screenOver, sScreenOverTexW * 4);
-                SDL_RenderTexture(sRenderer, sScreenOverTex, NULL, &od);
+                DrawScreenOverlay(sScreenOverTex, &od, sScreenOverTexW, outW, outH);
             }
         }
         if (!menuCanvas)
