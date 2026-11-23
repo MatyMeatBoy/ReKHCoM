@@ -514,4 +514,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-fb-neon-2x-20261123 | GA36: dibujar el cuadro opaco 2x directamente con NEON y conservar ruta SDL | integrado | codex-ga36-neon | https://github.com/MatyMeatBoy/ReKHCoM/pull/670 | Usuario: ve sumando todas las mejoras que puedas y sigue hasta full speed con margen | 2026-11-23T03:53:39.826913+00:00 |
 | improved-43-title-paper-20261123 | Completar fondo del titulo y pantallas de color del perfil mejorado 4:3 | en_curso | codex-ga36-title | — | — | 2026-11-23T03:51:11.625460+00:00 |
 
-Integrador: codex-ga36-neon (ocupado; 2026-11-23T03:53:25.620159+00:00)
+Integrador: libre
