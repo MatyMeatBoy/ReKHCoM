@@ -2571,6 +2571,25 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     for (x = end; x < w; x++) out[x] = TRANSPARENT;
     rx = refX + (int32_t)pa * (first - origin);
     ry = refY + (int32_t)pc * (first - origin);
+    if (first < end && mosH == 1 && !extendFloor && !extendBands && !singleCopy) {
+        const int last = end - first - 1;
+        const int limit = size << 8;
+        const bool inside = (unsigned)rx < (unsigned)limit && (unsigned)ry < (unsigned)limit &&
+                            (unsigned)(rx + (int32_t)pa * last) < (unsigned)limit &&
+                            (unsigned)(ry + (int32_t)pc * last) < (unsigned)limit;
+        if (wrap || inside) {
+            const int mask = size - 1;
+            memset(inWorld + first, 1, end - first);
+            for (x = first; x < end; x++, rx += pa, ry += pc) {
+                const int px = (rx >> 8) & mask;
+                const int py = (ry >> 8) & mask;
+                const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+            }
+            return;
+        }
+    }
     for (x = first; x < end; x++, rx += pa, ry += pc) {
         const int gx = x - origin;
         const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
