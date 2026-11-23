@@ -518,6 +518,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-blur-packed-cache-20261123 | Reutilizar celdas de desenfoque y duplicar el grupo NEON, con validación ARMv7 | integrado | codex-ga36-blur-cache | https://github.com/MatyMeatBoy/ReKHCoM/pull/674 | Usuario autorizó integrar optimizaciones comprobadas comunes y de GA36 | 2026-11-23T04:19:30.056245+00:00 |
 | ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | integrado | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | Usuario autorizó integrar optimizaciones verificadas del port | 2026-11-23T05:14:02.035598+00:00 |
 | ga36-skip-covered-clear-20261123 | Omitir el borrado redundante cuando NEON cubre toda la superficie | integrado | codex-ga36-clear | https://github.com/MatyMeatBoy/ReKHCoM/pull/676 | Usuario autorizó integrar optimizaciones del port | 2026-11-23T05:19:03.849408+00:00 |
-| ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | pendiente | — | — | — | 2026-11-23T05:20:30.037166+00:00 |
+| ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | en_curso | codex-ppu-native-builds | — | — | 2026-11-23T05:20:38.968184+00:00 |
 
 Integrador: libre
