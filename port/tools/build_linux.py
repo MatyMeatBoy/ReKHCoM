@@ -68,7 +68,7 @@ def symbols(src, dst):
         dst.write_text(text)
 
 
-def configure(version, arch, base, out, *, armhf_ppu_workers=False):
+def configure(version, arch, base, out, *, armhf_ppu_workers=False, armhf_ppu_a7=False):
     a = ARCHES[arch]
     sysroot = base / 'sysroot'
     sdl = base / 'sdl'
@@ -134,7 +134,10 @@ def configure(version, arch, base, out, *, armhf_ppu_workers=False):
         for src in port_sources:
             obj = f'$builddir/port/{src.stem}.o'
             if armhf_ppu_workers and src.stem in ('port_main', 'port_ppu'):
-                n.build(obj, 'cc_port', rel(src), variables={'port_cflags': port_cflags + ' -DPORT_PPU_THREADS'})
+                flags = port_cflags + ' -DPORT_PPU_THREADS'
+                if armhf_ppu_a7 and src.stem == 'port_ppu':
+                    flags = flags.replace(' -O2 ', ' -O3 -mtune=cortex-a7 ', 1)
+                n.build(obj, 'cc_port', rel(src), variables={'port_cflags': flags})
             else:
                 n.build(obj, 'cc_port', rel(src))
             objs.append(obj)
@@ -381,7 +384,11 @@ def main():
                     'build/releases/ReKHCoM-VERSION-{linux-x86-x64-desktop-steamdeck.tar.gz,anbernic-beta.zip}')
     ap.add_argument('--armhf-ppu-workers', action='store_true',
                     help='include optional PPU workers for ARMv7 testing')
+    ap.add_argument('--armhf-ppu-a7', action='store_true',
+                    help='optimize the threaded ARMv7 renderer for Cortex-A7')
     args = ap.parse_args()
+    if args.armhf_ppu_a7 and not args.armhf_ppu_workers:
+        ap.error('--armhf-ppu-a7 requires --armhf-ppu-workers')
     if args.armhf_ppu_workers and (args.arch != 'armhf' or args.package):
         ap.error('--armhf-ppu-workers requires --arch armhf and an individual build')
     if args.package:
@@ -398,7 +405,8 @@ def main():
     base = args.base or (WORK_DIR / 'linux') / args.arch
     for version in args.versions:
         out = ROOT / 'build' / f'linux-{args.arch}-{version}'
-        configure(version, args.arch, base, out, armhf_ppu_workers=args.armhf_ppu_workers)
+        configure(version, args.arch, base, out, armhf_ppu_workers=args.armhf_ppu_workers,
+                  armhf_ppu_a7=args.armhf_ppu_a7)
         subprocess.check_call(['ninja', '-f', str(out / 'build.ninja'), '-j', str(args.jobs)], cwd=ROOT)
         print('built', rel(out / f'khcom_{version}'))
     if args.bundle:
