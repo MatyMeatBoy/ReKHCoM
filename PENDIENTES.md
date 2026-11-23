@@ -512,4 +512,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ppu-native-tile-runs-20261123 | PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes | integrado | codex-ga36-tiles | https://github.com/MatyMeatBoy/ReKHCoM/pull/668 | Usuario: ve sumando todas las mejoras que puedas | 2026-11-23T03:36:21.222044+00:00 |
 | battle-blur-separable-20261123 | Reducir el coste del desenfoque de transicion de combate conservando pixeles | en_curso | codex-ga36-blur | — | — | 2026-11-23T03:35:34.098038+00:00 |
 
-Integrador: codex-ga36-tiles (ocupado; 2026-11-23T03:36:03.943189+00:00)
+Integrador: libre
