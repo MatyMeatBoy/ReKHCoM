@@ -1941,6 +1941,14 @@ static void Present(int paced) {
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
     uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
+#ifdef PORT_LINUX
+    const char* fbDetail;
+    PORT_ENV_ONCE(fbDetail, SDL_getenv, "KHCOM_FBDEV_DETAIL");
+    const bool measureFb = fbDetail && PortFbActive() && sFrameCount % 30 == 0;
+    uint64_t uploadTicks = 0, scaleTicks = 0;
+    bool usedScale2x = false;
+    const uint64_t detailStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
     uint64_t hdProfileWaitStart = sPresentWaitTotal;
     int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
@@ -1998,7 +2006,14 @@ static void Present(int paced) {
         extern void PortPpuOverKeepDrawn(const uint32_t* composite);
         PortPpuOverKeepDrawn(sComposite); /* the title's hint over its HD illustration */
     }
+#ifdef PORT_LINUX
+    uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
     SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+#ifdef PORT_LINUX
+    if (measureFb)
+        uploadTicks = SDL_GetPerformanceCounter() - uploadStart;
+#endif
     SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH);
     SDL_SetRenderDrawColor(sRenderer, 0, 0, 0, 255);
     {
@@ -2248,8 +2263,14 @@ static void Present(int paced) {
         bool drawn2x = false;
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
         if (!menuCanvas && sFitScale <= 0 && PortFixedFullscreen() && gPortConfig.filter == PORT_FILTER_NEAREST &&
-            dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH)
+            dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH) {
+            const uint64_t scaleStart = measureFb ? SDL_GetPerformanceCounter() : 0;
             drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height);
+            if (measureFb) {
+                scaleTicks = SDL_GetPerformanceCounter() - scaleStart;
+                usedScale2x = drawn2x;
+            }
+        }
 #endif
         if (!drawn2x)
             SDL_RenderClear(sRenderer);
@@ -2695,9 +2716,20 @@ static void Present(int paced) {
         extern void PortSceneGalleryPreviewPresented(int accepted);
         /* Finish rendering first, then submit the image on its fixed deadline.
            Sleeping only afterwards let variable draw cost become image jitter. */
+#ifdef PORT_LINUX
+        const uint64_t ready = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
         if (paced) PaceBeforePresent();
 #ifdef PORT_LINUX
         PortFbPresent(sRenderer);
+        if (measureFb) {
+            uint64_t drawTicks, copyTicks;
+            PortFbStageTicks(&drawTicks, &copyTicks);
+            const double ms = 1000.0 / SDL_GetPerformanceFrequency();
+            PortLog("fb phases: frame %u prep %.3f upload %.3f scale %.3f direct %d flush %.3f copy %.3f ms",
+                    (unsigned)sFrameCount, (ready - detailStart) * ms, uploadTicks * ms,
+                    scaleTicks * ms, usedScale2x, drawTicks * ms, copyTicks * ms);
+        }
 #endif
         int presented=SDL_RenderPresent(sRenderer);
         if (presented) {
