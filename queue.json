@@ -17999,19 +17999,20 @@
     "ga36-hblank-snapshot-20261123": {
       "id": "ga36-hblank-snapshot-20261123",
       "piece": "Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-ga36-hblank",
       "created_at": "2026-11-23T05:11:52.238404+00:00",
-      "updated_at": "2026-11-23T05:11:52.238404+00:00",
+      "updated_at": "2026-11-23T05:12:00.491355+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": null,
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-23T05:12:00.491355+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T05:11:52.238404+00:00",
+  "updated_at": "2026-11-23T05:12:00.491355+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
