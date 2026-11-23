@@ -523,4 +523,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-title-workers-20261123 | Paralelizar filas del título con fundido y guardar cachés por worker | integrado | codex-ga36-title-workers | https://github.com/MatyMeatBoy/ReKHCoM/pull/679 | Usuario autorizó integrar optimizaciones del port con prueba | 2026-11-23T06:40:18.202873+00:00 |
 | v291-hd-movies-credits-copy | Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/680 | User request on 2026-11-23 to address open issues before the coordinated v2.9.1 release; text-only clarification. | 2026-11-23T18:01:36.632673+00:00 |
 
-Integrador: codex-ga36-release (ocupado; 2026-11-23T18:01:27.590132+00:00)
+Integrador: libre
