@@ -2632,6 +2632,10 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
             return;
         }
     }
+    const int mosaicOffset = mosH == 1 ? 0 : (((first - origin) % mosH) + mosH) % mosH;
+    int mosaicEnd = first + mosH - mosaicOffset;
+    int32_t mosaicX = rx - (int32_t)pa * mosaicOffset;
+    int32_t mosaicY = ry - (int32_t)pc * mosaicOffset;
     for (x = first; x < end; x++, rx += pa, ry += pc) {
         const int gx = x - origin;
         const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
@@ -2639,9 +2643,13 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
         int tile, ci;
 
         if (mosH > 1) { /* every block of mosH pixels shows its first one */
-            int gq = gx - ((gx % mosH) + mosH) % mosH;
-            px = (refX + (int32_t)pa * gq) >> 8;
-            py = (refY + (int32_t)pc * gq) >> 8;
+            if (x == mosaicEnd) {
+                mosaicX = rx;
+                mosaicY = ry;
+                mosaicEnd += mosH;
+            }
+            px = mosaicX >> 8;
+            py = mosaicY >> 8;
         } else {
             px = rx >> 8;
             py = ry >> 8;
