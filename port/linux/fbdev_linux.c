@@ -176,8 +176,10 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
     float scaleX, scaleY;
     int logicalW, logicalH;
     SDL_RendererLogicalPresentation logicalMode;
+    const bool fractionalFit = sRenderSurface && sRenderSurface->w == 640 && w == 240 && h == 160 &&
+                               outY == 26 && outH == 426 && !cover;
     if (!sRenderSurface || w <= 0 || (w & 3) || h <= 0 ||
-        sRenderSurface->w / 2 != w || outY < 0 || outH <= 0 || outH > sRenderSurface->h - outY ||
+        (!fractionalFit && sRenderSurface->w / 2 != w) || outY < 0 || outH <= 0 || outH > sRenderSurface->h - outY ||
         (sRenderSurface->w & 1) ||
         SDL_MUSTLOCK(sRenderSurface) || SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
         !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
@@ -188,6 +190,26 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
         return 0;
     const int pitch = sRenderSurface->pitch;
     uint8_t* pixels = (uint8_t*)sRenderSurface->pixels + (size_t)outY * pitch;
+    if (fractionalFit) {
+        const unsigned stepX = (240u << 16) / 640u;
+        const unsigned stepY = (160u << 16) / 426u;
+        unsigned posY = stepY / 2;
+        unsigned previous = 160;
+        for (int y = 0; y < outH; y++, posY += stepY) {
+            const unsigned row = posY >> 16;
+            uint32_t* dest = (uint32_t*)(pixels + (size_t)y * pitch);
+            if (row == previous) {
+                memcpy(dest, (uint8_t*)dest - pitch, 640 * sizeof(*dest));
+            } else {
+                const uint32_t* input = src + row * 240;
+                unsigned posX = stepX / 2;
+                for (int x = 0; x < 640; x++, posX += stepX)
+                    dest[x] = input[posX >> 16];
+            }
+            previous = row;
+        }
+        return 1;
+    }
     if (h != outH / 2 || (outH & 1)) {
         /* SDL's nearest scaler samples the pixel centres with a 16.16 step. */
         const uint64_t step = ((uint64_t)h << 16) / outH;
