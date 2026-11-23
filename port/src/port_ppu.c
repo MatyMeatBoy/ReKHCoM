@@ -1314,6 +1314,33 @@ static int MapTile(const BgLatch* l, int tx, int ty) {
     return block[(ty & 31) * 32 + (tx & 31)];
 }
 
+/* Scene recipes match the whole map in tile row order. Check the block
+   address once per block; invalid blocks still contribute the MapTile sentinel. */
+static uint32_t HashWorldMap(const BgLatch* l) {
+    uint32_t hash = 2166136261u;
+    for (int by = 0; by < l->height; by++) {
+        const uint16_t* blocks[4];
+        for (int bx = 0; bx < l->width; bx++) {
+            const uint16_t* block = (const uint16_t*)l->map[by * l->width + bx];
+            blocks[bx] = PORT_GBA_MAP_MEMORY(block) ? block : NULL;
+        }
+        for (int y = 0; y < 32; y++) {
+            for (int bx = 0; bx < l->width; bx++) {
+                const uint16_t* block = blocks[bx];
+                if (block) {
+                    const uint16_t* row = block + y * 32;
+                    for (int x = 0; x < 32; x++)
+                        hash = (hash ^ row[x]) * 16777619u;
+                } else {
+                    for (int x = 0; x < 32; x++)
+                        hash = (hash ^ UINT32_MAX) * 16777619u;
+                }
+            }
+        }
+    }
+    return hash;
+}
+
 /* Matches between each tile near an edge and its diagonal neighbour inward. */
 static int IsoScore(const BgLatch* l, int x0, int x1, int y0, int y1, int dx, int dy) {
     int W = l->width * 32, H = l->height * 32, x, y, score = 0;
@@ -4489,11 +4516,7 @@ void PortPpuBeginFrame(void) {
         for (b=1; b<4; b++) {
             const BgLatch* l=&sBgLatch[b];
             if (l->valid && l->width <= 4 && l->height <= 4) {
-                uint32_t hash=2166136261u;
-                int xx,yy;
-                for (yy=0; yy<l->height*32; yy++)
-                    for (xx=0; xx<l->width*32; xx++)
-                        hash=(hash^(uint32_t)MapTile(l,xx,yy))*16777619u;
+                const uint32_t hash = HashWorldMap(l);
                 sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
                 if (getenv("KHCOM_PRELIMINAR_LOG"))
                     PortLog("preliminar bg%d %dx%d hash=%08x scene=%d",b,l->width,l->height,hash,
@@ -4525,13 +4548,7 @@ void PortPpuBeginFrame(void) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 2 && l->height == 2) {
-                uint32_t hash = 2166136261u;
-                int xx, yy, e;
-                for (yy = 0; yy < 64; yy++)
-                    for (xx = 0; xx < 64; xx++) {
-                        e = MapTile(l, xx, yy);
-                        hash = (hash ^ (uint32_t)e) * 16777619u;
-                    }
+                const uint32_t hash = HashWorldMap(l);
                 if (hash == 0x76732a49u) sAgrabahLayer[b] = 3;
                 if (hash == 0x30fe052eu) sAgrabahLayer[b] = 2;
             }
@@ -4546,11 +4563,7 @@ void PortPpuBeginFrame(void) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 1 && l->height == 1) {
-                uint32_t hash = 2166136261u;
-                int xx, yy;
-                for (yy = 0; yy < 32; yy++)
-                    for (xx = 0; xx < 32; xx++)
-                        hash = (hash ^ (uint32_t)MapTile(l, xx, yy)) * 16777619u;
+                const uint32_t hash = HashWorldMap(l);
                 if (hash == 0xc704bad0u) sAgrabah109Layer[b] = 3;
                 if (hash == 0xe1940c58u) sAgrabah109Layer[b] = 2;
             }
