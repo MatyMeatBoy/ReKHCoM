@@ -1927,6 +1927,19 @@ const uint16_t* PortLatinGlyphWidths(void);
 
 static int sUniformWorldTiles = -1;
 
+/* A tile's registration and source bytes stay stable during one scanline.
+   Resolve both recent frame records at most once for adjacent samples. */
+static const BgTextTile* MatchBgTextTile(unsigned offset, unsigned* lastOffset,
+                                         const BgTextTile** lastMatch) {
+    if (offset != *lastOffset) {
+        const BgTextTile* tile = BgTextTileAt(offset);
+        *lastOffset = offset;
+        *lastMatch = tile->code > 0x20 && !memcmp(tile->source, VRAM8 + offset, 32)
+                     ? tile : NULL;
+    }
+    return *lastMatch;
+}
+
 static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
@@ -1947,6 +1960,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     int x, py, ty, fy, outside;
     int w = gPortScreen.width;
     int cachedTx = 0, cachedTy = 0, cachedEntry = -1, cachedValid = 0;
+    unsigned lastTextOffset = UINT32_MAX;
+    const BgTextTile* lastTextMatch = NULL;
     /* also in the event before the fight (008), where the armour falls and assembles on the same patio */
     int guardPatio = bg == 0 && sBgLatch[bg].valid &&
         PortGuardArmorBackdropMatches((const void* const*)sBgLatch[bg].map) &&
@@ -2341,7 +2356,7 @@ scalar_world:
             !sWorldNameOn) {
             const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
             if (tileOff < 0x10000 &&
-                (!sHdText || (entry & 0xC00) || BgTextTileAt(tileOff)->code <= 0x20)) {
+                (!sHdText || (entry & 0xC00) || !MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch))) {
                 const int localX = x - gPortScreen.originX;
                 const int end = PPU_MIN(w - x, PPU_MIN(sRight - localX, GBA_SCREEN_W - gx));
                 const int count = PPU_MIN(8 - (px & 7), end);
@@ -2386,8 +2401,8 @@ scalar_world:
             if (sHdText && !(entry & 0xC00)) {
                 unsigned offset = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
                 if (offset < 0x10000) {
-                    const BgTextTile* text = BgTextTileAt(offset);
-                    if (text->code > 0x20 && !memcmp(text->source, VRAM8 + offset, 32)) {
+                    const BgTextTile* text = MatchBgTextTile(offset, &lastTextOffset, &lastTextMatch);
+                    if (text) {
                         if ((px & 7) == 0 && ((py & 7) == 0 || gy == 0) && BgTextRoom()) {
                             BgTextGlyph* glyph = BgTextNew();
                             int xx = x - (px & 7), yy = gy - (py & 7);
