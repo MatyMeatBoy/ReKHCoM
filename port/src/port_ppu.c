@@ -4834,6 +4834,12 @@ void PortPpuJiminyFade(int* dark, int* white) {
 }
 
 void PortPpuRenderFrame(void) {
+    static int profilePhases = -1;
+    uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
+    if (profilePhases < 0)
+        profilePhases = SDL_getenv("KHCOM_PPU_PHASES") != NULL;
+    if (profilePhases && PortFrameCount() % 30 == 0)
+        phaseStart = SDL_GetPerformanceCounter();
     int gy;
     int w = gPortScreen.width;
     extern Mode gModeJiminy;
@@ -4877,7 +4883,9 @@ void PortPpuRenderFrame(void) {
     ExportSprites();
 
     /* Lines above the original picture: state of line 0. */
+    if (phaseStart) topStart = SDL_GetPerformanceCounter();
     RenderOuterRows(0, gPortScreen.originY, 0);
+    if (phaseStart) pictureStart = SDL_GetPerformanceCounter();
 
 #ifdef PORT_PPU_THREADS
     if (PpuInnerBegin()) {
@@ -4916,10 +4924,20 @@ void PortPpuRenderFrame(void) {
         sLastFrameBlank = uniform;
     }
 
+    if (phaseStart) bottomStart = SDL_GetPerformanceCounter();
     /* Lines below the original picture: state after line 159. */
     RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
+    if (phaseStart) overlayStart = SDL_GetPerformanceCounter();
     MainHdOver();
     CaptureMenuMarginPixels();
+    if (phaseStart) {
+        const uint64_t end = SDL_GetPerformanceCounter();
+        const double msPerTick = 1000.0 / SDL_GetPerformanceFrequency();
+        PortLog("ppu phases: frame %u setup %.3f top %.3f picture %.3f bottom %.3f overlays %.3f ms",
+                (unsigned)PortFrameCount(), (topStart - phaseStart) * msPerTick,
+                (pictureStart - topStart) * msPerTick, (bottomStart - pictureStart) * msPerTick,
+                (overlayStart - bottomStart) * msPerTick, (end - overlayStart) * msPerTick);
+    }
 }
 
 /* A skipped frame (frame_skip, the device is late): the visible lines' events reach the game as in a drawn frame
