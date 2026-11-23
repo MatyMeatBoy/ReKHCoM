@@ -18100,8 +18100,13 @@
       "claimed_at": "2026-11-23T06:32:03.939412+00:00"
     }
   },
-  "integrator": null,
-  "updated_at": "2026-11-23T06:32:34.382202+00:00",
+  "integrator": {
+    "owner": "codex-ga36-title-palette",
+    "token": "dd743b47259c604a6fbb0508f2f193be1ba2edcf684acd19",
+    "created_at": "2026-11-23T06:32:41.587071+00:00",
+    "updated_at": "2026-11-23T06:32:41.587071+00:00"
+  },
+  "updated_at": "2026-11-23T06:32:41.587071+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
