@@ -17947,22 +17947,28 @@
     "ppu-sprite-row-cull-20261123": {
       "id": "ppu-sprite-row-cull-20261123",
       "piece": "PPU: descartar sprites fuera de la fila antes de consultar datos HD",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-objcull",
       "created_at": "2026-11-23T04:09:43.636611+00:00",
-      "updated_at": "2026-11-23T04:13:05.044029+00:00",
+      "updated_at": "2026-11-23T04:13:28.798309+00:00",
       "branch": "perf/ppu-sprite-row-cull",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/673",
-      "approval": null,
+      "approval": "Usuario: ve sumando todas las mejoras que puedas y sigue a full speed con margen",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T04:13:05.044029+00:00",
           "owner": "codex-ga36-objcull",
           "detail": "Field A/B/B/A 55.64/64.59/62.34/58.52 FPS; 5 exact screenshots; final field and battle exact"
+        },
+        {
+          "at": "2026-11-23T04:13:28.798309+00:00",
+          "owner": "codex-ga36-objcull",
+          "detail": "18c8f7b57732e84991c8ebd309d562a7b96662a6; two uncapped field runs above 59.73 FPS, five captures exact"
         }
       ],
-      "claimed_at": "2026-11-23T04:09:53.022418+00:00"
+      "claimed_at": "2026-11-23T04:09:53.022418+00:00",
+      "completed_at": "2026-11-23T04:13:28.798309+00:00"
     }
   },
   "integrator": {
@@ -17971,7 +17977,7 @@
     "created_at": "2026-11-23T04:13:14.459400+00:00",
     "updated_at": "2026-11-23T04:13:14.459400+00:00"
   },
-  "updated_at": "2026-11-23T04:13:14.459400+00:00",
+  "updated_at": "2026-11-23T04:13:28.798309+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
