@@ -424,13 +424,16 @@ unsigned int PortTitleBandPixel(int side, int y) {
 unsigned int PortTitleFooterPixel(int side, int y) {
     return sTitleBands && y >= 0 && y < GBA_SCREEN_H && sTitleBandObj[side > 0][y] ? sTitleBand[side > 0][y] : 0;
 }
-static uint16_t sTitlePalette[256], sTitleFadeColors[49][256];
+static uint16_t sTitlePalette[256];
+static PPU_TLS uint16_t sTitleFadeColors[49][256];
 static uint16_t sTitleColorIndex[0x8000];
 static struct {
     uint16_t red, green, blue, color;
 } sTitleCandidates[256];
 static int sTitleCandidateCount;
-static uint8_t sTitleFadeReady[49][256];
+static PPU_TLS uint8_t sTitleFadeReady[49][256];
+static PPU_TLS uint64_t sTitleWorkerPaletteEpoch;
+static uint64_t sTitlePaletteEpoch;
 static int sTitlePaletteValid;
 void PortTitleArtFade(int enabled) {
     sTitleArtFade = enabled != 0;
@@ -3129,6 +3132,10 @@ static void TitleArtFadeLine(int gy, int bg) {
     static const int ramp[7] = {0, 19, 66, 128, 189, 236, 255};
     int x, by;
     if (!sTitleArtFade || gy < 0 || gy >= GBA_SCREEN_H) return;
+    if (sTitleWorkerPaletteEpoch != sTitlePaletteEpoch) {
+        memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
+        sTitleWorkerPaletteEpoch = sTitlePaletteEpoch;
+    }
     by = gy > 153 ? gy - 153 : 0;
     const int left = PPU_MAX(0, gPortScreen.originX + (by ? 0 : 234));
     const int right = PPU_MIN(gPortScreen.width, gPortScreen.originX + GBA_SCREEN_W);
@@ -4163,7 +4170,7 @@ void PortPpuBeginFrame(void) {
             sTitleCandidates[j].green = ((color >> 5) & 31) * 255;
             sTitleCandidates[j].blue = (color >> 10) * 255;
         }
-        memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
+        sTitlePaletteEpoch++;
         sTitlePaletteValid = 1;
     }
 #if defined(__ANDROID__) || defined(PORT_LINUX) || defined(PORT_PS5_GUEST) /* FreeType / stb_truetype HD text (#77, #277) */
@@ -4706,7 +4713,9 @@ static int PpuInnerBegin(void) {
         PortLog("ppu: the picture's rows on %d cores in %d of the last 600 frames", sPpuWorkers + 1, sPpuInnerShared);
         sPpuInnerFrames = sPpuInnerShared = 0;
     }
-    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleArtFade || (IO16(0x00) & 0x80) || !PpuRowsIndependent())
+    /* The HD bar appends to a shared draw queue. Native title fades only
+       write the worker's own cache and the row being drawn. */
+    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80) || !PpuRowsIndependent())
         return 0;
     sPpuInnerShared++;
     sPpuPlttKept = sPpuOamKept = -1;
