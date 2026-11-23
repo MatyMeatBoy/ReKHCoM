@@ -17895,22 +17895,28 @@
     "improved-43-title-paper-20261123": {
       "id": "improved-43-title-paper-20261123",
       "piece": "Completar fondo del titulo y pantallas de color del perfil mejorado 4:3",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-title",
       "created_at": "2026-11-23T03:51:00.352426+00:00",
-      "updated_at": "2026-11-23T04:00:34.268552+00:00",
+      "updated_at": "2026-11-23T04:00:55.150954+00:00",
       "branch": "fix/improved-43-title-paper",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/671",
-      "approval": null,
+      "approval": "Usuario: el blanco debe rellenar el 4:3 mejorado, mejora las pantallas que falten",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T04:00:34.268552+00:00",
           "owner": "codex-ga36-title",
           "detail": "8 captures 640x480 desktop and ARMv7; title 54 rows white with exact body except animated lamp; journal footer check and layout suite PASS"
+        },
+        {
+          "at": "2026-11-23T04:00:55.150954+00:00",
+          "owner": "codex-ga36-title",
+          "detail": "b01bc2aea3d16f7b5689ad29871907f8495d6c46; 640x480 audit, six background fills plus field/battle full; test_jiminy_layout PASS"
         }
       ],
-      "claimed_at": "2026-11-23T03:51:11.625460+00:00"
+      "claimed_at": "2026-11-23T03:51:11.625460+00:00",
+      "completed_at": "2026-11-23T04:00:55.150954+00:00"
     }
   },
   "integrator": {
@@ -17919,7 +17925,7 @@
     "created_at": "2026-11-23T04:00:42.671033+00:00",
     "updated_at": "2026-11-23T04:00:42.671033+00:00"
   },
-  "updated_at": "2026-11-23T04:00:42.671033+00:00",
+  "updated_at": "2026-11-23T04:00:55.150954+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
