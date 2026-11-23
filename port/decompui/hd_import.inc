@@ -3001,8 +3001,8 @@ static bool HdModCard() {
     bool selectedMovies = mediaLanguage ? variantMovies[mediaLanguage - 1] : haveBase;
     bool selectedScenes = mediaLanguage ? variantScenes[mediaLanguage - 1] : haveScenes > 0;
     changed |= GatedToggle(T("Videos HD", "HD movies"),
-                         T("Reemplaza los videos de GBA por sus equivalentes HD de Re:Chain of Memories.",
-                           "Replaces GBA movies with Re:Chain of Memories' HD equivalents."), Ini("hd_movies"), selectedMovies);
+                         T("Reemplaza los vídeos compatibles de GBA por sus versiones HD. Los créditos conservan la versión de GBA.",
+                           "Replaces supported GBA movies with HD versions. Credits use the GBA version."), Ini("hd_movies"), selectedMovies);
     changed |= GatedToggle(T("Música HD", "HD music"),
                          T("La banda sonora orquestada de Re:Chain of Memories en lugar de la música de GBA.",
                            "Re:Chain of Memories' soundtrack in place of the GBA music."), Ini("hd_music"), !(haveTracks == 0));
