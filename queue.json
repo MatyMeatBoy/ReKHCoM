@@ -17761,10 +17761,23 @@
       ],
       "claimed_at": "2026-11-23T02:31:04.802053+00:00",
       "completed_at": "2026-11-23T02:37:47.133194+00:00"
+    },
+    "handheld-fullscreen-only-20261122": {
+      "id": "handheld-fullscreen-only-20261122",
+      "piece": "GA36 y R36S: pantalla completa fija y opciones de ventana ocultas",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-23T02:57:05.153329+00:00",
+      "updated_at": "2026-11-23T02:57:05.153329+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T02:37:56.238325+00:00",
+  "updated_at": "2026-11-23T02:57:05.153329+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
