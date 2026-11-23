@@ -2086,14 +2086,6 @@ static void Present(int paced) {
         extern void PortPpuOverKeepDrawn(const uint32_t* composite);
         PortPpuOverKeepDrawn(sComposite); /* the title's hint over its HD illustration */
     }
-#ifdef PORT_LINUX
-    uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
-#endif
-    SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
-#ifdef PORT_LINUX
-    if (measureFb)
-        uploadTicks = SDL_GetPerformanceCounter() - uploadStart;
-#endif
     SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH);
     SDL_SetRenderDrawColor(sRenderer, 0, 0, 0, 255);
     {
@@ -2106,6 +2098,28 @@ static void Present(int paced) {
         SDL_SetRenderViewport(sRenderer, area.x || area.y || area.w != outW || area.h != outH ? &area : NULL);
         outW = area.w;
         outH = area.h;
+    }
+    bool deferBase = false;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    const char* deferFlag;
+    PORT_ENV_ONCE(deferFlag, SDL_getenv, "KHCOM_FBDEV_DEFER_BASE_UPLOAD");
+    if (deferFlag && PortFbActive() && PortFixedFullscreen() && !menuCanvas && gPortScreen.wide &&
+        sFitScale <= 0 && !PortHd2dActive() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+        outW == 2 * gPortScreen.width && outH == 2 * gPortScreen.height) {
+        extern int PortUiScenePauseRect(int rect[4]);
+        int pauseRect[4];
+        deferBase = !PortUiScenePauseRect(pauseRect);
+    }
+#endif
+    if (!deferBase) {
+#ifdef PORT_LINUX
+        const uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
+        SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+#ifdef PORT_LINUX
+        if (measureFb)
+            uploadTicks = SDL_GetPerformanceCounter() - uploadStart;
+#endif
     }
     if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
         && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
@@ -2392,7 +2406,11 @@ static void Present(int paced) {
                   dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
                   PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height)))
 #endif
+            {
+                if (deferBase)
+                    SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
                 SDL_RenderTexture(sRenderer, frameTex, NULL, &dst);
+            }
         }
         worldScale = dst.w / gPortScreen.width;
         worldX = dst.x;
