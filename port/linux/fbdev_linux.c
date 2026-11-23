@@ -27,6 +27,13 @@ static SDL_Surface* sRenderSurface;
 static size_t sFbOffset;
 static struct fb_var_screeninfo sVar;
 static struct fb_fix_screeninfo sFix;
+static bool sProfileFb;
+static uint64_t sDrawTicks, sCopyTicks;
+
+void PortFbStageTicks(uint64_t* draw, uint64_t* copy) {
+    *draw = sDrawTicks;
+    *copy = sCopyTicks;
+}
 
 /* Opens the framebuffer named by KHCOM_FBDEV; returns 0 when not in use. */
 int PortFbInit(int* w, int* h) {
@@ -70,6 +77,7 @@ int PortFbInit(int* w, int* h) {
     }
     *w = (int)sVar.xres;
     *h = (int)sVar.yres;
+    sProfileFb = SDL_getenv("KHCOM_FBDEV_PROFILE") != NULL;
     PortLog("fbdev: %s %ux%u, %u bpp (red at bit %u)", path, sVar.xres, sVar.yres, sVar.bits_per_pixel,
             sVar.red.offset);
     return 1;
@@ -176,16 +184,29 @@ static void WriteFrame(SDL_Surface* frame) {
 
 /* Copies the renderer's frame to the framebuffer (call before presenting). */
 void PortFbPresent(SDL_Renderer* renderer) {
+    sDrawTicks = sCopyTicks = 0;
     if (!sFb)
         return;
+    uint64_t start = sProfileFb ? SDL_GetPerformanceCounter() : 0;
     if (sRenderSurface) {
-        if (SDL_FlushRenderer(renderer))
+        if (SDL_FlushRenderer(renderer)) {
+            uint64_t ready = sProfileFb ? SDL_GetPerformanceCounter() : 0;
             WriteFrame(sRenderSurface);
+            if (sProfileFb) {
+                sDrawTicks = ready - start;
+                sCopyTicks = SDL_GetPerformanceCounter() - ready;
+            }
+        }
         return;
     }
     SDL_Surface* frame = SDL_RenderReadPixels(renderer, NULL);
     if (frame) {
+        uint64_t ready = sProfileFb ? SDL_GetPerformanceCounter() : 0;
         WriteFrame(frame);
+        if (sProfileFb) {
+            sDrawTicks = ready - start;
+            sCopyTicks = SDL_GetPerformanceCounter() - ready;
+        }
         SDL_DestroySurface(frame);
     }
 }

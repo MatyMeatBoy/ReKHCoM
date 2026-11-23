@@ -226,6 +226,7 @@ int PortFbInit(int* w, int* h);
 int PortFbActive(void);
 SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
+void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
 static int sFbW, sFbH;
 #endif
@@ -3559,7 +3560,7 @@ static void VBlankCycle(void) {
             frameLog = fopen(frameLogPath, "w");
             gPortStutter.on = 1;
             if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
-                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped\n");
+                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped,fb_draw_ms,fb_copy_ms\n");
         }
         {
             /* the deep view of each frame: logic_ms is the time from the end of the previous frame's log to this
@@ -3572,13 +3573,18 @@ static void VBlankCycle(void) {
             double logic = logicStart && cycleStart > logicStart ? (cycleStart - logicStart) * ms : 0;
             double ppu = skip ? 0 : sPpuTicks * ms, present = skip ? 0 : sPresentTicks * ms;
             const char* limit = SDL_getenv("KHCOM_STUTTER");
+            uint64_t fbDraw = 0, fbCopy = 0;
+#ifdef PORT_LINUX
+            if (sPresentSerial != presentSerialStart)
+                PortFbStageTicks(&fbDraw, &fbCopy);
+#endif
             if (frameLog && previous)
-                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d\n", (unsigned)sFrameCount,
+                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d,%.3f,%.3f\n", (unsigned)sFrameCount,
                         interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
                         (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
                         (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms,
                         sPresentSerial != presentSerialStart,
-                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip);
+                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip, fbDraw * ms, fbCopy * ms);
             if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
                         "decode %.1f, upload %.1f; slowest %s %.1f ms), glyphs %u (%.1f ms)", (unsigned)sFrameCount,
