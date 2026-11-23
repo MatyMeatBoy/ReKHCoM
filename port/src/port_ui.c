@@ -330,6 +330,8 @@ static int SectionShown(int heading) {
 }
 
 static int ItemVisible(int item) {
+    if ((item == ITEM_FULLSCREEN || item == ITEM_FS_RES) && PortFixedFullscreen())
+        return 0;
     if (IsHeading(item) && item < ITEM_CLOSE)
         return SectionShown(item);
     switch (item) {
@@ -3518,11 +3520,13 @@ static void ModeChosen(int mode) {
     PortConfigSave();
     PortVideoApplyConfig();
 #if (defined(_WIN32) || defined(PORT_LINUX)) && !defined(PORT_GBA_RELOC) /* native window-mode wizard */
-    sWizStep = WIZ_SCREEN;
-    sWizCursor = gPortConfig.fullscreen ? 0 : 1;
-#else
-    Close();
+    if (!PortFixedFullscreen()) {
+        sWizStep = WIZ_SCREEN;
+        sWizCursor = gPortConfig.fullscreen ? 0 : 1;
+        return;
+    }
 #endif
+    Close();
 }
 
 static void WizFinish(void) {
