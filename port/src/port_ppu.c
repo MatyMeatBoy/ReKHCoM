@@ -4438,7 +4438,11 @@ static int SDLCALL PpuWorker(void* data) {
 
 static void PpuStart(void) {
     const char* env = SDL_getenv("KHCOM_PPU_THREADS");
+#if defined(PORT_LINUX) && defined(__arm__) && !defined(PORT_LINUX64_GUEST)
+    int n = env ? SDL_atoi(env) : 1;
+#else
     int n = env ? SDL_atoi(env) : SDL_GetNumLogicalCPUCores();
+#endif
     int i;
     if (n > PPU_MAX_THREADS)
         n = PPU_MAX_THREADS;
@@ -4711,9 +4715,16 @@ static void RenderOuterRows(int y0, int y1, int below) {
 #ifdef PORT_PPU_THREADS
     if (sPpuWorkers < 0)
         PpuStart();
-    if (sPpuWorkers > 0 && (size_t)(y1 - y0) * gPortScreen.width < 64 * 1024)
+#if defined(PORT_LINUX) && defined(__arm__) && !defined(PORT_LINUX64_GUEST)
+    /* A handheld's 320x240 field has 40 extension rows above and below. */
+    const size_t minBatchPixels = 8 * 1024;
+#else
+    const size_t minBatchPixels = 64 * 1024;
+#endif
+    const size_t pixels = (size_t)(y1 - y0) * gPortScreen.width;
+    if (sPpuWorkers > 0 && pixels < minBatchPixels)
         sPpuStats[4]++;
-    if (sPpuWorkers > 0 && (size_t)(y1 - y0) * gPortScreen.width >= 64 * 1024 && PpuRowsIndependent()) {
+    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent()) {
         int glyphStart = sBgTextCount;
         PpuRunBatch(&r, y0, y1);
         if (sPpuVerify)
