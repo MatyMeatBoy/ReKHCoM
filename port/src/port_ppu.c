@@ -4462,7 +4462,7 @@ extern void MapWorldTilePrime(void); /* src/map/map_cell.c */
 static int sPpuWorkers = -1; /* other cores drawing with this one; -1 not started */
 static SDL_Semaphore *sPpuGo[PPU_MAX_THREADS], *sPpuDone;
 static const OuterRows* sPpuJob; /* NULL: the GBA picture's rows (PpuInnerRow) */
-static int sPpuEnd;
+static int sPpuEnd, sPpuEdgeChunk = PPU_CHUNK;
 static SDL_AtomicInt sPpuNext;
 static void PpuInnerRow(int y);
 static PendingGlyph sPpuGlyphs[PPU_MAX_THREADS][1024];
@@ -4472,13 +4472,14 @@ static int sPpuVerify, sPpuMismatches;
 static void PpuRows(int slot) {
     const OuterRows* r = sPpuJob;
     int y, end, last = sPpuEnd;
+    const int chunk = r ? sPpuEdgeChunk : PPU_CHUNK;
     sGlyphPend = sPpuGlyphs[slot];
     sGlyphPendCount = 0;
     for (;;) {
-        y = SDL_AddAtomicInt(&sPpuNext, PPU_CHUNK);
+        y = SDL_AddAtomicInt(&sPpuNext, chunk);
         if (y >= last)
             break;
-        for (end = y + PPU_CHUNK < last ? y + PPU_CHUNK : last; y < end; y++) {
+        for (end = y + chunk < last ? y + chunk : last; y < end; y++) {
             sGlyphRow = y;
             if (r)
                 OuterRow(r, y);
@@ -4502,6 +4503,12 @@ static int SDLCALL PpuWorker(void* data) {
 
 static void PpuStart(void) {
     const char* env = SDL_getenv("KHCOM_PPU_THREADS");
+    const char* edgeChunk = SDL_getenv("KHCOM_PPU_EDGE_CHUNK");
+    if (edgeChunk) {
+        const int requested = SDL_atoi(edgeChunk);
+        if (requested >= 1 && requested <= 16)
+            sPpuEdgeChunk = requested;
+    }
 #if defined(PORT_LINUX) && defined(__arm__) && !defined(PORT_LINUX64_GUEST)
     int n = env ? SDL_atoi(env) : 1;
 #else
