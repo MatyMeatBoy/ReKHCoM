@@ -1242,7 +1242,7 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
     int x0, y0, w, h, cx, cy;
 
     if (sBlurTex == NULL) {
-        sBlurTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, BLUR_OUT_W,
+        sBlurTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, BLUR_OUT_W,
                                      BLUR_OUT_H);
         if (sBlurTex == NULL)
             return;
