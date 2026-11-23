@@ -18030,10 +18030,10 @@
     "ga36-skip-covered-clear-20261123": {
       "id": "ga36-skip-covered-clear-20261123",
       "piece": "Omitir el borrado redundante cuando NEON cubre toda la superficie",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-clear",
       "created_at": "2026-11-23T05:17:34.751311+00:00",
-      "updated_at": "2026-11-23T05:18:32.832359+00:00",
+      "updated_at": "2026-11-23T05:19:03.849408+00:00",
       "branch": "lab/ga36-skip-covered-clear",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/676",
       "approval": "Usuario autorizó integrar optimizaciones del port",
@@ -18043,9 +18043,15 @@
           "at": "2026-11-23T05:18:32.832359+00:00",
           "owner": "codex-ga36-clear",
           "detail": "QEMU presentación 1.88/1.50/1.42/1.95 ms. Cinco cuadros de campo y cinco de combate, mismos hashes y framebuffer."
+        },
+        {
+          "at": "2026-11-23T05:19:03.849408+00:00",
+          "owner": "codex-ga36-clear",
+          "detail": "Merge 76cea142b404c6b8c0b7f035aa0f05ddd3a21f0e. Presentación baja en ambas candidatas, 10 cuadros y framebuffer exactos."
         }
       ],
-      "claimed_at": "2026-11-23T05:17:42.843434+00:00"
+      "claimed_at": "2026-11-23T05:17:42.843434+00:00",
+      "completed_at": "2026-11-23T05:19:03.849408+00:00"
     }
   },
   "integrator": {
@@ -18054,7 +18060,7 @@
     "created_at": "2026-11-23T05:18:41.291854+00:00",
     "updated_at": "2026-11-23T05:18:41.291854+00:00"
   },
-  "updated_at": "2026-11-23T05:18:41.291854+00:00",
+  "updated_at": "2026-11-23T05:19:03.849408+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
