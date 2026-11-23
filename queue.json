@@ -17869,22 +17869,28 @@
     "ga36-fb-neon-2x-20261123": {
       "id": "ga36-fb-neon-2x-20261123",
       "piece": "GA36: dibujar el cuadro opaco 2x directamente con NEON y conservar ruta SDL",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-neon",
       "created_at": "2026-11-23T03:45:32.480587+00:00",
-      "updated_at": "2026-11-23T03:53:15.639825+00:00",
+      "updated_at": "2026-11-23T03:53:39.826913+00:00",
       "branch": "perf/ga36-fb-neon-2x",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/670",
-      "approval": null,
+      "approval": "Usuario: ve sumando todas las mejoras que puedas y sigue hasta full speed con margen",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T03:53:15.639825+00:00",
           "owner": "codex-ga36-neon",
           "detail": "SDL geometry/7 fixtures; QEMU render output exact 5 frames plus framebuffer; phase 3.09/1.91/2.74/3.04 ms"
+        },
+        {
+          "at": "2026-11-23T03:53:39.826913+00:00",
+          "owner": "codex-ga36-neon",
+          "detail": "a1eabbfa561f0f3752c9a085b2ca0575a47d80c4; faster phase both comparisons, exact images, average FPS not yet stable"
         }
       ],
-      "claimed_at": "2026-11-23T03:45:40.866325+00:00"
+      "claimed_at": "2026-11-23T03:45:40.866325+00:00",
+      "completed_at": "2026-11-23T03:53:39.826913+00:00"
     },
     "improved-43-title-paper-20261123": {
       "id": "improved-43-title-paper-20261123",
@@ -17907,7 +17913,7 @@
     "created_at": "2026-11-23T03:53:25.620159+00:00",
     "updated_at": "2026-11-23T03:53:25.620159+00:00"
   },
-  "updated_at": "2026-11-23T03:53:25.620159+00:00",
+  "updated_at": "2026-11-23T03:53:39.826913+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
