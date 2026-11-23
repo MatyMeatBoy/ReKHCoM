@@ -18134,22 +18134,28 @@
     "v291-hd-movies-credits-copy": {
       "id": "v291-hd-movies-credits-copy",
       "piece": "Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-release",
       "created_at": "2026-11-23T17:55:49.082651+00:00",
-      "updated_at": "2026-11-23T17:59:11.539424+00:00",
+      "updated_at": "2026-11-23T18:01:36.632673+00:00",
       "branch": "fix/v291-hd-credits-copy",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/680",
-      "approval": null,
+      "approval": "User request on 2026-11-23 to address open issues before the coordinated v2.9.1 release; text-only clarification.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/641",
       "evidence": [
         {
           "at": "2026-11-23T17:59:11.539424+00:00",
           "owner": "codex-ga36-release",
           "detail": "b6862e3f2: launcher and both in-game descriptions agree in six locales; diff check passed, audio issue remains in existing lane."
+        },
+        {
+          "at": "2026-11-23T18:01:36.632673+00:00",
+          "owner": "codex-ga36-release",
+          "detail": "Merged 306329ea66ff99751678a993ce887ff9b245d68c. Six locales checked with launcher string extraction; no audio behavior change."
         }
       ],
-      "claimed_at": "2026-11-23T17:56:02.459957+00:00"
+      "claimed_at": "2026-11-23T17:56:02.459957+00:00",
+      "completed_at": "2026-11-23T18:01:36.632673+00:00"
     }
   },
   "integrator": {
@@ -18158,7 +18164,7 @@
     "created_at": "2026-11-23T18:01:27.590132+00:00",
     "updated_at": "2026-11-23T18:01:27.590132+00:00"
   },
-  "updated_at": "2026-11-23T18:01:27.590132+00:00",
+  "updated_at": "2026-11-23T18:01:36.633838+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
