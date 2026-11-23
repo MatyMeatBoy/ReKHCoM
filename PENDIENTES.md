@@ -525,4 +525,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v291-release-preparation | Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/681 | User requested v2.9.1 and GA36 alpha together once prepared. | 2026-11-23T19:32:50.921257+00:00 |
 | v291-jp-credits-glyph | Use supported Japanese in the new credits help and verify the source gate | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/682 | User request of November 23 to address issues before v2.9.1; restores supported Japanese glyphs. | 2026-11-23T18:46:31.443728+00:00 |
 
-Integrador: codex-ga36-release (ocupado; 2026-11-23T19:32:34.312928+00:00)
+Integrador: libre
