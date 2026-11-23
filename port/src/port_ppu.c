@@ -4848,11 +4848,11 @@ static int PpuAffineMosaicDependent(void) {
     return mode==2 && (display&0x800) && (IO16(0x0E)&0x40);
 }
 
-static int PpuRowsIndependent(void) {
+static int PpuRowsIndependent(bool allowMosaic) {
     int i;
     if (sBgIsoLatched[0] | sBgIsoLatched[1] | sBgIsoLatched[2] | sBgIsoLatched[3])
         sPpuStats[1]++; /* drawn on several cores: IsoPrime fills the tables first */
-    if (PpuAffineMosaicDependent()) {
+    if (!allowMosaic && PpuAffineMosaicDependent()) {
         sPpuStats[2]++;
         return 0; /* vertical mosaic: affine BGs reuse the reference of a block's first row */
     }
@@ -4976,6 +4976,22 @@ static PpuLineState sPpuLines[GBA_SCREEN_H];
 static uint16_t sPpuPltt[GBA_SCREEN_H][512], sPpuOam[GBA_SCREEN_H][512];
 static int sPpuPlttKept, sPpuOamKept, sPpuInnerFrom, sPpuInnerOn = -1, sPpuInnerGlyphs, sPpuInnerFrames, sPpuInnerShared;
 
+static int sPpuInnerMosaicHeight;
+static unsigned sPpuInnerMosaicLayers;
+
+static void PpuInnerMosaicSeed(int gy) {
+    if (!sPpuInnerMosaicLayers)
+        return;
+    const PpuLineState* reference = &sPpuLines[gy - gy % sPpuInnerMosaicHeight];
+    for (int a = 0; a < 2; a++) {
+        if (!(sPpuInnerMosaicLayers & (1u << a)))
+            continue;
+        sMosAffX[a] = reference->affX[a];
+        sMosAffY[a] = reference->affY[a];
+        sMosNextGy[a] = gy;
+    }
+}
+
 static void PpuInnerRow(int y) {
     int gy = y - gPortScreen.originY;
     const PpuLineState* l = &sPpuLines[gy];
@@ -4984,9 +5000,37 @@ static void PpuInnerRow(int y) {
     sPpuOamView = l->oam;
     sAffX[0] = l->affX[0]; sAffX[1] = l->affX[1];
     sAffY[0] = l->affY[0]; sAffY[1] = l->affY[1];
+    PpuInnerMosaicSeed(gy);
     RenderLine(y, gy);
     sPpuIoView = NULL;
     sPpuPlttView = sPpuOamView = NULL;
+}
+
+/* Only use the block-first reference when the raster cannot change it. */
+static bool PpuRasterStatic(void) {
+    if (IO16(0x04) & 0x30)
+        return false;
+    for (int channel = 0; channel < 4; channel++)
+        if ((IO16(0xBA + channel * 12) & 0xB000) == 0xA000)
+            return false;
+    return true;
+}
+
+static unsigned PpuStaticMosaicLayers(void) {
+    const char* enabled;
+    PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_STATIC_MOSAIC");
+    if (!enabled || !PpuAffineMosaicDependent() || !PpuRasterStatic())
+        return 0;
+    const unsigned display = IO16(0x00);
+    const unsigned mode = display & 7u;
+    if (mode != 1 && mode != 2)
+        return 0;
+    unsigned layers = 0;
+    if ((display & 0x400) && (IO16(0x0C) & 0x40) && !sTitleLogoBgHd)
+        layers |= 1;
+    if (mode == 2 && (display & 0x800) && (IO16(0x0E) & 0x40))
+        layers |= 2;
+    return layers;
 }
 
 /* Whether this frame's picture rows wait for the line events (PpuInnerKeep) */
@@ -5011,8 +5055,14 @@ static int PpuInnerBegin(void) {
     }
     /* The HD bar appends to a shared draw queue. Native title fades only
        write the worker's own cache and the row being drawn. */
-    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80) || !PpuRowsIndependent())
+    sPpuInnerMosaicLayers = 0;
+    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80))
         return 0;
+    const unsigned mosaicLayers = PpuStaticMosaicLayers();
+    if (!PpuRowsIndependent(mosaicLayers != 0))
+        return 0;
+    sPpuInnerMosaicLayers = mosaicLayers;
+    sPpuInnerMosaicHeight = ((IO16(0x4C) >> 4) & 15) + 1;
     sPpuInnerShared++;
     sPpuPlttKept = sPpuOamKept = -1;
     sPpuInnerFrom = 0;
@@ -5025,7 +5075,7 @@ static void PpuInnerDraw(int gy1);
 /* Line gy, after its LineStart and LatchAffine: keep what its drawing reads. 0: draw this line and the rest now. */
 static int PpuInnerKeep(int gy, int memoryMayChange) {
     PpuLineState* l = &sPpuLines[gy];
-    if (PpuAffineMosaicDependent()) { /* a live affine mosaic carries its reference */
+    if (!sPpuInnerMosaicLayers && PpuAffineMosaicDependent()) { /* a live affine mosaic carries its reference */
         PpuInnerDraw(gy);
         return 0;
     }
@@ -5056,6 +5106,12 @@ static void PpuInnerDraw(int gy1) {
     PpuRunBatch(NULL, y0, y1);
     if (check)
         PpuCheckRows(y0, y1, sPpuInnerGlyphs, "picture");
+    if (sPpuInnerMosaicLayers) {
+        PpuInnerMosaicSeed(gy1 - 1);
+        for (int a = 0; a < 2; a++)
+            if (sPpuInnerMosaicLayers & (1u << a))
+                sMosNextGy[a] = gy1;
+    }
     sAffX[0] = affX[0]; sAffX[1] = affX[1]; /* this core drew rows too: the line events' reference goes on */
     sAffY[0] = affY[0]; sAffY[1] = affY[1];
     sPpuInnerFrom = gy1;
@@ -5064,19 +5120,15 @@ static void PpuInnerDraw(int gy1) {
 static bool PpuCanDeferTop(void) {
     if (!sFuseAllRows || !sFusePictureBottom || sPpuVerify || sPpuWorkers <= 0 ||
         gPortScreen.originY <= 0 || gPortScreen.originY + GBA_SCREEN_H >= gPortScreen.height ||
-        (IO16(0x00) & 7) != 0 || (IO16(0x04) & 0x30))
+        (IO16(0x00) & 7) != 0 || !PpuRasterStatic())
         return false;
-    for (int channel = 0; channel < 4; channel++) {
-        /* Enabled HBlank DMA can change what the top margin must display. */
-        if ((IO16(0xBA + channel * 12) & 0xB000) == 0xA000)
-            return false;
-    }
     return PpuInnerBegin();
 }
 
 static bool PpuDrawPictureAndBottom(const OuterRows* top) {
     const int bottom = gPortScreen.originY + GBA_SCREEN_H;
-    if (!sFusePictureBottom || sPpuVerify || sPpuInnerFrom != 0 || bottom >= gPortScreen.height)
+    if (!sFusePictureBottom || sPpuVerify || sPpuInnerMosaicLayers ||
+        sPpuInnerFrom != 0 || bottom >= gPortScreen.height)
         return false;
     /* The last HBlank has run. Picture rows read their own snapshots and
        bottom rows read the final state, with output committed in row order. */
@@ -5130,7 +5182,7 @@ static void RenderOuterRows(int y0, int y1, int below) {
     const size_t pixels = (size_t)(y1 - y0) * gPortScreen.width;
     if (sPpuWorkers > 0 && pixels < minBatchPixels)
         sPpuStats[4]++;
-    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent()) {
+    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent(false)) {
         int glyphStart = sBgTextCount;
         PpuRunBatch(&r, y0, y1);
         if (sPpuVerify)
