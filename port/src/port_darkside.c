@@ -337,6 +337,45 @@ int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy,
     return 1;
 }
 
+void PortDarksidePrepareBodyRow(PortDarksideBodyRow* row, const void* const* maps, int y, int cx, int cy) {
+    const uintptr_t offset = (uintptr_t)maps - (uintptr_t)gBosDsdFrameMaps;
+    row->art = NULL;
+    if (offset >= sizeof(gBosDsdFrameMaps) || offset % sizeof(gBosDsdFrameMaps[0]) || y < cy - 256 || y >= cy + 256)
+        return;
+    const int slot = (int)(offset / sizeof(gBosDsdFrameMaps[0]));
+    const int index = PoseIndex(slot);
+    if (index < 0)
+        return;
+    const DarksidePose* pose = &kPoses[index];
+    const int nativeY = (y & 511) - 256;
+    const int artY = nativeY - pose->top;
+    if ((unsigned)artY >= (unsigned)pose->rows)
+        return;
+    row->frame = (const uint16_t*)maps[2];
+    row->tiles = (const uint8_t*)gBosDsdFrameTiles[slot];
+    row->art = pose->art + artY * pose->stride;
+    row->dissolve = index == 3 ? pose : NULL;
+    row->left = cx - 256;
+    row->right = cx + 256;
+    row->width = 2 * pose->stride;
+    row->nativeY = nativeY;
+    row->artY = artY;
+}
+
+int PortDarksideBodyRowPixel(const PortDarksideBodyRow* row, int x, uint16_t* color) {
+    const int nativeX = x & 511;
+    const int artX = nativeX - DARKSIDE_ART_LEFT;
+    if (!row->art || x < row->left || x >= row->right || (unsigned)artX >= (unsigned)row->width)
+        return 0;
+    int v = (row->art[artX >> 1] >> ((artX & 1) * 4)) & 15;
+    if (row->dissolve)
+        v = ReachDissolve(row->dissolve, artX, row->artY, v);
+    if (!v || (nativeX < BEACH_W && FramePixel(row->frame, row->tiles, nativeX, row->nativeY)))
+        return 0;
+    *color = ((const uint16_t*)(uintptr_t)GBA_PLTT)[v] & 0x7fff;
+    return 1;
+}
+
 /* Atlas 9a47fba18d7749a2a54d4b9ccc8da65b revision3 approved this flank.
  * caller only requests it outside the GBA viewport, after approved pixels. */
 int PortDarksidePunchFlankPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color) {

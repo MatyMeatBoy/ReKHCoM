@@ -2090,6 +2090,17 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
         outside = 0;
     }
 
+    PortDarksideBodyRow darksideRow;
+    const char* useDarksideRow = NULL;
+    if (sDarksideLayer[bg] == 2) {
+        PORT_ENV_ONCE(useDarksideRow, SDL_getenv, "KHCOM_DARKSIDE_BODY_ROW");
+        if (useDarksideRow) {
+            const BgLatch* l = &sBgLatch[bg];
+            PortDarksidePrepareBodyRow(&darksideRow, (const void* const*)l->map, l->y + gy + (vofs - l->vofs),
+                                       l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2);
+        }
+    }
+
     int rowStart = 0, rowEnd = w;
     const char* trimMargins;
     PORT_ENV_ONCE(trimMargins, SDL_getenv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
@@ -2218,10 +2229,15 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
         if (sDarksideLayer[bg] && (sDarksideLayer[bg] == 2 || outside || gx < 0 || gx >= GBA_SCREEN_W)) {
             const BgLatch* l = &sBgLatch[bg];
             int wx = l->x + gx + (hofs - l->hofs), wy = l->y + gy + (vofs - l->vofs);
-            if (sDarksideLayer[bg] == 1 ? PortDarksideShorePixel(wx, wy, &out[x])
-                                        : PortDarksideBodyPixel((const void* const*)l->map, wx, wy,
-                                                                l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2,
-                                                                &out[x])) {
+            int painted;
+            if (sDarksideLayer[bg] == 1)
+                painted = PortDarksideShorePixel(wx, wy, &out[x]);
+            else if (useDarksideRow)
+                painted = PortDarksideBodyRowPixel(&darksideRow, wx, &out[x]);
+            else
+                painted = PortDarksideBodyPixel((const void* const*)l->map, wx, wy,
+                                                l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2, &out[x]);
+            if (painted) {
                 dtInWorld[x] = 1;
                 continue;
             }
