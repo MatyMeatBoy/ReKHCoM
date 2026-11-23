@@ -507,6 +507,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | r36s-uncapped-benchmark-20261122 | Medir capacidad real sin vsync del host Linux64 en KHCOM_FAST | integrado | codex-r36s-integer | https://github.com/MatyMeatBoy/ReKHCoM/pull/660 | Solicitud 22/11/2026 | 2026-11-22T23:33:30.756553+00:00 |
 | linux-fbdev-direct-convert | Equivalent framebuffer pixels without an intermediate converted surface | integrado | codex-retoma-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/662 | Usuario 22/11/2026: optimizaciones compartidas verificadas | 2026-11-22T23:37:51.396403+00:00 |
 | ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | integrado | codex-ga36-60fps | https://github.com/MatyMeatBoy/ReKHCoM/pull/664 | Usuario: optimizalo para que funcione a 60fps en la consola; mandato vigente de integrar los PR | 2026-11-23T02:37:47.133194+00:00 |
-| handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | pendiente | — | — | — | 2026-11-23T02:57:05.153329+00:00 |
+| handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | en_curso | codex-ga36-fullscreen | — | — | 2026-11-23T02:57:25.990263+00:00 |
 
 Integrador: libre
