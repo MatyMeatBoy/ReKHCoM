@@ -18108,10 +18108,10 @@
     "ga36-title-workers-20261123": {
       "id": "ga36-title-workers-20261123",
       "piece": "Paralelizar filas del título con fundido y guardar cachés por worker",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-title-workers",
       "created_at": "2026-11-23T06:38:58.392102+00:00",
-      "updated_at": "2026-11-23T06:39:45.645820+00:00",
+      "updated_at": "2026-11-23T06:40:18.202873+00:00",
       "branch": "lab/ga36-title-workers-compact",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/679",
       "approval": "Usuario autorizó integrar optimizaciones del port con prueba",
@@ -18121,9 +18121,15 @@
           "at": "2026-11-23T06:39:45.645820+00:00",
           "owner": "codex-ga36-title-workers",
           "detail": "QEMU título 75.61/78.03 FPS, cinco capturas exactas y PPU_VERIFY limpio."
+        },
+        {
+          "at": "2026-11-23T06:40:18.202873+00:00",
+          "owner": "codex-ga36-title-workers",
+          "detail": "Merge 8dcafc789f37bf28e145e9ac08912dfcd9cba523; título 75.61/78.03 FPS, cinco BMP exactos y VERIFY sin discrepancias."
         }
       ],
-      "claimed_at": "2026-11-23T06:39:06.785781+00:00"
+      "claimed_at": "2026-11-23T06:39:06.785781+00:00",
+      "completed_at": "2026-11-23T06:40:18.202873+00:00"
     }
   },
   "integrator": {
@@ -18132,7 +18138,7 @@
     "created_at": "2026-11-23T06:39:53.755316+00:00",
     "updated_at": "2026-11-23T06:39:53.755316+00:00"
   },
-  "updated_at": "2026-11-23T06:39:53.755316+00:00",
+  "updated_at": "2026-11-23T06:40:18.202873+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
