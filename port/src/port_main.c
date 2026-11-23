@@ -226,6 +226,8 @@ int PortFbInit(int* w, int* h);
 int PortFbActive(void);
 SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
+void PortFbWaitCopy(void);
+void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
@@ -2012,6 +2014,9 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
 }
 
 static void Present(int paced) {
+#ifdef PORT_LINUX
+    PortFbWaitCopy();
+#endif
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
@@ -3206,6 +3211,9 @@ void PortRequestQuitAll(void) {
     sQuitAllRequested = 1;
 }
 static void Quit(void) {
+#ifdef PORT_LINUX
+    PortFbStopCopy();
+#endif
     void PortHdHudShutdown(void);
     extern void PortSceneGalleryFinalShutdown(void);
     PortSramSyncIfDirty();

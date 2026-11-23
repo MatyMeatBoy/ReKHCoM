@@ -28,6 +28,36 @@ static size_t sFbOffset;
 static struct fb_var_screeninfo sVar;
 static struct fb_fix_screeninfo sFix;
 static bool sProfileFb;
+static bool sAsyncFbRequested, sAsyncFbPending, sAsyncFbStopping;
+static SDL_Thread* sAsyncFbThread;
+static SDL_Semaphore *sAsyncFbGo, *sAsyncFbDone;
+static struct {
+    uint8_t* destination;
+    const SDL_Surface* source;
+    int height;
+    size_t rowBytes;
+} sAsyncFbJob;
+
+void PortFbWaitCopy(void) {
+    if (sAsyncFbPending) {
+        SDL_WaitSemaphore(sAsyncFbDone);
+        sAsyncFbPending = false;
+    }
+}
+
+void PortFbStopCopy(void) {
+    if (!sAsyncFbThread)
+        return;
+    PortFbWaitCopy();
+    sAsyncFbStopping = true;
+    SDL_SignalSemaphore(sAsyncFbGo);
+    SDL_WaitThread(sAsyncFbThread, NULL);
+    SDL_DestroySemaphore(sAsyncFbGo);
+    SDL_DestroySemaphore(sAsyncFbDone);
+    sAsyncFbThread = NULL;
+    sAsyncFbGo = sAsyncFbDone = NULL;
+}
+
 static uint64_t sDrawTicks, sCopyTicks;
 
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy) {
@@ -78,6 +108,7 @@ int PortFbInit(int* w, int* h) {
     *w = (int)sVar.xres;
     *h = (int)sVar.yres;
     sProfileFb = SDL_getenv("KHCOM_FBDEV_PROFILE") != NULL;
+    sAsyncFbRequested = SDL_getenv("KHCOM_FBDEV_ASYNC_COPY") != NULL;
     PortLog("fbdev: %s %ux%u, %u bpp (red at bit %u)", path, sVar.xres, sVar.yres, sVar.bits_per_pixel,
             sVar.red.offset);
     return 1;
@@ -91,6 +122,7 @@ int PortFbActive(void) {
  * SDL_RenderReadPixels surface on every frame. Keep the drawing surface in
  * 32-bit colour so SDL applies the same blending before conversion to RGB565. */
 SDL_Renderer* PortFbCreateRenderer(void) {
+    PortFbWaitCopy();
     if (!sFb)
         return NULL;
     sRenderSurface = SDL_CreateSurface((int)sVar.xres, (int)sVar.yres, SDL_PIXELFORMAT_XRGB8888);
@@ -215,6 +247,35 @@ static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowByte
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);
 }
 
+static int SDLCALL FbCopyWorker(void* unused) {
+    (void)unused;
+    for (;;) {
+        SDL_WaitSemaphore(sAsyncFbGo);
+        if (sAsyncFbStopping)
+            return 0;
+        CopyRows(sAsyncFbJob.destination, sAsyncFbJob.source, sAsyncFbJob.height, sAsyncFbJob.rowBytes);
+        SDL_SignalSemaphore(sAsyncFbDone);
+    }
+}
+
+static bool StartFbCopyWorker(void) {
+    if (sAsyncFbThread)
+        return true;
+    sAsyncFbGo = SDL_CreateSemaphore(0);
+    sAsyncFbDone = SDL_CreateSemaphore(0);
+    if (sAsyncFbGo && sAsyncFbDone)
+        sAsyncFbThread = SDL_CreateThread(FbCopyWorker, "fbdev copy", NULL);
+    if (!sAsyncFbThread) {
+        SDL_DestroySemaphore(sAsyncFbGo);
+        SDL_DestroySemaphore(sAsyncFbDone);
+        sAsyncFbGo = sAsyncFbDone = NULL;
+        sAsyncFbRequested = false;
+        return false;
+    }
+    PortLog("fbdev: asynchronous panel copy active");
+    return true;
+}
+
 static SDL_PixelFormat FbFormat(void) {
     if (sVar.bits_per_pixel == 16)
         return SDL_PIXELFORMAT_RGB565;
@@ -223,6 +284,7 @@ static SDL_PixelFormat FbFormat(void) {
 
 /* Sample the visible aperture before the next frame overwrites it. */
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName) {
+    PortFbWaitCopy();
     if (!sFb || !sRenderSurface)
         return false;
     const SDL_PixelFormat format = FbFormat();
@@ -276,8 +338,22 @@ void PortFbPresent(SDL_Renderer* renderer) {
         return;
     uint64_t start = sProfileFb ? SDL_GetPerformanceCounter() : 0;
     if (sRenderSurface) {
+        PortFbWaitCopy();
         if (SDL_FlushRenderer(renderer)) {
             uint64_t ready = sProfileFb ? SDL_GetPerformanceCounter() : 0;
+            if (sAsyncFbRequested && sRenderSurface->format == FbFormat() &&
+                sRenderSurface->w == (int)sVar.xres && sRenderSurface->h == (int)sVar.yres &&
+                !SDL_MUSTLOCK(sRenderSurface) && StartFbCopyWorker()) {
+                sAsyncFbJob.destination = sFb + sFbOffset;
+                sAsyncFbJob.source = sRenderSurface;
+                sAsyncFbJob.height = sRenderSurface->h;
+                sAsyncFbJob.rowBytes = (size_t)sRenderSurface->w * (sVar.bits_per_pixel / 8);
+                sAsyncFbPending = true;
+                SDL_SignalSemaphore(sAsyncFbGo);
+                if (sProfileFb)
+                    sDrawTicks = ready - start;
+                return;
+            }
             WriteFrame(sRenderSurface);
             if (sProfileFb) {
                 sDrawTicks = ready - start;
