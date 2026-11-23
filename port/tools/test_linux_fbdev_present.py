@@ -110,6 +110,22 @@ static void Compare(SDL_PixelFormat src, SDL_PixelFormat target, int w, int h, i
     SDL_DestroySurface(surface);
 }
 
+static void CompareOwnedSurface(void) {
+    Setup(11, 13, 1, 2, 28, 16, 11);
+    int w, h;
+    assert(PortFbInit(&w, &h));
+    SDL_Renderer* renderer = PortFbCreateRenderer();
+    assert(renderer);
+    Paint(renderer);
+    LegacyPresent(renderer, expected, SDL_PIXELFORMAT_RGB565);
+    Paint(renderer);
+    PortFbPresent(renderer);
+    assert(memcmp(dst, expected, sizeof(dst)) == 0);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroySurface(sRenderSurface);
+    sRenderSurface = NULL;
+}
+
 static void Geometry(void) {
     int w, h;
     Setup(11, 13, 1, 2, 24, 16, 11);
@@ -150,28 +166,41 @@ static void Benchmark(int repeats) {
     LegacyPresent(renderer, expected, SDL_PIXELFORMAT_RGB565);
     PortFbPresent(renderer);
     assert(memcmp(dst, expected, sizeof(dst)) == 0);
-    size_t allocations[4];
-    for (int row = 0; row < 4; row++) {
-        const bool direct = row == 1 || row == 2;
+    SDL_Renderer* owned = PortFbCreateRenderer();
+    SDL_Surface* ownedSurface = sRenderSurface;
+    assert(owned);
+    Paint(owned);
+    PortFbPresent(owned);
+    assert(memcmp(dst, expected, sizeof(dst)) == 0);
+    size_t allocations[6];
+    for (int row = 0; row < 6; row++) {
+        const bool direct = row != 0 && row != 5;
+        const bool useOwned = row == 2 || row == 3;
+        SDL_Renderer* source = useOwned ? owned : renderer;
+        sRenderSurface = useOwned ? ownedSurface : NULL;
         for (int i = 0; i < 10; i++) {
-            if (direct) PortFbPresent(renderer);
-            else LegacyPresent(renderer, dst, SDL_PIXELFORMAT_RGB565);
+            if (direct) PortFbPresent(source);
+            else LegacyPresent(source, dst, SDL_PIXELFORMAT_RGB565);
         }
         allocBytes = 0;
         uint64_t start = SDL_GetPerformanceCounter();
         for (int i = 0; i < repeats; i++) {
-            if (direct) PortFbPresent(renderer);
-            else LegacyPresent(renderer, dst, SDL_PIXELFORMAT_RGB565);
+            if (direct) PortFbPresent(source);
+            else LegacyPresent(source, dst, SDL_PIXELFORMAT_RGB565);
         }
         uint64_t duration = SDL_GetPerformanceCounter() - start;
         double frameMs = duration * 1000.0 / SDL_GetPerformanceFrequency() / repeats;
         allocations[row] = allocBytes / (size_t)repeats;
         printf("%s ms/frame=%.5f allocated_bytes/frame=%zu frames=%d\n",
-               direct ? "direct" : "legacy", frameMs, allocations[row], repeats);
+               useOwned ? "owned" : direct ? "direct" : "legacy", frameMs, allocations[row], repeats);
     }
     const size_t convertedPixels = 640 * 480 * 2;
     assert(allocations[1] + convertedPixels <= allocations[0]);
-    assert(allocations[2] + convertedPixels <= allocations[3]);
+    assert(allocations[4] + convertedPixels <= allocations[5]);
+    assert(allocations[2] + 640 * 480 * 4 <= allocations[1]);
+    assert(allocations[3] + 640 * 480 * 4 <= allocations[4]);
+    SDL_DestroyRenderer(owned);
+    SDL_DestroySurface(ownedSurface);
     SDL_DestroyRenderer(renderer);
     SDL_DestroySurface(surface);
 }
@@ -191,7 +220,8 @@ int main(int argc, char** argv) {
         Compare(SDL_PIXELFORMAT_ARGB8888, SDL_PIXELFORMAT_XRGB8888, 11, 13, 1, 2, 52);
         Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_RGB565, 11, 13, 1, 2, 27);
         Compare(SDL_PIXELFORMAT_RGB24, SDL_PIXELFORMAT_RGB565, 11, 13, 1, 2, 28);
-        puts("fbdev geometry and six pixel/padding comparisons PASS");
+        CompareOwnedSurface();
+        puts("fbdev geometry and seven pixel/padding comparisons PASS");
     }
     SDL_Quit();
     return 0;

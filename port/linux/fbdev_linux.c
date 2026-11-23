@@ -20,6 +20,7 @@
 #include "port/port.h"
 
 static uint8_t* sFb;
+static SDL_Surface* sRenderSurface;
 static size_t sFbOffset;
 static struct fb_var_screeninfo sVar;
 static struct fb_fix_screeninfo sFix;
@@ -75,6 +76,23 @@ int PortFbActive(void) {
     return sFb != NULL;
 }
 
+/* Rendering into our own surface avoids allocating and copying a full-size
+ * SDL_RenderReadPixels surface on every frame. Keep the drawing surface in
+ * 32-bit colour so SDL applies the same blending before conversion to RGB565. */
+SDL_Renderer* PortFbCreateRenderer(void) {
+    if (!sFb)
+        return NULL;
+    sRenderSurface = SDL_CreateSurface((int)sVar.xres, (int)sVar.yres, SDL_PIXELFORMAT_XRGB8888);
+    if (!sRenderSurface)
+        return NULL;
+    SDL_Renderer* renderer = SDL_CreateSoftwareRenderer(sRenderSurface);
+    if (!renderer) {
+        SDL_DestroySurface(sRenderSurface);
+        sRenderSurface = NULL;
+    }
+    return renderer;
+}
+
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {
     for (int y = 0; y < h; y++)
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);
@@ -117,6 +135,11 @@ static void WriteFrame(SDL_Surface* frame) {
 void PortFbPresent(SDL_Renderer* renderer) {
     if (!sFb)
         return;
+    if (sRenderSurface) {
+        if (SDL_FlushRenderer(renderer))
+            WriteFrame(sRenderSurface);
+        return;
+    }
     SDL_Surface* frame = SDL_RenderReadPixels(renderer, NULL);
     if (frame) {
         WriteFrame(frame);

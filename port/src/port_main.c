@@ -219,6 +219,7 @@ void PortRaiseIrq(uint16_t flag) {
 /* port/linux/fbdev_linux.c: handhelds without a usable 32-bit GPU driver. */
 int PortFbInit(int* w, int* h);
 int PortFbActive(void);
+SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
 static int sFbW, sFbH;
 #endif
@@ -3745,7 +3746,11 @@ int main(int argc, char** argv) {
     PortCanvasAlloc();
     GrowPixelBuffer(&sCompositeBuf, &sCompositeCapacity, (size_t)gPortScreen.width * gPortScreen.height);
     sComposite = sCompositeBuf;
-    sRenderer = SDL_CreateRenderer(sWindow, NULL);
+#ifdef PORT_LINUX
+    sRenderer = PortFbCreateRenderer();
+#endif
+    if (sRenderer == NULL)
+        sRenderer = SDL_CreateRenderer(sWindow, NULL);
     if (sRenderer == NULL)
         PortFatal("Could not create the renderer: %s", SDL_GetError());
 #if defined(__ANDROID__) && !defined(PORT_ANDROID64)
