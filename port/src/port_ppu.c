@@ -4114,6 +4114,8 @@ static void TitleBarLine(int y, int gy) {
 
 typedef struct PpuRowTimes {
     uint64_t backgrounds, objects, compose, overlay;
+    uint32_t bgCount[4];
+    uint64_t bgTicks[4];
 } PpuRowTimes;
 static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
 static int sPpuSampleRows;
@@ -4186,12 +4188,19 @@ static void RenderLine(int y, int gy) {
     for (b = 0; b < 4; b++) {
         if (!bgOn[b])
             continue;
+        const bool affine = b >= 2 && (mode == 2 || (mode == 1 && b == 2));
+        const uint64_t layerStart = rowTimes ? SDL_GetPerformanceCounter() : 0;
+        const int kind = rowTimes ? (mode >= 3 ? 3 : affine ? 2 : !!(IO16(0x08 + 2*b) & 0x80)) : 0;
         if (mode >= 3)
             DrawBitmapBg(mode, gy, dispcnt);
-        else if (b >= 2 && (mode == 2 || (mode == 1 && b == 2)))
+        else if (affine)
             DrawAffineBg(b, gy, dispcnt);
         else
             DrawTextBg(b, gy, dispcnt, sharedLibrary);
+        if (rowTimes) {
+            rowTimes->bgCount[kind]++;
+            rowTimes->bgTicks[kind] += SDL_GetPerformanceCounter() - layerStart;
+        }
         if (sOverlay && sScreenBg[b] && sBgSplit[b])
             SplitBgLine(b, gy);
         else if (sBgClip[b] && !(sOverlay && sScreenBg[b])) {
@@ -5640,6 +5649,10 @@ void PortPpuRenderFrame(void) {
             sum->objects += sPpuRowTimes[row].objects;
             sum->compose += sPpuRowTimes[row].compose;
             sum->overlay += sPpuRowTimes[row].overlay;
+            for (int kind = 0; kind < 4; kind++) {
+                sum->bgCount[kind] += sPpuRowTimes[row].bgCount[kind];
+                sum->bgTicks[kind] += sPpuRowTimes[row].bgTicks[kind];
+            }
         }
         const double ms = 1000.0 / SDL_GetPerformanceFrequency();
         for (int band = 0; band < 2; band++) {
@@ -5647,6 +5660,10 @@ void PortPpuRenderFrame(void) {
             PortLog("ppu row work: frame %u %s backgrounds %.3f objects %.3f compose %.3f overlay %.3f core-ms",
                     (unsigned)PortFrameCount(), band ? "margins" : "picture",
                     sum->backgrounds * ms, sum->objects * ms, sum->compose * ms, sum->overlay * ms);
+            PortLog("ppu bg modes: frame %u %s text4 %u %.3f text8 %u %.3f affine %u %.3f bitmap %u %.3f",
+                    (unsigned)PortFrameCount(), band ? "margins" : "picture",
+                    sum->bgCount[0], sum->bgTicks[0] * ms, sum->bgCount[1], sum->bgTicks[1] * ms,
+                    sum->bgCount[2], sum->bgTicks[2] * ms, sum->bgCount[3], sum->bgTicks[3] * ms);
         }
     }
     if (phaseStart) {
