@@ -170,14 +170,15 @@ bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int str
 
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
-int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {
+static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outY, int outH, const SDL_Rect* cover) {
 #ifdef __ARM_NEON
     SDL_Rect viewport;
     float scaleX, scaleY;
     int logicalW, logicalH;
     SDL_RendererLogicalPresentation logicalMode;
     if (!sRenderSurface || w <= 0 || (w & 3) || h <= 0 ||
-        sRenderSurface->w / 2 != w || sRenderSurface->h != outH || (sRenderSurface->w & 1) ||
+        sRenderSurface->w / 2 != w || outY < 0 || outH <= 0 || outH > sRenderSurface->h - outY ||
+        (sRenderSurface->w & 1) ||
         SDL_MUSTLOCK(sRenderSurface) || SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
         !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
         viewport.w != sRenderSurface->w || viewport.h != sRenderSurface->h ||
@@ -185,8 +186,8 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
         !SDL_GetRenderLogicalPresentation(renderer, &logicalW, &logicalH, &logicalMode) ||
         logicalMode != SDL_LOGICAL_PRESENTATION_DISABLED || !SDL_FlushRenderer(renderer))
         return 0;
-    uint8_t* pixels = sRenderSurface->pixels;
     const int pitch = sRenderSurface->pitch;
+    uint8_t* pixels = (uint8_t*)sRenderSurface->pixels + (size_t)outY * pitch;
     if (h != outH / 2 || (outH & 1)) {
         /* SDL's nearest scaler samples the pixel centres with a 16.16 step. */
         const uint64_t step = ((uint64_t)h << 16) / outH;
@@ -238,9 +239,19 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
     }
     return 1;
 #else
-    (void)renderer; (void)src; (void)w; (void)h; (void)outH; (void)cover;
+    (void)renderer; (void)src; (void)w; (void)h; (void)outY; (void)outH; (void)cover;
     return 0;
 #endif
+}
+
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {
+    return sRenderSurface && sRenderSurface->h == outH && DrawNearest2x(renderer, src, w, h, 0, outH, cover);
+}
+
+int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest) {
+    return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
+           dest->x == 0 && dest->w == 640 &&
+           DrawNearest2x(renderer, src, w, h, (int)dest->y, (int)dest->h, NULL);
 }
 
 #ifdef __ARM_NEON

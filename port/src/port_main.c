@@ -231,6 +231,7 @@ void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
@@ -2504,6 +2505,9 @@ static void Present(int paced) {
                 }
             }
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
+            if (!drawn2x && sFitScale > 0 && !menuCanvas && frameTex == sTexture &&
+                PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST)
+                drawn2x = PortFbDrawFit2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, &dst);
             if (!drawn2x && !(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
                   outH == gPortScreen.height * 2 &&
