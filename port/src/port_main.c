@@ -1229,31 +1229,35 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
             cell[cy * BLUR_W + cx] = 0xFF000000u | ((r * 110 / 255 / n) << 16) | ((g * 110 / 255 / n) << 8) | (b * 110 / 255 / n);
         }
     }
-    /* bilinear enlargement in code: smooth, and nothing but a plain copy
-       is left for the renderer */
+    /* The horizontal interpolation depends on only 14 source rows. Reuse
+       their unrounded values for all destination rows. */
+    static float horizontal[BLUR_H][BLUR_OUT_W][3];
+    for (cx = 0; cx < BLUR_OUT_W; cx++) {
+        float fx = (cx + 0.5f) * BLUR_W / BLUR_OUT_W - 0.5f;
+        int ix = (int)SDL_floorf(fx);
+        float tx = fx - ix;
+        int jx = SDL_clamp(ix + 1, 0, BLUR_W - 1);
+        ix = SDL_clamp(ix, 0, BLUR_W - 1);
+        for (cy = 0; cy < BLUR_H; cy++) {
+            const uint32_t a = cell[cy * BLUR_W + ix], b = cell[cy * BLUR_W + jx];
+            for (int channel = 0; channel < 3; channel++) {
+                const int shift = channel * 8;
+                horizontal[cy][cx][channel] =
+                    (float)((a >> shift) & 255) * (1 - tx) + (float)((b >> shift) & 255) * tx;
+            }
+        }
+    }
     for (cy = 0; cy < BLUR_OUT_H; cy++) {
         float fy = (cy + 0.5f) * BLUR_H / BLUR_OUT_H - 0.5f;
-        int iy = (int)SDL_floorf(fy), jy;
+        int iy = (int)SDL_floorf(fy);
         float ty = fy - iy;
-
-        jy = SDL_clamp(iy + 1, 0, BLUR_H - 1);
+        int jy = SDL_clamp(iy + 1, 0, BLUR_H - 1);
         iy = SDL_clamp(iy, 0, BLUR_H - 1);
         for (cx = 0; cx < BLUR_OUT_W; cx++) {
-            float fx = (cx + 0.5f) * BLUR_W / BLUR_OUT_W - 0.5f;
-            int ix = (int)SDL_floorf(fx), jx, sh;
-            float tx = fx - ix;
             uint32_t out = 0xFF000000u;
-
-            jx = SDL_clamp(ix + 1, 0, BLUR_W - 1);
-            ix = SDL_clamp(ix, 0, BLUR_W - 1);
-            for (sh = 0; sh < 24; sh += 8) {
-                float a = (float)((cell[iy * BLUR_W + ix] >> sh) & 255);
-                float b = (float)((cell[iy * BLUR_W + jx] >> sh) & 255);
-                float c = (float)((cell[jy * BLUR_W + ix] >> sh) & 255);
-                float d = (float)((cell[jy * BLUR_W + jx] >> sh) & 255);
-                float v = (a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + d * tx) * ty;
-
-                out |= (uint32_t)(v + 0.5f) << sh;
+            for (int channel = 0; channel < 3; channel++) {
+                float v = horizontal[iy][cx][channel] * (1 - ty) + horizontal[jy][cx][channel] * ty;
+                out |= (uint32_t)(v + 0.5f) << (channel * 8);
             }
             big[cy * BLUR_OUT_W + cx] = out;
         }
