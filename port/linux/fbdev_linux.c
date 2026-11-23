@@ -441,6 +441,11 @@ void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint3
 }
 
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {
+    /* The visible region is contiguous only when neither surface has row padding. */
+    if (rowBytes == sFix.line_length && rowBytes == (size_t)src->pitch) {
+        memcpy(dst, src->pixels, (size_t)h * rowBytes);
+        return;
+    }
     for (int y = 0; y < h; y++)
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);
 }
