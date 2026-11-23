@@ -18056,10 +18056,10 @@
     "ppu-native-tiles-no-sdl-20261123": {
       "id": "ppu-native-tiles-no-sdl-20261123",
       "piece": "Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ppu-native-builds",
       "created_at": "2026-11-23T05:20:30.037166+00:00",
-      "updated_at": "2026-11-23T05:21:47.327565+00:00",
+      "updated_at": "2026-11-23T05:22:19.702750+00:00",
       "branch": "lab/ppu-native-tile-no-sdl",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/677",
       "approval": "Usuario autorizó integrar fixes y optimizaciones comunes",
@@ -18069,9 +18069,15 @@
           "at": "2026-11-23T05:21:47.327565+00:00",
           "owner": "codex-ppu-native-builds",
           "detail": "206 fixtures de PPU sin diferencias, más 295936 comparaciones RGB555."
+        },
+        {
+          "at": "2026-11-23T05:22:19.702750+00:00",
+          "owner": "codex-ppu-native-builds",
+          "detail": "Merge 1897d35c7642221d6d25c8ece015bb2f5794a2ed. 206 escenarios sin diferencias y 295936 referencias RGB555."
         }
       ],
-      "claimed_at": "2026-11-23T05:20:38.968184+00:00"
+      "claimed_at": "2026-11-23T05:20:38.968184+00:00",
+      "completed_at": "2026-11-23T05:22:19.702750+00:00"
     }
   },
   "integrator": {
@@ -18080,7 +18086,7 @@
     "created_at": "2026-11-23T05:21:56.472748+00:00",
     "updated_at": "2026-11-23T05:21:56.472748+00:00"
   },
-  "updated_at": "2026-11-23T05:21:56.472748+00:00",
+  "updated_at": "2026-11-23T05:22:19.702750+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
