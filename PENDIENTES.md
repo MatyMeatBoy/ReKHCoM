@@ -515,4 +515,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | improved-43-title-paper-20261123 | Completar fondo del titulo y pantallas de color del perfil mejorado 4:3 | integrado | codex-ga36-title | https://github.com/MatyMeatBoy/ReKHCoM/pull/671 | Usuario: el blanco debe rellenar el 4:3 mejorado, mejora las pantallas que falten | 2026-11-23T04:00:55.150954+00:00 |
 | ga36-neon-blur-transition-20261123 | GA36: vectorizar interpolacion vertical del desenfoque y auditar la textura opaca | pr_abierto | codex-ga36-neonblur | https://github.com/MatyMeatBoy/ReKHCoM/pull/672 | — | 2026-11-23T04:08:51.464656+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-neonblur (ocupado; 2026-11-23T04:08:59.843146+00:00)
