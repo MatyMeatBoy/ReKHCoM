@@ -1818,6 +1818,14 @@ typedef struct LibrarySample {
     bool authored;
 } LibrarySample;
 
+enum { LIBRARY_PAIR_WIDTH = 320, LIBRARY_PAIR_MISS = 0xffff };
+
+typedef struct LibraryScanline {
+    int worldX, worldY;
+    bool prepared;
+    uint16_t floor[LIBRARY_PAIR_WIDTH];
+} LibraryScanline;
+
 static LibrarySample SampleLibrary(const LibraryPanelRow* row, int x, int y) {
     LibrarySample sample = {-1, -1, false};
     if ((unsigned)x >= 512 || (unsigned)y >= 512)
@@ -1851,6 +1859,27 @@ static uint16_t Preliminar130Pixel(const LibraryPanelRow* row, int bg, uint16_t 
     }
     return index >= 0 && (index & 15) ? PLTT16[index] & 0x7fff : TRANSPARENT;
 }
+
+static uint16_t Preliminar130Pair(const LibraryPanelRow* row, int x, int y, uint16_t* floor) {
+    LibrarySample sample = SampleLibrary(row, x, y);
+    if (!sample.authored) {
+        int sx, sy;
+        if (PortScene130LibrarySource(x, y, &sx, &sy)) {
+            sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, sx, sy);
+            sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, sx, sy);
+        } else {
+            sample = SampleLibrary(row, sx, sy);
+            if (!sample.authored) {
+                const int donor = x < 240 ? 64 : 480;
+                sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, donor, 64);
+                sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, donor, 64);
+            }
+        }
+    }
+    *floor = sample.floor >= 0 && (sample.floor & 15) ? PLTT16[sample.floor] & 0x7fff : TRANSPARENT;
+    return sample.books >= 0 && (sample.books & 15) ? PLTT16[sample.books] & 0x7fff : TRANSPARENT;
+}
+
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
     int white = SinglePanelIndex(l, cnt, 0, 0);
@@ -1958,7 +1987,7 @@ static const BgTextTile* MatchBgTextTile(unsigned offset, unsigned* lastOffset,
     return *lastMatch;
 }
 
-static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
+static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* libraryPair) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
     uint8_t* const dtInWorld = sInWorld;
@@ -2021,8 +2050,34 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     }
 
     (void)dispcnt;
+    const int sourceY = gy;
     if (mosV > 1)
         gy -= ((gy % mosV) + mosV) % mosV;
+    bool pairedLibrary = false;
+    if (library && libraryPair && mosH == 1) {
+        const BgLatch* l = &sBgLatch[bg];
+        const int worldX = l->x - gPortScreen.originX - sBgShiftLatched[bg] + hofs - l->hofs;
+        const int worldY = l->y + gy + vofs - l->vofs;
+        if (bg == 2) {
+            const BgLatch* floor = &sBgLatch[3];
+            const int floorMosH = (libraryRow.floorControl & 64) ? (IO16(0x4C) & 15) + 1 : 1;
+            const int floorMosV = (libraryRow.floorControl & 64) ? ((IO16(0x4C) >> 4) & 15) + 1 : 1;
+            const int floorY = sourceY - ((sourceY % floorMosV) + floorMosV) % floorMosV;
+            const int floorWorldX = floor->x - gPortScreen.originX - sBgShiftLatched[3] +
+                (IO16(0x1C) & 0x1ff) - floor->hofs;
+            const int floorWorldY = floor->y + floorY + (IO16(0x1E) & 0x1ff) - floor->vofs;
+            if (floorMosH == 1 && worldX == floorWorldX && worldY == floorWorldY) {
+                libraryPair->prepared = true;
+                libraryPair->worldX = worldX;
+                libraryPair->worldY = worldY;
+                memset(libraryPair->floor, 0xff, w * sizeof(libraryPair->floor[0]));
+                pairedLibrary = true;
+            }
+        } else {
+            pairedLibrary = libraryPair->prepared && libraryPair->worldX == worldX &&
+                libraryPair->worldY == worldY;
+        }
+    }
     py = (gy + vofs) & hmask;
     ty = py >> 3;
     fy = py & 7;
@@ -2208,7 +2263,12 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     continue;
                 }
                 if (library) {
-                    out[x] = Preliminar130Pixel(&libraryRow, bg, cnt, wx, wy);
+                    if (pairedLibrary && bg == 2)
+                        out[x] = Preliminar130Pair(&libraryRow, wx, wy, &libraryPair->floor[x]);
+                    else if (pairedLibrary && libraryPair->floor[x] != LIBRARY_PAIR_MISS)
+                        out[x] = libraryPair->floor[x];
+                    else
+                        out[x] = Preliminar130Pixel(&libraryRow, bg, cnt, wx, wy);
                     dtInWorld[x]=1;
                     continue;
                 }
@@ -4049,6 +4109,19 @@ static void RenderLine(int y, int gy) {
         bgOn[0] = 0; /* the title's illustration: drawn HD under the picture (TitleArtQueue) */
     if (sTitleArtHd & 2)
         bgOn[1] = 0;
+    LibraryScanline libraryPair;
+    LibraryScanline* sharedLibrary = NULL;
+    if (mode == 0 && w <= LIBRARY_PAIR_WIDTH && bgOn[2] && bgOn[3] &&
+            sBgLatch[2].valid && sBgLatch[3].valid && sPreliminarRecipe[2] &&
+            sPreliminarRecipe[3] && sPreliminarRecipe[2]->v[0] == 130 &&
+            sPreliminarRecipe[3]->v[0] == 130) {
+        const char* enabled;
+        PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_LIBRARY_PAIR");
+        if (enabled) {
+            libraryPair.prepared = false;
+            sharedLibrary = &libraryPair;
+        }
+    }
     for (b = 0; b < 4; b++) {
         if (!bgOn[b])
             continue;
@@ -4057,7 +4130,7 @@ static void RenderLine(int y, int gy) {
         else if (b >= 2 && (mode == 2 || (mode == 1 && b == 2)))
             DrawAffineBg(b, gy, dispcnt);
         else
-            DrawTextBg(b, gy, dispcnt);
+            DrawTextBg(b, gy, dispcnt, sharedLibrary);
         if (sOverlay && sScreenBg[b] && sBgSplit[b])
             SplitBgLine(b, gy);
         else if (sBgClip[b] && !(sOverlay && sScreenBg[b])) {
