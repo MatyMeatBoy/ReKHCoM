@@ -18160,13 +18160,13 @@
     "v291-release-preparation": {
       "id": "v291-release-preparation",
       "piece": "Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-release",
       "created_at": "2026-11-23T18:02:54.534664+00:00",
-      "updated_at": "2026-11-23T19:30:12.087384+00:00",
+      "updated_at": "2026-11-23T19:32:50.921257+00:00",
       "branch": "release/v2.9.1-20261123",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/681",
-      "approval": null,
+      "approval": "User requested v2.9.1 and GA36 alpha together once prepared.",
       "reference": "User request 2026-11-23",
       "evidence": [
         {
@@ -18178,9 +18178,15 @@
           "at": "2026-11-23T19:30:12.087384+00:00",
           "owner": "codex-ga36-release",
           "detail": "Pinned 7f907b670 source; primary release checks pass. Android ARM32/64 certificate matches v2.9. GA36 alpha fa035d0bb ZIP 42a328d37694601eb342dbc127edfe9816fa28d6b6aa6549d01768e2de53735e passed seven QEMU routes plus clean Ports smoke. Prior physical alpha completed 35 runs, Riku E1 40.54–40.61 to 50.97–51.05 FPS. Further Riku A/B improves QEMU with five equal captures and waits for hardware. Additional platform builds are in progress."
+        },
+        {
+          "at": "2026-11-23T19:32:50.921257+00:00",
+          "owner": "codex-ga36-release",
+          "detail": "Merged source . Verified identical to the build producer. Primary stage and clean GA36 proof passed. Publication follows the additional-platform checks."
         }
       ],
-      "claimed_at": "2026-11-23T18:03:04.959446+00:00"
+      "claimed_at": "2026-11-23T18:03:04.959446+00:00",
+      "completed_at": "2026-11-23T19:32:50.921257+00:00"
     },
     "v291-jp-credits-glyph": {
       "id": "v291-jp-credits-glyph",
@@ -18215,7 +18221,7 @@
     "created_at": "2026-11-23T19:32:34.312928+00:00",
     "updated_at": "2026-11-23T19:32:34.312928+00:00"
   },
-  "updated_at": "2026-11-23T19:32:34.312928+00:00",
+  "updated_at": "2026-11-23T19:32:50.921257+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
