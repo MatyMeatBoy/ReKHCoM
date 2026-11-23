@@ -508,4 +508,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | linux-fbdev-direct-convert | Equivalent framebuffer pixels without an intermediate converted surface | integrado | codex-retoma-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/662 | Usuario 22/11/2026: optimizaciones compartidas verificadas | 2026-11-22T23:37:51.396403+00:00 |
 | ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | integrado | codex-ga36-60fps | https://github.com/MatyMeatBoy/ReKHCoM/pull/664 | Usuario: optimizalo para que funcione a 60fps en la consola; mandato vigente de integrar los PR | 2026-11-23T02:37:47.133194+00:00 |
 
-Integrador: codex-ga36-60fps (ocupado; 2026-11-23T02:37:37.179088+00:00)
+Integrador: libre
