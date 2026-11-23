@@ -229,6 +229,7 @@ void PortFbPresent(SDL_Renderer* renderer);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
+bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 static int sFbW, sFbH;
 #endif
 
@@ -1968,8 +1969,10 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
 #ifdef PORT_LINUX
     const char* clipOverlay;
     const char* trimOverlay;
+    const char* nativeOverlay;
     PORT_ENV_ONCE(clipOverlay, SDL_getenv, "KHCOM_FBDEV_CLIP_OVERLAY");
     PORT_ENV_ONCE(trimOverlay, SDL_getenv, "KHCOM_FBDEV_TIGHT_OVERLAY");
+    PORT_ENV_ONCE(nativeOverlay, SDL_getenv, "KHCOM_FBDEV_NATIVE_OVERLAY");
     const int scale = (int)sOverlayScale;
     if (clipOverlay && PortFbActive() && PortFixedFullscreen() && outW == 640 && outH == 480 &&
         scale > 1 && sOverlayScale == scale) {
@@ -1985,6 +1988,11 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
                 if (trimOverlay) {
                     bounds = ScreenOverlayAlphaBounds(pixels, width, bounds);
                     if (!bounds.w || !bounds.h)
+                        return true;
+                }
+                if (nativeOverlay && scale == 4) {
+                    const SDL_Rect panel = {left + bounds.x * 4, top + bounds.y * 4, bounds.w * 4, bounds.h * 4};
+                    if (PortFbBlendOverlay4x(sRenderer, pixels + bounds.y * width + bounds.x, width, &panel))
                         return true;
                 }
                 const SDL_FRect source = {bounds.x, bounds.y, bounds.w, bounds.h};

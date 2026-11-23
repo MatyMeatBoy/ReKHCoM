@@ -144,6 +144,72 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
 #endif
 }
 
+#ifdef __ARM_NEON
+static uint8x8_t BlendOverlayChannels(uint8x8_t source, uint8x8_t dest, uint8x8_t srcAlpha, uint8x8_t dstAlpha) {
+    uint16x8_t sum = vmlal_u8(vmull_u8(source, srcAlpha), dest, dstAlpha);
+    /* Exact floor(sum / 255), including the range endpoints. */
+    sum = vaddq_u16(sum, vdupq_n_u16(1));
+    return vshrn_n_u16(vaddq_u16(sum, vshrq_n_u16(sum, 8)), 8);
+}
+#endif
+
+/* Four adjacent output pixels from one ARGB source pixel, over an XRGB
+ * surface. The caller has already clipped to complete source pixels. */
+bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest) {
+#ifdef __ARM_NEON
+    SDL_Rect viewport;
+    float scaleX, scaleY;
+    int logicalW, logicalH;
+    SDL_RendererLogicalPresentation logicalMode;
+    if (!sRenderSurface || sRenderSurface->w != 640 || sRenderSurface->h != 480 ||
+        dest->x < 0 || dest->y < 0 || dest->w <= 0 || dest->h <= 0 ||
+        dest->w > 640 - dest->x || dest->h > 480 - dest->y ||
+        ((dest->w | dest->h) & 3) || SDL_MUSTLOCK(sRenderSurface) ||
+        SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
+        !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
+        viewport.w != 640 || viewport.h != 480 ||
+        !SDL_GetRenderScale(renderer, &scaleX, &scaleY) || scaleX != 1 || scaleY != 1 ||
+        !SDL_GetRenderLogicalPresentation(renderer, &logicalW, &logicalH, &logicalMode) ||
+        logicalMode != SDL_LOGICAL_PRESENTATION_DISABLED || !SDL_FlushRenderer(renderer))
+        return false;
+
+    uint8_t* const surface = sRenderSurface->pixels;
+    const int targetPitch = sRenderSurface->pitch;
+    for (int y = 0; y < dest->h / 4; y++) {
+        uint8_t* rows = surface + (dest->y + 4 * y) * targetPitch + 4 * dest->x;
+        for (int x = 0; x < dest->w / 4; x++) {
+            const uint32_t pixel = source[x];
+            const uint8_t alpha = (uint8_t)(pixel >> 24);
+            if (!alpha)
+                continue;
+            const uint32x4_t repeated = vdupq_n_u32(pixel);
+            for (int row = 0; row < 4; row++) {
+                uint32_t* target = (uint32_t*)(rows + row * targetPitch) + 4 * x;
+                if (alpha == 255) {
+                    vst1q_u32(target, repeated);
+                } else {
+                    const uint8x16_t old = vreinterpretq_u8_u32(vld1q_u32(target));
+                    const uint8x8_t color = vget_low_u8(vreinterpretq_u8_u32(repeated));
+                    const uint8x8_t alphaIn = vdup_n_u8(alpha);
+                    const uint8x8_t alphaOut = vdup_n_u8(255 - alpha);
+                    const uint8x8_t lo = BlendOverlayChannels(color, vget_low_u8(old), alphaIn, alphaOut);
+                    const uint8x8_t hi = BlendOverlayChannels(color, vget_high_u8(old), alphaIn, alphaOut);
+                    vst1q_u32(target, vreinterpretq_u32_u8(vcombine_u8(lo, hi)));
+                }
+            }
+        }
+        source += pitch;
+    }
+    return true;
+#else
+    (void)renderer;
+    (void)source;
+    (void)pitch;
+    (void)dest;
+    return false;
+#endif
+}
+
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {
     for (int y = 0; y < h; y++)
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);
