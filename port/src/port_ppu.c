@@ -1965,7 +1965,24 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
         outside = 0;
     }
 
-    for (x = 0; x < w; x++) {
+    int rowStart = 0, rowEnd = w;
+    const char* trimMargins;
+    PORT_ENV_ONCE(trimMargins, SDL_getenv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
+    if (trimMargins && mosH == 1 && !sSpotlight &&
+        !guardPatio && !tmBoard && !ursLayer && !jfLayer && !mxField && !oogieHall && !mdLayer &&
+        !sDarksideLayer[bg] && !(bg == sSinglePanelBg && sBgLatch[bg].valid) &&
+        !(bg == 3 && gPortScreen.wide && sBgLatch[bg].valid &&
+          sPreliminarRecipe[bg] && sPreliminarRecipe[bg]->v[0] == 102) &&
+        (sScreenBg[bg] || sBgDockedLatched[bg] || (!sBgLatch[bg].valid && !sBgWorldLatched[bg].valid))) {
+        const int origin = gPortScreen.originX;
+        const int offset = origin + sBgShiftLatched[bg];
+        rowStart = SDL_clamp(SDL_max(origin + sLeft, offset), 0, w);
+        rowEnd = outside ? rowStart
+            : SDL_clamp(SDL_min(origin + sRight, offset + GBA_SCREEN_W), rowStart, w);
+        for (x = 0; x < rowStart; x++) out[x] = TRANSPARENT;
+        for (x = rowEnd; x < w; x++) out[x] = TRANSPARENT;
+    }
+    for (x = rowStart; x < rowEnd; x++) {
         int gx = x - gPortScreen.originX - sBgShiftLatched[bg];
         int px, tx, block, entry, tile, pal, fx, fyy, ci;
         const uint16_t* map;
