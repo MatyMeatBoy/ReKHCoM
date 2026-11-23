@@ -17973,10 +17973,10 @@
     "ga36-blur-packed-cache-20261123": {
       "id": "ga36-blur-packed-cache-20261123",
       "piece": "Reutilizar celdas de desenfoque y duplicar el grupo NEON, con validación ARMv7",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-blur-cache",
       "created_at": "2026-11-23T04:17:51.305683+00:00",
-      "updated_at": "2026-11-23T04:19:02.670774+00:00",
+      "updated_at": "2026-11-23T04:19:30.056245+00:00",
       "branch": "perf/ga36-blur-packed-cache",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/674",
       "approval": "Usuario autorizó integrar optimizaciones comprobadas comunes y de GA36",
@@ -17986,9 +17986,15 @@
           "at": "2026-11-23T04:19:02.670774+00:00",
           "owner": "codex-ga36-blur-cache",
           "detail": "QEMU battle ABBA 67.60/63.52 FPS candidato, cinco cuadros y framebuffer idénticos."
+        },
+        {
+          "at": "2026-11-23T04:19:30.056245+00:00",
+          "owner": "codex-ga36-blur-cache",
+          "detail": "Merge f63ee4cea1c5ea4df844686ea4d9de0c6f44e857. Cinco cuadros y framebuffer exactos."
         }
       ],
-      "claimed_at": "2026-11-23T04:17:59.025769+00:00"
+      "claimed_at": "2026-11-23T04:17:59.025769+00:00",
+      "completed_at": "2026-11-23T04:19:30.056245+00:00"
     }
   },
   "integrator": {
@@ -17997,7 +18003,7 @@
     "created_at": "2026-11-23T04:19:10.184050+00:00",
     "updated_at": "2026-11-23T04:19:10.184050+00:00"
   },
-  "updated_at": "2026-11-23T04:19:10.184050+00:00",
+  "updated_at": "2026-11-23T04:19:30.056245+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
