@@ -138,7 +138,7 @@ SDL_Renderer* PortFbCreateRenderer(void) {
 
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
-int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH) {
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {
 #ifdef __ARM_NEON
     SDL_Rect viewport;
     float scaleX, scaleY;
@@ -160,21 +160,34 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
         const uint64_t step = ((uint64_t)h << 16) / outH;
         uint64_t pos = step / 2;
         int previous = -1;
+        bool previousCovered = false;
         for (int y = 0; y < outH; y++, pos += step) {
             const int row = (int)(pos >> 16);
             uint32_t* dst = (uint32_t*)(pixels + (size_t)y * pitch);
-            if (row == previous) {
-                memcpy(dst, (const uint8_t*)dst - pitch, (size_t)w * 2 * sizeof(*dst));
+            const bool covered = cover && y >= cover->y && y < cover->y + cover->h;
+            const int left = covered ? cover->x / 2 : w;
+            const int right = covered ? (cover->x + cover->w) / 2 : w;
+            if (row == previous && covered == previousCovered) {
+                memcpy(dst, (const uint8_t*)dst - pitch, (size_t)left * 2 * sizeof(*dst));
+                if (right < w)
+                    memcpy(dst + 2 * right, (const uint8_t*)(dst + 2 * right) - pitch,
+                           (size_t)(w - right) * 2 * sizeof(*dst));
                 continue;
             }
             const uint32_t* input = src + (size_t)row * w;
             for (int x = 0; x < w; x += 4) {
+                if (covered && x == left) {
+                    x = right;
+                    if (x == w)
+                        break;
+                }
                 const uint32x4_t colors = vld1q_u32(input + x);
                 const uint32x4x2_t doubled = vzipq_u32(colors, colors);
                 vst1q_u32(dst + 2 * x, doubled.val[0]);
                 vst1q_u32(dst + 2 * x + 4, doubled.val[1]);
             }
             previous = row;
+            previousCovered = covered;
         }
         return 1;
     }
@@ -193,7 +206,7 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
     }
     return 1;
 #else
-    (void)renderer; (void)src; (void)w; (void)h; (void)outH;
+    (void)renderer; (void)src; (void)w; (void)h; (void)outH; (void)cover;
     return 0;
 #endif
 }
