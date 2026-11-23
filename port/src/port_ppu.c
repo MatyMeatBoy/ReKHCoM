@@ -3994,18 +3994,20 @@ static void LineStart(int line) {
 /* End of a line's drawing period. The V-counter interrupt is delivered here
    rather than at the start of the line: handlers typically wait for HBlank
    anyway, and either way their writes take effect from the next line. */
-static void HBlank(int line) {
+static int HBlank(int line) {
     uint16_t dispstat;
+    int memoryMayChange;
 
     IO16(0x04) |= 2;
     dispstat = IO16(0x04);
-    if ((dispstat & 4) && (dispstat & 0x20))
+    const int vcountIrq = (dispstat & 0x24) == 0x24;
+    if (vcountIrq)
         PortRaiseIrq(0x0004);
-    if (line < GBA_SCREEN_H)
-        PortDmaHBlank();
+    memoryMayChange = line < GBA_SCREEN_H && PortDmaHBlank();
     if (dispstat & 0x10)
         PortRaiseIrq(0x0002);
     IO16(0x04) &= ~2;
+    return memoryMayChange || vcountIrq || (dispstat & 0x10);
 }
 
 /* A mode switch asks for its framing before the old picture has gone: the
@@ -4695,7 +4697,7 @@ static int PpuInnerBegin(void) {
 static void PpuInnerDraw(int gy1);
 
 /* Line gy, after its LineStart and LatchAffine: keep what its drawing reads. 0: draw this line and the rest now. */
-static int PpuInnerKeep(int gy) {
+static int PpuInnerKeep(int gy, int memoryMayChange) {
     PpuLineState* l = &sPpuLines[gy];
     if (PpuAffineMosaicDependent()) { /* a live affine mosaic carries its reference */
         PpuInnerDraw(gy);
@@ -4704,9 +4706,9 @@ static int PpuInnerKeep(int gy) {
     memcpy(l->io, (const void*)(uintptr_t)GBA_IO, PPU_IO_KEPT);
     l->affX[0] = sAffX[0]; l->affX[1] = sAffX[1];
     l->affY[0] = sAffY[0]; l->affY[1] = sAffY[1];
-    if (sPpuPlttKept < 0 || memcmp(sPpuPltt[sPpuPlttKept], (const void*)(uintptr_t)GBA_PLTT, 1024))
+    if (sPpuPlttKept < 0 || (memoryMayChange && memcmp(sPpuPltt[sPpuPlttKept], (const void*)(uintptr_t)GBA_PLTT, 1024)))
         memcpy(sPpuPltt[++sPpuPlttKept], (const void*)(uintptr_t)GBA_PLTT, 1024);
-    if (sPpuOamKept < 0 || memcmp(sPpuOam[sPpuOamKept], (const void*)(uintptr_t)GBA_OAM, 1024))
+    if (sPpuOamKept < 0 || (memoryMayChange && memcmp(sPpuOam[sPpuOamKept], (const void*)(uintptr_t)GBA_OAM, 1024)))
         memcpy(sPpuOam[++sPpuOamKept], (const void*)(uintptr_t)GBA_OAM, 1024);
     l->pltt = sPpuPltt[sPpuPlttKept];
     l->oam = sPpuOam[sPpuOamKept];
@@ -4850,15 +4852,16 @@ void PortPpuRenderFrame(void) {
 #ifdef PORT_PPU_THREADS
     if (PpuInnerBegin()) {
         int kept = 1;
+        int memoryMayChange = 1;
         for (gy = 0; gy < GBA_SCREEN_H; gy++) {
             LineStart(gy);
             LatchAffine(0);
             if (kept)
-                kept = PpuInnerKeep(gy);
+                kept = PpuInnerKeep(gy, memoryMayChange);
             if (!kept)
                 RenderLine(gy + gPortScreen.originY, gy);
             StepAffine(1);
-            HBlank(gy);
+            memoryMayChange = HBlank(gy);
         }
         if (kept)
             PpuInnerDraw(GBA_SCREEN_H);

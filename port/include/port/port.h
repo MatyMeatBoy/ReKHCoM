@@ -363,7 +363,7 @@ uint32_t PortTicks(void);
 
 /* ---- DMA (port_dma.c) ---------------------------------------------------- */
 
-void PortDmaHBlank(void);
+int PortDmaHBlank(void);
 void PortDmaVBlank(void);
 
 /* ---- video (port_ppu.c) -------------------------------------------------- */

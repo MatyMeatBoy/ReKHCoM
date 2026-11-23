@@ -142,7 +142,8 @@ void PortDmaSet(uint32_t ch, const void* src, void* dst, uint32_t cnt) {
     }
 }
 
-static void RunTimed(uint32_t timing) {
+static int RunTimed(uint32_t timing) {
+    int transferred = 0;
     int ch;
 
     for (ch = 0; ch < 4; ch++) {
@@ -158,19 +159,21 @@ static void RunTimed(uint32_t timing) {
         if (!d->armed || d->regSad != IO32(base) || d->regDad != IO32(base + 4) || d->regCnt != cnt)
             Latch(ch);
         Transfer(ch, cnt);
+        transferred = 1;
         if (!(cnt & DMA_REPEAT)) {
             IO32(base + 8) = cnt & ~DMA_ENABLE;
             d->armed = 0;
         }
     }
+    return transferred;
 }
 
 void PortDmaVisitState(PortStateVisitor visit) {
     visit(sDma, sizeof(sDma));
 }
 
-void PortDmaHBlank(void) {
-    RunTimed(DMA_TIMING_HBLANK);
+int PortDmaHBlank(void) {
+    return RunTimed(DMA_TIMING_HBLANK);
 }
 
 void PortDmaVBlank(void) {
