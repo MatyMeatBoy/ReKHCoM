@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.9.1
+
+- Android: offer software H.264 decoding for devices that show corruption with the hardware decoder (#643). Improve handling of SDL3 background and foreground events, optional audio startup, and short writes when loading the guest image (#647).
+- HD imports: use the Riku gauge atlas for Riku portraits. The Linux launcher explains the optional HD import and accepts an owned PC installation or prepared HD folder. The HD movies control explains that credits use the GBA presentation.
+- Linux handhelds: add ARMv7 GA36 Ports and AArch64 R36S PortMaster support, default to fullscreen, and use sharp integer 2× scaling for R36S gameplay.
+- Rendering: reduce Linux framebuffer allocations and recurring background, sprite and transition work. Experimental renderer switches retain their existing defaults.
+- Controls: support generic USB joysticks and SDL2-format mapping imports.
+
 ## v2.9
 
 - Windows64/Linux64: render eligible picture and margin rows on several CPU cores with isolated worker stacks and thread-local buffers. Native Windows32 also uses its existing picture-row pool by default. Scanline-dependent effects retain their serial path; game speed, zoom and picture quality are preserved.
