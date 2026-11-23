@@ -425,6 +425,11 @@ unsigned int PortTitleFooterPixel(int side, int y) {
     return sTitleBands && y >= 0 && y < GBA_SCREEN_H && sTitleBandObj[side > 0][y] ? sTitleBand[side > 0][y] : 0;
 }
 static uint16_t sTitlePalette[256], sTitleFadeColors[49][256];
+static uint16_t sTitleColorIndex[0x8000];
+static struct {
+    uint16_t red, green, blue, color;
+} sTitleCandidates[256];
+static int sTitleCandidateCount;
 static uint8_t sTitleFadeReady[49][256];
 static int sTitlePaletteValid;
 void PortTitleArtFade(int enabled) {
@@ -3125,15 +3130,15 @@ static void TitleArtFadeLine(int gy, int bg) {
     int x, by;
     if (!sTitleArtFade || gy < 0 || gy >= GBA_SCREEN_H) return;
     by = gy > 153 ? gy - 153 : 0;
-    for (x = 0; x < gPortScreen.width; x++) {
+    const int left = PPU_MAX(0, gPortScreen.originX + (by ? 0 : 234));
+    const int right = PPU_MIN(gPortScreen.width, gPortScreen.originX + GBA_SCREEN_W);
+    for (x = left; x < right; x++) {
         int gx = x - gPortScreen.originX, rx, code, c, index, i, strength, target[3], best, distance;
-        if (gx < 0 || gx >= GBA_SCREEN_W) continue;
         rx = gx > 233 ? gx - 233 : 0;
-        if (!rx && !by) continue;
         c = sBgLine[bg][x];
-        if (c == TRANSPARENT) continue;
-        for (index = 0; index < 256 && (sTitlePalette[index] & 0x7FFF) != c; index++) {}
-        if (index == 256) continue;
+        if (c >= 0x8000) continue;
+        index = sTitleColorIndex[c];
+        if (index == UINT16_MAX) continue;
         code = by * 7 + rx;
         if (!sTitleFadeReady[code][index]) {
             strength = 255 - ((255-ramp[rx])*(255-ramp[by]) + 127)/255;
@@ -3142,13 +3147,14 @@ static void TitleArtFadeLine(int gy, int bg) {
                 target[i] = a * (255-strength) + white * strength;
             }
             best = 0; distance = 0x7FFFFFFF;
-            for (i = 0; i < 256; i++) {
-                int p = sTitlePalette[i], r = (p & 31)*255-target[0];
-                int g = ((p>>5)&31)*255-target[1], b = ((p>>10)&31)*255-target[2];
+            for (i = 0; i < sTitleCandidateCount; i++) {
+                int r = sTitleCandidates[i].red - target[0];
+                int g = sTitleCandidates[i].green - target[1];
+                int b = sTitleCandidates[i].blue - target[2];
                 int d = r*r + g*g + b*b;
                 if (d < distance) {best = i; distance = d;}
             }
-            sTitleFadeColors[code][index] = sTitlePalette[best] & 0x7FFF;
+            sTitleFadeColors[code][index] = sTitleCandidates[best].color;
             sTitleFadeReady[code][index] = 1;
         }
         sBgLine[bg][x] = sTitleFadeColors[code][index];
@@ -4142,6 +4148,21 @@ void PortPpuBeginFrame(void) {
     int b, any = 0;
     if (sTitleArtFade && (!sTitlePaletteValid || memcmp(sTitlePalette, PLTT16, sizeof(sTitlePalette)))) {
         memcpy(sTitlePalette, PLTT16, sizeof(sTitlePalette));
+        memset(sTitleColorIndex, 0xff, sizeof(sTitleColorIndex));
+        /* Keep the first matching palette slot, including duplicate colors. */
+        for (int i = 255; i >= 0; i--)
+            sTitleColorIndex[sTitlePalette[i] & 0x7fff] = (uint16_t)i;
+        sTitleCandidateCount = 0;
+        for (int i = 0; i < 256; i++) {
+            const uint16_t color = sTitlePalette[i] & 0x7fff;
+            if (sTitleColorIndex[color] != i)
+                continue;
+            const int j = sTitleCandidateCount++;
+            sTitleCandidates[j].color = color;
+            sTitleCandidates[j].red = (color & 31) * 255;
+            sTitleCandidates[j].green = ((color >> 5) & 31) * 255;
+            sTitleCandidates[j].blue = (color >> 10) * 255;
+        }
         memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
         sTitlePaletteValid = 1;
     }
