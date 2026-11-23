@@ -506,6 +506,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ppu-rgb555-handheld-20261122 | Medir mezcla RGB555 comun para R36S y GA36 | integrado | codex-retoma-rgb555 | https://github.com/MatyMeatBoy/ReKHCoM/pull/661 | Pedido de rendimiento en portatiles del 22/11/2026, optimizacion compartida con equivalencia | 2026-11-22T23:36:53.397278+00:00 |
 | r36s-uncapped-benchmark-20261122 | Medir capacidad real sin vsync del host Linux64 en KHCOM_FAST | integrado | codex-r36s-integer | https://github.com/MatyMeatBoy/ReKHCoM/pull/660 | Solicitud 22/11/2026 | 2026-11-22T23:33:30.756553+00:00 |
 | linux-fbdev-direct-convert | Equivalent framebuffer pixels without an intermediate converted surface | integrado | codex-retoma-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/662 | Usuario 22/11/2026: optimizaciones compartidas verificadas | 2026-11-22T23:37:51.396403+00:00 |
-| ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | pendiente | — | — | — | 2026-11-23T02:30:54.347079+00:00 |
+| ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | en_curso | codex-ga36-60fps | — | — | 2026-11-23T02:31:04.802053+00:00 |
 
 Integrador: libre
