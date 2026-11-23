@@ -845,6 +845,71 @@ static uint32_t MenuVisibleBottomBand(const uint32_t* row, int width, int edgeX,
     return color;
 }
 
+static uint32_t ColorPaperBackdrop(int sx, int sy) {
+    /* One shared background for both sides. Counting exact colours
+       matters during fades: 4-bit bins merged grey paper with black
+       artwork, making only the right margin go dark. */
+    static uint16_t count[8192];
+    static uint32_t colors[8192];
+    uint32_t bd = 0;
+    int best = 0;
+    memset(count, 0, sizeof(count));
+    for (int i = 0; i < GBA_SCREEN_H * SIDE_STRIP * 2; i++) {
+        int strip = i / (GBA_SCREEN_H * SIDE_STRIP);
+        int offset = i % (GBA_SCREEN_H * SIDE_STRIP);
+        uint32_t c = StripPixel(sx + strip * (GBA_SCREEN_W - SIDE_STRIP), sy,
+                                offset % SIDE_STRIP, offset / SIDE_STRIP);
+        unsigned q = (c * 2654435761u) >> 19;
+        while (count[q] && colors[q] != c) q = (q + 1) & 8191;
+        colors[q] = c;
+        if (++count[q] > best) {
+            best = count[q];
+            bd = c;
+        }
+    }
+    return bd;
+}
+
+/* Extend plain menu edges without stretching a label or repeating artwork. */
+static uint32_t MenuEdgeColor(int sx, int sy) {
+    const uint32_t* row = sComposite + sy * gPortScreen.width + sx;
+    uint32_t color = 0;
+    int balance = 0, count = 0;
+    for (int x = 0; x < GBA_SCREEN_W; x++) {
+        uint32_t pixel = row[x] & 0x00FFFFFFu;
+        if (!balance) color = pixel;
+        balance += pixel == color ? 1 : -1;
+    }
+    for (int x = 0; x < GBA_SCREEN_W; x++)
+        count += (row[x] & 0x00FFFFFFu) == color;
+    return count > GBA_SCREEN_W / 2 ? color : 0;
+}
+
+static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
+    if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
+        sFitScale > 0 || (dst->y <= 0 && dst->y + dst->h >= h))
+        return;
+    if (sSideStyle != 1 && sSideStyle != 2 && sSideStyle != 4 && sSideStyle != 5 && sSideStyle != 9)
+        return;
+    const int sx = (int)src->x, sy = (int)src->y;
+    const float top = SDL_clamp(SDL_ceilf(dst->y - 0.5f), 0.0f, (float)h);
+    const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
+    const SDL_FRect bands[2] = { { 0, 0, (float)w, top }, { 0, bottom, (float)w, h - bottom } };
+    uint32_t colors[2];
+    if (sSideStyle == 1) {
+        colors[0] = colors[1] = ColorPaperBackdrop(sx, sy);
+    } else {
+        colors[0] = MenuEdgeColor(sx, sy);
+        colors[1] = MenuEdgeColor(sx, sy + GBA_SCREEN_H - 1);
+    }
+    for (int i = 0; i < 2; i++) {
+        const uint32_t color = colors[i];
+        if (bands[i].h <= 0 || !color) continue;
+        SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+        SDL_RenderFillRect(sRenderer, &bands[i]);
+    }
+}
+
 static void SideBar(int sx, int sy, int side, float y, float scale, float x0, float x1, int edgeX) {
     float w = SIDE_STRIP * scale;
     int band;
@@ -1083,27 +1148,8 @@ static void SideBar(int sx, int sy, int side, float y, float scale, float x0, fl
         return;
     }
     if (sSideStyle == 1) {
-        /* One shared background for both sides. Counting exact colours
-           matters during fades: 4-bit bins merged grey paper with black
-           artwork, making only the right margin go dark. */
-        static uint16_t count[8192];
-        static uint32_t colors[8192];
-        uint32_t bd = 0;
-        int i, best = 0, left = side < 0 ? sx : sx - (GBA_SCREEN_W - SIDE_STRIP);
-        memset(count, 0, sizeof(count));
-        for (i = 0; i < GBA_SCREEN_H * SIDE_STRIP * 2; i++) {
-            int strip = i / (GBA_SCREEN_H * SIDE_STRIP);
-            int offset = i % (GBA_SCREEN_H * SIDE_STRIP);
-            uint32_t c = StripPixel(left + strip * (GBA_SCREEN_W - SIDE_STRIP), sy,
-                                    offset % SIDE_STRIP, offset / SIDE_STRIP);
-            unsigned q = (c * 2654435761u) >> 19;
-            while (count[q] && colors[q] != c) q = (q + 1) & 8191;
-            colors[q] = c;
-            if (++count[q] > best) {
-                best = count[q];
-                bd = c;
-            }
-        }
+        int i;
+        uint32_t bd = ColorPaperBackdrop(side < 0 ? sx : sx - (GBA_SCREEN_W - SIDE_STRIP), sy);
         /* Snap both boundaries, not just the width: truncating a
            fractional x plus a fractional width left the final column
            black in windows such as 1920x997 (software SDL renderer). */
@@ -1949,6 +1995,7 @@ static void Present(int paced) {
                 dst.y = (float)(int)((outH - dst.h) / 2);
             }
         }
+        DrawEnhancedVerticalMargins(&src, &dst, outW, outH);
         if ((sSideStyle == 3 || sSideStyle == 8 || sSideStyle == 10 || sFitScale > 0) && !menuCanvas)
             DrawBlurredReflection(&src, outW, outH);
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
