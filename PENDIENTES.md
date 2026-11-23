@@ -509,6 +509,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-render-surface-20261122 | GA36: reducir el coste de presentacion fbdev y validar PPU multinucleo | integrado | codex-ga36-60fps | https://github.com/MatyMeatBoy/ReKHCoM/pull/664 | Usuario: optimizalo para que funcione a 60fps en la consola; mandato vigente de integrar los PR | 2026-11-23T02:37:47.133194+00:00 |
 | handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | integrado | codex-ga36-fullscreen | https://github.com/MatyMeatBoy/ReKHCoM/pull/666 | Usuario: este port no debe ofrecer modo ventana | 2026-11-23T03:05:38.258278+00:00 |
 | ga36-armhf-ppu-workers-20261123 | GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate | integrado | codex-ga36-ppu | https://github.com/MatyMeatBoy/ReKHCoM/pull/667 | Usuario: integra unos 10 cambios medidos que mejoren en QEMU; beta posterior a full speed | 2026-11-23T03:20:41.384891+00:00 |
-| ppu-native-tile-runs-20261123 | PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes | pendiente | — | — | — | 2026-11-23T03:30:14.566175+00:00 |
+| ppu-native-tile-runs-20261123 | PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes | en_curso | codex-ga36-tiles | — | — | 2026-11-23T03:30:25.348182+00:00 |
 
 Integrador: libre
