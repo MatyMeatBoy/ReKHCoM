@@ -516,4 +516,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-neon-blur-transition-20261123 | GA36: vectorizar interpolacion vertical del desenfoque y auditar la textura opaca | integrado | codex-ga36-neonblur | https://github.com/MatyMeatBoy/ReKHCoM/pull/672 | Usuario: ve sumando todas las mejoras que puedas y sigue a full speed con margen | 2026-11-23T04:09:12.929858+00:00 |
 | ppu-sprite-row-cull-20261123 | PPU: descartar sprites fuera de la fila antes de consultar datos HD | pr_abierto | codex-ga36-objcull | https://github.com/MatyMeatBoy/ReKHCoM/pull/673 | — | 2026-11-23T04:13:05.044029+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-objcull (ocupado; 2026-11-23T04:13:14.459400+00:00)
