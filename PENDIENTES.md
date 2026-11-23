@@ -520,6 +520,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-skip-covered-clear-20261123 | Omitir el borrado redundante cuando NEON cubre toda la superficie | integrado | codex-ga36-clear | https://github.com/MatyMeatBoy/ReKHCoM/pull/676 | Usuario autorizó integrar optimizaciones del port | 2026-11-23T05:19:03.849408+00:00 |
 | ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | integrado | codex-ppu-native-builds | https://github.com/MatyMeatBoy/ReKHCoM/pull/677 | Usuario autorizó integrar fixes y optimizaciones comunes | 2026-11-23T05:22:19.702750+00:00 |
 | ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | integrado | codex-ga36-title-palette | https://github.com/MatyMeatBoy/ReKHCoM/pull/678 | Usuario autorizó integrar optimizaciones verificadas para el port | 2026-11-23T06:33:02.156750+00:00 |
-| ga36-title-workers-20261123 | Paralelizar filas del título con fundido y guardar cachés por worker | pendiente | — | — | — | 2026-11-23T06:38:58.392102+00:00 |
+| ga36-title-workers-20261123 | Paralelizar filas del título con fundido y guardar cachés por worker | en_curso | codex-ga36-title-workers | — | — | 2026-11-23T06:39:06.785781+00:00 |
 
 Integrador: libre
