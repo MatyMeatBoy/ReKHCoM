@@ -4115,7 +4115,7 @@ static void TitleBarLine(int y, int gy) {
 typedef struct PpuRowTimes {
     uint64_t backgrounds, objects, compose, overlay;
     uint32_t bgCount[4];
-    uint64_t bgTicks[4];
+    uint64_t bgTicks[4], layerTicks[4];
 } PpuRowTimes;
 static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
 static int sPpuSampleRows;
@@ -4199,7 +4199,9 @@ static void RenderLine(int y, int gy) {
             DrawTextBg(b, gy, dispcnt, sharedLibrary);
         if (rowTimes) {
             rowTimes->bgCount[kind]++;
-            rowTimes->bgTicks[kind] += SDL_GetPerformanceCounter() - layerStart;
+            const uint64_t ticks = SDL_GetPerformanceCounter() - layerStart;
+            rowTimes->bgTicks[kind] += ticks;
+            rowTimes->layerTicks[b] = ticks;
         }
         if (sOverlay && sScreenBg[b] && sBgSplit[b])
             SplitBgLine(b, gy);
@@ -5659,6 +5661,7 @@ void PortPpuRenderFrame(void) {
             for (int kind = 0; kind < 4; kind++) {
                 sum->bgCount[kind] += sPpuRowTimes[row].bgCount[kind];
                 sum->bgTicks[kind] += sPpuRowTimes[row].bgTicks[kind];
+                sum->layerTicks[kind] += sPpuRowTimes[row].layerTicks[kind];
             }
         }
         const double ms = 1000.0 / SDL_GetPerformanceFrequency();
@@ -5671,6 +5674,10 @@ void PortPpuRenderFrame(void) {
                     (unsigned)PortFrameCount(), band ? "margins" : "picture",
                     sum->bgCount[0], sum->bgTicks[0] * ms, sum->bgCount[1], sum->bgTicks[1] * ms,
                     sum->bgCount[2], sum->bgTicks[2] * ms, sum->bgCount[3], sum->bgTicks[3] * ms);
+            PortLog("ppu bg layers: frame %u %s bg0 %.3f bg1 %.3f bg2 %.3f bg3 %.3f core-ms",
+                    frame, band ? "margins" : "picture",
+                    sum->layerTicks[0] * ms, sum->layerTicks[1] * ms,
+                    sum->layerTicks[2] * ms, sum->layerTicks[3] * ms);
         }
     }
     if (phaseStart) {
