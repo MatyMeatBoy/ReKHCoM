@@ -1,12 +1,12 @@
 {
-  "version": "v2.9-web-alpha",
-  "source_commit": "86a5970720bca1c102f4a77cec1b8a59b2cadacf",
+  "version": "v2.9.1-web-alpha",
+  "source_commit": "7f907b670fb0997a36239072989b43e7b8535684",
   "source_dirty": false,
-  "built_utc": "2026-11-07T00:02:23.122823+00:00",
+  "built_utc": "2026-11-23T20:32:44.440358+00:00",
   "files": {
     "index.html": {
-      "bytes": 16978,
-      "sha256": "1d67d1560361bc24eb9a4026662112b71cda3d7320bc68d7b4975aeb01b05696"
+      "bytes": 16984,
+      "sha256": "887f92d9b09287f15c1b727094aa1f82a397f2e3b1057747f09ba3913f5cc8a8"
     },
     "web.css": {
       "bytes": 14481,
@@ -98,27 +98,27 @@
     },
     "rekhcom-eu.js": {
       "bytes": 208954,
-      "sha256": "56604eae9924ed1fdb8da341b16e19d1f6e5c6b03a87fb2b173c5bcab5cd5529"
+      "sha256": "8efcc13c8d282ab56ef36374fc17ef37b0a2f1dcc8e964ab4a838f145bd3c44a"
     },
     "rekhcom-eu.wasm": {
-      "bytes": 9590327,
-      "sha256": "9be8acd12ef01be02655329e2a50f222f95ee8548ca838b94c06df05d341d9ff"
+      "bytes": 9607989,
+      "sha256": "13d3162d241f799715c8d16b8ef5c0da383a045fac4fdbe863079f6af0de9995"
     },
     "rekhcom-us.js": {
       "bytes": 208832,
-      "sha256": "38de0248caca91aa9f4f134d2b4b8af48398947f713e14b9758dfa262db7a77c"
+      "sha256": "44b1af098a7502227ee34262330039c23fbaa254b76812fabd67bf59a3048bca"
     },
     "rekhcom-us.wasm": {
-      "bytes": 9644410,
-      "sha256": "7f9c48feae0388b690bea7dc1d70a66d09414e47f51a7c6edc0eeed64f4ef4a0"
+      "bytes": 9662573,
+      "sha256": "2b9cbfa2b4741e485e4b50815a3f2c9ae87b5d24d72f1e771d73199bdedbfb4e"
     },
     "rekhcom-jp.js": {
       "bytes": 207740,
-      "sha256": "c61fe71fc2ae1ca0595601a4d4589dff2afbcd38783a3894c18722d228bd0a6b"
+      "sha256": "b06ed6223e7c821562c4d6bd10432b554aec74f55fa0f920e6f50426a7c82a7c"
     },
     "rekhcom-jp.wasm": {
-      "bytes": 9500082,
-      "sha256": "49b6fa3fd992cfef26ad6abf50c816edea72f3e8e16c50b19a4bad362e1d34f9"
+      "bytes": 9518382,
+      "sha256": "6fbd910e45c29481a167c43b6015258e6ab68f9ca5d5c753847f50d8596ebdfc"
     }
   }
 }
