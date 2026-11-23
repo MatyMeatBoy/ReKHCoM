@@ -18156,10 +18156,23 @@
       ],
       "claimed_at": "2026-11-23T17:56:02.459957+00:00",
       "completed_at": "2026-11-23T18:01:36.632673+00:00"
+    },
+    "v291-release-preparation": {
+      "id": "v291-release-preparation",
+      "piece": "Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-23T18:02:54.534664+00:00",
+      "updated_at": "2026-11-23T18:02:54.534664+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "User request 2026-11-23",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T18:01:47.299809+00:00",
+  "updated_at": "2026-11-23T18:02:54.534664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
