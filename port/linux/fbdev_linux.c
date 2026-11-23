@@ -149,12 +149,33 @@ static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowByte
         memcpy(dst + (size_t)y * sFix.line_length, (const uint8_t*)src->pixels + (size_t)y * src->pitch, rowBytes);
 }
 
-static void WriteFrame(SDL_Surface* frame) {
-    SDL_PixelFormat format;
+static SDL_PixelFormat FbFormat(void) {
     if (sVar.bits_per_pixel == 16)
-        format = SDL_PIXELFORMAT_RGB565;
-    else
-        format = sVar.red.offset == 0 ? SDL_PIXELFORMAT_XBGR8888 : SDL_PIXELFORMAT_XRGB8888;
+        return SDL_PIXELFORMAT_RGB565;
+    return sVar.red.offset == 0 ? SDL_PIXELFORMAT_XBGR8888 : SDL_PIXELFORMAT_XRGB8888;
+}
+
+/* Sample the visible aperture before the next frame overwrites it. */
+bool PortFbCapturePair(const char* framebufferName, const char* rendererName) {
+    if (!sFb || !sRenderSurface)
+        return false;
+    const SDL_PixelFormat format = FbFormat();
+    SDL_Surface* snapshot = SDL_CreateSurface((int)sVar.xres, (int)sVar.yres, format);
+    if (!snapshot)
+        return false;
+    const unsigned rowBytes = sVar.xres * (sVar.bits_per_pixel / 8);
+    for (int y = 0; y < snapshot->h; y++)
+        memcpy((uint8_t*)snapshot->pixels + (size_t)y * snapshot->pitch,
+               sFb + sFbOffset + (size_t)y * sFix.line_length, rowBytes);
+    const bool saved = SDL_SaveBMP(snapshot, PortConfigPath(framebufferName));
+    SDL_DestroySurface(snapshot);
+    if (!saved || !SDL_SaveBMP(sRenderSurface, PortConfigPath(rendererName)))
+        PortLog("fbdev: could not save paired capture: %s", SDL_GetError());
+    return true;
+}
+
+static void WriteFrame(SDL_Surface* frame) {
+    const SDL_PixelFormat format = FbFormat();
     const int w = SDL_min(frame->w, (int)sVar.xres);
     const int h = SDL_min(frame->h, (int)sVar.yres);
     const unsigned bpp = sVar.bits_per_pixel / 8;

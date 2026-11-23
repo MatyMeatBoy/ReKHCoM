@@ -226,6 +226,7 @@ int PortFbInit(int* w, int* h);
 int PortFbActive(void);
 SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
+bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
 static int sFbW, sFbH;
@@ -3538,9 +3539,9 @@ static void VBlankCycle(void) {
     uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
 #if defined(PORT_LINUX)
     static int captureEnabled = -1;
-    static unsigned captureFramesHeld;
+    static unsigned captureFramesHeld, capturedTotal;
     static SDL_Time captureStarted;
-    enum { CaptureBurstStride = 5, CaptureBurstLimit = 16 };
+    enum { CaptureBurstStride = 5, CaptureBurstLimit = 16, CaptureSessionLimit = 48 };
     const uint16_t captureKeys = L_BUTTON | R_BUTTON | SELECT_BUTTON;
     if (captureEnabled < 0)
         captureEnabled = PortFixedFullscreen() && SDL_getenv("KHCOM_HANDHELD_CAPTURE") != NULL;
@@ -3554,9 +3555,15 @@ static void VBlankCycle(void) {
                 SDL_GetCurrentTime(&captureStarted);
             }
             if (captureFramesHeld < CaptureBurstStride * CaptureBurstLimit) {
-                if (captureFramesHeld % CaptureBurstStride == 0) {
-                    SDL_snprintf(sHarnessShot, sizeof(sHarnessShot), "captura-%llu-%u.bmp",
+                if (captureFramesHeld % CaptureBurstStride == 0 && capturedTotal < CaptureSessionLimit) {
+                    char framebufferName[64], rendererName[64];
+                    SDL_snprintf(framebufferName, sizeof(framebufferName), "panel-%llu-%u.bmp",
                                  (unsigned long long)captureStarted, (unsigned)sFrameCount);
+                    SDL_snprintf(rendererName, sizeof(rendererName), "captura-%llu-%u.bmp",
+                                 (unsigned long long)captureStarted, (unsigned)sFrameCount);
+                    if (!PortFbCapturePair(framebufferName, rendererName))
+                        SDL_strlcpy(sHarnessShot, rendererName, sizeof(sHarnessShot));
+                    capturedTotal++;
                 }
                 captureFramesHeld++;
             }
