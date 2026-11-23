@@ -526,4 +526,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v291-jp-credits-glyph | Use supported Japanese in the new credits help and verify the source gate | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/682 | User request of November 23 to address issues before v2.9.1; restores supported Japanese glyphs. | 2026-11-23T18:46:31.443728+00:00 |
 | fbdev-contiguous-surface-copy | Avoid per-line copy calls for fully packed Linux framebuffer surfaces | integrado | codex-ga36-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/683 | User asked for transferable port fixes across Linux framebuffer backends. | 2026-11-23T20:07:17.919790+00:00 |
 
-Integrador: codex-ga36-fbdev (ocupado; 2026-11-23T20:07:01.641949+00:00)
+Integrador: libre
