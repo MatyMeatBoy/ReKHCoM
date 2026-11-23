@@ -18130,10 +18130,23 @@
       ],
       "claimed_at": "2026-11-23T06:39:06.785781+00:00",
       "completed_at": "2026-11-23T06:40:18.202873+00:00"
+    },
+    "v291-hd-movies-credits-copy": {
+      "id": "v291-hd-movies-credits-copy",
+      "piece": "Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-23T17:55:49.082651+00:00",
+      "updated_at": "2026-11-23T17:55:49.082651+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "https://github.com/MatyMeatBoy/ReKHCoM/issues/641",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T06:40:28.806217+00:00",
+  "updated_at": "2026-11-23T17:55:49.082651+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
