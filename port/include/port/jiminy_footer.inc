@@ -64,6 +64,11 @@ void PortUiJournalFooter(SDL_Renderer* renderer, int width, float y, float heigh
     }
     if (!ready && nativeWidth > 0 && nativeWidth * fontScale > width - 8 * scale)
         fontScale = SDL_max((width - 8 * scale) / nativeWidth, 0.01f);
+    if (gPortConfig.aspect == PORT_ASPECT_4_3 && gPortConfig.graphicsMode == PORT_MODE_GBA_ENHANCED) {
+        SDL_Rect viewport;
+        if (SDL_GetRenderViewport(renderer, &viewport))
+            area.h = SDL_max(area.h, viewport.h - y);
+    }
     SDL_SetRenderDrawColor(renderer, (Uint8)(ground >> 16), (Uint8)(ground >> 8), (Uint8)ground, 255);
     SDL_RenderFillRect(renderer, &area);
     pen = 4 * scale;
