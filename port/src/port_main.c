@@ -31,6 +31,7 @@ extern int PortBridgeVideoCaps(void);
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "gba/keys.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -3512,7 +3513,27 @@ static void VBlankCycle(void) {
                 PortMenuSoundClose(); /* back in the game's own sound */
         }
     }
-    IO16(0x130) = (uint16_t)(~PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)) & 0x3FF);
+    uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
+#if defined(PORT_LINUX)
+    static int captureEnabled = -1;
+    static bool captureHeld;
+    const uint16_t captureKeys = L_BUTTON | R_BUTTON | SELECT_BUTTON;
+    if (captureEnabled < 0)
+        captureEnabled = PortFixedFullscreen() && SDL_getenv("KHCOM_HANDHELD_CAPTURE") != NULL;
+    if (captureEnabled) {
+        const bool pressed = (keys & captureKeys) == captureKeys;
+        if (pressed && !captureHeld) {
+            SDL_Time now = 0;
+            SDL_GetCurrentTime(&now);
+            SDL_snprintf(sHarnessShot, sizeof(sHarnessShot), "captura-%llu-%u.bmp",
+                         (unsigned long long)now, (unsigned)sFrameCount);
+        }
+        captureHeld = pressed;
+        if (pressed)
+            keys &= (uint16_t)~captureKeys;
+    }
+#endif
+    IO16(0x130) = (uint16_t)(~PortInputResolve(keys) & 0x3FF);
     HarnessFrame();
     {
         extern int gPortInMainLoop;
