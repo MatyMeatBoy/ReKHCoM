@@ -521,4 +521,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | integrado | codex-ppu-native-builds | https://github.com/MatyMeatBoy/ReKHCoM/pull/677 | Usuario autorizó integrar fixes y optimizaciones comunes | 2026-11-23T05:22:19.702750+00:00 |
 | ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | integrado | codex-ga36-title-palette | https://github.com/MatyMeatBoy/ReKHCoM/pull/678 | Usuario autorizó integrar optimizaciones verificadas para el port | 2026-11-23T06:33:02.156750+00:00 |
 
-Integrador: codex-ga36-title-palette (ocupado; 2026-11-23T06:32:41.587071+00:00)
+Integrador: libre
