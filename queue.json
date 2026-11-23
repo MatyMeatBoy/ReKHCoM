@@ -18217,22 +18217,28 @@
     "fbdev-contiguous-surface-copy": {
       "id": "fbdev-contiguous-surface-copy",
       "piece": "Avoid per-line copy calls for fully packed Linux framebuffer surfaces",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-fbdev",
       "created_at": "2026-11-23T20:05:03.351054+00:00",
-      "updated_at": "2026-11-23T20:06:19.876736+00:00",
+      "updated_at": "2026-11-23T20:07:17.919790+00:00",
       "branch": "perf/fbdev-contiguous-rows",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/683",
-      "approval": null,
+      "approval": "User asked for transferable port fixes across Linux framebuffer backends.",
       "reference": "GA36 physical 640x480 XRGB8888 and deterministic framebuffer padding fixtures",
       "evidence": [
         {
           "at": "2026-11-23T20:06:19.876736+00:00",
           "owner": "codex-ga36-fbdev",
           "detail": "Eight exact pixel and padding comparisons pass for b5d39e9782089d2c3454bcb81eb8731bac58c37e"
+        },
+        {
+          "at": "2026-11-23T20:07:17.919790+00:00",
+          "owner": "codex-ga36-fbdev",
+          "detail": "Eight exact geometry comparisons passed; merged 307dede5e303de7f854002afa5980f6ca1928977. Separate from the pinned v2.9.1 artifacts."
         }
       ],
-      "claimed_at": "2026-11-23T20:05:11.984220+00:00"
+      "claimed_at": "2026-11-23T20:05:11.984220+00:00",
+      "completed_at": "2026-11-23T20:07:17.919790+00:00"
     }
   },
   "integrator": {
@@ -18241,7 +18247,7 @@
     "created_at": "2026-11-23T20:07:01.641949+00:00",
     "updated_at": "2026-11-23T20:07:01.641949+00:00"
   },
-  "updated_at": "2026-11-23T20:07:01.641949+00:00",
+  "updated_at": "2026-11-23T20:07:17.920788+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
