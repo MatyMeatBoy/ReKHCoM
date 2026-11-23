@@ -5488,15 +5488,22 @@ void PortPpuRenderFrame(void) {
 #endif
     static int profilePhases = -1;
     static int profileRows = -1;
-    if (profileRows < 0)
+    static unsigned profileFrame = 0;
+    if (profileRows < 0) {
+        const char* frame = SDL_getenv("KHCOM_PPU_PROFILE_FRAME");
+        profileFrame = frame ? (unsigned)SDL_atoi(frame) : 0;
         profileRows = SDL_getenv("KHCOM_PPU_ROW_TIMES") != NULL;
-    sPpuSampleRows = profileRows && (PortFrameCount() % 30 == 0);
+    }
+    const unsigned frame = (unsigned)PortFrameCount();
+    const bool profileSample = frame % 30 == 0 ||
+        (profileFrame && frame >= profileFrame - 1 && frame <= profileFrame + 1);
+    sPpuSampleRows = profileRows && profileSample;
     if (sPpuSampleRows)
         memset(sPpuRowTimes, 0, sizeof(sPpuRowTimes));
     uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
     if (profilePhases < 0)
         profilePhases = SDL_getenv("KHCOM_PPU_PHASES") != NULL;
-    if (profilePhases && PortFrameCount() % 30 == 0)
+    if (profilePhases && profileSample)
         phaseStart = SDL_GetPerformanceCounter();
     int gy;
     int w = gPortScreen.width;
