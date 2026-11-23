@@ -4112,7 +4112,15 @@ static void TitleBarLine(int y, int gy) {
     }
 }
 
+typedef struct PpuRowTimes {
+    uint64_t backgrounds, objects, compose, overlay;
+} PpuRowTimes;
+static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
+static int sPpuSampleRows;
+
 static void RenderLine(int y, int gy) {
+    PpuRowTimes* const rowTimes = sPpuSampleRows ? &sPpuRowTimes[y] : NULL;
+    uint64_t stage = rowTimes ? SDL_GetPerformanceCounter() : 0;
     uint16_t dispcnt = IO16(0x00);
     int mode = dispcnt & 7;
     int bgOn[4] = { 0, 0, 0, 0 }, bgPrio[4];
@@ -4196,9 +4204,19 @@ static void RenderLine(int y, int gy) {
     }
     if (bgOn[1]) TitleArtFadeLine(gy, 1);
     if (bgOn[0] && sTitleArtFadeBg0) TitleArtFadeLine(gy, 0);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->backgrounds = now - stage;
+        stage = now;
+    }
     DrawObjs(gy, dispcnt);
     BuildTitleBands(gy, bgOn);
     if (bgOn[0]) TitleBarLine(y, gy);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->objects = now - stage;
+        stage = now;
+    }
     BuildWindows(gy, dispcnt);
     ComposeLine(y, dispcnt, bgOn, bgPrio, gPortFrame, 1);
     /* The presenter also uses this background in non-menu narrow scenes,
@@ -4208,8 +4226,15 @@ static void RenderLine(int y, int gy) {
         ComposeLine(y, dispcnt, bgOn, bgPrio, gPortMenuBackground, 0);
     if (sSceneNarrow)
         BuildNarrowSides(gy, dispcnt, bgOn, bgPrio);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->compose = now - stage;
+        stage = now;
+    }
     if (sOverlay && gy >= 0 && gy < GBA_SCREEN_H)
         ComposeOverlayLine(gy, dispcnt, bgOn, bgPrio);
+    if (rowTimes)
+        rowTimes->overlay = SDL_GetPerformanceCounter() - stage;
 }
 
 /* Full-height GBA scenes (menus shown as the GBA picture with side bars):
@@ -5453,6 +5478,12 @@ void PortPpuRenderFrame(void) {
         memset(sComposeGates, 0, sizeof(sComposeGates));
 #endif
     static int profilePhases = -1;
+    static int profileRows = -1;
+    if (profileRows < 0)
+        profileRows = SDL_getenv("KHCOM_PPU_ROW_TIMES") != NULL;
+    sPpuSampleRows = profileRows && (PortFrameCount() % 30 == 0);
+    if (sPpuSampleRows)
+        memset(sPpuRowTimes, 0, sizeof(sPpuRowTimes));
     uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
     if (profilePhases < 0)
         profilePhases = SDL_getenv("KHCOM_PPU_PHASES") != NULL;
@@ -5600,6 +5631,24 @@ void PortPpuRenderFrame(void) {
         }
     }
 #endif
+    if (sPpuSampleRows) {
+        PpuRowTimes bands[2] = {{0}};
+        for (int row = 0; row < gPortScreen.height; row++) {
+            const int gbaY = row - gPortScreen.originY;
+            PpuRowTimes* sum = &bands[gbaY < 0 || gbaY >= GBA_SCREEN_H];
+            sum->backgrounds += sPpuRowTimes[row].backgrounds;
+            sum->objects += sPpuRowTimes[row].objects;
+            sum->compose += sPpuRowTimes[row].compose;
+            sum->overlay += sPpuRowTimes[row].overlay;
+        }
+        const double ms = 1000.0 / SDL_GetPerformanceFrequency();
+        for (int band = 0; band < 2; band++) {
+            const PpuRowTimes* sum = &bands[band];
+            PortLog("ppu row work: frame %u %s backgrounds %.3f objects %.3f compose %.3f overlay %.3f core-ms",
+                    (unsigned)PortFrameCount(), band ? "margins" : "picture",
+                    sum->backgrounds * ms, sum->objects * ms, sum->compose * ms, sum->overlay * ms);
+        }
+    }
     if (phaseStart) {
         const uint64_t end = SDL_GetPerformanceCounter();
         const double msPerTick = 1000.0 / SDL_GetPerformanceFrequency();
