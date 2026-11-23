@@ -1247,14 +1247,10 @@ static SDL_Texture* sBlurTex;
 #define BLUR_OUT_W 320
 #define BLUR_OUT_H 180
 
-static void PresentBlurTexture(const uint32_t* pixels, int w, int h, const SDL_FRect* picture) {
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
-    const char* directBlur;
-    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
-    const char* visibleBlur;
-    PORT_ENV_ONCE(visibleBlur, SDL_getenv, "KHCOM_FBDEV_VISIBLE_BLUR");
+static SDL_Rect BlurOpaqueCover(const SDL_FRect* picture, int w, int h) {
     SDL_Rect cover = {0};
-    if (visibleBlur && picture) {
+    if (picture) {
         /* Omit only complete SIMD groups strictly under the opaque picture. */
         const int left = (SDL_clamp((int)SDL_ceilf(picture->x) + 1, 0, w) + 7) & ~7;
         const int right = SDL_clamp((int)SDL_floorf(picture->x + picture->w) - 1, 0, w) & ~7;
@@ -1263,6 +1259,17 @@ static void PresentBlurTexture(const uint32_t* pixels, int w, int h, const SDL_F
         if (right > left && bottom > top)
             cover = (SDL_Rect){left, top, right - left, bottom - top};
     }
+    return cover;
+}
+#endif
+
+static void PresentBlurTexture(const uint32_t* pixels, int w, int h, const SDL_FRect* picture) {
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    const char* directBlur;
+    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
+    const char* visibleBlur;
+    PORT_ENV_ONCE(visibleBlur, SDL_getenv, "KHCOM_FBDEV_VISIBLE_BLUR");
+    SDL_Rect cover = BlurOpaqueCover(visibleBlur ? picture : NULL, w, h);
     if (directBlur && w == BLUR_OUT_W * 2 && PortFixed480p() &&
         PortFbDrawNearest2x(sRenderer, pixels, BLUR_OUT_W, BLUR_OUT_H, h, cover.w ? &cover : NULL))
         return;
@@ -1275,6 +1282,15 @@ static void PresentBlurTexture(const uint32_t* pixels, int w, int h, const SDL_F
 static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, const SDL_FRect* cover) {
     static uint32_t cell[BLUR_W * BLUR_H], uploaded[BLUR_W * BLUR_H], big[BLUR_OUT_W * BLUR_OUT_H];
     static int uploadedValid;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    static bool partialValid;
+    static SDL_Rect partialCover;
+    const char *partialInterpolation, *directBlur;
+    PORT_ENV_ONCE(partialInterpolation, SDL_getenv, "KHCOM_BLUR_PARTIAL_INTERPOLATION");
+    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
+    const SDL_Rect hidden = BlurOpaqueCover(partialInterpolation && directBlur && PortFixed480p() &&
+                                           outW == 640 && outH == 480 ? cover : NULL, outW, outH);
+#endif
     float aspect = outW / (float)outH, cw = src->w, ch = src->h;
     int x0, y0, w, h, cx, cy;
 
@@ -1285,6 +1301,9 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, cons
             return;
         SDL_SetTextureScaleMode(sBlurTex, SDL_SCALEMODE_NEAREST);
         uploadedValid = 0;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+        partialValid = false;
+#endif
     }
     if (aspect >= cw / ch)
         ch = cw / aspect; /* wider window: keep the full width, crop rows */
@@ -1318,6 +1337,20 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, cons
         PresentBlurTexture(big, outW, outH, cover);
         return;
     }
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    if (hidden.w && partialValid && SDL_RectsEqual(&hidden, &partialCover) &&
+        memcmp(cell, uploaded, sizeof(cell)) == 0) {
+        if (PortFbDrawNearest2x(sRenderer, big, BLUR_OUT_W, BLUR_OUT_H, outH, &hidden))
+            return;
+        partialValid = false;
+        DrawBlurredReflection(src, outW, outH, NULL);
+        return;
+    }
+    const int yStep = (BLUR_OUT_H << 16) / 480;
+    const int firstHiddenRow = hidden.y ? ((yStep / 2 + (hidden.y - 1) * yStep) >> 16) + 1 : 0;
+    const int afterHiddenRow = hidden.y + hidden.h < 480
+        ? (yStep / 2 + (hidden.y + hidden.h) * yStep) >> 16 : BLUR_OUT_H;
+#endif
     /* The horizontal interpolation depends on only 14 source rows. Reuse
        their unrounded values for all destination rows. */
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
@@ -1347,7 +1380,13 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, cons
         int jy = SDL_clamp(iy + 1, 0, BLUR_H - 1);
         iy = SDL_clamp(iy, 0, BLUR_H - 1);
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
+        const bool covered = hidden.w && cy >= firstHiddenRow && cy < afterHiddenRow;
         for (cx = 0; cx < BLUR_OUT_W; cx += 4) {
+            if (covered && cx == hidden.x / 2) {
+                cx = (hidden.x + hidden.w) / 2;
+                if (cx == BLUR_OUT_W)
+                    break;
+            }
             const float32x4x4_t above = vld4q_f32(horizontal[iy][cx]);
             const float32x4x4_t below = vld4q_f32(horizontal[jy][cx]);
             uint32x4_t channels[3];
@@ -1371,6 +1410,21 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, cons
         }
 #endif
     }
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    partialValid = false;
+    if (hidden.w) {
+        uploadedValid = 0;
+        if (PortFbDrawNearest2x(sRenderer, big, BLUR_OUT_W, BLUR_OUT_H, outH, &hidden)) {
+            memcpy(uploaded, cell, sizeof(cell));
+            partialCover = hidden;
+            partialValid = true;
+            return;
+        }
+        /* SDL fallback needs a complete texture. */
+        DrawBlurredReflection(src, outW, outH, NULL);
+        return;
+    }
+#endif
     if (SDL_UpdateTexture(sBlurTex, NULL, big, BLUR_OUT_W * 4)) {
         memcpy(uploaded, cell, sizeof(cell));
         uploadedValid = 1;
