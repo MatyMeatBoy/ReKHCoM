@@ -425,6 +425,7 @@ unsigned int PortTitleFooterPixel(int side, int y) {
     return sTitleBands && y >= 0 && y < GBA_SCREEN_H && sTitleBandObj[side > 0][y] ? sTitleBand[side > 0][y] : 0;
 }
 static uint16_t sTitlePalette[256], sTitleFadeColors[49][256];
+static uint16_t sTitleColorIndex[0x8000];
 static uint8_t sTitleFadeReady[49][256];
 static int sTitlePaletteValid;
 void PortTitleArtFade(int enabled) {
@@ -3125,15 +3126,15 @@ static void TitleArtFadeLine(int gy, int bg) {
     int x, by;
     if (!sTitleArtFade || gy < 0 || gy >= GBA_SCREEN_H) return;
     by = gy > 153 ? gy - 153 : 0;
-    for (x = 0; x < gPortScreen.width; x++) {
+    const int left = PPU_MAX(0, gPortScreen.originX + (by ? 0 : 234));
+    const int right = PPU_MIN(gPortScreen.width, gPortScreen.originX + GBA_SCREEN_W);
+    for (x = left; x < right; x++) {
         int gx = x - gPortScreen.originX, rx, code, c, index, i, strength, target[3], best, distance;
-        if (gx < 0 || gx >= GBA_SCREEN_W) continue;
         rx = gx > 233 ? gx - 233 : 0;
-        if (!rx && !by) continue;
         c = sBgLine[bg][x];
-        if (c == TRANSPARENT) continue;
-        for (index = 0; index < 256 && (sTitlePalette[index] & 0x7FFF) != c; index++) {}
-        if (index == 256) continue;
+        if (c >= 0x8000) continue;
+        index = sTitleColorIndex[c];
+        if (index == UINT16_MAX) continue;
         code = by * 7 + rx;
         if (!sTitleFadeReady[code][index]) {
             strength = 255 - ((255-ramp[rx])*(255-ramp[by]) + 127)/255;
@@ -4142,6 +4143,10 @@ void PortPpuBeginFrame(void) {
     int b, any = 0;
     if (sTitleArtFade && (!sTitlePaletteValid || memcmp(sTitlePalette, PLTT16, sizeof(sTitlePalette)))) {
         memcpy(sTitlePalette, PLTT16, sizeof(sTitlePalette));
+        memset(sTitleColorIndex, 0xff, sizeof(sTitleColorIndex));
+        /* Keep the first matching palette slot, including duplicate colors. */
+        for (int i = 255; i >= 0; i--)
+            sTitleColorIndex[sTitlePalette[i] & 0x7fff] = (uint16_t)i;
         memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
         sTitlePaletteValid = 1;
     }
