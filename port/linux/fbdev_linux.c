@@ -256,6 +256,45 @@ bool PortFbBeginGlyphBatch(SDL_Renderer* renderer) {
         logicalMode == SDL_LOGICAL_PRESENTATION_DISABLED && SDL_FlushRenderer(renderer);
 }
 
+/* The fixed 480p dialogue plane already fits the viewport at integer 2x. */
+bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest) {
+#ifdef __ARM_NEON
+    if (dest->x < 0 || dest->y < 0 || dest->w <= 0 || dest->h <= 0 ||
+        dest->w > 640 - dest->x || dest->h > 480 - dest->y || ((dest->w | dest->h) & 1) ||
+        !PortFbBeginGlyphBatch(renderer))
+        return false;
+
+    uint8_t* pixels = sRenderSurface->pixels;
+    const int pitch = sRenderSurface->pitch;
+    for (int y = 0; y < dest->h / 2; y++, source += stride) {
+        uint32_t* upper = (uint32_t*)(pixels + (dest->y + y * 2) * pitch) + dest->x;
+        uint32_t* lower = (uint32_t*)((uint8_t*)upper + pitch);
+        for (int x = 0; x < dest->w / 2; x++) {
+            const uint32_t pixel = source[x];
+            const unsigned alpha = pixel >> 24;
+            if (!alpha)
+                continue;
+            const uint32x2_t color = vdup_n_u32(pixel);
+            if (alpha == 255) {
+                vst1_u32(upper + x * 2, color);
+                vst1_u32(lower + x * 2, color);
+            } else {
+                const uint8x8_t rgb = vreinterpret_u8_u32(color);
+                const uint8x8_t in = vdup_n_u8((uint8_t)alpha), out = vmvn_u8(in);
+                const uint8x8_t a = vreinterpret_u8_u32(vld1_u32(upper + x * 2));
+                const uint8x8_t b = vreinterpret_u8_u32(vld1_u32(lower + x * 2));
+                vst1_u32(upper + x * 2, vreinterpret_u32_u8(BlendOverlayChannels(rgb, a, in, out)));
+                vst1_u32(lower + x * 2, vreinterpret_u32_u8(BlendOverlayChannels(rgb, b, in, out)));
+            }
+        }
+    }
+    return true;
+#else
+    (void)renderer; (void)source; (void)stride; (void)dest;
+    return false;
+#endif
+}
+
 static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor) {
     const uint32_t rb = 0x00FF00FFu;
     uint32_t redBlue = (rgb & rb) * factor + 0x00010001u;
