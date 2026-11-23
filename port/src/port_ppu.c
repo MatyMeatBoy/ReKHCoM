@@ -1894,6 +1894,8 @@ int PortArenasApproved(void) {
 const uint16_t* PortLatinGlyphWidths(void);
 #include "port_worldname.inc"
 
+static int sUniformWorldTiles = -1;
+
 static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
@@ -2186,6 +2188,18 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                             }
                         } else {
                             const uint16_t* colors = dtPalette + palette;
+                            if (sUniformWorldTiles > 0 && run == 8) {
+                                uint32_t packed;
+                                memcpy(&packed, pixels, sizeof(packed));
+                                const unsigned index = packed & 15u;
+                                if (packed == index * 0x11111111u) {
+                                    const uint16_t color = index ? colors[index] & 0x7FFF : TRANSPARENT;
+                                    for (j = 0; j < 8; j++)
+                                        out[x + j] = color;
+                                    x += 7;
+                                    continue;
+                                }
+                            }
                             for (j = 0; j < run; j++, xx += step) {
                                 int c = (pixels[xx >> 1] >> ((xx & 1) * 4)) & 15;
                                 out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
@@ -4146,6 +4160,8 @@ static void RegisterBgSlashes(uint16_t dispcnt) {
 }
 
 void PortPpuBeginFrame(void) {
+    if (sUniformWorldTiles < 0)
+        sUniformWorldTiles = getenv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
     static int oogiePreviewInitialized;
 #ifdef __EMSCRIPTEN__
     extern int gPortWebHdReady;
