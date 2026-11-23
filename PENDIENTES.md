@@ -521,6 +521,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | integrado | codex-ppu-native-builds | https://github.com/MatyMeatBoy/ReKHCoM/pull/677 | Usuario autorizó integrar fixes y optimizaciones comunes | 2026-11-23T05:22:19.702750+00:00 |
 | ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | integrado | codex-ga36-title-palette | https://github.com/MatyMeatBoy/ReKHCoM/pull/678 | Usuario autorizó integrar optimizaciones verificadas para el port | 2026-11-23T06:33:02.156750+00:00 |
 | ga36-title-workers-20261123 | Paralelizar filas del título con fundido y guardar cachés por worker | integrado | codex-ga36-title-workers | https://github.com/MatyMeatBoy/ReKHCoM/pull/679 | Usuario autorizó integrar optimizaciones del port con prueba | 2026-11-23T06:40:18.202873+00:00 |
-| v291-hd-movies-credits-copy | Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation | pendiente | — | — | — | 2026-11-23T17:55:49.082651+00:00 |
+| v291-hd-movies-credits-copy | Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation | en_curso | codex-ga36-release | — | — | 2026-11-23T17:56:02.459957+00:00 |
 
 Integrador: libre
