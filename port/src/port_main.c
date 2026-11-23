@@ -221,6 +221,7 @@ int PortFbInit(int* w, int* h);
 int PortFbActive(void);
 SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
 static int sFbW, sFbH;
 #endif
 
@@ -2176,7 +2177,12 @@ static void Present(int paced) {
                     frameTex = sMenuAlpha;
                 }
             }
-            SDL_RenderTexture(sRenderer, frameTex, NULL, &dst);
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+            if (!(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
+                  dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
+                  PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height)))
+#endif
+                SDL_RenderTexture(sRenderer, frameTex, NULL, &dst);
         }
         worldScale = dst.w / gPortScreen.width;
         worldX = dst.x;
