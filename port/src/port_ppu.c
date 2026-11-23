@@ -3237,42 +3237,56 @@ static uint8x8_t ExpandColor5(uint16x8_t value) {
 }
 
 static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
-                                 const int* priorities, uint16_t backdrop, uint16_t marginFill, bool collect) {
-    const uint16_t* first = n > 0 ? sBgLine[order[0]] : NULL;
-    const uint16_t* second = n > 1 ? sBgLine[order[1]] : NULL;
+                                 const int* priorities, uint16_t backdrop, uint16_t marginFill,
+                                 bool objects, bool collect, unsigned docked) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const objPixels = sObjLine;
+    const uint8_t* const objPrio = sObjPrio;
+    const uint16_t* const objIndex = sObjIndex;
+    const uint8_t* const world = sInWorld;
     const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
     const uint16x8_t zero = vdupq_n_u16(0);
     const uint16x8_t back = vdupq_n_u16(backdrop);
     const uint16x8_t margin = vdupq_n_u16(marginFill);
     const int width = gPortScreen.width;
     const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
-    const uint8_t* world = sInWorld;
-    const uint8x8_t neutral = vdup_n_u8(4);
-    const uint8x8_t firstPrio = vdup_n_u8(first ? (uint8_t)priorities[order[0]] : 4);
-    const uint8x8_t secondPrio = vdup_n_u8(second ? (uint8_t)priorities[order[1]] : 4);
-    const uint8x8_t firstLayer = vdup_n_u8(first ? (uint8_t)order[0] : 4);
-    const uint8x8_t secondLayer = vdup_n_u8(second ? (uint8_t)order[1] : 4);
     const uint16x8_t offsets = {0, 1, 2, 3, 4, 5, 6, 7};
     const int row = y * width;
-
-    if (collect) {
-        memset(sMsgMask + row, 0, width);
-        memset(sOccObj + row, 0xFF, (size_t)width * sizeof(*sOccObj));
+    uint16x8_t prioritiesByLayer[4], ids[4];
+    int dockedLayers[4], dockedCount = 0;
+    for (int i = 0; i < n; i++) {
+        prioritiesByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        ids[i] = vdupq_n_u16((uint16_t)order[i]);
     }
+    for (int i = 0; i < 4; i++)
+        if (docked & (1u << i))
+            dockedLayers[dockedCount++] = i;
+
     for (int x = 0; x < width; x += 8) {
-        const uint16x8_t a = first ? vld1q_u16(first + x) : clear;
-        const uint16x8_t b = second ? vld1q_u16(second + x) : clear;
-        const uint16x8_t hasA = vmvnq_u16(vceqq_u16(a, clear));
-        const uint16x8_t hasB = vmvnq_u16(vceqq_u16(b, clear));
         const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
-        uint16x8_t fallback = vandq_u16(inWorld, back);
+        uint16x8_t pixel = vandq_u16(inWorld, back);
         if (marginFill != TRANSPARENT) {
             const int16x8_t gx = vreinterpretq_s16_u16(vaddq_u16(offsets, vdupq_n_u16((uint16_t)(x - gPortScreen.originX))));
             const uint16x8_t offscreen = outside ? vdupq_n_u16(UINT16_MAX) :
                 vorrq_u16(vcltq_s16(gx, vdupq_n_s16(0)), vcgeq_s16(gx, vdupq_n_s16(GBA_SCREEN_W)));
-            fallback = vbslq_u16(offscreen, margin, fallback);
+            pixel = vbslq_u16(offscreen, margin, pixel);
         }
-        const uint16x8_t pixel = vbslq_u16(hasA, a, vbslq_u16(hasB, b, fallback));
+        uint16x8_t bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            pixel = vbslq_u16(visible, color, pixel);
+            bgPrio = vbslq_u16(visible, prioritiesByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, ids[i], bgLayer);
+        }
+        uint16x8_t hasObj = zero, priority = zero;
+        if (objects) {
+            const uint16x8_t color = vld1q_u16(objPixels + x);
+            hasObj = vmvnq_u16(vceqq_u16(color, clear));
+            priority = vmovl_u8(vld1_u8(objPrio + x));
+            const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+            pixel = vbslq_u16(front, color, pixel);
+        }
         uint8x8x4_t channels;
         channels.val[0] = ExpandColor5(vshrq_n_u16(pixel, 10));
         channels.val[1] = ExpandColor5(vshrq_n_u16(pixel, 5));
@@ -3280,10 +3294,18 @@ static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int*
         channels.val[3] = vdup_n_u8(255);
         vst4_u8((uint8_t*)(dst + x), channels);
         if (collect) {
-            const uint8x8_t aMask = vmovn_u16(hasA);
-            const uint8x8_t bMask = vmovn_u16(hasB);
-            vst1_u8(sOccBg + row + x, vbsl_u8(aMask, firstPrio, vbsl_u8(bMask, secondPrio, neutral)));
-            vst1_u8(sOccBgLayer + row + x, vbsl_u8(aMask, firstLayer, vbsl_u8(bMask, secondLayer, neutral)));
+            uint16x8_t message = zero;
+            for (int i = 0; i < dockedCount; i++) {
+                const uint16x8_t color = vld1q_u16(layers[dockedLayers[i]] + x);
+                message = vorrq_u16(message, vmvnq_u16(vceqq_u16(color, clear)));
+            }
+            const uint16x8_t hidden = sHudLayer ? message : zero;
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            const uint16x8_t occlusion = vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX));
+            vst1_u8(sMsgMask + row + x, vmovn_u16(vandq_u16(message, vdupq_n_u16(1))));
+            vst1_u8(sOccBg + row + x, vmovn_u16(vbicq_u16(bgPrio, hidden)));
+            vst1_u8(sOccBgLayer + row + x, vmovn_u16(vbicq_u16(bgLayer, hidden)));
+            vst1q_u16(sOccObj + row + x, vbicq_u16(occlusion, hidden));
         }
     }
     sNeonOpaqueRows[y] = true;
@@ -3352,6 +3374,19 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 #endif
 
+#ifdef __ARM_NEON
+    if (sNeonOpaqueCompose && w == 320 && gPortScreen.wide && !sLutMode && !scene102Fill &&
+        !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
+        !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
+        !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
+        (docked || (objects && sLineHasObjects) || n > 2) &&
+        sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) {
+        NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                             objects && sLineHasObjects, collect, (unsigned)docked);
+        return;
+    }
+#endif
+
     /* Most extra world scanlines contain only opaque backgrounds. Windows,
        object alpha, docked messages and colour effects retain the full path.
        Keep priority metadata identical for HUD and HD text consumers. */
@@ -3359,12 +3394,6 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         (!objects || !sLineHasObjects) && !docked &&
         (effect == 0 || !(bldcnt & 0x3F)) &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
-#ifdef __ARM_NEON
-        if (sNeonOpaqueCompose && w == 320 && n <= 2 && !sLutMode && !scene102Fill) {
-            NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill, collect);
-            return;
-        }
-#endif
         for (x = 0; x < w; x++) {
             int bg = -1;
             for (b = 0; b < n; b++) {
