@@ -217,11 +217,12 @@ int main(int argc, char** argv) {
         Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_RGB565, 11, 13, 1, 2, 28);
         Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_XBGR8888, 13, 15, 1, 2, 60);
         Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_XRGB8888, 9, 8, 1, 1, 44);
+        Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_XRGB8888, 11, 13, 0, 2, 44);
         Compare(SDL_PIXELFORMAT_ARGB8888, SDL_PIXELFORMAT_XRGB8888, 11, 13, 1, 2, 52);
         Compare(SDL_PIXELFORMAT_XRGB8888, SDL_PIXELFORMAT_RGB565, 11, 13, 1, 2, 27);
         Compare(SDL_PIXELFORMAT_RGB24, SDL_PIXELFORMAT_RGB565, 11, 13, 1, 2, 28);
         CompareOwnedSurface();
-        puts("fbdev geometry and seven pixel/padding comparisons PASS");
+        puts("fbdev geometry and eight pixel/padding comparisons PASS");
     }
     SDL_Quit();
     return 0;
