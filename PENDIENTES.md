@@ -518,4 +518,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-blur-packed-cache-20261123 | Reutilizar celdas de desenfoque y duplicar el grupo NEON, con validación ARMv7 | integrado | codex-ga36-blur-cache | https://github.com/MatyMeatBoy/ReKHCoM/pull/674 | Usuario autorizó integrar optimizaciones comprobadas comunes y de GA36 | 2026-11-23T04:19:30.056245+00:00 |
 | ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | pr_abierto | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | Usuario autorizó integrar optimizaciones verificadas del port | 2026-11-23T05:13:23.134957+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-hblank (ocupado; 2026-11-23T05:13:32.258260+00:00)
