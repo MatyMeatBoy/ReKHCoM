@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <time.h>
 #undef TRANSPARENT
+#define SDL_min(a, b) (((a) < (b)) ? (a) : (b))
 #ifndef PPU_SOURCE
 #define PPU_SOURCE "../src/port_ppu.c"
 #endif
@@ -109,8 +110,9 @@ void PortLog(const char* fmt, ...) { (void)fmt; }
 int PortHd2dActive(void) { return 0; }
 uint32_t PortFrameCount(void) { return 0; }
 void PortRaiseIrq(uint16_t flags) { (void)flags; }
-void PortDmaHBlank(void) {
+int PortDmaHBlank(void) {
     if (hblank) IO16(0x10) = (IO16(0x06) + 1) * 3;
+    return hblank != 0;
 }
 
 static uint16_t color(int i) {
