@@ -525,4 +525,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v291-release-preparation | Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha | pr_abierto | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/681 | — | 2026-11-23T18:11:55.086973+00:00 |
 | v291-jp-credits-glyph | Use supported Japanese in the new credits help and verify the source gate | pr_abierto | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/682 | — | 2026-11-23T18:45:40.168704+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-release (ocupado; 2026-11-23T18:46:19.714445+00:00)
