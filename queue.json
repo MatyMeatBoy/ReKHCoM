@@ -18180,22 +18180,28 @@
     "v291-jp-credits-glyph": {
       "id": "v291-jp-credits-glyph",
       "piece": "Use supported Japanese in the new credits help and verify the source gate",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-release",
       "created_at": "2026-11-23T18:44:33.747963+00:00",
-      "updated_at": "2026-11-23T18:45:40.168704+00:00",
+      "updated_at": "2026-11-23T18:46:31.443728+00:00",
       "branch": "fix/v291-jp-credits-glyph",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/682",
-      "approval": null,
+      "approval": "User request of November 23 to address issues before v2.9.1; restores supported Japanese glyphs.",
       "reference": "https://github.com/MatyMeatBoy/ReKHCoM/pull/680",
       "evidence": [
         {
           "at": "2026-11-23T18:45:40.168704+00:00",
           "owner": "codex-ga36-release",
           "detail": "516e4317c: full check_sources.py passes in UTF-8 mode with both game strings checked."
+        },
+        {
+          "at": "2026-11-23T18:46:31.443728+00:00",
+          "owner": "codex-ga36-release",
+          "detail": "Merged 66fd177ba6bb7d5b1ac0b1678319dcd6257191af; full gate check_sources.py passed with UTF-8 terminal."
         }
       ],
-      "claimed_at": "2026-11-23T18:44:40.843891+00:00"
+      "claimed_at": "2026-11-23T18:44:40.843891+00:00",
+      "completed_at": "2026-11-23T18:46:31.443728+00:00"
     }
   },
   "integrator": {
@@ -18204,7 +18210,7 @@
     "created_at": "2026-11-23T18:46:19.714445+00:00",
     "updated_at": "2026-11-23T18:46:19.714445+00:00"
   },
-  "updated_at": "2026-11-23T18:46:19.714445+00:00",
+  "updated_at": "2026-11-23T18:46:31.443728+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
