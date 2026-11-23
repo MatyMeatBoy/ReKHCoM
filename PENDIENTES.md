@@ -511,7 +511,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-armhf-ppu-workers-20261123 | GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate | integrado | codex-ga36-ppu | https://github.com/MatyMeatBoy/ReKHCoM/pull/667 | Usuario: integra unos 10 cambios medidos que mejoren en QEMU; beta posterior a full speed | 2026-11-23T03:20:41.384891+00:00 |
 | ppu-native-tile-runs-20261123 | PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes | integrado | codex-ga36-tiles | https://github.com/MatyMeatBoy/ReKHCoM/pull/668 | Usuario: ve sumando todas las mejoras que puedas | 2026-11-23T03:36:21.222044+00:00 |
 | battle-blur-separable-20261123 | Reducir el coste del desenfoque de transicion de combate conservando pixeles | integrado | codex-ga36-blur | https://github.com/MatyMeatBoy/ReKHCoM/pull/669 | Usuario: ve sumando todas las mejoras que puedas y sigue hasta full speed con margen | 2026-11-23T03:44:46.182653+00:00 |
-| ga36-fb-neon-2x-20261123 | GA36: dibujar el cuadro opaco 2x directamente con NEON y conservar ruta SDL | en_curso | codex-ga36-neon | — | — | 2026-11-23T03:45:40.866325+00:00 |
+| ga36-fb-neon-2x-20261123 | GA36: dibujar el cuadro opaco 2x directamente con NEON y conservar ruta SDL | pr_abierto | codex-ga36-neon | https://github.com/MatyMeatBoy/ReKHCoM/pull/670 | — | 2026-11-23T03:53:15.639825+00:00 |
 | improved-43-title-paper-20261123 | Completar fondo del titulo y pantallas de color del perfil mejorado 4:3 | en_curso | codex-ga36-title | — | — | 2026-11-23T03:51:11.625460+00:00 |
 
 Integrador: libre
