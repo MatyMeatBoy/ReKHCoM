@@ -2273,8 +2273,8 @@ scalar_world:
             if (tileOff < 0x10000 &&
                 (!sHdText || (entry & 0xC00) || BgTextTileAt(tileOff)->code <= 0x20)) {
                 const int localX = x - gPortScreen.originX;
-                const int end = SDL_min(w - x, SDL_min(sRight - localX, GBA_SCREEN_W - gx));
-                const int count = SDL_min(8 - (px & 7), end);
+                const int end = PPU_MIN(w - x, PPU_MIN(sRight - localX, GBA_SCREEN_W - gx));
+                const int count = PPU_MIN(8 - (px & 7), end);
                 const uint8_t* row = VRAM8 + tileOff + fyy * 4;
                 const uint16_t* palette = dtPalette + (entry >> 12) * 16;
                 const int step = (entry & 0x400) ? -1 : 1;
