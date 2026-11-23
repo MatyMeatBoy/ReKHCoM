@@ -524,5 +524,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v291-hd-movies-credits-copy | Clarify the HD video controls and preserved GBA credits for v2.9.1; independent of the claimed Riku audio investigation | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/680 | User request on 2026-11-23 to address open issues before the coordinated v2.9.1 release; text-only clarification. | 2026-11-23T18:01:36.632673+00:00 |
 | v291-release-preparation | Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/681 | User requested v2.9.1 and GA36 alpha together once prepared. | 2026-11-23T19:32:50.921257+00:00 |
 | v291-jp-credits-glyph | Use supported Japanese in the new credits help and verify the source gate | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/682 | User request of November 23 to address issues before v2.9.1; restores supported Japanese glyphs. | 2026-11-23T18:46:31.443728+00:00 |
+| fbdev-contiguous-surface-copy | Avoid per-line copy calls for fully packed Linux framebuffer surfaces | pendiente | — | — | — | 2026-11-23T20:05:03.351054+00:00 |
 
 Integrador: libre
