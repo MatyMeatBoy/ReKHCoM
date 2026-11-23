@@ -413,11 +413,16 @@ static int H_touch_poll(HostTouch* fingers, int max) { (void)fingers; (void)max;
 static int H_app_state(void) { return 0; }
 static int H_quit_requested(void) { return sQuit; }
 /* the image's full screen row arrives here as "\001fullscreen=0/1" (port/ps5/guest/src/sdl_shim.c) */
+static int FixedFullscreen(void) {
+    const char* fixed = getenv("KHCOM_FIXED_FULLSCREEN");
+    return fixed && strcmp(fixed, "1") == 0;
+}
+
 static void H_set_title(const char* s) {
     if (!sWindow || !s)
         return;
     if (s[0] == '\x01') {
-        if (!strncmp(s + 1, "fullscreen=", 11))
+        if (!strncmp(s + 1, "fullscreen=", 11) && (s[12] == '1' || !FixedFullscreen()))
             fprintf(stderr, "[rekhcom64] fullscreen %d\n",
                     SDL_SetWindowFullscreen(sWindow, s[12] == '1') ? s[12] - '0' : -1);
         return;
@@ -563,7 +568,7 @@ int main(int argc, char** argv) {
     {
         /* full screen as kh_com.ini says (the Steam Deck package's preset), or REKHCOM_FULLSCREEN=1 */
         char ini[1200], line[256];
-        int full = getenv("REKHCOM_FULLSCREEN") != NULL;
+        int full = FixedFullscreen() || getenv("REKHCOM_FULLSCREEN") != NULL;
         FILE* cfg;
         snprintf(ini, sizeof(ini), "%s/kh_com.ini", sData);
         if (!full && (cfg = fopen(ini, "r")) != NULL) {

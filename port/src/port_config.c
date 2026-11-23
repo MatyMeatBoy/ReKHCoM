@@ -416,10 +416,24 @@ static void PortConfigDeviceDefaults(void) {
     PortLog("Device profile: %s", profile);
 }
 
+int PortFixedFullscreen(void) {
+#if defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
+    const char* fixed = SDL_getenv("KHCOM_FIXED_FULLSCREEN");
+    return fixed && SDL_strcmp(fixed, "1") == 0;
+#else
+    return 0;
+#endif
+}
+
 void PortConfigLoad(void) {
     PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
+    if (PortFixedFullscreen()) {
+        gPortConfig.fullscreen = 1;
+        gPortConfig.fullscreenWidth = 0;
+        gPortConfig.fullscreenHeight = 0;
+    }
 }
 
 static void PortConfigLoadFile(void) {

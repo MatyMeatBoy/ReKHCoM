@@ -102,14 +102,14 @@ class R36SPortTest(unittest.TestCase):
         (portmaster / 'control.txt').write_bytes(b'''get_controls() { sdl_controllerconfig=mapped; }
 pm_finish() { printf 'finished\\n' >> "$GAMEDIR/result"; }
 ''')
-        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$SDL_GAMECONTROLLERCONFIG" "$KHCOM_TALL_FIT" "$KHCOM_CONFIG" "$@" > result
+        (game / 'ReKHCoM.sh').write_bytes(b'''printf '%s\\n' "$SDL_VIDEO_DRIVER" "$SDL_AUDIO_DRIVER" "$SDL_GAMECONTROLLERCONFIG" "$KHCOM_TALL_FIT" "$KHCOM_FIXED_FULLSCREEN" "$KHCOM_CONFIG" "$@" > result
 exit 17
 ''')
         profile = 'fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0'
         for video, mapping, tall_fit, settings, expected in (
-            ('', '', '', '', ['kmsdrm', 'alsa', 'mapped', '0', profile]),
+            ('', '', '', '', ['kmsdrm', 'alsa', 'mapped', '0', '1', profile]),
             ('dummy', 'override', '1', 'fullscreen=0;zoom=6',
-             ['dummy', 'alsa', 'override', '1', profile + ';fullscreen=0;zoom=6']),
+             ['dummy', 'alsa', 'override', '1', '1', profile + ';fullscreen=0;zoom=6']),
         ):
             env = dict(os.environ, SDL_VIDEO_DRIVER=video, SDL_AUDIO_DRIVER='',
                        SDL_GAMECONTROLLERCONFIG=mapping, KHCOM_TALL_FIT=tall_fit, KHCOM_CONFIG=settings)

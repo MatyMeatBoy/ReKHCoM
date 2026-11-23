@@ -3067,9 +3067,11 @@ static void PumpEvents(void) {
                     continue;
                 }
                 if ((ev.key.key == SDLK_RETURN && (ev.key.mod & SDL_KMOD_ALT)) || ev.key.key == SDLK_F11) {
-                    gPortConfig.fullscreen = !gPortConfig.fullscreen;
-                    ApplyWindowMode();
-                    PortConfigSave();
+                    if (!PortFixedFullscreen()) {
+                        gPortConfig.fullscreen = !gPortConfig.fullscreen;
+                        ApplyWindowMode();
+                        PortConfigSave();
+                    }
                     continue;
                 }
                 break;
