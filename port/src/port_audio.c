@@ -256,6 +256,10 @@ static void PsgRender(int n, int rate) {
         }
     }
 
+    const char* reuseIntegral;
+    PORT_ENV_ONCE(reuseIntegral, SDL_getenv, "KHCOM_PSG_REUSE_INTEGRAL");
+    int integralDuty[2] = {-1, -1};
+    double integralEnd[2] = {0};
     PsgFrameRegisters();
     for (i = 0; i < n; i++) {
         float l = 0, r = 0;
@@ -282,9 +286,17 @@ static void PsgRender(int n, int rate) {
                     double hz = 131072.0 / (2048 - c->freq);
                     double inc = hz * 8.0 / rate, p0 = c->phase;
                     c->phase += inc;
-                    s = (float)((DutyIntegral(duty, c->phase) - DutyIntegral(duty, p0)) / inc) * (float)c->volume;
-                    if (c->phase >= 8.0)
+                    const double end = DutyIntegral(duty, c->phase);
+                    const double begin = reuseIntegral && integralDuty[ch] == duty
+                        ? integralEnd[ch] : DutyIntegral(duty, p0);
+                    s = (float)((end - begin) / inc) * (float)c->volume;
+                    if (c->phase >= 8.0) {
                         c->phase -= 8.0 * (int)(c->phase / 8.0);
+                        integralDuty[ch] = -1;
+                    } else {
+                        integralDuty[ch] = duty;
+                        integralEnd[ch] = end;
+                    }
                     break;
                 }
                 case 2: {
