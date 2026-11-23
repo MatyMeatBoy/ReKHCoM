@@ -516,6 +516,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-neon-blur-transition-20261123 | GA36: vectorizar interpolacion vertical del desenfoque y auditar la textura opaca | integrado | codex-ga36-neonblur | https://github.com/MatyMeatBoy/ReKHCoM/pull/672 | Usuario: ve sumando todas las mejoras que puedas y sigue a full speed con margen | 2026-11-23T04:09:12.929858+00:00 |
 | ppu-sprite-row-cull-20261123 | PPU: descartar sprites fuera de la fila antes de consultar datos HD | integrado | codex-ga36-objcull | https://github.com/MatyMeatBoy/ReKHCoM/pull/673 | Usuario: ve sumando todas las mejoras que puedas y sigue a full speed con margen | 2026-11-23T04:13:28.798309+00:00 |
 | ga36-blur-packed-cache-20261123 | Reutilizar celdas de desenfoque y duplicar el grupo NEON, con validación ARMv7 | integrado | codex-ga36-blur-cache | https://github.com/MatyMeatBoy/ReKHCoM/pull/674 | Usuario autorizó integrar optimizaciones comprobadas comunes y de GA36 | 2026-11-23T04:19:30.056245+00:00 |
-| ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | en_revision | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | — | 2026-11-23T05:12:38.994845+00:00 |
+| ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | pr_abierto | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | Usuario autorizó integrar optimizaciones verificadas del port | 2026-11-23T05:13:23.134957+00:00 |
 
 Integrador: libre
