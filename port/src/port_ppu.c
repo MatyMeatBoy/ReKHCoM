@@ -4713,7 +4713,29 @@ void PortPpuBeginFrame(void) {
 typedef struct OuterRows {
     int y0, y1, below;
     int32_t affX[2], affY[2]; /* the reference point at line 0 (above) or after line 159 (below) */
+    struct {
+        unsigned layers;
+        int height, first, next[2];
+        int32_t x[2], y[2];
+    } mosaic;
 } OuterRows;
+
+static void SeedOuterMosaic(const OuterRows* r, int gy) {
+    if (!r->mosaic.layers)
+        return;
+    const int height = r->mosaic.height;
+    const int block = gy - ((gy % height) + height) % height;
+    const int anchor = PPU_MAX(block, r->mosaic.first);
+    const int offset = r->below ? anchor - GBA_SCREEN_H : anchor;
+    for (int a = 0; a < 2; a++) {
+        if (!(r->mosaic.layers & (1u << a)))
+            continue;
+        const bool carry = block < r->mosaic.first && r->mosaic.next[a] == r->mosaic.first;
+        sMosAffX[a] = carry ? r->mosaic.x[a] : r->affX[a] + (int16_t)IO16(0x22 + a * 0x10) * offset;
+        sMosAffY[a] = carry ? r->mosaic.y[a] : r->affY[a] + (int16_t)IO16(0x26 + a * 0x10) * offset;
+        sMosNextGy[a] = gy;
+    }
+}
 
 static void OuterRow(const OuterRows* r, int y) {
     int w = gPortScreen.width, gy = y - gPortScreen.originY, a, k;
@@ -4735,6 +4757,7 @@ static void OuterRow(const OuterRows* r, int y) {
         sAffX[a] = r->affX[a] + (int16_t)IO16(0x22 + a * 0x10) * k;
         sAffY[a] = r->affY[a] + (int16_t)IO16(0x26 + a * 0x10) * k;
     }
+    SeedOuterMosaic(r, gy);
     RenderLine(y, gy);
 }
 
@@ -4927,8 +4950,15 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     int y;
     if (!PpuSaveRows(r->y0, r->y1, glyphStart))
         return;
+    OuterRows serial = *r;
+    serial.mosaic.layers = 0;
+    if (r->mosaic.layers) {
+        memcpy(sMosNextGy, r->mosaic.next, sizeof(sMosNextGy));
+        memcpy(sMosAffX, r->mosaic.x, sizeof(sMosAffX));
+        memcpy(sMosAffY, r->mosaic.y, sizeof(sMosAffY));
+    }
     for (y = r->y0; y < r->y1; y++)
-        OuterRow(r, y);
+        OuterRow(&serial, y);
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
 
@@ -5140,7 +5170,7 @@ static bool PpuDrawPictureAndBottom(const OuterRows* top) {
     /* The last HBlank has run. Picture rows read their own snapshots and
        bottom rows read the final state, with output committed in row order. */
     OuterRows rows = {bottom, gPortScreen.height, 1,
-                      {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}};
+                      {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}, {0}};
     sPpuTopJob = top;
     PpuRunBatch(&rows, top ? top->y0 : gPortScreen.originY, rows.y1);
     sPpuTopJob = NULL;
@@ -5166,7 +5196,7 @@ static bool PpuDrawPictureAndBottom(const OuterRows* top) {
 #endif
 
 static void RenderOuterRows(int y0, int y1, int below) {
-    OuterRows r;
+    OuterRows r = {0};
     int a, drawn = 0;
     if (y1 <= y0)
         return;
@@ -5189,11 +5219,32 @@ static void RenderOuterRows(int y0, int y1, int below) {
     const size_t pixels = (size_t)(y1 - y0) * gPortScreen.width;
     if (sPpuWorkers > 0 && pixels < minBatchPixels)
         sPpuStats[4]++;
-    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent(false)) {
+    const int first = below ? y0 : PPU_MAX(y0, gPortScreen.originY + sTop);
+    const int last = below ? PPU_MIN(y1, gPortScreen.originY + sBottom) - 1 : y1 - 1;
+    const char* mosaicMargins;
+    PORT_ENV_ONCE(mosaicMargins, SDL_getenv, "KHCOM_PPU_MOSAIC_MARGINS");
+    const unsigned mosaicLayers = mosaicMargins && first <= last && !(IO16(0x00) & 0x80)
+        ? PpuStaticMosaicLayers() : 0;
+    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent(mosaicLayers != 0)) {
         int glyphStart = sBgTextCount;
+        r.mosaic.layers = mosaicLayers;
+        if (mosaicLayers) {
+            r.mosaic.height = ((IO16(0x4C) >> 4) & 15) + 1;
+            r.mosaic.first = first - gPortScreen.originY;
+            memcpy(r.mosaic.next, sMosNextGy, sizeof(sMosNextGy));
+            memcpy(r.mosaic.x, sMosAffX, sizeof(sMosAffX));
+            memcpy(r.mosaic.y, sMosAffY, sizeof(sMosAffY));
+        }
         PpuRunBatch(&r, y0, y1);
         if (sPpuVerify)
             PpuVerify(&r, glyphStart);
+        if (mosaicLayers) {
+            const int gy = last - gPortScreen.originY;
+            SeedOuterMosaic(&r, gy);
+            for (a = 0; a < 2; a++)
+                if (mosaicLayers & (1u << a))
+                    sMosNextGy[a] = gy + 1;
+        }
     } else
 #endif
     {
@@ -5299,7 +5350,7 @@ void PortPpuRenderFrame(void) {
 #ifdef PORT_PPU_THREADS
     const bool topQueued = PpuCanDeferTop();
     const OuterRows topRows = {0, gPortScreen.originY, 0,
-                               {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}};
+                               {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}, {0}};
     if (!topQueued)
 #endif
         RenderOuterRows(0, gPortScreen.originY, 0);
