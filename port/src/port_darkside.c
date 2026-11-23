@@ -60,11 +60,21 @@ static int SourceIndex(int x, int y) {
     return index ? (int)(entry >> 12) * 16 + index : 0;
 }
 
+typedef struct ShoreColumns {
+    uint8_t clean[BEACH_W];
+    uint8_t index[BEACH_W][8];
+} ShoreColumns;
+
 /* How alike two pixel columns of the shoreline row are (equal palette indices). */
-static int ColumnLike(int a, int b) {
+static int ColumnLike(const ShoreColumns* columns, int a, int b) {
     int y, same = 0;
-    for (y = 0; y < 8; y++)
-        same += SourceIndex(a, sShoreRow * 8 + y) == SourceIndex(b, sShoreRow * 8 + y);
+    if (columns) {
+        for (y = 0; y < 8; y++)
+            same += columns->index[a][y] == columns->index[b][y];
+    } else {
+        for (y = 0; y < 8; y++)
+            same += SourceIndex(a, sShoreRow * 8 + y) == SourceIndex(b, sShoreRow * 8 + y);
+    }
     return same;
 }
 
@@ -132,21 +142,35 @@ static int ShoreClean(int x) {
     return 1;
 }
 
+static void ReadShoreColumns(ShoreColumns* columns) {
+    int x, y;
+    for (x = 0; x < BEACH_W; x++) {
+        columns->clean[x] = ShoreClean(x);
+        for (y = 0; y < 8; y++)
+            columns->index[x][y] = (uint8_t)SourceIndex(x, sShoreRow * 8 + y);
+    }
+}
+
+static int CanExtendShore(const ShoreColumns* columns, int x) {
+    return columns ? (unsigned)x < BEACH_W && columns->clean[x] : ShoreClean(x);
+}
+
 /* Chains clean columns outward from the edge column: on along the current stretch; at its end, on from the clean
    column most like the current one (away from it, so the wave does not echo), in either direction. */
-static void Walk(short* out, int edge, int dir) {
+static void Walk(const ShoreColumns* columns, short* out, int edge, int dir) {
     int c = edge, d = dir, i;
     for (i = 0; i < SHORE_RUN; i++) {
-        if (!ShoreClean(c + d) || (i > 0 && i % 97 == 0)) {
+        if (!CanExtendShore(columns, c + d) || (i > 0 && i % 97 == 0)) {
             int best = -1, bestC = c, bestD = d, cand, cd;
+            int neighbor = (unsigned)(c + d) < BEACH_W ? c + d : c;
             for (cand = 0; cand < BEACH_W; cand++) {
-                if (!ShoreClean(cand) || abs(cand - c) < 24)
+                if (!CanExtendShore(columns, cand) || abs(cand - c) < 24)
                     continue;
                 for (cd = -1; cd <= 1; cd += 2) {
                     int score;
-                    if (!ShoreClean(cand + cd))
+                    if (!CanExtendShore(columns, cand + cd))
                         continue;
-                    score = ColumnLike(cand, c) * 4 + ColumnLike(cand + cd, c + d < 0 || c + d >= BEACH_W ? c : c + d);
+                    score = ColumnLike(columns, cand, c) * 4 + ColumnLike(columns, cand + cd, neighbor);
                     if (score > best) {
                         best = score;
                         bestC = cand;
@@ -178,8 +202,13 @@ static void Prepare(void) {
             sShoreRow = ty;
     }
     if (sShoreRow > 0 && sShoreRow < 63) {
-        Walk(sShoreRight, BEACH_W - 1, 1);
-        Walk(sShoreLeft, 0, -1);
+        const char* enabled;
+        ShoreColumns columns;
+        PORT_ENV_ONCE(enabled, getenv, "KHCOM_DARKSIDE_INDEX_SHORE");
+        if (enabled)
+            ReadShoreColumns(&columns);
+        Walk(enabled ? &columns : NULL, sShoreRight, BEACH_W - 1, 1);
+        Walk(enabled ? &columns : NULL, sShoreLeft, 0, -1);
     }
     sPrepared = 1;
 }
