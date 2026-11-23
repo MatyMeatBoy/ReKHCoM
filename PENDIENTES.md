@@ -510,6 +510,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | integrado | codex-ga36-fullscreen | https://github.com/MatyMeatBoy/ReKHCoM/pull/666 | Usuario: este port no debe ofrecer modo ventana | 2026-11-23T03:05:38.258278+00:00 |
 | ga36-armhf-ppu-workers-20261123 | GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate | integrado | codex-ga36-ppu | https://github.com/MatyMeatBoy/ReKHCoM/pull/667 | Usuario: integra unos 10 cambios medidos que mejoren en QEMU; beta posterior a full speed | 2026-11-23T03:20:41.384891+00:00 |
 | ppu-native-tile-runs-20261123 | PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes | integrado | codex-ga36-tiles | https://github.com/MatyMeatBoy/ReKHCoM/pull/668 | Usuario: ve sumando todas las mejoras que puedas | 2026-11-23T03:36:21.222044+00:00 |
-| battle-blur-separable-20261123 | Reducir el coste del desenfoque de transicion de combate conservando pixeles | en_curso | codex-ga36-blur | — | — | 2026-11-23T03:35:34.098038+00:00 |
+| battle-blur-separable-20261123 | Reducir el coste del desenfoque de transicion de combate conservando pixeles | pr_abierto | codex-ga36-blur | https://github.com/MatyMeatBoy/ReKHCoM/pull/669 | — | 2026-11-23T03:44:24.458493+00:00 |
 
 Integrador: libre
