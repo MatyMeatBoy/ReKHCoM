@@ -17791,22 +17791,28 @@
     "ga36-armhf-ppu-workers-20261123": {
       "id": "ga36-armhf-ppu-workers-20261123",
       "piece": "GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-ppu",
       "created_at": "2026-11-23T03:03:00.079488+00:00",
-      "updated_at": "2026-11-23T03:19:19.925848+00:00",
+      "updated_at": "2026-11-23T03:20:41.384891+00:00",
       "branch": "perf/ga36-ppu-workers-verified",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/667",
-      "approval": null,
+      "approval": "Usuario: integra unos 10 cambios medidos que mejoren en QEMU; beta posterior a full speed",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T03:19:19.925848+00:00",
           "owner": "codex-ga36-ppu",
           "detail": "ARMv7 QEMU field and battle internal PPU parity; field XRGB final hash exact; 20.3 serial to 40.8 parallel in initial session, ABBA ongoing; opt-in only"
+        },
+        {
+          "at": "2026-11-23T03:20:41.384891+00:00",
+          "owner": "codex-ga36-ppu",
+          "detail": "1af207878e6562bef884f64d04737d4149259668; ABBA serial 8.24/10.74, paralelo 19.66/17.81; hash exacto; verificador campo y combate; opt-in"
         }
       ],
-      "claimed_at": "2026-11-23T03:03:09.943927+00:00"
+      "claimed_at": "2026-11-23T03:03:09.943927+00:00",
+      "completed_at": "2026-11-23T03:20:41.384891+00:00"
     }
   },
   "integrator": {
@@ -17815,7 +17821,7 @@
     "created_at": "2026-11-23T03:20:25.175289+00:00",
     "updated_at": "2026-11-23T03:20:25.175289+00:00"
   },
-  "updated_at": "2026-11-23T03:20:25.175289+00:00",
+  "updated_at": "2026-11-23T03:20:41.385890+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
