@@ -3517,21 +3517,30 @@ static void VBlankCycle(void) {
     uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
 #if defined(PORT_LINUX)
     static int captureEnabled = -1;
-    static bool captureHeld;
+    static unsigned captureFramesHeld;
+    static SDL_Time captureStarted;
+    enum { CaptureBurstStride = 5, CaptureBurstLimit = 16 };
     const uint16_t captureKeys = L_BUTTON | R_BUTTON | SELECT_BUTTON;
     if (captureEnabled < 0)
         captureEnabled = PortFixedFullscreen() && SDL_getenv("KHCOM_HANDHELD_CAPTURE") != NULL;
     if (captureEnabled) {
         const bool pressed = (keys & captureKeys) == captureKeys;
-        if (pressed && !captureHeld) {
-            SDL_Time now = 0;
-            SDL_GetCurrentTime(&now);
-            SDL_snprintf(sHarnessShot, sizeof(sHarnessShot), "captura-%llu-%u.bmp",
-                         (unsigned long long)now, (unsigned)sFrameCount);
-        }
-        captureHeld = pressed;
-        if (pressed)
+        if (!pressed) {
+            captureFramesHeld = 0;
+        } else {
+            if (captureFramesHeld == 0) {
+                captureStarted = 0;
+                SDL_GetCurrentTime(&captureStarted);
+            }
+            if (captureFramesHeld < CaptureBurstStride * CaptureBurstLimit) {
+                if (captureFramesHeld % CaptureBurstStride == 0) {
+                    SDL_snprintf(sHarnessShot, sizeof(sHarnessShot), "captura-%llu-%u.bmp",
+                                 (unsigned long long)captureStarted, (unsigned)sFrameCount);
+                }
+                captureFramesHeld++;
+            }
             keys &= (uint16_t)~captureKeys;
+        }
     }
 #endif
     IO16(0x130) = (uint16_t)(~PortInputResolve(keys) & 0x3FF);
