@@ -519,6 +519,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | integrado | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | Usuario autorizó integrar optimizaciones verificadas del port | 2026-11-23T05:14:02.035598+00:00 |
 | ga36-skip-covered-clear-20261123 | Omitir el borrado redundante cuando NEON cubre toda la superficie | integrado | codex-ga36-clear | https://github.com/MatyMeatBoy/ReKHCoM/pull/676 | Usuario autorizó integrar optimizaciones del port | 2026-11-23T05:19:03.849408+00:00 |
 | ppu-native-tiles-no-sdl-20261123 | Usar mínimos locales en el camino de tiles de la PPU para builds sin SDL | integrado | codex-ppu-native-builds | https://github.com/MatyMeatBoy/ReKHCoM/pull/677 | Usuario autorizó integrar fixes y optimizaciones comunes | 2026-11-23T05:22:19.702750+00:00 |
-| ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | en_curso | codex-ga36-title-palette | — | — | 2026-11-23T06:32:03.939412+00:00 |
+| ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | pr_abierto | codex-ga36-title-palette | https://github.com/MatyMeatBoy/ReKHCoM/pull/678 | Usuario autorizó integrar optimizaciones verificadas para el port | 2026-11-23T06:32:34.382202+00:00 |
 
 Integrador: libre
