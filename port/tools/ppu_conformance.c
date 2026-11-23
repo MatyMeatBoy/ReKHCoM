@@ -5,7 +5,6 @@
 #include <stdarg.h>
 #include <time.h>
 #undef TRANSPARENT
-#define SDL_min(a, b) (((a) < (b)) ? (a) : (b))
 #ifndef PPU_SOURCE
 #define PPU_SOURCE "../src/port_ppu.c"
 #endif
