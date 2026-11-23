@@ -510,4 +510,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | handheld-fullscreen-only-20261122 | GA36 y R36S: pantalla completa fija y opciones de ventana ocultas | pr_abierto | codex-ga36-fullscreen | https://github.com/MatyMeatBoy/ReKHCoM/pull/666 | — | 2026-11-23T03:02:50.169758+00:00 |
 | ga36-armhf-ppu-workers-20261123 | GA36 ARMv7: validar PPU multinucleo contra referencia serial en campo y combate | en_curso | codex-ga36-ppu | — | — | 2026-11-23T03:03:09.943927+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-fullscreen (ocupado; 2026-11-23T03:05:24.573969+00:00)
