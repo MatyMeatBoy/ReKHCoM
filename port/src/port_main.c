@@ -1241,7 +1241,8 @@ static SDL_Texture* sBlurTex;
 #define BLUR_OUT_H 180
 
 static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
-    static uint32_t cell[BLUR_W * BLUR_H], big[BLUR_OUT_W * BLUR_OUT_H];
+    static uint32_t cell[BLUR_W * BLUR_H], uploaded[BLUR_W * BLUR_H], big[BLUR_OUT_W * BLUR_OUT_H];
+    static int uploadedValid;
     float aspect = outW / (float)outH, cw = src->w, ch = src->h;
     int x0, y0, w, h, cx, cy;
 
@@ -1251,6 +1252,7 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         if (sBlurTex == NULL)
             return;
         SDL_SetTextureScaleMode(sBlurTex, SDL_SCALEMODE_NEAREST);
+        uploadedValid = 0;
     }
     if (aspect >= cw / ch)
         ch = cw / aspect; /* wider window: keep the full width, crop rows */
@@ -1279,6 +1281,10 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
                 n = 1;
             cell[cy * BLUR_W + cx] = 0xFF000000u | ((r * 110 / 255 / n) << 16) | ((g * 110 / 255 / n) << 8) | (b * 110 / 255 / n);
         }
+    }
+    if (uploadedValid && memcmp(cell, uploaded, sizeof(cell)) == 0) {
+        SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+        return;
     }
     /* The horizontal interpolation depends on only 14 source rows. Reuse
        their unrounded values for all destination rows. */
@@ -1333,7 +1339,10 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         }
 #endif
     }
-    SDL_UpdateTexture(sBlurTex, NULL, big, BLUR_OUT_W * 4);
+    if (SDL_UpdateTexture(sBlurTex, NULL, big, BLUR_OUT_W * 4)) {
+        memcpy(uploaded, cell, sizeof(cell));
+        uploadedValid = 1;
+    }
     SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
 }
 
