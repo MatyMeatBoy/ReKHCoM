@@ -17921,20 +17921,26 @@
     "ga36-neon-blur-transition-20261123": {
       "id": "ga36-neon-blur-transition-20261123",
       "piece": "GA36: vectorizar interpolacion vertical del desenfoque y auditar la textura opaca",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ga36-neonblur",
       "created_at": "2026-11-23T04:01:37.748475+00:00",
-      "updated_at": "2026-11-23T04:01:45.828117+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-23T04:08:51.464656+00:00",
+      "branch": "perf/ga36-neon-blur-transitions",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/672",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-23T04:08:51.464656+00:00",
+          "owner": "codex-ga36-neonblur",
+          "detail": "Battle ABBA 54.66/61.34/58.55/54.40; transition present 18.63 to 12.06/12.44; five exact battle captures"
+        }
+      ],
       "claimed_at": "2026-11-23T04:01:45.828117+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T04:01:45.828117+00:00",
+  "updated_at": "2026-11-23T04:08:51.464656+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
