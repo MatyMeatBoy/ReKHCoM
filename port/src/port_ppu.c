@@ -11,6 +11,10 @@
  * the 160 original lines; lines added above and below reuse the state of the
  * nearest original line.
  */
+#ifdef __ARM_NEON
+#include <arm_neon.h>
+#endif
+
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -3221,6 +3225,71 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
     return top;
 }
 
+#ifdef __ARM_NEON
+static bool sNeonOpaqueCompose;
+static bool sNeonOpaqueRows[PORT_MAX_H];
+static bool sProbeComposeGates;
+static uint16_t sComposeGates[PORT_MAX_H];
+
+static uint8x8_t ExpandColor5(uint16x8_t value) {
+    value = vandq_u16(value, vdupq_n_u16(31));
+    return vmovn_u16(vorrq_u16(vshlq_n_u16(value, 3), vshrq_n_u16(value, 2)));
+}
+
+static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
+                                 const int* priorities, uint16_t backdrop, uint16_t marginFill, bool collect) {
+    const uint16_t* first = n > 0 ? sBgLine[order[0]] : NULL;
+    const uint16_t* second = n > 1 ? sBgLine[order[1]] : NULL;
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t back = vdupq_n_u16(backdrop);
+    const uint16x8_t margin = vdupq_n_u16(marginFill);
+    const int width = gPortScreen.width;
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const uint8_t* world = sInWorld;
+    const uint8x8_t neutral = vdup_n_u8(4);
+    const uint8x8_t firstPrio = vdup_n_u8(first ? (uint8_t)priorities[order[0]] : 4);
+    const uint8x8_t secondPrio = vdup_n_u8(second ? (uint8_t)priorities[order[1]] : 4);
+    const uint8x8_t firstLayer = vdup_n_u8(first ? (uint8_t)order[0] : 4);
+    const uint8x8_t secondLayer = vdup_n_u8(second ? (uint8_t)order[1] : 4);
+    const uint16x8_t offsets = {0, 1, 2, 3, 4, 5, 6, 7};
+    const int row = y * width;
+
+    if (collect) {
+        memset(sMsgMask + row, 0, width);
+        memset(sOccObj + row, 0xFF, (size_t)width * sizeof(*sOccObj));
+    }
+    for (int x = 0; x < width; x += 8) {
+        const uint16x8_t a = first ? vld1q_u16(first + x) : clear;
+        const uint16x8_t b = second ? vld1q_u16(second + x) : clear;
+        const uint16x8_t hasA = vmvnq_u16(vceqq_u16(a, clear));
+        const uint16x8_t hasB = vmvnq_u16(vceqq_u16(b, clear));
+        const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
+        uint16x8_t fallback = vandq_u16(inWorld, back);
+        if (marginFill != TRANSPARENT) {
+            const int16x8_t gx = vreinterpretq_s16_u16(vaddq_u16(offsets, vdupq_n_u16((uint16_t)(x - gPortScreen.originX))));
+            const uint16x8_t offscreen = outside ? vdupq_n_u16(UINT16_MAX) :
+                vorrq_u16(vcltq_s16(gx, vdupq_n_s16(0)), vcgeq_s16(gx, vdupq_n_s16(GBA_SCREEN_W)));
+            fallback = vbslq_u16(offscreen, margin, fallback);
+        }
+        const uint16x8_t pixel = vbslq_u16(hasA, a, vbslq_u16(hasB, b, fallback));
+        uint8x8x4_t channels;
+        channels.val[0] = ExpandColor5(vshrq_n_u16(pixel, 10));
+        channels.val[1] = ExpandColor5(vshrq_n_u16(pixel, 5));
+        channels.val[2] = ExpandColor5(pixel);
+        channels.val[3] = vdup_n_u8(255);
+        vst4_u8((uint8_t*)(dst + x), channels);
+        if (collect) {
+            const uint8x8_t aMask = vmovn_u16(hasA);
+            const uint8x8_t bMask = vmovn_u16(hasB);
+            vst1_u8(sOccBg + row + x, vbsl_u8(aMask, firstPrio, vbsl_u8(bMask, secondPrio, neutral)));
+            vst1_u8(sOccBgLayer + row + x, vbsl_u8(aMask, firstLayer, vbsl_u8(bMask, secondLayer, neutral)));
+        }
+    }
+    sNeonOpaqueRows[y] = true;
+}
+#endif
+
 static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgPrio, uint32_t* frame, int objects) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const clPalette = PLTT16;
@@ -3267,6 +3336,22 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sBgDockedLatched[b]) docked |= 1 << b;
 
+#ifdef __ARM_NEON
+    if (objects && sProbeComposeGates) {
+        unsigned flags = 1u;
+        if (w != 320 || !gPortScreen.wide) flags |= 1u << 1;
+        if (dispcnt & 0xE000) flags |= 1u << 2;
+        if (sLineHasObjects) flags |= 1u << 3;
+        if (effect && (bldcnt & 0x3F)) flags |= 1u << 4;
+        if (docked || scene102Fill || sJiminyDetailCapture ||
+            (sOverlay && sSpotlight && (sScreenBgMask & 2u))) flags |= 1u << 5;
+        if (n > 2) flags |= 1u << 6;
+        if (sLutMode) flags |= 1u << 7;
+        if (bldcnt & 0x3F00) flags |= 1u << 8;
+        sComposeGates[y] = (uint16_t)flags;
+    }
+#endif
+
     /* Most extra world scanlines contain only opaque backgrounds. Windows,
        object alpha, docked messages and colour effects retain the full path.
        Keep priority metadata identical for HUD and HD text consumers. */
@@ -3274,6 +3359,12 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         (!objects || !sLineHasObjects) && !docked &&
         (effect == 0 || !(bldcnt & 0x3F)) &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
+#ifdef __ARM_NEON
+        if (sNeonOpaqueCompose && w == 320 && n <= 2 && !sLutMode && !scene102Fill) {
+            NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill, collect);
+            return;
+        }
+#endif
         for (x = 0; x < w; x++) {
             int bg = -1;
             for (b = 0; b < n; b++) {
@@ -4907,6 +4998,16 @@ void PortPpuJiminyFade(int* dark, int* white) {
 }
 
 void PortPpuRenderFrame(void) {
+#ifdef __ARM_NEON
+    const char* neonOpaqueCompose;
+    PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
+    sNeonOpaqueCompose = neonOpaqueCompose != NULL;
+    const char* probeCompose;
+    PORT_ENV_ONCE(probeCompose, SDL_getenv, "KHCOM_PPU_PROBE_COMPOSE");
+    sProbeComposeGates = probeCompose && PortFrameCount() % 30 == 0;
+    if (sProbeComposeGates)
+        memset(sComposeGates, 0, sizeof(sComposeGates));
+#endif
     static int profilePhases = -1;
     uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
     if (profilePhases < 0)
@@ -5024,6 +5125,27 @@ void PortPpuRenderFrame(void) {
     if (phaseStart) overlayStart = SDL_GetPerformanceCounter();
     MainHdOver();
     CaptureMenuMarginPixels();
+#ifdef __ARM_NEON
+    if (sProbeComposeGates) {
+        unsigned gates[9] = {0};
+        for (int row = 0; row < gPortScreen.height; row++)
+            for (unsigned bit = 0; bit < 9; bit++)
+                gates[bit] += (sComposeGates[row] >> bit) & 1u;
+        PortLog("ppu gates: frame %u rows %u geometry %u windows %u sprites %u effects %u special %u layers %u correction %u second %u",
+                (unsigned)PortFrameCount(), gates[0], gates[1], gates[2], gates[3], gates[4],
+                gates[5], gates[6], gates[7], gates[8]);
+    }
+    static bool neonOpaqueLogged;
+    if (sNeonOpaqueCompose && !neonOpaqueLogged) {
+        for (int row = 0; row < gPortScreen.height; row++) {
+            if (sNeonOpaqueRows[row]) {
+                PortLog("ppu: NEON opaque composition active");
+                neonOpaqueLogged = true;
+                break;
+            }
+        }
+    }
+#endif
     if (phaseStart) {
         const uint64_t end = SDL_GetPerformanceCounter();
         const double msPerTick = 1000.0 / SDL_GetPerformanceFrequency();
