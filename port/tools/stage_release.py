@@ -53,6 +53,10 @@ def stage(mapping, folder):
     return sums
 
 
+ga36 = f'ReKHCoM-{V}-linux-armhf-ga36-alpha.zip'
+if (SRC / ga36).is_file():
+    MAIN[ga36] = ga36
+
 if OUT.exists():
     shutil.rmtree(OUT)
 print('\n'.join(stage(MAIN, OUT / 'main')))
