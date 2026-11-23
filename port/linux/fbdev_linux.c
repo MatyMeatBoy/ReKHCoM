@@ -16,6 +16,9 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#ifdef __ARM_NEON
+#include <arm_neon.h>
+#endif
 
 #include "port/port.h"
 
@@ -91,6 +94,46 @@ SDL_Renderer* PortFbCreateRenderer(void) {
         sRenderSurface = NULL;
     }
     return renderer;
+}
+
+/* The handheld's opaque nearest 2x case can write the software renderer's
+ * surface directly. Other geometry and renderer paths stay with SDL. */
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h) {
+#ifdef __ARM_NEON
+    SDL_Rect viewport;
+    float scaleX, scaleY;
+    int logicalW, logicalH;
+    SDL_RendererLogicalPresentation logicalMode;
+    if (!sRenderSurface || w <= 0 || (w & 3) || h <= 0 ||
+        sRenderSurface->w / 2 != w || sRenderSurface->h / 2 != h ||
+        (sRenderSurface->w & 1) || (sRenderSurface->h & 1) ||
+        SDL_MUSTLOCK(sRenderSurface) || SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
+        !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
+        viewport.w != sRenderSurface->w || viewport.h != sRenderSurface->h ||
+        !SDL_GetRenderScale(renderer, &scaleX, &scaleY) || scaleX != 1 || scaleY != 1 ||
+        !SDL_GetRenderLogicalPresentation(renderer, &logicalW, &logicalH, &logicalMode) ||
+        logicalMode != SDL_LOGICAL_PRESENTATION_DISABLED || !SDL_FlushRenderer(renderer))
+        return 0;
+    uint8_t* pixels = sRenderSurface->pixels;
+    const int pitch = sRenderSurface->pitch;
+    for (int y = 0; y < h; y++) {
+        uint32_t* upper = (uint32_t*)(pixels + (size_t)(2 * y) * pitch);
+        uint32_t* lower = (uint32_t*)((uint8_t*)upper + pitch);
+        for (int x = 0; x < w; x += 4) {
+            uint32x4_t colors = vld1q_u32(src + x);
+            uint32x4x2_t doubled = vzipq_u32(colors, colors);
+            vst1q_u32(upper + 2 * x, doubled.val[0]);
+            vst1q_u32(upper + 2 * x + 4, doubled.val[1]);
+            vst1q_u32(lower + 2 * x, doubled.val[0]);
+            vst1q_u32(lower + 2 * x + 4, doubled.val[1]);
+        }
+        src += w;
+    }
+    return 1;
+#else
+    (void)renderer; (void)src; (void)w; (void)h;
+    return 0;
+#endif
 }
 
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {
