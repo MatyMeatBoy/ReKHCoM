@@ -1808,30 +1808,48 @@ static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
  * authored library pixels except the reviewed flat-green notch, then extend
  * the empty map background.
  * Palette indices remain live for fades; OBJ furniture/actors stay unique. */
-static int Preliminar130Authored(int x,int y) {
-    int floor,books,base;
-    if (x<0 || y<0 || x>=512 || y>=512) return 0;
-    floor=SinglePanelIndex(&sBgLatch[3],IO16(14),x,y);
-    books=SinglePanelIndex(&sBgLatch[2],IO16(12),x,y);
-    base=SinglePanelIndex(&sBgLatch[3],IO16(14),0,0);
-    /* Explicitly reviewed exception to authored-pixel preservation: finish
-     * the shelf baseboard through its original flat-green notch only. */
-    if (PortScene130LibraryRemate(x,y) && books>=0 && !(books&15) && floor>=0 &&
-        floor==SinglePanelIndex(&sBgLatch[3],IO16(14),32,280)) return 0;
-    return (books>=0 && (books&15)) ||
-        (floor>=0 && base>=0 && (PLTT16[floor]&0x7fff)!=(PLTT16[base]&0x7fff));
+typedef struct LibraryPanelRow {
+    uint16_t booksControl, floorControl;
+    int floorBase, notch;
+} LibraryPanelRow;
+
+typedef struct LibrarySample {
+    int books, floor;
+    bool authored;
+} LibrarySample;
+
+static LibrarySample SampleLibrary(const LibraryPanelRow* row, int x, int y) {
+    LibrarySample sample = {-1, -1, false};
+    if ((unsigned)x >= 512 || (unsigned)y >= 512)
+        return sample;
+    sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, x, y);
+    sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, x, y);
+    /* Continue the reviewed baseboard through the flat-green notch. */
+    if (PortScene130LibraryRemate(x, y) && sample.books >= 0 &&
+        !(sample.books & 15) && sample.floor >= 0 && sample.floor == row->notch)
+        return sample;
+    sample.authored = (sample.books >= 0 && (sample.books & 15)) ||
+        (sample.floor >= 0 && row->floorBase >= 0 &&
+         (PLTT16[sample.floor] & 0x7fff) != (PLTT16[row->floorBase] & 0x7fff));
+    return sample;
 }
-static int Preliminar130Pixel(int bg,int x,int y,uint16_t* color) {
-    int sx=x,sy=y,index;
-    if (!sPreliminarRecipe[2] || !sPreliminarRecipe[3] ||
-        sPreliminarRecipe[2]->v[0]!=130 || sPreliminarRecipe[3]->v[0]!=130) return 0;
-    if (!Preliminar130Authored(x,y)) {
-        int carpet=PortScene130LibrarySource(x,y,&sx,&sy);
-        if (!carpet && !Preliminar130Authored(sx,sy)) { sx=x<240?64:480; sy=64; }
+
+static uint16_t Preliminar130Pixel(const LibraryPanelRow* row, int bg, uint16_t cnt, int x, int y) {
+    LibrarySample sample = SampleLibrary(row, x, y);
+    int index;
+    if (sample.authored) {
+        index = bg == 2 ? sample.books : sample.floor;
+    } else {
+        int sx, sy;
+        if (PortScene130LibrarySource(x, y, &sx, &sy)) {
+            index = SinglePanelIndex(&sBgLatch[bg], cnt, sx, sy);
+        } else {
+            sample = SampleLibrary(row, sx, sy);
+            index = sample.authored ? (bg == 2 ? sample.books : sample.floor)
+                                    : SinglePanelIndex(&sBgLatch[bg], cnt, x < 240 ? 64 : 480, 64);
+        }
     }
-    index=SinglePanelIndex(&sBgLatch[bg],IO16(8+bg*2),sx,sy);
-    *color=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
-    return 1;
+    return index >= 0 && (index & 15) ? PLTT16[index] & 0x7fff : TRANSPARENT;
 }
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
@@ -1990,6 +2008,16 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
             for (b = 0; b < 4; b++)
                 if (b != bg && sBgLatch[b].valid && PortMaleficentLayer((const void* const*)sBgLatch[b].map))
                     mdLayer = 2;
+    }
+
+    const bool library = (bg == 2 || bg == 3) && sPreliminarRecipe[2] && sPreliminarRecipe[3] &&
+        sPreliminarRecipe[2]->v[0] == 130 && sPreliminarRecipe[3]->v[0] == 130;
+    LibraryPanelRow libraryRow;
+    if (library) {
+        libraryRow.booksControl = IO16(12);
+        libraryRow.floorControl = IO16(14);
+        libraryRow.floorBase = SinglePanelIndex(&sBgLatch[3], libraryRow.floorControl, 0, 0);
+        libraryRow.notch = SinglePanelIndex(&sBgLatch[3], libraryRow.floorControl, 32, 280);
     }
 
     (void)dispcnt;
@@ -2179,7 +2207,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     sInWorld[x]=1;
                     continue;
                 }
-                if (sPreliminarRecipe[bg]->v[0]==130 && Preliminar130Pixel(bg,wx,wy,&out[x])) {
+                if (library) {
+                    out[x] = Preliminar130Pixel(&libraryRow, bg, cnt, wx, wy);
                     dtInWorld[x]=1;
                     continue;
                 }
