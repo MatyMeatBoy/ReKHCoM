@@ -519,4 +519,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-hblank-snapshot-20261123 | Evitar comparar OAM y paleta cuando HBlank no ejecutó DMA ni IRQ | integrado | codex-ga36-hblank | https://github.com/MatyMeatBoy/ReKHCoM/pull/675 | Usuario autorizó integrar optimizaciones verificadas del port | 2026-11-23T05:14:02.035598+00:00 |
 | ga36-skip-covered-clear-20261123 | Omitir el borrado redundante cuando NEON cubre toda la superficie | integrado | codex-ga36-clear | https://github.com/MatyMeatBoy/ReKHCoM/pull/676 | Usuario autorizó integrar optimizaciones del port | 2026-11-23T05:19:03.849408+00:00 |
 
-Integrador: codex-ga36-clear (ocupado; 2026-11-23T05:18:41.291854+00:00)
+Integrador: libre
