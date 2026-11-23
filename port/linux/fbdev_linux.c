@@ -136,6 +136,38 @@ SDL_Renderer* PortFbCreateRenderer(void) {
     return renderer;
 }
 
+/* The 720x480 picture is centred on the 640x480 handheld panel. */
+bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride) {
+    SDL_Rect viewport;
+    float scaleX, scaleY;
+    int logicalW, logicalH;
+    SDL_RendererLogicalPresentation logicalMode;
+    if (!sRenderSurface || sRenderSurface->w != 640 || sRenderSurface->h != 480 ||
+        sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888 ||
+        SDL_MUSTLOCK(sRenderSurface) || SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
+        !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
+        viewport.w != 640 || viewport.h != 480 ||
+        !SDL_GetRenderScale(renderer, &scaleX, &scaleY) || scaleX != 1 || scaleY != 1 ||
+        !SDL_GetRenderLogicalPresentation(renderer, &logicalW, &logicalH, &logicalMode) ||
+        logicalMode != SDL_LOGICAL_PRESENTATION_DISABLED || !SDL_FlushRenderer(renderer))
+        return false;
+    const int pitch = sRenderSurface->pitch;
+    uint8_t* row = sRenderSurface->pixels;
+    for (int y = 0; y < 160; y++, source += stride, row += 3 * pitch) {
+        uint32_t* output = (uint32_t*)row;
+        /* The 40-pixel crop cuts one pixel from the first and last triples. */
+        output[0] = output[1] = source[13];
+        for (int x = 0; x < 212; x++) {
+            const uint32_t color = source[14 + x];
+            output[2 + 3 * x] = output[3 + 3 * x] = output[4 + 3 * x] = color;
+        }
+        output[638] = output[639] = source[226];
+        memcpy(row + pitch, row, 640 * sizeof(*output));
+        memcpy(row + 2 * pitch, row, 640 * sizeof(*output));
+    }
+    return true;
+}
+
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {

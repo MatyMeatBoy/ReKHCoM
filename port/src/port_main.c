@@ -230,6 +230,7 @@ void PortFbWaitCopy(void);
 void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
+bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
@@ -2255,7 +2256,16 @@ static void Present(int paced) {
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
         if (journalShown) DrawJournalPicture(&src, &dst);
-        else SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
+        else {
+#ifdef PORT_LINUX
+            if (!(PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+                  src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+                  dst.x == -40 && dst.y == 0 && dst.w == 720 && dst.h == 480 &&
+                  PortFbDrawCropped3x(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                                     gPortScreen.width)))
+#endif
+                SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
+        }
         if (moviePrompt)
             DrawSkipLayer(&normal);
         if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
