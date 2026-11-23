@@ -669,7 +669,7 @@ static const char* const sNgDescHdMovies[LANG_COUNT] = {
     "Ersetzt unterstützte GBA-Videos durch HD-Versionen. Der Abspann bleibt in der GBA-Fassung.",
     "Sostituisce i filmati GBA compatibili con le versioni HD. I titoli di coda restano quelli GBA.",
     "Reemplaza los vídeos compatibles de GBA por sus versiones HD. Los créditos conservan la versión de GBA.",
-    "対応するGBAのムービーをHD版に置き換えます。スタッフロールはGBA版のままです。",
+    "対応するGBAのムービーをHDムービーに置き換えます。スタッフロールはGBAのままです。",
 };
 static const char* const sNgDescHdScenes[LANG_COUNT] = {
     "Story scenes that Re:CoM has as movies play them instead (English voices, subtitles in your language).",
@@ -3418,7 +3418,7 @@ static const char* const sAssetDesc[PORT_ASSET_COUNT][LANG_COUNT] = {
       "Ersetzt unterstützte GBA-Videos durch HD-Versionen. Der Abspann bleibt in der GBA-Fassung.",
       "Sostituisce i filmati GBA compatibili con le versioni HD. I titoli di coda restano quelli GBA.",
       "Reemplaza los vídeos compatibles de GBA por sus versiones HD. Los créditos conservan la versión de GBA.",
-      "対応するGBAのムービーをHD版に置き換えます。スタッフロールはGBA版のままです。" },
+      "対応するGBAのムービーをHDムービーに置き換えます。スタッフロールはGBAのままです。" },
     { "The story scenes as Re:Chain of Memories' HD movies, where one matches.",
       "Les scènes de l'histoire en vidéos HD de Re:Chain of Memories, quand il y en a une.",
       "Die Story-Szenen als HD-Videos von Re:Chain of Memories, wo es eins gibt.",
