@@ -17813,10 +17813,23 @@
       ],
       "claimed_at": "2026-11-23T03:03:09.943927+00:00",
       "completed_at": "2026-11-23T03:20:41.384891+00:00"
+    },
+    "ppu-native-tile-runs-20261123": {
+      "id": "ppu-native-tile-runs-20261123",
+      "piece": "PPU: leer tramos de tiles 4bpp nativos y saltar filas transparentes",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-23T03:30:14.566175+00:00",
+      "updated_at": "2026-11-23T03:30:14.566175+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T03:20:53.054919+00:00",
+  "updated_at": "2026-11-23T03:30:14.566175+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
