@@ -18082,10 +18082,10 @@
     "ga36-title-palette-20261123": {
       "id": "ga36-title-palette-20261123",
       "piece": "Acelerar el fundido del título con búsqueda directa y colores únicos",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-title-palette",
       "created_at": "2026-11-23T06:31:55.397146+00:00",
-      "updated_at": "2026-11-23T06:32:34.382202+00:00",
+      "updated_at": "2026-11-23T06:33:02.156750+00:00",
       "branch": "lab/ga36-title-palette-candidates",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/678",
       "approval": "Usuario autorizó integrar optimizaciones verificadas para el port",
@@ -18095,9 +18095,15 @@
           "at": "2026-11-23T06:32:34.382202+00:00",
           "owner": "codex-ga36-title-palette",
           "detail": "Cinco BMP y hash final idénticos, 2880 desempates verificados y menor costo de fase PPU."
+        },
+        {
+          "at": "2026-11-23T06:33:02.156750+00:00",
+          "owner": "codex-ga36-title-palette",
+          "detail": "Merge c9b4c6b38ae5a00c589e33a80a3d964b306659cf; cinco capturas idénticas con reloj fijo."
         }
       ],
-      "claimed_at": "2026-11-23T06:32:03.939412+00:00"
+      "claimed_at": "2026-11-23T06:32:03.939412+00:00",
+      "completed_at": "2026-11-23T06:33:02.156750+00:00"
     }
   },
   "integrator": {
@@ -18106,7 +18112,7 @@
     "created_at": "2026-11-23T06:32:41.587071+00:00",
     "updated_at": "2026-11-23T06:32:41.587071+00:00"
   },
-  "updated_at": "2026-11-23T06:32:41.587071+00:00",
+  "updated_at": "2026-11-23T06:33:02.157931+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
