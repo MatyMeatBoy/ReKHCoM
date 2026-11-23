@@ -18104,10 +18104,23 @@
       ],
       "claimed_at": "2026-11-23T06:32:03.939412+00:00",
       "completed_at": "2026-11-23T06:33:02.156750+00:00"
+    },
+    "ga36-title-workers-20261123": {
+      "id": "ga36-title-workers-20261123",
+      "piece": "Paralelizar filas del título con fundido y guardar cachés por worker",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-23T06:38:58.392102+00:00",
+      "updated_at": "2026-11-23T06:38:58.392102+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": null,
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-23T06:33:09.595849+00:00",
+  "updated_at": "2026-11-23T06:38:58.392102+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
