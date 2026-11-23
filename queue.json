@@ -17843,22 +17843,28 @@
     "battle-blur-separable-20261123": {
       "id": "battle-blur-separable-20261123",
       "piece": "Reducir el coste del desenfoque de transicion de combate conservando pixeles",
-      "status": "pr_abierto",
+      "status": "integrado",
       "owner": "codex-ga36-blur",
       "created_at": "2026-11-23T03:35:21.942887+00:00",
-      "updated_at": "2026-11-23T03:44:24.458493+00:00",
+      "updated_at": "2026-11-23T03:44:46.182653+00:00",
       "branch": "perf/battle-separable-blur",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/669",
-      "approval": null,
+      "approval": "Usuario: ve sumando todas las mejoras que puedas y sigue hasta full speed con margen",
       "reference": null,
       "evidence": [
         {
           "at": "2026-11-23T03:44:24.458493+00:00",
           "owner": "codex-ga36-blur",
           "detail": "7,372,800 interpolation pixels exact; ARMv7 battle 5 frame screenshots exact; lower ppu presentation in transition phase"
+        },
+        {
+          "at": "2026-11-23T03:44:46.182653+00:00",
+          "owner": "codex-ga36-blur",
+          "detail": "88a0876bd384620006db51304f3be98707d04d8d; QEMU transición present 38.19/26.02/28.67/32.72 ms; 5 cuadros y final exactos"
         }
       ],
-      "claimed_at": "2026-11-23T03:35:34.098038+00:00"
+      "claimed_at": "2026-11-23T03:35:34.098038+00:00",
+      "completed_at": "2026-11-23T03:44:46.182653+00:00"
     }
   },
   "integrator": {
@@ -17867,7 +17873,7 @@
     "created_at": "2026-11-23T03:44:33.271989+00:00",
     "updated_at": "2026-11-23T03:44:33.271989+00:00"
   },
-  "updated_at": "2026-11-23T03:44:33.271989+00:00",
+  "updated_at": "2026-11-23T03:44:46.182653+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
