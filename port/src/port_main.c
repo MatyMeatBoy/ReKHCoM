@@ -1918,6 +1918,23 @@ static void PrepareHudAfterOptions(int menuCanvas) {
 }
 
 
+/* Fully transparent straight-alpha overlays leave the fbdev target untouched. */
+static bool ScreenOverlayEmpty(const uint32_t* pixels, int width) {
+#ifdef PORT_LINUX
+    if (PortFbActive() && PortFixedFullscreen()) {
+        const size_t count = (size_t)width * GBA_SCREEN_H;
+        size_t i = 0;
+        while (i < count && !(pixels[i] & 0xff000000u))
+            i++;
+        return i == count;
+    }
+#else
+    (void)pixels;
+    (void)width;
+#endif
+    return false;
+}
+
 static void Present(int paced) {
     if (!RendererResetService()) return;
     const char* hdProfile;
@@ -2379,12 +2396,14 @@ static void Present(int paced) {
             SDL_SetTextureBlendMode(sOverlayTex, SDL_BLENDMODE_BLEND);
             SDL_SetTextureScaleMode(sOverlayTex, SDL_SCALEMODE_PIXELART);
         }
-        SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
         od.w = sOverlayTexW * sOverlayScale;
         od.h = GBA_SCREEN_H * sOverlayScale;
         od.x = (float)(int)((outW - od.w) / 2);
         od.y = (float)(int)((outH - od.h) / 2);
-        SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od);
+        if (!ScreenOverlayEmpty(overlay, sOverlayTexW)) {
+            SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
+            SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od);
+        }
         PortHdSpritesWorldFallback(nativeWorld);
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */
         if (worldLight && !nativeWorld && !PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &od)) {
@@ -2392,15 +2411,17 @@ static void Present(int paced) {
              * Repaint this same frame from retained native pixels, with all
              * other HD words/parts intact. No game tick or PPU replay occurs. */
             overlay = PortPpuScreenNativeWorld();
-            if (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
-                !SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od)) {
+            if (!ScreenOverlayEmpty(overlay, sOverlayTexW) &&
+                (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
+                 !SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od))) {
                 sRendererResetPending = 1;
                 return; /* Keep the last presented frame while audio/gameplay continue. */
             }
             PortHdSpritesWorldFallback(1);
             PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0);
         }
-        if (PortPpuScreenOver()) {
+        const uint32_t* screenOver = PortPpuScreenOver();
+        if (screenOver && !ScreenOverlayEmpty(screenOver, gPortOverlayW)) {
             /* what the menu draws in front of its HD parts */
             if (sScreenOverTex == NULL || sScreenOverTexW != gPortOverlayW) {
                 if (sScreenOverTex != NULL)
@@ -2412,7 +2433,7 @@ static void Present(int paced) {
                 SDL_SetTextureScaleMode(sScreenOverTex, SDL_SCALEMODE_PIXELART);
             }
             if (sScreenOverTex != NULL) {
-                SDL_UpdateTexture(sScreenOverTex, NULL, PortPpuScreenOver(), sScreenOverTexW * 4);
+                SDL_UpdateTexture(sScreenOverTex, NULL, screenOver, sScreenOverTexW * 4);
                 SDL_RenderTexture(sRenderer, sScreenOverTex, NULL, &od);
             }
         }
