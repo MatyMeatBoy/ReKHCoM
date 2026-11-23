@@ -34,6 +34,10 @@ extern int PortBridgeVideoCaps(void);
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
+
 #include "port/port.h"
 #include "port/port_netlink.h"
 #include "port/port_logfile.h"
@@ -1242,7 +1246,7 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
     int x0, y0, w, h, cx, cy;
 
     if (sBlurTex == NULL) {
-        sBlurTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, BLUR_OUT_W,
+        sBlurTex = SDL_CreateTexture(sRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, BLUR_OUT_W,
                                      BLUR_OUT_H);
         if (sBlurTex == NULL)
             return;
@@ -1278,7 +1282,11 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
     }
     /* The horizontal interpolation depends on only 14 source rows. Reuse
        their unrounded values for all destination rows. */
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    static float horizontal[BLUR_H][BLUR_OUT_W][4];
+#else
     static float horizontal[BLUR_H][BLUR_OUT_W][3];
+#endif
     for (cx = 0; cx < BLUR_OUT_W; cx++) {
         float fx = (cx + 0.5f) * BLUR_W / BLUR_OUT_W - 0.5f;
         int ix = (int)SDL_floorf(fx);
@@ -1302,10 +1310,19 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         iy = SDL_clamp(iy, 0, BLUR_H - 1);
         for (cx = 0; cx < BLUR_OUT_W; cx++) {
             uint32_t out = 0xFF000000u;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+            const float32x4_t above = vld1q_f32(horizontal[iy][cx]);
+            const float32x4_t below = vld1q_f32(horizontal[jy][cx]);
+            const float32x4_t value = vaddq_f32(vmulq_n_f32(above, 1 - ty), vmulq_n_f32(below, ty));
+            const uint32x4_t rounded = vcvtq_u32_f32(vaddq_f32(value, vdupq_n_f32(0.5f)));
+            out |= vgetq_lane_u32(rounded, 0) | (vgetq_lane_u32(rounded, 1) << 8) |
+                   (vgetq_lane_u32(rounded, 2) << 16);
+#else
             for (int channel = 0; channel < 3; channel++) {
                 float v = horizontal[iy][cx][channel] * (1 - ty) + horizontal[jy][cx][channel] * ty;
                 out |= (uint32_t)(v + 0.5f) << (channel * 8);
             }
+#endif
             big[cy * BLUR_OUT_W + cx] = out;
         }
     }
