@@ -2264,6 +2264,36 @@ scalar_world:
         tile = entry & 0x3FF;
         fx = (entry & 0x400) ? 7 - (px & 7) : (px & 7);
         fyy = (entry & 0x800) ? 7 - fy : fy;
+        /* Native 4bpp runs share the map entry, pixel row and palette.
+           Keep scene replacements and tiles with registered text on the pixel path. */
+        if (!bpp8 && !outside && (unsigned)gx < GBA_SCREEN_W &&
+            mosH == 1 && !sSpotlight && mdLayer != 2 && sDarksideLayer[bg] != 2 &&
+            !sWorldNameOn) {
+            const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
+            if (tileOff < 0x10000 &&
+                (!sHdText || (entry & 0xC00) || BgTextTileAt(tileOff)->code <= 0x20)) {
+                const int localX = x - gPortScreen.originX;
+                const int end = SDL_min(w - x, SDL_min(sRight - localX, GBA_SCREEN_W - gx));
+                const int count = SDL_min(8 - (px & 7), end);
+                const uint8_t* row = VRAM8 + tileOff + fyy * 4;
+                const uint16_t* palette = dtPalette + (entry >> 12) * 16;
+                const int step = (entry & 0x400) ? -1 : 1;
+                uint32_t packed;
+                memcpy(&packed, row, sizeof(packed));
+                if (!packed) {
+                    for (int i = 0; i < count; i++)
+                        out[x + i] = TRANSPARENT;
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        int sourceX = fx + i * step;
+                        unsigned index = (row[sourceX >> 1] >> ((sourceX & 1) * 4)) & 15;
+                        out[x + i] = index ? palette[index] & 0x7FFF : TRANSPARENT;
+                    }
+                }
+                x += count - 1;
+                continue;
+            }
+        }
     pixel:
         if (bpp8) {
             uint32_t off = tile * 64 + fyy * 8 + fx;
