@@ -522,4 +522,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-title-palette-20261123 | Acelerar el fundido del título con búsqueda directa y colores únicos | integrado | codex-ga36-title-palette | https://github.com/MatyMeatBoy/ReKHCoM/pull/678 | Usuario autorizó integrar optimizaciones verificadas para el port | 2026-11-23T06:33:02.156750+00:00 |
 | ga36-title-workers-20261123 | Paralelizar filas del título con fundido y guardar cachés por worker | pr_abierto | codex-ga36-title-workers | https://github.com/MatyMeatBoy/ReKHCoM/pull/679 | Usuario autorizó integrar optimizaciones del port con prueba | 2026-11-23T06:39:45.645820+00:00 |
 
-Integrador: libre
+Integrador: codex-ga36-title-workers (ocupado; 2026-11-23T06:39:53.755316+00:00)
