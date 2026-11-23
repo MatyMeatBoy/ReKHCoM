@@ -230,7 +230,7 @@ void PortFbWaitCopy(void);
 void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
-int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
 static int sFbW, sFbH;
@@ -1247,6 +1247,19 @@ static SDL_Texture* sBlurTex;
 #define BLUR_OUT_W 320
 #define BLUR_OUT_H 180
 
+static void PresentBlurTexture(const uint32_t* pixels, int w, int h) {
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    const char* directBlur;
+    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
+    if (directBlur && w == BLUR_OUT_W * 2 && PortFixed480p() &&
+        PortFbDrawNearest2x(sRenderer, pixels, BLUR_OUT_W, BLUR_OUT_H, h))
+        return;
+#else
+    (void)pixels; (void)w; (void)h;
+#endif
+    SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+}
+
 static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
     static uint32_t cell[BLUR_W * BLUR_H], uploaded[BLUR_W * BLUR_H], big[BLUR_OUT_W * BLUR_OUT_H];
     static int uploadedValid;
@@ -1290,7 +1303,7 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         }
     }
     if (uploadedValid && memcmp(cell, uploaded, sizeof(cell)) == 0) {
-        SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+        PresentBlurTexture(big, outW, outH);
         return;
     }
     /* The horizontal interpolation depends on only 14 source rows. Reuse
@@ -1350,7 +1363,7 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         memcpy(uploaded, cell, sizeof(cell));
         uploadedValid = 1;
     }
-    SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+    PresentBlurTexture(big, outW, outH);
 }
 
 /* Style 8 over the blurred reflection: a row whose sprites reach the edge
@@ -2372,7 +2385,7 @@ static void Present(int paced) {
         if (!menuCanvas && sFitScale <= 0 && PortFixedFullscreen() && gPortConfig.filter == PORT_FILTER_NEAREST &&
             dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH) {
             const uint64_t scaleStart = measureFb ? SDL_GetPerformanceCounter() : 0;
-            drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height);
+            drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, outH);
             if (measureFb) {
                 scaleTicks = SDL_GetPerformanceCounter() - scaleStart;
                 usedScale2x = drawn2x;
@@ -2417,7 +2430,8 @@ static void Present(int paced) {
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
             if (!drawn2x && !(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
-                  PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height)))
+                  outH == gPortScreen.height * 2 &&
+                  PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, outH)))
 #endif
             {
                 if (deferBase)

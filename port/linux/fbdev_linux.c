@@ -138,15 +138,14 @@ SDL_Renderer* PortFbCreateRenderer(void) {
 
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
-int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h) {
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH) {
 #ifdef __ARM_NEON
     SDL_Rect viewport;
     float scaleX, scaleY;
     int logicalW, logicalH;
     SDL_RendererLogicalPresentation logicalMode;
     if (!sRenderSurface || w <= 0 || (w & 3) || h <= 0 ||
-        sRenderSurface->w / 2 != w || sRenderSurface->h / 2 != h ||
-        (sRenderSurface->w & 1) || (sRenderSurface->h & 1) ||
+        sRenderSurface->w / 2 != w || sRenderSurface->h != outH || (sRenderSurface->w & 1) ||
         SDL_MUSTLOCK(sRenderSurface) || SDL_GetRenderTarget(renderer) || SDL_RenderClipEnabled(renderer) ||
         !SDL_GetRenderViewport(renderer, &viewport) || viewport.x || viewport.y ||
         viewport.w != sRenderSurface->w || viewport.h != sRenderSurface->h ||
@@ -156,6 +155,29 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
         return 0;
     uint8_t* pixels = sRenderSurface->pixels;
     const int pitch = sRenderSurface->pitch;
+    if (h != outH / 2 || (outH & 1)) {
+        /* SDL's nearest scaler samples the pixel centres with a 16.16 step. */
+        const uint64_t step = ((uint64_t)h << 16) / outH;
+        uint64_t pos = step / 2;
+        int previous = -1;
+        for (int y = 0; y < outH; y++, pos += step) {
+            const int row = (int)(pos >> 16);
+            uint32_t* dst = (uint32_t*)(pixels + (size_t)y * pitch);
+            if (row == previous) {
+                memcpy(dst, (const uint8_t*)dst - pitch, (size_t)w * 2 * sizeof(*dst));
+                continue;
+            }
+            const uint32_t* input = src + (size_t)row * w;
+            for (int x = 0; x < w; x += 4) {
+                const uint32x4_t colors = vld1q_u32(input + x);
+                const uint32x4x2_t doubled = vzipq_u32(colors, colors);
+                vst1q_u32(dst + 2 * x, doubled.val[0]);
+                vst1q_u32(dst + 2 * x + 4, doubled.val[1]);
+            }
+            previous = row;
+        }
+        return 1;
+    }
     for (int y = 0; y < h; y++) {
         uint32_t* upper = (uint32_t*)(pixels + (size_t)(2 * y) * pitch);
         uint32_t* lower = (uint32_t*)((uint8_t*)upper + pitch);
@@ -171,7 +193,7 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
     }
     return 1;
 #else
-    (void)renderer; (void)src; (void)w; (void)h;
+    (void)renderer; (void)src; (void)w; (void)h; (void)outH;
     return 0;
 #endif
 }
