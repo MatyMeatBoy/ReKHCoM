@@ -426,6 +426,10 @@ unsigned int PortTitleFooterPixel(int side, int y) {
 }
 static uint16_t sTitlePalette[256], sTitleFadeColors[49][256];
 static uint16_t sTitleColorIndex[0x8000];
+static struct {
+    uint16_t red, green, blue, color;
+} sTitleCandidates[256];
+static int sTitleCandidateCount;
 static uint8_t sTitleFadeReady[49][256];
 static int sTitlePaletteValid;
 void PortTitleArtFade(int enabled) {
@@ -3143,13 +3147,14 @@ static void TitleArtFadeLine(int gy, int bg) {
                 target[i] = a * (255-strength) + white * strength;
             }
             best = 0; distance = 0x7FFFFFFF;
-            for (i = 0; i < 256; i++) {
-                int p = sTitlePalette[i], r = (p & 31)*255-target[0];
-                int g = ((p>>5)&31)*255-target[1], b = ((p>>10)&31)*255-target[2];
+            for (i = 0; i < sTitleCandidateCount; i++) {
+                int r = sTitleCandidates[i].red - target[0];
+                int g = sTitleCandidates[i].green - target[1];
+                int b = sTitleCandidates[i].blue - target[2];
                 int d = r*r + g*g + b*b;
                 if (d < distance) {best = i; distance = d;}
             }
-            sTitleFadeColors[code][index] = sTitlePalette[best] & 0x7FFF;
+            sTitleFadeColors[code][index] = sTitleCandidates[best].color;
             sTitleFadeReady[code][index] = 1;
         }
         sBgLine[bg][x] = sTitleFadeColors[code][index];
@@ -4147,6 +4152,17 @@ void PortPpuBeginFrame(void) {
         /* Keep the first matching palette slot, including duplicate colors. */
         for (int i = 255; i >= 0; i--)
             sTitleColorIndex[sTitlePalette[i] & 0x7fff] = (uint16_t)i;
+        sTitleCandidateCount = 0;
+        for (int i = 0; i < 256; i++) {
+            const uint16_t color = sTitlePalette[i] & 0x7fff;
+            if (sTitleColorIndex[color] != i)
+                continue;
+            const int j = sTitleCandidateCount++;
+            sTitleCandidates[j].color = color;
+            sTitleCandidates[j].red = (color & 31) * 255;
+            sTitleCandidates[j].green = ((color >> 5) & 31) * 255;
+            sTitleCandidates[j].blue = (color >> 10) * 255;
+        }
         memset(sTitleFadeReady, 0, sizeof(sTitleFadeReady));
         sTitlePaletteValid = 1;
     }
