@@ -1308,23 +1308,30 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         float ty = fy - iy;
         int jy = SDL_clamp(iy + 1, 0, BLUR_H - 1);
         iy = SDL_clamp(iy, 0, BLUR_H - 1);
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+        for (cx = 0; cx < BLUR_OUT_W; cx += 4) {
+            const float32x4x4_t above = vld4q_f32(horizontal[iy][cx]);
+            const float32x4x4_t below = vld4q_f32(horizontal[jy][cx]);
+            uint32x4_t channels[3];
+            for (int channel = 0; channel < 3; channel++) {
+                const float32x4_t value = vaddq_f32(vmulq_n_f32(above.val[channel], 1 - ty),
+                                                   vmulq_n_f32(below.val[channel], ty));
+                channels[channel] = vcvtq_u32_f32(vaddq_f32(value, vdupq_n_f32(0.5f)));
+            }
+            const uint32x4_t bg = vorrq_u32(channels[0], vshlq_n_u32(channels[1], 8));
+            const uint32x4_t ra = vorrq_u32(vshlq_n_u32(channels[2], 16), vdupq_n_u32(0xFF000000u));
+            vst1q_u32(big + cy * BLUR_OUT_W + cx, vorrq_u32(bg, ra));
+        }
+#else
         for (cx = 0; cx < BLUR_OUT_W; cx++) {
             uint32_t out = 0xFF000000u;
-#if defined(PORT_LINUX) && defined(__ARM_NEON)
-            const float32x4_t above = vld1q_f32(horizontal[iy][cx]);
-            const float32x4_t below = vld1q_f32(horizontal[jy][cx]);
-            const float32x4_t value = vaddq_f32(vmulq_n_f32(above, 1 - ty), vmulq_n_f32(below, ty));
-            const uint32x4_t rounded = vcvtq_u32_f32(vaddq_f32(value, vdupq_n_f32(0.5f)));
-            out |= vgetq_lane_u32(rounded, 0) | (vgetq_lane_u32(rounded, 1) << 8) |
-                   (vgetq_lane_u32(rounded, 2) << 16);
-#else
             for (int channel = 0; channel < 3; channel++) {
                 float v = horizontal[iy][cx][channel] * (1 - ty) + horizontal[jy][cx][channel] * ty;
                 out |= (uint32_t)(v + 0.5f) << (channel * 8);
             }
-#endif
             big[cy * BLUR_OUT_W + cx] = out;
         }
+#endif
     }
     SDL_UpdateTexture(sBlurTex, NULL, big, BLUR_OUT_W * 4);
     SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
