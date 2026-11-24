@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T21:52:36.882326+00:00",
+      "updated_at": "2026-11-24T21:56:20.209846+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18991,13 +18991,18 @@
           "at": "2026-11-24T21:52:36.882326+00:00",
           "owner": "Codex-v22",
           "detail": "Candidata NEON para mascara foreground Jiminy compilada ARMhf, test escalar PASS, ABBA QEMU corregido diario A 72.75/67.43 FPS B 71.35/65.89 FPS; indicador revela que ruta HD foreground no se ejecuto, por ello comparacion no mide candidata. Descartada y revertida, patch archivado journal-foreground-neon-experiment.patch. No afirmar mejora; buscar ruta reproducible con assets/estado adecuados."
+        },
+        {
+          "at": "2026-11-24T21:56:20.209846+00:00",
+          "owner": "Codex-v22",
+          "detail": "Start reproducido en QEMU con START frame 180 y captura del menu real; perfil RC v4 start-v4-row-qemu: BG text4 7.25 core-ms + sprites 5.43 core-ms en frame 270, composicion 2.07. Candidata lectura packed text4 ABBA QEMU A 68.71/77.28 FPS P95 16.67/14.20 ms, B 67.34/77.07 P95 16.30/14.04; solapado, sin evidencia de mejora. Candidata revertida, patch archivado start-packed-text-experiment.patch; continuar."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:52:36.882326+00:00",
+  "updated_at": "2026-11-24T21:56:20.209846+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
