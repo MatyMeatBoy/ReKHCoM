@@ -18246,11 +18246,11 @@
       "status": "en_curso",
       "owner": "codex-ga36-menu-hud",
       "created_at": "2026-11-24T01:01:24.724815+00:00",
-      "updated_at": "2026-11-24T02:19:44.562448+00:00",
+      "updated_at": "2026-11-24T02:24:34.878384+00:00",
       "branch": "fix/ga36-menu-hud-20261123",
       "pr": null,
       "approval": null,
-      "reference": "Solicitud usuario 23/11: RC2",
+      "reference": "HUD separado: draft PR https://github.com/MatyMeatBoy/ReKHCoM/pull/684 commit cf5544376, base release/ga36-v0.1-alpha-shore; QEMU Sora tres cartas y combo Axel Muro de fuego visibles, build exacto PR y prueba fisica pendientes.",
       "evidence": [
         {
           "at": "2026-11-24T01:05:36.808118+00:00",
@@ -18276,6 +18276,11 @@
           "at": "2026-11-24T02:19:44.562448+00:00",
           "owner": "codex-ga36-menu-hud",
           "detail": "PRIORIDAD EXPRESA usuario: velocidad full speed en todos los menus, especialmente armar baraja, Añadir naipes, entrada y cambios de submenu; no considerar terminado sin pruebas comparables y fisicas. Usuario observa que barajas se ven mejor. Ajuste HUD aun no instalado. Diagnosticado coste texto HD; NEON experimental con pruebas de imagen y comparador fisico ABBA preparado; falta recorrido manual y comparacion fisica. Transicion entrada combate 4:3 pendiente ga36-battle-entry-43-20261123."
+        },
+        {
+          "at": "2026-11-24T02:24:34.878384+00:00",
+          "owner": "codex-ga36-menu-hud",
+          "detail": "Prioridad menus y transiciones a full speed sigue abierta. Usuario realiza diagnostico interactivo; comparador NEON ABBA fisico preparado, aun no instalado."
         }
       ],
       "claimed_at": "2026-11-24T01:06:22.704126+00:00"
@@ -18295,7 +18300,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T02:19:44.562448+00:00",
+  "updated_at": "2026-11-24T02:24:34.878384+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
