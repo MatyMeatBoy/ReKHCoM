@@ -18488,19 +18488,20 @@
     "ga36-synthesis-physical-spotlight-20261124": {
       "id": "ga36-synthesis-physical-spotlight-20261124",
       "piece": "Corregir rendimiento de síntesis con foco real observado en GA36 física",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-ga36-real-synthesis",
       "created_at": "2026-11-24T11:37:05.860534+00:00",
-      "updated_at": "2026-11-24T11:37:05.860534+00:00",
+      "updated_at": "2026-11-24T11:37:19.961013+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Diagnóstico físico 4232-4362: 34.11 FPS P95 29.73ms; PPU 19.42ms, presentación 7.66ms, excluidos frames de captura",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-24T11:37:19.961013+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T11:37:05.860534+00:00",
+  "updated_at": "2026-11-24T11:37:19.961013+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
