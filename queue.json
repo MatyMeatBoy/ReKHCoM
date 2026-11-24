@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T21:31:02.231825+00:00",
+      "updated_at": "2026-11-24T21:37:04.813687+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18791,6 +18791,11 @@
           "at": "2026-11-24T21:31:02.231825+00:00",
           "owner": "Codex-v22",
           "detail": "RC local EU y diagnostico unico v4 fuente 67ce76e9140e8cbf6a0c570eeda6a9ed2bb221e3; RC SHA256 cae12234bb72f6f6e285433726f04bf0fc9a685a778681f4bfdfb47348e339c5, diagnostico b9a5b333deeca3876dd1ea0f39f098baf2e1963d2d3633d9624a41d921190521. QEMU RC arranque y RC+diagnostico ocho casos PASS; flags de optimizacion de RC y diagnostico coinciden, instrumentos adicionales solo en diagnostico. Instalador conjunto fixture PASS, rechaza segunda instalacion y restaura todos archivos tras fallo inyectado luego de tres reemplazos. HOME no reconectada; prueba fisica pendiente."
+        },
+        {
+          "at": "2026-11-24T21:37:04.813687+00:00",
+          "owner": "Codex-v22",
+          "detail": "RC y diagnostico unico v4 instalados en F: HOME con identidad y cinco archivos protegidos verificados; recibo install-rc-menus-v4-20261124T213629618995Z.json. Seis entradas antiguas de diagnostico retiradas del menu con backup SHA256 0fffb96e28b921463668a73dab96822617252cf5d8cde6f03b45c2e8c5941512. Una unica prueba fisica agrupada pendiente, pedir al usuario ejecutar y devolver tarjeta."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -18962,7 +18967,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:31:02.231825+00:00",
+  "updated_at": "2026-11-24T21:37:04.813687+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
