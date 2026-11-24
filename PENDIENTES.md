@@ -536,6 +536,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-worldinspect-physical-20261124 | GA36 rendimiento real de naipes de mundo mode_worldinspect | pr_abierto | codex-ga36-real-worldinspect | https://github.com/MatyMeatBoy/ReKHCoM/pull/691 | — | 2026-11-24T12:14:25.013347+00:00 |
 | ga36-worldinspect-present-followup-20261124 | GA36 naipes mundo: investigar coste restante de presentacion tras PR691 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/692 | — | 2026-11-24T19:15:43.140039+00:00 |
 | ga36-synthesis-followup-profile-20261124 | GA36 sintesis con foco: identificar y reducir coste restante tras PR690 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/693 | — | 2026-11-24T19:23:05.849308+00:00 |
-| ga36-synthesis-next-hotspot-20261124 | GA36 sintesis: perfilar siguientes costes tras BG0 y optimizar | pendiente | — | — | — | 2026-11-24T19:23:26.568207+00:00 |
+| ga36-synthesis-next-hotspot-20261124 | GA36 sintesis: perfilar siguientes costes tras BG0 y optimizar | en_curso | Codex-v22 | — | — | 2026-11-24T19:23:39.248208+00:00 |
 
 Integrador: libre
