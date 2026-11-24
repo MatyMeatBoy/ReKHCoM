@@ -18886,17 +18886,23 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:06:19.020610+00:00",
-      "updated_at": "2026-11-24T21:06:30.896991+00:00",
-      "branch": null,
+      "updated_at": "2026-11-24T21:07:58.194571+00:00",
+      "branch": "perf/ga36-journal-bgvector-20261124",
       "pr": null,
       "approval": null,
       "reference": "Una pasada QEMU corregida 39.22 FPS P95 31.08; respetar prioridad sintesis/naipes y unica prueba fisica",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T21:07:58.194571+00:00",
+          "owner": "Codex-v22",
+          "detail": "QEMU V3 fixture muestra compose 25-32 core-ms por cuadro; perfil de etapas sin capturas. Explorar segundo fondo sin objetos conservando capturas de pagina."
+        }
+      ],
       "claimed_at": "2026-11-24T21:06:30.896991+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:06:30.896991+00:00",
+  "updated_at": "2026-11-24T21:07:58.194571+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
