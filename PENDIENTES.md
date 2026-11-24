@@ -541,6 +541,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-synthesis-clamped-bg0-20261124 | GA36 sintesis: reducir muestreo repetido de bordes del foco BG0 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/696 | — | 2026-11-24T19:43:49.376089+00:00 |
 | ga36-synthesis-clear-rows-20261124 | GA36 sintesis: acelerar limpieza de filas ocultas del mundo | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/697 | — | 2026-11-24T19:48:52.482784+00:00 |
 | ga36-synthesis-overlay-upload-20261124 | GA36 sintesis: evitar subida SDL redundante al componer overlay directo | pendiente | — | — | — | 2026-11-24T19:51:44.484807+00:00 |
-| ga36-worldinspect-background-vector-20261124 | GA36 naipes mundo: vectorizar composicion de fondo sin objetos | pendiente | — | — | — | 2026-11-24T19:53:50.679058+00:00 |
+| ga36-worldinspect-background-vector-20261124 | GA36 naipes mundo: vectorizar composicion de fondo sin objetos | en_curso | Codex-v22 | — | — | 2026-11-24T19:54:02.526938+00:00 |
 
 Integrador: libre
