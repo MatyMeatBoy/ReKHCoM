@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:29:39.516993+00:00",
+      "updated_at": "2026-11-24T22:32:17.215538+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19051,13 +19051,18 @@
           "at": "2026-11-24T22:29:39.516993+00:00",
           "owner": "Codex-v22",
           "detail": "Perfil por etapas diario dos niveles, QEMU journal-world-parts-qemu: PortHdTextDraw ~2.74-3.44 ms portada, ~5.64-5.85 lista Historia y ~3.16-5.22 detalle; otras partes del mundo ~0.01 ms. Direct clipped glyph activo. Es coste simulado instrumentado, no FPS fisicos. Instrumentacion revertida; RC restaurada."
+        },
+        {
+          "at": "2026-11-24T22:32:17.215538+00:00",
+          "owner": "Codex-v22",
+          "detail": "Recorte de filas de glyphs fuera de letra, QEMU ABBA vs RC exacta en raiz/lista/detalle: resultados solapados, sin mejora demostrada; journal-glyph-skip-rows-abba/qemu.log. Cambio revertido; patch journal-glyph-skip-rows-experiment.patch, RC restaurada."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:29:39.516993+00:00",
+  "updated_at": "2026-11-24T22:32:17.215538+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
