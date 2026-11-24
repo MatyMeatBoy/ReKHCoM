@@ -18423,12 +18423,12 @@
     "ga36-journal-presentation-perf-20261124": {
       "id": "ga36-journal-presentation-perf-20261124",
       "piece": "Investigar presentación lenta del diario 4:3 en GA36",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ga36-journal",
       "created_at": "2026-11-24T07:39:53.062934+00:00",
-      "updated_at": "2026-11-24T07:40:19.836499+00:00",
+      "updated_at": "2026-11-24T07:48:20.376973+00:00",
       "branch": "perf/ga36-journal-20261124",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/688",
       "approval": null,
       "reference": "QEMU RC con opción NEON: entrada diario 62.7-69.1 FPS, presentación 5.8-6.3 ms; control Estado separado",
       "evidence": [
@@ -18436,13 +18436,18 @@
           "at": "2026-11-24T07:40:19.836499+00:00",
           "owner": "codex-ga36-journal",
           "detail": "QEMU diario 62.7-69.1 FPS en suite; investigando presentación 5.8-6.3 ms."
+        },
+        {
+          "at": "2026-11-24T07:48:20.376973+00:00",
+          "owner": "codex-ga36-journal",
+          "detail": "QEMU B/A/A/B diario 69.62-70.76 a 81.21-83.88 FPS P95 15.45-15.78 a 12.85-13.50ms; presentación 5.71-5.72 a 4.22-4.30ms; 9 capturas iguales y tests PASS. Físico pendiente."
         }
       ],
       "claimed_at": "2026-11-24T07:40:05.623104+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T07:40:19.836499+00:00",
+  "updated_at": "2026-11-24T07:48:20.376973+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

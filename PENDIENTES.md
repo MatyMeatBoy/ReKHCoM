@@ -530,6 +530,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-room-synthesis-performance-20261124 | Diagnosticar y corregir lentitud de síntesis de estancias en GA36, reportada por usuario | pendiente | — | fix/ga36-next-rc-synthesis-20261124 | — | 2026-11-24T07:09:11.234117+00:00 |
 | ga36-world-background-composition-20261124 | Optimizar composición redundante de selección de naipes mundo en GA36; investigar sin modificar carril de cabeceras | pr_abierto | codex-ga36-world-compose | https://github.com/MatyMeatBoy/ReKHCoM/pull/686 | — | 2026-11-24T07:31:39.733603+00:00 |
 | ga36-start-synthesis-43-layout-20261124 | Ajustar márgenes 4:3 de menús Start y síntesis en GA36 | pr_abierto | codex-ga36-43-layout | https://github.com/MatyMeatBoy/ReKHCoM/pull/687 | — | 2026-11-24T07:39:35.592085+00:00 |
-| ga36-journal-presentation-perf-20261124 | Investigar presentación lenta del diario 4:3 en GA36 | en_curso | codex-ga36-journal | perf/ga36-journal-20261124 | — | 2026-11-24T07:40:19.836499+00:00 |
+| ga36-journal-presentation-perf-20261124 | Investigar presentación lenta del diario 4:3 en GA36 | pr_abierto | codex-ga36-journal | https://github.com/MatyMeatBoy/ReKHCoM/pull/688 | — | 2026-11-24T07:48:20.376973+00:00 |
 
 Integrador: libre
