@@ -555,6 +555,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-mapinspect-opaque-vector-20261124 | GA36 inspeccion mapa: vectorizar filas opacas sin sprites | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/701 | — | 2026-11-24T21:23:46.402247+00:00 |
 | ga36-start-journal-physical-v4-20261124 | GA36 rendimiento Start y Diario tras diagnostico fisico v4 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/702 | — | 2026-11-24T22:40:11.144656+00:00 |
 | ga36-fractional-fit-runs-20261124 | GA36 escala fraccional de diario y naipes optimizacion | pendiente | — | — | — | 2026-11-24T22:43:52.425141+00:00 |
-| ga36-journal-detail-central-compose-20261124 | GA36 diario detalle composicion central con bordes intactos | listo_pr | Codex-v22 | perf/ga36-journal-detail-central-20261124 | — | 2026-11-24T22:58:26.353525+00:00 |
+| ga36-journal-detail-central-compose-20261124 | GA36 diario detalle composicion central con bordes intactos | listo_pr | Codex-v22 | perf/ga36-journal-detail-central-20261124 | — | 2026-11-24T23:02:52.564270+00:00 |
 
 Integrador: libre

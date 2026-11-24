@@ -19096,7 +19096,7 @@
       "status": "listo_pr",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T22:44:20.787315+00:00",
-      "updated_at": "2026-11-24T22:58:26.353525+00:00",
+      "updated_at": "2026-11-24T23:02:52.564270+00:00",
       "branch": "perf/ga36-journal-detail-central-20261124",
       "pr": null,
       "approval": null,
@@ -19116,13 +19116,18 @@
           "at": "2026-11-24T22:58:26.353525+00:00",
           "owner": "Codex-v22",
           "detail": "Ampliacion QEMU ruta diario -> naipes -> lista Cadena del reino (journal-central-naipedia-visual): 5 capturas A/B identicas, PPU_VERIFY sin discrepancias. Optimizacion no se activo en esa lista, asi que valida fallback, no detalle interno de carta. PR pendiente por credenciales gh 401, commit dbdbdda94 conservado."
+        },
+        {
+          "at": "2026-11-24T23:02:52.564270+00:00",
+          "owner": "Codex-v22",
+          "detail": "Ampliacion QEMU Diario -> Naipes -> Cadena del reino -> detalle de carta verificada visualmente (journal-central-card-detail-visual/present_00510.bmp): 5 capturas A/B identicas, ruta central activa, PPU_VERIFY sin MISMATCH. Complementa detalle Historia. Falta medir consola fisica; PR pendiente por gh 401."
         }
       ],
       "claimed_at": "2026-11-24T22:50:26.431168+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:58:26.354612+00:00",
+  "updated_at": "2026-11-24T23:02:52.564270+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
