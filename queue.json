@@ -18321,17 +18321,23 @@
       "status": "en_curso",
       "owner": "codex-ga36-battle-entry",
       "created_at": "2026-11-24T01:08:10.259534+00:00",
-      "updated_at": "2026-11-24T05:42:09.790933+00:00",
-      "branch": null,
+      "updated_at": "2026-11-24T05:45:56.631500+00:00",
+      "branch": "fix/ga36-battle-entry-43",
       "pr": null,
       "approval": null,
       "reference": "Solicitud usuario 23/11: pendiente tras prioridad menus",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T05:45:56.631500+00:00",
+          "owner": "codex-ga36-battle-entry",
+          "detail": "24/11: usuario reporta Nivel, guardado y menú principal con bandas 3:2 en 4:3. Implementado relleno común superior/inferior desde el color dominante de los bordes, sin alterar los 240x160 originales; git diff --check, test_ga36_port.py y test_r36s_port.py PASS. Pendiente commit/compilación: Git local no tiene identidad configurada."
+        }
+      ],
       "claimed_at": "2026-11-24T05:42:09.790933+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T05:42:09.790977+00:00",
+  "updated_at": "2026-11-24T05:45:56.631529+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
