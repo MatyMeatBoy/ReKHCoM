@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T20:49:45.003296+00:00",
+      "updated_at": "2026-11-24T21:16:09.643381+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18776,6 +18776,11 @@
           "at": "2026-11-24T20:49:45.003296+00:00",
           "owner": "Codex-v22",
           "detail": "Nuevo candidato v3 reemplaza v2 antes de entrega: ZIP SHA256 884c581c5686c7f924bfba4682b43ff818e44095dfe6ffc627cf675f1fc68a2b, ELF 89aa1a6b88f51c1073626c6a3a2021c18bb50b0abc3d391a820d27aa33d49bbb, fuente 8abbe555204ddcb6fffa69dda69a63494ede810c, suma PR700 audio opt-in a PR692-699. QEMU ZIP exacto: copia RAM, partida original intacta, watchdog, ocho casos/CSV/logs PASS (smoke acortado), instalador probado en fixture. Una sola prueba fisica; usuario avisado para conectar HOME, sin confirmar aun."
+        },
+        {
+          "at": "2026-11-24T21:16:09.643381+00:00",
+          "owner": "Codex-v22",
+          "detail": "ELF exacto V3 QEMU comparacion total: mundo ABBA A 32.09-32.12 FPS P95 40.52-41.81 ms, B 52.77-55.26 P95 22.12-23.44; sintesis BAAB A 29.81-30.88 P95 35.60-38.46, B 46.55-47.67 P95 23.74-24.89. Exploracion otros modos QEMU y configuracion diario corregida en pruebas/ga36-armhf-20261122/menu-v3-baselines-20261124.json. HOME sin confirmacion de reconexion; no acceder."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -18927,7 +18932,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:15:54.781161+00:00",
+  "updated_at": "2026-11-24T21:16:09.643381+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
