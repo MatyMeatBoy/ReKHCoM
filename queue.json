@@ -18568,12 +18568,12 @@
     "ga36-synthesis-followup-profile-20261124": {
       "id": "ga36-synthesis-followup-profile-20261124",
       "piece": "GA36 sintesis con foco: identificar y reducir coste restante tras PR690",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T19:15:55.916108+00:00",
-      "updated_at": "2026-11-24T19:16:32.190863+00:00",
+      "updated_at": "2026-11-24T19:23:05.849308+00:00",
       "branch": "perf/ga36-synthesis-followup-20261124",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/693",
       "approval": null,
       "reference": "Diagnostico fisico f78663ecc y PR690; una sola prueba fisica agrupada reservada",
       "evidence": [
@@ -18581,13 +18581,18 @@
           "at": "2026-11-24T19:16:32.190863+00:00",
           "owner": "Codex-v22",
           "detail": "Retoma encima de candidato naipes PR692; reproducir sintesis con foco y perfil de fases, mantener una sola prueba fisica agrupada."
+        },
+        {
+          "at": "2026-11-24T19:23:05.849308+00:00",
+          "owner": "Codex-v22",
+          "detail": "d2df5b05b opt-in BG0 interior runs; QEMU BAAB frames 210-350 baseline 24.90-27.25 FPS P95 40.50-43.16 ms vs candidate 31.10-32.08 P95 35.30-36.42; six captures identical, PPU_VERIFY no mismatch, ARMhf build/test_ga36_port/check_sources pass. Fixture differs physical save; physical pending, grouped diagnostic reserved."
         }
       ],
       "claimed_at": "2026-11-24T19:16:07.726138+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T19:16:32.190863+00:00",
+  "updated_at": "2026-11-24T19:23:05.850565+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
