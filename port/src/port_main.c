@@ -2285,8 +2285,22 @@ static void Present(int paced) {
             }
         }
         DrawEnhancedVerticalMargins(&src, &dst, outW, outH);
-        if ((sSideStyle == 3 || sSideStyle == 8 || sSideStyle == 10 || sFitScale > 0) && !menuCanvas)
-            DrawBlurredReflection(&src, outW, outH, sFitScale > 0 && !journalShown ? &dst : NULL);
+        if ((sSideStyle == 3 || sSideStyle == 8 || sSideStyle == 10 || sFitScale > 0) && !menuCanvas) {
+            const SDL_FRect* blurCover = sFitScale > 0 && !journalShown ? &dst : NULL;
+#ifdef PORT_LINUX
+            extern Mode gModeWorldinspect;
+            const char* worldBlurCover;
+            PORT_ENV_ONCE(worldBlurCover, SDL_getenv, "KHCOM_GA36_WORLDINSPECT_BLUR_COVER");
+            if (worldBlurCover && gCurrentMode == &gModeWorldinspect && PortFbActive() && PortFixed480p() &&
+                gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+                dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: world inspect blur cover active"); logged = true; }
+                blurCover = &dst;
+            }
+#endif
+            DrawBlurredReflection(&src, outW, outH, blurCover);
+        }
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
         if (journalShown) DrawJournalPicture(&src, &dst);
