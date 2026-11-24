@@ -233,6 +233,7 @@ bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
@@ -1748,8 +1749,22 @@ static int DrawJournalHeader(const SDL_FRect* src, const SDL_FRect* dst) {
 static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
     /* A ready book avoids painting the native body underneath it. Restore
        the complete original after any rejected or partially failed draw. */
-    if (!DrawJournalBook(src, dst) || !DrawJournalHeader(src, dst))
+    if (!DrawJournalBook(src, dst) || !DrawJournalHeader(src, dst)) {
+#ifdef PORT_LINUX
+        const char* directJournal;
+        PORT_ENV_ONCE(directJournal, SDL_getenv, "KHCOM_FBDEV_JOURNAL_FIT");
+        if (directJournal && PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            src->w == 240 && src->h == 160 && dst->x == 0 && (int)dst->y == 8 &&
+            dst->w == 640 && (int)dst->h == 426 &&
+            PortFbDrawJournalFit(sRenderer, sComposite + (int)src->y * gPortScreen.width + (int)src->x,
+                                 gPortScreen.width)) {
+            static bool logged;
+            if (!logged) { PortLog("fbdev: journal fit active"); logged = true; }
+            return;
+        }
+#endif
         SDL_RenderTexture(sRenderer, sTexture, src, dst);
+    }
 }
 
 static void DrawJournalNameMargins(const SDL_FRect* dst, int outW, uint32_t rightGround) {

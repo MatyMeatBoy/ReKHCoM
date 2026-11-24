@@ -177,7 +177,7 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
     int logicalW, logicalH;
     SDL_RendererLogicalPresentation logicalMode;
     const bool fractionalFit = sRenderSurface && sRenderSurface->w == 640 && w == 240 && h == 160 &&
-                               outY == 26 && outH == 426 && !cover;
+                               (outY == 26 || outY == 8) && outH == 426 && !cover;
     if (!sRenderSurface || w <= 0 || (w & 3) || h <= 0 ||
         (!fractionalFit && sRenderSurface->w / 2 != w) || outY < 0 || outH <= 0 || outH > sRenderSurface->h - outY ||
         (sRenderSurface->w & 1) ||
@@ -284,6 +284,11 @@ int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int s
         if (!logged) { PortLog("fbdev: world inspect fit active"); logged = true; }
     }
     return drawn;
+}
+
+int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
+    return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
+           DrawNearest2x(renderer, src, 240, 160, stride, 8, 426, NULL);
 }
 
 #ifdef __ARM_NEON
