@@ -538,6 +538,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-synthesis-followup-profile-20261124 | GA36 sintesis con foco: identificar y reducir coste restante tras PR690 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/693 | — | 2026-11-24T19:23:05.849308+00:00 |
 | ga36-synthesis-next-hotspot-20261124 | GA36 sintesis: perfilar siguientes costes tras BG0 y optimizar | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/694 | — | 2026-11-24T19:30:44.982467+00:00 |
 | ga36-synthesis-overlay-fast-20261124 | GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/695 | — | 2026-11-24T19:38:16.962629+00:00 |
-| ga36-synthesis-clamped-bg0-20261124 | GA36 sintesis: reducir muestreo repetido de bordes del foco BG0 | pendiente | — | — | — | 2026-11-24T19:38:46.138035+00:00 |
+| ga36-synthesis-clamped-bg0-20261124 | GA36 sintesis: reducir muestreo repetido de bordes del foco BG0 | en_curso | Codex-v22 | — | — | 2026-11-24T19:38:58.383812+00:00 |
 
 Integrador: libre
