@@ -544,7 +544,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-worldinspect-background-vector-20261124 | GA36 naipes mundo: vectorizar composicion de fondo sin objetos | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/698 | — | 2026-11-24T19:59:18.828280+00:00 |
 | ga36-worldinspect-blur-covered-20261124 | GA36 naipes mundo: evitar difuminado cubierto por imagen opaca | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/699 | — | 2026-11-24T20:04:20.158279+00:00 |
 | ga36-worldinspect-blur-interpolation-20261124 | GA36 naipes mundo: omitir interpolacion blur no visible | pendiente | — | — | — | 2026-11-24T20:11:23.588662+00:00 |
-| ga36-single-grouped-diagnostic-20261124 | GA36 diagnostico unico: sintesis y naipes reales mas comparaciones A/B automaticas | en_revision | Codex-v22 | — | — | 2026-11-24T20:27:20.109410+00:00 |
+| ga36-single-grouped-diagnostic-20261124 | GA36 diagnostico unico: sintesis y naipes reales mas comparaciones A/B automaticas | en_revision | Codex-v22 | — | — | 2026-11-24T20:49:45.003296+00:00 |
 | ga36-worldinspect-blur-cells-20261124 | GA36 naipes mundo: evitar muestras de blur ocultas | pendiente | — | — | — | 2026-11-24T20:23:42.119910+00:00 |
 | ga36-synthesis-uniform-native-tiles-20261124 | GA36 sintesis: aprovechar filas nativas de mosaico uniformes | pendiente | — | — | — | 2026-11-24T20:32:21.746763+00:00 |
 | ga36-menu-cycle-profile-20261124 | GA36 menus: localizar tiempo restante fuera de PPU y presentacion | pendiente | — | — | — | 2026-11-24T20:37:19.223120+00:00 |
