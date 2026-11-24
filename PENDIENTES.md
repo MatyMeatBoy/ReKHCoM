@@ -525,5 +525,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | v291-release-preparation | Stage and verify ReKHCoM v2.9.1 with a separate GA36 ARMv7 alpha | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/681 | User requested v2.9.1 and GA36 alpha together once prepared. | 2026-11-23T19:32:50.921257+00:00 |
 | v291-jp-credits-glyph | Use supported Japanese in the new credits help and verify the source gate | integrado | codex-ga36-release | https://github.com/MatyMeatBoy/ReKHCoM/pull/682 | User request of November 23 to address issues before v2.9.1; restores supported Japanese glyphs. | 2026-11-23T18:46:31.443728+00:00 |
 | fbdev-contiguous-surface-copy | Avoid per-line copy calls for fully packed Linux framebuffer surfaces | integrado | codex-ga36-fbdev | https://github.com/MatyMeatBoy/ReKHCoM/pull/683 | User asked for transferable port fixes across Linux framebuffer backends. | 2026-11-23T20:07:17.919790+00:00 |
+| ga36-menu-performance-hud-20261123 | GA36: lentitud de menús y recorte inferior de baraja y combos | pendiente | — | — | — | 2026-11-24T01:01:24.724815+00:00 |
 
 Integrador: libre
