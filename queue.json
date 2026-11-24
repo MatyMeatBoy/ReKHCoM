@@ -18613,20 +18613,26 @@
     "ga36-synthesis-overlay-fast-20261124": {
       "id": "ga36-synthesis-overlay-fast-20261124",
       "piece": "GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T19:31:23.142797+00:00",
-      "updated_at": "2026-11-24T19:31:35.530956+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-24T19:38:16.962629+00:00",
+      "branch": "perf/ga36-synthesis-overlay-fast-20261124",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/695",
       "approval": null,
       "reference": "PR694; perfil QEMU overlay y blend control 0e41",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T19:38:16.962629+00:00",
+          "owner": "Codex-v22",
+          "detail": "55f1de9f3 opt-in constrained NEON, active and PPU_VERIFY no mismatch; six captures identical; QEMU BAAB 33.41-33.68 FPS P95 32.94-33.34 vs 36.50-38.62 FPS P95 29.25-30.38; ARMhf EU/test_ga36_port/check_sources pass. Fixture not real save; physical pending one grouped diagnostic."
+        }
+      ],
       "claimed_at": "2026-11-24T19:31:35.530956+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T19:31:35.531971+00:00",
+  "updated_at": "2026-11-24T19:38:16.962629+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

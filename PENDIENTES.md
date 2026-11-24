@@ -537,6 +537,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-worldinspect-present-followup-20261124 | GA36 naipes mundo: investigar coste restante de presentacion tras PR691 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/692 | — | 2026-11-24T19:15:43.140039+00:00 |
 | ga36-synthesis-followup-profile-20261124 | GA36 sintesis con foco: identificar y reducir coste restante tras PR690 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/693 | — | 2026-11-24T19:23:05.849308+00:00 |
 | ga36-synthesis-next-hotspot-20261124 | GA36 sintesis: perfilar siguientes costes tras BG0 y optimizar | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/694 | — | 2026-11-24T19:30:44.982467+00:00 |
-| ga36-synthesis-overlay-fast-20261124 | GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes | en_curso | Codex-v22 | — | — | 2026-11-24T19:31:35.530956+00:00 |
+| ga36-synthesis-overlay-fast-20261124 | GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/695 | — | 2026-11-24T19:38:16.962629+00:00 |
 
 Integrador: libre
