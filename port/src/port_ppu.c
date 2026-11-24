@@ -3486,6 +3486,7 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
 
 #ifdef __ARM_NEON
 static bool sNeonOpaqueCompose;
+static bool sNeonNarrowCompose;
 static bool sNeonScreenCompose;
 static bool sNeonScreenRows[GBA_SCREEN_H];
 static bool sNeonOpaqueRows[PORT_MAX_H];
@@ -3533,6 +3534,14 @@ static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int*
             dockedLayers[dockedCount++] = i;
 
     for (int x = 0; x < width; x += 8) {
+        /* Narrow scenes clip whole aligned blocks to black.  The scalar
+           compositor leaves their occlusion metadata untouched. */
+        const int gx0 = x - gPortScreen.originX;
+        if (gx0 + 8 <= sLeft || gx0 >= sRight) {
+            vst1q_u32(dst + x, vdupq_n_u32(0xff000000u));
+            vst1q_u32(dst + x + 4, vdupq_n_u32(0xff000000u));
+            continue;
+        }
         const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
         uint16x8_t pixel = vandq_u16(inWorld, back);
         if (marginFill != TRANSPARENT) {
@@ -3640,12 +3649,13 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
 #endif
 
 #ifdef __ARM_NEON
-    if (sNeonOpaqueCompose && w == 320 && gPortScreen.wide && !sLutMode && !scene102Fill &&
+    if (sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
         !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
         !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
         (docked || (objects && sLineHasObjects) || n > 2) &&
-        sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) {
+        (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
+         (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
         NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
                              objects && sLineHasObjects, collect, (unsigned)docked);
         return;
@@ -5353,7 +5363,16 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
     l->oam = sPpuOam[sPpuOamKept];
     if (sPpuVerify) { /* the line-by-line drawing to compare with */
         sPpuIoView = NULL;
+#ifdef __ARM_NEON
+        /* Compare the experimental narrow vector path against scalar rows,
+           including the background and text occlusion buffers. */
+        bool narrowVector = sNeonNarrowCompose;
+        sNeonNarrowCompose = false;
+#endif
         RenderLine(gy + gPortScreen.originY, gy);
+#ifdef __ARM_NEON
+        sNeonNarrowCompose = narrowVector;
+#endif
     }
     return 1;
 }
@@ -5517,6 +5536,9 @@ void PortPpuRenderFrame(void) {
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
     sNeonOpaqueCompose = neonOpaqueCompose != NULL;
+    const char* neonNarrowCompose;
+    PORT_ENV_ONCE(neonNarrowCompose, SDL_getenv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
+    sNeonNarrowCompose = neonNarrowCompose != NULL;
     const char* neonScreenCompose;
     PORT_ENV_ONCE(neonScreenCompose, SDL_getenv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
     sNeonScreenCompose = neonScreenCompose != NULL;
