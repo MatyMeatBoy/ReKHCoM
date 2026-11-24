@@ -18398,12 +18398,12 @@
     "ga36-start-synthesis-43-layout-20261124": {
       "id": "ga36-start-synthesis-43-layout-20261124",
       "piece": "Ajustar márgenes 4:3 de menús Start y síntesis en GA36",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ga36-43-layout",
       "created_at": "2026-11-24T07:31:58.361643+00:00",
-      "updated_at": "2026-11-24T07:32:28.448669+00:00",
+      "updated_at": "2026-11-24T07:39:35.592085+00:00",
       "branch": "fix/ga36-menu-43-20261124",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/687",
       "approval": null,
       "reference": "Capturas QEMU 640x480 RC 59bc: barras de UI a 26px de los extremos verticales; usuario reporta falta de ajuste 4:3",
       "evidence": [
@@ -18411,13 +18411,18 @@
           "at": "2026-11-24T07:32:28.448669+00:00",
           "owner": "codex-ga36-43-layout",
           "detail": "Reproducidos Start y síntesis a 640x480; se prueban márgenes sin estirar los gráficos ni modificar la lógica."
+        },
+        {
+          "at": "2026-11-24T07:39:35.592085+00:00",
+          "owner": "codex-ga36-43-layout",
+          "detail": "Solo márgenes verticales Start y síntesis: pruebas QEMU 26px arriba/28px abajo, sin cambios internos y al cerrar. C test/check_sources/GA36 PASS. Coste present ~0.3ms QEMU; resta valoración física y eventual redistribución visual."
         }
       ],
       "claimed_at": "2026-11-24T07:32:13.723988+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T07:32:28.448669+00:00",
+  "updated_at": "2026-11-24T07:39:35.592085+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
