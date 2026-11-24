@@ -18343,10 +18343,10 @@
     "ga36-room-synthesis-performance-20261124": {
       "id": "ga36-room-synthesis-performance-20261124",
       "piece": "Diagnosticar y corregir lentitud de síntesis de estancias en GA36, reportada por usuario",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "codex-ga36-synthesis",
       "created_at": "2026-11-24T06:48:50.871937+00:00",
-      "updated_at": "2026-11-24T07:09:11.234117+00:00",
+      "updated_at": "2026-11-24T11:03:31.874748+00:00",
       "branch": "fix/ga36-next-rc-synthesis-20261124",
       "pr": null,
       "approval": null,
@@ -18373,7 +18373,7 @@
           "detail": "released: "
         }
       ],
-      "claimed_at": "2026-11-24T06:51:27.842443+00:00"
+      "claimed_at": "2026-11-24T11:03:31.874748+00:00"
     },
     "ga36-world-background-composition-20261124": {
       "id": "ga36-world-background-composition-20261124",
@@ -18467,7 +18467,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T07:52:31.168956+00:00",
+  "updated_at": "2026-11-24T11:03:31.874748+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
