@@ -1,0 +1,71 @@
+"""Exercise the real direct overlay against SDL's nearest/alpha arithmetic."""
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+
+root = Path(__file__).resolve().parents[2]
+source = (root / 'port/linux/fbdev_linux.c').read_text()
+
+
+def function(signature):
+    start = source.index(signature)
+    opening = source.index('{', start)
+    depth = 1
+    for i in range(opening + 1, len(source)):
+        depth += (source[i] == '{') - (source[i] == '}')
+        if not depth:
+            return source[start:i + 1]
+    raise ValueError(signature)
+
+
+program = r'''
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+typedef struct { int x,y,w,h; } SDL_Rect;
+typedef struct { void *pixels; int pitch; } SDL_Surface;
+typedef struct { int unused; } SDL_Renderer;
+static SDL_Surface *sRenderSurface;
+static bool PortFbBeginGlyphBatch(SDL_Renderer *renderer) { (void)renderer; return true; }
+static void PortLog(const char *fmt, ...) { (void)fmt; }
+''' + function('static uint32_t ScaleGlyphRgb(') + '\n' + function('bool PortFbBlendOverlayScaled(') + r'''
+static unsigned rng=7331;
+static unsigned rnd(void) { rng=rng*1664525u+1013904223u; return rng; }
+static unsigned channel(unsigned s,unsigned d,unsigned a) { return s*a/255+d*(255-a)/255; }
+int main(void) {
+    uint32_t *pixels=malloc(640*480*4), *expected=malloc(640*480*4), *src=malloc(240*160*4);
+    SDL_Surface surface={pixels,640*4}; sRenderSurface=&surface;
+    if (!pixels || !expected || !src) return 2;
+    for (int t=0;t<80;t++) {
+        int sw=1+rnd()%240, sh=1+rnd()%160;
+        SDL_Rect r={rnd()%20,rnd()%20,0,0};
+        r.w=1+rnd()%(640-r.x); r.h=1+rnd()%(480-r.y);
+        for (int i=0;i<sw*sh;i++) src[i]=rnd();
+        for (int i=0;i<640*480;i++) pixels[i]=expected[i]=rnd();
+        uint64_t dx=((uint64_t)sw<<16)/r.w,dy=((uint64_t)sh<<16)/r.h,py=dy/2;
+        for (int y=0;y<r.h;y++,py+=dy) {
+            uint64_t px=dx/2;
+            for (int x=0;x<r.w;x++,px+=dx) {
+                int at=(r.y+y)*640+r.x+x;
+                uint32_t s=src[(py>>16)*sw+(px>>16)],d=expected[at]; unsigned a=s>>24;
+                if (a==255) expected[at]=s;
+                else if (a) expected[at]=(channel((s>>16)&255,(d>>16)&255,a)<<16)|
+                                               (channel((s>>8)&255,(d>>8)&255,a)<<8)|channel(s&255,d&255,a);
+            }
+        }
+        if (!PortFbBlendOverlayScaled(NULL,src,sw,sh,&r)) return 3;
+        for (int i=0;i<640*480;i++) if ((pixels[i]&0xffffff)!=(expected[i]&0xffffff)) return 4;
+    }
+    puts("PASS 80 fractional overlay sizes and alpha workloads");
+    free(src); free(expected); free(pixels); return 0;
+}
+'''
+with tempfile.TemporaryDirectory() as directory:
+    src = Path(directory) / 'test.c'
+    exe = Path(directory) / 'test.exe'
+    src.write_text(program)
+    subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'clang', '-O2', str(src), '-o', str(exe)], check=True)
+    subprocess.run([str(exe)], check=True)

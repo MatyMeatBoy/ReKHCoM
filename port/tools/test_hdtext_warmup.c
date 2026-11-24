@@ -66,6 +66,16 @@ int main(int argc, char** argv) {
            font->font && font->glyphs['A'].tex != NULL, ok); failures += !ok;
 
     if (!Reset()) return 5;
+    /* Exercise the bundled fallback used on handheld systems without fonts. */
+    if (fallback) FT_Done_Face(fallback);
+    fallback = NULL;
+    if (FT_New_Memory_Face(library, data[0], sizes[0], 0, &fallback)) return 6;
+    font = FontForScale(2, 1); /* Comic Hearts lacks these Latin glyphs. */
+    ok = ready && font->font && Glyph(renderer, font, 0xE1)->tex &&
+         Glyph(renderer, font, 0xE9)->tex && Glyph(renderer, font, 0xF1)->tex && ready;
+    printf("CASE bundled-latin-fallback pass=%d\n", ok); failures += !ok;
+
+    if (!Reset()) return 5;
     font = FontForScale(2, 0);
     /* An unsupported glyph actually requested by the game still disables HD
      * so the PPU resumes the original text. Only speculative warmup skips it. */

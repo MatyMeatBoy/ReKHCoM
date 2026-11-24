@@ -418,9 +418,38 @@ static uint32_t BlendGlyphPixel(uint32_t rgb, uint32_t dst, unsigned opacity) {
     return ((redBlue >> 8) & rb) | (green & 0xFF00u);
 }
 
-void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb) {
-    const int left = SDL_max(x, 0), right = SDL_min(x + w, 640);
-    const int top = SDL_max(y, 0), bottom = SDL_min(y + h, 480);
+/* Candidate for the handheld's fractional menu overlay. SDL's software
+   nearest blitter uses 16.16 pixel-centre sampling and separately rounded
+   source/destination alpha terms. Keep the same calculation here. */
+bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, int width, int height,
+                              const SDL_Rect* dest) {
+    uint16_t xMap[640];
+    if (!source || width <= 0 || height <= 0 || dest->x < 0 || dest->y < 0 ||
+        dest->w <= 0 || dest->h <= 0 || dest->x + dest->w > 640 || dest->y + dest->h > 480 ||
+        !PortFbBeginGlyphBatch(renderer)) return false;
+    static bool logged;
+    if (!logged) { PortLog("fbdev: direct fractional overlay active"); logged = true; }
+    const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
+    uint64_t pos = dx / 2, py = dy / 2;
+    for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
+    for (int y = 0; y < dest->h; y++, py += dy) {
+        const uint32_t* src = source + (py >> 16) * width;
+        uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (dest->y + y) * sRenderSurface->pitch) + dest->x;
+        for (int x = 0; x < dest->w; x++) {
+            const uint32_t pixel = src[xMap[x]];
+            const unsigned alpha = pixel >> 24;
+            if (alpha == 255) dst[x] = pixel;
+            else if (alpha) dst[x] = ScaleGlyphRgb(pixel, alpha) + ScaleGlyphRgb(dst[x], 255 - alpha);
+        }
+    }
+    return true;
+}
+
+void PortFbDrawGlyphMaskClipped(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb, const SDL_Rect* clip) {
+    const int left = SDL_max(SDL_max(x, 0), clip ? clip->x : 0);
+    const int right = SDL_min(SDL_min(x + w, 640), clip ? clip->x + clip->w : 640);
+    const int top = SDL_max(SDL_max(y, 0), clip ? clip->y : 0);
+    const int bottom = SDL_min(SDL_min(y + h, 480), clip ? clip->y + clip->h : 480);
     if (left >= right || top >= bottom)
         return;
     static bool logged;
@@ -438,6 +467,10 @@ void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint3
                 dst[col] = opacity == 255 ? rgb : BlendGlyphPixel(rgb, dst[col], opacity);
         }
     }
+}
+
+void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb) {
+    PortFbDrawGlyphMaskClipped(alpha, x, y, w, h, rgb, NULL);
 }
 
 static void CopyRows(uint8_t* dst, const SDL_Surface* src, int h, size_t rowBytes) {

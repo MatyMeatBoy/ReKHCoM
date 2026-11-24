@@ -4992,10 +4992,22 @@ static void DrawMenu(int l, int width, int height) {
         int ax0 = width - aw;
         extern int PortHdTitleArtReady(float*);
         int hd = sHdUiFrame && PortHdTitleArtReady(NULL);
-        for (y = 0; y < ah; y++)
-            for (x = 0; x < aw; x++)
-                Pixel(ax0 + x, y, hd ? 0x00FFFFFFu : sMenuArt[(y * GBA_SCREEN_H / ah) * GBA_SCREEN_W + MENU_ART_X +
-                                                              x * GBA_SCREEN_H / ah]);
+        static int fastArt = -1;
+        if (fastArt < 0) fastArt = SDL_getenv("KHCOM_UI_FAST_ART") != NULL;
+        if (fastArt && aw > 0 && aw <= PORT_MAX_W && ah > 0) {
+            int offsets[PORT_MAX_W], left = SDL_max(0, -ax0), right = SDL_min(aw, sFbW - ax0);
+            for (x = left; x < right; x++) offsets[x] = MENU_ART_X + x * GBA_SCREEN_H / ah;
+            for (y = 0; y < ah && y < sFbH; y++) {
+                uint32_t* row = sFb + y * sFbW;
+                const uint32_t* source = sMenuArt + (y * GBA_SCREEN_H / ah) * GBA_SCREEN_W;
+                for (x = left; x < right; x++) row[ax0 + x] = hd ? 0x00FFFFFFu : source[offsets[x]];
+            }
+        } else {
+            for (y = 0; y < ah; y++)
+                for (x = 0; x < aw; x++)
+                    Pixel(ax0 + x, y, hd ? 0x00FFFFFFu : sMenuArt[(y * GBA_SCREEN_H / ah) * GBA_SCREEN_W + MENU_ART_X +
+                                                                  x * GBA_SCREEN_H / ah]);
+        }
         artX = ax0 - MENU_ART_X;
         if (hd) {
             sHdArt[0] = ax0; sHdArt[1] = 0; sHdArt[2] = aw; sHdArt[3] = ah;
@@ -5644,7 +5656,7 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
         sHarnessShotPending = 0;
     }
     DrawMenu(l, width, height);
-    if (harnessShot)
+    if (harnessShot && !SDL_getenv("KHCOM_OPTIONS_NO_SHOTS"))
         HarnessOptionsShot(frame, width, height);
     {
         /* another page (controls, achievements, scenes...): it comes in from half black, briefly, as the menu does

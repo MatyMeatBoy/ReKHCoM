@@ -339,6 +339,13 @@ int PortConfigZoomHeavy(int level) {
 float gPortAutoScaleF; /* the Auto view's exact pixel scale (may be fractional) */
 
 float PortConfigMenuScaleF(int outW, int outH) {
+    /* On the 640x480 handheld, a 320x240 canvas gives the options menu
+       integer 2x pixels and larger text. Its list already scrolls to fit. */
+    if (PortFixed480p() && outW == 640 && outH == 480) {
+        static int handheld2x = -1;
+        if (handheld2x < 0) handheld2x = SDL_getenv("KHCOM_GA36_OPTIONS_2X") != NULL;
+        if (handheld2x) return 2.0f;
+    }
     return SDL_max(outH / 320.0f, SDL_max(outW / (float)PORT_MAX_W, outH / (float)PORT_MAX_H));
 }
 

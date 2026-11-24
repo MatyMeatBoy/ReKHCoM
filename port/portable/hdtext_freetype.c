@@ -20,8 +20,10 @@ typedef struct HdGlyph {
 #ifdef PORT_LINUX
 #define PORT_FBDEV_GLYPH_ALPHA 1
 static bool sFbGlyphBatch;
+static bool sFbWorldGlyphBatch;
 bool PortFbBeginGlyphBatch(SDL_Renderer* renderer);
 void PortFbDrawGlyphMask(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb);
+void PortFbDrawGlyphMaskClipped(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb, const SDL_Rect* clip);
 static bool WantFbGlyphMasks(void) {
     const char* enabled;
     PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_FBDEV_DIRECT_GLYPHS");
@@ -133,6 +135,11 @@ int PortPortableHdReady(void) {
         }
     }
 #endif
+    /* The handheld package already contains KHMenu, including Latin accents.
+       Use its loaded bytes when the OS has no fallback font: otherwise a
+       missing Comic Hearts glyph disables HD text for the rest of the run. */
+    if (!fallback && FT_New_Memory_Face(library, data[0], sizes[0], 0, &fallback))
+        fallback = NULL;
     PortLog("HD text: fallback face %s",fallback?"found":"missing (accents fall back to the game's text)");
     OpenJapanese();
 #ifdef VERSION_JP

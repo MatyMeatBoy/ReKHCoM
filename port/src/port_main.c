@@ -235,6 +235,7 @@ int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, c
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
+bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, int width, int height, const SDL_Rect* dest);
 static int sFbW, sFbH;
 #endif
 
@@ -896,6 +897,21 @@ static uint32_t MenuEdgeColor(int sx, int sy) {
     for (int x = 0; x < GBA_SCREEN_W; x++)
         count += (row[x] & 0x00FFFFFFu) == color;
     return count > GBA_SCREEN_W / 2 ? color : 0;
+}
+
+/* Non-wide GBA menus own only their 240x160 artwork.  Carry each authored
+   edge colour into 4:3's unused vertical rows without touching game pixels. */
+static void FillEnhancedVerticalColorMargins(void) {
+    const int top = gPortScreen.originY, bottom = top + GBA_SCREEN_H, w = gPortScreen.width;
+    uint32_t colors[2];
+    int y, x;
+    if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
+        gPortScreen.wide || top <= 0 || bottom >= gPortScreen.height)
+        return;
+    colors[0] = MenuEdgeColor(gPortScreen.originX, top);
+    colors[1] = MenuEdgeColor(gPortScreen.originX, bottom - 1);
+    for (y = 0; y < top; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[0];
+    for (y = bottom; y < gPortScreen.height; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[1];
 }
 
 static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
@@ -2057,6 +2073,14 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
     PORT_ENV_ONCE(clipOverlay, SDL_getenv, "KHCOM_FBDEV_CLIP_OVERLAY");
     PORT_ENV_ONCE(trimOverlay, SDL_getenv, "KHCOM_FBDEV_TIGHT_OVERLAY");
     PORT_ENV_ONCE(nativeOverlay, SDL_getenv, "KHCOM_FBDEV_NATIVE_OVERLAY");
+    const char* fractionalOverlay;
+    PORT_ENV_ONCE(fractionalOverlay, SDL_getenv, "KHCOM_FBDEV_FRACTIONAL_OVERLAY");
+    if (fractionalOverlay && PortFbActive() && PortFixed480p() && outW == 640 && outH == 480 &&
+        width == GBA_SCREEN_W && sOverlayScale > 2.66f && sOverlayScale < 2.67f &&
+        dest->x >= 0 && dest->y >= 0) {
+        SDL_Rect target = {(int)dest->x, (int)dest->y, (int)dest->w, (int)dest->h};
+        if (PortFbBlendOverlayScaled(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
+    }
     const int scale = (int)sOverlayScale;
     if (clipOverlay && PortFbActive() && PortFixedFullscreen() && outW == 640 && outH == 480 &&
         scale > 1 && sOverlayScale == scale) {
@@ -2209,6 +2233,7 @@ static void Present(int paced) {
 #ifdef PORT_LINUX
         const uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
 #endif
+        FillEnhancedVerticalColorMargins();
         SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
 #ifdef PORT_LINUX
         if (measureFb)
@@ -2608,6 +2633,12 @@ static void Present(int paced) {
             }
         }
     }
+    /* Optional sampling to identify which overlay geometry dominates a menu. */
+    const char* overlayAudit;
+    PORT_ENV_ONCE(overlayAudit, SDL_getenv, "KHCOM_OVERLAY_AUDIT");
+    if (overlayAudit && sFrameCount % 120 == 0)
+        PortLog("overlay audit: frame %u active=%d menu=%d scale=%.3f width=%d", (unsigned)sFrameCount,
+                PortPpuOverlayActive(), menuCanvas, sOverlayScale, gPortOverlayW);
     /* the options menu covers everything: no layer is drawn over it */
     if (PortPpuOverlayActive() && sOverlayScale > 0 && !menuCanvas) {
         SDL_FRect od;
@@ -3742,7 +3773,10 @@ static void VBlankCycle(void) {
         if (PortUiTakeMenuSound(1))
             PortMenuSoundDecide(0); /* SYS_CANSEL: the field menu's opening */
     }
+    int uiProfile = PortUiActive() && SDL_getenv("KHCOM_UI_PROFILE") != NULL, uiProfileFrame = 0;
+    static float uiProfileSamples[1024];
     while (PortUiActive()) {
+        uint64_t uiStart = uiProfile ? SDL_GetPerformanceCounter() : 0;
         extern void PortMenuSoundFrame(void);
         extern void PortAudioMenuFrame(void);
 #ifdef __EMSCRIPTEN__
@@ -3761,6 +3795,11 @@ static void VBlankCycle(void) {
         while (sAndroidBackground) { SDL_Delay(50); PumpEvents(); }
 #endif
         Pace(1);
+        if (uiProfile) {
+            double ms = (SDL_GetPerformanceCounter() - uiStart) * 1000.0 / SDL_GetPerformanceFrequency();
+            if (uiProfileFrame < (int)SDL_arraysize(uiProfileSamples))
+                uiProfileSamples[uiProfileFrame++] = (float)ms;
+        }
         /* Harness: with KHCOM_VPAD the menu frames count too, so the
            virtual pad can drive the overlay and KHCOM_RECORD films it. */
         if (SDL_getenv("KHCOM_VPAD")) {
@@ -3776,6 +3815,9 @@ static void VBlankCycle(void) {
                 PortMenuSoundClose(); /* back in the game's own sound */
         }
     }
+    if (uiProfile)
+        for (int i = 0; i < uiProfileFrame; i++)
+            PortLog("options profile: frame %d %.3f ms", i + 1, (double)uiProfileSamples[i]);
     uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
 #if defined(PORT_LINUX)
     static int captureEnabled = -1;

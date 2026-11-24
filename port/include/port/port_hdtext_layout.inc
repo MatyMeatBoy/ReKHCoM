@@ -19,8 +19,47 @@ static void DrawGlyph(SDL_Renderer* r, HdGlyph* g, float x, float y, uint32_t co
     d.w = (float)g->w;
     d.h = (float)g->h;
 #ifdef PORT_FBDEV_GLYPH_ALPHA
+    const char* clippedGlyphs;
+    PORT_ENV_ONCE(clippedGlyphs, SDL_getenv, "KHCOM_FBDEV_CLIPPED_GLYPHS");
+    if (clippedGlyphs && sFbWorldGlyphBatch && cell->coverage && g->fbAlpha && alpha == 255 &&
+        (color & 0xffffffu) != 0xffffffu && (sFbGlyphBatch || PortFbBeginGlyphBatch(r))) {
+        int row = 0;
+        static bool logged;
+        if (!logged) { PortLog("hd-text: direct clipped glyph active"); logged = true; }
+        sFbGlyphBatch = true;
+        while (row < 16) {
+            int end = row + 1, col = 0;
+            const uint16_t bits = cell->visible[row];
+            while (end < 16 && cell->visible[end] == bits) end++;
+            while (col < 16) {
+                int first;
+                SDL_Rect clip;
+                while (col < 16 && !(bits & (1u << col))) col++;
+                first = col;
+                while (col < 16 && (bits & (1u << col))) col++;
+                if (first == col) break;
+                clip.x = (int)SDL_floorf(originX + (cell->x + first - 4) * scale);
+                clip.y = (int)SDL_floorf(originY + (cell->y + row - 4) * scale);
+                clip.w = (int)SDL_floorf(originX + (cell->x + col - 4) * scale) - clip.x;
+                clip.h = (int)SDL_floorf(originY + (cell->y + end - 4) * scale) - clip.y;
+                if (clip.w > 0 && clip.h > 0)
+                    PortFbDrawGlyphMaskClipped(g->fbAlpha, (int)d.x, (int)d.y, g->w, g->h, color, &clip);
+            }
+            row = end;
+        }
+        return;
+    }
+    /* In the world plane, retain SDL's white-glyph blend path. Restart a
+       direct run only after flushing any intervening clipped SDL glyphs. */
+    if (sFbWorldGlyphBatch && !cell->coverage && g->fbAlpha && alpha == 255 &&
+        (color & 0xffffffu) != 0xffffffu &&
+        (sFbGlyphBatch || PortFbBeginGlyphBatch(r))) {
+        sFbGlyphBatch = true;
+        PortFbDrawGlyphMask(g->fbAlpha, (int)d.x, (int)d.y, g->w, g->h, color);
+        return;
+    }
     if (sFbGlyphBatch) {
-        if (!cell->coverage && g->fbAlpha && alpha == 255) {
+        if (!sFbWorldGlyphBatch && !cell->coverage && g->fbAlpha && alpha == 255) {
             PortFbDrawGlyphMask(g->fbAlpha, (int)d.x, (int)d.y, g->w, g->h, color);
             return;
         }
@@ -257,7 +296,11 @@ void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float o
     if (n == 0)
         return;
 #ifdef PORT_FBDEV_GLYPH_ALPHA
-    sFbGlyphBatch = hudLayer == 2 && WantFbGlyphMasks() && PortFbBeginGlyphBatch(renderer);
+    const char* worldGlyphs;
+    PORT_ENV_ONCE(worldGlyphs, SDL_getenv, "KHCOM_FBDEV_DIRECT_WORLD_GLYPHS");
+    sFbWorldGlyphBatch = hudLayer == 0 && worldGlyphs && WantFbGlyphMasks();
+    sFbGlyphBatch = (hudLayer == 2 || (hudLayer == 0 && worldGlyphs)) &&
+                    WantFbGlyphMasks() && PortFbBeginGlyphBatch(renderer);
 #endif
     SDL_qsort(glyphs, n, sizeof(glyphs[0]), CompareGlyphs);
     /* style 0 first (in place), then the subtitles after them */
@@ -294,6 +337,7 @@ void PortHdTextDraw(SDL_Renderer* renderer, int hudLayer, float originX, float o
     }
 #ifdef PORT_FBDEV_GLYPH_ALPHA
     sFbGlyphBatch = false;
+    sFbWorldGlyphBatch = false;
 #endif
 }
 

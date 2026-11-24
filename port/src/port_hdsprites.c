@@ -233,12 +233,29 @@ static void WarmStep(void) {
             continue;
         FamilyOf(kHdSprites[k].name, other, sizeof(other));
         if (!SDL_strcmp(other, sWarmFamily)) {
-            if (LoadCounted(k))
+            if (LoadCounted(k)) {
+                sLoadFrame = PortFrameCount();
                 sState[k].lastUsed = PortFrameCount();
+            }
             return;
         }
     }
     sWarmFamily[0] = 0; /* all of it loaded */
+}
+
+/* All rendering paths use this gate.  A menu can discover several HD pieces
+   in one PPU pass; keep the cartridge pixels for all but the first one and
+   let later frames promote them without a single-frame stall. */
+static int LoadThisFrame(int i) {
+    if (sState[i].image)
+        return 1;
+    if (sLoadFrame == PortFrameCount())
+        return 0;
+    if (!LoadCounted(i))
+        return 0;
+    sLoadFrame = PortFrameCount();
+    WarmStart(i);
+    return 1;
 }
 
 /* Find runs in game/OAM setup and Queue runs outside the PPU row workers.
@@ -254,10 +271,14 @@ static int SpriteReady(int i) {
     /* Freestanding guests use the SDL shim without thread introspection.
        Their game/OAM setup and Queue callers run outside the PPU row workers. */
     if (!sState[i].image) {
-        if (!LoadCounted(i))
+        /* A menu can queue a whole hand/deck (or the synthesis row) before
+           its first present.  Loading each new PNG and its bright copy here
+           made that single frame do every decode/upload at once.  Preserve
+           the cartridge sprite for the remaining entries and pick them up on
+           following frames instead; a short native fallback is preferable to
+           losing input or audio on a handheld. */
+        if (!LoadThisFrame(i))
             return 0;
-        sLoadFrame = PortFrameCount();
-        WarmStart(i);
     } else {
         WarmStep();
     }
@@ -1128,7 +1149,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         /* the game's brightness fade (BLDY) and the part's palette fade, whichever is further */
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
         float white = SDL_max(brighten > 0 ? brighten / 16.0f : 0.0f, q->white / 255.0f);
-        if (!st->image && !LoadCounted(q->id))
+        if (!st->image && !LoadThisFrame(q->id))
             continue;
         st->lastUsed = PortFrameCount();
         if (layer == 1 && sRingRatio >= 0 && SDL_strstr(kHdSprites[q->id].name, "FaceTiles") && RingLoad()) {
@@ -1180,7 +1201,7 @@ void PortHdSpritesHudFront(SDL_Renderer* renderer, float ox, float oy, float sca
         int k, x, y, left, top, right, bottom;
         float l = q->x[0], r = l, t = q->y[0], b = t;
         float shade, white;
-        if (!q->hudOwner || (!st->image && !LoadCounted(q->id))) continue;
+        if (!q->hudOwner || (!st->image && !LoadThisFrame(q->id))) continue;
         st->lastUsed = PortFrameCount();
         for (k = 1; k < 4; k++) {
             l = SDL_min(l, q->x[k]); r = SDL_max(r, q->x[k]);

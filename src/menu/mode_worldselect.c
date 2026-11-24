@@ -32,6 +32,9 @@
 #include "types.h"
 #include "gba/macro.h"
 #include <stddef.h>
+#ifdef PLATFORM_PC
+#include <stdlib.h>
+#endif
 #include "sprite_palettes.h"
 #include "card_ids.h"
 #include "card_message_data.h"
@@ -234,6 +237,9 @@ static s32 sWorldselectFrameY[2];
 static s32 sWorldselectTitleX;
 static TaskPool sWorldselectTaskPool;
 static s16 sWorldselectTutorialStep;
+#ifdef PLATFORM_PC
+static int sWorldselectTutorialParked, sWorldselectRestoreAttempts;
+#endif
 static u8 sWorldselectFirstVisit;
 static u8 sWorldselectBgAnimActive;
 static u8 sWorldselectCancelled;
@@ -722,6 +728,10 @@ void mode_worldselect_0() {
     void** bufferPtr;
 
     SpriteReset();
+#ifdef PLATFORM_PC
+    sWorldselectTutorialParked = 0;
+    sWorldselectRestoreAttempts = 0;
+#endif
     sWorldselectFirstVisit = (gGameState.progression.tutorialFlags ^ TUTORIAL_FLAG_WORLDSELECT) & TUTORIAL_FLAG_WORLDSELECT;
     sWorldselectBgAnimActive = FALSE;
     sWorldselectCancelled = FALSE;
@@ -838,6 +848,22 @@ void mode_worldselect_1() {
         if (sWorldselectTimer <= 0) {
             if (sWorldselectFirstVisit != 0) {
                 sWorldselectTutorialStep = 0;
+#ifdef PLATFORM_PC
+                /* These slots stay outside the front-facing range throughout
+                   the fixed tutorial. Lend their unused pictures' tiles to
+                   its text and portrait until the tutorial has closed. */
+                if (getenv("KHCOM_WORLDSELECT_TUTORIAL_TILE_RESERVE") && sWorldselectSlotCount >= 4) {
+                    for (int i = 2; i < sWorldselectSlotCount - 1; i++) if (sWorldselectSlots[i].tiles != NULL) {
+                        ReleaseObjTiles(sWorldselectSlots[i].tiles);
+                        sWorldselectSlots[i].tiles = NULL;
+                        sWorldselectTutorialParked |= 1 << i;
+                    }
+                    if (sWorldselectTutorialParked && getenv("KHCOM_SPRITE_BUDGET_AUDIT")) {
+                        extern void PortLog(const char*, ...);
+                        PortLog("worldselect: parked tutorial tiles mask=%d", sWorldselectTutorialParked);
+                    }
+                }
+#endif
                 CreateCardMessageTask(&sWorldselectTaskPool, 2, CARD_MSG_WORLDSELECT_TUTORIAL_0);
                 sWorldselectStep = WORLDSELECT_STEP_TUTORIAL;
             } else {
@@ -859,6 +885,24 @@ void mode_worldselect_1() {
                 CreateCardMessageTask(&sWorldselectTaskPool, 2, CARD_MSG_WORLDSELECT_TUTORIAL_1);
                 sWorldselectTutorialStep++;
             } else {
+#ifdef PLATFORM_PC
+                if (sWorldselectTutorialParked) {
+                    for (int i = 2; i <= 3; i++) if (sWorldselectTutorialParked & (1 << i)) {
+                        WorldselectLoadSlotTiles(sWorldselectWorlds[sWorldselectSlots[i].listIndex], i);
+                        if (sWorldselectSlots[i].tiles != NULL) sWorldselectTutorialParked &= ~(1 << i);
+                    }
+                    if (sWorldselectTutorialParked && ++sWorldselectRestoreAttempts < 60)
+                        break; /* message cleanup may need another tick */
+                    if (sWorldselectTutorialParked) {
+                        extern void PortLog(const char*, ...);
+                        PortLog("worldselect: tutorial tiles could not be restored; continuing without them");
+                        sWorldselectTutorialParked = 0;
+                    } else if (getenv("KHCOM_SPRITE_BUDGET_AUDIT")) {
+                        extern void PortLog(const char*, ...);
+                        PortLog("worldselect: restored tutorial tiles");
+                    }
+                }
+#endif
                 gGameState.progression.tutorialFlags |= TUTORIAL_FLAG_WORLDSELECT;
                 WorldselectSetBgMode1();
                 BgAnimInit(2, BGCNT_AFF512x512, BGCNT_256COLOR);

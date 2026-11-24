@@ -16,6 +16,7 @@
 #endif
 
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -607,13 +608,22 @@ static int FollowQ(int y) {
 
 /* The vertical shift of a sprite drawn now (engine.c, sprite.c). */
 int PortSpriteShiftY(int entry, int y) {
-    int q;
-    if (sHudDepth == 0 || sHudAy != 3)
+    int q, shift;
+    const char* handheldRaise;
+    PORT_ENV_ONCE(handheldRaise, getenv, "KHCOM_GA36_HUD_RAISE");
+    if (sHudDepth == 0)
         return gPortSpriteShiftY;
-    q = FollowQ(y);
-    if (entry >= 0 && entry < 128)
+    q = sHudAy == 3 ? FollowQ(y) : sHudAy * 256;
+    if (sHudAy == 3 && entry >= 0 && entry < 128)
         sEntryTag[entry].ayq = (int16_t)q;
-    return q * PortWideMarginY() / 256;
+    shift = sHudAy == 3 ? q * PortWideMarginY() / 256 : gPortSpriteShiftY;
+    /* At fixed 480p the HUD normally shares the world canvas, so TagHudY
+       never runs. Raise bottom cards there, including the played stacks. */
+    if (sHudAx == 2 && sHudAy == 1)
+        q = FollowQ(y); /* enemy stocks reach the top while the hand stays low */
+    if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256)
+        shift -= 16 * (q + 256) / 512;
+    return shift;
 }
 
 /* The tag's vertical shift on the world canvas, and its place on the HUD. */
@@ -799,6 +809,7 @@ int PortScreenMarginX(void) {
 int gPortHudScale;
 int gPortHeaderDraw;
 static int HeaderBandColor(int y, int phase);
+static int HeaderPick(void);
 int gPortHudW;
 int gPortHudH;
 
@@ -5072,6 +5083,12 @@ static int PpuRowsIndependent(bool allowMosaic) {
     }
     for (i = 0; i < OamCount(); i++)
         if (sOamTag[i].header) {
+            const char* parallel;
+            PORT_ENV_ONCE(parallel, SDL_getenv, "KHCOM_PPU_MENU_HEADER_PARALLEL");
+            /* Prime the shared once-per-frame band before waking workers. A
+               missing source still uses the original serial path. */
+            if (parallel && HeaderPick() >= 0)
+                break;
             sPpuStats[3]++;
             return 0; /* HeaderPick's once-a-frame choice */
         }
@@ -5196,6 +5213,9 @@ typedef struct PpuLineState {
 static PpuLineState sPpuLines[GBA_SCREEN_H];
 static uint16_t sPpuPltt[GBA_SCREEN_H][512], sPpuOam[GBA_SCREEN_H][512];
 static int sPpuPlttKept, sPpuOamKept, sPpuInnerFrom, sPpuInnerOn = -1, sPpuInnerGlyphs, sPpuInnerFrames, sPpuInnerShared;
+/* Verification draws the same rows twice; restore this once-per-frame marker
+   before the parallel pass so the world name is emitted in both passes. */
+static uint32_t sPpuInnerWorldEmitted;
 
 static int sPpuInnerMosaicHeight;
 static unsigned sPpuInnerMosaicLayers;
@@ -5295,6 +5315,7 @@ static int PpuInnerBegin(void) {
     sPpuPlttKept = sPpuOamKept = -1;
     sPpuInnerFrom = 0;
     sPpuInnerGlyphs = sBgTextCount;
+    sPpuInnerWorldEmitted = sWorldName.emitted;
     return 1;
 }
 
@@ -5331,9 +5352,12 @@ static void PpuInnerDraw(int gy1) {
         return;
     if (sPpuVerify)
         check = PpuSaveRows(y0, y1, sPpuInnerGlyphs);
+    if (check)
+        sWorldName.emitted = sPpuInnerWorldEmitted;
     PpuRunBatch(NULL, y0, y1);
     if (check)
         PpuCheckRows(y0, y1, sPpuInnerGlyphs, "picture");
+    sPpuInnerWorldEmitted = sWorldName.emitted;
     if (sPpuInnerMosaicLayers) {
         PpuInnerMosaicSeed(gy1 - 1);
         for (int a = 0; a < 2; a++)
@@ -5895,6 +5919,68 @@ static int MenuSpriteColor(const uint16_t* frame, const ObjTiles* tiles,
     return col;
 }
 
+typedef struct HeaderSamplerPiece {
+    uint16_t a0, a1, a2;
+    int x, y, width, height, tile;
+} HeaderSamplerPiece;
+
+typedef struct HeaderSampler {
+    HeaderSamplerPiece pieces[128];
+    int count, left, top, bottom, mapping1d;
+} HeaderSampler;
+
+static int HeaderSamplerInit(HeaderSampler* out, const uint16_t* frame,
+                             const ObjTiles* tiles, const ObjPalette* palette) {
+    const uint16_t* p;
+    int n, i, offset = 0;
+    if (!frame || !tiles || !palette || tiles->self != tiles || palette->self != palette ||
+        (IO16(0) & 0x80) || !(IO16(0) & 0x1000) || frame[0] > 128)
+        return 0;
+    n = frame[0]; p = frame + 1;
+    out->count = 0; out->left = out->top = 32767; out->bottom = -32767;
+    out->mapping1d = (IO16(0) & 0x40) != 0;
+    for (i = 0; i < n; i++) {
+        int x = p[i*3+1] & 511, y = p[i*3] & 255, shape = p[i*3] >> 14;
+        if (x >= 256) x -= 512;
+        if (y >= 128) y -= 256;
+        if (x < out->left) out->left = x;
+        if (shape < 3) {
+            int height = sObjSize[shape][p[i*3+1] >> 14][1];
+            if (y < out->top) out->top = y;
+            if (y + height > out->bottom) out->bottom = y + height;
+        }
+    }
+    for (i = 0; i < n; i++) {
+        uint16_t a0 = p[i*3], a1 = p[i*3+1], a2 = p[i*3+2];
+        int shape = a0 >> 14, size = a1 >> 14, tile;
+        HeaderSamplerPiece* part;
+        if (shape >= 3) continue;
+        part = &out->pieces[out->count++];
+        part->a0 = a0; part->a1 = a1;
+        part->x = a1 & 511; if (part->x >= 256) part->x -= 512;
+        part->y = a0 & 255; if (part->y >= 128) part->y -= 256;
+        part->width = sObjSize[shape][size][0]; part->height = sObjSize[shape][size][1];
+        tile = tiles->allocated ? offset : (a2 & 1023);
+        offset += (part->width * part->height / 64) * ((a0 & 0x2000) ? 2 : 1);
+        part->a2 = (uint16_t)(((tile + tiles->index) & 1023) | (((a2 >> 12) + palette->index) << 12));
+    }
+    return 1;
+}
+
+static int HeaderSamplerColor(const HeaderSampler* sampler, int y, int col0) {
+    int i;
+    for (i = 0; i < sampler->count; i++) {
+        const HeaderSamplerPiece* part = &sampler->pieces[i];
+        int tx = sampler->left + col0 - part->x, ty = y - part->y, color;
+        if (tx < 0 || tx >= part->width || ty < 0 || ty >= part->height) continue;
+        if (part->a1 & 0x1000) tx = part->width - 1 - tx;
+        if (part->a1 & 0x2000) ty = part->height - 1 - ty;
+        color = ObjColor(part->a0, part->a2, tx, ty, part->width, sampler->mapping1d);
+        if (color >= 0) return color;
+    }
+    return -1;
+}
+
 /* A repeatable piece of an asset, independent of its animated screen
    position: columns col0 and col0 + 1 from its left end. */
 static uint32_t MenuSpritePixel(const uint16_t* frame, const ObjTiles* tiles,
@@ -5926,8 +6012,16 @@ static int HeaderPick(void) {
     if (stamp != PortFrameCount() || key[0] != sMenuHeaderFrame || key[1] != sMenuHeaderTiles ||
         key[2] != sMenuHeaderPalette) {
         int top = 32767, bottom = -32767, best = 1 << 30, k, j, yy;
+        const char* fastHeader;
+        HeaderSampler sampler;
+        int prepared;
+        PORT_ENV_ONCE(fastHeader, getenv, "KHCOM_FAST_MENU_HEADER_PICK");
         stamp = PortFrameCount();
-        if (MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, 0, 0, &top, &bottom) == -2)
+        prepared = fastHeader && HeaderSamplerInit(&sampler, sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette);
+        if (fastHeader && !prepared)
+            return sMenuHeaderFrame && key[0] == sMenuHeaderFrame && valid ? pick : -1;
+        if (prepared) { top = sampler.top; bottom = sampler.bottom; }
+        else if (MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, 0, 0, &top, &bottom) == -2)
             return sMenuHeaderFrame && key[0] == sMenuHeaderFrame && valid ? pick : -1;
         valid = 0;
         pick = 0;
@@ -5938,7 +6032,8 @@ static int HeaderPick(void) {
             for (j = 0; j < 2; j++) {
                 int prev = -3;
                 for (yy = top; yy < bottom && yy < 32; yy++) {
-                    int c = MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, k + j, NULL, NULL);
+                    int c = prepared ? HeaderSamplerColor(&sampler, yy, k + j) :
+                        MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, k + j, NULL, NULL);
                     if (c >= 0) opaque++;
                     if (yy > top && c != prev) changes++;
                     prev = c;
@@ -5952,7 +6047,8 @@ static int HeaderPick(void) {
         }
         for (j = 0; j < 2; j++)
             for (yy = 0; yy < 32; yy++)
-                sHeaderBand[j][yy] = MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, pick + j, NULL, NULL);
+                sHeaderBand[j][yy] = prepared ? HeaderSamplerColor(&sampler, yy, pick + j) :
+                    MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, pick + j, NULL, NULL);
         key[0] = sMenuHeaderFrame; key[1] = sMenuHeaderTiles; key[2] = sMenuHeaderPalette;
         valid = 1;
     }
@@ -6998,6 +7094,51 @@ void PortPpuRenderHud(uint32_t* buf) {
     }
 }
 
+#ifdef __ARM_NEON
+static uint16_t BgTextVisible16(const uint8_t* bgp, const uint8_t* layer,
+                                const uint16_t* obj, int priority, int bg) {
+    const uint8x16_t bp = vld1q_u8(bgp), bl = vld1q_u8(layer);
+    const uint16x8_t o0 = vld1q_u16(obj), o1 = vld1q_u16(obj + 8);
+    const uint16x8_t limit = vdupq_n_u16((uint16_t)((priority + 1) * PORT_OAM_CAPACITY));
+    const uint8x16_t objVisible = vcombine_u8(vmovn_u16(vcgeq_u16(o0, limit)), vmovn_u16(vcgeq_u16(o1, limit)));
+    const uint8x16_t objZero = vcombine_u8(vmovn_u16(vceqq_u16(o0, vdupq_n_u16(0))), vmovn_u16(vceqq_u16(o1, vdupq_n_u16(0))));
+    const uint8x16_t bgVisible = vcgeq_u8(bp, vdupq_n_u8((uint8_t)priority));
+    const uint8x16_t layerVisible = vorrq_u8(vmvnq_u8(vceqq_u8(bp, vdupq_n_u8((uint8_t)priority))),
+                                               vcgeq_u8(bl, vdupq_n_u8((uint8_t)bg)));
+    const uint8x16_t initialized = vmvnq_u8(vandq_u8(vceqq_u8(bp, vdupq_n_u8(0)), objZero));
+    const uint8x16_t visible = vandq_u8(vandq_u8(bgVisible, layerVisible), vandq_u8(objVisible, initialized));
+    static const uint8_t weights[16] = {1,2,4,8,16,32,64,128,1,2,4,8,16,32,64,128};
+    const uint8x16_t bits = vandq_u8(visible, vld1q_u8(weights));
+    const uint16x8_t sums16 = vpaddlq_u8(bits);
+    const uint32x4_t sums32 = vpaddlq_u16(sums16);
+    const uint64x2_t sums64 = vpaddlq_u32(sums32);
+    return (uint16_t)(vgetq_lane_u64(sums64, 0) | (vgetq_lane_u64(sums64, 1) << 8));
+}
+#endif
+
+/* Bucket the background glyphs once, preserving their original within-layer
+   order, instead of rescanning the whole list for each of 16 BG priorities. */
+static void BuildBgTextOrder(int hud, int* order, int* starts, int* ends) {
+    int count[16] = {0}, cursor[16], i, total = 0;
+    for (i = 0; i < sBgTextCount; i++) {
+        const BgTextGlyph* glyph = &sBgTextGlyphs[i];
+        if ((glyph->screen ? 2 : 0) == hud && glyph->priority < 4 && glyph->bg < 4)
+            count[(3 - glyph->priority) * 4 + 3 - glyph->bg]++;
+    }
+    for (i = 0; i < 16; i++) {
+        starts[i] = cursor[i] = total;
+        total += count[i];
+        ends[i] = total;
+    }
+    for (i = 0; i < sBgTextCount; i++) {
+        const BgTextGlyph* glyph = &sBgTextGlyphs[i];
+        if ((glyph->screen ? 2 : 0) == hud && glyph->priority < 4 && glyph->bg < 4) {
+            int bucket = (3 - glyph->priority) * 4 + 3 - glyph->bg;
+            order[cursor[bucket]++] = i;
+        }
+    }
+}
+
 /* HD text glyphs of one layer (0 world canvas, 1 HUD canvas, 2 screen layer), front last. */
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
     uint16_t dispcnt = IO16(0x00);
@@ -7013,9 +7154,15 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
        their authored backgrounds. Their panel pixels still obey windows. */
     {
         int priority, bg, j;
+        int order[1024], starts[16], ends[16];
+        const char* bucketText;
+        PORT_ENV_ONCE(bucketText, getenv, "KHCOM_PPU_TEXT_BUCKETS");
+        if (bucketText)
+            BuildBgTextOrder(hud, order, starts, ends);
         for (priority = 3; priority >= 0; priority--) for (bg = 3; bg >= 0; bg--)
-            for (j = 0; j < sBgTextCount && n < max; j++) {
-                const BgTextGlyph* source = &sBgTextGlyphs[j];
+            for (j = bucketText ? starts[(3-priority)*4+3-bg] : 0;
+                 j < (bucketText ? ends[(3-priority)*4+3-bg] : sBgTextCount) && n < max; j++) {
+                const BgTextGlyph* source = &sBgTextGlyphs[bucketText ? order[j] : j];
                 const PortTextGlyph* glyph = &source->glyph;
                 int layer = source->screen ? 2 : 0;
                 int width = source->screen ? gPortOverlayW : gPortScreen.width;
@@ -7038,6 +7185,15 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                         (occBg[at]==priority && occLayer[at]<bg) || occObj[at]<(priority+1)* PORT_OAM_CAPACITY) continue;
                     best=distance; inkX=ix; inkY=iy;
                 }
+                {
+                    const char* skipHidden;
+                    PORT_ENV_ONCE(skipHidden, getenv, "KHCOM_PPU_SKIP_HIDDEN_TEXT");
+                    /* Hidden glyphs are discarded below. Avoid their 16x16
+                       coverage and clip work unless a coverage trace asks
+                       to inspect those discarded glyphs. */
+                    if (best == 100 && skipHidden && !getenv("KHCOM_HD_TEXT_COVERAGE"))
+                        continue;
+                }
                 px=glyph->x+inkX; py=glyph->y+inkY;
                 out[n] = *glyph;
                 /* a window over part of the cell (a menu opened beside the
@@ -7058,6 +7214,16 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                 out[n].coverage = 0;
                 for (iy=0; iy<16; iy++) {
                     uint16_t visible = 0;
+#ifdef __ARM_NEON
+                    const char* neonCoverage;
+                    PORT_ENV_ONCE(neonCoverage, getenv, "KHCOM_PPU_NEON_TEXT_COVERAGE");
+                    py = glyph->y + iy - 4;
+                    px = glyph->x - 4;
+                    if (neonCoverage && px >= 0 && px + 16 <= width && py >= 0 && py < height) {
+                        at = py * width + px;
+                        visible = BgTextVisible16(occBg + at, occLayer + at, occObj + at, priority, bg);
+                    } else
+#endif
                     for (ix=0; ix<16; ix++) {
                         px=glyph->x+ix-4; py=glyph->y+iy-4;
                         if (px<0 || px>=width || py<0 || py>=height) continue;
