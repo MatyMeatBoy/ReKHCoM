@@ -258,6 +258,8 @@ static void PsgRender(int n, int rate) {
 
     const char* reuseIntegral;
     PORT_ENV_ONCE(reuseIntegral, SDL_getenv, "KHCOM_PSG_REUSE_INTEGRAL");
+    const char* skipUnrouted;
+    PORT_ENV_ONCE(skipUnrouted, SDL_getenv, "KHCOM_PSG_SKIP_UNROUTED_WAVE");
     int integralDuty[2] = {-1, -1};
     double integralEnd[2] = {0};
     PsgFrameRegisters();
@@ -286,16 +288,22 @@ static void PsgRender(int n, int rate) {
                     double hz = 131072.0 / (2048 - c->freq);
                     double inc = hz * 8.0 / rate, p0 = c->phase;
                     c->phase += inc;
-                    const double end = DutyIntegral(duty, c->phase);
-                    const double begin = reuseIntegral && integralDuty[ch] == duty
-                        ? integralEnd[ch] : DutyIntegral(duty, p0);
-                    s = (float)((end - begin) / inc) * (float)c->volume;
+                    const bool audible = !skipUnrouted || (nr51 & (0x11 << ch));
+                    double end = 0;
+                    if (audible) {
+                        end = DutyIntegral(duty, c->phase);
+                        const double begin = reuseIntegral && integralDuty[ch] == duty
+                            ? integralEnd[ch] : DutyIntegral(duty, p0);
+                        s = (float)((end - begin) / inc) * (float)c->volume;
+                    }
                     if (c->phase >= 8.0) {
                         c->phase -= 8.0 * (int)(c->phase / 8.0);
                         integralDuty[ch] = -1;
-                    } else {
+                    } else if (audible) {
                         integralDuty[ch] = duty;
                         integralEnd[ch] = end;
+                    } else {
+                        integralDuty[ch] = -1;
                     }
                     break;
                 }
@@ -306,14 +314,16 @@ static void PsgRender(int n, int rate) {
                     c->phase += hz / rate;
                     if (c->phase >= 32.0)
                         c->phase -= 32.0 * (int)(c->phase / 32.0);
-                    idx = (int)c->phase;
-                    nib = (idx & 1) ? (wave[idx >> 1] & 15) : (wave[idx >> 1] >> 4);
-                    s = (float)(nib * 2 - 15);
-                    if (nr32 & 0x80) {
-                        s *= 0.75f;
-                    } else {
-                        shift = (nr32 >> 5) & 3;
-                        s = shift == 0 ? 0 : s / (float)(1 << (shift - 1));
+                    if (!skipUnrouted || (nr51 & (0x11 << ch))) {
+                        idx = (int)c->phase;
+                        nib = (idx & 1) ? (wave[idx >> 1] & 15) : (wave[idx >> 1] >> 4);
+                        s = (float)(nib * 2 - 15);
+                        if (nr32 & 0x80) {
+                            s *= 0.75f;
+                        } else {
+                            shift = (nr32 >> 5) & 3;
+                            s = shift == 0 ? 0 : s / (float)(1 << (shift - 1));
+                        }
                     }
                     break;
                 }
