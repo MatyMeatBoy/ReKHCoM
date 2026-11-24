@@ -18461,7 +18461,7 @@
       "status": "en_revision",
       "owner": "codex-ga36-prelocal",
       "created_at": "2026-11-24T07:48:33.861181+00:00",
-      "updated_at": "2026-11-24T11:18:31.901455+00:00",
+      "updated_at": "2026-11-24T11:22:48.330893+00:00",
       "branch": "perf/ga36-synthesis-20261124",
       "pr": null,
       "approval": null,
@@ -18476,13 +18476,18 @@
           "at": "2026-11-24T11:18:31.901455+00:00",
           "owner": "codex-ga36-prelocal",
           "detail": "Prelocal EU v2 full SHA 15f741d3, update 624469cf, diagnóstico v3 41be52c1; fuente e589df282, ELF f78663ec. Añade PR689 síntesis: presentación QEMU 6.22-6.27 a 3.49-3.68ms, 9 capturas iguales. Diagnóstico v3 QEMU guarda partida en copia, exporta logs y respeta timer. Sigue pendiente prueba física y validación 4:3."
+        },
+        {
+          "at": "2026-11-24T11:22:48.330893+00:00",
+          "owner": "codex-ga36-prelocal",
+          "detail": "Usuario conectó tarjeta HOME, montada G: (F: ausente). Instalados y SHA verificados prelocal v2 EU e589df282 y diagnóstico v3; 8 archivos, partida/ROM/3 INI hashes conservados. Backup backup-card-before-prelocal-v2-20261124T112214Z.zip; recibo install-prelocal-v2-20261124T112214Z.json. Pendiente medición en GA36."
         }
       ],
       "claimed_at": "2026-11-24T07:48:46.809357+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T11:18:31.901455+00:00",
+  "updated_at": "2026-11-24T11:22:48.330893+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
