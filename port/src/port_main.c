@@ -2299,7 +2299,17 @@ static void Present(int paced) {
             DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
             DrawHeaderLeft(&src, &dst);
         }
-        if (!menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
+        bool skipJournalSides = false;
+#ifdef PORT_LINUX
+        const char* skipEmptyJournalSides;
+        PORT_ENV_ONCE(skipEmptyJournalSides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_JOURNAL_SIDES");
+        /* All of the journal side repairs below paint outside dst.  At 4:3
+           the journal fills the viewport horizontally, so there is no side
+           region to sample, classify or paint. */
+        skipJournalSides = skipEmptyJournalSides && PortFixed480p() && PortFbActive() && journalShown &&
+            !PortJiminyHasSideMargins(dst.x, dst.w, outW);
+#endif
+        if (!skipJournalSides && !menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
             /* style 9: the scene's ground (its commonest colour) and its thick
                bars (blocks of six rows or more, so a frame's thin border is
                not one) carried on; nothing mirrored, nothing repeated */

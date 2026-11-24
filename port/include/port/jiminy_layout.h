@@ -6,6 +6,11 @@ typedef struct PortJiminyLayout {
     float scale, x, y, width, height, footerY, footerHeight;
 } PortJiminyLayout;
 
+/* Side repairs only have visible output outside the picture's horizontal span. */
+static inline int PortJiminyHasSideMargins(float x, float width, int outputWidth) {
+    return x > 0.0f || x + width < (float)outputWidth;
+}
+
 /* These are menu layout repairs, independent of optional HD artwork. */
 static inline int PortJiminyMenuActive(int canvas, int journal, int original, int crt, int style, float fit) {
     return !canvas && journal && !original && !crt && (style == 9 || style == 12) && fit <= 0;

@@ -30,6 +30,10 @@ int main(void){
  assert(!PortJiminyMenuActive(0,1,0,1,12,0));
  assert(!PortJiminyMenuActive(0,1,0,0,8,0));
  assert(!PortJiminyMenuActive(0,1,0,0,12,1));
+ assert(!PortJiminyHasSideMargins(0.0f,640.0f,640));
+ assert(!PortJiminyHasSideMargins(-1.0f,642.0f,640));
+ assert(PortJiminyHasSideMargins(0.1f,639.9f,640));
+ assert(PortJiminyHasSideMargins(0.0f,639.9f,640));
  assert(!PortJiminyFit(0,864,&b));assert(!PortJiminyFit(1280,0,&b));assert(!PortJiminyFit(-1,900,&b));assert(!PortJiminyFit(1280,720,0));
  for(w=1;w<=4096;w+=37)for(h=1;h<=2160;h+=43){
   assert(PortJiminyFit(w,h,&b));assert(isfinite(b.scale)&&b.scale>0);
