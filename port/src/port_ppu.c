@@ -433,6 +433,7 @@ static int sSpotlightTileRuns;
 static int sSpotlightBg0Runs;
 static int sSpotlightTrimMargins;
 static int sSpotlightOverlayFast;
+static int sSpotlightBg0Edges;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -2483,6 +2484,28 @@ scalar_world:
         tile = entry & 0x3FF;
         fx = (entry & 0x400) ? 7 - (px & 7) : (px & 7);
         fyy = (entry & 0x800) ? 7 - fy : fy;
+        /* BG0's spotlight clamps horizontal coordinates outside the GBA
+           picture. Those columns all sample the same pixel; keep registered
+           text on the scalar path because it can emit glyphs per position. */
+        if (sSpotlight && sSpotlightTileRuns && sSpotlightBg0Edges && bg == 0 && !bpp8 && mosH == 1 &&
+            mdLayer != 2 && sDarksideLayer[bg] != 2 && !sWorldNameOn) {
+            const int rawX = x - gPortScreen.originX - sBgShiftLatched[bg];
+            if (rawX < 0 || rawX >= GBA_SCREEN_W) {
+                const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
+                if (!sHdText || (entry & 0xC00) || tileOff >= 0x10000 ||
+                    !MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch)) {
+                    const unsigned off = tileOff + fyy * 4 + (fx >> 1);
+                    const uint8_t pixels = off < 0x10000 ? VRAM8[off] : 0;
+                    const unsigned index = (pixels >> ((fx & 1) * 4)) & 15;
+                    const uint16_t color = index ? dtPalette[(entry >> 12) * 16 + index] & 0x7FFF : TRANSPARENT;
+                    int count = PPU_MIN(w - x, sRight - (x - gPortScreen.originX));
+                    if (rawX < 0) count = PPU_MIN(count, -rawX);
+                    for (int i = 0; i < count; i++) out[x + i] = color;
+                    x += count - 1;
+                    continue;
+                }
+            }
+        }
         /* Native 4bpp runs share the map entry, pixel row and palette.
            Spotlight clamps BG0 coordinates only; other layers can use runs.
            Keep scene replacements and tiles with registered text on the pixel path. */
@@ -5581,6 +5604,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightOverlayFast;
     PORT_ENV_ONCE(spotlightOverlayFast, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_OVERLAY_FAST");
     sSpotlightOverlayFast = spotlightOverlayFast != NULL;
+    const char* spotlightBg0Edges;
+    PORT_ENV_ONCE(spotlightBg0Edges, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_EDGES");
+    sSpotlightBg0Edges = spotlightBg0Edges != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
