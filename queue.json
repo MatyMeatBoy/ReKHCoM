@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:05:09.836414+00:00",
+      "updated_at": "2026-11-24T22:09:47.546800+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19021,13 +19021,18 @@
           "at": "2026-11-24T22:05:09.836414+00:00",
           "owner": "Codex-v22",
           "detail": "Correccion: Start emplea PortFbDrawNearest2x, no Cropped3x. La prueba 3x anterior no ejercio candidata y queda invalidada. Perfil separado QEMU start-v4-2x-profile-r2: pre/flush ~0.02 ms y escalado 2x ~0.35-0.76 ms, prep total ~3.4 ms con menu abierto; perfil fisico scale 3.2 ms incluye llamada completa con flush. Instrumentacion temporal revertida y RC restaurada. Buscar coste restante sin asumir ruta 3x."
+        },
+        {
+          "at": "2026-11-24T22:09:47.546800+00:00",
+          "owner": "Codex-v22",
+          "detail": "Perfil QEMU Start separa superposicion: mezcla 3.34-4.93 ms, texto ~0.16-0.34 ms; repro start-overlay-parts-qemu. Ruta sparse campo se activo y ABBA A 43.73-44.54 FPS P95 26.42-26.52, B 37.48-44.75 P95 25.56-30.11; variacion solapada, sin ganancia. Candidata revertida; patch start-sparse-field-experiment.patch, RC restaurada."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:05:09.836414+00:00",
+  "updated_at": "2026-11-24T22:09:47.546800+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
