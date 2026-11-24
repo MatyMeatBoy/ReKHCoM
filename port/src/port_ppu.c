@@ -434,6 +434,7 @@ static int sSpotlightBg0Runs;
 static int sSpotlightTrimMargins;
 static int sSpotlightOverlayFast;
 static int sSpotlightBg0Edges;
+static int sSpotlightClearRows;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -3679,6 +3680,13 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 #endif
 
+    /* The general loop clears every pixel before any metadata or blend work
+       when the separate spotlight UI covers the world. */
+    if (sSpotlightClearRows && sOverlay && sSpotlight && (sScreenBgMask & 2u)) {
+        for (int i = 0; i < w; i++) dst[i] = 0xFF000000u;
+        return;
+    }
+
 #ifdef __ARM_NEON
     if (sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
         !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
@@ -5417,9 +5425,11 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         int spotlightRuns = sSpotlightTileRuns;
         int spotlightTrim = sSpotlightTrimMargins;
         int spotlightOverlay = sSpotlightOverlayFast;
+        int spotlightClear = sSpotlightClearRows;
         sSpotlightTileRuns = 0;
         sSpotlightTrimMargins = 0;
         sSpotlightOverlayFast = 0;
+        sSpotlightClearRows = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5430,6 +5440,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightTileRuns = spotlightRuns;
         sSpotlightTrimMargins = spotlightTrim;
         sSpotlightOverlayFast = spotlightOverlay;
+        sSpotlightClearRows = spotlightClear;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5607,6 +5618,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightBg0Edges;
     PORT_ENV_ONCE(spotlightBg0Edges, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_EDGES");
     sSpotlightBg0Edges = spotlightBg0Edges != NULL;
+    const char* spotlightClearRows;
+    PORT_ENV_ONCE(spotlightClearRows, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
+    sSpotlightClearRows = spotlightClearRows != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
