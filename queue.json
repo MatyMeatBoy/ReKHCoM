@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T21:58:17.971064+00:00",
+      "updated_at": "2026-11-24T21:59:52.694943+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19001,13 +19001,18 @@
           "at": "2026-11-24T21:58:17.971064+00:00",
           "owner": "Codex-v22",
           "detail": "Candidata limites previos de sprites en Start, ABBA QEMU sin profiling: A 77.01/74.79 FPS P95 14.04/14.44, B 77.00/74.19 FPS P95 14.11/15.27; sin mejora, descartada y revertida. Patch start-obj-clip-experiment.patch; ELF RC restaurado SHA256 6961b9bd2cae975edb21e893591fff86f0d22e5ee13b40fd14bb65fa5e74418d. Continuar con otras rutas."
+        },
+        {
+          "at": "2026-11-24T21:59:52.694943+00:00",
+          "owner": "Codex-v22",
+          "detail": "Probeda fixture QEMU diario con jiminy:0/1, tres pulsaciones A y hd_cards=1: probe foreground no se activa; no sirve para medir candidata foreground, no afirmar mejora. Ejecutable restaurado. Se requiere reproducir estado real o atacar ruta comun medida en lugar de repetir el mismo experimento."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:58:17.971064+00:00",
+  "updated_at": "2026-11-24T21:59:52.694943+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
