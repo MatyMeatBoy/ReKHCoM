@@ -18246,9 +18246,9 @@
       "status": "en_curso",
       "owner": "codex-ga36-menu-hud",
       "created_at": "2026-11-24T01:01:24.724815+00:00",
-      "updated_at": "2026-11-24T03:16:46.909338+00:00",
+      "updated_at": "2026-11-24T04:11:58.218505+00:00",
       "branch": "fix/ga36-menu-hud-20261123",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/685",
       "approval": null,
       "reference": "Cartas/combo separados en PR draft https://github.com/MatyMeatBoy/ReKHCoM/pull/684 SHA c240488b3, base release/ga36-v0.1-alpha-shore; Sora y Axel capturados en QEMU, validacion fisica pendiente.",
       "evidence": [
@@ -18306,6 +18306,11 @@
           "at": "2026-11-24T03:16:46.909338+00:00",
           "owner": "codex-ga36-menu-hud",
           "detail": "RC de prueba local copiada en F: con binario ARMv7 6a4fc6311d43ea88d5d2eaa0d03770ac2b69c13d581a8e40a40202183400f05f, ajuste HUD y cinco rutas candidatas; respaldo RC2 y partida verificada. Suite A/B de seis menus instalada, prueba fisica pendiente. Imagenes QEMU iguales; worldselect discrepancia interna previa en ambos lados. Diagnosticos anteriores respaldados; politica del entorno rechazo eliminacion."
+        },
+        {
+          "at": "2026-11-24T04:11:58.218505+00:00",
+          "owner": "codex-ga36-menu-hud",
+          "detail": "Physical GA36 suite completed 24/24; deck entry 24.42–24.52 to 56.31–56.65 FPS, status entry 29.38–29.40 to 63.54–63.60 FPS, five-change combined A/B. Exact Add Cards numeric selector and level-up reproduced in QEMU; extended diagnostics staged but user requested additional fixes before next physical run. Fallback font missing on device; candidate reuses bundled KHMenu. World-selection verifier restored once-per-frame marker; no claim of gameplay FPS gain. QEMU 640x480 options 2x, scroll, flush-safe profile and clipped glyph candidate under validation. Header-only draft PR685 exact branch build pending. F: ejected, do not access."
         }
       ],
       "claimed_at": "2026-11-24T01:06:22.704126+00:00"
@@ -18325,7 +18330,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T03:16:46.909338+00:00",
+  "updated_at": "2026-11-24T04:11:58.218505+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
