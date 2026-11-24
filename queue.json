@@ -19096,7 +19096,7 @@
       "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T22:44:20.787315+00:00",
-      "updated_at": "2026-11-24T23:03:26.908664+00:00",
+      "updated_at": "2026-11-24T23:05:50.376700+00:00",
       "branch": "perf/ga36-journal-detail-central-20261124",
       "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/703",
       "approval": null,
@@ -19126,13 +19126,18 @@
           "at": "2026-11-24T23:03:26.908664+00:00",
           "owner": "Codex-v22",
           "detail": "PR703 draft dbdbdda94 abierto al recuperarse credenciales. QEMU detalle Historia y detalle carta Naipes con 5 capturas identicas por recorrido, ruta activa y PPU_VERIFY sin diferencias; composicion detalle 29.76-31.09 a 22.60-22.74 ms CPU sumados, FPS solapados. Pendiente otras transiciones, consola fisica y RC."
+        },
+        {
+          "at": "2026-11-24T23:05:50.376700+00:00",
+          "owner": "Codex-v22",
+          "detail": "PR703 draft dbdbdda94. Validacion adicional de transicion Naipes -> detalle de carta QEMU journal-central-card-transition: 10 capturas A/B identicas, vector activo, PPU_VERIFY sin diferencias. Continua pendiente fisica y comprobar otras rutas; no afirmar 70 FPS."
         }
       ],
       "claimed_at": "2026-11-24T22:50:26.431168+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T23:03:26.908664+00:00",
+  "updated_at": "2026-11-24T23:05:50.376700+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
