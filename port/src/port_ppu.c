@@ -3525,6 +3525,8 @@ static bool sNeonOpaqueRows[PORT_MAX_H];
 static bool sWorldInspectBgVector;
 static bool sWorldInspectBgRows[PORT_MAX_H];
 static bool sMapInspectOpaqueVector;
+static bool sJournalCentralVector;
+static bool sJournalCentralRows[GBA_SCREEN_H];
 static bool sMapInspectOpaqueRows[PORT_MAX_H];
 static bool sProbeComposeGates;
 static uint16_t sComposeGates[PORT_MAX_H];
@@ -3545,7 +3547,7 @@ static void StoreArgb8(uint32_t* dst, uint16x8_t pixel, uint8x8_t alpha) {
 
 static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
                                  const int* priorities, uint16_t backdrop, uint16_t marginFill,
-                                 bool objects, bool collect, unsigned docked) {
+                                 bool objects, bool collect, unsigned docked, int begin, int end) {
     const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
     const uint16_t* const objPixels = sObjLine;
     const uint8_t* const objPrio = sObjPrio;
@@ -3569,7 +3571,7 @@ static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int*
         if (docked & (1u << i))
             dockedLayers[dockedCount++] = i;
 
-    for (int x = 0; x < width; x += 8) {
+    for (int x = begin; x < end; x += 8) {
         /* Narrow scenes clip whole aligned blocks to black.  The scalar
            compositor leaves their occlusion metadata untouched. */
         const int gx0 = x - gPortScreen.originX;
@@ -3692,7 +3694,26 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 
 #ifdef __ARM_NEON
-    if (sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
+    int journalBegin = 0, journalEnd = 0;
+    if (sJournalCentralVector && sNeonOpaqueCompose && sNeonNarrowCompose && w == 320 &&
+        !gPortScreen.wide && sJiminyDetailCapture && !sJiminyPaperCapture && !sLutMode && !scene102Fill &&
+        !sWorldBlendActive && !(dispcnt & 0xE000) && (!effect || !(bldcnt & 0x3F)) &&
+        gyLine >= 16 && gyLine < GBA_SCREEN_H && sLeft <= 8 && sRight >= 200 &&
+        gPortScreen.originX >= 0 && gPortScreen.originX + 200 <= w &&
+        ((gPortScreen.originX + 8) & 7) == 0 && !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
+        bool semi = false;
+        if (objects && (bldcnt & 0x3F00))
+            for (int i = gPortScreen.originX + 8; i < gPortScreen.originX + 200; i++)
+                if (clObjLine[i] != TRANSPARENT && clObjSemi[i]) { semi = true; break; }
+        if (!semi) {
+            journalBegin = gPortScreen.originX + 8;
+            journalEnd = gPortScreen.originX + 200;
+            NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                                 objects && sLineHasObjects, collect, (unsigned)docked, journalBegin, journalEnd);
+            sJournalCentralRows[gyLine] = true;
+        }
+    }
+    if (!journalEnd && sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
         !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
         !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
@@ -3701,7 +3722,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
          (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
         NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
-                             objects && sLineHasObjects, collect, (unsigned)docked);
+                             objects && sLineHasObjects, collect, (unsigned)docked, 0, w);
         if (!objects && sWorldInspectBgVector) sWorldInspectBgRows[y] = true;
         if (sMapInspectOpaqueVector && (!objects || !sLineHasObjects)) sMapInspectOpaqueRows[y] = true;
         return;
@@ -3737,6 +3758,9 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 
     for (x = 0; x < w; x++) {
+#ifdef __ARM_NEON
+        if (journalEnd && x == journalBegin) { x = journalEnd - 1; continue; }
+#endif
         int gx = x - gPortScreen.originX;
         uint8_t mask = clWinMask[x];
         int margin = gx < 0 || gx >= GBA_SCREEN_W || gyLine < 0 || gyLine >= GBA_SCREEN_H;
@@ -5635,6 +5659,9 @@ void PortPpuRenderFrame(void) {
     const char* neonNarrowCompose;
     PORT_ENV_ONCE(neonNarrowCompose, SDL_getenv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
     sNeonNarrowCompose = neonNarrowCompose != NULL;
+    const char* journalCentralVector;
+    PORT_ENV_ONCE(journalCentralVector, SDL_getenv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
+    sJournalCentralVector = journalCentralVector != NULL;
     {
         extern Mode gModeWorldinspect;
         extern Mode* gCurrentMode;
@@ -5794,6 +5821,12 @@ void PortPpuRenderFrame(void) {
         PortLog("ppu gates: frame %u rows %u geometry %u windows %u sprites %u effects %u special %u layers %u correction %u second %u",
                 (unsigned)PortFrameCount(), gates[0], gates[1], gates[2], gates[3], gates[4],
                 gates[5], gates[6], gates[7], gates[8]);
+    }
+    if (sJournalCentralVector) {
+        static bool logged;
+        if (!logged) for (int y = 0; y < GBA_SCREEN_H; y++) if (sJournalCentralRows[y]) {
+            PortLog("ppu: journal central vector active"); logged = true; break;
+        }
     }
     static bool neonScreenLogged;
     static bool mapInspectLogged;
