@@ -18609,10 +18609,23 @@
         }
       ],
       "claimed_at": "2026-11-24T19:23:39.248208+00:00"
+    },
+    "ga36-synthesis-overlay-fast-20261124": {
+      "id": "ga36-synthesis-overlay-fast-20261124",
+      "piece": "GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-24T19:31:23.142797+00:00",
+      "updated_at": "2026-11-24T19:31:23.142797+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "PR694; perfil QEMU overlay y blend control 0e41",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T19:30:44.982467+00:00",
+  "updated_at": "2026-11-24T19:31:23.142797+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
