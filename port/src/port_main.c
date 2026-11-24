@@ -232,6 +232,7 @@ void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
@@ -2291,7 +2292,16 @@ static void Present(int paced) {
         if (journalShown) DrawJournalPicture(&src, &dst);
         else {
 #ifdef PORT_LINUX
-            if (!(PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            extern Mode gModeWorldinspect;
+            const char* directWorldInspect;
+            PORT_ENV_ONCE(directWorldInspect, SDL_getenv, "KHCOM_FBDEV_WORLDINSPECT_FIT");
+            if (!(directWorldInspect && gCurrentMode == &gModeWorldinspect && PortFixed480p() &&
+                  gPortConfig.filter == PORT_FILTER_NEAREST && src.x == 40 && src.y == 40 &&
+                  src.w == 240 && src.h == 160 && dst.x == 0 && dst.y == 26 && dst.w == 640 &&
+                  dst.h == 160.0f * (640.0f / 240.0f) &&
+                  gPortScreen.width == 320 && gPortScreen.height >= 200 &&
+                  PortFbDrawWorldInspectFit(sRenderer, sComposite + 40 * 320 + 40, 320)) &&
+                !(PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
                   dst.x == -40 && dst.y == 0 && dst.w == 720 && dst.h == 480 &&
                   PortFbDrawCropped3x(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,

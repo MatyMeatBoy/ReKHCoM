@@ -170,7 +170,7 @@ bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int str
 
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
-static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outY, int outH, const SDL_Rect* cover) {
+static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int stride, int outY, int outH, const SDL_Rect* cover) {
 #ifdef __ARM_NEON
     SDL_Rect viewport;
     float scaleX, scaleY;
@@ -201,7 +201,7 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
             if (row == previous) {
                 memcpy(dest, (uint8_t*)dest - pitch, 640 * sizeof(*dest));
             } else {
-                const uint32_t* input = src + row * 240;
+                const uint32_t* input = src + row * stride;
                 unsigned posX = stepX / 2;
                 for (int x = 0; x < 640; x++, posX += stepX)
                     dest[x] = input[posX >> 16];
@@ -229,7 +229,7 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
                            (size_t)(w - right) * 2 * sizeof(*dst));
                 continue;
             }
-            const uint32_t* input = src + (size_t)row * w;
+            const uint32_t* input = src + (size_t)row * stride;
             for (int x = 0; x < w; x += 4) {
                 if (covered && x == left) {
                     x = right;
@@ -257,23 +257,33 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
             vst1q_u32(lower + 2 * x, doubled.val[0]);
             vst1q_u32(lower + 2 * x + 4, doubled.val[1]);
         }
-        src += w;
+        src += stride;
     }
     return 1;
 #else
-    (void)renderer; (void)src; (void)w; (void)h; (void)outY; (void)outH; (void)cover;
+    (void)renderer; (void)src; (void)w; (void)h; (void)stride; (void)outY; (void)outH; (void)cover;
     return 0;
 #endif
 }
 
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {
-    return sRenderSurface && sRenderSurface->h == outH && DrawNearest2x(renderer, src, w, h, 0, outH, cover);
+    return sRenderSurface && sRenderSurface->h == outH && DrawNearest2x(renderer, src, w, h, w, 0, outH, cover);
 }
 
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest) {
     return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
            dest->x == 0 && dest->w == 640 &&
-           DrawNearest2x(renderer, src, w, h, (int)dest->y, (int)dest->h, NULL);
+           DrawNearest2x(renderer, src, w, h, w, (int)dest->y, (int)dest->h, NULL);
+}
+
+int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
+    int drawn = sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
+                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL);
+    if (drawn) {
+        static bool logged;
+        if (!logged) { PortLog("fbdev: world inspect fit active"); logged = true; }
+    }
+    return drawn;
 }
 
 #ifdef __ARM_NEON
