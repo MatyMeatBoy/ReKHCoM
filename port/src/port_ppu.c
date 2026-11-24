@@ -430,6 +430,7 @@ int PortMenuSliding(void) {
 static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below */
 static int sSpotlight;
 static int sSpotlightTileRuns;
+static int sSpotlightBg0Runs;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -2484,7 +2485,9 @@ scalar_world:
            Spotlight clamps BG0 coordinates only; other layers can use runs.
            Keep scene replacements and tiles with registered text on the pixel path. */
         if (!bpp8 && !outside && (unsigned)gx < GBA_SCREEN_W &&
-            mosH == 1 && (!sSpotlight || (sSpotlightTileRuns && bg != 0)) && mdLayer != 2 && sDarksideLayer[bg] != 2 &&
+            mosH == 1 && (!sSpotlight || (sSpotlightTileRuns && (bg != 0 ||
+                (sSpotlightBg0Runs && gx == x - gPortScreen.originX - sBgShiftLatched[bg])))) &&
+            mdLayer != 2 && sDarksideLayer[bg] != 2 &&
             !sWorldNameOn) {
             const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
             if (tileOff < 0x10000 &&
@@ -5540,6 +5543,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightTileRuns;
     PORT_ENV_ONCE(spotlightTileRuns, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
     sSpotlightTileRuns = spotlightTileRuns != NULL;
+    const char* spotlightBg0Runs;
+    PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
+    sSpotlightBg0Runs = spotlightBg0Runs != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
