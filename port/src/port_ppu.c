@@ -28,6 +28,16 @@
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
+#if !__STDC_HOSTED__
+/* Console guests have no SDL or host environment switches. */
+#define SDL_getenv(name) ((const char*)0)
+#define SDL_GetPerformanceCounter() ((uint64_t)0)
+#define SDL_GetPerformanceFrequency() ((uint64_t)1)
+#define SDL_atoi(s) atoi(s)
+#define SDL_min(a, b) PPU_MIN((a), (b))
+#define SDL_max(a, b) PPU_MAX((a), (b))
+#define SDL_clamp(x, lo, hi) PPU_MIN(PPU_MAX((x), (lo)), (hi))
+#endif
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
 #include "port/synthesis_requirement_hd.h"
@@ -2104,7 +2114,9 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
     PortDarksideBodyRow darksideRow;
     const char* useDarksideRow = NULL;
     if (sDarksideLayer[bg] == 2) {
+#if __STDC_HOSTED__
         PORT_ENV_ONCE(useDarksideRow, SDL_getenv, "KHCOM_DARKSIDE_BODY_ROW");
+#endif
         if (useDarksideRow) {
             const BgLatch* l = &sBgLatch[bg];
             PortDarksidePrepareBodyRow(&darksideRow, (const void* const*)l->map, l->y + gy + (vofs - l->vofs),
@@ -2113,8 +2125,10 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
     }
 
     int rowStart = 0, rowEnd = w;
-    const char* trimMargins;
+    const char* trimMargins = NULL;
+#if __STDC_HOSTED__
     PORT_ENV_ONCE(trimMargins, SDL_getenv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
+#endif
     if (trimMargins && mosH == 1 && !sSpotlight &&
         !guardPatio && !tmBoard && !ursLayer && !jfLayer && !mxField && !oogieHall && !mdLayer &&
         !sDarksideLayer[bg] && !(bg == sSinglePanelBg && sBgLatch[bg].valid) &&
@@ -2123,9 +2137,9 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
         (sScreenBg[bg] || sBgDockedLatched[bg] || (!sBgLatch[bg].valid && !sBgWorldLatched[bg].valid))) {
         const int origin = gPortScreen.originX;
         const int offset = origin + sBgShiftLatched[bg];
-        rowStart = SDL_clamp(SDL_max(origin + sLeft, offset), 0, w);
+        rowStart = PPU_MIN(PPU_MAX(PPU_MAX(origin + sLeft, offset), 0), w);
         rowEnd = outside ? rowStart
-            : SDL_clamp(SDL_min(origin + sRight, offset + GBA_SCREEN_W), rowStart, w);
+            : PPU_MIN(PPU_MAX(PPU_MIN(origin + sRight, offset + GBA_SCREEN_W), rowStart), w);
         for (x = 0; x < rowStart; x++) out[x] = TRANSPARENT;
         for (x = rowEnd; x < w; x++) out[x] = TRANSPARENT;
     }
