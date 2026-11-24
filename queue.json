@@ -19096,7 +19096,7 @@
       "status": "listo_pr",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T22:44:20.787315+00:00",
-      "updated_at": "2026-11-24T22:53:24.498161+00:00",
+      "updated_at": "2026-11-24T22:58:26.353525+00:00",
       "branch": "perf/ga36-journal-detail-central-20261124",
       "pr": null,
       "approval": null,
@@ -19111,13 +19111,18 @@
           "at": "2026-11-24T22:53:24.498161+00:00",
           "owner": "Codex-v22",
           "detail": "Commit dbdbdda94 empujado; PPU_VERIFY sin discrepancias y 5 capturas iguales. QEMU ABBA trabajo CPU composicion detalle 29.76-31.09 -> 22.60-22.74 ms sumados por hilos; no es latencia. FPS sin profiling se solapan 41.33-42.50 -> 42.37-44.43, pendiente fisico. Tests y build ARMhf OK. gh pr create fallido HTTP 401 Bad credentials; PR pendiente de reautenticacion."
+        },
+        {
+          "at": "2026-11-24T22:58:26.353525+00:00",
+          "owner": "Codex-v22",
+          "detail": "Ampliacion QEMU ruta diario -> naipes -> lista Cadena del reino (journal-central-naipedia-visual): 5 capturas A/B identicas, PPU_VERIFY sin discrepancias. Optimizacion no se activo en esa lista, asi que valida fallback, no detalle interno de carta. PR pendiente por credenciales gh 401, commit dbdbdda94 conservado."
         }
       ],
       "claimed_at": "2026-11-24T22:50:26.431168+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:53:24.498161+00:00",
+  "updated_at": "2026-11-24T22:58:26.354612+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
