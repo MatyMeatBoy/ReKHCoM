@@ -18541,8 +18541,8 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T18:52:47.821247+00:00",
-      "updated_at": "2026-11-24T18:58:44.080066+00:00",
-      "branch": null,
+      "updated_at": "2026-11-24T19:00:04.863325+00:00",
+      "branch": "perf/ga36-worldinspect-present-followup-20261124",
       "pr": null,
       "approval": null,
       "reference": "PR691; diagnostico fisico device-prelocal-menus-19700620-230044-353",
@@ -18551,13 +18551,18 @@
           "at": "2026-11-24T18:53:34.684705+00:00",
           "owner": "Codex-v22",
           "detail": "released: Retoma: diagnostico fisico v2 identifica presentacion ~11.70ms; PR691 sin mejora QEMU estable. Script worldinspect-fit-abba cambia tambien SPARSE_FRACTIONAL; timing separado mantiene ese flag constante. Revisar coste SDL_UpdateTexture antes de ruta directa y dependencias antes de modificar; sin fix nuevo ni prueba fisica v3."
+        },
+        {
+          "at": "2026-11-24T19:00:04.863325+00:00",
+          "owner": "Codex-v22",
+          "detail": "Prototipo expansion 240 a 640 por bloques exactos, comparacion QEMU pendiente."
         }
       ],
       "claimed_at": "2026-11-24T18:58:44.080066+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T18:58:44.080066+00:00",
+  "updated_at": "2026-11-24T19:00:04.863325+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
