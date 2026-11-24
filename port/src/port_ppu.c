@@ -429,6 +429,7 @@ int PortMenuSliding(void) {
 }
 static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below */
 static int sSpotlight;
+static int sSpotlightTileRuns;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -2480,9 +2481,10 @@ scalar_world:
         fx = (entry & 0x400) ? 7 - (px & 7) : (px & 7);
         fyy = (entry & 0x800) ? 7 - fy : fy;
         /* Native 4bpp runs share the map entry, pixel row and palette.
+           Spotlight clamps BG0 coordinates only; other layers can use runs.
            Keep scene replacements and tiles with registered text on the pixel path. */
         if (!bpp8 && !outside && (unsigned)gx < GBA_SCREEN_W &&
-            mosH == 1 && !sSpotlight && mdLayer != 2 && sDarksideLayer[bg] != 2 &&
+            mosH == 1 && (!sSpotlight || (sSpotlightTileRuns && bg != 0)) && mdLayer != 2 && sDarksideLayer[bg] != 2 &&
             !sWorldNameOn) {
             const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
             if (tileOff < 0x10000 &&
@@ -5363,6 +5365,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
     l->oam = sPpuOam[sPpuOamKept];
     if (sPpuVerify) { /* the line-by-line drawing to compare with */
         sPpuIoView = NULL;
+        int spotlightRuns = sSpotlightTileRuns;
+        sSpotlightTileRuns = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5370,6 +5374,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sNeonNarrowCompose = false;
 #endif
         RenderLine(gy + gPortScreen.originY, gy);
+        sSpotlightTileRuns = spotlightRuns;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5532,6 +5537,9 @@ void PortPpuJiminyFade(int* dark, int* white) {
 }
 
 void PortPpuRenderFrame(void) {
+    const char* spotlightTileRuns;
+    PORT_ENV_ONCE(spotlightTileRuns, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
+    sSpotlightTileRuns = spotlightTileRuns != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
