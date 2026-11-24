@@ -2312,8 +2312,22 @@ static void Present(int paced) {
         if (moviePrompt)
             DrawSkipLayer(&normal);
         if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
-            DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
-            DrawHeaderLeft(&src, &dst);
+            bool drawSides = true;
+#ifdef PORT_LINUX
+            extern Mode gModeWorldinspect;
+            const char* skipWorldInspectSides;
+            PORT_ENV_ONCE(skipWorldInspectSides, SDL_getenv, "KHCOM_GA36_SKIP_WORLDINSPECT_SIDES");
+            if (skipWorldInspectSides && gCurrentMode == &gModeWorldinspect && PortFixed480p() && PortFbActive() &&
+                !PortJiminyHasSideMargins(dst.x, dst.w, outW)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: world inspect empty sides skipped"); logged = true; }
+                drawSides = false;
+            }
+#endif
+            if (drawSides) {
+                DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
+                DrawHeaderLeft(&src, &dst);
+            }
         }
         bool skipJournalSides = false;
 #ifdef PORT_LINUX
