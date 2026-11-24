@@ -607,13 +607,22 @@ static int FollowQ(int y) {
 
 /* The vertical shift of a sprite drawn now (engine.c, sprite.c). */
 int PortSpriteShiftY(int entry, int y) {
-    int q;
-    if (sHudDepth == 0 || sHudAy != 3)
+    int q, shift;
+    const char* handheldRaise;
+    PORT_ENV_ONCE(handheldRaise, getenv, "KHCOM_GA36_HUD_RAISE");
+    if (sHudDepth == 0)
         return gPortSpriteShiftY;
-    q = FollowQ(y);
-    if (entry >= 0 && entry < 128)
+    q = sHudAy == 3 ? FollowQ(y) : sHudAy * 256;
+    if (sHudAy == 3 && entry >= 0 && entry < 128)
         sEntryTag[entry].ayq = (int16_t)q;
-    return q * PortWideMarginY() / 256;
+    shift = sHudAy == 3 ? q * PortWideMarginY() / 256 : gPortSpriteShiftY;
+    /* At fixed 480p the HUD normally shares the world canvas, so TagHudY
+       never runs. Raise bottom cards there, including the played stacks. */
+    if (sHudAx == 2 && sHudAy == 1)
+        q = FollowQ(y); /* enemy stocks reach the top while the hand stays low */
+    if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256)
+        shift -= 16 * (q + 256) / 512;
+    return shift;
 }
 
 /* The tag's vertical shift on the world canvas, and its place on the HUD. */
