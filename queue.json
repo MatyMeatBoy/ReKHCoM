@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T23:21:16.058283+00:00",
+      "updated_at": "2026-11-24T23:27:42.121995+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18801,6 +18801,11 @@
           "at": "2026-11-24T23:21:16.058283+00:00",
           "owner": "Codex-v22",
           "detail": "RC local y diagnostico unico v5 preparados sin instalar: fuente 7506fafba, ELF c5fd1a65c21c821d43321d5e35356b1e2a059c2f59fd75587300dd3711582a80; RC SHA256 338aec0c8bfac9c59f20e3c1b58f7a279cdef6e7448240d5572d27e58088b862, diagnostico c051261c861e9233758cc302aaea8502b6e531a9b18b2de4ef6f9677f788d736. Incluye PR702-704 opt-in activados. Smoke QEMU RC arranca, diagnostico 16 salidas y CSV, save intacta; pruebas cortas no miden escenas completas. Instalador v5 fixture PASS y rollback fallo inyectado PASS. A/B nuevos flags en synthesis/worldcards/start/journal; user actualiza tras aviso y conexion HOME confirmada."
+        },
+        {
+          "at": "2026-11-24T23:27:42.121995+00:00",
+          "owner": "Codex-v22",
+          "detail": "RC y diagnostico v5 preparados, no instalados. QEMU 8 recorridos completos A/B (400/620 frames) terminaron con CSV y logs, partida intacta; ejecucion adicional de los 4 casos B con capturas confirma visualmente sintesis, mode_worldinspect, Start y detalle Historia, y confirma flags nuevos activos en Start/diario. Capturas rc-v5-diagnostic-route-images/. Validacion fisica pendiente; sin acceso a HOME hasta reconexion confirmada."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -19167,7 +19172,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T23:21:16.058283+00:00",
+  "updated_at": "2026-11-24T23:27:42.121995+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
