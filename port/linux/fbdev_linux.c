@@ -445,6 +445,44 @@ bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, in
     return true;
 }
 
+/* Preserve SDL's pixel-centre mapping and alpha arithmetic, but avoid
+ * visiting transparent ends (and entire empty rows) of sparse menu layers. */
+bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* source, int width, int height,
+                                    const SDL_Rect* dest) {
+    uint16_t xMap[640];
+    if (!source || width <= 0 || height <= 0 || dest->x < 0 || dest->y < 0 ||
+        dest->w <= 0 || dest->h <= 0 || dest->x + dest->w > 640 || dest->y + dest->h > 480 ||
+        !PortFbBeginGlyphBatch(renderer)) return false;
+    const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
+    uint64_t pos = dx / 2, py = dy / 2;
+    int previous = -1, begin = 0, end = 0;
+    for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
+    for (int y = 0; y < dest->h; y++, py += dy) {
+        const int sy = (int)(py >> 16);
+        const uint32_t* src = source + sy * width;
+        if (sy != previous) {
+            int left = 0, right = width, lo, hi;
+            while (left < right && !(src[left] >> 24)) left++;
+            while (right > left && !(src[right - 1] >> 24)) right--;
+            lo = 0; hi = dest->w;
+            while (lo < hi) { int mid = (lo + hi) / 2; if (xMap[mid] < left) lo = mid + 1; else hi = mid; }
+            begin = lo;
+            lo = begin; hi = dest->w;
+            while (lo < hi) { int mid = (lo + hi) / 2; if (xMap[mid] < right) lo = mid + 1; else hi = mid; }
+            end = lo;
+            previous = sy;
+        }
+        uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (dest->y + y) * sRenderSurface->pitch) + dest->x;
+        for (int x = begin; x < end; x++) {
+            const uint32_t pixel = src[xMap[x]];
+            const unsigned alpha = pixel >> 24;
+            if (alpha == 255) dst[x] = pixel;
+            else if (alpha) dst[x] = ScaleGlyphRgb(pixel, alpha) + ScaleGlyphRgb(dst[x], 255 - alpha);
+        }
+    }
+    return true;
+}
+
 void PortFbDrawGlyphMaskClipped(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb, const SDL_Rect* clip) {
     const int left = SDL_max(SDL_max(x, 0), clip ? clip->x : 0);
     const int right = SDL_min(SDL_min(x + w, 640), clip ? clip->x + clip->w : 640);

@@ -237,6 +237,7 @@ int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int 
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
 bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, int width, int height, const SDL_Rect* dest);
+bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* source, int width, int height, const SDL_Rect* dest);
 static int sFbW, sFbH;
 #endif
 
@@ -2079,7 +2080,12 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
     if (fractionalOverlay && PortFbActive() && PortFixed480p() && outW == 640 && outH == 480 &&
         width == GBA_SCREEN_W && sOverlayScale > 2.66f && sOverlayScale < 2.67f &&
         dest->x >= 0 && dest->y >= 0) {
+        const char* sparseOverlay;
+        extern int PortGa36SynthesisActive(void);
+        PORT_ENV_ONCE(sparseOverlay, SDL_getenv, "KHCOM_FBDEV_SPARSE_FRACTIONAL");
         SDL_Rect target = {(int)dest->x, (int)dest->y, (int)dest->w, (int)dest->h};
+        if (sparseOverlay && PortGa36SynthesisActive() &&
+            PortFbBlendOverlayScaledSparse(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
         if (PortFbBlendOverlayScaled(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
     }
     const int scale = (int)sOverlayScale;
