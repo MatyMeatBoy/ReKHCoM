@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T20:18:05.248906+00:00",
+      "updated_at": "2026-11-24T20:27:20.109410+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18766,6 +18766,11 @@
           "at": "2026-11-24T20:18:05.248906+00:00",
           "owner": "Codex-v22",
           "detail": "Candidato v2 ZIP SHA256 f17d587fc9d4e0042a26b82234fa56ad75085be6def5f26f9b50e551eaa45b5e, ELF 97b7b0b83ce68c8cdf0a99f9a1c353f0e21cb71cb032af32bc21e6275e8004d0 fuente 6d9855640, incluye PR692-699 y ocho flags optimizados. QEMU smoke exact ZIP: partida original inalterada, watchdog, ocho casos ABBA salidas 0 y CSV/log no vacios. Sintesis synthetic y mundo con 60 frames de smoke, escenarios completos ver pruebas previas. Usuario notificado para reconexion; no acceder SD sin confirmacion. Una sola prueba fisica."
+        },
+        {
+          "at": "2026-11-24T20:27:20.109410+00:00",
+          "owner": "Codex-v22",
+          "detail": "ELF exacto del ZIP: QEMU ABBA worldinspect 29.97-31.26 FPS P95 41.18-44.67 vs 49.46-55.89 FPS P95 20.93-24.46; BAAB synthesis fixture 29.17-29.78 P95 37.06-37.50 vs 40.94-42.22 P95 26.70-28.09. Instalador probado en tarjeta simulada: 4 archivos nuevos, identidad, hashes de partida/ROM/INI intactos y rechazo de sobreescritura. Esperando confirmacion de tarjeta HOME."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -18792,7 +18797,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T20:23:42.119910+00:00",
+  "updated_at": "2026-11-24T20:27:20.109410+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
