@@ -799,6 +799,7 @@ int PortScreenMarginX(void) {
 int gPortHudScale;
 int gPortHeaderDraw;
 static int HeaderBandColor(int y, int phase);
+static int HeaderPick(void);
 int gPortHudW;
 int gPortHudH;
 
@@ -5036,6 +5037,12 @@ static int PpuRowsIndependent(bool allowMosaic) {
     }
     for (i = 0; i < OamCount(); i++)
         if (sOamTag[i].header) {
+            const char* parallel;
+            PORT_ENV_ONCE(parallel, SDL_getenv, "KHCOM_PPU_MENU_HEADER_PARALLEL");
+            /* Prime the shared once-per-frame band before waking workers. A
+               missing source still uses the original serial path. */
+            if (parallel && HeaderPick() >= 0)
+                break;
             sPpuStats[3]++;
             return 0; /* HeaderPick's once-a-frame choice */
         }
