@@ -18838,20 +18838,26 @@
     "ga36-unrouted-psg-wave-20261124": {
       "id": "ga36-unrouted-psg-wave-20261124",
       "piece": "GA36 menus: evitar calcular forma PSG no conectada preservando fase y audio",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:37:32.778512+00:00",
-      "updated_at": "2026-11-24T20:37:43.935075+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-24T20:47:41.391169+00:00",
+      "branch": "perf/ga36-unrouted-psg-wave-20261124",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/700",
       "approval": null,
       "reference": "Diagnostico QEMU NR51=00 PSG 2-4ms, bitacora ciclo; verificar estado y audio equivalentes",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T20:47:41.391169+00:00",
+          "owner": "Codex-v22",
+          "detail": "8abbe5552 opt-in; QEMU world ABBA 52.25-53.12 FPS P95 23.57-24.30 vs 58.82-59.34 P95 20.58-20.59; synthesis BAAB 42.60-46.66 P95 24.26-27.69 vs 47.39-48.17 P95 23.15-24.87. Instrumented producer 301 frames, all four channels active and routes toggled: exact raw audio/rate hashes and all state hashes; normal fixture also equal. ARMhf, test_audio_render, test_ga36_port, check_sources PASS. Physical pending."
+        }
+      ],
       "claimed_at": "2026-11-24T20:37:43.935075+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T20:37:43.935075+00:00",
+  "updated_at": "2026-11-24T20:47:41.391169+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
