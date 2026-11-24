@@ -546,5 +546,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-worldinspect-blur-interpolation-20261124 | GA36 naipes mundo: omitir interpolacion blur no visible | pendiente | — | — | — | 2026-11-24T20:11:23.588662+00:00 |
 | ga36-single-grouped-diagnostic-20261124 | GA36 diagnostico unico: sintesis y naipes reales mas comparaciones A/B automaticas | en_revision | Codex-v22 | — | — | 2026-11-24T20:27:20.109410+00:00 |
 | ga36-worldinspect-blur-cells-20261124 | GA36 naipes mundo: evitar muestras de blur ocultas | pendiente | — | — | — | 2026-11-24T20:23:42.119910+00:00 |
+| ga36-synthesis-uniform-native-tiles-20261124 | GA36 sintesis: aprovechar filas nativas de mosaico uniformes | pendiente | — | — | — | 2026-11-24T20:28:27.464154+00:00 |
 
 Integrador: libre
