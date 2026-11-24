@@ -19138,20 +19138,26 @@
     "ga36-start-alpha-distribution-20261124": {
       "id": "ga36-start-alpha-distribution-20261124",
       "piece": "GA36 menu Start optimizar mezcla alpha",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T23:06:11.367055+00:00",
-      "updated_at": "2026-11-24T23:06:19.037725+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-24T23:13:50.128975+00:00",
+      "branch": "perf/ga36-start-alpha-distribution-20261124",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/704",
       "approval": null,
       "reference": "start-overlay-parts-qemu",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T23:13:50.128975+00:00",
+          "owner": "Codex-v22",
+          "detail": "PR704 draft 7506fafba. Start QEMU ABBA vs PR703 exacto A 42.22-43.35 FPS P95 26.23-27.54 ms, B 46.23-46.54 P95 24.81-24.97; presentacion media 5.20-5.59 a 4.15-4.44 ms. Ruta activa, 11 capturas identicas; test 80 geometria/alpha en ruta normal y candidata, test_ga36_port, check_sources, build ARMhf y diff PASS. Pendiente fisico y otros menus; opt-in."
+        }
+      ],
       "claimed_at": "2026-11-24T23:06:19.037725+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T23:06:19.037725+00:00",
+  "updated_at": "2026-11-24T23:13:50.128975+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
