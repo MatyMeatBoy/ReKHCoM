@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T21:56:20.209846+00:00",
+      "updated_at": "2026-11-24T21:58:17.971064+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18996,13 +18996,18 @@
           "at": "2026-11-24T21:56:20.209846+00:00",
           "owner": "Codex-v22",
           "detail": "Start reproducido en QEMU con START frame 180 y captura del menu real; perfil RC v4 start-v4-row-qemu: BG text4 7.25 core-ms + sprites 5.43 core-ms en frame 270, composicion 2.07. Candidata lectura packed text4 ABBA QEMU A 68.71/77.28 FPS P95 16.67/14.20 ms, B 67.34/77.07 P95 16.30/14.04; solapado, sin evidencia de mejora. Candidata revertida, patch archivado start-packed-text-experiment.patch; continuar."
+        },
+        {
+          "at": "2026-11-24T21:58:17.971064+00:00",
+          "owner": "Codex-v22",
+          "detail": "Candidata limites previos de sprites en Start, ABBA QEMU sin profiling: A 77.01/74.79 FPS P95 14.04/14.44, B 77.00/74.19 FPS P95 14.11/15.27; sin mejora, descartada y revertida. Patch start-obj-clip-experiment.patch; ELF RC restaurado SHA256 6961b9bd2cae975edb21e893591fff86f0d22e5ee13b40fd14bb65fa5e74418d. Continuar con otras rutas."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:56:20.209846+00:00",
+  "updated_at": "2026-11-24T21:58:17.971064+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
