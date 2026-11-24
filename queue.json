@@ -18461,8 +18461,8 @@
       "status": "en_revision",
       "owner": "codex-ga36-prelocal",
       "created_at": "2026-11-24T07:48:33.861181+00:00",
-      "updated_at": "2026-11-24T07:52:31.168956+00:00",
-      "branch": "perf/ga36-journal-20261124",
+      "updated_at": "2026-11-24T11:18:31.901455+00:00",
+      "branch": "perf/ga36-synthesis-20261124",
       "pr": null,
       "approval": null,
       "reference": "Solicitado usuario; sobre 065345679 y PR draft 686-688, sin publicar release",
@@ -18471,13 +18471,18 @@
           "at": "2026-11-24T07:52:31.168956+00:00",
           "owner": "codex-ga36-prelocal",
           "detail": "Prelocal EU local ZIP cb19fcd6; actualización cf75a538; diagnóstico v2 8ae925ff. Fuente 065345679, ELF 68c50dc5. QEMU RGB565 EU título PASS; diagnóstico QEMU conserva partida aislada, registros y watchdog PASS. Pendiente ejecución GA36 física y revisión de alcance visual 4:3; no instalar ni publicar automáticamente."
+        },
+        {
+          "at": "2026-11-24T11:18:31.901455+00:00",
+          "owner": "codex-ga36-prelocal",
+          "detail": "Prelocal EU v2 full SHA 15f741d3, update 624469cf, diagnóstico v3 41be52c1; fuente e589df282, ELF f78663ec. Añade PR689 síntesis: presentación QEMU 6.22-6.27 a 3.49-3.68ms, 9 capturas iguales. Diagnóstico v3 QEMU guarda partida en copia, exporta logs y respeta timer. Sigue pendiente prueba física y validación 4:3."
         }
       ],
       "claimed_at": "2026-11-24T07:48:46.809357+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T11:16:30.184337+00:00",
+  "updated_at": "2026-11-24T11:18:31.901455+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
