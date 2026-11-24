@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:15:30.801490+00:00",
+      "updated_at": "2026-11-24T22:20:24.533525+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19031,13 +19031,18 @@
           "at": "2026-11-24T22:15:30.801490+00:00",
           "owner": "Codex-v22",
           "detail": "Agrupar repeticiones alpha overlay paso 4 capturas ABBA identicas y test 80 geometria/alpha, pero comparacion correcta contra ELF RC exacto A 40.66-42.99 FPS P95 26.33-28.21 ms y B 35.68-41.25 FPS P95 27.17-32.17: sin mejora. El primer A/B usaba baseline modificado y queda invalidado. Candidata revertida; patch start-overlay-grouped-experiment.patch."
+        },
+        {
+          "at": "2026-11-24T22:20:24.533525+00:00",
+          "owner": "Codex-v22",
+          "detail": "Usuario reporta lentitud progresiva dos submenus de diario. Reproduccion QEMU RC exacta con dos entradas y capturas confirma raiz, Historia y Peripecias Sora I: una pasada sin frames de captura 42.17 FPS P95 28.01 / 41.43 P95 27.96 / 38.86 P95 30.14. Datos, capturas y guion journal-two-levels-qemu y profile-journal-two-levels.py; no extrapolar a consola. Experimento NEON overlay A 41.27-42.95 FPS B 25.43-26.42, revertido."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:15:30.801490+00:00",
+  "updated_at": "2026-11-24T22:20:24.533525+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
