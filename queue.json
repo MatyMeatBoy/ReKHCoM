@@ -18968,12 +18968,12 @@
     "ga36-start-journal-physical-v4-20261124": {
       "id": "ga36-start-journal-physical-v4-20261124",
       "piece": "GA36 rendimiento Start y Diario tras diagnostico fisico v4",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:38:22.921382+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-24T22:40:11.144656+00:00",
+      "branch": "perf/ga36-journal-direct-fit-20261124",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/702",
       "approval": null,
       "reference": "device-unico-v4-19700621-091300-294",
       "evidence": [
@@ -19061,13 +19061,18 @@
           "at": "2026-11-24T22:38:22.921382+00:00",
           "owner": "Codex-v22",
           "detail": "Perfil texto diario separa vaciado SDL de ordenacion: batch ~1.8-3.7 ms, sort ~0.05-0.13 ms en QEMU. Ruta fit directo se activo, cinco capturas de raiz/lista/detalle identicas, pero ABBA QEMU frente RC exacta solapado: raiz A 66.57-75.23 B 69.99-79.08; lista A 72.61-74.69 B 73.42-73.59; detalle A 69.57-71.93 B 66.09-72.81 FPS. Cambio no promovido, revertido y patch journal-direct-fit-experiment.patch. Usuario solicita avisar solo cuando RC/diagnostico nuevos listos."
+        },
+        {
+          "at": "2026-11-24T22:40:11.144656+00:00",
+          "owner": "Codex-v22",
+          "detail": "PR702 draft c0cb39884: fit directo diario opt-in. QEMU exacto ABBA presentacion media raiz A 4.54/4.95 B 4.22/4.07 ms; lista A 4.92/5.05 B 4.66/4.74; detalle A 5.35/5.24 B 4.96/4.88. FPS totales solapados; cinco capturas iguales, test_jiminy_layout/paper/ga36/check_sources y build ARMhf pass. Pendiente validacion fisica, no activado en RC actual. Usuario pide avisar solo al tener RC/diagnostico nuevos listos."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:38:22.921382+00:00",
+  "updated_at": "2026-11-24T22:40:11.144656+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
