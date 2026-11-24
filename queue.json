@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T23:27:42.121995+00:00",
+      "updated_at": "2026-11-24T23:28:42.762297+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18806,6 +18806,11 @@
           "at": "2026-11-24T23:27:42.121995+00:00",
           "owner": "Codex-v22",
           "detail": "RC y diagnostico v5 preparados, no instalados. QEMU 8 recorridos completos A/B (400/620 frames) terminaron con CSV y logs, partida intacta; ejecucion adicional de los 4 casos B con capturas confirma visualmente sintesis, mode_worldinspect, Start y detalle Historia, y confirma flags nuevos activos en Start/diario. Capturas rc-v5-diagnostic-route-images/. Validacion fisica pendiente; sin acceso a HOME hasta reconexion confirmada."
+        },
+        {
+          "at": "2026-11-24T23:28:42.762297+00:00",
+          "owner": "Codex-v22",
+          "detail": "Analizador local analyze-diagnostic-unico-v5.py preparado: valida estado completo y fotogramas sin huecos de 16 casos, calcula FPS/P95 para sintesis, naipes, Start y tres etapas de diario; explicita entorno y rutas sinteticas. Fixture 24 muestras PASS contra referencia fisica anterior; rechaza diagnostico incompleto. RC y diagnostico v5 listos, esperando reconexion confirmada HOME."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -19172,7 +19177,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T23:27:42.121995+00:00",
+  "updated_at": "2026-11-24T23:28:42.762297+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
