@@ -18689,10 +18689,23 @@
         }
       ],
       "claimed_at": "2026-11-24T19:49:40.757681+00:00"
+    },
+    "ga36-worldinspect-background-vector-20261124": {
+      "id": "ga36-worldinspect-background-vector-20261124",
+      "piece": "GA36 naipes mundo: vectorizar composicion de fondo sin objetos",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-24T19:53:50.679058+00:00",
+      "updated_at": "2026-11-24T19:53:50.679058+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "PR697; QEMU PPU muestra coste de composicion de fondo",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T19:51:44.485833+00:00",
+  "updated_at": "2026-11-24T19:53:50.679058+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
