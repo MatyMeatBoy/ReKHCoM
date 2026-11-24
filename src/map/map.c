@@ -5758,6 +5758,14 @@ s32 MapMenuResume(MapMenuWork* work) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+int PortGa36FieldMenuBars(void) {
+    extern Mode* gCurrentMode;
+    return gCurrentMode == &gModeMapFld && gFieldState != NULL &&
+        (gFieldState->flags & (FIELD_FLAG_MENU_OPEN | FIELD_FLAG_ROOM_CREATE)) != 0;
+}
+#endif
+
 void Task_MapMenu_0(MapMenuWork* work) {
     s8 cursor;
 

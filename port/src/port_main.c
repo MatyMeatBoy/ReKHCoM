@@ -45,6 +45,7 @@ extern int PortBridgeVideoCaps(void);
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
+#include "port/overlay_vertical_bands.h"
 #include "port/gba_border_layout.h"
 #include "port/lcd_grid.h"
 #include "port/port_hd2d.h"
@@ -2659,6 +2660,29 @@ static void Present(int paced) {
         od.x = (float)(int)((outW - od.w) / 2);
         od.y = (float)(int)((outH - od.h) / 2);
         if (!ScreenOverlayEmpty(overlay, sOverlayTexW)) {
+#ifdef PORT_LINUX
+            const char* menuBands43;
+            extern int PortGa36FieldMenuBars(void);
+            PORT_ENV_ONCE(menuBands43, SDL_getenv, "KHCOM_GA36_MENU_43_BANDS");
+            if (menuBands43 && PortFixed480p() && PortFbActive() && PortGa36FieldMenuBars() &&
+                gPortConfig.aspect == PORT_ASPECT_4_3 && gPortConfig.graphicsMode == PORT_MODE_GBA_ENHANCED &&
+                outW == 640 && outH == 480 && sOverlayTexW == GBA_SCREEN_W &&
+                (int)od.x == 0 && (int)od.w == outW && od.y > 0) {
+                uint32_t color;
+                const int top = (int)od.y, bottom = top + (int)od.h;
+                if (PortOverlaySolidEdge(overlay, sOverlayTexW, &color)) {
+                    SDL_FRect band = {0, 0, (float)outW, (float)top};
+                    SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &band);
+                }
+                if (bottom < outH && PortOverlaySolidEdge(overlay + (GBA_SCREEN_H - 1) * sOverlayTexW,
+                                                          sOverlayTexW, &color)) {
+                    SDL_FRect band = {0, (float)bottom, (float)outW, (float)(outH - bottom)};
+                    SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &band);
+                }
+            }
+#endif
             SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
             DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH);
         }
