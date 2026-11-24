@@ -439,6 +439,9 @@ static uint32_t BlendGlyphPixel(uint32_t rgb, uint32_t dst, unsigned opacity) {
 bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, int width, int height,
                               const SDL_Rect* dest) {
     uint16_t xMap[640];
+    uint8_t repeats[240];
+    static int grouped = -1;
+    if (grouped < 0) grouped = SDL_getenv("KHCOM_FBDEV_OVERLAY_240_RUNS") != NULL;
     if (!source || width <= 0 || height <= 0 || dest->x < 0 || dest->y < 0 ||
         dest->w <= 0 || dest->h <= 0 || dest->x + dest->w > 640 || dest->y + dest->h > 480 ||
         !PortFbBeginGlyphBatch(renderer)) return false;
@@ -447,9 +450,32 @@ bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, in
     const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
     uint64_t pos = dx / 2, py = dy / 2;
     for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
+    bool runs = grouped && width == 240 && dest->w == 640;
+    if (runs) {
+        memset(repeats, 0, sizeof(repeats));
+        for (int x = 0; x < dest->w; x++) repeats[xMap[x]]++;
+        for (int x = 0; x < 240; x++) if (repeats[x] < 2 || repeats[x] > 3) runs = false;
+        if (runs) { static bool logged; if (!logged) { PortLog("fbdev: overlay 240 runs active"); logged = true; } }
+    }
     for (int y = 0; y < dest->h; y++, py += dy) {
         const uint32_t* src = source + (py >> 16) * width;
         uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (dest->y + y) * sRenderSurface->pitch) + dest->x;
+        if (runs) {
+            int x = 0;
+            for (int sx = 0; sx < 240; sx++) {
+                const uint32_t pixel = src[sx];
+                const unsigned alpha = pixel >> 24, count = repeats[sx];
+                if (alpha == 255) {
+                    dst[x] = dst[x + 1] = pixel;
+                    if (count == 3) dst[x + 2] = pixel;
+                } else if (alpha) {
+                    const uint32_t fg = ScaleGlyphRgb(pixel, alpha);
+                    for (unsigned j = 0; j < count; j++) dst[x + j] = fg + ScaleGlyphRgb(dst[x + j], 255 - alpha);
+                }
+                x += (int)count;
+            }
+            continue;
+        }
         for (int x = 0; x < dest->w; x++) {
             const uint32_t pixel = src[xMap[x]];
             const unsigned alpha = pixel >> 24;

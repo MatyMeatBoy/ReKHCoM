@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import os
 
 root = Path(__file__).resolve().parents[2]
 source = (root / 'port/linux/fbdev_linux.c').read_text()
@@ -25,6 +26,7 @@ program = r'''
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#define SDL_getenv getenv
 typedef struct { int x,y,w,h; } SDL_Rect;
 typedef struct { void *pixels; int pitch; } SDL_Surface;
 typedef struct { int unused; } SDL_Renderer;
@@ -47,6 +49,7 @@ int main(void) {
         int sw=1+rnd()%240, sh=1+rnd()%160;
         SDL_Rect r={rnd()%20,rnd()%20,0,0};
         r.w=1+rnd()%(640-r.x); r.h=1+rnd()%(480-r.y);
+        if (t % 4 == 3) { sw=240; r.x=0; r.w=640; }
         for (int i=0;i<sw*sh;i++) {
             src[i]=rnd();
             if (t%4==0 && (i/sw)%3) src[i]&=0x00ffffffu;
@@ -93,3 +96,4 @@ with tempfile.TemporaryDirectory() as directory:
     src.write_text(program)
     subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'clang', '-O2', str(src), '-o', str(exe)], check=True)
     subprocess.run([str(exe)], check=True)
+    subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_OVERLAY_240_RUNS': '1'})
