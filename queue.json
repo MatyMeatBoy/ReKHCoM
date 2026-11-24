@@ -18733,20 +18733,26 @@
     "ga36-worldinspect-blur-interpolation-20261124": {
       "id": "ga36-worldinspect-blur-interpolation-20261124",
       "piece": "GA36 naipes mundo: omitir interpolacion blur no visible",
-      "status": "en_curso",
-      "owner": "Codex-v22",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-24T20:04:47.788301+00:00",
-      "updated_at": "2026-11-24T20:04:58.965237+00:00",
+      "updated_at": "2026-11-24T20:11:23.588662+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "PR699; calcular solo dependencias del borde visible conservando fallback completo",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T20:11:23.588662+00:00",
+          "owner": "Codex-v22",
+          "detail": "released: Nine captures identical, but ABBA/BAAB FPS ranges overlap and last BAAB candidate regressed: A 53.03-54.92 FPS P95 22.90-23.26, B 51.92-54.15 P95 22.94-23.38; discarded, no stable gain."
+        }
+      ],
       "claimed_at": "2026-11-24T20:04:58.965237+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T20:04:58.965237+00:00",
+  "updated_at": "2026-11-24T20:11:23.588662+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
