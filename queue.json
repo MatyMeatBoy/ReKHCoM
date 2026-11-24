@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T21:16:09.643381+00:00",
+      "updated_at": "2026-11-24T21:30:19.592894+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18781,6 +18781,11 @@
           "at": "2026-11-24T21:16:09.643381+00:00",
           "owner": "Codex-v22",
           "detail": "ELF exacto V3 QEMU comparacion total: mundo ABBA A 32.09-32.12 FPS P95 40.52-41.81 ms, B 52.77-55.26 P95 22.12-23.44; sintesis BAAB A 29.81-30.88 P95 35.60-38.46, B 46.55-47.67 P95 23.74-24.89. Exploracion otros modos QEMU y configuracion diario corregida en pruebas/ga36-armhf-20261122/menu-v3-baselines-20261124.json. HOME sin confirmacion de reconexion; no acceder."
+        },
+        {
+          "at": "2026-11-24T21:30:19.592894+00:00",
+          "owner": "Codex-v22",
+          "detail": "RC local EU y diagnostico unico v4 fuente 67ce76e9140e8cbf6a0c570eeda6a9ed2bb221e3; RC SHA256 cae12234bb72f6f6e285433726f04bf0fc9a685a778681f4bfdfb47348e339c5, diagnostico b9a5b333deeca3876dd1ea0f39f098baf2e1963d2d3633d9624a41d921190521. QEMU RC arranque PASS, RC+diagnostico ocho casos con datos y partida aislada PASS. Instalador conjunto en fixture PASS y rechaza segunda instalacion; HOME no reconectada, prueba fisica pendiente."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -18952,7 +18957,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:23:46.402247+00:00",
+  "updated_at": "2026-11-24T21:30:19.592894+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
