@@ -18513,20 +18513,26 @@
     "ga36-worldinspect-physical-20261124": {
       "id": "ga36-worldinspect-physical-20261124",
       "piece": "GA36 rendimiento real de naipes de mundo mode_worldinspect",
-      "status": "en_curso",
-      "owner": "codex-ga36-real-worldinspect",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-24T11:58:47.779349+00:00",
-      "updated_at": "2026-11-24T11:59:02.404623+00:00",
+      "updated_at": "2026-11-24T12:00:15.782664+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "Diagnostico fisico 20261124 frames 5152-5325",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T12:00:15.782664+00:00",
+          "owner": "codex-ga36-real-worldinspect",
+          "detail": "released: Physical diagnostic 47.97 FPS p95 22.11 ms, present 11.70 ms; QEMU reaches mode_worldinspect but no valid capture yet; reproduction in pruebas/ga36-armhf-20261122/worldinspect-real-repro, no fix claimed."
+        }
+      ],
       "claimed_at": "2026-11-24T11:59:02.404623+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T11:59:02.404623+00:00",
+  "updated_at": "2026-11-24T12:00:15.782664+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
