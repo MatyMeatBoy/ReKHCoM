@@ -3522,6 +3522,8 @@ static bool sNeonScreenCompose;
 static bool sNeonScreenRows[GBA_SCREEN_H];
 static bool sSpotlightScreenRows[GBA_SCREEN_H];
 static bool sNeonOpaqueRows[PORT_MAX_H];
+static bool sWorldInspectBgVector;
+static bool sWorldInspectBgRows[PORT_MAX_H];
 static bool sProbeComposeGates;
 static uint16_t sComposeGates[PORT_MAX_H];
 
@@ -3692,11 +3694,12 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
         !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
-        (docked || (objects && sLineHasObjects) || n > 2) &&
+        (docked || (objects && sLineHasObjects) || n > 2 || (!objects && sWorldInspectBgVector)) &&
         (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
          (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
         NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
                              objects && sLineHasObjects, collect, (unsigned)docked);
+        if (!objects && sWorldInspectBgVector) sWorldInspectBgRows[y] = true;
         return;
     }
 #endif
@@ -5628,6 +5631,13 @@ void PortPpuRenderFrame(void) {
     const char* neonNarrowCompose;
     PORT_ENV_ONCE(neonNarrowCompose, SDL_getenv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
     sNeonNarrowCompose = neonNarrowCompose != NULL;
+    {
+        extern Mode gModeWorldinspect;
+        extern Mode* gCurrentMode;
+        const char* vectorWorldBackground;
+        PORT_ENV_ONCE(vectorWorldBackground, SDL_getenv, "KHCOM_PPU_WORLDINSPECT_BACKGROUND_VECTOR");
+        sWorldInspectBgVector = vectorWorldBackground && gCurrentMode == &gModeWorldinspect;
+    }
     const char* neonScreenCompose;
     PORT_ENV_ONCE(neonScreenCompose, SDL_getenv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
     sNeonScreenCompose = neonScreenCompose != NULL;
@@ -5778,6 +5788,16 @@ void PortPpuRenderFrame(void) {
                 gates[5], gates[6], gates[7], gates[8]);
     }
     static bool neonScreenLogged;
+    static bool worldBackgroundLogged;
+    if (sWorldInspectBgVector && !worldBackgroundLogged) {
+        for (int row = 0; row < gPortScreen.height; row++) {
+            if (sWorldInspectBgRows[row]) {
+                PortLog("ppu: world inspect background vector active");
+                worldBackgroundLogged = true;
+                break;
+            }
+        }
+    }
     static bool spotlightScreenLogged;
     if (sSpotlightOverlayFast && sSpotlight && !spotlightScreenLogged) {
         for (int row = 0; row < GBA_SCREEN_H; row++) {
