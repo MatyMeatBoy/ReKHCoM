@@ -431,6 +431,7 @@ static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below *
 static int sSpotlight;
 static int sSpotlightTileRuns;
 static int sSpotlightBg0Runs;
+static int sSpotlightTrimMargins;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -2131,7 +2132,7 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
 #if __STDC_HOSTED__
     PORT_ENV_ONCE(trimMargins, SDL_getenv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
 #endif
-    if (trimMargins && mosH == 1 && !sSpotlight &&
+    if (trimMargins && mosH == 1 && (!sSpotlight || (sSpotlightTrimMargins && bg != 0)) &&
         !guardPatio && !tmBoard && !ursLayer && !jfLayer && !mxField && !oogieHall && !mdLayer &&
         !sDarksideLayer[bg] && !(bg == sSinglePanelBg && sBgLatch[bg].valid) &&
         !(bg == 3 && gPortScreen.wide && sBgLatch[bg].valid &&
@@ -5369,7 +5370,9 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
     if (sPpuVerify) { /* the line-by-line drawing to compare with */
         sPpuIoView = NULL;
         int spotlightRuns = sSpotlightTileRuns;
+        int spotlightTrim = sSpotlightTrimMargins;
         sSpotlightTileRuns = 0;
+        sSpotlightTrimMargins = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5378,6 +5381,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
 #endif
         RenderLine(gy + gPortScreen.originY, gy);
         sSpotlightTileRuns = spotlightRuns;
+        sSpotlightTrimMargins = spotlightTrim;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5546,6 +5550,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightBg0Runs;
     PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
     sSpotlightBg0Runs = spotlightBg0Runs != NULL;
+    const char* spotlightTrimMargins;
+    PORT_ENV_ONCE(spotlightTrimMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TRIM_MARGINS");
+    sSpotlightTrimMargins = spotlightTrimMargins != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
