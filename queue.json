@@ -18968,19 +18968,20 @@
     "ga36-start-journal-physical-v4-20261124": {
       "id": "ga36-start-journal-physical-v4-20261124",
       "piece": "GA36 rendimiento Start y Diario tras diagnostico fisico v4",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T21:45:58.508415+00:00",
+      "updated_at": "2026-11-24T21:46:07.980607+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "device-unico-v4-19700621-091300-294",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:45:58.508415+00:00",
+  "updated_at": "2026-11-24T21:46:07.980607+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
