@@ -18246,7 +18246,7 @@
       "status": "en_curso",
       "owner": "codex-ga36-menu-hud",
       "created_at": "2026-11-24T01:01:24.724815+00:00",
-      "updated_at": "2026-11-24T02:50:18.523300+00:00",
+      "updated_at": "2026-11-24T02:51:29.626070+00:00",
       "branch": "fix/ga36-menu-hud-20261123",
       "pr": null,
       "approval": null,
@@ -18291,6 +18291,11 @@
           "at": "2026-11-24T02:50:18.523300+00:00",
           "owner": "codex-ga36-menu-hud",
           "detail": "Mandato nuevo: agrupar 4-5 mejoras verificadas o todas las posibles por candidata y una sola bateria fisica posterior; no pedir un diagnostico por cada fix. Prioridad full speed de todos menus/submenus y transiciones. Entrada barajas cabecera paralela QEMU ABBA 30,43-31,26 -> 64,00-64,12 FPS, P95 33,83-34,32 -> 16,27-16,57 ms, 8 capturas y PPU_VERIFY iguales; fisica posterior pendiente. NEON cobertura, buckets de texto y dibujo oscuro directo en validacion. Usuario probara diagnostico instalado luego. Entrada combate 4:3 pendiente separada."
+        },
+        {
+          "at": "2026-11-24T02:51:29.626070+00:00",
+          "owner": "codex-ga36-menu-hud",
+          "detail": "Mandato usuario: preparar 4-5 o tantas mejoras verificadas como sea posible antes de nueva prueba; diagnosticos deben cubrir varios menus/submenus/transiciones y mejoras en UN solo ejecutable; no pedir ejecucion por fix. Cabecera QEMU entrada baraja 30,43-31,26 -> 64,00-64,12 FPS, 8 capturas y PPU_VERIFY iguales; fisico previo NEON solo 31,68-31,86 -> 31,93-31,98 entrada (comparacion completa). Buckets y NEON cobertura preservan 8 capturas; trazado oscuro directo 8 capturas RGB exactas, falta medir. Foco: todos submenus y transiciones. No activar ni contar beneficios sin evidencia."
         }
       ],
       "claimed_at": "2026-11-24T01:06:22.704126+00:00"
@@ -18310,7 +18315,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T02:50:18.523300+00:00",
+  "updated_at": "2026-11-24T02:51:29.626070+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
