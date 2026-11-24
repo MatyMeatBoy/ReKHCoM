@@ -18343,12 +18343,12 @@
     "ga36-room-synthesis-performance-20261124": {
       "id": "ga36-room-synthesis-performance-20261124",
       "piece": "Diagnosticar y corregir lentitud de síntesis de estancias en GA36, reportada por usuario",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "codex-ga36-synthesis",
       "created_at": "2026-11-24T06:48:50.871937+00:00",
-      "updated_at": "2026-11-24T11:04:21.653413+00:00",
+      "updated_at": "2026-11-24T11:16:30.184337+00:00",
       "branch": "perf/ga36-synthesis-20261124",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/689",
       "approval": null,
       "reference": "GA36 RC acumulada 59bc8675; separar selección de mundo de carril de menús activo",
       "evidence": [
@@ -18376,6 +18376,11 @@
           "at": "2026-11-24T11:04:21.653413+00:00",
           "owner": "codex-ga36-synthesis",
           "detail": "Retomado a petición del usuario; perfilando apertura y desplazamiento sobre prelocal 065345679."
+        },
+        {
+          "at": "2026-11-24T11:16:30.184337+00:00",
+          "owner": "codex-ga36-synthesis",
+          "detail": "QEMU desplazamiento B/A/A/B presentación 6.22-6.27 a 3.49-3.68 ms; FPS 36.80-41.41 a 45.05-45.55, P95 27.99-31.83 a 24.78-26.29 ms. Host variable; 9 capturas idénticas, 80 tests alfa/bounds y check_sources/GA36 PASS. Física pendiente."
         }
       ],
       "claimed_at": "2026-11-24T11:03:31.874748+00:00"
@@ -18472,7 +18477,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T11:04:21.653413+00:00",
+  "updated_at": "2026-11-24T11:16:30.184337+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
