@@ -18729,10 +18729,23 @@
         }
       ],
       "claimed_at": "2026-11-24T20:00:17.818409+00:00"
+    },
+    "ga36-worldinspect-blur-interpolation-20261124": {
+      "id": "ga36-worldinspect-blur-interpolation-20261124",
+      "piece": "GA36 naipes mundo: omitir interpolacion blur no visible",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-24T20:04:47.788301+00:00",
+      "updated_at": "2026-11-24T20:04:47.788301+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "PR699; calcular solo dependencias del borde visible conservando fallback completo",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T20:04:20.158279+00:00",
+  "updated_at": "2026-11-24T20:04:47.788301+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
