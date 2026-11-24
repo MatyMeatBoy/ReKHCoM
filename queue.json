@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:20:24.533525+00:00",
+      "updated_at": "2026-11-24T22:24:08.763256+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19036,13 +19036,18 @@
           "at": "2026-11-24T22:20:24.533525+00:00",
           "owner": "Codex-v22",
           "detail": "Usuario reporta lentitud progresiva dos submenus de diario. Reproduccion QEMU RC exacta con dos entradas y capturas confirma raiz, Historia y Peripecias Sora I: una pasada sin frames de captura 42.17 FPS P95 28.01 / 41.43 P95 27.96 / 38.86 P95 30.14. Datos, capturas y guion journal-two-levels-qemu y profile-journal-two-levels.py; no extrapolar a consola. Experimento NEON overlay A 41.27-42.95 FPS B 25.43-26.42, revertido."
+        },
+        {
+          "at": "2026-11-24T22:24:08.763256+00:00",
+          "owner": "Codex-v22",
+          "detail": "Diario dos niveles: prueba ABBA QEMU ruta opaca sin semitransparentes no da mejora consistente contra RC: raiz A 43.19/43.71 B 44.05/38.88, Historia A 42.10/42.42 B 41.35/42.35, detalle A 38.19/35.96 B 42.33/34.54 FPS. P95 y frame logs en journal-opaque-relax-abba. No sumada, revertida; patch journal-opaque-relax-experiment.patch."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:20:24.533525+00:00",
+  "updated_at": "2026-11-24T22:24:08.763256+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
