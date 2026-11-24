@@ -18933,20 +18933,26 @@
     "ga36-mapinspect-opaque-vector-20261124": {
       "id": "ga36-mapinspect-opaque-vector-20261124",
       "piece": "GA36 inspeccion mapa: vectorizar filas opacas sin sprites",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:18:49.487602+00:00",
-      "updated_at": "2026-11-24T21:19:00.792416+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-24T21:23:46.402247+00:00",
+      "branch": "perf/ga36-mapinspect-opaque-vector-20261124",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/701",
       "approval": null,
       "reference": "PPU QEMU 20-27 core-ms; conservar prioridad y oclusion exactas",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T21:23:46.402247+00:00",
+          "owner": "Codex-v22",
+          "detail": "67ce76e91 opt-in active; QEMU ABBA frames 200-350 42.56-46.64 FPS P95 24.63-29.50 vs 49.72-55.49 FPS P95 21.37-24.23; nine captures identical, PPU_VERIFY no mismatch, ARMhf build/test_ga36_port/check_sources pass. Physical pending."
+        }
+      ],
       "claimed_at": "2026-11-24T21:19:00.792416+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T21:19:00.792416+00:00",
+  "updated_at": "2026-11-24T21:23:46.402247+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
