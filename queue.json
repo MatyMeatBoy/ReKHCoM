@@ -19093,20 +19093,26 @@
     "ga36-journal-detail-central-compose-20261124": {
       "id": "ga36-journal-detail-central-compose-20261124",
       "piece": "GA36 diario detalle composicion central con bordes intactos",
-      "status": "en_curso",
-      "owner": "Codex-v22",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-24T22:44:20.787315+00:00",
-      "updated_at": "2026-11-24T22:44:28.075383+00:00",
+      "updated_at": "2026-11-24T22:50:00.518502+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
       "reference": "journal-two-levels-stages",
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-24T22:50:00.518502+00:00",
+          "owner": "Codex-v22",
+          "detail": "released: Ruta central detalle se activo, QEMU PPU_VERIFY sin MISMATCH y cinco capturas identicas; ABBA sin captura detalle A 41.33-42.50 FPS P95 27.08-27.83 y B 42.37-44.43 P95 27.21-27.65, mejora de FPS se solapa; portada/lista variaron mas lento en B. No promovida, candidata revertida, patch journal-central-neon-experiment.patch. PR702 conservado."
+        }
+      ],
       "claimed_at": "2026-11-24T22:44:28.075383+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:44:28.075383+00:00",
+  "updated_at": "2026-11-24T22:50:00.519500+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
