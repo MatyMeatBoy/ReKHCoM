@@ -532,6 +532,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-start-synthesis-43-layout-20261124 | Ajustar márgenes 4:3 de menús Start y síntesis en GA36 | pr_abierto | codex-ga36-43-layout | https://github.com/MatyMeatBoy/ReKHCoM/pull/687 | — | 2026-11-24T07:39:35.592085+00:00 |
 | ga36-journal-presentation-perf-20261124 | Investigar presentación lenta del diario 4:3 en GA36 | pr_abierto | codex-ga36-journal | https://github.com/MatyMeatBoy/ReKHCoM/pull/688 | — | 2026-11-24T07:48:20.376973+00:00 |
 | ga36-prelocal-menus-20261124 | Preparar prerelease local EU y diagnóstico físico de síntesis y selección de mundo GA36 | en_revision | codex-ga36-prelocal | perf/ga36-synthesis-20261124 | — | 2026-11-24T11:22:48.330893+00:00 |
-| ga36-synthesis-physical-spotlight-20261124 | Corregir rendimiento de síntesis con foco real observado en GA36 física | en_curso | codex-ga36-real-synthesis | — | — | 2026-11-24T11:37:19.961013+00:00 |
+| ga36-synthesis-physical-spotlight-20261124 | Corregir rendimiento de síntesis con foco real observado en GA36 física | en_curso | codex-ga36-real-synthesis | perf/ga36-synthesis-physical-20261124 | — | 2026-11-24T11:37:38.667374+00:00 |
 
 Integrador: libre
