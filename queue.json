@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:26:38.756771+00:00",
+      "updated_at": "2026-11-24T22:29:39.516993+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19046,13 +19046,18 @@
           "at": "2026-11-24T22:26:38.756771+00:00",
           "owner": "Codex-v22",
           "detail": "Candidata omitir subida de textura del overlay Start, ABBA QEMU vs RC exacta A 38.53-43.02 FPS P95 27.21-30.69, B 42.69-45.08 FPS P95 25.39-26.85; rangos solapados y ruta no instrumentada, no confirma mejora. Revertida y patch archivado start-field-no-upload-experiment.patch, ELF RC restaurado."
+        },
+        {
+          "at": "2026-11-24T22:29:39.516993+00:00",
+          "owner": "Codex-v22",
+          "detail": "Perfil por etapas diario dos niveles, QEMU journal-world-parts-qemu: PortHdTextDraw ~2.74-3.44 ms portada, ~5.64-5.85 lista Historia y ~3.16-5.22 detalle; otras partes del mundo ~0.01 ms. Direct clipped glyph activo. Es coste simulado instrumentado, no FPS fisicos. Instrumentacion revertida; RC restaurada."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:26:38.756771+00:00",
+  "updated_at": "2026-11-24T22:29:39.516993+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
