@@ -18346,8 +18346,8 @@
       "status": "en_curso",
       "owner": "codex-ga36-synthesis",
       "created_at": "2026-11-24T06:48:50.871937+00:00",
-      "updated_at": "2026-11-24T06:51:27.842443+00:00",
-      "branch": null,
+      "updated_at": "2026-11-24T07:00:54.556772+00:00",
+      "branch": "fix/ga36-next-rc-synthesis-20261124",
       "pr": null,
       "approval": null,
       "reference": "GA36 RC acumulada 59bc8675; separar selección de mundo de carril de menús activo",
@@ -18356,13 +18356,18 @@
           "at": "2026-11-24T06:50:00.532149+00:00",
           "owner": "codex-ga36-synthesis",
           "detail": "released: "
+        },
+        {
+          "at": "2026-11-24T07:00:54.556772+00:00",
+          "owner": "codex-ga36-synthesis",
+          "detail": "RC 59bc; QEMU síntesis reproduce lentitud y captura 4:3; comparación y causa en investigación."
         }
       ],
       "claimed_at": "2026-11-24T06:51:27.842443+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T06:51:27.842443+00:00",
+  "updated_at": "2026-11-24T07:00:54.556772+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
