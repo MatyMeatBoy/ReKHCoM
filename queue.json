@@ -18538,12 +18538,12 @@
     "ga36-worldinspect-present-followup-20261124": {
       "id": "ga36-worldinspect-present-followup-20261124",
       "piece": "GA36 naipes mundo: investigar coste restante de presentacion tras PR691",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T18:52:47.821247+00:00",
-      "updated_at": "2026-11-24T19:00:04.863325+00:00",
+      "updated_at": "2026-11-24T19:15:43.140039+00:00",
       "branch": "perf/ga36-worldinspect-present-followup-20261124",
-      "pr": null,
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/692",
       "approval": null,
       "reference": "PR691; diagnostico fisico device-prelocal-menus-19700620-230044-353",
       "evidence": [
@@ -18556,13 +18556,18 @@
           "at": "2026-11-24T19:00:04.863325+00:00",
           "owner": "Codex-v22",
           "detail": "Prototipo expansion 240 a 640 por bloques exactos, comparacion QEMU pendiente."
+        },
+        {
+          "at": "2026-11-24T19:15:43.140039+00:00",
+          "owner": "Codex-v22",
+          "detail": "43e981327 experimental opt-in, QEMU nine matching frames; ABBA/BAAB show reduced present in first pairs but major host drift, no stable overall FPS claim. ARMhf EU build, test_jiminy_layout, test_ga36_port and check_sources PASS; physical pending. One grouped physical diagnostic reserved."
         }
       ],
       "claimed_at": "2026-11-24T18:58:44.080066+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T19:00:04.863325+00:00",
+  "updated_at": "2026-11-24T19:15:43.140039+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
