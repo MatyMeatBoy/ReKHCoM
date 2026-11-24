@@ -18444,10 +18444,23 @@
         }
       ],
       "claimed_at": "2026-11-24T07:40:05.623104+00:00"
+    },
+    "ga36-prelocal-menus-20261124": {
+      "id": "ga36-prelocal-menus-20261124",
+      "piece": "Preparar prerelease local EU y diagnóstico físico de síntesis y selección de mundo GA36",
+      "status": "pendiente",
+      "owner": null,
+      "created_at": "2026-11-24T07:48:33.861181+00:00",
+      "updated_at": "2026-11-24T07:48:33.861181+00:00",
+      "branch": null,
+      "pr": null,
+      "approval": null,
+      "reference": "Solicitado usuario; sobre 065345679 y PR draft 686-688, sin publicar release",
+      "evidence": []
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T07:48:20.376973+00:00",
+  "updated_at": "2026-11-24T07:48:33.861181+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
