@@ -533,6 +533,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-journal-presentation-perf-20261124 | Investigar presentación lenta del diario 4:3 en GA36 | pr_abierto | codex-ga36-journal | https://github.com/MatyMeatBoy/ReKHCoM/pull/688 | — | 2026-11-24T07:48:20.376973+00:00 |
 | ga36-prelocal-menus-20261124 | Preparar prerelease local EU y diagnóstico físico de síntesis y selección de mundo GA36 | en_revision | codex-ga36-prelocal | perf/ga36-synthesis-20261124 | — | 2026-11-24T11:22:48.330893+00:00 |
 | ga36-synthesis-physical-spotlight-20261124 | Corregir rendimiento de síntesis con foco real observado en GA36 física | pr_abierto | codex-ga36-real-synthesis | https://github.com/MatyMeatBoy/ReKHCoM/pull/690 | — | 2026-11-24T11:58:20.471664+00:00 |
-| ga36-worldinspect-physical-20261124 | GA36 rendimiento real de naipes de mundo mode_worldinspect | en_curso | codex-ga36-real-worldinspect | — | — | 2026-11-24T12:01:05.106363+00:00 |
+| ga36-worldinspect-physical-20261124 | GA36 rendimiento real de naipes de mundo mode_worldinspect | pr_abierto | codex-ga36-real-worldinspect | https://github.com/MatyMeatBoy/ReKHCoM/pull/691 | — | 2026-11-24T12:14:25.013347+00:00 |
 
 Integrador: libre
