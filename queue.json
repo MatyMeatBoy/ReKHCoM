@@ -18971,7 +18971,7 @@
       "status": "en_curso",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T21:45:58.508415+00:00",
-      "updated_at": "2026-11-24T22:01:44.518233+00:00",
+      "updated_at": "2026-11-24T22:03:30.671251+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -19011,13 +19011,18 @@
           "at": "2026-11-24T22:01:44.518233+00:00",
           "owner": "Codex-v22",
           "detail": "Limpieza por bloques buffers sprites ABBA QEMU Start A 73.86/75.94 FPS P95 14.81/14.25; B 74.31/72.15 P95 14.41/17.41. Solapada y P95 empeora en una pasada: descartada y revertida; patch start-obj-bulk-experiment.patch. RC fuente y binario restaurados."
+        },
+        {
+          "at": "2026-11-24T22:03:30.671251+00:00",
+          "owner": "Codex-v22",
+          "detail": "Escalado 3x recortado NEON en Start ABBA QEMU A 74.55/74.15 FPS P95 14.64/15.38, B 67.84/70.79 P95 15.70/15.13; no mejora, revertido y patch archivado start-cropped3x-neon-experiment.patch. RC restaurada, ruta alternativa pendiente."
         }
       ],
       "claimed_at": "2026-11-24T21:46:07.980607+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T22:01:44.518233+00:00",
+  "updated_at": "2026-11-24T22:03:30.671251+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
