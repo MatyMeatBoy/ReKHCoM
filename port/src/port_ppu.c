@@ -432,6 +432,7 @@ static int sSpotlight;
 static int sSpotlightTileRuns;
 static int sSpotlightBg0Runs;
 static int sSpotlightTrimMargins;
+static int sSpotlightOverlayFast;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -3495,6 +3496,7 @@ static bool sNeonOpaqueCompose;
 static bool sNeonNarrowCompose;
 static bool sNeonScreenCompose;
 static bool sNeonScreenRows[GBA_SCREEN_H];
+static bool sSpotlightScreenRows[GBA_SCREEN_H];
 static bool sNeonOpaqueRows[PORT_MAX_H];
 static bool sProbeComposeGates;
 static uint16_t sComposeGates[PORT_MAX_H];
@@ -3898,7 +3900,7 @@ static void SplitBgLine(int b, int gy) {
 /* The screen layer's line gy: menu layers only, transparent elsewhere. */
 #ifdef __ARM_NEON
 static void NeonScreenComposeRow(uint32_t* dst, int gy, int width, int start, int n,
-                                 const int* order, const int* priorities, unsigned eva) {
+                                 const int* order, const int* priorities, unsigned eva, bool spotlightAlpha) {
     const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
     const uint16_t* const obj = sScrLine + start;
     const uint8_t* const objPrio = sScrPrio + start;
@@ -3936,7 +3938,11 @@ static void NeonScreenComposeRow(uint32_t* dst, int gy, int width, int start, in
         const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
         pixel = vbslq_u16(front, object, pixel);
         const uint8x8_t semiFront = vand_u8(vmovn_u16(front), vcgt_u8(vld1_u8(semi + x), vdup_n_u8(0)));
-        const uint8x8_t alpha = vbsl_u8(semiFront, spriteAlpha, vmovn_u16(vorrq_u16(hasBg, hasObj)));
+        uint8x8_t alpha = vbsl_u8(semiFront, spriteAlpha, vmovn_u16(vorrq_u16(hasBg, hasObj)));
+        if (spotlightAlpha) {
+            const uint16x8_t bg0Top = vandq_u16(hasBg, vandq_u16(vceqq_u16(bgLayer, zero), vmvnq_u16(front)));
+            alpha = vbsl_u8(vmovn_u16(bg0Top), spriteAlpha, alpha);
+        }
         StoreArgb8(dst + x, pixel, alpha);
         if (collect) {
             const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
@@ -3971,8 +3977,24 @@ static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, cons
         w == 320 && !(wo & 7) && start >= 0 && start + wo <= w &&
         -originO >= sLeft && wo - originO <= sRight &&
         !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F))) {
-        NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva);
+        NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva, false);
         return;
+    }
+    /* In synthesis BG1 is above BG0 and the effect targets BG0 over BG1-3.
+       BG0 can therefore only blend over the world below, never another BG.
+       Semi-transparent objects keep the general compositor. */
+    if (sSpotlightOverlayFast && sSpotlight && sNeonScreenCompose && !nativeWorld &&
+        !sWorldBlendActive && !sLutMode && w == 320 && wo == 240 && start >= 0 && start + wo <= w &&
+        -originO >= sLeft && wo - originO <= sRight && !(dispcnt & 0xE000) &&
+        bldcnt == 0x0e41 && n == 2 && order[0] == 1 && order[1] == 0) {
+        bool opaqueObjects = true;
+        for (int i = start; i < start + wo; i++)
+            if (sScrLine[i] != TRANSPARENT && sScrSemi[i]) { opaqueObjects = false; break; }
+        if (opaqueObjects) {
+            NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva, true);
+            sSpotlightScreenRows[gy] = true;
+            return;
+        }
     }
 #endif
     for (ox = 0; ox < wo; ox++) {
@@ -5371,8 +5393,10 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sPpuIoView = NULL;
         int spotlightRuns = sSpotlightTileRuns;
         int spotlightTrim = sSpotlightTrimMargins;
+        int spotlightOverlay = sSpotlightOverlayFast;
         sSpotlightTileRuns = 0;
         sSpotlightTrimMargins = 0;
+        sSpotlightOverlayFast = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5382,6 +5406,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         RenderLine(gy + gPortScreen.originY, gy);
         sSpotlightTileRuns = spotlightRuns;
         sSpotlightTrimMargins = spotlightTrim;
+        sSpotlightOverlayFast = spotlightOverlay;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5553,6 +5578,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightTrimMargins;
     PORT_ENV_ONCE(spotlightTrimMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TRIM_MARGINS");
     sSpotlightTrimMargins = spotlightTrimMargins != NULL;
+    const char* spotlightOverlayFast;
+    PORT_ENV_ONCE(spotlightOverlayFast, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_OVERLAY_FAST");
+    sSpotlightOverlayFast = spotlightOverlayFast != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
@@ -5710,6 +5738,16 @@ void PortPpuRenderFrame(void) {
                 gates[5], gates[6], gates[7], gates[8]);
     }
     static bool neonScreenLogged;
+    static bool spotlightScreenLogged;
+    if (sSpotlightOverlayFast && sSpotlight && !spotlightScreenLogged) {
+        for (int row = 0; row < GBA_SCREEN_H; row++) {
+            if (sSpotlightScreenRows[row]) {
+                PortLog("ppu: spotlight screen vector active");
+                spotlightScreenLogged = true;
+                break;
+            }
+        }
+    }
     if (sNeonScreenCompose && !neonScreenLogged) {
         for (int row = 0; row < GBA_SCREEN_H; row++) {
             if (sNeonScreenRows[row]) {
