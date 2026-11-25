@@ -2036,6 +2036,37 @@ static const BgTextTile* MatchBgTextTile(unsigned offset, unsigned* lastOffset,
    the other tile rows leave nothing behind. */
 static PPU_TLS bool sBgGlyphRowsOnly;
 
+static int sTextNeon; /* KHCOM_PPU_TEXT_NEON */
+
+/* Eight pixels of one 4bpp tile row, leftmost screen pixel first. */
+static inline void DecodeTile4(uint16_t* out, const uint8_t* row, const uint16_t* colors, int flip) {
+#ifdef __ARM_NEON
+    uint32_t packed;
+    memcpy(&packed, row, sizeof(packed));
+    if (!packed) {
+        vst1q_u16(out, vdupq_n_u16(TRANSPARENT));
+        return;
+    }
+    const uint8x8_t bytes = vreinterpret_u8_u32(vdup_n_u32(packed));
+    uint8x8_t index = vzip_u8(vand_u8(bytes, vdup_n_u8(15)), vshr_n_u8(bytes, 4)).val[0];
+    if (flip) index = vrev64_u8(index);
+    const uint8x16x2_t halves = vld2q_u8((const uint8_t*)colors); /* low bytes, high bytes */
+    const uint8x8x2_t low = {{vget_low_u8(halves.val[0]), vget_high_u8(halves.val[0])}};
+    const uint8x8x2_t high = {{vget_low_u8(halves.val[1]), vget_high_u8(halves.val[1])}};
+    const uint8x8_t clear = vceq_u8(index, vdup_n_u8(0));
+    uint8x8x2_t pixels;
+    pixels.val[0] = vbic_u8(vtbl2_u8(low, index), clear);
+    pixels.val[1] = vbsl_u8(clear, vdup_n_u8(TRANSPARENT >> 8), vand_u8(vtbl2_u8(high, index), vdup_n_u8(0x7F)));
+    vst2_u8((uint8_t*)out, pixels);
+#else
+    for (int i = 0; i < 8; i++) {
+        const int x = flip ? 7 - i : i;
+        const int c = (row[x >> 1] >> ((x & 1) * 4)) & 15;
+        out[i] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+    }
+#endif
+}
+
 static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* libraryPair) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
@@ -2411,6 +2442,11 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
                             }
                         } else {
                             const uint16_t* colors = dtPalette + palette;
+                            if (sTextNeon && run == 8) {
+                                DecodeTile4(out + x, pixels, colors, we & 0x400);
+                                x += 7;
+                                continue;
+                            }
                             if (sUniformWorldTiles > 0 && run == 8) {
                                 uint32_t packed;
                                 memcpy(&packed, pixels, sizeof(packed));
@@ -2548,6 +2584,11 @@ scalar_world:
                 const uint8_t* row = VRAM8 + tileOff + fyy * 4;
                 const uint16_t* palette = dtPalette + (entry >> 12) * 16;
                 const int step = (entry & 0x400) ? -1 : 1;
+                if (sTextNeon && count == 8) {
+                    DecodeTile4(out + x, row, palette, entry & 0x400);
+                    x += 7;
+                    continue;
+                }
                 uint32_t packed;
                 memcpy(&packed, row, sizeof(packed));
                 if (!packed) {
@@ -5438,8 +5479,11 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sObjAffineSpan = 0;
     const int skipMargins = sSpotlightSkipMargins; /* compare with the full rows */
     sSpotlightSkipMargins = 0;
+    const int textNeon = sTextNeon;
+    sTextNeon = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
+    sTextNeon = textNeon;
     sObjSkipClear = objSkipClear;
     sObjAffineSpan = objAffineSpan;
     sSpotlightSkipMargins = skipMargins;
@@ -5629,6 +5673,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightClearRows = 0;
         int menuBgCopy = sMenuBgCopy;
         sMenuBgCopy = 0;
+        int textNeon = sTextNeon;
+        sTextNeon = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5643,6 +5689,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightOverlayFast = spotlightOverlay;
         sSpotlightClearRows = spotlightClear;
         sMenuBgCopy = menuBgCopy;
+        sTextNeon = textNeon;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5838,6 +5885,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightSkipMargins;
     PORT_ENV_ONCE(spotlightSkipMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS");
     sSpotlightSkipMargins = spotlightSkipMargins != NULL;
+    const char* textNeon;
+    PORT_ENV_ONCE(textNeon, SDL_getenv, "KHCOM_PPU_TEXT_NEON");
+    sTextNeon = textNeon != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
