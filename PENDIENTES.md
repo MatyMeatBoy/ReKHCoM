@@ -554,7 +554,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-deck-background-vector-20261124 | GA36 barajas: evaluar composicion vectorial de fondo sin objetos | pendiente | — | — | — | 2026-11-24T21:15:54.781161+00:00 |
 | ga36-mapinspect-opaque-vector-20261124 | GA36 inspeccion mapa: vectorizar filas opacas sin sprites | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/701 | — | 2026-11-24T21:23:46.402247+00:00 |
 | ga36-start-journal-physical-v4-20261124 | GA36 rendimiento Start y Diario tras diagnostico fisico v4 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/702 | — | 2026-11-24T22:40:11.144656+00:00 |
-| ga36-fractional-fit-runs-20261124 | GA36 escala fraccional de diario y naipes optimizacion | pendiente | — | — | — | 2026-11-24T22:43:52.425141+00:00 |
+| ga36-fractional-fit-runs-20261124 | GA36 escala fraccional de diario y naipes optimizacion | en_curso | claude-ga36 | — | — | 2026-11-25T01:59:23.254417+00:00 |
 | ga36-journal-detail-central-compose-20261124 | GA36 diario detalle composicion central con bordes intactos | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/703 | — | 2026-11-24T23:05:50.376700+00:00 |
 | ga36-start-alpha-distribution-20261124 | GA36 menu Start optimizar mezcla alpha | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/704 | — | 2026-11-24T23:17:00.008280+00:00 |
 
