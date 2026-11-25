@@ -430,6 +430,7 @@ int PortMenuSliding(void) {
 static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below */
 static int sSpotlight;
 static int sSpotlightTileRuns;
+static int sObjSkipClear;
 static int sSpotlightBg0Runs;
 static int sSpotlightTrimMargins;
 static int sSpotlightOverlayFast;
@@ -3021,6 +3022,27 @@ static int Preliminar130Shadow(int i) {
     return 0;
 }
 
+/* Pixels from tx onwards, in screen order, that are transparent within one
+   eight-pixel tile row. tx's own pixel must be transparent. */
+static int ObjClearRun(const uint8_t* row, int tx, int bpp8, int flip) {
+    const int at = tx & 7;
+    if (!bpp8) {
+        uint32_t bits;
+        memcpy(&bits, row, sizeof(bits));
+        bits = flip ? bits << (28 - 4 * at) : bits >> (4 * at);
+        if (!bits)
+            return flip ? at + 1 : 8 - at;
+        return (flip ? __builtin_clz(bits) : __builtin_ctz(bits)) >> 2;
+    } else {
+        uint64_t bits;
+        memcpy(&bits, row, sizeof(bits));
+        bits = flip ? bits << (56 - 8 * at) : bits >> (8 * at);
+        if (!bits)
+            return flip ? at + 1 : 8 - at;
+        return (flip ? __builtin_clzll(bits) : __builtin_ctzll(bits)) >> 3;
+    }
+}
+
 static void DrawObjs(int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const obPalette = PLTT16;
@@ -3270,8 +3292,14 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 ci = (tx & 1) ? (VRAM8[off] >> 4) : (VRAM8[off] & 15);
                 col = ci ? (obPalette[256 + palBank * 16 + ci] & 0x7FFF) : -1;
             }
-            if (col < 0)
+            if (col < 0) {
+                /* A transparent texel writes nothing: step over its whole run.
+                   Affine and horizontal-mosaic sampling stay per pixel. */
+                if (sObjSkipClear && !affine && !(objMosaic && mosH > 1))
+                    sx += ObjClearRun(VRAM8 + off - (bpp8 ? tx & 7 : (tx & 7) >> 1), tx, bpp8,
+                                      (a1 & 0x1000) != 0) - 1;
                 continue;
+            }
             /* 081: the authored platform leaves a detached lower OBJ arc
              * over the empty map cap. Keep the real backdrop, only outside
              * the native frame; actors and the other decorations bypass it. */
@@ -5293,8 +5321,11 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
         memcpy(sMosAffX, r->mosaic.x, sizeof(sMosAffX));
         memcpy(sMosAffY, r->mosaic.y, sizeof(sMosAffY));
     }
+    const int objSkipClear = sObjSkipClear; /* the reference samples every texel */
+    sObjSkipClear = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
+    sObjSkipClear = objSkipClear;
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
 
@@ -5472,6 +5503,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         int spotlightOverlay = sSpotlightOverlayFast;
         int spotlightClear = sSpotlightClearRows;
         sSpotlightTileRuns = 0;
+        int objSkipClear = sObjSkipClear;
+        sObjSkipClear = 0;
         sSpotlightTrimMargins = 0;
         sSpotlightOverlayFast = 0;
         sSpotlightClearRows = 0;
@@ -5483,6 +5516,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
 #endif
         RenderLine(gy + gPortScreen.originY, gy);
         sSpotlightTileRuns = spotlightRuns;
+        sObjSkipClear = objSkipClear;
         sSpotlightTrimMargins = spotlightTrim;
         sSpotlightOverlayFast = spotlightOverlay;
         sSpotlightClearRows = spotlightClear;
@@ -5651,6 +5685,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightTileRuns;
     PORT_ENV_ONCE(spotlightTileRuns, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
     sSpotlightTileRuns = spotlightTileRuns != NULL;
+    const char* objSkipClear;
+    PORT_ENV_ONCE(objSkipClear, SDL_getenv, "KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS");
+    sObjSkipClear = objSkipClear != NULL;
     const char* spotlightBg0Runs;
     PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
     sSpotlightBg0Runs = spotlightBg0Runs != NULL;
