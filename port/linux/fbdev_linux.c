@@ -380,6 +380,71 @@ static uint8x8_t BlendOverlayChannels(uint8x8_t source, uint8x8_t dest, uint8x8_
 }
 #endif
 
+static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor);
+
+/* Output rows that sample the same source row are blended together: one
+ * alpha test per source pixel for the group, transparent quads skipped at once
+ * and opaque spans expanded once and copied. Same arithmetic as the row loops. */
+static void BlendOverlayRowGroups(const uint32_t* source, int width, int height, const SDL_Rect* dest) {
+    uint16_t first[241]; /* first output column of each source column */
+    const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
+    uint64_t pos = dx / 2, py = dy / 2;
+    for (int sx = 0, x = 0; sx <= width; sx++) {
+        while (x < dest->w && (int)(pos >> 16) < sx) { x++; pos += dx; }
+        first[sx] = (uint16_t)x;
+    }
+    static bool logged;
+    if (!logged) { PortLog("fbdev: overlay row groups active"); logged = true; }
+    const int pitch = sRenderSurface->pitch;
+    uint8_t* base = (uint8_t*)sRenderSurface->pixels + dest->y * pitch + 4 * dest->x;
+    for (int y = 0; y < dest->h;) {
+        const int sy = (int)(py >> 16);
+        uint32_t* rows[4];
+        int count = 0;
+        do {
+            rows[count++] = (uint32_t*)(base + (size_t)y * pitch);
+            y++;
+            py += dy;
+        } while (count < 4 && y < dest->h && (int)(py >> 16) == sy);
+        const uint32_t* src = source + sy * width;
+        for (int sx = 0; sx < width;) {
+            if (sx + 4 <= width && !((src[sx] | src[sx + 1] | src[sx + 2] | src[sx + 3]) >> 24)) {
+                sx += 4;
+                continue;
+            }
+            const uint32_t pixel = src[sx];
+            const unsigned alpha = pixel >> 24;
+            if (alpha == 255) {
+                const int start = first[sx];
+                int x = start;
+                do {
+                    const uint32_t color = src[sx];
+                    while (x < first[sx + 1]) rows[0][x++] = color;
+                    sx++;
+                } while (sx < width && (src[sx] >> 24) == 255);
+                for (int r = 1; r < count; r++)
+                    memcpy(rows[r] + start, rows[0] + start, (size_t)(x - start) * sizeof(**rows));
+                continue;
+            }
+            if (alpha) {
+                const uint32_t fg = ScaleGlyphRgb(pixel, alpha);
+                for (int r = 0; r < count; r++)
+                    for (int x = first[sx]; x < first[sx + 1]; x++) {
+                        const uint32_t under = rows[r][x];
+                        rows[r][x] = (under & 0x00FFFFFFu) ? fg + ScaleGlyphRgb(under, 255 - alpha) : fg;
+                    }
+            }
+            sx++;
+        }
+    }
+}
+
+static bool UseOverlayRowGroups(int width, const SDL_Rect* dest) {
+    static int enabled = -1;
+    if (enabled < 0) enabled = SDL_getenv("KHCOM_FBDEV_OVERLAY_ROW_GROUPS") != NULL;
+    return enabled && width == 240 && dest->w == 640;
+}
+
 /* Four adjacent output pixels from one ARGB source pixel, over an XRGB
  * surface. The caller has already clipped to complete source pixels. */
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest) {
@@ -527,6 +592,10 @@ bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, in
         !PortFbBeginGlyphBatch(renderer)) return false;
     static bool logged;
     if (!logged) { PortLog("fbdev: direct fractional overlay active"); logged = true; }
+    if (UseOverlayRowGroups(width, dest)) {
+        BlendOverlayRowGroups(source, width, height, dest);
+        return true;
+    }
     const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
     uint64_t pos = dx / 2, py = dy / 2;
     for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
@@ -574,6 +643,10 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
     if (!source || width <= 0 || height <= 0 || dest->x < 0 || dest->y < 0 ||
         dest->w <= 0 || dest->h <= 0 || dest->x + dest->w > 640 || dest->y + dest->h > 480 ||
         !PortFbBeginGlyphBatch(renderer)) return false;
+    if (UseOverlayRowGroups(width, dest)) {
+        BlendOverlayRowGroups(source, width, height, dest);
+        return true;
+    }
     const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
     uint64_t pos = dx / 2, py = dy / 2;
     int previous = -1, begin = 0, end = 0;
