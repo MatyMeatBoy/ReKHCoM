@@ -274,6 +274,10 @@ int PortUndubAvailable(void);
 void PortUndubApply(void);
 void PortSramLoad(void);
 void PortSramSyncIfDirty(void);
+#ifdef PORT_LINUX
+/* The once-a-second sync; KHCOM_SAVE_ASYNC=1 moves it off the game's thread. */
+void PortSramSyncPeriodic(void);
+#endif
 /* Save banks: bank 1 is PORT_SAVE_NAME, bank n kh_com[_us|_jp]_bank<n>.sav. */
 #define PORT_SAVE_BANKS 5
 const char* PortSaveName(void);

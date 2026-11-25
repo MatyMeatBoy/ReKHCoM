@@ -3996,8 +3996,13 @@ static void VBlankCycle(void) {
     Pace(sPresentPaceEpoch == presentPaceStart);
     sCycleEnd = SDL_GetPerformanceCounter();
 
-    if (++sFrameCount % 60 == 0)
+    if (++sFrameCount % 60 == 0) {
+#ifdef PORT_LINUX
+        PortSramSyncPeriodic();
+#else
         PortSramSyncIfDirty();
+#endif
+    }
     if (frameLogStart) {
         static FILE* frameLog;
         static int attempted;
