@@ -125,6 +125,9 @@ static uint8_t sObjBandKinds[2][GBA_SCREEN_H], sObjBandTotal[2][GBA_SCREEN_H];
 static uint16_t sObjBandColor[2][GBA_SCREEN_H][OBJ_BAND_COLORS];
 static int sNarrowObjBands, sNarrowSideFill;
 ''' + sides + r'''
+#define WIDE_MODES 1
+#define WIDE_OFF (sWidePlainVector = false)
+#define WIDE_SET(m) (sWidePlainVector = true)
 typedef struct {
     uint32_t frame[W], back[W];
     uint8_t bg[W], layer[W], msg[W];
@@ -221,6 +224,51 @@ int main(void) {
         }
     }
     assert(used[0] && used[1] && used[2] && used[3] && copies && fills);
+    /* wide scenes: full rows, extensions above and below the picture */
+    long wideUsed[2] = {0};
+    gPortScreen.wide = 1; sLeft = -40; sRight = 280;
+    for (int t = 0; t < 60000; t++) {
+        int on[4], prio[4], y = t % 3 == 0 ? pick(H) : 40 + pick(160), gy = y - 40;
+        int objects = pick(3), layers = pick(3) ? pick(3) : pick(5);
+        uint16_t dispcnt = pick(12) == 0 ? 0x2000 : 0;
+        sJiminyCoverCapture = sJiminyDetailCapture = sJiminyPageCapture = sJiminyPaperCapture = 0;
+        for (int b = 0; b < 4; b++) {
+            on[b] = b < layers; prio[b] = pick(4); sBgDockedLatched[b] = pick(12) == 0;
+            sWorldPadding[b] = pick(3) ? TRANSPARENT : (uint16_t)pick(32768);
+        }
+        IO16(0x50) = pick(2) ? 0 : (uint16_t)((pick(3) ? 0 : pick(4) << 6) | (pick(2) ? pick(64) : 0) | (pick(2) ? pick(64) << 8 : 0));
+        IO16(0x52) = (uint16_t)(pick(32) | pick(32) << 8); IO16(0x54) = (uint16_t)pick(32);
+        for (int i = 0; i < 512; i++) palette[i] = (uint16_t)pick(32768);
+        sLineHasObjects = 0; sHudLayer = pick(8) == 0; sHdText = pick(2); sWorldBlendActive = 0;
+        for (int x = 0; x < W; x++) {
+            for (int b = 0; b < 4; b++) sBgLine[b][x] = pick(3) ? (uint16_t)pick(32768) : TRANSPARENT;
+            sObjLine[x] = objects && !pick(objects == 1 ? 40 : 3) ? (uint16_t)pick(32768) : TRANSPARENT;
+            if (sObjLine[x] != TRANSPARENT) sLineHasObjects = 1;
+            sObjPrio[x] = (uint8_t)pick(4); sObjIndex[x] = (uint16_t)pick(128);
+            sObjSemi[x] = objects == 2 && pick(t % 2 ? 400 : 3) == 0;
+            sInWorld[x] = pick(4) != 0; sWinMask[x] = dispcnt ? (uint8_t)pick(64) : 0x3f;
+        }
+        sNeonOpaqueCompose = sNeonNarrowCompose = sJournalCentralVector = false;
+        sJournalPageVector = sNarrowSecondVector = sNarrowPlainVector = sMenuBgVector = false;
+        WIDE_OFF;
+        run(&ref, y, dispcnt, on, prio);
+        sNeonOpaqueCompose = true;
+        memset(sNeonOpaqueRows, 0, sizeof sNeonOpaqueRows);
+        run(&got, y, dispcnt, on, prio);
+        assert(!memcmp(&ref, &got, sizeof ref));
+        const bool before = sNeonOpaqueRows[y];
+        for (int mode = 0; mode < WIDE_MODES; mode++) {
+            WIDE_SET(mode);
+            memset(sNeonOpaqueRows, 0, sizeof sNeonOpaqueRows);
+            run(&got, y, dispcnt, on, prio);
+            if (!before && sNeonOpaqueRows[y]) wideUsed[mode]++;
+            if (memcmp(&ref, &got, sizeof ref)) {
+                printf("MISMATCH wide case %d mode %d row %d bld %04x\n", t, mode, gy, IO16(0x50));
+                return 1;
+            }
+        }
+    }
+    for (int mode = 0; mode < WIDE_MODES; mode++) { assert(wideUsed[mode]); printf("wide mode %d newly vector rows %ld\n", mode, wideUsed[mode]); }
     printf("PASS narrow menu composition: 60000 rows; newly vector rows: page %ld second %ld plain %ld background %ld; copies %ld\n",
            used[0], used[1], used[2], used[3], copies);
     return 0;
