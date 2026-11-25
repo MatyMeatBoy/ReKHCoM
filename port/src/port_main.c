@@ -939,6 +939,9 @@ static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, 
     const SDL_FRect row = { src->x, src->y + src->h - 1, src->w, 1 };
     const SDL_FRect band = { dst->x, bottom, dst->w, h - bottom };
     if (band.h <= 0 || dst->x > 0 || dst->x + dst->w < w) return;
+    /* The menu fit path may leave the whole picture's upload for later. */
+    const SDL_Rect texels = { (int)row.x, (int)row.y, (int)row.w, 1 };
+    SDL_UpdateTexture(sTexture, &texels, sComposite + texels.y * gPortScreen.width + texels.x, gPortScreen.width * 4);
     SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
     SDL_RenderTexture(sRenderer, sTexture, &row, &band);
 }
