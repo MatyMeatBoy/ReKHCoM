@@ -35,6 +35,8 @@ typedef struct RaSsl {
 
 static RaSsl sRaSsl;
 static SDL_InitState sRaSslInit;
+static SDL_AtomicInt sRaSslTriedFlag;
+#define sRaSslTried SDL_GetAtomicInt(&sRaSslTriedFlag)
 
 static void RaSslLoad(void) {
     void* lib;
@@ -47,6 +49,7 @@ static void RaSslLoad(void) {
         RA_SYM(SSL_connect) && RA_SYM(SSL_read) && RA_SYM(SSL_write) && RA_SYM(SSL_shutdown) &&
         RA_SYM(SSL_get_verify_result);
 #undef RA_SYM
+    SDL_SetAtomicInt(&sRaSslTriedFlag, 1);
     SDL_SetInitialized(&sRaSslInit, true);
 }
 

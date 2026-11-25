@@ -761,6 +761,12 @@ static void LoggedIn(int result, const char* error, rc_client_t* client, void* u
         ra->retry = result != RC_INVALID_CREDENTIALS && result != RC_EXPIRED_TOKEN && result != RC_ACCESS_DENIED;
         ra->next_try = SDL_GetTicks() + 60000;
         if (!ra->retry && ra->password[0]) { SecureZeroMemory(ra->password, sizeof(ra->password)); ra->account_file = 0; }
+        #ifdef RA_LINUX_ONLINE
+        if (ra->retry && sRaSslTried && !sRaSsl.ready) {
+            SetStatus(ra, "No se pudo cargar OpenSSL (libssl.so.3): sin conexion segura.", 1);
+            return;
+        }
+#endif
         SetStatus(ra, ra->retry ? "Sin conexion con RetroAchievements: se reintenta cada minuto." : error, 1);
         return;
     }
