@@ -2308,7 +2308,10 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
         extern int PortGa36SynthesisActive(void);
         PORT_ENV_ONCE(sparseOverlay, SDL_getenv, "KHCOM_FBDEV_SPARSE_FRACTIONAL");
         SDL_Rect target = {(int)dest->x, (int)dest->y, (int)dest->w, (int)dest->h};
-        if (sparseOverlay && PortGa36SynthesisActive() &&
+        /* Same arithmetic over any screen layer, not only synthesis. */
+        const char* sparseAll;
+        PORT_ENV_ONCE(sparseAll, SDL_getenv, "KHCOM_FBDEV_SPARSE_FRACTIONAL_ALL");
+        if ((sparseAll || (sparseOverlay && PortGa36SynthesisActive())) &&
             PortFbBlendOverlayScaledSparse(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
         if (PortFbBlendOverlayScaled(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
     }
