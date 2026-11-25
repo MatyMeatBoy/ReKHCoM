@@ -2330,7 +2330,18 @@ static void Present(int paced) {
     }
     if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
         && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
-        SDL_RenderClear(sRenderer);
+        const char* bandClear = NULL;
+#ifdef PORT_LINUX
+        if (menuFit)
+            PORT_ENV_ONCE(bandClear, SDL_getenv, "KHCOM_GA36_MENU_FIT_BAND_CLEAR");
+#endif
+        if (menuFit && bandClear) {
+            /* The opaque picture replaces rows 26..451: only the bands need black. */
+            const SDL_FRect bands[2] = {{0, 0, 640, 26}, {0, 452, 640, 28}};
+            SDL_RenderFillRects(sRenderer, bands, 2);
+        } else {
+            SDL_RenderClear(sRenderer);
+        }
         /* Scene without a wide view: show the GBA picture at full height
            (bars only at the sides), sampled with the pixel-art filter. */
         SDL_FRect src = { (float)gPortScreen.originX, (float)gPortScreen.originY, GBA_SCREEN_W, GBA_SCREEN_H };
