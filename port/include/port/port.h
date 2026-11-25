@@ -467,6 +467,7 @@ extern PortStutterProbe gPortStutter;
 int PortAudioInit(void);
 void PortAudioFrame(void);
 void PortAudioShutdown(void);
+int PortAudioQueueBelow(int frames); /* KHCOM_AUDIO_RESCUE_SKIP; 0 while priming */
 
 /* ---- input (port_input.c) ------------------------------------------------ */
 

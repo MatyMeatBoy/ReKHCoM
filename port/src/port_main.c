@@ -40,6 +40,7 @@ extern int PortBridgeVideoCaps(void);
 #endif
 
 #include "port/port.h"
+#include "port/port_audio_rate.h"
 #include "port/port_netlink.h"
 #include "port/port_logfile.h"
 #include "port/loop_phases.h"
@@ -3984,6 +3985,36 @@ static int FrameSkipDue(int sizeChanged) {
     }
 }
 
+/* KHCOM_AUDIO_RESCUE_SKIP=frames (opt-in, port_audio_rate.h): while less than
+   that much sound is queued, a frame that starts late is not drawn nor
+   presented, never two in a row, so the clock is caught up before the pacer
+   drops time and the queue drains; logic and sound run as always. Same guards
+   as the frame skip above, which takes its place when it is on. */
+static int AudioRescueDue(int sizeChanged) {
+    static int frames = -1, skippedLast, window, total;
+    uint64_t now, late;
+    int skip;
+
+    if (frames < 0)
+        frames = PortAudioRescueFrames(SDL_getenv("KHCOM_AUDIO_RESCUE_SKIP"));
+    if (!frames)
+        return 0;
+    if (gPortConfig.frameSkip || sizeChanged || !sNextFrame || SDL_getenv("KHCOM_FAST") || PortUiActive()) {
+        skippedLast = 0;
+        return 0;
+    }
+    now = SDL_GetPerformanceCounter();
+    late = now > sNextFrame ? now - sNextFrame : 0;
+    skip = PortAudioRescueDue(PortAudioQueueBelow(frames), late, (uint64_t)(sPerfFreq / GBA_FPS), &skippedLast);
+    total += skip;
+    if (++window == 600) {
+        if (total)
+            PortLog("audio rescue: %d of the last 600 frames not drawn", total);
+        window = total = 0;
+    }
+    return skip;
+}
+
 /* One display frame: draw, vertical blank, present, input, pacing. */
 /* A frame the network link's rollback plays again (port_rollback.c): the game's frame as VBlankCycle runs it when it
    skips drawing (the same logic, test_frameskip.py), with nothing shown, sounded or paced, and the keys it had. */
@@ -4066,7 +4097,10 @@ static void VBlankCycle(void) {
         int w = gPortScreen.width, h = gPortScreen.height;
         UpdateResolution();
         if (gPortConfig.vsync==2 && sFrameCount%60==0) ApplyVideoSync(0);
-        skip = FrameSkipDue(w != gPortScreen.width || h != gPortScreen.height);
+        const int sizeChanged = w != gPortScreen.width || h != gPortScreen.height;
+        skip = FrameSkipDue(sizeChanged);
+        if (!skip)
+            skip = AudioRescueDue(sizeChanged);
     }
 
     {

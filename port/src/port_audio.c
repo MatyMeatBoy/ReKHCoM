@@ -521,6 +521,14 @@ void PortAudioShutdown(void) {
     sStream = NULL;
 }
 
+/* KHCOM_AUDIO_RESCUE_SKIP (port_main.c): less than `frames` game frames of
+   sound are queued while the device is playing. */
+int PortAudioQueueBelow(int frames) {
+    if (sStream == NULL || sStreamPriming || sStreamRate <= 0)
+        return 0;
+    return SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float)) < sStreamRate / (float)GBA_FPS * (float)frames;
+}
+
 static void Queue(int n, int rate) {
     if (sStream == NULL)
         return;

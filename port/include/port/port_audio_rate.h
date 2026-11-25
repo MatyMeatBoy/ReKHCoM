@@ -3,6 +3,7 @@
 #ifndef PORT_AUDIO_RATE_H
 #define PORT_AUDIO_RATE_H
 
+#include <stdint.h>
 #include <stdlib.h>
 
 /* Game frames of sound kept queued: 4, or KHCOM_AUDIO_TARGET_FRAMES between 4
@@ -30,5 +31,25 @@ static inline float PortAudioQueueRatio(float avg, float target, int refill, int
     if (avg > target * 3.0f)
         return 1.0015f;
     return 1.0f;
+}
+
+/* KHCOM_AUDIO_RESCUE_SKIP: queue level, in game frames, under which a late
+ * frame may be left undrawn. Off (0) when unset, 0 or not a number; 1 means 4;
+ * otherwise 2 to 8. */
+static inline int PortAudioRescueFrames(const char* value) {
+    int frames = value ? atoi(value) : 0;
+    if (frames <= 0)
+        return 0;
+    return frames == 1 ? 4 : (frames > 8 ? 8 : frames);
+}
+
+/* Whether the frame about to start is left undrawn: the queue is low, the frame
+ * starts more than a quarter period after its deadline (skipping an on-time
+ * frame cannot add sound: the pacer only waits longer) and the frame before it
+ * was drawn. `late` and `period` are in the same clock units. */
+static inline int PortAudioRescueDue(int queueLow, uint64_t late, uint64_t period, int* skippedLast) {
+    int skip = queueLow && !*skippedLast && late > period / 4;
+    *skippedLast = skip;
+    return skip;
 }
 #endif
