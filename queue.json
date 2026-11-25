@@ -18903,10 +18903,10 @@
     "ga36-psg-phase-step-after-unrouted-20261124": {
       "id": "ga36-psg-phase-step-after-unrouted-20261124",
       "piece": "GA36 menus: evaluar reutilizacion exacta de pasos PSG tras omitir onda no conectada",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-ga36",
       "created_at": "2026-11-24T20:53:22.683064+00:00",
-      "updated_at": "2026-11-24T21:01:00.869658+00:00",
+      "updated_at": "2026-11-25T01:59:08.515433+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18918,7 +18918,7 @@
           "detail": "released: Cache paso PSG tras PR700: primer BAAB mejora, pero codigo final BAAB referencia 47.83-48.98 FPS P95 23.35-23.96 vs candidato 48.22-49.35 P95 23.30-23.64, rangos solapados. Audio/rates y 602 estados exactos con 4 canales y rutas alternadas; mejora no robusta relativa al costo/riesgo de audio, descartado. PR700 conservado."
         }
       ],
-      "claimed_at": "2026-11-24T20:53:34.794933+00:00"
+      "claimed_at": "2026-11-25T01:59:08.515433+00:00"
     },
     "ga36-journal-v3-followup-20261124": {
       "id": "ga36-journal-v3-followup-20261124",
@@ -19182,7 +19182,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-25T01:59:00.804708+00:00",
+  "updated_at": "2026-11-25T01:59:08.515433+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
