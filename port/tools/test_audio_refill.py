@@ -38,6 +38,9 @@ static float Run(int refill, int frames, int* changes) {
 }
 int main(void) {
     float target = 4224;
+    assert(PortAudioTargetFrames(0) == 4 && PortAudioTargetFrames("") == 4 && PortAudioTargetFrames("x") == 4);
+    assert(PortAudioTargetFrames("3") == 4 && PortAudioTargetFrames("-1") == 4 && PortAudioTargetFrames("4") == 4);
+    assert(PortAudioTargetFrames("6") == 6 && PortAudioTargetFrames("8") == 8 && PortAudioTargetFrames("99") == 8);
     for (int t = 1; t < 12000; t++) for (int v = 0; v < 40000; v += 7) {
         int state = 0;
         if (t % 211) break;

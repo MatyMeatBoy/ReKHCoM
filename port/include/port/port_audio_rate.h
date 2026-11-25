@@ -3,6 +3,15 @@
 #ifndef PORT_AUDIO_RATE_H
 #define PORT_AUDIO_RATE_H
 
+#include <stdlib.h>
+
+/* Game frames of sound kept queued: 4, or KHCOM_AUDIO_TARGET_FRAMES between 4
+ * and 8 (each one more adds 16.7 ms of latency and of margin before silence). */
+static inline int PortAudioTargetFrames(const char* value) {
+    int frames = value ? atoi(value) : 4;
+    return frames < 4 ? 4 : (frames > 8 ? 8 : frames);
+}
+
 /* Playback ratio for a smoothed queue level. Without refill only a drift
  * outside the wide dead band is corrected. With it, a level lost to late
  * frames (below 70% of the target) is rebuilt at 0.3% slower playback until it

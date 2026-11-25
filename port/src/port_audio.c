@@ -535,12 +535,14 @@ static void Queue(int n, int rate) {
     SDL_PutAudioStreamData(sStream, sOut, n * 2 * (int)sizeof(float));
 #endif
 
-    /* Keep ~4 frames queued. The fill level is smoothed and the playback rate
+    /* Keep ~4 frames queued (KHCOM_AUDIO_TARGET_FRAMES: up to 8). The fill level is smoothed and the playback rate
        corrected by at most 0.3% (about 5 cents), which is inaudible; only a
        large backlog (e.g. after a pause) is dropped outright. */
     {
         float queued = (float)(SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float)));
-        float target = rate / (float)GBA_FPS * 4.0f;
+        const char* frames;
+        PORT_ENV_ONCE(frames, SDL_getenv, "KHCOM_AUDIO_TARGET_FRAMES");
+        float target = rate / (float)GBA_FPS * (float)PortAudioTargetFrames(frames);
         float ratio;
 
         if (queued > target * 6) {
