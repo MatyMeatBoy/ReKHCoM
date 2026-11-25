@@ -18673,10 +18673,10 @@
     "ga36-synthesis-overlay-upload-20261124": {
       "id": "ga36-synthesis-overlay-upload-20261124",
       "piece": "GA36 sintesis: evitar subida SDL redundante al componer overlay directo",
-      "status": "en_curso",
-      "owner": "claude-ga36",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-24T19:49:28.118938+00:00",
-      "updated_at": "2026-11-25T01:58:52.685903+00:00",
+      "updated_at": "2026-11-25T02:03:09.795838+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18686,6 +18686,11 @@
           "at": "2026-11-24T19:51:44.484807+00:00",
           "owner": "Codex-v22",
           "detail": "released: QEMU BAAB frames 210-350: baseline 42.36-43.82 FPS P95 26.40-26.57, candidate 41.04-43.60 P95 26.97-28.33; present 5.39-5.54 vs 5.17-5.33ms. No stable FPS gain, prototype discarded, no change retained."
+        },
+        {
+          "at": "2026-11-25T02:03:09.795838+00:00",
+          "owner": "claude-ga36",
+          "detail": "released: Devuelta sin trabajo: experimento ya descartado por Codex; no se repite sin evidencia nueva."
         }
       ],
       "claimed_at": "2026-11-25T01:58:52.685903+00:00"
@@ -19192,7 +19197,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-25T01:59:56.686151+00:00",
+  "updated_at": "2026-11-25T02:03:09.795838+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
