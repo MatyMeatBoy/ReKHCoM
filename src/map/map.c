@@ -6643,6 +6643,7 @@ s32 Task_MapSave_1(MapSaveWork* work) {
 void Task_MapSave_2(MapSaveWork* work) {
 #ifdef PLATFORM_PC
     PortScreenBegin(); /* menu: drawn on the screen layer, at the window's height */
+    PortFlatMenu(); /* 4:3 flat: its title bar and bottom band at the panel's edges */
     PortBgSplit(0, 8); /* the file panel goes right with its text */
 #endif
     TaskPoolDraw(&work->tasks);

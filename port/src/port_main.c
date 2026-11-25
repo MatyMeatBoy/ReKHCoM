@@ -2503,17 +2503,21 @@ static SDL_Rect ScreenOverlayAlphaBounds(const uint32_t* pixels, int pitch, SDL_
 /* Clip on source pixel boundaries before SDL allocates a scaled intermediate
  * for a layer that extends beyond the fixed-size panel. */
 int gPortLevelUpActive; /* card_level_up.c: the level up screen is open */
+static uint32_t sFlatMenuFrame; /* PortFlatMenu: the frame a flat menu (save) was last drawn */
+void PortFlatMenu(void) { sFlatMenuFrame = PortFrameCount() + 1; }
 
 /* GA36 4:3 (flat): the level up screen's top band (its banner and level) goes up to the panel's top and its bottom
-   panel down to the bottom; the middle stays. The bands are split at fully transparent rows, where the battle shows
-   through, so nothing is cut and nothing needs filling. */
+   panel down to the bottom; the middle stays. The same for the save point's menu (their title bar and
+   bottom band). The bands are split at fully transparent rows, where the picture under them shows through, so
+   nothing is cut and nothing needs filling. */
 static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
 #ifdef PORT_LINUX
     extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
     const char* on;
     int a = -1, f = -1, seen = 0, r;
     PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_LEVELUP_FLAT");
-    if (!on || !gPortLevelUpActive || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
+    const bool flatMenu = sFlatMenuFrame && PortFrameCount() <= sFlatMenuFrame;
+    if (!on || !(gPortLevelUpActive || flatMenu) || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
         outW != 640 || outH != 480 || width != GBA_SCREEN_W || (int)od->x != 0 || (int)od->w != outW || od->y < 8 ||
         sOverlayScale < 2.66f || sOverlayScale > 2.67f)
         return false;
@@ -2543,7 +2547,7 @@ static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int wi
             !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)f * width, width, GBA_SCREEN_H - f, &down))
             return false;
         static bool logged;
-        if (!logged) { PortLog("ga36: level up laid out flat (rows %d/%d)", a, f); logged = true; }
+        if (!logged) { PortLog("ga36: %s laid out flat (rows %d/%d)", flatMenu ? "menu" : "level up", a, f); logged = true; }
         return true;
     }
 #else
