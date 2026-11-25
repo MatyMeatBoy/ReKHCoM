@@ -534,6 +534,21 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
     uint64_t pos = dx / 2, py = dy / 2;
     int previous = -1, begin = 0, end = 0;
     for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
+    /* Optionally walk source pixels: one alpha test and one scaled foreground
+     * per output run, and no destination term over black. */
+    static int grouped = -1;
+    if (grouped < 0) grouped = SDL_getenv("KHCOM_FBDEV_SPARSE_RUNS") != NULL;
+    uint16_t first[641]; /* first output column of each source column */
+    const bool runs = grouped && width <= 640;
+    if (runs) {
+        static bool logged;
+        if (!logged) { PortLog("fbdev: sparse overlay runs active"); logged = true; }
+        for (int sx = 0, x = 0; sx <= width; sx++) {
+            while (x < dest->w && xMap[x] < sx) x++;
+            first[sx] = (uint16_t)x;
+        }
+    }
+    int sourceLeft = 0, sourceRight = 0;
     for (int y = 0; y < dest->h; y++, py += dy) {
         const int sy = (int)(py >> 16);
         const uint32_t* src = source + sy * width;
@@ -547,9 +562,29 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
             lo = begin; hi = dest->w;
             while (lo < hi) { int mid = (lo + hi) / 2; if (xMap[mid] < right) lo = mid + 1; else hi = mid; }
             end = lo;
+            sourceLeft = left;
+            sourceRight = right;
             previous = sy;
         }
         uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (dest->y + y) * sRenderSurface->pitch) + dest->x;
+        if (runs) {
+            for (int sx = sourceLeft; sx < sourceRight; sx++) {
+                const uint32_t pixel = src[sx];
+                const unsigned alpha = pixel >> 24;
+                if (!alpha) continue;
+                const int stop = first[sx + 1];
+                if (alpha == 255) {
+                    for (int x = first[sx]; x < stop; x++) dst[x] = pixel;
+                } else {
+                    const uint32_t fg = ScaleGlyphRgb(pixel, alpha);
+                    for (int x = first[sx]; x < stop; x++) {
+                        const uint32_t under = dst[x];
+                        dst[x] = (under & 0x00FFFFFFu) ? fg + ScaleGlyphRgb(under, 255 - alpha) : fg;
+                    }
+                }
+            }
+            continue;
+        }
         for (int x = begin; x < end; x++) {
             const uint32_t pixel = src[xMap[x]];
             const unsigned alpha = pixel >> 24;

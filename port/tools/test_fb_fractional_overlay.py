@@ -70,7 +70,9 @@ int main(void) {
         }
         if (!PortFbBlendOverlayScaled(NULL,src,sw,sh,&r)) return 3;
         for (int i=0;i<640*480;i++) if ((pixels[i]&0xffffff)!=(expected[i]&0xffffff)) return 4;
+        /* Black destinations (with any unused alpha byte) take their own path. */
         for (int i=0;i<640*480;i++) pixels[i]=rnd();
+        for (int i=0;i<640*480;i+=2) pixels[i]&=0xff000000u;
         memcpy(expected,pixels,640*480*4);
         uint64_t sy=dy/2;
         for (int y=0;y<r.h;y++,sy+=dy) {
@@ -97,3 +99,4 @@ with tempfile.TemporaryDirectory() as directory:
     subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'clang', '-O2', str(src), '-o', str(exe)], check=True)
     subprocess.run([str(exe)], check=True)
     subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_OVERLAY_240_RUNS': '1'})
+    subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_SPARSE_RUNS': '1'})
