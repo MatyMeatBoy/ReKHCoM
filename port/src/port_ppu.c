@@ -5399,6 +5399,23 @@ static void RegisterBgSlashes(uint16_t dispcnt) {
     }
 }
 
+/* PortPpuBeginFrame's switches: the environment never changes while the game
+   runs, and a lookup walks every variable (the handheld launchers export over a
+   hundred), so each name is read once. Main thread only; keys are literals. */
+static const char* FrameEnv(const char* name) {
+    static struct { const char* key; const char* value; } seen[32];
+    static int count;
+    for (int i = 0; i < count; i++)
+        if (seen[i].key == name) return seen[i].value;
+    const char* value = getenv(name);
+    if (count < (int)(sizeof(seen) / sizeof(seen[0]))) { seen[count].key = name; seen[count].value = value; count++; }
+    return value;
+}
+static int FrameArtOn(const char* name) {
+    const char* v = FrameEnv(name);
+    return v == NULL || atoi(v) != 0;
+}
+
 void PortPpuBeginFrame(void) {
     if (sUniformWorldTiles < 0)
         sUniformWorldTiles = PortTunedEnv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
@@ -5434,19 +5451,19 @@ void PortPpuBeginFrame(void) {
 #endif
     sBgTextCount = 0;
     sEventBackdropProfile = PortEventBackdropProfile();
-    sUseSceneProfiles = getenv("KHCOM_NO_SCENE_PROFILES") == NULL;
+    sUseSceneProfiles = FrameEnv("KHCOM_NO_SCENE_PROFILES") == NULL;
     {
-        const char* v = getenv("KHCOM_SCENE_ACTOR_FRAME");
+        const char* v = FrameEnv("KHCOM_SCENE_ACTOR_FRAME");
         sEnvActorFrameOff = v && strcmp(v, "off") == 0;
-        v = getenv("KHCOM_HUD_LAYOUT");
+        v = FrameEnv("KHCOM_HUD_LAYOUT");
         sEnvHudLayoutFrame = v ? atoi(v) : -1;
-        sEnvNoGuardPatio = getenv("KHCOM_NO_GUARD_PATIO") != NULL;
-        sEnvTitleBandsOff = getenv("KHCOM_TITLE_BANDS_OFF") != NULL;
+        sEnvNoGuardPatio = FrameEnv("KHCOM_NO_GUARD_PATIO") != NULL;
+        sEnvTitleBandsOff = FrameEnv("KHCOM_TITLE_BANDS_OFF") != NULL;
     }
-    sPreliminarV1 = getenv("KHCOM_PRELIMINAR_V1") != NULL;
+    sPreliminarV1 = FrameEnv("KHCOM_PRELIMINAR_V1") != NULL;
     (void)PortArenasV2(); (void)PortArenasApproved(); /* its switch read here, on the main thread, before the cores draw (they ask it per row) */
     if (!oogiePreviewInitialized) {
-        PortOogieSetPreview(getenv("KHCOM_OOGIE_PREVIEW"));
+        PortOogieSetPreview(FrameEnv("KHCOM_OOGIE_PREVIEW"));
         oogiePreviewInitialized = 1;
     }
     sSinglePanelBg = PortEventBackdropPanel();
@@ -5480,7 +5497,10 @@ void PortPpuBeginFrame(void) {
     memset(sPreliminarRecipe, 0, sizeof(sPreliminarRecipe));
     /* Preliminar V1 is opt-in until approved; scenes approved with honours are on for everyone (=0 turns one off) */
     sPreliminarApprovedOnly = !sPreliminarV1;
-    {
+    static int approvedRead, anyApprovedRead;
+    if (approvedRead) {
+        if (!anyApprovedRead) sPreliminarApprovedOnly = 0;
+    } else {
         int anyApproved = 0;
         for (b = 0; b < (int)(sizeof(kPreliminarApproved)/sizeof(kPreliminarApproved[0])); b++) {
             char var[] = "KHCOM_SCENE000_WIDE";
@@ -5491,16 +5511,18 @@ void PortPpuBeginFrame(void) {
             anyApproved |= sPreliminarApprovedOn[b];
         }
         if (!anyApproved) sPreliminarApprovedOnly = 0;
+        anyApprovedRead = anyApproved;
+        approvedRead = 1;
     }
     if ((sPreliminarV1 || sPreliminarApprovedOnly) && !sBattleView) {
-        const char* skipValue=getenv("KHCOM_PRELIMINAR_SKIP");
+        const char* skipValue=FrameEnv("KHCOM_PRELIMINAR_SKIP");
         int skip=skipValue?atoi(skipValue):-1;
         for (b=1; b<4; b++) {
             const BgLatch* l=&sBgLatch[b];
             if (l->valid && l->width <= 4 && l->height <= 4) {
                 const uint32_t hash = HashWorldMap(l);
                 sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
-                if (getenv("KHCOM_PRELIMINAR_LOG"))
+                if (FrameEnv("KHCOM_PRELIMINAR_LOG"))
                     PortLog("preliminar bg%d %dx%d hash=%08x scene=%d",b,l->width,l->height,hash,
                             sPreliminarRecipe[b]?sPreliminarRecipe[b]->v[0]:-1);
                 if (sPreliminarRecipe[b] && sPreliminarRecipe[b]->v[0]==skip)
@@ -5516,17 +5538,17 @@ void PortPpuBeginFrame(void) {
     }
     sPreviewScene097Trees = 0;
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0] == 97) {
-        const char* preview = getenv("KHCOM_SCENE097_TREE_PREVIEW");
+        const char* preview = FrameEnv("KHCOM_SCENE097_TREE_PREVIEW");
         sPreviewScene097Trees = preview && strcmp(preview, "1") == 0;
     }
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
         PreparePreliminarFir();
     sPreviewScene120Masonry = 0;
     if (sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0]==120) {
-        const char* preview=getenv("KHCOM_SCENE120_MASONRY_PREVIEW");
+        const char* preview=FrameEnv("KHCOM_SCENE120_MASONRY_PREVIEW");
         sPreviewScene120Masonry = preview && strcmp(preview,"1")==0;
     }
-    if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH_WIDE")) {
+    if (sPreliminarV1 || FrameArtOn("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 2 && l->height == 2) {
@@ -5541,7 +5563,7 @@ void PortPpuBeginFrame(void) {
     sDarksideLayer[2] = sDarksideLayer[3] = 0;
     memset(sAgrabah109Layer, 0, sizeof(sAgrabah109Layer));
     sAgrabah109ShopPal[0] = sAgrabah109ShopPal[1] = -1;
-    if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH109_WIDE")) {
+    if (sPreliminarV1 || FrameArtOn("KHCOM_AGRABAH109_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 1 && l->height == 1) {
@@ -5587,7 +5609,7 @@ void PortPpuBeginFrame(void) {
        GBA-size scene: shown at the window's height like the other menus,
        never as a small picture at the world's zoom */
     {
-        const char* aerithNativeFrame = getenv("KHCOM_AERITH_NATIVE_FRAME");
+        const char* aerithNativeFrame = FrameEnv("KHCOM_AERITH_NATIVE_FRAME");
         int keepAerithFrame = PortEventId() == 9 && aerithNativeFrame &&
                               strcmp(aerithNativeFrame, "on") == 0;
         gPortScreen.wide = any && !sSceneNarrow && !keepAerithFrame &&
@@ -5595,7 +5617,7 @@ void PortPpuBeginFrame(void) {
                        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)
                        && !(dispcnt & 0x80);
     }
-    if (getenv("KHCOM_PPULOG"))
+    if (FrameEnv("KHCOM_PPULOG"))
         PortLog("ppu: dispcnt %04x latch %d%d%d%d world %d%d%d%d bgcnt %04x %04x %04x %04x wide %d narrow %d", dispcnt,
                 sBgLatch[0].valid, sBgLatch[1].valid, sBgLatch[2].valid, sBgLatch[3].valid, sBgWorldLatched[0].valid,
                 sBgWorldLatched[1].valid, sBgWorldLatched[2].valid, sBgWorldLatched[3].valid, IO16(0x08), IO16(0x0A),
