@@ -18923,10 +18923,10 @@
     "ga36-journal-v3-followup-20261124": {
       "id": "ga36-journal-v3-followup-20261124",
       "piece": "GA36 diario: perfilar coste restante con configuracion V3",
-      "status": "pendiente",
-      "owner": null,
+      "status": "en_curso",
+      "owner": "claude-ga36",
       "created_at": "2026-11-24T21:06:19.020610+00:00",
-      "updated_at": "2026-11-24T21:11:29.461968+00:00",
+      "updated_at": "2026-11-25T01:59:16.027909+00:00",
       "branch": "perf/ga36-journal-bgvector-20261124",
       "pr": null,
       "approval": null,
@@ -18943,7 +18943,7 @@
           "detail": "released: QEMU diario V3 corregido: una pasada 39.22 FPS P95 31.08; perfil compose 25-32 core-ms, present split main 2.9-4.6 ms. Ensayo NEON fondo: PPU_VERIFY sin MISMATCH, pero ABBA referencia 35.40-38.61 FPS P95 31.02-32.76 vs candidato 36.75-37.28 P95 31.87-32.20, rangos solapados; descartado. Prioridad sintesis/naipes, una prueba fisica pendiente de HOME."
         }
       ],
-      "claimed_at": "2026-11-24T21:06:30.896991+00:00"
+      "claimed_at": "2026-11-25T01:59:16.027909+00:00"
     },
     "ga36-deck-background-vector-20261124": {
       "id": "ga36-deck-background-vector-20261124",
@@ -19182,7 +19182,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-25T01:59:08.515433+00:00",
+  "updated_at": "2026-11-25T01:59:16.027909+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

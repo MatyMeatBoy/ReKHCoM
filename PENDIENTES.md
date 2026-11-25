@@ -550,7 +550,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-menu-cycle-profile-20261124 | GA36 menus: localizar tiempo restante fuera de PPU y presentacion | pendiente | — | — | — | 2026-11-24T20:37:19.223120+00:00 |
 | ga36-unrouted-psg-wave-20261124 | GA36 menus: evitar calcular forma PSG no conectada preservando fase y audio | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/700 | — | 2026-11-24T20:47:41.391169+00:00 |
 | ga36-psg-phase-step-after-unrouted-20261124 | GA36 menus: evaluar reutilizacion exacta de pasos PSG tras omitir onda no conectada | en_curso | claude-ga36 | — | — | 2026-11-25T01:59:08.515433+00:00 |
-| ga36-journal-v3-followup-20261124 | GA36 diario: perfilar coste restante con configuracion V3 | pendiente | — | perf/ga36-journal-bgvector-20261124 | — | 2026-11-24T21:11:29.461968+00:00 |
+| ga36-journal-v3-followup-20261124 | GA36 diario: perfilar coste restante con configuracion V3 | en_curso | claude-ga36 | perf/ga36-journal-bgvector-20261124 | — | 2026-11-25T01:59:16.027909+00:00 |
 | ga36-deck-background-vector-20261124 | GA36 barajas: evaluar composicion vectorial de fondo sin objetos | pendiente | — | — | — | 2026-11-24T21:15:54.781161+00:00 |
 | ga36-mapinspect-opaque-vector-20261124 | GA36 inspeccion mapa: vectorizar filas opacas sin sprites | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/701 | — | 2026-11-24T21:23:46.402247+00:00 |
 | ga36-start-journal-physical-v4-20261124 | GA36 rendimiento Start y Diario tras diagnostico fisico v4 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/702 | — | 2026-11-24T22:40:11.144656+00:00 |
