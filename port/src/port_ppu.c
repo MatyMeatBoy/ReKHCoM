@@ -3597,6 +3597,7 @@ static bool sWorldInspectBgVector;
 static bool sWorldInspectBgRows[PORT_MAX_H];
 static bool sMapInspectOpaqueVector;
 static bool sJournalCentralVector;
+static bool sNarrowSecondVector;
 static bool sJournalPageVector;
 static bool sJournalCentralRows[GBA_SCREEN_H];
 static bool sMapInspectOpaqueRows[PORT_MAX_H];
@@ -3788,8 +3789,17 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
             sJournalCentralRows[gyLine] = true;
         }
     }
+    /* A second blend target alone changes nothing: with no first-target
+       effect, only a semi-transparent sprite pixel can use it. */
+    bool secondIdle = !(bldcnt & 0x3F00);
+    if (!secondIdle && !journalEnd && sNarrowSecondVector && sNeonNarrowCompose && !gPortScreen.wide) {
+        secondIdle = true;
+        if (objects && sLineHasObjects)
+            for (int i = 0; i < w; i++)
+                if (clObjLine[i] != TRANSPARENT && clObjSemi[i]) { secondIdle = false; break; }
+    }
     if (!journalEnd && sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
-        !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F)) &&
+        !(dispcnt & 0xE000) && secondIdle && (!effect || !(bldcnt & 0x3F)) &&
         !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
         (docked || (objects && sLineHasObjects) || n > 2 || (!objects && sWorldInspectBgVector) ||
@@ -5759,6 +5769,9 @@ void PortPpuRenderFrame(void) {
     const char* journalCentralVector;
     PORT_ENV_ONCE(journalCentralVector, SDL_getenv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
     sJournalCentralVector = journalCentralVector != NULL;
+    const char* narrowSecondVector;
+    PORT_ENV_ONCE(narrowSecondVector, SDL_getenv, "KHCOM_PPU_NARROW_SECOND_VECTOR");
+    sNarrowSecondVector = narrowSecondVector != NULL;
     const char* journalPageVector;
     PORT_ENV_ONCE(journalPageVector, SDL_getenv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
     sJournalPageVector = journalPageVector != NULL;
