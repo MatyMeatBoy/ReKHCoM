@@ -495,6 +495,17 @@ static int CoverActive(void) {
     return PortFrameCount() - sCoverFrom < 180 && (sFitScale > 0 || !gPortScreen.wide);
 }
 
+/* GA36 4:3: the battle's opening fills the panel, keeping its proportions. */
+static int Ga36CoverIntro(void) {
+#ifdef PORT_LINUX
+    static int enabled = -1;
+    if (enabled < 0) enabled = SDL_getenv("KHCOM_GA36_BATTLE_COVER") != NULL;
+    return enabled && sFitScale > 0 && CoverActive() && PortFixed480p() && PortFbActive();
+#else
+    return 0;
+#endif
+}
+
 static float MenuScale(int outW, int outH) {
     /* menus and every GBA-size scene always fill the window's height */
     return SDL_min(outH / (float)GBA_SCREEN_H, outW / (float)GBA_SCREEN_W);
@@ -936,14 +947,63 @@ static int Menu43Extend(void) {
 
 static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
-    const SDL_FRect row = { src->x, src->y + src->h - 1, src->w, 1 };
-    const SDL_FRect band = { dst->x, bottom, dst->w, h - bottom };
-    if (band.h <= 0 || dst->x > 0 || dst->x + dst->w < w) return;
-    /* The menu fit path may leave the whole picture's upload for later. */
-    const SDL_Rect texels = { (int)row.x, (int)row.y, (int)row.w, 1 };
-    SDL_UpdateTexture(sTexture, &texels, sComposite + texels.y * gPortScreen.width + texels.x, gPortScreen.width * 4);
-    SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
-    SDL_RenderTexture(sRenderer, sTexture, &row, &band);
+    /* The plainest of the last rows: an icon or a binder ring touching the very
+       edge must not turn into a stripe down the margin. */
+    int best = (int)(src->y + src->h) - 1, fewest = 1 << 30;
+    for (int y = best, n = 0; n < 8 && y >= 0; y--, n++) {
+        const uint32_t* pixels = sComposite + y * gPortScreen.width + (int)src->x;
+        int changes = 0;
+        for (int x = 1; x < (int)src->w; x++) changes += pixels[x] != pixels[x - 1];
+        if (changes < fewest) { fewest = changes; best = y; }
+    }
+    const uint32_t* pixels = sComposite + best * gPortScreen.width + (int)src->x;
+    const int count = (int)src->w;
+    const float step = dst->w / src->w;
+    if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W) return;
+    static uint32_t line[PORT_MAX_W];
+    memcpy(line, pixels, count * sizeof(*line));
+    /* one or two odd pixels between equal neighbours are an icon's tip */
+    for (int x = 1; x < count - 1; x++)
+        for (int n = 1; n <= 2 && x + n < count; n++)
+            if (line[x] != line[x - 1] && line[x + n] == line[x - 1]) {
+                for (int k = 0; k < n; k++) line[x + k] = line[x - 1];
+                break;
+            }
+    for (int x = 0, end; x < count; x = end) {
+        for (end = x + 1; end < count && line[end] == line[x]; end++) {}
+        const SDL_FRect band = { dst->x + x * step, bottom, (end - x) * step, h - bottom };
+        SDL_SetRenderDrawColor(sRenderer, (line[x] >> 16) & 255, (line[x] >> 8) & 255, line[x] & 255, 255);
+        SDL_RenderFillRect(sRenderer, &band);
+    }
+}
+
+/* GA36 4:3: the world map at a smaller scale than the panel's width, so it
+   does not look zoomed in. 0 keeps the width fit. */
+static float AllmapScale(void) {
+#ifdef PORT_LINUX
+    extern Mode gModeAllmap;
+    static float scale = -1;
+    if (scale < 0) {
+        const char* value = SDL_getenv("KHCOM_GA36_ALLMAP_SCALE");
+        scale = value ? (float)SDL_atof(value) : 0;
+        if (scale < 2.0f || scale > 2.66f) scale = 0;
+    }
+    return scale > 0 && gCurrentMode == &gModeAllmap && PortFixed480p() && PortFbActive() &&
+        gPortConfig.aspect == PORT_ASPECT_4_3 ? scale : 0;
+#else
+    return 0;
+#endif
+}
+
+/* Its backdrop is made of horizontal bands: the edge columns carry them on. */
+static void DrawAllmapSides(const SDL_FRect* src, const SDL_FRect* dst, int w) {
+    for (int side = 0; side < 2; side++) {
+        const SDL_FRect column = { side ? src->x + src->w - 1 : src->x, src->y, 1, src->h };
+        const SDL_FRect area = { side ? dst->x + dst->w : 0, dst->y, side ? w - dst->x - dst->w : dst->x, dst->h };
+        if (area.w <= 0) continue;
+        SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
+        SDL_RenderTexture(sRenderer, sTexture, &column, &area);
+    }
 }
 
 static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
@@ -2308,7 +2368,7 @@ static void Present(int paced) {
             gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
             gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height && !CoverActive() &&
             PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, MenuScale(outW, outH)) ==
-                640.0f / 240.0f;
+                640.0f / 240.0f && !AllmapScale();
     }
 #endif
     bool deferBase = false;
@@ -2348,7 +2408,7 @@ static void Present(int paced) {
 #endif
     }
     if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
-        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
+        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H || Ga36CoverIntro())) {
         const char* bandClear = NULL;
 #ifdef PORT_LINUX
         if (menuFit)
@@ -2368,6 +2428,7 @@ static void Present(int paced) {
                       : sSideStyle == 10 ? SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                                          : MenuScale(outW, outH);
         scale = PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, scale);
+        if (AllmapScale() > 0 && !menuCanvas) scale = AllmapScale();
         if (borderOn) scale = SDL_min(scale, SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H));
         dst.w = GBA_SCREEN_W * scale;
         dst.h = GBA_SCREEN_H * scale;
@@ -2462,6 +2523,7 @@ static void Present(int paced) {
 #endif
                 SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
         }
+        if (AllmapScale() > 0 && !menuCanvas) DrawAllmapSides(&src, &dst, outW);
         if (moviePrompt)
             DrawSkipLayer(&normal);
         if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {

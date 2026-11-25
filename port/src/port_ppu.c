@@ -643,13 +643,18 @@ int PortSpriteShiftY(int entry, int y) {
     if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256) {
         /* The bottom rows (hand, deck and enemy or boss stocks alike) end this
            many lines higher than on the cartridge. */
-        static int raise = -1;
+        static int raise = -1, enemyRaise;
         if (raise < 0) {
             const char* lines = getenv("KHCOM_GA36_HAND_RAISE");
+            const char* enemyLines = getenv("KHCOM_GA36_ENEMY_RAISE");
             raise = lines ? atoi(lines) : 16;
             if (raise < 0 || raise > 40) raise = 16;
+            /* enemy and boss cards sit higher on the cartridge: their own
+               amount puts both bottoms on one line */
+            enemyRaise = enemyLines ? atoi(enemyLines) : raise;
+            if (enemyRaise < 0 || enemyRaise > 40) enemyRaise = raise;
         }
-        shift -= raise * (q + 256) / 512;
+        shift -= (sHudAx == 2 && sHudAy == 1 ? enemyRaise : raise) * (q + 256) / 512;
     }
     return shift;
 }
