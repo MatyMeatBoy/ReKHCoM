@@ -286,6 +286,17 @@ int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int s
     return drawn;
 }
 
+/* Any GBA-size menu picture fitted to the 640x480 panel's width. */
+int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
+    int drawn = sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
+                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL);
+    if (drawn) {
+        static bool logged;
+        if (!logged) { PortLog("fbdev: menu fit active"); logged = true; }
+    }
+    return drawn;
+}
+
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
     return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
            DrawNearest2x(renderer, src, 240, 160, stride, 8, 426, NULL);

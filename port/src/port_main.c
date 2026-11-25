@@ -234,6 +234,7 @@ void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
@@ -2273,6 +2274,24 @@ static void Present(int paced) {
         outW = area.w;
         outH = area.h;
     }
+    bool menuFit = false;
+#ifdef PORT_LINUX
+    {
+        /* A GBA-size menu picture at the handheld panel's full width: every
+           condition is known before the frame goes to the renderer. */
+        const char* menuFitFlag;
+        PORT_ENV_ONCE(menuFitFlag, SDL_getenv, "KHCOM_GA36_MENU_FIT");
+        menuFit = menuFitFlag && PortFbActive() && PortFixed480p() && !menuCanvas && !borderOn && !journalActive &&
+            (sFitScale > 0 || !gPortScreen.wide) && gPortConfig.viewMode != PORT_VIEW_CRT &&
+            gPortConfig.filter == PORT_FILTER_NEAREST && sSideStyle != 10 && outW == 640 && outH == 480 &&
+            (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height && !CoverActive() &&
+            PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, MenuScale(outW, outH)) ==
+                640.0f / 240.0f;
+    }
+#endif
     bool deferBase = false;
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
     const char* deferFlag;
@@ -2355,7 +2374,15 @@ static void Present(int paced) {
         }
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
-        if (journalShown) DrawJournalPicture(&src, &dst);
+        bool drewMenuFit = false;
+#ifdef PORT_LINUX
+        drewMenuFit = menuFit && !journalShown && src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+            dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f) &&
+            PortFbDrawMenuFit(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                              gPortScreen.width);
+#endif
+        if (drewMenuFit) {
+        } else if (journalShown) DrawJournalPicture(&src, &dst);
         else {
 #ifdef PORT_LINUX
             extern Mode gModeWorldinspect;
