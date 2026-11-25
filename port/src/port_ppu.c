@@ -3230,6 +3230,53 @@ static void ObjAffineClip(int step, int base, int lo, int hi, int* first, int* e
         *end = to;
 }
 
+static int sObjRowRuns; /* KHCOM_PPU_OBJ_ROW_RUNS */
+
+/* Columns [first, end) of one row of a plain 4bpp sprite (no affine, mosaic, window, header or HD replacement):
+   what DrawObjs does per column, with the sprite's state resolved once and each tile row read once. */
+static void DrawObjRowRuns(int i, int first, int end, int ox, int ow, int ty, int tileRow, int hflip, int prio,
+                           int semi, int palBank) {
+    const int gxLo = PPU_MAX(sLeft, -gPortScreen.originX), gxHi = PPU_MIN(sRight, gPortScreen.width - gPortScreen.originX);
+    first = PPU_MAX(first, gxLo - ox);
+    end = PPU_MIN(end, gxHi - ox);
+    if (sOamTag[i].clipX0 < sOamTag[i].clipX1) {
+        first = PPU_MAX(first, sOamTag[i].clipX0 - ox);
+        end = PPU_MIN(end, sOamTag[i].clipX1 - ox);
+    }
+    if (first >= end)
+        return;
+    const bool screen = SpriteOnScreen(sOamTag[i].screen);
+    uint16_t* const line = screen ? sScrLine : sObjLine;
+    uint8_t* const prios = screen ? sScrPrio : sObjPrio;
+    uint16_t* const index = screen ? sScrIndex : sObjIndex;
+    uint8_t* const semis = screen ? sScrSemi : sObjSemi;
+    const uint16_t* const colors = PLTT16 + 256 + palBank * 16;
+    const int origin = ox + gPortScreen.originX, step = hflip ? -4 : 4;
+    int drawn = 0;
+    for (int sx = first, n; sx < end; sx += n) {
+        const int tx = hflip ? ow - 1 - sx : sx;
+        n = PPU_MIN(hflip ? (tx & 7) + 1 : 8 - (tx & 7), end - sx);
+        const unsigned off = 0x10000 + ((tileRow + (tx >> 3)) & 0x3FF) * 32 + (ty & 7) * 4;
+        uint32_t bits;
+        memcpy(&bits, VRAM8 + off, sizeof(bits));
+        if (!bits)
+            continue;
+        for (int k = 0, shift = (tx & 7) * 4; k < n; k++, shift += step) {
+            const unsigned ci = (bits >> shift) & 15u;
+            const int x = origin + sx + k;
+            if (ci && (line[x] == TRANSPARENT || prio < prios[x])) {
+                line[x] = colors[ci] & 0x7FFF;
+                prios[x] = (uint8_t)prio;
+                index[x] = (uint16_t)i;
+                semis[x] = (uint8_t)semi;
+                drawn = 1;
+            }
+        }
+    }
+    if (drawn && !screen)
+        sLineHasObjects = 1;
+}
+
 static void DrawObjs(int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const obPalette = PLTT16;
@@ -3437,6 +3484,15 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             const int cx0 = -(bw / 2), cy = line - bh / 2;
             ObjAffineClip(pa, pa * cx0 + pb * cy, -(ow / 2) * 256, (ow - ow / 2) * 256, &sxFirst, &sxEnd);
             ObjAffineClip(pc, pc * cx0 + pd * cy, -(oh / 2) * 256, (oh - oh / 2) * 256, &sxFirst, &sxEnd);
+        }
+        if (sObjRowRuns && !affine && !bpp8 && !(objMosaic && mosH > 1) && mode != 2 && !sMainHdPart[i] &&
+            !sOamTag[i].header && !sWorldBlendActive && !(HdTextGlyph(i) && sOamTag[i].style == 2) &&
+            !(gPortScreen.wide && sActorSceneKey == EVENT_081_MONSTORO_E3)) {
+            const int row = (a1 & 0x2000) ? oh - 1 - line : line;
+            DrawObjRowRuns(i, sxFirst, sxEnd, ox, ow, row,
+                           tileBase + (row >> 3) * (mapping1d ? ow >> 3 : 32), (a1 & 0x1000) != 0, prio, mode == 1,
+                           palBank);
+            continue;
         }
         for (sx = sxFirst; sx < sxEnd; sx++) {
             int gx = ox + sx;
@@ -5777,6 +5833,8 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sObjSkipClear = 0;
     const int objAffineSpan = sObjAffineSpan;
     sObjAffineSpan = 0;
+    const int objRowRuns = sObjRowRuns;
+    sObjRowRuns = 0;
     const int skipMargins = sSpotlightSkipMargins; /* compare with the full rows */
     sSpotlightSkipMargins = 0;
     const int textNeon = sTextNeon;
@@ -5789,6 +5847,7 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sBgPlainRows = bgPlainRows;
     sObjSkipClear = objSkipClear;
     sObjAffineSpan = objAffineSpan;
+    sObjRowRuns = objRowRuns;
     sSpotlightSkipMargins = skipMargins;
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
@@ -5971,6 +6030,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sObjSkipClear = 0;
         int objAffineSpan = sObjAffineSpan;
         sObjAffineSpan = 0;
+        int objRowRuns = sObjRowRuns;
+        sObjRowRuns = 0;
         sSpotlightTrimMargins = 0;
         sSpotlightOverlayFast = 0;
         sSpotlightClearRows = 0;
@@ -5990,6 +6051,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightTileRuns = spotlightRuns;
         sObjSkipClear = objSkipClear;
         sObjAffineSpan = objAffineSpan;
+        sObjRowRuns = objRowRuns;
         sSpotlightTrimMargins = spotlightTrim;
         sSpotlightOverlayFast = spotlightOverlay;
         sSpotlightClearRows = spotlightClear;
@@ -6172,6 +6234,9 @@ void PortPpuRenderFrame(void) {
     const char* objAffineSpan;
     PORT_ENV_ONCE(objAffineSpan, SDL_getenv, "KHCOM_PPU_OBJ_AFFINE_SPAN");
     sObjAffineSpan = objAffineSpan != NULL;
+    const char* objRowRuns;
+    PORT_ENV_ONCE(objRowRuns, SDL_getenv, "KHCOM_PPU_OBJ_ROW_RUNS");
+    sObjRowRuns = objRowRuns != NULL;
     const char* spotlightBg0Runs;
     PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
     sSpotlightBg0Runs = spotlightBg0Runs != NULL;
