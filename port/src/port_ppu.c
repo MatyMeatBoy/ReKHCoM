@@ -2067,6 +2067,109 @@ static inline void DecodeTile4(uint16_t* out, const uint8_t* row, const uint16_t
 #endif
 }
 
+static int sBgPlainRows; /* KHCOM_PPU_BG_PLAIN_ROWS */
+
+static void BgFill(uint16_t* out, int from, int to, uint16_t color) {
+    for (int x = from; x < to; x++) out[x] = color;
+}
+
+/* One row of a 4bpp text layer with no mosaic, spotlight or scene replacement: what is invariant along the row is
+   resolved once, then whole tile runs are copied. Same pixels and world marks as DrawTextBg's own run paths.
+   Returns 0 at registered HD text, which the caller's per-pixel path then draws the whole row for. */
+static int DrawTextBgPlain(int bg, int gy, uint16_t cnt, int hofs, int vofs) {
+    const uint16_t* const palette = PLTT16;
+    uint16_t* const out = sBgLine[bg];
+    uint8_t* const inWorld = sInWorld;
+    const BgLatch* const l = &sBgLatch[bg];
+    const BgWorld* const wd = &sBgWorldLatched[bg];
+    const unsigned base = ((cnt >> 2) & 3) * 0x4000;
+    const uint16_t* const screen = (const uint16_t*)(VRAM8 + ((cnt >> 8) & 31) * 0x800);
+    const int size = cnt >> 14, wmask = (size & 1) ? 511 : 255;
+    const int py = (gy + vofs) & ((size & 2) ? 511 : 255), ty = py >> 3, fy = py & 7;
+    const int w = gPortScreen.width, origin = gPortScreen.originX;
+    const int start = PPU_MIN(PPU_MAX(origin + sLeft, 0), w);
+    const int end = PPU_MIN(PPU_MAX(origin + sRight, start), w);
+    const int offset = origin + sBgShiftLatched[bg]; /* the canvas column of the picture's gx 0 */
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const int pictureStart = outside ? end : PPU_MIN(PPU_MAX(offset, start), end);
+    const int pictureEnd = outside ? end : PPU_MIN(PPU_MAX(offset + GBA_SCREEN_W, pictureStart), end);
+    const bool world = !sScreenBg[bg] && !sBgDockedLatched[bg] && (l->valid || wd->valid);
+    unsigned lastTextOffset = UINT32_MAX;
+    const BgTextTile* lastTextMatch = NULL;
+    BgFill(out, 0, start, TRANSPARENT);
+    BgFill(out, end, w, TRANSPARENT);
+    /* the picture */
+    for (int x = pictureStart, count; x < pictureEnd; x += count) {
+        const int px = (x - offset + hofs) & wmask;
+        int block = 0;
+        if (px >= 256) block += 1;
+        if (ty >= 32) block += (size == 3) ? 2 : 1;
+        const int entry = screen[block * 0x400 + (ty & 31) * 32 + ((px >> 3) & 31)];
+        const unsigned tileOff = base + (entry & 0x3FF) * 32;
+        count = PPU_MIN(8 - (px & 7), pictureEnd - x);
+        if (tileOff >= 0x10000) {
+            BgFill(out, x, x + count, TRANSPARENT);
+            continue;
+        }
+        if (sHdText && !(entry & 0xC00) && MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch))
+            return 0;
+        const uint8_t* row = VRAM8 + tileOff + ((entry & 0x800) ? 7 - fy : fy) * 4;
+        const uint16_t* colors = palette + (entry >> 12) * 16;
+        if (count == 8) {
+            DecodeTile4(out + x, row, colors, entry & 0x400);
+        } else {
+            for (int i = 0; i < count; i++) {
+                const int sx = (entry & 0x400) ? 7 - (px & 7) - i : (px & 7) + i;
+                const int c = (row[sx >> 1] >> ((sx & 1) * 4)) & 15;
+                out[x + i] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+            }
+        }
+    }
+    /* beyond the picture, on both sides (a row outside it: the whole span, as the "left" side) */
+    const int sides[2][2] = {{start, pictureStart}, {pictureEnd, end}};
+    const int baseX = world ? (l->valid ? l->x + (hofs - l->hofs) : wd->x + (hofs - wd->hofs)) - offset : 0;
+    const int wy = world ? (l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs)) : 0;
+    for (int side = 0; side < 2; side++) {
+        const int to = sides[side][1];
+        if (!world) {
+            BgFill(out, sides[side][0], to, TRANSPARENT);
+            continue;
+        }
+        for (int x = sides[side][0], run; x < to; x += run) {
+            const int wx = baseX + x;
+            run = PPU_MIN(8 - (wx & 7), to - x);
+            const int we = l->valid ? ExtendedWorldEntry(l, wx, wy) : wd->fn(bg, wx >> 3, wy >> 3);
+            if (we < 0) {
+                BgFill(out, x, x + run, sWorldPadding[bg]);
+                continue;
+            }
+            unsigned off = base + (we & 1023) * 32;
+            if (sHdText && off < 0x10000 && sBgTextTiles[off / 32].code > 0x20)
+                return 0;
+            off += ((we & 0x800) ? 7 - (wy & 7) : wy & 7) * 4;
+            if (run == 8)
+                memset(inWorld + x, 1, 8); /* one store */
+            else
+                memset(inWorld + x, 1, run);
+            if (off + 4 > 0x10000) {
+                BgFill(out, x, x + run, TRANSPARENT);
+                continue;
+            }
+            const uint16_t* colors = palette + (we >> 12) * 16;
+            if (run == 8) {
+                DecodeTile4(out + x, VRAM8 + off, colors, we & 0x400);
+            } else {
+                for (int j = 0; j < run; j++) {
+                    const int xx = (we & 0x400) ? 7 - (wx & 7) - j : (wx & 7) + j;
+                    const int c = (VRAM8[off + (xx >> 1)] >> ((xx & 1) * 4)) & 15;
+                    out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
 static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* libraryPair) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
@@ -2184,6 +2287,12 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
                                        l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2);
         }
     }
+
+    if (sBgPlainRows && !bpp8 && !mosaic && !sSpotlight && !sWorldNameOn && !guardPatio && !tmBoard && !ursLayer &&
+        !jfLayer && !mxField && !oogieHall && !mdLayer && !sDarksideLayer[bg] &&
+        !(bg == sSinglePanelBg && sBgLatch[bg].valid) && !sPreliminarRecipe[bg] && !sAgrabahLayer[bg] &&
+        !sAgrabah109Layer[bg] && bg != sTiledBackdropBg && DrawTextBgPlain(bg, gy, cnt, hofs, vofs))
+        return;
 
     int rowStart = 0, rowEnd = w;
     const char* trimMargins = NULL;
@@ -5481,9 +5590,12 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sSpotlightSkipMargins = 0;
     const int textNeon = sTextNeon;
     sTextNeon = 0;
+    const int bgPlainRows = sBgPlainRows;
+    sBgPlainRows = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
     sTextNeon = textNeon;
+    sBgPlainRows = bgPlainRows;
     sObjSkipClear = objSkipClear;
     sObjAffineSpan = objAffineSpan;
     sSpotlightSkipMargins = skipMargins;
@@ -5675,6 +5787,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sMenuBgCopy = 0;
         int textNeon = sTextNeon;
         sTextNeon = 0;
+        int bgPlainRows = sBgPlainRows;
+        sBgPlainRows = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5690,6 +5804,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightClearRows = spotlightClear;
         sMenuBgCopy = menuBgCopy;
         sTextNeon = textNeon;
+        sBgPlainRows = bgPlainRows;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5888,6 +6003,9 @@ void PortPpuRenderFrame(void) {
     const char* textNeon;
     PORT_ENV_ONCE(textNeon, SDL_getenv, "KHCOM_PPU_TEXT_NEON");
     sTextNeon = textNeon != NULL;
+    const char* bgPlainRows;
+    PORT_ENV_ONCE(bgPlainRows, SDL_getenv, "KHCOM_PPU_BG_PLAIN_ROWS");
+    sBgPlainRows = bgPlainRows != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
