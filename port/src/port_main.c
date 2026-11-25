@@ -1141,12 +1141,17 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
     const int sx = (int)src->x, sy = (int)src->y, H = GBA_SCREEN_H, W = GBA_SCREEN_W;
 #define ALLMAP_PX(r, c) sComposite[(size_t)(sy + (r)) * gPortScreen.width + sx + (c)]
     /* the band row under the header (the last one found when a map tile hides every candidate) */
-    static int lastA = -1;
+    static int lastA = -1, bigMap;
     static Mode* lastMode;
-    if (lastMode != gCurrentMode) { lastMode = gCurrentMode; lastA = -1; }
+    if (lastMode != gCurrentMode) { lastMode = gCurrentMode; lastA = -1; bigMap = 0; }
     int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
+    /* A floor larger than the view scrolls its rooms right up to the header, as on the GBA: once a room shows under
+       it (the band row below the header moves down), the header keeps the GBA's place for this visit and only the
+       footer goes to the bottom (the rooms never cover it). Small floors keep the header at the top. */
+    if (a > 17 || (lastA > 0 && a > lastA + 1)) bigMap = 1; /* the header's band row is 16 */
     if (a <= 0) a = lastA;
-    if (a > 0) lastA = a;
+    if (a > 0 && (lastA <= 0 || a < lastA)) lastA = a;
+    if (bigMap) a = 0;
     /* The footer: its bar starts at the left edge. Rows' band colours are
        those covering a fifth of the row (the dithered bands have two). */
     uint32_t bands[GBA_SCREEN_H][4];
@@ -2494,6 +2499,53 @@ static SDL_Rect ScreenOverlayAlphaBounds(const uint32_t* pixels, int pitch, SDL_
 
 /* Clip on source pixel boundaries before SDL allocates a scaled intermediate
  * for a layer that extends beyond the fixed-size panel. */
+int gPortLevelUpActive; /* card_level_up.c: the level up screen is open */
+
+/* GA36 4:3 (flat): the level up screen's top band (its banner and level) goes up to the panel's top and its bottom
+   panel down to the bottom; the middle stays. The bands are split at fully transparent rows, where the battle shows
+   through, so nothing is cut and nothing needs filling. */
+static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+    const char* on;
+    int a = -1, f = -1, seen = 0, r;
+    PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_LEVELUP_FLAT");
+    if (!on || !gPortLevelUpActive || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
+        outW != 640 || outH != 480 || width != GBA_SCREEN_W || (int)od->x != 0 || (int)od->w != outW || od->y < 8 ||
+        sOverlayScale < 2.66f || sOverlayScale > 2.67f)
+        return false;
+#define ROW_CLEAR(r) ({ const uint32_t* row_ = overlay + (size_t)(r) * width; int c_ = 0;                         while (c_ < width && !(row_[c_] >> 24)) c_++; c_ == width; })
+    for (r = 0; r < GBA_SCREEN_H / 2 && a < 0; r++) {
+        if (!ROW_CLEAR(r)) seen = 1;
+        else if (seen) a = r;
+    }
+    for (r = GBA_SCREEN_H - 1, seen = 0; r >= GBA_SCREEN_H / 2 && f < 0; r--) {
+        if (!ROW_CLEAR(r)) seen = 1;
+        else if (seen) f = r + 1;
+    }
+#undef ROW_CLEAR
+    if (a <= 0 || f <= a || f >= GBA_SCREEN_H)
+        return false;
+    {
+        const int top = (int)od->y, below = outH - (top + (int)od->h);
+#define Y(r) ((int)((r) * (int)od->h / GBA_SCREEN_H))
+        const SDL_Rect up = {0, 0, outW, Y(a)}, mid = {0, top + Y(a), outW, Y(f) - Y(a)},
+                       down = {0, top + Y(f) + below, outW, Y(GBA_SCREEN_H) - Y(f)};
+#undef Y
+        if (!PortFbBlendOverlayScaled(sRenderer, overlay, width, a, &up) ||
+            !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)a * width, width, f - a, &mid) ||
+            !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)f * width, width, GBA_SCREEN_H - f, &down))
+            return false;
+        static bool logged;
+        if (!logged) { PortLog("ga36: level up laid out flat (rows %d/%d)", a, f); logged = true; }
+        return true;
+    }
+#else
+    (void)overlay; (void)od; (void)width; (void)outW; (void)outH;
+    return false;
+#endif
+}
+
 static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, const SDL_FRect* dest, int width, int outW, int outH) {
 #ifdef PORT_LINUX
     const char* clipOverlay;
@@ -3344,8 +3396,10 @@ static void Present(int paced) {
                 }
             }
 #endif
-            SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
-            DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH);
+            if (!DrawLevelUpFlat(overlay, &od, sOverlayTexW, outW, outH)) {
+                SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
+                DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH);
+            }
         }
         PortHdSpritesWorldFallback(nativeWorld);
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */

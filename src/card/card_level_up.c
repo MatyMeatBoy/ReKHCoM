@@ -90,6 +90,9 @@ enum LevelUpStat {
 
 void Level_Up_0(LevelUpWork* work) {
 #ifdef PLATFORM_PC
+    { extern int gPortLevelUpActive; gPortLevelUpActive = 1; } /* the port lays this screen out on wide panels */
+#endif
+#ifdef PLATFORM_PC
     /* Only the stat panel is screen UI. Most boss arenas keep their world
        on BG0; splitting that layer too removes the scenery between panels.
        Ursula uses BG0 for stats instead of BG1 (matching its loads below). */
@@ -1329,6 +1332,9 @@ void Level_Up_2(LevelUpWork* work) {
 }
 
 void Level_Up_3(LevelUpWork* work) {
+#ifdef PLATFORM_PC
+    { extern int gPortLevelUpActive; gPortLevelUpActive = 0; }
+#endif
 #ifdef PLATFORM_PC
     PortBgSplit(0, 0);
     PortBgSplit(1, 0);

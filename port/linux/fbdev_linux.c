@@ -112,6 +112,17 @@ int PortFbInit(int* w, int* h) {
     sAsyncFbRequested = SDL_getenv("KHCOM_FBDEV_ASYNC_COPY") != NULL;
     PortLog("fbdev: %s %ux%u, %u bpp (red at bit %u)", path, sVar.xres, sVar.yres, sVar.bits_per_pixel,
             sVar.red.offset);
+    {
+        /* the panel's refresh from its timing (frame pacing: the game runs at 59.7275 Hz) */
+        const uint64_t htotal = (uint64_t)sVar.xres + sVar.left_margin + sVar.right_margin + sVar.hsync_len;
+        const uint64_t vtotal = (uint64_t)sVar.yres + sVar.upper_margin + sVar.lower_margin + sVar.vsync_len;
+        if (sVar.pixclock && htotal && vtotal)
+            PortLog("fbdev: panel %.3f Hz (pixclock %u ps, %llux%llu total)",
+                    1e12 / ((double)sVar.pixclock * (double)htotal * (double)vtotal), sVar.pixclock,
+                    (unsigned long long)htotal, (unsigned long long)vtotal);
+        else
+            PortLog("fbdev: panel refresh unknown (no timing in the screen info)");
+    }
     return 1;
 }
 
