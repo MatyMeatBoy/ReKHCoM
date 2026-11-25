@@ -18756,7 +18756,7 @@
       "status": "en_revision",
       "owner": "Codex-v22",
       "created_at": "2026-11-24T20:12:20.354038+00:00",
-      "updated_at": "2026-11-24T23:28:42.762297+00:00",
+      "updated_at": "2026-11-25T01:53:50.857477+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18811,6 +18811,11 @@
           "at": "2026-11-24T23:28:42.762297+00:00",
           "owner": "Codex-v22",
           "detail": "Analizador local analyze-diagnostic-unico-v5.py preparado: valida estado completo y fotogramas sin huecos de 16 casos, calcula FPS/P95 para sintesis, naipes, Start y tres etapas de diario; explicita entorno y rutas sinteticas. Fixture 24 muestras PASS contra referencia fisica anterior; rechaza diagnostico incompleto. RC y diagnostico v5 listos, esperando reconexion confirmada HOME."
+        },
+        {
+          "at": "2026-11-25T01:53:50.857477+00:00",
+          "owner": "Codex-v22",
+          "detail": "Usuario solicito instalar; RC y diagnostico v5 instalados en F: HOME, 8 archivos verificados, ROM/SAV/3 INI preservados. Recibo install-rc-menus-v5-20261125T015241115526Z.json y backup SHA256 5d21c17445eec253fbb95a8c358c165e46bde62396d6c59be088d1df63872289. Handoff D:/01Claude/ReKHCoM/HANDOFF-GA36-DIAGNOSTICO-V5.md; usuario debe ejecutar y reconectar. No acceder nuevamente hasta confirmar, fisico pendiente."
         }
       ],
       "claimed_at": "2026-11-24T20:12:31.858529+00:00"
@@ -19177,7 +19182,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-24T23:28:42.762297+00:00",
+  "updated_at": "2026-11-25T01:53:50.857477+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
