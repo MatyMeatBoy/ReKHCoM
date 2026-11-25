@@ -27,7 +27,7 @@ class PackageVersionTests(unittest.TestCase):
                 self.assertNotIn('APPVERSION', script)
 
     def test_unrepresentable_release_stops_before_package_commands(self):
-        for version in ('1.9.16','2.2-pre3','100.0.0','2.10.0','2.2.10'):
+        for version in ('1.9.16','2.2-pre3','100.0.0','2.10.1','2.2.10'):
             with self.subTest(version=version), patch.object(build.build_switch, 'version', return_value=version):
                 with self.assertRaises(ValueError):build.package_script(['eu'])
 

@@ -44,7 +44,7 @@ extern int PortBridgeVideoCaps(void);
 #include "port/port_netlink.h"
 #include "port/port_logfile.h"
 #include "port/loop_phases.h"
-#ifdef __linux__
+#if defined(__linux__) && __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) /* getrusage: full Linux builds */
 #include <sys/resource.h>
 #include <time.h>
 #endif
@@ -240,7 +240,7 @@ static void LoopEnd(uint32_t frame) {
 
     if (!sLoop.threshold)
         return;
-#ifdef __linux__
+#if defined(__linux__) && __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) /* getrusage: full Linux builds */
     {
         static double lastCpu;
         static long lastSwitches, lastFaults;
