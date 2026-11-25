@@ -968,20 +968,41 @@ static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, 
     const int count = (int)src->w, last = (int)(src->y + src->h) - 1;
     const float step = dst->w / src->w;
     if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W || last < 7) return;
-    /* Column by column, the colour most of the last eight rows agree on: panels
-       and pages carry on, while a sliding line, an icon's tip or a binder ring
-       touching the very edge never turns into a stripe down the margin. */
     static uint32_t line[PORT_MAX_W];
-    for (int x = 0; x < count; x++) {
-        uint32_t column[8];
-        for (int i = 0; i < 8; i++) column[i] = sComposite[(last - i) * gPortScreen.width + (int)src->x + x];
-        int best = 0, votes = 0;
-        for (int i = 0; i < 8 && votes <= 4; i++) {
-            int n = 0;
-            for (int k = 0; k < 8; k++) n += column[k] == column[i];
-            if (n > votes) { votes = n; best = i; }
+    const uint32_t* edge = sComposite + last * gPortScreen.width + (int)src->x;
+    const uint32_t* inner = edge - 4 * gPortScreen.width;
+    memcpy(line, edge, count * sizeof(*line));
+    /* A line sliding past the edge during a menu's entry: a long run over a
+       plain stretch of another colour. Take the colour behind it. */
+    for (int x = 0, end; x < count; x = end) {
+        for (end = x + 1; end < count && line[end] == line[x]; end++) {}
+        if (end - x < 40) continue;
+        int behind = 0;
+        for (int k = x; k < end; k++) behind += inner[k] == inner[x + (end - x) / 2];
+        if (inner[x + (end - x) / 2] != line[x] && behind * 10 >= (end - x) * 9)
+            for (int k = x; k < end; k++) line[k] = inner[x + (end - x) / 2];
+    }
+    extern Mode gModeJiminy;
+    if (gCurrentMode == &gModeJiminy) {
+        /* The binder's rings cross the edge: column by column, what most of the
+           last eight rows agree on carries the page and the ground on. */
+        for (int x = 0; x < count; x++) {
+            uint32_t column[8];
+            int best = 0, votes = 0;
+            for (int i = 0; i < 8; i++) column[i] = edge[x - i * gPortScreen.width];
+            for (int i = 0; i < 8 && votes <= 4; i++) {
+                int n = 0;
+                for (int k = 0; k < 8; k++) n += column[k] == column[i];
+                if (n > votes) { votes = n; best = i; }
+            }
+            line[x] = column[best];
         }
-        line[x] = column[best];
+    }
+    /* Up to three odd pixels between equal neighbours are an icon's tip. */
+    for (int x = 1, end; x < count - 1; x = end) {
+        for (end = x + 1; end < count && line[end] != line[x - 1]; end++) {}
+        if (line[x] == line[x - 1] || end >= count || end - x > 3) { end = x + 1; continue; }
+        for (int k = x; k < end; k++) line[k] = line[x - 1];
     }
     for (int x = 0, end; x < count; x = end) {
         for (end = x + 1; end < count && line[end] == line[x]; end++) {}
