@@ -24,6 +24,11 @@ static int AudioLog(void) {
 #include "port/port_state.h"
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
 #include "port/port_audio_continuity.h"
+#include "port/port_tuning.h"
+/* KHCOM_PPU_* and KHCOM_PSG_* switches, with the default-on fast paths (port_tuning.h). */
+static const char* PortTunedEnv(const char* name) {
+    return PortTuningValue(name, SDL_getenv(name), SDL_getenv("KHCOM_FAST_PATHS"));
+}
 #define PORT_AUDIO_CONTINUITY 1
 #endif
 
@@ -259,9 +264,9 @@ static void PsgRender(int n, int rate) {
     }
 
     const char* reuseIntegral;
-    PORT_ENV_ONCE(reuseIntegral, SDL_getenv, "KHCOM_PSG_REUSE_INTEGRAL");
+    PORT_ENV_ONCE(reuseIntegral, PortTunedEnv, "KHCOM_PSG_REUSE_INTEGRAL");
     const char* skipUnrouted;
-    PORT_ENV_ONCE(skipUnrouted, SDL_getenv, "KHCOM_PSG_SKIP_UNROUTED_WAVE");
+    PORT_ENV_ONCE(skipUnrouted, PortTunedEnv, "KHCOM_PSG_SKIP_UNROUTED_WAVE");
     int integralDuty[2] = {-1, -1};
     double integralEnd[2] = {0};
     PsgFrameRegisters();

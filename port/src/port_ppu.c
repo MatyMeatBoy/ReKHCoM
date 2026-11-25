@@ -11,8 +11,15 @@
  * the 160 original lines; lines added above and below reuse the state of the
  * nearest original line.
  */
-#ifdef __ARM_NEON
+#if defined(__ARM_NEON)
 #include <arm_neon.h>
+#define PORT_NEON 1
+#elif defined(PORT_SIMDE_NEON)
+/* x86 builds: the same NEON kernels through SIMDe, which maps them to SSE.
+   The x86 intrinsics come first: SIMDe renames a few of them with macros. */
+#include <x86intrin.h>
+#include <arm_neon.h>
+#define PORT_NEON 1
 #endif
 
 #include <math.h>
@@ -38,6 +45,9 @@
 #define SDL_max(a, b) PPU_MAX((a), (b))
 #define SDL_clamp(x, lo, hi) PPU_MIN(PPU_MAX((x), (lo)), (hi))
 #endif
+#include "port/port_tuning.h"
+/* KHCOM_PPU_* and KHCOM_PSG_* switches, with the default-on fast paths (port_tuning.h). */
+static const char* PortTunedEnv(const char* name); /* defined at the end, after SDL */
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
 #include "port/synthesis_requirement_hd.h"
@@ -2040,7 +2050,7 @@ static int sTextNeon; /* KHCOM_PPU_TEXT_NEON */
 
 /* Eight pixels of one 4bpp tile row, leftmost screen pixel first. */
 static inline void DecodeTile4(uint16_t* out, const uint8_t* row, const uint16_t* colors, int flip) {
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     uint32_t packed;
     memcpy(&packed, row, sizeof(packed));
     if (!packed) {
@@ -2297,7 +2307,7 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
     int rowStart = 0, rowEnd = w;
     const char* trimMargins = NULL;
 #if __STDC_HOSTED__
-    PORT_ENV_ONCE(trimMargins, SDL_getenv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
+    PORT_ENV_ONCE(trimMargins, PortTunedEnv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
 #endif
     if (trimMargins && mosH == 1 && (!sSpotlight || (sSpotlightTrimMargins && bg != 0)) &&
         !guardPatio && !tmBoard && !ursLayer && !jfLayer && !mxField && !oogieHall && !mdLayer &&
@@ -3088,7 +3098,7 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     }
     const int mosaicOffset = mosH == 1 ? 0 : (((first - origin) % mosH) + mosH) % mosH;
     const char* colorSpans;
-    PORT_ENV_ONCE(colorSpans, SDL_getenv, "KHCOM_PPU_AFFINE_COLOR_SPANS");
+    PORT_ENV_ONCE(colorSpans, PortTunedEnv, "KHCOM_PPU_AFFINE_COLOR_SPANS");
     if (colorSpans && mosH > 1 && !extendBands && !extendFloor) {
         /* A mosaic block and its viewport classification share one sample.
            Split the block when it crosses either edge of the native picture. */
@@ -3928,7 +3938,7 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
     return top;
 }
 
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
 static bool sNeonOpaqueCompose;
 static bool sNeonNarrowCompose;
 static bool sNeonScreenCompose;
@@ -4230,7 +4240,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sBgDockedLatched[b]) docked |= 1 << b;
 
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     if (objects && sProbeComposeGates) {
         unsigned flags = 1u;
         if (w != 320 || !gPortScreen.wide) flags |= 1u << 1;
@@ -4253,7 +4263,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         return;
     }
 
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     int journalBegin = 0, journalEnd = 0;
     if (sJournalCentralVector && sNeonOpaqueCompose && sNeonNarrowCompose && w == 320 &&
         !gPortScreen.wide && (sJiminyDetailCapture || (sJournalPageVector && sJiminyPageCapture)) &&
@@ -4345,7 +4355,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 
     for (x = 0; x < w; x++) {
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
         if (journalEnd && x == journalBegin) { x = journalEnd - 1; continue; }
 #endif
         int gx = x - gPortScreen.originX;
@@ -4547,7 +4557,7 @@ static void SplitBgLine(int b, int gy) {
 }
 
 /* The screen layer's line gy: menu layers only, transparent elsewhere. */
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
 static void NeonScreenComposeRow(uint32_t* dst, int gy, int width, int start, int n,
                                  const int* order, const int* priorities, unsigned eva, bool spotlightAlpha) {
     const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
@@ -4620,7 +4630,7 @@ static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, cons
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sScreenBg[b] && bgPrio[b] == p)
                 order[n++] = b;
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     const int start = gPortScreen.originX - originO;
     if (sNeonScreenCompose && !nativeWorld && !sWorldBlendActive && !sLutMode &&
         w == 320 && !(wo & 7) && start >= 0 && start + wo <= w &&
@@ -4921,7 +4931,7 @@ static void RenderLine(int y, int gy) {
             sPreliminarRecipe[3] && sPreliminarRecipe[2]->v[0] == 130 &&
             sPreliminarRecipe[3]->v[0] == 130) {
         const char* enabled;
-        PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_LIBRARY_PAIR");
+        PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_LIBRARY_PAIR");
         if (enabled) {
             libraryPair.prepared = false;
             sharedLibrary = &libraryPair;
@@ -5388,7 +5398,7 @@ static void RegisterBgSlashes(uint16_t dispcnt) {
 
 void PortPpuBeginFrame(void) {
     if (sUniformWorldTiles < 0)
-        sUniformWorldTiles = getenv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
+        sUniformWorldTiles = PortTunedEnv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
     static int oogiePreviewInitialized;
 #ifdef __EMSCRIPTEN__
     extern int gPortWebHdReady;
@@ -5776,8 +5786,8 @@ static int SDLCALL PpuWorker(void* data) {
 }
 
 static void PpuStart(void) {
-    const char* env = SDL_getenv("KHCOM_PPU_THREADS");
-    const char* edgeChunk = SDL_getenv("KHCOM_PPU_EDGE_CHUNK");
+    const char* env = PortTunedEnv("KHCOM_PPU_THREADS");
+    const char* edgeChunk = PortTunedEnv("KHCOM_PPU_EDGE_CHUNK");
     if (edgeChunk) {
         const int requested = SDL_atoi(edgeChunk);
         if (requested >= 1 && requested <= 16)
@@ -5792,7 +5802,7 @@ static void PpuStart(void) {
     if (n > PPU_MAX_THREADS)
         n = PPU_MAX_THREADS;
     sPpuWorkers = 0;
-    sPpuVerify = SDL_getenv("KHCOM_PPU_VERIFY") != NULL;
+    sPpuVerify = PortTunedEnv("KHCOM_PPU_VERIFY") != NULL;
     if (n < 2 || !(sPpuDone = SDL_CreateSemaphore(0)))
         return;
     for (i = 0; i < n - 1; i++) {
@@ -5868,7 +5878,7 @@ static int PpuRowsIndependent(bool allowMosaic) {
     for (i = 0; i < OamCount(); i++)
         if (sOamTag[i].header) {
             const char* parallel;
-            PORT_ENV_ONCE(parallel, SDL_getenv, "KHCOM_PPU_MENU_HEADER_PARALLEL");
+            PORT_ENV_ONCE(parallel, PortTunedEnv, "KHCOM_PPU_MENU_HEADER_PARALLEL");
             /* Prime the shared once-per-frame band before waking workers. A
                missing source still uses the original serial path. */
             if (parallel && HeaderPick() >= 0)
@@ -6068,7 +6078,7 @@ static bool PpuRasterStatic(void) {
 
 static unsigned PpuStaticMosaicLayers(void) {
     const char* enabled;
-    PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_STATIC_MOSAIC");
+    PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_STATIC_MOSAIC");
     if (!enabled || !PpuAffineMosaicDependent() || !PpuRasterStatic())
         return 0;
     const unsigned display = IO16(0x00);
@@ -6086,9 +6096,9 @@ static unsigned PpuStaticMosaicLayers(void) {
 /* Whether this frame's picture rows wait for the line events (PpuInnerKeep) */
 static int PpuInnerBegin(void) {
     if (sPpuInnerOn < 0) {
-        const char* env = SDL_getenv("KHCOM_PPU_INNER");
-        sFusePictureBottom = SDL_getenv("KHCOM_PPU_FUSE_PICTURE_BOTTOM") != NULL;
-        sFuseAllRows = SDL_getenv("KHCOM_PPU_FUSE_ALL_ROWS") != NULL;
+        const char* env = PortTunedEnv("KHCOM_PPU_INNER");
+        sFusePictureBottom = PortTunedEnv("KHCOM_PPU_FUSE_PICTURE_BOTTOM") != NULL;
+        sFuseAllRows = PortTunedEnv("KHCOM_PPU_FUSE_ALL_ROWS") != NULL;
 #if defined(PORT_SWITCH) || defined(PORT_LINUX64_GUEST) || defined(_WIN32)
         sPpuInnerOn = !env || SDL_atoi(env) != 0;
 #else
@@ -6110,7 +6120,7 @@ static int PpuInnerBegin(void) {
         return 0;
     const unsigned mosaicLayers = PpuStaticMosaicLayers();
     const char* audit;
-    PORT_ENV_ONCE(audit, SDL_getenv, "KHCOM_PPU_MOSAIC_AUDIT");
+    PORT_ENV_ONCE(audit, PortTunedEnv, "KHCOM_PPU_MOSAIC_AUDIT");
     if (audit && PpuAffineMosaicDependent()) {
         PortLog("ppu mosaic: frame %u layers %u MOSAIC %04x DISPSTAT %04x DMA %04x %04x %04x %04x",
                 (unsigned)PortFrameCount(), mosaicLayers, IO16(0x4C), IO16(0x04),
@@ -6170,7 +6180,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sBgPlainRows = 0;
         int arenaFast = sArenaFast;
         sArenaFast = 0;
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
         bool narrowVector = sNeonNarrowCompose;
@@ -6188,7 +6198,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sTextNeon = textNeon;
         sBgPlainRows = bgPlainRows;
         sArenaFast = arenaFast;
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
     }
@@ -6293,7 +6303,7 @@ static void RenderOuterRows(int y0, int y1, int below) {
     const int first = below ? y0 : PPU_MAX(y0, gPortScreen.originY + sTop);
     const int last = below ? PPU_MIN(y1, gPortScreen.originY + sBottom) - 1 : y1 - 1;
     const char* mosaicMargins;
-    PORT_ENV_ONCE(mosaicMargins, SDL_getenv, "KHCOM_PPU_MOSAIC_MARGINS");
+    PORT_ENV_ONCE(mosaicMargins, PortTunedEnv, "KHCOM_PPU_MOSAIC_MARGINS");
     const unsigned mosaicLayers = mosaicMargins && first <= last && !(IO16(0x00) & 0x80)
         ? PpuStaticMosaicLayers() : 0;
     if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent(mosaicLayers != 0)) {
@@ -6356,97 +6366,97 @@ void PortPpuJiminyFade(int* dark, int* white) {
 
 void PortPpuRenderFrame(void) {
     const char* spotlightTileRuns;
-    PORT_ENV_ONCE(spotlightTileRuns, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
+    PORT_ENV_ONCE(spotlightTileRuns, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
     sSpotlightTileRuns = spotlightTileRuns != NULL;
     const char* objSkipClear;
-    PORT_ENV_ONCE(objSkipClear, SDL_getenv, "KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS");
+    PORT_ENV_ONCE(objSkipClear, PortTunedEnv, "KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS");
     sObjSkipClear = objSkipClear != NULL;
     const char* objAffineSpan;
-    PORT_ENV_ONCE(objAffineSpan, SDL_getenv, "KHCOM_PPU_OBJ_AFFINE_SPAN");
+    PORT_ENV_ONCE(objAffineSpan, PortTunedEnv, "KHCOM_PPU_OBJ_AFFINE_SPAN");
     sObjAffineSpan = objAffineSpan != NULL;
     const char* objRowRuns;
-    PORT_ENV_ONCE(objRowRuns, SDL_getenv, "KHCOM_PPU_OBJ_ROW_RUNS");
+    PORT_ENV_ONCE(objRowRuns, PortTunedEnv, "KHCOM_PPU_OBJ_ROW_RUNS");
     sObjRowRuns = objRowRuns != NULL;
     const char* spotlightBg0Runs;
-    PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
+    PORT_ENV_ONCE(spotlightBg0Runs, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
     sSpotlightBg0Runs = spotlightBg0Runs != NULL;
     const char* spotlightTrimMargins;
-    PORT_ENV_ONCE(spotlightTrimMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_TRIM_MARGINS");
+    PORT_ENV_ONCE(spotlightTrimMargins, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_TRIM_MARGINS");
     sSpotlightTrimMargins = spotlightTrimMargins != NULL;
     const char* spotlightOverlayFast;
-    PORT_ENV_ONCE(spotlightOverlayFast, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_OVERLAY_FAST");
+    PORT_ENV_ONCE(spotlightOverlayFast, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_OVERLAY_FAST");
     sSpotlightOverlayFast = spotlightOverlayFast != NULL;
     const char* spotlightBg0Edges;
-    PORT_ENV_ONCE(spotlightBg0Edges, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_EDGES");
+    PORT_ENV_ONCE(spotlightBg0Edges, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_BG0_EDGES");
     sSpotlightBg0Edges = spotlightBg0Edges != NULL;
     const char* spotlightClearRows;
-    PORT_ENV_ONCE(spotlightClearRows, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
+    PORT_ENV_ONCE(spotlightClearRows, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
     sSpotlightClearRows = spotlightClearRows != NULL;
     const char* narrowSideFill;
-    PORT_ENV_ONCE(narrowSideFill, SDL_getenv, "KHCOM_PPU_NARROW_SIDE_FILL");
+    PORT_ENV_ONCE(narrowSideFill, PortTunedEnv, "KHCOM_PPU_NARROW_SIDE_FILL");
     sNarrowSideFill = narrowSideFill != NULL;
     const char* menuBgCopy;
-    PORT_ENV_ONCE(menuBgCopy, SDL_getenv, "KHCOM_PPU_MENU_BG_COPY");
+    PORT_ENV_ONCE(menuBgCopy, PortTunedEnv, "KHCOM_PPU_MENU_BG_COPY");
     sMenuBgCopy = menuBgCopy != NULL;
     const char* spotlightSkipMargins;
-    PORT_ENV_ONCE(spotlightSkipMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS");
+    PORT_ENV_ONCE(spotlightSkipMargins, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS");
     sSpotlightSkipMargins = spotlightSkipMargins != NULL;
     const char* textNeon;
-    PORT_ENV_ONCE(textNeon, SDL_getenv, "KHCOM_PPU_TEXT_NEON");
+    PORT_ENV_ONCE(textNeon, PortTunedEnv, "KHCOM_PPU_TEXT_NEON");
     sTextNeon = textNeon != NULL;
     const char* bgPlainRows;
-    PORT_ENV_ONCE(bgPlainRows, SDL_getenv, "KHCOM_PPU_BG_PLAIN_ROWS");
+    PORT_ENV_ONCE(bgPlainRows, PortTunedEnv, "KHCOM_PPU_BG_PLAIN_ROWS");
     sBgPlainRows = bgPlainRows != NULL;
     const char* arenaFast;
-    PORT_ENV_ONCE(arenaFast, SDL_getenv, "KHCOM_PPU_ARENA_FAST");
+    PORT_ENV_ONCE(arenaFast, PortTunedEnv, "KHCOM_PPU_ARENA_FAST");
     sArenaFast = arenaFast != NULL;
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     const char* neonOpaqueCompose;
-    PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
+    PORT_ENV_ONCE(neonOpaqueCompose, PortTunedEnv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
     sNeonOpaqueCompose = neonOpaqueCompose != NULL;
     const char* neonNarrowCompose;
-    PORT_ENV_ONCE(neonNarrowCompose, SDL_getenv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
+    PORT_ENV_ONCE(neonNarrowCompose, PortTunedEnv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
     sNeonNarrowCompose = neonNarrowCompose != NULL;
     const char* journalCentralVector;
-    PORT_ENV_ONCE(journalCentralVector, SDL_getenv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
+    PORT_ENV_ONCE(journalCentralVector, PortTunedEnv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
     sJournalCentralVector = journalCentralVector != NULL;
     const char* menuBgVector;
-    PORT_ENV_ONCE(menuBgVector, SDL_getenv, "KHCOM_PPU_MENU_BG_VECTOR");
+    PORT_ENV_ONCE(menuBgVector, PortTunedEnv, "KHCOM_PPU_MENU_BG_VECTOR");
     sMenuBgVector = menuBgVector != NULL;
     const char* narrowPlainVector;
-    PORT_ENV_ONCE(narrowPlainVector, SDL_getenv, "KHCOM_PPU_NARROW_PLAIN_VECTOR");
+    PORT_ENV_ONCE(narrowPlainVector, PortTunedEnv, "KHCOM_PPU_NARROW_PLAIN_VECTOR");
     sNarrowPlainVector = narrowPlainVector != NULL;
     const char* widePlainVector;
-    PORT_ENV_ONCE(widePlainVector, SDL_getenv, "KHCOM_PPU_WIDE_PLAIN_VECTOR");
+    PORT_ENV_ONCE(widePlainVector, PortTunedEnv, "KHCOM_PPU_WIDE_PLAIN_VECTOR");
     sWidePlainVector = widePlainVector != NULL;
     const char* narrowSecondVector;
-    PORT_ENV_ONCE(narrowSecondVector, SDL_getenv, "KHCOM_PPU_NARROW_SECOND_VECTOR");
+    PORT_ENV_ONCE(narrowSecondVector, PortTunedEnv, "KHCOM_PPU_NARROW_SECOND_VECTOR");
     sNarrowSecondVector = narrowSecondVector != NULL;
     const char* wideSecondVector;
-    PORT_ENV_ONCE(wideSecondVector, SDL_getenv, "KHCOM_PPU_WIDE_SECOND_VECTOR");
+    PORT_ENV_ONCE(wideSecondVector, PortTunedEnv, "KHCOM_PPU_WIDE_SECOND_VECTOR");
     sWideSecondVector = wideSecondVector != NULL;
     const char* journalPageVector;
-    PORT_ENV_ONCE(journalPageVector, SDL_getenv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
+    PORT_ENV_ONCE(journalPageVector, PortTunedEnv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
     sJournalPageVector = journalPageVector != NULL;
     {
         extern Mode gModeWorldinspect;
         extern Mode* gCurrentMode;
         const char* vectorWorldBackground;
-        PORT_ENV_ONCE(vectorWorldBackground, SDL_getenv, "KHCOM_PPU_WORLDINSPECT_BACKGROUND_VECTOR");
+        PORT_ENV_ONCE(vectorWorldBackground, PortTunedEnv, "KHCOM_PPU_WORLDINSPECT_BACKGROUND_VECTOR");
         sWorldInspectBgVector = vectorWorldBackground && gCurrentMode == &gModeWorldinspect;
         extern Mode gModeMapinspect;
         const char* vectorMapInspect;
-        PORT_ENV_ONCE(vectorMapInspect, SDL_getenv, "KHCOM_PPU_MAPINSPECT_OPAQUE_VECTOR");
+        PORT_ENV_ONCE(vectorMapInspect, PortTunedEnv, "KHCOM_PPU_MAPINSPECT_OPAQUE_VECTOR");
         sMapInspectOpaqueVector = vectorMapInspect && gCurrentMode == &gModeMapinspect;
     }
     const char* neonScreenCompose;
-    PORT_ENV_ONCE(neonScreenCompose, SDL_getenv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
+    PORT_ENV_ONCE(neonScreenCompose, PortTunedEnv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
     sNeonScreenCompose = neonScreenCompose != NULL;
     const char* neonEffectCompose;
-    PORT_ENV_ONCE(neonEffectCompose, SDL_getenv, "KHCOM_PPU_NEON_EFFECT_COMPOSE");
+    PORT_ENV_ONCE(neonEffectCompose, PortTunedEnv, "KHCOM_PPU_NEON_EFFECT_COMPOSE");
     sNeonEffectCompose = neonEffectCompose != NULL;
     const char* probeCompose;
-    PORT_ENV_ONCE(probeCompose, SDL_getenv, "KHCOM_PPU_PROBE_COMPOSE");
+    PORT_ENV_ONCE(probeCompose, PortTunedEnv, "KHCOM_PPU_PROBE_COMPOSE");
     sProbeComposeGates = probeCompose && PortFrameCount() % 30 == 0;
     if (sProbeComposeGates)
         memset(sComposeGates, 0, sizeof(sComposeGates));
@@ -6455,9 +6465,9 @@ void PortPpuRenderFrame(void) {
     static int profileRows = -1;
     static unsigned profileFrame = 0;
     if (profileRows < 0) {
-        const char* frame = SDL_getenv("KHCOM_PPU_PROFILE_FRAME");
+        const char* frame = PortTunedEnv("KHCOM_PPU_PROFILE_FRAME");
         profileFrame = frame ? (unsigned)SDL_atoi(frame) : 0;
-        profileRows = SDL_getenv("KHCOM_PPU_ROW_TIMES") != NULL;
+        profileRows = PortTunedEnv("KHCOM_PPU_ROW_TIMES") != NULL;
     }
     const unsigned frame = (unsigned)PortFrameCount();
     const bool profileSample = frame % 30 == 0 ||
@@ -6467,7 +6477,7 @@ void PortPpuRenderFrame(void) {
         memset(sPpuRowTimes, 0, sizeof(sPpuRowTimes));
     uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
     if (profilePhases < 0)
-        profilePhases = SDL_getenv("KHCOM_PPU_PHASES") != NULL;
+        profilePhases = PortTunedEnv("KHCOM_PPU_PHASES") != NULL;
     if (profilePhases && profileSample)
         phaseStart = SDL_GetPerformanceCounter();
     int gy;
@@ -6581,7 +6591,7 @@ void PortPpuRenderFrame(void) {
     if (phaseStart) overlayStart = SDL_GetPerformanceCounter();
     MainHdOver();
     CaptureMenuMarginPixels();
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
     if (sProbeComposeGates) {
         unsigned gates[9] = {0};
         for (int row = 0; row < gPortScreen.height; row++)
@@ -6989,7 +6999,7 @@ static const void* sHeaderKey[3];
    cleared, so HeaderPick is -1 for the whole frame and needs no writes. */
 static int HeaderGone(void) {
     const char* enabled;
-    PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_HEADER_GONE_PARALLEL");
+    PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_HEADER_GONE_PARALLEL");
     return enabled && !sMenuHeaderFrame && sHeaderKey[0];
 }
 
@@ -8086,7 +8096,7 @@ void PortPpuRenderHud(uint32_t* buf) {
     }
 }
 
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
 static uint16_t BgTextVisible16(const uint8_t* bgp, const uint8_t* layer,
                                 const uint16_t* obj, int priority, int bg) {
     const uint8x16_t bp = vld1q_u8(bgp), bl = vld1q_u8(layer);
@@ -8148,7 +8158,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
         int priority, bg, j;
         int order[1024], starts[16], ends[16];
         const char* bucketText;
-        PORT_ENV_ONCE(bucketText, getenv, "KHCOM_PPU_TEXT_BUCKETS");
+        PORT_ENV_ONCE(bucketText, PortTunedEnv, "KHCOM_PPU_TEXT_BUCKETS");
         if (bucketText)
             BuildBgTextOrder(hud, order, starts, ends);
         for (priority = 3; priority >= 0; priority--) for (bg = 3; bg >= 0; bg--)
@@ -8179,7 +8189,7 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                 }
                 {
                     const char* skipHidden;
-                    PORT_ENV_ONCE(skipHidden, getenv, "KHCOM_PPU_SKIP_HIDDEN_TEXT");
+                    PORT_ENV_ONCE(skipHidden, PortTunedEnv, "KHCOM_PPU_SKIP_HIDDEN_TEXT");
                     /* Hidden glyphs are discarded below. Avoid their 16x16
                        coverage and clip work unless a coverage trace asks
                        to inspect those discarded glyphs. */
@@ -8206,9 +8216,9 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                 out[n].coverage = 0;
                 for (iy=0; iy<16; iy++) {
                     uint16_t visible = 0;
-#ifdef __ARM_NEON
+#ifdef PORT_NEON
                     const char* neonCoverage;
-                    PORT_ENV_ONCE(neonCoverage, getenv, "KHCOM_PPU_NEON_TEXT_COVERAGE");
+                    PORT_ENV_ONCE(neonCoverage, PortTunedEnv, "KHCOM_PPU_NEON_TEXT_COVERAGE");
                     py = glyph->y + iy - 4;
                     px = glyph->x - 4;
                     if (neonCoverage && px >= 0 && px + 16 <= width && py >= 0 && py < height) {
@@ -8360,4 +8370,8 @@ void PortPpuSpriteMask(uint8_t* out) {
         uint8_t bg = sOccBg[i];
         out[i] = sMsgMask[i] ? 2 : (obj != 0xFFFFu && !(obj == 0 && bg == 0) && (obj >> PORT_OAM_PRIORITY_SHIFT) <= bg);
     }
+}
+
+static const char* PortTunedEnv(const char* name) {
+    return PortTuningValue(name, SDL_getenv(name), SDL_getenv("KHCOM_FAST_PATHS"));
 }
