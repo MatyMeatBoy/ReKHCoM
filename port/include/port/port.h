@@ -203,10 +203,12 @@ typedef struct PortConfig {
     int goldPremium;           /* appended, experimental, off: premium cards with a gold frame in the deck menu */
     int hideTitleHint;         /* appended, off: hide SELECT OPTIONS text; SELECT still opens options */
     int lcdGrid;               /* appended, 0..100: source-pixel LCD grid intensity; off by default */
+    int hdHudPack;             /* appended: a handheld's pre-scaled HD HUD pack (KHCOM_HD_HUD_PACK), off by default */
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
     int hdSoftwareH264;        /* prefer Android's software codec for HD AVC videos */
 #endif
 } PortConfig;
+int PortHdHudPackPresent(void); /* port_config.c: a handheld HD HUD pack on the card */
 
 extern PortConfig gPortConfig;
 

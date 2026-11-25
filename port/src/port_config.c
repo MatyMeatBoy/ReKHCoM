@@ -184,6 +184,7 @@ static const Key sKeys[] = {
     { "ps2_fast_text", &gPortConfig.ps2FastText, 0, 1 },
     { "hd_hud", &gPortConfig.hdHud, 0, 1 },
     { "aspect", &gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1 },
+    { "hd_hud_pack", &gPortConfig.hdHudPack, 0, 1 },
     { "assets_seen", &gPortConfig.assetsSeen, -1, (1 << PORT_ASSET_COUNT) - 1 },
 #define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_BINDING_MAX }
     BIND("a", PORT_ACT_A), BIND("b", PORT_ACT_B), BIND("l", PORT_ACT_L), BIND("r", PORT_ACT_R),
@@ -585,6 +586,17 @@ void PortHdMediaInvalidate(void) {
     PortHdMediaAvailabilityReset();
     PortHdMovieInvalidatePaths();
 }
+/* a handheld's HD HUD pack: its launcher says so and the card carries it (the HP ring, made from the player's copy) */
+int PortHdHudPackPresent(void) {
+    static int present = -1;
+    if (present < 0) {
+        FILE* f = SDL_getenv("KHCOM_HD_HUD_PACK") ? fopen(PortConfigPath("hd/sprites/gBtlHpRing.png"), "rb") : NULL;
+        present = f != NULL;
+        if (f) fclose(f);
+    }
+    return present;
+}
+
 int PortAssetPresent(int asset) {
     extern int PortUndubAvailable(void);
     static const char* const files[PORT_ASSET_COUNT][2] = {

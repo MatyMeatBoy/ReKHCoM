@@ -75,9 +75,8 @@ void PortHdSpritesWorldFallback(int fallback) { sWorldBlendFallback = fallback; 
 int PortHdHudPack(void);
 static int HudPack(void) { return PortHdHudPack(); }
 int PortHdHudPack(void) {
-    static int on = -1;
-    if (on < 0) on = SDL_getenv("KHCOM_HD_HUD_PACK") != NULL;
-    return on;
+    extern int PortHdHudPackPresent(void);
+    return gPortConfig.hdHudPack && PortHdHudPackPresent(); /* Options > HD HUD, off by default */
 }
 #define HD_HUD_ON (gPortConfig.hdCards || HudPack())
 
