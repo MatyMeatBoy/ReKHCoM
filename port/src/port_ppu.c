@@ -4315,7 +4315,7 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         return;
     }
     /* Colour effects and semi-transparent sprites (battles). */
-    if (!journalEnd && sNeonEffectCompose && w == 320 && !sLutMode && !scene102Fill &&
+    if (!journalEnd && sNeonEffectCompose && w >= 8 && !(w & 7) && w <= PORT_MAX_W && !sLutMode && !scene102Fill &&
         !(dispcnt & 0xE000) && !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture &&
         !sWorldBlendActive && !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
         (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
