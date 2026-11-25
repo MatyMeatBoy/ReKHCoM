@@ -2515,16 +2515,19 @@ static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int wi
         sOverlayScale < 2.66f || sOverlayScale > 2.67f)
         return false;
 #define ROW_CLEAR(r) ({ const uint32_t* row_ = overlay + (size_t)(r) * width; int c_ = 0;                         while (c_ < width && !(row_[c_] >> 24)) c_++; c_ == width; })
+    /* a band is a run of at least 8 drawn rows touching the top (or the bottom) of the screen */
     for (r = 0; r < GBA_SCREEN_H / 2 && a < 0; r++) {
-        if (!ROW_CLEAR(r)) seen = 1;
+        if (!ROW_CLEAR(r)) seen++;
         else if (seen) a = r;
+        else if (r > 4) break;
     }
     for (r = GBA_SCREEN_H - 1, seen = 0; r >= GBA_SCREEN_H / 2 && f < 0; r--) {
-        if (!ROW_CLEAR(r)) seen = 1;
+        if (!ROW_CLEAR(r)) seen++;
         else if (seen) f = r + 1;
+        else if (r < GBA_SCREEN_H - 5) break;
     }
 #undef ROW_CLEAR
-    if (a <= 0 || f <= a || f >= GBA_SCREEN_H)
+    if (a < 8 || f <= a || f > GBA_SCREEN_H - 8)
         return false;
     {
         const int top = (int)od->y, below = outH - (top + (int)od->h);
