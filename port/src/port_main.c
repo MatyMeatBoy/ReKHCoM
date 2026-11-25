@@ -1028,7 +1028,15 @@ static void DrawJournalFooterBar(const SDL_FRect* src, const SDL_FRect* dst, int
     if (!bar || row >= 16) return;
     const uint32_t edge = column[row * gPortScreen.width] & 0xFFFFFFu;
     const float scale = dst->h / src->h, height = dst->y + row * scale;
-    const SDL_FRect line = { 0, (float)(int)(h - height - scale), (float)w, scale };
+    SDL_FRect line = { 0, (float)(int)(h - height - scale), (float)w, scale };
+    /* The page already ends on that bright line left of the book: carry the
+       same line across, over the book, instead of a second one below it. */
+    for (int r = (int)src->h - 1; r >= (int)src->h - 20; r--)
+        if ((column[r * gPortScreen.width - 200] & 0xFFFFFFu) == edge) {
+            line.y = SDL_floorf(dst->y + r * scale);
+            line.h = SDL_ceilf(dst->y + (r + 1) * scale) - line.y;
+            break;
+        }
     const SDL_FRect fill = { 0, line.y + line.h, (float)w, h - line.y - line.h };
     SDL_SetRenderDrawColor(sRenderer, (edge >> 16) & 255, (edge >> 8) & 255, edge & 255, 255);
     SDL_RenderFillRect(sRenderer, &line);
