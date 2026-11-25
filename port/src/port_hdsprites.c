@@ -70,11 +70,22 @@ static int sWorldBlendFallback;
 
 void PortHdSpritesWorldFallback(int fallback) { sWorldBlendFallback = fallback; }
 
+/* KHCOM_HD_HUD_PACK (handhelds): only the battle HUD's HD parts (group 3), pre-scaled for the panel, without the
+   rest of HD cards (their world light, menu cards and journal paper cost frames there). */
+int PortHdHudPack(void);
+static int HudPack(void) { return PortHdHudPack(); }
+int PortHdHudPack(void) {
+    static int on = -1;
+    if (on < 0) on = SDL_getenv("KHCOM_HD_HUD_PACK") != NULL;
+    return on;
+}
+#define HD_HUD_ON (gPortConfig.hdCards || HudPack())
+
 static int GroupOn(int group) {
     switch (group) {
     case 1: return gPortConfig.hdCards;
     case 2: return gPortConfig.hdTitle;
-    case 3: return gPortConfig.hdCards; /* the battle HUD's faces and words go with the cards */
+    case 3: return HD_HUD_ON; /* the battle HUD's faces and words go with the cards */
     case 4: return gPortConfig.hdCards; /* the world select's worlds */
     case 5: return gPortConfig.hdCards; /* the menus' title banners, in Re:CoM's lettering */
     case 6: return gPortConfig.hdCards; /* the menus' small cards: Re:CoM's picture in the window, the cartridge's frame */
@@ -292,7 +303,7 @@ static int SpriteReady(int i) {
 int PortHdSpriteFind(const void* tiles, const void* frame) {
     int i, shared = -1;
     PortHdNormalizeEuBossStock(&tiles, &frame);
-    if (!tiles || (!gPortConfig.hdCards && !gPortConfig.hdTitle))
+    if (!tiles || (!HD_HUD_ON && !gPortConfig.hdTitle))
         return 0;
     for (i = 0; i < HD_SPRITE_COUNT; i++) {
         const HdSpriteDef* d = &kHdSprites[i];
@@ -1026,7 +1037,7 @@ static int RingLoad(void) {
 int PortHdHpRing(const void* faceTiles, const void* faceFrame, int ratio) {
     char file[PORT_HD_PATH_MAX];
     FILE* f;
-    if (!gPortConfig.hdCards || !PortHdSpriteFind(faceTiles, faceFrame))
+    if (!HD_HUD_ON || !PortHdSpriteFind(faceTiles, faceFrame))
         return 0;
     if (!sRingFull) {
         if (sRingTried)
@@ -1043,7 +1054,7 @@ int PortHdHpRing(const void* faceTiles, const void* faceFrame, int ratio) {
 /* GBA pixels the battle EXP line (btl_exp.c) goes down when the HD HP ring is in use: the ring reaches lower than the
    cartridge's gauge and covered the line's start ("SIG. NIVEL", user report 27/10). */
 int PortHdHudExpDrop(void) {
-    return gPortConfig.hdCards && sRingFull ? 7 : 0;
+    return HD_HUD_ON && sRingFull ? 7 : 0;
 }
 
 /* GBA x of the opponent's sleight name (card_friend_card.c draws it at 120, top centre). On the wide HUD canvas the
@@ -1055,7 +1066,7 @@ int PortHdHudExpDrop(void) {
 int PortHdHudStockNameX(int x, const uint16_t* frame, int stockCount) {
     static const uint8_t width[3][4] = { { 8, 16, 32, 64 }, { 16, 32, 32, 64 }, { 8, 8, 16, 32 } };
     int i, right = 0, stack, half = (gPortHudW - GBA_SCREEN_W) / 2;
-    if (!gPortConfig.hdCards || !frame || stockCount < 1 || stockCount > 3 || half <= 0)
+    if (!HD_HUD_ON || !frame || stockCount < 1 || stockCount > 3 || half <= 0)
         return x;
     for (i = 0; i < frame[0]; i++) {
         const uint16_t* p = frame + 1 + i * 3;

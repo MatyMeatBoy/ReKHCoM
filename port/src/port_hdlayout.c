@@ -111,9 +111,10 @@ int PortHdLayoutReady(int layout, int texture) {
     return sTextures[texture].tex != NULL;
 }
 
+int PortHdHudPack(void); /* port_hdsprites.c: the HUD-only HD pack */
 void PortHdLayoutPrepare(SDL_Renderer* renderer) {
     int i;
-    if (!gPortConfig.hdCards)
+    if (!gPortConfig.hdCards && !PortHdHudPack())
         return;
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++)
         if (sTextures[i].requested)
@@ -481,7 +482,7 @@ int PortHdGauge(int hp, int maxHp, int riku) {
     int msPerFrame = 17;
     int i, bodyReady, faceReady;
     static const int groups[] = { 7, 8, 9, 10, 13, 14, 15 };
-    if (!gPortConfig.hdCards)
+    if (!gPortConfig.hdCards && !PortHdHudPack())
         return 0;
     /* Structurally valid imports may still lack this gauge's animations. */
     for (i = 0; i < (int)(sizeof(groups) / sizeof(groups[0])); i++)
@@ -808,7 +809,7 @@ static struct {
 
 int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
     int i;
-    if (!gPortConfig.hdCards)
+    if (!gPortConfig.hdCards && !PortHdHudPack())
         return 0;
     for (i = 0; i < 7; i++)
         if (!PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, kEnemyPlaceGroup[i]))
@@ -855,7 +856,7 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
  * With an imported HP bar active, anchor9 puts the full plate below its
  * y12 lower edge; otherwise preserve the cartridge's authored anchor4. */
 int PortHdStockValueTop(int opponent) {
-    if (!gPortConfig.hdCards) return 0;
+    if (!gPortConfig.hdCards && !PortHdHudPack()) return 0;
     return opponent ? (sEnemy.active && sEnemy.frame == (int)PortFrameCount() ? 9 : 0)
                     : (sGauge.active && sGauge.frame == (int)PortFrameCount() ? 9 : 0);
 }
