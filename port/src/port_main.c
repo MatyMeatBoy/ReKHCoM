@@ -234,7 +234,7 @@ void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
-int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* source, int stride, const uint8_t* hiddenRows);
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
@@ -2188,6 +2188,22 @@ static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, cons
     return SDL_RenderTexture(sRenderer, texture, NULL, dest);
 }
 
+#ifdef PORT_LINUX
+/* Rows of the 240x160 screen layer with no transparency at all: the layer
+ * replaces whatever lies under them. Returns how many there are. */
+static int OpaqueOverlayRows(const uint32_t* overlay, uint8_t hidden[GBA_SCREEN_H]) {
+    int count = 0;
+    for (int y = 0; y < GBA_SCREEN_H; y++, overlay += GBA_SCREEN_W) {
+        int x = 0;
+        while (x < GBA_SCREEN_W && (overlay[x] >> 24) == 255)
+            x++;
+        hidden[y] = x == GBA_SCREEN_W;
+        count += hidden[y];
+    }
+    return count;
+}
+#endif
+
 static void Present(int paced) {
 #ifdef PORT_LINUX
     PortFbWaitCopy();
@@ -2400,10 +2416,25 @@ static void Present(int paced) {
                                                                                  : SDL_SCALEMODE_PIXELART);
         bool drewMenuFit = false;
 #ifdef PORT_LINUX
+        static uint8_t hiddenRows[GBA_SCREEN_H];
+        const uint8_t* covered = NULL;
+        if (menuFit && PortPpuOverlayActive() && gPortOverlayW == GBA_SCREEN_W &&
+            sOverlayScale > 2.66f && sOverlayScale < 2.67f && !PortPpuScreenAdditive()) {
+            /* The screen layer goes over the same rectangle with the same
+               row sampling, through the direct fractional blend. */
+            const char *skipCovered, *directOverlay;
+            PORT_ENV_ONCE(skipCovered, SDL_getenv, "KHCOM_GA36_MENU_FIT_SKIP_COVERED");
+            PORT_ENV_ONCE(directOverlay, SDL_getenv, "KHCOM_FBDEV_FRACTIONAL_OVERLAY");
+            if (skipCovered && directOverlay && OpaqueOverlayRows(gPortOverlay, hiddenRows)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: menu fit covered rows skipped"); logged = true; }
+                covered = hiddenRows;
+            }
+        }
         drewMenuFit = menuFit && !journalShown && src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
             dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f) &&
             PortFbDrawMenuFit(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
-                              gPortScreen.width);
+                              gPortScreen.width, covered);
 #endif
         if (deferMenuUpload && !drewMenuFit)
             SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);

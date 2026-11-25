@@ -170,7 +170,7 @@ bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int str
 
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
-static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int stride, int outY, int outH, const SDL_Rect* cover) {
+static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int stride, int outY, int outH, const SDL_Rect* cover, const uint8_t* hiddenRows) {
 #ifdef __ARM_NEON
     SDL_Rect viewport;
     float scaleX, scaleY;
@@ -198,6 +198,8 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
         for (int y = 0; y < outH; y++, posY += stepY) {
             const unsigned row = posY >> 16;
             uint32_t* dest = (uint32_t*)(pixels + (size_t)y * pitch);
+            if (hiddenRows && hiddenRows[row])
+                continue;
             if (row == previous) {
                 memcpy(dest, (uint8_t*)dest - pitch, 640 * sizeof(*dest));
             } else {
@@ -261,24 +263,24 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
     }
     return 1;
 #else
-    (void)renderer; (void)src; (void)w; (void)h; (void)stride; (void)outY; (void)outH; (void)cover;
+    (void)renderer; (void)src; (void)w; (void)h; (void)stride; (void)outY; (void)outH; (void)cover; (void)hiddenRows;
     return 0;
 #endif
 }
 
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover) {
-    return sRenderSurface && sRenderSurface->h == outH && DrawNearest2x(renderer, src, w, h, w, 0, outH, cover);
+    return sRenderSurface && sRenderSurface->h == outH && DrawNearest2x(renderer, src, w, h, w, 0, outH, cover, NULL);
 }
 
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest) {
     return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
            dest->x == 0 && dest->w == 640 &&
-           DrawNearest2x(renderer, src, w, h, w, (int)dest->y, (int)dest->h, NULL);
+           DrawNearest2x(renderer, src, w, h, w, (int)dest->y, (int)dest->h, NULL, NULL);
 }
 
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
     int drawn = sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
-                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL);
+                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL, NULL);
     if (drawn) {
         static bool logged;
         if (!logged) { PortLog("fbdev: world inspect fit active"); logged = true; }
@@ -287,9 +289,9 @@ int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int s
 }
 
 /* Any GBA-size menu picture fitted to the 640x480 panel's width. */
-int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
+int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* src, int stride, const uint8_t* hiddenRows) {
     int drawn = sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
-                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL);
+                DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL, hiddenRows);
     if (drawn) {
         static bool logged;
         if (!logged) { PortLog("fbdev: menu fit active"); logged = true; }
@@ -299,7 +301,7 @@ int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
 
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* src, int stride) {
     return sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
-           DrawNearest2x(renderer, src, 240, 160, stride, 8, 426, NULL);
+           DrawNearest2x(renderer, src, 240, 160, stride, 8, 426, NULL, NULL);
 }
 
 #ifdef __ARM_NEON
