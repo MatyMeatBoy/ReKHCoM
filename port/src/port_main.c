@@ -915,6 +915,24 @@ static uint32_t MenuEdgeColor(int sx, int sy) {
     return count > GBA_SCREEN_W / 2 ? color : 0;
 }
 
+/* The margin colour of one edge. On the handheld's 4:3 panel a line sliding
+   past the edge during a menu's entry must not flash across the whole margin:
+   take what most of the outer rows agree on. */
+static uint32_t MenuMarginColor(int sx, int sy, int inward) {
+    static int steady = -1;
+    if (steady < 0) steady = SDL_getenv("KHCOM_GA36_MENU_43_EXTEND") && PortFixed480p();
+    if (!steady) return MenuEdgeColor(sx, sy);
+    uint32_t colors[6];
+    for (int i = 0; i < 6; i++) colors[i] = MenuEdgeColor(sx, sy + i * inward);
+    int best = 0, votes = 0;
+    for (int i = 0; i < 6; i++) {
+        int n = 0;
+        for (int k = 0; k < 6; k++) n += colors[k] == colors[i];
+        if (colors[i] && n > votes) { votes = n; best = i; }
+    }
+    return colors[best];
+}
+
 /* Non-wide GBA menus own only their 240x160 artwork.  Carry each authored
    edge colour into 4:3's unused vertical rows without touching game pixels. */
 static void FillEnhancedVerticalColorMargins(void) {
@@ -924,8 +942,8 @@ static void FillEnhancedVerticalColorMargins(void) {
     if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
         gPortScreen.wide || top <= 0 || bottom >= gPortScreen.height)
         return;
-    colors[0] = MenuEdgeColor(gPortScreen.originX, top);
-    colors[1] = MenuEdgeColor(gPortScreen.originX, bottom - 1);
+    colors[0] = MenuMarginColor(gPortScreen.originX, top, 1);
+    colors[1] = MenuMarginColor(gPortScreen.originX, bottom - 1, -1);
     for (y = 0; y < top; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[0];
     for (y = bottom; y < gPortScreen.height; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[1];
 }
@@ -947,28 +965,24 @@ static int Menu43Extend(void) {
 
 static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
-    /* The plainest of the last rows: an icon or a binder ring touching the very
-       edge must not turn into a stripe down the margin. */
-    int best = (int)(src->y + src->h) - 1, fewest = 1 << 30;
-    for (int y = best, n = 0; n < 8 && y >= 0; y--, n++) {
-        const uint32_t* pixels = sComposite + y * gPortScreen.width + (int)src->x;
-        int changes = 0;
-        for (int x = 1; x < (int)src->w; x++) changes += pixels[x] != pixels[x - 1];
-        if (changes < fewest) { fewest = changes; best = y; }
-    }
-    const uint32_t* pixels = sComposite + best * gPortScreen.width + (int)src->x;
-    const int count = (int)src->w;
+    const int count = (int)src->w, last = (int)(src->y + src->h) - 1;
     const float step = dst->w / src->w;
-    if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W) return;
+    if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W || last < 7) return;
+    /* Column by column, the colour most of the last eight rows agree on: panels
+       and pages carry on, while a sliding line, an icon's tip or a binder ring
+       touching the very edge never turns into a stripe down the margin. */
     static uint32_t line[PORT_MAX_W];
-    memcpy(line, pixels, count * sizeof(*line));
-    /* one or two odd pixels between equal neighbours are an icon's tip */
-    for (int x = 1; x < count - 1; x++)
-        for (int n = 1; n <= 2 && x + n < count; n++)
-            if (line[x] != line[x - 1] && line[x + n] == line[x - 1]) {
-                for (int k = 0; k < n; k++) line[x + k] = line[x - 1];
-                break;
-            }
+    for (int x = 0; x < count; x++) {
+        uint32_t column[8];
+        for (int i = 0; i < 8; i++) column[i] = sComposite[(last - i) * gPortScreen.width + (int)src->x + x];
+        int best = 0, votes = 0;
+        for (int i = 0; i < 8 && votes <= 4; i++) {
+            int n = 0;
+            for (int k = 0; k < 8; k++) n += column[k] == column[i];
+            if (n > votes) { votes = n; best = i; }
+        }
+        line[x] = column[best];
+    }
     for (int x = 0, end; x < count; x = end) {
         for (end = x + 1; end < count && line[end] == line[x]; end++) {}
         const SDL_FRect band = { dst->x + x * step, bottom, (end - x) * step, h - bottom };
@@ -1021,8 +1035,8 @@ static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* d
     if (sSideStyle == 1) {
         colors[0] = colors[1] = ColorPaperBackdrop(sx, sy);
     } else {
-        colors[0] = MenuEdgeColor(sx, sy);
-        colors[1] = MenuEdgeColor(sx, sy + GBA_SCREEN_H - 1);
+        colors[0] = MenuMarginColor(sx, sy, 1);
+        colors[1] = MenuMarginColor(sx, sy + GBA_SCREEN_H - 1, -1);
     }
     for (int i = 0; i < 2; i++) {
         const uint32_t color = colors[i];
