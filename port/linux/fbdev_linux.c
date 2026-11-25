@@ -18,6 +18,7 @@
 #include <unistd.h>
 #ifdef __ARM_NEON
 #include <arm_neon.h>
+#include "fb_fit_row.h"
 #endif
 
 #include "port/port.h"
@@ -195,6 +196,28 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
         const unsigned stepY = (160u << 16) / 426u;
         unsigned posY = stepY / 2;
         unsigned previous = 160;
+        static int fitNeon = -1;
+        if (fitNeon < 0) {
+            fitNeon = SDL_getenv("KHCOM_FBDEV_FIT_NEON") != NULL;
+            if (fitNeon) PortLog("fbdev: NEON fit rows active");
+        }
+        if (fitNeon) {
+            /* Each source row feeds two or three output rows: store them
+             * together instead of reading the first one back. */
+            for (int y = 0; y < outH;) {
+                const unsigned row = posY >> 16;
+                uint32_t* rows[3];
+                int count = 0;
+                do {
+                    rows[count++] = (uint32_t*)(pixels + (size_t)y * pitch);
+                    y++;
+                    posY += stepY;
+                } while (count < 3 && y < outH && (posY >> 16) == row);
+                if (!(hiddenRows && hiddenRows[row]))
+                    FbFitRow240To640(rows, count, src + (size_t)row * stride);
+            }
+            return 1;
+        }
         for (int y = 0; y < outH; y++, posY += stepY) {
             const unsigned row = posY >> 16;
             uint32_t* dest = (uint32_t*)(pixels + (size_t)y * pitch);
