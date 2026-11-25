@@ -137,6 +137,8 @@ SDL_Renderer* PortFbCreateRenderer(void) {
     return renderer;
 }
 
+bool PortFbBeginGlyphBatch(SDL_Renderer* renderer);
+
 /* The 720x480 picture is centred on the 640x480 handheld panel. */
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride) {
     SDL_Rect viewport;
@@ -331,6 +333,26 @@ int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* src, int s
         if (!logged) { PortLog("fbdev: world inspect fit active"); logged = true; }
     }
     return drawn;
+}
+
+/* The 4:3 world map at exactly 2x, centred: 480x320 at (80, 80). */
+int PortFbDrawAllmap2x(SDL_Renderer* renderer, const uint32_t* src, int stride) {
+#ifdef __ARM_NEON
+    if (!PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return 0;
+    const int pitch = sRenderSurface->pitch;
+    uint8_t* row = (uint8_t*)sRenderSurface->pixels + 80 * pitch + 80 * sizeof(uint32_t);
+    for (int y = 0; y < 160; y++, src += stride, row += 2 * pitch) {
+        FbDoubleRow((uint32_t*)row, src, 240);
+        memcpy(row + pitch, row, 480 * sizeof(uint32_t));
+    }
+    static bool logged;
+    if (!logged) { PortLog("fbdev: allmap direct 2x active"); logged = true; }
+    return 1;
+#else
+    (void)renderer; (void)src; (void)stride;
+    return 0;
+#endif
 }
 
 /* Any GBA-size menu picture fitted to the 640x480 panel's width. */

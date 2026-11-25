@@ -288,6 +288,7 @@ bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int str
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* source, int stride, const uint8_t* hiddenRows);
+int PortFbDrawAllmap2x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
 int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
 bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
@@ -2520,6 +2521,20 @@ static void Present(int paced) {
     }
 #endif
     sJournalUploadPending = journalLight;
+    bool allmapDirect = false;
+#ifdef PORT_LINUX
+    {
+        const char* direct;
+        PORT_ENV_ONCE(direct, SDL_getenv, "KHCOM_FBDEV_ALLMAP_DIRECT");
+        allmapDirect = direct && AllmapScale() == 2.0f && !menuCanvas && !borderOn && !journalActive &&
+            sSideStyle != 10 && (sFitScale > 0 || !gPortScreen.wide) && gPortConfig.viewMode != PORT_VIEW_CRT &&
+            gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+            (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height;
+    }
+#endif
     bool deferMenuUpload = false;
 #ifdef PORT_LINUX
     if (menuFit && !nativeMainWorld) {
@@ -2555,6 +2570,10 @@ static void Present(int paced) {
             /* The opaque picture replaces rows 26..451: only the bands need black. */
             const SDL_FRect bands[2] = {{0, 0, 640, 26}, {0, 452, 640, 28}};
             SDL_RenderFillRects(sRenderer, bands, 2);
+        } else if (allmapDirect) {
+            /* The opaque picture replaces its own rectangle. */
+            const SDL_FRect around[4] = {{0, 0, 640, 80}, {0, 400, 640, 80}, {0, 80, 80, 320}, {560, 80, 80, 320}};
+            SDL_RenderFillRects(sRenderer, around, 4);
         } else {
             SDL_RenderClear(sRenderer);
         }
@@ -2652,6 +2671,10 @@ static void Present(int paced) {
                   dst.h == 160.0f * (640.0f / 240.0f) &&
                   gPortScreen.width == 320 && gPortScreen.height >= 200 &&
                   PortFbDrawWorldInspectFit(sRenderer, sComposite + 40 * 320 + 40, 320)) &&
+                !(allmapDirect && src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+                  dst.x == 80 && dst.y == 80 && dst.w == 480 && dst.h == 320 &&
+                  PortFbDrawAllmap2x(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                                     gPortScreen.width)) &&
                 !(PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
                   dst.x == -40 && dst.y == 0 && dst.w == 720 && dst.h == 480 &&
