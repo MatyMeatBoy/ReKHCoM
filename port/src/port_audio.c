@@ -20,6 +20,7 @@ static int AudioLog(void) {
     return v != NULL;
 }
 #include "port/port_audio.h"
+#include "port/port_audio_rate.h"
 #include "port/port_state.h"
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
 #include "port/port_audio_continuity.h"
@@ -36,6 +37,7 @@ static PortAudioContinuity sContinuity;
 static int sStreamRate;
 static int sStreamPriming = 1;
 static float sQueuedAvg = -1.0f;
+static int sRefilling;
 static float sOut[FRAME_SAMPLES_MAX * 2];
 static float sPsgL[FRAME_SAMPLES_MAX], sPsgR[FRAME_SAMPLES_MAX];
 static float sDsAR[FRAME_SAMPLES_MAX];
@@ -466,6 +468,7 @@ void PortAudioReset(void) {
     }
     sStreamPriming = 1;
     sQueuedAvg = -1.0f;
+    sRefilling = 0;
 }
 
 /* An HD movie takes the sound over (port_hdmovie.c): the game's output and the HD track fade out in 150 ms, so
@@ -557,13 +560,14 @@ static void Queue(int n, int rate) {
         sQueuedAvg += (queued - sQueuedAvg) * 0.02f;
         /* Production already matches consumption (59.7275 frames x samples per
            frame = sample rate), so normally play at exactly 1.0. Only a real
-           drift outside the dead band is corrected, by at most 0.15%. */
-        if (sQueuedAvg < target * 0.5f)
-            ratio = 0.9985f;
-        else if (sQueuedAvg > target * 3.0f)
-            ratio = 1.0015f;
-        else
-            ratio = 1.0f;
+           drift outside the dead band is corrected, by at most 0.15%.
+           KHCOM_AUDIO_REFILL also rebuilds, at most 0.3% slower, the level a
+           stretch of late frames took away (nothing else brings it back). */
+        {
+            const char* refill;
+            PORT_ENV_ONCE(refill, SDL_getenv, "KHCOM_AUDIO_REFILL");
+            ratio = PortAudioQueueRatio(sQueuedAvg, target, refill != NULL, &sRefilling);
+        }
         SDL_SetAudioStreamFrequencyRatio(sStream, ratio);
         if (AudioLog()) {
             static int sTick;
