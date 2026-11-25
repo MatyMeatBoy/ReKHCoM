@@ -31,6 +31,11 @@ static void SecureZeroMemory(void* p, size_t n) {
 #include "rc_api_user.h"
 #include "rc_api_runtime.h"
 
+/* Linux handhelds and desktops talk to the server themselves (ra_https_linux.inc); Android stays offline. */
+#if !defined(_WIN32) && defined(PORT_LINUX) && !defined(__ANDROID__)
+#define RA_LINUX_ONLINE 1
+#endif
+
 typedef struct KhRaJob {
     struct KhRaJob* next;
     char *url, *post, *content_type, *body;
@@ -57,11 +62,30 @@ struct KhRa {
     int account_progress_available;
     const uint32_t* official; /* KhRaStartOfficial: the only achievements evaluated */
     uint32_t official_count;
+    /* sign-in from the card (RA_ACCOUNT_FILE) and retries while there is no network */
+    char password[256];
+    int account_file, retry;
+    uint64_t next_try;
 };
 
 static void SetStatus(KhRa* ra, const char* text, int error) {
     snprintf(ra->status, sizeof(ra->status), "%s", text ? text : "Unknown error");
     ra->error = error;
+#ifdef RA_LINUX_ONLINE
+    {
+        /* what the player can read on the card (no secrets: the account name at most) */
+        char path[1200];
+        FILE* file;
+        snprintf(path, sizeof(path), "%s/retroachievements_estado.txt", ra->directory);
+        if ((file = fopen(path, "w"))) {
+            time_t now = time(NULL);
+            fprintf(file, "%s%s%s\n%s\n", ra->username[0] ? "Cuenta: " : "", ra->username,
+                    ra->username[0] ? "\n" : "", ra->status);
+            fprintf(file, "Hora de la consola: %s", ctime(&now));
+            fclose(file);
+        }
+    }
+#endif
 }
 
 #ifdef _WIN32
@@ -295,12 +319,20 @@ static void ReadToken(KhRa* ra) {
 #endif
 }
 
+#ifdef RA_LINUX_ONLINE
+#include "ra_https_linux.inc"
+#endif
+
 /* Workers only fill their response. rcheevos callbacks are dispatched by Pump
  * on the owning thread, so UI access and frame evaluation cannot race. */
 static int HttpWorker(void* userdata) {
     KhRaJob* job = (KhRaJob*)userdata;
 #ifndef _WIN32
+#ifdef RA_LINUX_ONLINE
+    RaHttpsLinux(job);
+#else
     job->status = RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR; /* no online requests here (see the top) */
+#endif
     SDL_SetAtomicInt(&job->done, 1);
     return 0;
 #else
@@ -414,112 +446,219 @@ int KhRaFetchImage(KhRa* ra, const char* url, KhRaImageCallback callback, void* 
     return 1;
 }
 
-
-/* Unlocks made while signed in but without a connection (a phone in the underground, 25/10): rc_client retries them
- * only while the game runs. Each one is also kept in retroachievements_pending.txt ("id unix-time" per line, the
- * account's name first) until the account shows it; the next start with a connection sends the rest with their
- * seconds since the unlock, as RetroAchievements takes a client's queued offline unlocks. Unlocks earned with no
- * account signed in never go here (RetroAchievements' rules). */
-#define RA_PENDING "retroachievements_pending.txt"
-#define RA_PENDING_MAX 128
-typedef struct { uint32_t id; long long when; } RaPendingEntry;
-
-static int PendingRead(KhRa* ra, RaPendingEntry* out, char* user, size_t userSize) {
-    FILE* f = DataFile(ra, RA_PENDING, RA_MODE("r"));
-    char line[160];
-    int n = 0;
-    user[0] = 0;
-    if (!f) return 0;
-    if (fgets(line, sizeof(line), f)) {
-        line[strcspn(line, "\r\n")] = 0;
-        snprintf(user, userSize, "%s", line);
-    }
-    while (n < RA_PENDING_MAX && fgets(line, sizeof(line), f)) {
-        unsigned id; long long when;
-        if (sscanf(line, "%u %lld", &id, &when) == 2 && id) { out[n].id = id; out[n].when = when; n++; }
-    }
-    fclose(f);
-    return n;
-}
-
-static void PendingWrite(KhRa* ra, const RaPendingEntry* e, int n, const char* user) {
-    FILE* f = DataFile(ra, RA_PENDING, RA_MODE("w"));
-    int i;
-    if (!f) return;
-    if (n > 0) {
-        fprintf(f, "%s\n", user);
-        for (i = 0; i < n; i++) fprintf(f, "%u %lld\n", e[i].id, e[i].when);
-    }
-    fclose(f);
-}
-
-static void PendingAdd(KhRa* ra, uint32_t id) {
-    RaPendingEntry e[RA_PENDING_MAX];
-    char user[128];
-    int n = PendingRead(ra, e, user, sizeof(user)), i;
-    const rc_client_user_t* me = rc_client_get_user_info(ra->client);
-    if (!me || !me->username) return;
-    if (n && strcmp(user, me->username) != 0) n = 0; /* another account's queue: not this one's to send */
-    for (i = 0; i < n; i++) if (e[i].id == id) return;
-    if (n == RA_PENDING_MAX) return;
-    e[n].id = id; e[n].when = (long long)time(NULL); n++;
-    PendingWrite(ra, e, n, me->username);
-}
-
-static void PendingDrop(KhRa* ra, uint32_t id) {
-    RaPendingEntry e[RA_PENDING_MAX];
-    char user[128];
-    int n = PendingRead(ra, e, user, sizeof(user)), i, k = 0;
-    for (i = 0; i < n; i++) if (e[i].id != id) e[k++] = e[i];
-    if (k != n) PendingWrite(ra, e, k, user);
-}
-
-typedef struct PendingRequest { KhRa* ra; uint32_t id; } PendingRequest;
-static void PendingAwarded(const rc_api_server_response_t* response, void* userdata) {
-    PendingRequest* request = (PendingRequest*)userdata;
-    rc_api_award_achievement_response_t award;
-    memset(&award, 0, sizeof(award));
-    /* sent (or already on the account): off the queue; a network error leaves it for the next start */
-    if (rc_api_process_award_achievement_server_response(&award, response) == RC_OK &&
-        (award.response.succeeded || award.awarded_achievement_id == request->id))
-        PendingDrop(request->ra, request->id);
-    rc_api_destroy_award_achievement_response(&award);
-    free(request);
-}
-
-/* with the account's unlocks just read: drop what it has, send the rest */
-static void PendingFlush(KhRa* ra) {
-    RaPendingEntry e[RA_PENDING_MAX];
-    char user[128];
-    int n = PendingRead(ra, e, user, sizeof(user)), i, k = 0;
-    const rc_client_user_t* me = rc_client_get_user_info(ra->client);
-    long long now = (long long)time(NULL);
-    if (!n || !me || !me->username || strcmp(user, me->username) != 0 || !ra->hash[0]) return;
-    for (i = 0; i < n; i++) {
-        uint32_t j, have = 0;
-        for (j = 0; j < ra->account_unlock_count; ++j) have |= ra->account_unlocks[j] == e[i].id;
-        if (have) continue;
-        e[k++] = e[i];
-    }
-    PendingWrite(ra, e, k, user);
-    for (i = 0; i < k; i++) {
-        rc_api_award_achievement_request_t params;
-        rc_api_request_t api;
-        PendingRequest* request = (PendingRequest*)calloc(1, sizeof(*request));
-        long long ago = now - e[i].when;
-        if (!request) break;
-        memset(&params, 0, sizeof(params));
-        params.username = me->username; params.api_token = me->token;
-        params.achievement_id = e[i].id; params.hardcore = 0; params.game_hash = ra->hash;
-        params.seconds_since_unlock = ago < 0 ? 0 : ago > 0x7FFFFFFF ? 0x7FFFFFFF : (uint32_t)ago;
-        request->ra = ra; request->id = e[i].id;
-        if (rc_api_init_award_achievement_request(&api, &params) == RC_OK)
-            ServerCall(&api, PendingAwarded, request, ra->client);
-        else free(request);
-        rc_api_destroy_request(&api);
-    }
-}
-
+
+
+/* Unlocks made while signed in but without a connection (a phone in the underground, 25/10): rc_client retries them
+
+ * only while the game runs. Each one is also kept in retroachievements_pending.txt ("id unix-time" per line, the
+
+ * account's name first) until the account shows it; the next start with a connection sends the rest with their
+
+ * seconds since the unlock, as RetroAchievements takes a client's queued offline unlocks. Unlocks earned with no
+
+ * account signed in never go here (RetroAchievements' rules). */
+
+#define RA_PENDING "retroachievements_pending.txt"
+#define RA_ACCOUNT_FILE "retroachievements_cuenta.txt"
+
+#define RA_PENDING_MAX 128
+
+typedef struct { uint32_t id; long long when; } RaPendingEntry;
+
+
+
+static int PendingRead(KhRa* ra, RaPendingEntry* out, char* user, size_t userSize) {
+
+    FILE* f = DataFile(ra, RA_PENDING, RA_MODE("r"));
+
+    char line[160];
+
+    int n = 0;
+
+    user[0] = 0;
+
+    if (!f) return 0;
+
+    if (fgets(line, sizeof(line), f)) {
+
+        line[strcspn(line, "\r\n")] = 0;
+
+        snprintf(user, userSize, "%s", line);
+
+    }
+
+    while (n < RA_PENDING_MAX && fgets(line, sizeof(line), f)) {
+
+        unsigned id; long long when;
+
+        if (sscanf(line, "%u %lld", &id, &when) == 2 && id) { out[n].id = id; out[n].when = when; n++; }
+
+    }
+
+    fclose(f);
+
+    return n;
+
+}
+
+
+
+static void PendingWrite(KhRa* ra, const RaPendingEntry* e, int n, const char* user) {
+
+    FILE* f = DataFile(ra, RA_PENDING, RA_MODE("w"));
+
+    int i;
+
+    if (!f) return;
+
+    if (n > 0) {
+
+        fprintf(f, "%s\n", user);
+
+        for (i = 0; i < n; i++) fprintf(f, "%u %lld\n", e[i].id, e[i].when);
+
+    }
+
+    fclose(f);
+
+}
+
+
+
+static void PendingAdd(KhRa* ra, uint32_t id) {
+
+    RaPendingEntry e[RA_PENDING_MAX];
+
+    char user[128];
+
+    int n = PendingRead(ra, e, user, sizeof(user)), i;
+
+    const rc_client_user_t* me = rc_client_get_user_info(ra->client);
+
+    if (!me || !me->username) return;
+
+    if (n && strcmp(user, me->username) != 0) n = 0; /* another account's queue: not this one's to send */
+
+    for (i = 0; i < n; i++) if (e[i].id == id) return;
+
+    if (n == RA_PENDING_MAX) return;
+
+    e[n].id = id; e[n].when = (long long)time(NULL); n++;
+
+    PendingWrite(ra, e, n, me->username);
+
+}
+
+
+
+static void PendingDrop(KhRa* ra, uint32_t id) {
+
+    RaPendingEntry e[RA_PENDING_MAX];
+
+    char user[128];
+
+    int n = PendingRead(ra, e, user, sizeof(user)), i, k = 0;
+
+    for (i = 0; i < n; i++) if (e[i].id != id) e[k++] = e[i];
+
+    if (k != n) PendingWrite(ra, e, k, user);
+
+}
+
+
+
+typedef struct PendingRequest { KhRa* ra; uint32_t id; } PendingRequest;
+
+static void PendingAwarded(const rc_api_server_response_t* response, void* userdata) {
+
+    PendingRequest* request = (PendingRequest*)userdata;
+
+    rc_api_award_achievement_response_t award;
+
+    memset(&award, 0, sizeof(award));
+
+    /* sent (or already on the account): off the queue; a network error leaves it for the next start */
+
+    if (rc_api_process_award_achievement_server_response(&award, response) == RC_OK &&
+
+        (award.response.succeeded || award.awarded_achievement_id == request->id))
+
+        PendingDrop(request->ra, request->id);
+
+    rc_api_destroy_award_achievement_response(&award);
+
+    free(request);
+
+}
+
+
+
+/* with the account's unlocks just read: drop what it has, send the rest */
+
+static void PendingFlush(KhRa* ra) {
+
+    RaPendingEntry e[RA_PENDING_MAX];
+
+    char user[128];
+
+    int n = PendingRead(ra, e, user, sizeof(user)), i, k = 0;
+
+    const rc_client_user_t* me = rc_client_get_user_info(ra->client);
+
+    long long now = (long long)time(NULL);
+
+    if (!n || !me || !me->username || strcmp(user, me->username) != 0 || !ra->hash[0]) return;
+
+    for (i = 0; i < n; i++) {
+
+        uint32_t j, have = 0;
+
+        for (j = 0; j < ra->account_unlock_count; ++j) have |= ra->account_unlocks[j] == e[i].id;
+
+        if (have) continue;
+
+        e[k++] = e[i];
+
+    }
+
+    PendingWrite(ra, e, k, user);
+
+    for (i = 0; i < k; i++) {
+
+        rc_api_award_achievement_request_t params;
+
+        rc_api_request_t api;
+
+        PendingRequest* request = (PendingRequest*)calloc(1, sizeof(*request));
+
+        long long ago = now - e[i].when;
+
+        if (!request) break;
+
+        memset(&params, 0, sizeof(params));
+
+        params.username = me->username; params.api_token = me->token;
+
+        params.achievement_id = e[i].id; params.hardcore = 0; params.game_hash = ra->hash;
+
+        params.seconds_since_unlock = ago < 0 ? 0 : ago > 0x7FFFFFFF ? 0x7FFFFFFF : (uint32_t)ago;
+
+        request->ra = ra; request->id = e[i].id;
+
+        if (rc_api_init_award_achievement_request(&api, &params) == RC_OK)
+
+            ServerCall(&api, PendingAwarded, request, ra->client);
+
+        else free(request);
+
+        rc_api_destroy_request(&api);
+
+    }
+
+}
+
+
+
 static void Event(const rc_client_event_t* event, rc_client_t* client) {
     KhRa* ra = (KhRa*)rc_client_get_userdata(client);
     if (event->type == RC_CLIENT_EVENT_ACHIEVEMENT_TRIGGERED && event->achievement) {
@@ -617,7 +756,28 @@ static void LoadGame(KhRa* ra) {
 static void LoggedIn(int result, const char* error, rc_client_t* client, void* userdata) {
     KhRa* ra = (KhRa*)userdata;
     ra->busy = 0;
-    if (result != RC_OK) { SetStatus(ra, error, 1); return; }
+    if (result != RC_OK) {
+        /* no network yet (a handheld whose Wi-Fi comes later): try again in a minute; a refused account does not */
+        ra->retry = result != RC_INVALID_CREDENTIALS && result != RC_EXPIRED_TOKEN && result != RC_ACCESS_DENIED;
+        ra->next_try = SDL_GetTicks() + 60000;
+        if (!ra->retry && ra->password[0]) { SecureZeroMemory(ra->password, sizeof(ra->password)); ra->account_file = 0; }
+        SetStatus(ra, ra->retry ? "Sin conexion con RetroAchievements: se reintenta cada minuto." : error, 1);
+        return;
+    }
+    ra->retry = 0;
+    SecureZeroMemory(ra->password, sizeof(ra->password));
+#ifdef RA_LINUX_ONLINE
+    if (ra->account_file) {
+        /* signed in: the password leaves the card; the token (retroachievements.auth) keeps the session */
+        FILE* file = DataFile(ra, RA_ACCOUNT_FILE, "w");
+        if (file) {
+            fprintf(file, "usuario=%s\n# Sesion iniciada: la contrasena se borro de este archivo.\n",
+                    rc_client_get_user_info(client)->username);
+            fclose(file);
+        }
+        ra->account_file = 0;
+    }
+#endif
     {
         const rc_client_user_t* user = rc_client_get_user_info(client);
         snprintf(ra->username, sizeof(ra->username), "%s", user->username);
@@ -628,6 +788,43 @@ static void LoggedIn(int result, const char* error, rc_client_t* client, void* u
     }
     LoadGame(ra);
 }
+
+#ifdef RA_LINUX_ONLINE
+/* A handheld has no launcher to type the account in: the player writes it once in this file on the card
+ *     usuario=NAME
+ *     contrasena=PASSWORD
+ * The game signs in, keeps the session token (retroachievements.auth) and rewrites the file without the password. */
+static void AccountFile(KhRa* ra) {
+    char line[512], user[128] = "", pass[256] = "";
+    FILE* file = DataFile(ra, RA_ACCOUNT_FILE, "r");
+    if (!file) return;
+    while (fgets(line, sizeof(line), file)) {
+        char* value = strchr(line, '=');
+        size_t n;
+        if (!value || line[0] == '#') continue;
+        *value++ = 0;
+        n = strcspn(value, "\r\n");
+        value[n] = 0;
+        if (!strcmp(line, "usuario") || !strcmp(line, "user") || !strcmp(line, "username"))
+            snprintf(user, sizeof(user), "%s", value);
+        else if (!strcmp(line, "contrasena") || !strcmp(line, "contraseña") || !strcmp(line, "password"))
+            snprintf(pass, sizeof(pass), "%s", value);
+    }
+    fclose(file);
+    SecureZeroMemory(line, sizeof(line));
+    if (user[0] && pass[0]) {
+        FILE* ini = DataFile(ra, "retroachievements.ini", "w");
+        if (ini) { fprintf(ini, "enabled=1\n"); fclose(ini); }
+        ra->enabled = 1;
+        ra->remember = 1;
+        ra->account_file = 1;
+        snprintf(ra->username, sizeof(ra->username), "%s", user);
+        snprintf(ra->password, sizeof(ra->password), "%s", pass);
+        ra->token[0] = 0;
+    }
+    SecureZeroMemory(pass, sizeof(pass));
+}
+#endif
 
 KhRa* KhRaCreate(const char* directory, KhRaRead read, void* userdata, KhRaTransport transport) {
     KhRa* ra = (KhRa*)calloc(1, sizeof(*ra));
@@ -662,7 +859,14 @@ KhRa* KhRaCreate(const char* directory, KhRaRead read, void* userdata, KhRaTrans
     } else if (ra->remember) {
         CacheWrite(ra->username, ra->token); /* its own account wins and becomes this PC's last one */
     }
-    if (ra->enabled && ra->token[0]) {
+#ifdef RA_LINUX_ONLINE
+    AccountFile(ra);
+#endif
+    if (ra->enabled && ra->password[0]) {
+        ra->busy = 1;
+        SetStatus(ra, "Iniciando sesion...", 0);
+        rc_client_begin_login_with_password(ra->client, ra->username, ra->password, LoggedIn, ra);
+    } else if (ra->enabled && ra->token[0]) {
         ra->busy = 1;
         SetStatus(ra, "Signing in...", 0);
         rc_client_begin_login_with_token(ra->client, ra->username, ra->token, LoggedIn, ra);
@@ -700,11 +904,22 @@ void KhRaPump(KhRa* ra, int evaluate) {
             else { job->status = RC_API_SERVER_RESPONSE_CLIENT_ERROR; SDL_SetAtomicInt(&job->done, 1); }
         }
     }
+    if (ra->retry && ra->enabled && !ra->busy && SDL_GetTicks() >= ra->next_try) {
+        ra->retry = 0;
+        ra->busy = 1;
+        if (ra->password[0])
+            rc_client_begin_login_with_password(ra->client, ra->username, ra->password, LoggedIn, ra);
+        else if (ra->token[0])
+            rc_client_begin_login_with_token(ra->client, ra->username, ra->token, LoggedIn, ra);
+        else
+            ra->busy = 0;
+    }
     if (evaluate && ra->enabled && !ra->invalidated) rc_client_do_frame(ra->client);
     else rc_client_idle(ra->client);
 }
 
 void KhRaDestroy(KhRa* ra) {
+    if (ra) SecureZeroMemory(ra->password, sizeof(ra->password));
     if (!ra) return;
     ra->closing = 1;
     while (ra->jobs) {
