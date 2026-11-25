@@ -4335,6 +4335,8 @@ typedef struct PpuRowTimes {
 static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
 static int sPpuSampleRows;
 
+static int sMenuBgCopy;
+
 static void RenderLine(int y, int gy) {
     PpuRowTimes* const rowTimes = sPpuSampleRows ? &sPpuRowTimes[y] : NULL;
     uint64_t stage = rowTimes ? SDL_GetPerformanceCounter() : 0;
@@ -4448,8 +4450,14 @@ static void RenderLine(int y, int gy) {
     /* The presenter also uses this background in non-menu narrow scenes,
        including the blank frame between modes. Never leave last frame's
        palette/fade in the buffer. */
-    if (sSceneNarrow || !gPortScreen.wide)
-        ComposeLine(y, dispcnt, bgOn, bgPrio, gPortMenuBackground, 0);
+    if (sSceneNarrow || !gPortScreen.wide) {
+        /* A row without sprite pixels composes to the same colours twice.
+           World light also writes its own buffers: keep that path. */
+        if (sMenuBgCopy && !sLineHasObjects && !sWorldBlendActive)
+            memcpy(gPortMenuBackground + y * w, gPortFrame + y * w, (size_t)w * 4);
+        else
+            ComposeLine(y, dispcnt, bgOn, bgPrio, gPortMenuBackground, 0);
+    }
     if (sSceneNarrow)
         BuildNarrowSides(gy, dispcnt, bgOn, bgPrio);
     if (rowTimes) {
@@ -5565,6 +5573,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightTrimMargins = 0;
         sSpotlightOverlayFast = 0;
         sSpotlightClearRows = 0;
+        int menuBgCopy = sMenuBgCopy;
+        sMenuBgCopy = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -5578,6 +5588,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightTrimMargins = spotlightTrim;
         sSpotlightOverlayFast = spotlightOverlay;
         sSpotlightClearRows = spotlightClear;
+        sMenuBgCopy = menuBgCopy;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -5764,6 +5775,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightClearRows;
     PORT_ENV_ONCE(spotlightClearRows, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
     sSpotlightClearRows = spotlightClearRows != NULL;
+    const char* menuBgCopy;
+    PORT_ENV_ONCE(menuBgCopy, SDL_getenv, "KHCOM_PPU_MENU_BG_COPY");
+    sMenuBgCopy = menuBgCopy != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
