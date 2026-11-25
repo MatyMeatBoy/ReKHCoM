@@ -3597,6 +3597,7 @@ static bool sWorldInspectBgVector;
 static bool sWorldInspectBgRows[PORT_MAX_H];
 static bool sMapInspectOpaqueVector;
 static bool sJournalCentralVector;
+static bool sJournalPageVector;
 static bool sJournalCentralRows[GBA_SCREEN_H];
 static bool sMapInspectOpaqueRows[PORT_MAX_H];
 static bool sProbeComposeGates;
@@ -3767,9 +3768,12 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
 #ifdef __ARM_NEON
     int journalBegin = 0, journalEnd = 0;
     if (sJournalCentralVector && sNeonOpaqueCompose && sNeonNarrowCompose && w == 320 &&
-        !gPortScreen.wide && sJiminyDetailCapture && !sJiminyPaperCapture && !sLutMode && !scene102Fill &&
+        !gPortScreen.wide && (sJiminyDetailCapture || (sJournalPageVector && sJiminyPageCapture)) &&
+        !sJiminyPaperCapture && !sLutMode && !scene102Fill &&
         !sWorldBlendActive && !(dispcnt & 0xE000) && (!effect || !(bldcnt & 0x3F)) &&
-        gyLine >= 16 && gyLine < GBA_SCREEN_H && sLeft <= 8 && sRight >= 200 &&
+        /* Root and list pages capture only columns 0 and 200..239, from
+           row 16 down; detail keeps its established rows. */
+        gyLine >= (sJiminyDetailCapture ? 16 : 0) && gyLine < GBA_SCREEN_H && sLeft <= 8 && sRight >= 200 &&
         gPortScreen.originX >= 0 && gPortScreen.originX + 200 <= w &&
         ((gPortScreen.originX + 8) & 7) == 0 && !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
         bool semi = false;
@@ -5755,6 +5759,9 @@ void PortPpuRenderFrame(void) {
     const char* journalCentralVector;
     PORT_ENV_ONCE(journalCentralVector, SDL_getenv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
     sJournalCentralVector = journalCentralVector != NULL;
+    const char* journalPageVector;
+    PORT_ENV_ONCE(journalPageVector, SDL_getenv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
+    sJournalPageVector = journalPageVector != NULL;
     {
         extern Mode gModeWorldinspect;
         extern Mode* gCurrentMode;
