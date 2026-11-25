@@ -652,7 +652,7 @@ int PortSpriteShiftY(int entry, int y) {
             /* enemy and boss cards sit higher on the cartridge: their own
                amount puts both bottoms on one line */
             enemyRaise = enemyLines ? atoi(enemyLines) : raise;
-            if (enemyRaise < 0 || enemyRaise > 40) enemyRaise = raise;
+            if (enemyRaise < -12 || enemyRaise > 40) enemyRaise = raise;
         }
         shift -= (sHudAx == 2 && sHudAy == 1 ? enemyRaise : raise) * (q + 256) / 512;
     }

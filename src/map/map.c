@@ -5762,7 +5762,9 @@ s32 MapMenuResume(MapMenuWork* work) {
 int PortGa36FieldMenuBars(void) {
     extern Mode* gCurrentMode;
     return gCurrentMode == &gModeMapFld && gFieldState != NULL &&
-        (gFieldState->flags & (FIELD_FLAG_MENU_OPEN | FIELD_FLAG_ROOM_CREATE)) != 0;
+        ((gFieldState->flags & (FIELD_FLAG_MENU_OPEN | FIELD_FLAG_ROOM_CREATE)) != 0 ||
+         /* the save crystal's screen carries the same bars */
+         (gMapRoomState != NULL && (gMapRoomState->flags & ROOM_FLAG_SAVE_MENU_OPEN) != 0));
 }
 int PortGa36SynthesisActive(void) {
     extern Mode* gCurrentMode;
