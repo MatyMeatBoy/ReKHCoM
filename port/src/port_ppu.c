@@ -4482,6 +4482,7 @@ static void RenderLine(int y, int gy) {
 #define NARROW_SIDE_W 96
 #define PLTT16_0() (PPU_PLTT_BASE[0])
 static uint32_t sNarrowSide[2][GBA_SCREEN_H][NARROW_SIDE_W];
+static int sNarrowSideFill;
 /* per row: the colour of the layer in front of the scenery at the picture's
    edge, and whether that row was a band (2), only touched the edge (1) or
    showed the scenery (0) */
@@ -4662,7 +4663,11 @@ static void BuildNarrowSides(int gy, uint16_t dispcnt, const int* bgOn, const in
             sNarrowEdgeKind[side][gy] = bandOk[b] ? 2 : 1;
             break;
         }
-        for (d = 0; d < NARROW_SIDE_W; d++) {
+        /* Plain scenery, or a band in front of everything, gives every
+           column the same colour: resolve the first and repeat it. */
+        const int columns = sNarrowSideFill && (flat || (n && order[0] != scenery && bandOk[order[0]]))
+            ? 1 : NARROW_SIDE_W;
+        for (d = 0; d < columns; d++) {
             uint16_t col = (uint16_t)(PLTT16_0() & 0x7FFF);
             int i, src = flat ? 0 : d < GBA_SCREEN_W ? d : GBA_SCREEN_W - 1;
             for (i = 0; i < n; i++) {
@@ -4679,6 +4684,8 @@ static void BuildNarrowSides(int gy, uint16_t dispcnt, const int* bgOn, const in
             if (effect == 3 && (bldcnt & 0x3F)) col = Darken(col, evy);
             sNarrowSide[side][gy][d] = sColorLut[col & 0x7FFF];
         }
+        for (; d < NARROW_SIDE_W; d++)
+            sNarrowSide[side][gy][d] = sNarrowSide[side][gy][0];
         /* the sprites touching the edge on this row, counted per colour
            (PortNarrowSidesFinish decides the margin's colour for the run) */
         sObjBandKinds[side][gy] = sObjBandTotal[side][gy] = 0;
@@ -5775,6 +5782,9 @@ void PortPpuRenderFrame(void) {
     const char* spotlightClearRows;
     PORT_ENV_ONCE(spotlightClearRows, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
     sSpotlightClearRows = spotlightClearRows != NULL;
+    const char* narrowSideFill;
+    PORT_ENV_ONCE(narrowSideFill, SDL_getenv, "KHCOM_PPU_NARROW_SIDE_FILL");
+    sNarrowSideFill = narrowSideFill != NULL;
     const char* menuBgCopy;
     PORT_ENV_ONCE(menuBgCopy, SDL_getenv, "KHCOM_PPU_MENU_BG_COPY");
     sMenuBgCopy = menuBgCopy != NULL;
