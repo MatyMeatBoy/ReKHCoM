@@ -24,6 +24,8 @@ static uint64_t SDL_GetPerformanceCounter(void){return now;}
 static const char* SDL_getenv(const char*n){(void)n;return NULL;}
 static void SDL_DelayPrecise(uint64_t n){now+=n/1000;}
 static void PortLog(const char* f,...){(void)f;}
+static struct{int threshold;}sLoop; /* KHCOM_LOOP_PHASES off */
+static void PortLoopPhasesWait(void* p,uint64_t a,uint64_t b){(void)p;(void)a;(void)b;assert(0);}
 '''+reset+'\n'+timing+'''
 static void NextSecond(void){now+=1000000;gFrameCounter+=60;sFpsFrames+=60;Pace(0);}
 int main(void){

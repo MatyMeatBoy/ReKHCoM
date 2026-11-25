@@ -55,6 +55,8 @@ static void emscripten_sleep(unsigned ms){clockNow+=(uint64_t)ms*1000;if(ms)dela
 #define GAP_ON_TARGET(d) ((d)==period)
 #endif
 static void PortLog(const char* f,...){(void)f;}
+static struct{int threshold;}sLoop; /* KHCOM_LOOP_PHASES off */
+static void PortLoopPhasesWait(void* p,uint64_t a,uint64_t b){(void)p;(void)a;(void)b;assert(0);}
 '''+pace+'''
 static void Show(void){images[imageCount++]=clockNow;}
 static void Frame(uint64_t work){clockNow+=work;gFrameCounter++;

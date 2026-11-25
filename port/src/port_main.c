@@ -42,6 +42,11 @@ extern int PortBridgeVideoCaps(void);
 #include "port/port.h"
 #include "port/port_netlink.h"
 #include "port/port_logfile.h"
+#include "port/loop_phases.h"
+#ifdef __linux__
+#include <sys/resource.h>
+#include <time.h>
+#endif
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
@@ -215,6 +220,53 @@ void PortRaiseIrq(uint16_t flag) {
     sInIrq = 0;
     IO16(0x200) = ie;
     IO16(0x208) = ime;
+}
+
+/* KHCOM_LOOP_PHASES (port/loop_phases.h): off, each mark is one test. */
+static PortLoopPhases sLoop;
+
+static void LoopMark(int phase) {
+    if (sLoop.threshold)
+        PortLoopPhasesMark(&sLoop, phase, SDL_GetPerformanceCounter());
+}
+
+/* The end of a cycle: a slow one leaves its line, with what the system did to this thread meanwhile (CPU time well
+   under interval - wait: it was not running; involuntary switches; page faults that read from storage). */
+static void LoopEnd(uint32_t frame) {
+    static char line[640];
+    double cpu = -1;
+    long switches = -1, faults = -1;
+
+    if (!sLoop.threshold)
+        return;
+#ifdef __linux__
+    {
+        static double lastCpu;
+        static long lastSwitches, lastFaults;
+        static int primed;
+        struct timespec t;
+        struct rusage use;
+        /* one pair of reads a frame, so a slow frame has the previous one's values to compare with */
+        if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t) == 0 && getrusage(1 /* RUSAGE_THREAD */, &use) == 0) {
+            double now = t.tv_sec * 1000.0 + t.tv_nsec / 1e6;
+            if (primed) {
+                cpu = now - lastCpu;
+                switches = use.ru_nivcsw - lastSwitches;
+                faults = use.ru_majflt - lastFaults;
+            }
+            primed = 1;
+            lastCpu = now;
+            lastSwitches = use.ru_nivcsw;
+            lastFaults = use.ru_majflt;
+        }
+    }
+#endif
+    if (PortLoopPhasesEnd(&sLoop, line, sizeof(line))) {
+        extern const char* PortHarnessModeName(void);
+        PortLog("loop phases: frame %u %s %s | thread cpu %.2f ms, preempted %ld, major faults %ld",
+                (unsigned)frame, PortHarnessModeName(), line, cpu, switches, faults);
+        LoopMark(PORT_LOOP_REPORT);
+    }
 }
 
 /* ---- presentation --------------------------------------------------------------- */
@@ -2313,6 +2365,7 @@ static void Present(int paced) {
 #ifdef PORT_LINUX
     PortFbWaitCopy();
 #endif
+    LoopMark(PORT_LOOP_COPYWAIT);
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
@@ -3277,6 +3330,7 @@ static void Present(int paced) {
         const uint64_t ready = measureFb ? SDL_GetPerformanceCounter() : 0;
 #endif
         if (paced) PaceBeforePresent();
+        LoopMark(PORT_LOOP_DRAW); /* the wait just taken is counted apart */
 #ifdef PORT_LINUX
         PortFbPresent(sRenderer);
         if (measureFb) {
@@ -3289,6 +3343,7 @@ static void Present(int paced) {
         }
 #endif
         int presented=SDL_RenderPresent(sRenderer);
+        LoopMark(PORT_LOOP_FLIP);
         if (presented) {
             uint64_t acceptedAt = SDL_GetPerformanceCounter();
             sPresentGapTicks = sPresentSerial ? acceptedAt - sPresentAcceptedAt : 0;
@@ -3850,6 +3905,8 @@ static uint64_t AdvanceFrameDeadline(void) {
     if (!yielded) emscripten_sleep(0);
     now = SDL_GetPerformanceCounter();
 #endif
+    if (sLoop.threshold) /* late: only a sleep that returned past its deadline, not a frame already behind */
+        PortLoopPhasesWait(&sLoop, now - begin, begin < sNextFrame && now > sNextFrame ? now - sNextFrame : 0);
     return now - begin;
 }
 
@@ -3984,6 +4041,7 @@ static void TimingLine(int skip, uint64_t cycleStart, uint64_t workEnd) {
 }
 
 static void VBlankCycle(void) {
+    LoopMark(PORT_LOOP_SERVICES);
     uint64_t cycleStart = SDL_GetPerformanceCounter();
     uint64_t presentSerialStart = sPresentSerial;
     uint64_t presentPaceStart = sPresentPaceEpoch;
@@ -4022,6 +4080,7 @@ static void VBlankCycle(void) {
                     IO16(0x4A), IO16(0x40), IO16(0x44), IO16(0x4C));
     }
 
+    LoopMark(PORT_LOOP_SETUP);
     /* Visible lines (HBlank / VCount events in between). */
     if (skip) {
         PortPpuRunFrameEvents();
@@ -4035,16 +4094,22 @@ static void VBlankCycle(void) {
         }
     }
 
+    LoopMark(PORT_LOOP_PPU);
+
     /* Line 160: vertical blank. */
     IO16(0x06) = GBA_SCREEN_H;
     IO16(0x04) = (IO16(0x04) & ~6) | 1 | (((IO16(0x04) >> 8) == GBA_SCREEN_H) ? 4 : 0);
     PortDmaVBlank();
+    LoopMark(PORT_LOOP_DMA);
     if (IO16(0x04) & 0x08)
         PortRaiseIrq(0x0001);
+    LoopMark(PORT_LOOP_IRQ);
     PortPpuVBlankLines();
     IO16(0x04) &= ~1;
+    LoopMark(PORT_LOOP_VBLINES);
 
     PortAudioFrame();
+    LoopMark(PORT_LOOP_AUDIO);
     {
         /* KHCOM_PROFILE: mean PPU and present time every 240 frames */
         static uint64_t ppuSum, presSum;
@@ -4080,7 +4145,9 @@ static void VBlankCycle(void) {
             }
         }
     }
+    LoopMark(PORT_LOOP_PRESENT_END);
     PumpEvents();
+    LoopMark(PORT_LOOP_EVENTS);
 
     /* Options overlay: the game is paused until it closes. */
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
@@ -4139,6 +4206,7 @@ static void VBlankCycle(void) {
     if (uiProfile)
         for (int i = 0; i < uiProfileFrame; i++)
             PortLog("options profile: frame %d %.3f ms", i + 1, (double)uiProfileSamples[i]);
+    LoopMark(PORT_LOOP_UI); /* the whole paused menu, when it was open */
     uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
 #if defined(PORT_LINUX)
     static int captureEnabled = -1;
@@ -4175,17 +4243,22 @@ static void VBlankCycle(void) {
     }
 #endif
     IO16(0x130) = (uint16_t)(~PortInputResolve(keys) & 0x3FF);
+    LoopMark(PORT_LOOP_INPUT);
     HarnessFrame();
+    LoopMark(PORT_LOOP_HARNESS);
     {
         extern int gPortInMainLoop;
         PortRollbackBoundary(gPortInMainLoop); /* the network link: a wrong guess taken back, this frame kept */
     }
+    LoopMark(PORT_LOOP_ROLLBACK);
     if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart);
     TimingLine(skip, cycleStart, SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart));
+    LoopMark(PORT_LOOP_TIMING);
     /* Closing a menu already consumed its image deadlines in that loop.
        Only an entirely unpresented cycle needs an additional clock tick. */
     Pace(sPresentPaceEpoch == presentPaceStart);
     sCycleEnd = SDL_GetPerformanceCounter();
+    LoopMark(PORT_LOOP_PACE);
 
     if (++sFrameCount % 60 == 0) {
 #ifdef PORT_LINUX
@@ -4194,6 +4267,7 @@ static void VBlankCycle(void) {
         PortSramSyncIfDirty();
 #endif
     }
+    LoopMark(PORT_LOOP_SRAM);
     if (frameLogStart) {
         static FILE* frameLog;
         static int attempted;
@@ -4265,6 +4339,8 @@ static void VBlankCycle(void) {
                     (unsigned)gFrameCounter);
         last = t;
     }
+    LoopMark(PORT_LOOP_FRAMELOG);
+    LoopEnd(sFrameCount);
 }
 
 /* The network link's lockstep (src/sio/sio.c): while the other player's packet for this link frame is on its way the
@@ -4295,6 +4371,7 @@ void PortFrame(void) {
         ResimCycle();
         return;
     }
+    LoopMark(PORT_LOOP_LOGIC);
     PortStateService();
     {
         extern void PortSceneGalleryFrame(void);
@@ -4327,6 +4404,7 @@ void PortMovieFrame(void) {
 #ifdef __EMSCRIPTEN__
     PortWebWaitVisible();
 #endif
+    LoopMark(PORT_LOOP_LOGIC);
     VBlankCycle();
 }
 
@@ -4544,6 +4622,9 @@ int main(int argc, char** argv) {
     }
 #endif
     sPerfFreq = SDL_GetPerformanceFrequency();
+    PortLoopPhasesInit(&sLoop, SDL_getenv("KHCOM_LOOP_PHASES"), sPerfFreq);
+    if (sLoop.threshold)
+        PortLog("loop phases: reporting frames over %.2f ms", sLoop.threshold * sLoop.msPerTick);
     sFpsTime = SDL_GetPerformanceCounter();
 
     if (!PortRomLoad()) {

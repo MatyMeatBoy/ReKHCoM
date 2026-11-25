@@ -18,6 +18,7 @@ static uint64_t now;
 static int SDL_RenderPresent(int renderer){(void)renderer;return accepted;}
 static uint64_t SDL_GetPerformanceCounter(void){clockReads++;return now;}
 static void PortSceneGalleryPreviewPresented(int value){gallery=value;}
+#define LoopMark(phase) ((void)0) /* KHCOM_LOOP_PHASES off */
 static void PresentBlock(void){
 '''+block+r'''
 }
