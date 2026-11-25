@@ -280,6 +280,19 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
         }
         return 1;
     }
+    static int rowCopy2x = -1;
+    if (rowCopy2x < 0) {
+        rowCopy2x = SDL_getenv("KHCOM_FBDEV_2X_ROWCOPY") != NULL;
+        if (rowCopy2x) PortLog("fbdev: 2x rows copied in sequence");
+    }
+    if (rowCopy2x) {
+        for (int y = 0; y < h; y++, src += stride) {
+            uint32_t* upper = (uint32_t*)(pixels + (size_t)(2 * y) * pitch);
+            FbDoubleRow(upper, src, w);
+            memcpy((uint8_t*)upper + pitch, upper, (size_t)w * 2 * sizeof(*upper));
+        }
+        return 1;
+    }
     for (int y = 0; y < h; y++) {
         uint32_t* upper = (uint32_t*)(pixels + (size_t)(2 * y) * pitch);
         uint32_t* lower = (uint32_t*)((uint8_t*)upper + pitch);

@@ -25,6 +25,11 @@ static uint32x2_t vdup_lane_u32(uint32x2_t a, int n) { return (uint32x2_t){{a.v[
 static uint32x2_t vext_u32(uint32x2_t a, uint32x2_t b, int n) { assert(n == 1); return (uint32x2_t){{a.v[1], b.v[0]}}; }
 static uint32x4_t vcombine_u32(uint32x2_t a, uint32x2_t b) { return (uint32x4_t){{a.v[0], a.v[1], b.v[0], b.v[1]}}; }
 static void vst1q_u32(uint32_t* p, uint32x4_t a) { memcpy(p, a.v, sizeof(a.v)); }
+typedef struct { uint32x4_t val[2]; } uint32x4x2_t;
+static uint32x4_t vld1q_u32(const uint32_t* p) { return (uint32x4_t){{p[0], p[1], p[2], p[3]}}; }
+static uint32x4x2_t vzipq_u32(uint32x4_t a, uint32x4_t b) {
+    return (uint32x4x2_t){{{{a.v[0], b.v[0], a.v[1], b.v[1]}}, {{a.v[2], b.v[2], a.v[3], b.v[3]}}}};
+}
 KERNEL
 
 static uint32_t frame[240 * 320];
@@ -76,6 +81,38 @@ int main(void) {
             for (int col = 0; col < 640; col++)
                 if ((x[col] & 0xFFFFFFu) != (z[col] & 0xFFFFFFu)) {
                     printf("mismatch pass %d at %d,%d: %08x %08x\n", pass, col, y, x[col], z[col]);
+                    return 1;
+                }
+        }
+    }
+    /* Doubled rows: the whole 320x240 frame, and the 240x160 world map at
+     * 2x centred over a dirty surface with only its surroundings cleared. */
+    for (int map = 0; map < 2; map++) {
+        memset(sdl->pixels, 0x5A, (size_t)sdl->pitch * 480);
+        memset(fit->pixels, 0xA5, (size_t)fit->pitch * 480);
+        const SDL_FRect src = {40, 40, 240, 160};
+        const SDL_FRect dst = {80, 80, 480, 320};
+        const SDL_FRect around[4] = {{0, 0, 640, 80}, {0, 400, 640, 80}, {0, 80, 80, 320}, {560, 80, 80, 320}};
+        assert(SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART));
+        SDL_SetRenderDrawColor(a, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(b, 0, 0, 0, 255);
+        assert(SDL_RenderClear(a) && SDL_RenderTexture(a, texture, map ? &src : NULL, map ? &dst : NULL) &&
+               SDL_FlushRenderer(a));
+        if (map) assert(SDL_RenderFillRects(b, around, 4) && SDL_FlushRenderer(b));
+        const int w = map ? 240 : 320, h = map ? 160 : 240;
+        const uint32_t* input = frame + (map ? 40 * 320 + 40 : 0);
+        for (int y = 0; y < h; y++, input += 320) {
+            uint32_t* upper = (uint32_t*)((uint8_t*)fit->pixels + (size_t)((map ? 80 : 0) + 2 * y) * fit->pitch) +
+                              (map ? 80 : 0);
+            FbDoubleRow(upper, input, w);
+            memcpy((uint8_t*)upper + fit->pitch, upper, (size_t)w * 8);
+        }
+        for (int y = 0; y < 480; y++) {
+            const uint32_t* x = (const uint32_t*)((uint8_t*)sdl->pixels + (size_t)y * sdl->pitch);
+            const uint32_t* z = (const uint32_t*)((uint8_t*)fit->pixels + (size_t)y * fit->pitch);
+            for (int col = 0; col < 640; col++)
+                if ((x[col] & 0xFFFFFFu) != (z[col] & 0xFFFFFFu)) {
+                    printf("2x mismatch case %d at %d,%d: %08x %08x\n", map, col, y, x[col], z[col]);
                     return 1;
                 }
         }
