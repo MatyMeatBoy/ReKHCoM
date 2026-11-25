@@ -557,6 +557,6 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-fractional-fit-runs-20261124 | GA36 escala fraccional de diario y naipes optimizacion | pendiente | — | — | — | 2026-11-25T02:03:48.347618+00:00 |
 | ga36-journal-detail-central-compose-20261124 | GA36 diario detalle composicion central con bordes intactos | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/703 | — | 2026-11-24T23:05:50.376700+00:00 |
 | ga36-start-alpha-distribution-20261124 | GA36 menu Start optimizar mezcla alpha | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/704 | — | 2026-11-24T23:17:00.008280+00:00 |
-| ga36-v04-accumulated-20261124 | GA36 v0.4: rendimiento, audio y encuadre 4:3 acumulados | pendiente | — | — | — | 2026-11-25T02:59:18.280229+00:00 |
+| ga36-v04-accumulated-20261124 | GA36 v0.4: rendimiento, audio y encuadre 4:3 acumulados | en_curso | claude-ga36 | — | — | 2026-11-25T02:59:27.335751+00:00 |
 
 Integrador: libre
