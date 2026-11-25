@@ -2687,7 +2687,20 @@ static void Present(int paced) {
         if (AllmapScale() > 0 && !menuCanvas) DrawAllmapSides(&src, &dst, outW);
         if (moviePrompt)
             DrawSkipLayer(&normal);
-        if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
+        /* Every side repair below paints outside dst: any mode whose picture
+           fills the panel's width has nothing for them to show. */
+        bool emptySides = false;
+#ifdef PORT_LINUX
+        const char* skipEmptySides;
+        PORT_ENV_ONCE(skipEmptySides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_SIDES");
+        emptySides = skipEmptySides && PortFixed480p() && PortFbActive() &&
+            !PortJiminyHasSideMargins(dst.x, dst.w, outW);
+        if (emptySides) {
+            static bool logged;
+            if (!logged) { PortLog("fbdev: empty side repairs skipped"); logged = true; }
+        }
+#endif
+        if (!emptySides && !menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
             bool drawSides = true;
 #ifdef PORT_LINUX
             extern Mode gModeWorldinspect;
@@ -2715,7 +2728,7 @@ static void Present(int paced) {
         skipJournalSides = skipEmptyJournalSides && PortFixed480p() && PortFbActive() && journalShown &&
             !PortJiminyHasSideMargins(dst.x, dst.w, outW);
 #endif
-        if (!skipJournalSides && !menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
+        if (!emptySides && !skipJournalSides && !menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
             /* style 9: the scene's ground (its commonest colour) and its thick
                bars (blocks of six rows or more, so a frame's thin border is
                not one) carried on; nothing mirrored, nothing repeated */
@@ -2831,7 +2844,7 @@ static void Present(int paced) {
                 DrawJournalNameMargins(&dst, outW, pageExpanded ? 0 : journalRightGround);
         }
         if (SDL_getenv("KHCOM_DBGSIDE")) PortLog("side f%u style %d fit %.2f wide %d src %.0f,%.0f %.0fx%.0f", (unsigned)PortFrameCount(), sSideStyle, sFitScale, gPortScreen.wide, src.x, src.y, src.w, src.h);
-        if (!menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {
+        if (!emptySides && !menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {
             /* a fade has reached one flat colour (or the screen is blank
                between modes): the margins are that colour too, so the
                transition stays one smooth fade */
@@ -2839,7 +2852,7 @@ static void Present(int paced) {
             SDL_SetRenderDrawColor(sRenderer, (Uint8)(uniform >> 16), (Uint8)(uniform >> 8), (Uint8)uniform, 255);
             SDL_RenderFillRect(sRenderer, &a);
             SDL_RenderFillRect(sRenderer, &b2);
-        } else if (!menuCanvas && sSideStyle != 3 && sSideStyle != 8 && sSideStyle != 9 && sSideStyle != 10 &&
+        } else if (!emptySides && !menuCanvas && sSideStyle != 3 && sSideStyle != 8 && sSideStyle != 9 && sSideStyle != 10 &&
                    sSideStyle != 12 && sFitScale <= 0) {
             SideBar((int)src.x, (int)src.y, -1, dst.y, scale, 0.0f, dst.x, (int)src.x);
             SideBar((int)(src.x + src.w) - SIDE_STRIP, (int)src.y, 1, dst.y, scale, dst.x + dst.w, (float)outW,
