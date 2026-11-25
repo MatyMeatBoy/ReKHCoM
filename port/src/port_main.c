@@ -2378,6 +2378,13 @@ static int OpaqueOverlayRows(const uint32_t* overlay, uint8_t hidden[GBA_SCREEN_
 }
 #endif
 
+#ifdef PORT_LINUX
+/* The 240x160 picture at the 640x480 panel's full width. */
+static bool PortGa36FitGeometry(const SDL_FRect* dst) {
+    return dst->x == 0 && dst->y == 26 && dst->w == 640 && dst->h == 160.0f * (640.0f / 240.0f);
+}
+#endif
+
 static void Present(int paced) {
 #ifdef PORT_LINUX
     PortFbWaitCopy();
@@ -2627,6 +2634,17 @@ static void Present(int paced) {
                 dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f)) {
                 static bool logged;
                 if (!logged) { PortLog("fbdev: world inspect blur cover active"); logged = true; }
+                blurCover = &dst;
+            }
+            /* The same opaque picture follows the reflection in every mode
+               with this geometry (world cards, world warp, ...). */
+            const char* blurCoverAll;
+            PORT_ENV_ONCE(blurCoverAll, SDL_getenv, "KHCOM_GA36_BLUR_COVER_ALL");
+            if (blurCoverAll && !journalShown && PortFbActive() && PortFixed480p() &&
+                gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+                PortGa36FitGeometry(&dst)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: blur cover active"); logged = true; }
                 blurCover = &dst;
             }
 #endif
