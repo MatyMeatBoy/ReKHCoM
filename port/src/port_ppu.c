@@ -431,6 +431,7 @@ static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below *
 static int sSpotlight;
 static int sSpotlightTileRuns;
 static int sObjSkipClear;
+static int sObjAffineSpan;
 static int sSpotlightBg0Runs;
 static int sSpotlightTrimMargins;
 static int sSpotlightOverlayFast;
@@ -3043,6 +3044,30 @@ static int ObjClearRun(const uint8_t* row, int tx, int bpp8, int flip) {
     }
 }
 
+/* Narrow [*first, *end) to the sx where lo <= base + step * sx < hi. */
+static void ObjAffineClip(int step, int base, int lo, int hi, int* first, int* end) {
+    int from, to;
+    if (!step) {
+        if (base < lo || base >= hi)
+            *end = *first;
+        return;
+    }
+    if (step < 0) { /* mirrored: lo <= v < hi is 1 - hi <= -v < 1 - lo */
+        const int above = 1 - hi;
+        hi = 1 - lo;
+        lo = above;
+        base = -base;
+        step = -step;
+    }
+    /* ceil((lo - base) / step) and ceil((hi - base) / step) */
+    from = (lo - base) / step + ((lo - base) % step > 0);
+    to = (hi - base) / step + ((hi - base) % step > 0);
+    if (from > *first)
+        *first = from;
+    if (to < *end)
+        *end = to;
+}
+
 static void DrawObjs(int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const obPalette = PLTT16;
@@ -3243,7 +3268,15 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             pd = (int16_t)p[15];
         }
 
-        for (sx = 0; sx < bw; sx++) {
+        int sxFirst = 0, sxEnd = bw;
+        if (sObjAffineSpan && affine && !(objMosaic && mosH > 1)) {
+            /* Only these columns sample inside the texture: (v >> 8) + size / 2
+               lies in [0, size) exactly when v lies in the bounds below. */
+            const int cx0 = -(bw / 2), cy = line - bh / 2;
+            ObjAffineClip(pa, pa * cx0 + pb * cy, -(ow / 2) * 256, (ow - ow / 2) * 256, &sxFirst, &sxEnd);
+            ObjAffineClip(pc, pc * cx0 + pd * cy, -(oh / 2) * 256, (oh - oh / 2) * 256, &sxFirst, &sxEnd);
+        }
+        for (sx = sxFirst; sx < sxEnd; sx++) {
             int gx = ox + sx;
             int fx = gx;
             int tx, ty, tile, ci, col;
@@ -5323,9 +5356,12 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     }
     const int objSkipClear = sObjSkipClear; /* the reference samples every texel */
     sObjSkipClear = 0;
+    const int objAffineSpan = sObjAffineSpan;
+    sObjAffineSpan = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
     sObjSkipClear = objSkipClear;
+    sObjAffineSpan = objAffineSpan;
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
 
@@ -5505,6 +5541,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sSpotlightTileRuns = 0;
         int objSkipClear = sObjSkipClear;
         sObjSkipClear = 0;
+        int objAffineSpan = sObjAffineSpan;
+        sObjAffineSpan = 0;
         sSpotlightTrimMargins = 0;
         sSpotlightOverlayFast = 0;
         sSpotlightClearRows = 0;
@@ -5517,6 +5555,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         RenderLine(gy + gPortScreen.originY, gy);
         sSpotlightTileRuns = spotlightRuns;
         sObjSkipClear = objSkipClear;
+        sObjAffineSpan = objAffineSpan;
         sSpotlightTrimMargins = spotlightTrim;
         sSpotlightOverlayFast = spotlightOverlay;
         sSpotlightClearRows = spotlightClear;
@@ -5688,6 +5727,9 @@ void PortPpuRenderFrame(void) {
     const char* objSkipClear;
     PORT_ENV_ONCE(objSkipClear, SDL_getenv, "KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS");
     sObjSkipClear = objSkipClear != NULL;
+    const char* objAffineSpan;
+    PORT_ENV_ONCE(objAffineSpan, SDL_getenv, "KHCOM_PPU_OBJ_AFFINE_SPAN");
+    sObjAffineSpan = objAffineSpan != NULL;
     const char* spotlightBg0Runs;
     PORT_ENV_ONCE(spotlightBg0Runs, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
     sSpotlightBg0Runs = spotlightBg0Runs != NULL;
