@@ -530,6 +530,25 @@ static void Queue(int n, int rate) {
         sStreamRate = rate;
     }
 #ifdef PORT_AUDIO_CONTINUITY
+    {
+        /* KHCOM_AUDIO_QUEUE_STATS: the margin actually left, which the
+           once-a-second sample misses: the lowest level found before a frame
+           was added, over 60 frames. */
+        const char* stats;
+        PORT_ENV_ONCE(stats, SDL_getenv, "KHCOM_AUDIO_QUEUE_STATS");
+        if (stats != NULL && !sStreamPriming) {
+            static int sLow = -1, sCount;
+            int left = SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float));
+            if (sLow < 0 || left < sLow)
+                sLow = left;
+            if (++sCount == 60) {
+                PortLog("audio queue: low %d samples at %d Hz in 60 frames, underruns %u", sLow, rate,
+                        (unsigned)PortAudioContinuityUnderruns(&sContinuity, sStream));
+                sLow = -1;
+                sCount = 0;
+            }
+        }
+    }
     PortAudioContinuityPut(&sContinuity, sStream, sOut, n * 2 * (int)sizeof(float));
 #else
     SDL_PutAudioStreamData(sStream, sOut, n * 2 * (int)sizeof(float));
