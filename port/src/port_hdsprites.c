@@ -1137,10 +1137,15 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
     sRenderer = renderer;
     if ((unsigned)layer >= HD_LAYERS)
         return;
-    if (layer == 1) /* Re:CoM's HP gauge on the HUD canvas, under the cards */
+    /* no HUD canvas (a small panel: the HUD shares the world's): the gauges go in the world's pass, under its parts */
+    const int sharedHud = layer == 0 && !gPortHudScale && HD_HUD_ON;
+    if (layer == 1 || sharedHud) { /* Re:CoM's HP gauge on the HUD canvas, under the cards */
+        const int hudW = gPortHudW;
+        if (sharedHud) gPortHudW = gPortScreen.width;
         PortHdGaugeDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
-    if (layer == 1)
         PortHdEnemyGaugeDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
+        gPortHudW = hudW;
+    }
     for (i = 0; layer == 0 && i < sArtCount && sArt; i++) { /* the title's illustration, under everything */
         const HdSpriteDraw* q = &sArtDraws[i];
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
@@ -1163,7 +1168,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         if (!st->image && !LoadThisFrame(q->id))
             continue;
         st->lastUsed = PortFrameCount();
-        if (layer == 1 && sRingRatio >= 0 && SDL_strstr(kHdSprites[q->id].name, "FaceTiles") && RingLoad()) {
+        if ((layer == 1 || sharedHud) && sRingRatio >= 0 && SDL_strstr(kHdSprites[q->id].name, "FaceTiles") && RingLoad()) {
             /* the HP ring behind the face: the face frame's origin from this part's corner and its place in the
                picture (faces are drawn unturned) */
             const HdSpriteDef* d = &kHdSprites[q->id];

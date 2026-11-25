@@ -97,6 +97,11 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
             stbi_image_free(px);
             if (t->tex)
                 SDL_SetTextureBlendMode(t->tex, SDL_BLENDMODE_BLEND);
+            {
+                /* a pack pre-scaled for a small panel: the layouts address the remaster's own texture size */
+                static const int kOriginal[HD_LAYOUT_TEXTURE_COUNT] = { 256, 512, 256, 1024 };
+                if (t->w < kOriginal[which] && t->w == t->h) t->w = t->h = kOriginal[which];
+            }
         }
     }
     return t->tex ? t : NULL;
