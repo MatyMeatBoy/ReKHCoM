@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.10
+
+- Rendering on every platform: the renderer fast paths first measured on the GA36 handheld are now on by default (vectorised tile decoding, composition and colour-effect blending, plainer rows resolved once, sprite rows by tile runs, menu background reuse). Pictures are identical to the previous paths. On PC the NEON kernels build through SIMDe as SSE; in a Windows test the composition ran 1.5× to 2.6× faster, and field scenes at 1080p rose from 75 to 109 uncapped FPS. `KHCOM_FAST_PATHS=0` restores the previous paths for comparison.
+- GA36 v0.6: measured on the console, every tested scene runs between 74 and 145 uncapped FPS. A rescue keeps battle audio without dropouts when a frame runs late. 4:3 layout refinements for the save crystal, journal, deck and battle cards.
+- R36S: the renderer uses the four Cortex-A35 cores.
+
 ## v2.9.1
 
 - Android: offer software H.264 decoding for devices that show corruption with the hardware decoder (#643). Improve handling of SDL3 background and foreground events, optional audio startup, and short writes when loading the guest image (#647).
