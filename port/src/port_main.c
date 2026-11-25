@@ -965,6 +965,18 @@ static int Menu43Extend(void) {
 
 static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
+    extern Mode gModeJiminy;
+    if (gCurrentMode == &gModeJiminy) {
+        /* The journal closes with the same plain bar it opens with, over the
+           book: its rings cut by the picture's edge never stretch down. */
+        const uint32_t bar = MenuMarginColor((int)src->x, (int)src->y, 1);
+        const SDL_FRect footer = { 0, bottom, (float)w, h - bottom };
+        if (bar && footer.h > 0) {
+            SDL_SetRenderDrawColor(sRenderer, (bar >> 16) & 255, (bar >> 8) & 255, bar & 255, 255);
+            SDL_RenderFillRect(sRenderer, &footer);
+        }
+        return;
+    }
     const int count = (int)src->w, last = (int)(src->y + src->h) - 1;
     const float step = dst->w / src->w;
     if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W || last < 7) return;
@@ -982,27 +994,22 @@ static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, 
         if (inner[x + (end - x) / 2] != line[x] && behind * 10 >= (end - x) * 9)
             for (int k = x; k < end; k++) line[k] = inner[x + (end - x) / 2];
     }
-    extern Mode gModeJiminy;
-    if (gCurrentMode == &gModeJiminy) {
-        /* The binder's rings cross the edge: column by column, what most of the
-           last eight rows agree on carries the page and the ground on. */
-        for (int x = 0; x < count; x++) {
-            uint32_t column[8];
-            int best = 0, votes = 0;
-            for (int i = 0; i < 8; i++) column[i] = edge[x - i * gPortScreen.width];
-            for (int i = 0; i < 8 && votes <= 4; i++) {
-                int n = 0;
-                for (int k = 0; k < 8; k++) n += column[k] == column[i];
-                if (n > votes) { votes = n; best = i; }
-            }
-            line[x] = column[best];
-        }
-    }
     /* Up to three odd pixels between equal neighbours are an icon's tip. */
     for (int x = 1, end; x < count - 1; x = end) {
         for (end = x + 1; end < count && line[end] != line[x - 1]; end++) {}
         if (line[x] == line[x - 1] || end >= count || end - x > 3) { end = x + 1; continue; }
         for (int k = x; k < end; k++) line[k] = line[x - 1];
+    }
+    /* Only the card panel, which touches one side of the screen, reaches the
+       bottom. Whatever else ends there (a deck's box) closes on the screen's
+       own background. */
+    const uint32_t ground = MenuMarginColor((int)src->x, (int)src->y, 1);
+    if (ground) {
+        int left = 0, right = count;
+        while (left < count && (line[left] & 0xFFFFFFu) != ground) left++;
+        while (right > left && (line[right - 1] & 0xFFFFFFu) != ground) right--;
+        if (left < count)
+            for (int x = left; x < right; x++) line[x] = ground;
     }
     for (int x = 0, end; x < count; x = end) {
         for (end = x + 1; end < count && line[end] == line[x]; end++) {}
