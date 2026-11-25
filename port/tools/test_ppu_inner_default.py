@@ -15,6 +15,7 @@ fixture='''#include <stdlib.h>
 #define _WIN32 1
 #endif
 static int sPpuInnerOn=-1;
+static int sFusePictureBottom,sFuseAllRows;
 static const char* setting;
 static const char* SDL_getenv(const char* name){(void)name;return setting;}
 #define SDL_atoi atoi
@@ -26,7 +27,7 @@ sPpuInnerOn=-1;setting="0";assert(PpuInnerBegin()==0);
 sPpuInnerOn=-1;setting="1";assert(PpuInnerBegin()==1);
 puts("PASS actual inner-row default and explicit controls");return 0;}
 '''
-cc=os.environ.get('CC') or shutil.which('cc') or str(root.parent.parent/'toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/x86_64-w64-mingw32-clang.exe')
+cc=os.environ.get('CC') or shutil.which('cc') or str(Path(os.environ.get('KHCOM_TOOLCHAIN',root.parent.parent/'toolchain'))/'llvm-mingw-20261006-ucrt-x86_64/bin/x86_64-w64-mingw32-clang.exe')
 with tempfile.TemporaryDirectory() as directory:
     d=Path(directory);(d/'default.c').write_text(fixture)
     for name,flags,expected in [('windows32',['-DTEST_WIN32'],1),('windows-reloc',['-DTEST_WIN32','-DPORT_GBA_RELOC'],1),('desktop-x32',['-DPORT_LINUX64_GUEST'],1),('switch',['-DPORT_SWITCH'],1),('other',[],0)]:

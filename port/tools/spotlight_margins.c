@@ -8,6 +8,7 @@
 #define SDL_clamp(x, a, b) ((x) < (a) ? (a) : (x) > (b) ? (b) : (x))
 #define SDL_GetPerformanceCounter() 0
 #define SDL_GetPerformanceFrequency() 1
+#define PPU_FIXTURE_OWN_STUBS
 #define main PpuConformanceMain
 #include "ppu_conformance.c"
 #undef main

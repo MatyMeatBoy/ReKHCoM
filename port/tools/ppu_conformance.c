@@ -5,6 +5,19 @@
 #include <stdarg.h>
 #include <time.h>
 #undef TRANSPARENT
+/* The renderer is built here without SDL: back its few SDL calls with the host.
+ * A fixture with its own versions defines PPU_FIXTURE_OWN_STUBS. */
+#ifndef PPU_FIXTURE_OWN_STUBS
+#include <stdlib.h>
+#include <stdint.h>
+static const char* SDL_getenv(const char* name) { return getenv(name); }
+static uint64_t SDL_GetPerformanceCounter(void) { return 0; }
+static uint64_t SDL_GetPerformanceFrequency(void) { return 1; }
+#define SDL_atoi atoi
+#define SDL_min(a, b) ((a) < (b) ? (a) : (b))
+#define SDL_max(a, b) ((a) > (b) ? (a) : (b))
+#define SDL_clamp(x, lo, hi) SDL_min(SDL_max((x), (lo)), (hi))
+#endif
 #ifndef PPU_SOURCE
 #define PPU_SOURCE "../src/port_ppu.c"
 #endif
@@ -29,6 +42,11 @@ const unsigned char gSynthesisHdIdentities[SYNTHESIS_HD_COUNT]={0};
 const unsigned char gTitlePressStartTiles[32]={0},gTitlePressStartFrenchTiles[32]={1};
 const unsigned char gTitlePressStartGermanTiles[32]={2},gTitlePressStartItalianTiles[32]={3};
 const unsigned char gTitlePressStartSpanishTiles[32]={4};
+#ifndef PPU_FIXTURE_OWN_STUBS
+int PortFixed480p(void){return 0;}
+void PortDarksidePrepareBodyRow(PortDarksideBodyRow* row, const void* const* maps, int y, int cx, int cy){}
+int PortDarksideBodyRowPixel(const PortDarksideBodyRow* row, int x, uint16_t* color){return 0;}
+#endif
 void PortMarluxiaField(int on){}
 int PortEventBackdropProfile(void){return -1;}
 int PortEventId(void){return -1;}
@@ -410,6 +428,13 @@ int main(int argc, char** argv) {
     if(forceWide) {
         /* Exercise the wide-world compositor at native dimensions so the
            independent hardware oracle remains directly comparable. */
+        /* This path skips PortPpuRenderFrame: read its opt-in row shortcuts
+           here too, so they are compared against the same oracle. */
+        sObjSkipClear=getenv("KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS")!=NULL;
+        sObjAffineSpan=getenv("KHCOM_PPU_OBJ_AFFINE_SPAN")!=NULL;
+        sNarrowSideFill=getenv("KHCOM_PPU_NARROW_SIDE_FILL")!=NULL;
+        sMenuBgCopy=getenv("KHCOM_PPU_MENU_BG_COPY")!=NULL;
+        sSpotlightSkipMargins=getenv("KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS")!=NULL;
         gPortConfig.hdText=1; /* Also collect the HUD/text priority metadata. */
         PortPpuBeginFrame(); gPortScreen.wide=1; LatchAffine(1);
         for(i=0;i<160;i++) {
