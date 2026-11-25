@@ -3597,6 +3597,7 @@ static bool sWorldInspectBgVector;
 static bool sWorldInspectBgRows[PORT_MAX_H];
 static bool sMapInspectOpaqueVector;
 static bool sJournalCentralVector;
+static bool sMenuBgVector;
 static bool sNarrowPlainVector;
 static bool sNarrowSecondVector;
 static bool sJournalPageVector;
@@ -3792,7 +3793,10 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
     /* A second blend target alone changes nothing: with no first-target
        effect, only a semi-transparent sprite pixel can use it. */
-    bool secondIdle = !(bldcnt & 0x3F00);
+    /* The sprite-free menu background pass feeds no journal capture and
+       cannot use a second target. */
+    const bool menuBg = !objects && sMenuBgVector && sNeonNarrowCompose && !gPortScreen.wide;
+    bool secondIdle = !(bldcnt & 0x3F00) || menuBg;
     if (!secondIdle && !journalEnd && sNarrowSecondVector && sNeonNarrowCompose && !gPortScreen.wide) {
         secondIdle = true;
         if (objects && sLineHasObjects)
@@ -3801,10 +3805,10 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
     if (!journalEnd && sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
         !(dispcnt & 0xE000) && secondIdle && (!effect || !(bldcnt & 0x3F)) &&
-        !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture && !sWorldBlendActive &&
+        (menuBg || (!sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture)) && !sWorldBlendActive &&
         !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
         (docked || (objects && sLineHasObjects) || n > 2 || (!objects && sWorldInspectBgVector) ||
-         sMapInspectOpaqueVector || (sNarrowPlainVector && !gPortScreen.wide)) &&
+         sMapInspectOpaqueVector || (sNarrowPlainVector && !gPortScreen.wide) || menuBg) &&
         (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
          (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
         NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
@@ -5770,6 +5774,9 @@ void PortPpuRenderFrame(void) {
     const char* journalCentralVector;
     PORT_ENV_ONCE(journalCentralVector, SDL_getenv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
     sJournalCentralVector = journalCentralVector != NULL;
+    const char* menuBgVector;
+    PORT_ENV_ONCE(menuBgVector, SDL_getenv, "KHCOM_PPU_MENU_BG_VECTOR");
+    sMenuBgVector = menuBgVector != NULL;
     const char* narrowPlainVector;
     PORT_ENV_ONCE(narrowPlainVector, SDL_getenv, "KHCOM_PPU_NARROW_PLAIN_VECTOR");
     sNarrowPlainVector = narrowPlainVector != NULL;
