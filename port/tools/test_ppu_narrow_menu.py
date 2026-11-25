@@ -125,9 +125,9 @@ static uint8_t sObjBandKinds[2][GBA_SCREEN_H], sObjBandTotal[2][GBA_SCREEN_H];
 static uint16_t sObjBandColor[2][GBA_SCREEN_H][OBJ_BAND_COLORS];
 static int sNarrowObjBands, sNarrowSideFill;
 ''' + sides + r'''
-#define WIDE_MODES 1
-#define WIDE_OFF (sWidePlainVector = false)
-#define WIDE_SET(m) (sWidePlainVector = true)
+#define WIDE_MODES 3
+#define WIDE_OFF (sWidePlainVector = sWideSecondVector = false)
+#define WIDE_SET(m) (sWidePlainVector = (m) != 1, sWideSecondVector = (m) != 0)
 typedef struct {
     uint32_t frame[W], back[W];
     uint8_t bg[W], layer[W], msg[W];
@@ -225,7 +225,7 @@ int main(void) {
     }
     assert(used[0] && used[1] && used[2] && used[3] && copies && fills);
     /* wide scenes: full rows, extensions above and below the picture */
-    long wideUsed[2] = {0};
+    long wideUsed[WIDE_MODES] = {0};
     gPortScreen.wide = 1; sLeft = -40; sRight = 280;
     for (int t = 0; t < 60000; t++) {
         int on[4], prio[4], y = t % 3 == 0 ? pick(H) : 40 + pick(160), gy = y - 40;

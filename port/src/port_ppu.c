@@ -3613,6 +3613,7 @@ static bool sMenuBgVector;
 static bool sNarrowPlainVector;
 static bool sWidePlainVector;
 static bool sNarrowSecondVector;
+static bool sWideSecondVector;
 static bool sJournalPageVector;
 static bool sJournalCentralRows[GBA_SCREEN_H];
 static bool sMapInspectOpaqueRows[PORT_MAX_H];
@@ -3810,7 +3811,8 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
        cannot use a second target. */
     const bool menuBg = !objects && sMenuBgVector && sNeonNarrowCompose && !gPortScreen.wide;
     bool secondIdle = !(bldcnt & 0x3F00) || menuBg;
-    if (!secondIdle && !journalEnd && sNarrowSecondVector && sNeonNarrowCompose && !gPortScreen.wide) {
+    if (!secondIdle && !journalEnd &&
+        (gPortScreen.wide ? sWideSecondVector : sNarrowSecondVector && sNeonNarrowCompose)) {
         secondIdle = true;
         if (objects && sLineHasObjects)
             for (int i = 0; i < w; i++)
@@ -5858,6 +5860,9 @@ void PortPpuRenderFrame(void) {
     const char* narrowSecondVector;
     PORT_ENV_ONCE(narrowSecondVector, SDL_getenv, "KHCOM_PPU_NARROW_SECOND_VECTOR");
     sNarrowSecondVector = narrowSecondVector != NULL;
+    const char* wideSecondVector;
+    PORT_ENV_ONCE(wideSecondVector, SDL_getenv, "KHCOM_PPU_WIDE_SECOND_VECTOR");
+    sWideSecondVector = wideSecondVector != NULL;
     const char* journalPageVector;
     PORT_ENV_ONCE(journalPageVector, SDL_getenv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
     sJournalPageVector = journalPageVector != NULL;
