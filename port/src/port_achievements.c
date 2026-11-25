@@ -91,6 +91,9 @@ static void OfflineEvent(const rc_runtime_event_t* event) {
     sOffline.when[index] = now ? now : 1;
     PortLog("achievement: %u unlocked", (unsigned)event->id);
     if (!KhOfflineSave(&sOffline, sOfflinePath)) PortLog("achievements: could not save progress");
+#if defined(PORT_RETROACHIEVEMENTS) && defined(PORT_LINUX) && !defined(__ANDROID__)
+    KhRaQueueLocal(sRa, event->id, (long long)now);
+#endif
 #ifdef __EMSCRIPTEN__
     else EM_ASM({ if (Module.persistSoon) Module.persistSoon();
                   if (Module.onAchievementsChanged) Module.onAchievementsChanged(); });
@@ -214,6 +217,12 @@ void PortAchievementsInit(void) {
        (KHCOM_ACHIEVEMENTS_LIVE=1, with its own data folder) */
     if ((SDL_getenv("KHCOM_MODE") || SDL_getenv("KHCOM_BOT") || SDL_getenv("KHCOM_BATTLE") ||
          SDL_getenv("KHCOM_EVENT") || SDL_getenv("KHCOM_KEYS")) && !SDL_getenv("KHCOM_ACHIEVEMENTS_LIVE")) sInvalidated = 1;
+#if defined(PORT_RETROACHIEVEMENTS) && defined(KH_OFFLINE_EVAL) && defined(PORT_LINUX) && !defined(__ANDROID__)
+    /* handhelds (Linux): what this device earned (mostly offline) goes to the account set up here at its next start online */
+    if (!sInvalidated)
+        for (i = 0; i < KhOfficialCount(); ++i)
+            if (sOffline.when[i]) KhRaQueueLocal(sRa, KhOfficialAt(i)->id, (long long)sOffline.when[i]);
+#endif
 }
 
 void PortAchievementsRomLoaded(const uint8_t* rom, size_t size) {

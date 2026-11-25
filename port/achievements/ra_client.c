@@ -551,6 +551,21 @@ static void PendingAdd(KhRa* ra, uint32_t id) {
 
 
 
+/* An achievement earned on this device (the local list, often offline) for the account set up here: queued under that
+ * account's name and sent the next time the game starts with a connection (PendingFlush, after the sign-in). */
+void KhRaQueueLocal(KhRa* ra, uint32_t id, long long when) {
+    RaPendingEntry e[RA_PENDING_MAX];
+    char user[128];
+    int n, i;
+    if (!ra || !ra->enabled || !ra->username[0] || !id) return;
+    n = PendingRead(ra, e, user, sizeof(user));
+    if (n && strcmp(user, ra->username) != 0) n = 0;
+    for (i = 0; i < n; i++) if (e[i].id == id) return;
+    if (n == RA_PENDING_MAX) return;
+    e[n].id = id; e[n].when = when > 1 ? when : (long long)time(NULL); n++;
+    PendingWrite(ra, e, n, ra->username);
+}
+
 static void PendingDrop(KhRa* ra, uint32_t id) {
 
     RaPendingEntry e[RA_PENDING_MAX];
@@ -757,9 +772,9 @@ static void LoggedIn(int result, const char* error, rc_client_t* client, void* u
     KhRa* ra = (KhRa*)userdata;
     ra->busy = 0;
     if (result != RC_OK) {
-        /* no network yet (a handheld whose Wi-Fi comes later): try again in a minute; a refused account does not */
+        /* one attempt per start (a handheld is mostly offline): the queue waits for the next start with a network;
+           a refused account forgets the password it was given */
         ra->retry = result != RC_INVALID_CREDENTIALS && result != RC_EXPIRED_TOKEN && result != RC_ACCESS_DENIED;
-        ra->next_try = SDL_GetTicks() + 60000;
         if (!ra->retry && ra->password[0]) { SecureZeroMemory(ra->password, sizeof(ra->password)); ra->account_file = 0; }
         #ifdef RA_LINUX_ONLINE
         if (ra->retry && sRaSslTried && !sRaSsl.ready) {
@@ -767,7 +782,7 @@ static void LoggedIn(int result, const char* error, rc_client_t* client, void* u
             return;
         }
 #endif
-        SetStatus(ra, ra->retry ? "Sin conexion con RetroAchievements: se reintenta cada minuto." : error, 1);
+        SetStatus(ra, ra->retry ? "Sin conexion: los logros se enviaran la proxima vez que el juego arranque con internet." : error, 1);
         return;
     }
     ra->retry = 0;
@@ -909,16 +924,6 @@ void KhRaPump(KhRa* ra, int evaluate) {
             if (job->thread) ++active;
             else { job->status = RC_API_SERVER_RESPONSE_CLIENT_ERROR; SDL_SetAtomicInt(&job->done, 1); }
         }
-    }
-    if (ra->retry && ra->enabled && !ra->busy && SDL_GetTicks() >= ra->next_try) {
-        ra->retry = 0;
-        ra->busy = 1;
-        if (ra->password[0])
-            rc_client_begin_login_with_password(ra->client, ra->username, ra->password, LoggedIn, ra);
-        else if (ra->token[0])
-            rc_client_begin_login_with_token(ra->client, ra->username, ra->token, LoggedIn, ra);
-        else
-            ra->busy = 0;
     }
     if (evaluate && ra->enabled && !ra->invalidated) rc_client_do_frame(ra->client);
     else rc_client_idle(ra->client);
