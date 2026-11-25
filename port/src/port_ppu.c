@@ -35,7 +35,10 @@
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
-#if !__STDC_HOSTED__
+#if __STDC_HOSTED__ || defined(PORT_PPU_THREADS)
+#include <SDL3/SDL.h> /* hosted builds and threaded guests (R36S) */
+#endif
+#if !__STDC_HOSTED__ && !defined(PORT_PPU_THREADS)
 /* Console guests have no SDL or host environment switches. */
 #define SDL_getenv(name) ((const char*)0)
 #define SDL_GetPerformanceCounter() ((uint64_t)0)

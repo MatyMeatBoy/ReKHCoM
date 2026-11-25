@@ -22,13 +22,13 @@ static int AudioLog(void) {
 #include "port/port_audio.h"
 #include "port/port_audio_rate.h"
 #include "port/port_state.h"
-#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
-#include "port/port_audio_continuity.h"
 #include "port/port_tuning.h"
 /* KHCOM_PPU_* and KHCOM_PSG_* switches, with the default-on fast paths (port_tuning.h). */
 static const char* PortTunedEnv(const char* name) {
     return PortTuningValue(name, SDL_getenv(name), SDL_getenv("KHCOM_FAST_PATHS"));
 }
+#if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
+#include "port/port_audio_continuity.h"
 #define PORT_AUDIO_CONTINUITY 1
 #endif
 
