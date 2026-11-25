@@ -50,6 +50,14 @@ static void vst1q_u32(uint32_t* p, const uint32_t* v) { memcpy(p, v, 16); }
 static uint8x8_t vmovn_u16(uint16x8_t a) { uint8x8_t r; EACH(i) r[i] = (uint8_t)a[i]; return r; }
 static uint16x8_t vmovl_u8(uint8x8_t a) { uint16x8_t r; EACH(i) r[i] = a[i]; return r; }
 static uint16x8_t vmlaq_n_u16(uint16x8_t a, uint16x8_t b, uint16_t n) { EACH(i) a[i] = (uint16_t)(a[i] + b[i] * n); return a; }
+OP16(vminq_u16, a[i] < b[i] ? a[i] : b[i]) OP16(vsubq_u16, a[i] - b[i]) OP16(vtstq_u16, (a[i] & b[i]) ? 0xffff : 0)
+static uint16x8_t vmulq_n_u16(uint16x8_t a, uint16_t n) { EACH(i) a[i] = (uint16_t)(a[i] * n); return a; }
+typedef uint16_t uint16x4_t __attribute__((vector_size(8)));
+static uint16x4_t vget_low_u16(uint16x8_t a) { uint16x4_t r; memcpy(&r, &a, 8); return r; }
+static uint16x4_t vget_high_u16(uint16x8_t a) { uint16x4_t r; memcpy(&r, (const char*)&a + 8, 8); return r; }
+#define vorr_u16(a, b) ((a) | (b))
+static uint64_t vreinterpret_u64_u16(uint16x4_t a) { uint64_t r; memcpy(&r, &a, 8); return r; }
+#define vget_lane_u64(a, lane) (a)
 #define vshlq_n_u16(a, n) ((a) << (n))
 #define vshrq_n_u16(a, n) ((a) >> (n))
 static int16x8_t vreinterpretq_s16_u16(uint16x8_t a) { return (int16x8_t)a; }
@@ -156,7 +164,7 @@ static void run(Result* r, int y, uint16_t dispcnt, const int* on, const int* pr
 
 int main(void) {
     static Result ref, got;
-    long used[4] = {0}, copies = 0, fills = 0;
+    long used[4] = {0}, effects = 0, copies = 0, fills = 0;
     for (int i = 0; i < 32768; i++)
         sColorLut[i] = 0xff000000u | ((i & 31) * 8 + (i & 31) / 4) << 16 |
             (((i >> 5) & 31) * 8 + ((i >> 5) & 31) / 4) << 8 | (((i >> 10) & 31) * 8 + ((i >> 10) & 31) / 4);
@@ -205,6 +213,24 @@ int main(void) {
                 return 1;
             }
         }
+        /* the colour effect rows: same frames, narrow and wide */
+        for (int wide = 0; wide < 2; wide++) {
+            gPortScreen.wide = wide; sBattleView = pick(2); sLeft = wide ? -40 : 0; sRight = wide ? 280 : 240;
+            for (int b = 0; b < 4; b++) sWorldPadding[b] = pick(2) ? TRANSPARENT : (uint16_t)pick(32768);
+            sNeonOpaqueCompose = sNeonNarrowCompose = sJournalCentralVector = sNeonEffectCompose = false;
+            sJournalPageVector = sNarrowSecondVector = sNarrowPlainVector = sMenuBgVector = false;
+            run(&ref, y, dispcnt, on, prio);
+            sNeonEffectCompose = true; sNeonEffectUsed = false;
+            sNeonOpaqueCompose = sNeonNarrowCompose = pick(2);
+            run(&got, y, dispcnt, on, prio);
+            effects += sNeonEffectUsed;
+            if (memcmp(&ref, &got, sizeof ref)) {
+                printf("MISMATCH effect case %d wide %d row %d bld %04x\n", t, wide, y, IO16(0x50));
+                return 1;
+            }
+            sNeonEffectCompose = false;
+        }
+        gPortScreen.wide = 0; sBattleView = 0; sLeft = 0; sRight = 240; memset(sWorldPadding, 0, sizeof sWorldPadding);
         /* the background copy: no sprite pixel means both passes agree */
         if (!sLineHasObjects) { assert(!memcmp(ref.frame, ref.back, sizeof ref.frame)); copies++; }
         /* narrow side columns, with long edge runs so bands and flat scenery occur */
@@ -223,7 +249,8 @@ int main(void) {
             fills += keep[side][0] == keep[side][95];
         }
     }
-    assert(used[0] && used[1] && used[2] && used[3] && copies && fills);
+    assert(used[0] && used[1] && used[2] && used[3] && effects > 10000 && copies && fills);
+    printf("colour effect rows %ld\n", effects);
     /* wide scenes: full rows, extensions above and below the picture */
     long wideUsed[WIDE_MODES] = {0};
     gPortScreen.wide = 1; sLeft = -40; sRight = 280;

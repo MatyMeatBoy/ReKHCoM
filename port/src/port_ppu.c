@@ -3752,6 +3752,8 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
 static bool sNeonOpaqueCompose;
 static bool sNeonNarrowCompose;
 static bool sNeonScreenCompose;
+static bool sNeonEffectCompose;
+static bool sNeonEffectUsed;
 static bool sNeonScreenRows[GBA_SCREEN_H];
 static bool sSpotlightScreenRows[GBA_SCREEN_H];
 static bool sNeonOpaqueRows[PORT_MAX_H];
@@ -3860,6 +3862,145 @@ static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int*
         }
     }
     sNeonOpaqueRows[y] = true;
+}
+
+/* NeonOpaqueComposeRow with the colour effects, for rows without windows: the
+ * two front-most pixels of each column, then the compositor's own choice of
+ * alpha, semi-transparent sprite, brighten or darken. */
+static uint16x8_t NeonBlend(uint16x8_t a, uint16x8_t b, uint16_t ea, uint16_t eb) {
+    const uint16x8_t channel = vdupq_n_u16(31);
+    uint16x8_t red = vmlaq_n_u16(vmulq_n_u16(vandq_u16(a, channel), ea), vandq_u16(b, channel), eb);
+    uint16x8_t green = vmlaq_n_u16(vmulq_n_u16(vandq_u16(vshrq_n_u16(a, 5), channel), ea),
+                                   vandq_u16(vshrq_n_u16(b, 5), channel), eb);
+    uint16x8_t blue = vmlaq_n_u16(vmulq_n_u16(vandq_u16(vshrq_n_u16(a, 10), channel), ea),
+                                  vandq_u16(vshrq_n_u16(b, 10), channel), eb);
+    red = vminq_u16(vshrq_n_u16(red, 4), channel);
+    green = vminq_u16(vshrq_n_u16(green, 4), channel);
+    blue = vminq_u16(vshrq_n_u16(blue, 4), channel);
+    return vorrq_u16(red, vorrq_u16(vshlq_n_u16(green, 5), vshlq_n_u16(blue, 10)));
+}
+
+static uint16x8_t NeonFade(uint16x8_t color, uint16_t evy, bool brighten) {
+    const uint16x8_t channel = vdupq_n_u16(31);
+    uint16x8_t c[3] = {vandq_u16(color, channel), vandq_u16(vshrq_n_u16(color, 5), channel),
+                       vandq_u16(vshrq_n_u16(color, 10), channel)};
+    for (int i = 0; i < 3; i++)
+        c[i] = brighten ? vaddq_u16(c[i], vshrq_n_u16(vmulq_n_u16(vsubq_u16(channel, c[i]), evy), 4))
+                        : vsubq_u16(c[i], vshrq_n_u16(vmulq_n_u16(c[i], evy), 4));
+    return vorrq_u16(c[0], vorrq_u16(vshlq_n_u16(c[1], 5), vshlq_n_u16(c[2], 10)));
+}
+
+static int NeonAny(uint16x8_t mask) {
+    const uint16x4_t half = vorr_u16(vget_low_u16(mask), vget_high_u16(mask));
+    return vget_lane_u64(vreinterpret_u64_u16(half), 0) != 0;
+}
+
+static void NeonEffectComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
+                                 const int* priorities, uint16_t backdrop, uint16_t marginFill,
+                                 bool objects, bool collect, unsigned docked, uint16_t bldcnt,
+                                 int eva, int evb, int evy) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const objPixels = sObjLine;
+    const uint8_t* const objPrio = sObjPrio;
+    const uint8_t* const objSemi = sObjSemi;
+    const uint16_t* const objIndex = sObjIndex;
+    const uint8_t* const world = sInWorld;
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t back = vdupq_n_u16(backdrop);
+    const uint16x8_t margin = vdupq_n_u16(marginFill);
+    /* layer bits as BLDCNT numbers them: backgrounds, then sprites, backdrop */
+    const uint16x8_t backdropBit = vdupq_n_u16(1u << LAYER_BD);
+    const uint16x8_t objectBit = vdupq_n_u16(1u << LAYER_OBJ);
+    const uint16x8_t firstTargets = vdupq_n_u16(bldcnt & 0x3F);
+    const uint16x8_t secondTargets = vdupq_n_u16((bldcnt >> 8) & 0x3F);
+    const int effect = (bldcnt >> 6) & 3;
+    const int width = gPortScreen.width;
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const uint16x8_t offsets = {0, 1, 2, 3, 4, 5, 6, 7};
+    const int row = y * width;
+    uint16x8_t prioritiesByLayer[4], ids[4], bits[4];
+    int dockedLayers[4], dockedCount = 0;
+    for (int i = 0; i < n; i++) {
+        prioritiesByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        ids[i] = vdupq_n_u16((uint16_t)order[i]);
+        bits[i] = vdupq_n_u16((uint16_t)(1u << order[i]));
+    }
+    for (int i = 0; i < 4; i++)
+        if (docked & (1u << i))
+            dockedLayers[dockedCount++] = i;
+
+    for (int x = 0; x < width; x += 8) {
+        const int gx0 = x - gPortScreen.originX;
+        if (gx0 + 8 <= sLeft || gx0 >= sRight) {
+            vst1q_u32(dst + x, vdupq_n_u32(0xff000000u));
+            vst1q_u32(dst + x + 4, vdupq_n_u32(0xff000000u));
+            continue;
+        }
+        const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
+        uint16x8_t base = vandq_u16(inWorld, back);
+        if (marginFill != TRANSPARENT) {
+            const int16x8_t gx = vreinterpretq_s16_u16(vaddq_u16(offsets, vdupq_n_u16((uint16_t)(x - gPortScreen.originX))));
+            const uint16x8_t offscreen = outside ? vdupq_n_u16(UINT16_MAX) :
+                vorrq_u16(vcltq_s16(gx, vdupq_n_s16(0)), vcgeq_s16(gx, vdupq_n_s16(GBA_SCREEN_W)));
+            base = vbslq_u16(offscreen, margin, base);
+        }
+        uint16x8_t top = base, topBit = backdropBit, bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        uint16x8_t second = base, secondBit = backdropBit, secondPrio = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            second = vbslq_u16(visible, top, second);
+            secondBit = vbslq_u16(visible, topBit, secondBit);
+            secondPrio = vbslq_u16(visible, bgPrio, secondPrio);
+            top = vbslq_u16(visible, color, top);
+            topBit = vbslq_u16(visible, bits[i], topBit);
+            bgPrio = vbslq_u16(visible, prioritiesByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, ids[i], bgLayer);
+        }
+        uint16x8_t hasObj = zero, priority = zero, semiFront = zero;
+        if (objects) {
+            const uint16x8_t color = vld1q_u16(objPixels + x);
+            hasObj = vmvnq_u16(vceqq_u16(color, clear));
+            priority = vmovl_u8(vld1_u8(objPrio + x));
+            const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+            const uint16x8_t behind = vandq_u16(vbicq_u16(hasObj, front), vcleq_u16(priority, secondPrio));
+            second = vbslq_u16(front, top, vbslq_u16(behind, color, second));
+            secondBit = vbslq_u16(front, topBit, vbslq_u16(behind, objectBit, secondBit));
+            top = vbslq_u16(front, color, top);
+            topBit = vbslq_u16(front, objectBit, topBit);
+            semiFront = vandq_u16(front, vcgtq_u16(vmovl_u8(vld1_u8(objSemi + x)), zero));
+        }
+        const uint16x8_t secondOk = vtstq_u16(secondBit, secondTargets);
+        const uint16x8_t firstOk = vtstq_u16(topBit, firstTargets);
+        const uint16x8_t semiBlend = vandq_u16(semiFront, secondOk);
+        uint16x8_t alpha = semiBlend;
+        if (effect == 1) alpha = vorrq_u16(alpha, vandq_u16(firstOk, secondOk));
+        uint16x8_t pixel = top;
+        if (NeonAny(alpha))
+            pixel = vbslq_u16(alpha, NeonBlend(top, second, (uint16_t)eva, (uint16_t)evb), pixel);
+        if (effect >= 2) {
+            const uint16x8_t faded = vbicq_u16(firstOk, semiBlend);
+            if (NeonAny(faded))
+                pixel = vbslq_u16(faded, NeonFade(top, (uint16_t)evy, effect == 2), pixel);
+        }
+        StoreArgb8(dst + x, pixel, vdup_n_u8(255));
+        if (collect) {
+            uint16x8_t message = zero;
+            for (int i = 0; i < dockedCount; i++) {
+                const uint16x8_t color = vld1q_u16(layers[dockedLayers[i]] + x);
+                message = vorrq_u16(message, vmvnq_u16(vceqq_u16(color, clear)));
+            }
+            const uint16x8_t hidden = sHudLayer ? message : zero;
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            const uint16x8_t occlusion = vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX));
+            vst1_u8(sMsgMask + row + x, vmovn_u16(vandq_u16(message, vdupq_n_u16(1))));
+            vst1_u8(sOccBg + row + x, vmovn_u16(vbicq_u16(bgPrio, hidden)));
+            vst1_u8(sOccBgLayer + row + x, vmovn_u16(vbicq_u16(bgLayer, hidden)));
+            vst1q_u16(sOccObj + row + x, vbicq_u16(occlusion, hidden));
+        }
+    }
+    sNeonEffectUsed = true;
 }
 #endif
 
@@ -3981,6 +4122,16 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
                              objects && sLineHasObjects, collect, (unsigned)docked, 0, w);
         if (!objects && sWorldInspectBgVector) sWorldInspectBgRows[y] = true;
         if (sMapInspectOpaqueVector && (!objects || !sLineHasObjects)) sMapInspectOpaqueRows[y] = true;
+        return;
+    }
+    /* Colour effects and semi-transparent sprites (battles). */
+    if (!journalEnd && sNeonEffectCompose && w == 320 && !sLutMode && !scene102Fill &&
+        !(dispcnt & 0xE000) && !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture &&
+        !sWorldBlendActive && !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
+        (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
+         (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
+        NeonEffectComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                             objects && sLineHasObjects, collect, (unsigned)docked, bldcnt, eva, evb, evy);
         return;
     }
 #endif
@@ -6048,6 +6199,9 @@ void PortPpuRenderFrame(void) {
     const char* neonScreenCompose;
     PORT_ENV_ONCE(neonScreenCompose, SDL_getenv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
     sNeonScreenCompose = neonScreenCompose != NULL;
+    const char* neonEffectCompose;
+    PORT_ENV_ONCE(neonEffectCompose, SDL_getenv, "KHCOM_PPU_NEON_EFFECT_COMPOSE");
+    sNeonEffectCompose = neonEffectCompose != NULL;
     const char* probeCompose;
     PORT_ENV_ONCE(probeCompose, SDL_getenv, "KHCOM_PPU_PROBE_COMPOSE");
     sProbeComposeGates = probeCompose && PortFrameCount() % 30 == 0;
@@ -6239,6 +6393,11 @@ void PortPpuRenderFrame(void) {
                 break;
             }
         }
+    }
+    static bool neonEffectLogged;
+    if (sNeonEffectUsed && !neonEffectLogged) {
+        PortLog("ppu: NEON effect composition active");
+        neonEffectLogged = true;
     }
     static bool neonOpaqueLogged;
     if (sNeonOpaqueCompose && !neonOpaqueLogged) {
