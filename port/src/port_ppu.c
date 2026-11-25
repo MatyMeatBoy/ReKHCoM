@@ -5416,6 +5416,16 @@ static int FrameArtOn(const char* name) {
     return v == NULL || atoi(v) != 0;
 }
 
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk);
+/* the occupancy the HUD and HD text read (what is in front of each pixel), back to empty for rows [begin, end) */
+static void ClearOccupancyRows(void* ctx, int begin, int end) {
+    const size_t w = (size_t)gPortScreen.width, rows = (size_t)(end - begin);
+    (void)ctx;
+    memset(sOccBg + begin * w, 4, rows * w);
+    memset(sOccBgLayer + begin * w, 4, rows * w);
+    memset(sOccObj + begin * w, 0xFF, rows * w * 2);
+}
+
 void PortPpuBeginFrame(void) {
     if (sUniformWorldTiles < 0)
         sUniformWorldTiles = PortTunedEnv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
@@ -5639,9 +5649,9 @@ void PortPpuBeginFrame(void) {
     WorldNameFrame();
     RegisterBgSlashes(dispcnt);
     if (sHudLayer || sHdText) {
-        memset(sOccBg, 4, (size_t)gPortScreen.width * gPortScreen.height);
-        memset(sOccBgLayer, 4, (size_t)gPortScreen.width * gPortScreen.height);
-        memset(sOccObj, 0xFF, (size_t)gPortScreen.width * gPortScreen.height * 2);
+        /* about 4 bytes a pixel (8 MB at 1080p): cleared in row bands on the renderer's cores */
+        if (!PortPpuParallelRows(ClearOccupancyRows, NULL, gPortScreen.height, 64))
+            ClearOccupancyRows(NULL, 0, gPortScreen.height);
     }
     /* the frame the layer only lingers (2): once the door's spotlight hands its floor (BG1) back to the world, its
        light blends with that floor there; on the empty screen layer its dark halo showed as a black ball */
