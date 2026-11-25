@@ -1129,8 +1129,10 @@ static int AllmapBandRow(int sx, int sy, int first, int step, int count, int w) 
     return -1;
 }
 
+int gPortAllmapCoverRows; /* mode_allmap.c: the header rows the rooms stay out of (0: none) */
 static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w, int h, bool stale, bool direct) {
 #ifdef PORT_LINUX
+    gPortAllmapCoverRows = 0;
     extern Mode gModeAllmap;
     const char* on;
     PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_ALLMAP_ANCHOR");
@@ -1146,12 +1148,13 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
     if (lastMode != gCurrentMode) { lastMode = gCurrentMode; lastA = -1; bigMap = 0; }
     int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
     /* A floor larger than the view scrolls its rooms right up to the header, as on the GBA: once a room shows under
-       it (the band row below the header moves down), the header keeps the GBA's place for this visit and only the
-       footer goes to the bottom (the rooms never cover it). Small floors keep the header at the top. */
+       it, the band row found below the header moves down. The header still goes to the panel's top, at its own band
+       row (the smallest seen, 16 on the GBA), and covers what reaches it there: the rooms pass under it as they pass
+       under the footer. */
     if (a > 17 || (lastA > 0 && a > lastA + 1)) bigMap = 1; /* the header's band row is 16 */
     if (a <= 0) a = lastA;
     if (a > 0 && (lastA <= 0 || a < lastA)) lastA = a;
-    if (bigMap) a = 0;
+    if (bigMap) gPortAllmapCoverRows = a = 16;
     /* The footer: its bar starts at the left edge. Rows' band colours are
        those covering a fifth of the row (the dithered bands have two). */
     uint32_t bands[GBA_SCREEN_H][4];

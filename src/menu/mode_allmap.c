@@ -321,9 +321,39 @@ void mode_allmap_1() {
         DisableBg(0);
         DisableBg(1);
     }
+#ifdef PLATFORM_PC
+    {
+        /* GA36 4:3, a floor larger than the view: the header goes to the panel's top (port_main.c,
+           DrawAllmapAnchored) and covers the rooms that reach it, as the footer does. The windows leave the rooms
+           (BG0, BG1) out of the header's rows, so nothing of them is moved up with it; window 0 (its left part)
+           also the cursor's sprites, window 1 (the rest) keeps the sprites of the room's name. */
+        extern int gPortAllmapCoverRows;
+        static u8 sCovering;
+        if (gPortAllmapCoverRows > 0) {
+            gWin0H = WIN_RANGE(0, 128);
+            gWin1H = WIN_RANGE(0, DISPLAY_WIDTH);
+            gWin0V = gWin1V = WIN_RANGE(0, gPortAllmapCoverRows);
+            gWinIn = WININ_WIN0_BG2 | WININ_WIN0_BG3 | WININ_WIN0_CLR |
+                     ((WININ_WIN0_BG2 | WININ_WIN0_BG3 | WININ_WIN0_OBJ | WININ_WIN0_CLR) << 8);
+            gWinOut = (gWinOut & 0xFF00) | 0x3F;
+            gDispCnt |= DISPCNT_WIN0_ON | DISPCNT_WIN1_ON;
+            sCovering = 1;
+        } else if (sCovering) {
+            gDispCnt &= ~(DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+            sCovering = 0;
+        }
+    }
+#endif
 }
 
 void mode_allmap_2() {
+#ifdef PLATFORM_PC
+    {
+        extern int gPortAllmapCoverRows;
+        gPortAllmapCoverRows = 0;
+        gDispCnt &= ~(DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+    }
+#endif
     DestroyAllmap();
     TaskPoolDestroy(&gAllmapTaskPool);
     REG_IME = 0;
