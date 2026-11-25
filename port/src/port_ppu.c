@@ -835,6 +835,7 @@ int gPortHudScale;
 int gPortHeaderDraw;
 static int HeaderBandColor(int y, int phase);
 static int HeaderPick(void);
+static int HeaderGone(void);
 int gPortHudW;
 int gPortHudH;
 
@@ -5212,6 +5213,10 @@ static int PpuRowsIndependent(bool allowMosaic) {
                missing source still uses the original serial path. */
             if (parallel && HeaderPick() >= 0)
                 break;
+            /* A new mode cleared the source while its predecessor's header
+               sprites are still in OAM: every row gets "no band". */
+            if (HeaderGone())
+                break;
             sPpuStats[3]++;
             return 0; /* HeaderPick's once-a-frame choice */
         }
@@ -6218,11 +6223,23 @@ static uint32_t MenuSpritePixel(const uint16_t* frame, const ObjTiles* tiles,
    and its sprite palette is released, while the band must stay. */
 static int sHeaderBand[2][32];
 
+static const void* sHeaderKey[3];
+
+/* KHCOM_PPU_HEADER_GONE_PARALLEL: the source of an already picked header was
+   cleared, so HeaderPick is -1 for the whole frame and needs no writes. */
+static int HeaderGone(void) {
+    const char* enabled;
+    PORT_ENV_ONCE(enabled, SDL_getenv, "KHCOM_PPU_HEADER_GONE_PARALLEL");
+    return enabled && !sMenuHeaderFrame && sHeaderKey[0];
+}
+
 static int HeaderPick(void) {
-    static const void* key[3];
+    const void** key = sHeaderKey;
     static int pick, valid;
     static uint32_t stamp;
 
+    if (HeaderGone())
+        return -1;
     /* once a frame: the asset's tiles and palette arrive after it is first drawn */
     if (stamp != PortFrameCount() || key[0] != sMenuHeaderFrame || key[1] != sMenuHeaderTiles ||
         key[2] != sMenuHeaderPalette) {
