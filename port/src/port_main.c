@@ -1902,6 +1902,8 @@ static void DrawSkipLayer(const SDL_FRect* normal) {
 }
 
 /* Replace only the journal background; native foreground remains on top. */
+static bool sJournalUploadPending; /* the direct journal skipped the frame upload */
+
 static int DrawJournalBook(const SDL_FRect* src, const SDL_FRect* dst) {
     extern const unsigned char gJiminyBgTiles[];
     static uint32_t foreground[240 * 160];
@@ -1964,6 +1966,10 @@ static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
                                       gPortScreen.width))
             return;
 #endif
+        if (sJournalUploadPending) {
+            SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+            sJournalUploadPending = false;
+        }
         SDL_RenderTexture(sRenderer, sTexture, src, dst);
     }
 }
@@ -2488,6 +2494,32 @@ static void Present(int paced) {
         deferBase = !PortUiScenePauseRect(pauseRect);
     }
 #endif
+    /* The centred 4:3 journal drawn straight to the panel: nothing reads the
+       frame texture, and the picture replaces rows 26..451. */
+    bool journalLight = false;
+#ifdef PORT_LINUX
+    {
+        const char *light, *directJournal, *skipSides;
+        PORT_ENV_ONCE(light, SDL_getenv, "KHCOM_GA36_JOURNAL_LIGHT_BASE");
+        PORT_ENV_ONCE(directJournal, SDL_getenv, "KHCOM_FBDEV_JOURNAL_FIT");
+        PORT_ENV_ONCE(skipSides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_JOURNAL_SIDES");
+        if (light && directJournal && skipSides && journalActive && Menu43Extend() && !menuCanvas && !borderOn &&
+            !nativeMainWorld && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0 && !gPortScreen.wide &&
+            gPortConfig.viewMode != PORT_VIEW_CRT && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            outW == 640 && outH == 480 && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height && !CoverActive() &&
+            PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, MenuScale(outW, outH)) ==
+                640.0f / 240.0f && !PortPpuJiminyPaperMask()) {
+            extern int PortUiScenePauseRect(int rect[4]);
+            PortJiminyLayout layout;
+            int pauseRect[4];
+            journalLight = !PortUiScenePauseRect(pauseRect) && PortJiminyFit(outW, outH, &layout);
+        }
+    }
+#endif
+    sJournalUploadPending = journalLight;
     bool deferMenuUpload = false;
 #ifdef PORT_LINUX
     if (menuFit && !nativeMainWorld) {
@@ -2499,9 +2531,9 @@ static void Present(int paced) {
         deferMenuUpload = lazyUpload && !PortUiScenePauseRect(pauseRect);
     }
 #endif
-    if (deferMenuUpload)
+    if (deferMenuUpload || journalLight)
         FillEnhancedVerticalColorMargins();
-    if (!deferBase && !deferMenuUpload) {
+    if (!deferBase && !deferMenuUpload && !journalLight) {
 #ifdef PORT_LINUX
         const uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
 #endif
@@ -2519,7 +2551,7 @@ static void Present(int paced) {
         if (menuFit)
             PORT_ENV_ONCE(bandClear, SDL_getenv, "KHCOM_GA36_MENU_FIT_BAND_CLEAR");
 #endif
-        if (menuFit && bandClear) {
+        if ((menuFit && bandClear) || journalLight) {
             /* The opaque picture replaces rows 26..451: only the bands need black. */
             const SDL_FRect bands[2] = {{0, 0, 640, 26}, {0, 452, 640, 28}};
             SDL_RenderFillRects(sRenderer, bands, 2);
