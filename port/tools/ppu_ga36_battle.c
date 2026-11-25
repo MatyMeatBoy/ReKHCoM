@@ -6,6 +6,7 @@
 #define __ARM_NEON 1
 #include <stdlib.h>
 /* the flags come from the environment; PORT_ENV_ONCE reads them once */
+#define PPU_FIXTURE_OWN_STUBS /* the SDL and platform stubs below */
 #define main ConformanceMain
 #include "ppu_conformance.c"
 #undef main
@@ -49,9 +50,30 @@ int main(void) {
         !VirtualAlloc((void*)GBA_VRAM, 0x20000, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE) ||
         !VirtualAlloc((void*)GBA_OAM, 0x10000, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE))
         return 3;
-    const bool on = getenv("GA36_FAST") != NULL;
-    sNeonOpaqueCompose = sNeonNarrowCompose = on;
-    sNeonEffectCompose = on;
+    /* GA36_FAST turns on every route; GA36_MASK (bits below) narrows a failure */
+    const char* maskText = getenv("GA36_MASK");
+    const unsigned mask = !getenv("GA36_FAST") ? 0 : maskText ? (unsigned)strtoul(maskText, NULL, 0) : ~0u;
+#define ON(bit) ((mask >> (bit)) & 1)
+    sNeonOpaqueCompose = sNeonNarrowCompose = ON(0);
+    sNeonEffectCompose = ON(1);
+    /* every KHCOM_PPU_* route of the GA36 RC flag set (rc7-new-flags.json);
+       KHCOM_PPU_HEADER_GONE_PARALLEL is read from the environment */
+    sTextNeon = ON(2);
+    sBgPlainRows = ON(3);
+    sNeonObjRows = ON(4);
+    sRowFill = ON(5);
+    sObjSkipClear = ON(6);
+    sObjAffineSpan = ON(7);
+    sJournalPageVector = ON(8);
+    sNarrowSecondVector = ON(9);
+    sNarrowPlainVector = ON(10);
+    sWideSecondVector = ON(11);
+    sWidePlainVector = ON(12);
+    sMenuBgVector = ON(13);
+    sMenuBgCopy = ON(14);
+    sNarrowSideFill = ON(15);
+    sSpotlightSkipMargins = ON(16);
+#undef ON
     gPortConfig.hdText = 1;
     PortCanvasAlloc();
     BuildLut();
@@ -107,11 +129,56 @@ int main(void) {
         sRight = gPortScreen.wide ? gPortScreen.width - gPortScreen.originX : GBA_SCREEN_W;
         sTop = -gPortScreen.originY;
         sBottom = gPortScreen.height - gPortScreen.originY;
+        gPortScreenLayer = !Pick(3);
+        /* the journal pages, spotlight margins and narrow side columns gate
+           their routes on this state; both runs draw the same values */
+        sOverlay = !Pick(4);
+        sSpotlight = !Pick(3);
+        sScreenBgMask = (unsigned)Pick(4);
+        sSpotlightClearRows = !Pick(2);
+        sJournalCentralVector = !Pick(3);
+        sJiminyPageCapture = !gPortScreen.wide && !Pick(3);
+        sSceneNarrow = !Pick(6);
+        for (int i = 0; i < 128; i++) {
+            memset(&sOamTag[i], 0, sizeof(sOamTag[i]));
+            sOamTag[i].screen = !Pick(5);
+            if (!Pick(6)) {
+                sOamTag[i].clipX0 = Pick(200) - 20;
+                sOamTag[i].clipX1 = sOamTag[i].clipX0 + Pick(120);
+            }
+        }
         LatchAffine(1);
-        for (int y = 0; y < gPortScreen.height; y++)
+        uint64_t lines = 14695981039346656037u;
+        for (int y = 0; y < gPortScreen.height; y++) {
             RenderLine(y, y - gPortScreen.originY);
+            /* nothing reads a skipped spotlight margin row's layer lines */
+            const int skipMargins = sSpotlightSkipMargins;
+            sSpotlightSkipMargins = 1;
+            const bool margin = SpotlightMarginRow(y - gPortScreen.originY, IO16(0));
+            sSpotlightSkipMargins = skipMargins;
+            if (margin)
+                continue;
+            const size_t n = (size_t)gPortScreen.width;
+            for (int b = 0; b < 4; b++)
+                if (IO16(0) & (0x100 << b)) lines = Hash(lines, sBgLine[b], n * 2);
+            lines = Hash(lines, sObjLine, n * 2); lines = Hash(lines, sObjPrio, n);
+            lines = Hash(lines, sObjSemi, n);
+            lines = Hash(lines, sScrLine, n * 2); lines = Hash(lines, sScrPrio, n);
+            lines = Hash(lines, sScrIndex, n * 2);
+            /* DrawObjs leaves sScrSemi and sObjIndex alone where nothing is
+               drawn, so skipped rows may leave older values there; only the
+               pixels a sprite wrote are read */
+            for (size_t x = 0; x < n; x++) {
+                const uint8_t semi = sScrLine[x] != TRANSPARENT ? sScrSemi[x] : 0;
+                const uint16_t index = sObjLine[x] != TRANSPARENT ? sObjIndex[x] : 0;
+                lines = Hash(lines, &semi, 1);
+                lines = Hash(lines, &index, 2);
+            }
+            lines = Hash(lines, sObjWin, n); lines = Hash(lines, sInWorld, n);
+            lines = Hash(lines, sTitleSampleLine, n * 2); lines = Hash(lines, sTitleSamplePrio, n);
+        }
         const size_t pixels = (size_t)gPortScreen.width * gPortScreen.height;
-        uint64_t h = 14695981039346656037u;
+        uint64_t h = lines;
         h = Hash(h, gPortFrame, pixels * 4);
         if (!gPortScreen.wide) h = Hash(h, gPortMenuBackground, pixels * 4);
         h = Hash(h, sOccBg, pixels);
@@ -120,6 +187,6 @@ int main(void) {
         h = Hash(h, sMsgMask, pixels);
         printf("%d wide %d %016llx\n", frame, gPortScreen.wide, (unsigned long long)h);
     }
-    fprintf(stderr, "routes: effect %d\n", sNeonEffectUsed);
+    fprintf(stderr, "routes: effect %d obj %d\n", sNeonEffectUsed, sNeonObjUsed);
     return 0;
 }

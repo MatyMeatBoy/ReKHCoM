@@ -31,12 +31,15 @@ with tempfile.TemporaryDirectory() as directory:
     for fast in (False, True):
         env = dict(os.environ)
         env.pop('GA36_FAST', None)
+        env.pop('KHCOM_PPU_HEADER_GONE_PARALLEL', None)
         if fast:
             env['GA36_FAST'] = '1'
+            env['KHCOM_PPU_HEADER_GONE_PARALLEL'] = '1'
         runs.append(subprocess.run([str(exe)], env=env, check=True, capture_output=True, text=True, timeout=300))
     reference, fast = (run.stdout.splitlines() for run in runs)
     assert len(reference) == 600 == len(fast)
     different = [(a, b) for a, b in zip(reference, fast) if a != b]
     assert not different, (len(different), different[:5])
     assert len({line.split()[-1] for line in reference}) > 500
+    assert ' 0' not in runs[1].stderr, runs[1].stderr
     print('PASS GA36 battle/field routes: 600 frames identical;', runs[1].stderr.strip())
