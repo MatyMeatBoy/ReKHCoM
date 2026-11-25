@@ -2304,7 +2304,20 @@ static void Present(int paced) {
         deferBase = !PortUiScenePauseRect(pauseRect);
     }
 #endif
-    if (!deferBase) {
+    bool deferMenuUpload = false;
+#ifdef PORT_LINUX
+    if (menuFit && !nativeMainWorld) {
+        extern int PortUiScenePauseRect(int rect[4]);
+        const char* lazyUpload;
+        int pauseRect[4];
+        PORT_ENV_ONCE(lazyUpload, SDL_getenv, "KHCOM_GA36_MENU_FIT_LAZY_UPLOAD");
+        /* The scene pause's panel is the one later reader of the texture. */
+        deferMenuUpload = lazyUpload && !PortUiScenePauseRect(pauseRect);
+    }
+#endif
+    if (deferMenuUpload)
+        FillEnhancedVerticalColorMargins();
+    if (!deferBase && !deferMenuUpload) {
 #ifdef PORT_LINUX
         const uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
 #endif
@@ -2381,6 +2394,8 @@ static void Present(int paced) {
             PortFbDrawMenuFit(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
                               gPortScreen.width);
 #endif
+        if (deferMenuUpload && !drewMenuFit)
+            SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
         if (drewMenuFit) {
         } else if (journalShown) DrawJournalPicture(&src, &dst);
         else {
