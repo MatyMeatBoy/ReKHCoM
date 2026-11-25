@@ -993,8 +993,13 @@ static void FillEnhancedVerticalColorMargins(void) {
     const int top = gPortScreen.originY, bottom = top + GBA_SCREEN_H, w = gPortScreen.width;
     uint32_t colors[2];
     int y, x;
+    extern int PortUiMenuCanvas(void);
     if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
         gPortScreen.wide || top <= 0 || bottom >= gPortScreen.height)
+        return;
+    /* the Options panel covers the whole canvas: its top and bottom rows are
+       its own (title, help), not the game's margins */
+    if (PortUiMenuCanvas())
         return;
     colors[0] = MenuMarginColor(gPortScreen.originX, top, 1);
     colors[1] = MenuMarginColor(gPortScreen.originX, bottom - 1, -1);
