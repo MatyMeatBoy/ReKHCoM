@@ -13,3 +13,11 @@ static inline void FbFitRow240To640(uint32_t* const* rows, int count, const uint
         }
     }
 }
+
+/* The same rows built once and then copied, so the processor writes one
+ * sequential stream at a time instead of interleaving up to three. */
+static inline void FbFitRows240To640Copy(uint32_t* const* rows, int count, const uint32_t* input) {
+    FbFitRow240To640(rows, 1, input);
+    for (int row = 1; row < count; row++)
+        memcpy(rows[row], rows[0], 640 * sizeof(**rows));
+}

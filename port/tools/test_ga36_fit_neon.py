@@ -65,7 +65,10 @@ int main(void) {
                 posY += stepY;
             } while (count < 3 && y < 426 && (posY >> 16) == row);
             assert(row < 160);
-            FbFitRow240To640(rows, count, frame + (40 + row) * 320 + 40);
+            if (pass & 1)
+                FbFitRows240To640Copy(rows, count, frame + (40 + row) * 320 + 40);
+            else
+                FbFitRow240To640(rows, count, frame + (40 + row) * 320 + 40);
         }
         for (int y = 0; y < 480; y++) {
             const uint32_t* x = (const uint32_t*)((uint8_t*)sdl->pixels + (size_t)y * sdl->pitch);

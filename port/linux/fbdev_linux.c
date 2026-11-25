@@ -202,6 +202,11 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
             if (fitNeon) PortLog("fbdev: NEON fit rows active");
         }
         if (fitNeon) {
+            static int rowCopy = -1;
+            if (rowCopy < 0) {
+                rowCopy = SDL_getenv("KHCOM_FBDEV_FIT_ROWCOPY") != NULL;
+                if (rowCopy) PortLog("fbdev: fit rows copied in sequence");
+            }
             /* Each source row feeds two or three output rows: store them
              * together instead of reading the first one back. */
             for (int y = 0; y < outH;) {
@@ -213,7 +218,11 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
                     y++;
                     posY += stepY;
                 } while (count < 3 && y < outH && (posY >> 16) == row);
-                if (!(hiddenRows && hiddenRows[row]))
+                if (hiddenRows && hiddenRows[row])
+                    continue;
+                if (rowCopy)
+                    FbFitRows240To640Copy(rows, count, src + (size_t)row * stride);
+                else
                     FbFitRow240To640(rows, count, src + (size_t)row * stride);
             }
             return 1;
