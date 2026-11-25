@@ -540,7 +540,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-synthesis-overlay-fast-20261124 | GA36 sintesis: acelerar composicion del foco con prioridades y alfa equivalentes | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/695 | — | 2026-11-24T19:38:16.962629+00:00 |
 | ga36-synthesis-clamped-bg0-20261124 | GA36 sintesis: reducir muestreo repetido de bordes del foco BG0 | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/696 | — | 2026-11-24T19:43:49.376089+00:00 |
 | ga36-synthesis-clear-rows-20261124 | GA36 sintesis: acelerar limpieza de filas ocultas del mundo | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/697 | — | 2026-11-24T19:48:52.482784+00:00 |
-| ga36-synthesis-overlay-upload-20261124 | GA36 sintesis: evitar subida SDL redundante al componer overlay directo | pendiente | — | — | — | 2026-11-24T19:51:44.484807+00:00 |
+| ga36-synthesis-overlay-upload-20261124 | GA36 sintesis: evitar subida SDL redundante al componer overlay directo | en_curso | claude-ga36 | — | — | 2026-11-25T01:58:52.685903+00:00 |
 | ga36-worldinspect-background-vector-20261124 | GA36 naipes mundo: vectorizar composicion de fondo sin objetos | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/698 | — | 2026-11-24T19:59:18.828280+00:00 |
 | ga36-worldinspect-blur-covered-20261124 | GA36 naipes mundo: evitar difuminado cubierto por imagen opaca | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/699 | — | 2026-11-24T20:04:20.158279+00:00 |
 | ga36-worldinspect-blur-interpolation-20261124 | GA36 naipes mundo: omitir interpolacion blur no visible | en_curso | claude-ga36 | — | — | 2026-11-25T01:58:44.493905+00:00 |
