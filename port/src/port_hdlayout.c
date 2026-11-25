@@ -866,11 +866,14 @@ int PortHdStockValueTop(int opponent) {
                     : (sGauge.active && sGauge.frame == (int)PortFrameCount() ? 9 : 0);
 }
 
+float gPortHdEnemyGaugeZoom = 1.0f; /* port_hdsprites.c: larger on a small panel's shared canvas */
+
 void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, float shade) {
     const float unit = 240.0f / 640.0f;
-    float s = unit * scale, tint[4] = { shade, shade, shade, 1.0f };
+    const float zoom = gPortHdEnemyGaugeZoom > 0 ? gPortHdEnemyGaugeZoom : 1.0f;
+    float s = unit * scale * zoom, tint[4] = { shade, shade, shade, 1.0f };
     /* Re:CoM's bar ends at x 495 of its 640; the cartridge's at 236 of its 240, which the HUD keeps from its right */
-    float x = ox + ((float)(gPortHudW - GBA_SCREEN_W) + 236.0f - 495.0f * unit) * scale, y = oy;
+    float x = ox + ((float)(gPortHudW - GBA_SCREEN_W) + 236.0f - 495.0f * unit * zoom) * scale, y = oy;
     int layer, layers, hpFrame, trailFrame, trailLayer, backFrame, top, i;
     if (!sEnemy.active || sEnemy.frame != (int)PortFrameCount())
         return;

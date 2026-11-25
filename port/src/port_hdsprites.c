@@ -1139,11 +1139,19 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         return;
     /* no HUD canvas (a small panel: the HUD shares the world's): the gauges go in the world's pass, under its parts */
     const int sharedHud = layer == 0 && !gPortHudScale && HD_HUD_ON;
+    /* there, Re:CoM's gauges sit lower in their box than the cartridge's: 3 of its pixels up, faces and ring with them */
+    const float hudOy = sharedHud ? oy - 3.0f * scale : oy;
+    /* and 4/3 larger from its top left corner (Sora's head as large as the cartridge's; Re:CoM's textures 1:1) */
+    const float hudScale = sharedHud ? scale * 4.0f / 3.0f : scale;
     if (layer == 1 || sharedHud) { /* Re:CoM's HP gauge on the HUD canvas, under the cards */
+        extern float gPortHdEnemyGaugeZoom;
         const int hudW = gPortHudW;
         if (sharedHud) gPortHudW = gPortScreen.width;
-        PortHdGaugeDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
-        PortHdEnemyGaugeDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
+        PortHdGaugeDraw(renderer, ox, hudOy, hudScale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
+        /* on the small panel Re:CoM's thin enemy bar would read at half the cartridge's: 4/3 (the remaster texture pixel for pixel), from the same right edge */
+        gPortHdEnemyGaugeZoom = sharedHud ? 4.0f / 3.0f : 1.0f; /* its texture 1:1 */
+        PortHdEnemyGaugeDraw(renderer, ox, hudOy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
+        gPortHdEnemyGaugeZoom = 1.0f;
         gPortHudW = hudW;
     }
     for (i = 0; layer == 0 && i < sArtCount && sArt; i++) { /* the title's illustration, under everything */
@@ -1168,21 +1176,23 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         if (!st->image && !LoadThisFrame(q->id))
             continue;
         st->lastUsed = PortFrameCount();
+        const int face = SDL_strstr(kHdSprites[q->id].name, "FaceTiles") != NULL;
+        const float qy = sharedHud && face ? hudOy : oy, qs = sharedHud && face ? hudScale : scale;
         if ((layer == 1 || sharedHud) && sRingRatio >= 0 && SDL_strstr(kHdSprites[q->id].name, "FaceTiles") && RingLoad()) {
             /* the HP ring behind the face: the face frame's origin from this part's corner and its place in the
                picture (faces are drawn unturned) */
             const HdSpriteDef* d = &kHdSprites[q->id];
             float fx = q->x[0] - (q->u0 * d->w + d->x0), fy = q->y[0] - (q->v0 * d->h + d->y0);
-            RingDraw(ox + (fx + RING_FACE_X) * scale, oy + (fy + RING_FACE_Y) * scale, scale / 8.0f,
+            RingDraw(ox + (fx + RING_FACE_X) * qs, qy + (fy + RING_FACE_Y) * qs, qs / 8.0f,
                      (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
             sRingRatio = -1; /* once a frame, behind its first face part */
         }
         /* At full white the coloured base must not remain under its own
          * translucent white copy: AA edges otherwise retain A*(1-A) colour. */
         if (white < 1.0f)
-            Quad(st->image, q, ox, oy, scale, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
+            Quad(st->image, q, ox, qy, qs, (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
         if (white > 0)
-            Quad(st->white, q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
+            Quad(st->white, q, ox, qy, qs, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
         if (kHdSprites[q->id].group == 7 && MenuLightName(kHdSprites[q->id].name))
             SpriteMenuLight(renderer, q, ox, oy, scale, shade, white);
         if (q->u0 <= 0.0f && SDL_strstr(kHdSprites[q->id].name, "PremireChanceTitle")) {
