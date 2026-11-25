@@ -19223,20 +19223,26 @@
     "ga36-v04-accumulated-20261124": {
       "id": "ga36-v04-accumulated-20261124",
       "piece": "GA36 v0.4: rendimiento, audio y encuadre 4:3 acumulados",
-      "status": "en_curso",
+      "status": "pr_abierto",
       "owner": "claude-ga36",
       "created_at": "2026-11-25T02:59:18.280229+00:00",
-      "updated_at": "2026-11-25T02:59:27.335751+00:00",
-      "branch": null,
-      "pr": null,
+      "updated_at": "2026-11-25T02:59:46.162229+00:00",
+      "branch": "ga36/rc6-integration",
+      "pr": "https://github.com/MatyMeatBoy/ReKHCoM/pull/705",
       "approval": null,
       "reference": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-11-25T02:59:46.162229+00:00",
+          "owner": "claude-ga36",
+          "detail": "Pre-release ga36-v0.4-pre publicada desde 918eaadd8; QEMU PASS; rendimiento fisico pendiente."
+        }
+      ],
       "claimed_at": "2026-11-25T02:59:27.335751+00:00"
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-25T02:59:27.335751+00:00",
+  "updated_at": "2026-11-25T02:59:46.162229+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",
