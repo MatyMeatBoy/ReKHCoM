@@ -21,6 +21,10 @@ def block(start_text):
 
 # The scalar fractional path itself, taken from DrawNearest2x.
 loop = block("    if (fractionalFit) {")
+# The NEON rows have their own check (test_ga36_fit_neon.py): drop them here.
+if "static int fitNeon" in loop:
+    neon = loop.index("static int fitNeon")
+    loop = loop[:neon] + loop[loop.index("for (int y = 0; y < outH; y++, posY += stepY)", neon):]
 rows = "hiddenRows" in loop
 
 program = r"""
