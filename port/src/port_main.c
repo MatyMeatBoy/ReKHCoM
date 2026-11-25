@@ -1108,6 +1108,115 @@ static float AllmapScale(void) {
 #endif
 }
 
+/* GA36 4:3 world map at its own fitted zoom: the header goes up to the panel's
+   top and the footer down to its bottom; the band rows next to them (one
+   colour across the width) stretch over the space they leave, so the view in
+   between is no longer framed by the picture's margins. */
+static int AllmapBandRow(int sx, int sy, int first, int step, int count, int w) {
+    int seen = 0;
+    for (int i = 0, r = first; i < count; i++, r += step) {
+        const uint32_t* row = sComposite + (size_t)(sy + r) * gPortScreen.width + sx;
+        int uniform = 1;
+        for (int x = 1; x < w && uniform; x++) uniform = row[x] == row[0];
+        if (!uniform) seen = 1;
+        else if (seen) return r;
+    }
+    return -1;
+}
+
+static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w, int h, bool stale) {
+#ifdef PORT_LINUX
+    extern Mode gModeAllmap;
+    const char* on;
+    PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_ALLMAP_ANCHOR");
+    if (!on || gCurrentMode != &gModeAllmap || AllmapScale() > 0 || !PortFixed480p() || !PortFbActive() ||
+        gPortConfig.aspect != PORT_ASPECT_4_3 || dst->x != 0 || dst->w != w || dst->y < 8 ||
+        dst->y + dst->h > h - 8 || src->w != GBA_SCREEN_W || src->h != GBA_SCREEN_H)
+        return;
+    const int sx = (int)src->x, sy = (int)src->y, H = GBA_SCREEN_H, W = GBA_SCREEN_W;
+#define ALLMAP_PX(r, c) sComposite[(size_t)(sy + (r)) * gPortScreen.width + sx + (c)]
+    const int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
+    /* The footer: its bar starts at the left edge. Rows' band colours are
+       those covering a fifth of the row (the dithered bands have two). */
+    uint32_t bands[GBA_SCREEN_H][4];
+    int nb[GBA_SCREEN_H] = {0}, f = -1, barRight = 0;
+    for (int r = H / 2; r < H; r++) {
+        uint32_t colors[16];
+        int counts[16], n = 0;
+        for (int c = 0; c < W; c++) {
+            const uint32_t p = ALLMAP_PX(r, c);
+            int k = 0;
+            while (k < n && colors[k] != p) k++;
+            if (k == n) {
+                if (n == 16) continue;
+                colors[n] = p; counts[n++] = 0;
+            }
+            counts[k]++;
+        }
+        for (int k = 0; k < n; k++)
+            if (counts[k] >= W / 5 && nb[r] < 4) bands[r][nb[r]++] = colors[k];
+    }
+#define ALLMAP_BAND(r, p) ((nb[r] > 0 && bands[r][0] == (p)) || (nb[r] > 1 && bands[r][1] == (p)) || \
+                           (nb[r] > 2 && bands[r][2] == (p)) || (nb[r] > 3 && bands[r][3] == (p)))
+    for (int r = H / 2 + 1; r < H && f < 0; r++)
+        if (!ALLMAP_BAND(r, ALLMAP_PX(r, 0))) f = r - 1;
+    if (f > H / 2 && nb[f - 1] > 0) {
+        for (int r = f; r < H; r++) {
+            int x = 0;
+            while (x < W && !ALLMAP_BAND(r, ALLMAP_PX(r, x))) x++;
+            if (x < W / 2) barRight = SDL_max(barRight, x);
+        }
+    } else {
+        f = -1;
+    }
+    if (a <= 0 && f < 0)
+        return;
+    if (stale)
+        SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+    const float s = dst->h / H, up = dst->y, down = h - (dst->y + dst->h);
+    SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
+    if (a > 0) {
+        const SDL_FRect bandSrc = {(float)sx, (float)(sy + a), (float)W, 1}, bandDst = {0, a * s, (float)w, up};
+        const SDL_FRect partSrc = {(float)sx, (float)sy, (float)W, (float)a}, partDst = {0, 0, (float)w, a * s};
+        SDL_RenderTexture(sRenderer, sTexture, &bandSrc, &bandDst);
+        SDL_RenderTexture(sRenderer, sTexture, &partSrc, &partDst);
+    }
+    if (f > 0) {
+        /* the bottom rows go down; what is not band nor footer bar there (the
+           world's logo) stays where it was, so it is never split */
+        const uint32_t gap = bands[f - 1][0];
+        const SDL_FRect gapDst = {0, up + f * s, (float)w, down};
+        const SDL_FRect partSrc = {(float)sx, (float)(sy + f), (float)W, (float)(H - f)};
+        const SDL_FRect partDst = {0, up + f * s + down, (float)w, (H - f) * s};
+        SDL_SetRenderDrawColor(sRenderer, (gap >> 16) & 255, (gap >> 8) & 255, gap & 255, 255);
+        SDL_RenderFillRect(sRenderer, &gapDst);
+        SDL_RenderTexture(sRenderer, sTexture, &partSrc, &partDst);
+        for (int pass = 0; pass < 2; pass++)
+            for (int r = f; r < H; r++)
+                for (int c = barRight; c < W && nb[r] > 0; c++) {
+                    uint32_t p = ALLMAP_PX(r, c);
+                    if (ALLMAP_BAND(r, p))
+                        continue;
+                    if (!pass) /* the moved copy: the band under it */
+                        p = c >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, c - 2)) ? ALLMAP_PX(r, c - 2) : bands[r][0];
+                    /* whole output pixels, tiling as the picture's own nearest sampling does */
+                    const float base = up + (pass ? 0 : down), x0 = SDL_floorf(c * s), y0 = SDL_floorf(base + r * s);
+                    const float grow = pass ? 0 : 1; /* the band over the moved copy also takes rounding's edge */
+                    const SDL_FRect at = {x0, y0, SDL_floorf((c + 1) * s) - x0 + grow,
+                                          SDL_floorf(base + (r + 1) * s) - y0 + grow};
+                    SDL_SetRenderDrawColor(sRenderer, (p >> 16) & 255, (p >> 8) & 255, p & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &at);
+                }
+    }
+#undef ALLMAP_BAND
+#undef ALLMAP_PX
+    static bool logged;
+    if (!logged) { PortLog("ga36: world map header/footer anchored (rows %d/%d, bar %d)", a, f, barRight); logged = true; }
+#else
+    (void)src; (void)dst; (void)w; (void)h; (void)stale;
+#endif
+}
+
 /* Its backdrop is made of horizontal bands: the edge columns carry them on. */
 static void DrawAllmapSides(const SDL_FRect* src, const SDL_FRect* dst, int w) {
     for (int side = 0; side < 2; side++) {
@@ -2720,6 +2829,7 @@ static void Present(int paced) {
             PORT_ENV_ONCE(sidesOnce, SDL_getenv, "KHCOM_GA36_ALLMAP_SIDES_ONCE");
             if (AllmapScale() > 0 && !menuCanvas && !(sidesOnce && sFitScale <= 0))
                 DrawAllmapSides(&src, &dst, outW);
+            DrawAllmapAnchored(&src, &dst, outW, outH, deferMenuUpload);
         }
         if (moviePrompt)
             DrawSkipLayer(&normal);
