@@ -91,6 +91,9 @@ def configure(version, arch, base, out, *, armhf_ppu_workers=False, armhf_ppu_a7
     game_cflags = f'{common} -std=gnu89 -w -include port/game_prefix.h {includes}'
     port_cflags = (f'{common} -std=gnu11 -Wall -Wno-unused-function -Wno-missing-braces {quoted} -Iport/include '
                    f'-I{rel(out)} -I{(sdl / "include").as_posix()} -I{(ft / "include/freetype2").as_posix()}')
+    # Achievements (rcheevos): earned and kept locally; ra_client.c makes no
+    # online requests outside Windows.
+    port_cflags += ' -DPORT_RETROACHIEVEMENTS -DRC_CLIENT_SUPPORTS_HASH -Iport/third_party/rcheevos/include'
     # Fixed image base above the GBA space (0x02000000-0x0E010000): quick
     # states hold raw pointers, as on Windows.
     runtime_lib = 'libarmhf' if arch == 'armhf' else 'lib'
@@ -140,6 +143,14 @@ def configure(version, arch, base, out, *, armhf_ppu_workers=False, armhf_ppu_a7
                 n.build(obj, 'cc_port', rel(src), variables={'port_cflags': flags})
             else:
                 n.build(obj, 'cc_port', rel(src))
+            objs.append(obj)
+        ra_root = ROOT / 'port/third_party/rcheevos/src'
+        ra_sources = [ra_root / name for name in ('rc_client.c', 'rc_compat.c', 'rc_util.c', 'rc_version.c')]
+        for directory in ('rcheevos', 'rapi', 'rhash'):
+            ra_sources += sorted((ra_root / directory).glob('*.c'))
+        for src in ra_sources + [ROOT / 'port/achievements/ra_client.c']:
+            obj = '$builddir/ra/' + rel(src).replace('/', '_')[:-2] + '.o'
+            n.build(obj, 'cc_port', rel(src))
             objs.append(obj)
         for name in ('port_symbols', 'rom_symbols'):
             obj = f'$builddir/port/{name}_s.o'
