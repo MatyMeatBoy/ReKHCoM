@@ -918,11 +918,36 @@ static void FillEnhancedVerticalColorMargins(void) {
     for (y = bottom; y < gPortScreen.height; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[1];
 }
 
+/* GA36 4:3: deck, map cards and the journal carry their last row down to the
+   screen edge, so panels and pages reach it instead of ending on a flat bar. */
+static int Menu43Extend(void) {
+#ifdef PORT_LINUX
+    extern Mode gModeDeck, gModeMapinspect, gModeJiminy;
+    const char* extend;
+    PORT_ENV_ONCE(extend, SDL_getenv, "KHCOM_GA36_MENU_43_EXTEND");
+    return extend && PortFixed480p() && PortFbActive() && gPortConfig.aspect == PORT_ASPECT_4_3 &&
+        gPortConfig.graphicsMode == PORT_MODE_GBA_ENHANCED &&
+        (gCurrentMode == &gModeDeck || gCurrentMode == &gModeMapinspect || gCurrentMode == &gModeJiminy);
+#else
+    return 0;
+#endif
+}
+
+static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
+    const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
+    const SDL_FRect row = { src->x, src->y + src->h - 1, src->w, 1 };
+    const SDL_FRect band = { dst->x, bottom, dst->w, h - bottom };
+    if (band.h <= 0 || dst->x > 0 || dst->x + dst->w < w) return;
+    SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
+    SDL_RenderTexture(sRenderer, sTexture, &row, &band);
+}
+
 static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
         sFitScale > 0 || (dst->y <= 0 && dst->y + dst->h >= h))
         return;
-    if (sSideStyle != 1 && sSideStyle != 2 && sSideStyle != 4 && sSideStyle != 5 && sSideStyle != 9)
+    if (sSideStyle != 1 && sSideStyle != 2 && sSideStyle != 4 && sSideStyle != 5 && sSideStyle != 9 &&
+        !(sSideStyle == 12 && Menu43Extend()))
         return;
     const int sx = (int)src->x, sy = (int)src->y;
     const float top = SDL_clamp(SDL_ceilf(dst->y - 0.5f), 0.0f, (float)h);
@@ -941,6 +966,7 @@ static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* d
         SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
         SDL_RenderFillRect(sRenderer, &bands[i]);
     }
+    if (Menu43Extend()) DrawMenu43Bottom(src, dst, w, h);
 }
 
 static void SideBar(int sx, int sy, int side, float y, float scale, float x0, float x1, int edgeX) {
@@ -1762,6 +1788,13 @@ static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
             if (!logged) { PortLog("fbdev: journal fit active"); logged = true; }
             return;
         }
+        /* the centred journal has the world inspect geometry */
+        if (directJournal && Menu43Extend() && PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            src->w == 240 && src->h == 160 && dst->x == 0 && (int)dst->y == 26 &&
+            dst->w == 640 && (int)dst->h == 426 &&
+            PortFbDrawWorldInspectFit(sRenderer, sComposite + (int)src->y * gPortScreen.width + (int)src->x,
+                                      gPortScreen.width))
+            return;
 #endif
         SDL_RenderTexture(sRenderer, sTexture, src, dst);
     }
@@ -2279,6 +2312,10 @@ static void Present(int paced) {
         dst.x = (float)(int)((outW - dst.w) / 2);
         dst.y = (float)(int)((outH - dst.h) / 2);
         if (journalActive && PortJiminyFit(outW, outH, &journalLayout)) {
+            if (Menu43Extend()) {
+                /* centred like the other menus, without the added help row */
+                journalLayout = (PortJiminyLayout){ scale, dst.x, dst.y, dst.w, dst.h, dst.y + dst.h, 0 };
+            }
             scale = journalLayout.scale;
             dst = (SDL_FRect){ journalLayout.x, journalLayout.y, journalLayout.width, journalLayout.height };
             journalShown = 1;
@@ -2888,7 +2925,7 @@ static void Present(int paced) {
     }
     if (gPortConfig.viewMode != PORT_VIEW_CRT) /* the CRT or its shader draws them */
         DrawScanlines(&dst, outW);
-    if (journalShown) {
+    if (journalShown && journalLayout.footerHeight > 0) {
         int dark = 0, white = 0;
         /* Bank5 belongs to the header in all journal maps. Bank0 belongs to
            portraits and may be cleared while an otherwise visible book opens. */

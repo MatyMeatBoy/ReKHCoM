@@ -637,8 +637,17 @@ int PortSpriteShiftY(int entry, int y) {
        never runs. Raise bottom cards there, including the played stacks. */
     if (sHudAx == 2 && sHudAy == 1)
         q = FollowQ(y); /* enemy stocks reach the top while the hand stays low */
-    if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256)
-        shift -= 16 * (q + 256) / 512;
+    if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256) {
+        /* The bottom rows (hand, deck and enemy or boss stocks alike) end this
+           many lines higher than on the cartridge. */
+        static int raise = -1;
+        if (raise < 0) {
+            const char* lines = getenv("KHCOM_GA36_HAND_RAISE");
+            raise = lines ? atoi(lines) : 16;
+            if (raise < 0 || raise > 40) raise = 16;
+        }
+        shift -= raise * (q + 256) / 512;
+    }
     return shift;
 }
 
