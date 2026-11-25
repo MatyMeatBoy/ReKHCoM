@@ -5567,11 +5567,29 @@ static void PpuRows(int slot) {
     sGlyphPend = NULL;
 }
 
+/* A presentation task borrowed by the idle workers (PortPpuParallelRows). */
+static void (*sPpuTask)(void* ctx, int begin, int end);
+static void* sPpuTaskCtx;
+static int sPpuTaskChunk;
+
+static void PpuTaskRows(void) {
+    const int last = sPpuEnd, chunk = sPpuTaskChunk;
+    for (;;) {
+        const int begin = SDL_AddAtomicInt(&sPpuNext, chunk);
+        if (begin >= last)
+            break;
+        sPpuTask(sPpuTaskCtx, begin, begin + chunk < last ? begin + chunk : last);
+    }
+}
+
 static int SDLCALL PpuWorker(void* data) {
     int slot = (int)(intptr_t)data;
     for (;;) {
         SDL_WaitSemaphore(sPpuGo[slot]);
-        PpuRows(slot);
+        if (sPpuTask)
+            PpuTaskRows();
+        else
+            PpuRows(slot);
         SDL_SignalSemaphore(sPpuDone);
     }
     return 0;
@@ -5609,6 +5627,28 @@ static void PpuStart(void) {
         sPpuWorkers++;
     }
     PortLog("ppu: %d cores for the rows beyond the picture%s", sPpuWorkers + 1, sPpuVerify ? " (verified)" : "");
+}
+
+/* Runs fn over [0, count) in chunks on this thread and the PPU workers, which
+ * are idle between frames. Only the main thread calls it, never while a PPU
+ * batch is running; the semaphores order every write before the return.
+ * Returns 0 (nothing run) when there are no workers: the caller runs it alone. */
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk) {
+    int i;
+    if (sPpuWorkers <= 0 || sPpuTask || chunk <= 0 || count <= chunk)
+        return 0;
+    sPpuTask = fn;
+    sPpuTaskCtx = ctx;
+    sPpuTaskChunk = chunk;
+    sPpuEnd = count;
+    SDL_SetAtomicInt(&sPpuNext, 0);
+    for (i = 0; i < sPpuWorkers; i++)
+        SDL_SignalSemaphore(sPpuGo[i]);
+    PpuTaskRows();
+    for (i = 0; i < sPpuWorkers; i++)
+        SDL_WaitSemaphore(sPpuDone);
+    sPpuTask = NULL;
+    return 1;
 }
 
 static int PpuGlyphOrder(const void* a, const void* b) {
@@ -6026,6 +6066,11 @@ static bool PpuDrawPictureAndBottom(const OuterRows* top) {
         logged = true;
     }
     return true;
+}
+#else
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk) {
+    (void)fn; (void)ctx; (void)count; (void)chunk;
+    return 0;
 }
 #endif
 

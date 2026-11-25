@@ -59,22 +59,14 @@ int main(void) {
         SDL_SetRenderDrawColor(b, 0, 0, 0, 255);
         assert(SDL_RenderFillRects(b, bands, 2) && SDL_FlushRenderer(b));
         const unsigned stepY = (160u << 16) / 426u;
-        unsigned posY = stepY / 2;
-        for (int y = 0; y < 426;) {
-            const unsigned row = posY >> 16;
-            uint32_t* rows[3];
-            int count = 0;
-            do {
-                rows[count++] = (uint32_t*)((uint8_t*)fit->pixels + (size_t)(26 + y) * fit->pitch);
-                y++;
-                posY += stepY;
-            } while (count < 3 && y < 426 && (posY >> 16) == row);
-            assert(row < 160);
-            if (pass & 1)
-                FbFitRows240To640Copy(rows, count, frame + (40 + row) * 320 + 40);
-            else
-                FbFitRow240To640(rows, count, frame + (40 + row) * 320 + 40);
-        }
+        /* The production band kernel: whole, or in reverse 16-row bands as the
+         * PPU workers may take them (KHCOM_FBDEV_PARALLEL_PRESENT). */
+        FitJob job = { (uint8_t*)fit->pixels + 26 * (size_t)fit->pitch, fit->pitch, 426, 320, stepY,
+                       frame + 40 * 320 + 40, NULL, (pass & 1) != 0 };
+        if (pass & 2)
+            for (int b = 144; b >= 0; b -= 16) FitRowsBand(&job, b, b + 16);
+        else
+            FitRowsBand(&job, 0, 160);
         for (int y = 0; y < 480; y++) {
             const uint32_t* x = (const uint32_t*)((uint8_t*)sdl->pixels + (size_t)y * sdl->pitch);
             const uint32_t* z = (const uint32_t*)((uint8_t*)fit->pixels + (size_t)y * fit->pitch);
@@ -101,6 +93,10 @@ int main(void) {
         if (map) assert(SDL_RenderFillRects(b, around, 4) && SDL_FlushRenderer(b));
         const int w = map ? 240 : 320, h = map ? 160 : 240;
         const uint32_t* input = frame + (map ? 40 * 320 + 40 : 0);
+        if (map) {
+            Allmap2xJob job = { (uint8_t*)fit->pixels + 80 * (size_t)fit->pitch + 80 * 4, fit->pitch, 320, input };
+            for (int b = 144; b >= 0; b -= 16) Allmap2xBand(&job, b, b + 16);
+        } else
         for (int y = 0; y < h; y++, input += 320) {
             uint32_t* upper = (uint32_t*)((uint8_t*)fit->pixels + (size_t)((map ? 80 : 0) + 2 * y) * fit->pitch) +
                               (map ? 80 : 0);
@@ -131,7 +127,11 @@ def main():
     kernel = (ROOT / "port/linux/fb_fit_row.h").read_text(encoding="utf-8")
     with tempfile.TemporaryDirectory() as tmp:
         source, exe = Path(tmp) / "fit.c", Path(tmp) / "fit.exe"
-        source.write_text(FIXTURE.replace("KERNEL", kernel), encoding="utf-8")
+        fb = (ROOT / "port/linux/fbdev_linux.c").read_text(encoding="utf-8")
+        start = fb.index("static int FirstOutputRow(")
+        bands = fb[start:fb.index("#endif", fb.index("static void Allmap2xBand("))]
+        bands = bands.replace("#ifdef __ARM_NEON\n", "")
+        source.write_text(FIXTURE.replace("KERNEL", kernel + "\n" + bands), encoding="utf-8")
         subprocess.run([str(compiler), "-O1", str(source), "-o", str(exe), "-I" + str(sdl / "include"),
                         "-L" + str(sdl / "lib"), "-lSDL3"], check=True)
         env = dict(os.environ, PATH=str(sdl / "bin") + os.pathsep + os.environ["PATH"])

@@ -171,6 +171,82 @@ bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int str
     return true;
 }
 
+/* KHCOM_FBDEV_PARALLEL_PRESENT: the per-row presentation kernels are split
+ * by source row among this thread and the PPU workers, idle at this point.
+ * Each band writes only its own output rows and reads the finished frame,
+ * so the result is the same as the single-thread loop. */
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk);
+
+static bool ParallelPresent(void) {
+    static int enabled = -1;
+    if (enabled < 0) {
+        enabled = SDL_getenv("KHCOM_FBDEV_PARALLEL_PRESENT") != NULL;
+        if (enabled) PortLog("fbdev: presentation rows on the PPU workers");
+    }
+    return enabled;
+}
+
+/* First output row that samples source row s or a later one, for the 16.16
+ * pixel-centre walk pos(y) = first + y * step. */
+static int FirstOutputRow(unsigned s, uint64_t first, uint64_t step, int outH) {
+    const uint64_t target = (uint64_t)s << 16;
+    if (target <= first)
+        return 0;
+    const uint64_t y = (target - first + step - 1) / step;
+    return y < (uint64_t)outH ? (int)y : outH;
+}
+
+#ifdef __ARM_NEON
+typedef struct {
+    uint8_t* pixels;
+    int pitch, outH, stride;
+    unsigned stepY;
+    const uint32_t* src;
+    const uint8_t* hiddenRows;
+    bool rowCopy;
+} FitJob;
+
+/* Same grouping as the serial fit loop, started at a source-row boundary. */
+static void FitRowsBand(void* ctx, int begin, int end) {
+    const FitJob* job = ctx;
+    int y = FirstOutputRow((unsigned)begin, job->stepY / 2, job->stepY, job->outH);
+    unsigned posY = job->stepY / 2 + (unsigned)y * job->stepY;
+    while (y < job->outH) {
+        const unsigned row = posY >> 16;
+        if ((int)row >= end)
+            break;
+        uint32_t* rows[3];
+        int count = 0;
+        do {
+            rows[count++] = (uint32_t*)(job->pixels + (size_t)y * job->pitch);
+            y++;
+            posY += job->stepY;
+        } while (count < 3 && y < job->outH && (posY >> 16) == row);
+        if (job->hiddenRows && job->hiddenRows[row])
+            continue;
+        if (job->rowCopy)
+            FbFitRows240To640Copy(rows, count, job->src + (size_t)row * job->stride);
+        else
+            FbFitRow240To640(rows, count, job->src + (size_t)row * job->stride);
+    }
+}
+
+typedef struct {
+    uint8_t* row;
+    int pitch, stride;
+    const uint32_t* src;
+} Allmap2xJob;
+
+static void Allmap2xBand(void* ctx, int begin, int end) {
+    const Allmap2xJob* job = ctx;
+    for (int y = begin; y < end; y++) {
+        uint8_t* row = job->row + (size_t)(2 * y) * job->pitch;
+        FbDoubleRow((uint32_t*)row, job->src + (size_t)y * job->stride, 240);
+        memcpy(row + job->pitch, row, 480 * sizeof(uint32_t));
+    }
+}
+#endif
+
 /* The handheld's opaque nearest 2x case can write the software renderer's
  * surface directly. Other geometry and renderer paths stay with SDL. */
 static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int stride, int outY, int outH, const SDL_Rect* cover, const uint8_t* hiddenRows) {
@@ -208,6 +284,11 @@ static int DrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int
             if (rowCopy < 0) {
                 rowCopy = SDL_getenv("KHCOM_FBDEV_FIT_ROWCOPY") != NULL;
                 if (rowCopy) PortLog("fbdev: fit rows copied in sequence");
+            }
+            if (ParallelPresent()) {
+                FitJob job = { pixels, pitch, outH, stride, stepY, src, hiddenRows, rowCopy != 0 };
+                if (PortPpuParallelRows(FitRowsBand, &job, 160, 16))
+                    return 1;
             }
             /* Each source row feeds two or three output rows: store them
              * together instead of reading the first one back. */
@@ -342,10 +423,9 @@ int PortFbDrawAllmap2x(SDL_Renderer* renderer, const uint32_t* src, int stride) 
         return 0;
     const int pitch = sRenderSurface->pitch;
     uint8_t* row = (uint8_t*)sRenderSurface->pixels + 80 * pitch + 80 * sizeof(uint32_t);
-    for (int y = 0; y < 160; y++, src += stride, row += 2 * pitch) {
-        FbDoubleRow((uint32_t*)row, src, 240);
-        memcpy(row + pitch, row, 480 * sizeof(uint32_t));
-    }
+    Allmap2xJob job = { row, pitch, stride, src };
+    if (!ParallelPresent() || !PortPpuParallelRows(Allmap2xBand, &job, 160, 16))
+        Allmap2xBand(&job, 0, 160);
     static bool logged;
     if (!logged) { PortLog("fbdev: allmap direct 2x active"); logged = true; }
     return 1;
@@ -385,27 +465,52 @@ static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor);
 /* Output rows that sample the same source row are blended together: one
  * alpha test per source pixel for the group, transparent quads skipped at once
  * and opaque spans expanded once and copied. Same arithmetic as the row loops. */
+typedef struct {
+    const uint32_t* source;
+    const uint16_t* first;
+    int width, outH, pitch;
+    uint8_t* base;
+    uint64_t dy;
+} OverlayGroupsJob;
+
+static void OverlayGroupsBand(void* ctx, int begin, int end);
+
 static void BlendOverlayRowGroups(const uint32_t* source, int width, int height, const SDL_Rect* dest) {
     uint16_t first[241]; /* first output column of each source column */
     const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
-    uint64_t pos = dx / 2, py = dy / 2;
+    uint64_t pos = dx / 2;
     for (int sx = 0, x = 0; sx <= width; sx++) {
         while (x < dest->w && (int)(pos >> 16) < sx) { x++; pos += dx; }
         first[sx] = (uint16_t)x;
     }
     static bool logged;
     if (!logged) { PortLog("fbdev: overlay row groups active"); logged = true; }
-    const int pitch = sRenderSurface->pitch;
-    uint8_t* base = (uint8_t*)sRenderSurface->pixels + dest->y * pitch + 4 * dest->x;
-    for (int y = 0; y < dest->h;) {
+    OverlayGroupsJob job = { source, first, width, dest->h, sRenderSurface->pitch,
+        (uint8_t*)sRenderSurface->pixels + dest->y * sRenderSurface->pitch + 4 * dest->x, dy };
+    if (!ParallelPresent() || !PortPpuParallelRows(OverlayGroupsBand, &job, height, 8))
+        OverlayGroupsBand(&job, 0, height);
+}
+
+static void OverlayGroupsBand(void* ctx, int begin, int end) {
+    const OverlayGroupsJob* job = ctx;
+    const uint32_t* source = job->source;
+    const uint16_t* first = job->first;
+    const int width = job->width, pitch = job->pitch;
+    const uint64_t dy = job->dy;
+    uint8_t* base = job->base;
+    int y = FirstOutputRow((unsigned)begin, dy / 2, dy, job->outH);
+    uint64_t py = dy / 2 + (uint64_t)y * dy;
+    while (y < job->outH) {
         const int sy = (int)(py >> 16);
+        if (sy >= end)
+            break;
         uint32_t* rows[4];
         int count = 0;
         do {
             rows[count++] = (uint32_t*)(base + (size_t)y * pitch);
             y++;
             py += dy;
-        } while (count < 4 && y < dest->h && (int)(py >> 16) == sy);
+        } while (count < 4 && y < job->outH && (int)(py >> 16) == sy);
         const uint32_t* src = source + sy * width;
         for (int sx = 0; sx < width;) {
             if (sx + 4 <= width && !((src[sx] | src[sx + 1] | src[sx + 2] | src[sx + 3]) >> 24)) {
@@ -635,6 +740,18 @@ bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, in
     return true;
 }
 
+typedef struct {
+    const uint32_t* source;
+    const uint16_t* xMap;
+    const uint16_t* first; /* NULL: per-output-pixel loop */
+    int width, outW, outH, outX;
+    uint8_t* base;
+    int pitch;
+    uint64_t dy;
+} SparseJob;
+
+static void SparseBand(void* ctx, int bandBegin, int bandEnd);
+
 /* Preserve SDL's pixel-centre mapping and alpha arithmetic, but avoid
  * visiting transparent ends (and entire empty rows) of sparse menu layers. */
 bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* source, int width, int height,
@@ -648,8 +765,7 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
         return true;
     }
     const uint64_t dx = ((uint64_t)width << 16) / dest->w, dy = ((uint64_t)height << 16) / dest->h;
-    uint64_t pos = dx / 2, py = dy / 2;
-    int previous = -1, begin = 0, end = 0;
+    uint64_t pos = dx / 2;
     for (int x = 0; x < dest->w; x++, pos += dx) xMap[x] = (uint16_t)(pos >> 16);
     /* Optionally walk source pixels: one alpha test and one scaled foreground
      * per output run, and no destination term over black. */
@@ -665,25 +781,45 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
             first[sx] = (uint16_t)x;
         }
     }
+    SparseJob job = { source, xMap, runs ? first : NULL, width, dest->w, dest->h, dest->x,
+        (uint8_t*)sRenderSurface->pixels + dest->y * sRenderSurface->pitch, sRenderSurface->pitch, dy };
+    if (!ParallelPresent() || !PortPpuParallelRows(SparseBand, &job, height, 8))
+        SparseBand(&job, 0, height);
+    return true;
+}
+
+static void SparseBand(void* ctx, int bandBegin, int bandEnd) {
+    const SparseJob* job = ctx;
+    const uint32_t* source = job->source;
+    const uint16_t* xMap = job->xMap;
+    const uint16_t* first = job->first;
+    const bool runs = first != NULL;
+    const int width = job->width;
+    const uint64_t dy = job->dy;
+    int previous = -1, begin = 0, end = 0;
     int sourceLeft = 0, sourceRight = 0;
-    for (int y = 0; y < dest->h; y++, py += dy) {
+    int y = FirstOutputRow((unsigned)bandBegin, dy / 2, dy, job->outH);
+    uint64_t py = dy / 2 + (uint64_t)y * dy;
+    for (; y < job->outH; y++, py += dy) {
         const int sy = (int)(py >> 16);
+        if (sy >= bandEnd)
+            break;
         const uint32_t* src = source + sy * width;
         if (sy != previous) {
             int left = 0, right = width, lo, hi;
             while (left < right && !(src[left] >> 24)) left++;
             while (right > left && !(src[right - 1] >> 24)) right--;
-            lo = 0; hi = dest->w;
+            lo = 0; hi = job->outW;
             while (lo < hi) { int mid = (lo + hi) / 2; if (xMap[mid] < left) lo = mid + 1; else hi = mid; }
             begin = lo;
-            lo = begin; hi = dest->w;
+            lo = begin; hi = job->outW;
             while (lo < hi) { int mid = (lo + hi) / 2; if (xMap[mid] < right) lo = mid + 1; else hi = mid; }
             end = lo;
             sourceLeft = left;
             sourceRight = right;
             previous = sy;
         }
-        uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (dest->y + y) * sRenderSurface->pitch) + dest->x;
+        uint32_t* dst = (uint32_t*)(job->base + (size_t)y * job->pitch) + job->outX;
         if (runs) {
             for (int sx = sourceLeft; sx < sourceRight; sx++) {
                 const uint32_t pixel = src[sx];
@@ -709,7 +845,6 @@ bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* sour
             else if (alpha) dst[x] = ScaleGlyphRgb(pixel, alpha) + ScaleGlyphRgb(dst[x], 255 - alpha);
         }
     }
-    return true;
 }
 
 void PortFbDrawGlyphMaskClipped(const uint8_t* alpha, int x, int y, int w, int h, uint32_t rgb, const SDL_Rect* clip) {

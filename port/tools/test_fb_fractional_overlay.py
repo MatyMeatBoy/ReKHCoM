@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import os
+import re
 
 root = Path(__file__).resolve().parents[2]
 source = (root / 'port/linux/fbdev_linux.c').read_text()
@@ -20,6 +21,41 @@ def function(signature):
     raise ValueError(signature)
 
 
+def struct(name):
+    return re.search(r'typedef struct \{[^}]*\} ' + name + ';', source).group(0) + '\n'
+
+
+# KHCOM_FBDEV_PARALLEL_PRESENT: the bands run in reverse order, or on real
+# threads, to show that each band depends only on its own output rows.
+PARALLEL_STUB = r'''
+#include <pthread.h>
+#include <stdatomic.h>
+static void OverlayGroupsBand(void* ctx, int begin, int end);
+static void SparseBand(void* ctx, int bandBegin, int bandEnd);
+static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor);
+static void (*stubFn)(void*, int, int); static void* stubCtx; static int stubCount, stubChunk;
+static atomic_int stubNext;
+static void* StubWorker(void* unused) {
+    (void)unused;
+    for (;;) { int b = atomic_fetch_add(&stubNext, stubChunk); if (b >= stubCount) return NULL;
+               stubFn(stubCtx, b, b + stubChunk < stubCount ? b + stubChunk : stubCount); }
+}
+static int PortPpuParallelRows(void (*fn)(void*, int, int), void* ctx, int count, int chunk) {
+    const char* mode = getenv("TEST_PARALLEL_MODE");
+    if (!mode || count <= chunk) return 0;
+    if (!strcmp(mode, "reverse")) {
+        for (int b = (count - 1) / chunk * chunk; b >= 0; b -= chunk) fn(ctx, b, b + chunk < count ? b + chunk : count);
+        return 1;
+    }
+    stubFn = fn; stubCtx = ctx; stubCount = count; stubChunk = chunk; atomic_store(&stubNext, 0);
+    pthread_t t[3];
+    for (int i = 0; i < 3; i++) pthread_create(&t[i], NULL, StubWorker, NULL);
+    StubWorker(NULL);
+    for (int i = 0; i < 3; i++) pthread_join(t[i], NULL);
+    return 1;
+}
+'''
+
 program = r'''
 #include <stdint.h>
 #include <stdbool.h>
@@ -33,7 +69,7 @@ typedef struct { int unused; } SDL_Renderer;
 static SDL_Surface *sRenderSurface;
 static bool PortFbBeginGlyphBatch(SDL_Renderer *renderer) { (void)renderer; return true; }
 static void PortLog(const char *fmt, ...) { (void)fmt; }
-''' + function('static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor) {') + '\n' + function('static void BlendOverlayRowGroups(') + '\n' + function('static bool UseOverlayRowGroups(') + '\n' + function('bool PortFbBlendOverlayScaled(') + '\n' + function('bool PortFbBlendOverlayScaledSparse(') + r'''
+''' + PARALLEL_STUB + function('static uint32_t ScaleGlyphRgb(uint32_t rgb, unsigned factor) {') + '\n' + function('static int FirstOutputRow(') + '\n' + function('static bool ParallelPresent(void) {') + '\n' + struct('OverlayGroupsJob') + struct('SparseJob') + function('static void OverlayGroupsBand(void* ctx, int begin, int end) {') + '\n' + function('static void SparseBand(void* ctx, int bandBegin, int bandEnd) {') + '\n' + function('static void BlendOverlayRowGroups(') + '\n' + function('static bool UseOverlayRowGroups(') + '\n' + function('bool PortFbBlendOverlayScaled(') + '\n' + function('bool PortFbBlendOverlayScaledSparse(') + r'''
 static unsigned rng=7331;
 static unsigned rnd(void) { rng=rng*1664525u+1013904223u; return rng; }
 static unsigned channel(unsigned s,unsigned d,unsigned a) { return s*a/255+d*(255-a)/255; }
@@ -99,8 +135,12 @@ with tempfile.TemporaryDirectory() as directory:
     src = Path(directory) / 'test.c'
     exe = Path(directory) / 'test.exe'
     src.write_text(program)
-    subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'clang', '-O2', str(src), '-o', str(exe)], check=True)
+    subprocess.run([sys.argv[1] if len(sys.argv) > 1 else 'clang', '-O2', '-pthread', str(src), '-o', str(exe)], check=True)
     subprocess.run([str(exe)], check=True)
     subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_OVERLAY_240_RUNS': '1'})
     subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_SPARSE_RUNS': '1'})
     subprocess.run([str(exe)], check=True, env={**os.environ, 'KHCOM_FBDEV_OVERLAY_ROW_GROUPS': '1'})
+    for mode in ('reverse', 'threads'):
+        for flags in ({}, {'KHCOM_FBDEV_SPARSE_RUNS': '1'}, {'KHCOM_FBDEV_OVERLAY_ROW_GROUPS': '1'}):
+            subprocess.run([str(exe)], check=True, env={**os.environ, **flags,
+                           'KHCOM_FBDEV_PARALLEL_PRESENT': '1', 'TEST_PARALLEL_MODE': mode})
