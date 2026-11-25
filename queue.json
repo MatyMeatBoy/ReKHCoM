@@ -18823,10 +18823,10 @@
     "ga36-worldinspect-blur-cells-20261124": {
       "id": "ga36-worldinspect-blur-cells-20261124",
       "piece": "GA36 naipes mundo: evitar muestras de blur ocultas",
-      "status": "en_curso",
-      "owner": "claude-ga36",
+      "status": "pendiente",
+      "owner": null,
       "created_at": "2026-11-24T20:19:58.173594+00:00",
-      "updated_at": "2026-11-25T01:58:35.805024+00:00",
+      "updated_at": "2026-11-25T01:59:48.550569+00:00",
       "branch": null,
       "pr": null,
       "approval": null,
@@ -18836,6 +18836,11 @@
           "at": "2026-11-24T20:23:42.119910+00:00",
           "owner": "Codex-v22",
           "detail": "released: Nine QEMU captures identical; ABBA FPS A 51.20-51.24 P95 23.17-24.27 vs B 51.68-55.91 P95 21.18-23.25, presentation 5.68-5.82 vs 4.53-5.62 with host variability and one overlapping run. Small uncertain effect relative complexity/cache risk; discarded."
+        },
+        {
+          "at": "2026-11-25T01:59:48.550569+00:00",
+          "owner": "claude-ga36",
+          "detail": "released: Devuelta sin trabajo: era un experimento ya descartado con evidencia de Codex; claude-ga36 no lo repite sin evidencia nueva."
         }
       ],
       "claimed_at": "2026-11-25T01:58:35.805024+00:00"
@@ -19182,7 +19187,7 @@
     }
   },
   "integrator": null,
-  "updated_at": "2026-11-25T01:59:30.685607+00:00",
+  "updated_at": "2026-11-25T01:59:48.550569+00:00",
   "recoveries": [
     {
       "at": "2026-10-24T16:25:04.486968+00:00",

@@ -545,7 +545,7 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-worldinspect-blur-covered-20261124 | GA36 naipes mundo: evitar difuminado cubierto por imagen opaca | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/699 | — | 2026-11-24T20:04:20.158279+00:00 |
 | ga36-worldinspect-blur-interpolation-20261124 | GA36 naipes mundo: omitir interpolacion blur no visible | en_curso | claude-ga36 | — | — | 2026-11-25T01:58:44.493905+00:00 |
 | ga36-single-grouped-diagnostic-20261124 | GA36 diagnostico unico: sintesis y naipes reales mas comparaciones A/B automaticas | en_revision | Codex-v22 | — | — | 2026-11-25T01:53:50.857477+00:00 |
-| ga36-worldinspect-blur-cells-20261124 | GA36 naipes mundo: evitar muestras de blur ocultas | en_curso | claude-ga36 | — | — | 2026-11-25T01:58:35.805024+00:00 |
+| ga36-worldinspect-blur-cells-20261124 | GA36 naipes mundo: evitar muestras de blur ocultas | pendiente | — | — | — | 2026-11-25T01:59:48.550569+00:00 |
 | ga36-synthesis-uniform-native-tiles-20261124 | GA36 sintesis: aprovechar filas nativas de mosaico uniformes | en_curso | claude-ga36 | — | — | 2026-11-25T01:59:00.804708+00:00 |
 | ga36-menu-cycle-profile-20261124 | GA36 menus: localizar tiempo restante fuera de PPU y presentacion | en_curso | claude-ga36 | — | — | 2026-11-25T01:59:30.685607+00:00 |
 | ga36-unrouted-psg-wave-20261124 | GA36 menus: evitar calcular forma PSG no conectada preservando fase y audio | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/700 | — | 2026-11-24T20:47:41.391169+00:00 |
