@@ -1016,20 +1016,29 @@ static int Menu43Extend(void) {
 #endif
 }
 
+/* The journal closes with the top bar mirrored: the same height, colour and
+   bright edge line, drawn over the book so its rings never end cut or
+   stretched. Call after the picture. */
+static void DrawJournalFooterBar(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
+    const uint32_t* column = sComposite + (int)src->y * gPortScreen.width + (int)src->x + 200;
+    const uint32_t bar = column[0] & 0xFFFFFFu;
+    int row = 1;
+    while (row < 16 && (column[row * gPortScreen.width] & 0xFFFFFFu) == bar) row++;
+    if (!bar || row >= 16) return;
+    const uint32_t edge = column[row * gPortScreen.width] & 0xFFFFFFu;
+    const float scale = dst->h / src->h, height = dst->y + row * scale;
+    const SDL_FRect line = { 0, (float)(int)(h - height - scale), (float)w, scale };
+    const SDL_FRect fill = { 0, line.y + line.h, (float)w, h - line.y - line.h };
+    SDL_SetRenderDrawColor(sRenderer, (edge >> 16) & 255, (edge >> 8) & 255, edge & 255, 255);
+    SDL_RenderFillRect(sRenderer, &line);
+    SDL_SetRenderDrawColor(sRenderer, (bar >> 16) & 255, (bar >> 8) & 255, bar & 255, 255);
+    SDL_RenderFillRect(sRenderer, &fill);
+}
+
 static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
     extern Mode gModeJiminy;
-    if (gCurrentMode == &gModeJiminy) {
-        /* The journal closes with the same plain bar it opens with, over the
-           book: its rings cut by the picture's edge never stretch down. */
-        const uint32_t bar = MenuMarginColor((int)src->x, (int)src->y, 1);
-        const SDL_FRect footer = { 0, bottom, (float)w, h - bottom };
-        if (bar && footer.h > 0) {
-            SDL_SetRenderDrawColor(sRenderer, (bar >> 16) & 255, (bar >> 8) & 255, bar & 255, 255);
-            SDL_RenderFillRect(sRenderer, &footer);
-        }
-        return;
-    }
+    if (gCurrentMode == &gModeJiminy) return; /* DrawJournalFooterBar, over the picture */
     const int count = (int)src->w, last = (int)(src->y + src->h) - 1;
     const float step = dst->w / src->w;
     if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W || last < 7) return;
@@ -1037,11 +1046,12 @@ static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, 
     const uint32_t* edge = sComposite + last * gPortScreen.width + (int)src->x;
     const uint32_t* inner = edge - 4 * gPortScreen.width;
     memcpy(line, edge, count * sizeof(*line));
+    const uint32_t ground = MenuMarginColor((int)src->x, (int)src->y, 1);
     /* A line sliding past the edge during a menu's entry: a long run over a
        plain stretch of another colour. Take the colour behind it. */
     for (int x = 0, end; x < count; x = end) {
         for (end = x + 1; end < count && line[end] == line[x]; end++) {}
-        if (end - x < 40) continue;
+        if (end - x < 40 || (line[x] & 0xFFFFFFu) == ground) continue;
         int behind = 0;
         for (int k = x; k < end; k++) behind += inner[k] == inner[x + (end - x) / 2];
         if (inner[x + (end - x) / 2] != line[x] && behind * 10 >= (end - x) * 9)
@@ -1056,7 +1066,6 @@ static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, 
     /* Only the card panel, which touches one side of the screen, reaches the
        bottom. Whatever else ends there (a deck's box) closes on the screen's
        own background. */
-    const uint32_t ground = MenuMarginColor((int)src->x, (int)src->y, 1);
     if (ground) {
         int left = 0, right = count;
         while (left < count && (line[left] & 0xFFFFFFu) != ground) left++;
@@ -2619,6 +2628,7 @@ static void Present(int paced) {
 #endif
                 SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
         }
+        if (journalShown && Menu43Extend()) DrawJournalFooterBar(&src, &dst, outW, outH);
         if (AllmapScale() > 0 && !menuCanvas) DrawAllmapSides(&src, &dst, outW);
         if (moviePrompt)
             DrawSkipLayer(&normal);
