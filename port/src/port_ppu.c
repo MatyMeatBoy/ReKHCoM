@@ -2900,6 +2900,125 @@ static void DrawStraightAffine(int bg, int gy, uint16_t cnt, int32_t refX, int32
     }
 }
 
+/* KHCOM_PPU_ARENA_FAST: the battle arena's affine row (wide margins with reflected ornament bands, extended floor)
+   without the per-pixel classification. The row is split at the GBA picture's edges; a centre span whose ends lie
+   inside the texture is read with no checks (the affine map is linear, so every pixel between lies inside too), and
+   the margins take their final texture column from a table of the band reflection plus the sideways repeat, built
+   once per band layout. Anything the table does not cover goes through ArenaAffinePixel, the reference rule. */
+static int sArenaFast;
+#define ARENA_LUT_OFFSET 2048
+#define ARENA_LUT_SIZE 5120
+static PPU_TLS int16_t sArenaLut[ARENA_LUT_SIZE];
+static PPU_TLS int sArenaLutKey[9], sArenaLutValid;
+
+static uint16_t ArenaAffinePixel(int px, int py, bool margin, int size, int wrap, bool extendFloor,
+                                 bool extendBands, const uint8_t* screen, const uint8_t* chars,
+                                 uint8_t* inWorld) {
+    int tile, ci;
+    if (extendFloor && py >= size) py = size - 1;
+    if (extendBands && margin && py >= 0 && py < size) {
+        if (px < sArenaBands[0])
+            px = ArenaBandPixel(sArenaBands[0] - 1 - px, sArenaBands[2], sArenaBands[3], 0);
+        else if (px >= sArenaBands[1])
+            px = ArenaBandPixel(px - sArenaBands[1], sArenaBands[4], sArenaBands[5], 1);
+    }
+    if (wrap) {
+        px &= size - 1;
+        py &= size - 1;
+    } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && margin) {
+        px &= size - 1;
+    } else if (px < 0 || py < 0 || px >= size || py >= size) {
+        return TRANSPARENT;
+    }
+    *inWorld = 1;
+    tile = screen[(py >> 3) * (size >> 3) + (px >> 3)];
+    ci = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+    return ci ? (PLTT16[ci] & 0x7FFF) : TRANSPARENT;
+}
+
+static void DrawArenaAffineRow(uint16_t* out, uint8_t* inWorld, int first, int end, int origin,
+                               int32_t rx, int32_t ry, int pa, int pc, int size, int wrap,
+                               bool extendFloor, bool extendBands, const uint8_t* screen,
+                               const uint8_t* chars) {
+    const int tiles = size >> 3, limit = size << 8;
+    const uint16_t* const palette = PLTT16;
+    const int cuts[4] = { first, SDL_clamp(origin, first, end), SDL_clamp(origin + GBA_SCREEN_W, first, end), end };
+    int key[9], i, s, x;
+
+    key[0] = size; key[1] = wrap; key[2] = extendBands;
+    for (i = 0; i < 6; i++) key[3 + i] = sArenaBands[i];
+    if (!sArenaLutValid || memcmp(key, sArenaLutKey, sizeof(key))) {
+        /* the margin rule for a row inside the texture (0 <= py < size) */
+        for (i = 0; i < ARENA_LUT_SIZE; i++) {
+            int px = i - ARENA_LUT_OFFSET;
+            if (extendBands) {
+                if (px < sArenaBands[0])
+                    px = ArenaBandPixel(sArenaBands[0] - 1 - px, sArenaBands[2], sArenaBands[3], 0);
+                else if (px >= sArenaBands[1])
+                    px = ArenaBandPixel(px - sArenaBands[1], sArenaBands[4], sArenaBands[5], 1);
+            }
+            if (wrap || ((px < 0 || px >= size) && size >= 512)) px &= size - 1;
+            sArenaLut[i] = (px >= 0 && px < size) ? (int16_t)px : -1;
+        }
+        memcpy(sArenaLutKey, key, sizeof(key));
+        sArenaLutValid = 1;
+    }
+    for (s = 0; s < 3; s++) {
+        const int a = cuts[s], b = cuts[s + 1];
+        const bool margin = s != 1;
+        int32_t sx = rx + (int32_t)pa * (a - first), sy = ry + (int32_t)pc * (a - first);
+        if (a >= b) continue;
+        if (!margin) {
+            const int last = b - a - 1;
+            if ((unsigned)sx < (unsigned)limit && (unsigned)sy < (unsigned)limit &&
+                (unsigned)(sx + (int32_t)pa * last) < (unsigned)limit &&
+                (unsigned)(sy + (int32_t)pc * last) < (unsigned)limit) {
+                memset(inWorld + a, 1, b - a);
+                if (pc == 0) { /* one texture row: its tile row once */
+                    const int py = sy >> 8;
+                    const uint8_t* row = screen + (py >> 3) * tiles;
+                    const uint8_t* line = chars + (py & 7) * 8;
+                    for (x = a; x < b; x++, sx += pa) {
+                        const int px = sx >> 8;
+                        const unsigned index = line[row[px >> 3] * 64 + (px & 7)];
+                        out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                    }
+                } else {
+                    for (x = a; x < b; x++, sx += pa, sy += pc) {
+                        const int px = sx >> 8, py = sy >> 8;
+                        const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                        const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                        out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                    }
+                }
+                continue;
+            }
+            for (x = a; x < b; x++, sx += pa, sy += pc)
+                out[x] = ArenaAffinePixel(sx >> 8, sy >> 8, false, size, wrap, extendFloor, extendBands,
+                                          screen, chars, inWorld + x);
+            continue;
+        }
+        for (x = a; x < b; x++, sx += pa, sy += pc) {
+            int px = sx >> 8, py = sy >> 8;
+            const unsigned li = (unsigned)(px + ARENA_LUT_OFFSET);
+            if (extendFloor && py >= size) py = size - 1;
+            if ((unsigned)py < (unsigned)size && li < ARENA_LUT_SIZE) {
+                const int m = sArenaLut[li];
+                if (m < 0) { out[x] = TRANSPARENT; continue; }
+                {
+                    const unsigned tile = screen[(py >> 3) * tiles + (m >> 3)];
+                    const unsigned index = chars[tile * 64 + (py & 7) * 8 + (m & 7)];
+                    inWorld[x] = 1;
+                    out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                }
+                continue;
+            }
+            out[x] = ArenaAffinePixel(px, py, true, size, wrap, extendFloor, extendBands, screen, chars,
+                                      inWorld + x);
+        }
+    }
+}
+
 static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     int a = bg - 2;
     uint16_t cnt = IO16(0x08 + bg * 2);
@@ -3003,6 +3122,11 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
             }
             while (x < stop) out[x++] = color;
         }
+        return;
+    }
+    if (sArenaFast && mosH == 1 && !singleCopy && !(extendFloor && sHalloweenFloor)) {
+        DrawArenaAffineRow(out, inWorld, first, end, origin, rx, ry, pa, pc, size, wrap, extendFloor,
+                           extendBands, screen, chars);
         return;
     }
     int mosaicEnd = first + mosH - mosaicOffset;
@@ -5841,10 +5965,13 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sTextNeon = 0;
     const int bgPlainRows = sBgPlainRows;
     sBgPlainRows = 0;
+    const int arenaFast = sArenaFast;
+    sArenaFast = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
     sTextNeon = textNeon;
     sBgPlainRows = bgPlainRows;
+    sArenaFast = arenaFast;
     sObjSkipClear = objSkipClear;
     sObjAffineSpan = objAffineSpan;
     sObjRowRuns = objRowRuns;
@@ -6041,6 +6168,8 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sTextNeon = 0;
         int bgPlainRows = sBgPlainRows;
         sBgPlainRows = 0;
+        int arenaFast = sArenaFast;
+        sArenaFast = 0;
 #ifdef __ARM_NEON
         /* Compare the experimental narrow vector path against scalar rows,
            including the background and text occlusion buffers. */
@@ -6058,6 +6187,7 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
         sMenuBgCopy = menuBgCopy;
         sTextNeon = textNeon;
         sBgPlainRows = bgPlainRows;
+        sArenaFast = arenaFast;
 #ifdef __ARM_NEON
         sNeonNarrowCompose = narrowVector;
 #endif
@@ -6267,6 +6397,9 @@ void PortPpuRenderFrame(void) {
     const char* bgPlainRows;
     PORT_ENV_ONCE(bgPlainRows, SDL_getenv, "KHCOM_PPU_BG_PLAIN_ROWS");
     sBgPlainRows = bgPlainRows != NULL;
+    const char* arenaFast;
+    PORT_ENV_ONCE(arenaFast, SDL_getenv, "KHCOM_PPU_ARENA_FAST");
+    sArenaFast = arenaFast != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
