@@ -1129,7 +1129,7 @@ static int AllmapBandRow(int sx, int sy, int first, int step, int count, int w) 
     return -1;
 }
 
-static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w, int h, bool stale) {
+static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w, int h, bool stale, bool direct) {
 #ifdef PORT_LINUX
     extern Mode gModeAllmap;
     const char* on;
@@ -1176,6 +1176,50 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
     }
     if (a <= 0 && f < 0)
         return;
+    {
+        /* The menu fit drew the picture straight to the panel (rows 26..451, the
+           same nearest sampling): the anchored parts are rows moved in place,
+           with no texture upload or scaling. */
+        extern bool PortFbBeginGlyphBatch(SDL_Renderer*);
+        extern void PortFbMoveRows(int, int, int), PortFbRepeatRow(int, int, int);
+        extern void PortFbFillRect(int, int, int, int, uint32_t);
+        if (direct && w == 640 && h == 480 && dst->y == 26 && PortFbBeginGlyphBatch(sRenderer)) {
+            const unsigned stepY = (160u << 16) / 426u, stepX = (240u << 16) / 640u;
+            int firstY[GBA_SCREEN_H + 1], firstX[GBA_SCREEN_W + 1];
+            for (int r = 0, y = 0; r <= H; r++) {
+                while (y < 426 && ((stepY / 2 + (unsigned)y * stepY) >> 16) < (unsigned)r) y++;
+                firstY[r] = y;
+            }
+            for (int c = 0, x = 0; c <= W; c++) {
+                while (x < 640 && ((stepX / 2 + (unsigned)x * stepX) >> 16) < (unsigned)c) x++;
+                firstX[c] = x;
+            }
+            const int top = 26, below = 480 - (26 + 426);
+            if (a > 0) {
+                PortFbMoveRows(0, top, firstY[a]);
+                PortFbRepeatRow(top + firstY[a], firstY[a], top);
+            }
+            if (f > 0) {
+                const int from = top + firstY[f];
+                PortFbMoveRows(from + below, from, 426 - firstY[f]);
+                PortFbFillRect(0, from, 640, below, bands[f - 1][0] | 0xFF000000u);
+                for (int pass = 0; pass < 2; pass++)
+                    for (int r = f; r < H; r++)
+                        for (int c = barRight; c < W && nb[r] > 0; c++) {
+                            uint32_t p = ALLMAP_PX(r, c);
+                            if (ALLMAP_BAND(r, p))
+                                continue;
+                            if (!pass)
+                                p = c >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, c - 2)) ? ALLMAP_PX(r, c - 2) : bands[r][0];
+                            PortFbFillRect(firstX[c], top + firstY[r] + (pass ? 0 : below), firstX[c + 1] - firstX[c],
+                                           firstY[r + 1] - firstY[r], p | 0xFF000000u);
+                        }
+            }
+            static bool loggedDirect;
+            if (!loggedDirect) { PortLog("ga36: world map anchored in place (rows %d/%d)", a, f); loggedDirect = true; }
+            return;
+        }
+    }
     if (stale)
         SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
     const float s = dst->h / H, up = dst->y, down = h - (dst->y + dst->h);
@@ -1218,7 +1262,7 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
     static bool logged;
     if (!logged) { PortLog("ga36: world map header/footer anchored (rows %d/%d, bar %d)", a, f, barRight); logged = true; }
 #else
-    (void)src; (void)dst; (void)w; (void)h; (void)stale;
+    (void)src; (void)dst; (void)w; (void)h; (void)stale; (void)direct;
 #endif
 }
 
@@ -2834,7 +2878,7 @@ static void Present(int paced) {
             PORT_ENV_ONCE(sidesOnce, SDL_getenv, "KHCOM_GA36_ALLMAP_SIDES_ONCE");
             if (AllmapScale() > 0 && !menuCanvas && !(sidesOnce && sFitScale <= 0))
                 DrawAllmapSides(&src, &dst, outW);
-            DrawAllmapAnchored(&src, &dst, outW, outH, deferMenuUpload);
+            DrawAllmapAnchored(&src, &dst, outW, outH, deferMenuUpload, drewMenuFit);
         }
         if (moviePrompt)
             DrawSkipLayer(&normal);

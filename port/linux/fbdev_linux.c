@@ -436,6 +436,36 @@ int PortFbDrawAllmap2x(SDL_Renderer* renderer, const uint32_t* src, int stride) 
 }
 
 /* Any GBA-size menu picture fitted to the 640x480 panel's width. */
+/* Rows of the 640x480 panel moved, repeated or filled in place (the world
+   map's header and footer, after the menu fit drew its picture). Call after
+   PortFbBeginGlyphBatch. */
+void PortFbMoveRows(int dstY, int srcY, int count) {
+    const int pitch = sRenderSurface->pitch;
+    uint8_t* base = sRenderSurface->pixels;
+    if (count <= 0 || dstY == srcY || dstY < 0 || srcY < 0 || dstY + count > 480 || srcY + count > 480)
+        return;
+    if (dstY > srcY)
+        for (int i = count - 1; i >= 0; i--) memcpy(base + (size_t)(dstY + i) * pitch, base + (size_t)(srcY + i) * pitch, 640 * 4);
+    else
+        for (int i = 0; i < count; i++) memcpy(base + (size_t)(dstY + i) * pitch, base + (size_t)(srcY + i) * pitch, 640 * 4);
+}
+
+void PortFbRepeatRow(int srcY, int dstY, int count) {
+    const int pitch = sRenderSurface->pitch;
+    uint8_t* base = sRenderSurface->pixels;
+    for (int i = 0; i < count && srcY >= 0 && srcY < 480; i++)
+        if (dstY + i >= 0 && dstY + i < 480 && dstY + i != srcY)
+            memcpy(base + (size_t)(dstY + i) * pitch, base + (size_t)srcY * pitch, 640 * 4);
+}
+
+void PortFbFillRect(int x, int y, int w, int h, uint32_t color) {
+    const int left = SDL_max(x, 0), right = SDL_min(x + w, 640), top = SDL_max(y, 0), bottom = SDL_min(y + h, 480);
+    for (int row = top; row < bottom; row++) {
+        uint32_t* dst = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)row * sRenderSurface->pitch);
+        for (int col = left; col < right; col++) dst[col] = color;
+    }
+}
+
 int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* src, int stride, const uint8_t* hiddenRows) {
     int drawn = sRenderSurface && sRenderSurface->w == 640 && sRenderSurface->h == 480 &&
                 DrawNearest2x(renderer, src, 240, 160, stride, 26, 426, NULL, hiddenRows);
