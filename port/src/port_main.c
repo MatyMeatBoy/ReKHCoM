@@ -2713,7 +2713,14 @@ static void Present(int paced) {
                 SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
         }
         if (journalShown && Menu43Extend()) DrawJournalFooterBar(&src, &dst, outW, outH);
-        if (AllmapScale() > 0 && !menuCanvas) DrawAllmapSides(&src, &dst, outW);
+        {
+            /* The side repairs below repaint these margins whenever the picture
+               is not fitted, so stretching the edge columns first is unseen. */
+            const char* sidesOnce;
+            PORT_ENV_ONCE(sidesOnce, SDL_getenv, "KHCOM_GA36_ALLMAP_SIDES_ONCE");
+            if (AllmapScale() > 0 && !menuCanvas && !(sidesOnce && sFitScale <= 0))
+                DrawAllmapSides(&src, &dst, outW);
+        }
         if (moviePrompt)
             DrawSkipLayer(&normal);
         /* Every side repair below paints outside dst: any mode whose picture
