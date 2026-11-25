@@ -35,7 +35,8 @@ int PortEventId(void){return -1;}
 int PortDarksideLayer(const void*const*m){return 0;}
 int PortJafarWide(void){return 0;}
 int PortJafarLayer(const void*const*m){return 0;}
-int PortMarluxiaFieldOn(void){return 0;}
+static int sFixtureWideField;
+int PortMarluxiaFieldOn(void){return sFixtureWideField;}
 void PortHdSpritesBegin(int l){}
 int PortHdTitleArtReady(float*a){return 0;}
 void PortPaletteFade(const uint16_t*a,const volatile uint16_t*b,int c,int*d,int*w){*d=*w=0;}

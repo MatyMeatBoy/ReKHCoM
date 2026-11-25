@@ -437,6 +437,7 @@ static int sSpotlightTrimMargins;
 static int sSpotlightOverlayFast;
 static int sSpotlightBg0Edges;
 static int sSpotlightClearRows;
+static int sSpotlightSkipMargins;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -2026,6 +2027,10 @@ static const BgTextTile* MatchBgTextTile(unsigned offset, unsigned* lastOffset,
     return *lastMatch;
 }
 
+/* A discarded spotlight margin row only has to keep the BG text it finds:
+   the other tile rows leave nothing behind. */
+static PPU_TLS bool sBgGlyphRowsOnly;
+
 static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* libraryPair) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
@@ -2128,6 +2133,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* librar
         fy = py & 7;
         outside = 0;
     }
+    if (sBgGlyphRowsOnly && (!sHdText || fy))
+        return;
 
     PortDarksideBodyRow darksideRow;
     const char* useDarksideRow = NULL;
@@ -4336,6 +4343,30 @@ static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
 static int sPpuSampleRows;
 
 static int sMenuBgCopy;
+/* The world rows above and below the GBA picture while the separate spotlight
+   UI covers the world: ComposeLine paints them black and nothing reads their
+   layer lines. Rows with per-row state (affine layers, world name, title art,
+   narrow sides, staged scene actors) keep the full path. */
+static bool SpotlightMarginRow(int gy, uint16_t dispcnt) {
+    return sSpotlightSkipMargins && sSpotlightClearRows && sOverlay && sSpotlight && (sScreenBgMask & 2u) &&
+        (gy < 0 || gy >= GBA_SCREEN_H) && !(dispcnt & 7) && !sSceneNarrow && !sWorldNameOn &&
+        !sTitleBands && !sTitleBarHd && !sTitleArtHd && !sTitleLogoBgHd && !sPreliminarRecipe[1] && !sPreliminarRecipe[2] && !sPreliminarRecipe[3] &&
+        sEventBackdropProfile != 97 && sActorSceneKey != EVENT_130_HOLLOWBASTION_E1;
+}
+
+static void SkipSpotlightMarginRow(int y, int gy, uint16_t dispcnt) {
+    const int w = gPortScreen.width;
+    if (sHdText) {
+        sBgGlyphRowsOnly = true;
+        for (int b = 0; b < 4; b++)
+            if (dispcnt & (0x100 << b))
+                DrawTextBg(b, gy, dispcnt, NULL);
+        sBgGlyphRowsOnly = false;
+    }
+    for (int x = 0; x < w; x++) gPortFrame[y * w + x] = 0xFF000000u;
+    if (!gPortScreen.wide)
+        for (int x = 0; x < w; x++) gPortMenuBackground[y * w + x] = 0xFF000000u;
+}
 
 static void RenderLine(int y, int gy) {
     PpuRowTimes* const rowTimes = sPpuSampleRows ? &sPpuRowTimes[y] : NULL;
@@ -4353,6 +4384,10 @@ static void RenderLine(int y, int gy) {
             dst[x] = (gx < sLeft || gx >= sRight) ? 0xFF000000u : 0xFFFFFFFFu;
             gPortMenuBackground[y * w + x] = dst[x];
         }
+        return;
+    }
+    if (SpotlightMarginRow(gy, dispcnt)) {
+        SkipSpotlightMarginRow(y, gy, dispcnt);
         return;
     }
 
@@ -5392,10 +5427,13 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     sObjSkipClear = 0;
     const int objAffineSpan = sObjAffineSpan;
     sObjAffineSpan = 0;
+    const int skipMargins = sSpotlightSkipMargins; /* compare with the full rows */
+    sSpotlightSkipMargins = 0;
     for (y = r->y0; y < r->y1; y++)
         OuterRow(&serial, y);
     sObjSkipClear = objSkipClear;
     sObjAffineSpan = objAffineSpan;
+    sSpotlightSkipMargins = skipMargins;
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
 
@@ -5788,6 +5826,9 @@ void PortPpuRenderFrame(void) {
     const char* menuBgCopy;
     PORT_ENV_ONCE(menuBgCopy, SDL_getenv, "KHCOM_PPU_MENU_BG_COPY");
     sMenuBgCopy = menuBgCopy != NULL;
+    const char* spotlightSkipMargins;
+    PORT_ENV_ONCE(spotlightSkipMargins, SDL_getenv, "KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS");
+    sSpotlightSkipMargins = spotlightSkipMargins != NULL;
 #ifdef __ARM_NEON
     const char* neonOpaqueCompose;
     PORT_ENV_ONCE(neonOpaqueCompose, SDL_getenv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
