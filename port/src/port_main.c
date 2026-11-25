@@ -1140,12 +1140,19 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
         return;
     const int sx = (int)src->x, sy = (int)src->y, H = GBA_SCREEN_H, W = GBA_SCREEN_W;
 #define ALLMAP_PX(r, c) sComposite[(size_t)(sy + (r)) * gPortScreen.width + sx + (c)]
-    const int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
+    /* the band row under the header (the last one found when a map tile hides every candidate) */
+    static int lastA = -1;
+    static Mode* lastMode;
+    if (lastMode != gCurrentMode) { lastMode = gCurrentMode; lastA = -1; }
+    int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
+    if (a <= 0) a = lastA;
+    if (a > 0) lastA = a;
     /* The footer: its bar starts at the left edge. Rows' band colours are
        those covering a fifth of the row (the dithered bands have two). */
     uint32_t bands[GBA_SCREEN_H][4];
     int nb[GBA_SCREEN_H] = {0}, f = -1, barRight = 0;
-    for (int r = H / 2; r < H; r++) {
+    for (int r = 0; r < H; r++) {
+        if (r > a && r < H / 2) continue;
         uint32_t colors[16];
         int counts[16], n = 0;
         for (int c = 0; c < W; c++) {
@@ -1176,6 +1183,17 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
     }
     if (a <= 0 && f < 0)
         return;
+    /* the header covers the map: what is neither band nor the header bar (which starts at the left edge) in its rows
+       and in the band row stretched below it is a map tile, drawn as the band behind it */
+    int headRight[GBA_SCREEN_H] = {0};
+    for (int r = 0; r < a; r++) {
+        /* the bar ends where the backdrop (the row's right edge colour) runs for 8 pixels */
+        const uint32_t back = ALLMAP_PX(r, W - 1);
+        int x = 0, run = 0;
+        while (x < W && run < 8) run = ALLMAP_PX(r, x++) == back ? run + 1 : 0;
+        headRight[r] = run >= 8 ? SDL_min(x - run + 2, W) : W; /* +2: the arrow's tip pixel */
+    }
+#define ALLMAP_UNDER(r, c) ((c) >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, (c) - 2)) ? ALLMAP_PX(r, (c) - 2) : bands[r][0])
     {
         /* The menu fit drew the picture straight to the panel (rows 26..451, the
            same nearest sampling): the anchored parts are rows moved in place,
@@ -1198,6 +1216,13 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
             if (a > 0) {
                 PortFbMoveRows(0, top, firstY[a]);
                 PortFbRepeatRow(top + firstY[a], firstY[a], top);
+                for (int r = 0; r <= a; r++)
+                    for (int c = r < a ? headRight[r] : 0; c < W && nb[r] > 0; c++) {
+                        const uint32_t p = ALLMAP_PX(r, c);
+                        if (ALLMAP_BAND(r, p)) continue;
+                        const int y0 = r < a ? firstY[r] : firstY[a], rows = r < a ? firstY[r + 1] - firstY[r] : top;
+                        PortFbFillRect(firstX[c], y0, firstX[c + 1] - firstX[c], rows, ALLMAP_UNDER(r, c) | 0xFF000000u);
+                    }
             }
             if (f > 0) {
                 const int from = top + firstY[f];
@@ -1229,6 +1254,17 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
         const SDL_FRect partSrc = {(float)sx, (float)sy, (float)W, (float)a}, partDst = {0, 0, (float)w, a * s};
         SDL_RenderTexture(sRenderer, sTexture, &bandSrc, &bandDst);
         SDL_RenderTexture(sRenderer, sTexture, &partSrc, &partDst);
+        for (int r = 0; r <= a; r++)
+            for (int c = r < a ? headRight[r] : 0; c < W && nb[r] > 0; c++) {
+                const uint32_t p = ALLMAP_PX(r, c);
+                if (ALLMAP_BAND(r, p)) continue;
+                const uint32_t q = ALLMAP_UNDER(r, c);
+                const float x0 = SDL_floorf(c * s), y0 = SDL_floorf(r < a ? r * s : a * s);
+                const SDL_FRect at = {x0, y0, SDL_floorf((c + 1) * s) - x0 + 1,
+                                      (r < a ? SDL_floorf((r + 1) * s) : SDL_floorf(a * s + up)) - y0 + 1};
+                SDL_SetRenderDrawColor(sRenderer, (q >> 16) & 255, (q >> 8) & 255, q & 255, 255);
+                SDL_RenderFillRect(sRenderer, &at);
+            }
     }
     if (f > 0) {
         /* the bottom rows go down; what is not band nor footer bar there (the
@@ -1257,6 +1293,7 @@ static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w
                     SDL_RenderFillRect(sRenderer, &at);
                 }
     }
+#undef ALLMAP_UNDER
 #undef ALLMAP_BAND
 #undef ALLMAP_PX
     static bool logged;
