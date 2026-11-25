@@ -3401,6 +3401,17 @@ static void DrawObjRowRuns(int i, int first, int end, int ox, int ow, int ty, in
         sLineHasObjects = 1;
 }
 
+static int sRowFill; /* KHCOM_PPU_ROW_FILL */
+/* TRANSPARENT over one line buffer, eight (NEON) columns at a time. */
+static void FillTransparent(uint16_t* line, int width) {
+    int x = 0;
+#ifdef __ARM_NEON
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    for (; x + 8 <= width; x += 8) vst1q_u16(line + x, clear);
+#endif
+    for (; x < width; x++) line[x] = TRANSPARENT;
+}
+
 static void DrawObjs(int gy, uint16_t dispcnt) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const obPalette = PLTT16;
@@ -3451,7 +3462,24 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
     int mosV = ((mosaic >> 12) & 15) + 1;
 
     sLineHasObjects = 0;
-    for (i = 0; i < w; i++) {
+    if (sRowFill) {
+        /* the same clears, one buffer at a time */
+        const size_t n = (size_t)w;
+        FillTransparent(obObjLine, w);
+        memset(obObjPrio, 4, n);
+        memset(obObjSemi, 0, n);
+        FillTransparent(obScrLine, w);
+        memset(obScrPrio, 4, n);
+        for (i = 0; i < w; i++) obScrIndex[i] = PORT_OAM_CAPACITY - 1;
+        if (sWorldBlendActive) {
+            FillTransparent(obScrBlendLine, w);
+            memset(obScrBlendPrio, 4, n);
+            memset(obScrBlendSemi, 0, n);
+        }
+        memset(obObjWin, 0, n);
+        FillTransparent(obTitleSampleLine, w);
+        memset(obTitleSamplePrio, 4, n);
+    } else for (i = 0; i < w; i++) {
         obObjLine[i] = TRANSPARENT;
         obObjPrio[i] = 4;
         obObjSemi[i] = 0;
@@ -4883,9 +4911,16 @@ static void RenderLine(int y, int gy) {
 
     {
         int x, inside = !gPortScreen.wide || (gy >= 0 && gy < GBA_SCREEN_H);
-        for (x = 0; x < w; x++) {
-            int gx = x - gPortScreen.originX;
-            sInWorld[x] = inside && (!gPortScreen.wide || (gx >= 0 && gx < GBA_SCREEN_W));
+        if (sRowFill) {
+            const int first = gPortScreen.wide ? PPU_MIN(PPU_MAX(gPortScreen.originX, 0), w) : 0;
+            const int end = gPortScreen.wide ? PPU_MIN(PPU_MAX(gPortScreen.originX + GBA_SCREEN_W, first), w) : w;
+            memset(sInWorld, 0, (size_t)w);
+            if (inside) memset(sInWorld + first, 1, (size_t)(end - first));
+        } else {
+            for (x = 0; x < w; x++) {
+                int gx = x - gPortScreen.originX;
+                sInWorld[x] = inside && (!gPortScreen.wide || (gx >= 0 && gx < GBA_SCREEN_W));
+            }
         }
     }
 
@@ -6394,6 +6429,9 @@ void PortPpuRenderFrame(void) {
     const char* textNeon;
     PORT_ENV_ONCE(textNeon, SDL_getenv, "KHCOM_PPU_TEXT_NEON");
     sTextNeon = textNeon != NULL;
+    const char* rowFill;
+    PORT_ENV_ONCE(rowFill, SDL_getenv, "KHCOM_PPU_ROW_FILL");
+    sRowFill = rowFill != NULL;
     const char* bgPlainRows;
     PORT_ENV_ONCE(bgPlainRows, SDL_getenv, "KHCOM_PPU_BG_PLAIN_ROWS");
     sBgPlainRows = bgPlainRows != NULL;
