@@ -99,7 +99,26 @@ static int Prepare(SDL_Renderer* renderer, int outputWidth) {
         Line(pixels, 5, toast->label, 0xFF6B6565);
         Line(pixels, 19, toast->title, 0xFF080808);
         Line(pixels, 33, toast->detail, 0xFF6B6565);
-    } else { /* no label line: the name and the start of the description sit centred */
+    } else if (PortUiTextWidth(toast->detail) > sWidth - 50) {
+        /* a description longer than the box: the name on top and the description on two lines, broken at the last
+           space that fits (it read "...in Castle O" on the handheld's narrower box) */
+        char first[256];
+        const char* second;
+        size_t cut = strlen(toast->detail), fit = 0, i;
+        for (i = 1; i <= cut; i++) {
+            if (toast->detail[i] != ' ' && toast->detail[i] != 0) continue;
+            SDL_strlcpy(first, toast->detail, SDL_min(i + 1, sizeof(first)));
+            if (PortUiTextWidth(first) > sWidth - 50) break;
+            fit = i;
+        }
+        if (!fit) fit = cut;
+        SDL_strlcpy(first, toast->detail, SDL_min(fit + 1, sizeof(first)));
+        second = toast->detail + fit;
+        while (*second == ' ') second++;
+        Line(pixels, 5, toast->title, 0xFF080808);
+        Line(pixels, 19, first, 0xFF6B6565);
+        Line(pixels, 33, second, 0xFF6B6565);
+    } else { /* no label line: the name and the description sit centred */
         Line(pixels, 11, toast->title, 0xFF080808);
         Line(pixels, 26, toast->detail, 0xFF6B6565);
     }

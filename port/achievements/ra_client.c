@@ -79,7 +79,7 @@ static void SetStatus(KhRa* ra, const char* text, int error) {
         snprintf(path, sizeof(path), "%s/retroachievements_estado.txt", ra->directory);
         if ((file = fopen(path, "w"))) {
             time_t now = time(NULL);
-            fprintf(file, "%s%s%s\n%s\n", ra->username[0] ? "Cuenta: " : "", ra->username,
+            fprintf(file, "%s%s%s%s\n", ra->username[0] ? "Cuenta: " : "", ra->username,
                     ra->username[0] ? "\n" : "", ra->status);
             fprintf(file, "Hora de la consola: %s", ctime(&now));
             fclose(file);
