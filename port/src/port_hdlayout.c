@@ -28,6 +28,8 @@ typedef struct HdLayout {
 typedef struct HdLayoutTexture {
     SDL_Texture* tex;
     int w, h, tried, requested;
+    int texW, texH; /* the loaded picture's own size (w, h: the layout's coordinates) */
+    SDL_Texture* flipped[4]; /* software renderer: the picture mirrored (1 across, 2 upside down, 3 both) */
 } HdLayoutTexture;
 
 static HdLayout sLayouts[HD_LAYOUT_COUNT];
@@ -92,11 +94,31 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
             SDL_Surface* s = SDL_CreateSurfaceFrom(t->w, t->h, SDL_PIXELFORMAT_RGBA32, px, t->w * 4);
             if (s) {
                 t->tex = SDL_CreateTextureFromSurface(renderer, s);
+                /* SDL's software renderer copies only unmirrored rectangles: the gauges' mirrored parts (the ring's
+                   quarters, the bars drawn upward) went to its triangle rasteriser, ten times the cost per pixel.
+                   Mirrored copies of the gauge pictures (not the cockpit's) turn them into plain copies. */
+                if (t->tex && which != HD_LAYOUT_TEX_COCKPIT && !SDL_getenv("KHCOM_HD_GAUGE_TRIANGLES") &&
+                    SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) == 0) {
+                    int f;
+                    for (f = 1; f < 4; f++) {
+                        SDL_Surface* m = SDL_DuplicateSurface(s);
+                        if (!m) continue;
+                        if (((f & 1) && !SDL_FlipSurface(m, SDL_FLIP_HORIZONTAL)) ||
+                            ((f & 2) && !SDL_FlipSurface(m, SDL_FLIP_VERTICAL))) {
+                            SDL_DestroySurface(m);
+                            continue;
+                        }
+                        t->flipped[f] = SDL_CreateTextureFromSurface(renderer, m);
+                        SDL_DestroySurface(m);
+                    }
+                }
                 SDL_DestroySurface(s);
             }
             stbi_image_free(px);
             if (t->tex)
                 SDL_SetTextureBlendMode(t->tex, SDL_BLENDMODE_BLEND);
+            t->texW = t->w;
+            t->texH = t->h;
             {
                 /* a pack pre-scaled for a small panel: the layouts address the remaster's own texture size */
                 static const int kOriginal[HD_LAYOUT_TEXTURE_COUNT] = { 256, 512, 256, 1024 };
@@ -270,6 +292,62 @@ static int ClipToRect(const SDL_Vertex* in, int n, const SDL_FRect* clip, SDL_Ve
     return m;
 }
 
+/* SDL's software renderer (handhelds): an unturned quad of one colour is a scaled copy, many times cheaper than its
+   triangle rasteriser (the HD gauge cost five frames' worth of instructions there). The source rectangle is clamped
+   inside the texture, which SDL's own conversion did not do. Mirrored quads use mirrored copies of the picture;
+   turned quads and gradients keep the triangles. */
+static int SoftwareCopy(SDL_Renderer* r, const HdLayoutTexture* t, const SDL_Vertex* v, const SDL_Vertex* over,
+                        int bright, const float* tu, const float* tv, int blend) {
+    static int software = -1;
+    SDL_Texture* tex = t->tex;
+    SDL_FRect src, dst;
+    float x0 = v[0].position.x, x1 = v[1].position.x, y0 = v[0].position.y, y1 = v[2].position.y, q;
+    float u0 = tu[0], u1 = tu[1], w0 = tv[0], w1 = tv[2];
+    int k, flip = 0;
+    if (software < 0) software = SDL_strcmp(SDL_GetRendererName(r), SDL_SOFTWARE_RENDERER) == 0 && !SDL_getenv("KHCOM_HD_GAUGE_TRIANGLES");
+    if (!software)
+        return 0;
+    /* corners 0 1 / 2 3: unturned means rows and columns share coordinates */
+    if (SDL_fabsf(v[0].position.y - v[1].position.y) > 0.01f || SDL_fabsf(v[2].position.y - v[3].position.y) > 0.01f ||
+        SDL_fabsf(v[0].position.x - v[2].position.x) > 0.01f || SDL_fabsf(v[1].position.x - v[3].position.x) > 0.01f)
+        return 0;
+    /* drawn leftward or upward: the same rectangle with its texture coordinates swapped, then a picture running the
+       other way is the mirrored copy's (its coordinates 1 - u) */
+    if (x1 < x0) { q = x0; x0 = x1; x1 = q; q = u0; u0 = u1; u1 = q; }
+    if (y1 < y0) { q = y0; y0 = y1; y1 = q; q = w0; w0 = w1; w1 = q; }
+    if (x1 - x0 < 0.01f || y1 - y0 < 0.01f)
+        return 0;
+    if (u1 < u0) { flip |= 1; u0 = 1.0f - u0; u1 = 1.0f - u1; }
+    if (w1 < w0) { flip |= 2; w0 = 1.0f - w0; w1 = 1.0f - w1; }
+    if (flip && !(tex = t->flipped[flip]))
+        return 0;
+    for (k = 1; k < 4; k++)
+        if (v[k].color.r != v[0].color.r || v[k].color.g != v[0].color.g || v[k].color.b != v[0].color.b ||
+            v[k].color.a != v[0].color.a || (bright && (over[k].color.r != over[0].color.r ||
+            over[k].color.g != over[0].color.g || over[k].color.b != over[0].color.b)))
+            return 0;
+    src.x = SDL_clamp(u0 * t->texW, 0.0f, (float)t->texW);
+    src.y = SDL_clamp(w0 * t->texH, 0.0f, (float)t->texH);
+    src.w = SDL_clamp(u1 * t->texW, 0.0f, (float)t->texW) - src.x;
+    src.h = SDL_clamp(w1 * t->texH, 0.0f, (float)t->texH) - src.y;
+    if (src.w <= 0.0f) { src.w = 1.0f; if (src.x >= t->texW) src.x = (float)t->texW - 1.0f; } /* a stretched column */
+    if (src.h <= 0.0f) { src.h = 1.0f; if (src.y >= t->texH) src.y = (float)t->texH - 1.0f; }
+    dst.x = x0; dst.y = y0;
+    dst.w = x1 - x0; dst.h = y1 - y0;
+    SDL_SetTextureBlendMode(tex, blend == 1 ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_BLEND);
+    SDL_SetTextureColorModFloat(tex, v[0].color.r, v[0].color.g, v[0].color.b);
+    SDL_SetTextureAlphaModFloat(tex, v[0].color.a);
+    SDL_RenderTexture(r, tex, &src, &dst);
+    if (bright) {
+        SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);
+        SDL_SetTextureColorModFloat(tex, over[0].color.r, over[0].color.g, over[0].color.b);
+        SDL_RenderTexture(r, tex, &src, &dst);
+    }
+    SDL_SetTextureColorModFloat(tex, 1.0f, 1.0f, 1.0f);
+    SDL_SetTextureAlphaModFloat(tex, 1.0f);
+    return 1;
+}
+
 /* One sprite of a part. A sprite with no texture at all (its UVs one point) is a mask: its box is returned in mask
    (1) and limits what the group draws after it, the way the gauge's ring shows only the turned quarters' part inside
    the box (the remaster's gauge.lad: groups 27-29). */
@@ -355,6 +433,8 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         }
         return 0;
     }
+    if (SoftwareCopy(r, t, v, over, bright, tu, tv, blend))
+        return 0;
     /* SDL's software renderer turns an axis-aligned quad into a copy that reads past the texture (port_hdsprites.c,
        Quad): a hundredth of a pixel keeps it on the triangle path */
     v[1].position.x += 0.01f;
@@ -455,8 +535,12 @@ static void GaugeTargetsRelease(void);
 void PortHdLayoutShutdown(void) {
     int i;
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
+        int f;
         if (sTextures[i].tex)
             SDL_DestroyTexture(sTextures[i].tex);
+        for (f = 1; f < 4; f++)
+            if (sTextures[i].flipped[f])
+                SDL_DestroyTexture(sTextures[i].flipped[f]);
         memset(&sTextures[i], 0, sizeof(sTextures[i]));
     }
 #if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
