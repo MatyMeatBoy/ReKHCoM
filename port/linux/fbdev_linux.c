@@ -662,6 +662,38 @@ bool PortFbBeginGlyphBatch(SDL_Renderer* renderer) {
         logicalMode == SDL_LOGICAL_PRESENTATION_DISABLED && SDL_FlushRenderer(renderer);
 }
 
+/* A premultiplied ARGB picture's covered spans (first/last column per row, -1 none) over the framebuffer at (x, y):
+   c = s + d (1 - a). The HD gauge's cache: SDL's premultiplied copies of its row bands cost more than the blend. */
+bool PortFbBlendPremultipliedSpans(SDL_Renderer* renderer, const uint32_t* src, int pitch, const int16_t* spans,
+                                   int x, int y, int w, int h) {
+    if (!src || !spans || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    for (int r = 0; r < h; r++) {
+        const int sy = y + r;
+        int first = spans[r * 2], last = spans[r * 2 + 1];
+        if (first < 0 || sy < 0 || sy >= sRenderSurface->h) continue;
+        if (x + first < 0) first = -x;
+        if (x + last >= sRenderSurface->w) last = sRenderSurface->w - 1 - x;
+        if (last >= w) last = w - 1;
+        const uint32_t* in = src + (size_t)r * pitch;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)sy * sRenderSurface->pitch) + x;
+        for (int c = first; c <= last; c++) {
+            const uint32_t p = in[c];
+            const unsigned a = p >> 24;
+            if (!p) continue;
+            if (a == 255) { out[c] = p; continue; }
+            const uint32_t d = out[c];
+            const unsigned inv = 255 - a;
+            unsigned rr = ((d >> 16) & 255) * inv, gg = ((d >> 8) & 255) * inv, bb = (d & 255) * inv;
+            rr = ((rr + 1 + (rr >> 8)) >> 8) + ((p >> 16) & 255);
+            gg = ((gg + 1 + (gg >> 8)) >> 8) + ((p >> 8) & 255);
+            bb = ((bb + 1 + (bb >> 8)) >> 8) + (p & 255);
+            out[c] = 0xFF000000u | (SDL_min(rr, 255u) << 16) | (SDL_min(gg, 255u) << 8) | SDL_min(bb, 255u);
+        }
+    }
+    return true;
+}
+
 /* A turned HD sprite (a card spinning as it is played) drawn straight into the framebuffer: a parallelogram (corners
    top-left, top-right, bottom-right, bottom-left), nearest texel, SDL's 8-bit blend over the opaque picture. SDL's
    triangle rasteriser cost about 620 instructions a pixel there. RGBA texels, one colour for the quad. */

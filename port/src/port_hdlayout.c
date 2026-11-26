@@ -1324,6 +1324,17 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
         if (!GaugeFrameFind(sGeoHash, w, h))
             GaugeFrameStore(sGeoHash, w, h, frame);
     }
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    {
+        /* the handheld's framebuffer: the covered spans blended straight in (whole pixels: the box is on them) */
+        extern bool PortFbBlendPremultipliedSpans(SDL_Renderer*, const uint32_t*, int, const int16_t*, int, int, int, int);
+        static int sdlCopy = -1;
+        if (sdlCopy < 0) sdlCopy = SDL_getenv("KHCOM_HD_GAUGE_SDL_COPY") != NULL;
+        if (!sdlCopy && PortFbBlendPremultipliedSpans(renderer, (const uint32_t*)sCacheSurface->pixels,
+                                                      sCacheSurface->pitch / 4, sCacheSpan, (int)rx, (int)ry, w, h))
+            return 1;
+    }
+#endif
     /* bands of 8 rows, each cut to its covered columns */
     for (row = 0; row < h; row += 8) {
         int r, first = INT_MAX, last = -1, bh = SDL_min(8, h - row);
