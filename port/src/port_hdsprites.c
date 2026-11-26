@@ -1752,34 +1752,37 @@ static uint16_t* sPartRuns;
 static uint32_t sPartRowStart[481];
 static int sPartX, sPartY, sPartW, sPartH, sPartCap;
 static uint32_t sPartKey;
+static unsigned sPartStat[8]; /* calls, hits, rebuilds, no: fade, kind, quad, size, few */
+static uint64_t sPartTicks, sPartOther;
 static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten,
                          uint8_t* covered) {
+    sPartStat[0]++;
     typedef struct { const unsigned char* px; int pw, sx, sy, x0, y0, x1, y1; } Part;
     static Part part[PART_CACHE_MAX];
     static int off = -1;
     int n = 0, i, bx0 = 640, by0 = 480, bx1 = 0, by1 = 0;
     uint32_t key = 2166136261u;
     if (off < 0) off = SDL_getenv("KHCOM_HD_PART_CACHE_OFF") != NULL;
-    if (off || darken > 0 || brighten > 0 || sDrawCount[layer] < 2 || sDrawCount[layer] > PART_CACHE_MAX)
-        return 0;
+    if (off || darken > 0 || brighten > 0 || sDrawCount[layer] < 1 || sDrawCount[layer] > PART_CACHE_MAX)
+        return sPartStat[3]++, 0;
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
         const HdSpriteDef* d = &kHdSprites[q->id];
         HdSpriteState* st = &sState[q->id];
         covered[i] = 0;
-        if (d->group == 7 && MenuLightName(d->name))
-            continue; /* drawn as usual, over the layer */
-        if ((d->group != 2 && d->group != 7) || q->hudOwner || q->alpha != 255 || q->dark || q->white || !st->cpu)
-            return 0;
+        if (d->group == 7)
+            continue; /* the title's words animate (their frames change): drawn as usual, over the layer */
+        if (d->group != 2 || q->hudOwner || q->alpha != 255 || q->dark || q->white || !st->cpu)
+            return sPartStat[4]++, 0;
         if (q->y[0] != q->y[1] || q->x[0] != q->x[3] || q->x[1] != q->x[2] || q->y[2] != q->y[3] ||
             q->x[1] <= q->x[0] || q->y[3] <= q->y[0] || q->u1 <= q->u0 || q->v1 <= q->v0)
-            return 0;
+            return sPartStat[5]++, 0;
         const float ew = scale * (q->x[1] - q->x[0]), eh = scale * (q->y[3] - q->y[0]);
         const int fw = (int)(ew / (q->u1 - q->u0) + 0.5f), fh = (int)(eh / (q->v1 - q->v0) + 0.5f);
         const unsigned char* px = NULL;
         if (st->cpuW == fw && st->cpuH == fh) px = st->cpu;
         else if (st->fit && st->fitW == fw && st->fitH == fh) px = st->fit;
-        if (!px) return 0; /* not yet at its size: the usual drawing makes the copy */
+        if (!px) return sPartStat[6]++, 0; /* not yet at its size: the usual drawing makes the copy */
         Part* t = &part[n];
         t->px = px; t->pw = fw;
         t->x0 = (int)SDL_roundf(ox + q->x[0] * scale); t->y0 = (int)SDL_roundf(oy + q->y[0] * scale);
@@ -1796,9 +1799,10 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
         covered[i] = 1;
         n++;
     }
-    if (n < 2 || bx1 <= bx0 || by1 <= by0)
-        return 0;
+    if (n < 1 || bx1 <= bx0 || by1 <= by0)
+        return sPartStat[7]++, 0;
     key ^= (uint32_t)(bx0 | bx1 << 10 | by0 << 20); key *= 16777619u;
+    if (sPartLayer && key == sPartKey) sPartStat[1]++; else sPartStat[2]++;
     if (!sPartLayer || key != sPartKey) {
         /* compose: premultiplied "over", the parts in their drawing order */
         const int w = bx1 - bx0, h = by1 - by0;
@@ -1896,8 +1900,20 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
     uint8_t covered[MAX_DRAWS];
     int partCached = 0;
 #if defined(PORT_LINUX) && __STDC_HOSTED__
-    if (layer != 1 && !sharedHud && gPortConfig.hdTitle && sDrawCount[layer] <= PART_CACHE_MAX)
+    if (layer != 1 && gPortConfig.hdTitle && sDrawCount[layer] <= PART_CACHE_MAX) { /* shared HUD too: only title parts qualify */
+        const uint64_t t0 = SDL_GetPerformanceCounter();
         partCached = PartCacheDraw(renderer, layer, ox, oy, scale, darken, brighten, covered);
+        sPartTicks += SDL_GetPerformanceCounter() - t0;
+        static int partLog = -1;
+        if (partLog < 0) partLog = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
+        if (partLog && sPartStat[0] % 100 == 0) {
+            PortLog("probe partcache calls %u hits %u rebuilds %u no: fade %u kind %u quad %u size %u few %u | cache %.2f other %.2f ms/call | draws %d",
+                    sPartStat[0], sPartStat[1], sPartStat[2], sPartStat[3], sPartStat[4], sPartStat[5], sPartStat[6], sPartStat[7],
+                    sPartTicks / 1e8, sPartOther / 1e8, sDrawCount[layer]);
+            SDL_memset(sPartStat, 0, sizeof(sPartStat)); sPartTicks = sPartOther = 0;
+        }
+    }
+    const uint64_t tOther = SDL_GetPerformanceCounter();
 #endif
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
@@ -1949,6 +1965,9 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         }
     }
     gPortPiece[8] += SDL_GetPerformanceCounter() - _pt;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    sPartOther += SDL_GetPerformanceCounter() - tOther;
+#endif
 }
 
 /* The original draws base -> affine fill/full cap -> counter. The fill remains the game's own tiles,
