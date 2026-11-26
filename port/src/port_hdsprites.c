@@ -78,6 +78,9 @@ typedef struct HdSpriteState {
     unsigned char* jobBuf;
     const unsigned char* jobBase;
     int jobBW, jobBH, jobW, jobH;
+    uint32_t* jobPacked; /* its runs, packed on the thread too (PackRuns) */
+    uint16_t* jobRuns;
+    uint32_t* jobRowStart;
 #endif
 } HdSpriteState;
 
@@ -558,6 +561,8 @@ static void CpuFree(HdSpriteState* st) {
 #if defined(PORT_LINUX) && __STDC_HOSTED__
     if (st->job) { SDL_WaitThread(st->job, NULL); st->job = NULL; }
     SDL_free(st->jobBuf); st->jobBuf = NULL;
+    SDL_free(st->jobPacked); SDL_free(st->jobRuns); SDL_free(st->jobRowStart);
+    st->jobPacked = NULL; st->jobRuns = NULL; st->jobRowStart = NULL;
     SDL_SetAtomicInt(&st->jobDone, 0);
 #endif
     SDL_free(st->packed); SDL_free(st->packRuns); SDL_free(st->packRowStart);
@@ -1133,10 +1138,18 @@ static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* ds
    changes. SDL's software renderer scaled the title's 1080x1303 poster and 1920-pixel words down every frame:
    30 million instructions a frame on GA36. */
 static int kSyncFit = -1; /* KHCOM_HD_FIT_SYNC=1: exact copies made on the frame (the earlier behaviour) */
+static int PackRuns(HdSpriteState* st, const unsigned char* px, int w, int h);
 static int SDLCALL FitJob(void* data) {
     HdSpriteState* st = (HdSpriteState*)data;
+    HdSpriteState pack;
     SDL_SetCurrentThreadPriority(SDL_THREAD_PRIORITY_LOW);
     BoxScale(st->jobBase, st->jobBW, st->jobBH, st->jobBuf, st->jobW, st->jobH);
+    SDL_memset(&pack, 0, sizeof(pack));
+    if (PackRuns(&pack, st->jobBuf, st->jobW, st->jobH)) {
+        st->jobPacked = pack.packed; st->jobRuns = pack.packRuns; st->jobRowStart = pack.packRowStart;
+    } else {
+        SDL_free(pack.packed); SDL_free(pack.packRuns); SDL_free(pack.packRowStart);
+    }
     SDL_SetAtomicInt(&st->jobDone, 1);
     return 0;
 }
@@ -1153,6 +1166,12 @@ static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, in
         st->fit = st->jobBuf; st->fitW = st->jobW; st->fitH = st->jobH;
         st->jobBuf = NULL;
         st->packOf = NULL;
+        if (st->jobPacked) { /* and its runs */
+            SDL_free(st->packed); SDL_free(st->packRuns); SDL_free(st->packRowStart);
+            st->packed = st->jobPacked; st->packRuns = st->jobRuns; st->packRowStart = st->jobRowStart;
+            st->packOf = st->fit; st->packW = st->fitW; st->packH = st->fitH;
+            st->jobPacked = NULL; st->jobRuns = NULL; st->jobRowStart = NULL;
+        }
     }
     if (st->fit && (exact ? st->fitW == dw && st->fitH == dh
                           : SDL_abs(st->fitW - dw) * 8 <= dw && SDL_abs(st->fitH - dh) * 8 <= dh)) {
@@ -1341,6 +1360,18 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                     sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
                     bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
                     if (PortFbBlendArgbRuns(sRenderer, st->packed, pw, st->packRuns, st->packRowStart, sx, sy, bw, bh, bx, by))
+                        return 1;
+                }
+                if (upright && (pw != fw || ph != fh)) {
+                    /* upright but not at its size (a zoom, or a copy still being made): scaled by a column table */
+                    extern bool PortFbBlendRgbaScaled(SDL_Renderer*, const unsigned char*, int, int, float, float, float,
+                                                      float, int, int, int, int, unsigned, unsigned, unsigned, unsigned, int);
+                    if (PortFbBlendRgbaScaled(sRenderer, px, pw, ph, v[0].tex_coord.x, v[0].tex_coord.y, v[2].tex_coord.x,
+                                              v[2].tex_coord.y, (int)v[0].position.x, (int)v[0].position.y,
+                                              (int)v[1].position.x, (int)v[3].position.y,
+                                              (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                              (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                              white))
                         return 1;
                 }
                 if (upright && pw == fw && ph == fh) {

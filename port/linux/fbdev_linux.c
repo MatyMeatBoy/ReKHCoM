@@ -793,6 +793,51 @@ bool PortFbFillRows(SDL_Renderer* renderer, const uint32_t* row, int x, int w, i
     return true;
 }
 
+/* An upright RGBA picture (straight alpha) scaled by nearest texel into the box (x0, y0)-(x1, y1) (whole pixels, on
+   the screen), texture coordinates u0..u1, v0..v1, with SDL's 8-bit colour/alpha modulation: a column table per
+   call, no edge tests per pixel. The HD title's poster while it zooms covered the screen through the general
+   rasteriser: 20 ms a frame on GA36. */
+bool PortFbBlendRgbaScaled(SDL_Renderer* renderer, const unsigned char* tex, int tw, int th, float u0, float v0, float u1,
+                           float v1, int x0, int y0, int x1, int y1, unsigned cr, unsigned cg, unsigned cb, unsigned ca,
+                           int white) {
+    static int32_t col[640];
+    if (!tex || tw <= 0 || th <= 0 || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    x0 = SDL_max(x0, 0); y0 = SDL_max(y0, 0);
+    x1 = SDL_min(x1, SDL_min(sRenderSurface->w, 640)); y1 = SDL_min(y1, sRenderSurface->h);
+    if (x1 <= x0 || y1 <= y0) return true;
+    const float bw = (float)(x1 - x0), bh = (float)(y1 - y0);
+    for (int x = x0; x < x1; x++) {
+        int t = (int)((u0 + (x - x0 + 0.5f) / bw * (u1 - u0)) * tw);
+        col[x] = SDL_clamp(t, 0, tw - 1) * 4;
+    }
+    const int plain = !white && cr == 255 && cg == 255 && cb == 255 && ca == 255;
+    for (int y = y0; y < y1; y++) {
+        int ty = (int)((v0 + (y - y0 + 0.5f) / bh * (v1 - v0)) * th);
+        ty = SDL_clamp(ty, 0, th - 1);
+        const unsigned char* row = tex + (size_t)ty * tw * 4;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)y * sRenderSurface->pitch);
+        for (int x = x0; x < x1; x++) {
+            const unsigned char* sp = row + col[x];
+            unsigned sa = sp[3];
+            if (!sa) continue;
+            unsigned sr = white ? 255u : sp[0], sg = white ? 255u : sp[1], sb = white ? 255u : sp[2];
+            if (!plain) {
+                sa = sa * ca; sa = (sa + 1 + (sa >> 8)) >> 8;
+                if (!sa) continue;
+                sr *= cr; sr = (sr + 1 + (sr >> 8)) >> 8; sg *= cg; sg = (sg + 1 + (sg >> 8)) >> 8; sb *= cb; sb = (sb + 1 + (sb >> 8)) >> 8;
+            }
+            if (sa == 255) { out[x] = 0xFF000000u | (sr << 16) | (sg << 8) | sb; continue; }
+            const uint32_t d = out[x];
+            const unsigned inv = 255 - sa;
+            unsigned r = sr * sa + ((d >> 16) & 255) * inv, g = sg * sa + ((d >> 8) & 255) * inv, b = sb * sa + (d & 255) * inv;
+            r = (r + 1 + (r >> 8)) >> 8; g = (g + 1 + (g >> 8)) >> 8; b = (b + 1 + (b >> 8)) >> 8;
+            out[x] = 0xFF000000u | (r << 16) | (g << 8) | b;
+        }
+    }
+    return true;
+}
+
 /* An upright picture prepared in runs (port_hdsprites.c PackRuns): ARGB pixels (straight alpha) and, per row, runs
    of uint16 (kind << 14 | length): 0 nothing, 1 opaque (copied as they are), 2 translucent (blended). w x h from
    (sx, sy) to (x, y), 1:1, no colour change. The HD title's poster: a third clear, a third opaque, a third soft. */
