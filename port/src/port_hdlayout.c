@@ -35,6 +35,9 @@ typedef struct HdLayoutTexture {
 static HdLayout sLayouts[HD_LAYOUT_COUNT];
 static int sLayoutTried[HD_LAYOUT_COUNT];
 static HdLayoutTexture sTextures[HD_LAYOUT_TEXTURE_COUNT];
+/* the gauge cache's own renderer (SDL's software renderer on a surface) needs its own textures */
+static SDL_Renderer* sCacheRenderer;
+static HdLayoutTexture sCacheTextures[HD_LAYOUT_TEXTURE_COUNT];
 /* the 1.5+2.5's remastered layouts (UK_gauge.lad...): their UVs are the HD textures' own; the PS2 ones (gauge.lad)
    doubled miss the pieces the remaster moved (the ring's quarters, the bar) */
 static const char* const kLayoutFiles[HD_LAYOUT_COUNT] = { "gHudGaugeHdLad", "gHudCockpitHdLad" };
@@ -83,7 +86,7 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
     HdLayoutTexture* t;
     if ((unsigned)which >= HD_LAYOUT_TEXTURE_COUNT)
         return NULL;
-    t = &sTextures[which];
+    t = renderer && renderer == sCacheRenderer ? &sCacheTextures[which] : &sTextures[which];
     if (!t->tex && !t->tried && renderer) {
         char file[PORT_HD_PATH_MAX];
         int n;
@@ -348,6 +351,14 @@ static int SoftwareCopy(SDL_Renderer* r, const HdLayoutTexture* t, const SDL_Ver
     return 1;
 }
 
+/* The gauge cache's dry run: what would be drawn goes into a hash instead of the renderer. */
+static int sGeoDry;
+static uint32_t sGeoHash;
+static void GeoMix(const void* p, size_t n) {
+    const unsigned char* b = (const unsigned char*)p;
+    while (n--) sGeoHash = (sGeoHash ^ *b++) * 16777619u;
+}
+
 /* One sprite of a part. A sprite with no texture at all (its UVs one point) is a mask: its box is returned in mask
    (1) and limits what the group draws after it, the way the gauge's ring shows only the turned quarters' part inside
    the box (the remaster's gauge.lad: groups 27-29). */
@@ -395,6 +406,13 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         v[k].tex_coord.x = over[k].tex_coord.x = tu[k];
         v[k].tex_coord.y = over[k].tex_coord.y = tv[k];
     }
+    if (sGeoDry) {
+        GeoMix(v, sizeof(v));
+        GeoMix(&bright, sizeof(bright));
+        GeoMix(&blend, sizeof(blend));
+        GeoMix(&t, sizeof(t));
+        if (clip) GeoMix(clip, sizeof(*clip));
+    }
     if (su0 == su1 && sv0 == sv1) {
         float x0 = v[0].position.x, y0 = v[0].position.y, x1 = x0, y1 = y0;
         for (k = 1; k < 4; k++) {
@@ -409,6 +427,8 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         mask->h = y1 - y0;
         return 1;
     }
+    if (sGeoDry)
+        return 0;
     SDL_SetTextureBlendMode(t->tex, blend == 1 ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_BLEND);
     if (clip) {
         /* the quad as a fan (top-left, top-right, bottom-right, bottom-left), cut to the mask */
@@ -532,6 +552,8 @@ int PortHdLayoutDraw(SDL_Renderer* renderer, int layout, int texture, int sequen
 static void GaugeTargetsRelease(void);
 #endif
 
+static void GaugeCacheRelease(void);
+
 void PortHdLayoutShutdown(void) {
     int i;
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
@@ -546,6 +568,7 @@ void PortHdLayoutShutdown(void) {
 #if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
     GaugeTargetsRelease();
 #endif
+    GaugeCacheRelease();
 }
 
 /* ---- the player's HP gauge (Gauge::CPlayerGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ---------------
@@ -764,6 +787,119 @@ static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height
 
 #endif
 
+/* SDL's software renderer (handhelds): the gauge drawn piece by piece cost 3.3 million instructions a frame
+   (QEMU, GA36), while its picture changes only on a hit or a heal. It is drawn once into a surface of its own
+   (premultiplied: the pieces over transparency, then that over the screen, is the same picture) and copied while
+   nothing it draws changes; the copy is cut to the rows' covered spans, since the ring and the bar leave most of the
+   box empty. A hit's animation rebuilds it at most every other frame. KHCOM_HD_GAUGE_NO_CACHE draws it directly. */
+static SDL_Surface* sCacheSurface;
+static SDL_Texture* sCacheTexture;
+static SDL_Renderer* sCacheOwner;
+static int sCacheW, sCacheH, sCacheValid, sCacheFailed;
+static uint32_t sCacheHash, sCacheBuilt;
+static int16_t* sCacheSpan; /* per row: first and last covered column, -1 none */
+
+static void GaugeCacheRelease(void) {
+    int i;
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
+        int f;
+        if (sCacheTextures[i].tex) SDL_DestroyTexture(sCacheTextures[i].tex);
+        for (f = 1; f < 4; f++)
+            if (sCacheTextures[i].flipped[f]) SDL_DestroyTexture(sCacheTextures[i].flipped[f]);
+        memset(&sCacheTextures[i], 0, sizeof(sCacheTextures[i]));
+    }
+    if (sCacheRenderer) SDL_DestroyRenderer(sCacheRenderer);
+    if (sCacheSurface) SDL_DestroySurface(sCacheSurface);
+    if (sCacheTexture) SDL_DestroyTexture(sCacheTexture);
+    SDL_free(sCacheSpan);
+    sCacheRenderer = NULL;
+    sCacheSurface = NULL;
+    sCacheTexture = NULL;
+    sCacheSpan = NULL;
+    sCacheOwner = NULL;
+    sCacheW = sCacheH = sCacheValid = 0;
+}
+
+static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
+    /* the box of every frame the gauge has (PortHdGaugeDraw's measured bounds) */
+    const float ux0 = -92.0f, uy0 = -92.0f, ux1 = 206.0f, uy1 = 92.0f;
+    float rx = SDL_floorf(x + ux0 * s), ry = SDL_floorf(y + uy0 * s), lx = x - rx, ly = y - ry;
+    int w = (int)SDL_ceilf((ux1 - ux0) * s) + 2, h = (int)SDL_ceilf((uy1 - uy0) * s) + 2, row;
+    uint32_t frame = PortFrameCount();
+    static int disabled = -1;
+    if (disabled < 0) disabled = SDL_getenv("KHCOM_HD_GAUGE_NO_CACHE") != NULL;
+    if (disabled || sCacheFailed || w <= 0 || h <= 0 || w > 2048 || h > 2048)
+        return 0;
+    if (renderer != sCacheOwner || w != sCacheW || h != sCacheH) {
+        GaugeCacheRelease();
+        sCacheSurface = SDL_CreateSurface(w, h, SDL_PIXELFORMAT_ARGB8888);
+        sCacheRenderer = sCacheSurface ? SDL_CreateSoftwareRenderer(sCacheSurface) : NULL;
+        sCacheTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+        sCacheSpan = (int16_t*)SDL_malloc(sizeof(int16_t) * 2 * (size_t)h);
+        if (!sCacheRenderer || !sCacheTexture || !sCacheSpan ||
+            !SDL_SetTextureBlendMode(sCacheTexture, SDL_BLENDMODE_BLEND_PREMULTIPLIED)) {
+            PortLog("gauge cache: unavailable (%s)", SDL_GetError());
+            GaugeCacheRelease();
+            sCacheFailed = 1;
+            return 0;
+        }
+        SDL_SetTextureScaleMode(sCacheTexture, SDL_SCALEMODE_NEAREST);
+        sCacheOwner = renderer;
+        sCacheW = w;
+        sCacheH = h;
+        PortLog("gauge cache: %dx%d", w, h);
+    }
+    /* what the gauge would draw this frame, placed in the box */
+    sGeoDry = 1;
+    sGeoHash = 2166136261u;
+    GeoMix(tint, sizeof(float) * 4);
+    GaugeParts(sCacheRenderer, lx, ly, s, tint);
+    sGeoDry = 0;
+    if (!sCacheValid || (sGeoHash != sCacheHash && frame - sCacheBuilt >= 2)) {
+        const uint32_t* px;
+        int pitch, xx;
+        SDL_SetRenderDrawColor(sCacheRenderer, 0, 0, 0, 0);
+        SDL_RenderClear(sCacheRenderer);
+        GaugeParts(sCacheRenderer, lx, ly, s, tint);
+        if (!SDL_FlushRenderer(sCacheRenderer) || !SDL_UpdateTexture(sCacheTexture, NULL, sCacheSurface->pixels,
+                                                                       sCacheSurface->pitch)) {
+            sCacheValid = 0;
+            return 0;
+        }
+        px = (const uint32_t*)sCacheSurface->pixels;
+        pitch = sCacheSurface->pitch / 4;
+        for (row = 0; row < h; row++) {
+            const uint32_t* p = px + (size_t)row * pitch;
+            int first = -1, last = -1;
+            for (xx = 0; xx < w; xx++)
+                if (p[xx]) { /* any colour or coverage: ADD leaves colour at alpha 0 */
+                    if (first < 0) first = xx;
+                    last = xx;
+                }
+            sCacheSpan[row * 2] = (int16_t)first;
+            sCacheSpan[row * 2 + 1] = (int16_t)last;
+        }
+        sCacheHash = sGeoHash;
+        sCacheBuilt = frame;
+        sCacheValid = 1;
+    }
+    /* bands of 8 rows, each cut to its covered columns */
+    for (row = 0; row < h; row += 8) {
+        int r, first = INT_MAX, last = -1, bh = SDL_min(8, h - row);
+        for (r = row; r < row + bh; r++)
+            if (sCacheSpan[r * 2] >= 0) {
+                first = SDL_min(first, sCacheSpan[r * 2]);
+                last = SDL_max(last, sCacheSpan[r * 2 + 1]);
+            }
+        if (last >= 0) {
+            SDL_FRect src = { (float)first, (float)row, (float)(last - first + 1), (float)bh };
+            SDL_FRect dst = { rx + first, ry + row, src.w, src.h };
+            SDL_RenderTexture(renderer, sCacheTexture, &src, &dst);
+        }
+    }
+    return 1;
+}
+
 void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, float shade) {
     /* gauge:01 sits at (60, 60) of Re:CoM's 640-wide screen: the GBA HUD's 240 gives 0.375 of a GBA pixel a unit */
     const float unit = 240.0f / 640.0f;
@@ -864,6 +1000,8 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
         }
     } else {
         GaugeTargetsRelease();
+        if (SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) == 0 && GaugeCached(renderer, x, y, s, tint))
+            return;
     }
 #endif
     GaugeParts(renderer, x, y, s, tint);

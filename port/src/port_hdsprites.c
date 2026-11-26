@@ -850,6 +850,39 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
         for (k = 0; k < 4; k++)
             v[k].tex_coord.y = SDL_clamp(v[k].tex_coord.y - halfTexel, 0.0f, 1.0f);
     }
+    {
+        /* SDL's software renderer: a quad that is upright, unmirrored and inside the canvas (cut to it above) is a
+           plain scaled copy, a tenth of its triangle rasteriser's cost per pixel (the battle's "Card Break" sign
+           cost GA36 3 million instructions a frame). The source rectangle stays inside the texture. */
+        static int software = -1;
+        float tw = 0, th = 0;
+        if (software < 0)
+            software = SDL_strcmp(SDL_GetRendererName(sRenderer), SDL_SOFTWARE_RENDERER) == 0 &&
+                       !SDL_getenv("KHCOM_HD_SPRITE_TRIANGLES");
+        if (software && v[0].position.y == v[1].position.y && v[0].position.x == v[3].position.x &&
+            v[1].position.x == v[2].position.x && v[2].position.y == v[3].position.y &&
+            v[1].position.x > v[0].position.x && v[3].position.y > v[0].position.y &&
+            v[1].tex_coord.x > v[0].tex_coord.x && v[3].tex_coord.y > v[0].tex_coord.y &&
+            v[0].tex_coord.x >= 0 && v[0].tex_coord.y >= 0 && v[2].tex_coord.x <= 1.0f && v[2].tex_coord.y <= 1.0f &&
+            SDL_GetTextureSize(t, &tw, &th) && tw > 0 && th > 0) {
+            int ow = 0, oh = 0;
+            if (SDL_GetCurrentRenderOutputSize(sRenderer, &ow, &oh) && v[0].position.x >= 0 && v[0].position.y >= 0 &&
+                v[2].position.x <= (float)ow && v[2].position.y <= (float)oh) {
+                SDL_FRect src = { v[0].tex_coord.x * tw, v[0].tex_coord.y * th,
+                                  (v[2].tex_coord.x - v[0].tex_coord.x) * tw, (v[2].tex_coord.y - v[0].tex_coord.y) * th };
+                SDL_FRect dst = { v[0].position.x, v[0].position.y, v[1].position.x - v[0].position.x,
+                                  v[3].position.y - v[0].position.y };
+                bool ok;
+                SDL_SetTextureColorModFloat(t, c.r, c.g, c.b);
+                SDL_SetTextureAlphaModFloat(t, c.a);
+                ok = SDL_RenderTexture(sRenderer, t, &src, &dst);
+                SDL_SetTextureColorModFloat(t, 1.0f, 1.0f, 1.0f);
+                SDL_SetTextureAlphaModFloat(t, 1.0f);
+                if (ok)
+                    return 1;
+            }
+        }
+    }
     /* SDL turns an axis-aligned quad into a texture copy, and the software
        renderer's scaled copy reads outside the texture when the quad is
        mirrored, turned a quarter (a card spinning) or partly off the canvas (a
