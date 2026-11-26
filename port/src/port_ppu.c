@@ -6148,10 +6148,10 @@ static int PpuInnerBegin(void) {
         PortLog("ppu: the picture's rows on %d cores in %d of the last 600 frames", sPpuWorkers + 1, sPpuInnerShared);
         sPpuInnerFrames = sPpuInnerShared = 0;
     }
-    /* The HD bar appends to a shared draw queue. Native title fades only
+    /* The HD bar's rows fill slots of their own (port_hdsprites.c PortHdTitleBarRow). Native title fades only
        write the worker's own cache and the row being drawn. */
     sPpuInnerMosaicLayers = 0;
-    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80))
+    if (!sPpuInnerOn || sPpuWorkers <= 0 || (IO16(0x00) & 0x80))
         return 0;
     const unsigned mosaicLayers = PpuStaticMosaicLayers();
     const char* audit;

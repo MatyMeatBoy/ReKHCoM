@@ -64,6 +64,7 @@ typedef struct HdSpriteState {
     int halfW[4], halfH[4];
     unsigned char* fit; /* the copy at the size last drawn */
     int fitW, fitH;
+    int askW, askH; /* the size asked for last time: an exact copy only once the size holds (not every frame of a zoom) */
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -834,19 +835,27 @@ void PortHdTitleArtQueue(const float* x, const float* y, float u0, float v0, flo
 /* The title's press-start bar (BG0, a gradient the cartridge steps column by column): its rows as the game colours
    them (port_ppu.c TitleBarLine), drawn smooth at the output's resolution, colours interpolated between the columns'
    centres, over the illustration and under the HD words. */
-#define BAR_RUNS 512
+/* Slots by row (two runs a row): the PPU draws the picture's rows on several cores, each row on one of them, so the
+   rows fill their own slots with no shared counter (a shared queue had kept the HD title's picture on one core:
+   GA36's PPU 8.4 ms a frame against 3.4). */
+#define BAR_ROWS 1024
+#define BAR_PER_ROW 2
+#define BAR_RUNS (BAR_ROWS * BAR_PER_ROW)
 typedef struct BarRun {
     int16_t y, x0, n;
     uint32_t c[256];
 } BarRun;
 static BarRun sBar[BAR_RUNS];
-static int sBarCount;
+static uint8_t sBarRowN[BAR_ROWS];
+static int sBarCount; /* 1 when some row has a run this frame */
+#define BAR_SLOT_USED(i) (((i) % BAR_PER_ROW) < sBarRowN[(i) / BAR_PER_ROW])
 
 void PortHdTitleBarRow(int y, int x0, int n, const uint32_t* argb) {
     BarRun* r;
-    if (sBarCount == BAR_RUNS || n < 1)
+    if (y < 0 || y >= BAR_ROWS || n < 1 || sBarRowN[y] >= BAR_PER_ROW)
         return;
-    r = &sBar[sBarCount++];
+    r = &sBar[y * BAR_PER_ROW + sBarRowN[y]++];
+    sBarCount = 1;
     r->y = (int16_t)y;
     r->x0 = (int16_t)x0;
     r->n = (int16_t)SDL_min(n, 256);
@@ -866,7 +875,8 @@ static void BarDraw(SDL_Renderer* renderer, float ox, float oy, float scale, flo
         extern bool PortFbFillRows(SDL_Renderer*, const uint32_t*, int, int, int, int);
         static uint32_t row[2048];
         int done = 1;
-        for (i = 0; i < sBarCount && done; i++) {
+        for (i = 0; i < BAR_RUNS && done; i++) {
+            if (!BAR_SLOT_USED(i)) continue;
             const BarRun* r = &sBar[i];
             const int y0 = (int)SDL_ceilf(oy + r->y * scale - 0.5f), y1 = (int)SDL_ceilf(oy + (r->y + 1) * scale - 0.5f);
             const int x0 = (int)SDL_floorf(ox + r->x0 * scale + 0.5f), x1 = (int)SDL_floorf(ox + (r->x0 + r->n) * scale + 0.5f);
@@ -897,7 +907,8 @@ static void BarDraw(SDL_Renderer* renderer, float ox, float oy, float scale, flo
         if (done) return;
     }
 #endif
-    for (i = 0; i < sBarCount; i++) {
+    for (i = 0; i < BAR_RUNS; i++) {
+        if (!BAR_SLOT_USED(i)) continue;
         const BarRun* r = &sBar[i];
         /* Match the presenter's nearest-sampled row boundaries. Fractional
            geometry edges otherwise leave a one-pixel slit before the native
@@ -926,8 +937,10 @@ void PortHdSpritesBegin(int layer) {
     if (layer == 0) sWorldBlendFallback = 0;
     if ((unsigned)layer < HD_LAYERS)
         sDrawCount[layer] = 0;
-    if (layer == 0)
+    if (layer == 0) {
+        if (sBarCount) memset(sBarRowN, 0, sizeof(sBarRowN));
         sArtCount = sBarCount = 0;
+    }
 }
 
 /* Test aid (KHCOM_HDDRAWLOG=frame,frame,...): this frame's HD drawing is logged ("hd draw <frame> <name> layer <n>",
@@ -1076,7 +1089,7 @@ static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, in
     int bw = st->cpuW, bh = st->cpuH, k;
     if (dw < 1 || dh < 1) return NULL;
     if (st->fit && (exact ? st->fitW == dw && st->fitH == dh
-                          : SDL_abs(st->fitW - dw) * 33 <= dw && SDL_abs(st->fitH - dh) * 33 <= dh)) {
+                          : SDL_abs(st->fitW - dw) * 8 <= dw && SDL_abs(st->fitH - dh) * 8 <= dh)) {
         *w = st->fitW; *h = st->fitH;
         return st->fit;
     }
@@ -1190,9 +1203,11 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                                     v[1].position.x == v[2].position.x && v[2].position.y == v[3].position.y &&
                                     v[1].position.x > v[0].position.x && v[3].position.y > v[0].position.y &&
                                     v[1].tex_coord.x > v[0].tex_coord.x && v[3].tex_coord.y > v[0].tex_coord.y;
+                const int steady = fw == st->askW && fh == st->askH;
+                st->askW = fw; st->askH = fh;
                 if (fw * 5 < pw * 4 || fh * 5 < ph * 4 || (upright && (fw < pw || fh < ph))) {
                     int w2 = 0, h2 = 0;
-                    const unsigned char* fit = CpuFit(st, fw, fh, &w2, &h2, upright);
+                    const unsigned char* fit = CpuFit(st, fw, fh, &w2, &h2, upright && steady);
                     if (fit) { px = fit; pw = w2; ph = h2; }
                 }
                 if (upright && pw == fw && ph == fh) {
@@ -1764,6 +1779,7 @@ void PortHdSpritesShutdown(void) {
     if (sArtWhite) SDL_DestroyTexture(sArtWhite);
     sArt = sArtWhite = NULL;
     CpuFree(&sArtCpu);
+    memset(sBarRowN, 0, sizeof(sBarRowN));
     sArtTried = sArtW = sArtH = sArtCount = sBarCount = 0;
     SDL_memset(sDrawCount, 0, sizeof(sDrawCount));
     sRenderer = NULL;
