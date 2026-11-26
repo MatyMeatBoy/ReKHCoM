@@ -662,6 +662,72 @@ bool PortFbBeginGlyphBatch(SDL_Renderer* renderer) {
         logicalMode == SDL_LOGICAL_PRESENTATION_DISABLED && SDL_FlushRenderer(renderer);
 }
 
+/* A turned HD sprite (a card spinning as it is played) drawn straight into the framebuffer: a parallelogram (corners
+   top-left, top-right, bottom-right, bottom-left), nearest texel, SDL's 8-bit blend over the opaque picture. SDL's
+   triangle rasteriser cost about 620 instructions a pixel there. RGBA texels, one colour for the quad. */
+bool PortFbRasterQuad(SDL_Renderer* renderer, const unsigned char* tex, int tw, int th, const SDL_Vertex* v,
+                      unsigned cr, unsigned cg, unsigned cb, unsigned ca) {
+    if (!tex || tw <= 0 || th <= 0 || !PortFbBeginGlyphBatch(renderer) ||
+        sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    const float ex = v[1].position.x - v[0].position.x, ey = v[1].position.y - v[0].position.y;
+    const float fx = v[3].position.x - v[0].position.x, fy = v[3].position.y - v[0].position.y;
+    const float det = ex * fy - ey * fx;
+    if (det > -0.01f && det < 0.01f)
+        return true;
+    if (SDL_fabsf(v[2].position.x - (v[1].position.x + fx)) > 0.5f || SDL_fabsf(v[2].position.y - (v[1].position.y + fy)) > 0.5f)
+        return false; /* not a parallelogram */
+    float minx = v[0].position.x, maxx = minx, miny = v[0].position.y, maxy = miny;
+    for (int k = 1; k < 4; k++) {
+        minx = SDL_min(minx, v[k].position.x); maxx = SDL_max(maxx, v[k].position.x);
+        miny = SDL_min(miny, v[k].position.y); maxy = SDL_max(maxy, v[k].position.y);
+    }
+    const int x0 = SDL_max(0, (int)SDL_floorf(minx)), y0 = SDL_max(0, (int)SDL_floorf(miny));
+    const int x1 = SDL_min(sRenderSurface->w, (int)SDL_ceilf(maxx)), y1 = SDL_min(sRenderSurface->h, (int)SDL_ceilf(maxy));
+    const float ia = fy / det, ib = -fx / det, ic = -ey / det, id = ex / det;
+    const float dua = v[1].tex_coord.x - v[0].tex_coord.x, dub = v[3].tex_coord.x - v[0].tex_coord.x;
+    const float dva = v[1].tex_coord.y - v[0].tex_coord.y, dvb = v[3].tex_coord.y - v[0].tex_coord.y;
+    const int32_t dA = (int32_t)(ia * 65536.0f), dB = (int32_t)(ic * 65536.0f);
+    const int32_t dU = (int32_t)((dua * ia + dub * ic) * tw * 65536.0f), dV = (int32_t)((dva * ia + dvb * ic) * th * 65536.0f);
+    for (int y = y0; y < y1; y++) {
+        const float py = y + 0.5f - v[0].position.y;
+        float a = ia * (x0 + 0.5f - v[0].position.x) + ib * py, b = ic * (x0 + 0.5f - v[0].position.x) + id * py;
+        float lo = (float)x0, hi = (float)x1;
+        if (ia > 1e-6f) { lo = SDL_max(lo, x0 - a / ia - 1); hi = SDL_min(hi, x0 + (1 - a) / ia + 1); }
+        else if (ia < -1e-6f) { lo = SDL_max(lo, x0 + (1 - a) / ia - 1); hi = SDL_min(hi, x0 - a / ia + 1); }
+        else if (a < 0 || a >= 1) continue;
+        if (ic > 1e-6f) { lo = SDL_max(lo, x0 - b / ic - 1); hi = SDL_min(hi, x0 + (1 - b) / ic + 1); }
+        else if (ic < -1e-6f) { lo = SDL_max(lo, x0 + (1 - b) / ic - 1); hi = SDL_min(hi, x0 - b / ic + 1); }
+        else if (b < 0 || b >= 1) continue;
+        const int xs = SDL_max(x0, (int)SDL_floorf(lo)), xe = SDL_min(x1, (int)SDL_ceilf(hi));
+        if (xs >= xe) continue;
+        a += ia * (xs - x0);
+        b += ic * (xs - x0);
+        int32_t A = (int32_t)(a * 65536.0f), B = (int32_t)(b * 65536.0f);
+        int32_t U = (int32_t)((v[0].tex_coord.x + a * dua + b * dub) * tw * 65536.0f);
+        int32_t V = (int32_t)((v[0].tex_coord.y + a * dva + b * dvb) * th * 65536.0f);
+        uint32_t* line = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)y * sRenderSurface->pitch);
+        for (int x = xs; x < xe; x++, A += dA, B += dB, U += dU, V += dV) {
+            if ((uint32_t)A >= 65536u || (uint32_t)B >= 65536u) continue;
+            const int tx = U >> 16, ty = V >> 16;
+            if ((unsigned)tx >= (unsigned)tw || (unsigned)ty >= (unsigned)th) continue;
+            const unsigned char* sp = tex + ((size_t)ty * tw + tx) * 4;
+            if (!sp[3]) continue;
+            unsigned sa = sp[3] * ca, sr = sp[0] * cr, sg = sp[1] * cg, sb = sp[2] * cb;
+            sa = (sa + 1 + (sa >> 8)) >> 8;
+            if (!sa) continue;
+            sr = (sr + 1 + (sr >> 8)) >> 8; sg = (sg + 1 + (sg >> 8)) >> 8; sb = (sb + 1 + (sb >> 8)) >> 8;
+            const uint32_t d = line[x];
+            if (sa == 255) { line[x] = 0xFF000000u | (sr << 16) | (sg << 8) | sb; continue; }
+            const unsigned inv = 255 - sa;
+            unsigned r = sr * sa + ((d >> 16) & 255) * inv, g = sg * sa + ((d >> 8) & 255) * inv, bl = sb * sa + (d & 255) * inv;
+            r = (r + 1 + (r >> 8)) >> 8; g = (g + 1 + (g >> 8)) >> 8; bl = (bl + 1 + (bl >> 8)) >> 8;
+            line[x] = 0xFF000000u | (r << 16) | (g << 8) | bl;
+        }
+    }
+    return true;
+}
+
 /* The fixed 480p dialogue plane already fits the viewport at integer 2x. */
 bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest) {
 #ifdef __ARM_NEON

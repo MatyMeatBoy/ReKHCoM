@@ -58,6 +58,8 @@ typedef struct HdSpriteState {
     size_t bytes;
     int textureH;
     uint8_t present; /* 0 not looked up yet, 1 missing, 2 on disk */
+    unsigned char* cpu; /* handheld battle cards: the picture's RGBA, for turned quads drawn by PortFbRasterQuad */
+    int cpuW, cpuH;
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -520,6 +522,8 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) { (void)renderer; }
 #endif
 
 static void Unload(int i) {
+    SDL_free(sState[i].cpu);
+    sState[i].cpu = NULL;
     if (sState[i].image) SDL_DestroyTexture(sState[i].image);
     if (sState[i].white) SDL_DestroyTexture(sState[i].white);
     sState[i].image = sState[i].white = NULL;
@@ -658,6 +662,14 @@ static int Load(int i) {
     if (s) {
         uint64_t t0 = PORT_STUTTER_NOW();
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+        if (kHdSprites[i].group == 1 && HudPackCards() && !sState[i].cpu &&
+            (sState[i].cpu = (unsigned char*)SDL_malloc((size_t)w * h * 4)) != NULL) {
+            memcpy(sState[i].cpu, px, (size_t)w * h * 4); /* before the white copy below rewrites px */
+            sState[i].cpuW = w;
+            sState[i].cpuH = h;
+        }
+#endif
         /* the white copy for the game's brightening fades */
         for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
         sState[i].white = SDL_CreateTextureFromSurface(sRenderer, s);
@@ -1044,6 +1056,20 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
             }
         }
     }
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    {
+        /* a turned card on the handheld's framebuffer (an enemy's card spinning as it is played): the cards' own
+           rasteriser, not SDL's triangles (fbdev_linux.c PortFbRasterQuad) */
+        extern bool PortFbRasterQuad(SDL_Renderer*, const unsigned char*, int, int, const SDL_Vertex*, unsigned, unsigned,
+                                     unsigned, unsigned);
+        const HdSpriteState* st = &sState[q->id];
+        if (st->cpu && t == st->image && !SDL_getenv("KHCOM_HD_SPRITE_TRIANGLES") &&
+            PortFbRasterQuad(sRenderer, st->cpu, st->cpuW, st->cpuH, v,
+                             (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
+                             (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f)))
+            return 1;
+    }
+#endif
     /* SDL turns an axis-aligned quad into a texture copy, and the software
        renderer's scaled copy reads outside the texture when the quad is
        mirrored, turned a quarter (a card spinning) or partly off the canvas (a
