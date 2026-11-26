@@ -89,6 +89,42 @@ static const HdLayout* Layout(int which) {
     return sLayouts[which].data ? &sLayouts[which] : NULL;
 }
 
+/* The HD HUD pack's gauge pictures, decoded on a thread before the first battle (PortHdLayoutPrepare): their
+   decode on the frame loop took the console a frame or more each on the title. */
+static struct {
+    char* path;
+    unsigned char* px;
+    int w, h;
+    SDL_AtomicInt state; /* 0 waiting, 1 decoded, 2 failed */
+} sTexPre[HD_LAYOUT_TEXTURE_COUNT];
+static SDL_Thread* sTexPreThread;
+
+static int SDLCALL TexturePreThread(void* unused) {
+    int i;
+    (void)unused;
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
+        int n = 0;
+        if (!sTexPre[i].path) continue;
+        sTexPre[i].px = stbi_load(sTexPre[i].path, &sTexPre[i].w, &sTexPre[i].h, &n, 4);
+        SDL_SetAtomicInt(&sTexPre[i].state, sTexPre[i].px ? 1 : 2);
+    }
+    return 0;
+}
+
+static void TexturePreRelease(void) {
+    int i;
+    if (sTexPreThread) {
+        SDL_WaitThread(sTexPreThread, NULL);
+        sTexPreThread = NULL;
+    }
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
+        if (sTexPre[i].px) stbi_image_free(sTexPre[i].px);
+        SDL_free(sTexPre[i].path);
+        sTexPre[i].px = NULL;
+        sTexPre[i].path = NULL;
+    }
+}
+
 static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
     HdLayoutTexture* t;
     if ((unsigned)which >= HD_LAYOUT_TEXTURE_COUNT)
@@ -111,7 +147,14 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
         int n;
         unsigned char* px;
         t->tried = 1;
-        px = stbi_load(PortHdSpritePath(file, sizeof(file), kTextureFiles[which]), &t->w, &t->h, &n, 4);
+        if (t == &sTextures[which] && sTexPre[which].px && SDL_GetAtomicInt(&sTexPre[which].state) == 1) {
+            px = sTexPre[which].px; /* decoded on the preload thread */
+            sTexPre[which].px = NULL;
+            t->w = sTexPre[which].w;
+            t->h = sTexPre[which].h;
+        } else {
+            px = stbi_load(PortHdSpritePath(file, sizeof(file), kTextureFiles[which]), &t->w, &t->h, &n, 4);
+        }
         if (px) {
             SDL_Surface* s = SDL_CreateSurfaceFrom(t->w, t->h, SDL_PIXELFORMAT_RGBA32, px, t->w * 4);
             const int keep = which != HD_LAYOUT_TEX_COCKPIT && t == &sTextures[which] &&
@@ -180,12 +223,25 @@ void PortHdLayoutPrepare(SDL_Renderer* renderer) {
     if (PortHdHudPack() && renderer && !SDL_getenv("KHCOM_HD_HUD_NO_PRELOAD")) {
         static const int kGauge[3] = { HD_LAYOUT_TEX_GAUGE, HD_LAYOUT_TEX_GAUGE_FACES, HD_LAYOUT_TEX_RIKU_FACES };
         static uint32_t lastStep;
+        static int threadTried;
         uint32_t frame = PortFrameCount();
         int ow = 0, oh = 0;
+        if (!threadTried) {
+            threadTried = 1;
+            for (i = 0; i < 3; i++) {
+                char file[PORT_HD_PATH_MAX];
+                const char* path = PortHdSpritePath(file, sizeof(file), kTextureFiles[kGauge[i]]);
+                if (!sTextures[kGauge[i]].tried && path && path[0]) sTexPre[kGauge[i]].path = SDL_strdup(path);
+            }
+            sTexPreThread = SDL_CreateThread(TexturePreThread, "hd-gauge-preload", NULL);
+            if (!sTexPreThread) TexturePreRelease(); /* decoded on the frame loop as before */
+        }
         if (frame == lastStep)
             return;
         for (i = 0; i < 3; i++)
             if (!sTextures[kGauge[i]].tried) {
+                if (sTexPre[kGauge[i]].path && SDL_GetAtomicInt(&sTexPre[kGauge[i]].state) == 0)
+                    return; /* still decoding */
                 lastStep = frame;
                 Texture(renderer, kGauge[i]);
                 PortLog("hd hud preload: %s %s", kTextureFiles[kGauge[i]], sTextures[kGauge[i]].tex ? "loaded" : "missing");
@@ -779,6 +835,7 @@ void PortHdLayoutShutdown(void) {
     GaugeTargetsRelease();
 #endif
     GaugeCacheRelease();
+    TexturePreRelease();
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
         int f;
         for (f = 0; f < 4; f++) {
