@@ -1740,6 +1740,122 @@ static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
     }
 }
 
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+/* The HD title's parts (its logo pieces, the background behind them and its words: groups 2 and 7) overlap and stay
+   put on the title screen: composed once into a premultiplied layer, cut into runs, and copied each frame while
+   the same parts are drawn in the same places (about 6 ms a frame on GA36 with the HD logo). A part that moves,
+   fades or is not yet at its drawn size leaves the frame to the usual drawing; the shimmering words (MenuLightName)
+   are drawn as usual over the layer. covered[i]: the part is in the layer. */
+#define PART_CACHE_MAX 64
+static uint32_t* sPartLayer;
+static uint16_t* sPartRuns;
+static uint32_t sPartRowStart[481];
+static int sPartX, sPartY, sPartW, sPartH, sPartCap;
+static uint32_t sPartKey;
+static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten,
+                         uint8_t* covered) {
+    typedef struct { const unsigned char* px; int pw, sx, sy, x0, y0, x1, y1; } Part;
+    static Part part[PART_CACHE_MAX];
+    static int off = -1;
+    int n = 0, i, bx0 = 640, by0 = 480, bx1 = 0, by1 = 0;
+    uint32_t key = 2166136261u;
+    if (off < 0) off = SDL_getenv("KHCOM_HD_PART_CACHE_OFF") != NULL;
+    if (off || darken > 0 || brighten > 0 || sDrawCount[layer] < 2 || sDrawCount[layer] > PART_CACHE_MAX)
+        return 0;
+    for (i = 0; i < sDrawCount[layer]; i++) {
+        const HdSpriteDraw* q = &sDraws[layer][i];
+        const HdSpriteDef* d = &kHdSprites[q->id];
+        HdSpriteState* st = &sState[q->id];
+        covered[i] = 0;
+        if (d->group == 7 && MenuLightName(d->name))
+            continue; /* drawn as usual, over the layer */
+        if ((d->group != 2 && d->group != 7) || q->hudOwner || q->alpha != 255 || q->dark || q->white || !st->cpu)
+            return 0;
+        if (q->y[0] != q->y[1] || q->x[0] != q->x[3] || q->x[1] != q->x[2] || q->y[2] != q->y[3] ||
+            q->x[1] <= q->x[0] || q->y[3] <= q->y[0] || q->u1 <= q->u0 || q->v1 <= q->v0)
+            return 0;
+        const float ew = scale * (q->x[1] - q->x[0]), eh = scale * (q->y[3] - q->y[0]);
+        const int fw = (int)(ew / (q->u1 - q->u0) + 0.5f), fh = (int)(eh / (q->v1 - q->v0) + 0.5f);
+        const unsigned char* px = NULL;
+        if (st->cpuW == fw && st->cpuH == fh) px = st->cpu;
+        else if (st->fit && st->fitW == fw && st->fitH == fh) px = st->fit;
+        if (!px) return 0; /* not yet at its size: the usual drawing makes the copy */
+        Part* t = &part[n];
+        t->px = px; t->pw = fw;
+        t->x0 = (int)SDL_roundf(ox + q->x[0] * scale); t->y0 = (int)SDL_roundf(oy + q->y[0] * scale);
+        t->x1 = (int)SDL_roundf(ox + q->x[1] * scale); t->y1 = (int)SDL_roundf(oy + q->y[3] * scale);
+        t->sx = (int)(q->u0 * fw + 0.5f); t->sy = (int)(q->v0 * fh + 0.5f);
+        t->x1 = SDL_min(t->x1, t->x0 + fw - t->sx); t->y1 = SDL_min(t->y1, t->y0 + fh - t->sy);
+        {
+            const int k[8] = { q->id, t->x0, t->y0, t->x1, t->y1, t->sx, t->sy, fw };
+            for (int j = 0; j < 8; j++) { key ^= (uint32_t)k[j]; key *= 16777619u; }
+            key ^= (uint32_t)(uintptr_t)px; key *= 16777619u;
+        }
+        bx0 = SDL_min(bx0, SDL_max(t->x0, 0)); by0 = SDL_min(by0, SDL_max(t->y0, 0));
+        bx1 = SDL_max(bx1, SDL_min(t->x1, 640)); by1 = SDL_max(by1, SDL_min(t->y1, 480));
+        covered[i] = 1;
+        n++;
+    }
+    if (n < 2 || bx1 <= bx0 || by1 <= by0)
+        return 0;
+    key ^= (uint32_t)(bx0 | bx1 << 10 | by0 << 20); key *= 16777619u;
+    if (!sPartLayer || key != sPartKey) {
+        /* compose: premultiplied "over", the parts in their drawing order */
+        const int w = bx1 - bx0, h = by1 - by0;
+        if (w * h > sPartCap) {
+            SDL_free(sPartLayer); SDL_free(sPartRuns);
+            sPartLayer = (uint32_t*)SDL_malloc((size_t)w * h * 4);
+            sPartRuns = (uint16_t*)SDL_malloc(((size_t)w * h + 512) * 2); /* at most a run a pixel, and one a row */
+            sPartCap = sPartLayer && sPartRuns ? w * h : 0;
+            if (!sPartCap) { sPartLayer = NULL; return 0; }
+        }
+        memset(sPartLayer, 0, (size_t)w * h * 4);
+        for (i = 0; i < n; i++) {
+            const Part* t = &part[i];
+            const int cx0 = SDL_max(t->x0, bx0), cy0 = SDL_max(t->y0, by0), cx1 = SDL_min(t->x1, bx1), cy1 = SDL_min(t->y1, by1);
+            for (int y = cy0; y < cy1; y++) {
+                const unsigned char* in = t->px + ((size_t)(t->sy + y - t->y0) * t->pw + t->sx + cx0 - t->x0) * 4;
+                uint32_t* out = sPartLayer + (size_t)(y - by0) * w + (cx0 - bx0);
+                for (int x = cx0; x < cx1; x++, in += 4, out++) {
+                    const unsigned a = in[3];
+                    if (!a) continue;
+                    unsigned r = in[0] * a, g = in[1] * a, b = in[2] * a; /* premultiplied */
+                    r = (r + 1 + (r >> 8)) >> 8; g = (g + 1 + (g >> 8)) >> 8; b = (b + 1 + (b >> 8)) >> 8;
+                    if (a == 255) { *out = 0xFF000000u | (r << 16) | (g << 8) | b; continue; }
+                    const uint32_t d = *out;
+                    const unsigned inv = 255 - a;
+                    unsigned da = (d >> 24) * inv, dr = ((d >> 16) & 255) * inv, dg = ((d >> 8) & 255) * inv, db = (d & 255) * inv;
+                    da = ((da + 1 + (da >> 8)) >> 8) + a; dr = ((dr + 1 + (dr >> 8)) >> 8) + r;
+                    dg = ((dg + 1 + (dg >> 8)) >> 8) + g; db = ((db + 1 + (db >> 8)) >> 8) + b;
+                    *out = (SDL_min(da, 255u) << 24) | (SDL_min(dr, 255u) << 16) | (SDL_min(dg, 255u) << 8) | SDL_min(db, 255u);
+                }
+            }
+        }
+        uint32_t nr = 0;
+        for (int y = 0; y < h; y++) {
+            const uint32_t* row = sPartLayer + (size_t)y * w;
+            sPartRowStart[y] = nr;
+            int x = 0;
+            while (x < w) {
+                const unsigned a = row[x] >> 24;
+                const int kind = !a ? 0 : a == 255 ? 1 : 2;
+                int e = x;
+                while (e < w && e - x < 0x3FFF) {
+                    const unsigned b = row[e] >> 24;
+                    if ((!b ? 0 : b == 255 ? 1 : 2) != kind) break;
+                    e++;
+                }
+                sPartRuns[nr++] = (uint16_t)(kind << 14 | (e - x));
+                x = e;
+            }
+        }
+        sPartX = bx0; sPartY = by0; sPartW = w; sPartH = h; sPartKey = key;
+    }
+    extern bool PortFbBlendPremulRuns(SDL_Renderer*, const uint32_t*, const uint16_t*, const uint32_t*, int, int, int, int);
+    return PortFbBlendPremulRuns(renderer, sPartLayer, sPartRuns, sPartRowStart, sPartW, sPartH, sPartX, sPartY);
+}
+#endif
+
 void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, float scale, int darken, int brighten) {
     int i;
     sRenderer = renderer;
@@ -1777,9 +1893,16 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
     if (layer == 0 && sBarCount)
         BarDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
     gPortPiece[7] += SDL_GetPerformanceCounter() - _pt; _pt = SDL_GetPerformanceCounter();
+    uint8_t covered[MAX_DRAWS];
+    int partCached = 0;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    if (layer != 1 && !sharedHud && gPortConfig.hdTitle && sDrawCount[layer] <= PART_CACHE_MAX)
+        partCached = PartCacheDraw(renderer, layer, ox, oy, scale, darken, brighten, covered);
+#endif
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
         HdSpriteState* st = &sState[q->id];
+        if (partCached && covered[i]) { st->lastUsed = PortFrameCount(); continue; }
         if (sWorldBlendFallback && kHdSprites[q->id].group == 4) continue;
         if (q->hudOwner) continue;
         /* the game's brightness fade (BLDY) and the part's palette fade, whichever is further */

@@ -838,6 +838,39 @@ bool PortFbBlendRgbaScaled(SDL_Renderer* renderer, const unsigned char* tex, int
     return true;
 }
 
+/* A premultiplied ARGB layer in runs (port_hdsprites.c the title's part cache): runs of uint16 (kind << 14 | length),
+   0 clear, 1 opaque (copied), 2 translucent (c = s + d (1 - a)), w x h at (x, y), whole rows of the layer. */
+bool PortFbBlendPremulRuns(SDL_Renderer* renderer, const uint32_t* argb, const uint16_t* runs, const uint32_t* rowStart,
+                           int w, int h, int x, int y) {
+    if (!argb || !runs || !rowStart || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    if (x < 0 || y < 0 || x + w > sRenderSurface->w || y + h > sRenderSurface->h)
+        return false; /* the cache is cut to the screen when made */
+    for (int r = 0; r < h; r++) {
+        const uint16_t* run = runs + rowStart[r];
+        const uint32_t* in = argb + (size_t)r * w;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)(y + r) * sRenderSurface->pitch) + x;
+        int c = 0;
+        while (c < w) {
+            const int kind = *run >> 14, len = *run & 0x3FFF;
+            run++;
+            if (kind == 1) memcpy(out + c, in + c, (size_t)len * 4);
+            else if (kind == 2)
+                for (int k = c; k < c + len; k++) {
+                    const uint32_t p = in[k], d = out[k];
+                    const unsigned inv = 255 - (p >> 24);
+                    unsigned rr = ((d >> 16) & 255) * inv, gg = ((d >> 8) & 255) * inv, bb = (d & 255) * inv;
+                    rr = ((rr + 1 + (rr >> 8)) >> 8) + ((p >> 16) & 255);
+                    gg = ((gg + 1 + (gg >> 8)) >> 8) + ((p >> 8) & 255);
+                    bb = ((bb + 1 + (bb >> 8)) >> 8) + (p & 255);
+                    out[k] = 0xFF000000u | (SDL_min(rr, 255u) << 16) | (SDL_min(gg, 255u) << 8) | SDL_min(bb, 255u);
+                }
+            c += len;
+        }
+    }
+    return true;
+}
+
 /* An upright picture prepared in runs (port_hdsprites.c PackRuns): ARGB pixels (straight alpha) and, per row, runs
    of uint16 (kind << 14 | length): 0 nothing, 1 opaque (copied as they are), 2 translucent (blended). w x h from
    (sx, sy) to (x, y), 1:1, no colour change. The HD title's poster: a third clear, a third opaque, a third soft. */
