@@ -2533,8 +2533,10 @@ static int sPieceFlush = -1;
 #define PIECE_CK(i) do { if (sPieceFlush < 0) sPieceFlush = SDL_getenv("KHCOM_PIECE_LOG") != NULL; if (sPieceFlush) SDL_FlushRenderer(sRenderer); const uint64_t _n = SDL_GetPerformanceCounter(); gPortPiece[i] += _n - sPieceCk; sPieceCk = _n; } while (0) /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
 static void PieceLog(void) {
     static int on = -1;
+    static int every = -1;
     if (on < 0) on = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
-    if (!on || sFrameCount % 100) return;
+    if (every < 0) every = SDL_getenv("KHCOM_PIECE_EVERY") != NULL; /* each frame's own, not a hundred's */
+    if (!on || (sFrameCount % 100 && !every)) return;
     PortLog("probe piece f=%u spr0 %.2f text0 %.2f spr2 %.2f text2 %.2f uihd %.2f footer %.2f art %.2f bar %.2f parts %.2f mainover %.2f base %.2f | pre %.2f hdlayers %.2f hud %.2f tail %.2f fbpresent %.2f | preover %.2f overlay %.2f layer2 %.2f screenover %.2f | sprites %.2f light %.2f over %.2f",
             (unsigned)sFrameCount, gPortPiece[0] / 1e8, gPortPiece[1] / 1e8, gPortPiece[2] / 1e8, gPortPiece[3] / 1e8,
             gPortPiece[4] / 1e8, gPortPiece[5] / 1e8, gPortPiece[6] / 1e8, gPortPiece[7] / 1e8, gPortPiece[8] / 1e8, gPortPiece[9] / 1e8, gPortPiece[10] / 1e8, gPortPiece[11] / 1e8, gPortPiece[12] / 1e8, gPortPiece[13] / 1e8, gPortPiece[14] / 1e8, gPortPiece[15] / 1e8, gPortPiece[16] / 1e8, gPortPiece[17] / 1e8, gPortPiece[18] / 1e8, gPortPiece[19] / 1e8, gPortPiece[20] / 1e8, gPortPiece[21] / 1e8, gPortPiece[22] / 1e8);

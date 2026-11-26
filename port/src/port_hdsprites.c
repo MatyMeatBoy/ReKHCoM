@@ -65,6 +65,7 @@ typedef struct HdSpriteState {
     unsigned char* fit; /* the copy at the size last drawn */
     int fitW, fitH;
     int askW, askH; /* the size asked for last time: an exact copy only once the size holds (not every frame of a zoom) */
+    uint32_t askSince; /* the frame that size was first asked for */
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -1059,12 +1060,32 @@ void PortHdSpriteHudOwner(int slot) {
 
 #if defined(PORT_LINUX) && __STDC_HOSTED__
 /* Box average of an RGBA picture to dw x dh, weighted by alpha (no dark fringe at the edges). */
+static uint32_t kRecip[64]; /* 65536 / n, rounded up (BoxScale's alpha) */
+static uint32_t kInvOpaque[64]; /* 2^32 / (255 n) + 1: an opaque box's mean without a division */
 static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* dst, int dw, int dh) {
+    if (!kRecip[1])
+        for (int k = 1; k < 64; k++) {
+            kRecip[k] = (65536u + k - 1) / k;
+            kInvOpaque[k] = 0xFFFFFFFFu / (255u * k) + 1u;
+        }
+    /* each column's box once: a 64-bit division per pixel is a library call on ARM32 (a near 1:1 copy of the title's
+       poster cost GA36 270 million instructions, a frame of the intro's zoom) */
+    static uint16_t colFrom[4097], colTo[4097];
+    if (dw > 4096 || sw > 65535 || sh > 65535) return;
+    for (int x = 0; x < dw; x++) {
+        const int x0 = (int)((uint32_t)x * (uint32_t)sw / (uint32_t)dw);
+        colFrom[x] = (uint16_t)x0;
+        colTo[x] = (uint16_t)SDL_max(x0 + 1, (int)((uint32_t)(x + 1) * (uint32_t)sw / (uint32_t)dw));
+    }
     for (int y = 0; y < dh; y++) {
-        const int y0 = (int)((int64_t)y * sh / dh), y1 = SDL_max(y0 + 1, (int)((int64_t)(y + 1) * sh / dh));
+        const int y0 = (int)((uint32_t)y * (uint32_t)sh / (uint32_t)dh), y1 = SDL_max(y0 + 1, (int)((uint32_t)(y + 1) * (uint32_t)sh / (uint32_t)dh));
         unsigned char* out = dst + (size_t)y * dw * 4;
         for (int x = 0; x < dw; x++, out += 4) {
-            const int x0 = (int)((int64_t)x * sw / dw), x1 = SDL_max(x0 + 1, (int)((int64_t)(x + 1) * sw / dw));
+            const int x0 = colFrom[x], x1 = colTo[x];
+            if (x1 - x0 == 1 && y1 - y0 == 1) { /* one pixel: itself */
+                memcpy(out, src + ((size_t)y0 * sw + x0) * 4, 4);
+                continue;
+            }
             uint32_t r = 0, g = 0, b = 0, a = 0, n = 0;
             for (int yy = y0; yy < y1; yy++) {
                 const unsigned char* in = src + ((size_t)yy * sw + x0) * 4;
@@ -1075,8 +1096,15 @@ static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* ds
                 n += (uint32_t)(x1 - x0);
             }
             if (!a) { out[0] = out[1] = out[2] = out[3] = 0; continue; }
-            out[0] = (unsigned char)(r / a); out[1] = (unsigned char)(g / a); out[2] = (unsigned char)(b / a);
-            out[3] = (unsigned char)((a + n / 2) / n);
+            {
+                /* one 32-bit division a pixel for the three channels (ARMv7 without a divide instruction calls a
+                   routine for each) and the alpha by a table of reciprocals */
+                const uint32_t inv = n < 64 && a == 255u * n ? kInvOpaque[n] : 0xFFFFFFFFu / a + 1u;
+                out[0] = (unsigned char)SDL_min((uint32_t)(((uint64_t)r * inv) >> 32), 255u);
+                out[1] = (unsigned char)SDL_min((uint32_t)(((uint64_t)g * inv) >> 32), 255u);
+                out[2] = (unsigned char)SDL_min((uint32_t)(((uint64_t)b * inv) >> 32), 255u);
+                out[3] = (unsigned char)(n < 64 ? ((a + n / 2) * kRecip[n]) >> 16 : (a + n / 2) / n);
+            }
         }
     }
 }
@@ -1203,9 +1231,12 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                                     v[1].position.x == v[2].position.x && v[2].position.y == v[3].position.y &&
                                     v[1].position.x > v[0].position.x && v[3].position.y > v[0].position.y &&
                                     v[1].tex_coord.x > v[0].tex_coord.x && v[3].tex_coord.y > v[0].tex_coord.y;
-                const int steady = fw == st->askW && fh == st->askH;
-                st->askW = fw; st->askH = fh;
-                if (fw * 5 < pw * 4 || fh * 5 < ph * 4 || (upright && (fw < pw || fh < ph))) {
+                /* steady: the same size for 8 frames (the title's zoom steps every 5) */
+                if (fw != st->askW || fh != st->askH) { st->askW = fw; st->askH = fh; st->askSince = PortFrameCount(); }
+                const int steady = PortFrameCount() - st->askSince >= 8;
+                /* a copy at the drawn size: much smaller than the picture, or (upright and the size holding) a 1:1
+                   copy; while a zoom changes the size every frame the rasteriser samples the nearest copy kept */
+                if (fw * 5 < pw * 4 || fh * 5 < ph * 4 || (upright && steady && (fw < pw || fh < ph))) {
                     int w2 = 0, h2 = 0;
                     const unsigned char* fit = CpuFit(st, fw, fh, &w2, &h2, upright && steady);
                     if (fit) { px = fit; pw = w2; ph = h2; }
