@@ -2530,7 +2530,12 @@ static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
 uint64_t gPortPiece[24];
 static uint64_t sPieceCk;
 static int sPieceFlush = -1;
-#define PIECE_CK(i) do { if (sPieceFlush < 0) sPieceFlush = SDL_getenv("KHCOM_PIECE_LOG") != NULL; if (sPieceFlush) SDL_FlushRenderer(sRenderer); const uint64_t _n = SDL_GetPerformanceCounter(); gPortPiece[i] += _n - sPieceCk; sPieceCk = _n; } while (0) /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
+#if __STDC_HOSTED__
+#define PIECE_FLUSH() SDL_FlushRenderer(sRenderer)
+#else
+#define PIECE_FLUSH() ((void)0) /* freestanding guests (SDL shim): no queued draws to flush */
+#endif
+#define PIECE_CK(i) do { if (sPieceFlush < 0) sPieceFlush = SDL_getenv("KHCOM_PIECE_LOG") != NULL; if (sPieceFlush) PIECE_FLUSH(); const uint64_t _n = SDL_GetPerformanceCounter(); gPortPiece[i] += _n - sPieceCk; sPieceCk = _n; } while (0) /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
 static void PieceLog(void) {
     static int on = -1;
     static int every = -1;
@@ -3457,9 +3462,6 @@ static void Present(int paced) {
             }
             if (over) {
                 SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
-                if (sPieceFlush > 0 && sFrameCount % 300 == 0)
-                    PortLog("probe mainover sdl: fb %d scale %d od %.2f,%.2f %.2fx%.2f", PortFbActive(),
-                            (int)sPictureScaleMode, od.x, od.y, od.w, od.h);
                 if (sMainOverTexture == NULL || sMainOverW != gPortScreen.width || sMainOverH != gPortScreen.height) {
                     if (sMainOverTexture != NULL)
                         SDL_DestroyTexture(sMainOverTexture);
@@ -3498,7 +3500,7 @@ static void Present(int paced) {
                         float top = PixelEdge(worldY, gPortScreen.originY + row, worldScale);
                         float bottom = PixelEdge(worldY, gPortScreen.originY + row + 1, worldScale);
                         SDL_FRect band = { left, top, right - left, bottom - top };
-#ifdef PORT_LINUX
+#if defined(PORT_LINUX) && __STDC_HOSTED__
                         {
                             /* the handheld's framebuffer: the band's rows written straight in; SDL's 320 small
                                fills a frame cost GA36 about 11 million instructions (QEMU) */
