@@ -411,27 +411,42 @@ static SDL_Surface* sCacheSurface;
    a + d (1 - a); ADD: c = s a + d). SDL's triangle rasteriser cost about 620 instructions a pixel there; the low-HP
    alarm turns four large pieces and their bright pass every frame (user, 26/11: slow again at low HP). Only one
    colour for the whole quad; otherwise 0 and SDL draws it. */
-static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const SDL_FRect* clip, int add) {
+#define DIV255(x) (((x) + 1u + ((x) >> 8)) >> 8) /* exact for x <= 255 * 255 */
+/* the rebuild's covered columns per row, kept by the rasteriser (sCacheSpan), so the picture need not be scanned;
+   anything SDL draws into the cache instead clears sSpanTracked and the picture is scanned */
+static int sSpanTracking, sSpanTracked;
+static int16_t* sCacheSpan;
+
+static unsigned ColourByte(float c) { return (unsigned)(SDL_clamp(c, 0.0f, 1.0f) * 255.0f + 0.5f); }
+
+/* A quad drawn straight into the gauge cache's surface (corners top-left, top-right, bottom-left, bottom-right: a
+   parallelogram), nearest texel, SDL's own 8-bit blend (BLEND: c = s a + d (1 - a), alpha a + d (1 - a); ADD:
+   c = s a + d), and the PS2's bright second pass (ADD, `over`) on the same texel in the same walk. Each row walks
+   only the columns inside the quad, in 16.16 fixed point. SDL's colour-modulated copies and triangles cost the
+   console 11-34 ms a rebuild (GA36 RC 0.8.6 diagnostic, user 26/11). One colour a quad; otherwise 0 and SDL draws
+   it. */
+static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const SDL_Vertex* over, const SDL_FRect* clip,
+                           int add) {
     const SDL_Surface* pic;
     const unsigned char* tex;
-    int which = (int)(t - sCacheTextures), x0, y0, x1, y1, x, y, k, tw, th, tpitch, pitch;
+    int which = (int)(t - sCacheTextures), x0, y0, x1, y1, y, k, tw, th, tpitch, pitch;
     float ex = v[1].position.x - v[0].position.x, ey = v[1].position.y - v[0].position.y;
     float fx = v[2].position.x - v[0].position.x, fy = v[2].position.y - v[0].position.y, det, minx, miny, maxx, maxy;
-    float ia, ib, ic, id, du, dv;
-    unsigned cr, cg, cb, ca;
+    float ia, ib, ic, id, dua, dub, dva, dvb;
+    unsigned cr, cg, cb, ca, orr = 0, og = 0, ob = 0;
     uint32_t* dst;
     if (!sCacheSurface || which < 0 || which >= HD_LAYOUT_TEXTURE_COUNT || !(pic = sPictures[which][0]))
         return 0;
     for (k = 1; k < 4; k++)
         if (v[k].color.r != v[0].color.r || v[k].color.g != v[0].color.g || v[k].color.b != v[0].color.b ||
-            v[k].color.a != v[0].color.a)
+            v[k].color.a != v[0].color.a || (over && (over[k].color.r != over[0].color.r ||
+            over[k].color.g != over[0].color.g || over[k].color.b != over[0].color.b)))
             return 0;
     det = ex * fy - ey * fx;
     if (det > -0.01f && det < 0.01f)
         return 1; /* no area */
-    /* parallelogram only: the fourth corner where the other three put it */
     if (SDL_fabsf(v[3].position.x - (v[1].position.x + fx)) > 0.5f || SDL_fabsf(v[3].position.y - (v[1].position.y + fy)) > 0.5f)
-        return 0;
+        return 0; /* not a parallelogram */
     SDL_FlushRenderer(sCacheRenderer); /* what SDL queued before goes under */
     minx = maxx = v[0].position.x;
     miny = maxy = v[0].position.y;
@@ -447,57 +462,88 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
     x1 = SDL_min(sCacheSurface->w, (int)SDL_ceilf(maxx)); y1 = SDL_min(sCacheSurface->h, (int)SDL_ceilf(maxy));
     if (x0 >= x1 || y0 >= y1)
         return 1;
-    /* pixel centre -> (a, b) across the two edges */
+    /* pixel centre -> (a, b) across the two edges, and the texture point there */
     ia = fy / det; ib = -fx / det; ic = -ey / det; id = ex / det;
-    du = v[1].tex_coord.x - v[0].tex_coord.x;
-    dv = v[2].tex_coord.y - v[0].tex_coord.y;
+    dua = v[1].tex_coord.x - v[0].tex_coord.x; dub = v[2].tex_coord.x - v[0].tex_coord.x;
+    dva = v[1].tex_coord.y - v[0].tex_coord.y; dvb = v[2].tex_coord.y - v[0].tex_coord.y;
+    tw = pic->w; th = pic->h; tpitch = pic->pitch;
+    tex = (const unsigned char*)pic->pixels;
+    cr = ColourByte(v[0].color.r); cg = ColourByte(v[0].color.g); cb = ColourByte(v[0].color.b); ca = ColourByte(v[0].color.a);
+    if (over) { orr = ColourByte(over[0].color.r); og = ColourByte(over[0].color.g); ob = ColourByte(over[0].color.b); }
+    pitch = sCacheSurface->pitch / 4;
+    dst = (uint32_t*)sCacheSurface->pixels;
     {
-        /* the texture's corners need not run along the edges (mirrored quads): a full map */
-        float dua = v[1].tex_coord.x - v[0].tex_coord.x, dub = v[2].tex_coord.x - v[0].tex_coord.x;
-        float dva = v[1].tex_coord.y - v[0].tex_coord.y, dvb = v[2].tex_coord.y - v[0].tex_coord.y;
-        tw = pic->w; th = pic->h; tpitch = pic->pitch;
-        tex = (const unsigned char*)pic->pixels;
-        cr = (unsigned)(SDL_clamp(v[0].color.r, 0.0f, 1.0f) * 255.0f + 0.5f);
-        cg = (unsigned)(SDL_clamp(v[0].color.g, 0.0f, 1.0f) * 255.0f + 0.5f);
-        cb = (unsigned)(SDL_clamp(v[0].color.b, 0.0f, 1.0f) * 255.0f + 0.5f);
-        ca = (unsigned)(SDL_clamp(v[0].color.a, 0.0f, 1.0f) * 255.0f + 0.5f);
-        pitch = sCacheSurface->pitch / 4;
-        dst = (uint32_t*)sCacheSurface->pixels;
-        (void)du; (void)dv;
+        /* per pixel step in x, 16.16: (a, b) and texels */
+        const float sa_ = ia, sb_ = ic;
+        const float su = (dua * ia + dub * ic) * tw, sv = (dva * ia + dvb * ic) * th;
+        const int32_t dA = (int32_t)(sa_ * 65536.0f), dB = (int32_t)(sb_ * 65536.0f);
+        const int32_t dU = (int32_t)(su * 65536.0f), dV = (int32_t)(sv * 65536.0f);
         for (y = y0; y < y1; y++) {
-            float py = y + 0.5f - v[0].position.y, px = x0 + 0.5f - v[0].position.x;
-            float a = ia * px + ib * py, b = ic * px + id * py;
-            uint32_t* line = dst + (size_t)y * pitch;
-            for (x = x0; x < x1; x++, a += ia, b += ic) {
-                float u, w;
-                int tx, ty;
-                const unsigned char* s;
+            float py = y + 0.5f - v[0].position.y, pxs = x0 + 0.5f - v[0].position.x;
+            float a = ia * pxs + ib * py, b = ic * pxs + id * py, lo = (float)x0, hi = (float)x1;
+            int xs, xe, x, first = -1, last = -1;
+            int32_t A, B, U, V;
+            uint32_t* line;
+            /* the columns where 0 <= a < 1 and 0 <= b < 1 (a pixel of margin: the fixed-point test decides) */
+            if (ia > 1e-6f) { lo = SDL_max(lo, x0 - a / ia - 1); hi = SDL_min(hi, x0 + (1 - a) / ia + 1); }
+            else if (ia < -1e-6f) { lo = SDL_max(lo, x0 + (1 - a) / ia - 1); hi = SDL_min(hi, x0 - a / ia + 1); }
+            else if (a < 0 || a >= 1) continue;
+            if (ic > 1e-6f) { lo = SDL_max(lo, x0 - b / ic - 1); hi = SDL_min(hi, x0 + (1 - b) / ic + 1); }
+            else if (ic < -1e-6f) { lo = SDL_max(lo, x0 + (1 - b) / ic - 1); hi = SDL_min(hi, x0 - b / ic + 1); }
+            else if (b < 0 || b >= 1) continue;
+            xs = SDL_max(x0, (int)SDL_floorf(lo));
+            xe = SDL_min(x1, (int)SDL_ceilf(hi));
+            if (xs >= xe) continue;
+            a += ia * (xs - x0);
+            b += ic * (xs - x0);
+            A = (int32_t)(a * 65536.0f); B = (int32_t)(b * 65536.0f);
+            U = (int32_t)((v[0].tex_coord.x + a * dua + b * dub) * tw * 65536.0f);
+            V = (int32_t)((v[0].tex_coord.y + a * dva + b * dvb) * th * 65536.0f);
+            line = dst + (size_t)y * pitch;
+            for (x = xs; x < xe; x++, A += dA, B += dB, U += dU, V += dV) {
+                const unsigned char* sp;
                 unsigned sa, sr, sg, sb;
                 uint32_t d;
-                if (a < 0.0f || a >= 1.0f || b < 0.0f || b >= 1.0f)
+                int tx, ty;
+                if ((uint32_t)A >= 65536u || (uint32_t)B >= 65536u)
                     continue;
-                u = v[0].tex_coord.x + a * dua + b * dub;
-                w = v[0].tex_coord.y + a * dva + b * dvb;
-                tx = (int)(u * tw);
-                ty = (int)(w * th);
+                tx = U >> 16; ty = V >> 16;
                 if ((unsigned)tx >= (unsigned)tw || (unsigned)ty >= (unsigned)th)
                     continue;
-                s = tex + (size_t)ty * tpitch + (size_t)tx * 4;
-                sa = s[3] * ca / 255;
+                sp = tex + (size_t)ty * tpitch + (size_t)tx * 4;
+                if (!sp[3])
+                    continue;
+                sa = DIV255(sp[3] * ca);
                 if (!sa)
                     continue;
-                sr = s[0] * cr / 255; sg = s[1] * cg / 255; sb = s[2] * cb / 255;
                 d = line[x];
-                if (add) {
-                    unsigned r = ((d >> 16) & 255) + sr * sa / 255, g = ((d >> 8) & 255) + sg * sa / 255,
-                             bl = (d & 255) + sb * sa / 255;
-                    line[x] = (d & 0xFF000000u) | (SDL_min(r, 255u) << 16) | (SDL_min(g, 255u) << 8) | SDL_min(bl, 255u);
-                } else {
-                    unsigned inv = 255 - sa;
-                    unsigned r = (sr * sa + ((d >> 16) & 255) * inv) / 255, g = (sg * sa + ((d >> 8) & 255) * inv) / 255,
-                             bl = (sb * sa + (d & 255) * inv) / 255, al = sa + (d >> 24) * inv / 255;
-                    line[x] = (al << 24) | (r << 16) | (g << 8) | bl;
+                {
+                    unsigned dr = (d >> 16) & 255, dg = (d >> 8) & 255, db = d & 255, da = d >> 24;
+                    sr = DIV255(sp[0] * cr); sg = DIV255(sp[1] * cg); sb = DIV255(sp[2] * cb);
+                    if (add) {
+                        dr = SDL_min(dr + DIV255(sr * sa), 255u); dg = SDL_min(dg + DIV255(sg * sa), 255u);
+                        db = SDL_min(db + DIV255(sb * sa), 255u);
+                    } else if (sa == 255) {
+                        dr = sr; dg = sg; db = sb; da = 255;
+                    } else {
+                        unsigned inv = 255 - sa;
+                        dr = DIV255(sr * sa + dr * inv); dg = DIV255(sg * sa + dg * inv); db = DIV255(sb * sa + db * inv);
+                        da = sa + DIV255(da * inv);
+                    }
+                    if (over) { /* the bright pass: ADD of the texel times the excess colour */
+                        dr = SDL_min(dr + DIV255(DIV255(sp[0] * orr) * sa), 255u);
+                        dg = SDL_min(dg + DIV255(DIV255(sp[1] * og) * sa), 255u);
+                        db = SDL_min(db + DIV255(DIV255(sp[2] * ob) * sa), 255u);
+                    }
+                    line[x] = (da << 24) | (dr << 16) | (dg << 8) | db;
                 }
+                if (first < 0) first = x;
+                last = x;
+            }
+            if (sSpanTracking && first >= 0) {
+                int16_t* span = sCacheSpan + y * 2;
+                if (span[0] < 0 || first < span[0]) span[0] = (int16_t)first;
+                if (last > span[1]) span[1] = (int16_t)last;
             }
         }
     }
@@ -582,13 +628,13 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     }
     if (sGeoDry)
         return 0;
+    /* every piece the cache draws: the console (GA36 RC 0.8.6 diagnostic) took 11-14 ms a rebuild, 25-34 ms in a
+       hit's flash, through SDL's colour-modulated scaled copies */
     if (r == sCacheRenderer && r && !SDL_getenv("KHCOM_HD_GAUGE_SDL_TURNED") &&
-        (clip || !(SDL_fabsf(v[0].position.y - v[1].position.y) <= 0.01f && SDL_fabsf(v[0].position.x - v[2].position.x) <= 0.01f)) &&
-        CacheRasterQuad(t, v, clip, blend == 1)) {
-        if (bright)
-            CacheRasterQuad(t, over, clip, 1);
+        CacheRasterQuad(t, v, bright ? over : NULL, clip, blend == 1))
         return 0;
-    }
+    if (r == sCacheRenderer)
+        sSpanTracked = 0; /* SDL draws this one: the rebuild scans its picture */
     SDL_SetTextureBlendMode(t->tex, blend == 1 ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_BLEND);
     if (clip) {
         /* the quad as a fan (top-left, top-right, bottom-right, bottom-left), cut to the mask */
@@ -967,12 +1013,11 @@ static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height
    (QEMU, GA36), while its picture changes only on a hit or a heal. It is drawn once into a surface of its own
    (premultiplied: the pieces over transparency, then that over the screen, is the same picture) and copied while
    nothing it draws changes; the copy is cut to the rows' covered spans, since the ring and the bar leave most of the
-   box empty. A hit's animation rebuilds it at most every other frame. KHCOM_HD_GAUGE_NO_CACHE draws it directly. */
+   box empty. A hit's animation rebuilds it at most every third frame. KHCOM_HD_GAUGE_NO_CACHE draws it directly. */
 static SDL_Texture* sCacheTexture;
 static SDL_Renderer* sCacheOwner;
 static int sCacheW, sCacheH, sCacheValid, sCacheFailed; /* sCacheW/H: the surface's size, the box may be smaller */
 static uint32_t sCacheHash, sCacheBuilt;
-static int16_t* sCacheSpan; /* per row: first and last covered column, -1 none */
 
 /* Pictures the gauge has shown, by their geometry hash: the low-HP alarm and the faces loop, so after one round
    every frame of the loop is a copy (user, 26/11: "at low HP it went slow again"). Only the rows' covered spans are
@@ -1154,7 +1199,8 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
             sCacheHash = sGeoHash;
         }
     }
-    if (!sCacheValid || (sGeoHash != sCacheHash && frame - sCacheBuilt >= 2)) {
+    /* an animation (a hit, the low-HP alarm) rebuilds at most every third frame: 20 a second for the gauge, 60 for the game */
+    if (!sCacheValid || (sGeoHash != sCacheHash && frame - sCacheBuilt >= 3)) {
         const uint32_t* px;
         int pitch, xx;
         SDL_FRect box = { 0, 0, (float)w, (float)h };
@@ -1162,7 +1208,13 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
         SDL_SetRenderDrawBlendMode(sCacheRenderer, SDL_BLENDMODE_NONE);
         SDL_SetRenderDrawColor(sCacheRenderer, 0, 0, 0, 0);
         SDL_RenderFillRect(sCacheRenderer, &box);
+        for (row = 0; row < h; row++) {
+            sCacheSpan[row * 2] = -1;
+            sCacheSpan[row * 2 + 1] = -1;
+        }
+        sSpanTracking = sSpanTracked = 1;
         GaugeParts(sCacheRenderer, lx, ly, s, tint);
+        sSpanTracking = 0;
         if (!SDL_FlushRenderer(sCacheRenderer) || !SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels,
                                                                        sCacheSurface->pitch)) {
             sCacheValid = 0;
@@ -1170,7 +1222,7 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
         }
         px = (const uint32_t*)sCacheSurface->pixels;
         pitch = sCacheSurface->pitch / 4;
-        for (row = 0; row < h; row++) {
+        for (row = 0; row < h && !sSpanTracked; row++) {
             const uint32_t* p = px + (size_t)row * pitch;
             int first = -1, last = -1;
             for (xx = 0; xx < w; xx++)
