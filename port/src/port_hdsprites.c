@@ -66,6 +66,11 @@ typedef struct HdSpriteState {
     int fitW, fitH;
     int askW, askH; /* the size asked for last time: an exact copy only once the size holds (not every frame of a zoom) */
     uint32_t askSince; /* the frame that size was first asked for */
+    uint32_t* packed; /* the exact copy (fit) as ARGB with its runs (PackRuns), for PortFbBlendArgbRuns */
+    uint16_t* packRuns;
+    uint32_t* packRowStart;
+    const unsigned char* packOf; /* the fit it was made from, and its size */
+    int packW, packH;
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -542,6 +547,8 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) { (void)renderer; }
 
 static void CpuFree(HdSpriteState* st) {
     int k;
+    SDL_free(st->packed); SDL_free(st->packRuns); SDL_free(st->packRowStart);
+    st->packed = NULL; st->packRuns = NULL; st->packRowStart = NULL; st->packOf = NULL;
     SDL_free(st->cpu);
     SDL_free(st->fit);
     st->cpu = st->fit = NULL;
@@ -1145,6 +1152,42 @@ static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, in
 }
 #endif
 
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+/* The exact copy in runs (opaque runs copied, clear ones skipped, soft ones blended): once per copy. */
+static int PackRuns(HdSpriteState* st, const unsigned char* px, int w, int h) {
+    if (st->packed && st->packOf == px && st->packW == w && st->packH == h)
+        return 1;
+    SDL_free(st->packed); SDL_free(st->packRuns); SDL_free(st->packRowStart);
+    st->packed = (uint32_t*)SDL_malloc((size_t)w * h * 4);
+    st->packRuns = (uint16_t*)SDL_malloc((size_t)w * h * 2 + (size_t)h * 2);
+    st->packRowStart = (uint32_t*)SDL_malloc((size_t)h * 4);
+    st->packOf = NULL;
+    if (!st->packed || !st->packRuns || !st->packRowStart) return 0;
+    uint32_t n = 0;
+    for (int y = 0; y < h; y++) {
+        const unsigned char* in = px + (size_t)y * w * 4;
+        uint32_t* out = st->packed + (size_t)y * w;
+        st->packRowStart[y] = n;
+        int x = 0;
+        while (x < w) {
+            const unsigned a = in[x * 4 + 3];
+            const int kind = !a ? 0 : a == 255 ? 1 : 2;
+            int e = x;
+            while (e < w && e - x < 0x3FFF) {
+                const unsigned b = in[e * 4 + 3];
+                if ((!b ? 0 : b == 255 ? 1 : 2) != kind) break;
+                out[e] = ((uint32_t)b << 24) | ((uint32_t)in[e * 4] << 16) | ((uint32_t)in[e * 4 + 1] << 8) | in[e * 4 + 2];
+                e++;
+            }
+            st->packRuns[n++] = (uint16_t)(kind << 14 | (e - x));
+            x = e;
+        }
+    }
+    st->packOf = px; st->packW = w; st->packH = h;
+    return 1;
+}
+#endif
+
 static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
     SDL_Vertex v[4];
     static const int kIndex[6] = { 0, 1, 2, 0, 2, 3 };
@@ -1240,6 +1283,19 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                     int w2 = 0, h2 = 0;
                     const unsigned char* fit = CpuFit(st, fw, fh, &w2, &h2, upright && steady);
                     if (fit) { px = fit; pw = w2; ph = h2; }
+                }
+                if (upright && pw == fw && ph == fh && !white && c.r >= 1.0f && c.g >= 1.0f && c.b >= 1.0f && c.a >= 1.0f &&
+                    (size_t)pw * ph >= 4096 && PackRuns(st, px, pw, ph)) {
+                    /* a large picture as it is (the title's poster): its runs */
+                    extern bool PortFbBlendArgbRuns(SDL_Renderer*, const uint32_t*, int, const uint16_t*, const uint32_t*,
+                                                    int, int, int, int, int, int);
+                    const int bx = (int)v[0].position.x, by = (int)v[0].position.y;
+                    int sx = (int)(v[0].tex_coord.x * pw + 0.5f), sy = (int)(v[0].tex_coord.y * ph + 0.5f);
+                    int bw = (int)v[1].position.x - bx, bh = (int)v[3].position.y - by;
+                    sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
+                    bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
+                    if (PortFbBlendArgbRuns(sRenderer, st->packed, pw, st->packRuns, st->packRowStart, sx, sy, bw, bh, bx, by))
+                        return 1;
                 }
                 if (upright && pw == fw && ph == fh) {
                     extern bool PortFbBlendRgba(SDL_Renderer*, const unsigned char*, int, int, int, int, int, int, int,

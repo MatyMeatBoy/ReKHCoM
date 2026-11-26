@@ -793,6 +793,44 @@ bool PortFbFillRows(SDL_Renderer* renderer, const uint32_t* row, int x, int w, i
     return true;
 }
 
+/* An upright picture prepared in runs (port_hdsprites.c PackRuns): ARGB pixels (straight alpha) and, per row, runs
+   of uint16 (kind << 14 | length): 0 nothing, 1 opaque (copied as they are), 2 translucent (blended). w x h from
+   (sx, sy) to (x, y), 1:1, no colour change. The HD title's poster: a third clear, a third opaque, a third soft. */
+bool PortFbBlendArgbRuns(SDL_Renderer* renderer, const uint32_t* argb, int pitch, const uint16_t* runs,
+                         const uint32_t* rowStart, int sx, int sy, int w, int h, int x, int y) {
+    if (!argb || !runs || !rowStart || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    if (x < 0) { sx -= x; w += x; x = 0; }
+    if (y < 0) { sy -= y; h += y; y = 0; }
+    if (x + w > sRenderSurface->w) w = sRenderSurface->w - x;
+    if (y + h > sRenderSurface->h) h = sRenderSurface->h - y;
+    if (w <= 0 || h <= 0) return true;
+    const int ex = sx + w;
+    for (int r = 0; r < h; r++) {
+        const uint16_t* run = runs + rowStart[sy + r];
+        const uint32_t* in = argb + (size_t)(sy + r) * pitch;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)(y + r) * sRenderSurface->pitch) + (x - sx);
+        int c = 0;
+        while (c < ex) {
+            const int kind = *run >> 14, len = *run & 0x3FFF;
+            run++;
+            int a = SDL_max(c, sx), b = SDL_min(c + len, ex);
+            c += len;
+            if (a >= b || kind == 0) continue;
+            if (kind == 1) { memcpy(out + a, in + a, (size_t)(b - a) * 4); continue; }
+            for (; a < b; a++) {
+                const uint32_t p = in[a], d = out[a];
+                const unsigned al = p >> 24, inv = 255 - al;
+                unsigned rr = ((p >> 16) & 255) * al + ((d >> 16) & 255) * inv, gg = ((p >> 8) & 255) * al + ((d >> 8) & 255) * inv,
+                         bb = (p & 255) * al + (d & 255) * inv;
+                rr = (rr + 1 + (rr >> 8)) >> 8; gg = (gg + 1 + (gg >> 8)) >> 8; bb = (bb + 1 + (bb >> 8)) >> 8;
+                out[a] = 0xFF000000u | (rr << 16) | (gg << 8) | bb;
+            }
+        }
+    }
+    return true;
+}
+
 /* An upright RGBA picture (straight alpha) copied 1:1 into the framebuffer: w x h from (sx, sy) of a picture pitch
    pixels wide, to (x, y), with SDL's 8-bit colour/alpha modulation (white: its colour taken as white). The HD title's
    poster and words at the size they are drawn (port_hdsprites.c CpuFit). */
