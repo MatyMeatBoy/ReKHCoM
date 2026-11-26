@@ -2510,6 +2510,85 @@ void PortFlatMenu(void) { sFlatMenuFrame = PortFrameCount() + 1; }
    panel down to the bottom; the middle stays. The same for the save point's menu (their title bar and
    bottom band). The bands are split at fully transparent rows, where the picture under them shows through, so
    nothing is cut and nothing needs filling. */
+/* The level up screen while a bonus is chosen: the list hangs under the banner with no clear row between them, so
+   the whole-row split found nothing until the choice was made, and the header jumped then, and back and forth as the
+   list moved (user, 26/11). Here the header is cut per 4-pixel column: each column's run from the top (one clear row
+   bridged: the level box starts a row under the top band) goes up; the list, below a gap in every column, stays. The
+   footer keeps the session's last split while something crosses its gap for a moment. */
+#define FLAT_GROUPS (GBA_SCREEN_W / 4)
+#define FLAT_HEAD_MAX 40
+static uint32_t sFlatUp[GBA_SCREEN_W * FLAT_HEAD_MAX], sFlatMid[GBA_SCREEN_W * GBA_SCREEN_H];
+static int sFlatFooter; /* the session's last bottom split, 0 none */
+
+static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
+    const uint32_t* p = overlay + (size_t)row * width + g * 4;
+    return (p[0] | p[1] | p[2] | p[3]) >> 24 != 0;
+}
+
+static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+    int head[FLAT_GROUPS], g, r, top = 0, f = -1, seen = 0;
+    for (g = 0; g < FLAT_GROUPS; g++) {
+        int last = 0;
+        if (!FlatGroupDrawn(overlay, width, 0, g) && !FlatGroupDrawn(overlay, width, 1, g)) {
+            head[g] = 0;
+            continue;
+        }
+        for (r = 0; r < GBA_SCREEN_H; r++) {
+            if (FlatGroupDrawn(overlay, width, r, g)) last = r + 1;
+            else if (r + 1 < GBA_SCREEN_H && FlatGroupDrawn(overlay, width, r + 1, g) && r < 12) continue;
+            else break;
+        }
+        head[g] = last <= FLAT_HEAD_MAX ? last : 0; /* a column drawn further down is not header: it stays */
+        top = SDL_max(top, head[g]);
+    }
+    for (r = GBA_SCREEN_H - 1; r >= GBA_SCREEN_H / 2 && f < 0; r--) {
+        const uint32_t* row = overlay + (size_t)r * width;
+        int c = 0;
+        while (c < width && !(row[c] >> 24)) c++;
+        if (c < width) seen++;
+        else if (seen) f = r + 1;
+        else if (r < GBA_SCREEN_H - 5) break;
+    }
+    if (f > GBA_SCREEN_H - 8 || f < GBA_SCREEN_H - 24) f = -1;
+    if (f > 0) sFlatFooter = f;
+    else if (sFlatFooter) f = sFlatFooter;
+    else f = GBA_SCREEN_H;
+    if (top < 8)
+        return false;
+    memcpy(sFlatMid, overlay, sizeof(uint32_t) * GBA_SCREEN_W * GBA_SCREEN_H);
+    memset(sFlatUp, 0, sizeof(uint32_t) * GBA_SCREEN_W * top);
+    for (g = 0; g < FLAT_GROUPS; g++)
+        for (r = 0; r < head[g]; r++) {
+            memcpy(sFlatUp + (size_t)r * GBA_SCREEN_W + g * 4, sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 16);
+            memset(sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 0, 16);
+        }
+    if (f < GBA_SCREEN_H)
+        memset(sFlatMid + (size_t)f * GBA_SCREEN_W, 0, sizeof(uint32_t) * GBA_SCREEN_W * (GBA_SCREEN_H - f));
+    {
+        const int y0 = (int)od->y, below = outH - (y0 + (int)od->h);
+#define Y(r) ((int)((r) * (int)od->h / GBA_SCREEN_H))
+        const SDL_Rect up = {0, 0, outW, Y(top)}, mid = {0, y0, outW, Y(GBA_SCREEN_H)},
+                       down = {0, y0 + Y(f) + below, outW, Y(GBA_SCREEN_H) - Y(f)};
+#undef Y
+        if (!PortFbBlendOverlayScaled(sRenderer, sFlatMid, width, GBA_SCREEN_H, &mid) ||
+            !PortFbBlendOverlayScaled(sRenderer, sFlatUp, width, top, &up) ||
+            (f < GBA_SCREEN_H &&
+             !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)f * width, width, GBA_SCREEN_H - f, &down)))
+            return false;
+    }
+    {
+        static bool logged;
+        if (!logged) { PortLog("ga36: level up laid out flat by columns (header %d, footer %d)", top, f); logged = true; }
+    }
+    return true;
+#else
+    (void)overlay; (void)od; (void)width; (void)outW; (void)outH;
+    return false;
+#endif
+}
+
 static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
 #ifdef PORT_LINUX
     extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
@@ -2519,8 +2598,12 @@ static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int wi
     const bool flatMenu = sFlatMenuFrame && PortFrameCount() <= sFlatMenuFrame;
     if (!on || !(gPortLevelUpActive || flatMenu) || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
         outW != 640 || outH != 480 || width != GBA_SCREEN_W || (int)od->x != 0 || (int)od->w != outW || od->y < 8 ||
-        sOverlayScale < 2.66f || sOverlayScale > 2.67f)
+        sOverlayScale < 2.66f || sOverlayScale > 2.67f) {
+        if (!gPortLevelUpActive) sFlatFooter = 0; /* the next level up starts afresh */
         return false;
+    }
+    if (gPortLevelUpActive && !flatMenu && !SDL_getenv("KHCOM_GA36_LEVELUP_ROWS_ONLY"))
+        return DrawLevelUpColumns(overlay, od, width, outW, outH);
 #define ROW_CLEAR(r) ({ const uint32_t* row_ = overlay + (size_t)(r) * width; int c_ = 0;                         while (c_ < width && !(row_[c_] >> 24)) c_++; c_ == width; })
     /* a band is a run of at least 8 drawn rows touching the top (or the bottom) of the screen */
     for (r = 0; r < GBA_SCREEN_H / 2 && a < 0; r++) {
@@ -2704,6 +2787,10 @@ static void Present(int paced) {
     GrowPixelBuffer(&sCompositeBuf, &sCompositeCapacity, (size_t)gPortScreen.width * gPortScreen.height);
     PortHdHudPrepare(sRenderer);
     PortHdLayoutPrepare(sRenderer);
+    {
+        void PortHdSpritesPreloadStep(SDL_Renderer* renderer);
+        PortHdSpritesPreloadStep(sRenderer); /* the HD HUD pack's pictures, before the first battle */
+    }
     /* movies shown cropped: the skip prompt is drawn after the movie, on its
        own, so it neither grows with the video nor shifts the crop */
     moviePrompt = sSideStyle == 10 && sFitScale <= 0 && !menuCanvas && !gPortScreen.wide
