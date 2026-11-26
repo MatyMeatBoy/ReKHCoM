@@ -557,7 +557,12 @@ static int Load(int i) {
         h = sGivenH;
     } else {
         uint64_t t0 = PORT_STUTTER_NOW();
-        int ok = stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n);
+        /* the full path for both the header and the decode: `file` alone is relative to the data folder, and the
+           decode read it from the working folder (every HD sprite was rejected with --data-dir) */
+        const char* path = SpritePath(file, sizeof(file), kHdSprites[i].name);
+        int ok;
+        if (path != file) SDL_strlcpy(file, path, sizeof(file));
+        ok = stbi_info(file, &w, &h, &n);
         PORT_STUTTER_ADD(hdHeaderTicks, t0);
         if (!ok)
             goto invalid;
@@ -1231,7 +1236,7 @@ int PortHdHudExpDrop(void) {
     if (HD_HUD_ON && PortHdGaugeShown())
         /* Re:CoM's ring (port_hdlayout.c) ends at GBA y 35 on a shared canvas (4/3 larger, user report 26/11),
            29 on the HUD canvas; the line's ink starts 11 above its y */
-        return gPortHudScale ? 2 : 9;
+        return gPortHudScale ? 8 : 9; /* HUD canvas: measured at 720p (PC), the ring reaches GBA y 35 there */
     return HD_HUD_ON && sRingFull ? 7 : 0;
 }
 
@@ -1252,8 +1257,9 @@ int PortHdHudStockShift(int axis) {
     extern int PortHdGaugeShown(void);
     if (!HD_HUD_ON || !PortHdGaugeShown())
         return 0;
-    if (gPortHudScale) /* the total's height is PortHdStockValueTop's there */
-        return axis ? 0 : 6;
+    if (gPortHudScale) /* the HUD canvas (PC, measured at 720p: the ring reaches GBA x 34); the total's height is
+                          PortHdStockValueTop's there */
+        return axis ? 0 : 10;
     return axis ? 6 : 19;
 }
 

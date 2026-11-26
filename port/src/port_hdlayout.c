@@ -62,7 +62,11 @@ static const HdLayout* Layout(int which) {
         void* data;
         sLayoutTried[which] = 1;
         SDL_snprintf(name, sizeof(name), "%s", kLayoutFiles[which]);
-        PortHdSpritePath(file, sizeof(file), name);
+        {
+            /* the full path (the data folder's), not `file` alone: relative, it was read from the working folder */
+            const char* path = PortHdSpritePath(file, sizeof(file), name);
+            if (path != file) SDL_strlcpy(file, path, sizeof(file));
+        }
         /* the path helper names .png: the layout is the same name with .lad */
         if (strlen(file) > 4 && SDL_strcmp(file + strlen(file) - 4, ".png") == 0)
             memcpy(file + strlen(file) - 4, ".lad", 4);
@@ -1392,7 +1396,7 @@ static struct {
 
 /* Re:CoM's enemy gauge was drawn this frame or the last. */
 int PortHdEnemyGaugeShown(void) {
-    return sEnemy.active && (int)PortFrameCount() - sEnemy.frame <= 1;
+    return sEnemy.active && (unsigned)((int)PortFrameCount() - sEnemy.frame) <= 8u;
 }
 
 int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
@@ -1443,9 +1447,10 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
 /* Stock sums use a 16px GBA sprite with ink beginning at local y5.
  * With an imported HP bar active, anchor9 puts the full plate below its
  * y12 lower edge; otherwise preserve the cartridge's authored anchor4. */
-/* Re:CoM's player gauge was drawn this frame or the last (the cards may draw before the gauge's task). */
+/* Re:CoM's player gauge was drawn within the last few frames (the cards may draw before the gauge's task, and a
+   frame skip leaves out the draw tasks of skipped frames: on PC the gauge's frame lagged and nothing moved). */
 int PortHdGaugeShown(void) {
-    return sGauge.active && (int)PortFrameCount() - sGauge.frame <= 1;
+    return sGauge.active && (unsigned)((int)PortFrameCount() - sGauge.frame) <= 8u;
 }
 
 int PortHdStockValueTop(int opponent) {
