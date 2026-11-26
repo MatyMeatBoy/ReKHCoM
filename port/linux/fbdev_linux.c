@@ -694,6 +694,36 @@ bool PortFbBlendPremultipliedSpans(SDL_Renderer* renderer, const uint32_t* src, 
     return true;
 }
 
+/* The same from a cached picture's packed spans (only the covered columns of each row, one after another). */
+bool PortFbBlendPremultipliedPacked(SDL_Renderer* renderer, const uint32_t* in, const int16_t* spans, int x, int y, int w,
+                                    int h) {
+    if (!in || !spans || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    for (int r = 0; r < h; r++) {
+        const int first = spans[r * 2], last = spans[r * 2 + 1];
+        if (first < 0) continue;
+        const int n = last - first + 1, sy = y + r;
+        const uint32_t* px = in;
+        in += n;
+        if (sy < 0 || sy >= sRenderSurface->h || x + first < 0 || x + last >= sRenderSurface->w || last >= w) continue;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)sy * sRenderSurface->pitch) + x + first;
+        for (int c = 0; c < n; c++) {
+            const uint32_t p = px[c];
+            const unsigned a = p >> 24;
+            if (!p) continue;
+            if (a == 255) { out[c] = p; continue; }
+            const uint32_t d = out[c];
+            const unsigned inv = 255 - a;
+            unsigned rr = ((d >> 16) & 255) * inv, gg = ((d >> 8) & 255) * inv, bb = (d & 255) * inv;
+            rr = ((rr + 1 + (rr >> 8)) >> 8) + ((p >> 16) & 255);
+            gg = ((gg + 1 + (gg >> 8)) >> 8) + ((p >> 8) & 255);
+            bb = ((bb + 1 + (bb >> 8)) >> 8) + (p & 255);
+            out[c] = 0xFF000000u | (SDL_min(rr, 255u) << 16) | (SDL_min(gg, 255u) << 8) | SDL_min(bb, 255u);
+        }
+    }
+    return true;
+}
+
 /* A sparse ARGB layer (straight alpha) scaled by nearest pixel to a box that may reach past the 640x480 framebuffer
    and need not sit on whole pixels (the HD title: the 320x240 canvas at 2.67x, from -107,-81): only the box's part on
    the screen, rows and columns of the layer that hold nothing skipped. SDL scaled the whole box, about 11 million

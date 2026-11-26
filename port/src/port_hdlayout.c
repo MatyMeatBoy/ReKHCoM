@@ -760,6 +760,26 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     return 0;
 }
 
+/* the frame PortHdLayoutDraw shows for a counter that keeps rising (a looping group repeats), for the gauge's key */
+static int LayoutEffFrame(int layout, int sequence, int group, int frame) {
+    const HdLayout* l = Layout(layout);
+    const unsigned char* s;
+    const unsigned char* ag;
+    int size, loopStart, loopEnd;
+    if (!l || !(s = Sequence(l, sequence, &size)) || group < 0 || group >= I32(s + 40))
+        return frame;
+    ag = s + I32(s + 44) + group * 36;
+    loopStart = I32(ag + 8);
+    loopEnd = I32(ag + 12);
+    if (!(frame & HD_LAYOUT_HOLD(0)) && I16(ag + 4) == 0) {
+        if (loopEnd == 0)
+            loopEnd = PortHdLayoutGroupFrames(layout, sequence, group);
+        if (loopEnd > loopStart && frame >= loopEnd)
+            frame = loopStart + (frame - loopStart) % (loopEnd - loopStart);
+    }
+    return frame;
+}
+
 int PortHdLayoutDraw(SDL_Renderer* renderer, int layout, int texture, int sequence, int group, int frame, float x,
                      float y, float scale, float alpha, const float* tint) {
     const HdLayout* l = Layout(layout);
@@ -971,6 +991,7 @@ int PortHdGauge(int hp, int maxHp, int riku) {
 }
 
 static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const float* tint);
+static void GaugeLayerParts(SDL_Renderer* renderer, int layer, float x, float y, float s, const float* tint);
 
 /* The gauge drawn supersampled (23/10, the player: its face's and its bar's cut edges were jagged): its pieces go on
    a texture at GAUGE_SS times the output, which comes down to the output in halves with linear filtering (each half a
@@ -1103,16 +1124,15 @@ static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height
    box empty. A hit's animation rebuilds it at most every third frame. KHCOM_HD_GAUGE_NO_CACHE draws it directly. */
 static SDL_Texture* sCacheTexture;
 static SDL_Renderer* sCacheOwner;
-static int sCacheW, sCacheH, sCacheValid, sCacheFailed; /* sCacheW/H: the surface's size, the box may be smaller */
-static uint32_t sCacheHash, sCacheBuilt;
+static int sCacheW, sCacheH, sCacheFailed; /* sCacheW/H: the surface's size, the box may be smaller */
 
 /* Pictures the gauge has shown, by their geometry hash: the low-HP alarm and the faces loop, so after one round
    every frame of the loop is a copy (user, 26/11: "at low HP it went slow again"). Only the rows' covered spans are
    kept. Least recently shown goes first past the budget. */
-#define GAUGE_FRAMES 96
+#define GAUGE_FRAMES 224
 #define GAUGE_FRAME_BUDGET (6u * 1024 * 1024)
 typedef struct {
-    uint32_t hash, used;
+    uint32_t hash, used, key;
     int w, h;
     int16_t* span;
     uint32_t* px;
@@ -1120,12 +1140,37 @@ typedef struct {
 } GaugeFrame;
 static GaugeFrame sFrames[GAUGE_FRAMES];
 static size_t sFrameBytes;
+/* The gauge is two layers cached apart: the ring and bars (the state loop, 40 frames low, 60 normal), and the face over
+   them (59). Each has its own cycle; together they would not repeat in thousands of frames. Premultiplied pictures
+   compose in any grouping, so each is blended from its own entry. A layer's key is its state (which skips the dry
+   run); its rebuilds go one a frame and at most every third frame. */
+
+
+typedef struct {
+    int valid;
+    uint32_t hash, key, built;
+    GaugeFrame* shown; /* the entry on screen (valid implies one) */
+} GaugeLayer;
+static GaugeLayer sLayer[2];
+static uint32_t sLayerBuilt; /* frame of the latest rebuild, any layer */
 
 static void GaugeFrameDrop(GaugeFrame* e) {
+    int li;
+    for (li = 0; li < 2; li++)
+        if (sLayer[li].shown == e) { sLayer[li].shown = NULL; sLayer[li].valid = 0; }
     SDL_free(e->span);
     SDL_free(e->px);
     sFrameBytes -= e->bytes;
     memset(e, 0, sizeof(*e));
+}
+
+
+static GaugeFrame* GaugeFrameFindKey(uint32_t key, int w, int h) {
+    int i;
+    for (i = 0; i < GAUGE_FRAMES; i++)
+        if (sFrames[i].px && sFrames[i].key == key && sFrames[i].w == w && sFrames[i].h == h)
+            return &sFrames[i];
+    return NULL;
 }
 
 static GaugeFrame* GaugeFrameFind(uint32_t hash, int w, int h) {
@@ -1137,7 +1182,7 @@ static GaugeFrame* GaugeFrameFind(uint32_t hash, int w, int h) {
 }
 
 /* the surface's box (with sCacheSpan) into a new entry */
-static void GaugeFrameStore(uint32_t hash, int w, int h, uint32_t frame) {
+static void GaugeFrameStore(uint32_t hash, uint32_t key, int w, int h, uint32_t frame) {
     const uint32_t* src = (const uint32_t*)sCacheSurface->pixels;
     int pitch = sCacheSurface->pitch / 4, row, i, slot = -1;
     size_t count = 0, bytes;
@@ -1177,6 +1222,7 @@ static void GaugeFrameStore(uint32_t hash, int w, int h, uint32_t frame) {
             out += n;
         }
     sFrames[slot].hash = hash;
+    sFrames[slot].key = key;
     sFrames[slot].used = frame;
     sFrames[slot].w = w;
     sFrames[slot].h = h;
@@ -1201,7 +1247,8 @@ static int GaugeFrameShow(GaugeFrame* e, int w, int h) {
         }
     }
     memcpy(sCacheSpan, e->span, sizeof(int16_t) * 2 * (size_t)h);
-    return SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels, sCacheSurface->pitch);
+    (void)area;
+    return 1;
 }
 
 static void GaugeCacheRelease(void) {
@@ -1224,7 +1271,8 @@ static void GaugeCacheRelease(void) {
     sCacheTexture = NULL;
     sCacheSpan = NULL;
     sCacheOwner = NULL;
-    sCacheW = sCacheH = sCacheValid = 0;
+    sCacheW = sCacheH = 0;
+    memset(sLayer, 0, sizeof(sLayer));
 }
 
 /* The cache's surface, renderer and copy for boxes up to w x h (made before the first battle when preloading). */
@@ -1249,62 +1297,115 @@ static int GaugeCachePrepare(SDL_Renderer* renderer, int w, int h) {
     return 1;
 }
 
-static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
-    /* the box of every frame the gauge has (PortHdGaugeDraw's measured bounds) */
-    const float ux0 = -92.0f, uy0 = -92.0f, ux1 = 206.0f, uy1 = 92.0f;
-    float rx = SDL_floorf(x + ux0 * s), ry = SDL_floorf(y + uy0 * s), lx = x - rx, ly = y - ry;
-    int w = (int)SDL_ceilf((ux1 - ux0) * s) + 2, h = (int)SDL_ceilf((uy1 - uy0) * s) + 2, row;
-    uint32_t frame = PortFrameCount();
-    static int disabled = -1;
-    if (disabled < 0) disabled = SDL_getenv("KHCOM_HD_GAUGE_NO_CACHE") != NULL;
-    if (disabled || sCacheFailed || w <= 0 || h <= 0 || w > 2048 || h > 2048)
-        return 0;
-    if (renderer != sCacheOwner || w > sCacheW || h > sCacheH) {
-        if (!GaugeCachePrepare(renderer, w, h))
-            return 0;
+/* what a layer draws is a function of these (and of the layout, fixed once loaded) */
+static uint32_t GaugeKey(int layer, float lx, float ly, float s, const float* tint, int w, int h) {
+    uint32_t k = 2166136261u;
+    int v[8];
+    float f[7] = { lx, ly, s, tint[0], tint[1], tint[2], tint[3] };
+    const unsigned char* b = (const unsigned char*)v;
+    size_t n;
+    memset(v, 0, sizeof(v));
+    v[0] = layer;
+    v[6] = w;
+    v[7] = h;
+    if (layer == 0) {
+        v[1] = sGauge.stateAnim;
+        v[2] = LayoutEffFrame(HD_LAYOUT_GAUGE, 1, sGauge.stateAnim, sGauge.stateFrame);
+        v[3] = GAUGE_LEN(sGauge.maxHp);
+        v[4] = GAUGE_LEN(sGauge.trail);
+        v[5] = GAUGE_LEN(sGauge.hp);
+    } else {
+        v[1] = sGauge.faceAnim;
+        v[2] = LayoutEffFrame(HD_LAYOUT_GAUGE, 0, sGauge.faceAnim, sGauge.faceFrame);
+        v[3] = sGauge.riku;
     }
+    for (n = 0; n < sizeof(v); n++) k = (k ^ b[n]) * 16777619u;
+    b = (const unsigned char*)f;
+    for (n = 0; n < sizeof(f); n++) k = (k ^ b[n]) * 16777619u;
+    return k ? k : 1;
+}
+
+/* the surface (a layer just built that has no entry, or an entry shown into it) onto the screen */
+static int GaugeSurfaceDraw(SDL_Renderer* renderer, float rx, float ry, int w, int h) {
+    SDL_Rect area = { 0, 0, w, h };
+    int row;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
     {
-        static int lastW, lastH;
-        if (w != lastW || h != lastH) sCacheValid = 0; /* another box: rebuild */
-        lastW = w;
-        lastH = h;
+        extern bool PortFbBlendPremultipliedSpans(SDL_Renderer*, const uint32_t*, int, const int16_t*, int, int, int, int);
+        static int sdlCopy = -1;
+        if (sdlCopy < 0) sdlCopy = SDL_getenv("KHCOM_HD_GAUGE_SDL_COPY") != NULL;
+        if (!sdlCopy && PortFbBlendPremultipliedSpans(renderer, (const uint32_t*)sCacheSurface->pixels,
+                                                      sCacheSurface->pitch / 4, sCacheSpan, (int)rx, (int)ry, w, h))
+            return 1;
     }
-    /* what the gauge would draw this frame, placed in the box */
-    sGeoDry = 1;
-    sGeoHash = 2166136261u;
-    GeoMix(tint, sizeof(float) * 4);
-    GaugeParts(sCacheRenderer, lx, ly, s, tint);
-    sGeoDry = 0;
-    if (sCacheValid && sGeoHash != sCacheHash) {
-        GaugeFrame* e = GaugeFrameFind(sGeoHash, w, h);
-        if (e) {
-            e->used = frame;
-            if (!GaugeFrameShow(e, w, h)) {
-                sCacheValid = 0;
-                return 0;
+#endif
+    if (!SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels, sCacheSurface->pitch))
+        return 0;
+    /* bands of 8 rows, each cut to its covered columns */
+    for (row = 0; row < h; row += 8) {
+        int r, first = INT_MAX, last = -1, bh = SDL_min(8, h - row);
+        for (r = row; r < row + bh; r++)
+            if (sCacheSpan[r * 2] >= 0) {
+                first = SDL_min(first, sCacheSpan[r * 2]);
+                last = SDL_max(last, sCacheSpan[r * 2 + 1]);
             }
-            sCacheHash = sGeoHash;
+        if (last >= 0) {
+            SDL_FRect src = { (float)first, (float)row, (float)(last - first + 1), (float)bh };
+            SDL_FRect dst = { rx + first, ry + row, src.w, src.h };
+            SDL_RenderTexture(renderer, sCacheTexture, &src, &dst);
         }
     }
-    /* an animation (a hit, the low-HP alarm) rebuilds at most every third frame: 20 a second for the gauge, 60 for the game */
-    if (!sCacheValid || (sGeoHash != sCacheHash && frame - sCacheBuilt >= 3)) {
+    return 1;
+}
+
+static int GaugeLayerShow(SDL_Renderer* renderer, int li, float rx, float ry, float lx, float ly, float s,
+                          const float* tint, int w, int h, uint32_t frame) {
+    GaugeLayer* L = &sLayer[li];
+    uint32_t key = GaugeKey(li, lx, ly, s, tint, w, h), hash = 0;
+    GaugeFrame* e = NULL;
+    int dry = 0, built = 0, row;
+    static int stats = -1;
+    if (stats < 0) stats = SDL_getenv("KHCOM_GAUGE_STATS") != NULL;
+    if (L->valid && key == L->key) {
+        hash = L->hash;
+    } else if ((e = GaugeFrameFindKey(key, w, h)) != NULL) {
+        hash = e->hash;
+    } else {
+        sGeoDry = 1;
+        sGeoHash = 2166136261u;
+        GeoMix(&li, sizeof(li));
+        GeoMix(tint, sizeof(float) * 4);
+        GaugeLayerParts(sCacheRenderer, li, lx, ly, s, tint);
+        sGeoDry = 0;
+        hash = sGeoHash;
+        e = GaugeFrameFind(hash, w, h);
+        dry = 1;
+    }
+    if (L->valid && hash == L->hash) {
+        L->key = key;
+    } else if (e) {
+        e->used = frame;
+        if (!e->key) e->key = key;
+        L->shown = e;
+        L->hash = hash;
+        L->key = key;
+        L->valid = 1;
+    } else if (!L->valid || (frame - L->built >= 3 && sLayerBuilt != frame)) {
         const uint32_t* px;
         int pitch, xx;
         SDL_FRect box = { 0, 0, (float)w, (float)h };
-        SDL_Rect area = { 0, 0, w, h };
-        SDL_SetRenderDrawBlendMode(sCacheRenderer, SDL_BLENDMODE_NONE);
         SDL_SetRenderDrawColor(sCacheRenderer, 0, 0, 0, 0);
+        SDL_SetRenderDrawBlendMode(sCacheRenderer, SDL_BLENDMODE_NONE);
         SDL_RenderFillRect(sCacheRenderer, &box);
         for (row = 0; row < h; row++) {
             sCacheSpan[row * 2] = -1;
             sCacheSpan[row * 2 + 1] = -1;
         }
         sSpanTracking = sSpanTracked = 1;
-        GaugeParts(sCacheRenderer, lx, ly, s, tint);
+        GaugeLayerParts(sCacheRenderer, li, lx, ly, s, tint);
         sSpanTracking = 0;
-        if (!SDL_FlushRenderer(sCacheRenderer) || !SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels,
-                                                                       sCacheSurface->pitch)) {
-            sCacheValid = 0;
+        if (!SDL_FlushRenderer(sCacheRenderer)) {
+            L->valid = 0;
             return 0;
         }
         px = (const uint32_t*)sCacheSurface->pixels;
@@ -1320,37 +1421,71 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
             sCacheSpan[row * 2] = (int16_t)first;
             sCacheSpan[row * 2 + 1] = (int16_t)last;
         }
-        sCacheHash = sGeoHash;
-        sCacheBuilt = frame;
-        sCacheValid = 1;
-        if (!GaugeFrameFind(sGeoHash, w, h))
-            GaugeFrameStore(sGeoHash, w, h, frame);
+        GaugeFrameStore(hash, key, w, h, frame);
+        e = GaugeFrameFind(hash, w, h);
+        L->built = sLayerBuilt = frame;
+        built = 1;
+        if (e) {
+            L->shown = e;
+            L->hash = hash;
+            L->key = key;
+            L->valid = 1;
+        } else { /* no room for it: drawn from the surface now, rebuilt next time */
+            L->valid = 0;
+            return GaugeSurfaceDraw(renderer, rx, ry, w, h);
+        }
     }
+    if (stats) {
+        static int calls, dryruns, rebuilds;
+        calls++;
+        dryruns += dry;
+        rebuilds += built;
+        if (calls % 200 == 0) {
+            int used = 0, q;
+            for (q = 0; q < GAUGE_FRAMES; q++) used += sFrames[q].px != NULL;
+            PortLog("gauge stats frame %u layercalls %d rebuilds %d dryruns %d entries %d bytes %u hp %d state %d", (unsigned)frame,
+                    calls, rebuilds, dryruns, used, (unsigned)sFrameBytes, sGauge.hp, sGauge.stateAnim);
+        }
+    }
+    if (!L->valid || !L->shown)
+        return 1; /* nothing to show (never built yet) */
+    L->shown->used = frame;
 #if defined(PORT_LINUX) && __STDC_HOSTED__
     {
-        /* the handheld's framebuffer: the covered spans blended straight in (whole pixels: the box is on them) */
-        extern bool PortFbBlendPremultipliedSpans(SDL_Renderer*, const uint32_t*, int, const int16_t*, int, int, int, int);
+        extern bool PortFbBlendPremultipliedPacked(SDL_Renderer*, const uint32_t*, const int16_t*, int, int, int, int);
         static int sdlCopy = -1;
         if (sdlCopy < 0) sdlCopy = SDL_getenv("KHCOM_HD_GAUGE_SDL_COPY") != NULL;
-        if (!sdlCopy && PortFbBlendPremultipliedSpans(renderer, (const uint32_t*)sCacheSurface->pixels,
-                                                      sCacheSurface->pitch / 4, sCacheSpan, (int)rx, (int)ry, w, h))
+        if (!sdlCopy && PortFbBlendPremultipliedPacked(renderer, L->shown->px, L->shown->span, (int)rx, (int)ry, w, h))
             return 1;
     }
 #endif
-    /* bands of 8 rows, each cut to its covered columns */
-    for (row = 0; row < h; row += 8) {
-        int r, first = INT_MAX, last = -1, bh = SDL_min(8, h - row);
-        for (r = row; r < row + bh; r++)
-            if (sCacheSpan[r * 2] >= 0) {
-                first = SDL_min(first, sCacheSpan[r * 2]);
-                last = SDL_max(last, sCacheSpan[r * 2 + 1]);
-            }
-        if (last >= 0) {
-            SDL_FRect src = { (float)first, (float)row, (float)(last - first + 1), (float)bh };
-            SDL_FRect dst = { rx + first, ry + row, src.w, src.h };
-            SDL_RenderTexture(renderer, sCacheTexture, &src, &dst);
-        }
+    if (!GaugeFrameShow(L->shown, w, h)) { L->valid = 0; return 0; }
+    return GaugeSurfaceDraw(renderer, rx, ry, w, h);
+}
+
+static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
+    /* the box of every frame the gauge has (PortHdGaugeDraw's measured bounds) */
+    const float ux0 = -92.0f, uy0 = -92.0f, ux1 = 206.0f, uy1 = 92.0f;
+    float rx = SDL_floorf(x + ux0 * s), ry = SDL_floorf(y + uy0 * s), lx = x - rx, ly = y - ry;
+    int w = (int)SDL_ceilf((ux1 - ux0) * s) + 2, h = (int)SDL_ceilf((uy1 - uy0) * s) + 2, li;
+    uint32_t frame = PortFrameCount();
+    static int disabled = -1;
+    if (disabled < 0) disabled = SDL_getenv("KHCOM_HD_GAUGE_NO_CACHE") != NULL;
+    if (disabled || sCacheFailed || w <= 0 || h <= 0 || w > 2048 || h > 2048)
+        return 0;
+    if (renderer != sCacheOwner || w > sCacheW || h > sCacheH) {
+        if (!GaugeCachePrepare(renderer, w, h))
+            return 0;
     }
+    {
+        static int lastW, lastH;
+        if (w != lastW || h != lastH) memset(sLayer, 0, sizeof(sLayer)); /* another box: rebuild */
+        lastW = w;
+        lastH = h;
+    }
+    for (li = 0; li < 2; li++)
+        if (!GaugeLayerShow(renderer, li, rx, ry, lx, ly, s, tint, w, h, frame))
+            return li ? 1 : 0; /* a failed face leaves the bars drawn */
     return 1;
 }
 
@@ -1461,16 +1596,24 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
     GaugeParts(renderer, x, y, s, tint);
 }
 
+static void GaugeLayerParts(SDL_Renderer* renderer, int layer, float x, float y, float s, const float* tint) {
+    if (layer == 0) {
+        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, sGauge.stateAnim, sGauge.stateFrame, x, y, s, 1.0f, tint);
+        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 7, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.maxHp)), x, y, s,
+                         1.0f, tint);
+        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 8, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.trail)), x, y, s,
+                         1.0f, tint);
+        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 9, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.hp)), x, y, s,
+                         1.0f, tint);
+    } else {
+        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, sGauge.riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES, 0,
+                         sGauge.faceAnim, sGauge.faceFrame, x, y, s, 1.0f, tint);
+    }
+}
+
 static void GaugeParts(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
-    PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, sGauge.stateAnim, sGauge.stateFrame, x, y, s, 1.0f, tint);
-    PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 7, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.maxHp)), x, y, s,
-                     1.0f, tint);
-    PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 8, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.trail)), x, y, s,
-                     1.0f, tint);
-    PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 9, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.hp)), x, y, s,
-                     1.0f, tint);
-    PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, sGauge.riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES, 0,
-                     sGauge.faceAnim, sGauge.faceFrame, x, y, s, 1.0f, tint);
+    GaugeLayerParts(renderer, 0, x, y, s, tint);
+    GaugeLayerParts(renderer, 1, x, y, s, tint);
 }
 
 /* ---- the enemy HP gauge (Gauge::CEnemyGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ------------------
