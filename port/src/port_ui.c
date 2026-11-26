@@ -3501,7 +3501,7 @@ static int AssetAt(int row) {
 /* the new assets' window answered: the chosen ones on, never asked again for any of them */
 static void AssetsChosen(int mask) {
     if (mask) {
-        if (mask >> PORT_ASSET_HD_CARDS & 1)
+        if (mask >> PORT_ASSET_HD_CARDS & 1 && !PortHdHudPackPresent()) /* a handheld's pack: only its own option */
             gPortConfig.hdCards = gPortConfig.hdTitle = 1;
         if (mask >> PORT_ASSET_HD_MUSIC & 1)
             gPortConfig.hdMusic = 1;

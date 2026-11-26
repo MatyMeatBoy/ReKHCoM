@@ -446,9 +446,14 @@ void PortConfigLoad(void) {
     PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
-    /* a handheld with the HD HUD pack: its HD title goes with the HUD HD option (one switch; user, 26/11) */
-    if (PortHdHudPackPresent())
+    /* A card carrying the HD HUD pack is a handheld: the full HD cards (menu cards, world light, journal) stay off
+       whatever an old settings file says, or they would load their pictures at the first battle with the pack's
+       option off. The pack's own option (hd_hud_pack) is the only HD HUD switch there, and the HD title goes with it
+       (one switch; user, 26/11). */
+    if (PortHdHudPackPresent()) {
+        gPortConfig.hdCards = 0;
         gPortConfig.hdTitle = gPortConfig.hdHudPack;
+    }
     if (PortFixed480p()) {
         gPortConfig.viewMode = PORT_VIEW_AUTO;
         gPortConfig.aspect = PORT_ASPECT_4_3;

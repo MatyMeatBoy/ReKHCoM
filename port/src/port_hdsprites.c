@@ -339,9 +339,10 @@ static int SpriteReady(int i) {
 
 int PortHdSpriteFind(const void* tiles, const void* frame) {
     int i, shared = -1;
-    PortHdNormalizeEuBossStock(&tiles, &frame);
+    /* every OAM part of every frame asks: with HD off (the HUD pack's option too) it must cost nothing */
     if (!tiles || (!HD_HUD_ON && !gPortConfig.hdTitle))
         return 0;
+    PortHdNormalizeEuBossStock(&tiles, &frame);
     for (i = 0; i < HD_SPRITE_COUNT; i++) {
         const HdSpriteDef* d = &kHdSprites[i];
         if (d->tiles != tiles || !GroupOn(d->group))
