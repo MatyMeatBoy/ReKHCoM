@@ -26,6 +26,15 @@
 #include "port/port_menu_light.h"
 #include "../decompui/third_party/stb_image.h"
 
+/* Freestanding guests (console and x64 images) build against a reduced SDL without the software renderer's helpers:
+   inert stand-ins, so those paths (they check for the software renderer, or for these calls' success) stay off. */
+#if !__STDC_HOSTED__
+#define SDL_SetTextureColorModFloat(t, r, g, b) ((void)(t), (void)(r), (void)(g), (void)(b), false)
+#define SDL_SetTextureAlphaModFloat(t, a) ((void)(t), (void)(a), false)
+#define SDL_FlushRenderer(r) ((void)(r), true)
+#define SDL_GetTextureSize(t, w, h) ((void)(t), (void)(w), (void)(h), false)
+#endif
+
 typedef struct HdSpriteDef {
     const void* tiles;
     const void* frame; /* NULL: any frame with these tiles */
@@ -399,6 +408,7 @@ void PortHdSpriteBox(int id, int* x0, int* y0, int* w, int* h) {
    decodes them; the frame loop only uploads a decoded picture, one a frame. Paths are made here (PortConfigPath is
    not thread-safe), only for files that exist (the pack has a few dozen of the hundreds of names). Missing files
    are tried once. KHCOM_HD_HUD_NO_PRELOAD keeps the old way. */
+#if __STDC_HOSTED__
 typedef struct {
     int id, w, h;
     char* path;
@@ -503,6 +513,11 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
         PreloadStop();
     }
 }
+#else
+/* freestanding guests (SDL shim): no threads; the HUD pack is a handheld's (software renderer) */
+static void PreloadStop(void) {}
+void PortHdSpritesPreloadStep(SDL_Renderer* renderer) { (void)renderer; }
+#endif
 
 static void Unload(int i) {
     if (sState[i].image) SDL_DestroyTexture(sState[i].image);

@@ -17,6 +17,17 @@
 #include "port/port_hdsprites.h"
 #include "../decompui/third_party/stb_image.h"
 
+/* Freestanding guests (console and x64 images) build against a reduced SDL without the software renderer's helpers:
+   inert stand-ins, so those paths (they check for the software renderer, or for these calls' success) stay off. */
+#if !__STDC_HOSTED__
+#define SDL_SetTextureColorModFloat(t, r, g, b) ((void)(t), (void)(r), (void)(g), (void)(b), false)
+#define SDL_SetTextureAlphaModFloat(t, a) ((void)(t), (void)(a), false)
+#define SDL_FlushRenderer(r) ((void)(r), true)
+#define SDL_GetTextureSize(t, w, h) ((void)(t), (void)(w), (void)(h), false)
+#define SDL_CreateSoftwareRenderer(s) ((void)(s), (SDL_Renderer*)NULL)
+#define SDL_DestroyRenderer(r) ((void)(r))
+#endif
+
 const char* PortHdSpritePath(char* file, size_t size, const char* name);
 
 typedef struct HdLayout {
@@ -97,6 +108,8 @@ static struct {
     int w, h;
     SDL_AtomicInt state; /* 0 waiting, 1 decoded, 2 failed */
 } sTexPre[HD_LAYOUT_TEXTURE_COUNT];
+/* freestanding guests (console/x64 images, SDL shim): no threads, no software renderer; the frame loop decodes */
+#if __STDC_HOSTED__
 static SDL_Thread* sTexPreThread;
 
 static int SDLCALL TexturePreThread(void* unused) {
@@ -124,6 +137,9 @@ static void TexturePreRelease(void) {
         sTexPre[i].path = NULL;
     }
 }
+#else
+static void TexturePreRelease(void) {}
+#endif
 
 static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
     HdLayoutTexture* t;
@@ -164,6 +180,7 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
                 /* SDL's software renderer copies only unmirrored rectangles: the gauges' mirrored parts (the ring's
                    quarters, the bars drawn upward) went to its triangle rasteriser, ten times the cost per pixel.
                    Mirrored copies of the gauge pictures (not the cockpit's) turn them into plain copies. */
+#if __STDC_HOSTED__
                 if (t->tex && which != HD_LAYOUT_TEX_COCKPIT && !SDL_getenv("KHCOM_HD_GAUGE_TRIANGLES") &&
                     SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) == 0) {
                     int f;
@@ -181,6 +198,9 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
                     }
                 }
                 if (keep && t->tex && !sPictures[which][0]) sPictures[which][0] = SDL_DuplicateSurface(s);
+#else
+                (void)keep;
+#endif
                 SDL_DestroySurface(s);
             }
             stbi_image_free(px);
@@ -226,6 +246,7 @@ void PortHdLayoutPrepare(SDL_Renderer* renderer) {
         static int threadTried;
         uint32_t frame = PortFrameCount();
         int ow = 0, oh = 0;
+#if __STDC_HOSTED__
         if (!threadTried) {
             threadTried = 1;
             for (i = 0; i < 3; i++) {
@@ -236,6 +257,9 @@ void PortHdLayoutPrepare(SDL_Renderer* renderer) {
             sTexPreThread = SDL_CreateThread(TexturePreThread, "hd-gauge-preload", NULL);
             if (!sTexPreThread) TexturePreRelease(); /* decoded on the frame loop as before */
         }
+#else
+        threadTried = 1;
+#endif
         if (frame == lastStep)
             return;
         for (i = 0; i < 3; i++)
