@@ -1053,7 +1053,25 @@ int PortHdHpRing(const void* faceTiles, const void* faceFrame, int ratio) {
 /* GBA pixels the battle EXP line (btl_exp.c) goes down when the HD HP ring is in use: the ring reaches lower than the
    cartridge's gauge and covered the line's start ("SIG. NIVEL", user report 27/10). */
 int PortHdHudExpDrop(void) {
+    extern int PortHdGaugeShown(void);
+    if (HD_HUD_ON && PortHdGaugeShown())
+        /* Re:CoM's ring (port_hdlayout.c) ends at GBA y 35 on a shared canvas (4/3 larger, user report 26/11),
+           29 on the HUD canvas; the line's ink starts 11 above its y */
+        return gPortHudScale ? 2 : 9;
     return HD_HUD_ON && sRingFull ? 7 : 0;
+}
+
+/* GBA pixels the player's stocked cards and their total move while Re:CoM's gauge is drawn: its ring reaches
+   x 38 and its bar y 9.5 on a shared canvas (28 and 7 on the HUD canvas, 3/4 of it), where the cartridge's stack
+   starts at x 24 with its total's ink at y 6 (user report 26/11: the stack sat under the ring and the bar).
+   axis 0 x, 1 y. */
+int PortHdHudStockShift(int axis) {
+    extern int PortHdGaugeShown(void);
+    if (!HD_HUD_ON || !PortHdGaugeShown())
+        return 0;
+    if (gPortHudScale) /* the total's height is PortHdStockValueTop's there */
+        return axis ? 0 : 6;
+    return axis ? 6 : 19;
 }
 
 /* GBA x of the opponent's sleight name (card_friend_card.c draws it at 120, top centre). On the wide HUD canvas the

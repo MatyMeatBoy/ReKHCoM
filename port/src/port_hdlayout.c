@@ -944,6 +944,11 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
 /* Stock sums use a 16px GBA sprite with ink beginning at local y5.
  * With an imported HP bar active, anchor9 puts the full plate below its
  * y12 lower edge; otherwise preserve the cartridge's authored anchor4. */
+/* Re:CoM's player gauge was drawn this frame or the last (the cards may draw before the gauge's task). */
+int PortHdGaugeShown(void) {
+    return sGauge.active && (int)PortFrameCount() - sGauge.frame <= 1;
+}
+
 int PortHdStockValueTop(int opponent) {
     if (!gPortConfig.hdCards && !PortHdHudPack()) return 0;
     return opponent ? (sEnemy.active && sEnemy.frame == (int)PortFrameCount() ? 9 : 0)
