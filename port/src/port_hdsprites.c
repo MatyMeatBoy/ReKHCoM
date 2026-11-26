@@ -71,6 +71,14 @@ typedef struct HdSpriteState {
     uint32_t* packRowStart;
     const unsigned char* packOf; /* the fit it was made from, and its size */
     int packW, packH;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    /* an exact copy made on a thread (FitJob): a picture that stops zooming changes over without a stalled frame */
+    SDL_Thread* job;
+    SDL_AtomicInt jobDone;
+    unsigned char* jobBuf;
+    const unsigned char* jobBase;
+    int jobBW, jobBH, jobW, jobH;
+#endif
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -547,6 +555,11 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) { (void)renderer; }
 
 static void CpuFree(HdSpriteState* st) {
     int k;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    if (st->job) { SDL_WaitThread(st->job, NULL); st->job = NULL; }
+    SDL_free(st->jobBuf); st->jobBuf = NULL;
+    SDL_SetAtomicInt(&st->jobDone, 0);
+#endif
     SDL_free(st->packed); SDL_free(st->packRuns); SDL_free(st->packRowStart);
     st->packed = NULL; st->packRuns = NULL; st->packRowStart = NULL; st->packOf = NULL;
     SDL_free(st->cpu);
@@ -1076,8 +1089,8 @@ static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* ds
             kInvOpaque[k] = 0xFFFFFFFFu / (255u * k) + 1u;
         }
     /* each column's box once: a 64-bit division per pixel is a library call on ARM32 (a near 1:1 copy of the title's
-       poster cost GA36 270 million instructions, a frame of the intro's zoom) */
-    static uint16_t colFrom[4097], colTo[4097];
+       poster cost GA36 270 million instructions, a frame of the intro's zoom); on the stack: FitJob runs it on a thread */
+    uint16_t colFrom[4097], colTo[4097];
     if (dw > 4096 || sw > 65535 || sh > 65535) return;
     for (int x = 0; x < dw; x++) {
         const int x0 = (int)((uint32_t)x * (uint32_t)sw / (uint32_t)dw);
@@ -1119,10 +1132,28 @@ static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* ds
 /* The picture at about dw x dh (within 2%): made from the smallest halving still as large, kept until the size
    changes. SDL's software renderer scaled the title's 1080x1303 poster and 1920-pixel words down every frame:
    30 million instructions a frame on GA36. */
+static int kSyncFit = -1; /* KHCOM_HD_FIT_SYNC=1: exact copies made on the frame (the earlier behaviour) */
+static int SDLCALL FitJob(void* data) {
+    HdSpriteState* st = (HdSpriteState*)data;
+    SDL_SetCurrentThreadPriority(SDL_THREAD_PRIORITY_LOW);
+    BoxScale(st->jobBase, st->jobBW, st->jobBH, st->jobBuf, st->jobW, st->jobH);
+    SDL_SetAtomicInt(&st->jobDone, 1);
+    return 0;
+}
+
 static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, int* h, int exact) {
     const unsigned char* base = st->cpu;
     int bw = st->cpuW, bh = st->cpuH, k;
     if (dw < 1 || dh < 1) return NULL;
+    if (st->job && SDL_GetAtomicInt(&st->jobDone)) { /* a copy made on its thread: it becomes the fit */
+        SDL_WaitThread(st->job, NULL);
+        st->job = NULL;
+        SDL_SetAtomicInt(&st->jobDone, 0);
+        SDL_free(st->fit);
+        st->fit = st->jobBuf; st->fitW = st->jobW; st->fitH = st->jobH;
+        st->jobBuf = NULL;
+        st->packOf = NULL;
+    }
     if (st->fit && (exact ? st->fitW == dw && st->fitH == dh
                           : SDL_abs(st->fitW - dw) * 8 <= dw && SDL_abs(st->fitH - dh) * 8 <= dh)) {
         *w = st->fitW; *h = st->fitH;
@@ -1136,6 +1167,21 @@ static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, in
             st->halfW[k] = hw; st->halfH[k] = hh;
         }
         base = st->half[k]; bw = st->halfW[k]; bh = st->halfH[k];
+    }
+    if (kSyncFit < 0) kSyncFit = SDL_getenv("KHCOM_HD_FIT_SYNC") != NULL;
+    if (exact && !kSyncFit) {
+        /* the exact copy on a thread; meanwhile the copy kept (or the picture), drawn by the rasteriser */
+        static int recipReady;
+        if (!recipReady) { unsigned char one[4] = { 0 }, out[4]; BoxScale(one, 1, 1, out, 1, 1); recipReady = 1; }
+        if (!st->job && (st->jobBuf = (unsigned char*)SDL_malloc((size_t)dw * dh * 4)) != NULL) {
+            st->jobBase = base; st->jobBW = bw; st->jobBH = bh; st->jobW = dw; st->jobH = dh;
+            SDL_SetAtomicInt(&st->jobDone, 0);
+            if (!(st->job = SDL_CreateThread(FitJob, "hd-fit", st))) { SDL_free(st->jobBuf); st->jobBuf = NULL; }
+        }
+        if (st->job) {
+            if (st->fit) { *w = st->fitW; *h = st->fitH; return st->fit; }
+            return NULL;
+        }
     }
     if (st->fitW * st->fitH < dw * dh || !st->fit) {
         SDL_free(st->fit);
