@@ -2527,14 +2527,17 @@ static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
     return (p[0] | p[1] | p[2] | p[3]) >> 24 != 0;
 }
 
-uint64_t gPortPiece[12]; /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
+uint64_t gPortPiece[24];
+static uint64_t sPieceCk;
+static int sPieceFlush = -1;
+#define PIECE_CK(i) do { if (sPieceFlush < 0) sPieceFlush = SDL_getenv("KHCOM_PIECE_LOG") != NULL; if (sPieceFlush) SDL_FlushRenderer(sRenderer); const uint64_t _n = SDL_GetPerformanceCounter(); gPortPiece[i] += _n - sPieceCk; sPieceCk = _n; } while (0) /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
 static void PieceLog(void) {
     static int on = -1;
     if (on < 0) on = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
     if (!on || sFrameCount % 100) return;
-    PortLog("probe piece f=%u spr0 %.2f text0 %.2f spr2 %.2f text2 %.2f uihd %.2f footer %.2f art %.2f bar %.2f parts %.2f mainover %.2f base %.2f",
+    PortLog("probe piece f=%u spr0 %.2f text0 %.2f spr2 %.2f text2 %.2f uihd %.2f footer %.2f art %.2f bar %.2f parts %.2f mainover %.2f base %.2f | pre %.2f hdlayers %.2f hud %.2f tail %.2f fbpresent %.2f | preover %.2f overlay %.2f layer2 %.2f screenover %.2f | sprites %.2f light %.2f over %.2f",
             (unsigned)sFrameCount, gPortPiece[0] / 1e8, gPortPiece[1] / 1e8, gPortPiece[2] / 1e8, gPortPiece[3] / 1e8,
-            gPortPiece[4] / 1e8, gPortPiece[5] / 1e8, gPortPiece[6] / 1e8, gPortPiece[7] / 1e8, gPortPiece[8] / 1e8, gPortPiece[9] / 1e8, gPortPiece[10] / 1e8);
+            gPortPiece[4] / 1e8, gPortPiece[5] / 1e8, gPortPiece[6] / 1e8, gPortPiece[7] / 1e8, gPortPiece[8] / 1e8, gPortPiece[9] / 1e8, gPortPiece[10] / 1e8, gPortPiece[11] / 1e8, gPortPiece[12] / 1e8, gPortPiece[13] / 1e8, gPortPiece[14] / 1e8, gPortPiece[15] / 1e8, gPortPiece[16] / 1e8, gPortPiece[17] / 1e8, gPortPiece[18] / 1e8, gPortPiece[19] / 1e8, gPortPiece[20] / 1e8, gPortPiece[21] / 1e8, gPortPiece[22] / 1e8);
     SDL_memset(gPortPiece, 0, sizeof(gPortPiece));
 }
 
@@ -2755,6 +2758,7 @@ static void Present(int paced) {
     PortFbWaitCopy();
 #endif
     LoopMark(PORT_LOOP_COPYWAIT);
+    sPieceCk = SDL_GetPerformanceCounter();
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
@@ -3397,6 +3401,7 @@ static void Present(int paced) {
         }
     }
     if (!menuCanvas) {
+        PIECE_CK(11);
         /* HD sprites of the game's picture (the title's logo), with the game's fade */
         uint16_t bld = *(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x50);
         int effect = (bld >> 6) & 3, amount = SDL_min(*(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x54) & 31, 16);
@@ -3404,6 +3409,7 @@ static void Present(int paced) {
         PortHdSpritesDraw(sRenderer, 0, worldX, worldY, worldScale, (bld & 0x10) && effect == 3 ? amount : 0,
                           (bld & 0x10) && effect == 2 ? amount : 0);
  gPortPiece[0] += SDL_GetPerformanceCounter() - _pt; }
+        PIECE_CK(20);
         if (mainWorldLight && !nativeMainWorld) {
             SDL_FRect lightRect = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
             if (!PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &lightRect)) {
@@ -3418,6 +3424,7 @@ static void Present(int paced) {
                     (bld & 0x10) && effect == 3 ? amount : 0, (bld & 0x10) && effect == 2 ? amount : 0);
             }
         }
+        PIECE_CK(21);
         uint64_t _mo = SDL_GetPerformanceCounter();
         {
             const uint32_t* over = PortPpuMainOver();
@@ -3435,10 +3442,20 @@ static void Present(int paced) {
                     od.x == odi.x && od.y == odi.y && od.w == odi.w && od.h == odi.h &&
                     PortFbBlendOverlayScaledSparse(sRenderer, over, gPortScreen.width, gPortScreen.height, &odi))
                     over = NULL;
+                /* a box past the screen or off whole pixels (the HD title's zoomed canvas): clipped, nearest */
+                extern bool PortFbBlendOverlayNearestClipped(SDL_Renderer*, const uint32_t*, int, int, float, float, float,
+                                                             float);
+                if (over && PortFbActive() && sPictureScaleMode == SDL_SCALEMODE_NEAREST && !overSdl &&
+                    PortFbBlendOverlayNearestClipped(sRenderer, over, gPortScreen.width, gPortScreen.height, od.x, od.y,
+                                                     od.w, od.h))
+                    over = NULL;
 #endif
             }
             if (over) {
                 SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
+                if (sPieceFlush > 0 && sFrameCount % 300 == 0)
+                    PortLog("probe mainover sdl: fb %d scale %d od %.2f,%.2f %.2fx%.2f", PortFbActive(),
+                            (int)sPictureScaleMode, od.x, od.y, od.w, od.h);
                 if (sMainOverTexture == NULL || sMainOverW != gPortScreen.width || sMainOverH != gPortScreen.height) {
                     if (sMainOverTexture != NULL)
                         SDL_DestroyTexture(sMainOverTexture);
@@ -3457,6 +3474,7 @@ static void Present(int paced) {
         }
 { uint64_t _pt = SDL_GetPerformanceCounter();
         gPortPiece[9] += SDL_GetPerformanceCounter() - _mo;
+        PIECE_CK(22);
         PortHdTextDraw(sRenderer, 0, worldX, worldY, worldScale);
  gPortPiece[1] += SDL_GetPerformanceCounter() - _pt; }
         uint64_t _footer = SDL_GetPerformanceCounter();
@@ -3476,6 +3494,21 @@ static void Present(int paced) {
                         float top = PixelEdge(worldY, gPortScreen.originY + row, worldScale);
                         float bottom = PixelEdge(worldY, gPortScreen.originY + row + 1, worldScale);
                         SDL_FRect band = { left, top, right - left, bottom - top };
+#ifdef PORT_LINUX
+                        {
+                            /* the handheld's framebuffer: the band's rows written straight in; SDL's 320 small
+                               fills a frame cost GA36 about 11 million instructions (QEMU) */
+                            extern bool PortFbFillRows(SDL_Renderer*, const uint32_t*, int, int, int, int);
+                            static uint32_t rowPx[1024];
+                            const int bx = (int)SDL_ceilf(left - 0.5f), bw = (int)SDL_ceilf(right - 0.5f) - bx;
+                            if (PortFbActive() && bw > 0 && bw <= 1024) {
+                                for (int k = 0; k < bw; k++) rowPx[k] = 0xFF000000u | (c & 0xFFFFFFu);
+                                if (PortFbFillRows(sRenderer, rowPx, bx, bw, (int)SDL_ceilf(top - 0.5f),
+                                                   (int)SDL_ceilf(bottom - 0.5f)))
+                                    continue;
+                            }
+                        }
+#endif
                         SDL_SetRenderDrawColor(sRenderer, (c >> 16) & 255, (c >> 8) & 255, c & 255, 255);
                         SDL_RenderFillRect(sRenderer, &band);
                     }
@@ -3509,6 +3542,7 @@ static void Present(int paced) {
         od.h = GBA_SCREEN_H * sOverlayScale;
         od.x = (float)(int)((outW - od.w) / 2);
         od.y = (float)(int)((outH - od.h) / 2);
+        PIECE_CK(16);
         if (!ScreenOverlayEmpty(overlay, sOverlayTexW)) {
 #ifdef PORT_LINUX
             const char* menuBands43;
@@ -3538,6 +3572,7 @@ static void Present(int paced) {
                 DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH);
             }
         }
+        PIECE_CK(17);
         PortHdSpritesWorldFallback(nativeWorld);
 { uint64_t _pt = SDL_GetPerformanceCounter();
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */
@@ -3556,6 +3591,7 @@ static void Present(int paced) {
             PortHdSpritesWorldFallback(1);
             PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0);
         }
+        PIECE_CK(18);
         const uint32_t* screenOver = PortPpuScreenOver();
         if (screenOver && !ScreenOverlayEmpty(screenOver, gPortOverlayW)) {
             /* what the menu draws in front of its HD parts */
@@ -3574,10 +3610,12 @@ static void Present(int paced) {
             }
         }
 { uint64_t _pt = SDL_GetPerformanceCounter();
+        PIECE_CK(19);
         if (!menuCanvas)
             PortHdTextDraw(sRenderer, 2, od.x, od.y, sOverlayScale);
  gPortPiece[3] += SDL_GetPerformanceCounter() - _pt; }
     }
+    PIECE_CK(12);
     if (PortPpuHudActive() && !menuCanvas) {
         int savedHud[4];
         PortPpuHudFrameBegin(savedHud);
@@ -3676,6 +3714,7 @@ static void Present(int paced) {
         PortUiHdDraw(sRenderer, worldX, worldY, worldScale);
  gPortPiece[4] += SDL_GetPerformanceCounter() - _pt; }
     }
+    PIECE_CK(13);
     if (gPortConfig.viewMode != PORT_VIEW_CRT) /* the CRT or its shader draws them */
         DrawScanlines(&dst, outW);
     if (journalShown && journalLayout.footerHeight > 0) {
@@ -3841,7 +3880,9 @@ static void Present(int paced) {
         if (paced) PaceBeforePresent();
         LoopMark(PORT_LOOP_DRAW); /* the wait just taken is counted apart */
 #ifdef PORT_LINUX
+        PIECE_CK(14);
         PortFbPresent(sRenderer);
+        PIECE_CK(15);
         if (measureFb) {
             uint64_t drawTicks, copyTicks;
             PortFbStageTicks(&drawTicks, &copyTicks);

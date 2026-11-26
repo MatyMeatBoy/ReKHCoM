@@ -1583,7 +1583,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         gPortHdEnemyGaugeZoom = 1.0f;
         gPortHudW = hudW;
     }
-    extern uint64_t gPortPiece[12];
+    extern uint64_t gPortPiece[24];
     uint64_t _pt = SDL_GetPerformanceCounter();
     for (i = 0; layer == 0 && i < sArtCount && sArt; i++) { /* the title's illustration, under everything */
         const HdSpriteDraw* q = &sArtDraws[i];

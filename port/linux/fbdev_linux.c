@@ -694,6 +694,62 @@ bool PortFbBlendPremultipliedSpans(SDL_Renderer* renderer, const uint32_t* src, 
     return true;
 }
 
+/* A sparse ARGB layer (straight alpha) scaled by nearest pixel to a box that may reach past the 640x480 framebuffer
+   and need not sit on whole pixels (the HD title: the 320x240 canvas at 2.67x, from -107,-81): only the box's part on
+   the screen, rows and columns of the layer that hold nothing skipped. SDL scaled the whole box, about 11 million
+   instructions a frame on GA36 (QEMU). */
+bool PortFbBlendOverlayNearestClipped(SDL_Renderer* renderer, const uint32_t* src, int w, int h, float bx, float by,
+                                      float bw, float bh) {
+    static int16_t first[1024], last[1024];
+    static int16_t colOf[640];
+    if (!src || w <= 0 || h <= 0 || w > 1024 || h > 1024 || bw <= 0 || bh <= 0 || !PortFbBeginGlyphBatch(renderer) ||
+        sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    int any = 0;
+    for (int r = 0; r < h; r++) {
+        const uint32_t* row = src + (size_t)r * w;
+        int a = 0, b = w - 1;
+        while (a < w && !(row[a] >> 24)) a++;
+        if (a == w) { first[r] = -1; continue; }
+        while (!(row[b] >> 24)) b--;
+        first[r] = (int16_t)a; last[r] = (int16_t)b; any = 1;
+    }
+    if (!any) return true;
+    const float sx = w / bw, sy = h / bh;
+    const int W = sRenderSurface->w, H = sRenderSurface->h;
+    /* a pixel takes the layer pixel under its centre, as SDL's nearest copy does */
+    for (int x = 0; x < W && x < 640; x++) {
+        const float u = (x + 0.5f - bx) * sx;
+        colOf[x] = (int16_t)(u < 0 ? -1 : u >= w ? -1 : (int)u);
+    }
+    for (int y = 0; y < H; y++) {
+        const float v = (y + 0.5f - by) * sy;
+        if (v < 0 || v >= h) continue;
+        const int r = (int)v;
+        if (first[r] < 0) continue;
+        /* the output columns of the row's covered span */
+        int x0 = (int)SDL_floorf(bx + first[r] / sx), x1 = (int)SDL_ceilf(bx + (last[r] + 1) / sx);
+        x0 = SDL_max(x0 - 1, 0); x1 = SDL_min(x1 + 1, SDL_min(W, 640));
+        const uint32_t* in = src + (size_t)r * w;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)y * sRenderSurface->pitch);
+        for (int x = x0; x < x1; x++) {
+            const int c = colOf[x];
+            if (c < 0) continue;
+            const uint32_t p = in[c];
+            const unsigned a = p >> 24;
+            if (!a) continue;
+            if (a == 255) { out[x] = p | 0xFF000000u; continue; }
+            const uint32_t d = out[x];
+            const unsigned inv = 255 - a;
+            unsigned rr = ((p >> 16) & 255) * a + ((d >> 16) & 255) * inv, gg = ((p >> 8) & 255) * a + ((d >> 8) & 255) * inv,
+                     bb = (p & 255) * a + (d & 255) * inv;
+            rr = (rr + 1 + (rr >> 8)) >> 8; gg = (gg + 1 + (gg >> 8)) >> 8; bb = (bb + 1 + (bb >> 8)) >> 8;
+            out[x] = 0xFF000000u | (rr << 16) | (gg << 8) | bb;
+        }
+    }
+    return true;
+}
+
 /* One row of XRGB colours copied into framebuffer rows y0..y1-1 from column x (the HD title's smooth bar). */
 bool PortFbFillRows(SDL_Renderer* renderer, const uint32_t* row, int x, int w, int y0, int y1) {
     if (!row || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
