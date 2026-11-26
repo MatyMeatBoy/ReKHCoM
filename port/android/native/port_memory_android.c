@@ -14,6 +14,10 @@
 
 #include "port/port.h"
 #include "port/rom_relocs.h"
+#ifdef PORT_LINUX
+#include <stdlib.h>
+#include <SDL3/SDL.h>
+#endif
 
 /* Keep original 32-bit GBA pointers, reserving virtual space without
  * replacing existing mappings. Only hardware regions receive physical pages. */
@@ -189,6 +193,76 @@ const char* PortSaveName(void) {
 
 static int SramSyncCurrent(void);
 
+#ifdef PORT_LINUX
+/* KHCOM_SAVE_ASYNC=1 (handhelds, FAT32 SD): the once-a-second comparison and save file write run on their own
+   thread, from a copy of SRAM taken on the game's thread. While a writer exists it alone owns the snapshot, the paths
+   and the shadow; every other user of the shadow joins it first. */
+static struct {
+    SDL_Thread* thread;
+    SDL_AtomicInt done;
+    int saved;
+    char path[MAX_PATH], tmp[MAX_PATH + 4];
+    uint8_t snapshot[GBA_SRAM_SIZE];
+} sWriter;
+
+static int SramWriterRun(void* unused) {
+    (void)unused;
+    if (memcmp(sSramShadow, sWriter.snapshot, GBA_SRAM_SIZE) != 0) {
+        FILE* f = fopen(sWriter.tmp, "wb");
+        if (f != NULL) {
+            int written = fwrite(sWriter.snapshot, 1, GBA_SRAM_SIZE, f) == GBA_SRAM_SIZE;
+            int closed = fclose(f) == 0;
+            if (written && closed && rename(sWriter.tmp, sWriter.path) == 0) {
+                memcpy(sSramShadow, sWriter.snapshot, GBA_SRAM_SIZE);
+                sWriter.saved = 1;
+            }
+        }
+    }
+    SDL_SetAtomicInt(&sWriter.done, 1);
+    return 0;
+}
+
+static void SramWriterJoin(void) {
+    if (sWriter.thread == NULL)
+        return;
+    SDL_WaitThread(sWriter.thread, NULL);
+    sWriter.thread = NULL;
+    if (sWriter.saved) {
+        extern void PortUiSaved(void);
+        sWriter.saved = 0;
+        PortUiSaved();
+    }
+}
+
+void PortSramSyncPeriodic(void) {
+    extern int PortSceneGalleryActive(void);
+    static int registered;
+    const char* async;
+
+    PORT_ENV_ONCE(async, SDL_getenv, "KHCOM_SAVE_ASYNC");
+    if (async == NULL || strcmp(async, "1") != 0) {
+        PortSramSyncIfDirty();
+        return;
+    }
+    if (sWriter.thread != NULL && !SDL_GetAtomicInt(&sWriter.done))
+        return; /* a slow card: look again next second, without waiting for it */
+    SramWriterJoin();
+    if (PortSceneGalleryActive() || !sSramLoaded)
+        return;
+    memcpy(sWriter.snapshot, (const void*)(uintptr_t)GBA_SRAM, GBA_SRAM_SIZE);
+    snprintf(sWriter.path, sizeof(sWriter.path), "%s", PortConfigPath(BankName(sSramBank)));
+    snprintf(sWriter.tmp, sizeof(sWriter.tmp), "%s.tmp", sWriter.path);
+    if (!registered) {
+        registered = 1;
+        atexit(SramWriterJoin); /* exit() must not cut a write short */
+    }
+    SDL_SetAtomicInt(&sWriter.done, 0);
+    sWriter.thread = SDL_CreateThread(SramWriterRun, "save", NULL);
+    if (sWriter.thread == NULL)
+        PortSramSyncIfDirty();
+}
+#endif
+
 int PortSramSwitchBank(void) {
     if (gPortConfig.saveBank == sSramBank)
         return 1;
@@ -203,6 +277,9 @@ int PortSramSwitchBank(void) {
 
 void PortSramLoad(void) {
     FILE* f;
+#ifdef PORT_LINUX
+    SramWriterJoin();
+#endif
     sSramBank = gPortConfig.saveBank < 1 ? 1 : gPortConfig.saveBank > PORT_SAVE_BANKS ? PORT_SAVE_BANKS : gPortConfig.saveBank;
     f = fopen(PortConfigPath(BankName(sSramBank)), "rb");
     uint8_t* sram = (uint8_t*)(uintptr_t)GBA_SRAM;
@@ -230,6 +307,9 @@ void PortSramLoad(void) {
 
 static int SramSyncCurrent(void) {
     extern int PortSceneGalleryActive(void);
+#ifdef PORT_LINUX
+    SramWriterJoin(); /* an immediate sync (quit, bank switch, replay) never overlaps the writer */
+#endif
     if (PortSceneGalleryActive()) return 0; /* replay restores SRAM before normal syncing resumes */
     const uint8_t* sram = (const uint8_t*)(uintptr_t)GBA_SRAM;
     char tmp[MAX_PATH];

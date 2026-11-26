@@ -68,7 +68,7 @@ def symbols(src, dst):
         dst.write_text(text)
 
 
-def configure(version, arch, base, out, *, armhf_ppu_workers=False):
+def configure(version, arch, base, out, *, armhf_ppu_workers=False, armhf_ppu_a7=False):
     a = ARCHES[arch]
     sysroot = base / 'sysroot'
     sdl = base / 'sdl'
@@ -91,6 +91,9 @@ def configure(version, arch, base, out, *, armhf_ppu_workers=False):
     game_cflags = f'{common} -std=gnu89 -w -include port/game_prefix.h {includes}'
     port_cflags = (f'{common} -std=gnu11 -Wall -Wno-unused-function -Wno-missing-braces {quoted} -Iport/include '
                    f'-I{rel(out)} -I{(sdl / "include").as_posix()} -I{(ft / "include/freetype2").as_posix()}')
+    # Achievements (rcheevos): earned and kept locally; ra_client.c makes no
+    # online requests outside Windows.
+    port_cflags += ' -DPORT_RETROACHIEVEMENTS -DRC_CLIENT_SUPPORTS_HASH -Iport/third_party/rcheevos/include'
     # Fixed image base above the GBA space (0x02000000-0x0E010000): quick
     # states hold raw pointers, as on Windows.
     runtime_lib = 'libarmhf' if arch == 'armhf' else 'lib'
@@ -134,9 +137,20 @@ def configure(version, arch, base, out, *, armhf_ppu_workers=False):
         for src in port_sources:
             obj = f'$builddir/port/{src.stem}.o'
             if armhf_ppu_workers and src.stem in ('port_main', 'port_ppu'):
-                n.build(obj, 'cc_port', rel(src), variables={'port_cflags': port_cflags + ' -DPORT_PPU_THREADS'})
+                flags = port_cflags + ' -DPORT_PPU_THREADS'
+                if armhf_ppu_a7 and src.stem == 'port_ppu':
+                    flags = flags.replace(' -O2 ', ' -O3 -mtune=cortex-a7 ', 1)
+                n.build(obj, 'cc_port', rel(src), variables={'port_cflags': flags})
             else:
                 n.build(obj, 'cc_port', rel(src))
+            objs.append(obj)
+        ra_root = ROOT / 'port/third_party/rcheevos/src'
+        ra_sources = [ra_root / name for name in ('rc_client.c', 'rc_compat.c', 'rc_util.c', 'rc_version.c')]
+        for directory in ('rcheevos', 'rapi', 'rhash'):
+            ra_sources += sorted((ra_root / directory).glob('*.c'))
+        for src in ra_sources + [ROOT / 'port/achievements/ra_client.c']:
+            obj = '$builddir/ra/' + rel(src).replace('/', '_')[:-2] + '.o'
+            n.build(obj, 'cc_port', rel(src))
             objs.append(obj)
         for name in ('port_symbols', 'rom_symbols'):
             obj = f'$builddir/port/{name}_s.o'
@@ -381,7 +395,11 @@ def main():
                     'build/releases/ReKHCoM-VERSION-{linux-x86-x64-desktop-steamdeck.tar.gz,anbernic-beta.zip}')
     ap.add_argument('--armhf-ppu-workers', action='store_true',
                     help='include optional PPU workers for ARMv7 testing')
+    ap.add_argument('--armhf-ppu-a7', action='store_true',
+                    help='optimize the threaded ARMv7 renderer for Cortex-A7')
     args = ap.parse_args()
+    if args.armhf_ppu_a7 and not args.armhf_ppu_workers:
+        ap.error('--armhf-ppu-a7 requires --armhf-ppu-workers')
     if args.armhf_ppu_workers and (args.arch != 'armhf' or args.package):
         ap.error('--armhf-ppu-workers requires --arch armhf and an individual build')
     if args.package:
@@ -398,7 +416,8 @@ def main():
     base = args.base or (WORK_DIR / 'linux') / args.arch
     for version in args.versions:
         out = ROOT / 'build' / f'linux-{args.arch}-{version}'
-        configure(version, args.arch, base, out, armhf_ppu_workers=args.armhf_ppu_workers)
+        configure(version, args.arch, base, out, armhf_ppu_workers=args.armhf_ppu_workers,
+                  armhf_ppu_a7=args.armhf_ppu_a7)
         subprocess.check_call(['ninja', '-f', str(out / 'build.ninja'), '-j', str(args.jobs)], cwd=ROOT)
         print('built', rel(out / f'khcom_{version}'))
     if args.bundle:

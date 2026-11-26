@@ -1,0 +1,55 @@
+/* Queue-level control of the output stream (port_audio.c). Pure arithmetic, so
+ * it can be checked on the host (port/tools/test_audio_refill.py). */
+#ifndef PORT_AUDIO_RATE_H
+#define PORT_AUDIO_RATE_H
+
+#include <stdint.h>
+#include <stdlib.h>
+
+/* Game frames of sound kept queued: 4, or KHCOM_AUDIO_TARGET_FRAMES between 4
+ * and 8 (each one more adds 16.7 ms of latency and of margin before silence). */
+static inline int PortAudioTargetFrames(const char* value) {
+    int frames = value ? atoi(value) : 4;
+    return frames < 4 ? 4 : (frames > 8 ? 8 : frames);
+}
+
+/* Playback ratio for a smoothed queue level. Without refill only a drift
+ * outside the wide dead band is corrected. With it, a level lost to late
+ * frames (below 70% of the target) is rebuilt at 0.3% slower playback until it
+ * is back at 85%; in between the previous choice holds. */
+static inline float PortAudioQueueRatio(float avg, float target, int refill, int* refilling) {
+    if (refill) {
+        if (avg < target * 0.70f)
+            *refilling = 1;
+        else if (avg >= target * 0.85f)
+            *refilling = 0;
+        if (*refilling)
+            return 0.9970f;
+    }
+    if (avg < target * 0.5f)
+        return 0.9985f;
+    if (avg > target * 3.0f)
+        return 1.0015f;
+    return 1.0f;
+}
+
+/* KHCOM_AUDIO_RESCUE_SKIP: queue level, in game frames, under which a late
+ * frame may be left undrawn. Off (0) when unset, 0 or not a number; 1 means 4;
+ * otherwise 2 to 8. */
+static inline int PortAudioRescueFrames(const char* value) {
+    int frames = value ? atoi(value) : 0;
+    if (frames <= 0)
+        return 0;
+    return frames == 1 ? 4 : (frames > 8 ? 8 : frames);
+}
+
+/* Whether the frame about to start is left undrawn: the queue is low, the frame
+ * starts more than a quarter period after its deadline (skipping an on-time
+ * frame cannot add sound: the pacer only waits longer) and the frame before it
+ * was drawn. `late` and `period` are in the same clock units. */
+static inline int PortAudioRescueDue(int queueLow, uint64_t late, uint64_t period, int* skippedLast) {
+    int skip = queueLow && !*skippedLast && late > period / 4;
+    *skippedLast = skip;
+    return skip;
+}
+#endif

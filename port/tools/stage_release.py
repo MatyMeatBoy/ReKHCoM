@@ -56,6 +56,9 @@ def stage(mapping, folder):
 ga36 = f'ReKHCoM-{V}-linux-armhf-ga36-alpha.zip'
 if (SRC / ga36).is_file():
     MAIN[ga36] = ga36
+r36s = f'ReKHCoM-{V}-linux-arm64-r36s-beta.zip'  # port/linux/r36s/package.py
+if (SRC / r36s).is_file():
+    MAIN[r36s] = r36s
 
 if OUT.exists():
     shutil.rmtree(OUT)

@@ -322,6 +322,21 @@ static int PortObjAllocFails(int palette) {
 #define PORT_OBJ_ALLOC_FAILS(palette) 0
 #endif
 
+#ifdef PLATFORM_PC
+/* Optional failure-only evidence; never logs or scans on successful loads. */
+static void PortAuditObjTiles(const char* reason, u16 size) {
+    static int enabled = -1, reports;
+    if (enabled < 0) enabled = getenv("KHCOM_SPRITE_BUDGET_AUDIT") != NULL;
+    if (enabled && reports++ < 40) {
+        extern void PortLog(const char*, ...);
+        PortLog("sprite audit: %s size=%u", reason, size);
+    }
+}
+#define PORT_AUDIT_OBJ_TILES(reason, size) PortAuditObjTiles(reason, size)
+#else
+#define PORT_AUDIT_OBJ_TILES(reason, size) ((void)0)
+#endif
+
 ObjTiles* LoadObjTiles(const void* src, u16 size) {
     ObjTiles* node;
     ObjTiles* cur;
@@ -353,6 +368,7 @@ ObjTiles* LoadObjTiles(const void* src, u16 size) {
     node = ListPoolFirstFree(&gSpriteWork->tilePool);
 
     if (node == NULL) {
+        PORT_AUDIT_OBJ_TILES("tile node pool full", size);
         return NULL;
     }
 
@@ -408,6 +424,7 @@ ObjTiles* LoadObjTiles(const void* src, u16 size) {
         cur = next;
     }
 
+    PORT_AUDIT_OBJ_TILES("no tile space", size);
     return NULL;
 }
 
@@ -473,6 +490,7 @@ ObjTiles* AllocObjTiles(u16 size, const void* owner) {
     node = ListPoolFirstFree(&gSpriteWork->tilePool);
 
     if (node == NULL) {
+        PORT_AUDIT_OBJ_TILES("allocated tile node pool full", size);
         return NULL;
     }
 
@@ -525,6 +543,7 @@ ObjTiles* AllocObjTiles(u16 size, const void* owner) {
         cur = next;
     }
 
+    PORT_AUDIT_OBJ_TILES("no allocated tile space", size);
     return NULL;
 }
 

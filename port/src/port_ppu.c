@@ -11,7 +11,19 @@
  * the 160 original lines; lines added above and below reuse the state of the
  * nearest original line.
  */
+#if defined(__ARM_NEON)
+#include <arm_neon.h>
+#define PORT_NEON 1
+#elif defined(PORT_SIMDE_NEON)
+/* x86 builds: the same NEON kernels through SIMDe, which maps them to SSE.
+   The x86 intrinsics come first: SIMDe renames a few of them with macros. */
+#include <x86intrin.h>
+#include <arm_neon.h>
+#define PORT_NEON 1
+#endif
+
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,6 +35,22 @@
 /* PPU is also compiled by console guests without SDL headers. */
 #define PPU_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define PPU_MAX(a, b) ((a) > (b) ? (a) : (b))
+#if __STDC_HOSTED__ || defined(PORT_PPU_THREADS)
+#include <SDL3/SDL.h> /* hosted builds and threaded guests (R36S) */
+#endif
+#if !__STDC_HOSTED__ && !defined(PORT_PPU_THREADS)
+/* Console guests have no SDL or host environment switches. */
+#define SDL_getenv(name) ((const char*)0)
+#define SDL_GetPerformanceCounter() ((uint64_t)0)
+#define SDL_GetPerformanceFrequency() ((uint64_t)1)
+#define SDL_atoi(s) atoi(s)
+#define SDL_min(a, b) PPU_MIN((a), (b))
+#define SDL_max(a, b) PPU_MAX((a), (b))
+#define SDL_clamp(x, lo, hi) PPU_MIN(PPU_MAX((x), (lo)), (hi))
+#endif
+#include "port/port_tuning.h"
+/* KHCOM_PPU_* and KHCOM_PSG_* switches, with the default-on fast paths (port_tuning.h). */
+static const char* PortTunedEnv(const char* name); /* defined at the end, after SDL */
 #include "port/port_hd2d.h"
 #include "port/port_hdsprites.h"
 #include "port/synthesis_requirement_hd.h"
@@ -414,6 +442,15 @@ int PortMenuSliding(void) {
 }
 static int sSceneNarrow, sNarrowWanted, sNarrowWait; /* PortSceneNarrow, below */
 static int sSpotlight;
+static int sSpotlightTileRuns;
+static int sObjSkipClear;
+static int sObjAffineSpan;
+static int sSpotlightBg0Runs;
+static int sSpotlightTrimMargins;
+static int sSpotlightOverlayFast;
+static int sSpotlightBg0Edges;
+static int sSpotlightClearRows;
+static int sSpotlightSkipMargins;
 static int sTitleArtFade, sTitleBands;
 static uint32_t sTitleBand[2][GBA_SCREEN_H];
 static uint8_t sTitleBandObj[2][GBA_SCREEN_H];
@@ -603,13 +640,36 @@ static int FollowQ(int y) {
 
 /* The vertical shift of a sprite drawn now (engine.c, sprite.c). */
 int PortSpriteShiftY(int entry, int y) {
-    int q;
-    if (sHudDepth == 0 || sHudAy != 3)
+    int q, shift;
+    const char* handheldRaise;
+    PORT_ENV_ONCE(handheldRaise, getenv, "KHCOM_GA36_HUD_RAISE");
+    if (sHudDepth == 0)
         return gPortSpriteShiftY;
-    q = FollowQ(y);
-    if (entry >= 0 && entry < 128)
+    q = sHudAy == 3 ? FollowQ(y) : sHudAy * 256;
+    if (sHudAy == 3 && entry >= 0 && entry < 128)
         sEntryTag[entry].ayq = (int16_t)q;
-    return q * PortWideMarginY() / 256;
+    shift = sHudAy == 3 ? q * PortWideMarginY() / 256 : gPortSpriteShiftY;
+    /* At fixed 480p the HUD normally shares the world canvas, so TagHudY
+       never runs. Raise bottom cards there, including the played stacks. */
+    if (sHudAx == 2 && sHudAy == 1)
+        q = FollowQ(y); /* enemy stocks reach the top while the hand stays low */
+    if (handheldRaise && PortFixed480p() && sBattleView && gPortHudScale == 0 && q > -256) {
+        /* The bottom rows (hand, deck and enemy or boss stocks alike) end this
+           many lines higher than on the cartridge. */
+        static int raise = -1, enemyRaise;
+        if (raise < 0) {
+            const char* lines = getenv("KHCOM_GA36_HAND_RAISE");
+            const char* enemyLines = getenv("KHCOM_GA36_ENEMY_RAISE");
+            raise = lines ? atoi(lines) : 16;
+            if (raise < 0 || raise > 40) raise = 16;
+            /* enemy and boss cards sit higher on the cartridge: their own
+               amount puts both bottoms on one line */
+            enemyRaise = enemyLines ? atoi(enemyLines) : raise;
+            if (enemyRaise < -12 || enemyRaise > 40) enemyRaise = raise;
+        }
+        shift -= (sHudAx == 2 && sHudAy == 1 ? enemyRaise : raise) * (q + 256) / 512;
+    }
+    return shift;
 }
 
 /* The tag's vertical shift on the world canvas, and its place on the HUD. */
@@ -795,6 +855,8 @@ int PortScreenMarginX(void) {
 int gPortHudScale;
 int gPortHeaderDraw;
 static int HeaderBandColor(int y, int phase);
+static int HeaderPick(void);
+static int HeaderGone(void);
 int gPortHudW;
 int gPortHudH;
 
@@ -1310,6 +1372,33 @@ static int MapTile(const BgLatch* l, int tx, int ty) {
     return block[(ty & 31) * 32 + (tx & 31)];
 }
 
+/* Scene recipes match the whole map in tile row order. Check the block
+   address once per block; invalid blocks still contribute the MapTile sentinel. */
+static uint32_t HashWorldMap(const BgLatch* l) {
+    uint32_t hash = 2166136261u;
+    for (int by = 0; by < l->height; by++) {
+        const uint16_t* blocks[4];
+        for (int bx = 0; bx < l->width; bx++) {
+            const uint16_t* block = (const uint16_t*)l->map[by * l->width + bx];
+            blocks[bx] = PORT_GBA_MAP_MEMORY(block) ? block : NULL;
+        }
+        for (int y = 0; y < 32; y++) {
+            for (int bx = 0; bx < l->width; bx++) {
+                const uint16_t* block = blocks[bx];
+                if (block) {
+                    const uint16_t* row = block + y * 32;
+                    for (int x = 0; x < 32; x++)
+                        hash = (hash ^ row[x]) * 16777619u;
+                } else {
+                    for (int x = 0; x < 32; x++)
+                        hash = (hash ^ UINT32_MAX) * 16777619u;
+                }
+            }
+        }
+    }
+    return hash;
+}
+
 /* Matches between each tile near an edge and its diagonal neighbour inward. */
 static int IsoScore(const BgLatch* l, int x0, int x1, int y0, int y1, int dx, int dy) {
     int W = l->width * 32, H = l->height * 32, x, y, score = 0;
@@ -1777,31 +1866,78 @@ static int PreliminarFirPixel(int wx,int wy,uint16_t* color) {
  * authored library pixels except the reviewed flat-green notch, then extend
  * the empty map background.
  * Palette indices remain live for fades; OBJ furniture/actors stay unique. */
-static int Preliminar130Authored(int x,int y) {
-    int floor,books,base;
-    if (x<0 || y<0 || x>=512 || y>=512) return 0;
-    floor=SinglePanelIndex(&sBgLatch[3],IO16(14),x,y);
-    books=SinglePanelIndex(&sBgLatch[2],IO16(12),x,y);
-    base=SinglePanelIndex(&sBgLatch[3],IO16(14),0,0);
-    /* Explicitly reviewed exception to authored-pixel preservation: finish
-     * the shelf baseboard through its original flat-green notch only. */
-    if (PortScene130LibraryRemate(x,y) && books>=0 && !(books&15) && floor>=0 &&
-        floor==SinglePanelIndex(&sBgLatch[3],IO16(14),32,280)) return 0;
-    return (books>=0 && (books&15)) ||
-        (floor>=0 && base>=0 && (PLTT16[floor]&0x7fff)!=(PLTT16[base]&0x7fff));
+typedef struct LibraryPanelRow {
+    uint16_t booksControl, floorControl;
+    int floorBase, notch;
+} LibraryPanelRow;
+
+typedef struct LibrarySample {
+    int books, floor;
+    bool authored;
+} LibrarySample;
+
+enum { LIBRARY_PAIR_WIDTH = 320, LIBRARY_PAIR_MISS = 0xffff };
+
+typedef struct LibraryScanline {
+    int worldX, worldY;
+    bool prepared;
+    uint16_t floor[LIBRARY_PAIR_WIDTH];
+} LibraryScanline;
+
+static LibrarySample SampleLibrary(const LibraryPanelRow* row, int x, int y) {
+    LibrarySample sample = {-1, -1, false};
+    if ((unsigned)x >= 512 || (unsigned)y >= 512)
+        return sample;
+    sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, x, y);
+    sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, x, y);
+    /* Continue the reviewed baseboard through the flat-green notch. */
+    if (PortScene130LibraryRemate(x, y) && sample.books >= 0 &&
+        !(sample.books & 15) && sample.floor >= 0 && sample.floor == row->notch)
+        return sample;
+    sample.authored = (sample.books >= 0 && (sample.books & 15)) ||
+        (sample.floor >= 0 && row->floorBase >= 0 &&
+         (PLTT16[sample.floor] & 0x7fff) != (PLTT16[row->floorBase] & 0x7fff));
+    return sample;
 }
-static int Preliminar130Pixel(int bg,int x,int y,uint16_t* color) {
-    int sx=x,sy=y,index;
-    if (!sPreliminarRecipe[2] || !sPreliminarRecipe[3] ||
-        sPreliminarRecipe[2]->v[0]!=130 || sPreliminarRecipe[3]->v[0]!=130) return 0;
-    if (!Preliminar130Authored(x,y)) {
-        int carpet=PortScene130LibrarySource(x,y,&sx,&sy);
-        if (!carpet && !Preliminar130Authored(sx,sy)) { sx=x<240?64:480; sy=64; }
+
+static uint16_t Preliminar130Pixel(const LibraryPanelRow* row, int bg, uint16_t cnt, int x, int y) {
+    LibrarySample sample = SampleLibrary(row, x, y);
+    int index;
+    if (sample.authored) {
+        index = bg == 2 ? sample.books : sample.floor;
+    } else {
+        int sx, sy;
+        if (PortScene130LibrarySource(x, y, &sx, &sy)) {
+            index = SinglePanelIndex(&sBgLatch[bg], cnt, sx, sy);
+        } else {
+            sample = SampleLibrary(row, sx, sy);
+            index = sample.authored ? (bg == 2 ? sample.books : sample.floor)
+                                    : SinglePanelIndex(&sBgLatch[bg], cnt, x < 240 ? 64 : 480, 64);
+        }
     }
-    index=SinglePanelIndex(&sBgLatch[bg],IO16(8+bg*2),sx,sy);
-    *color=index>=0 && (index&15)?PLTT16[index]&0x7fff:TRANSPARENT;
-    return 1;
+    return index >= 0 && (index & 15) ? PLTT16[index] & 0x7fff : TRANSPARENT;
 }
+
+static uint16_t Preliminar130Pair(const LibraryPanelRow* row, int x, int y, uint16_t* floor) {
+    LibrarySample sample = SampleLibrary(row, x, y);
+    if (!sample.authored) {
+        int sx, sy;
+        if (PortScene130LibrarySource(x, y, &sx, &sy)) {
+            sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, sx, sy);
+            sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, sx, sy);
+        } else {
+            sample = SampleLibrary(row, sx, sy);
+            if (!sample.authored) {
+                const int donor = x < 240 ? 64 : 480;
+                sample.books = SinglePanelIndex(&sBgLatch[2], row->booksControl, donor, 64);
+                sample.floor = SinglePanelIndex(&sBgLatch[3], row->floorControl, donor, 64);
+            }
+        }
+    }
+    *floor = sample.floor >= 0 && (sample.floor & 15) ? PLTT16[sample.floor] & 0x7fff : TRANSPARENT;
+    return sample.books >= 0 && (sample.books & 15) ? PLTT16[sample.books] & 0x7fff : TRANSPARENT;
+}
+
 static uint16_t SinglePanelColor(const BgLatch* l, uint16_t cnt, int wx, int wy) {
     int edge, inward, distance, a, b, c, slope, shade, bank;
     int white = SinglePanelIndex(l, cnt, 0, 0);
@@ -1894,7 +2030,160 @@ int PortArenasApproved(void) {
 const uint16_t* PortLatinGlyphWidths(void);
 #include "port_worldname.inc"
 
-static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
+static int sUniformWorldTiles = -1;
+
+/* A tile's registration and source bytes stay stable during one scanline.
+   Resolve both recent frame records at most once for adjacent samples. */
+static const BgTextTile* MatchBgTextTile(unsigned offset, unsigned* lastOffset,
+                                         const BgTextTile** lastMatch) {
+    if (offset != *lastOffset) {
+        const BgTextTile* tile = BgTextTileAt(offset);
+        *lastOffset = offset;
+        *lastMatch = tile->code > 0x20 && !memcmp(tile->source, VRAM8 + offset, 32)
+                     ? tile : NULL;
+    }
+    return *lastMatch;
+}
+
+/* A discarded spotlight margin row only has to keep the BG text it finds:
+   the other tile rows leave nothing behind. */
+static PPU_TLS bool sBgGlyphRowsOnly;
+
+static int sTextNeon; /* KHCOM_PPU_TEXT_NEON */
+
+/* Eight pixels of one 4bpp tile row, leftmost screen pixel first. */
+static inline void DecodeTile4(uint16_t* out, const uint8_t* row, const uint16_t* colors, int flip) {
+#ifdef PORT_NEON
+    uint32_t packed;
+    memcpy(&packed, row, sizeof(packed));
+    if (!packed) {
+        vst1q_u16(out, vdupq_n_u16(TRANSPARENT));
+        return;
+    }
+    const uint8x8_t bytes = vreinterpret_u8_u32(vdup_n_u32(packed));
+    uint8x8_t index = vzip_u8(vand_u8(bytes, vdup_n_u8(15)), vshr_n_u8(bytes, 4)).val[0];
+    if (flip) index = vrev64_u8(index);
+    const uint8x16x2_t halves = vld2q_u8((const uint8_t*)colors); /* low bytes, high bytes */
+    const uint8x8x2_t low = {{vget_low_u8(halves.val[0]), vget_high_u8(halves.val[0])}};
+    const uint8x8x2_t high = {{vget_low_u8(halves.val[1]), vget_high_u8(halves.val[1])}};
+    const uint8x8_t clear = vceq_u8(index, vdup_n_u8(0));
+    uint8x8x2_t pixels;
+    pixels.val[0] = vbic_u8(vtbl2_u8(low, index), clear);
+    pixels.val[1] = vbsl_u8(clear, vdup_n_u8(TRANSPARENT >> 8), vand_u8(vtbl2_u8(high, index), vdup_n_u8(0x7F)));
+    vst2_u8((uint8_t*)out, pixels);
+#else
+    for (int i = 0; i < 8; i++) {
+        const int x = flip ? 7 - i : i;
+        const int c = (row[x >> 1] >> ((x & 1) * 4)) & 15;
+        out[i] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+    }
+#endif
+}
+
+static int sBgPlainRows; /* KHCOM_PPU_BG_PLAIN_ROWS */
+
+static void BgFill(uint16_t* out, int from, int to, uint16_t color) {
+    for (int x = from; x < to; x++) out[x] = color;
+}
+
+/* One row of a 4bpp text layer with no mosaic, spotlight or scene replacement: what is invariant along the row is
+   resolved once, then whole tile runs are copied. Same pixels and world marks as DrawTextBg's own run paths.
+   Returns 0 at registered HD text, which the caller's per-pixel path then draws the whole row for. */
+static int DrawTextBgPlain(int bg, int gy, uint16_t cnt, int hofs, int vofs) {
+    const uint16_t* const palette = PLTT16;
+    uint16_t* const out = sBgLine[bg];
+    uint8_t* const inWorld = sInWorld;
+    const BgLatch* const l = &sBgLatch[bg];
+    const BgWorld* const wd = &sBgWorldLatched[bg];
+    const unsigned base = ((cnt >> 2) & 3) * 0x4000;
+    const uint16_t* const screen = (const uint16_t*)(VRAM8 + ((cnt >> 8) & 31) * 0x800);
+    const int size = cnt >> 14, wmask = (size & 1) ? 511 : 255;
+    const int py = (gy + vofs) & ((size & 2) ? 511 : 255), ty = py >> 3, fy = py & 7;
+    const int w = gPortScreen.width, origin = gPortScreen.originX;
+    const int start = PPU_MIN(PPU_MAX(origin + sLeft, 0), w);
+    const int end = PPU_MIN(PPU_MAX(origin + sRight, start), w);
+    const int offset = origin + sBgShiftLatched[bg]; /* the canvas column of the picture's gx 0 */
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const int pictureStart = outside ? end : PPU_MIN(PPU_MAX(offset, start), end);
+    const int pictureEnd = outside ? end : PPU_MIN(PPU_MAX(offset + GBA_SCREEN_W, pictureStart), end);
+    const bool world = !sScreenBg[bg] && !sBgDockedLatched[bg] && (l->valid || wd->valid);
+    unsigned lastTextOffset = UINT32_MAX;
+    const BgTextTile* lastTextMatch = NULL;
+    BgFill(out, 0, start, TRANSPARENT);
+    BgFill(out, end, w, TRANSPARENT);
+    /* the picture */
+    for (int x = pictureStart, count; x < pictureEnd; x += count) {
+        const int px = (x - offset + hofs) & wmask;
+        int block = 0;
+        if (px >= 256) block += 1;
+        if (ty >= 32) block += (size == 3) ? 2 : 1;
+        const int entry = screen[block * 0x400 + (ty & 31) * 32 + ((px >> 3) & 31)];
+        const unsigned tileOff = base + (entry & 0x3FF) * 32;
+        count = PPU_MIN(8 - (px & 7), pictureEnd - x);
+        if (tileOff >= 0x10000) {
+            BgFill(out, x, x + count, TRANSPARENT);
+            continue;
+        }
+        if (sHdText && !(entry & 0xC00) && MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch))
+            return 0;
+        const uint8_t* row = VRAM8 + tileOff + ((entry & 0x800) ? 7 - fy : fy) * 4;
+        const uint16_t* colors = palette + (entry >> 12) * 16;
+        if (count == 8) {
+            DecodeTile4(out + x, row, colors, entry & 0x400);
+        } else {
+            for (int i = 0; i < count; i++) {
+                const int sx = (entry & 0x400) ? 7 - (px & 7) - i : (px & 7) + i;
+                const int c = (row[sx >> 1] >> ((sx & 1) * 4)) & 15;
+                out[x + i] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+            }
+        }
+    }
+    /* beyond the picture, on both sides (a row outside it: the whole span, as the "left" side) */
+    const int sides[2][2] = {{start, pictureStart}, {pictureEnd, end}};
+    const int baseX = world ? (l->valid ? l->x + (hofs - l->hofs) : wd->x + (hofs - wd->hofs)) - offset : 0;
+    const int wy = world ? (l->valid ? l->y + gy + (vofs - l->vofs) : wd->y + gy + (vofs - wd->vofs)) : 0;
+    for (int side = 0; side < 2; side++) {
+        const int to = sides[side][1];
+        if (!world) {
+            BgFill(out, sides[side][0], to, TRANSPARENT);
+            continue;
+        }
+        for (int x = sides[side][0], run; x < to; x += run) {
+            const int wx = baseX + x;
+            run = PPU_MIN(8 - (wx & 7), to - x);
+            const int we = l->valid ? ExtendedWorldEntry(l, wx, wy) : wd->fn(bg, wx >> 3, wy >> 3);
+            if (we < 0) {
+                BgFill(out, x, x + run, sWorldPadding[bg]);
+                continue;
+            }
+            unsigned off = base + (we & 1023) * 32;
+            if (sHdText && off < 0x10000 && sBgTextTiles[off / 32].code > 0x20)
+                return 0;
+            off += ((we & 0x800) ? 7 - (wy & 7) : wy & 7) * 4;
+            if (run == 8)
+                memset(inWorld + x, 1, 8); /* one store */
+            else
+                memset(inWorld + x, 1, run);
+            if (off + 4 > 0x10000) {
+                BgFill(out, x, x + run, TRANSPARENT);
+                continue;
+            }
+            const uint16_t* colors = palette + (we >> 12) * 16;
+            if (run == 8) {
+                DecodeTile4(out + x, VRAM8 + off, colors, we & 0x400);
+            } else {
+                for (int j = 0; j < run; j++) {
+                    const int xx = (we & 0x400) ? 7 - (wx & 7) - j : (wx & 7) + j;
+                    const int c = (VRAM8[off + (xx >> 1)] >> ((xx & 1) * 4)) & 15;
+                    out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
+static void DrawTextBg(int bg, int gy, uint16_t dispcnt, LibraryScanline* libraryPair) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const dtPalette = PLTT16;
     uint8_t* const dtInWorld = sInWorld;
@@ -1914,6 +2203,8 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
     int x, py, ty, fy, outside;
     int w = gPortScreen.width;
     int cachedTx = 0, cachedTy = 0, cachedEntry = -1, cachedValid = 0;
+    unsigned lastTextOffset = UINT32_MAX;
+    const BgTextTile* lastTextMatch = NULL;
     /* also in the event before the fight (008), where the armour falls and assembles on the same patio */
     int guardPatio = bg == 0 && sBgLatch[bg].valid &&
         PortGuardArmorBackdropMatches((const void* const*)sBgLatch[bg].map) &&
@@ -1944,9 +2235,45 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     mdLayer = 2;
     }
 
+    const bool library = (bg == 2 || bg == 3) && sPreliminarRecipe[2] && sPreliminarRecipe[3] &&
+        sPreliminarRecipe[2]->v[0] == 130 && sPreliminarRecipe[3]->v[0] == 130;
+    LibraryPanelRow libraryRow;
+    if (library) {
+        libraryRow.booksControl = IO16(12);
+        libraryRow.floorControl = IO16(14);
+        libraryRow.floorBase = SinglePanelIndex(&sBgLatch[3], libraryRow.floorControl, 0, 0);
+        libraryRow.notch = SinglePanelIndex(&sBgLatch[3], libraryRow.floorControl, 32, 280);
+    }
+
     (void)dispcnt;
+    const int sourceY = gy;
     if (mosV > 1)
         gy -= ((gy % mosV) + mosV) % mosV;
+    bool pairedLibrary = false;
+    if (library && libraryPair && mosH == 1) {
+        const BgLatch* l = &sBgLatch[bg];
+        const int worldX = l->x - gPortScreen.originX - sBgShiftLatched[bg] + hofs - l->hofs;
+        const int worldY = l->y + gy + vofs - l->vofs;
+        if (bg == 2) {
+            const BgLatch* floor = &sBgLatch[3];
+            const int floorMosH = (libraryRow.floorControl & 64) ? (IO16(0x4C) & 15) + 1 : 1;
+            const int floorMosV = (libraryRow.floorControl & 64) ? ((IO16(0x4C) >> 4) & 15) + 1 : 1;
+            const int floorY = sourceY - ((sourceY % floorMosV) + floorMosV) % floorMosV;
+            const int floorWorldX = floor->x - gPortScreen.originX - sBgShiftLatched[3] +
+                (IO16(0x1C) & 0x1ff) - floor->hofs;
+            const int floorWorldY = floor->y + floorY + (IO16(0x1E) & 0x1ff) - floor->vofs;
+            if (floorMosH == 1 && worldX == floorWorldX && worldY == floorWorldY) {
+                libraryPair->prepared = true;
+                libraryPair->worldX = worldX;
+                libraryPair->worldY = worldY;
+                memset(libraryPair->floor, 0xff, w * sizeof(libraryPair->floor[0]));
+                pairedLibrary = true;
+            }
+        } else {
+            pairedLibrary = libraryPair->prepared && libraryPair->worldX == worldX &&
+                libraryPair->worldY == worldY;
+        }
+    }
     py = (gy + vofs) & hmask;
     ty = py >> 3;
     fy = py & 7;
@@ -1958,8 +2285,48 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
         fy = py & 7;
         outside = 0;
     }
+    if (sBgGlyphRowsOnly && (!sHdText || fy))
+        return;
 
-    for (x = 0; x < w; x++) {
+    PortDarksideBodyRow darksideRow;
+    const char* useDarksideRow = NULL;
+    if (sDarksideLayer[bg] == 2) {
+#if __STDC_HOSTED__
+        PORT_ENV_ONCE(useDarksideRow, SDL_getenv, "KHCOM_DARKSIDE_BODY_ROW");
+#endif
+        if (useDarksideRow) {
+            const BgLatch* l = &sBgLatch[bg];
+            PortDarksidePrepareBodyRow(&darksideRow, (const void* const*)l->map, l->y + gy + (vofs - l->vofs),
+                                       l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2);
+        }
+    }
+
+    if (sBgPlainRows && !bpp8 && !mosaic && !sSpotlight && !sWorldNameOn && !guardPatio && !tmBoard && !ursLayer &&
+        !jfLayer && !mxField && !oogieHall && !mdLayer && !sDarksideLayer[bg] &&
+        !(bg == sSinglePanelBg && sBgLatch[bg].valid) && !sPreliminarRecipe[bg] && !sAgrabahLayer[bg] &&
+        !sAgrabah109Layer[bg] && bg != sTiledBackdropBg && DrawTextBgPlain(bg, gy, cnt, hofs, vofs))
+        return;
+
+    int rowStart = 0, rowEnd = w;
+    const char* trimMargins = NULL;
+#if __STDC_HOSTED__
+    PORT_ENV_ONCE(trimMargins, PortTunedEnv, "KHCOM_PPU_TRANSPARENT_BG_MARGINS");
+#endif
+    if (trimMargins && mosH == 1 && (!sSpotlight || (sSpotlightTrimMargins && bg != 0)) &&
+        !guardPatio && !tmBoard && !ursLayer && !jfLayer && !mxField && !oogieHall && !mdLayer &&
+        !sDarksideLayer[bg] && !(bg == sSinglePanelBg && sBgLatch[bg].valid) &&
+        !(bg == 3 && gPortScreen.wide && sBgLatch[bg].valid &&
+          sPreliminarRecipe[bg] && sPreliminarRecipe[bg]->v[0] == 102) &&
+        (sScreenBg[bg] || sBgDockedLatched[bg] || (!sBgLatch[bg].valid && !sBgWorldLatched[bg].valid))) {
+        const int origin = gPortScreen.originX;
+        const int offset = origin + sBgShiftLatched[bg];
+        rowStart = PPU_MIN(PPU_MAX(PPU_MAX(origin + sLeft, offset), 0), w);
+        rowEnd = outside ? rowStart
+            : PPU_MIN(PPU_MAX(PPU_MIN(origin + sRight, offset + GBA_SCREEN_W), rowStart), w);
+        for (x = 0; x < rowStart; x++) out[x] = TRANSPARENT;
+        for (x = rowEnd; x < w; x++) out[x] = TRANSPARENT;
+    }
+    for (x = rowStart; x < rowEnd; x++) {
         int gx = x - gPortScreen.originX - sBgShiftLatched[bg];
         int px, tx, block, entry, tile, pal, fx, fyy, ci;
         const uint16_t* map;
@@ -2070,10 +2437,15 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
         if (sDarksideLayer[bg] && (sDarksideLayer[bg] == 2 || outside || gx < 0 || gx >= GBA_SCREEN_W)) {
             const BgLatch* l = &sBgLatch[bg];
             int wx = l->x + gx + (hofs - l->hofs), wy = l->y + gy + (vofs - l->vofs);
-            if (sDarksideLayer[bg] == 1 ? PortDarksideShorePixel(wx, wy, &out[x])
-                                        : PortDarksideBodyPixel((const void* const*)l->map, wx, wy,
-                                                                l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2,
-                                                                &out[x])) {
+            int painted;
+            if (sDarksideLayer[bg] == 1)
+                painted = PortDarksideShorePixel(wx, wy, &out[x]);
+            else if (useDarksideRow)
+                painted = PortDarksideBodyRowPixel(&darksideRow, wx, &out[x]);
+            else
+                painted = PortDarksideBodyPixel((const void* const*)l->map, wx, wy,
+                                                l->x + GBA_SCREEN_W / 2, l->y + GBA_SCREEN_H / 2, &out[x]);
+            if (painted) {
                 dtInWorld[x] = 1;
                 continue;
             }
@@ -2114,7 +2486,13 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                     sInWorld[x]=1;
                     continue;
                 }
-                if (sPreliminarRecipe[bg]->v[0]==130 && Preliminar130Pixel(bg,wx,wy,&out[x])) {
+                if (library) {
+                    if (pairedLibrary && bg == 2)
+                        out[x] = Preliminar130Pair(&libraryRow, wx, wy, &libraryPair->floor[x]);
+                    else if (pairedLibrary && libraryPair->floor[x] != LIBRARY_PAIR_MISS)
+                        out[x] = libraryPair->floor[x];
+                    else
+                        out[x] = Preliminar130Pixel(&libraryRow, bg, cnt, wx, wy);
                     dtInWorld[x]=1;
                     continue;
                 }
@@ -2186,6 +2564,23 @@ static void DrawTextBg(int bg, int gy, uint16_t dispcnt) {
                             }
                         } else {
                             const uint16_t* colors = dtPalette + palette;
+                            if (sTextNeon && run == 8) {
+                                DecodeTile4(out + x, pixels, colors, we & 0x400);
+                                x += 7;
+                                continue;
+                            }
+                            if (sUniformWorldTiles > 0 && run == 8) {
+                                uint32_t packed;
+                                memcpy(&packed, pixels, sizeof(packed));
+                                const unsigned index = packed & 15u;
+                                if (packed == index * 0x11111111u) {
+                                    const uint16_t color = index ? colors[index] & 0x7FFF : TRANSPARENT;
+                                    for (j = 0; j < 8; j++)
+                                        out[x + j] = color;
+                                    x += 7;
+                                    continue;
+                                }
+                            }
                             for (j = 0; j < run; j++, xx += step) {
                                 int c = (pixels[xx >> 1] >> ((xx & 1) * 4)) & 15;
                                 out[x + j] = c ? colors[c] & 0x7FFF : TRANSPARENT;
@@ -2272,20 +2667,50 @@ scalar_world:
         tile = entry & 0x3FF;
         fx = (entry & 0x400) ? 7 - (px & 7) : (px & 7);
         fyy = (entry & 0x800) ? 7 - fy : fy;
+        /* BG0's spotlight clamps horizontal coordinates outside the GBA
+           picture. Those columns all sample the same pixel; keep registered
+           text on the scalar path because it can emit glyphs per position. */
+        if (sSpotlight && sSpotlightTileRuns && sSpotlightBg0Edges && bg == 0 && !bpp8 && mosH == 1 &&
+            mdLayer != 2 && sDarksideLayer[bg] != 2 && !sWorldNameOn) {
+            const int rawX = x - gPortScreen.originX - sBgShiftLatched[bg];
+            if (rawX < 0 || rawX >= GBA_SCREEN_W) {
+                const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
+                if (!sHdText || (entry & 0xC00) || tileOff >= 0x10000 ||
+                    !MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch)) {
+                    const unsigned off = tileOff + fyy * 4 + (fx >> 1);
+                    const uint8_t pixels = off < 0x10000 ? VRAM8[off] : 0;
+                    const unsigned index = (pixels >> ((fx & 1) * 4)) & 15;
+                    const uint16_t color = index ? dtPalette[(entry >> 12) * 16 + index] & 0x7FFF : TRANSPARENT;
+                    int count = PPU_MIN(w - x, sRight - (x - gPortScreen.originX));
+                    if (rawX < 0) count = PPU_MIN(count, -rawX);
+                    for (int i = 0; i < count; i++) out[x + i] = color;
+                    x += count - 1;
+                    continue;
+                }
+            }
+        }
         /* Native 4bpp runs share the map entry, pixel row and palette.
+           Spotlight clamps BG0 coordinates only; other layers can use runs.
            Keep scene replacements and tiles with registered text on the pixel path. */
         if (!bpp8 && !outside && (unsigned)gx < GBA_SCREEN_W &&
-            mosH == 1 && !sSpotlight && mdLayer != 2 && sDarksideLayer[bg] != 2 &&
+            mosH == 1 && (!sSpotlight || (sSpotlightTileRuns && (bg != 0 ||
+                (sSpotlightBg0Runs && gx == x - gPortScreen.originX - sBgShiftLatched[bg])))) &&
+            mdLayer != 2 && sDarksideLayer[bg] != 2 &&
             !sWorldNameOn) {
             const unsigned tileOff = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
             if (tileOff < 0x10000 &&
-                (!sHdText || (entry & 0xC00) || BgTextTileAt(tileOff)->code <= 0x20)) {
+                (!sHdText || (entry & 0xC00) || !MatchBgTextTile(tileOff, &lastTextOffset, &lastTextMatch))) {
                 const int localX = x - gPortScreen.originX;
                 const int end = PPU_MIN(w - x, PPU_MIN(sRight - localX, GBA_SCREEN_W - gx));
                 const int count = PPU_MIN(8 - (px & 7), end);
                 const uint8_t* row = VRAM8 + tileOff + fyy * 4;
                 const uint16_t* palette = dtPalette + (entry >> 12) * 16;
                 const int step = (entry & 0x400) ? -1 : 1;
+                if (sTextNeon && count == 8) {
+                    DecodeTile4(out + x, row, palette, entry & 0x400);
+                    x += 7;
+                    continue;
+                }
                 uint32_t packed;
                 memcpy(&packed, row, sizeof(packed));
                 if (!packed) {
@@ -2324,8 +2749,8 @@ scalar_world:
             if (sHdText && !(entry & 0xC00)) {
                 unsigned offset = ((cnt >> 2) & 3) * 0x4000 + tile * 32;
                 if (offset < 0x10000) {
-                    const BgTextTile* text = BgTextTileAt(offset);
-                    if (text->code > 0x20 && !memcmp(text->source, VRAM8 + offset, 32)) {
+                    const BgTextTile* text = MatchBgTextTile(offset, &lastTextOffset, &lastTextMatch);
+                    if (text) {
                         if ((px & 7) == 0 && ((py & 7) == 0 || gy == 0) && BgTextRoom()) {
                             BgTextGlyph* glyph = BgTextNew();
                             int xx = x - (px & 7), yy = gy - (py & 7);
@@ -2488,6 +2913,125 @@ static void DrawStraightAffine(int bg, int gy, uint16_t cnt, int32_t refX, int32
     }
 }
 
+/* KHCOM_PPU_ARENA_FAST: the battle arena's affine row (wide margins with reflected ornament bands, extended floor)
+   without the per-pixel classification. The row is split at the GBA picture's edges; a centre span whose ends lie
+   inside the texture is read with no checks (the affine map is linear, so every pixel between lies inside too), and
+   the margins take their final texture column from a table of the band reflection plus the sideways repeat, built
+   once per band layout. Anything the table does not cover goes through ArenaAffinePixel, the reference rule. */
+static int sArenaFast;
+#define ARENA_LUT_OFFSET 2048
+#define ARENA_LUT_SIZE 5120
+static PPU_TLS int16_t sArenaLut[ARENA_LUT_SIZE];
+static PPU_TLS int sArenaLutKey[9], sArenaLutValid;
+
+static uint16_t ArenaAffinePixel(int px, int py, bool margin, int size, int wrap, bool extendFloor,
+                                 bool extendBands, const uint8_t* screen, const uint8_t* chars,
+                                 uint8_t* inWorld) {
+    int tile, ci;
+    if (extendFloor && py >= size) py = size - 1;
+    if (extendBands && margin && py >= 0 && py < size) {
+        if (px < sArenaBands[0])
+            px = ArenaBandPixel(sArenaBands[0] - 1 - px, sArenaBands[2], sArenaBands[3], 0);
+        else if (px >= sArenaBands[1])
+            px = ArenaBandPixel(px - sArenaBands[1], sArenaBands[4], sArenaBands[5], 1);
+    }
+    if (wrap) {
+        px &= size - 1;
+        py &= size - 1;
+    } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && margin) {
+        px &= size - 1;
+    } else if (px < 0 || py < 0 || px >= size || py >= size) {
+        return TRANSPARENT;
+    }
+    *inWorld = 1;
+    tile = screen[(py >> 3) * (size >> 3) + (px >> 3)];
+    ci = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+    return ci ? (PLTT16[ci] & 0x7FFF) : TRANSPARENT;
+}
+
+static void DrawArenaAffineRow(uint16_t* out, uint8_t* inWorld, int first, int end, int origin,
+                               int32_t rx, int32_t ry, int pa, int pc, int size, int wrap,
+                               bool extendFloor, bool extendBands, const uint8_t* screen,
+                               const uint8_t* chars) {
+    const int tiles = size >> 3, limit = size << 8;
+    const uint16_t* const palette = PLTT16;
+    const int cuts[4] = { first, SDL_clamp(origin, first, end), SDL_clamp(origin + GBA_SCREEN_W, first, end), end };
+    int key[9], i, s, x;
+
+    key[0] = size; key[1] = wrap; key[2] = extendBands;
+    for (i = 0; i < 6; i++) key[3 + i] = sArenaBands[i];
+    if (!sArenaLutValid || memcmp(key, sArenaLutKey, sizeof(key))) {
+        /* the margin rule for a row inside the texture (0 <= py < size) */
+        for (i = 0; i < ARENA_LUT_SIZE; i++) {
+            int px = i - ARENA_LUT_OFFSET;
+            if (extendBands) {
+                if (px < sArenaBands[0])
+                    px = ArenaBandPixel(sArenaBands[0] - 1 - px, sArenaBands[2], sArenaBands[3], 0);
+                else if (px >= sArenaBands[1])
+                    px = ArenaBandPixel(px - sArenaBands[1], sArenaBands[4], sArenaBands[5], 1);
+            }
+            if (wrap || ((px < 0 || px >= size) && size >= 512)) px &= size - 1;
+            sArenaLut[i] = (px >= 0 && px < size) ? (int16_t)px : -1;
+        }
+        memcpy(sArenaLutKey, key, sizeof(key));
+        sArenaLutValid = 1;
+    }
+    for (s = 0; s < 3; s++) {
+        const int a = cuts[s], b = cuts[s + 1];
+        const bool margin = s != 1;
+        int32_t sx = rx + (int32_t)pa * (a - first), sy = ry + (int32_t)pc * (a - first);
+        if (a >= b) continue;
+        if (!margin) {
+            const int last = b - a - 1;
+            if ((unsigned)sx < (unsigned)limit && (unsigned)sy < (unsigned)limit &&
+                (unsigned)(sx + (int32_t)pa * last) < (unsigned)limit &&
+                (unsigned)(sy + (int32_t)pc * last) < (unsigned)limit) {
+                memset(inWorld + a, 1, b - a);
+                if (pc == 0) { /* one texture row: its tile row once */
+                    const int py = sy >> 8;
+                    const uint8_t* row = screen + (py >> 3) * tiles;
+                    const uint8_t* line = chars + (py & 7) * 8;
+                    for (x = a; x < b; x++, sx += pa) {
+                        const int px = sx >> 8;
+                        const unsigned index = line[row[px >> 3] * 64 + (px & 7)];
+                        out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                    }
+                } else {
+                    for (x = a; x < b; x++, sx += pa, sy += pc) {
+                        const int px = sx >> 8, py = sy >> 8;
+                        const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                        const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                        out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                    }
+                }
+                continue;
+            }
+            for (x = a; x < b; x++, sx += pa, sy += pc)
+                out[x] = ArenaAffinePixel(sx >> 8, sy >> 8, false, size, wrap, extendFloor, extendBands,
+                                          screen, chars, inWorld + x);
+            continue;
+        }
+        for (x = a; x < b; x++, sx += pa, sy += pc) {
+            int px = sx >> 8, py = sy >> 8;
+            const unsigned li = (unsigned)(px + ARENA_LUT_OFFSET);
+            if (extendFloor && py >= size) py = size - 1;
+            if ((unsigned)py < (unsigned)size && li < ARENA_LUT_SIZE) {
+                const int m = sArenaLut[li];
+                if (m < 0) { out[x] = TRANSPARENT; continue; }
+                {
+                    const unsigned tile = screen[(py >> 3) * tiles + (m >> 3)];
+                    const unsigned index = chars[tile * 64 + (py & 7) * 8 + (m & 7)];
+                    inWorld[x] = 1;
+                    out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+                }
+                continue;
+            }
+            out[x] = ArenaAffinePixel(px, py, true, size, wrap, extendFloor, extendBands, screen, chars,
+                                      inWorld + x);
+        }
+    }
+}
+
 static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     int a = bg - 2;
     uint16_t cnt = IO16(0x08 + bg * 2);
@@ -2504,6 +3048,9 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
     int mosH = mosaic ? (IO16(0x4C) & 15) + 1 : 1;
     int mosV = mosaic ? ((IO16(0x4C) >> 4) & 15) + 1 : 1;
     int32_t refX = sAffX[a], refY = sAffY[a];
+    const int origin = gPortScreen.originX;
+    const uint16_t* const palette = PLTT16;
+    uint8_t* const inWorld = sInWorld;
     int32_t rx, ry;
 
     (void)dispcnt;
@@ -2521,31 +3068,106 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
         DrawStraightAffine(bg, gy, cnt, refX, refY);
         return;
     }
-    rx = refX + (int32_t)pa * (-gPortScreen.originX);
-    ry = refY + (int32_t)pc * (-gPortScreen.originX);
-    for (x = 0; x < w; x++, rx += pa, ry += pc) {
-        int gx = x - gPortScreen.originX;
+    const int first = SDL_clamp(origin + sLeft, 0, w);
+    const int end = SDL_clamp(origin + sRight, first, w);
+    const bool arena = ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 && size >= 512;
+    const bool extendFloor = arena && sBattleView && gPortScreen.wide && gy >= GBA_SCREEN_H;
+    const bool extendBands = arena && sBattleView && sArenaBands[1];
+    const bool singleCopy = AffineSingleCopy(bg);
+    const int firstSource = refX >> 8;
+    const int lastSource = (refX + (int32_t)pa * (GBA_SCREEN_W - 1)) >> 8;
+    for (x = 0; x < first; x++) out[x] = TRANSPARENT;
+    for (x = end; x < w; x++) out[x] = TRANSPARENT;
+    rx = refX + (int32_t)pa * (first - origin);
+    ry = refY + (int32_t)pc * (first - origin);
+    if (first < end && mosH == 1 && !extendFloor && !extendBands && !singleCopy) {
+        const int last = end - first - 1;
+        const int limit = size << 8;
+        const bool inside = (unsigned)rx < (unsigned)limit && (unsigned)ry < (unsigned)limit &&
+                            (unsigned)(rx + (int32_t)pa * last) < (unsigned)limit &&
+                            (unsigned)(ry + (int32_t)pc * last) < (unsigned)limit;
+        if (wrap || inside) {
+            const int mask = size - 1;
+            memset(inWorld + first, 1, end - first);
+            for (x = first; x < end; x++, rx += pa, ry += pc) {
+                const int px = (rx >> 8) & mask;
+                const int py = (ry >> 8) & mask;
+                const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                out[x] = index ? (palette[index] & 0x7FFF) : TRANSPARENT;
+            }
+            return;
+        }
+    }
+    const int mosaicOffset = mosH == 1 ? 0 : (((first - origin) % mosH) + mosH) % mosH;
+    const char* colorSpans;
+    PORT_ENV_ONCE(colorSpans, PortTunedEnv, "KHCOM_PPU_AFFINE_COLOR_SPANS");
+    if (colorSpans && mosH > 1 && !extendBands && !extendFloor) {
+        /* A mosaic block and its viewport classification share one sample.
+           Split the block when it crosses either edge of the native picture. */
+        int sampleEnd = first + mosH - mosaicOffset;
+        int32_t sampleX = rx - (int32_t)pa * mosaicOffset;
+        int32_t sampleY = ry - (int32_t)pc * mosaicOffset;
+        for (x = first; x < end;) {
+            const int gx = x - origin;
+            const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
+            if (x == sampleEnd) {
+                sampleEnd += mosH;
+                sampleX += (int32_t)pa * mosH;
+                sampleY += (int32_t)pc * mosH;
+            }
+            int stop = PPU_MIN(end, sampleEnd);
+            if (gx < 0) stop = PPU_MIN(stop, origin);
+            else if (!margin) stop = PPU_MIN(stop, origin + GBA_SCREEN_W);
+            int px = sampleX >> 8, py = sampleY >> 8;
+            uint16_t color = TRANSPARENT;
+            if (!singleCopy || !margin || AffineCopyShown(px, firstSource, lastSource, size)) {
+                if (wrap || (margin && size >= 512 && (unsigned)py < (unsigned)size))
+                    px &= size - 1;
+                if (wrap)
+                    py &= size - 1;
+                if ((unsigned)px < (unsigned)size && (unsigned)py < (unsigned)size) {
+                    const unsigned tile = screen[(py >> 3) * tiles + (px >> 3)];
+                    const unsigned index = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
+                    color = index ? palette[index] & 0x7FFF : TRANSPARENT;
+                    memset(inWorld + x, 1, stop - x);
+                }
+            }
+            while (x < stop) out[x++] = color;
+        }
+        return;
+    }
+    if (sArenaFast && mosH == 1 && !singleCopy && !(extendFloor && sHalloweenFloor)) {
+        DrawArenaAffineRow(out, inWorld, first, end, origin, rx, ry, pa, pc, size, wrap, extendFloor,
+                           extendBands, screen, chars);
+        return;
+    }
+    int mosaicEnd = first + mosH - mosaicOffset;
+    int32_t mosaicX = rx - (int32_t)pa * mosaicOffset;
+    int32_t mosaicY = ry - (int32_t)pc * mosaicOffset;
+    for (x = first; x < end; x++, rx += pa, ry += pc) {
+        const int gx = x - origin;
+        const bool margin = gx < 0 || gx >= GBA_SCREEN_W;
         int px, py;
         int tile, ci;
 
         if (mosH > 1) { /* every block of mosH pixels shows its first one */
-            int gq = gx - ((gx % mosH) + mosH) % mosH;
-            px = (refX + (int32_t)pa * gq) >> 8;
-            py = (refY + (int32_t)pc * gq) >> 8;
+            if (x == mosaicEnd) {
+                mosaicX = rx;
+                mosaicY = ry;
+                mosaicEnd += mosH;
+            }
+            px = mosaicX >> 8;
+            py = mosaicY >> 8;
         } else {
             px = rx >> 8;
             py = ry >> 8;
         }
 
-        if (gx < sLeft || gx >= sRight) {
-            out[x] = TRANSPARENT;
-            continue;
-        }
         /* Outside the original picture, continue the bottom of the arena
            in texture space. Composition still handles palette zero, fades,
            masks and sprites normally; no framebuffer colours are guessed. */
-        if (sBattleView && gPortScreen.wide && ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 && size >= 512 &&
-            gy >= GBA_SCREEN_H && py >= size) {
+        if (extendFloor && py >= size) {
             if (!(sHalloweenFloor && size == 512 && PortHalloweenFloorSource(&px, &py)))
                 py = size - 1;
         }
@@ -2553,9 +3175,7 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
            original hardware viewport, camera and collision remain exact.
            Reflecting each short side band joins its edge without bringing
            padding or unique centre landmarks into the added view. */
-        if (sBattleView && sArenaBands[1] && size >= 512 &&
-            ((cnt >> 2) & 3) == 0 && ((cnt >> 8) & 31) == 12 &&
-            (gx < 0 || gx >= GBA_SCREEN_W) && py >= 0 && py < size) {
+        if (extendBands && margin && py >= 0 && py < size) {
             if (px < sArenaBands[0])
                 px = ArenaBandPixel(sArenaBands[0] - 1 - px,
                                     sArenaBands[2], sArenaBands[3], 0);
@@ -2563,15 +3183,14 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
                 px = ArenaBandPixel(px - sArenaBands[1],
                                     sArenaBands[4], sArenaBands[5], 1);
         }
-        if (AffineSingleCopy(bg) && (gx < 0 || gx >= GBA_SCREEN_W) &&
-            !AffineCopyShown(px, refX >> 8, (refX + (int32_t)pa * (GBA_SCREEN_W - 1)) >> 8, size)) {
+        if (singleCopy && margin && !AffineCopyShown(px, firstSource, lastSource, size)) {
             out[x] = TRANSPARENT;
             continue;
         }
         if (wrap) {
             px &= size - 1;
             py &= size - 1;
-        } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && (gx < 0 || gx >= GBA_SCREEN_W)) {
+        } else if ((px < 0 || px >= size) && py >= 0 && py < size && size >= 512 && margin) {
             /* wide margins of a battle arena: the stage repeats sideways
                instead of ending in the void */
             px &= size - 1;
@@ -2579,10 +3198,10 @@ static void DrawAffineBg(int bg, int gy, uint16_t dispcnt) {
             out[x] = TRANSPARENT;
             continue;
         }
-        sInWorld[x] = 1;
+        inWorld[x] = 1;
         tile = screen[(py >> 3) * tiles + (px >> 3)];
         ci = chars[tile * 64 + (py & 7) * 8 + (px & 7)];
-        out[x] = ci ? (PLTT16[ci] & 0x7FFF) : TRANSPARENT;
+        out[x] = ci ? (palette[ci] & 0x7FFF) : TRANSPARENT;
     }
 }
 
@@ -2701,6 +3320,98 @@ static int Preliminar130Shadow(int i) {
             sOamTag[i].anchorY==sOamTag[j].anchorY) return 1;
     }
     return 0;
+}
+
+/* Pixels from tx onwards, in screen order, that are transparent within one
+   eight-pixel tile row. tx's own pixel must be transparent. */
+static int ObjClearRun(const uint8_t* row, int tx, int bpp8, int flip) {
+    const int at = tx & 7;
+    if (!bpp8) {
+        uint32_t bits;
+        memcpy(&bits, row, sizeof(bits));
+        bits = flip ? bits << (28 - 4 * at) : bits >> (4 * at);
+        if (!bits)
+            return flip ? at + 1 : 8 - at;
+        return (flip ? __builtin_clz(bits) : __builtin_ctz(bits)) >> 2;
+    } else {
+        uint64_t bits;
+        memcpy(&bits, row, sizeof(bits));
+        bits = flip ? bits << (56 - 8 * at) : bits >> (8 * at);
+        if (!bits)
+            return flip ? at + 1 : 8 - at;
+        return (flip ? __builtin_clzll(bits) : __builtin_ctzll(bits)) >> 3;
+    }
+}
+
+/* Narrow [*first, *end) to the sx where lo <= base + step * sx < hi. */
+static void ObjAffineClip(int step, int base, int lo, int hi, int* first, int* end) {
+    int from, to;
+    if (!step) {
+        if (base < lo || base >= hi)
+            *end = *first;
+        return;
+    }
+    if (step < 0) { /* mirrored: lo <= v < hi is 1 - hi <= -v < 1 - lo */
+        const int above = 1 - hi;
+        hi = 1 - lo;
+        lo = above;
+        base = -base;
+        step = -step;
+    }
+    /* ceil((lo - base) / step) and ceil((hi - base) / step) */
+    from = (lo - base) / step + ((lo - base) % step > 0);
+    to = (hi - base) / step + ((hi - base) % step > 0);
+    if (from > *first)
+        *first = from;
+    if (to < *end)
+        *end = to;
+}
+
+static int sObjRowRuns; /* KHCOM_PPU_OBJ_ROW_RUNS */
+
+/* Columns [first, end) of one row of a plain 4bpp sprite (no affine, mosaic, window, header or HD replacement):
+   what DrawObjs does per column, with the sprite's state resolved once and each tile row read once. */
+static void DrawObjRowRuns(int i, int first, int end, int ox, int ow, int ty, int tileRow, int hflip, int prio,
+                           int semi, int palBank) {
+    const int gxLo = PPU_MAX(sLeft, -gPortScreen.originX), gxHi = PPU_MIN(sRight, gPortScreen.width - gPortScreen.originX);
+    first = PPU_MAX(first, gxLo - ox);
+    end = PPU_MIN(end, gxHi - ox);
+    if (sOamTag[i].clipX0 < sOamTag[i].clipX1) {
+        first = PPU_MAX(first, sOamTag[i].clipX0 - ox);
+        end = PPU_MIN(end, sOamTag[i].clipX1 - ox);
+    }
+    if (first >= end)
+        return;
+    const bool screen = SpriteOnScreen(sOamTag[i].screen);
+    uint16_t* const line = screen ? sScrLine : sObjLine;
+    uint8_t* const prios = screen ? sScrPrio : sObjPrio;
+    uint16_t* const index = screen ? sScrIndex : sObjIndex;
+    uint8_t* const semis = screen ? sScrSemi : sObjSemi;
+    const uint16_t* const colors = PLTT16 + 256 + palBank * 16;
+    const int origin = ox + gPortScreen.originX, step = hflip ? -4 : 4;
+    int drawn = 0;
+    for (int sx = first, n; sx < end; sx += n) {
+        const int tx = hflip ? ow - 1 - sx : sx;
+        n = PPU_MIN(hflip ? (tx & 7) + 1 : 8 - (tx & 7), end - sx);
+        const unsigned off = 0x10000 + ((tileRow + (tx >> 3)) & 0x3FF) * 32 + (ty & 7) * 4;
+        uint32_t bits;
+        memcpy(&bits, VRAM8 + off, sizeof(bits));
+        if (!bits)
+            continue;
+        for (int k = 0, shift = (tx & 7) * 4; k < n; k++, shift += step) {
+            const unsigned ci = (bits >> shift) & 15u;
+            const int x = origin + sx + k;
+            if (ci && (line[x] == TRANSPARENT || prio < prios[x])) {
+                line[x] = colors[ci] & 0x7FFF;
+                prios[x] = (uint8_t)prio;
+                index[x] = (uint16_t)i;
+                semis[x] = (uint8_t)semi;
+                drawn = 1;
+            }
+        }
+    }
+    if (drawn && !screen)
+        sLineHasObjects = 1;
 }
 
 static void DrawObjs(int gy, uint16_t dispcnt) {
@@ -2903,7 +3614,24 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
             pd = (int16_t)p[15];
         }
 
-        for (sx = 0; sx < bw; sx++) {
+        int sxFirst = 0, sxEnd = bw;
+        if (sObjAffineSpan && affine && !(objMosaic && mosH > 1)) {
+            /* Only these columns sample inside the texture: (v >> 8) + size / 2
+               lies in [0, size) exactly when v lies in the bounds below. */
+            const int cx0 = -(bw / 2), cy = line - bh / 2;
+            ObjAffineClip(pa, pa * cx0 + pb * cy, -(ow / 2) * 256, (ow - ow / 2) * 256, &sxFirst, &sxEnd);
+            ObjAffineClip(pc, pc * cx0 + pd * cy, -(oh / 2) * 256, (oh - oh / 2) * 256, &sxFirst, &sxEnd);
+        }
+        if (sObjRowRuns && !affine && !bpp8 && !(objMosaic && mosH > 1) && mode != 2 && !sMainHdPart[i] &&
+            !sOamTag[i].header && !sWorldBlendActive && !(HdTextGlyph(i) && sOamTag[i].style == 2) &&
+            !(gPortScreen.wide && sActorSceneKey == EVENT_081_MONSTORO_E3)) {
+            const int row = (a1 & 0x2000) ? oh - 1 - line : line;
+            DrawObjRowRuns(i, sxFirst, sxEnd, ox, ow, row,
+                           tileBase + (row >> 3) * (mapping1d ? ow >> 3 : 32), (a1 & 0x1000) != 0, prio, mode == 1,
+                           palBank);
+            continue;
+        }
+        for (sx = sxFirst; sx < sxEnd; sx++) {
             int gx = ox + sx;
             int fx = gx;
             int tx, ty, tile, ci, col;
@@ -2952,8 +3680,14 @@ static void DrawObjs(int gy, uint16_t dispcnt) {
                 ci = (tx & 1) ? (VRAM8[off] >> 4) : (VRAM8[off] & 15);
                 col = ci ? (obPalette[256 + palBank * 16 + ci] & 0x7FFF) : -1;
             }
-            if (col < 0)
+            if (col < 0) {
+                /* A transparent texel writes nothing: step over its whole run.
+                   Affine and horizontal-mosaic sampling stay per pixel. */
+                if (sObjSkipClear && !affine && !(objMosaic && mosH > 1))
+                    sx += ObjClearRun(VRAM8 + off - (bpp8 ? tx & 7 : (tx & 7) >> 1), tx, bpp8,
+                                      (a1 & 0x1000) != 0) - 1;
                 continue;
+            }
             /* 081: the authored platform leaves a detached lower OBJ arc
              * over the empty map cap. Keep the real backdrop, only outside
              * the native frame; actors and the other decorations bypass it. */
@@ -3207,6 +3941,262 @@ static uint16_t NativeWorldColor(int x, int mask, const int* order, int count, c
     return top;
 }
 
+#ifdef PORT_NEON
+static bool sNeonOpaqueCompose;
+static bool sNeonNarrowCompose;
+static bool sNeonScreenCompose;
+static bool sNeonEffectCompose;
+static bool sNeonEffectUsed;
+static bool sNeonScreenRows[GBA_SCREEN_H];
+static bool sSpotlightScreenRows[GBA_SCREEN_H];
+static bool sNeonOpaqueRows[PORT_MAX_H];
+static bool sWorldInspectBgVector;
+static bool sWorldInspectBgRows[PORT_MAX_H];
+static bool sMapInspectOpaqueVector;
+static bool sJournalCentralVector;
+static bool sMenuBgVector;
+static bool sNarrowPlainVector;
+static bool sWidePlainVector;
+static bool sNarrowSecondVector;
+static bool sWideSecondVector;
+static bool sJournalPageVector;
+static bool sJournalCentralRows[GBA_SCREEN_H];
+static bool sMapInspectOpaqueRows[PORT_MAX_H];
+static bool sProbeComposeGates;
+static uint16_t sComposeGates[PORT_MAX_H];
+
+static uint8x8_t ExpandColor5(uint16x8_t value) {
+    value = vandq_u16(value, vdupq_n_u16(31));
+    return vmovn_u16(vorrq_u16(vshlq_n_u16(value, 3), vshrq_n_u16(value, 2)));
+}
+
+static void StoreArgb8(uint32_t* dst, uint16x8_t pixel, uint8x8_t alpha) {
+    uint8x8x4_t channels;
+    channels.val[0] = ExpandColor5(vshrq_n_u16(pixel, 10));
+    channels.val[1] = ExpandColor5(vshrq_n_u16(pixel, 5));
+    channels.val[2] = ExpandColor5(pixel);
+    channels.val[3] = alpha;
+    vst4_u8((uint8_t*)dst, channels);
+}
+
+static void NeonOpaqueComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
+                                 const int* priorities, uint16_t backdrop, uint16_t marginFill,
+                                 bool objects, bool collect, unsigned docked, int begin, int end) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const objPixels = sObjLine;
+    const uint8_t* const objPrio = sObjPrio;
+    const uint16_t* const objIndex = sObjIndex;
+    const uint8_t* const world = sInWorld;
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t back = vdupq_n_u16(backdrop);
+    const uint16x8_t margin = vdupq_n_u16(marginFill);
+    const int width = gPortScreen.width;
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const uint16x8_t offsets = {0, 1, 2, 3, 4, 5, 6, 7};
+    const int row = y * width;
+    uint16x8_t prioritiesByLayer[4], ids[4];
+    int dockedLayers[4], dockedCount = 0;
+    for (int i = 0; i < n; i++) {
+        prioritiesByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        ids[i] = vdupq_n_u16((uint16_t)order[i]);
+    }
+    for (int i = 0; i < 4; i++)
+        if (docked & (1u << i))
+            dockedLayers[dockedCount++] = i;
+
+    for (int x = begin; x < end; x += 8) {
+        /* Narrow scenes clip whole aligned blocks to black.  The scalar
+           compositor leaves their occlusion metadata untouched. */
+        const int gx0 = x - gPortScreen.originX;
+        if (gx0 + 8 <= sLeft || gx0 >= sRight) {
+            vst1q_u32(dst + x, vdupq_n_u32(0xff000000u));
+            vst1q_u32(dst + x + 4, vdupq_n_u32(0xff000000u));
+            continue;
+        }
+        const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
+        uint16x8_t pixel = vandq_u16(inWorld, back);
+        if (marginFill != TRANSPARENT) {
+            const int16x8_t gx = vreinterpretq_s16_u16(vaddq_u16(offsets, vdupq_n_u16((uint16_t)(x - gPortScreen.originX))));
+            const uint16x8_t offscreen = outside ? vdupq_n_u16(UINT16_MAX) :
+                vorrq_u16(vcltq_s16(gx, vdupq_n_s16(0)), vcgeq_s16(gx, vdupq_n_s16(GBA_SCREEN_W)));
+            pixel = vbslq_u16(offscreen, margin, pixel);
+        }
+        uint16x8_t bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            pixel = vbslq_u16(visible, color, pixel);
+            bgPrio = vbslq_u16(visible, prioritiesByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, ids[i], bgLayer);
+        }
+        uint16x8_t hasObj = zero, priority = zero;
+        if (objects) {
+            const uint16x8_t color = vld1q_u16(objPixels + x);
+            hasObj = vmvnq_u16(vceqq_u16(color, clear));
+            priority = vmovl_u8(vld1_u8(objPrio + x));
+            const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+            pixel = vbslq_u16(front, color, pixel);
+        }
+        StoreArgb8(dst + x, pixel, vdup_n_u8(255));
+        if (collect) {
+            uint16x8_t message = zero;
+            for (int i = 0; i < dockedCount; i++) {
+                const uint16x8_t color = vld1q_u16(layers[dockedLayers[i]] + x);
+                message = vorrq_u16(message, vmvnq_u16(vceqq_u16(color, clear)));
+            }
+            const uint16x8_t hidden = sHudLayer ? message : zero;
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            const uint16x8_t occlusion = vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX));
+            vst1_u8(sMsgMask + row + x, vmovn_u16(vandq_u16(message, vdupq_n_u16(1))));
+            vst1_u8(sOccBg + row + x, vmovn_u16(vbicq_u16(bgPrio, hidden)));
+            vst1_u8(sOccBgLayer + row + x, vmovn_u16(vbicq_u16(bgLayer, hidden)));
+            vst1q_u16(sOccObj + row + x, vbicq_u16(occlusion, hidden));
+        }
+    }
+    sNeonOpaqueRows[y] = true;
+}
+
+/* NeonOpaqueComposeRow with the colour effects, for rows without windows: the
+ * two front-most pixels of each column, then the compositor's own choice of
+ * alpha, semi-transparent sprite, brighten or darken. */
+static uint16x8_t NeonBlend(uint16x8_t a, uint16x8_t b, uint16_t ea, uint16_t eb) {
+    const uint16x8_t channel = vdupq_n_u16(31);
+    uint16x8_t red = vmlaq_n_u16(vmulq_n_u16(vandq_u16(a, channel), ea), vandq_u16(b, channel), eb);
+    uint16x8_t green = vmlaq_n_u16(vmulq_n_u16(vandq_u16(vshrq_n_u16(a, 5), channel), ea),
+                                   vandq_u16(vshrq_n_u16(b, 5), channel), eb);
+    uint16x8_t blue = vmlaq_n_u16(vmulq_n_u16(vandq_u16(vshrq_n_u16(a, 10), channel), ea),
+                                  vandq_u16(vshrq_n_u16(b, 10), channel), eb);
+    red = vminq_u16(vshrq_n_u16(red, 4), channel);
+    green = vminq_u16(vshrq_n_u16(green, 4), channel);
+    blue = vminq_u16(vshrq_n_u16(blue, 4), channel);
+    return vorrq_u16(red, vorrq_u16(vshlq_n_u16(green, 5), vshlq_n_u16(blue, 10)));
+}
+
+static uint16x8_t NeonFade(uint16x8_t color, uint16_t evy, bool brighten) {
+    const uint16x8_t channel = vdupq_n_u16(31);
+    uint16x8_t c[3] = {vandq_u16(color, channel), vandq_u16(vshrq_n_u16(color, 5), channel),
+                       vandq_u16(vshrq_n_u16(color, 10), channel)};
+    for (int i = 0; i < 3; i++)
+        c[i] = brighten ? vaddq_u16(c[i], vshrq_n_u16(vmulq_n_u16(vsubq_u16(channel, c[i]), evy), 4))
+                        : vsubq_u16(c[i], vshrq_n_u16(vmulq_n_u16(c[i], evy), 4));
+    return vorrq_u16(c[0], vorrq_u16(vshlq_n_u16(c[1], 5), vshlq_n_u16(c[2], 10)));
+}
+
+static int NeonAny(uint16x8_t mask) {
+    const uint16x4_t half = vorr_u16(vget_low_u16(mask), vget_high_u16(mask));
+    return vget_lane_u64(vreinterpret_u64_u16(half), 0) != 0;
+}
+
+static void NeonEffectComposeRow(uint32_t* dst, int y, int gy, int n, const int* order,
+                                 const int* priorities, uint16_t backdrop, uint16_t marginFill,
+                                 bool objects, bool collect, unsigned docked, uint16_t bldcnt,
+                                 int eva, int evb, int evy) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const objPixels = sObjLine;
+    const uint8_t* const objPrio = sObjPrio;
+    const uint8_t* const objSemi = sObjSemi;
+    const uint16_t* const objIndex = sObjIndex;
+    const uint8_t* const world = sInWorld;
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t back = vdupq_n_u16(backdrop);
+    const uint16x8_t margin = vdupq_n_u16(marginFill);
+    /* layer bits as BLDCNT numbers them: backgrounds, then sprites, backdrop */
+    const uint16x8_t backdropBit = vdupq_n_u16(1u << LAYER_BD);
+    const uint16x8_t objectBit = vdupq_n_u16(1u << LAYER_OBJ);
+    const uint16x8_t firstTargets = vdupq_n_u16(bldcnt & 0x3F);
+    const uint16x8_t secondTargets = vdupq_n_u16((bldcnt >> 8) & 0x3F);
+    const int effect = (bldcnt >> 6) & 3;
+    const int width = gPortScreen.width;
+    const bool outside = gy < 0 || gy >= GBA_SCREEN_H;
+    const uint16x8_t offsets = {0, 1, 2, 3, 4, 5, 6, 7};
+    const int row = y * width;
+    uint16x8_t prioritiesByLayer[4], ids[4], bits[4];
+    int dockedLayers[4], dockedCount = 0;
+    for (int i = 0; i < n; i++) {
+        prioritiesByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        ids[i] = vdupq_n_u16((uint16_t)order[i]);
+        bits[i] = vdupq_n_u16((uint16_t)(1u << order[i]));
+    }
+    for (int i = 0; i < 4; i++)
+        if (docked & (1u << i))
+            dockedLayers[dockedCount++] = i;
+
+    for (int x = 0; x < width; x += 8) {
+        const int gx0 = x - gPortScreen.originX;
+        if (gx0 + 8 <= sLeft || gx0 >= sRight) {
+            vst1q_u32(dst + x, vdupq_n_u32(0xff000000u));
+            vst1q_u32(dst + x + 4, vdupq_n_u32(0xff000000u));
+            continue;
+        }
+        const uint16x8_t inWorld = vcgtq_u16(vmovl_u8(vld1_u8(world + x)), zero);
+        uint16x8_t base = vandq_u16(inWorld, back);
+        if (marginFill != TRANSPARENT) {
+            const int16x8_t gx = vreinterpretq_s16_u16(vaddq_u16(offsets, vdupq_n_u16((uint16_t)(x - gPortScreen.originX))));
+            const uint16x8_t offscreen = outside ? vdupq_n_u16(UINT16_MAX) :
+                vorrq_u16(vcltq_s16(gx, vdupq_n_s16(0)), vcgeq_s16(gx, vdupq_n_s16(GBA_SCREEN_W)));
+            base = vbslq_u16(offscreen, margin, base);
+        }
+        uint16x8_t top = base, topBit = backdropBit, bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        uint16x8_t second = base, secondBit = backdropBit, secondPrio = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            second = vbslq_u16(visible, top, second);
+            secondBit = vbslq_u16(visible, topBit, secondBit);
+            secondPrio = vbslq_u16(visible, bgPrio, secondPrio);
+            top = vbslq_u16(visible, color, top);
+            topBit = vbslq_u16(visible, bits[i], topBit);
+            bgPrio = vbslq_u16(visible, prioritiesByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, ids[i], bgLayer);
+        }
+        uint16x8_t hasObj = zero, priority = zero, semiFront = zero;
+        if (objects) {
+            const uint16x8_t color = vld1q_u16(objPixels + x);
+            hasObj = vmvnq_u16(vceqq_u16(color, clear));
+            priority = vmovl_u8(vld1_u8(objPrio + x));
+            const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+            const uint16x8_t behind = vandq_u16(vbicq_u16(hasObj, front), vcleq_u16(priority, secondPrio));
+            second = vbslq_u16(front, top, vbslq_u16(behind, color, second));
+            secondBit = vbslq_u16(front, topBit, vbslq_u16(behind, objectBit, secondBit));
+            top = vbslq_u16(front, color, top);
+            topBit = vbslq_u16(front, objectBit, topBit);
+            semiFront = vandq_u16(front, vcgtq_u16(vmovl_u8(vld1_u8(objSemi + x)), zero));
+        }
+        const uint16x8_t secondOk = vtstq_u16(secondBit, secondTargets);
+        const uint16x8_t firstOk = vtstq_u16(topBit, firstTargets);
+        const uint16x8_t semiBlend = vandq_u16(semiFront, secondOk);
+        uint16x8_t alpha = semiBlend;
+        if (effect == 1) alpha = vorrq_u16(alpha, vandq_u16(firstOk, secondOk));
+        uint16x8_t pixel = top;
+        if (NeonAny(alpha))
+            pixel = vbslq_u16(alpha, NeonBlend(top, second, (uint16_t)eva, (uint16_t)evb), pixel);
+        if (effect >= 2) {
+            const uint16x8_t faded = vbicq_u16(firstOk, semiBlend);
+            if (NeonAny(faded))
+                pixel = vbslq_u16(faded, NeonFade(top, (uint16_t)evy, effect == 2), pixel);
+        }
+        StoreArgb8(dst + x, pixel, vdup_n_u8(255));
+        if (collect) {
+            uint16x8_t message = zero;
+            for (int i = 0; i < dockedCount; i++) {
+                const uint16x8_t color = vld1q_u16(layers[dockedLayers[i]] + x);
+                message = vorrq_u16(message, vmvnq_u16(vceqq_u16(color, clear)));
+            }
+            const uint16x8_t hidden = sHudLayer ? message : zero;
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            const uint16x8_t occlusion = vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX));
+            vst1_u8(sMsgMask + row + x, vmovn_u16(vandq_u16(message, vdupq_n_u16(1))));
+            vst1_u8(sOccBg + row + x, vmovn_u16(vbicq_u16(bgPrio, hidden)));
+            vst1_u8(sOccBgLayer + row + x, vmovn_u16(vbicq_u16(bgLayer, hidden)));
+            vst1q_u16(sOccObj + row + x, vbicq_u16(occlusion, hidden));
+        }
+    }
+    sNeonEffectUsed = true;
+}
+#endif
+
 static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgPrio, uint32_t* frame, int objects) {
     /* Resolve this row's TLS buffers once; contents remain live. */
     const uint16_t* const clPalette = PLTT16;
@@ -3253,6 +4243,92 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sBgDockedLatched[b]) docked |= 1 << b;
 
+#ifdef PORT_NEON
+    if (objects && sProbeComposeGates) {
+        unsigned flags = 1u;
+        if (w != 320 || !gPortScreen.wide) flags |= 1u << 1;
+        if (dispcnt & 0xE000) flags |= 1u << 2;
+        if (sLineHasObjects) flags |= 1u << 3;
+        if (effect && (bldcnt & 0x3F)) flags |= 1u << 4;
+        if (docked || scene102Fill || sJiminyDetailCapture ||
+            (sOverlay && sSpotlight && (sScreenBgMask & 2u))) flags |= 1u << 5;
+        if (n > 2) flags |= 1u << 6;
+        if (sLutMode) flags |= 1u << 7;
+        if (bldcnt & 0x3F00) flags |= 1u << 8;
+        sComposeGates[y] = (uint16_t)flags;
+    }
+#endif
+
+    /* The general loop clears every pixel before any metadata or blend work
+       when the separate spotlight UI covers the world. */
+    if (sSpotlightClearRows && sOverlay && sSpotlight && (sScreenBgMask & 2u)) {
+        for (int i = 0; i < w; i++) dst[i] = 0xFF000000u;
+        return;
+    }
+
+#ifdef PORT_NEON
+    int journalBegin = 0, journalEnd = 0;
+    if (sJournalCentralVector && sNeonOpaqueCompose && sNeonNarrowCompose && w == 320 &&
+        !gPortScreen.wide && (sJiminyDetailCapture || (sJournalPageVector && sJiminyPageCapture)) &&
+        !sJiminyPaperCapture && !sLutMode && !scene102Fill &&
+        !sWorldBlendActive && !(dispcnt & 0xE000) && (!effect || !(bldcnt & 0x3F)) &&
+        /* Root and list pages capture only columns 0 and 200..239, from
+           row 16 down; detail keeps its established rows. */
+        gyLine >= (sJiminyDetailCapture ? 16 : 0) && gyLine < GBA_SCREEN_H && sLeft <= 8 && sRight >= 200 &&
+        gPortScreen.originX >= 0 && gPortScreen.originX + 200 <= w &&
+        ((gPortScreen.originX + 8) & 7) == 0 && !(sOverlay && sSpotlight && (sScreenBgMask & 2u))) {
+        bool semi = false;
+        if (objects && (bldcnt & 0x3F00))
+            for (int i = gPortScreen.originX + 8; i < gPortScreen.originX + 200; i++)
+                if (clObjLine[i] != TRANSPARENT && clObjSemi[i]) { semi = true; break; }
+        if (!semi) {
+            journalBegin = gPortScreen.originX + 8;
+            journalEnd = gPortScreen.originX + 200;
+            NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                                 objects && sLineHasObjects, collect, (unsigned)docked, journalBegin, journalEnd);
+            sJournalCentralRows[gyLine] = true;
+        }
+    }
+    /* A second blend target alone changes nothing: with no first-target
+       effect, only a semi-transparent sprite pixel can use it. */
+    /* The sprite-free menu background pass feeds no journal capture and
+       cannot use a second target. */
+    const bool menuBg = !objects && sMenuBgVector && sNeonNarrowCompose && !gPortScreen.wide;
+    bool secondIdle = !(bldcnt & 0x3F00) || menuBg;
+    if (!secondIdle && !journalEnd &&
+        (gPortScreen.wide ? sWideSecondVector : sNarrowSecondVector && sNeonNarrowCompose)) {
+        secondIdle = true;
+        if (objects && sLineHasObjects)
+            for (int i = 0; i < w; i++)
+                if (clObjLine[i] != TRANSPARENT && clObjSemi[i]) { secondIdle = false; break; }
+    }
+    if (!journalEnd && sNeonOpaqueCompose && w == 320 && (gPortScreen.wide || sNeonNarrowCompose) && !sLutMode && !scene102Fill &&
+        !(dispcnt & 0xE000) && secondIdle && (!effect || !(bldcnt & 0x3F)) &&
+        (menuBg || (!sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture)) && !sWorldBlendActive &&
+        !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
+        (docked || (objects && sLineHasObjects) || n > 2 || (!objects && sWorldInspectBgVector) ||
+         sMapInspectOpaqueVector || (sNarrowPlainVector && !gPortScreen.wide) ||
+         (sWidePlainVector && gPortScreen.wide) || menuBg) &&
+        (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
+         (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
+        NeonOpaqueComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                             objects && sLineHasObjects, collect, (unsigned)docked, 0, w);
+        if (!objects && sWorldInspectBgVector) sWorldInspectBgRows[y] = true;
+        if (sMapInspectOpaqueVector && (!objects || !sLineHasObjects)) sMapInspectOpaqueRows[y] = true;
+        return;
+    }
+    /* Colour effects and semi-transparent sprites (battles). */
+    if (!journalEnd && sNeonEffectCompose && w >= 8 && !(w & 7) && w <= PORT_MAX_W && !sLutMode && !scene102Fill &&
+        !(dispcnt & 0xE000) && !sJiminyDetailCapture && !sJiminyPageCapture && !sJiminyPaperCapture &&
+        !sWorldBlendActive && !(sOverlay && sSpotlight && (sScreenBgMask & 2u)) &&
+        (gPortScreen.wide ? (sLeft <= -gPortScreen.originX && sRight >= w - gPortScreen.originX) :
+         (((sLeft + gPortScreen.originX) & 7) == 0 && ((sRight + gPortScreen.originX) & 7) == 0))) {
+        NeonEffectComposeRow(dst, y, gyLine, n, order, bgPrio, backdrop, marginFill,
+                             objects && sLineHasObjects, collect, (unsigned)docked, bldcnt, eva, evb, evy);
+        return;
+    }
+#endif
+
     /* Most extra world scanlines contain only opaque backgrounds. Windows,
        object alpha, docked messages and colour effects retain the full path.
        Keep priority metadata identical for HUD and HD text consumers. */
@@ -3282,6 +4358,9 @@ static void ComposeLine(int y, uint16_t dispcnt, const int* bgOn, const int* bgP
     }
 
     for (x = 0; x < w; x++) {
+#ifdef PORT_NEON
+        if (journalEnd && x == journalBegin) { x = journalEnd - 1; continue; }
+#endif
         int gx = x - gPortScreen.originX;
         uint8_t mask = clWinMask[x];
         int margin = gx < 0 || gx >= GBA_SCREEN_W || gyLine < 0 || gyLine >= GBA_SCREEN_H;
@@ -3481,6 +4560,63 @@ static void SplitBgLine(int b, int gy) {
 }
 
 /* The screen layer's line gy: menu layers only, transparent elsewhere. */
+#ifdef PORT_NEON
+static void NeonScreenComposeRow(uint32_t* dst, int gy, int width, int start, int n,
+                                 const int* order, const int* priorities, unsigned eva, bool spotlightAlpha) {
+    const uint16_t (*const layers)[PORT_MAX_W] = sBgLine;
+    const uint16_t* const obj = sScrLine + start;
+    const uint8_t* const objPrio = sScrPrio + start;
+    const uint16_t* const objIndex = sScrIndex + start;
+    const uint8_t* const semi = sScrSemi + start;
+    const uint16x8_t zero = vdupq_n_u16(0);
+    const uint16x8_t clear = vdupq_n_u16(TRANSPARENT);
+    const uint8x8_t spriteAlpha = vdup_n_u8((uint8_t)SDL_min(eva * 16, 255u));
+    const bool collect = sHdText || sScreenHdAny;
+    const int row = gy * width;
+    uint16x8_t prioByLayer[4], layerIds[4];
+    for (int i = 0; i < n; i++) {
+        prioByLayer[i] = vdupq_n_u16((uint16_t)priorities[order[i]]);
+        layerIds[i] = vdupq_n_u16((uint16_t)order[i]);
+    }
+    if (!collect) {
+        memset(sScreenOccBg + row, 0, width);
+        memset(sScreenOccBgLayer + row, 0, width);
+        memset(sScreenOccObj + row, 0, (size_t)width * sizeof(*sScreenOccObj));
+    }
+    for (int x = 0; x < width; x += 8) {
+        uint16x8_t pixel = zero, hasBg = zero;
+        uint16x8_t bgPrio = vdupq_n_u16(4), bgLayer = vdupq_n_u16(4);
+        for (int i = n - 1; i >= 0; i--) {
+            const uint16x8_t color = vld1q_u16(layers[order[i]] + start + x);
+            const uint16x8_t visible = vmvnq_u16(vceqq_u16(color, clear));
+            hasBg = vorrq_u16(hasBg, visible);
+            pixel = vbslq_u16(visible, color, pixel);
+            bgPrio = vbslq_u16(visible, prioByLayer[i], bgPrio);
+            bgLayer = vbslq_u16(visible, layerIds[i], bgLayer);
+        }
+        const uint16x8_t object = vld1q_u16(obj + x);
+        const uint16x8_t hasObj = vmvnq_u16(vceqq_u16(object, clear));
+        const uint16x8_t priority = vmovl_u8(vld1_u8(objPrio + x));
+        const uint16x8_t front = vandq_u16(hasObj, vcleq_u16(priority, bgPrio));
+        pixel = vbslq_u16(front, object, pixel);
+        const uint8x8_t semiFront = vand_u8(vmovn_u16(front), vcgt_u8(vld1_u8(semi + x), vdup_n_u8(0)));
+        uint8x8_t alpha = vbsl_u8(semiFront, spriteAlpha, vmovn_u16(vorrq_u16(hasBg, hasObj)));
+        if (spotlightAlpha) {
+            const uint16x8_t bg0Top = vandq_u16(hasBg, vandq_u16(vceqq_u16(bgLayer, zero), vmvnq_u16(front)));
+            alpha = vbsl_u8(vmovn_u16(bg0Top), spriteAlpha, alpha);
+        }
+        StoreArgb8(dst + x, pixel, alpha);
+        if (collect) {
+            const uint16x8_t objectKey = vmlaq_n_u16(vld1q_u16(objIndex + x), priority, PORT_OAM_CAPACITY);
+            vst1_u8(sScreenOccBg + row + x, vmovn_u16(bgPrio));
+            vst1_u8(sScreenOccBgLayer + row + x, vmovn_u16(bgLayer));
+            vst1q_u16(sScreenOccObj + row + x, vbslq_u16(hasObj, objectKey, vdupq_n_u16(UINT16_MAX)));
+        }
+    }
+    sNeonScreenRows[gy] = true;
+}
+#endif
+
 static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, const int* bgPrio, int nativeWorld) {
     int wo = gPortOverlayW, w = gPortScreen.width;
     int originO = (wo - GBA_SCREEN_W) / 2;
@@ -3497,6 +4633,32 @@ static void ComposeOverlayPixels(int gy, uint16_t dispcnt, const int* bgOn, cons
         for (b = 0; b < 4; b++)
             if (bgOn[b] && sScreenBg[b] && bgPrio[b] == p)
                 order[n++] = b;
+#ifdef PORT_NEON
+    const int start = gPortScreen.originX - originO;
+    if (sNeonScreenCompose && !nativeWorld && !sWorldBlendActive && !sLutMode &&
+        w == 320 && !(wo & 7) && start >= 0 && start + wo <= w &&
+        -originO >= sLeft && wo - originO <= sRight &&
+        !(dispcnt & 0xE000) && !(bldcnt & 0x3F00) && (!effect || !(bldcnt & 0x3F))) {
+        NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva, false);
+        return;
+    }
+    /* In synthesis BG1 is above BG0 and the effect targets BG0 over BG1-3.
+       BG0 can therefore only blend over the world below, never another BG.
+       Semi-transparent objects keep the general compositor. */
+    if (sSpotlightOverlayFast && sSpotlight && sNeonScreenCompose && !nativeWorld &&
+        !sWorldBlendActive && !sLutMode && w == 320 && wo == 240 && start >= 0 && start + wo <= w &&
+        -originO >= sLeft && wo - originO <= sRight && !(dispcnt & 0xE000) &&
+        bldcnt == 0x0e41 && n == 2 && order[0] == 1 && order[1] == 0) {
+        bool opaqueObjects = true;
+        for (int i = start; i < start + wo; i++)
+            if (sScrLine[i] != TRANSPARENT && sScrSemi[i]) { opaqueObjects = false; break; }
+        if (opaqueObjects) {
+            NeonScreenComposeRow(dst, gy, wo, start, n, order, bgPrio, (unsigned)eva, true);
+            sSpotlightScreenRows[gy] = true;
+            return;
+        }
+    }
+#endif
     for (ox = 0; ox < wo; ox++) {
         int gx = ox - originO, x = gx + gPortScreen.originX, i, found = 0, objDone = 0;
         int topLayer = LAYER_BD, secondLayer = LAYER_BD;
@@ -3675,7 +4837,43 @@ static void TitleBarLine(int y, int gy) {
     }
 }
 
+typedef struct PpuRowTimes {
+    uint64_t backgrounds, objects, compose, overlay;
+    uint32_t bgCount[4];
+    uint64_t bgTicks[4], layerTicks[4];
+} PpuRowTimes;
+static PpuRowTimes sPpuRowTimes[PORT_MAX_H];
+static int sPpuSampleRows;
+
+static int sMenuBgCopy;
+/* The world rows above and below the GBA picture while the separate spotlight
+   UI covers the world: ComposeLine paints them black and nothing reads their
+   layer lines. Rows with per-row state (affine layers, world name, title art,
+   narrow sides, staged scene actors) keep the full path. */
+static bool SpotlightMarginRow(int gy, uint16_t dispcnt) {
+    return sSpotlightSkipMargins && sSpotlightClearRows && sOverlay && sSpotlight && (sScreenBgMask & 2u) &&
+        (gy < 0 || gy >= GBA_SCREEN_H) && !(dispcnt & 7) && !sSceneNarrow && !sWorldNameOn &&
+        !sTitleBands && !sTitleBarHd && !sTitleArtHd && !sTitleLogoBgHd && !sPreliminarRecipe[1] && !sPreliminarRecipe[2] && !sPreliminarRecipe[3] &&
+        sEventBackdropProfile != 97 && sActorSceneKey != EVENT_130_HOLLOWBASTION_E1;
+}
+
+static void SkipSpotlightMarginRow(int y, int gy, uint16_t dispcnt) {
+    const int w = gPortScreen.width;
+    if (sHdText) {
+        sBgGlyphRowsOnly = true;
+        for (int b = 0; b < 4; b++)
+            if (dispcnt & (0x100 << b))
+                DrawTextBg(b, gy, dispcnt, NULL);
+        sBgGlyphRowsOnly = false;
+    }
+    for (int x = 0; x < w; x++) gPortFrame[y * w + x] = 0xFF000000u;
+    if (!gPortScreen.wide)
+        for (int x = 0; x < w; x++) gPortMenuBackground[y * w + x] = 0xFF000000u;
+}
+
 static void RenderLine(int y, int gy) {
+    PpuRowTimes* const rowTimes = sPpuSampleRows ? &sPpuRowTimes[y] : NULL;
+    uint64_t stage = rowTimes ? SDL_GetPerformanceCounter() : 0;
     uint16_t dispcnt = IO16(0x00);
     int mode = dispcnt & 7;
     int bgOn[4] = { 0, 0, 0, 0 }, bgPrio[4];
@@ -3689,6 +4887,10 @@ static void RenderLine(int y, int gy) {
             dst[x] = (gx < sLeft || gx >= sRight) ? 0xFF000000u : 0xFFFFFFFFu;
             gPortMenuBackground[y * w + x] = dst[x];
         }
+        return;
+    }
+    if (SpotlightMarginRow(gy, dispcnt)) {
+        SkipSpotlightMarginRow(y, gy, dispcnt);
         return;
     }
 
@@ -3725,15 +4927,37 @@ static void RenderLine(int y, int gy) {
         bgOn[0] = 0; /* the title's illustration: drawn HD under the picture (TitleArtQueue) */
     if (sTitleArtHd & 2)
         bgOn[1] = 0;
+    LibraryScanline libraryPair;
+    LibraryScanline* sharedLibrary = NULL;
+    if (mode == 0 && w <= LIBRARY_PAIR_WIDTH && bgOn[2] && bgOn[3] &&
+            sBgLatch[2].valid && sBgLatch[3].valid && sPreliminarRecipe[2] &&
+            sPreliminarRecipe[3] && sPreliminarRecipe[2]->v[0] == 130 &&
+            sPreliminarRecipe[3]->v[0] == 130) {
+        const char* enabled;
+        PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_LIBRARY_PAIR");
+        if (enabled) {
+            libraryPair.prepared = false;
+            sharedLibrary = &libraryPair;
+        }
+    }
     for (b = 0; b < 4; b++) {
         if (!bgOn[b])
             continue;
+        const bool affine = b >= 2 && (mode == 2 || (mode == 1 && b == 2));
+        const uint64_t layerStart = rowTimes ? SDL_GetPerformanceCounter() : 0;
+        const int kind = rowTimes ? (mode >= 3 ? 3 : affine ? 2 : !!(IO16(0x08 + 2*b) & 0x80)) : 0;
         if (mode >= 3)
             DrawBitmapBg(mode, gy, dispcnt);
-        else if (b >= 2 && (mode == 2 || (mode == 1 && b == 2)))
+        else if (affine)
             DrawAffineBg(b, gy, dispcnt);
         else
-            DrawTextBg(b, gy, dispcnt);
+            DrawTextBg(b, gy, dispcnt, sharedLibrary);
+        if (rowTimes) {
+            rowTimes->bgCount[kind]++;
+            const uint64_t ticks = SDL_GetPerformanceCounter() - layerStart;
+            rowTimes->bgTicks[kind] += ticks;
+            rowTimes->layerTicks[b] = ticks;
+        }
         if (sOverlay && sScreenBg[b] && sBgSplit[b])
             SplitBgLine(b, gy);
         else if (sBgClip[b] && !(sOverlay && sScreenBg[b])) {
@@ -3746,20 +4970,43 @@ static void RenderLine(int y, int gy) {
     }
     if (bgOn[1]) TitleArtFadeLine(gy, 1);
     if (bgOn[0] && sTitleArtFadeBg0) TitleArtFadeLine(gy, 0);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->backgrounds = now - stage;
+        stage = now;
+    }
     DrawObjs(gy, dispcnt);
     BuildTitleBands(gy, bgOn);
     if (bgOn[0]) TitleBarLine(y, gy);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->objects = now - stage;
+        stage = now;
+    }
     BuildWindows(gy, dispcnt);
     ComposeLine(y, dispcnt, bgOn, bgPrio, gPortFrame, 1);
     /* The presenter also uses this background in non-menu narrow scenes,
        including the blank frame between modes. Never leave last frame's
        palette/fade in the buffer. */
-    if (sSceneNarrow || !gPortScreen.wide)
-        ComposeLine(y, dispcnt, bgOn, bgPrio, gPortMenuBackground, 0);
+    if (sSceneNarrow || !gPortScreen.wide) {
+        /* A row without sprite pixels composes to the same colours twice.
+           World light also writes its own buffers: keep that path. */
+        if (sMenuBgCopy && !sLineHasObjects && !sWorldBlendActive)
+            memcpy(gPortMenuBackground + y * w, gPortFrame + y * w, (size_t)w * 4);
+        else
+            ComposeLine(y, dispcnt, bgOn, bgPrio, gPortMenuBackground, 0);
+    }
     if (sSceneNarrow)
         BuildNarrowSides(gy, dispcnt, bgOn, bgPrio);
+    if (rowTimes) {
+        const uint64_t now = SDL_GetPerformanceCounter();
+        rowTimes->compose = now - stage;
+        stage = now;
+    }
     if (sOverlay && gy >= 0 && gy < GBA_SCREEN_H)
         ComposeOverlayLine(gy, dispcnt, bgOn, bgPrio);
+    if (rowTimes)
+        rowTimes->overlay = SDL_GetPerformanceCounter() - stage;
 }
 
 /* Full-height GBA scenes (menus shown as the GBA picture with side bars):
@@ -3773,6 +5020,7 @@ static void RenderLine(int y, int gy) {
 #define NARROW_SIDE_W 96
 #define PLTT16_0() (PPU_PLTT_BASE[0])
 static uint32_t sNarrowSide[2][GBA_SCREEN_H][NARROW_SIDE_W];
+static int sNarrowSideFill;
 /* per row: the colour of the layer in front of the scenery at the picture's
    edge, and whether that row was a band (2), only touched the edge (1) or
    showed the scenery (0) */
@@ -3953,7 +5201,11 @@ static void BuildNarrowSides(int gy, uint16_t dispcnt, const int* bgOn, const in
             sNarrowEdgeKind[side][gy] = bandOk[b] ? 2 : 1;
             break;
         }
-        for (d = 0; d < NARROW_SIDE_W; d++) {
+        /* Plain scenery, or a band in front of everything, gives every
+           column the same colour: resolve the first and repeat it. */
+        const int columns = sNarrowSideFill && (flat || (n && order[0] != scenery && bandOk[order[0]]))
+            ? 1 : NARROW_SIDE_W;
+        for (d = 0; d < columns; d++) {
             uint16_t col = (uint16_t)(PLTT16_0() & 0x7FFF);
             int i, src = flat ? 0 : d < GBA_SCREEN_W ? d : GBA_SCREEN_W - 1;
             for (i = 0; i < n; i++) {
@@ -3970,6 +5222,8 @@ static void BuildNarrowSides(int gy, uint16_t dispcnt, const int* bgOn, const in
             if (effect == 3 && (bldcnt & 0x3F)) col = Darken(col, evy);
             sNarrowSide[side][gy][d] = sColorLut[col & 0x7FFF];
         }
+        for (; d < NARROW_SIDE_W; d++)
+            sNarrowSide[side][gy][d] = sNarrowSide[side][gy][0];
         /* the sprites touching the edge on this row, counted per colour
            (PortNarrowSidesFinish decides the margin's colour for the run) */
         sObjBandKinds[side][gy] = sObjBandTotal[side][gy] = 0;
@@ -4145,7 +5399,36 @@ static void RegisterBgSlashes(uint16_t dispcnt) {
     }
 }
 
+/* PortPpuBeginFrame's switches: the environment never changes while the game
+   runs, and a lookup walks every variable (the handheld launchers export over a
+   hundred), so each name is read once. Main thread only; keys are literals. */
+static const char* FrameEnv(const char* name) {
+    static struct { const char* key; const char* value; } seen[32];
+    static int count;
+    for (int i = 0; i < count; i++)
+        if (seen[i].key == name) return seen[i].value;
+    const char* value = getenv(name);
+    if (count < (int)(sizeof(seen) / sizeof(seen[0]))) { seen[count].key = name; seen[count].value = value; count++; }
+    return value;
+}
+static int FrameArtOn(const char* name) {
+    const char* v = FrameEnv(name);
+    return v == NULL || atoi(v) != 0;
+}
+
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk);
+/* the occupancy the HUD and HD text read (what is in front of each pixel), back to empty for rows [begin, end) */
+static void ClearOccupancyRows(void* ctx, int begin, int end) {
+    const size_t w = (size_t)gPortScreen.width, rows = (size_t)(end - begin);
+    (void)ctx;
+    memset(sOccBg + begin * w, 4, rows * w);
+    memset(sOccBgLayer + begin * w, 4, rows * w);
+    memset(sOccObj + begin * w, 0xFF, rows * w * 2);
+}
+
 void PortPpuBeginFrame(void) {
+    if (sUniformWorldTiles < 0)
+        sUniformWorldTiles = PortTunedEnv("KHCOM_PPU_UNIFORM_TILE_RUNS") != NULL;
     static int oogiePreviewInitialized;
 #ifdef __EMSCRIPTEN__
     extern int gPortWebHdReady;
@@ -4178,19 +5461,19 @@ void PortPpuBeginFrame(void) {
 #endif
     sBgTextCount = 0;
     sEventBackdropProfile = PortEventBackdropProfile();
-    sUseSceneProfiles = getenv("KHCOM_NO_SCENE_PROFILES") == NULL;
+    sUseSceneProfiles = FrameEnv("KHCOM_NO_SCENE_PROFILES") == NULL;
     {
-        const char* v = getenv("KHCOM_SCENE_ACTOR_FRAME");
+        const char* v = FrameEnv("KHCOM_SCENE_ACTOR_FRAME");
         sEnvActorFrameOff = v && strcmp(v, "off") == 0;
-        v = getenv("KHCOM_HUD_LAYOUT");
+        v = FrameEnv("KHCOM_HUD_LAYOUT");
         sEnvHudLayoutFrame = v ? atoi(v) : -1;
-        sEnvNoGuardPatio = getenv("KHCOM_NO_GUARD_PATIO") != NULL;
-        sEnvTitleBandsOff = getenv("KHCOM_TITLE_BANDS_OFF") != NULL;
+        sEnvNoGuardPatio = FrameEnv("KHCOM_NO_GUARD_PATIO") != NULL;
+        sEnvTitleBandsOff = FrameEnv("KHCOM_TITLE_BANDS_OFF") != NULL;
     }
-    sPreliminarV1 = getenv("KHCOM_PRELIMINAR_V1") != NULL;
+    sPreliminarV1 = FrameEnv("KHCOM_PRELIMINAR_V1") != NULL;
     (void)PortArenasV2(); (void)PortArenasApproved(); /* its switch read here, on the main thread, before the cores draw (they ask it per row) */
     if (!oogiePreviewInitialized) {
-        PortOogieSetPreview(getenv("KHCOM_OOGIE_PREVIEW"));
+        PortOogieSetPreview(FrameEnv("KHCOM_OOGIE_PREVIEW"));
         oogiePreviewInitialized = 1;
     }
     sSinglePanelBg = PortEventBackdropPanel();
@@ -4224,7 +5507,10 @@ void PortPpuBeginFrame(void) {
     memset(sPreliminarRecipe, 0, sizeof(sPreliminarRecipe));
     /* Preliminar V1 is opt-in until approved; scenes approved with honours are on for everyone (=0 turns one off) */
     sPreliminarApprovedOnly = !sPreliminarV1;
-    {
+    static int approvedRead, anyApprovedRead;
+    if (approvedRead) {
+        if (!anyApprovedRead) sPreliminarApprovedOnly = 0;
+    } else {
         int anyApproved = 0;
         for (b = 0; b < (int)(sizeof(kPreliminarApproved)/sizeof(kPreliminarApproved[0])); b++) {
             char var[] = "KHCOM_SCENE000_WIDE";
@@ -4235,20 +5521,18 @@ void PortPpuBeginFrame(void) {
             anyApproved |= sPreliminarApprovedOn[b];
         }
         if (!anyApproved) sPreliminarApprovedOnly = 0;
+        anyApprovedRead = anyApproved;
+        approvedRead = 1;
     }
     if ((sPreliminarV1 || sPreliminarApprovedOnly) && !sBattleView) {
-        const char* skipValue=getenv("KHCOM_PRELIMINAR_SKIP");
+        const char* skipValue=FrameEnv("KHCOM_PRELIMINAR_SKIP");
         int skip=skipValue?atoi(skipValue):-1;
         for (b=1; b<4; b++) {
             const BgLatch* l=&sBgLatch[b];
             if (l->valid && l->width <= 4 && l->height <= 4) {
-                uint32_t hash=2166136261u;
-                int xx,yy;
-                for (yy=0; yy<l->height*32; yy++)
-                    for (xx=0; xx<l->width*32; xx++)
-                        hash=(hash^(uint32_t)MapTile(l,xx,yy))*16777619u;
+                const uint32_t hash = HashWorldMap(l);
                 sPreliminarRecipe[b]=PortPreliminarFind(hash,b,l->width,l->height);
-                if (getenv("KHCOM_PRELIMINAR_LOG"))
+                if (FrameEnv("KHCOM_PRELIMINAR_LOG"))
                     PortLog("preliminar bg%d %dx%d hash=%08x scene=%d",b,l->width,l->height,hash,
                             sPreliminarRecipe[b]?sPreliminarRecipe[b]->v[0]:-1);
                 if (sPreliminarRecipe[b] && sPreliminarRecipe[b]->v[0]==skip)
@@ -4264,27 +5548,21 @@ void PortPpuBeginFrame(void) {
     }
     sPreviewScene097Trees = 0;
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0] == 97) {
-        const char* preview = getenv("KHCOM_SCENE097_TREE_PREVIEW");
+        const char* preview = FrameEnv("KHCOM_SCENE097_TREE_PREVIEW");
         sPreviewScene097Trees = preview && strcmp(preview, "1") == 0;
     }
     if (sPreliminarRecipe[2] && sPreliminarRecipe[2]->v[0]==45)
         PreparePreliminarFir();
     sPreviewScene120Masonry = 0;
     if (sPreliminarRecipe[3] && sPreliminarRecipe[3]->v[0]==120) {
-        const char* preview=getenv("KHCOM_SCENE120_MASONRY_PREVIEW");
+        const char* preview=FrameEnv("KHCOM_SCENE120_MASONRY_PREVIEW");
         sPreviewScene120Masonry = preview && strcmp(preview,"1")==0;
     }
-    if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH_WIDE")) {
+    if (sPreliminarV1 || FrameArtOn("KHCOM_AGRABAH_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 2 && l->height == 2) {
-                uint32_t hash = 2166136261u;
-                int xx, yy, e;
-                for (yy = 0; yy < 64; yy++)
-                    for (xx = 0; xx < 64; xx++) {
-                        e = MapTile(l, xx, yy);
-                        hash = (hash ^ (uint32_t)e) * 16777619u;
-                    }
+                const uint32_t hash = HashWorldMap(l);
                 if (hash == 0x76732a49u) sAgrabahLayer[b] = 3;
                 if (hash == 0x30fe052eu) sAgrabahLayer[b] = 2;
             }
@@ -4295,15 +5573,11 @@ void PortPpuBeginFrame(void) {
     sDarksideLayer[2] = sDarksideLayer[3] = 0;
     memset(sAgrabah109Layer, 0, sizeof(sAgrabah109Layer));
     sAgrabah109ShopPal[0] = sAgrabah109ShopPal[1] = -1;
-    if (sPreliminarV1 || PortArtOn("KHCOM_AGRABAH109_WIDE")) {
+    if (sPreliminarV1 || FrameArtOn("KHCOM_AGRABAH109_WIDE")) {
         for (b = 2; b <= 3; b++) {
             const BgLatch* l = &sBgLatch[b];
             if (l->valid && l->width == 1 && l->height == 1) {
-                uint32_t hash = 2166136261u;
-                int xx, yy;
-                for (yy = 0; yy < 32; yy++)
-                    for (xx = 0; xx < 32; xx++)
-                        hash = (hash ^ (uint32_t)MapTile(l, xx, yy)) * 16777619u;
+                const uint32_t hash = HashWorldMap(l);
                 if (hash == 0xc704bad0u) sAgrabah109Layer[b] = 3;
                 if (hash == 0xe1940c58u) sAgrabah109Layer[b] = 2;
             }
@@ -4345,7 +5619,7 @@ void PortPpuBeginFrame(void) {
        GBA-size scene: shown at the window's height like the other menus,
        never as a small picture at the world's zoom */
     {
-        const char* aerithNativeFrame = getenv("KHCOM_AERITH_NATIVE_FRAME");
+        const char* aerithNativeFrame = FrameEnv("KHCOM_AERITH_NATIVE_FRAME");
         int keepAerithFrame = PortEventId() == 9 && aerithNativeFrame &&
                               strcmp(aerithNativeFrame, "on") == 0;
         gPortScreen.wide = any && !sSceneNarrow && !keepAerithFrame &&
@@ -4353,7 +5627,7 @@ void PortPpuBeginFrame(void) {
                        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)
                        && !(dispcnt & 0x80);
     }
-    if (getenv("KHCOM_PPULOG"))
+    if (FrameEnv("KHCOM_PPULOG"))
         PortLog("ppu: dispcnt %04x latch %d%d%d%d world %d%d%d%d bgcnt %04x %04x %04x %04x wide %d narrow %d", dispcnt,
                 sBgLatch[0].valid, sBgLatch[1].valid, sBgLatch[2].valid, sBgLatch[3].valid, sBgWorldLatched[0].valid,
                 sBgWorldLatched[1].valid, sBgWorldLatched[2].valid, sBgWorldLatched[3].valid, IO16(0x08), IO16(0x0A),
@@ -4375,9 +5649,9 @@ void PortPpuBeginFrame(void) {
     WorldNameFrame();
     RegisterBgSlashes(dispcnt);
     if (sHudLayer || sHdText) {
-        memset(sOccBg, 4, (size_t)gPortScreen.width * gPortScreen.height);
-        memset(sOccBgLayer, 4, (size_t)gPortScreen.width * gPortScreen.height);
-        memset(sOccObj, 0xFF, (size_t)gPortScreen.width * gPortScreen.height * 2);
+        /* about 4 bytes a pixel (8 MB at 1080p): cleared in row bands on the renderer's cores */
+        if (!PortPpuParallelRows(ClearOccupancyRows, NULL, gPortScreen.height, 64))
+            ClearOccupancyRows(NULL, 0, gPortScreen.height);
     }
     /* the frame the layer only lingers (2): once the door's spotlight hands its floor (BG1) back to the world, its
        light blends with that floor there; on the empty screen layer its dark halo showed as a black ball */
@@ -4430,7 +5704,29 @@ void PortPpuBeginFrame(void) {
 typedef struct OuterRows {
     int y0, y1, below;
     int32_t affX[2], affY[2]; /* the reference point at line 0 (above) or after line 159 (below) */
+    struct {
+        unsigned layers;
+        int height, first, next[2];
+        int32_t x[2], y[2];
+    } mosaic;
 } OuterRows;
+
+static void SeedOuterMosaic(const OuterRows* r, int gy) {
+    if (!r->mosaic.layers)
+        return;
+    const int height = r->mosaic.height;
+    const int block = gy - ((gy % height) + height) % height;
+    const int anchor = PPU_MAX(block, r->mosaic.first);
+    const int offset = r->below ? anchor - GBA_SCREEN_H : anchor;
+    for (int a = 0; a < 2; a++) {
+        if (!(r->mosaic.layers & (1u << a)))
+            continue;
+        const bool carry = block < r->mosaic.first && r->mosaic.next[a] == r->mosaic.first;
+        sMosAffX[a] = carry ? r->mosaic.x[a] : r->affX[a] + (int16_t)IO16(0x22 + a * 0x10) * offset;
+        sMosAffY[a] = carry ? r->mosaic.y[a] : r->affY[a] + (int16_t)IO16(0x26 + a * 0x10) * offset;
+        sMosNextGy[a] = gy;
+    }
+}
 
 static void OuterRow(const OuterRows* r, int y) {
     int w = gPortScreen.width, gy = y - gPortScreen.originY, a, k;
@@ -4452,6 +5748,7 @@ static void OuterRow(const OuterRows* r, int y) {
         sAffX[a] = r->affX[a] + (int16_t)IO16(0x22 + a * 0x10) * k;
         sAffY[a] = r->affY[a] + (int16_t)IO16(0x26 + a * 0x10) * k;
     }
+    SeedOuterMosaic(r, gy);
     RenderLine(y, gy);
 }
 
@@ -4461,8 +5758,10 @@ static void OuterRow(const OuterRows* r, int y) {
 extern void MapWorldTilePrime(void); /* src/map/map_cell.c */
 static int sPpuWorkers = -1; /* other cores drawing with this one; -1 not started */
 static SDL_Semaphore *sPpuGo[PPU_MAX_THREADS], *sPpuDone;
+static bool sFusePictureBottom, sFuseAllRows;
+static const OuterRows* sPpuTopJob;
 static const OuterRows* sPpuJob; /* NULL: the GBA picture's rows (PpuInnerRow) */
-static int sPpuEnd;
+static int sPpuEnd, sPpuEdgeChunk = PPU_CHUNK;
 static SDL_AtomicInt sPpuNext;
 static void PpuInnerRow(int y);
 static PendingGlyph sPpuGlyphs[PPU_MAX_THREADS][1024];
@@ -4472,15 +5771,18 @@ static int sPpuVerify, sPpuMismatches;
 static void PpuRows(int slot) {
     const OuterRows* r = sPpuJob;
     int y, end, last = sPpuEnd;
+    const int chunk = r ? sPpuEdgeChunk : PPU_CHUNK;
     sGlyphPend = sPpuGlyphs[slot];
     sGlyphPendCount = 0;
     for (;;) {
-        y = SDL_AddAtomicInt(&sPpuNext, PPU_CHUNK);
+        y = SDL_AddAtomicInt(&sPpuNext, chunk);
         if (y >= last)
             break;
-        for (end = y + PPU_CHUNK < last ? y + PPU_CHUNK : last; y < end; y++) {
+        for (end = y + chunk < last ? y + chunk : last; y < end; y++) {
             sGlyphRow = y;
-            if (r)
+            if (sPpuTopJob && y < sPpuTopJob->y1)
+                OuterRow(sPpuTopJob, y);
+            else if (r && y >= r->y0)
                 OuterRow(r, y);
             else
                 PpuInnerRow(y);
@@ -4490,18 +5792,42 @@ static void PpuRows(int slot) {
     sGlyphPend = NULL;
 }
 
+/* A presentation task borrowed by the idle workers (PortPpuParallelRows). */
+static void (*sPpuTask)(void* ctx, int begin, int end);
+static void* sPpuTaskCtx;
+static int sPpuTaskChunk;
+
+static void PpuTaskRows(void) {
+    const int last = sPpuEnd, chunk = sPpuTaskChunk;
+    for (;;) {
+        const int begin = SDL_AddAtomicInt(&sPpuNext, chunk);
+        if (begin >= last)
+            break;
+        sPpuTask(sPpuTaskCtx, begin, begin + chunk < last ? begin + chunk : last);
+    }
+}
+
 static int SDLCALL PpuWorker(void* data) {
     int slot = (int)(intptr_t)data;
     for (;;) {
         SDL_WaitSemaphore(sPpuGo[slot]);
-        PpuRows(slot);
+        if (sPpuTask)
+            PpuTaskRows();
+        else
+            PpuRows(slot);
         SDL_SignalSemaphore(sPpuDone);
     }
     return 0;
 }
 
 static void PpuStart(void) {
-    const char* env = SDL_getenv("KHCOM_PPU_THREADS");
+    const char* env = PortTunedEnv("KHCOM_PPU_THREADS");
+    const char* edgeChunk = PortTunedEnv("KHCOM_PPU_EDGE_CHUNK");
+    if (edgeChunk) {
+        const int requested = SDL_atoi(edgeChunk);
+        if (requested >= 1 && requested <= 16)
+            sPpuEdgeChunk = requested;
+    }
 #if defined(PORT_LINUX) && defined(__arm__) && !defined(PORT_LINUX64_GUEST)
     int n = env ? SDL_atoi(env) : 1;
 #else
@@ -4511,7 +5837,7 @@ static void PpuStart(void) {
     if (n > PPU_MAX_THREADS)
         n = PPU_MAX_THREADS;
     sPpuWorkers = 0;
-    sPpuVerify = SDL_getenv("KHCOM_PPU_VERIFY") != NULL;
+    sPpuVerify = PortTunedEnv("KHCOM_PPU_VERIFY") != NULL;
     if (n < 2 || !(sPpuDone = SDL_CreateSemaphore(0)))
         return;
     for (i = 0; i < n - 1; i++) {
@@ -4526,6 +5852,28 @@ static void PpuStart(void) {
         sPpuWorkers++;
     }
     PortLog("ppu: %d cores for the rows beyond the picture%s", sPpuWorkers + 1, sPpuVerify ? " (verified)" : "");
+}
+
+/* Runs fn over [0, count) in chunks on this thread and the PPU workers, which
+ * are idle between frames. Only the main thread calls it, never while a PPU
+ * batch is running; the semaphores order every write before the return.
+ * Returns 0 (nothing run) when there are no workers: the caller runs it alone. */
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk) {
+    int i;
+    if (sPpuWorkers <= 0 || sPpuTask || chunk <= 0 || count <= chunk)
+        return 0;
+    sPpuTask = fn;
+    sPpuTaskCtx = ctx;
+    sPpuTaskChunk = chunk;
+    sPpuEnd = count;
+    SDL_SetAtomicInt(&sPpuNext, 0);
+    for (i = 0; i < sPpuWorkers; i++)
+        SDL_SignalSemaphore(sPpuGo[i]);
+    PpuTaskRows();
+    for (i = 0; i < sPpuWorkers; i++)
+        SDL_WaitSemaphore(sPpuDone);
+    sPpuTask = NULL;
+    return 1;
 }
 
 static int PpuGlyphOrder(const void* a, const void* b) {
@@ -4554,16 +5902,26 @@ static int PpuAffineMosaicDependent(void) {
     return mode==2 && (display&0x800) && (IO16(0x0E)&0x40);
 }
 
-static int PpuRowsIndependent(void) {
+static int PpuRowsIndependent(bool allowMosaic) {
     int i;
     if (sBgIsoLatched[0] | sBgIsoLatched[1] | sBgIsoLatched[2] | sBgIsoLatched[3])
         sPpuStats[1]++; /* drawn on several cores: IsoPrime fills the tables first */
-    if (PpuAffineMosaicDependent()) {
+    if (!allowMosaic && PpuAffineMosaicDependent()) {
         sPpuStats[2]++;
         return 0; /* vertical mosaic: affine BGs reuse the reference of a block's first row */
     }
     for (i = 0; i < OamCount(); i++)
         if (sOamTag[i].header) {
+            const char* parallel;
+            PORT_ENV_ONCE(parallel, PortTunedEnv, "KHCOM_PPU_MENU_HEADER_PARALLEL");
+            /* Prime the shared once-per-frame band before waking workers. A
+               missing source still uses the original serial path. */
+            if (parallel && HeaderPick() >= 0)
+                break;
+            /* A new mode cleared the source while its predecessor's header
+               sprites are still in OAM: every row gets "no band". */
+            if (HeaderGone())
+                break;
             sPpuStats[3]++;
             return 0; /* HeaderPick's once-a-frame choice */
         }
@@ -4633,8 +5991,36 @@ static void PpuVerify(const OuterRows* r, int glyphStart) {
     int y;
     if (!PpuSaveRows(r->y0, r->y1, glyphStart))
         return;
+    OuterRows serial = *r;
+    serial.mosaic.layers = 0;
+    if (r->mosaic.layers) {
+        memcpy(sMosNextGy, r->mosaic.next, sizeof(sMosNextGy));
+        memcpy(sMosAffX, r->mosaic.x, sizeof(sMosAffX));
+        memcpy(sMosAffY, r->mosaic.y, sizeof(sMosAffY));
+    }
+    const int objSkipClear = sObjSkipClear; /* the reference samples every texel */
+    sObjSkipClear = 0;
+    const int objAffineSpan = sObjAffineSpan;
+    sObjAffineSpan = 0;
+    const int objRowRuns = sObjRowRuns;
+    sObjRowRuns = 0;
+    const int skipMargins = sSpotlightSkipMargins; /* compare with the full rows */
+    sSpotlightSkipMargins = 0;
+    const int textNeon = sTextNeon;
+    sTextNeon = 0;
+    const int bgPlainRows = sBgPlainRows;
+    sBgPlainRows = 0;
+    const int arenaFast = sArenaFast;
+    sArenaFast = 0;
     for (y = r->y0; y < r->y1; y++)
-        OuterRow(r, y);
+        OuterRow(&serial, y);
+    sTextNeon = textNeon;
+    sBgPlainRows = bgPlainRows;
+    sArenaFast = arenaFast;
+    sObjSkipClear = objSkipClear;
+    sObjAffineSpan = objAffineSpan;
+    sObjRowRuns = objRowRuns;
+    sSpotlightSkipMargins = skipMargins;
     PpuCheckRows(r->y0, r->y1, glyphStart, "margins");
 }
 
@@ -4681,6 +6067,25 @@ typedef struct PpuLineState {
 static PpuLineState sPpuLines[GBA_SCREEN_H];
 static uint16_t sPpuPltt[GBA_SCREEN_H][512], sPpuOam[GBA_SCREEN_H][512];
 static int sPpuPlttKept, sPpuOamKept, sPpuInnerFrom, sPpuInnerOn = -1, sPpuInnerGlyphs, sPpuInnerFrames, sPpuInnerShared;
+/* Verification draws the same rows twice; restore this once-per-frame marker
+   before the parallel pass so the world name is emitted in both passes. */
+static uint32_t sPpuInnerWorldEmitted;
+
+static int sPpuInnerMosaicHeight;
+static unsigned sPpuInnerMosaicLayers;
+
+static void PpuInnerMosaicSeed(int gy) {
+    if (!sPpuInnerMosaicLayers)
+        return;
+    const PpuLineState* reference = &sPpuLines[gy - gy % sPpuInnerMosaicHeight];
+    for (int a = 0; a < 2; a++) {
+        if (!(sPpuInnerMosaicLayers & (1u << a)))
+            continue;
+        sMosAffX[a] = reference->affX[a];
+        sMosAffY[a] = reference->affY[a];
+        sMosNextGy[a] = gy;
+    }
+}
 
 static void PpuInnerRow(int y) {
     int gy = y - gPortScreen.originY;
@@ -4690,15 +6095,45 @@ static void PpuInnerRow(int y) {
     sPpuOamView = l->oam;
     sAffX[0] = l->affX[0]; sAffX[1] = l->affX[1];
     sAffY[0] = l->affY[0]; sAffY[1] = l->affY[1];
+    PpuInnerMosaicSeed(gy);
     RenderLine(y, gy);
     sPpuIoView = NULL;
     sPpuPlttView = sPpuOamView = NULL;
 }
 
+/* Only use the block-first reference when the raster cannot change it. */
+static bool PpuRasterStatic(void) {
+    if (IO16(0x04) & 0x30)
+        return false;
+    for (int channel = 0; channel < 4; channel++)
+        if ((IO16(0xBA + channel * 12) & 0xB000) == 0xA000)
+            return false;
+    return true;
+}
+
+static unsigned PpuStaticMosaicLayers(void) {
+    const char* enabled;
+    PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_STATIC_MOSAIC");
+    if (!enabled || !PpuAffineMosaicDependent() || !PpuRasterStatic())
+        return 0;
+    const unsigned display = IO16(0x00);
+    const unsigned mode = display & 7u;
+    if (mode != 1 && mode != 2)
+        return 0;
+    unsigned layers = 0;
+    if ((display & 0x400) && (IO16(0x0C) & 0x40) && !sTitleLogoBgHd)
+        layers |= 1;
+    if (mode == 2 && (display & 0x800) && (IO16(0x0E) & 0x40))
+        layers |= 2;
+    return layers;
+}
+
 /* Whether this frame's picture rows wait for the line events (PpuInnerKeep) */
 static int PpuInnerBegin(void) {
     if (sPpuInnerOn < 0) {
-        const char* env = SDL_getenv("KHCOM_PPU_INNER");
+        const char* env = PortTunedEnv("KHCOM_PPU_INNER");
+        sFusePictureBottom = PortTunedEnv("KHCOM_PPU_FUSE_PICTURE_BOTTOM") != NULL;
+        sFuseAllRows = PortTunedEnv("KHCOM_PPU_FUSE_ALL_ROWS") != NULL;
 #if defined(PORT_SWITCH) || defined(PORT_LINUX64_GUEST) || defined(_WIN32)
         sPpuInnerOn = !env || SDL_atoi(env) != 0;
 #else
@@ -4713,14 +6148,28 @@ static int PpuInnerBegin(void) {
         PortLog("ppu: the picture's rows on %d cores in %d of the last 600 frames", sPpuWorkers + 1, sPpuInnerShared);
         sPpuInnerFrames = sPpuInnerShared = 0;
     }
-    /* The HD bar appends to a shared draw queue. Native title fades only
+    /* The HD bar's rows fill slots of their own (port_hdsprites.c PortHdTitleBarRow). Native title fades only
        write the worker's own cache and the row being drawn. */
-    if (!sPpuInnerOn || sPpuWorkers <= 0 || sTitleBarHd || (IO16(0x00) & 0x80) || !PpuRowsIndependent())
+    sPpuInnerMosaicLayers = 0;
+    if (!sPpuInnerOn || sPpuWorkers <= 0 || (IO16(0x00) & 0x80))
         return 0;
+    const unsigned mosaicLayers = PpuStaticMosaicLayers();
+    const char* audit;
+    PORT_ENV_ONCE(audit, PortTunedEnv, "KHCOM_PPU_MOSAIC_AUDIT");
+    if (audit && PpuAffineMosaicDependent()) {
+        PortLog("ppu mosaic: frame %u layers %u MOSAIC %04x DISPSTAT %04x DMA %04x %04x %04x %04x",
+                (unsigned)PortFrameCount(), mosaicLayers, IO16(0x4C), IO16(0x04),
+                IO16(0xBA), IO16(0xC6), IO16(0xD2), IO16(0xDE));
+    }
+    if (!PpuRowsIndependent(mosaicLayers != 0))
+        return 0;
+    sPpuInnerMosaicLayers = mosaicLayers;
+    sPpuInnerMosaicHeight = ((IO16(0x4C) >> 4) & 15) + 1;
     sPpuInnerShared++;
     sPpuPlttKept = sPpuOamKept = -1;
     sPpuInnerFrom = 0;
     sPpuInnerGlyphs = sBgTextCount;
+    sPpuInnerWorldEmitted = sWorldName.emitted;
     return 1;
 }
 
@@ -4729,7 +6178,7 @@ static void PpuInnerDraw(int gy1);
 /* Line gy, after its LineStart and LatchAffine: keep what its drawing reads. 0: draw this line and the rest now. */
 static int PpuInnerKeep(int gy, int memoryMayChange) {
     PpuLineState* l = &sPpuLines[gy];
-    if (PpuAffineMosaicDependent()) { /* a live affine mosaic carries its reference */
+    if (!sPpuInnerMosaicLayers && PpuAffineMosaicDependent()) { /* a live affine mosaic carries its reference */
         PpuInnerDraw(gy);
         return 0;
     }
@@ -4744,7 +6193,49 @@ static int PpuInnerKeep(int gy, int memoryMayChange) {
     l->oam = sPpuOam[sPpuOamKept];
     if (sPpuVerify) { /* the line-by-line drawing to compare with */
         sPpuIoView = NULL;
+        int spotlightRuns = sSpotlightTileRuns;
+        int spotlightTrim = sSpotlightTrimMargins;
+        int spotlightOverlay = sSpotlightOverlayFast;
+        int spotlightClear = sSpotlightClearRows;
+        sSpotlightTileRuns = 0;
+        int objSkipClear = sObjSkipClear;
+        sObjSkipClear = 0;
+        int objAffineSpan = sObjAffineSpan;
+        sObjAffineSpan = 0;
+        int objRowRuns = sObjRowRuns;
+        sObjRowRuns = 0;
+        sSpotlightTrimMargins = 0;
+        sSpotlightOverlayFast = 0;
+        sSpotlightClearRows = 0;
+        int menuBgCopy = sMenuBgCopy;
+        sMenuBgCopy = 0;
+        int textNeon = sTextNeon;
+        sTextNeon = 0;
+        int bgPlainRows = sBgPlainRows;
+        sBgPlainRows = 0;
+        int arenaFast = sArenaFast;
+        sArenaFast = 0;
+#ifdef PORT_NEON
+        /* Compare the experimental narrow vector path against scalar rows,
+           including the background and text occlusion buffers. */
+        bool narrowVector = sNeonNarrowCompose;
+        sNeonNarrowCompose = false;
+#endif
         RenderLine(gy + gPortScreen.originY, gy);
+        sSpotlightTileRuns = spotlightRuns;
+        sObjSkipClear = objSkipClear;
+        sObjAffineSpan = objAffineSpan;
+        sObjRowRuns = objRowRuns;
+        sSpotlightTrimMargins = spotlightTrim;
+        sSpotlightOverlayFast = spotlightOverlay;
+        sSpotlightClearRows = spotlightClear;
+        sMenuBgCopy = menuBgCopy;
+        sTextNeon = textNeon;
+        sBgPlainRows = bgPlainRows;
+        sArenaFast = arenaFast;
+#ifdef PORT_NEON
+        sNeonNarrowCompose = narrowVector;
+#endif
     }
     return 1;
 }
@@ -4757,17 +6248,71 @@ static void PpuInnerDraw(int gy1) {
         return;
     if (sPpuVerify)
         check = PpuSaveRows(y0, y1, sPpuInnerGlyphs);
+    if (check)
+        sWorldName.emitted = sPpuInnerWorldEmitted;
     PpuRunBatch(NULL, y0, y1);
     if (check)
         PpuCheckRows(y0, y1, sPpuInnerGlyphs, "picture");
+    sPpuInnerWorldEmitted = sWorldName.emitted;
+    if (sPpuInnerMosaicLayers) {
+        PpuInnerMosaicSeed(gy1 - 1);
+        for (int a = 0; a < 2; a++)
+            if (sPpuInnerMosaicLayers & (1u << a))
+                sMosNextGy[a] = gy1;
+    }
     sAffX[0] = affX[0]; sAffX[1] = affX[1]; /* this core drew rows too: the line events' reference goes on */
     sAffY[0] = affY[0]; sAffY[1] = affY[1];
     sPpuInnerFrom = gy1;
 }
+
+static bool PpuCanDeferTop(void) {
+    if (!sFuseAllRows || !sFusePictureBottom || sPpuVerify || sPpuWorkers <= 0 ||
+        gPortScreen.originY <= 0 || gPortScreen.originY + GBA_SCREEN_H >= gPortScreen.height ||
+        (IO16(0x00) & 7) != 0 || !PpuRasterStatic())
+        return false;
+    return PpuInnerBegin();
+}
+
+static bool PpuDrawPictureAndBottom(const OuterRows* top) {
+    const int bottom = gPortScreen.originY + GBA_SCREEN_H;
+    if (!sFusePictureBottom || sPpuVerify || sPpuInnerMosaicLayers ||
+        sPpuInnerFrom != 0 || bottom >= gPortScreen.height)
+        return false;
+    /* The last HBlank has run. Picture rows read their own snapshots and
+       bottom rows read the final state, with output committed in row order. */
+    OuterRows rows = {bottom, gPortScreen.height, 1,
+                      {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}, {0}};
+    sPpuTopJob = top;
+    PpuRunBatch(&rows, top ? top->y0 : gPortScreen.originY, rows.y1);
+    sPpuTopJob = NULL;
+    if (top) {
+        static bool loggedAll;
+        if (!loggedAll) {
+            PortLog("ppu: fused all rows active");
+            loggedAll = true;
+        }
+    }
+    const int drawn = SDL_clamp(sBottom - GBA_SCREEN_H, 0, rows.y1 - rows.y0);
+    for (int a = 0; a < 2; a++) {
+        sAffX[a] = rows.affX[a] + (int16_t)IO16(0x22 + a * 0x10) * drawn;
+        sAffY[a] = rows.affY[a] + (int16_t)IO16(0x26 + a * 0x10) * drawn;
+    }
+    static bool logged;
+    if (!logged) {
+        PortLog("ppu: fused picture and bottom batch active");
+        logged = true;
+    }
+    return true;
+}
+#else
+int PortPpuParallelRows(void (*fn)(void* ctx, int begin, int end), void* ctx, int count, int chunk) {
+    (void)fn; (void)ctx; (void)count; (void)chunk;
+    return 0;
+}
 #endif
 
 static void RenderOuterRows(int y0, int y1, int below) {
-    OuterRows r;
+    OuterRows r = {0};
     int a, drawn = 0;
     if (y1 <= y0)
         return;
@@ -4790,11 +6335,32 @@ static void RenderOuterRows(int y0, int y1, int below) {
     const size_t pixels = (size_t)(y1 - y0) * gPortScreen.width;
     if (sPpuWorkers > 0 && pixels < minBatchPixels)
         sPpuStats[4]++;
-    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent()) {
+    const int first = below ? y0 : PPU_MAX(y0, gPortScreen.originY + sTop);
+    const int last = below ? PPU_MIN(y1, gPortScreen.originY + sBottom) - 1 : y1 - 1;
+    const char* mosaicMargins;
+    PORT_ENV_ONCE(mosaicMargins, PortTunedEnv, "KHCOM_PPU_MOSAIC_MARGINS");
+    const unsigned mosaicLayers = mosaicMargins && first <= last && !(IO16(0x00) & 0x80)
+        ? PpuStaticMosaicLayers() : 0;
+    if (sPpuWorkers > 0 && pixels >= minBatchPixels && PpuRowsIndependent(mosaicLayers != 0)) {
         int glyphStart = sBgTextCount;
+        r.mosaic.layers = mosaicLayers;
+        if (mosaicLayers) {
+            r.mosaic.height = ((IO16(0x4C) >> 4) & 15) + 1;
+            r.mosaic.first = first - gPortScreen.originY;
+            memcpy(r.mosaic.next, sMosNextGy, sizeof(sMosNextGy));
+            memcpy(r.mosaic.x, sMosAffX, sizeof(sMosAffX));
+            memcpy(r.mosaic.y, sMosAffY, sizeof(sMosAffY));
+        }
         PpuRunBatch(&r, y0, y1);
         if (sPpuVerify)
             PpuVerify(&r, glyphStart);
+        if (mosaicLayers) {
+            const int gy = last - gPortScreen.originY;
+            SeedOuterMosaic(&r, gy);
+            for (a = 0; a < 2; a++)
+                if (mosaicLayers & (1u << a))
+                    sMosNextGy[a] = gy + 1;
+        }
     } else
 #endif
     {
@@ -4834,6 +6400,121 @@ void PortPpuJiminyFade(int* dark, int* white) {
 }
 
 void PortPpuRenderFrame(void) {
+    const char* spotlightTileRuns;
+    PORT_ENV_ONCE(spotlightTileRuns, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_TILE_RUNS");
+    sSpotlightTileRuns = spotlightTileRuns != NULL;
+    const char* objSkipClear;
+    PORT_ENV_ONCE(objSkipClear, PortTunedEnv, "KHCOM_PPU_OBJ_SKIP_CLEAR_RUNS");
+    sObjSkipClear = objSkipClear != NULL;
+    const char* objAffineSpan;
+    PORT_ENV_ONCE(objAffineSpan, PortTunedEnv, "KHCOM_PPU_OBJ_AFFINE_SPAN");
+    sObjAffineSpan = objAffineSpan != NULL;
+    const char* objRowRuns;
+    PORT_ENV_ONCE(objRowRuns, PortTunedEnv, "KHCOM_PPU_OBJ_ROW_RUNS");
+    sObjRowRuns = objRowRuns != NULL;
+    const char* spotlightBg0Runs;
+    PORT_ENV_ONCE(spotlightBg0Runs, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_BG0_RUNS");
+    sSpotlightBg0Runs = spotlightBg0Runs != NULL;
+    const char* spotlightTrimMargins;
+    PORT_ENV_ONCE(spotlightTrimMargins, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_TRIM_MARGINS");
+    sSpotlightTrimMargins = spotlightTrimMargins != NULL;
+    const char* spotlightOverlayFast;
+    PORT_ENV_ONCE(spotlightOverlayFast, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_OVERLAY_FAST");
+    sSpotlightOverlayFast = spotlightOverlayFast != NULL;
+    const char* spotlightBg0Edges;
+    PORT_ENV_ONCE(spotlightBg0Edges, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_BG0_EDGES");
+    sSpotlightBg0Edges = spotlightBg0Edges != NULL;
+    const char* spotlightClearRows;
+    PORT_ENV_ONCE(spotlightClearRows, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_CLEAR_ROWS");
+    sSpotlightClearRows = spotlightClearRows != NULL;
+    const char* narrowSideFill;
+    PORT_ENV_ONCE(narrowSideFill, PortTunedEnv, "KHCOM_PPU_NARROW_SIDE_FILL");
+    sNarrowSideFill = narrowSideFill != NULL;
+    const char* menuBgCopy;
+    PORT_ENV_ONCE(menuBgCopy, PortTunedEnv, "KHCOM_PPU_MENU_BG_COPY");
+    sMenuBgCopy = menuBgCopy != NULL;
+    const char* spotlightSkipMargins;
+    PORT_ENV_ONCE(spotlightSkipMargins, PortTunedEnv, "KHCOM_PPU_SPOTLIGHT_SKIP_MARGINS");
+    sSpotlightSkipMargins = spotlightSkipMargins != NULL;
+    const char* textNeon;
+    PORT_ENV_ONCE(textNeon, PortTunedEnv, "KHCOM_PPU_TEXT_NEON");
+    sTextNeon = textNeon != NULL;
+    const char* bgPlainRows;
+    PORT_ENV_ONCE(bgPlainRows, PortTunedEnv, "KHCOM_PPU_BG_PLAIN_ROWS");
+    sBgPlainRows = bgPlainRows != NULL;
+    const char* arenaFast;
+    PORT_ENV_ONCE(arenaFast, PortTunedEnv, "KHCOM_PPU_ARENA_FAST");
+    sArenaFast = arenaFast != NULL;
+#ifdef PORT_NEON
+    const char* neonOpaqueCompose;
+    PORT_ENV_ONCE(neonOpaqueCompose, PortTunedEnv, "KHCOM_PPU_NEON_OPAQUE_COMPOSE");
+    sNeonOpaqueCompose = neonOpaqueCompose != NULL;
+    const char* neonNarrowCompose;
+    PORT_ENV_ONCE(neonNarrowCompose, PortTunedEnv, "KHCOM_PPU_NEON_NARROW_COMPOSE");
+    sNeonNarrowCompose = neonNarrowCompose != NULL;
+    const char* journalCentralVector;
+    PORT_ENV_ONCE(journalCentralVector, PortTunedEnv, "KHCOM_PPU_JOURNAL_CENTRAL_VECTOR");
+    sJournalCentralVector = journalCentralVector != NULL;
+    const char* menuBgVector;
+    PORT_ENV_ONCE(menuBgVector, PortTunedEnv, "KHCOM_PPU_MENU_BG_VECTOR");
+    sMenuBgVector = menuBgVector != NULL;
+    const char* narrowPlainVector;
+    PORT_ENV_ONCE(narrowPlainVector, PortTunedEnv, "KHCOM_PPU_NARROW_PLAIN_VECTOR");
+    sNarrowPlainVector = narrowPlainVector != NULL;
+    const char* widePlainVector;
+    PORT_ENV_ONCE(widePlainVector, PortTunedEnv, "KHCOM_PPU_WIDE_PLAIN_VECTOR");
+    sWidePlainVector = widePlainVector != NULL;
+    const char* narrowSecondVector;
+    PORT_ENV_ONCE(narrowSecondVector, PortTunedEnv, "KHCOM_PPU_NARROW_SECOND_VECTOR");
+    sNarrowSecondVector = narrowSecondVector != NULL;
+    const char* wideSecondVector;
+    PORT_ENV_ONCE(wideSecondVector, PortTunedEnv, "KHCOM_PPU_WIDE_SECOND_VECTOR");
+    sWideSecondVector = wideSecondVector != NULL;
+    const char* journalPageVector;
+    PORT_ENV_ONCE(journalPageVector, PortTunedEnv, "KHCOM_PPU_JOURNAL_PAGE_VECTOR");
+    sJournalPageVector = journalPageVector != NULL;
+    {
+        extern Mode gModeWorldinspect;
+        extern Mode* gCurrentMode;
+        const char* vectorWorldBackground;
+        PORT_ENV_ONCE(vectorWorldBackground, PortTunedEnv, "KHCOM_PPU_WORLDINSPECT_BACKGROUND_VECTOR");
+        sWorldInspectBgVector = vectorWorldBackground && gCurrentMode == &gModeWorldinspect;
+        extern Mode gModeMapinspect;
+        const char* vectorMapInspect;
+        PORT_ENV_ONCE(vectorMapInspect, PortTunedEnv, "KHCOM_PPU_MAPINSPECT_OPAQUE_VECTOR");
+        sMapInspectOpaqueVector = vectorMapInspect && gCurrentMode == &gModeMapinspect;
+    }
+    const char* neonScreenCompose;
+    PORT_ENV_ONCE(neonScreenCompose, PortTunedEnv, "KHCOM_PPU_NEON_SCREEN_COMPOSE");
+    sNeonScreenCompose = neonScreenCompose != NULL;
+    const char* neonEffectCompose;
+    PORT_ENV_ONCE(neonEffectCompose, PortTunedEnv, "KHCOM_PPU_NEON_EFFECT_COMPOSE");
+    sNeonEffectCompose = neonEffectCompose != NULL;
+    const char* probeCompose;
+    PORT_ENV_ONCE(probeCompose, PortTunedEnv, "KHCOM_PPU_PROBE_COMPOSE");
+    sProbeComposeGates = probeCompose && PortFrameCount() % 30 == 0;
+    if (sProbeComposeGates)
+        memset(sComposeGates, 0, sizeof(sComposeGates));
+#endif
+    static int profilePhases = -1;
+    static int profileRows = -1;
+    static unsigned profileFrame = 0;
+    if (profileRows < 0) {
+        const char* frame = PortTunedEnv("KHCOM_PPU_PROFILE_FRAME");
+        profileFrame = frame ? (unsigned)SDL_atoi(frame) : 0;
+        profileRows = PortTunedEnv("KHCOM_PPU_ROW_TIMES") != NULL;
+    }
+    const unsigned frame = (unsigned)PortFrameCount();
+    const bool profileSample = frame % 30 == 0 ||
+        (profileFrame && frame >= profileFrame - 1 && frame <= profileFrame + 1);
+    sPpuSampleRows = profileRows && profileSample;
+    if (sPpuSampleRows)
+        memset(sPpuRowTimes, 0, sizeof(sPpuRowTimes));
+    uint64_t phaseStart = 0, topStart = 0, pictureStart = 0, bottomStart = 0, overlayStart = 0;
+    if (profilePhases < 0)
+        profilePhases = PortTunedEnv("KHCOM_PPU_PHASES") != NULL;
+    if (profilePhases && profileSample)
+        phaseStart = SDL_GetPerformanceCounter();
     int gy;
     int w = gPortScreen.width;
     extern Mode gModeJiminy;
@@ -4877,10 +6558,19 @@ void PortPpuRenderFrame(void) {
     ExportSprites();
 
     /* Lines above the original picture: state of line 0. */
-    RenderOuterRows(0, gPortScreen.originY, 0);
+    if (phaseStart) topStart = SDL_GetPerformanceCounter();
+#ifdef PORT_PPU_THREADS
+    const bool topQueued = PpuCanDeferTop();
+    const OuterRows topRows = {0, gPortScreen.originY, 0,
+                               {sAffX[0], sAffX[1]}, {sAffY[0], sAffY[1]}, {0}};
+    if (!topQueued)
+#endif
+        RenderOuterRows(0, gPortScreen.originY, 0);
+    if (phaseStart) pictureStart = SDL_GetPerformanceCounter();
+    bool bottomDrawn = false;
 
 #ifdef PORT_PPU_THREADS
-    if (PpuInnerBegin()) {
+    if (topQueued || PpuInnerBegin()) {
         int kept = 1;
         int memoryMayChange = 1;
         for (gy = 0; gy < GBA_SCREEN_H; gy++) {
@@ -4893,8 +6583,11 @@ void PortPpuRenderFrame(void) {
             StepAffine(1);
             memoryMayChange = HBlank(gy);
         }
-        if (kept)
-            PpuInnerDraw(GBA_SCREEN_H);
+        if (kept) {
+            bottomDrawn = PpuDrawPictureAndBottom(topQueued ? &topRows : NULL);
+            if (!bottomDrawn)
+                PpuInnerDraw(GBA_SCREEN_H);
+        }
     } else
 #endif
     for (gy = 0; gy < GBA_SCREEN_H; gy++) {
@@ -4904,6 +6597,16 @@ void PortPpuRenderFrame(void) {
         StepAffine(1);
         HBlank(gy);
     }
+#ifdef PORT_PPU_THREADS
+    if (topQueued && !bottomDrawn) {
+        const int32_t affX[2] = {sAffX[0], sAffX[1]}, affY[2] = {sAffY[0], sAffY[1]};
+        PpuRunBatch(&topRows, topRows.y0, topRows.y1);
+        for (int a = 0; a < 2; a++) {
+            sAffX[a] = affX[a];
+            sAffY[a] = affY[a];
+        }
+    }
+#endif
     if (!sLastFrameBlank) {
         /* the game's own fades rewrite the palettes: a picture of one colour
            (all white or all black) is a blank frame of the transition too */
@@ -4916,10 +6619,124 @@ void PortPpuRenderFrame(void) {
         sLastFrameBlank = uniform;
     }
 
+    if (phaseStart) bottomStart = SDL_GetPerformanceCounter();
     /* Lines below the original picture: state after line 159. */
-    RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
+    if (!bottomDrawn)
+        RenderOuterRows(gPortScreen.originY + GBA_SCREEN_H, gPortScreen.height, 1);
+    if (phaseStart) overlayStart = SDL_GetPerformanceCounter();
     MainHdOver();
     CaptureMenuMarginPixels();
+#ifdef PORT_NEON
+    if (sProbeComposeGates) {
+        unsigned gates[9] = {0};
+        for (int row = 0; row < gPortScreen.height; row++)
+            for (unsigned bit = 0; bit < 9; bit++)
+                gates[bit] += (sComposeGates[row] >> bit) & 1u;
+        PortLog("ppu gates: frame %u rows %u geometry %u windows %u sprites %u effects %u special %u layers %u correction %u second %u",
+                (unsigned)PortFrameCount(), gates[0], gates[1], gates[2], gates[3], gates[4],
+                gates[5], gates[6], gates[7], gates[8]);
+    }
+    if (sJournalCentralVector) {
+        static bool logged;
+        if (!logged) for (int y = 0; y < GBA_SCREEN_H; y++) if (sJournalCentralRows[y]) {
+            PortLog("ppu: journal central vector active"); logged = true; break;
+        }
+    }
+    static bool neonScreenLogged;
+    static bool mapInspectLogged;
+    if (sMapInspectOpaqueVector && !mapInspectLogged) {
+        for (int row = 0; row < gPortScreen.height; row++) {
+            if (sMapInspectOpaqueRows[row]) {
+                PortLog("ppu: map inspect opaque vector active");
+                mapInspectLogged = true;
+                break;
+            }
+        }
+    }
+    static bool worldBackgroundLogged;
+    if (sWorldInspectBgVector && !worldBackgroundLogged) {
+        for (int row = 0; row < gPortScreen.height; row++) {
+            if (sWorldInspectBgRows[row]) {
+                PortLog("ppu: world inspect background vector active");
+                worldBackgroundLogged = true;
+                break;
+            }
+        }
+    }
+    static bool spotlightScreenLogged;
+    if (sSpotlightOverlayFast && sSpotlight && !spotlightScreenLogged) {
+        for (int row = 0; row < GBA_SCREEN_H; row++) {
+            if (sSpotlightScreenRows[row]) {
+                PortLog("ppu: spotlight screen vector active");
+                spotlightScreenLogged = true;
+                break;
+            }
+        }
+    }
+    if (sNeonScreenCompose && !neonScreenLogged) {
+        for (int row = 0; row < GBA_SCREEN_H; row++) {
+            if (sNeonScreenRows[row]) {
+                PortLog("ppu: NEON screen composition active");
+                neonScreenLogged = true;
+                break;
+            }
+        }
+    }
+    static bool neonEffectLogged;
+    if (sNeonEffectUsed && !neonEffectLogged) {
+        PortLog("ppu: NEON effect composition active");
+        neonEffectLogged = true;
+    }
+    static bool neonOpaqueLogged;
+    if (sNeonOpaqueCompose && !neonOpaqueLogged) {
+        for (int row = 0; row < gPortScreen.height; row++) {
+            if (sNeonOpaqueRows[row]) {
+                PortLog("ppu: NEON opaque composition active");
+                neonOpaqueLogged = true;
+                break;
+            }
+        }
+    }
+#endif
+    if (sPpuSampleRows) {
+        PpuRowTimes bands[2] = {{0}};
+        for (int row = 0; row < gPortScreen.height; row++) {
+            const int gbaY = row - gPortScreen.originY;
+            PpuRowTimes* sum = &bands[gbaY < 0 || gbaY >= GBA_SCREEN_H];
+            sum->backgrounds += sPpuRowTimes[row].backgrounds;
+            sum->objects += sPpuRowTimes[row].objects;
+            sum->compose += sPpuRowTimes[row].compose;
+            sum->overlay += sPpuRowTimes[row].overlay;
+            for (int kind = 0; kind < 4; kind++) {
+                sum->bgCount[kind] += sPpuRowTimes[row].bgCount[kind];
+                sum->bgTicks[kind] += sPpuRowTimes[row].bgTicks[kind];
+                sum->layerTicks[kind] += sPpuRowTimes[row].layerTicks[kind];
+            }
+        }
+        const double ms = 1000.0 / SDL_GetPerformanceFrequency();
+        for (int band = 0; band < 2; band++) {
+            const PpuRowTimes* sum = &bands[band];
+            PortLog("ppu row work: frame %u %s backgrounds %.3f objects %.3f compose %.3f overlay %.3f core-ms",
+                    (unsigned)PortFrameCount(), band ? "margins" : "picture",
+                    sum->backgrounds * ms, sum->objects * ms, sum->compose * ms, sum->overlay * ms);
+            PortLog("ppu bg modes: frame %u %s text4 %u %.3f text8 %u %.3f affine %u %.3f bitmap %u %.3f",
+                    (unsigned)PortFrameCount(), band ? "margins" : "picture",
+                    sum->bgCount[0], sum->bgTicks[0] * ms, sum->bgCount[1], sum->bgTicks[1] * ms,
+                    sum->bgCount[2], sum->bgTicks[2] * ms, sum->bgCount[3], sum->bgTicks[3] * ms);
+            PortLog("ppu bg layers: frame %u %s bg0 %.3f bg1 %.3f bg2 %.3f bg3 %.3f core-ms",
+                    frame, band ? "margins" : "picture",
+                    sum->layerTicks[0] * ms, sum->layerTicks[1] * ms,
+                    sum->layerTicks[2] * ms, sum->layerTicks[3] * ms);
+        }
+    }
+    if (phaseStart) {
+        const uint64_t end = SDL_GetPerformanceCounter();
+        const double msPerTick = 1000.0 / SDL_GetPerformanceFrequency();
+        PortLog("ppu phases: frame %u setup %.3f top %.3f picture %.3f bottom %.3f overlays %.3f ms",
+                (unsigned)PortFrameCount(), (topStart - phaseStart) * msPerTick,
+                (pictureStart - topStart) * msPerTick, (bottomStart - pictureStart) * msPerTick,
+                (overlayStart - bottomStart) * msPerTick, (end - overlayStart) * msPerTick);
+    }
 }
 
 /* A skipped frame (frame_skip, the device is late): the visible lines' events reach the game as in a drawn frame
@@ -5127,6 +6944,68 @@ static int MenuSpriteColor(const uint16_t* frame, const ObjTiles* tiles,
     return col;
 }
 
+typedef struct HeaderSamplerPiece {
+    uint16_t a0, a1, a2;
+    int x, y, width, height, tile;
+} HeaderSamplerPiece;
+
+typedef struct HeaderSampler {
+    HeaderSamplerPiece pieces[128];
+    int count, left, top, bottom, mapping1d;
+} HeaderSampler;
+
+static int HeaderSamplerInit(HeaderSampler* out, const uint16_t* frame,
+                             const ObjTiles* tiles, const ObjPalette* palette) {
+    const uint16_t* p;
+    int n, i, offset = 0;
+    if (!frame || !tiles || !palette || tiles->self != tiles || palette->self != palette ||
+        (IO16(0) & 0x80) || !(IO16(0) & 0x1000) || frame[0] > 128)
+        return 0;
+    n = frame[0]; p = frame + 1;
+    out->count = 0; out->left = out->top = 32767; out->bottom = -32767;
+    out->mapping1d = (IO16(0) & 0x40) != 0;
+    for (i = 0; i < n; i++) {
+        int x = p[i*3+1] & 511, y = p[i*3] & 255, shape = p[i*3] >> 14;
+        if (x >= 256) x -= 512;
+        if (y >= 128) y -= 256;
+        if (x < out->left) out->left = x;
+        if (shape < 3) {
+            int height = sObjSize[shape][p[i*3+1] >> 14][1];
+            if (y < out->top) out->top = y;
+            if (y + height > out->bottom) out->bottom = y + height;
+        }
+    }
+    for (i = 0; i < n; i++) {
+        uint16_t a0 = p[i*3], a1 = p[i*3+1], a2 = p[i*3+2];
+        int shape = a0 >> 14, size = a1 >> 14, tile;
+        HeaderSamplerPiece* part;
+        if (shape >= 3) continue;
+        part = &out->pieces[out->count++];
+        part->a0 = a0; part->a1 = a1;
+        part->x = a1 & 511; if (part->x >= 256) part->x -= 512;
+        part->y = a0 & 255; if (part->y >= 128) part->y -= 256;
+        part->width = sObjSize[shape][size][0]; part->height = sObjSize[shape][size][1];
+        tile = tiles->allocated ? offset : (a2 & 1023);
+        offset += (part->width * part->height / 64) * ((a0 & 0x2000) ? 2 : 1);
+        part->a2 = (uint16_t)(((tile + tiles->index) & 1023) | (((a2 >> 12) + palette->index) << 12));
+    }
+    return 1;
+}
+
+static int HeaderSamplerColor(const HeaderSampler* sampler, int y, int col0) {
+    int i;
+    for (i = 0; i < sampler->count; i++) {
+        const HeaderSamplerPiece* part = &sampler->pieces[i];
+        int tx = sampler->left + col0 - part->x, ty = y - part->y, color;
+        if (tx < 0 || tx >= part->width || ty < 0 || ty >= part->height) continue;
+        if (part->a1 & 0x1000) tx = part->width - 1 - tx;
+        if (part->a1 & 0x2000) ty = part->height - 1 - ty;
+        color = ObjColor(part->a0, part->a2, tx, ty, part->width, sampler->mapping1d);
+        if (color >= 0) return color;
+    }
+    return -1;
+}
+
 /* A repeatable piece of an asset, independent of its animated screen
    position: columns col0 and col0 + 1 from its left end. */
 static uint32_t MenuSpritePixel(const uint16_t* frame, const ObjTiles* tiles,
@@ -5149,17 +7028,37 @@ static uint32_t MenuSpritePixel(const uint16_t* frame, const ObjTiles* tiles,
    and its sprite palette is released, while the band must stay. */
 static int sHeaderBand[2][32];
 
+static const void* sHeaderKey[3];
+
+/* KHCOM_PPU_HEADER_GONE_PARALLEL: the source of an already picked header was
+   cleared, so HeaderPick is -1 for the whole frame and needs no writes. */
+static int HeaderGone(void) {
+    const char* enabled;
+    PORT_ENV_ONCE(enabled, PortTunedEnv, "KHCOM_PPU_HEADER_GONE_PARALLEL");
+    return enabled && !sMenuHeaderFrame && sHeaderKey[0];
+}
+
 static int HeaderPick(void) {
-    static const void* key[3];
+    const void** key = sHeaderKey;
     static int pick, valid;
     static uint32_t stamp;
 
+    if (HeaderGone())
+        return -1;
     /* once a frame: the asset's tiles and palette arrive after it is first drawn */
     if (stamp != PortFrameCount() || key[0] != sMenuHeaderFrame || key[1] != sMenuHeaderTiles ||
         key[2] != sMenuHeaderPalette) {
         int top = 32767, bottom = -32767, best = 1 << 30, k, j, yy;
+        const char* fastHeader;
+        HeaderSampler sampler;
+        int prepared;
+        PORT_ENV_ONCE(fastHeader, getenv, "KHCOM_FAST_MENU_HEADER_PICK");
         stamp = PortFrameCount();
-        if (MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, 0, 0, &top, &bottom) == -2)
+        prepared = fastHeader && HeaderSamplerInit(&sampler, sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette);
+        if (fastHeader && !prepared)
+            return sMenuHeaderFrame && key[0] == sMenuHeaderFrame && valid ? pick : -1;
+        if (prepared) { top = sampler.top; bottom = sampler.bottom; }
+        else if (MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, 0, 0, &top, &bottom) == -2)
             return sMenuHeaderFrame && key[0] == sMenuHeaderFrame && valid ? pick : -1;
         valid = 0;
         pick = 0;
@@ -5170,7 +7069,8 @@ static int HeaderPick(void) {
             for (j = 0; j < 2; j++) {
                 int prev = -3;
                 for (yy = top; yy < bottom && yy < 32; yy++) {
-                    int c = MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, k + j, NULL, NULL);
+                    int c = prepared ? HeaderSamplerColor(&sampler, yy, k + j) :
+                        MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, k + j, NULL, NULL);
                     if (c >= 0) opaque++;
                     if (yy > top && c != prev) changes++;
                     prev = c;
@@ -5184,7 +7084,8 @@ static int HeaderPick(void) {
         }
         for (j = 0; j < 2; j++)
             for (yy = 0; yy < 32; yy++)
-                sHeaderBand[j][yy] = MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, pick + j, NULL, NULL);
+                sHeaderBand[j][yy] = prepared ? HeaderSamplerColor(&sampler, yy, pick + j) :
+                    MenuSpriteColor(sMenuHeaderFrame, sMenuHeaderTiles, sMenuHeaderPalette, yy, pick + j, NULL, NULL);
         key[0] = sMenuHeaderFrame; key[1] = sMenuHeaderTiles; key[2] = sMenuHeaderPalette;
         valid = 1;
     }
@@ -6230,6 +8131,51 @@ void PortPpuRenderHud(uint32_t* buf) {
     }
 }
 
+#ifdef PORT_NEON
+static uint16_t BgTextVisible16(const uint8_t* bgp, const uint8_t* layer,
+                                const uint16_t* obj, int priority, int bg) {
+    const uint8x16_t bp = vld1q_u8(bgp), bl = vld1q_u8(layer);
+    const uint16x8_t o0 = vld1q_u16(obj), o1 = vld1q_u16(obj + 8);
+    const uint16x8_t limit = vdupq_n_u16((uint16_t)((priority + 1) * PORT_OAM_CAPACITY));
+    const uint8x16_t objVisible = vcombine_u8(vmovn_u16(vcgeq_u16(o0, limit)), vmovn_u16(vcgeq_u16(o1, limit)));
+    const uint8x16_t objZero = vcombine_u8(vmovn_u16(vceqq_u16(o0, vdupq_n_u16(0))), vmovn_u16(vceqq_u16(o1, vdupq_n_u16(0))));
+    const uint8x16_t bgVisible = vcgeq_u8(bp, vdupq_n_u8((uint8_t)priority));
+    const uint8x16_t layerVisible = vorrq_u8(vmvnq_u8(vceqq_u8(bp, vdupq_n_u8((uint8_t)priority))),
+                                               vcgeq_u8(bl, vdupq_n_u8((uint8_t)bg)));
+    const uint8x16_t initialized = vmvnq_u8(vandq_u8(vceqq_u8(bp, vdupq_n_u8(0)), objZero));
+    const uint8x16_t visible = vandq_u8(vandq_u8(bgVisible, layerVisible), vandq_u8(objVisible, initialized));
+    static const uint8_t weights[16] = {1,2,4,8,16,32,64,128,1,2,4,8,16,32,64,128};
+    const uint8x16_t bits = vandq_u8(visible, vld1q_u8(weights));
+    const uint16x8_t sums16 = vpaddlq_u8(bits);
+    const uint32x4_t sums32 = vpaddlq_u16(sums16);
+    const uint64x2_t sums64 = vpaddlq_u32(sums32);
+    return (uint16_t)(vgetq_lane_u64(sums64, 0) | (vgetq_lane_u64(sums64, 1) << 8));
+}
+#endif
+
+/* Bucket the background glyphs once, preserving their original within-layer
+   order, instead of rescanning the whole list for each of 16 BG priorities. */
+static void BuildBgTextOrder(int hud, int* order, int* starts, int* ends) {
+    int count[16] = {0}, cursor[16], i, total = 0;
+    for (i = 0; i < sBgTextCount; i++) {
+        const BgTextGlyph* glyph = &sBgTextGlyphs[i];
+        if ((glyph->screen ? 2 : 0) == hud && glyph->priority < 4 && glyph->bg < 4)
+            count[(3 - glyph->priority) * 4 + 3 - glyph->bg]++;
+    }
+    for (i = 0; i < 16; i++) {
+        starts[i] = cursor[i] = total;
+        total += count[i];
+        ends[i] = total;
+    }
+    for (i = 0; i < sBgTextCount; i++) {
+        const BgTextGlyph* glyph = &sBgTextGlyphs[i];
+        if ((glyph->screen ? 2 : 0) == hud && glyph->priority < 4 && glyph->bg < 4) {
+            int bucket = (3 - glyph->priority) * 4 + 3 - glyph->bg;
+            order[cursor[bucket]++] = i;
+        }
+    }
+}
+
 /* HD text glyphs of one layer (0 world canvas, 1 HUD canvas, 2 screen layer), front last. */
 int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
     uint16_t dispcnt = IO16(0x00);
@@ -6245,9 +8191,15 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
        their authored backgrounds. Their panel pixels still obey windows. */
     {
         int priority, bg, j;
+        int order[1024], starts[16], ends[16];
+        const char* bucketText;
+        PORT_ENV_ONCE(bucketText, PortTunedEnv, "KHCOM_PPU_TEXT_BUCKETS");
+        if (bucketText)
+            BuildBgTextOrder(hud, order, starts, ends);
         for (priority = 3; priority >= 0; priority--) for (bg = 3; bg >= 0; bg--)
-            for (j = 0; j < sBgTextCount && n < max; j++) {
-                const BgTextGlyph* source = &sBgTextGlyphs[j];
+            for (j = bucketText ? starts[(3-priority)*4+3-bg] : 0;
+                 j < (bucketText ? ends[(3-priority)*4+3-bg] : sBgTextCount) && n < max; j++) {
+                const BgTextGlyph* source = &sBgTextGlyphs[bucketText ? order[j] : j];
                 const PortTextGlyph* glyph = &source->glyph;
                 int layer = source->screen ? 2 : 0;
                 int width = source->screen ? gPortOverlayW : gPortScreen.width;
@@ -6270,6 +8222,15 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                         (occBg[at]==priority && occLayer[at]<bg) || occObj[at]<(priority+1)* PORT_OAM_CAPACITY) continue;
                     best=distance; inkX=ix; inkY=iy;
                 }
+                {
+                    const char* skipHidden;
+                    PORT_ENV_ONCE(skipHidden, PortTunedEnv, "KHCOM_PPU_SKIP_HIDDEN_TEXT");
+                    /* Hidden glyphs are discarded below. Avoid their 16x16
+                       coverage and clip work unless a coverage trace asks
+                       to inspect those discarded glyphs. */
+                    if (best == 100 && skipHidden && !getenv("KHCOM_HD_TEXT_COVERAGE"))
+                        continue;
+                }
                 px=glyph->x+inkX; py=glyph->y+inkY;
                 out[n] = *glyph;
                 /* a window over part of the cell (a menu opened beside the
@@ -6290,6 +8251,16 @@ int PortPpuTextGlyphs(PortTextGlyph* out, int max, int hud) {
                 out[n].coverage = 0;
                 for (iy=0; iy<16; iy++) {
                     uint16_t visible = 0;
+#ifdef PORT_NEON
+                    const char* neonCoverage;
+                    PORT_ENV_ONCE(neonCoverage, PortTunedEnv, "KHCOM_PPU_NEON_TEXT_COVERAGE");
+                    py = glyph->y + iy - 4;
+                    px = glyph->x - 4;
+                    if (neonCoverage && px >= 0 && px + 16 <= width && py >= 0 && py < height) {
+                        at = py * width + px;
+                        visible = BgTextVisible16(occBg + at, occLayer + at, occObj + at, priority, bg);
+                    } else
+#endif
                     for (ix=0; ix<16; ix++) {
                         px=glyph->x+ix-4; py=glyph->y+iy-4;
                         if (px<0 || px>=width || py<0 || py>=height) continue;
@@ -6434,4 +8405,8 @@ void PortPpuSpriteMask(uint8_t* out) {
         uint8_t bg = sOccBg[i];
         out[i] = sMsgMask[i] ? 2 : (obj != 0xFFFFu && !(obj == 0 && bg == 0) && (obj >> PORT_OAM_PRIORITY_SHIFT) <= bg);
     }
+}
+
+static const char* PortTunedEnv(const char* name) {
+    return PortTuningValue(name, SDL_getenv(name), SDL_getenv("KHCOM_FAST_PATHS"));
 }

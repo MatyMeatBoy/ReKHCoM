@@ -282,6 +282,14 @@ static const s32 sRikuCardSwingAngles[4] = {
     0xE000, 0x2000, 0x6000, 0xA000,
 };
 
+#ifdef PLATFORM_PC
+int PortHdHudOpponentStockDrop(void);
+/* the opponent's stock, below Re:CoM's enemy bar when it is drawn (port_hdsprites.c) */
+#define RIKU_STOCK_DROP PortHdHudOpponentStockDrop()
+#else
+#define RIKU_STOCK_DROP 0
+#endif
+
 static const s16 sRikuStockValueX[4] = {
     184, 172, 160, 0,
 };
@@ -1468,7 +1476,8 @@ static void cardbattle_2(CardBattleWork* work) {
 #ifdef PLATFORM_PC
         PortHudBegin(1, -1); /* the opponent's stocked values: top-right, under its HP */
 #endif
-        DrawSprite(work->x, 4, gStockValueFrames[0], work->tiles, work->palette, NULL, SPRITE_FLAG_NO_MOSAIC, 12);
+        DrawSprite(work->x, 4 + RIKU_STOCK_DROP, gStockValueFrames[0], work->tiles, work->palette, NULL,
+                   SPRITE_FLAG_NO_MOSAIC, 12);
 #ifdef PLATFORM_PC
         PortHudEnd();
 #endif
@@ -3347,7 +3356,7 @@ u8 RikuStockHold(CardDisplayWork* work, void* task) {
         switch (work->phase) {
         case CARD_STOCK_PHASE_RISE:
             work->y -= 0x80;
-            targetY = gRikuCardLayout[3 - work->stockIndex][1] - 0x200;
+            targetY = (gRikuCardLayout[3 - work->stockIndex][1] + RIKU_STOCK_DROP * 256) - 0x200;
 
             if (work->y <= targetY) {
                 work->y = targetY;
@@ -3357,7 +3366,7 @@ u8 RikuStockHold(CardDisplayWork* work, void* task) {
             break;
         case CARD_STOCK_PHASE_DROP:
             work->y += 0x200;
-            targetY = gRikuCardLayout[3 - work->stockIndex][1];
+            targetY = (gRikuCardLayout[3 - work->stockIndex][1] + RIKU_STOCK_DROP * 256);
 
             if (work->y >= targetY) {
                 work->y = targetY;
@@ -3389,7 +3398,7 @@ u8 RikuStockMoveToSlot(CardDisplayWork* work, void* task) {
     if (work->flags & CARD_DISP_FLAG_OPEN) {
         ApproachValue(&work->x, gRikuCardLayout[3 - work->stockIndex][0], work->timer);
         ApproachValue(&work->scaleY, Q_8_8(0.7), work->timer);
-        ApproachValue(&work->y, gRikuCardLayout[3 - work->stockIndex][1], work->timer);
+        ApproachValue(&work->y, (gRikuCardLayout[3 - work->stockIndex][1] + RIKU_STOCK_DROP * 256), work->timer);
         ApproachValue(&work->scaleX, Q_8_8(0.7), work->timer);
     } else {
         ApproachValue(&work->x, gRikuCardLayout[4][0], work->timer);

@@ -20,7 +20,13 @@ static int AudioLog(void) {
     return v != NULL;
 }
 #include "port/port_audio.h"
+#include "port/port_audio_rate.h"
 #include "port/port_state.h"
+#include "port/port_tuning.h"
+/* KHCOM_PPU_* and KHCOM_PSG_* switches, with the default-on fast paths (port_tuning.h). */
+static const char* PortTunedEnv(const char* name) {
+    return PortTuningValue(name, SDL_getenv(name), SDL_getenv("KHCOM_FAST_PATHS"));
+}
 #if __STDC_HOSTED__ && !defined(__EMSCRIPTEN__)
 #include "port/port_audio_continuity.h"
 #define PORT_AUDIO_CONTINUITY 1
@@ -36,6 +42,7 @@ static PortAudioContinuity sContinuity;
 static int sStreamRate;
 static int sStreamPriming = 1;
 static float sQueuedAvg = -1.0f;
+static int sRefilling;
 static float sOut[FRAME_SAMPLES_MAX * 2];
 static float sPsgL[FRAME_SAMPLES_MAX], sPsgR[FRAME_SAMPLES_MAX];
 static float sDsAR[FRAME_SAMPLES_MAX];
@@ -256,6 +263,12 @@ static void PsgRender(int n, int rate) {
         }
     }
 
+    const char* reuseIntegral;
+    PORT_ENV_ONCE(reuseIntegral, PortTunedEnv, "KHCOM_PSG_REUSE_INTEGRAL");
+    const char* skipUnrouted;
+    PORT_ENV_ONCE(skipUnrouted, PortTunedEnv, "KHCOM_PSG_SKIP_UNROUTED_WAVE");
+    int integralDuty[2] = {-1, -1};
+    double integralEnd[2] = {0};
     PsgFrameRegisters();
     for (i = 0; i < n; i++) {
         float l = 0, r = 0;
@@ -282,9 +295,23 @@ static void PsgRender(int n, int rate) {
                     double hz = 131072.0 / (2048 - c->freq);
                     double inc = hz * 8.0 / rate, p0 = c->phase;
                     c->phase += inc;
-                    s = (float)((DutyIntegral(duty, c->phase) - DutyIntegral(duty, p0)) / inc) * (float)c->volume;
-                    if (c->phase >= 8.0)
+                    const bool audible = !skipUnrouted || (nr51 & (0x11 << ch));
+                    double end = 0;
+                    if (audible) {
+                        end = DutyIntegral(duty, c->phase);
+                        const double begin = reuseIntegral && integralDuty[ch] == duty
+                            ? integralEnd[ch] : DutyIntegral(duty, p0);
+                        s = (float)((end - begin) / inc) * (float)c->volume;
+                    }
+                    if (c->phase >= 8.0) {
                         c->phase -= 8.0 * (int)(c->phase / 8.0);
+                        integralDuty[ch] = -1;
+                    } else if (audible) {
+                        integralDuty[ch] = duty;
+                        integralEnd[ch] = end;
+                    } else {
+                        integralDuty[ch] = -1;
+                    }
                     break;
                 }
                 case 2: {
@@ -294,14 +321,16 @@ static void PsgRender(int n, int rate) {
                     c->phase += hz / rate;
                     if (c->phase >= 32.0)
                         c->phase -= 32.0 * (int)(c->phase / 32.0);
-                    idx = (int)c->phase;
-                    nib = (idx & 1) ? (wave[idx >> 1] & 15) : (wave[idx >> 1] >> 4);
-                    s = (float)(nib * 2 - 15);
-                    if (nr32 & 0x80) {
-                        s *= 0.75f;
-                    } else {
-                        shift = (nr32 >> 5) & 3;
-                        s = shift == 0 ? 0 : s / (float)(1 << (shift - 1));
+                    if (!skipUnrouted || (nr51 & (0x11 << ch))) {
+                        idx = (int)c->phase;
+                        nib = (idx & 1) ? (wave[idx >> 1] & 15) : (wave[idx >> 1] >> 4);
+                        s = (float)(nib * 2 - 15);
+                        if (nr32 & 0x80) {
+                            s *= 0.75f;
+                        } else {
+                            shift = (nr32 >> 5) & 3;
+                            s = shift == 0 ? 0 : s / (float)(1 << (shift - 1));
+                        }
                     }
                     break;
                 }
@@ -444,6 +473,7 @@ void PortAudioReset(void) {
     }
     sStreamPriming = 1;
     sQueuedAvg = -1.0f;
+    sRefilling = 0;
 }
 
 /* An HD movie takes the sound over (port_hdmovie.c): the game's output and the HD track fade out in 150 ms, so
@@ -496,6 +526,14 @@ void PortAudioShutdown(void) {
     sStream = NULL;
 }
 
+/* KHCOM_AUDIO_RESCUE_SKIP (port_main.c): less than `frames` game frames of
+   sound are queued while the device is playing. */
+int PortAudioQueueBelow(int frames) {
+    if (sStream == NULL || sStreamPriming || sStreamRate <= 0)
+        return 0;
+    return SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float)) < sStreamRate / (float)GBA_FPS * (float)frames;
+}
+
 static void Queue(int n, int rate) {
     if (sStream == NULL)
         return;
@@ -505,17 +543,38 @@ static void Queue(int n, int rate) {
         sStreamRate = rate;
     }
 #ifdef PORT_AUDIO_CONTINUITY
+    {
+        /* KHCOM_AUDIO_QUEUE_STATS: the margin actually left, which the
+           once-a-second sample misses: the lowest level found before a frame
+           was added, over 60 frames. */
+        const char* stats;
+        PORT_ENV_ONCE(stats, SDL_getenv, "KHCOM_AUDIO_QUEUE_STATS");
+        if (stats != NULL && !sStreamPriming) {
+            static int sLow = -1, sCount;
+            int left = SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float));
+            if (sLow < 0 || left < sLow)
+                sLow = left;
+            if (++sCount == 60) {
+                PortLog("audio queue: low %d samples at %d Hz in 60 frames, underruns %u", sLow, rate,
+                        (unsigned)PortAudioContinuityUnderruns(&sContinuity, sStream));
+                sLow = -1;
+                sCount = 0;
+            }
+        }
+    }
     PortAudioContinuityPut(&sContinuity, sStream, sOut, n * 2 * (int)sizeof(float));
 #else
     SDL_PutAudioStreamData(sStream, sOut, n * 2 * (int)sizeof(float));
 #endif
 
-    /* Keep ~4 frames queued. The fill level is smoothed and the playback rate
+    /* Keep ~4 frames queued (KHCOM_AUDIO_TARGET_FRAMES: up to 8). The fill level is smoothed and the playback rate
        corrected by at most 0.3% (about 5 cents), which is inaudible; only a
        large backlog (e.g. after a pause) is dropped outright. */
     {
         float queued = (float)(SDL_GetAudioStreamQueued(sStream) / (2 * (int)sizeof(float)));
-        float target = rate / (float)GBA_FPS * 4.0f;
+        const char* frames;
+        PORT_ENV_ONCE(frames, SDL_getenv, "KHCOM_AUDIO_TARGET_FRAMES");
+        float target = rate / (float)GBA_FPS * (float)PortAudioTargetFrames(frames);
         float ratio;
 
         if (queued > target * 6) {
@@ -535,13 +594,14 @@ static void Queue(int n, int rate) {
         sQueuedAvg += (queued - sQueuedAvg) * 0.02f;
         /* Production already matches consumption (59.7275 frames x samples per
            frame = sample rate), so normally play at exactly 1.0. Only a real
-           drift outside the dead band is corrected, by at most 0.15%. */
-        if (sQueuedAvg < target * 0.5f)
-            ratio = 0.9985f;
-        else if (sQueuedAvg > target * 3.0f)
-            ratio = 1.0015f;
-        else
-            ratio = 1.0f;
+           drift outside the dead band is corrected, by at most 0.15%.
+           KHCOM_AUDIO_REFILL also rebuilds, at most 0.3% slower, the level a
+           stretch of late frames took away (nothing else brings it back). */
+        {
+            const char* refill;
+            PORT_ENV_ONCE(refill, SDL_getenv, "KHCOM_AUDIO_REFILL");
+            ratio = PortAudioQueueRatio(sQueuedAvg, target, refill != NULL, &sRefilling);
+        }
         SDL_SetAudioStreamFrequencyRatio(sStream, ratio);
         if (AudioLog()) {
             static int sTick;

@@ -10,11 +10,11 @@ ROOT=Path(__file__).resolve().parents[2]
 
 class SfoReleaseTests(unittest.TestCase):
     def test_requested_and_boundary_versions(self):
-        for source,expected in [('2.2.5','02.25'),('v2.2.5','02.25'),('2.2','02.20'),('2.3','02.30'),('0.0.0','00.00'),('99.9.9','99.99')]:
+        for source,expected in [('2.2.5','02.25'),('v2.2.5','02.25'),('2.2','02.20'),('2.3','02.30'),('0.0.0','00.00'),('99.9.9','99.99'),('v2.10','02.92'),('2.17','02.99')]:
             with self.subTest(source=source):self.assertEqual(sfo_release_version(source),expected)
 
     def test_reject_unrepresentable_or_nonstable_versions(self):
-        for source in ('100.0.0','2.10.0','2.2.10','1.9.16','2.2-pre3','2.2.5.1','2','-1.2.3','2.-1.3','2.2.-1','',None):
+        for source in ('100.0.0','2.10.1','2.18','2.2.10','1.9.16','2.2-pre3','2.2.5.1','2','-1.2.3','2.-1.3','2.2.-1','',None):
             with self.subTest(source=source),self.assertRaises(ValueError):sfo_release_version(source)
 
     def test_all_bounded_triples_are_unique_and_ordered(self):

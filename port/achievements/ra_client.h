@@ -37,6 +37,8 @@ const char* KhRaTakeNotice(KhRa* ra);
 uint32_t KhRaNoticeId(const KhRa* ra); /* id of the achievement behind the last notice */
 /* Game process: evaluate and submit (softcore) only these achievement ids. */
 void KhRaStartOfficial(KhRa* ra, const uint32_t* ids, uint32_t count);
+/* An achievement earned locally, for the account set up on this device: sent at its next start online. */
+void KhRaQueueLocal(KhRa* ra, uint32_t id, long long when);
 
 #ifdef __cplusplus
 }

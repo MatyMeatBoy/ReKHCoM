@@ -25,7 +25,7 @@ export SDL_VIDEO_DRIVER="${SDL_VIDEO_DRIVER:-kmsdrm}"
 export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-alsa}"
 # At 640x480, the existing Auto compositor fills a 320x240 canvas at exactly 2x.
 export REKHCOM_FULLSCREEN=1
-export KHCOM_FIXED_FULLSCREEN=1
+export KHCOM_FIXED_FULLSCREEN=1 KHCOM_FIXED_480P=1
 export KHCOM_TALL_FIT="${KHCOM_TALL_FIT:-0}"
 export KHCOM_CONFIG="fullscreen=1;view_mode=4;aspect=5;zoom=4;battle_zoom=4;filter=0${KHCOM_CONFIG:+;$KHCOM_CONFIG}"
 

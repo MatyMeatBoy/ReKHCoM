@@ -35,6 +35,8 @@ def configure_guest(*, r36s=False):
     build_switch.TOUCH_CONTROLS = False
     if r36s:
         build_switch.CPU = '-mcpu=cortex-a35'
+        # the RK3326 has four Cortex-A35 cores: the PPU spreads its rows over them
+        build_switch.PPU_THREADS = True
     build_switch.common_flags = lambda: [f for f in _SWITCH_COMMON_FLAGS() if f != '-DPORT_SWITCH'] + ['-DPORT_LINUX64_GUEST']
 
 

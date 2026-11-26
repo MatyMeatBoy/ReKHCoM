@@ -5758,6 +5758,21 @@ s32 MapMenuResume(MapMenuWork* work) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+int PortGa36FieldMenuBars(void) {
+    extern Mode* gCurrentMode;
+    return gCurrentMode == &gModeMapFld && gFieldState != NULL &&
+        ((gFieldState->flags & (FIELD_FLAG_MENU_OPEN | FIELD_FLAG_ROOM_CREATE)) != 0 ||
+         /* the save crystal's screen carries the same bars */
+         (gMapRoomState != NULL && (gMapRoomState->flags & ROOM_FLAG_SAVE_MENU_OPEN) != 0));
+}
+int PortGa36SynthesisActive(void) {
+    extern Mode* gCurrentMode;
+    return gCurrentMode == &gModeMapFld && gFieldState != NULL &&
+        (gFieldState->flags & FIELD_FLAG_ROOM_CREATE) != 0;
+}
+#endif
+
 void Task_MapMenu_0(MapMenuWork* work) {
     s8 cursor;
 
@@ -6628,6 +6643,7 @@ s32 Task_MapSave_1(MapSaveWork* work) {
 void Task_MapSave_2(MapSaveWork* work) {
 #ifdef PLATFORM_PC
     PortScreenBegin(); /* menu: drawn on the screen layer, at the window's height */
+    PortFlatMenu(); /* 4:3 flat: its title bar and bottom band at the panel's edges */
     PortBgSplit(0, 8); /* the file panel goes right with its text */
 #endif
     TaskPoolDraw(&work->tasks);

@@ -184,6 +184,7 @@ static const Key sKeys[] = {
     { "ps2_fast_text", &gPortConfig.ps2FastText, 0, 1 },
     { "hd_hud", &gPortConfig.hdHud, 0, 1 },
     { "aspect", &gPortConfig.aspect, 0, PORT_ASPECT_COUNT - 1 },
+    { "hd_hud_pack", &gPortConfig.hdHudPack, 0, 1 },
     { "assets_seen", &gPortConfig.assetsSeen, -1, (1 << PORT_ASSET_COUNT) - 1 },
 #define BIND(name, act)                                                           { "kb_" name, &gPortConfig.keys[act][0], 0, 0x7FFFFFFF },                     { "kb_" name "_2", &gPortConfig.keys[act][1], 0, 0x7FFFFFFF },                { "pad_" name, &gPortConfig.pad[act], -1, PORT_PAD_BINDING_MAX }
     BIND("a", PORT_ACT_A), BIND("b", PORT_ACT_B), BIND("l", PORT_ACT_L), BIND("r", PORT_ACT_R),
@@ -339,6 +340,13 @@ int PortConfigZoomHeavy(int level) {
 float gPortAutoScaleF; /* the Auto view's exact pixel scale (may be fractional) */
 
 float PortConfigMenuScaleF(int outW, int outH) {
+    /* On the 640x480 handheld, a 320x240 canvas gives the options menu
+       integer 2x pixels and larger text. Its list already scrolls to fit. */
+    if (PortFixed480p() && outW == 640 && outH == 480) {
+        static int handheld2x = -1;
+        if (handheld2x < 0) handheld2x = SDL_getenv("KHCOM_GA36_OPTIONS_2X") != NULL;
+        if (handheld2x) return 2.0f;
+    }
     return SDL_max(outH / 320.0f, SDL_max(outW / (float)PORT_MAX_W, outH / (float)PORT_MAX_H));
 }
 
@@ -416,10 +424,19 @@ static void PortConfigDeviceDefaults(void) {
     PortLog("Device profile: %s", profile);
 }
 
+int PortFixed480p(void) {
+#if defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
+    const char* fixed = SDL_getenv("KHCOM_FIXED_480P");
+    return fixed && SDL_strcmp(fixed, "1") == 0;
+#else
+    return 0;
+#endif
+}
+
 int PortFixedFullscreen(void) {
 #if defined(PORT_LINUX) || defined(PORT_LINUX64_GUEST)
     const char* fixed = SDL_getenv("KHCOM_FIXED_FULLSCREEN");
-    return fixed && SDL_strcmp(fixed, "1") == 0;
+    return PortFixed480p() || (fixed && SDL_strcmp(fixed, "1") == 0);
 #else
     return 0;
 #endif
@@ -429,6 +446,23 @@ void PortConfigLoad(void) {
     PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
+    /* A card carrying the HD HUD pack is a handheld: the full HD cards (menu cards, world light, journal) stay off
+       whatever an old settings file says, or they would load their pictures at the first battle with the pack's
+       option off. The pack's own option (hd_hud_pack) is the only HD HUD switch there, and the HD title goes with it
+       (one switch; user, 26/11). */
+    if (PortHdHudPackPresent()) {
+        gPortConfig.hdCards = 0;
+        gPortConfig.hdTitle = gPortConfig.hdHudPack;
+    }
+    if (PortFixed480p()) {
+        gPortConfig.viewMode = PORT_VIEW_AUTO;
+        gPortConfig.aspect = PORT_ASPECT_4_3;
+        gPortConfig.zoom = 4;
+        gPortConfig.battleZoom = 4;
+        gPortConfig.filter = PORT_FILTER_NEAREST;
+        gPortConfig.scaleMode = PORT_SCALE_INTEGER;
+        gPortSceneFraming = 0;
+    }
     if (PortFixedFullscreen()) {
         gPortConfig.fullscreen = 1;
         gPortConfig.fullscreenWidth = 0;
@@ -560,6 +594,17 @@ void PortHdMediaInvalidate(void) {
     PortHdMediaAvailabilityReset();
     PortHdMovieInvalidatePaths();
 }
+/* a handheld's HD HUD pack: its launcher says so and the card carries it (the HP ring, made from the player's copy) */
+int PortHdHudPackPresent(void) {
+    static int present = -1;
+    if (present < 0) {
+        FILE* f = SDL_getenv("KHCOM_HD_HUD_PACK") ? fopen(PortConfigPath("hd/sprites/gBtlHpRing.png"), "rb") : NULL;
+        present = f != NULL;
+        if (f) fclose(f);
+    }
+    return present;
+}
+
 int PortAssetPresent(int asset) {
     extern int PortUndubAvailable(void);
     static const char* const files[PORT_ASSET_COUNT][2] = {
@@ -623,10 +668,12 @@ void PortApplyGraphicsMode(int mode) {
         return;
     }
     sUpgradedSettings = 0;
-    gPortConfig.viewMode = classic ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
+    gPortConfig.viewMode = classic && !PortFixed480p() ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
     /* the HD mod's parts only once imported: the new start offers them when the launcher brings them */
     gPortConfig.hdText = !classic; /* every mode but GBA classic (user 25/10) */
-    gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS);
+    /* a handheld's HD HUD pack may carry the battle's cards: they go with its HD HUD option, never the full HD cards
+       (menus, journal, world select), too heavy there */
+    gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS) && !PortHdHudPackPresent();
     gPortConfig.hdTitle = gPortConfig.hdCards;
     gPortConfig.hdMusic = hd && PortAssetPresent(PORT_ASSET_HD_MUSIC);
     /* HD replacements for cartridge movies: on unless GBA Original */

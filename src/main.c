@@ -486,6 +486,17 @@ int PortHarnessMode(const char* name, int arg) {
         SetActiveDeckIndex((u8)deck);
         return 1;
     }
+    /* deckfree:N: test-only collection with N additional unassigned cards,
+       so the Add Cards submenu can be profiled without a player's save. */
+    if (strcmp(name, "deckfree") == 0) {
+        extern u16 gCardCount;
+        int i;
+        if (arg < 1 || arg > 999 - gCardCount)
+            return 0;
+        for (i = 0; i < arg; i++)
+            gCardCollection[gCardCount++] = 1;
+        return 1;
+    }
     /* eventplay:N - a story event requested as the game does (RequestEventMode), not from the debug event menu: an
        event that starts a battle goes on into it and, once won, into the event after it (issue #46) */
     if (strcmp(name, "eventplay") == 0) {

@@ -12,6 +12,7 @@ port/include/port/port.h for the overall design.
 """
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -90,6 +91,17 @@ def main():
     port_cflags += " -DPORT_RETROACHIEVEMENTS -DRC_CLIENT_SUPPORTS_HASH -Iport/third_party/rcheevos/include"
     # the PPU draws the rows beyond the GBA picture on several cores (port_ppu.c, RenderOuterRows)
     port_cflags += " -DPORT_PPU_THREADS"
+    # The renderer's NEON kernels, mapped to SSE by SIMDe (MIT). Its single
+    # header is copied alone: the folder it ships in also replaces libc headers.
+    simde = toolchain.parent / "emsdk/upstream/emscripten/system/include/compat/arm_neon.h"
+    if simde.is_file() and os.environ.get("KHCOM_NO_SIMDE") != "1":
+        (BUILD / "simde").mkdir(parents=True, exist_ok=True)
+        target = BUILD / "simde" / "arm_neon.h"
+        if not target.is_file() or target.stat().st_size != simde.stat().st_size:
+            shutil.copyfile(simde, target)
+        port_cflags += f" -DPORT_SIMDE_NEON -msse4.1 -I{rel(BUILD / 'simde')}"
+    else:
+        print("note: SIMDe not found; the renderer builds its scalar paths only")
     ldflags = (f"-L{rel(sdl_arch / 'lib')} -lSDL3 -lgdi32 -lwinhttp -lcrypt32 -lws2_32 -lmfplat -lmfreadwrite -lmfuuid -lole32 -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic -Wl,--disable-dynamicbase -Wl,--large-address-aware "
                + ("" if args.debug else "-Wl,--subsystem,windows"))
     if args.reloc:

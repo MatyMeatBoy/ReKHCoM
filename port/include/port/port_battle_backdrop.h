@@ -50,6 +50,15 @@ int PortDarksideLayer(const void* const* maps);
 int PortDarksideTileSource(int layer, int* tx, int* ty, int cx, int cy);
 int PortDarksideShorePixel(int x, int y, uint16_t* color);
 int PortDarksideBodyPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color);
+typedef struct PortDarksideBodyRow {
+    const uint16_t* frame;
+    const uint8_t* tiles;
+    const uint8_t* art;
+    const struct DarksidePose* dissolve;
+    int left, right, width, nativeY, artY;
+} PortDarksideBodyRow;
+void PortDarksidePrepareBodyRow(PortDarksideBodyRow* row, const void* const* maps, int y, int cx, int cy);
+int PortDarksideBodyRowPixel(const PortDarksideBodyRow* row, int x, uint16_t* color);
 int PortDarksidePunchFlankPixel(const void* const* maps, int x, int y, int cx, int cy, uint16_t* color);
 
 int PortMaleficentDragonPixel(const void* map, int x, int y, int cx, int cy, uint16_t* color);

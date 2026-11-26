@@ -31,6 +31,7 @@ extern int PortBridgeVideoCaps(void);
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "gba/keys.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -39,11 +40,18 @@ extern int PortBridgeVideoCaps(void);
 #endif
 
 #include "port/port.h"
+#include "port/port_audio_rate.h"
 #include "port/port_netlink.h"
 #include "port/port_logfile.h"
+#include "port/loop_phases.h"
+#if defined(__linux__) && __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) /* getrusage: full Linux builds */
+#include <sys/resource.h>
+#include <time.h>
+#endif
 #include "port/port_version.h"
 #include "mode.h"
 #include "port/port_aspect.h"
+#include "port/overlay_vertical_bands.h"
 #include "port/gba_border_layout.h"
 #include "port/lcd_grid.h"
 #include "port/port_hd2d.h"
@@ -215,6 +223,53 @@ void PortRaiseIrq(uint16_t flag) {
     IO16(0x208) = ime;
 }
 
+/* KHCOM_LOOP_PHASES (port/loop_phases.h): off, each mark is one test. */
+static PortLoopPhases sLoop;
+
+static void LoopMark(int phase) {
+    if (sLoop.threshold)
+        PortLoopPhasesMark(&sLoop, phase, SDL_GetPerformanceCounter());
+}
+
+/* The end of a cycle: a slow one leaves its line, with what the system did to this thread meanwhile (CPU time well
+   under interval - wait: it was not running; involuntary switches; page faults that read from storage). */
+static void LoopEnd(uint32_t frame) {
+    static char line[640];
+    double cpu = -1;
+    long switches = -1, faults = -1;
+
+    if (!sLoop.threshold)
+        return;
+#if defined(__linux__) && __STDC_HOSTED__ && !defined(PORT_LINUX64_GUEST) /* getrusage: full Linux builds */
+    {
+        static double lastCpu;
+        static long lastSwitches, lastFaults;
+        static int primed;
+        struct timespec t;
+        struct rusage use;
+        /* one pair of reads a frame, so a slow frame has the previous one's values to compare with */
+        if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t) == 0 && getrusage(1 /* RUSAGE_THREAD */, &use) == 0) {
+            double now = t.tv_sec * 1000.0 + t.tv_nsec / 1e6;
+            if (primed) {
+                cpu = now - lastCpu;
+                switches = use.ru_nivcsw - lastSwitches;
+                faults = use.ru_majflt - lastFaults;
+            }
+            primed = 1;
+            lastCpu = now;
+            lastSwitches = use.ru_nivcsw;
+            lastFaults = use.ru_majflt;
+        }
+    }
+#endif
+    if (PortLoopPhasesEnd(&sLoop, line, sizeof(line))) {
+        extern const char* PortHarnessModeName(void);
+        PortLog("loop phases: frame %u %s %s | thread cpu %.2f ms, preempted %ld, major faults %ld",
+                (unsigned)frame, PortHarnessModeName(), line, cpu, switches, faults);
+        LoopMark(PORT_LOOP_REPORT);
+    }
+}
+
 /* ---- presentation --------------------------------------------------------------- */
 
 /* Fullscreen uses the configured display mode (closest the monitor offers);
@@ -225,7 +280,21 @@ int PortFbInit(int* w, int* h);
 int PortFbActive(void);
 SDL_Renderer* PortFbCreateRenderer(void);
 void PortFbPresent(SDL_Renderer* renderer);
-int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h);
+void PortFbWaitCopy(void);
+void PortFbStopCopy(void);
+bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
+void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
+bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawMenuFit(SDL_Renderer* renderer, const uint32_t* source, int stride, const uint8_t* hiddenRows);
+int PortFbDrawAllmap2x(SDL_Renderer* renderer, const uint32_t* source, int stride);
+int PortFbDrawFit2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, const SDL_FRect* dest);
+int PortFbDrawNearest2x(SDL_Renderer* renderer, const uint32_t* src, int w, int h, int outH, const SDL_Rect* cover);
+bool PortFbBlendOverlay4x(SDL_Renderer* renderer, const uint32_t* source, int pitch, const SDL_Rect* dest);
+bool PortFbBlendOverlay2x(SDL_Renderer* renderer, const uint32_t* source, int stride, const SDL_Rect* dest);
+bool PortFbBlendOverlayScaled(SDL_Renderer* renderer, const uint32_t* source, int width, int height, const SDL_Rect* dest);
+bool PortFbBlendOverlayScaledSparse(SDL_Renderer* renderer, const uint32_t* source, int width, int height, const SDL_Rect* dest);
 static int sFbW, sFbH;
 #endif
 
@@ -478,6 +547,17 @@ void PortCoverIntro(void) {
 }
 static int CoverActive(void) {
     return PortFrameCount() - sCoverFrom < 180 && (sFitScale > 0 || !gPortScreen.wide);
+}
+
+/* GA36 4:3: the battle's opening fills the panel, keeping its proportions. */
+static int Ga36CoverIntro(void) {
+#ifdef PORT_LINUX
+    static int enabled = -1;
+    if (enabled < 0) enabled = SDL_getenv("KHCOM_GA36_BATTLE_COVER") != NULL;
+    return enabled && sFitScale > 0 && CoverActive() && PortFixed480p() && PortFbActive();
+#else
+    return 0;
+#endif
 }
 
 static float MenuScale(int outW, int outH) {
@@ -889,11 +969,365 @@ static uint32_t MenuEdgeColor(int sx, int sy) {
     return count > GBA_SCREEN_W / 2 ? color : 0;
 }
 
+/* The margin colour of one edge. On the handheld's 4:3 panel a line sliding
+   past the edge during a menu's entry must not flash across the whole margin:
+   take what most of the outer rows agree on. */
+static uint32_t MenuMarginColor(int sx, int sy, int inward) {
+    static int steady = -1;
+    if (steady < 0) steady = SDL_getenv("KHCOM_GA36_MENU_43_EXTEND") && PortFixed480p();
+    if (!steady) return MenuEdgeColor(sx, sy);
+    uint32_t colors[6];
+    for (int i = 0; i < 6; i++) colors[i] = MenuEdgeColor(sx, sy + i * inward);
+    int best = 0, votes = 0;
+    for (int i = 0; i < 6; i++) {
+        int n = 0;
+        for (int k = 0; k < 6; k++) n += colors[k] == colors[i];
+        if (colors[i] && n > votes) { votes = n; best = i; }
+    }
+    return colors[best];
+}
+
+/* Non-wide GBA menus own only their 240x160 artwork.  Carry each authored
+   edge colour into 4:3's unused vertical rows without touching game pixels. */
+static void FillEnhancedVerticalColorMargins(void) {
+    const int top = gPortScreen.originY, bottom = top + GBA_SCREEN_H, w = gPortScreen.width;
+    uint32_t colors[2];
+    int y, x;
+    extern int PortUiMenuCanvas(void);
+    if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
+        gPortScreen.wide || top <= 0 || bottom >= gPortScreen.height)
+        return;
+    /* the Options panel covers the whole canvas: its top and bottom rows are
+       its own (title, help), not the game's margins */
+    if (PortUiMenuCanvas())
+        return;
+    colors[0] = MenuMarginColor(gPortScreen.originX, top, 1);
+    colors[1] = MenuMarginColor(gPortScreen.originX, bottom - 1, -1);
+    for (y = 0; y < top; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[0];
+    for (y = bottom; y < gPortScreen.height; y++) for (x = 0; x < w; x++) sComposite[y * w + x] = colors[1];
+}
+
+/* GA36 4:3: deck, map cards and the journal carry their last row down to the
+   screen edge, so panels and pages reach it instead of ending on a flat bar. */
+static int Menu43Extend(void) {
+#ifdef PORT_LINUX
+    extern Mode gModeDeck, gModeMapinspect, gModeJiminy;
+    const char* extend;
+    PORT_ENV_ONCE(extend, SDL_getenv, "KHCOM_GA36_MENU_43_EXTEND");
+    return extend && PortFixed480p() && PortFbActive() && gPortConfig.aspect == PORT_ASPECT_4_3 &&
+        gPortConfig.graphicsMode == PORT_MODE_GBA_ENHANCED &&
+        (gCurrentMode == &gModeDeck || gCurrentMode == &gModeMapinspect || gCurrentMode == &gModeJiminy);
+#else
+    return 0;
+#endif
+}
+
+/* The journal closes with the top bar mirrored: the same height, colour and
+   bright edge line, drawn over the book so its rings never end cut or
+   stretched. Call after the picture. */
+static void DrawJournalFooterBar(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
+    const uint32_t* column = sComposite + (int)src->y * gPortScreen.width + (int)src->x + 200;
+    const uint32_t bar = column[0] & 0xFFFFFFu;
+    int row = 1;
+    while (row < 16 && (column[row * gPortScreen.width] & 0xFFFFFFu) == bar) row++;
+    if (!bar || row >= 16) return;
+    const uint32_t edge = column[row * gPortScreen.width] & 0xFFFFFFu;
+    const float scale = dst->h / src->h, height = dst->y + row * scale;
+    SDL_FRect line = { 0, (float)(int)(h - height - scale), (float)w, scale };
+    /* The page already ends on that bright line left of the book: carry the
+       same line across, over the book, instead of a second one below it. */
+    for (int r = (int)src->h - 1; r >= (int)src->h - 20; r--)
+        if ((column[r * gPortScreen.width - 200] & 0xFFFFFFu) == edge) {
+            line.y = SDL_floorf(dst->y + r * scale);
+            line.h = SDL_ceilf(dst->y + (r + 1) * scale) - line.y;
+            break;
+        }
+    const SDL_FRect fill = { 0, line.y + line.h, (float)w, h - line.y - line.h };
+    SDL_SetRenderDrawColor(sRenderer, (edge >> 16) & 255, (edge >> 8) & 255, edge & 255, 255);
+    SDL_RenderFillRect(sRenderer, &line);
+    SDL_SetRenderDrawColor(sRenderer, (bar >> 16) & 255, (bar >> 8) & 255, bar & 255, 255);
+    SDL_RenderFillRect(sRenderer, &fill);
+}
+
+static void DrawMenu43Bottom(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
+    const float bottom = SDL_clamp(SDL_floorf(dst->y + dst->h), 0.0f, (float)h);
+    extern Mode gModeJiminy;
+    if (gCurrentMode == &gModeJiminy) return; /* DrawJournalFooterBar, over the picture */
+    const int count = (int)src->w, last = (int)(src->y + src->h) - 1;
+    const float step = dst->w / src->w;
+    if (bottom >= h || dst->x > 0 || dst->x + dst->w < w || count <= 0 || count > PORT_MAX_W || last < 7) return;
+    static uint32_t line[PORT_MAX_W];
+    const uint32_t* edge = sComposite + last * gPortScreen.width + (int)src->x;
+    const uint32_t* inner = edge - 4 * gPortScreen.width;
+    memcpy(line, edge, count * sizeof(*line));
+    const uint32_t ground = MenuMarginColor((int)src->x, (int)src->y, 1);
+    /* A line sliding past the edge during a menu's entry: a long run over a
+       plain stretch of another colour. Take the colour behind it. */
+    for (int x = 0, end; x < count; x = end) {
+        for (end = x + 1; end < count && line[end] == line[x]; end++) {}
+        if (end - x < 40 || (line[x] & 0xFFFFFFu) == ground) continue;
+        int behind = 0;
+        for (int k = x; k < end; k++) behind += inner[k] == inner[x + (end - x) / 2];
+        if (inner[x + (end - x) / 2] != line[x] && behind * 10 >= (end - x) * 9)
+            for (int k = x; k < end; k++) line[k] = inner[x + (end - x) / 2];
+    }
+    /* Up to three odd pixels between equal neighbours are an icon's tip. */
+    for (int x = 1, end; x < count - 1; x = end) {
+        for (end = x + 1; end < count && line[end] != line[x - 1]; end++) {}
+        if (line[x] == line[x - 1] || end >= count || end - x > 3) { end = x + 1; continue; }
+        for (int k = x; k < end; k++) line[k] = line[x - 1];
+    }
+    /* Only the card panel, which touches one side of the screen, reaches the
+       bottom. Whatever else ends there (a deck's box) closes on the screen's
+       own background. */
+    if (ground) {
+        int left = 0, right = count;
+        while (left < count && (line[left] & 0xFFFFFFu) != ground) left++;
+        while (right > left && (line[right - 1] & 0xFFFFFFu) != ground) right--;
+        if (left < count)
+            for (int x = left; x < right; x++) line[x] = ground;
+    }
+    for (int x = 0, end; x < count; x = end) {
+        for (end = x + 1; end < count && line[end] == line[x]; end++) {}
+        const SDL_FRect band = { dst->x + x * step, bottom, (end - x) * step, h - bottom };
+        SDL_SetRenderDrawColor(sRenderer, (line[x] >> 16) & 255, (line[x] >> 8) & 255, line[x] & 255, 255);
+        SDL_RenderFillRect(sRenderer, &band);
+    }
+}
+
+/* GA36 4:3: the world map at a smaller scale than the panel's width, so it
+   does not look zoomed in. 0 keeps the width fit. */
+static float AllmapScale(void) {
+#ifdef PORT_LINUX
+    extern Mode gModeAllmap;
+    static float scale = -1;
+    if (scale < 0) {
+        const char* value = SDL_getenv("KHCOM_GA36_ALLMAP_SCALE");
+        scale = value ? (float)SDL_atof(value) : 0;
+        if (scale < 2.0f || scale > 2.66f) scale = 0;
+    }
+    return scale > 0 && gCurrentMode == &gModeAllmap && PortFixed480p() && PortFbActive() &&
+        gPortConfig.aspect == PORT_ASPECT_4_3 ? scale : 0;
+#else
+    return 0;
+#endif
+}
+
+/* GA36 4:3 world map at its own fitted zoom: the header goes up to the panel's
+   top and the footer down to its bottom; the band rows next to them (one
+   colour across the width) stretch over the space they leave, so the view in
+   between is no longer framed by the picture's margins. */
+static int AllmapBandRow(int sx, int sy, int first, int step, int count, int w) {
+    int seen = 0;
+    for (int i = 0, r = first; i < count; i++, r += step) {
+        const uint32_t* row = sComposite + (size_t)(sy + r) * gPortScreen.width + sx;
+        int uniform = 1;
+        for (int x = 1; x < w && uniform; x++) uniform = row[x] == row[0];
+        if (!uniform) seen = 1;
+        else if (seen) return r;
+    }
+    return -1;
+}
+
+int gPortAllmapCoverRows; /* mode_allmap.c: the header rows the rooms stay out of (0: none) */
+static void DrawAllmapAnchored(const SDL_FRect* src, const SDL_FRect* dst, int w, int h, bool stale, bool direct) {
+#ifdef PORT_LINUX
+    gPortAllmapCoverRows = 0;
+    extern Mode gModeAllmap;
+    const char* on;
+    PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_ALLMAP_ANCHOR");
+    if (!on || gCurrentMode != &gModeAllmap || AllmapScale() > 0 || !PortFixed480p() || !PortFbActive() ||
+        gPortConfig.aspect != PORT_ASPECT_4_3 || dst->x != 0 || dst->w != w || dst->y < 8 ||
+        dst->y + dst->h > h - 8 || src->w != GBA_SCREEN_W || src->h != GBA_SCREEN_H)
+        return;
+    const int sx = (int)src->x, sy = (int)src->y, H = GBA_SCREEN_H, W = GBA_SCREEN_W;
+#define ALLMAP_PX(r, c) sComposite[(size_t)(sy + (r)) * gPortScreen.width + sx + (c)]
+    /* the band row under the header (the last one found when a map tile hides every candidate) */
+    static int lastA = -1, bigMap;
+    static Mode* lastMode;
+    if (lastMode != gCurrentMode) { lastMode = gCurrentMode; lastA = -1; bigMap = 0; }
+    int a = AllmapBandRow(sx, sy, 0, 1, H / 3, W);
+    /* A floor larger than the view scrolls its rooms right up to the header, as on the GBA: once a room shows under
+       it, the band row found below the header moves down. The header still goes to the panel's top, at its own band
+       row (the smallest seen, 16 on the GBA), and covers what reaches it there: the rooms pass under it as they pass
+       under the footer. */
+    if (a > 17 || (lastA > 0 && a > lastA + 1)) bigMap = 1; /* the header's band row is 16 */
+    if (a <= 0) a = lastA;
+    if (a > 0 && (lastA <= 0 || a < lastA)) lastA = a;
+    if (bigMap) gPortAllmapCoverRows = a = 16;
+    /* The footer: its bar starts at the left edge. Rows' band colours are
+       those covering a fifth of the row (the dithered bands have two). */
+    uint32_t bands[GBA_SCREEN_H][4];
+    int nb[GBA_SCREEN_H] = {0}, f = -1, barRight = 0;
+    for (int r = 0; r < H; r++) {
+        if (r > a && r < H / 2) continue;
+        uint32_t colors[16];
+        int counts[16], n = 0;
+        for (int c = 0; c < W; c++) {
+            const uint32_t p = ALLMAP_PX(r, c);
+            int k = 0;
+            while (k < n && colors[k] != p) k++;
+            if (k == n) {
+                if (n == 16) continue;
+                colors[n] = p; counts[n++] = 0;
+            }
+            counts[k]++;
+        }
+        for (int k = 0; k < n; k++)
+            if (counts[k] >= W / 5 && nb[r] < 4) bands[r][nb[r]++] = colors[k];
+    }
+#define ALLMAP_BAND(r, p) ((nb[r] > 0 && bands[r][0] == (p)) || (nb[r] > 1 && bands[r][1] == (p)) || \
+                           (nb[r] > 2 && bands[r][2] == (p)) || (nb[r] > 3 && bands[r][3] == (p)))
+    for (int r = H / 2 + 1; r < H && f < 0; r++)
+        if (!ALLMAP_BAND(r, ALLMAP_PX(r, 0))) f = r - 1;
+    if (f > H / 2 && nb[f - 1] > 0) {
+        for (int r = f; r < H; r++) {
+            int x = 0;
+            while (x < W && !ALLMAP_BAND(r, ALLMAP_PX(r, x))) x++;
+            if (x < W / 2) barRight = SDL_max(barRight, x);
+        }
+    } else {
+        f = -1;
+    }
+    if (a <= 0 && f < 0)
+        return;
+    /* the header covers the map: what is neither band nor the header bar (which starts at the left edge) in its rows
+       and in the band row stretched below it is a map tile, drawn as the band behind it */
+    int headRight[GBA_SCREEN_H] = {0};
+    for (int r = 0; r < a; r++) {
+        /* the bar ends where the backdrop (the row's right edge colour) runs for 8 pixels */
+        const uint32_t back = ALLMAP_PX(r, W - 1);
+        int x = 0, run = 0;
+        while (x < W && run < 8) run = ALLMAP_PX(r, x++) == back ? run + 1 : 0;
+        headRight[r] = run >= 8 ? SDL_min(x - run + 2, W) : W; /* +2: the arrow's tip pixel */
+    }
+#define ALLMAP_UNDER(r, c) ((c) >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, (c) - 2)) ? ALLMAP_PX(r, (c) - 2) : bands[r][0])
+    {
+        /* The menu fit drew the picture straight to the panel (rows 26..451, the
+           same nearest sampling): the anchored parts are rows moved in place,
+           with no texture upload or scaling. */
+        extern bool PortFbBeginGlyphBatch(SDL_Renderer*);
+        extern void PortFbMoveRows(int, int, int), PortFbRepeatRow(int, int, int);
+        extern void PortFbFillRect(int, int, int, int, uint32_t);
+        if (direct && w == 640 && h == 480 && dst->y == 26 && PortFbBeginGlyphBatch(sRenderer)) {
+            const unsigned stepY = (160u << 16) / 426u, stepX = (240u << 16) / 640u;
+            int firstY[GBA_SCREEN_H + 1], firstX[GBA_SCREEN_W + 1];
+            for (int r = 0, y = 0; r <= H; r++) {
+                while (y < 426 && ((stepY / 2 + (unsigned)y * stepY) >> 16) < (unsigned)r) y++;
+                firstY[r] = y;
+            }
+            for (int c = 0, x = 0; c <= W; c++) {
+                while (x < 640 && ((stepX / 2 + (unsigned)x * stepX) >> 16) < (unsigned)c) x++;
+                firstX[c] = x;
+            }
+            const int top = 26, below = 480 - (26 + 426);
+            if (a > 0) {
+                PortFbMoveRows(0, top, firstY[a]);
+                PortFbRepeatRow(top + firstY[a], firstY[a], top);
+                for (int r = 0; r <= a; r++)
+                    for (int c = r < a ? headRight[r] : 0; c < W && nb[r] > 0; c++) {
+                        const uint32_t p = ALLMAP_PX(r, c);
+                        if (ALLMAP_BAND(r, p)) continue;
+                        const int y0 = r < a ? firstY[r] : firstY[a], rows = r < a ? firstY[r + 1] - firstY[r] : top;
+                        PortFbFillRect(firstX[c], y0, firstX[c + 1] - firstX[c], rows, ALLMAP_UNDER(r, c) | 0xFF000000u);
+                    }
+            }
+            if (f > 0) {
+                const int from = top + firstY[f];
+                PortFbMoveRows(from + below, from, 426 - firstY[f]);
+                PortFbFillRect(0, from, 640, below, bands[f - 1][0] | 0xFF000000u);
+                for (int pass = 0; pass < 2; pass++)
+                    for (int r = f; r < H; r++)
+                        for (int c = barRight; c < W && nb[r] > 0; c++) {
+                            uint32_t p = ALLMAP_PX(r, c);
+                            if (ALLMAP_BAND(r, p))
+                                continue;
+                            if (!pass)
+                                p = c >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, c - 2)) ? ALLMAP_PX(r, c - 2) : bands[r][0];
+                            PortFbFillRect(firstX[c], top + firstY[r] + (pass ? 0 : below), firstX[c + 1] - firstX[c],
+                                           firstY[r + 1] - firstY[r], p | 0xFF000000u);
+                        }
+            }
+            static bool loggedDirect;
+            if (!loggedDirect) { PortLog("ga36: world map anchored in place (rows %d/%d)", a, f); loggedDirect = true; }
+            return;
+        }
+    }
+    if (stale)
+        SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+    const float s = dst->h / H, up = dst->y, down = h - (dst->y + dst->h);
+    SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
+    if (a > 0) {
+        const SDL_FRect bandSrc = {(float)sx, (float)(sy + a), (float)W, 1}, bandDst = {0, a * s, (float)w, up};
+        const SDL_FRect partSrc = {(float)sx, (float)sy, (float)W, (float)a}, partDst = {0, 0, (float)w, a * s};
+        SDL_RenderTexture(sRenderer, sTexture, &bandSrc, &bandDst);
+        SDL_RenderTexture(sRenderer, sTexture, &partSrc, &partDst);
+        for (int r = 0; r <= a; r++)
+            for (int c = r < a ? headRight[r] : 0; c < W && nb[r] > 0; c++) {
+                const uint32_t p = ALLMAP_PX(r, c);
+                if (ALLMAP_BAND(r, p)) continue;
+                const uint32_t q = ALLMAP_UNDER(r, c);
+                const float x0 = SDL_floorf(c * s), y0 = SDL_floorf(r < a ? r * s : a * s);
+                const SDL_FRect at = {x0, y0, SDL_floorf((c + 1) * s) - x0 + 1,
+                                      (r < a ? SDL_floorf((r + 1) * s) : SDL_floorf(a * s + up)) - y0 + 1};
+                SDL_SetRenderDrawColor(sRenderer, (q >> 16) & 255, (q >> 8) & 255, q & 255, 255);
+                SDL_RenderFillRect(sRenderer, &at);
+            }
+    }
+    if (f > 0) {
+        /* the bottom rows go down; what is not band nor footer bar there (the
+           world's logo) stays where it was, so it is never split */
+        const uint32_t gap = bands[f - 1][0];
+        const SDL_FRect gapDst = {0, up + f * s, (float)w, down};
+        const SDL_FRect partSrc = {(float)sx, (float)(sy + f), (float)W, (float)(H - f)};
+        const SDL_FRect partDst = {0, up + f * s + down, (float)w, (H - f) * s};
+        SDL_SetRenderDrawColor(sRenderer, (gap >> 16) & 255, (gap >> 8) & 255, gap & 255, 255);
+        SDL_RenderFillRect(sRenderer, &gapDst);
+        SDL_RenderTexture(sRenderer, sTexture, &partSrc, &partDst);
+        for (int pass = 0; pass < 2; pass++)
+            for (int r = f; r < H; r++)
+                for (int c = barRight; c < W && nb[r] > 0; c++) {
+                    uint32_t p = ALLMAP_PX(r, c);
+                    if (ALLMAP_BAND(r, p))
+                        continue;
+                    if (!pass) /* the moved copy: the band under it */
+                        p = c >= 2 && ALLMAP_BAND(r, ALLMAP_PX(r, c - 2)) ? ALLMAP_PX(r, c - 2) : bands[r][0];
+                    /* whole output pixels, tiling as the picture's own nearest sampling does */
+                    const float base = up + (pass ? 0 : down), x0 = SDL_floorf(c * s), y0 = SDL_floorf(base + r * s);
+                    const float grow = pass ? 0 : 1; /* the band over the moved copy also takes rounding's edge */
+                    const SDL_FRect at = {x0, y0, SDL_floorf((c + 1) * s) - x0 + grow,
+                                          SDL_floorf(base + (r + 1) * s) - y0 + grow};
+                    SDL_SetRenderDrawColor(sRenderer, (p >> 16) & 255, (p >> 8) & 255, p & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &at);
+                }
+    }
+#undef ALLMAP_UNDER
+#undef ALLMAP_BAND
+#undef ALLMAP_PX
+    static bool logged;
+    if (!logged) { PortLog("ga36: world map header/footer anchored (rows %d/%d, bar %d)", a, f, barRight); logged = true; }
+#else
+    (void)src; (void)dst; (void)w; (void)h; (void)stale; (void)direct;
+#endif
+}
+
+/* Its backdrop is made of horizontal bands: the edge columns carry them on. */
+static void DrawAllmapSides(const SDL_FRect* src, const SDL_FRect* dst, int w) {
+    for (int side = 0; side < 2; side++) {
+        const SDL_FRect column = { side ? src->x + src->w - 1 : src->x, src->y, 1, src->h };
+        const SDL_FRect area = { side ? dst->x + dst->w : 0, dst->y, side ? w - dst->x - dst->w : dst->x, dst->h };
+        if (area.w <= 0) continue;
+        SDL_SetTextureScaleMode(sTexture, SDL_SCALEMODE_NEAREST);
+        SDL_RenderTexture(sRenderer, sTexture, &column, &area);
+    }
+}
+
 static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* dst, int w, int h) {
     if (gPortConfig.aspect != PORT_ASPECT_4_3 || gPortConfig.graphicsMode != PORT_MODE_GBA_ENHANCED ||
         sFitScale > 0 || (dst->y <= 0 && dst->y + dst->h >= h))
         return;
-    if (sSideStyle != 1 && sSideStyle != 2 && sSideStyle != 4 && sSideStyle != 5 && sSideStyle != 9)
+    if (sSideStyle != 1 && sSideStyle != 2 && sSideStyle != 4 && sSideStyle != 5 && sSideStyle != 9 &&
+        !(sSideStyle == 12 && Menu43Extend()))
         return;
     const int sx = (int)src->x, sy = (int)src->y;
     const float top = SDL_clamp(SDL_ceilf(dst->y - 0.5f), 0.0f, (float)h);
@@ -903,8 +1337,8 @@ static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* d
     if (sSideStyle == 1) {
         colors[0] = colors[1] = ColorPaperBackdrop(sx, sy);
     } else {
-        colors[0] = MenuEdgeColor(sx, sy);
-        colors[1] = MenuEdgeColor(sx, sy + GBA_SCREEN_H - 1);
+        colors[0] = MenuMarginColor(sx, sy, 1);
+        colors[1] = MenuMarginColor(sx, sy + GBA_SCREEN_H - 1, -1);
     }
     for (int i = 0; i < 2; i++) {
         const uint32_t color = colors[i];
@@ -912,6 +1346,7 @@ static void DrawEnhancedVerticalMargins(const SDL_FRect* src, const SDL_FRect* d
         SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
         SDL_RenderFillRect(sRenderer, &bands[i]);
     }
+    if (Menu43Extend()) DrawMenu43Bottom(src, dst, w, h);
 }
 
 static void SideBar(int sx, int sy, int side, float y, float scale, float x0, float x1, int edgeX) {
@@ -1240,9 +1675,50 @@ static SDL_Texture* sBlurTex;
 #define BLUR_OUT_W 320
 #define BLUR_OUT_H 180
 
-static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+static SDL_Rect BlurOpaqueCover(const SDL_FRect* picture, int w, int h) {
+    SDL_Rect cover = {0};
+    if (picture) {
+        /* Omit only complete SIMD groups strictly under the opaque picture. */
+        const int left = (SDL_clamp((int)SDL_ceilf(picture->x) + 1, 0, w) + 7) & ~7;
+        const int right = SDL_clamp((int)SDL_floorf(picture->x + picture->w) - 1, 0, w) & ~7;
+        const int top = SDL_clamp((int)SDL_ceilf(picture->y) + 1, 0, h);
+        const int bottom = SDL_clamp((int)SDL_floorf(picture->y + picture->h) - 1, 0, h);
+        if (right > left && bottom > top)
+            cover = (SDL_Rect){left, top, right - left, bottom - top};
+    }
+    return cover;
+}
+#endif
+
+static void PresentBlurTexture(const uint32_t* pixels, int w, int h, const SDL_FRect* picture) {
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    const char* directBlur;
+    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
+    const char* visibleBlur;
+    PORT_ENV_ONCE(visibleBlur, SDL_getenv, "KHCOM_FBDEV_VISIBLE_BLUR");
+    SDL_Rect cover = BlurOpaqueCover(visibleBlur ? picture : NULL, w, h);
+    if (directBlur && w == BLUR_OUT_W * 2 && PortFixed480p() &&
+        PortFbDrawNearest2x(sRenderer, pixels, BLUR_OUT_W, BLUR_OUT_H, h, cover.w ? &cover : NULL))
+        return;
+#else
+    (void)pixels; (void)w; (void)h; (void)picture;
+#endif
+    SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+}
+
+static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH, const SDL_FRect* cover) {
     static uint32_t cell[BLUR_W * BLUR_H], uploaded[BLUR_W * BLUR_H], big[BLUR_OUT_W * BLUR_OUT_H];
     static int uploadedValid;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    static bool partialValid;
+    static SDL_Rect partialCover;
+    const char *partialInterpolation, *directBlur;
+    PORT_ENV_ONCE(partialInterpolation, SDL_getenv, "KHCOM_BLUR_PARTIAL_INTERPOLATION");
+    PORT_ENV_ONCE(directBlur, SDL_getenv, "KHCOM_FBDEV_DIRECT_BLUR");
+    const SDL_Rect hidden = BlurOpaqueCover(partialInterpolation && directBlur && PortFixed480p() &&
+                                           outW == 640 && outH == 480 ? cover : NULL, outW, outH);
+#endif
     float aspect = outW / (float)outH, cw = src->w, ch = src->h;
     int x0, y0, w, h, cx, cy;
 
@@ -1253,6 +1729,9 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
             return;
         SDL_SetTextureScaleMode(sBlurTex, SDL_SCALEMODE_NEAREST);
         uploadedValid = 0;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+        partialValid = false;
+#endif
     }
     if (aspect >= cw / ch)
         ch = cw / aspect; /* wider window: keep the full width, crop rows */
@@ -1283,9 +1762,23 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         }
     }
     if (uploadedValid && memcmp(cell, uploaded, sizeof(cell)) == 0) {
-        SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+        PresentBlurTexture(big, outW, outH, cover);
         return;
     }
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    if (hidden.w && partialValid && SDL_RectsEqual(&hidden, &partialCover) &&
+        memcmp(cell, uploaded, sizeof(cell)) == 0) {
+        if (PortFbDrawNearest2x(sRenderer, big, BLUR_OUT_W, BLUR_OUT_H, outH, &hidden))
+            return;
+        partialValid = false;
+        DrawBlurredReflection(src, outW, outH, NULL);
+        return;
+    }
+    const int yStep = (BLUR_OUT_H << 16) / 480;
+    const int firstHiddenRow = hidden.y ? ((yStep / 2 + (hidden.y - 1) * yStep) >> 16) + 1 : 0;
+    const int afterHiddenRow = hidden.y + hidden.h < 480
+        ? (yStep / 2 + (hidden.y + hidden.h) * yStep) >> 16 : BLUR_OUT_H;
+#endif
     /* The horizontal interpolation depends on only 14 source rows. Reuse
        their unrounded values for all destination rows. */
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
@@ -1315,7 +1808,13 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         int jy = SDL_clamp(iy + 1, 0, BLUR_H - 1);
         iy = SDL_clamp(iy, 0, BLUR_H - 1);
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
+        const bool covered = hidden.w && cy >= firstHiddenRow && cy < afterHiddenRow;
         for (cx = 0; cx < BLUR_OUT_W; cx += 4) {
+            if (covered && cx == hidden.x / 2) {
+                cx = (hidden.x + hidden.w) / 2;
+                if (cx == BLUR_OUT_W)
+                    break;
+            }
             const float32x4x4_t above = vld4q_f32(horizontal[iy][cx]);
             const float32x4x4_t below = vld4q_f32(horizontal[jy][cx]);
             uint32x4_t channels[3];
@@ -1339,11 +1838,26 @@ static void DrawBlurredReflection(const SDL_FRect* src, int outW, int outH) {
         }
 #endif
     }
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    partialValid = false;
+    if (hidden.w) {
+        uploadedValid = 0;
+        if (PortFbDrawNearest2x(sRenderer, big, BLUR_OUT_W, BLUR_OUT_H, outH, &hidden)) {
+            memcpy(uploaded, cell, sizeof(cell));
+            partialCover = hidden;
+            partialValid = true;
+            return;
+        }
+        /* SDL fallback needs a complete texture. */
+        DrawBlurredReflection(src, outW, outH, NULL);
+        return;
+    }
+#endif
     if (SDL_UpdateTexture(sBlurTex, NULL, big, BLUR_OUT_W * 4)) {
         memcpy(uploaded, cell, sizeof(cell));
         uploadedValid = 1;
     }
-    SDL_RenderTexture(sRenderer, sBlurTex, NULL, NULL);
+    PresentBlurTexture(big, outW, outH, cover);
 }
 
 /* Style 8 over the blurred reflection: a row whose sprites reach the edge
@@ -1600,6 +2114,8 @@ static void DrawSkipLayer(const SDL_FRect* normal) {
 }
 
 /* Replace only the journal background; native foreground remains on top. */
+static bool sJournalUploadPending; /* the direct journal skipped the frame upload */
+
 static int DrawJournalBook(const SDL_FRect* src, const SDL_FRect* dst) {
     extern const unsigned char gJiminyBgTiles[];
     static uint32_t foreground[240 * 160];
@@ -1641,8 +2157,33 @@ static int DrawJournalHeader(const SDL_FRect* src, const SDL_FRect* dst) {
 static void DrawJournalPicture(const SDL_FRect* src, const SDL_FRect* dst) {
     /* A ready book avoids painting the native body underneath it. Restore
        the complete original after any rejected or partially failed draw. */
-    if (!DrawJournalBook(src, dst) || !DrawJournalHeader(src, dst))
+    if (!DrawJournalBook(src, dst) || !DrawJournalHeader(src, dst)) {
+#ifdef PORT_LINUX
+        const char* directJournal;
+        PORT_ENV_ONCE(directJournal, SDL_getenv, "KHCOM_FBDEV_JOURNAL_FIT");
+        if (directJournal && PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            src->w == 240 && src->h == 160 && dst->x == 0 && (int)dst->y == 8 &&
+            dst->w == 640 && (int)dst->h == 426 &&
+            PortFbDrawJournalFit(sRenderer, sComposite + (int)src->y * gPortScreen.width + (int)src->x,
+                                 gPortScreen.width)) {
+            static bool logged;
+            if (!logged) { PortLog("fbdev: journal fit active"); logged = true; }
+            return;
+        }
+        /* the centred journal has the world inspect geometry */
+        if (directJournal && Menu43Extend() && PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            src->w == 240 && src->h == 160 && dst->x == 0 && (int)dst->y == 26 &&
+            dst->w == 640 && (int)dst->h == 426 &&
+            PortFbDrawWorldInspectFit(sRenderer, sComposite + (int)src->y * gPortScreen.width + (int)src->x,
+                                      gPortScreen.width))
+            return;
+#endif
+        if (sJournalUploadPending) {
+            SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+            sJournalUploadPending = false;
+        }
         SDL_RenderTexture(sRenderer, sTexture, src, dst);
+    }
 }
 
 static void DrawJournalNameMargins(const SDL_FRect* dst, int outW, uint32_t rightGround) {
@@ -1916,11 +2457,329 @@ static void PrepareHudAfterOptions(int menuCanvas) {
 }
 
 
+/* Fully transparent straight-alpha overlays leave the fbdev target untouched. */
+static bool ScreenOverlayEmpty(const uint32_t* pixels, int width) {
+#ifdef PORT_LINUX
+    if (PortFbActive() && PortFixedFullscreen()) {
+        const size_t count = (size_t)width * GBA_SCREEN_H;
+        size_t i = 0;
+        while (i < count && !(pixels[i] & 0xff000000u))
+            i++;
+        return i == count;
+    }
+#else
+    (void)pixels;
+    (void)width;
+#endif
+    return false;
+}
+
+#ifdef PORT_LINUX
+static SDL_Rect ScreenOverlayAlphaBounds(const uint32_t* pixels, int pitch, SDL_Rect scan) {
+    int left = scan.x + scan.w, right = scan.x;
+    int top = scan.y + scan.h, bottom = scan.y;
+    for (int y = scan.y; y < scan.y + scan.h; y++) {
+        const uint32_t* row = pixels + y * pitch;
+        int x = scan.x;
+        while (x < left && !(row[x] >> 24)) x++;
+        if (x < left) left = x;
+        x = scan.x + scan.w;
+        while (x > right && !(row[x - 1] >> 24)) x--;
+        if (x > right) right = x;
+        for (x = left; x < right; x++) {
+            if (row[x] >> 24) {
+                top = SDL_min(top, y);
+                bottom = y + 1;
+                break;
+            }
+        }
+    }
+    if (left >= right || top >= bottom)
+        return (SDL_Rect){0, 0, 0, 0};
+    return (SDL_Rect){left, top, right - left, bottom - top};
+}
+#endif
+
+/* Clip on source pixel boundaries before SDL allocates a scaled intermediate
+ * for a layer that extends beyond the fixed-size panel. */
+int gPortLevelUpActive; /* card_level_up.c: the level up screen is open */
+static uint32_t sFlatMenuFrame; /* PortFlatMenu: the frame a flat menu (save) was last drawn */
+void PortFlatMenu(void) { sFlatMenuFrame = PortFrameCount() + 1; }
+
+/* GA36 4:3 (flat): the level up screen's top band (its banner and level) goes up to the panel's top and its bottom
+   panel down to the bottom; the middle stays. The same for the save point's menu (their title bar and
+   bottom band). The bands are split at fully transparent rows, where the picture under them shows through, so
+   nothing is cut and nothing needs filling. */
+/* The level up screen while a bonus is chosen: the list hangs under the banner with no clear row between them, so
+   the whole-row split found nothing until the choice was made, and the header jumped then, and back and forth as the
+   list moved (user, 26/11). Here the header is cut per 4-pixel column: each column's run from the top (one clear row
+   bridged: the level box starts a row under the top band) goes up; the list, below a gap in every column, stays. The
+   footer the same from the bottom: where the third bonus card touches the bottom band, the card goes down whole with
+   it (a whole-row split at 152 had cut the card in two, user 26/11). */
+#define FLAT_GROUPS (GBA_SCREEN_W / 4)
+#define FLAT_HEAD_MAX 40
+#define FLAT_FOOT_TOP 60 /* a column drawn from the bottom up past this row is a panel, not footer: it stays */
+static uint32_t sFlatUp[GBA_SCREEN_W * FLAT_HEAD_MAX], sFlatMid[GBA_SCREEN_W * GBA_SCREEN_H],
+    sFlatDown[GBA_SCREEN_W * GBA_SCREEN_H];
+
+static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
+    const uint32_t* p = overlay + (size_t)row * width + g * 4;
+    return (p[0] | p[1] | p[2] | p[3]) >> 24 != 0;
+}
+
+uint64_t gPortPiece[24];
+static uint64_t sPieceCk;
+static int sPieceFlush = -1;
+#if __STDC_HOSTED__
+#define PIECE_FLUSH() SDL_FlushRenderer(sRenderer)
+#else
+#define PIECE_FLUSH() ((void)0) /* freestanding guests (SDL shim): no queued draws to flush */
+#endif
+#define PIECE_CK(i) do { if (sPieceFlush < 0) sPieceFlush = SDL_getenv("KHCOM_PIECE_LOG") != NULL; if (sPieceFlush) PIECE_FLUSH(); const uint64_t _n = SDL_GetPerformanceCounter(); gPortPiece[i] += _n - sPieceCk; sPieceCk = _n; } while (0) /* KHCOM_PIECE_LOG: instructions (icount) spent per HD piece of the presentation */
+static void PieceLog(void) {
+    static int on = -1;
+    static int every = -1;
+    if (on < 0) on = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
+    if (every < 0) every = SDL_getenv("KHCOM_PIECE_EVERY") != NULL; /* each frame's own, not a hundred's */
+    static unsigned calls;
+    /* every hundred presented frames (a frame skip leaves out the frames that are not presented) */
+    if (!on || (++calls % 100 && !every)) return;
+    PortLog("probe piece f=%u spr0 %.2f text0 %.2f spr2 %.2f text2 %.2f uihd %.2f footer %.2f art %.2f bar %.2f parts %.2f mainover %.2f base %.2f | pre %.2f hdlayers %.2f hud %.2f tail %.2f fbpresent %.2f | preover %.2f overlay %.2f layer2 %.2f screenover %.2f | sprites %.2f light %.2f over %.2f",
+            (unsigned)sFrameCount, gPortPiece[0] / 1e8, gPortPiece[1] / 1e8, gPortPiece[2] / 1e8, gPortPiece[3] / 1e8,
+            gPortPiece[4] / 1e8, gPortPiece[5] / 1e8, gPortPiece[6] / 1e8, gPortPiece[7] / 1e8, gPortPiece[8] / 1e8, gPortPiece[9] / 1e8, gPortPiece[10] / 1e8, gPortPiece[11] / 1e8, gPortPiece[12] / 1e8, gPortPiece[13] / 1e8, gPortPiece[14] / 1e8, gPortPiece[15] / 1e8, gPortPiece[16] / 1e8, gPortPiece[17] / 1e8, gPortPiece[18] / 1e8, gPortPiece[19] / 1e8, gPortPiece[20] / 1e8, gPortPiece[21] / 1e8, gPortPiece[22] / 1e8);
+    SDL_memset(gPortPiece, 0, sizeof(gPortPiece));
+}
+
+static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+    int head[FLAT_GROUPS], foot[FLAT_GROUPS], g, r, top = 0, f = GBA_SCREEN_H;
+    for (g = 0; g < FLAT_GROUPS; g++) {
+        int last = 0;
+        if (!FlatGroupDrawn(overlay, width, 0, g) && !FlatGroupDrawn(overlay, width, 1, g)) {
+            head[g] = 0;
+            continue;
+        }
+        for (r = 0; r < GBA_SCREEN_H; r++) {
+            if (FlatGroupDrawn(overlay, width, r, g)) last = r + 1;
+            else if (r + 1 < GBA_SCREEN_H && FlatGroupDrawn(overlay, width, r + 1, g) && r < 12) continue;
+            else break;
+        }
+        head[g] = last <= FLAT_HEAD_MAX ? last : 0; /* a column drawn further down is not header: it stays */
+        top = SDL_max(top, head[g]);
+    }
+    for (g = 0; g < FLAT_GROUPS; g++) {
+        int first = GBA_SCREEN_H;
+        if (FlatGroupDrawn(overlay, width, GBA_SCREEN_H - 1, g) || FlatGroupDrawn(overlay, width, GBA_SCREEN_H - 2, g))
+            for (r = GBA_SCREEN_H - 1; r >= 0 && FlatGroupDrawn(overlay, width, r, g); r--)
+                first = r;
+        foot[g] = first >= FLAT_FOOT_TOP && first > head[g] ? first : GBA_SCREEN_H;
+        f = SDL_min(f, foot[g]);
+    }
+    if (top < 8)
+        return false;
+    memcpy(sFlatMid, overlay, sizeof(uint32_t) * GBA_SCREEN_W * GBA_SCREEN_H);
+    memset(sFlatUp, 0, sizeof(uint32_t) * GBA_SCREEN_W * top);
+    for (g = 0; g < FLAT_GROUPS; g++)
+        for (r = 0; r < head[g]; r++) {
+            memcpy(sFlatUp + (size_t)r * GBA_SCREEN_W + g * 4, sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 16);
+            memset(sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 0, 16);
+        }
+    if (f < GBA_SCREEN_H) {
+        memset(sFlatDown + (size_t)f * GBA_SCREEN_W, 0, sizeof(uint32_t) * GBA_SCREEN_W * (GBA_SCREEN_H - f));
+        for (g = 0; g < FLAT_GROUPS; g++)
+            for (r = foot[g]; r < GBA_SCREEN_H; r++) {
+                memcpy(sFlatDown + (size_t)r * GBA_SCREEN_W + g * 4, sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 16);
+                memset(sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 0, 16);
+            }
+    }
+    {
+        const int y0 = (int)od->y, below = outH - (y0 + (int)od->h);
+#define Y(r) ((int)((r) * (int)od->h / GBA_SCREEN_H))
+        const SDL_Rect up = {0, 0, outW, Y(top)}, mid = {0, y0, outW, Y(GBA_SCREEN_H)},
+                       down = {0, y0 + Y(f) + below, outW, Y(GBA_SCREEN_H) - Y(f)};
+#undef Y
+        if (!PortFbBlendOverlayScaled(sRenderer, sFlatMid, width, GBA_SCREEN_H, &mid) ||
+            !PortFbBlendOverlayScaled(sRenderer, sFlatUp, width, top, &up) ||
+            (f < GBA_SCREEN_H &&
+             !PortFbBlendOverlayScaled(sRenderer, sFlatDown + (size_t)f * GBA_SCREEN_W, width, GBA_SCREEN_H - f, &down)))
+            return false;
+    }
+    {
+        static bool logged;
+        if (!logged) { PortLog("ga36: level up laid out flat by columns (header %d, footer %d)", top, f); logged = true; }
+    }
+    return true;
+#else
+    (void)overlay; (void)od; (void)width; (void)outW; (void)outH;
+    return false;
+#endif
+}
+
+static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+    const char* on;
+    int a = -1, f = -1, seen = 0, r;
+    PORT_ENV_ONCE(on, SDL_getenv, "KHCOM_GA36_LEVELUP_FLAT");
+    const bool flatMenu = sFlatMenuFrame && PortFrameCount() <= sFlatMenuFrame;
+    if (!on || !(gPortLevelUpActive || flatMenu) || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
+        outW != 640 || outH != 480 || width != GBA_SCREEN_W || (int)od->x != 0 || (int)od->w != outW || od->y < 8 ||
+        sOverlayScale < 2.66f || sOverlayScale > 2.67f) {
+        return false;
+    }
+    if (gPortLevelUpActive && !flatMenu && !SDL_getenv("KHCOM_GA36_LEVELUP_ROWS_ONLY"))
+        return DrawLevelUpColumns(overlay, od, width, outW, outH);
+#define ROW_CLEAR(r) ({ const uint32_t* row_ = overlay + (size_t)(r) * width; int c_ = 0;                         while (c_ < width && !(row_[c_] >> 24)) c_++; c_ == width; })
+    /* a band is a run of at least 8 drawn rows touching the top (or the bottom) of the screen */
+    for (r = 0; r < GBA_SCREEN_H / 2 && a < 0; r++) {
+        if (!ROW_CLEAR(r)) seen++;
+        else if (seen) a = r;
+        else if (r > 4) break;
+    }
+    for (r = GBA_SCREEN_H - 1, seen = 0; r >= GBA_SCREEN_H / 2 && f < 0; r--) {
+        if (!ROW_CLEAR(r)) seen++;
+        else if (seen) f = r + 1;
+        else if (r < GBA_SCREEN_H - 5) break;
+    }
+#undef ROW_CLEAR
+    if (a < 8 || f <= a || f > GBA_SCREEN_H - 8)
+        return false;
+    {
+        const int top = (int)od->y, below = outH - (top + (int)od->h);
+#define Y(r) ((int)((r) * (int)od->h / GBA_SCREEN_H))
+        const SDL_Rect up = {0, 0, outW, Y(a)}, mid = {0, top + Y(a), outW, Y(f) - Y(a)},
+                       down = {0, top + Y(f) + below, outW, Y(GBA_SCREEN_H) - Y(f)};
+#undef Y
+        if (!PortFbBlendOverlayScaled(sRenderer, overlay, width, a, &up) ||
+            !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)a * width, width, f - a, &mid) ||
+            !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)f * width, width, GBA_SCREEN_H - f, &down))
+            return false;
+        static bool logged;
+        if (!logged) { PortLog("ga36: %s laid out flat (rows %d/%d)", flatMenu ? "menu" : "level up", a, f); logged = true; }
+        return true;
+    }
+#else
+    (void)overlay; (void)od; (void)width; (void)outW; (void)outH;
+    return false;
+#endif
+}
+
+static bool DrawScreenOverlay(SDL_Texture* texture, const uint32_t* pixels, const SDL_FRect* dest, int width, int outW, int outH) {
+#ifdef PORT_LINUX
+    const char* clipOverlay;
+    const char* trimOverlay;
+    const char* nativeOverlay;
+    PORT_ENV_ONCE(clipOverlay, SDL_getenv, "KHCOM_FBDEV_CLIP_OVERLAY");
+    PORT_ENV_ONCE(trimOverlay, SDL_getenv, "KHCOM_FBDEV_TIGHT_OVERLAY");
+    PORT_ENV_ONCE(nativeOverlay, SDL_getenv, "KHCOM_FBDEV_NATIVE_OVERLAY");
+    const char* fractionalOverlay;
+    PORT_ENV_ONCE(fractionalOverlay, SDL_getenv, "KHCOM_FBDEV_FRACTIONAL_OVERLAY");
+    if (fractionalOverlay && PortFbActive() && PortFixed480p() && outW == 640 && outH == 480 &&
+        width == GBA_SCREEN_W && sOverlayScale > 2.66f && sOverlayScale < 2.67f &&
+        dest->x >= 0 && dest->y >= 0) {
+        const char* sparseOverlay;
+        extern int PortGa36SynthesisActive(void);
+        PORT_ENV_ONCE(sparseOverlay, SDL_getenv, "KHCOM_FBDEV_SPARSE_FRACTIONAL");
+        SDL_Rect target = {(int)dest->x, (int)dest->y, (int)dest->w, (int)dest->h};
+        /* Same arithmetic over any screen layer, not only synthesis. */
+        const char* sparseAll;
+        PORT_ENV_ONCE(sparseAll, SDL_getenv, "KHCOM_FBDEV_SPARSE_FRACTIONAL_ALL");
+        if ((sparseAll || (sparseOverlay && PortGa36SynthesisActive())) &&
+            PortFbBlendOverlayScaledSparse(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
+        if (PortFbBlendOverlayScaled(sRenderer, pixels, width, GBA_SCREEN_H, &target)) return true;
+    }
+    const int scale = (int)sOverlayScale;
+    if (clipOverlay && PortFbActive() && PortFixedFullscreen() && outW == 640 && outH == 480 &&
+        scale > 1 && sOverlayScale == scale) {
+        const int left = (int)dest->x, top = (int)dest->y;
+        const int right = left + width * scale, bottom = top + GBA_SCREEN_H * scale;
+        const char* native2x;
+        PORT_ENV_ONCE(native2x, SDL_getenv, "KHCOM_FBDEV_NATIVE_OVERLAY_2X");
+        if (native2x && scale == 2 && left >= 0 && top >= 0 && right <= outW && bottom <= outH) {
+            SDL_Rect bounds = {0, 0, width, GBA_SCREEN_H};
+            if (trimOverlay)
+                bounds = ScreenOverlayAlphaBounds(pixels, width, bounds);
+            if (!bounds.w || !bounds.h)
+                return true;
+            const SDL_Rect panel = {left + bounds.x * 2, top + bounds.y * 2, bounds.w * 2, bounds.h * 2};
+            if (PortFbBlendOverlay2x(sRenderer, pixels + bounds.y * width + bounds.x, width, &panel))
+                return true;
+        }
+        if (left < 0 || top < 0 || right > outW || bottom > outH) {
+            const int x0 = SDL_max(0, -left), y0 = SDL_max(0, -top);
+            const int x1 = SDL_min(outW, right) - left, y1 = SDL_min(outH, bottom) - top;
+            if (x0 >= x1 || y0 >= y1)
+                return true;
+            if (!(x0 % scale || y0 % scale || x1 % scale || y1 % scale)) {
+                SDL_Rect bounds = {x0 / scale, y0 / scale, (x1 - x0) / scale, (y1 - y0) / scale};
+                if (trimOverlay) {
+                    bounds = ScreenOverlayAlphaBounds(pixels, width, bounds);
+                    if (!bounds.w || !bounds.h)
+                        return true;
+                }
+                if (nativeOverlay && scale == 4) {
+                    const SDL_Rect panel = {left + bounds.x * 4, top + bounds.y * 4, bounds.w * 4, bounds.h * 4};
+                    if (PortFbBlendOverlay4x(sRenderer, pixels + bounds.y * width + bounds.x, width, &panel))
+                        return true;
+                }
+                const SDL_FRect source = {bounds.x, bounds.y, bounds.w, bounds.h};
+                const SDL_FRect visible = {left + bounds.x * scale, top + bounds.y * scale,
+                                            bounds.w * scale, bounds.h * scale};
+                return SDL_RenderTexture(sRenderer, texture, &source, &visible);
+            }
+        }
+    }
+#else
+    (void)pixels;
+    (void)width;
+    (void)outW;
+    (void)outH;
+#endif
+    return SDL_RenderTexture(sRenderer, texture, NULL, dest);
+}
+
+#ifdef PORT_LINUX
+/* Rows of the 240x160 screen layer with no transparency at all: the layer
+ * replaces whatever lies under them. Returns how many there are. */
+static int OpaqueOverlayRows(const uint32_t* overlay, uint8_t hidden[GBA_SCREEN_H]) {
+    int count = 0;
+    for (int y = 0; y < GBA_SCREEN_H; y++, overlay += GBA_SCREEN_W) {
+        int x = 0;
+        while (x < GBA_SCREEN_W && (overlay[x] >> 24) == 255)
+            x++;
+        hidden[y] = x == GBA_SCREEN_W;
+        count += hidden[y];
+    }
+    return count;
+}
+#endif
+
+#ifdef PORT_LINUX
+/* The 240x160 picture at the 640x480 panel's full width. */
+static bool PortGa36FitGeometry(const SDL_FRect* dst) {
+    return dst->x == 0 && dst->y == 26 && dst->w == 640 && dst->h == 160.0f * (640.0f / 240.0f);
+}
+#endif
+
 static void Present(int paced) {
+#ifdef PORT_LINUX
+    PortFbWaitCopy();
+#endif
+    LoopMark(PORT_LOOP_COPYWAIT);
+    sPieceCk = SDL_GetPerformanceCounter();
     if (!RendererResetService()) return;
     const char* hdProfile;
     PORT_ENV_ONCE(hdProfile, SDL_getenv, "KHCOM_HD_MENU_PROFILE");
     uint64_t hdProfileStart = hdProfile ? SDL_GetPerformanceCounter() : 0;
+#ifdef PORT_LINUX
+    const char* fbDetail;
+    PORT_ENV_ONCE(fbDetail, SDL_getenv, "KHCOM_FBDEV_DETAIL");
+    const bool measureFb = fbDetail && PortFbActive() && sFrameCount % 30 == 0;
+    uint64_t uploadTicks = 0, scaleTicks = 0;
+    bool usedScale2x = false;
+    const uint64_t detailStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
     uint64_t hdProfileWaitStart = sPresentWaitTotal;
     int hdProfileAlloc = hdProfile ? HdMenuAllocations() : 0;
     int outW, outH;
@@ -1955,6 +2814,10 @@ static void Present(int paced) {
     GrowPixelBuffer(&sCompositeBuf, &sCompositeCapacity, (size_t)gPortScreen.width * gPortScreen.height);
     PortHdHudPrepare(sRenderer);
     PortHdLayoutPrepare(sRenderer);
+    {
+        void PortHdSpritesPreloadStep(SDL_Renderer* renderer);
+        PortHdSpritesPreloadStep(sRenderer); /* the HD HUD pack's pictures, before the first battle */
+    }
     /* movies shown cropped: the skip prompt is drawn after the movie, on its
        own, so it neither grows with the video nor shifts the crop */
     moviePrompt = sSideStyle == 10 && sFitScale <= 0 && !menuCanvas && !gPortScreen.wide
@@ -1978,7 +2841,6 @@ static void Present(int paced) {
         extern void PortPpuOverKeepDrawn(const uint32_t* composite);
         PortPpuOverKeepDrawn(sComposite); /* the title's hint over its HD illustration */
     }
-    SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
     SDL_GetCurrentRenderOutputSize(sRenderer, &outW, &outH);
     SDL_SetRenderDrawColor(sRenderer, 0, 0, 0, 255);
     {
@@ -1992,9 +2854,118 @@ static void Present(int paced) {
         outW = area.w;
         outH = area.h;
     }
+    bool menuFit = false;
+#ifdef PORT_LINUX
+    {
+        /* A GBA-size menu picture at the handheld panel's full width: every
+           condition is known before the frame goes to the renderer. */
+        const char* menuFitFlag;
+        PORT_ENV_ONCE(menuFitFlag, SDL_getenv, "KHCOM_GA36_MENU_FIT");
+        menuFit = menuFitFlag && PortFbActive() && PortFixed480p() && !menuCanvas && !borderOn && !journalActive &&
+            (sFitScale > 0 || !gPortScreen.wide) && gPortConfig.viewMode != PORT_VIEW_CRT &&
+            gPortConfig.filter == PORT_FILTER_NEAREST && sSideStyle != 10 && outW == 640 && outH == 480 &&
+            (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height && !CoverActive() &&
+            PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, MenuScale(outW, outH)) ==
+                640.0f / 240.0f && !AllmapScale();
+    }
+#endif
+    bool deferBase = false;
+#if defined(PORT_LINUX) && defined(__ARM_NEON)
+    const char* deferFlag;
+    PORT_ENV_ONCE(deferFlag, SDL_getenv, "KHCOM_FBDEV_DEFER_BASE_UPLOAD");
+    if (deferFlag && PortFbActive() && PortFixedFullscreen() && !menuCanvas && gPortScreen.wide &&
+        sFitScale <= 0 && !PortHd2dActive() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+        outW == 2 * gPortScreen.width && outH == 2 * gPortScreen.height) {
+        extern int PortUiScenePauseRect(int rect[4]);
+        int pauseRect[4];
+        deferBase = !PortUiScenePauseRect(pauseRect);
+    }
+#endif
+    /* The centred 4:3 journal drawn straight to the panel: nothing reads the
+       frame texture, and the picture replaces rows 26..451. */
+    bool journalLight = false;
+#ifdef PORT_LINUX
+    {
+        const char *light, *directJournal, *skipSides;
+        PORT_ENV_ONCE(light, SDL_getenv, "KHCOM_GA36_JOURNAL_LIGHT_BASE");
+        PORT_ENV_ONCE(directJournal, SDL_getenv, "KHCOM_FBDEV_JOURNAL_FIT");
+        PORT_ENV_ONCE(skipSides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_JOURNAL_SIDES");
+        if (light && directJournal && skipSides && journalActive && Menu43Extend() && !menuCanvas && !borderOn &&
+            !nativeMainWorld && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0 && !gPortScreen.wide &&
+            gPortConfig.viewMode != PORT_VIEW_CRT && gPortConfig.filter == PORT_FILTER_NEAREST &&
+            outW == 640 && outH == 480 && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height && !CoverActive() &&
+            PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, MenuScale(outW, outH)) ==
+                640.0f / 240.0f && !PortPpuJiminyPaperMask()) {
+            extern int PortUiScenePauseRect(int rect[4]);
+            PortJiminyLayout layout;
+            int pauseRect[4];
+            journalLight = !PortUiScenePauseRect(pauseRect) && PortJiminyFit(outW, outH, &layout);
+        }
+    }
+#endif
+    sJournalUploadPending = journalLight;
+    bool allmapDirect = false;
+#ifdef PORT_LINUX
+    {
+        const char* direct;
+        PORT_ENV_ONCE(direct, SDL_getenv, "KHCOM_FBDEV_ALLMAP_DIRECT");
+        allmapDirect = direct && AllmapScale() == 2.0f && !menuCanvas && !borderOn && !journalActive &&
+            sSideStyle != 10 && (sFitScale > 0 || !gPortScreen.wide) && gPortConfig.viewMode != PORT_VIEW_CRT &&
+            gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+            (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H) &&
+            gPortScreen.originX >= 0 && gPortScreen.originY >= 0 &&
+            gPortScreen.originX + GBA_SCREEN_W <= gPortScreen.width &&
+            gPortScreen.originY + GBA_SCREEN_H <= gPortScreen.height;
+    }
+#endif
+    bool deferMenuUpload = false;
+#ifdef PORT_LINUX
+    if (menuFit && !nativeMainWorld) {
+        extern int PortUiScenePauseRect(int rect[4]);
+        const char* lazyUpload;
+        int pauseRect[4];
+        PORT_ENV_ONCE(lazyUpload, SDL_getenv, "KHCOM_GA36_MENU_FIT_LAZY_UPLOAD");
+        /* The scene pause's panel is the one later reader of the texture. */
+        deferMenuUpload = lazyUpload && !PortUiScenePauseRect(pauseRect);
+    }
+#endif
+    if (deferMenuUpload || journalLight)
+        FillEnhancedVerticalColorMargins();
+    if (!deferBase && !deferMenuUpload && !journalLight) {
+#ifdef PORT_LINUX
+        const uint64_t uploadStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
+        FillEnhancedVerticalColorMargins();
+        SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+#ifdef PORT_LINUX
+        if (measureFb)
+            uploadTicks = SDL_GetPerformanceCounter() - uploadStart;
+#endif
+    }
     if ((sFitScale > 0 || (!gPortScreen.wide)) && !menuCanvas && gPortConfig.viewMode != PORT_VIEW_CRT
-        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H)) {
-        SDL_RenderClear(sRenderer);
+        && (gPortScreen.width > GBA_SCREEN_W || gPortScreen.height > GBA_SCREEN_H || Ga36CoverIntro())) {
+        const char* bandClear = NULL;
+#ifdef PORT_LINUX
+        if (menuFit)
+            PORT_ENV_ONCE(bandClear, SDL_getenv, "KHCOM_GA36_MENU_FIT_BAND_CLEAR");
+#endif
+        if ((menuFit && bandClear) || journalLight) {
+            /* The opaque picture replaces rows 26..451: only the bands need black. */
+            const SDL_FRect bands[2] = {{0, 0, 640, 26}, {0, 452, 640, 28}};
+            SDL_RenderFillRects(sRenderer, bands, 2);
+        } else if (allmapDirect) {
+            /* The opaque picture replaces its own rectangle. */
+            const SDL_FRect around[4] = {{0, 0, 640, 80}, {0, 400, 640, 80}, {0, 80, 80, 320}, {560, 80, 80, 320}};
+            SDL_RenderFillRects(sRenderer, around, 4);
+        } else {
+            SDL_RenderClear(sRenderer);
+        }
         /* Scene without a wide view: show the GBA picture at full height
            (bars only at the sides), sampled with the pixel-art filter. */
         SDL_FRect src = { (float)gPortScreen.originX, (float)gPortScreen.originY, GBA_SCREEN_W, GBA_SCREEN_H };
@@ -2002,12 +2973,17 @@ static void Present(int paced) {
                       : sSideStyle == 10 ? SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H)
                                          : MenuScale(outW, outH);
         scale = PortSceneFramingNarrowScale(gPortSceneCameraAdjusted, outW, outH, scale);
+        if (AllmapScale() > 0 && !menuCanvas) scale = AllmapScale();
         if (borderOn) scale = SDL_min(scale, SDL_min(outW / (float)GBA_SCREEN_W, outH / (float)GBA_SCREEN_H));
         dst.w = GBA_SCREEN_W * scale;
         dst.h = GBA_SCREEN_H * scale;
         dst.x = (float)(int)((outW - dst.w) / 2);
         dst.y = (float)(int)((outH - dst.h) / 2);
         if (journalActive && PortJiminyFit(outW, outH, &journalLayout)) {
+            if (Menu43Extend()) {
+                /* centred like the other menus, without the added help row */
+                journalLayout = (PortJiminyLayout){ scale, dst.x, dst.y, dst.w, dst.h, dst.y + dst.h, 0 };
+            }
             scale = journalLayout.scale;
             dst = (SDL_FRect){ journalLayout.x, journalLayout.y, journalLayout.width, journalLayout.height };
             journalShown = 1;
@@ -2029,19 +3005,138 @@ static void Present(int paced) {
             }
         }
         DrawEnhancedVerticalMargins(&src, &dst, outW, outH);
-        if ((sSideStyle == 3 || sSideStyle == 8 || sSideStyle == 10 || sFitScale > 0) && !menuCanvas)
-            DrawBlurredReflection(&src, outW, outH);
+        if ((sSideStyle == 3 || sSideStyle == 8 || sSideStyle == 10 || sFitScale > 0) && !menuCanvas) {
+            const SDL_FRect* blurCover = sFitScale > 0 && !journalShown ? &dst : NULL;
+#ifdef PORT_LINUX
+            extern Mode gModeWorldinspect;
+            const char* worldBlurCover;
+            PORT_ENV_ONCE(worldBlurCover, SDL_getenv, "KHCOM_GA36_WORLDINSPECT_BLUR_COVER");
+            if (worldBlurCover && gCurrentMode == &gModeWorldinspect && PortFbActive() && PortFixed480p() &&
+                gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+                dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: world inspect blur cover active"); logged = true; }
+                blurCover = &dst;
+            }
+            /* The same opaque picture follows the reflection in every mode
+               with this geometry (world cards, world warp, ...). */
+            const char* blurCoverAll;
+            PORT_ENV_ONCE(blurCoverAll, SDL_getenv, "KHCOM_GA36_BLUR_COVER_ALL");
+            if (blurCoverAll && !journalShown && PortFbActive() && PortFixed480p() &&
+                gPortConfig.filter == PORT_FILTER_NEAREST && outW == 640 && outH == 480 &&
+                PortGa36FitGeometry(&dst)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: blur cover active"); logged = true; }
+                blurCover = &dst;
+            }
+#endif
+            DrawBlurredReflection(&src, outW, outH, blurCover);
+        }
         SDL_SetTextureScaleMode(sTexture, gPortConfig.filter == PORT_FILTER_LINEAR ? (SDL_ScaleMode)PortSmoothScaleMode()
                                                                                  : SDL_SCALEMODE_PIXELART);
-        if (journalShown) DrawJournalPicture(&src, &dst);
-        else SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
+        bool drewMenuFit = false;
+#ifdef PORT_LINUX
+        static uint8_t hiddenRows[GBA_SCREEN_H];
+        const uint8_t* covered = NULL;
+        if (menuFit && PortPpuOverlayActive() && gPortOverlayW == GBA_SCREEN_W &&
+            sOverlayScale > 2.66f && sOverlayScale < 2.67f && !PortPpuScreenAdditive()) {
+            /* The screen layer goes over the same rectangle with the same
+               row sampling, through the direct fractional blend. */
+            const char *skipCovered, *directOverlay;
+            PORT_ENV_ONCE(skipCovered, SDL_getenv, "KHCOM_GA36_MENU_FIT_SKIP_COVERED");
+            PORT_ENV_ONCE(directOverlay, SDL_getenv, "KHCOM_FBDEV_FRACTIONAL_OVERLAY");
+            if (skipCovered && directOverlay && OpaqueOverlayRows(gPortOverlay, hiddenRows)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: menu fit covered rows skipped"); logged = true; }
+                covered = hiddenRows;
+            }
+        }
+        drewMenuFit = menuFit && !journalShown && src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+            dst.x == 0 && dst.y == 26 && dst.w == 640 && dst.h == 160.0f * (640.0f / 240.0f) &&
+            PortFbDrawMenuFit(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                              gPortScreen.width, covered);
+#endif
+        if (deferMenuUpload && !drewMenuFit)
+            SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
+        if (drewMenuFit) {
+        } else if (journalShown) DrawJournalPicture(&src, &dst);
+        else {
+#ifdef PORT_LINUX
+            extern Mode gModeWorldinspect;
+            const char* directWorldInspect;
+            PORT_ENV_ONCE(directWorldInspect, SDL_getenv, "KHCOM_FBDEV_WORLDINSPECT_FIT");
+            if (!(directWorldInspect && gCurrentMode == &gModeWorldinspect && PortFixed480p() &&
+                  gPortConfig.filter == PORT_FILTER_NEAREST && src.x == 40 && src.y == 40 &&
+                  src.w == 240 && src.h == 160 && dst.x == 0 && dst.y == 26 && dst.w == 640 &&
+                  dst.h == 160.0f * (640.0f / 240.0f) &&
+                  gPortScreen.width == 320 && gPortScreen.height >= 200 &&
+                  PortFbDrawWorldInspectFit(sRenderer, sComposite + 40 * 320 + 40, 320)) &&
+                !(allmapDirect && src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+                  dst.x == 80 && dst.y == 80 && dst.w == 480 && dst.h == 320 &&
+                  PortFbDrawAllmap2x(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                                     gPortScreen.width)) &&
+                !(PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST &&
+                  src.w == GBA_SCREEN_W && src.h == GBA_SCREEN_H &&
+                  dst.x == -40 && dst.y == 0 && dst.w == 720 && dst.h == 480 &&
+                  PortFbDrawCropped3x(sRenderer, sComposite + (int)src.y * gPortScreen.width + (int)src.x,
+                                     gPortScreen.width)))
+#endif
+                SDL_RenderTexture(sRenderer, sTexture, &src, &dst);
+        }
+        if (journalShown && Menu43Extend()) DrawJournalFooterBar(&src, &dst, outW, outH);
+        {
+            /* The side repairs below repaint these margins whenever the picture
+               is not fitted, so stretching the edge columns first is unseen. */
+            const char* sidesOnce;
+            PORT_ENV_ONCE(sidesOnce, SDL_getenv, "KHCOM_GA36_ALLMAP_SIDES_ONCE");
+            if (AllmapScale() > 0 && !menuCanvas && !(sidesOnce && sFitScale <= 0))
+                DrawAllmapSides(&src, &dst, outW);
+            DrawAllmapAnchored(&src, &dst, outW, outH, deferMenuUpload, drewMenuFit);
+        }
         if (moviePrompt)
             DrawSkipLayer(&normal);
-        if (!menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
-            DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
-            DrawHeaderLeft(&src, &dst);
+        /* Every side repair below paints outside dst: any mode whose picture
+           fills the panel's width has nothing for them to show. */
+        bool emptySides = false;
+#ifdef PORT_LINUX
+        const char* skipEmptySides;
+        PORT_ENV_ONCE(skipEmptySides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_SIDES");
+        emptySides = skipEmptySides && PortFixed480p() && PortFbActive() &&
+            !PortJiminyHasSideMargins(dst.x, dst.w, outW);
+        if (emptySides) {
+            static bool logged;
+            if (!logged) { PortLog("fbdev: empty side repairs skipped"); logged = true; }
         }
-        if (!menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
+#endif
+        if (!emptySides && !menuCanvas && sSideStyle == 8 && sFitScale <= 0) {
+            bool drawSides = true;
+#ifdef PORT_LINUX
+            extern Mode gModeWorldinspect;
+            const char* skipWorldInspectSides;
+            PORT_ENV_ONCE(skipWorldInspectSides, SDL_getenv, "KHCOM_GA36_SKIP_WORLDINSPECT_SIDES");
+            if (skipWorldInspectSides && gCurrentMode == &gModeWorldinspect && PortFixed480p() && PortFbActive() &&
+                !PortJiminyHasSideMargins(dst.x, dst.w, outW)) {
+                static bool logged;
+                if (!logged) { PortLog("fbdev: world inspect empty sides skipped"); logged = true; }
+                drawSides = false;
+            }
+#endif
+            if (drawSides) {
+                DrawEdgeBands(&src, &dst, outW, 3, GBA_SCREEN_H, GBA_SCREEN_H);
+                DrawHeaderLeft(&src, &dst);
+            }
+        }
+        bool skipJournalSides = false;
+#ifdef PORT_LINUX
+        const char* skipEmptyJournalSides;
+        PORT_ENV_ONCE(skipEmptyJournalSides, SDL_getenv, "KHCOM_GA36_SKIP_EMPTY_JOURNAL_SIDES");
+        /* All of the journal side repairs below paint outside dst.  At 4:3
+           the journal fills the viewport horizontally, so there is no side
+           region to sample, classify or paint. */
+        skipJournalSides = skipEmptyJournalSides && PortFixed480p() && PortFbActive() && journalShown &&
+            !PortJiminyHasSideMargins(dst.x, dst.w, outW);
+#endif
+        if (!emptySides && !skipJournalSides && !menuCanvas && (sSideStyle == 9 || sSideStyle == 12) && sFitScale <= 0) {
             /* style 9: the scene's ground (its commonest colour) and its thick
                bars (blocks of six rows or more, so a frame's thin border is
                not one) carried on; nothing mirrored, nothing repeated */
@@ -2157,7 +3252,7 @@ static void Present(int paced) {
                 DrawJournalNameMargins(&dst, outW, pageExpanded ? 0 : journalRightGround);
         }
         if (SDL_getenv("KHCOM_DBGSIDE")) PortLog("side f%u style %d fit %.2f wide %d src %.0f,%.0f %.0fx%.0f", (unsigned)PortFrameCount(), sSideStyle, sFitScale, gPortScreen.wide, src.x, src.y, src.w, src.h);
-        if (!menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {
+        if (!emptySides && !menuCanvas && sSideStyle != 10 && sFitScale <= 0 && UniformPicture(&src, &uniform)) {
             /* a fade has reached one flat colour (or the screen is blank
                between modes): the margins are that colour too, so the
                transition stays one smooth fade */
@@ -2165,7 +3260,7 @@ static void Present(int paced) {
             SDL_SetRenderDrawColor(sRenderer, (Uint8)(uniform >> 16), (Uint8)(uniform >> 8), (Uint8)uniform, 255);
             SDL_RenderFillRect(sRenderer, &a);
             SDL_RenderFillRect(sRenderer, &b2);
-        } else if (!menuCanvas && sSideStyle != 3 && sSideStyle != 8 && sSideStyle != 9 && sSideStyle != 10 &&
+        } else if (!emptySides && !menuCanvas && sSideStyle != 3 && sSideStyle != 8 && sSideStyle != 9 && sSideStyle != 10 &&
                    sSideStyle != 12 && sFitScale <= 0) {
             SideBar((int)src.x, (int)src.y, -1, dst.y, scale, 0.0f, dst.x, (int)src.x);
             SideBar((int)(src.x + src.w) - SIDE_STRIP, (int)src.y, 1, dst.y, scale, dst.x + dst.w, (float)outW,
@@ -2224,12 +3319,19 @@ static void Present(int paced) {
         worldX = dst.x;
         worldY = dst.y;
     } else {
+        const uint64_t _base = SDL_GetPerformanceCounter();
         OutputRect(outW, outH, &dst);
         bool drawn2x = false;
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
         if (!menuCanvas && sFitScale <= 0 && PortFixedFullscreen() && gPortConfig.filter == PORT_FILTER_NEAREST &&
-            dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH)
-            drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height);
+            dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH) {
+            const uint64_t scaleStart = measureFb ? SDL_GetPerformanceCounter() : 0;
+            drawn2x = PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, outH, NULL);
+            if (measureFb) {
+                scaleTicks = SDL_GetPerformanceCounter() - scaleStart;
+                usedScale2x = drawn2x;
+            }
+        }
 #endif
         if (!drawn2x)
             SDL_RenderClear(sRenderer);
@@ -2239,7 +3341,7 @@ static void Present(int paced) {
             SDL_FRect backdrop = { (float)gPortScreen.originX,
                                    (float)gPortScreen.originY,
                                    GBA_SCREEN_W, GBA_SCREEN_H };
-            DrawBlurredReflection(&backdrop, outW, outH);
+            DrawBlurredReflection(&backdrop, outW, outH, &dst);
         }
         {
             /* the Options panel's HD picture under its canvas, which leaves it clear (port_ui.c): the canvas then goes
@@ -2267,15 +3369,24 @@ static void Present(int paced) {
                 }
             }
 #if defined(PORT_LINUX) && defined(__ARM_NEON)
+            if (!drawn2x && sFitScale > 0 && !menuCanvas && frameTex == sTexture &&
+                PortFixed480p() && gPortConfig.filter == PORT_FILTER_NEAREST)
+                drawn2x = PortFbDrawFit2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, &dst);
             if (!drawn2x && !(PortFixedFullscreen() && frameTex == sTexture && gPortConfig.filter == PORT_FILTER_NEAREST &&
                   dst.x == 0 && dst.y == 0 && dst.w == outW && dst.h == outH &&
-                  PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height)))
+                  outH == gPortScreen.height * 2 &&
+                  PortFbDrawNearest2x(sRenderer, sComposite, gPortScreen.width, gPortScreen.height, outH, NULL)))
 #endif
+            {
+                if (deferBase)
+                    SDL_UpdateTexture(sTexture, NULL, sComposite, gPortScreen.width * 4);
                 SDL_RenderTexture(sRenderer, frameTex, NULL, &dst);
+            }
         }
         worldScale = dst.w / gPortScreen.width;
         worldX = dst.x;
         worldY = dst.y;
+        gPortPiece[10] += SDL_GetPerformanceCounter() - _base;
         if (menuCanvas) {
             /* Options > HD text > A: the font samples at the screen's resolution over their boxes (port_ui.c) */
             extern int PortUiHdSamples(int rects[2][4], int faces[2], const unsigned char** rgba, int* sw, int* sh);
@@ -2299,11 +3410,15 @@ static void Present(int paced) {
         }
     }
     if (!menuCanvas) {
+        PIECE_CK(11);
         /* HD sprites of the game's picture (the title's logo), with the game's fade */
         uint16_t bld = *(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x50);
         int effect = (bld >> 6) & 3, amount = SDL_min(*(volatile uint16_t*)(uintptr_t)(GBA_IO + 0x54) & 31, 16);
+{ uint64_t _pt = SDL_GetPerformanceCounter();
         PortHdSpritesDraw(sRenderer, 0, worldX, worldY, worldScale, (bld & 0x10) && effect == 3 ? amount : 0,
                           (bld & 0x10) && effect == 2 ? amount : 0);
+ gPortPiece[0] += SDL_GetPerformanceCounter() - _pt; }
+        PIECE_CK(20);
         if (mainWorldLight && !nativeMainWorld) {
             SDL_FRect lightRect = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
             if (!PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &lightRect)) {
@@ -2318,8 +3433,33 @@ static void Present(int paced) {
                     (bld & 0x10) && effect == 3 ? amount : 0, (bld & 0x10) && effect == 2 ? amount : 0);
             }
         }
+        PIECE_CK(21);
+        uint64_t _mo = SDL_GetPerformanceCounter();
         {
             const uint32_t* over = PortPpuMainOver();
+            if (over) {
+                SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
+#ifdef PORT_LINUX
+                /* the handheld's framebuffer: the sprites over the HD parts (the cards' values and borders over the HD
+                   cards) are a sparse whole-screen layer; SDL's scaled copy of all of it cost GA36 17 million
+                   instructions a frame (QEMU), the direct blend visits only its drawn spans */
+                extern bool PortFbBlendOverlayScaledSparse(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+                const SDL_Rect odi = { (int)od.x, (int)od.y, (int)od.w, (int)od.h };
+                const char* overSdl;
+                PORT_ENV_ONCE(overSdl, SDL_getenv, "KHCOM_MAIN_OVER_SDL");
+                if (PortFbActive() && sPictureScaleMode == SDL_SCALEMODE_NEAREST && !overSdl &&
+                    od.x == odi.x && od.y == odi.y && od.w == odi.w && od.h == odi.h &&
+                    PortFbBlendOverlayScaledSparse(sRenderer, over, gPortScreen.width, gPortScreen.height, &odi))
+                    over = NULL;
+                /* a box past the screen or off whole pixels (the HD title's zoomed canvas): clipped, nearest */
+                extern bool PortFbBlendOverlayNearestClipped(SDL_Renderer*, const uint32_t*, int, int, float, float, float,
+                                                             float);
+                if (over && PortFbActive() && sPictureScaleMode == SDL_SCALEMODE_NEAREST && !overSdl &&
+                    PortFbBlendOverlayNearestClipped(sRenderer, over, gPortScreen.width, gPortScreen.height, od.x, od.y,
+                                                     od.w, od.h))
+                    over = NULL;
+#endif
+            }
             if (over) {
                 SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
                 if (sMainOverTexture == NULL || sMainOverW != gPortScreen.width || sMainOverH != gPortScreen.height) {
@@ -2338,7 +3478,12 @@ static void Present(int paced) {
                 }
             }
         }
+{ uint64_t _pt = SDL_GetPerformanceCounter();
+        gPortPiece[9] += SDL_GetPerformanceCounter() - _mo;
+        PIECE_CK(22);
         PortHdTextDraw(sRenderer, 0, worldX, worldY, worldScale);
+ gPortPiece[1] += SDL_GetPerformanceCounter() - _pt; }
+        uint64_t _footer = SDL_GetPerformanceCounter();
         if (gPortConfig.hdTitle && gPortConfig.viewMode != PORT_VIEW_ORIGINAL) {
             /* The title's HD poster is drawn after the ordinary side fill.
                Reapply the authored margin bands above it, including the
@@ -2355,13 +3500,35 @@ static void Present(int paced) {
                         float top = PixelEdge(worldY, gPortScreen.originY + row, worldScale);
                         float bottom = PixelEdge(worldY, gPortScreen.originY + row + 1, worldScale);
                         SDL_FRect band = { left, top, right - left, bottom - top };
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+                        {
+                            /* the handheld's framebuffer: the band's rows written straight in; SDL's 320 small
+                               fills a frame cost GA36 about 11 million instructions (QEMU) */
+                            extern bool PortFbFillRows(SDL_Renderer*, const uint32_t*, int, int, int, int);
+                            static uint32_t rowPx[1024];
+                            const int bx = (int)SDL_ceilf(left - 0.5f), bw = (int)SDL_ceilf(right - 0.5f) - bx;
+                            if (PortFbActive() && bw > 0 && bw <= 1024) {
+                                for (int k = 0; k < bw; k++) rowPx[k] = 0xFF000000u | (c & 0xFFFFFFu);
+                                if (PortFbFillRows(sRenderer, rowPx, bx, bw, (int)SDL_ceilf(top - 0.5f),
+                                                   (int)SDL_ceilf(bottom - 0.5f)))
+                                    continue;
+                            }
+                        }
+#endif
                         SDL_SetRenderDrawColor(sRenderer, (c >> 16) & 255, (c >> 8) & 255, c & 255, 255);
                         SDL_RenderFillRect(sRenderer, &band);
                     }
                 }
             }
         }
+        gPortPiece[5] += SDL_GetPerformanceCounter() - _footer;
     }
+    /* Optional sampling to identify which overlay geometry dominates a menu. */
+    const char* overlayAudit;
+    PORT_ENV_ONCE(overlayAudit, SDL_getenv, "KHCOM_OVERLAY_AUDIT");
+    if (overlayAudit && sFrameCount % 120 == 0)
+        PortLog("overlay audit: frame %u active=%d menu=%d scale=%.3f width=%d", (unsigned)sFrameCount,
+                PortPpuOverlayActive(), menuCanvas, sOverlayScale, gPortOverlayW);
     /* the options menu covers everything: no layer is drawn over it */
     if (PortPpuOverlayActive() && sOverlayScale > 0 && !menuCanvas) {
         SDL_FRect od;
@@ -2377,28 +3544,62 @@ static void Present(int paced) {
             SDL_SetTextureBlendMode(sOverlayTex, SDL_BLENDMODE_BLEND);
             SDL_SetTextureScaleMode(sOverlayTex, SDL_SCALEMODE_PIXELART);
         }
-        SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
         od.w = sOverlayTexW * sOverlayScale;
         od.h = GBA_SCREEN_H * sOverlayScale;
         od.x = (float)(int)((outW - od.w) / 2);
         od.y = (float)(int)((outH - od.h) / 2);
-        SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od);
+        PIECE_CK(16);
+        if (!ScreenOverlayEmpty(overlay, sOverlayTexW)) {
+#ifdef PORT_LINUX
+            const char* menuBands43;
+            extern int PortGa36FieldMenuBars(void);
+            PORT_ENV_ONCE(menuBands43, SDL_getenv, "KHCOM_GA36_MENU_43_BANDS");
+            if (menuBands43 && PortFixed480p() && PortFbActive() && PortGa36FieldMenuBars() &&
+                gPortConfig.aspect == PORT_ASPECT_4_3 && gPortConfig.graphicsMode == PORT_MODE_GBA_ENHANCED &&
+                outW == 640 && outH == 480 && sOverlayTexW == GBA_SCREEN_W &&
+                (int)od.x == 0 && (int)od.w == outW && od.y > 0) {
+                uint32_t color;
+                const int top = (int)od.y, bottom = top + (int)od.h;
+                if (PortOverlaySolidEdge(overlay, sOverlayTexW, &color)) {
+                    SDL_FRect band = {0, 0, (float)outW, (float)top};
+                    SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &band);
+                }
+                if (bottom < outH && PortOverlaySolidEdge(overlay + (GBA_SCREEN_H - 1) * sOverlayTexW,
+                                                          sOverlayTexW, &color)) {
+                    SDL_FRect band = {0, (float)bottom, (float)outW, (float)(outH - bottom)};
+                    SDL_SetRenderDrawColor(sRenderer, (color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+                    SDL_RenderFillRect(sRenderer, &band);
+                }
+            }
+#endif
+            if (!DrawLevelUpFlat(overlay, &od, sOverlayTexW, outW, outH)) {
+                SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4);
+                DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH);
+            }
+        }
+        PIECE_CK(17);
         PortHdSpritesWorldFallback(nativeWorld);
+{ uint64_t _pt = SDL_GetPerformanceCounter();
         PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0); /* menus' HD parts, the title's logo */
+ gPortPiece[2] += SDL_GetPerformanceCounter() - _pt; }
         if (worldLight && !nativeWorld && !PortScreenWorldBlendDraw(&sWorldLight, sRenderer, &od)) {
             /* A failed draw cannot leave the replacement without its light.
              * Repaint this same frame from retained native pixels, with all
              * other HD words/parts intact. No game tick or PPU replay occurs. */
             overlay = PortPpuScreenNativeWorld();
-            if (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
-                !SDL_RenderTexture(sRenderer, sOverlayTex, NULL, &od)) {
+            if (!ScreenOverlayEmpty(overlay, sOverlayTexW) &&
+                (!SDL_UpdateTexture(sOverlayTex, NULL, overlay, sOverlayTexW * 4) ||
+                 !DrawScreenOverlay(sOverlayTex, overlay, &od, sOverlayTexW, outW, outH))) {
                 sRendererResetPending = 1;
                 return; /* Keep the last presented frame while audio/gameplay continue. */
             }
             PortHdSpritesWorldFallback(1);
             PortHdSpritesDraw(sRenderer, 2, od.x, od.y, sOverlayScale, 0, 0);
         }
-        if (PortPpuScreenOver()) {
+        PIECE_CK(18);
+        const uint32_t* screenOver = PortPpuScreenOver();
+        if (screenOver && !ScreenOverlayEmpty(screenOver, gPortOverlayW)) {
             /* what the menu draws in front of its HD parts */
             if (sScreenOverTex == NULL || sScreenOverTexW != gPortOverlayW) {
                 if (sScreenOverTex != NULL)
@@ -2410,13 +3611,17 @@ static void Present(int paced) {
                 SDL_SetTextureScaleMode(sScreenOverTex, SDL_SCALEMODE_PIXELART);
             }
             if (sScreenOverTex != NULL) {
-                SDL_UpdateTexture(sScreenOverTex, NULL, PortPpuScreenOver(), sScreenOverTexW * 4);
-                SDL_RenderTexture(sRenderer, sScreenOverTex, NULL, &od);
+                SDL_UpdateTexture(sScreenOverTex, NULL, screenOver, sScreenOverTexW * 4);
+                DrawScreenOverlay(sScreenOverTex, screenOver, &od, sScreenOverTexW, outW, outH);
             }
         }
+{ uint64_t _pt = SDL_GetPerformanceCounter();
+        PIECE_CK(19);
         if (!menuCanvas)
             PortHdTextDraw(sRenderer, 2, od.x, od.y, sOverlayScale);
+ gPortPiece[3] += SDL_GetPerformanceCounter() - _pt; }
     }
+    PIECE_CK(12);
     if (PortPpuHudActive() && !menuCanvas) {
         int savedHud[4];
         PortPpuHudFrameBegin(savedHud);
@@ -2508,13 +3713,17 @@ static void Present(int paced) {
             SDL_RenderTexture(sRenderer, sTexture, &ps, &pd);
         }
     }
+    PieceLog();
     if (gPortConfig.hdTitle) {
         extern void PortUiHdDraw(SDL_Renderer*, float, float, float);
+{ uint64_t _pt = SDL_GetPerformanceCounter();
         PortUiHdDraw(sRenderer, worldX, worldY, worldScale);
+ gPortPiece[4] += SDL_GetPerformanceCounter() - _pt; }
     }
+    PIECE_CK(13);
     if (gPortConfig.viewMode != PORT_VIEW_CRT) /* the CRT or its shader draws them */
         DrawScanlines(&dst, outW);
-    if (journalShown) {
+    if (journalShown && journalLayout.footerHeight > 0) {
         int dark = 0, white = 0;
         /* Bank5 belongs to the header in all journal maps. Bank0 belongs to
            portraits and may be cleared while an otherwise visible book opens. */
@@ -2671,11 +3880,26 @@ static void Present(int paced) {
         extern void PortSceneGalleryPreviewPresented(int accepted);
         /* Finish rendering first, then submit the image on its fixed deadline.
            Sleeping only afterwards let variable draw cost become image jitter. */
-        if (paced) PaceBeforePresent();
 #ifdef PORT_LINUX
+        const uint64_t ready = measureFb ? SDL_GetPerformanceCounter() : 0;
+#endif
+        if (paced) PaceBeforePresent();
+        LoopMark(PORT_LOOP_DRAW); /* the wait just taken is counted apart */
+#ifdef PORT_LINUX
+        PIECE_CK(14);
         PortFbPresent(sRenderer);
+        PIECE_CK(15);
+        if (measureFb) {
+            uint64_t drawTicks, copyTicks;
+            PortFbStageTicks(&drawTicks, &copyTicks);
+            const double ms = 1000.0 / SDL_GetPerformanceFrequency();
+            PortLog("fb phases: frame %u prep %.3f upload %.3f scale %.3f direct %d flush %.3f copy %.3f ms",
+                    (unsigned)sFrameCount, (ready - detailStart) * ms, uploadTicks * ms,
+                    scaleTicks * ms, usedScale2x, drawTicks * ms, copyTicks * ms);
+        }
 #endif
         int presented=SDL_RenderPresent(sRenderer);
+        LoopMark(PORT_LOOP_FLIP);
         if (presented) {
             uint64_t acceptedAt = SDL_GetPerformanceCounter();
             sPresentGapTicks = sPresentSerial ? acceptedAt - sPresentAcceptedAt : 0;
@@ -3075,6 +4299,9 @@ void PortRequestQuitAll(void) {
     sQuitAllRequested = 1;
 }
 static void Quit(void) {
+#ifdef PORT_LINUX
+    PortFbStopCopy();
+#endif
     void PortHdHudShutdown(void);
     extern void PortSceneGalleryFinalShutdown(void);
     PortSramSyncIfDirty();
@@ -3234,6 +4461,8 @@ static uint64_t AdvanceFrameDeadline(void) {
     if (!yielded) emscripten_sleep(0);
     now = SDL_GetPerformanceCounter();
 #endif
+    if (sLoop.threshold) /* late: only a sleep that returned past its deadline, not a frame already behind */
+        PortLoopPhasesWait(&sLoop, now - begin, begin < sNextFrame && now > sNextFrame ? now - sNextFrame : 0);
     return now - begin;
 }
 
@@ -3311,6 +4540,36 @@ static int FrameSkipDue(int sizeChanged) {
     }
 }
 
+/* KHCOM_AUDIO_RESCUE_SKIP=frames (opt-in, port_audio_rate.h): while less than
+   that much sound is queued, a frame that starts late is not drawn nor
+   presented, never two in a row, so the clock is caught up before the pacer
+   drops time and the queue drains; logic and sound run as always. Same guards
+   as the frame skip above, which takes its place when it is on. */
+static int AudioRescueDue(int sizeChanged) {
+    static int frames = -1, skippedLast, window, total;
+    uint64_t now, late;
+    int skip;
+
+    if (frames < 0)
+        frames = PortAudioRescueFrames(SDL_getenv("KHCOM_AUDIO_RESCUE_SKIP"));
+    if (!frames)
+        return 0;
+    if (gPortConfig.frameSkip || sizeChanged || !sNextFrame || SDL_getenv("KHCOM_FAST") || PortUiActive()) {
+        skippedLast = 0;
+        return 0;
+    }
+    now = SDL_GetPerformanceCounter();
+    late = now > sNextFrame ? now - sNextFrame : 0;
+    skip = PortAudioRescueDue(PortAudioQueueBelow(frames), late, (uint64_t)(sPerfFreq / GBA_FPS), &skippedLast);
+    total += skip;
+    if (++window == 600) {
+        if (total)
+            PortLog("audio rescue: %d of the last 600 frames not drawn", total);
+        window = total = 0;
+    }
+    return skip;
+}
+
 /* One display frame: draw, vertical blank, present, input, pacing. */
 /* A frame the network link's rollback plays again (port_rollback.c): the game's frame as VBlankCycle runs it when it
    skips drawing (the same logic, test_frameskip.py), with nothing shown, sounded or paced, and the keys it had. */
@@ -3368,6 +4627,7 @@ static void TimingLine(int skip, uint64_t cycleStart, uint64_t workEnd) {
 }
 
 static void VBlankCycle(void) {
+    LoopMark(PORT_LOOP_SERVICES);
     uint64_t cycleStart = SDL_GetPerformanceCounter();
     uint64_t presentSerialStart = sPresentSerial;
     uint64_t presentPaceStart = sPresentPaceEpoch;
@@ -3392,7 +4652,10 @@ static void VBlankCycle(void) {
         int w = gPortScreen.width, h = gPortScreen.height;
         UpdateResolution();
         if (gPortConfig.vsync==2 && sFrameCount%60==0) ApplyVideoSync(0);
-        skip = FrameSkipDue(w != gPortScreen.width || h != gPortScreen.height);
+        const int sizeChanged = w != gPortScreen.width || h != gPortScreen.height;
+        skip = FrameSkipDue(sizeChanged);
+        if (!skip)
+            skip = AudioRescueDue(sizeChanged);
     }
 
     {
@@ -3406,6 +4669,7 @@ static void VBlankCycle(void) {
                     IO16(0x4A), IO16(0x40), IO16(0x44), IO16(0x4C));
     }
 
+    LoopMark(PORT_LOOP_SETUP);
     /* Visible lines (HBlank / VCount events in between). */
     if (skip) {
         PortPpuRunFrameEvents();
@@ -3419,16 +4683,22 @@ static void VBlankCycle(void) {
         }
     }
 
+    LoopMark(PORT_LOOP_PPU);
+
     /* Line 160: vertical blank. */
     IO16(0x06) = GBA_SCREEN_H;
     IO16(0x04) = (IO16(0x04) & ~6) | 1 | (((IO16(0x04) >> 8) == GBA_SCREEN_H) ? 4 : 0);
     PortDmaVBlank();
+    LoopMark(PORT_LOOP_DMA);
     if (IO16(0x04) & 0x08)
         PortRaiseIrq(0x0001);
+    LoopMark(PORT_LOOP_IRQ);
     PortPpuVBlankLines();
     IO16(0x04) &= ~1;
+    LoopMark(PORT_LOOP_VBLINES);
 
     PortAudioFrame();
+    LoopMark(PORT_LOOP_AUDIO);
     {
         /* KHCOM_PROFILE: mean PPU and present time every 240 frames */
         static uint64_t ppuSum, presSum;
@@ -3464,7 +4734,9 @@ static void VBlankCycle(void) {
             }
         }
     }
+    LoopMark(PORT_LOOP_PRESENT_END);
     PumpEvents();
+    LoopMark(PORT_LOOP_EVENTS);
 
     /* Options overlay: the game is paused until it closes. */
 #if defined(__ANDROID__) || defined(PORT_ANDROID64)
@@ -3478,7 +4750,10 @@ static void VBlankCycle(void) {
         if (PortUiTakeMenuSound(1))
             PortMenuSoundDecide(0); /* SYS_CANSEL: the field menu's opening */
     }
+    int uiProfile = PortUiActive() && SDL_getenv("KHCOM_UI_PROFILE") != NULL, uiProfileFrame = 0;
+    static float uiProfileSamples[1024];
     while (PortUiActive()) {
+        uint64_t uiStart = uiProfile ? SDL_GetPerformanceCounter() : 0;
         extern void PortMenuSoundFrame(void);
         extern void PortAudioMenuFrame(void);
 #ifdef __EMSCRIPTEN__
@@ -3497,6 +4772,11 @@ static void VBlankCycle(void) {
         while (sAndroidBackground) { SDL_Delay(50); PumpEvents(); }
 #endif
         Pace(1);
+        if (uiProfile) {
+            double ms = (SDL_GetPerformanceCounter() - uiStart) * 1000.0 / SDL_GetPerformanceFrequency();
+            if (uiProfileFrame < (int)SDL_arraysize(uiProfileSamples))
+                uiProfileSamples[uiProfileFrame++] = (float)ms;
+        }
         /* Harness: with KHCOM_VPAD the menu frames count too, so the
            virtual pad can drive the overlay and KHCOM_RECORD films it. */
         if (SDL_getenv("KHCOM_VPAD")) {
@@ -3512,21 +4792,71 @@ static void VBlankCycle(void) {
                 PortMenuSoundClose(); /* back in the game's own sound */
         }
     }
-    IO16(0x130) = (uint16_t)(~PortInputResolve(PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount)) & 0x3FF);
+    if (uiProfile)
+        for (int i = 0; i < uiProfileFrame; i++)
+            PortLog("options profile: frame %d %.3f ms", i + 1, (double)uiProfileSamples[i]);
+    LoopMark(PORT_LOOP_UI); /* the whole paused menu, when it was open */
+    uint16_t keys = PortInputKeys() | HarnessKeys(sFrameCount) | PortBotKeys(sFrameCount);
+#if defined(PORT_LINUX)
+    static int captureEnabled = -1;
+    static unsigned captureFramesHeld, capturedTotal;
+    static SDL_Time captureStarted;
+    enum { CaptureBurstStride = 5, CaptureBurstLimit = 16, CaptureSessionLimit = 48 };
+    const uint16_t captureKeys = L_BUTTON | R_BUTTON | SELECT_BUTTON;
+    if (captureEnabled < 0)
+        captureEnabled = PortFixedFullscreen() && SDL_getenv("KHCOM_HANDHELD_CAPTURE") != NULL;
+    if (captureEnabled) {
+        const bool pressed = (keys & captureKeys) == captureKeys;
+        if (!pressed) {
+            captureFramesHeld = 0;
+        } else {
+            if (captureFramesHeld == 0) {
+                captureStarted = 0;
+                SDL_GetCurrentTime(&captureStarted);
+            }
+            if (captureFramesHeld < CaptureBurstStride * CaptureBurstLimit) {
+                if (captureFramesHeld % CaptureBurstStride == 0 && capturedTotal < CaptureSessionLimit) {
+                    char framebufferName[64], rendererName[64];
+                    SDL_snprintf(framebufferName, sizeof(framebufferName), "panel-%llu-%u.bmp",
+                                 (unsigned long long)captureStarted, (unsigned)sFrameCount);
+                    SDL_snprintf(rendererName, sizeof(rendererName), "captura-%llu-%u.bmp",
+                                 (unsigned long long)captureStarted, (unsigned)sFrameCount);
+                    if (!PortFbCapturePair(framebufferName, rendererName))
+                        SDL_strlcpy(sHarnessShot, rendererName, sizeof(sHarnessShot));
+                    capturedTotal++;
+                }
+                captureFramesHeld++;
+            }
+            keys &= (uint16_t)~captureKeys;
+        }
+    }
+#endif
+    IO16(0x130) = (uint16_t)(~PortInputResolve(keys) & 0x3FF);
+    LoopMark(PORT_LOOP_INPUT);
     HarnessFrame();
+    LoopMark(PORT_LOOP_HARNESS);
     {
         extern int gPortInMainLoop;
         PortRollbackBoundary(gPortInMainLoop); /* the network link: a wrong guess taken back, this frame kept */
     }
+    LoopMark(PORT_LOOP_ROLLBACK);
     if (frameLogStart) frameLogWork = SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart);
     TimingLine(skip, cycleStart, SDL_GetPerformanceCounter() - (sPresentWaitTotal - presentWaitStart));
+    LoopMark(PORT_LOOP_TIMING);
     /* Closing a menu already consumed its image deadlines in that loop.
        Only an entirely unpresented cycle needs an additional clock tick. */
     Pace(sPresentPaceEpoch == presentPaceStart);
     sCycleEnd = SDL_GetPerformanceCounter();
+    LoopMark(PORT_LOOP_PACE);
 
-    if (++sFrameCount % 60 == 0)
+    if (++sFrameCount % 60 == 0) {
+#ifdef PORT_LINUX
+        PortSramSyncPeriodic();
+#else
         PortSramSyncIfDirty();
+#endif
+    }
+    LoopMark(PORT_LOOP_SRAM);
     if (frameLogStart) {
         static FILE* frameLog;
         static int attempted;
@@ -3538,7 +4868,7 @@ static void VBlankCycle(void) {
             frameLog = fopen(frameLogPath, "w");
             gPortStutter.on = 1;
             if (frameLog) fprintf(frameLog, "frame,interval_ms,render_work_ms,logic,screen,fit,logic_ms,ppu_ms,present_ms,"
-                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped\n");
+                                            "hd_loads,hd_load_ms,glyphs,glyph_ms,presented,present_interval_ms,skipped,fb_draw_ms,fb_copy_ms\n");
         }
         {
             /* the deep view of each frame: logic_ms is the time from the end of the previous frame's log to this
@@ -3551,13 +4881,18 @@ static void VBlankCycle(void) {
             double logic = logicStart && cycleStart > logicStart ? (cycleStart - logicStart) * ms : 0;
             double ppu = skip ? 0 : sPpuTicks * ms, present = skip ? 0 : sPresentTicks * ms;
             const char* limit = SDL_getenv("KHCOM_STUTTER");
+            uint64_t fbDraw = 0, fbCopy = 0;
+#ifdef PORT_LINUX
+            if (sPresentSerial != presentSerialStart)
+                PortFbStageTicks(&fbDraw, &fbCopy);
+#endif
             if (frameLog && previous)
-                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d\n", (unsigned)sFrameCount,
+                fprintf(frameLog, "%u,%.6f,%.6f,%u,%d,%d,%.3f,%.3f,%.3f,%u,%.3f,%u,%.3f,%d,%.6f,%d,%.3f,%.3f\n", (unsigned)sFrameCount,
                         interval, (frameLogWork - frameLogStart) * ms, (unsigned)gFrameCounter, gPortScreenLayer,
                         (int)sFit, logic, ppu, present, (unsigned)gPortStutter.hdLoads, gPortStutter.hdLoadTicks * ms,
                         (unsigned)gPortStutter.glyphs, gPortStutter.glyphTicks * ms,
                         sPresentSerial != presentSerialStart,
-                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip);
+                        sPresentSerial != presentSerialStart ? sPresentGapTicks * ms : 0.0, skip, fbDraw * ms, fbCopy * ms);
             if (previous && interval > (limit ? (double)SDL_atoi(limit) : 25.0))
                 PortLog("stutter: frame %u %.1f ms: logic %.1f, ppu %.1f, present %.1f; hd loads %u (%.1f ms: header %.1f, "
                         "decode %.1f, upload %.1f; slowest %s %.1f ms), glyphs %u (%.1f ms)", (unsigned)sFrameCount,
@@ -3593,6 +4928,8 @@ static void VBlankCycle(void) {
                     (unsigned)gFrameCounter);
         last = t;
     }
+    LoopMark(PORT_LOOP_FRAMELOG);
+    LoopEnd(sFrameCount);
 }
 
 /* The network link's lockstep (src/sio/sio.c): while the other player's packet for this link frame is on its way the
@@ -3623,6 +4960,7 @@ void PortFrame(void) {
         ResimCycle();
         return;
     }
+    LoopMark(PORT_LOOP_LOGIC);
     PortStateService();
     {
         extern void PortSceneGalleryFrame(void);
@@ -3655,6 +4993,7 @@ void PortMovieFrame(void) {
 #ifdef __EMSCRIPTEN__
     PortWebWaitVisible();
 #endif
+    LoopMark(PORT_LOOP_LOGIC);
     VBlankCycle();
 }
 
@@ -3872,6 +5211,9 @@ int main(int argc, char** argv) {
     }
 #endif
     sPerfFreq = SDL_GetPerformanceFrequency();
+    PortLoopPhasesInit(&sLoop, SDL_getenv("KHCOM_LOOP_PHASES"), sPerfFreq);
+    if (sLoop.threshold)
+        PortLog("loop phases: reporting frames over %.2f ms", sLoop.threshold * sLoop.msPerTick);
     sFpsTime = SDL_GetPerformanceCounter();
 
     if (!PortRomLoad()) {

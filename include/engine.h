@@ -152,6 +152,9 @@ void PortMenuTabBg(int side, int bg, int x, int y);
 void PortMenuTabSprite(void* frame, void* tiles, void* palette);
 /* Full-screen menus: shown as the GBA picture (full height, side bars). */
 void PortSceneNarrow(int on);
+/* A menu on the screen layer with a title bar on top and a band at the bottom, drawn this frame: the GA36's 4:3
+   flat layout puts them at the panel's edges (port_main.c, DrawOverlayFlat). */
+void PortFlatMenu(void);
 void PortNarrowObjBands(int on);
 #define PORT_MENU_LEFT(x) ((x) - PortScreenMarginX())
 #define PORT_MENU_RIGHT(x) ((x) + PortScreenMarginX())

@@ -1328,6 +1328,10 @@ s32 cardbattleSora_1(CardBattleWork* work, Task* task) {
     return 1;
 }
 
+#ifdef PLATFORM_PC
+int PortHdHudStockShift(int axis);
+#endif
+
 static void cardbattle_2(CardBattleWork* work) {
     gCardBattleState->gfx = AnimUpdate(&gCardBattleState->anim);
     gCardBattleState->gfx2 = AnimUpdate(&gCardBattleState->anim2);
@@ -1336,8 +1340,14 @@ static void cardbattle_2(CardBattleWork* work) {
 #ifdef PLATFORM_PC
         PortHudBegin(-1, -1); /* stocked values: top-left, under the HP gauge */
 #endif
+#ifdef PLATFORM_PC
+        DrawSprite(work->x + PortHdHudStockShift(0) + PortHdHudStockShift(2), 4 + PortHdHudStockShift(1),
+                   gStockValueFrames[0], work->tiles,
+                   work->palette, NULL, SPRITE_FLAG_NO_MOSAIC, 12);
+#else
         DrawSprite(work->x, 4, gStockValueFrames[0], work->tiles, work->palette, NULL, SPRITE_FLAG_NO_MOSAIC,
                    12);
+#endif
 #ifdef PLATFORM_PC
         PortHudEnd();
 #endif
@@ -1559,6 +1569,14 @@ TaskDesc gTaskDescCardBattleSora = {
     (TaskDestroyFunc)cardbattle_3,
     sizeof(CardBattleWork),
 };
+
+#ifdef PLATFORM_PC
+int PortHdHudStockShift(int axis);
+/* a stock slot, moved clear of Re:CoM's HD gauge when it is drawn (port_hdsprites.c) */
+#define STOCK_SLOT(slot, axis) (gSoraCardLayout[slot][axis] + PortHdHudStockShift(axis) * 256)
+#else
+#define STOCK_SLOT(slot, axis) gSoraCardLayout[slot][axis]
+#endif
 
 const s32 gSoraCardLayout[5][2] = {
     { -0x3A00, 0xD400 },
@@ -4605,8 +4623,8 @@ u8 SoraStockHold(CardDisplayWork* work, void* task) {
         case CARD_STOCK_PHASE_RISE:
             work->y -= 0x80;
 
-            if (work->y <= gSoraCardLayout[3 - work->stockIndex][1] - 0x200) {
-                work->y = gSoraCardLayout[3 - work->stockIndex][1] - 0x200;
+            if (work->y <= STOCK_SLOT(3 - work->stockIndex, 1) - 0x200) {
+                work->y = STOCK_SLOT(3 - work->stockIndex, 1) - 0x200;
                 work->phase = CARD_STOCK_PHASE_DROP;
             }
 
@@ -4614,8 +4632,8 @@ u8 SoraStockHold(CardDisplayWork* work, void* task) {
         case CARD_STOCK_PHASE_DROP:
             work->y += 0x200;
 
-            if (work->y >= gSoraCardLayout[3 - work->stockIndex][1]) {
-                work->y = gSoraCardLayout[3 - work->stockIndex][1];
+            if (work->y >= STOCK_SLOT(3 - work->stockIndex, 1)) {
+                work->y = STOCK_SLOT(3 - work->stockIndex, 1);
                 work->phase = CARD_STOCK_PHASE_RISE;
                 work->timer = 16;
             }
@@ -4642,9 +4660,9 @@ u8 SoraStockMoveToSlot(CardDisplayWork* work, void* task) {
     SyncCardDisplayGfx(work);
 
     if (work->flags & CARD_DISP_FLAG_OPEN) {
-        ApproachValue(&work->x, gSoraCardLayout[3 - work->stockIndex][0], work->timer);
+        ApproachValue(&work->x, STOCK_SLOT(3 - work->stockIndex, 0), work->timer);
         ApproachValue(&work->scaleY, Q_8_8(0.7), work->timer);
-        ApproachValue(&work->y, gSoraCardLayout[3 - work->stockIndex][1], work->timer);
+        ApproachValue(&work->y, STOCK_SLOT(3 - work->stockIndex, 1), work->timer);
         ApproachValue(&work->scaleX, Q_8_8(0.7), work->timer);
     } else {
         ApproachValue(&work->x, gSoraCardLayout[4][0], work->timer);

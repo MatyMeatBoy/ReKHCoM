@@ -50,6 +50,7 @@ static void* TestMap(void* addr, size_t len, int prot, int flags, int fd, int of
     return dst;
 }
 static void PortLog(const char *format, ...) { (void)format; }
+static const char* PortConfigPath(const char* name) { return name; }
 
 #define open TestOpen
 #define close TestClose

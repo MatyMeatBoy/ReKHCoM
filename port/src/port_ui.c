@@ -330,6 +330,14 @@ static int SectionShown(int heading) {
 }
 
 static int ItemVisible(int item) {
+    if (PortFixed480p()) {
+        switch (item) {
+            case ITEM_VIEW: case ITEM_CRT_OUTPUT: case ITEM_ASPECT:
+            case ITEM_ZOOM: case ITEM_BATTLE_ZOOM: case ITEM_SCENE_FRAMING:
+            case ITEM_INTZOOM: case ITEM_SCALE: case ITEM_FILTER: case ITEM_MODE_RESET:
+                return 0;
+        }
+    }
     if ((item == ITEM_FULLSCREEN || item == ITEM_FS_RES) && PortFixedFullscreen())
         return 0;
     if (IsHeading(item) && item < ITEM_CLOSE)
@@ -1234,7 +1242,7 @@ static int NeedsLauncher(int item) {
         case ITEM_HD_SCENES:
         case ITEM_PS2_HDSCENES: return PortAssetPresent(PORT_ASSET_HD_SCENES) ? NEED_NONE : NEED_HD;
         case ITEM_HD_SUBTITLES: return NEED_NONE; /* audio page also explains missing variants */
-        case ITEM_HD_CARDS: return PortAssetPresent(PORT_ASSET_HD_CARDS) ? NEED_NONE : NEED_HD;
+        case ITEM_HD_CARDS: return PortAssetPresent(PORT_ASSET_HD_CARDS) || PortHdHudPackPresent() ? NEED_NONE : NEED_HD;
         case ITEM_UNDUB: return PortUndubAvailable() ? NEED_NONE : NEED_JP;
         default: return NEED_NONE;
     }
@@ -1511,7 +1519,7 @@ static void ValueText(int item, char* out, size_t size) {
             SDL_strlcpy(out, sOnOff[gPortConfig.hdMediaLanguage == item - ITEM_HD_MEDIA_AUTO][l], size);
             break;
         case ITEM_HD_CARDS:
-            SDL_strlcpy(out, sOnOff[gPortConfig.hdCards != 0][l], size);
+            SDL_strlcpy(out, sOnOff[(PortHdHudPackPresent() ? gPortConfig.hdHudPack : gPortConfig.hdCards) != 0][l], size);
             break;
         case ITEM_HD_TITLE:
             SDL_strlcpy(out, sOnOff[gPortConfig.hdTitle != 0][l], size);
@@ -1841,6 +1849,11 @@ static void Change(int item, int dir) {
             sPage = PAGE_MAIN; sCursor = ITEM_HD_SUBTITLES; sScroll = 0;
             break;
         case ITEM_HD_CARDS: /* HD HUD: the cards, the battle HUD and the title's logo together */
+            if (PortHdHudPackPresent()) { /* a handheld's HUD pack: the battle HUD and the title's HD with it (user, 26/11) */
+                gPortConfig.hdHudPack = !gPortConfig.hdHudPack;
+                gPortConfig.hdTitle = gPortConfig.hdHudPack;
+                break;
+            }
             gPortConfig.hdCards = !gPortConfig.hdCards;
             gPortConfig.hdTitle = gPortConfig.hdCards;
             break;
@@ -3366,7 +3379,7 @@ static int WizOptionAvailable(int kind) {
         case WOPT_HDMUSIC: return PortAssetPresent(PORT_ASSET_HD_MUSIC);
         case WOPT_HDMOVIES: return PortAssetPresent(PORT_ASSET_HD_MOVIES);
         case WOPT_HDSCENES: return PortAssetPresent(PORT_ASSET_HD_SCENES);
-        case WOPT_HDHUD: return PortAssetPresent(PORT_ASSET_HD_CARDS);
+        case WOPT_HDHUD: return PortAssetPresent(PORT_ASSET_HD_CARDS) || PortHdHudPackPresent();
         default: return 1;
     }
 }
@@ -3488,7 +3501,7 @@ static int AssetAt(int row) {
 /* the new assets' window answered: the chosen ones on, never asked again for any of them */
 static void AssetsChosen(int mask) {
     if (mask) {
-        if (mask >> PORT_ASSET_HD_CARDS & 1)
+        if (mask >> PORT_ASSET_HD_CARDS & 1 && !PortHdHudPackPresent()) /* a handheld's pack: only its own option */
             gPortConfig.hdCards = gPortConfig.hdTitle = 1;
         if (mask >> PORT_ASSET_HD_MUSIC & 1)
             gPortConfig.hdMusic = 1;
@@ -3653,7 +3666,9 @@ static void WizKey(int key) {
                     gPortConfig.hdScenes = !gPortConfig.hdScenes;
                 break;
             case WOPT_HDHUD:
-                if (toggle)
+                if (toggle && PortHdHudPackPresent())
+                    gPortConfig.hdHudPack = !gPortConfig.hdHudPack;
+                else if (toggle)
                     gPortConfig.hdTitle = gPortConfig.hdCards = !gPortConfig.hdCards;
                 break;
             default:
@@ -3817,7 +3832,7 @@ static void DrawWizard(int l, int width, int height) {
                     break;
                 case WOPT_HDHUD:
                     labels[i] = sLabels[ITEM_HD_CARDS][l]; subs[i] = sNgDescHdHud[l];
-                    values[i] = sOnOff[gPortConfig.hdCards != 0][l];
+                    values[i] = sOnOff[(PortHdHudPackPresent() ? gPortConfig.hdHudPack : gPortConfig.hdCards) != 0][l];
                     break;
                 default:
                     labels[i] = sWizConfirm[l]; subs[i] = sNgDescStart[l];
@@ -4984,10 +4999,22 @@ static void DrawMenu(int l, int width, int height) {
         int ax0 = width - aw;
         extern int PortHdTitleArtReady(float*);
         int hd = sHdUiFrame && PortHdTitleArtReady(NULL);
-        for (y = 0; y < ah; y++)
-            for (x = 0; x < aw; x++)
-                Pixel(ax0 + x, y, hd ? 0x00FFFFFFu : sMenuArt[(y * GBA_SCREEN_H / ah) * GBA_SCREEN_W + MENU_ART_X +
-                                                              x * GBA_SCREEN_H / ah]);
+        static int fastArt = -1;
+        if (fastArt < 0) fastArt = SDL_getenv("KHCOM_UI_FAST_ART") != NULL;
+        if (fastArt && aw > 0 && aw <= PORT_MAX_W && ah > 0) {
+            int offsets[PORT_MAX_W], left = SDL_max(0, -ax0), right = SDL_min(aw, sFbW - ax0);
+            for (x = left; x < right; x++) offsets[x] = MENU_ART_X + x * GBA_SCREEN_H / ah;
+            for (y = 0; y < ah && y < sFbH; y++) {
+                uint32_t* row = sFb + y * sFbW;
+                const uint32_t* source = sMenuArt + (y * GBA_SCREEN_H / ah) * GBA_SCREEN_W;
+                for (x = left; x < right; x++) row[ax0 + x] = hd ? 0x00FFFFFFu : source[offsets[x]];
+            }
+        } else {
+            for (y = 0; y < ah; y++)
+                for (x = 0; x < aw; x++)
+                    Pixel(ax0 + x, y, hd ? 0x00FFFFFFu : sMenuArt[(y * GBA_SCREEN_H / ah) * GBA_SCREEN_W + MENU_ART_X +
+                                                                  x * GBA_SCREEN_H / ah]);
+        }
         artX = ax0 - MENU_ART_X;
         if (hd) {
             sHdArt[0] = ax0; sHdArt[1] = 0; sHdArt[2] = aw; sHdArt[3] = ah;
@@ -5636,7 +5663,7 @@ void PortUiDraw(uint32_t* frame, int width, int height) {
         sHarnessShotPending = 0;
     }
     DrawMenu(l, width, height);
-    if (harnessShot)
+    if (harnessShot && !SDL_getenv("KHCOM_OPTIONS_NO_SHOTS"))
         HarnessOptionsShot(frame, width, height);
     {
         /* another page (controls, achievements, scenes...): it comes in from half black, briefly, as the menu does
