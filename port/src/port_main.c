@@ -2514,11 +2514,13 @@ void PortFlatMenu(void) { sFlatMenuFrame = PortFrameCount() + 1; }
    the whole-row split found nothing until the choice was made, and the header jumped then, and back and forth as the
    list moved (user, 26/11). Here the header is cut per 4-pixel column: each column's run from the top (one clear row
    bridged: the level box starts a row under the top band) goes up; the list, below a gap in every column, stays. The
-   footer keeps the session's last split while something crosses its gap for a moment. */
+   footer the same from the bottom: where the third bonus card touches the bottom band, the card goes down whole with
+   it (a whole-row split at 152 had cut the card in two, user 26/11). */
 #define FLAT_GROUPS (GBA_SCREEN_W / 4)
 #define FLAT_HEAD_MAX 40
-static uint32_t sFlatUp[GBA_SCREEN_W * FLAT_HEAD_MAX], sFlatMid[GBA_SCREEN_W * GBA_SCREEN_H];
-static int sFlatFooter; /* the session's last bottom split, 0 none */
+#define FLAT_FOOT_TOP 60 /* a column drawn from the bottom up past this row is a panel, not footer: it stays */
+static uint32_t sFlatUp[GBA_SCREEN_W * FLAT_HEAD_MAX], sFlatMid[GBA_SCREEN_W * GBA_SCREEN_H],
+    sFlatDown[GBA_SCREEN_W * GBA_SCREEN_H];
 
 static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
     const uint32_t* p = overlay + (size_t)row * width + g * 4;
@@ -2528,7 +2530,7 @@ static int FlatGroupDrawn(const uint32_t* overlay, int width, int row, int g) {
 static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int width, int outW, int outH) {
 #ifdef PORT_LINUX
     extern bool PortFbBlendOverlayScaled(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
-    int head[FLAT_GROUPS], g, r, top = 0, f = -1, seen = 0;
+    int head[FLAT_GROUPS], foot[FLAT_GROUPS], g, r, top = 0, f = GBA_SCREEN_H;
     for (g = 0; g < FLAT_GROUPS; g++) {
         int last = 0;
         if (!FlatGroupDrawn(overlay, width, 0, g) && !FlatGroupDrawn(overlay, width, 1, g)) {
@@ -2543,18 +2545,14 @@ static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int
         head[g] = last <= FLAT_HEAD_MAX ? last : 0; /* a column drawn further down is not header: it stays */
         top = SDL_max(top, head[g]);
     }
-    for (r = GBA_SCREEN_H - 1; r >= GBA_SCREEN_H / 2 && f < 0; r--) {
-        const uint32_t* row = overlay + (size_t)r * width;
-        int c = 0;
-        while (c < width && !(row[c] >> 24)) c++;
-        if (c < width) seen++;
-        else if (seen) f = r + 1;
-        else if (r < GBA_SCREEN_H - 5) break;
+    for (g = 0; g < FLAT_GROUPS; g++) {
+        int first = GBA_SCREEN_H;
+        if (FlatGroupDrawn(overlay, width, GBA_SCREEN_H - 1, g) || FlatGroupDrawn(overlay, width, GBA_SCREEN_H - 2, g))
+            for (r = GBA_SCREEN_H - 1; r >= 0 && FlatGroupDrawn(overlay, width, r, g); r--)
+                first = r;
+        foot[g] = first >= FLAT_FOOT_TOP && first > head[g] ? first : GBA_SCREEN_H;
+        f = SDL_min(f, foot[g]);
     }
-    if (f > GBA_SCREEN_H - 8 || f < GBA_SCREEN_H - 24) f = -1;
-    if (f > 0) sFlatFooter = f;
-    else if (sFlatFooter) f = sFlatFooter;
-    else f = GBA_SCREEN_H;
     if (top < 8)
         return false;
     memcpy(sFlatMid, overlay, sizeof(uint32_t) * GBA_SCREEN_W * GBA_SCREEN_H);
@@ -2564,8 +2562,14 @@ static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int
             memcpy(sFlatUp + (size_t)r * GBA_SCREEN_W + g * 4, sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 16);
             memset(sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 0, 16);
         }
-    if (f < GBA_SCREEN_H)
-        memset(sFlatMid + (size_t)f * GBA_SCREEN_W, 0, sizeof(uint32_t) * GBA_SCREEN_W * (GBA_SCREEN_H - f));
+    if (f < GBA_SCREEN_H) {
+        memset(sFlatDown + (size_t)f * GBA_SCREEN_W, 0, sizeof(uint32_t) * GBA_SCREEN_W * (GBA_SCREEN_H - f));
+        for (g = 0; g < FLAT_GROUPS; g++)
+            for (r = foot[g]; r < GBA_SCREEN_H; r++) {
+                memcpy(sFlatDown + (size_t)r * GBA_SCREEN_W + g * 4, sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 16);
+                memset(sFlatMid + (size_t)r * GBA_SCREEN_W + g * 4, 0, 16);
+            }
+    }
     {
         const int y0 = (int)od->y, below = outH - (y0 + (int)od->h);
 #define Y(r) ((int)((r) * (int)od->h / GBA_SCREEN_H))
@@ -2575,7 +2579,7 @@ static bool DrawLevelUpColumns(const uint32_t* overlay, const SDL_FRect* od, int
         if (!PortFbBlendOverlayScaled(sRenderer, sFlatMid, width, GBA_SCREEN_H, &mid) ||
             !PortFbBlendOverlayScaled(sRenderer, sFlatUp, width, top, &up) ||
             (f < GBA_SCREEN_H &&
-             !PortFbBlendOverlayScaled(sRenderer, overlay + (size_t)f * width, width, GBA_SCREEN_H - f, &down)))
+             !PortFbBlendOverlayScaled(sRenderer, sFlatDown + (size_t)f * GBA_SCREEN_W, width, GBA_SCREEN_H - f, &down)))
             return false;
     }
     {
@@ -2599,7 +2603,6 @@ static bool DrawLevelUpFlat(const uint32_t* overlay, const SDL_FRect* od, int wi
     if (!on || !(gPortLevelUpActive || flatMenu) || !PortFbActive() || !PortFixed480p() || gPortConfig.aspect != PORT_ASPECT_4_3 ||
         outW != 640 || outH != 480 || width != GBA_SCREEN_W || (int)od->x != 0 || (int)od->w != outW || od->y < 8 ||
         sOverlayScale < 2.66f || sOverlayScale > 2.67f) {
-        if (!gPortLevelUpActive) sFlatFooter = 0; /* the next level up starts afresh */
         return false;
     }
     if (gPortLevelUpActive && !flatMenu && !SDL_getenv("KHCOM_GA36_LEVELUP_ROWS_ONLY"))
@@ -3402,6 +3405,22 @@ static void Present(int paced) {
         }
         {
             const uint32_t* over = PortPpuMainOver();
+            if (over) {
+                SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
+#ifdef PORT_LINUX
+                /* the handheld's framebuffer: the sprites over the HD parts (the cards' values and borders over the HD
+                   cards) are a sparse whole-screen layer; SDL's scaled copy of all of it cost GA36 17 million
+                   instructions a frame (QEMU), the direct blend visits only its drawn spans */
+                extern bool PortFbBlendOverlayScaledSparse(SDL_Renderer*, const uint32_t*, int, int, const SDL_Rect*);
+                const SDL_Rect odi = { (int)od.x, (int)od.y, (int)od.w, (int)od.h };
+                const char* overSdl;
+                PORT_ENV_ONCE(overSdl, SDL_getenv, "KHCOM_MAIN_OVER_SDL");
+                if (PortFbActive() && sPictureScaleMode == SDL_SCALEMODE_NEAREST && !overSdl &&
+                    od.x == odi.x && od.y == odi.y && od.w == odi.w && od.h == odi.h &&
+                    PortFbBlendOverlayScaledSparse(sRenderer, over, gPortScreen.width, gPortScreen.height, &odi))
+                    over = NULL;
+#endif
+            }
             if (over) {
                 SDL_FRect od = { worldX, worldY, gPortScreen.width * worldScale, gPortScreen.height * worldScale };
                 if (sMainOverTexture == NULL || sMainOverW != gPortScreen.width || sMainOverH != gPortScreen.height) {

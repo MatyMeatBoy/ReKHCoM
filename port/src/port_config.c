@@ -663,7 +663,9 @@ void PortApplyGraphicsMode(int mode) {
     gPortConfig.viewMode = classic && !PortFixed480p() ? PORT_VIEW_ORIGINAL : PORT_VIEW_AUTO;
     /* the HD mod's parts only once imported: the new start offers them when the launcher brings them */
     gPortConfig.hdText = !classic; /* every mode but GBA classic (user 25/10) */
-    gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS);
+    /* a handheld's HD HUD pack may carry the battle's cards: they go with its HD HUD option, never the full HD cards
+       (menus, journal, world select), too heavy there */
+    gPortConfig.hdCards = hd && PortAssetPresent(PORT_ASSET_HD_CARDS) && !PortHdHudPackPresent();
     gPortConfig.hdTitle = gPortConfig.hdCards;
     gPortConfig.hdMusic = hd && PortAssetPresent(PORT_ASSET_HD_MUSIC);
     /* HD replacements for cartridge movies: on unless GBA Original */

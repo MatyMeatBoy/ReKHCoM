@@ -1390,6 +1390,11 @@ static struct {
     const void* who;
 } sEnemy;
 
+/* Re:CoM's enemy gauge was drawn this frame or the last. */
+int PortHdEnemyGaugeShown(void) {
+    return sEnemy.active && (int)PortFrameCount() - sEnemy.frame <= 1;
+}
+
 int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
     int i;
     if (!gPortConfig.hdCards && !PortHdHudPack())

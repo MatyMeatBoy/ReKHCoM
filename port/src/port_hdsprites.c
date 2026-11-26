@@ -80,9 +80,21 @@ int PortHdHudPack(void) {
 }
 #define HD_HUD_ON (gPortConfig.hdCards || HudPack())
 
+/* The HD HUD pack (handhelds) with the battle's cards in it (hd/sprites/gCardWep01Tiles.png, pre-scaled for the
+   panel): the cards go with the HUD, without the rest of HD cards (menus, world select, journal). */
+static int HudPackCards(void) {
+    static int present = -1;
+    extern int PortAssetPresent(int asset);
+    if (!HudPack())
+        return 0;
+    if (present < 0)
+        present = PortAssetPresent(PORT_ASSET_HD_CARDS) != 0;
+    return present;
+}
+
 static int GroupOn(int group) {
     switch (group) {
-    case 1: return gPortConfig.hdCards;
+    case 1: return gPortConfig.hdCards || HudPackCards(); /* the battle's cards */
     case 2: return gPortConfig.hdTitle;
     case 3: return HD_HUD_ON; /* the battle HUD's faces and words go with the cards */
     case 4: return gPortConfig.hdCards; /* the world select's worlds */
@@ -377,7 +389,8 @@ void PortHdSpriteBox(int id, int* x0, int* y0, int* w, int* h) {
     *x0 = d->x0; *y0 = d->y0; *w = d->w; *h = d->h;
 }
 
-/* The HD HUD pack (handhelds): its pictures (group 3: faces, the battle's signs, LEVEL UP) load before the first
+/* The HD HUD pack (handhelds): its pictures (group 3: faces, the battle's signs, LEVEL UP; group 1, the battle's
+   cards, when the pack has them) load before the first
    battle, one a frame on frames that loaded nothing else, and stay; the first battle had read and decoded them while
    it was being played (user, 26/11). Missing files are tried once. KHCOM_HD_HUD_NO_PRELOAD keeps the old way. */
 void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
@@ -387,7 +400,8 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
         return;
     sRenderer = renderer;
     for (; next < HD_SPRITE_COUNT; next++) {
-        if (kHdSprites[next].group != 3 || sState[next].image || sState[next].present == 1)
+        if ((kHdSprites[next].group != 3 && !(kHdSprites[next].group == 1 && HudPackCards())) || sState[next].image ||
+            sState[next].present == 1)
             continue;
         if (LoadCounted(next)) {
             sLoadFrame = PortFrameCount();
@@ -1122,6 +1136,15 @@ int PortHdHudExpDrop(void) {
    x 38 and its bar y 9.5 on a shared canvas (28 and 7 on the HUD canvas, 3/4 of it), where the cartridge's stack
    starts at x 24 with its total's ink at y 6 (user report 26/11: the stack sat under the ring and the bar).
    axis 0 x, 1 y. */
+/* GBA pixels the opponent's stocked cards and their total go down while Re:CoM's enemy bar is drawn: on a shared
+   canvas its bar and "HP" reach y 11, where the total's ink starts at y 6 (user 26/11: the enemy's HUD too). */
+int PortHdHudOpponentStockDrop(void) {
+    extern int PortHdEnemyGaugeShown(void);
+    if (!HD_HUD_ON || !PortHdEnemyGaugeShown() || gPortHudScale)
+        return 0;
+    return 6;
+}
+
 int PortHdHudStockShift(int axis) {
     extern int PortHdGaugeShown(void);
     if (!HD_HUD_ON || !PortHdGaugeShown())
