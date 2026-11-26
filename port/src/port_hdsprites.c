@@ -201,6 +201,9 @@ static int MenuLightName(const char* name) {
 
 static int Load(int i);
 static int LoadCounted(int i);
+static unsigned char* sGivenPx; /* PortHdSpritesPreloadStep: the next Load's pixels, already decoded */
+static int sGivenW, sGivenH;
+
 
 static int SpriteTextureReady(SDL_Texture* texture) {
 #ifdef PORT_SDL_BRIDGE_TEXTURE_READY
@@ -390,28 +393,114 @@ void PortHdSpriteBox(int id, int* x0, int* y0, int* w, int* h) {
 }
 
 /* The HD HUD pack (handhelds): its pictures (group 3: faces, the battle's signs, LEVEL UP; group 1, the battle's
-   cards, when the pack has them) load before the first
-   battle, one a frame on frames that loaded nothing else, and stay; the first battle had read and decoded them while
-   it was being played (user, 26/11). Missing files are tried once. KHCOM_HD_HUD_NO_PRELOAD keeps the old way. */
+   cards, when the pack has them) load before the first battle and stay. Decoding a PNG took the console a frame or
+   more each, so the frame that loaded one was late and the audio rescue skipped it: a steady stutter on the title and
+   the field while they loaded (user 26/11: "on the map it feels as if something loads in the background"). A thread
+   decodes them; the frame loop only uploads a decoded picture, one a frame. Paths are made here (PortConfigPath is
+   not thread-safe), only for files that exist (the pack has a few dozen of the hundreds of names). Missing files
+   are tried once. KHCOM_HD_HUD_NO_PRELOAD keeps the old way. */
+typedef struct {
+    int id, w, h;
+    char* path;
+    unsigned char* px;
+    SDL_AtomicInt state; /* 0 waiting, 1 decoded, 2 failed */
+} PreloadItem;
+static PreloadItem* sPre;
+static int sPreCount, sPreNext;
+static SDL_Thread* sPreThread;
+static SDL_AtomicInt sPreStop;
+
+static int SDLCALL PreloadThread(void* unused) {
+    int k;
+    (void)unused;
+    for (k = 0; k < sPreCount && !SDL_GetAtomicInt(&sPreStop); k++) {
+        int n = 0;
+        sPre[k].px = stbi_load(sPre[k].path, &sPre[k].w, &sPre[k].h, &n, 4);
+        SDL_SetAtomicInt(&sPre[k].state, sPre[k].px ? 1 : 2);
+    }
+    return 0;
+}
+
+static void PreloadStop(void) {
+    int k;
+    if (sPreThread) {
+        SDL_SetAtomicInt(&sPreStop, 1);
+        SDL_WaitThread(sPreThread, NULL);
+        sPreThread = NULL;
+    }
+    for (k = 0; k < sPreCount; k++) {
+        if (sPre[k].px) stbi_image_free(sPre[k].px);
+        SDL_free(sPre[k].path);
+    }
+    SDL_free(sPre);
+    sPre = NULL;
+    sPreCount = sPreNext = 0;
+}
+
 void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
-    static int next, off = -1;
+    static int started, off = -1;
     if (off < 0) off = SDL_getenv("KHCOM_HD_HUD_NO_PRELOAD") != NULL;
-    if (off || !renderer || !HudPack() || gPortConfig.hdCards || sLoadFrame == PortFrameCount())
+    if (off || !renderer || !HudPack() || gPortConfig.hdCards)
         return;
     sRenderer = renderer;
-    for (; next < HD_SPRITE_COUNT; next++) {
-        if ((kHdSprites[next].group != 3 && !(kHdSprites[next].group == 1 && HudPackCards())) || sState[next].image ||
-            sState[next].present == 1)
-            continue;
-        if (LoadCounted(next)) {
-            sLoadFrame = PortFrameCount();
-            sState[next].lastUsed = PortFrameCount();
-            PortLog("hd hud preload: %s", kHdSprites[next].name);
-        } else if (!sState[next].image) {
-            sState[next].present = 1; /* not in the pack */
+    if (!started) {
+        int i, count = 0;
+        started = 1;
+        sPre = (PreloadItem*)SDL_calloc(HD_SPRITE_COUNT, sizeof(*sPre));
+        if (!sPre)
+            return;
+        for (i = 0; i < HD_SPRITE_COUNT; i++) {
+            char file[PORT_HD_PATH_MAX];
+            const char* path;
+            if ((kHdSprites[i].group != 3 && !(kHdSprites[i].group == 1 && HudPackCards())) || sState[i].image ||
+                sState[i].present == 1)
+                continue;
+            path = SpritePath(file, sizeof(file), kHdSprites[i].name);
+            if (!path || !path[0] || !SDL_GetPathInfo(path, NULL)) {
+                sState[i].present = 1; /* not in the pack: never looked for again */
+                continue;
+            }
+            sPre[count].id = i;
+            sPre[count].path = SDL_strdup(path);
+            if (sPre[count].path) count++;
         }
-        next++;
+        sPreCount = count;
+        PortLog("hd hud preload: %d pictures, decoded in the background", count);
+        if (count && !(sPreThread = SDL_CreateThread(PreloadThread, "hd-preload", NULL))) {
+            PortLog("hd hud preload: no thread (%s), loading as drawn", SDL_GetError());
+            PreloadStop();
+        }
         return;
+    }
+    if (!sPre || sLoadFrame == PortFrameCount())
+        return;
+    while (sPreNext < sPreCount) {
+        PreloadItem* it = &sPre[sPreNext];
+        int state = SDL_GetAtomicInt(&it->state), id = it->id;
+        if (state == 0)
+            return; /* still decoding */
+        sPreNext++;
+        if (state == 2 || sState[id].image) {
+            if (it->px) { stbi_image_free(it->px); it->px = NULL; }
+            if (state == 2) sState[id].present = 1;
+            continue;
+        }
+        sGivenPx = it->px;
+        sGivenW = it->w;
+        sGivenH = it->h;
+        it->px = NULL;
+        if (LoadCounted(id)) {
+            sLoadFrame = PortFrameCount();
+            sState[id].lastUsed = PortFrameCount();
+        }
+        sGivenPx = NULL;
+        return; /* one upload a frame */
+    }
+    if (sPreThread) {
+        SDL_WaitThread(sPreThread, NULL); /* it has finished: every item is past waiting */
+        sPreThread = NULL;
+        PortLog("hd hud preload: done");
+        PreloadStop();
     }
 }
 
@@ -448,6 +537,7 @@ static int Load(int i) {
     char file[PORT_HD_PATH_MAX];
     int w = 0, h = 0, n, k, decodedW, decodedH;
     unsigned char* px;
+    unsigned char* given = sGivenPx;
     void* data = NULL;
     size_t size = 0, need;
     SDL_Surface* s;
@@ -461,6 +551,10 @@ static int Load(int i) {
         SDL_snprintf(file, sizeof(file), "%s", kHdSprites[i].name);
         if (!data || size > 0x7FFFFFFF || !stbi_info_from_memory(data, (int)size, &w, &h, &n))
             goto invalid;
+    } else if (given) {
+        SDL_snprintf(file, sizeof(file), "%s (preloaded)", kHdSprites[i].name);
+        w = sGivenW;
+        h = sGivenH;
     } else {
         uint64_t t0 = PORT_STUTTER_NOW();
         int ok = stbi_info(SpritePath(file, sizeof(file), kHdSprites[i].name), &w, &h, &n);
@@ -490,15 +584,23 @@ static int Load(int i) {
                 victim = k;
         if (victim < 0) {
             SDL_free(data);
+            if (given) stbi_image_free(given);
             return 0; /* transient pressure: allow another attempt next frame */
         }
         Unload(victim);
     }
     {
         uint64_t t0 = PORT_STUTTER_NOW();
-        px = kHdSprites[i].group == 7
-            ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
-            : stbi_load(file, &decodedW, &decodedH, &n, 4);
+        if (given) {
+            px = given;
+            given = NULL; /* Load owns it from here */
+            decodedW = w;
+            decodedH = h;
+        } else {
+            px = kHdSprites[i].group == 7
+                ? stbi_load_from_memory(data, (int)size, &decodedW, &decodedH, &n, 4)
+                : stbi_load(file, &decodedW, &decodedH, &n, 4);
+        }
         PORT_STUTTER_ADD(hdDecodeTicks, t0);
     }
     SDL_free(data);
@@ -557,6 +659,7 @@ static int Load(int i) {
     return 1;
 invalid:
     SDL_free(data);
+    if (given) stbi_image_free(given); /* rejected before its pixels were used */
     sState[i].present = 1;
     PortLog("HD sprites: %s rejected (header, dimensions, recipe, budget or decode)", file);
     return 0;
@@ -1411,6 +1514,7 @@ void PortPaletteFade(const uint16_t* original, const volatile uint16_t* current,
 /* Renderer gone (or the HD files re-imported): drop the textures and look the files up again. */
 void PortHdSpritesShutdown(void) {
     int i;
+    PreloadStop();
     MenuLightRelease();
     if (sJiminyForeground) SDL_DestroyTexture(sJiminyForeground);
     sJiminyForeground = NULL;
