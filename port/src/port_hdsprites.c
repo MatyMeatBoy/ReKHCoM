@@ -58,8 +58,12 @@ typedef struct HdSpriteState {
     size_t bytes;
     int textureH;
     uint8_t present; /* 0 not looked up yet, 1 missing, 2 on disk */
-    unsigned char* cpu; /* handheld battle cards: the picture's RGBA, for turned quads drawn by PortFbRasterQuad */
+    unsigned char* cpu; /* handhelds: the picture's RGBA, drawn by PortFbRasterQuad (CpuPic below) */
     int cpuW, cpuH;
+    unsigned char* half[4]; /* its halvings, made when a smaller copy is wanted */
+    int halfW[4], halfH[4];
+    unsigned char* fit; /* the copy at the size last drawn */
+    int fitW, fitH;
 } HdSpriteState;
 
 static HdSpriteState sState[HD_SPRITE_COUNT];
@@ -110,7 +114,15 @@ static int GroupOn(int group) {
     case 3: return HD_HUD_ON; /* the battle HUD's faces and words go with the cards */
     case 4: return gPortConfig.hdCards; /* the world select's worlds */
     case 5: return gPortConfig.hdCards; /* the menus' title banners, in Re:CoM's lettering */
-    case 6: return gPortConfig.hdCards; /* the menus' small cards: Re:CoM's picture in the window, the cartridge's frame */
+    case 6: /* the menus' small cards: Re:CoM's picture in the window, the cartridge's frame; with the handheld's HUD
+               pack, the battle's stocked cards only (a deck's menus stay the cartridge's) */
+        if (gPortConfig.hdCards) return 1;
+        if (HudPackCards()) {
+            extern const char* PortHarnessModeName(void);
+            const char* mode = PortHarnessModeName();
+            return mode && !SDL_strcmp(mode, "mode_battle");
+        }
+        return 0;
     case 7: return gPortConfig.hdTitle; /* the title's words, ours (embedded: TitleWordAsset) */
     default: return 0;
     }
@@ -425,6 +437,8 @@ static SDL_AtomicInt sPreStop;
 static int SDLCALL PreloadThread(void* unused) {
     int k;
     (void)unused;
+    /* below the game and the PPU workers: the decode yields to the frame (4 cores, all busy on a handheld) */
+    SDL_SetCurrentThreadPriority(SDL_THREAD_PRIORITY_LOW);
     for (k = 0; k < sPreCount && !SDL_GetAtomicInt(&sPreStop); k++) {
         int n = 0;
         sPre[k].px = stbi_load(sPre[k].path, &sPre[k].w, &sPre[k].h, &n, 4);
@@ -464,7 +478,9 @@ void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
         for (i = 0; i < HD_SPRITE_COUNT; i++) {
             char file[PORT_HD_PATH_MAX];
             const char* path;
-            if ((kHdSprites[i].group != 3 && !(kHdSprites[i].group == 1 && HudPackCards())) || sState[i].image ||
+            /* the HUD's parts, and with the cards in the pack the battle's cards and the stocked (small) cards */
+            if ((kHdSprites[i].group != 3 && !((kHdSprites[i].group == 1 || kHdSprites[i].group == 6) && HudPackCards())) ||
+                sState[i].image ||
                 sState[i].present == 1)
                 continue;
             path = SpritePath(file, sizeof(file), kHdSprites[i].name);
@@ -521,9 +537,20 @@ static void PreloadStop(void) {}
 void PortHdSpritesPreloadStep(SDL_Renderer* renderer) { (void)renderer; }
 #endif
 
+static void CpuFree(HdSpriteState* st) {
+    int k;
+    SDL_free(st->cpu);
+    SDL_free(st->fit);
+    st->cpu = st->fit = NULL;
+    st->fitW = st->fitH = 0;
+    for (k = 0; k < 4; k++) {
+        SDL_free(st->half[k]);
+        st->half[k] = NULL;
+    }
+}
+
 static void Unload(int i) {
-    SDL_free(sState[i].cpu);
-    sState[i].cpu = NULL;
+    CpuFree(&sState[i]);
     if (sState[i].image) SDL_DestroyTexture(sState[i].image);
     if (sState[i].white) SDL_DestroyTexture(sState[i].white);
     sState[i].image = sState[i].white = NULL;
@@ -663,7 +690,9 @@ static int Load(int i) {
         uint64_t t0 = PORT_STUTTER_NOW();
         sState[i].image = SDL_CreateTextureFromSurface(sRenderer, s);
 #if defined(PORT_LINUX) && __STDC_HOSTED__
-        if (kHdSprites[i].group == 1 && HudPackCards() && !sState[i].cpu &&
+        if ((((kHdSprites[i].group == 1 || kHdSprites[i].group == 6) && HudPackCards()) ||
+             kHdSprites[i].group == 2 || kHdSprites[i].group == 7) && !sState[i].cpu &&
+            !SDL_strcmp(SDL_GetRendererName(sRenderer), SDL_SOFTWARE_RENDERER) &&
             (sState[i].cpu = (unsigned char*)SDL_malloc((size_t)w * h * 4)) != NULL) {
             memcpy(sState[i].cpu, px, (size_t)w * h * 4); /* before the white copy below rewrites px */
             sState[i].cpuW = w;
@@ -701,6 +730,7 @@ invalid:
    on the game's picture under every other HD part, in place of the cartridge's title art (port_ppu.c TitleArtQueue). */
 static SDL_Texture *sArt, *sArtWhite;
 static int sArtTried, sArtW, sArtH;
+static HdSpriteState sArtCpu; /* its RGBA on a handheld (PortFbRasterQuad from a copy at the drawn size) */
 static HdSpriteDraw sArtDraws[2];
 static int sArtCount;
 
@@ -714,6 +744,14 @@ int PortHdTitleArtReady(float* aspect) {
         sArtTried = 1;
         if (s) {
             sArt = SDL_CreateTextureFromSurface(sRenderer, s);
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+            if (!SDL_strcmp(SDL_GetRendererName(sRenderer), SDL_SOFTWARE_RENDERER) &&
+                (sArtCpu.cpu = (unsigned char*)SDL_malloc((size_t)w * h * 4)) != NULL) {
+                memcpy(sArtCpu.cpu, px, (size_t)w * h * 4);
+                sArtCpu.cpuW = w;
+                sArtCpu.cpuH = h;
+            }
+#endif
             for (k = 0; k < w * h; k++) px[k * 4] = px[k * 4 + 1] = px[k * 4 + 2] = 255;
             sArtWhite = SDL_CreateTextureFromSurface(sRenderer, s);
             SDL_DestroySurface(s);
@@ -818,6 +856,46 @@ static void BarDraw(SDL_Renderer* renderer, float ox, float oy, float scale, flo
     static SDL_Vertex v[(256 + 2) * 2];
     static int index[(256 + 1) * 6];
     int i, k;
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    /* a handheld's framebuffer: each run's row of colours (centres interpolated, as the triangles had them) is made
+       once and copied down its rows; SDL's gouraud triangles cost GA36 3 million instructions a frame */
+    static int fbOff = -1;
+    if (fbOff < 0) fbOff = SDL_getenv("KHCOM_HD_BAR_TRIANGLES") != NULL;
+    if (!fbOff) {
+        extern bool PortFbFillRows(SDL_Renderer*, const uint32_t*, int, int, int, int);
+        static uint32_t row[2048];
+        int done = 1;
+        for (i = 0; i < sBarCount && done; i++) {
+            const BarRun* r = &sBar[i];
+            const int y0 = (int)SDL_ceilf(oy + r->y * scale - 0.5f), y1 = (int)SDL_ceilf(oy + (r->y + 1) * scale - 0.5f);
+            const int x0 = (int)SDL_floorf(ox + r->x0 * scale + 0.5f), x1 = (int)SDL_floorf(ox + (r->x0 + r->n) * scale + 0.5f);
+            const int w = SDL_min(x1 - x0, 2048);
+            const unsigned sh = (unsigned)(SDL_clamp(shade, 0.0f, 1.0f) * 256.0f + 0.5f);
+            if (w <= 0 || y1 <= y0) continue;
+            for (k = 0; k < w; k++) {
+                /* the pixel centre in GBA columns of the run, between the centres of two columns */
+                float gx = (x0 + k + 0.5f - ox) / scale - r->x0 - 0.5f;
+                int c0 = (int)SDL_floorf(gx);
+                float t = gx - c0;
+                uint32_t a, b;
+                if (c0 < 0) { c0 = 0; t = 0; }
+                if (c0 >= r->n - 1) { c0 = r->n - 1; t = 0; }
+                a = r->c[c0];
+                b = r->c[SDL_min(c0 + 1, r->n - 1)];
+                {
+                    const unsigned ti = (unsigned)(t * 256.0f);
+                    unsigned rr = (((a >> 16) & 255) * (256 - ti) + ((b >> 16) & 255) * ti) >> 8;
+                    unsigned gg = (((a >> 8) & 255) * (256 - ti) + ((b >> 8) & 255) * ti) >> 8;
+                    unsigned bb = ((a & 255) * (256 - ti) + (b & 255) * ti) >> 8;
+                    rr = rr * sh >> 8; gg = gg * sh >> 8; bb = bb * sh >> 8;
+                    row[k] = 0xFF000000u | (SDL_min(rr, 255u) << 16) | (SDL_min(gg, 255u) << 8) | SDL_min(bb, 255u);
+                }
+            }
+            done = PortFbFillRows(renderer, row, x0, w, y0, y1);
+        }
+        if (done) return;
+    }
+#endif
     for (i = 0; i < sBarCount; i++) {
         const BarRun* r = &sBar[i];
         /* Match the presenter's nearest-sampled row boundaries. Fractional
@@ -965,6 +1043,66 @@ void PortHdSpriteHudOwner(int slot) {
     if (!SDL_strncmp(kHdSprites[q->id].name, prefix, sizeof(prefix) - 1)) q->hudOwner = slot + 1;
 }
 
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+/* Box average of an RGBA picture to dw x dh, weighted by alpha (no dark fringe at the edges). */
+static void BoxScale(const unsigned char* src, int sw, int sh, unsigned char* dst, int dw, int dh) {
+    for (int y = 0; y < dh; y++) {
+        const int y0 = (int)((int64_t)y * sh / dh), y1 = SDL_max(y0 + 1, (int)((int64_t)(y + 1) * sh / dh));
+        unsigned char* out = dst + (size_t)y * dw * 4;
+        for (int x = 0; x < dw; x++, out += 4) {
+            const int x0 = (int)((int64_t)x * sw / dw), x1 = SDL_max(x0 + 1, (int)((int64_t)(x + 1) * sw / dw));
+            uint32_t r = 0, g = 0, b = 0, a = 0, n = 0;
+            for (int yy = y0; yy < y1; yy++) {
+                const unsigned char* in = src + ((size_t)yy * sw + x0) * 4;
+                for (int xx = x0; xx < x1; xx++, in += 4) {
+                    const uint32_t ia = in[3];
+                    r += in[0] * ia; g += in[1] * ia; b += in[2] * ia; a += ia;
+                }
+                n += (uint32_t)(x1 - x0);
+            }
+            if (!a) { out[0] = out[1] = out[2] = out[3] = 0; continue; }
+            out[0] = (unsigned char)(r / a); out[1] = (unsigned char)(g / a); out[2] = (unsigned char)(b / a);
+            out[3] = (unsigned char)((a + n / 2) / n);
+        }
+    }
+}
+
+/* The picture at about dw x dh (within 2%): made from the smallest halving still as large, kept until the size
+   changes. SDL's software renderer scaled the title's 1080x1303 poster and 1920-pixel words down every frame:
+   30 million instructions a frame on GA36. */
+static const unsigned char* CpuFit(HdSpriteState* st, int dw, int dh, int* w, int* h, int exact) {
+    const unsigned char* base = st->cpu;
+    int bw = st->cpuW, bh = st->cpuH, k;
+    if (dw < 1 || dh < 1) return NULL;
+    if (st->fit && (exact ? st->fitW == dw && st->fitH == dh
+                          : SDL_abs(st->fitW - dw) * 33 <= dw && SDL_abs(st->fitH - dh) * 33 <= dh)) {
+        *w = st->fitW; *h = st->fitH;
+        return st->fit;
+    }
+    for (k = 0; k < 4 && bw / 2 >= dw && bh / 2 >= dh; k++) {
+        if (!st->half[k]) {
+            const int hw = bw / 2, hh = bh / 2;
+            if (!(st->half[k] = (unsigned char*)SDL_malloc((size_t)hw * hh * 4))) break;
+            BoxScale(base, bw, bh, st->half[k], hw, hh);
+            st->halfW[k] = hw; st->halfH[k] = hh;
+        }
+        base = st->half[k]; bw = st->halfW[k]; bh = st->halfH[k];
+    }
+    if (st->fitW * st->fitH < dw * dh || !st->fit) {
+        SDL_free(st->fit);
+        if (!(st->fit = (unsigned char*)SDL_malloc((size_t)dw * dh * 4))) { st->fitW = st->fitH = 0; return NULL; }
+    }
+    BoxScale(base, bw, bh, st->fit, dw, dh);
+    static int fitLog = -1;
+    if (fitLog < 0) fitLog = SDL_getenv("KHCOM_HD_FIT_LOG") != NULL;
+    if (fitLog)
+        PortLog("probe fit f=%u %dx%d from %dx%d (picture %dx%d)", PortFrameCount(), dw, dh, bw, bh, st->cpuW, st->cpuH);
+    st->fitW = dw; st->fitH = dh;
+    *w = dw; *h = dh;
+    return st->fit;
+}
+#endif
+
 static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
     SDL_Vertex v[4];
     static const int kIndex[6] = { 0, 1, 2, 0, 2, 3 };
@@ -1023,6 +1161,62 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
         for (k = 0; k < 4; k++)
             v[k].tex_coord.y = SDL_clamp(v[k].tex_coord.y - halfTexel, 0.0f, 1.0f);
     }
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+    {
+        /* A handheld's framebuffer: the pictures that keep their pixels (battle cards, stocked cards, the title's
+           poster and words) are drawn by their own rasteriser (fbdev_linux.c PortFbRasterQuad), not SDL's triangles
+           or scaled copies; one made smaller than its picture is drawn from a copy at that size (CpuFit). */
+        extern bool PortFbRasterQuad(SDL_Renderer*, const unsigned char*, int, int, const SDL_Vertex*, unsigned, unsigned,
+                                     unsigned, unsigned, int);
+        static int off = -1;
+        HdSpriteState* st = t == sArt || t == sArtWhite ? &sArtCpu : &sState[q->id];
+        const int white = t == sArtWhite || (st != &sArtCpu && t == st->white);
+        if (off < 0) off = SDL_getenv("KHCOM_HD_SPRITE_TRIANGLES") != NULL;
+        if (!off && st->cpu && (white || t == st->image || t == sArt)) {
+            const unsigned char* px = st->cpu;
+            int pw = st->cpuW, ph = st->cpuH;
+            /* the whole picture's size from the part's own corners (before rounding and clipping): every part of one
+               picture (the title's words come in 32-pixel pieces) asks for the same copy */
+            const float du = q->u1 - q->u0, dv = q->v1 - q->v0;
+            const float ew = scale * SDL_sqrtf((q->x[1] - q->x[0]) * (q->x[1] - q->x[0]) + (q->y[1] - q->y[0]) * (q->y[1] - q->y[0]));
+            const float eh = scale * SDL_sqrtf((q->x[3] - q->x[0]) * (q->x[3] - q->x[0]) + (q->y[3] - q->y[0]) * (q->y[3] - q->y[0]));
+            if (du > 0.0001f && dv > 0.0001f) {
+                /* the whole picture's size as drawn */
+                const int fw = (int)(ew / du + 0.5f), fh = (int)(eh / dv + 0.5f);
+                /* upright and unmirrored, on whole pixels (cut and rounded above): a 1:1 copy of the picture at the
+                   size drawn, a sixth of the rasteriser's cost */
+                const int upright = v[0].position.y == v[1].position.y && v[0].position.x == v[3].position.x &&
+                                    v[1].position.x == v[2].position.x && v[2].position.y == v[3].position.y &&
+                                    v[1].position.x > v[0].position.x && v[3].position.y > v[0].position.y &&
+                                    v[1].tex_coord.x > v[0].tex_coord.x && v[3].tex_coord.y > v[0].tex_coord.y;
+                if (fw * 5 < pw * 4 || fh * 5 < ph * 4 || (upright && (fw < pw || fh < ph))) {
+                    int w2 = 0, h2 = 0;
+                    const unsigned char* fit = CpuFit(st, fw, fh, &w2, &h2, upright);
+                    if (fit) { px = fit; pw = w2; ph = h2; }
+                }
+                if (upright && pw == fw && ph == fh) {
+                    extern bool PortFbBlendRgba(SDL_Renderer*, const unsigned char*, int, int, int, int, int, int, int,
+                                                unsigned, unsigned, unsigned, unsigned, int);
+                    const int bx = (int)v[0].position.x, by = (int)v[0].position.y;
+                    int sx = (int)(v[0].tex_coord.x * pw + 0.5f), sy = (int)(v[0].tex_coord.y * ph + 0.5f);
+                    int bw = (int)v[1].position.x - bx, bh = (int)v[3].position.y - by;
+                    sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
+                    bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
+                    if (PortFbBlendRgba(sRenderer, px, pw, sx, sy, bw, bh, bx, by,
+                                        (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                        (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                        white))
+                        return 1;
+                }
+            }
+            if (PortFbRasterQuad(sRenderer, px, pw, ph, v,
+                                 (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                 (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
+                                 white))
+                return 1;
+        }
+    }
+#endif
     {
         /* SDL's software renderer: a quad that is upright, unmirrored and inside the canvas (cut to it above) is a
            plain scaled copy, a tenth of its triangle rasteriser's cost per pixel (the battle's "Card Break" sign
@@ -1056,20 +1250,6 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
             }
         }
     }
-#if defined(PORT_LINUX) && __STDC_HOSTED__
-    {
-        /* a turned card on the handheld's framebuffer (an enemy's card spinning as it is played): the cards' own
-           rasteriser, not SDL's triangles (fbdev_linux.c PortFbRasterQuad) */
-        extern bool PortFbRasterQuad(SDL_Renderer*, const unsigned char*, int, int, const SDL_Vertex*, unsigned, unsigned,
-                                     unsigned, unsigned);
-        const HdSpriteState* st = &sState[q->id];
-        if (st->cpu && t == st->image && !SDL_getenv("KHCOM_HD_SPRITE_TRIANGLES") &&
-            PortFbRasterQuad(sRenderer, st->cpu, st->cpuW, st->cpuH, v,
-                             (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
-                             (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f)))
-            return 1;
-    }
-#endif
     /* SDL turns an axis-aligned quad into a texture copy, and the software
        renderer's scaled copy reads outside the texture when the quad is
        mirrored, turned a quarter (a card spinning) or partly off the canvas (a
@@ -1300,8 +1480,9 @@ int PortHdHudStockShift(int axis) {
         return 0;
     if (gPortHudScale) /* the HUD canvas (PC, measured at 720p: the ring reaches GBA x 34); the total's height is
                           PortHdStockValueTop's there */
-        return axis ? 0 : 10;
-    return axis ? 6 : 19;
+        return axis == 1 ? 0 : axis == 2 ? 3 : 10;
+    /* axis 2: the total alone, a little further right, clear of the third card's crown (user, 26/11) */
+    return axis == 1 ? 6 : axis == 2 ? 6 : 19;
 }
 
 /* GBA x of the opponent's sleight name (card_friend_card.c draws it at 120, top centre). On the wide HUD canvas the
@@ -1401,6 +1582,8 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         gPortHdEnemyGaugeZoom = 1.0f;
         gPortHudW = hudW;
     }
+    extern uint64_t gPortPiece[12];
+    uint64_t _pt = SDL_GetPerformanceCounter();
     for (i = 0; layer == 0 && i < sArtCount && sArt; i++) { /* the title's illustration, under everything */
         const HdSpriteDraw* q = &sArtDraws[i];
         float shade = 1.0f - SDL_max(darken > 0 ? darken / 16.0f : 0.0f, q->dark / 255.0f);
@@ -1410,8 +1593,10 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         if (white > 0)
             Quad(sArtWhite, q, ox, oy, scale, (SDL_FColor){ 1, 1, 1, q->alpha / 255.0f * white });
     }
+    gPortPiece[6] += SDL_GetPerformanceCounter() - _pt; _pt = SDL_GetPerformanceCounter();
     if (layer == 0 && sBarCount)
         BarDraw(renderer, ox, oy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
+    gPortPiece[7] += SDL_GetPerformanceCounter() - _pt; _pt = SDL_GetPerformanceCounter();
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
         HdSpriteState* st = &sState[q->id];
@@ -1460,6 +1645,7 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
             }
         }
     }
+    gPortPiece[8] += SDL_GetPerformanceCounter() - _pt;
 }
 
 /* The original draws base -> affine fill/full cap -> counter. The fill remains the game's own tiles,
@@ -1576,6 +1762,7 @@ void PortHdSpritesShutdown(void) {
     if (sArt) SDL_DestroyTexture(sArt);
     if (sArtWhite) SDL_DestroyTexture(sArtWhite);
     sArt = sArtWhite = NULL;
+    CpuFree(&sArtCpu);
     sArtTried = sArtW = sArtH = sArtCount = sBarCount = 0;
     SDL_memset(sDrawCount, 0, sizeof(sDrawCount));
     sRenderer = NULL;

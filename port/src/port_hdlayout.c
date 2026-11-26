@@ -115,6 +115,8 @@ static SDL_Thread* sTexPreThread;
 static int SDLCALL TexturePreThread(void* unused) {
     int i;
     (void)unused;
+    /* below the game and the PPU workers: the decode yields to the frame (4 cores, all busy on a handheld) */
+    SDL_SetCurrentThreadPriority(SDL_THREAD_PRIORITY_LOW);
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
         int n = 0;
         if (!sTexPre[i].path) continue;

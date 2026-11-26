@@ -446,6 +446,9 @@ void PortConfigLoad(void) {
     PortConfigDeviceDefaults();
     PortConfigLoadFile();
     ApplyEnvConfig();
+    /* a handheld with the HD HUD pack: its HD title goes with the HUD HD option (one switch; user, 26/11) */
+    if (PortHdHudPackPresent())
+        gPortConfig.hdTitle = gPortConfig.hdHudPack;
     if (PortFixed480p()) {
         gPortConfig.viewMode = PORT_VIEW_AUTO;
         gPortConfig.aspect = PORT_ASPECT_4_3;

@@ -1849,8 +1849,9 @@ static void Change(int item, int dir) {
             sPage = PAGE_MAIN; sCursor = ITEM_HD_SUBTITLES; sScroll = 0;
             break;
         case ITEM_HD_CARDS: /* HD HUD: the cards, the battle HUD and the title's logo together */
-            if (PortHdHudPackPresent()) { /* a handheld's HUD pack: only the battle HUD */
+            if (PortHdHudPackPresent()) { /* a handheld's HUD pack: the battle HUD and the title's HD with it (user, 26/11) */
                 gPortConfig.hdHudPack = !gPortConfig.hdHudPack;
+                gPortConfig.hdTitle = gPortConfig.hdHudPack;
                 break;
             }
             gPortConfig.hdCards = !gPortConfig.hdCards;

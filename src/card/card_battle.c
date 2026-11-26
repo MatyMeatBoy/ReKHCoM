@@ -1341,7 +1341,8 @@ static void cardbattle_2(CardBattleWork* work) {
         PortHudBegin(-1, -1); /* stocked values: top-left, under the HP gauge */
 #endif
 #ifdef PLATFORM_PC
-        DrawSprite(work->x + PortHdHudStockShift(0), 4 + PortHdHudStockShift(1), gStockValueFrames[0], work->tiles,
+        DrawSprite(work->x + PortHdHudStockShift(0) + PortHdHudStockShift(2), 4 + PortHdHudStockShift(1),
+                   gStockValueFrames[0], work->tiles,
                    work->palette, NULL, SPRITE_FLAG_NO_MOSAIC, 12);
 #else
         DrawSprite(work->x, 4, gStockValueFrames[0], work->tiles, work->palette, NULL, SPRITE_FLAG_NO_MOSAIC,

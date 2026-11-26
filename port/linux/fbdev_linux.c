@@ -694,11 +694,72 @@ bool PortFbBlendPremultipliedSpans(SDL_Renderer* renderer, const uint32_t* src, 
     return true;
 }
 
+/* One row of XRGB colours copied into framebuffer rows y0..y1-1 from column x (the HD title's smooth bar). */
+bool PortFbFillRows(SDL_Renderer* renderer, const uint32_t* row, int x, int w, int y0, int y1) {
+    if (!row || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    if (x < 0) { row -= x; w += x; x = 0; }
+    if (x + w > sRenderSurface->w) w = sRenderSurface->w - x;
+    y0 = SDL_max(y0, 0);
+    y1 = SDL_min(y1, sRenderSurface->h);
+    for (int y = y0; y < y1 && w > 0; y++)
+        memcpy((uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)y * sRenderSurface->pitch) + x, row, (size_t)w * 4);
+    return true;
+}
+
+/* An upright RGBA picture (straight alpha) copied 1:1 into the framebuffer: w x h from (sx, sy) of a picture pitch
+   pixels wide, to (x, y), with SDL's 8-bit colour/alpha modulation (white: its colour taken as white). The HD title's
+   poster and words at the size they are drawn (port_hdsprites.c CpuFit). */
+bool PortFbBlendRgba(SDL_Renderer* renderer, const unsigned char* src, int pitch, int sx, int sy, int w, int h, int x,
+                     int y, unsigned cr, unsigned cg, unsigned cb, unsigned ca, int white) {
+    if (!src || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
+        return false;
+    if (x < 0) { sx -= x; w += x; x = 0; }
+    if (y < 0) { sy -= y; h += y; y = 0; }
+    if (x + w > sRenderSurface->w) w = sRenderSurface->w - x;
+    if (y + h > sRenderSurface->h) h = sRenderSurface->h - y;
+    if (w <= 0 || h <= 0) return true;
+    const int plain = !white && cr == 255 && cg == 255 && cb == 255 && ca == 255;
+    for (int r = 0; r < h; r++) {
+        const unsigned char* in = src + ((size_t)(sy + r) * pitch + sx) * 4;
+        uint32_t* out = (uint32_t*)((uint8_t*)sRenderSurface->pixels + (size_t)(y + r) * sRenderSurface->pitch) + x;
+        if (plain) {
+            for (int c = 0; c < w; c++, in += 4) {
+                const unsigned a = in[3];
+                if (!a) continue;
+                if (a == 255) { out[c] = 0xFF000000u | ((uint32_t)in[0] << 16) | ((uint32_t)in[1] << 8) | in[2]; continue; }
+                const uint32_t d = out[c];
+                const unsigned inv = 255 - a;
+                unsigned rr = in[0] * a + ((d >> 16) & 255) * inv, gg = in[1] * a + ((d >> 8) & 255) * inv,
+                         bb = in[2] * a + (d & 255) * inv;
+                rr = (rr + 1 + (rr >> 8)) >> 8; gg = (gg + 1 + (gg >> 8)) >> 8; bb = (bb + 1 + (bb >> 8)) >> 8;
+                out[c] = 0xFF000000u | (rr << 16) | (gg << 8) | bb;
+            }
+            continue;
+        }
+        for (int c = 0; c < w; c++, in += 4) {
+            if (!in[3]) continue;
+            unsigned sa = in[3] * ca, sr = (white ? 255u : in[0]) * cr, sg = (white ? 255u : in[1]) * cg,
+                     sb = (white ? 255u : in[2]) * cb;
+            sa = (sa + 1 + (sa >> 8)) >> 8;
+            if (!sa) continue;
+            sr = (sr + 1 + (sr >> 8)) >> 8; sg = (sg + 1 + (sg >> 8)) >> 8; sb = (sb + 1 + (sb >> 8)) >> 8;
+            const uint32_t d = out[c];
+            if (sa == 255) { out[c] = 0xFF000000u | (sr << 16) | (sg << 8) | sb; continue; }
+            const unsigned inv = 255 - sa;
+            unsigned rr = sr * sa + ((d >> 16) & 255) * inv, gg = sg * sa + ((d >> 8) & 255) * inv, bb = sb * sa + (d & 255) * inv;
+            rr = (rr + 1 + (rr >> 8)) >> 8; gg = (gg + 1 + (gg >> 8)) >> 8; bb = (bb + 1 + (bb >> 8)) >> 8;
+            out[c] = 0xFF000000u | (rr << 16) | (gg << 8) | bb;
+        }
+    }
+    return true;
+}
+
 /* A turned HD sprite (a card spinning as it is played) drawn straight into the framebuffer: a parallelogram (corners
    top-left, top-right, bottom-right, bottom-left), nearest texel, SDL's 8-bit blend over the opaque picture. SDL's
    triangle rasteriser cost about 620 instructions a pixel there. RGBA texels, one colour for the quad. */
 bool PortFbRasterQuad(SDL_Renderer* renderer, const unsigned char* tex, int tw, int th, const SDL_Vertex* v,
-                      unsigned cr, unsigned cg, unsigned cb, unsigned ca) {
+                      unsigned cr, unsigned cg, unsigned cb, unsigned ca, int white) {
     if (!tex || tw <= 0 || th <= 0 || !PortFbBeginGlyphBatch(renderer) ||
         sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
         return false;
@@ -745,7 +806,8 @@ bool PortFbRasterQuad(SDL_Renderer* renderer, const unsigned char* tex, int tw, 
             if ((unsigned)tx >= (unsigned)tw || (unsigned)ty >= (unsigned)th) continue;
             const unsigned char* sp = tex + ((size_t)ty * tw + tx) * 4;
             if (!sp[3]) continue;
-            unsigned sa = sp[3] * ca, sr = sp[0] * cr, sg = sp[1] * cg, sb = sp[2] * cb;
+            unsigned sa = sp[3] * ca, sr = (white ? 255u : sp[0]) * cr, sg = (white ? 255u : sp[1]) * cg,
+                     sb = (white ? 255u : sp[2]) * cb;
             sa = (sa + 1 + (sa >> 8)) >> 8;
             if (!sa) continue;
             sr = (sr + 1 + (sr >> 8)) >> 8; sg = (sg + 1 + (sg >> 8)) >> 8; sb = (sb + 1 + (sb >> 8)) >> 8;
