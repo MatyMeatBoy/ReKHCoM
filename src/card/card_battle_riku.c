@@ -286,8 +286,13 @@ static const s32 sRikuCardSwingAngles[4] = {
 int PortHdHudOpponentStockDrop(void);
 /* the opponent's stock, below Re:CoM's enemy bar when it is drawn (port_hdsprites.c) */
 #define RIKU_STOCK_DROP PortHdHudOpponentStockDrop()
+int PortHdHudOpponentStockValueShift(int axis);
+#define RIKU_STOCK_VALUE_X PortHdHudOpponentStockValueShift(0)
+#define RIKU_STOCK_VALUE_Y PortHdHudOpponentStockValueShift(1)
 #else
 #define RIKU_STOCK_DROP 0
+#define RIKU_STOCK_VALUE_X 0
+#define RIKU_STOCK_VALUE_Y 0
 #endif
 
 static const s16 sRikuStockValueX[4] = {
@@ -1476,7 +1481,8 @@ static void cardbattle_2(CardBattleWork* work) {
 #ifdef PLATFORM_PC
         PortHudBegin(1, -1); /* the opponent's stocked values: top-right, under its HP */
 #endif
-        DrawSprite(work->x, 4 + RIKU_STOCK_DROP, gStockValueFrames[0], work->tiles, work->palette, NULL,
+        DrawSprite(work->x + RIKU_STOCK_VALUE_X, 4 + RIKU_STOCK_DROP + RIKU_STOCK_VALUE_Y, gStockValueFrames[0], work->tiles,
+                   work->palette, NULL,
                    SPRITE_FLAG_NO_MOSAIC, 12);
 #ifdef PLATFORM_PC
         PortHudEnd();

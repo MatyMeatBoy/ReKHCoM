@@ -1654,6 +1654,15 @@ int PortHdHudOpponentStockDrop(void) {
     return 6;
 }
 
+/* GBA pixels the opponent's stock total moves with Re:CoM's enemy bar on a shared canvas: under its stocked cards
+   (they drop 6 under the bar and end about y 41), not at the top where the opponent's sleight name shows ("Tormenta",
+   user 26/11); its x a little right, under the stack. axis 0 x, 1 y. */
+int PortHdHudOpponentStockValueShift(int axis) {
+    if (!PortHdHudOpponentStockDrop())
+        return 0;
+    return axis ? 33 : 12;
+}
+
 int PortHdHudStockShift(int axis) {
     extern int PortHdGaugeShown(void);
     if (!HD_HUD_ON || !PortHdGaugeShown())
