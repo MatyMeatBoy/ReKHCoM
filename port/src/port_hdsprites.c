@@ -377,6 +377,30 @@ void PortHdSpriteBox(int id, int* x0, int* y0, int* w, int* h) {
     *x0 = d->x0; *y0 = d->y0; *w = d->w; *h = d->h;
 }
 
+/* The HD HUD pack (handhelds): its pictures (group 3: faces, the battle's signs, LEVEL UP) load before the first
+   battle, one a frame on frames that loaded nothing else, and stay; the first battle had read and decoded them while
+   it was being played (user, 26/11). Missing files are tried once. KHCOM_HD_HUD_NO_PRELOAD keeps the old way. */
+void PortHdSpritesPreloadStep(SDL_Renderer* renderer) {
+    static int next, off = -1;
+    if (off < 0) off = SDL_getenv("KHCOM_HD_HUD_NO_PRELOAD") != NULL;
+    if (off || !renderer || !HudPack() || gPortConfig.hdCards || sLoadFrame == PortFrameCount())
+        return;
+    sRenderer = renderer;
+    for (; next < HD_SPRITE_COUNT; next++) {
+        if (kHdSprites[next].group != 3 || sState[next].image || sState[next].present == 1)
+            continue;
+        if (LoadCounted(next)) {
+            sLoadFrame = PortFrameCount();
+            sState[next].lastUsed = PortFrameCount();
+            PortLog("hd hud preload: %s", kHdSprites[next].name);
+        } else if (!sState[next].image) {
+            sState[next].present = 1; /* not in the pack */
+        }
+        next++;
+        return;
+    }
+}
+
 static void Unload(int i) {
     if (sState[i].image) SDL_DestroyTexture(sState[i].image);
     if (sState[i].white) SDL_DestroyTexture(sState[i].white);

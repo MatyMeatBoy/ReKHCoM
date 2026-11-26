@@ -38,6 +38,9 @@ static HdLayoutTexture sTextures[HD_LAYOUT_TEXTURE_COUNT];
 /* the gauge cache's own renderer (SDL's software renderer on a surface) needs its own textures */
 static SDL_Renderer* sCacheRenderer;
 static HdLayoutTexture sCacheTextures[HD_LAYOUT_TEXTURE_COUNT];
+/* software renderer: the decoded pictures (and their mirrored copies) stay, so the gauge cache's renderer gets its
+   textures without decoding and mirroring them again */
+static SDL_Surface* sPictures[HD_LAYOUT_TEXTURE_COUNT][4];
 /* the 1.5+2.5's remastered layouts (UK_gauge.lad...): their UVs are the HD textures' own; the PS2 ones (gauge.lad)
    doubled miss the pieces the remaster moved (the ring's quarters, the bar) */
 static const char* const kLayoutFiles[HD_LAYOUT_COUNT] = { "gHudGaugeHdLad", "gHudCockpitHdLad" };
@@ -87,6 +90,18 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
     if ((unsigned)which >= HD_LAYOUT_TEXTURE_COUNT)
         return NULL;
     t = renderer && renderer == sCacheRenderer ? &sCacheTextures[which] : &sTextures[which];
+    if (!t->tex && !t->tried && renderer && t == &sCacheTextures[which] && sPictures[which][0]) {
+        int f;
+        t->tried = 1;
+        t->tex = SDL_CreateTextureFromSurface(renderer, sPictures[which][0]);
+        for (f = 1; f < 4; f++)
+            if (sPictures[which][f]) t->flipped[f] = SDL_CreateTextureFromSurface(renderer, sPictures[which][f]);
+        if (t->tex) SDL_SetTextureBlendMode(t->tex, SDL_BLENDMODE_BLEND);
+        t->w = sTextures[which].w;
+        t->h = sTextures[which].h;
+        t->texW = sTextures[which].texW;
+        t->texH = sTextures[which].texH;
+    }
     if (!t->tex && !t->tried && renderer) {
         char file[PORT_HD_PATH_MAX];
         int n;
@@ -95,6 +110,8 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
         px = stbi_load(PortHdSpritePath(file, sizeof(file), kTextureFiles[which]), &t->w, &t->h, &n, 4);
         if (px) {
             SDL_Surface* s = SDL_CreateSurfaceFrom(t->w, t->h, SDL_PIXELFORMAT_RGBA32, px, t->w * 4);
+            const int keep = which != HD_LAYOUT_TEX_COCKPIT && t == &sTextures[which] &&
+                             SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) == 0;
             if (s) {
                 t->tex = SDL_CreateTextureFromSurface(renderer, s);
                 /* SDL's software renderer copies only unmirrored rectangles: the gauges' mirrored parts (the ring's
@@ -112,9 +129,11 @@ static HdLayoutTexture* Texture(SDL_Renderer* renderer, int which) {
                             continue;
                         }
                         t->flipped[f] = SDL_CreateTextureFromSurface(renderer, m);
-                        SDL_DestroySurface(m);
+                        if (keep && !sPictures[which][f]) sPictures[which][f] = m;
+                        else SDL_DestroySurface(m);
                     }
                 }
+                if (keep && t->tex && !sPictures[which][0]) sPictures[which][0] = SDL_DuplicateSurface(s);
                 SDL_DestroySurface(s);
             }
             stbi_image_free(px);
@@ -142,6 +161,8 @@ int PortHdLayoutReady(int layout, int texture) {
 }
 
 int PortHdHudPack(void); /* port_hdsprites.c: the HUD-only HD pack */
+static int GaugeCachePrepare(SDL_Renderer* renderer, int w, int h);
+
 void PortHdLayoutPrepare(SDL_Renderer* renderer) {
     int i;
     if (!gPortConfig.hdCards && !PortHdHudPack())
@@ -149,6 +170,38 @@ void PortHdLayoutPrepare(SDL_Renderer* renderer) {
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++)
         if (sTextures[i].requested)
             Texture(renderer, i);
+    /* The HD HUD pack (handhelds) is the battle HUD alone: its gauge pictures load before the first battle, one a
+       frame, and stay, with the gauge cache and its own copies of them. The first battle had stalled on their decode
+       (user, 26/11: "the first battle was slow, the second better"). */
+    if (PortHdHudPack() && renderer && !SDL_getenv("KHCOM_HD_HUD_NO_PRELOAD")) {
+        static const int kGauge[3] = { HD_LAYOUT_TEX_GAUGE, HD_LAYOUT_TEX_GAUGE_FACES, HD_LAYOUT_TEX_RIKU_FACES };
+        static uint32_t lastStep;
+        uint32_t frame = PortFrameCount();
+        int ow = 0, oh = 0;
+        if (frame == lastStep)
+            return;
+        for (i = 0; i < 3; i++)
+            if (!sTextures[kGauge[i]].tried) {
+                lastStep = frame;
+                Texture(renderer, kGauge[i]);
+                PortLog("hd hud preload: %s %s", kTextureFiles[kGauge[i]], sTextures[kGauge[i]].tex ? "loaded" : "missing");
+                return;
+            }
+        if (SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) != 0 || sCacheRenderer)
+            ;
+        else if (SDL_GetCurrentRenderOutputSize(renderer, &ow, &oh) && ow > 0 && oh > 0) {
+            lastStep = frame;
+            GaugeCachePrepare(renderer, SDL_min(ow, 1024), SDL_min(oh, 768));
+            return;
+        }
+        if (sCacheRenderer)
+            for (i = 0; i < 3; i++)
+                if (!sCacheTextures[kGauge[i]].tried && sTextures[kGauge[i]].tex) {
+                    lastStep = frame;
+                    Texture(sCacheRenderer, kGauge[i]);
+                    return;
+                }
+    }
 }
 
 /* The layout's sequence n: its bytes and size. Validate ranges before forming
@@ -351,6 +404,106 @@ static int SoftwareCopy(SDL_Renderer* r, const HdLayoutTexture* t, const SDL_Ver
     return 1;
 }
 
+static SDL_Surface* sCacheSurface;
+
+/* A turned quad drawn straight into the gauge cache's surface (corners top-left, top-right, bottom-left,
+   bottom-right: a parallelogram), nearest texel, SDL's own 8-bit blend (BLEND: c = s a + d (1 - a), alpha
+   a + d (1 - a); ADD: c = s a + d). SDL's triangle rasteriser cost about 620 instructions a pixel there; the low-HP
+   alarm turns four large pieces and their bright pass every frame (user, 26/11: slow again at low HP). Only one
+   colour for the whole quad; otherwise 0 and SDL draws it. */
+static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const SDL_FRect* clip, int add) {
+    const SDL_Surface* pic;
+    const unsigned char* tex;
+    int which = (int)(t - sCacheTextures), x0, y0, x1, y1, x, y, k, tw, th, tpitch, pitch;
+    float ex = v[1].position.x - v[0].position.x, ey = v[1].position.y - v[0].position.y;
+    float fx = v[2].position.x - v[0].position.x, fy = v[2].position.y - v[0].position.y, det, minx, miny, maxx, maxy;
+    float ia, ib, ic, id, du, dv;
+    unsigned cr, cg, cb, ca;
+    uint32_t* dst;
+    if (!sCacheSurface || which < 0 || which >= HD_LAYOUT_TEXTURE_COUNT || !(pic = sPictures[which][0]))
+        return 0;
+    for (k = 1; k < 4; k++)
+        if (v[k].color.r != v[0].color.r || v[k].color.g != v[0].color.g || v[k].color.b != v[0].color.b ||
+            v[k].color.a != v[0].color.a)
+            return 0;
+    det = ex * fy - ey * fx;
+    if (det > -0.01f && det < 0.01f)
+        return 1; /* no area */
+    /* parallelogram only: the fourth corner where the other three put it */
+    if (SDL_fabsf(v[3].position.x - (v[1].position.x + fx)) > 0.5f || SDL_fabsf(v[3].position.y - (v[1].position.y + fy)) > 0.5f)
+        return 0;
+    SDL_FlushRenderer(sCacheRenderer); /* what SDL queued before goes under */
+    minx = maxx = v[0].position.x;
+    miny = maxy = v[0].position.y;
+    for (k = 1; k < 4; k++) {
+        minx = SDL_min(minx, v[k].position.x); maxx = SDL_max(maxx, v[k].position.x);
+        miny = SDL_min(miny, v[k].position.y); maxy = SDL_max(maxy, v[k].position.y);
+    }
+    if (clip) {
+        minx = SDL_max(minx, clip->x); miny = SDL_max(miny, clip->y);
+        maxx = SDL_min(maxx, clip->x + clip->w); maxy = SDL_min(maxy, clip->y + clip->h);
+    }
+    x0 = SDL_max(0, (int)SDL_floorf(minx)); y0 = SDL_max(0, (int)SDL_floorf(miny));
+    x1 = SDL_min(sCacheSurface->w, (int)SDL_ceilf(maxx)); y1 = SDL_min(sCacheSurface->h, (int)SDL_ceilf(maxy));
+    if (x0 >= x1 || y0 >= y1)
+        return 1;
+    /* pixel centre -> (a, b) across the two edges */
+    ia = fy / det; ib = -fx / det; ic = -ey / det; id = ex / det;
+    du = v[1].tex_coord.x - v[0].tex_coord.x;
+    dv = v[2].tex_coord.y - v[0].tex_coord.y;
+    {
+        /* the texture's corners need not run along the edges (mirrored quads): a full map */
+        float dua = v[1].tex_coord.x - v[0].tex_coord.x, dub = v[2].tex_coord.x - v[0].tex_coord.x;
+        float dva = v[1].tex_coord.y - v[0].tex_coord.y, dvb = v[2].tex_coord.y - v[0].tex_coord.y;
+        tw = pic->w; th = pic->h; tpitch = pic->pitch;
+        tex = (const unsigned char*)pic->pixels;
+        cr = (unsigned)(SDL_clamp(v[0].color.r, 0.0f, 1.0f) * 255.0f + 0.5f);
+        cg = (unsigned)(SDL_clamp(v[0].color.g, 0.0f, 1.0f) * 255.0f + 0.5f);
+        cb = (unsigned)(SDL_clamp(v[0].color.b, 0.0f, 1.0f) * 255.0f + 0.5f);
+        ca = (unsigned)(SDL_clamp(v[0].color.a, 0.0f, 1.0f) * 255.0f + 0.5f);
+        pitch = sCacheSurface->pitch / 4;
+        dst = (uint32_t*)sCacheSurface->pixels;
+        (void)du; (void)dv;
+        for (y = y0; y < y1; y++) {
+            float py = y + 0.5f - v[0].position.y, px = x0 + 0.5f - v[0].position.x;
+            float a = ia * px + ib * py, b = ic * px + id * py;
+            uint32_t* line = dst + (size_t)y * pitch;
+            for (x = x0; x < x1; x++, a += ia, b += ic) {
+                float u, w;
+                int tx, ty;
+                const unsigned char* s;
+                unsigned sa, sr, sg, sb;
+                uint32_t d;
+                if (a < 0.0f || a >= 1.0f || b < 0.0f || b >= 1.0f)
+                    continue;
+                u = v[0].tex_coord.x + a * dua + b * dub;
+                w = v[0].tex_coord.y + a * dva + b * dvb;
+                tx = (int)(u * tw);
+                ty = (int)(w * th);
+                if ((unsigned)tx >= (unsigned)tw || (unsigned)ty >= (unsigned)th)
+                    continue;
+                s = tex + (size_t)ty * tpitch + (size_t)tx * 4;
+                sa = s[3] * ca / 255;
+                if (!sa)
+                    continue;
+                sr = s[0] * cr / 255; sg = s[1] * cg / 255; sb = s[2] * cb / 255;
+                d = line[x];
+                if (add) {
+                    unsigned r = ((d >> 16) & 255) + sr * sa / 255, g = ((d >> 8) & 255) + sg * sa / 255,
+                             bl = (d & 255) + sb * sa / 255;
+                    line[x] = (d & 0xFF000000u) | (SDL_min(r, 255u) << 16) | (SDL_min(g, 255u) << 8) | SDL_min(bl, 255u);
+                } else {
+                    unsigned inv = 255 - sa;
+                    unsigned r = (sr * sa + ((d >> 16) & 255) * inv) / 255, g = (sg * sa + ((d >> 8) & 255) * inv) / 255,
+                             bl = (sb * sa + (d & 255) * inv) / 255, al = sa + (d >> 24) * inv / 255;
+                    line[x] = (al << 24) | (r << 16) | (g << 8) | bl;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
 /* The gauge cache's dry run: what would be drawn goes into a hash instead of the renderer. */
 static int sGeoDry;
 static uint32_t sGeoHash;
@@ -429,6 +582,13 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     }
     if (sGeoDry)
         return 0;
+    if (r == sCacheRenderer && r && !SDL_getenv("KHCOM_HD_GAUGE_SDL_TURNED") &&
+        (clip || !(SDL_fabsf(v[0].position.y - v[1].position.y) <= 0.01f && SDL_fabsf(v[0].position.x - v[2].position.x) <= 0.01f)) &&
+        CacheRasterQuad(t, v, clip, blend == 1)) {
+        if (bright)
+            CacheRasterQuad(t, over, clip, 1);
+        return 0;
+    }
     SDL_SetTextureBlendMode(t->tex, blend == 1 ? SDL_BLENDMODE_ADD : SDL_BLENDMODE_BLEND);
     if (clip) {
         /* the quad as a fan (top-left, top-right, bottom-right, bottom-left), cut to the mask */
@@ -569,6 +729,13 @@ void PortHdLayoutShutdown(void) {
     GaugeTargetsRelease();
 #endif
     GaugeCacheRelease();
+    for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
+        int f;
+        for (f = 0; f < 4; f++) {
+            if (sPictures[i][f]) SDL_DestroySurface(sPictures[i][f]);
+            sPictures[i][f] = NULL;
+        }
+    }
 }
 
 /* ---- the player's HP gauge (Gauge::CPlayerGauge, read from Re:CoM's executable, HUD_HD_RECOM.md) ---------------
@@ -607,6 +774,15 @@ int PortHdGauge(int hp, int maxHp, int riku) {
     faceReady = PortHdLayoutReady(HD_LAYOUT_GAUGE, riku ? HD_LAYOUT_TEX_RIKU_FACES : HD_LAYOUT_TEX_GAUGE_FACES);
     if (!bodyReady || !faceReady)
         return 0;
+    {
+        /* harness: KHCOM_HD_GAUGE_TEST_HP=n shows at most n HP (the low-HP alarm without losing a battle) */
+        static int testHp = -2;
+        if (testHp == -2) {
+            const char* v = SDL_getenv("KHCOM_HD_GAUGE_TEST_HP");
+            testHp = v ? SDL_atoi(v) : -1;
+        }
+        if (testHp >= 0) hp = SDL_min(hp, testHp);
+    }
     hp = SDL_clamp(hp, 0, 560);
     maxHp = SDL_clamp(maxHp, 1, 560);
     if (!sGauge.started || sGauge.frame + 1 != (int)PortFrameCount() || sGauge.riku != riku) {
@@ -792,15 +968,114 @@ static int GaugeTargetsPrepare(SDL_Renderer* renderer, float width, float height
    (premultiplied: the pieces over transparency, then that over the screen, is the same picture) and copied while
    nothing it draws changes; the copy is cut to the rows' covered spans, since the ring and the bar leave most of the
    box empty. A hit's animation rebuilds it at most every other frame. KHCOM_HD_GAUGE_NO_CACHE draws it directly. */
-static SDL_Surface* sCacheSurface;
 static SDL_Texture* sCacheTexture;
 static SDL_Renderer* sCacheOwner;
-static int sCacheW, sCacheH, sCacheValid, sCacheFailed;
+static int sCacheW, sCacheH, sCacheValid, sCacheFailed; /* sCacheW/H: the surface's size, the box may be smaller */
 static uint32_t sCacheHash, sCacheBuilt;
 static int16_t* sCacheSpan; /* per row: first and last covered column, -1 none */
 
+/* Pictures the gauge has shown, by their geometry hash: the low-HP alarm and the faces loop, so after one round
+   every frame of the loop is a copy (user, 26/11: "at low HP it went slow again"). Only the rows' covered spans are
+   kept. Least recently shown goes first past the budget. */
+#define GAUGE_FRAMES 96
+#define GAUGE_FRAME_BUDGET (6u * 1024 * 1024)
+typedef struct {
+    uint32_t hash, used;
+    int w, h;
+    int16_t* span;
+    uint32_t* px;
+    size_t bytes;
+} GaugeFrame;
+static GaugeFrame sFrames[GAUGE_FRAMES];
+static size_t sFrameBytes;
+
+static void GaugeFrameDrop(GaugeFrame* e) {
+    SDL_free(e->span);
+    SDL_free(e->px);
+    sFrameBytes -= e->bytes;
+    memset(e, 0, sizeof(*e));
+}
+
+static GaugeFrame* GaugeFrameFind(uint32_t hash, int w, int h) {
+    int i;
+    for (i = 0; i < GAUGE_FRAMES; i++)
+        if (sFrames[i].px && sFrames[i].hash == hash && sFrames[i].w == w && sFrames[i].h == h)
+            return &sFrames[i];
+    return NULL;
+}
+
+/* the surface's box (with sCacheSpan) into a new entry */
+static void GaugeFrameStore(uint32_t hash, int w, int h, uint32_t frame) {
+    const uint32_t* src = (const uint32_t*)sCacheSurface->pixels;
+    int pitch = sCacheSurface->pitch / 4, row, i, slot = -1;
+    size_t count = 0, bytes;
+    uint32_t* out;
+    for (row = 0; row < h; row++)
+        if (sCacheSpan[row * 2] >= 0) count += (size_t)(sCacheSpan[row * 2 + 1] - sCacheSpan[row * 2] + 1);
+    bytes = count * 4 + sizeof(int16_t) * 2 * (size_t)h;
+    if (bytes > GAUGE_FRAME_BUDGET / 4)
+        return;
+    for (;;) {
+        int oldest = -1;
+        slot = -1;
+        for (i = 0; i < GAUGE_FRAMES; i++) {
+            if (!sFrames[i].px) { if (slot < 0) slot = i; continue; }
+            if (oldest < 0 || sFrames[i].used < sFrames[oldest].used) oldest = i;
+        }
+        if (slot >= 0 && sFrameBytes + bytes <= GAUGE_FRAME_BUDGET)
+            break;
+        if (oldest < 0)
+            return;
+        GaugeFrameDrop(&sFrames[oldest]);
+    }
+    sFrames[slot].span = (int16_t*)SDL_malloc(sizeof(int16_t) * 2 * (size_t)h);
+    sFrames[slot].px = (uint32_t*)SDL_malloc(count ? count * 4 : 4);
+    if (!sFrames[slot].span || !sFrames[slot].px) {
+        SDL_free(sFrames[slot].span);
+        SDL_free(sFrames[slot].px);
+        memset(&sFrames[slot], 0, sizeof(sFrames[slot]));
+        return;
+    }
+    memcpy(sFrames[slot].span, sCacheSpan, sizeof(int16_t) * 2 * (size_t)h);
+    out = sFrames[slot].px;
+    for (row = 0; row < h; row++)
+        if (sCacheSpan[row * 2] >= 0) {
+            int n = sCacheSpan[row * 2 + 1] - sCacheSpan[row * 2] + 1;
+            memcpy(out, src + (size_t)row * pitch + sCacheSpan[row * 2], (size_t)n * 4);
+            out += n;
+        }
+    sFrames[slot].hash = hash;
+    sFrames[slot].used = frame;
+    sFrames[slot].w = w;
+    sFrames[slot].h = h;
+    sFrames[slot].bytes = bytes;
+    sFrameBytes += bytes;
+}
+
+/* an entry back into the surface (its old spans cleared) and the copy */
+static int GaugeFrameShow(GaugeFrame* e, int w, int h) {
+    uint32_t* dst = (uint32_t*)sCacheSurface->pixels;
+    const uint32_t* in = e->px;
+    int pitch = sCacheSurface->pitch / 4, row;
+    SDL_Rect area = { 0, 0, w, h };
+    for (row = 0; row < h; row++) {
+        uint32_t* line = dst + (size_t)row * pitch;
+        if (sCacheSpan[row * 2] >= 0)
+            memset(line + sCacheSpan[row * 2], 0, (size_t)(sCacheSpan[row * 2 + 1] - sCacheSpan[row * 2] + 1) * 4);
+        if (e->span[row * 2] >= 0) {
+            int n = e->span[row * 2 + 1] - e->span[row * 2] + 1;
+            memcpy(line + e->span[row * 2], in, (size_t)n * 4);
+            in += n;
+        }
+    }
+    memcpy(sCacheSpan, e->span, sizeof(int16_t) * 2 * (size_t)h);
+    return SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels, sCacheSurface->pitch);
+}
+
 static void GaugeCacheRelease(void) {
     int i;
+    for (i = 0; i < GAUGE_FRAMES; i++)
+        if (sFrames[i].px || sFrames[i].span) GaugeFrameDrop(&sFrames[i]);
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
         int f;
         if (sCacheTextures[i].tex) SDL_DestroyTexture(sCacheTextures[i].tex);
@@ -820,6 +1095,28 @@ static void GaugeCacheRelease(void) {
     sCacheW = sCacheH = sCacheValid = 0;
 }
 
+/* The cache's surface, renderer and copy for boxes up to w x h (made before the first battle when preloading). */
+static int GaugeCachePrepare(SDL_Renderer* renderer, int w, int h) {
+    GaugeCacheRelease();
+    sCacheSurface = SDL_CreateSurface(w, h, SDL_PIXELFORMAT_ARGB8888);
+    sCacheRenderer = sCacheSurface ? SDL_CreateSoftwareRenderer(sCacheSurface) : NULL;
+    sCacheTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+    sCacheSpan = (int16_t*)SDL_malloc(sizeof(int16_t) * 2 * (size_t)h);
+    if (!sCacheRenderer || !sCacheTexture || !sCacheSpan ||
+        !SDL_SetTextureBlendMode(sCacheTexture, SDL_BLENDMODE_BLEND_PREMULTIPLIED)) {
+        PortLog("gauge cache: unavailable (%s)", SDL_GetError());
+        GaugeCacheRelease();
+        sCacheFailed = 1;
+        return 0;
+    }
+    SDL_SetTextureScaleMode(sCacheTexture, SDL_SCALEMODE_NEAREST);
+    sCacheOwner = renderer;
+    sCacheW = w;
+    sCacheH = h;
+    PortLog("gauge cache: %dx%d", w, h);
+    return 1;
+}
+
 static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
     /* the box of every frame the gauge has (PortHdGaugeDraw's measured bounds) */
     const float ux0 = -92.0f, uy0 = -92.0f, ux1 = 206.0f, uy1 = 92.0f;
@@ -830,24 +1127,15 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
     if (disabled < 0) disabled = SDL_getenv("KHCOM_HD_GAUGE_NO_CACHE") != NULL;
     if (disabled || sCacheFailed || w <= 0 || h <= 0 || w > 2048 || h > 2048)
         return 0;
-    if (renderer != sCacheOwner || w != sCacheW || h != sCacheH) {
-        GaugeCacheRelease();
-        sCacheSurface = SDL_CreateSurface(w, h, SDL_PIXELFORMAT_ARGB8888);
-        sCacheRenderer = sCacheSurface ? SDL_CreateSoftwareRenderer(sCacheSurface) : NULL;
-        sCacheTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
-        sCacheSpan = (int16_t*)SDL_malloc(sizeof(int16_t) * 2 * (size_t)h);
-        if (!sCacheRenderer || !sCacheTexture || !sCacheSpan ||
-            !SDL_SetTextureBlendMode(sCacheTexture, SDL_BLENDMODE_BLEND_PREMULTIPLIED)) {
-            PortLog("gauge cache: unavailable (%s)", SDL_GetError());
-            GaugeCacheRelease();
-            sCacheFailed = 1;
+    if (renderer != sCacheOwner || w > sCacheW || h > sCacheH) {
+        if (!GaugeCachePrepare(renderer, w, h))
             return 0;
-        }
-        SDL_SetTextureScaleMode(sCacheTexture, SDL_SCALEMODE_NEAREST);
-        sCacheOwner = renderer;
-        sCacheW = w;
-        sCacheH = h;
-        PortLog("gauge cache: %dx%d", w, h);
+    }
+    {
+        static int lastW, lastH;
+        if (w != lastW || h != lastH) sCacheValid = 0; /* another box: rebuild */
+        lastW = w;
+        lastH = h;
     }
     /* what the gauge would draw this frame, placed in the box */
     sGeoDry = 1;
@@ -855,13 +1143,27 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
     GeoMix(tint, sizeof(float) * 4);
     GaugeParts(sCacheRenderer, lx, ly, s, tint);
     sGeoDry = 0;
+    if (sCacheValid && sGeoHash != sCacheHash) {
+        GaugeFrame* e = GaugeFrameFind(sGeoHash, w, h);
+        if (e) {
+            e->used = frame;
+            if (!GaugeFrameShow(e, w, h)) {
+                sCacheValid = 0;
+                return 0;
+            }
+            sCacheHash = sGeoHash;
+        }
+    }
     if (!sCacheValid || (sGeoHash != sCacheHash && frame - sCacheBuilt >= 2)) {
         const uint32_t* px;
         int pitch, xx;
+        SDL_FRect box = { 0, 0, (float)w, (float)h };
+        SDL_Rect area = { 0, 0, w, h };
+        SDL_SetRenderDrawBlendMode(sCacheRenderer, SDL_BLENDMODE_NONE);
         SDL_SetRenderDrawColor(sCacheRenderer, 0, 0, 0, 0);
-        SDL_RenderClear(sCacheRenderer);
+        SDL_RenderFillRect(sCacheRenderer, &box);
         GaugeParts(sCacheRenderer, lx, ly, s, tint);
-        if (!SDL_FlushRenderer(sCacheRenderer) || !SDL_UpdateTexture(sCacheTexture, NULL, sCacheSurface->pixels,
+        if (!SDL_FlushRenderer(sCacheRenderer) || !SDL_UpdateTexture(sCacheTexture, &area, sCacheSurface->pixels,
                                                                        sCacheSurface->pitch)) {
             sCacheValid = 0;
             return 0;
@@ -882,6 +1184,8 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
         sCacheHash = sGeoHash;
         sCacheBuilt = frame;
         sCacheValid = 1;
+        if (!GaugeFrameFind(sGeoHash, w, h))
+            GaugeFrameStore(sGeoHash, w, h, frame);
     }
     /* bands of 8 rows, each cut to its covered columns */
     for (row = 0; row < h; row += 8) {
