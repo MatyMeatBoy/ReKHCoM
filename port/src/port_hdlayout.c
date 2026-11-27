@@ -558,6 +558,8 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
     if (over) { orr = ColourByte(over[0].color.r); og = ColourByte(over[0].color.g); ob = ColourByte(over[0].color.b); }
     pitch = sCacheSurface->pitch / 4;
     dst = (uint32_t*)sCacheSurface->pixels;
+    static int bilinear = -1; /* KHCOM_HD_GAUGE_NEAREST: the nearest texel, as before */
+    if (bilinear < 0) bilinear = SDL_getenv("KHCOM_HD_GAUGE_NEAREST") == NULL;
     {
         /* per pixel step in x, 16.16: (a, b) and texels */
         const float sa_ = ia, sb_ = ic;
@@ -588,6 +590,7 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
             line = dst + (size_t)y * pitch;
             for (x = xs; x < xe; x++, A += dA, B += dB, U += dU, V += dV) {
                 const unsigned char* sp;
+                unsigned char smooth[4];
                 unsigned sa, sr, sg, sb;
                 uint32_t d;
                 int tx, ty;
@@ -597,6 +600,31 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
                 if ((unsigned)tx >= (unsigned)tw || (unsigned)ty >= (unsigned)th)
                     continue;
                 sp = tex + (size_t)ty * tpitch + (size_t)tx * 4;
+                if (bilinear) {
+                    /* the four texels around the sample point, weighted (1/16 of a texel), colour averaged over their
+                       coverage: the gauge is drawn here only when it changes, so smoothing costs no steady frame (the
+                       nearest texel left its ring and bars stepped at 640x480, user 27/11) */
+                    const int32_t uu = U - 32768, vv = V - 32768;
+                    const int ax = SDL_clamp(uu >> 16, 0, tw - 1), ay = SDL_clamp(vv >> 16, 0, th - 1);
+                    const int bx = SDL_min(ax + 1, tw - 1), by = SDL_min(ay + 1, th - 1);
+                    const unsigned wx = uu < 0 ? 0u : ((uint32_t)uu >> 12) & 15u, wy = vv < 0 ? 0u : ((uint32_t)vv >> 12) & 15u;
+                    const unsigned w[4] = { (16 - wx) * (16 - wy), wx * (16 - wy), (16 - wx) * wy, wx * wy };
+                    const unsigned char* q[4] = { tex + (size_t)ay * tpitch + (size_t)ax * 4, tex + (size_t)ay * tpitch + (size_t)bx * 4,
+                                                  tex + (size_t)by * tpitch + (size_t)ax * 4, tex + (size_t)by * tpitch + (size_t)bx * 4 };
+                    unsigned pa = 0, pr = 0, pg = 0, pb = 0, i4;
+                    for (i4 = 0; i4 < 4; i4++) {
+                        const unsigned wa = q[i4][3] * w[i4];
+                        pa += wa; pr += q[i4][0] * wa; pg += q[i4][1] * wa; pb += q[i4][2] * wa;
+                    }
+                    if (pa < 256u)
+                        continue; /* under one level of coverage */
+                    {
+                        const float inv = 1.0f / (float)pa;
+                        smooth[0] = (unsigned char)(pr * inv + 0.5f); smooth[1] = (unsigned char)(pg * inv + 0.5f);
+                        smooth[2] = (unsigned char)(pb * inv + 0.5f); smooth[3] = (unsigned char)((pa + 128) >> 8);
+                    }
+                    sp = smooth;
+                }
                 if (!sp[3])
                     continue;
                 sa = DIV255(sp[3] * ca);
