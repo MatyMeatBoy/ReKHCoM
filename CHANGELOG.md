@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.13
+
+- HD HP gauge: no longer flickers or restarts its animation while spells and effects make the game skip a HUD frame. Its ring and bar are sampled smoothly at 640x480 and other small screens. The face backdrop is opaque, so a bright room no longer shows through as a white crescent between the face and the ring (`KHCOM_HD_GAUGE_BACKDROP_ORIGINAL=1` keeps Re:CoM's translucent one).
+- HD title: opening the SELECT menu over the title keeps the logo's cached pieces while the title darkens, instead of redrawing them every frame.
+- GA36 v0.11: the KMS frame copy overlaps the next frame's emulation instead of waiting for it (`KHCOM_KMS_SYNC_COPY=1` restores the previous order).
+
 ## v2.12
 
 - Credits song (Sora and Riku): the game's one streamed PCM track now plays at the precision it is decoded with, instead of cut to 8 bits as on the cartridge, without its hiss and without a click near the end (#641). `KHCOM_CREDITS_8BIT=1` plays the cartridge's 8-bit stream.
