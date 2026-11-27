@@ -221,6 +221,15 @@ void task_allmap_room_2(AllmapRoomWork* work) {
     }
 
 #ifdef PLATFORM_PC
+    if (!work->asSprite) {
+        /* GA36 (mode_allmap.c): the windows keep the sprites in the header's right part for the room's name box, so
+           a room passing under the header or the footer loses its sprites (the stairs' arrows reach 12 rows above
+           it) rather than having them drawn over those bars. */
+        extern int PortGa36AllmapCoverRows(int* header, int* footer);
+        int header, footer;
+        if (PortGa36AllmapCoverRows(&header, &footer) && (y - 12 < header || y + 32 > footer))
+            return;
+    }
     /* Only the field diagram is a HUD element; the full map is unchanged. */
     if (work->asSprite) {
         PortHudBegin(1, -1);
@@ -1187,6 +1196,26 @@ void AllmapCenterOnRoom() {
     AllmapRoomWork* room;
 
     room = sAllmapState->roomTasks[gAllmapCursorRoom]->work;
+#ifdef PLATFORM_PC
+    {
+        /* GA36 4:3 (port_main.c, PortGa36AllmapClearRows): the header with the room's name box and the footer keep
+           their rows; the floor is laid out between them. One that fits there is centred in them and never
+           scrolls; a taller one follows the cursor, its first and last rooms (with the hand above them) stopping at
+           the clear rows' edges instead of under the header or the footer. */
+        extern int PortGa36AllmapClearRows(int* top, int* bottom);
+        int top, bottom;
+        if (PortGa36AllmapClearRows(&top, &bottom)) {
+            const s32 dy = sAllmapState->minY * 24 - sAllmapState->originY; /* the floor's first row on screen */
+            const s32 minScroll = dy - top, maxScroll = dy + sAllmapState->height - bottom;
+            s32 scroll = room->y * 24 - sAllmapState->originY + 16 - (top + bottom) / 2; /* room centred */
+            if (maxScroll <= minScroll) scroll = (minScroll + maxScroll) / 2;
+            else if (scroll < minScroll) scroll = minScroll;
+            else if (scroll > maxScroll) scroll = maxScroll;
+            sAllmapState->scrollY = scroll;
+            return;
+        }
+    }
+#endif
     sAllmapState->scrollY = room->y * 24 - sAllmapState->originY - 69;
 
     if (sAllmapState->scrollY < 0 || sAllmapState->height <= DISPLAY_HEIGHT - 1) {
