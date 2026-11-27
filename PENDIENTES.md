@@ -559,4 +559,4 @@ Tomar una pieza con claim antes de trabajar. Todos los cambios entran por PR.
 | ga36-start-alpha-distribution-20261124 | GA36 menu Start optimizar mezcla alpha | pr_abierto | Codex-v22 | https://github.com/MatyMeatBoy/ReKHCoM/pull/704 | — | 2026-11-24T23:17:00.008280+00:00 |
 | ga36-v04-accumulated-20261124 | GA36 v0.4: rendimiento, audio y encuadre 4:3 acumulados | pr_abierto | claude-ga36 | https://github.com/MatyMeatBoy/ReKHCoM/pull/705 | — | 2026-11-25T02:59:46.162229+00:00 |
 
-Integrador: claude-ga36 (ocupado; 2026-11-27T13:24:38.310781+00:00)
+Integrador: libre
