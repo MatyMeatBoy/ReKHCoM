@@ -2,9 +2,9 @@
 
 ## v2.13
 
-- HD HP gauge: no longer flickers or restarts its animation while spells and effects make the game skip a HUD frame. Its ring and bar are sampled smoothly at 640x480 and other small screens. The face backdrop is opaque, so a bright room no longer shows through as a white crescent between the face and the ring (`KHCOM_HD_GAUGE_BACKDROP_ORIGINAL=1` keeps Re:CoM's translucent one).
+- HD HP gauge: no longer flickers or restarts its animation while spells and effects make the game skip a HUD frame. The face backdrop is opaque, so a bright room no longer shows through as a white crescent between the face and the ring (`KHCOM_HD_GAUGE_BACKDROP_ORIGINAL=1` keeps Re:CoM's translucent one).
 - HD title: opening the SELECT menu over the title keeps the logo's cached pieces while the title darkens, instead of redrawing them every frame.
-- GA36 v0.11: the KMS frame copy overlaps the next frame's emulation instead of waiting for it (`KHCOM_KMS_SYNC_COPY=1` restores the previous order).
+- Handhelds (GA36, Anbernic): two opt-in experiments, off by default because each added about 20 slow frames in 1000 to an HD battle on the GA36: `KHCOM_HD_GAUGE_BILINEAR=1` samples the HD gauge smoothly, and `KHCOM_KMS_ASYNC_COPY=1` overlaps the KMS frame copy with the next frame.
 
 ## v2.12
 

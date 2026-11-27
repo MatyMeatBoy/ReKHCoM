@@ -558,8 +558,10 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
     if (over) { orr = ColourByte(over[0].color.r); og = ColourByte(over[0].color.g); ob = ColourByte(over[0].color.b); }
     pitch = sCacheSurface->pitch / 4;
     dst = (uint32_t*)sCacheSurface->pixels;
-    static int bilinear = -1; /* KHCOM_HD_GAUGE_NEAREST: the nearest texel, as before */
-    if (bilinear < 0) bilinear = SDL_getenv("KHCOM_HD_GAUGE_NEAREST") == NULL;
+    /* Opt-in (KHCOM_HD_GAUGE_BILINEAR=1): its rebuilds during a hit's animation cost the GA36 about 20 more slow
+       frames in 1000 against Riku in HD (27/11, three runs each). */
+    static int bilinear = -1;
+    if (bilinear < 0) bilinear = SDL_getenv("KHCOM_HD_GAUGE_BILINEAR") != NULL && SDL_getenv("KHCOM_HD_GAUGE_NEAREST") == NULL;
     {
         /* per pixel step in x, 16.16: (a, b) and texels */
         const float sa_ = ia, sb_ = ic;

@@ -2129,9 +2129,10 @@ static void KmsPresent(SDL_Renderer* renderer) {
         /* The copy into the KMS buffer and the wait for the panel go to the copy thread: they overlap the next frame's
            game logic instead of adding to this frame (2 ms of copy bound by memory, v0.10: about 12 slow frames in
            1000 against Riku). The next Present waits for it (PortFbWaitCopy), so the panel still paces the game.
-           KHCOM_KMS_SYNC_COPY keeps it on this thread. */
+           Opt-in (KHCOM_KMS_ASYNC_COPY=1): on the GA36 the copy then competes with the PPU workers for memory, and
+           against Riku in HD slow frames rose from 5-10 to 27-28 in 1000 (27/11, three runs each). */
         static int sync = -1;
-        if (sync < 0) sync = SDL_getenv("KHCOM_KMS_SYNC_COPY") != NULL;
+        if (sync < 0) sync = SDL_getenv("KHCOM_KMS_ASYNC_COPY") == NULL || SDL_getenv("KHCOM_KMS_SYNC_COPY") != NULL;
         if (!sync && frame == sRenderSurface && frame->format == FbFormat() && !SDL_MUSTLOCK(frame) &&
             frame->w == (int)sVar.xres && frame->h == (int)sVar.yres && StartFbCopyWorker()) {
             const int page = KmsAcquire();
