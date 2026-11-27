@@ -37,6 +37,7 @@ static struct {
     const SDL_Surface* source;
     int height;
     size_t rowBytes;
+    int kmsPage; /* >= 0: a KMS buffer, flipped (KmsSubmit) once copied */
 } sAsyncFbJob;
 
 void PortFbWaitCopy(void) {
@@ -1518,7 +1519,7 @@ bool PortFbBlendRgbaScaled(SDL_Renderer* renderer, const unsigned char* tex, int
 /* A premultiplied ARGB layer in runs (port_hdsprites.c the title's part cache): runs of uint16 (kind << 14 | length),
    0 clear, 1 opaque (copied), 2 translucent (c = s + d (1 - a)), w x h at (x, y), whole rows of the layer. */
 bool PortFbBlendPremulRuns(SDL_Renderer* renderer, const uint32_t* argb, const uint16_t* runs, const uint32_t* rowStart,
-                           int w, int h, int x, int y) {
+                           int w, int h, int x, int y, unsigned shade /* 256: as is; less: the game's darkening */) {
     if (!argb || !runs || !rowStart || !PortFbBeginGlyphBatch(renderer) || sRenderSurface->format != SDL_PIXELFORMAT_XRGB8888)
         return false;
     if (x < 0 || y < 0 || x + w > sRenderSurface->w || y + h > sRenderSurface->h)
@@ -1531,10 +1532,19 @@ bool PortFbBlendPremulRuns(SDL_Renderer* renderer, const uint32_t* argb, const u
         while (c < w) {
             const int kind = *run >> 14, len = *run & 0x3FFF;
             run++;
-            if (kind == 1) memcpy(out + c, in + c, (size_t)len * 4);
+            if (kind == 1 && shade >= 256) memcpy(out + c, in + c, (size_t)len * 4);
+            else if (kind == 1)
+                for (int k = c; k < c + len; k++) {
+                    const uint32_t p = in[k];
+                    out[k] = 0xFF000000u | ((((p >> 16) & 255) * shade >> 8) << 16) | ((((p >> 8) & 255) * shade >> 8) << 8) |
+                             ((p & 255) * shade >> 8);
+                }
             else if (kind == 2)
                 for (int k = c; k < c + len; k++) {
-                    const uint32_t p = in[k], d = out[k];
+                    const uint32_t p = shade >= 256 ? in[k]
+                        : (in[k] & 0xFF000000u) | ((((in[k] >> 16) & 255) * shade >> 8) << 16) |
+                          ((((in[k] >> 8) & 255) * shade >> 8) << 8) | ((in[k] & 255) * shade >> 8);
+                    const uint32_t d = out[k];
                     const unsigned inv = 255 - (p >> 24);
                     unsigned rr = ((d >> 16) & 255) * inv, gg = ((d >> 8) & 255) * inv, bb = (d & 255) * inv;
                     rr = ((rr + 1 + (rr >> 8)) >> 8) + ((p >> 16) & 255);
@@ -1988,6 +1998,10 @@ static int SDLCALL FbCopyWorker(void* unused) {
         if (sAsyncFbStopping)
             return 0;
         CopyRows(sAsyncFbJob.destination, sAsyncFbJob.source, sAsyncFbJob.height, sAsyncFbJob.rowBytes);
+#ifdef KHCOM_KMS_BUILD
+        if (sAsyncFbJob.kmsPage >= 0)
+            KmsSubmit(sAsyncFbJob.kmsPage); /* with the panel pacing, waits here for its refresh */
+#endif
         SDL_SignalSemaphore(sAsyncFbDone);
     }
 }
@@ -2075,6 +2089,25 @@ static void WriteFrame(SDL_Surface* frame) {
 
 #ifdef KHCOM_KMS_BUILD
 /* The frame into a free KMS buffer, then to the flip (waiting for the panel when it paces the game). */
+/* The frame into a KMS buffer on the PPU's workers: done on the main thread alone, the 1.2 MB copy cost GA36 about
+   2 ms a frame more than the old /dev/fb0 copy (v0.10: 12 slow frames in 1000 against Riku). Bands of 32 rows. */
+typedef struct { const uint8_t* src; uint8_t* dst; size_t srcPitch, dstPitch, rowBytes; } KmsCopyJob;
+static void KmsCopyBand(void* ctx, int begin, int end) {
+    const KmsCopyJob* j = (const KmsCopyJob*)ctx;
+    for (int y = begin; y < end; y++)
+        memcpy(j->dst + (size_t)y * j->dstPitch, j->src + (size_t)y * j->srcPitch, j->rowBytes);
+}
+static bool KmsCopyParallel(SDL_Surface* frame, uint8_t* dst) {
+    static int off = -1;
+    if (off < 0) off = SDL_getenv("KHCOM_KMS_SERIAL_COPY") != NULL;
+    if (off || frame != sRenderSurface || frame->format != FbFormat() || SDL_MUSTLOCK(frame) ||
+        frame->w != (int)sVar.xres || frame->h != (int)sVar.yres)
+        return false;
+    KmsCopyJob job = { (const uint8_t*)frame->pixels, dst, (size_t)frame->pitch, sFix.line_length,
+                       (size_t)frame->w * (sVar.bits_per_pixel / 8) };
+    return PortPpuParallelRows(KmsCopyBand, &job, frame->h, 32) != 0;
+}
+
 static void KmsPresent(SDL_Renderer* renderer) {
     static int logEvery = -1;
     const uint64_t start = SDL_GetPerformanceCounter();
@@ -2082,6 +2115,7 @@ static void KmsPresent(SDL_Renderer* renderer) {
     SDL_Surface* read = NULL;
     sKms.submitted = false;
     sKms.waitTicks = 0;
+    PortFbWaitCopy(); /* the previous frame copied and handed to the panel */
     if (sRenderSurface) {
         if (SDL_FlushRenderer(renderer))
             frame = sRenderSurface;
@@ -2091,9 +2125,34 @@ static void KmsPresent(SDL_Renderer* renderer) {
     if (!frame)
         return;
     const uint64_t ready = SDL_GetPerformanceCounter();
+    {
+        /* The copy into the KMS buffer and the wait for the panel go to the copy thread: they overlap the next frame's
+           game logic instead of adding to this frame (2 ms of copy bound by memory, v0.10: about 12 slow frames in
+           1000 against Riku). The next Present waits for it (PortFbWaitCopy), so the panel still paces the game.
+           Opt-in (KHCOM_KMS_ASYNC_COPY=1): on the GA36 the copy then competes with the PPU workers for memory, and
+           against Riku in HD slow frames rose from 5-10 to 27-28 in 1000 (27/11, three runs each). */
+        static int sync = -1;
+        if (sync < 0) sync = SDL_getenv("KHCOM_KMS_ASYNC_COPY") == NULL || SDL_getenv("KHCOM_KMS_SYNC_COPY") != NULL;
+        if (!sync && frame == sRenderSurface && frame->format == FbFormat() && !SDL_MUSTLOCK(frame) &&
+            frame->w == (int)sVar.xres && frame->h == (int)sVar.yres && StartFbCopyWorker()) {
+            const int page = KmsAcquire();
+            sAsyncFbJob.destination = sKms.buf[page].pixels;
+            sAsyncFbJob.source = frame;
+            sAsyncFbJob.height = frame->h;
+            sAsyncFbJob.rowBytes = (size_t)frame->w * (sVar.bits_per_pixel / 8);
+            sAsyncFbJob.kmsPage = page;
+            sAsyncFbPending = true;
+            SDL_SignalSemaphore(sAsyncFbGo);
+            sKms.submitted = true;
+            sKms.stats.presents++;
+            if (sProfileFb) sDrawTicks = ready - start;
+            return;
+        }
+    }
     const int page = KmsAcquire();
     const uint64_t copyStart = SDL_GetPerformanceCounter();
-    WriteFrameTo(frame, sKms.buf[page].pixels);
+    if (!KmsCopyParallel(frame, sKms.buf[page].pixels))
+        WriteFrameTo(frame, sKms.buf[page].pixels);
     const uint64_t copied = SDL_GetPerformanceCounter();
     KmsSubmit(page);
     const uint64_t end = SDL_GetPerformanceCounter();
@@ -2138,6 +2197,7 @@ void PortFbPresent(SDL_Renderer* renderer) {
                 sAsyncFbJob.source = sRenderSurface;
                 sAsyncFbJob.height = sRenderSurface->h;
                 sAsyncFbJob.rowBytes = (size_t)sRenderSurface->w * (sVar.bits_per_pixel / 8);
+                sAsyncFbJob.kmsPage = -1;
                 sAsyncFbPending = true;
                 SDL_SignalSemaphore(sAsyncFbGo);
                 if (sProfileFb)

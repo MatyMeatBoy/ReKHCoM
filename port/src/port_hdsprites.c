@@ -1253,6 +1253,17 @@ static int PackRuns(HdSpriteState* st, const unsigned char* px, int w, int h) {
 }
 #endif
 
+#if defined(PORT_LINUX) && __STDC_HOSTED__
+/* The whole picture's top left corner on screen, rounded once, from an upright part: the same for every piece of
+   one picture (its width in cartridge pixels, (x1 - x0) / (u1 - u0), is shared), so pieces drawn 1:1 from the copy
+   at the drawn size keep their neighbours' offset and meet without a step. */
+static void PieceOrigin(const HdSpriteDraw* q, float ox, float oy, float scale, int* x, int* y) {
+    const float pw = (q->x[1] - q->x[0]) / (q->u1 - q->u0), ph = (q->y[3] - q->y[0]) / (q->v1 - q->v0);
+    *x = (int)SDL_roundf(ox + (q->x[0] - q->u0 * pw) * scale);
+    *y = (int)SDL_roundf(oy + (q->y[0] - q->v0 * ph) * scale);
+}
+#endif
+
 /* KHCOM_PIECE_LOG: how the presentation's HD parts were drawn (count, time): runs, plain 1:1, scaled, rasteriser,
    SDL. Logged with the piece log (port_main.c). */
 uint32_t gPortQuadCount[8];
@@ -1376,10 +1387,12 @@ static int QuadPath(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, f
                     /* a large picture as it is (the title's poster): its runs */
                     extern bool PortFbBlendArgbRuns(SDL_Renderer*, const uint32_t*, int, const uint16_t*, const uint32_t*,
                                                     int, int, int, int, int, int);
-                    const int bx = (int)v[0].position.x, by = (int)v[0].position.y;
                     int sx = (int)(v[0].tex_coord.x * pw + 0.5f), sy = (int)(v[0].tex_coord.y * ph + 0.5f);
-                    int bw = (int)v[1].position.x - bx, bh = (int)v[3].position.y - by;
+                    int bx, by, bw, bh;
                     sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
+                    PieceOrigin(q, ox, oy, scale, &bx, &by); /* the picture's corner, shared by its pieces */
+                    bw = (int)(v[1].tex_coord.x * pw + 0.5f) - sx; bh = (int)(v[3].tex_coord.y * ph + 0.5f) - sy;
+                    bx += sx; by += sy;
                     bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
                     if (PortFbBlendArgbRuns(sRenderer, st->packed, pw, st->packRuns, st->packRowStart, sx, sy, bw, bh, bx, by))
                         return *path = 0, 1;
@@ -1399,10 +1412,12 @@ static int QuadPath(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, f
                 if (upright && pw == fw && ph == fh) {
                     extern bool PortFbBlendRgba(SDL_Renderer*, const unsigned char*, int, int, int, int, int, int, int,
                                                 unsigned, unsigned, unsigned, unsigned, int);
-                    const int bx = (int)v[0].position.x, by = (int)v[0].position.y;
                     int sx = (int)(v[0].tex_coord.x * pw + 0.5f), sy = (int)(v[0].tex_coord.y * ph + 0.5f);
-                    int bw = (int)v[1].position.x - bx, bh = (int)v[3].position.y - by;
+                    int bx, by, bw, bh;
                     sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
+                    PieceOrigin(q, ox, oy, scale, &bx, &by); /* the picture's corner, shared by its pieces */
+                    bw = (int)(v[1].tex_coord.x * pw + 0.5f) - sx; bh = (int)(v[3].tex_coord.y * ph + 0.5f) - sy;
+                    bx += sx; by += sy;
                     bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
                     if (PortFbBlendRgba(sRenderer, px, pw, sx, sy, bw, bh, bx, by,
                                         (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
@@ -1798,7 +1813,9 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
     int n = 0, i, bx0 = 640, by0 = 480, bx1 = 0, by1 = 0;
     uint32_t key = 2166136261u;
     if (off < 0) off = SDL_getenv("KHCOM_HD_PART_CACHE_OFF") != NULL;
-    if (off || darken > 0 || brighten > 0 || sDrawCount[layer] < 1 || sDrawCount[layer] > PART_CACHE_MAX)
+    /* the game's darkening (the SELECT menu over the title, fades) is applied when copying: refusing it drew every part
+       again each frame and the title's menu ran slow (user, 27/11); a whitening still draws as usual */
+    if (off || brighten > 0 || darken >= 16 || sDrawCount[layer] < 1 || sDrawCount[layer] > PART_CACHE_MAX)
         return sPartStat[3]++, 0;
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
@@ -1819,10 +1836,15 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
         else if (st->fit && st->fitW == fw && st->fitH == fh) px = st->fit;
         if (!px) return sPartStat[6]++, 0; /* not yet at its size: the usual drawing makes the copy */
         Part* t = &part[n];
+        int orgX, orgY;
         t->px = px; t->pw = fw;
-        t->x0 = (int)SDL_roundf(ox + q->x[0] * scale); t->y0 = (int)SDL_roundf(oy + q->y[0] * scale);
-        t->x1 = (int)SDL_roundf(ox + q->x[1] * scale); t->y1 = (int)SDL_roundf(oy + q->y[3] * scale);
-        t->sx = (int)(q->u0 * fw + 0.5f); t->sy = (int)(q->v0 * fh + 0.5f);
+        /* every piece of one picture from the picture's own corner, rounded once: rounding each piece's corner and
+           its place in the picture apart shifted pieces a pixel against their neighbours (crooked lines across the
+           logo's 8- and 32-pixel pieces at 640x480, x2.667: user, 27/11) */
+        PieceOrigin(q, ox, oy, scale, &orgX, &orgY);
+        t->sx = (int)SDL_roundf(q->u0 * fw); t->sy = (int)SDL_roundf(q->v0 * fh);
+        t->x0 = orgX + t->sx; t->y0 = orgY + t->sy;
+        t->x1 = orgX + (int)SDL_roundf(q->u1 * fw); t->y1 = orgY + (int)SDL_roundf(q->v1 * fh);
         t->x1 = SDL_min(t->x1, t->x0 + fw - t->sx); t->y1 = SDL_min(t->y1, t->y0 + fh - t->sy);
         {
             const int k[8] = { q->id, t->x0, t->y0, t->x1, t->y1, t->sx, t->sy, fw };
@@ -1890,8 +1912,10 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
         }
         sPartX = bx0; sPartY = by0; sPartW = w; sPartH = h; sPartKey = key;
     }
-    extern bool PortFbBlendPremulRuns(SDL_Renderer*, const uint32_t*, const uint16_t*, const uint32_t*, int, int, int, int);
-    return PortFbBlendPremulRuns(renderer, sPartLayer, sPartRuns, sPartRowStart, sPartW, sPartH, sPartX, sPartY);
+    extern bool PortFbBlendPremulRuns(SDL_Renderer*, const uint32_t*, const uint16_t*, const uint32_t*, int, int, int, int,
+                                      unsigned);
+    return PortFbBlendPremulRuns(renderer, sPartLayer, sPartRuns, sPartRowStart, sPartW, sPartH, sPartX, sPartY,
+                                 darken > 0 ? 256u - (unsigned)darken * 16u : 256u);
 }
 #endif
 
