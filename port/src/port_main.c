@@ -2547,6 +2547,15 @@ static void PieceLog(void) {
     PortLog("probe piece f=%u spr0 %.2f text0 %.2f spr2 %.2f text2 %.2f uihd %.2f footer %.2f art %.2f bar %.2f parts %.2f mainover %.2f base %.2f | pre %.2f hdlayers %.2f hud %.2f tail %.2f fbpresent %.2f | preover %.2f overlay %.2f layer2 %.2f screenover %.2f | sprites %.2f light %.2f over %.2f",
             (unsigned)sFrameCount, gPortPiece[0] / 1e8, gPortPiece[1] / 1e8, gPortPiece[2] / 1e8, gPortPiece[3] / 1e8,
             gPortPiece[4] / 1e8, gPortPiece[5] / 1e8, gPortPiece[6] / 1e8, gPortPiece[7] / 1e8, gPortPiece[8] / 1e8, gPortPiece[9] / 1e8, gPortPiece[10] / 1e8, gPortPiece[11] / 1e8, gPortPiece[12] / 1e8, gPortPiece[13] / 1e8, gPortPiece[14] / 1e8, gPortPiece[15] / 1e8, gPortPiece[16] / 1e8, gPortPiece[17] / 1e8, gPortPiece[18] / 1e8, gPortPiece[19] / 1e8, gPortPiece[20] / 1e8, gPortPiece[21] / 1e8, gPortPiece[22] / 1e8);
+    {
+        extern uint32_t gPortQuadCount[8];
+        extern uint64_t gPortQuadTicks[8];
+        PortLog("probe quads runs %u/%.2f plain %u/%.2f scaled %u/%.2f raster %u/%.2f sdl %u/%.2f flush %u/%.2f ring %u/%.2f gauges %u/%.2f enemy %u/%.2f (count/ms per frame x100)",
+                gPortQuadCount[0], gPortQuadTicks[0] / 1e8, gPortQuadCount[1], gPortQuadTicks[1] / 1e8, gPortQuadCount[2],
+                gPortQuadTicks[2] / 1e8, gPortQuadCount[3], gPortQuadTicks[3] / 1e8, gPortQuadCount[5], gPortQuadTicks[5] / 1e8, gPortQuadCount[4], gPortQuadTicks[4] / 1e8, gPortQuadCount[3], gPortQuadTicks[3] / 1e8, gPortQuadCount[6], gPortQuadTicks[6] / 1e8, gPortQuadCount[7], gPortQuadTicks[7] / 1e8);
+        SDL_memset(gPortQuadCount, 0, sizeof(gPortQuadCount));
+        SDL_memset(gPortQuadTicks, 0, sizeof(gPortQuadTicks));
+    }
     SDL_memset(gPortPiece, 0, sizeof(gPortPiece));
 }
 

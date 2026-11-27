@@ -896,6 +896,22 @@ bool PortFbBlendArgbRuns(SDL_Renderer* renderer, const uint32_t* argb, int pitch
             c += len;
             if (a >= b || kind == 0) continue;
             if (kind == 1) { memcpy(out + a, in + a, (size_t)(b - a) * 4); continue; }
+#ifdef __ARM_NEON
+            /* eight at a time, the same rounding as below: (x + 1 + (x >> 8)) >> 8 */
+            for (; a + 8 <= b; a += 8) {
+                const uint8x8x4_t s = vld4_u8((const uint8_t*)(in + a));
+                uint8x8x4_t d = vld4_u8((const uint8_t*)(out + a));
+                const uint8x8_t al = s.val[3], inv = vmvn_u8(al);
+                const uint16x8_t one = vdupq_n_u16(1);
+                for (int ch = 0; ch < 3; ch++) {
+                    uint16x8_t x = vmlal_u8(vmull_u8(s.val[ch], al), d.val[ch], inv);
+                    x = vaddq_u16(vsraq_n_u16(x, x, 8), one);
+                    d.val[ch] = vshrn_n_u16(x, 8);
+                }
+                d.val[3] = vdup_n_u8(255);
+                vst4_u8((uint8_t*)(out + a), d);
+            }
+#endif
             for (; a < b; a++) {
                 const uint32_t p = in[a], d = out[a];
                 const unsigned al = p >> 24, inv = 255 - al;
