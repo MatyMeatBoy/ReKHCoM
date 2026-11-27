@@ -676,7 +676,7 @@ static void GeoMix(const void* p, size_t n) {
 /* One sprite of a part. A sprite with no texture at all (its UVs one point) is a mask: its box is returned in mask
    (1) and limits what the group draws after it, the way the gauge's ring shows only the turned quarters' part inside
    the box (the remaster's gauge.lad: groups 27-29). */
-/* The player gauge's face backdrop (gauge.lad sequence 1, sprite 12, four quarters of a grey disc) is half
+/* The player gauge's face backdrop (gauge.lad and its remastered UK_ version, sequence 1, sprite 12, four quarters of a grey disc) is half
    translucent in Re:CoM, over its dark 3D arenas. Over CoM's bright rooms it showed the floor through as a white
    crescent between the face and the ring, and the room's colours moved behind it (user 27/11: "the gap at the
    start of the bar"). Drawn opaque it is the same grey everywhere; KHCOM_HD_GAUGE_BACKDROP_ORIGINAL keeps Re:CoM's. */
@@ -686,7 +686,7 @@ static int GaugeBackdropSprite(const HdLayoutTexture* t, const unsigned char* s,
     if (original || (t != &sTextures[HD_LAYOUT_TEX_GAUGE] && t != &sCacheTextures[HD_LAYOUT_TEX_GAUGE]))
         return 0;
     return sp == s + I32(s + 12) + 12 * 44 && I32(s + 8) > 12 && (uint32_t)I32(sp + 28) == 0x40808080u &&
-           I32(sp + 4) == 180 && I32(sp + 8) == 4;
+           ((I32(sp + 4) == 180 && I32(sp + 8) == 4) || (I32(sp + 4) == 360 && I32(sp + 8) == 8)); /* gauge.lad, UK_ */
 }
 
 static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned char* s, const Ctx* c,
