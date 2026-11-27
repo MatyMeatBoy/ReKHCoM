@@ -903,6 +903,7 @@ void PortHdLayoutShutdown(void) {
    green at once; the trail waits 1.5 s, then closes a tenth of the gap and one more each step; healing moves both.
    Low HP is 25 % of the maximum. Only the picture is Re:CoM's: the HP and its rules are the game's own. */
 #define GAUGE_LEN(v) ((int)((float)SDL_clamp((v), 0, 560) / 560.0f * 470.0f))
+#define HD_GAUGE_HOLD_FRAMES 4u /* frames an HD gauge stays drawn without its task (a frame skip) */
 static struct {
     int active, frame, hp, maxHp, trail, delayMs, hurtMs, riku, started;
     int stateAnim, stateFrame, faceAnim, faceFrame;
@@ -943,8 +944,9 @@ int PortHdGauge(int hp, int maxHp, int riku) {
     }
     hp = SDL_clamp(hp, 0, 560);
     maxHp = SDL_clamp(maxHp, 1, 560);
-    if (!sGauge.started || sGauge.frame + 1 != (int)PortFrameCount() || sGauge.riku != riku) {
-        /* a new battle (or the gauge was away): it appears, full as the game has it */
+    /* a new battle (or the gauge was away): it appears, full as the game has it. A frame or two the HUD task skipped
+       (a spell's load, the frame skip) is not "away": restarting there replayed its entry and it flickered (27/11) */
+    if (!sGauge.started || (unsigned)((int)PortFrameCount() - sGauge.frame - 1) > HD_GAUGE_HOLD_FRAMES || sGauge.riku != riku) {
         memset(&sGauge, 0, sizeof(sGauge));
         sGauge.started = 1;
         sGauge.riku = riku;
@@ -1552,7 +1554,9 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
 #if __STDC_HOSTED__ || defined(SDL_BRIDGE_GPU_TARGETS)
     if (!GaugeRestoreOutput()) return;
 #endif
-    if (!sGauge.active || sGauge.frame != (int)PortFrameCount())
+    /* drawn from its last state for a few frames the game's HUD task did not run (a spell's effects load the CPU and
+       the frame skip leaves out draw tasks; the cartridge's gauge, a sprite, stays in OAM): it flickered (user, 27/11) */
+    if (!sGauge.active || (unsigned)((int)PortFrameCount() - sGauge.frame) > HD_GAUGE_HOLD_FRAMES)
         return;
     if (PortHdDrawLogged())
         PortLog("hd gauge %u hp %d/%d trail %d state %d face %d", (unsigned)PortFrameCount(), sGauge.hp, sGauge.maxHp,
@@ -1715,7 +1719,8 @@ int PortHdEnemyGauge(int visible, int hp, int maxHp, const void* who) {
     }
     hp = SDL_max(hp, 0);
     sEnemy.maxHp = maxHp;
-    if (!sEnemy.started || sEnemy.who != who || sEnemy.frame + 1 != (int)PortFrameCount()) {
+    /* a skipped frame or two keeps the trail's animation (it restarted, and the trail jumped) */
+    if (!sEnemy.started || sEnemy.who != who || (unsigned)((int)PortFrameCount() - sEnemy.frame - 1) > HD_GAUGE_HOLD_FRAMES) {
         memset(&sEnemy, 0, sizeof(sEnemy));
         sEnemy.started = 1;
         sEnemy.who = who;
@@ -1755,8 +1760,9 @@ int PortHdGaugeShown(void) {
 
 int PortHdStockValueTop(int opponent) {
     if (!gPortConfig.hdCards && !PortHdHudPack()) return 0;
-    return opponent ? (sEnemy.active && sEnemy.frame == (int)PortFrameCount() ? 9 : 0)
-                    : (sGauge.active && sGauge.frame == (int)PortFrameCount() ? 9 : 0);
+    /* the stocks' place holds across a skipped HUD frame (it jumped up and back) */
+    return opponent ? (sEnemy.active && (unsigned)((int)PortFrameCount() - sEnemy.frame) <= HD_GAUGE_HOLD_FRAMES ? 9 : 0)
+                    : (sGauge.active && (unsigned)((int)PortFrameCount() - sGauge.frame) <= HD_GAUGE_HOLD_FRAMES ? 9 : 0);
 }
 
 float gPortHdEnemyGaugeZoom = 1.0f; /* port_hdsprites.c: larger on a small panel's shared canvas */
@@ -1768,8 +1774,8 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
     /* Re:CoM's bar ends at x 495 of its 640; the cartridge's at 236 of its 240, which the HUD keeps from its right */
     float x = ox + ((float)(gPortHudW - GBA_SCREEN_W) + 236.0f - 495.0f * unit * zoom) * scale, y = oy;
     int layer, layers, hpFrame, trailFrame, trailLayer, backFrame, top, i;
-    if (!sEnemy.active || sEnemy.frame != (int)PortFrameCount())
-        return;
+    if (!sEnemy.active || (unsigned)((int)PortFrameCount() - sEnemy.frame) > HD_GAUGE_HOLD_FRAMES)
+        return; /* as Sora's (PortHdGaugeDraw) */
     layer = sEnemy.hp > 0 ? (sEnemy.hp - 1) / ENEMY_LAYER : 0;
     trailLayer = sEnemy.trail > 0 ? (sEnemy.trail - 1) / ENEMY_LAYER : 0;
     /* Re:CoM's frames are absolute HP (CEnemyGauge: 200 a whole bar; its background is the maximum, or what of it is
