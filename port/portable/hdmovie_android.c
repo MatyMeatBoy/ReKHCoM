@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/system_properties.h>
 #include <unistd.h>
 #include <android/native_window.h>
 #include <media/NdkMediaCodec.h>
@@ -506,8 +507,29 @@ static int YuvToRgb(SDL_Texture* texture, int w, int h, const uint8_t* y, int sy
 /* Plays the movie at path to the end (or until skipped). subs, subs2: the subtitle file to show and the one to try
    if it is missing (NULL: none); font: the KHMenu face to try before the APK's. 0: it could not be opened, 1 played,
    2 played and the app was closed. */
+/* A MediaTek system (its SoC maker, or a board named mtNNNN): their hardware H.264 decoders gave green vertical bands
+   in the HD movies (issue #643, Xiaomi 17T Pro, Mali), where Android's software decoder plays them clean. */
+static bool MediaTekSoc(void) {
+    static int known = -1;
+    if (known < 0) {
+        char v[PROP_VALUE_MAX] = { 0 };
+        known = 0;
+        if (__system_property_get("ro.soc.manufacturer", v) > 0 && SDL_strcasestr(v, "mediatek"))
+            known = 1;
+        else if ((__system_property_get("ro.board.platform", v) > 0 || __system_property_get("ro.hardware", v) > 0) &&
+                 (v[0] == 'm' || v[0] == 'M') && (v[1] == 't' || v[1] == 'T') && v[2] >= '0' && v[2] <= '9')
+            known = 1;
+    }
+    return known == 1;
+}
+
 int HdMovieAndroidPlay(SDL_Renderer* renderer, const char* path, const char* subs1, const char* subs2,
                        const char* fontPath, int masterVolume, bool softwareH264) {
+    /* MediaTek: software H.264 by default (KHCOM_HDMOVIE_HW keeps the hardware decoder) */
+    if (!softwareH264 && MediaTekSoc() && !SDL_getenv("KHCOM_HDMOVIE_HW")) {
+        softwareH264 = true;
+        HdMovieLog("hd movie: MediaTek system, software H.264 by default");
+    }
     Track video, audioTrack;
     AMediaFormat *vFormat = NULL, *aFormat = NULL;
     AImageReader* reader = NULL;
