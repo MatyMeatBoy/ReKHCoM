@@ -66,6 +66,650 @@ void PortFbStageTicks(uint64_t* draw, uint64_t* copy) {
     *copy = sCopyTicks;
 }
 
+/* ---- KMS presentation: tear-free page flips at the panel's refresh ----------------
+ *
+ * The A33's /dev/fb0 is DRM's fbdev emulation: a single scanout page, written
+ * while the panel reads it, with no usable vsync. With KHCOM_FBDEV set and a
+ * DRM card present, the frame goes to the panel through KMS instead:
+ *
+ *   - three dumb buffers (XRGB8888) are allocated on the card;
+ *   - each frame, the shadow surface the renderer drew is copied into a buffer
+ *     that is neither on screen nor waiting for a flip, and a page flip to it is
+ *     requested; the display switches at the start of a refresh;
+ *   - a worker thread reads the flip-complete events. A frame that arrives while
+ *     another is still in flight waits in a "ready" slot; a newer frame takes
+ *     that slot over (the stale one is never shown).
+ *
+ * The panel is retimed toward the GBA's 59.7275 Hz (KHCOM_KMS_HZ overrides the
+ * target, 0 keeps the panel's own mode). Candidates trimming vertical blanking,
+ * then horizontal blanking, then scaling the pixel clock are each measured by
+ * timing real flips; KMS is kept only when the panel then measures 58.5..61.5 Hz.
+ * Otherwise the original crtc is restored and /dev/fb0 is used as before.
+ *
+ * When the measured rate is within 0.15% of 59.7275 Hz (what the audio drift
+ * correction absorbs) the panel paces the game: a present that finds a frame in
+ * flight waits until that flip completes. Otherwise, or with KHCOM_KMS_PACE=0,
+ * the software pacer keeps time and KMS only removes the tearing.
+ *
+ * Only kernel uapi structures and ioctls are used (no libdrm library). */
+#if defined(PORT_LINUX) && __STDC_HOSTED__ && defined(__has_include)
+#if __has_include(<libdrm/drm.h>)
+#include <libdrm/drm.h>
+#define KHCOM_KMS_BUILD 1
+#elif __has_include(<drm/drm.h>)
+#include <drm/drm.h>
+#define KHCOM_KMS_BUILD 1
+#endif
+#endif
+
+#ifdef KHCOM_KMS_BUILD
+#include <errno.h>
+#include <poll.h>
+#include <stdio.h>
+#include <time.h>
+
+#define KMS_TARGET_HZ 59.7275
+#define KMS_MIN_HZ 58.5
+#define KMS_MAX_HZ 61.5
+#define KMS_PACE_TOLERANCE 0.0015 /* relative distance from 59.7275 Hz the audio rate control absorbs */
+enum { KMS_BUFFERS = 3, KMS_NONE = -1, KMS_WAIT_MS = 100 };
+
+typedef struct {
+    uint32_t handle, fbId, pitch;
+    uint64_t size;
+    uint8_t* pixels;
+} KmsBuffer;
+
+static struct {
+    int fd;
+    bool on, panelPaces, allowWait, submitted;
+    uint32_t crtcId, connectorId;
+    struct drm_mode_crtc original;   /* the crtc as found: restored on exit */
+    struct drm_mode_modeinfo mode;   /* the mode in use (maybe retimed) */
+    KmsBuffer buf[KMS_BUFFERS];
+    int scanout;                     /* buffer the panel shows */
+    int inflight;                    /* buffer a requested flip will show */
+    int ready;                       /* finished frame waiting for the next flip */
+    int lastSubmitted;               /* for captures */
+    SDL_Mutex* lock;
+    SDL_Condition* changed;
+    SDL_Thread* worker;
+    SDL_AtomicInt run;
+    double hz;
+    uint64_t periodNs, idleSinceNs, waitTicks;
+    char cachePath[1024];
+    struct { unsigned long presents, flips, replaced, repeated, timeouts; } stats;
+} sKms = { .fd = -1, .allowWait = true, .inflight = KMS_NONE, .ready = KMS_NONE };
+
+static uint64_t KmsClockNs(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (uint64_t)ts.tv_sec * 1000000000ull + (uint64_t)ts.tv_nsec;
+}
+
+/* ioctl, repeated when a signal or a busy driver interrupts it. */
+static int KmsIoctl(unsigned long request, void* arg) {
+    int result;
+    do
+        result = ioctl(sKms.fd, request, arg);
+    while (result == -1 && (errno == EINTR || errno == EAGAIN));
+    return result;
+}
+
+static bool KmsRequestFlip(int index) {
+    struct drm_mode_crtc_page_flip request = { 0 };
+    request.crtc_id = sKms.crtcId;
+    request.fb_id = sKms.buf[index].fbId;
+    request.flags = DRM_MODE_PAGE_FLIP_EVENT;
+    request.user_data = (uint64_t)(unsigned)index;
+    return ioctl(sKms.fd, DRM_IOCTL_MODE_PAGE_FLIP, &request) == 0; /* EBUSY must not be retried blindly */
+}
+
+static bool KmsModeset(const struct drm_mode_modeinfo* mode, int index) {
+    struct drm_mode_crtc request = { 0 };
+    request.crtc_id = sKms.crtcId;
+    request.fb_id = sKms.buf[index].fbId;
+    request.set_connectors_ptr = (uint64_t)(uintptr_t)&sKms.connectorId;
+    request.count_connectors = 1;
+    request.mode = *mode;
+    request.mode_valid = 1;
+    return KmsIoctl(DRM_IOCTL_MODE_SETCRTC, &request) == 0;
+}
+
+/* Waits up to timeoutMs for DRM events; returns the flip completions read and
+   the time of the last one (kernel timestamp, or ours when it gives none). */
+static int KmsReadFlips(int timeoutMs, uint64_t* whenNs) {
+    struct pollfd pfd = { .fd = sKms.fd, .events = POLLIN };
+    union { struct drm_event header; uint8_t bytes[1024]; } events;
+    int completions = 0;
+    if (poll(&pfd, 1, timeoutMs) <= 0 || !(pfd.revents & POLLIN))
+        return 0;
+    const ssize_t length = read(sKms.fd, events.bytes, sizeof events.bytes);
+    size_t offset = 0;
+    while (length > 0 && offset + sizeof(struct drm_event) <= (size_t)length) {
+        struct drm_event header;
+        memcpy(&header, events.bytes + offset, sizeof header);
+        if (header.length < sizeof header || offset + header.length > (size_t)length)
+            break;
+        if (header.type == DRM_EVENT_FLIP_COMPLETE && header.length >= sizeof(struct drm_event_vblank)) {
+            struct drm_event_vblank flip;
+            memcpy(&flip, events.bytes + offset, sizeof flip);
+            const uint64_t stamp = (uint64_t)flip.tv_sec * 1000000000ull + (uint64_t)flip.tv_usec * 1000ull;
+            *whenNs = stamp ? stamp : KmsClockNs();
+            completions++;
+        }
+        offset += header.length;
+    }
+    return completions;
+}
+
+/* The refresh rate the panel really runs at: flip between buffers 1 and 2
+   `samples` times and average the middle half of the sorted intervals. */
+static double KmsProbeRefresh(int samples) {
+    enum { MAX_SAMPLES = 16 };
+    uint64_t stamps[MAX_SAMPLES], intervals[MAX_SAMPLES];
+    int taken = 0;
+    if (samples > MAX_SAMPLES)
+        samples = MAX_SAMPLES;
+    for (int i = 0; i < samples; i++) {
+        const int index = 1 + (i & 1);
+        uint64_t when = 0;
+        if (!KmsRequestFlip(index) || KmsReadFlips(250, &when) <= 0)
+            break;
+        sKms.scanout = index;
+        stamps[taken++] = when;
+    }
+    if (taken < 6)
+        return 0.0;
+    const int count = taken - 1;
+    for (int i = 0; i < count; i++)
+        intervals[i] = stamps[i + 1] - stamps[i];
+    for (int i = 1; i < count; i++) { /* insertion sort, a dozen values */
+        const uint64_t value = intervals[i];
+        int j = i - 1;
+        for (; j >= 0 && intervals[j] > value; j--)
+            intervals[j + 1] = intervals[j];
+        intervals[j + 1] = value;
+    }
+    const int from = count / 4, to = count - count / 4;
+    uint64_t sum = 0;
+    for (int i = from; i < to; i++)
+        sum += intervals[i];
+    return sum ? 1e9 * (double)(to - from) / (double)sum : 0.0;
+}
+
+/* Sets `mode`, lets the panel settle, and measures it. */
+static double KmsApplyAndProbe(const struct drm_mode_modeinfo* mode) {
+    if (!KmsModeset(mode, 0))
+        return -1.0;
+    sKms.scanout = 0;
+    (void)KmsProbeRefresh(4); /* the first refreshes after a modeset run irregular */
+    return KmsProbeRefresh(14);
+}
+
+/* ---- retiming --------------------------------------------------------------------- */
+
+/* Removes `cut` blank units (lines or columns) from a porch pair: the front
+   porch first (moving the sync pulse earlier), then the back porch; each keeps
+   at least one unit. */
+static bool KmsTrimBlanking(uint16_t active, uint16_t* syncStart, uint16_t* syncEnd, uint16_t* total, unsigned cut) {
+    const unsigned front = (unsigned)(*syncStart - active), back = (unsigned)(*total - *syncEnd);
+    if (!cut || front < 1 || back < 1 || cut > (front - 1) + (back - 1))
+        return false;
+    const unsigned fromFront = SDL_min(cut, front - 1);
+    *syncStart = (uint16_t)(*syncStart - fromFront);
+    *syncEnd = (uint16_t)(*syncEnd - fromFront);
+    *total = (uint16_t)(*total - cut);
+    return true;
+}
+
+/* Builds the retiming candidate `kind` (0 vertical blanking, 1 horizontal
+   blanking, 2 pixel clock) for a mode measured at `measured` Hz. */
+static bool KmsRetimeCandidate(const struct drm_mode_modeinfo* base, double measured, double target, int kind,
+                               struct drm_mode_modeinfo* out) {
+    *out = *base;
+    if (kind == 0) {
+        const double lines = (double)base->vtotal * measured / target;
+        const long keep = SDL_lround(lines);
+        if (keep <= base->vdisplay || keep >= base->vtotal ||
+            !KmsTrimBlanking(base->vdisplay, &out->vsync_start, &out->vsync_end, &out->vtotal,
+                             (unsigned)(base->vtotal - keep)))
+            return false;
+    } else if (kind == 1) {
+        const double columns = (double)base->htotal * measured / target;
+        const long keep = SDL_lround(columns);
+        if (keep <= base->hdisplay || keep >= base->htotal ||
+            !KmsTrimBlanking(base->hdisplay, &out->hsync_start, &out->hsync_end, &out->htotal,
+                             (unsigned)(base->htotal - keep)))
+            return false;
+    } else {
+        out->clock = (uint32_t)SDL_lround((double)base->clock * target / measured);
+        if (out->clock == base->clock)
+            return false;
+    }
+    out->vrefresh = (uint32_t)SDL_lround(target);
+    SDL_snprintf(out->name, sizeof out->name, "%ux%u-kh%.2f", out->hdisplay, out->vdisplay, target);
+    return true;
+}
+
+static const char* const kKmsRetimeNames[3] = { "vertical blanking", "horizontal blanking", "pixel clock" };
+
+/* kms-mode.txt: the retimed mode found for a given panel mode and target, so
+   the next start verifies it with one probe instead of searching again. */
+static bool KmsLoadCachedMode(const struct drm_mode_modeinfo* base, double target, struct drm_mode_modeinfo* out) {
+    FILE* file = fopen(sKms.cachePath, "r");
+    unsigned b[7], m[7];
+    double savedTarget = 0;
+    if (!file)
+        return false;
+    const int fields = fscanf(file,
+                              "rekhcom-kms 1\npanel %u %u %u %u %u %u %u\ntarget %lf\nretimed %u %u %u %u %u %u %u",
+                              &b[0], &b[1], &b[2], &b[3], &b[4], &b[5], &b[6], &savedTarget,
+                              &m[0], &m[1], &m[2], &m[3], &m[4], &m[5], &m[6]);
+    fclose(file);
+    if (fields != 15 || SDL_fabs(savedTarget - target) > 0.001 || b[0] != base->clock || b[1] != base->htotal ||
+        b[2] != base->hsync_start || b[3] != base->hsync_end || b[4] != base->vtotal || b[5] != base->vsync_start ||
+        b[6] != base->vsync_end)
+        return false;
+    *out = *base;
+    out->clock = m[0];
+    out->htotal = (uint16_t)m[1];
+    out->hsync_start = (uint16_t)m[2];
+    out->hsync_end = (uint16_t)m[3];
+    out->vtotal = (uint16_t)m[4];
+    out->vsync_start = (uint16_t)m[5];
+    out->vsync_end = (uint16_t)m[6];
+    out->vrefresh = (uint32_t)SDL_lround(target);
+    SDL_snprintf(out->name, sizeof out->name, "%ux%u-kh%.2f", out->hdisplay, out->vdisplay, target);
+    return true;
+}
+
+static void KmsSaveCachedMode(const struct drm_mode_modeinfo* base, double target, const struct drm_mode_modeinfo* m) {
+    FILE* file = fopen(sKms.cachePath, "w");
+    if (!file)
+        return;
+    fprintf(file, "rekhcom-kms 1\npanel %u %u %u %u %u %u %u\ntarget %.4f\nretimed %u %u %u %u %u %u %u\n",
+            base->clock, base->htotal, base->hsync_start, base->hsync_end, base->vtotal, base->vsync_start,
+            base->vsync_end, target, m->clock, m->htotal, m->hsync_start, m->hsync_end, m->vtotal, m->vsync_start,
+            m->vsync_end);
+    fclose(file);
+}
+
+/* Brings the panel to `target` Hz if it is not already in range. Returns the
+   measured rate of the mode left on screen (sKms.mode). */
+static double KmsRetime(double target) {
+    const struct drm_mode_modeinfo panel = sKms.mode;
+    struct drm_mode_modeinfo candidate;
+    if (target > 1.0 && KmsLoadCachedMode(&panel, target, &candidate)) {
+        const double hz = KmsApplyAndProbe(&candidate);
+        if (hz >= KMS_MIN_HZ && hz <= KMS_MAX_HZ) {
+            sKms.mode = candidate;
+            PortLog("kms: cached retimed mode: %.3f Hz (clock %u kHz, %ux%u total)", hz, candidate.clock,
+                    candidate.htotal, candidate.vtotal);
+            return hz;
+        }
+        PortLog("kms: cached retimed mode measures %.3f Hz: discarded", hz);
+        remove(sKms.cachePath);
+    }
+    const double own = KmsApplyAndProbe(&panel);
+    PortLog("kms: panel mode \"%s\" %ux%u measures %.3f Hz (clock %u kHz, h %u/%u/%u/%u, v %u/%u/%u/%u)", panel.name,
+            panel.hdisplay, panel.vdisplay, own, panel.clock, panel.hdisplay, panel.hsync_start, panel.hsync_end,
+            panel.htotal, panel.vdisplay, panel.vsync_start, panel.vsync_end, panel.vtotal);
+    if (own <= 1.0 || target <= 1.0 || (own >= KMS_MIN_HZ && own <= KMS_MAX_HZ &&
+                                        SDL_fabs(own - target) <= target * KMS_PACE_TOLERANCE))
+        return own;
+    for (int kind = 0; kind < 3; kind++) {
+        if (!KmsRetimeCandidate(&panel, own, target, kind, &candidate))
+            continue;
+        const double hz = KmsApplyAndProbe(&candidate);
+        if (hz >= KMS_MIN_HZ && hz <= KMS_MAX_HZ) {
+            PortLog("kms: retimed by %s to %.3f Hz (clock %u kHz, %ux%u total)", kKmsRetimeNames[kind], hz,
+                    candidate.clock, candidate.htotal, candidate.vtotal);
+            KmsSaveCachedMode(&panel, target, &candidate);
+            sKms.mode = candidate;
+            return hz;
+        }
+        PortLog("kms: retiming by %s %s (%.3f Hz)", kKmsRetimeNames[kind], hz < 0 ? "refused" : "measured off", hz);
+    }
+    /* nothing better: the panel's own mode again (it may still be in range) */
+    sKms.mode = panel;
+    return KmsApplyAndProbe(&panel);
+}
+
+/* ---- setup and teardown ------------------------------------------------------------ */
+
+/* A card with a connected connector, its crtc and the mode it shows now. */
+static bool KmsFindOutput(char* why, size_t whyLen, char* card, size_t cardLen) {
+    for (int n = 0; n < 4; n++) {
+        SDL_snprintf(card, cardLen, "/dev/dri/card%d", n);
+        sKms.fd = open(card, O_RDWR | O_CLOEXEC);
+        if (sKms.fd < 0) {
+            if (n == 0 || errno != ENOENT)
+                SDL_snprintf(why, whyLen, "%s: %s", card, strerror(errno));
+            continue;
+        }
+        uint32_t connectors[16], crtcs[8], encoders[16];
+        struct drm_mode_card_res res = { 0 };
+        if (KmsIoctl(DRM_IOCTL_MODE_GETRESOURCES, &res) == 0 && res.count_connectors && res.count_crtcs) {
+            res.count_fbs = 0;
+            res.count_connectors = SDL_min(res.count_connectors, 16u);
+            res.count_crtcs = SDL_min(res.count_crtcs, 8u);
+            res.count_encoders = SDL_min(res.count_encoders, 16u);
+            res.connector_id_ptr = (uint64_t)(uintptr_t)connectors;
+            res.crtc_id_ptr = (uint64_t)(uintptr_t)crtcs;
+            res.encoder_id_ptr = (uint64_t)(uintptr_t)encoders;
+            res.fb_id_ptr = 0;
+            if (KmsIoctl(DRM_IOCTL_MODE_GETRESOURCES, &res) != 0)
+                res.count_connectors = 0;
+        } else {
+            res.count_connectors = 0;
+        }
+        for (uint32_t c = 0; c < SDL_min(res.count_connectors, 16u); c++) {
+            struct drm_mode_modeinfo modes[32];
+            struct drm_mode_get_connector conn = { .connector_id = connectors[c] };
+            if (KmsIoctl(DRM_IOCTL_MODE_GETCONNECTOR, &conn) != 0 || conn.connection != 1 || !conn.count_modes)
+                continue;
+            const uint32_t wanted = SDL_min(conn.count_modes, 32u);
+            SDL_memset(&conn, 0, sizeof conn);
+            conn.connector_id = connectors[c];
+            conn.count_modes = wanted;
+            conn.modes_ptr = (uint64_t)(uintptr_t)modes;
+            /* the mode count can grow between the two calls: only `wanted` were written */
+            if (KmsIoctl(DRM_IOCTL_MODE_GETCONNECTOR, &conn) != 0 || !conn.count_modes)
+                continue;
+            const uint32_t modeCount = SDL_min(conn.count_modes, wanted);
+            uint32_t crtcId = 0;
+            struct drm_mode_get_encoder enc = { .encoder_id = conn.encoder_id };
+            if (conn.encoder_id && KmsIoctl(DRM_IOCTL_MODE_GETENCODER, &enc) == 0)
+                crtcId = enc.crtc_id;
+            for (uint32_t k = 0; !crtcId && k < SDL_min(res.count_crtcs, 8u); k++)
+                if (!conn.encoder_id || (enc.possible_crtcs & (1u << k)))
+                    crtcId = crtcs[k];
+            if (!crtcId)
+                continue;
+            sKms.connectorId = connectors[c];
+            sKms.crtcId = crtcId;
+            SDL_memset(&sKms.original, 0, sizeof sKms.original);
+            sKms.original.crtc_id = crtcId;
+            (void)KmsIoctl(DRM_IOCTL_MODE_GETCRTC, &sKms.original);
+            sKms.mode = modes[0];
+            for (uint32_t m = 0; m < modeCount; m++)
+                if (modes[m].type & DRM_MODE_TYPE_PREFERRED) {
+                    sKms.mode = modes[m];
+                    break;
+                }
+            if (sKms.original.mode_valid)
+                sKms.mode = sKms.original.mode; /* what the panel shows now */
+            return true;
+        }
+        SDL_snprintf(why, whyLen, "%s: no connected output with a crtc", card);
+        close(sKms.fd);
+        sKms.fd = -1;
+    }
+    return false;
+}
+
+static bool KmsCreateBuffers(void) {
+    for (int i = 0; i < KMS_BUFFERS; i++) {
+        KmsBuffer* b = &sKms.buf[i];
+        struct drm_mode_create_dumb create = { .width = sKms.mode.hdisplay, .height = sKms.mode.vdisplay, .bpp = 32 };
+        if (KmsIoctl(DRM_IOCTL_MODE_CREATE_DUMB, &create) != 0)
+            return false;
+        b->handle = create.handle;
+        b->pitch = create.pitch;
+        b->size = create.size;
+        struct drm_mode_fb_cmd fb = { .width = create.width, .height = create.height, .pitch = create.pitch,
+                                      .bpp = 32, .depth = 24, .handle = create.handle };
+        if (KmsIoctl(DRM_IOCTL_MODE_ADDFB, &fb) != 0)
+            return false;
+        b->fbId = fb.fb_id;
+        struct drm_mode_map_dumb map = { .handle = create.handle };
+        if (KmsIoctl(DRM_IOCTL_MODE_MAP_DUMB, &map) != 0)
+            return false;
+        void* pixels = mmap(NULL, (size_t)create.size, PROT_READ | PROT_WRITE, MAP_SHARED, sKms.fd, (off_t)map.offset);
+        if (pixels == MAP_FAILED)
+            return false;
+        b->pixels = pixels;
+        SDL_memset(pixels, 0, (size_t)create.size);
+    }
+    const uint32_t pitch = sKms.buf[0].pitch;
+    for (int i = 1; i < KMS_BUFFERS; i++)
+        if (sKms.buf[i].pitch != pitch) {
+            errno = EINVAL;
+            return false;
+        }
+    if (pitch < sKms.mode.hdisplay * 4u || pitch > INT_MAX) {
+        errno = EINVAL;
+        return false;
+    }
+    return true;
+}
+
+/* Async-signal-safe: puts back the crtc as it was found (crash handler, exit). */
+void PortFbKmsRestoreFromSignal(void) {
+    if (sKms.fd < 0 || !sKms.original.mode_valid || !sKms.original.fb_id)
+        return;
+    struct drm_mode_crtc back = sKms.original;
+    back.set_connectors_ptr = (uint64_t)(uintptr_t)&sKms.connectorId;
+    back.count_connectors = 1;
+    (void)ioctl(sKms.fd, DRM_IOCTL_MODE_SETCRTC, &back);
+}
+
+static void KmsExitHook(void) {
+    if (sKms.on)
+        PortFbKmsRestoreFromSignal();
+}
+
+/* Restores the crtc and frees everything (closing the card frees the buffers). */
+static void KmsTeardown(void) {
+    PortFbKmsRestoreFromSignal();
+    for (int i = 0; i < KMS_BUFFERS; i++) {
+        if (sKms.buf[i].pixels)
+            munmap(sKms.buf[i].pixels, (size_t)sKms.buf[i].size);
+        SDL_memset(&sKms.buf[i], 0, sizeof sKms.buf[i]);
+    }
+    if (sKms.fd >= 0)
+        close(sKms.fd);
+    sKms.fd = -1;
+    sKms.on = false;
+}
+
+/* The flip worker: on each completion the in-flight buffer becomes the
+   scanout one and a ready frame, if any, is flipped to next. */
+static int SDLCALL KmsWorker(void* unused) {
+    (void)unused;
+    while (SDL_GetAtomicInt(&sKms.run)) {
+        uint64_t when = 0;
+        const int completions = KmsReadFlips(KMS_WAIT_MS, &when);
+        if (completions <= 0)
+            continue;
+        SDL_LockMutex(sKms.lock);
+        sKms.stats.flips += (unsigned long)completions;
+        if (sKms.inflight != KMS_NONE) {
+            sKms.scanout = sKms.inflight;
+            sKms.inflight = KMS_NONE;
+        }
+        if (sKms.ready != KMS_NONE) {
+            if (KmsRequestFlip(sKms.ready))
+                sKms.inflight = sKms.ready;
+            else
+                sKms.stats.timeouts++; /* (counted with the lost flips) */
+            sKms.ready = KMS_NONE;
+        }
+        if (sKms.inflight == KMS_NONE)
+            sKms.idleSinceNs = KmsClockNs(); /* nothing new for the next refresh */
+        SDL_BroadcastCondition(sKms.changed);
+        SDL_UnlockMutex(sKms.lock);
+    }
+    return 0;
+}
+
+/* Opens KMS for a fbW x fbH panel. On failure `why` says why and the display
+   is as it was found. */
+static bool KmsStart(unsigned fbW, unsigned fbH, char* why, size_t whyLen) {
+    char card[32] = "/dev/dri";
+    const char* hzText = SDL_getenv("KHCOM_KMS_HZ");
+    const double target = hzText && *hzText ? SDL_atof(hzText) : KMS_TARGET_HZ;
+    SDL_strlcpy(sKms.cachePath, PortConfigPath("kms-mode.txt"), sizeof sKms.cachePath);
+    SDL_snprintf(why, whyLen, "no DRM card in /dev/dri");
+    if (!KmsFindOutput(why, whyLen, card, sizeof card))
+        return false;
+    if (sKms.mode.hdisplay != fbW || sKms.mode.vdisplay != fbH) {
+        SDL_snprintf(why, whyLen, "%s shows %ux%u, the framebuffer is %ux%u", card, sKms.mode.hdisplay,
+                     sKms.mode.vdisplay, fbW, fbH);
+        KmsTeardown();
+        return false;
+    }
+    (void)ioctl(sKms.fd, DRM_IOCTL_SET_MASTER, 0); /* already master as the first opener; harmless otherwise */
+    if (!KmsCreateBuffers()) {
+        SDL_snprintf(why, whyLen, "%s: dumb buffers refused (%s)", card, strerror(errno));
+        KmsTeardown();
+        return false;
+    }
+    const double hz = KmsRetime(target);
+    if (hz < KMS_MIN_HZ || hz > KMS_MAX_HZ) {
+        if (hz <= 0.0)
+            SDL_snprintf(why, whyLen, "%s: modeset or page flips refused (%s)", card, strerror(errno));
+        else
+            SDL_snprintf(why, whyLen, "%s: panel at %.3f Hz after retiming, outside %.1f..%.1f", card, hz, KMS_MIN_HZ,
+                         KMS_MAX_HZ);
+        KmsTeardown();
+        return false;
+    }
+    sKms.hz = hz;
+    sKms.periodNs = (uint64_t)(1e9 / hz);
+    sKms.inflight = sKms.ready = KMS_NONE;
+    sKms.lastSubmitted = sKms.scanout;
+    sKms.idleSinceNs = KmsClockNs();
+    sKms.lock = SDL_CreateMutex();
+    sKms.changed = SDL_CreateCondition();
+    SDL_SetAtomicInt(&sKms.run, 1);
+    sKms.worker = sKms.lock && sKms.changed ? SDL_CreateThread(KmsWorker, "kms flips", NULL) : NULL;
+    if (!sKms.worker) {
+        SDL_SetAtomicInt(&sKms.run, 0);
+        SDL_DestroyCondition(sKms.changed);
+        SDL_DestroyMutex(sKms.lock);
+        sKms.changed = NULL;
+        sKms.lock = NULL;
+        SDL_snprintf(why, whyLen, "no flip thread: %s", SDL_GetError());
+        KmsTeardown();
+        return false;
+    }
+    sKms.on = true;
+    atexit(KmsExitHook);
+    return true;
+}
+
+static void KmsStop(void) {
+    if (!sKms.on)
+        return;
+    SDL_SetAtomicInt(&sKms.run, 0);
+    SDL_WaitThread(sKms.worker, NULL);
+    sKms.worker = NULL;
+    PortLog("kms: %lu presents, %lu flips, %lu frames replaced unseen, %lu refreshes repeated a frame, %lu lost flips",
+            sKms.stats.presents, sKms.stats.flips, sKms.stats.replaced, sKms.stats.repeated, sKms.stats.timeouts);
+    KmsTeardown();
+    SDL_DestroyCondition(sKms.changed);
+    SDL_DestroyMutex(sKms.lock);
+    sKms.changed = NULL;
+    sKms.lock = NULL;
+}
+
+/* ---- per frame ----------------------------------------------------------------------- */
+
+static bool KmsMayWait(void) {
+    return sKms.panelPaces && sKms.allowWait && SDL_GetAtomicInt(&sKms.run);
+}
+
+/* A buffer to copy the next frame into: a frame still waiting in the ready
+   slot is superseded (its buffer reused), else one neither shown nor in flight. */
+static int KmsAcquire(void) {
+    int index;
+    SDL_LockMutex(sKms.lock);
+    if (sKms.ready != KMS_NONE) {
+        index = sKms.ready;
+        sKms.ready = KMS_NONE;
+        sKms.stats.replaced++;
+    } else {
+        for (index = 0; index == sKms.scanout || index == sKms.inflight; index++) {}
+    }
+    SDL_UnlockMutex(sKms.lock);
+    return index;
+}
+
+/* Hands a finished buffer to the display. With the panel pacing, returns once
+   the frame is on its way to the screen (flipped now, or at the next completion). */
+static void KmsSubmit(int index) {
+    SDL_LockMutex(sKms.lock);
+    sKms.lastSubmitted = index;
+    if (sKms.inflight == KMS_NONE) {
+        /* the panel idles: every refresh since the last completion repeated a frame */
+        const uint64_t idle = KmsClockNs() - sKms.idleSinceNs;
+        if (sKms.periodNs && idle > sKms.periodNs + sKms.periodNs / 4)
+            sKms.stats.repeated += (unsigned long)(idle / sKms.periodNs);
+        if (KmsRequestFlip(index))
+            sKms.inflight = index;
+        else if (KmsModeset(&sKms.mode, index))
+            sKms.scanout = index; /* flips refused: shown at once, may tear */
+    } else {
+        sKms.ready = index;
+        while (sKms.ready == index && KmsMayWait()) {
+            if (SDL_WaitConditionTimeout(sKms.changed, sKms.lock, KMS_WAIT_MS))
+                continue;
+            /* no completion for 100 ms (panel blanked?): the flip is taken as lost */
+            if (!sKms.stats.timeouts++)
+                PortLog("kms: no flip completion in %d ms: flipping the newest frame directly", KMS_WAIT_MS);
+            sKms.ready = sKms.inflight = KMS_NONE;
+            if (KmsRequestFlip(index))
+                sKms.inflight = index;
+            else if (KmsModeset(&sKms.mode, index))
+                sKms.scanout = index;
+        }
+    }
+    SDL_UnlockMutex(sKms.lock);
+}
+#else
+void PortFbKmsRestoreFromSignal(void) {}
+#endif
+
+/* The panel paces the game: PaceBeforePresent leaves the wait to PortFbPresent. */
+int PortFbKmsPaced(void) {
+#ifdef KHCOM_KMS_BUILD
+    return sKms.on && sKms.panelPaces;
+#else
+    return 0;
+#endif
+}
+
+/* Whether the next PortFbPresent may wait for the panel (Present(0): the link's idle refresh may not). */
+void PortFbKmsNextPaced(int paced) {
+#ifdef KHCOM_KMS_BUILD
+    sKms.allowWait = paced != 0;
+#else
+    (void)paced;
+#endif
+}
+
+/* After PortFbPresent: 1 when it handed a frame to a KMS flip; *waitTicks the time it waited for the panel. */
+int PortFbKmsTakePresent(uint64_t* waitTicks) {
+#ifdef KHCOM_KMS_BUILD
+    const int submitted = sKms.submitted;
+    *waitTicks = submitted ? sKms.waitTicks : 0;
+    sKms.submitted = false;
+    return submitted;
+#else
+    *waitTicks = 0;
+    return 0;
+#endif
+}
+
+/* The display handed back as it was found (Quit, before SDL_Quit). */
+void PortFbShutdown(void) {
+#ifdef KHCOM_KMS_BUILD
+    KmsStop();
+#endif
+}
+
 /* Opens the framebuffer named by KHCOM_FBDEV; returns 0 when not in use. */
 int PortFbInit(int* w, int* h) {
     const char* path = SDL_getenv("KHCOM_FBDEV");
@@ -123,6 +767,39 @@ int PortFbInit(int* w, int* h) {
         else
             PortLog("fbdev: panel refresh unknown (no timing in the screen info)");
     }
+#ifdef KHCOM_KMS_BUILD
+    {
+        const char* kms = SDL_getenv("KHCOM_KMS");
+        const char* pace = SDL_getenv("KHCOM_KMS_PACE");
+        char why[192];
+        if (kms && kms[0] == '0') {
+            PortLog("fbdev: display chosen: %s page copy, software pacing (KHCOM_KMS=0)", path);
+        } else if (KmsStart(sVar.xres, sVar.yres, why, sizeof why)) {
+            /* the panel paces the game only near the GBA's rate: the sound's drift correction reaches 0.15% */
+            const int nearGba = SDL_fabs(sKms.hz - KMS_TARGET_HZ) <= KMS_TARGET_HZ * KMS_PACE_TOLERANCE;
+            sKms.panelPaces = nearGba && !(pace && pace[0] == '0') && !SDL_getenv("KHCOM_FAST");
+            munmap(sFb, (size_t)mapSize);
+            sFb = sKms.buf[0].pixels;
+            sFbOffset = 0;
+            sVar.xoffset = sVar.yoffset = 0;
+            sVar.bits_per_pixel = 32;
+            sVar.red.offset = 16;
+            sVar.green.offset = 8;
+            sVar.blue.offset = 0;
+            sFix.line_length = sKms.buf[0].pitch;
+            if (sAsyncFbRequested)
+                PortLog("fbdev: KHCOM_FBDEV_ASYNC_COPY ignored with KMS (the copy goes to the flip at once)");
+            sAsyncFbRequested = false;
+            PortLog("fbdev: display chosen: KMS page flips, %ux%u, %.3f Hz measured, %d buffers, pitch %u, %s", sVar.xres,
+                    sVar.yres, sKms.hz, KMS_BUFFERS, sFix.line_length,
+                    sKms.panelPaces ? "paced by the panel"
+                    : !nearGba ? "software pacing (the panel is more than 0.15% from 59.7275 Hz)"
+                               : "software pacing (KHCOM_KMS_PACE=0 or KHCOM_FAST)");
+        } else {
+            PortLog("fbdev: display chosen: %s page copy, software pacing (KMS not used: %s)", path, why);
+        }
+    }
+#endif
     return 1;
 }
 
@@ -1349,9 +2026,14 @@ bool PortFbCapturePair(const char* framebufferName, const char* rendererName) {
     if (!snapshot)
         return false;
     const unsigned rowBytes = sVar.xres * (sVar.bits_per_pixel / 8);
+    const uint8_t* shown = sFb + sFbOffset;
+#ifdef KHCOM_KMS_BUILD
+    if (sKms.on)
+        shown = sKms.buf[sKms.lastSubmitted].pixels; /* the buffer last presented */
+#endif
     for (int y = 0; y < snapshot->h; y++)
         memcpy((uint8_t*)snapshot->pixels + (size_t)y * snapshot->pitch,
-               sFb + sFbOffset + (size_t)y * sFix.line_length, rowBytes);
+               shown + (size_t)y * sFix.line_length, rowBytes);
     const bool saved = SDL_SaveBMP(snapshot, PortConfigPath(framebufferName));
     SDL_DestroySurface(snapshot);
     if (!saved || !SDL_SaveBMP(sRenderSurface, PortConfigPath(rendererName)))
@@ -1359,14 +2041,13 @@ bool PortFbCapturePair(const char* framebufferName, const char* rendererName) {
     return true;
 }
 
-static void WriteFrame(SDL_Surface* frame) {
+static void WriteFrameTo(SDL_Surface* frame, uint8_t* dst) {
     const SDL_PixelFormat format = FbFormat();
     const int w = SDL_min(frame->w, (int)sVar.xres);
     const int h = SDL_min(frame->h, (int)sVar.yres);
     const unsigned bpp = sVar.bits_per_pixel / 8;
     if (w <= 0 || h <= 0)
         return;
-    uint8_t* dst = sFb + sFbOffset;
     if (frame->pixels && !SDL_MUSTLOCK(frame) && SDL_GetSurfaceColorspace(frame) == SDL_COLORSPACE_SRGB &&
         !SDL_SurfaceHasColorKey(frame)) {
         if (frame->format == format) {
@@ -1388,11 +2069,63 @@ static void WriteFrame(SDL_Surface* frame) {
     }
 }
 
+static void WriteFrame(SDL_Surface* frame) {
+    WriteFrameTo(frame, sFb + sFbOffset);
+}
+
+#ifdef KHCOM_KMS_BUILD
+/* The frame into a free KMS buffer, then to the flip (waiting for the panel when it paces the game). */
+static void KmsPresent(SDL_Renderer* renderer) {
+    static int logEvery = -1;
+    const uint64_t start = SDL_GetPerformanceCounter();
+    SDL_Surface* frame = NULL;
+    SDL_Surface* read = NULL;
+    sKms.submitted = false;
+    sKms.waitTicks = 0;
+    if (sRenderSurface) {
+        if (SDL_FlushRenderer(renderer))
+            frame = sRenderSurface;
+    } else {
+        frame = read = SDL_RenderReadPixels(renderer, NULL);
+    }
+    if (!frame)
+        return;
+    const uint64_t ready = SDL_GetPerformanceCounter();
+    const int page = KmsAcquire();
+    const uint64_t copyStart = SDL_GetPerformanceCounter();
+    WriteFrameTo(frame, sKms.buf[page].pixels);
+    const uint64_t copied = SDL_GetPerformanceCounter();
+    KmsSubmit(page);
+    const uint64_t end = SDL_GetPerformanceCounter();
+    SDL_DestroySurface(read);
+    sKms.submitted = true;
+    sKms.waitTicks = (copyStart - ready) + (end - copied);
+    sKms.stats.presents++;
+    if (sProfileFb) {
+        sDrawTicks = ready - start;
+        sCopyTicks = copied - copyStart;
+    }
+    /* KHCOM_KMS_LOG, KHCOM_PIECE_LOG or KHCOM_FRAMELOG: the flip counters every 600 presents */
+    if (logEvery < 0)
+        logEvery = SDL_getenv("KHCOM_KMS_LOG") || SDL_getenv("KHCOM_PIECE_LOG") || SDL_getenv("KHCOM_FRAMELOG");
+    if (logEvery && sKms.stats.presents % 600 == 0)
+        PortLog("kms: presents %lu flips %lu replaced %lu repeated %lu lost %lu (last wait %.3f ms)", sKms.stats.presents,
+                sKms.stats.flips, sKms.stats.replaced, sKms.stats.repeated, sKms.stats.timeouts,
+                sKms.waitTicks * 1000.0 / (double)SDL_GetPerformanceFrequency());
+}
+#endif
+
 /* Copies the renderer's frame to the framebuffer (call before presenting). */
 void PortFbPresent(SDL_Renderer* renderer) {
     sDrawTicks = sCopyTicks = 0;
     if (!sFb)
         return;
+#ifdef KHCOM_KMS_BUILD
+    if (sKms.on) {
+        KmsPresent(renderer);
+        return;
+    }
+#endif
     uint64_t start = sProfileFb ? SDL_GetPerformanceCounter() : 0;
     if (sRenderSurface) {
         PortFbWaitCopy();

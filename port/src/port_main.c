@@ -153,6 +153,7 @@ static uint32_t sFpsFrames;
 static uint64_t sPresentSerial, sPresentAcceptedAt, sPresentGapTicks;
 static uint64_t sPresentPaceEpoch, sPresentWaitTotal;
 static void PaceBeforePresent(void);
+static uint64_t AdvanceFrameDeadline(void);
 
 void PortLog(const char* fmt, ...) {
     va_list ap;
@@ -284,6 +285,10 @@ void PortFbWaitCopy(void);
 void PortFbStopCopy(void);
 bool PortFbCapturePair(const char* framebufferName, const char* rendererName);
 void PortFbStageTicks(uint64_t* draw, uint64_t* copy);
+int PortFbKmsPaced(void);
+void PortFbKmsNextPaced(int paced);
+int PortFbKmsTakePresent(uint64_t* waitTicks);
+void PortFbShutdown(void);
 bool PortFbDrawCropped3x(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawWorldInspectFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
 int PortFbDrawJournalFit(SDL_Renderer* renderer, const uint32_t* source, int stride);
@@ -3896,7 +3901,20 @@ static void Present(int paced) {
         LoopMark(PORT_LOOP_DRAW); /* the wait just taken is counted apart */
 #ifdef PORT_LINUX
         PIECE_CK(14);
+        PortFbKmsNextPaced(paced);
         PortFbPresent(sRenderer);
+        if (paced && PortFbKmsPaced()) {
+            /* KMS: the flip paced this frame inside PortFbPresent. Its wait counts as pacing, not drawing, and the
+               software schedule restarts from it (idle cycles and the frame skip measure from here). */
+            uint64_t kmsWait;
+            if (PortFbKmsTakePresent(&kmsWait)) {
+                sPresentWaitTotal += kmsWait;
+                sPieceCk += kmsWait;
+                sNextFrame = SDL_GetPerformanceCounter();
+            } else {
+                sPresentWaitTotal += AdvanceFrameDeadline(); /* nothing reached the panel: the sleep paces it */
+            }
+        }
         PIECE_CK(15);
         if (measureFb) {
             uint64_t drawTicks, copyTicks;
@@ -4328,6 +4346,9 @@ static void Quit(void) {
 #if defined(__ANDROID__) && !defined(PORT_ANDROID64)
     PortAndroidLifecycleStop();
 #endif
+#ifdef PORT_LINUX
+    PortFbShutdown(); /* KMS: the panel's own mode and picture back */
+#endif
     SDL_Quit();
     exit(gPortExitCode);
 }
@@ -4476,6 +4497,14 @@ static uint64_t AdvanceFrameDeadline(void) {
 }
 
 static void PaceBeforePresent(void) {
+#ifdef PORT_LINUX
+    if (PortFbKmsPaced()) {
+        /* the KMS flip in PortFbPresent waits for the panel's refresh instead of the sleep */
+        sPacedByVsync = 1;
+        sPresentPaceEpoch++;
+        return;
+    }
+#endif
     sPresentWaitTotal += AdvanceFrameDeadline();
     sPresentPaceEpoch++;
 }

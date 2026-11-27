@@ -69,6 +69,8 @@ long long __aeabi_ldiv0(long long value) {
 }
 #endif
 
+void PortFbKmsRestoreFromSignal(void);
+
 static void CrashSignal(int sig) {
     void* frames[32];
     int n = backtrace(frames, 32);
@@ -80,6 +82,7 @@ static void CrashSignal(int sig) {
         backtrace_symbols_fd(frames, n, fileno(f));
         fclose(f);
     }
+    PortFbKmsRestoreFromSignal(); /* the panel's own mode back before the process dies */
     signal(sig, SIG_DFL);
     raise(sig);
 }
