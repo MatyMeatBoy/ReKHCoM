@@ -3,6 +3,8 @@
 ## v2.13
 
 - HD HP gauge: no longer flickers or restarts its animation while spells and effects make the game skip a HUD frame. The face backdrop reaches the ring under its three quarters, so a bright room no longer shows through as a white crescent between the face and the ring (`KHCOM_HD_GAUGE_BACKDROP_ORIGINAL=1` keeps Re:CoM's). After a hit, the face keeps its backdrop: the ring's hit animation plays once and then returns to the normal or low-HP state, where it drew nothing for the rest of the hurt face.
+- HD title at 640x480: the logo's pieces are placed from the picture's corner, rounded once, so their shared edges meet instead of stepping a pixel ("Chain of Memories" letters).
+- `KHCOM_HD_GAUGE_SMOOTH=1` (handhelds, opt-in): smooth HD gauge from prefiltered copies, far cheaper than `KHCOM_HD_GAUGE_BILINEAR` (16 against 26-30 slow frames in 1000 against Riku on the GA36; 9 without).
 - HD title: opening the SELECT menu over the title keeps the logo's cached pieces while the title darkens, instead of redrawing them every frame.
 - Handhelds (GA36, Anbernic): two opt-in experiments, off by default because each added about 20 slow frames in 1000 to an HD battle on the GA36: `KHCOM_HD_GAUGE_BILINEAR=1` samples the HD gauge smoothly, and `KHCOM_KMS_ASYNC_COPY=1` overlaps the KMS frame copy with the next frame.
 
