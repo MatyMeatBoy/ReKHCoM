@@ -678,10 +678,10 @@ static void GeoMix(const void* p, size_t n) {
 /* One sprite of a part. A sprite with no texture at all (its UVs one point) is a mask: its box is returned in mask
    (1) and limits what the group draws after it, the way the gauge's ring shows only the turned quarters' part inside
    the box (the remaster's gauge.lad: groups 27-29). */
-/* The player gauge's face backdrop (gauge.lad and its remastered UK_ version, sequence 1, sprite 12, four quarters of a grey disc) is half
-   translucent in Re:CoM, over its dark 3D arenas. Over CoM's bright rooms it showed the floor through as a white
-   crescent between the face and the ring, and the room's colours moved behind it (user 27/11: "the gap at the
-   start of the bar"). Drawn opaque it is the same grey everywhere; KHCOM_HD_GAUGE_BACKDROP_ORIGINAL keeps Re:CoM's. */
+/* The player gauge's face backdrop (gauge.lad and its remastered UK_ version, sequence 1, sprite 12: four quarters of
+   a half translucent dark disc, radius 27) stops short of the ring's inner outline (37). Over CoM's bright rooms the
+   floor showed through that band as a bright crescent between the face and the ring (user 27/11). It is drawn out
+   to the outline, with Re:CoM's colour; KHCOM_HD_GAUGE_BACKDROP_ORIGINAL keeps Re:CoM's size. */
 static int GaugeBackdropSprite(const HdLayoutTexture* t, const unsigned char* s, const unsigned char* sp) {
     static int original = -1;
     if (original < 0) original = SDL_getenv("KHCOM_HD_GAUGE_BACKDROP_ORIGINAL") != NULL;
@@ -707,6 +707,11 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     SDL_Vertex v[4], over[4];
     int bright = 0, backdrop = GaugeBackdropSprite(t, s, sp);
     int k;
+    if (backdrop) /* out to the ring's inner outline (sprite 13's quarters, 37 from the centre): no gap to see through */
+        for (k = 0; k < 4; k++) {
+            cx[k] *= 36.5f / 27.0f;
+            cy[k] *= 36.5f / 27.0f;
+        }
     for (k = 0; k < 4; k++) {
         float col[4], x = cx[k] + c->px, y = cy[k] + c->py, nx;
         x *= c->sx;
@@ -718,7 +723,6 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         x = nx + c->x;
         y += c->y;
         Color((uint32_t)I32(sp + 28 + 4 * k), col);
-        if (backdrop) col[3] = 1.0f;
         v[k].position.x = ox + x * scale;
         v[k].position.y = oy + y * scale;
         v[k].color.r = SDL_min(1.0f, col[0] * c->c[0]);
