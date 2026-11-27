@@ -680,8 +680,9 @@ static void GeoMix(const void* p, size_t n) {
    the box (the remaster's gauge.lad: groups 27-29). */
 /* The player gauge's face backdrop (gauge.lad and its remastered UK_ version, sequence 1, sprite 12: four quarters of
    a half translucent dark disc, radius 27) stops short of the ring's inner outline (37). Over CoM's bright rooms the
-   floor showed through that band as a bright crescent between the face and the ring (user 27/11). It is drawn out
-   to the outline, with Re:CoM's colour; KHCOM_HD_GAUGE_BACKDROP_ORIGINAL keeps Re:CoM's size. */
+   floor showed through that band as a bright crescent between the face and the ring, widest at the ring's end (user
+   27/11). Under the ring it is drawn out to the outline, with Re:CoM's colour; the quarter the ring leaves open keeps
+   Re:CoM's size (the user preferred it to a full larger disc). KHCOM_HD_GAUGE_BACKDROP_ORIGINAL keeps Re:CoM's. */
 static int GaugeBackdropSprite(const HdLayoutTexture* t, const unsigned char* s, const unsigned char* sp) {
     static int original = -1;
     if (original < 0) original = SDL_getenv("KHCOM_HD_GAUGE_BACKDROP_ORIGINAL") != NULL;
@@ -707,7 +708,8 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
     SDL_Vertex v[4], over[4];
     int bright = 0, backdrop = GaugeBackdropSprite(t, s, sp);
     int k;
-    if (backdrop) /* out to the ring's inner outline (sprite 13's quarters, 37 from the centre): no gap to see through */
+    if (backdrop && !(L > 0.0f && T < 0.0f)) /* the three quarters the ring covers, out to its inner outline (sprite
+                                                    13's quarters, 37 from the centre); the open one stays Re:CoM's */
         for (k = 0; k < 4; k++) {
             cx[k] *= 36.5f / 27.0f;
             cy[k] *= 36.5f / 27.0f;
@@ -1027,6 +1029,11 @@ int PortHdGauge(int hp, int maxHp, int riku) {
     }
     if (sGauge.hurtMs > 0) {
         sGauge.hurtMs -= msPerFrame;
+        /* the hit's ring animation (13) plays once, 60 frames, and draws nothing after them: the face's backdrop and
+           the ring's flash vanished for the rest of the hurt face's 3 s (user 27/11). The ring goes back to its HP's
+           state there; the face keeps hurting. */
+        if (sGauge.stateAnim == 13 && sGauge.stateFrame >= PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, 13))
+            GaugeSet(&sGauge.stateAnim, &sGauge.stateFrame, hp == 0 ? 15 : hp <= maxHp * 25 / 100 ? 10 : 15);
     } else if (sGauge.stateAnim != 14 || sGauge.stateFrame >= PortHdLayoutGroupFrames(HD_LAYOUT_GAUGE, 1, 14)) {
         if (hp == 0) {
             GaugeSet(&sGauge.stateAnim, &sGauge.stateFrame, 15);
