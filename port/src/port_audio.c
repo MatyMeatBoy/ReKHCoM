@@ -423,8 +423,14 @@ static void FifoRead(int fifo, float* out, int n, float scale, double step) {
         f->pos = sad;
         f->frac = 0;
     }
+    static int eightBit = -1;
+    extern const int16_t* PcmPlaybackWide(uint32_t addr, int32_t* index);
+    if (eightBit < 0) eightBit = SDL_getenv("KHCOM_CREDITS_8BIT") != NULL;
     for (i = 0; i < n; i++) {
-        out[i] = (float)*(const int8_t*)(uintptr_t)f->pos * scale;
+        int32_t at = 0;
+        const int16_t* wide = eightBit ? NULL : PcmPlaybackWide(f->pos, &at);
+        /* the staff roll's stream at the precision it was decoded with (pcm_audio.c), else the FIFO's byte */
+        out[i] = wide ? (float)wide[at] * (1.0f / 256.0f) * scale : (float)*(const int8_t*)(uintptr_t)f->pos * scale;
         f->frac += step;
         while (f->frac >= 1.0) {
             f->frac -= 1.0;
