@@ -505,6 +505,149 @@ static int16_t* sCacheSpan;
 
 static unsigned ColourByte(float c) { return (unsigned)(SDL_clamp(c, 0.0f, 1.0f) * 255.0f + 0.5f); }
 
+/* Smooth sampling for the cache (KHCOM_HD_GAUGE_SMOOTH, user 27/11: "lo mas smooth posible para 640x480"): the
+   picture premultiplied and area-filtered once to the scale the cache draws it at, per axis (the HD gauge is drawn
+   at about half its texels at 640x480), then four texels of that copy weighted in 8-bit fixed point, two channels a
+   multiply, with no division. The float filter of the full picture (KHCOM_HD_GAUGE_BILINEAR) cost the GA36 about
+   20 more slow frames in 1000 and still aliased where the picture is drawn smaller than half. Each copy has a
+   texel of border, its edge repeated, so the four reads need no clamping. */
+typedef struct {
+    const SDL_Surface* pic; /* the picture it was made from */
+    int qu, qv;             /* texels of the picture a copy texel, in quarters (4: the picture's own) */
+    int w, h, pitch;        /* the copy's size, border excluded; pitch in texels */
+    uint32_t* px;           /* ARGB premultiplied, origin at the border's corner */
+} GaugeMip;
+#define GAUGE_MIPS 16
+static GaugeMip sMips[GAUGE_MIPS];
+
+static void GaugeMipsRelease(void) {
+    int i;
+    for (i = 0; i < GAUGE_MIPS; i++) SDL_free(sMips[i].px);
+    memset(sMips, 0, sizeof(sMips));
+}
+
+/* texels of the picture per drawn pixel along one texture axis -> quarters, 4 (none) below 1.25 */
+static int GaugeMipQuarters(float texelsPerPixel) {
+    if (!(texelsPerPixel >= 1.25f)) return 4;
+    return texelsPerPixel >= 8.0f ? 32 : (int)(texelsPerPixel * 4.0f + 0.5f);
+}
+
+/* one axis of the area filter: for each output texel, the source texels it covers and their weights (16.16) */
+static void GaugeMipAxis(int n, int q, int on, int* first, int* count, int32_t* weight /* on * 10 */) {
+    const float k = q / 4.0f;
+    int o;
+    for (o = 0; o < on; o++) {
+        float a = o * k, b = SDL_min((o + 1) * k, (float)n);
+        int s0 = (int)a, s, c = 0;
+        for (s = s0; s < n && s < b && c < 10; s++, c++) {
+            float lo = SDL_max(a, (float)s), hi = SDL_min(b, (float)(s + 1));
+            weight[o * 10 + c] = (int32_t)((hi - lo) / (b - a) * 65536.0f + 0.5f);
+        }
+        first[o] = s0;
+        count[o] = c;
+    }
+}
+
+static const GaugeMip* GaugeMipGet(const SDL_Surface* pic, int qu, int qv) {
+    GaugeMip* m = NULL;
+    const unsigned char* src = (const unsigned char*)pic->pixels;
+    int i, x, y, w, h, pitch, *fx = NULL, *cx = NULL, *fy = NULL, *cy = NULL;
+    int32_t *wx = NULL, *wy = NULL;
+    uint32_t* row = NULL; /* one source row filtered across, 4 channels 8.8 */
+    Uint64 t0 = SDL_GetPerformanceCounter();
+    for (i = 0; i < GAUGE_MIPS; i++)
+        if (sMips[i].px && sMips[i].pic == pic && sMips[i].qu == qu && sMips[i].qv == qv)
+            return &sMips[i];
+    for (i = 0; i < GAUGE_MIPS && !m; i++)
+        if (!sMips[i].px) m = &sMips[i];
+    if (!m) { /* all made (an animation's many scales): the closest copy of this picture */
+        const GaugeMip* best = NULL;
+        int bestD = INT_MAX;
+        for (i = 0; i < GAUGE_MIPS; i++) {
+            const int d = SDL_abs(sMips[i].qu - qu) + SDL_abs(sMips[i].qv - qv);
+            if (sMips[i].pic == pic && d < bestD) { best = &sMips[i]; bestD = d; }
+        }
+        return best;
+    }
+    w = (pic->w * 4 + qu - 1) / qu;
+    h = (pic->h * 4 + qv - 1) / qv;
+    pitch = w + 2;
+    m->px = (uint32_t*)SDL_malloc(sizeof(uint32_t) * (size_t)pitch * (size_t)(h + 2));
+    fx = (int*)SDL_malloc(sizeof(int) * (size_t)(w + h) * 2);
+    wx = (int32_t*)SDL_malloc(sizeof(int32_t) * 10 * (size_t)(w + h));
+    row = (uint32_t*)SDL_malloc(sizeof(uint32_t) * 4 * (size_t)w * (size_t)pic->h);
+    if (!m->px || !fx || !wx || !row) {
+        SDL_free(m->px); SDL_free(fx); SDL_free(wx); SDL_free(row);
+        m->px = NULL;
+        return NULL;
+    }
+    cx = fx + w; fy = cx + w; cy = fy + h;
+    wy = wx + 10 * w;
+    GaugeMipAxis(pic->w, qu, w, fx, cx, wx);
+    GaugeMipAxis(pic->h, qv, h, fy, cy, wy);
+    /* across: premultiplied (8.8 per channel after the weights) */
+    for (y = 0; y < pic->h; y++) {
+        const unsigned char* s = src + (size_t)y * pic->pitch;
+        for (x = 0; x < w; x++) {
+            uint32_t r = 0, g = 0, b = 0, a = 0;
+            int c;
+            for (c = 0; c < cx[x]; c++) {
+                const unsigned char* p = s + (size_t)(fx[x] + c) * 4;
+                const uint32_t wt = (uint32_t)wx[x * 10 + c], pa = p[3];
+                r += DIV255(p[0] * pa) * wt; g += DIV255(p[1] * pa) * wt; b += DIV255(p[2] * pa) * wt; a += pa * wt;
+            }
+            row[((size_t)y * w + x) * 4 + 0] = (r + 128) >> 8; row[((size_t)y * w + x) * 4 + 1] = (g + 128) >> 8;
+            row[((size_t)y * w + x) * 4 + 2] = (b + 128) >> 8; row[((size_t)y * w + x) * 4 + 3] = (a + 128) >> 8;
+        }
+    }
+    /* down, into the copy inside its border */
+    for (y = 0; y < h; y++) {
+        uint32_t* d = m->px + (size_t)(y + 1) * pitch + 1;
+        for (x = 0; x < w; x++) {
+            uint64_t ch[4] = { 0, 0, 0, 0 };
+            int c, k;
+            for (c = 0; c < cy[y]; c++) {
+                const uint32_t* p = row + ((size_t)(fy[y] + c) * w + x) * 4;
+                const uint64_t wt = (uint32_t)wy[y * 10 + c];
+                for (k = 0; k < 4; k++) ch[k] += p[k] * wt;
+            }
+            for (k = 0; k < 4; k++) ch[k] = SDL_min((ch[k] + (1u << 23)) >> 24, 255u);
+            ch[0] = SDL_min(ch[0], ch[3]); ch[1] = SDL_min(ch[1], ch[3]); ch[2] = SDL_min(ch[2], ch[3]);
+            d[x] = (uint32_t)(ch[3] << 24 | ch[0] << 16 | ch[1] << 8 | ch[2]);
+        }
+        d[-1] = d[0];
+        d[w] = d[w - 1];
+    }
+    memcpy(m->px, m->px + pitch, sizeof(uint32_t) * (size_t)pitch);
+    memcpy(m->px + (size_t)(h + 1) * pitch, m->px + (size_t)h * pitch, sizeof(uint32_t) * (size_t)pitch);
+    SDL_free(fx); SDL_free(wx); SDL_free(row);
+    m->pic = pic;
+    m->qu = qu;
+    m->qv = qv;
+    m->w = w;
+    m->h = h;
+    m->pitch = pitch;
+    PortLog("gauge cache: smooth copy %dx%d of %dx%d (%.2f x %.2f texels a texel) in %.2f ms", w, h, pic->w, pic->h,
+            qu / 4.0f, qv / 4.0f, (SDL_GetPerformanceCounter() - t0) * 1000.0 / (double)SDL_GetPerformanceFrequency());
+    return m;
+}
+
+/* four premultiplied texels around (U, V) (16.16 in the copy's texels, its border excluded), 8-bit weights */
+static uint32_t GaugeMipSample(const GaugeMip* m, int32_t U, int32_t V) {
+    const int32_t uu = U - 32768 + 65536, vv = V - 32768 + 65536; /* + the border */
+    const int ax = SDL_min(uu >> 16, m->w), ay = SDL_min(vv >> 16, m->h);
+    const uint32_t* p = m->px + (size_t)ay * m->pitch + ax;
+    const uint32_t fx = ((uint32_t)uu >> 8) & 255u, fy = ((uint32_t)vv >> 8) & 255u;
+    const uint32_t w11 = (fx * fy + 128) >> 8, w10 = fx - w11, w01 = fy - w11, w00 = 256 - fx - fy + w11;
+    const uint32_t p00 = p[0], p10 = p[1], p01 = p[m->pitch], p11 = p[m->pitch + 1];
+    /* each lane stays under 255 x 256: the weights add to 256 */
+    const uint32_t rb = (p00 & 0x00FF00FFu) * w00 + (p10 & 0x00FF00FFu) * w10 + (p01 & 0x00FF00FFu) * w01 +
+                        (p11 & 0x00FF00FFu) * w11;
+    const uint32_t ag = ((p00 >> 8) & 0x00FF00FFu) * w00 + ((p10 >> 8) & 0x00FF00FFu) * w10 +
+                        ((p01 >> 8) & 0x00FF00FFu) * w01 + ((p11 >> 8) & 0x00FF00FFu) * w11;
+    return ((rb >> 8) & 0x00FF00FFu) | (ag & 0xFF00FF00u);
+}
+
 /* A quad drawn straight into the gauge cache's surface (corners top-left, top-right, bottom-left, bottom-right: a
    parallelogram), nearest texel, SDL's own 8-bit blend (BLEND: c = s a + d (1 - a), alpha a + d (1 - a); ADD:
    c = s a + d), and the PS2's bright second pass (ADD, `over`) on the same texel in the same walk. Each row walks
@@ -561,13 +704,31 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
     /* Opt-in (KHCOM_HD_GAUGE_BILINEAR=1): its rebuilds during a hit's animation cost the GA36 about 20 more slow
        frames in 1000 against Riku in HD (27/11, three runs each). */
     static int bilinear = -1;
+    static int smooth = -1;
     if (bilinear < 0) bilinear = SDL_getenv("KHCOM_HD_GAUGE_BILINEAR") != NULL && SDL_getenv("KHCOM_HD_GAUGE_NEAREST") == NULL;
+    if (smooth < 0) smooth = SDL_getenv("KHCOM_HD_GAUGE_SMOOTH") != NULL && SDL_getenv("KHCOM_HD_GAUGE_NEAREST") == NULL;
     {
         /* per pixel step in x, 16.16: (a, b) and texels */
         const float sa_ = ia, sb_ = ic;
         const float su = (dua * ia + dub * ic) * tw, sv = (dva * ia + dvb * ic) * th;
         const int32_t dA = (int32_t)(sa_ * 65536.0f), dB = (int32_t)(sb_ * 65536.0f);
         const int32_t dU = (int32_t)(su * 65536.0f), dV = (int32_t)(sv * 65536.0f);
+        const GaugeMip* mip = NULL;
+        float mu = 1.0f, mv = 1.0f;
+        int32_t dMU = 0, dMV = 0;
+        uint32_t kr = 0, kg = 0, kb = 0, kor = 0, kog = 0, kob = 0;
+        if (smooth) {
+            /* texels of the picture per pixel along u and v: the length of each one's gradient over the screen */
+            const float uy = (dua * ib + dub * id) * tw, vy = (dva * ib + dvb * id) * th;
+            const int qu = GaugeMipQuarters(SDL_sqrtf(su * su + uy * uy)), qv = GaugeMipQuarters(SDL_sqrtf(sv * sv + vy * vy));
+            if ((mip = GaugeMipGet(pic, qu, qv)) != NULL) {
+                mu = 4.0f / mip->qu; mv = 4.0f / mip->qv; /* its own: a full table gives the closest */
+                dMU = (int32_t)(su * mu * 65536.0f); dMV = (int32_t)(sv * mv * 65536.0f);
+                /* premultiplied texel times the vertex colour and alpha: one multiply a channel */
+                kr = DIV255(cr * ca); kg = DIV255(cg * ca); kb = DIV255(cb * ca);
+                kor = DIV255(orr * ca); kog = DIV255(og * ca); kob = DIV255(ob * ca);
+            }
+        }
         for (y = y0; y < y1; y++) {
             float py = y + 0.5f - v[0].position.y, pxs = x0 + 0.5f - v[0].position.x;
             float a = ia * pxs + ib * py, b = ic * pxs + id * py, lo = (float)x0, hi = (float)x1;
@@ -590,6 +751,43 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
             U = (int32_t)((v[0].tex_coord.x + a * dua + b * dub) * tw * 65536.0f);
             V = (int32_t)((v[0].tex_coord.y + a * dva + b * dvb) * th * 65536.0f);
             line = dst + (size_t)y * pitch;
+            if (mip) {
+                int32_t MU = (int32_t)((v[0].tex_coord.x + a * dua + b * dub) * tw * mu * 65536.0f);
+                int32_t MV = (int32_t)((v[0].tex_coord.y + a * dva + b * dvb) * th * mv * 65536.0f);
+                for (x = xs; x < xe; x++, A += dA, B += dB, U += dU, V += dV, MU += dMU, MV += dMV) {
+                    uint32_t p, d, sa, pr, pg, pb, dr, dg, db, da;
+                    if ((uint32_t)A >= 65536u || (uint32_t)B >= 65536u || (uint32_t)U >= (uint32_t)tw << 16 ||
+                        (uint32_t)V >= (uint32_t)th << 16 || MU < 0 || MV < 0)
+                        continue;
+                    p = GaugeMipSample(mip, MU, MV);
+                    if (p < 0x01000000u)
+                        continue; /* no coverage */
+                    sa = DIV255((p >> 24) * ca);
+                    if (!sa)
+                        continue;
+                    pr = (p >> 16) & 255; pg = (p >> 8) & 255; pb = p & 255;
+                    d = line[x];
+                    dr = (d >> 16) & 255; dg = (d >> 8) & 255; db = d & 255; da = d >> 24;
+                    if (add) {
+                        dr = SDL_min(dr + DIV255(pr * kr), 255u); dg = SDL_min(dg + DIV255(pg * kg), 255u);
+                        db = SDL_min(db + DIV255(pb * kb), 255u);
+                    } else if (sa == 255) {
+                        dr = DIV255(pr * kr); dg = DIV255(pg * kg); db = DIV255(pb * kb); da = 255;
+                    } else {
+                        const uint32_t inv = 255 - sa;
+                        dr = DIV255(pr * kr) + DIV255(dr * inv); dg = DIV255(pg * kg) + DIV255(dg * inv);
+                        db = DIV255(pb * kb) + DIV255(db * inv); da = sa + DIV255(da * inv);
+                        dr = SDL_min(dr, 255u); dg = SDL_min(dg, 255u); db = SDL_min(db, 255u);
+                    }
+                    if (over) { /* the bright pass: ADD of the texel times the excess colour */
+                        dr = SDL_min(dr + DIV255(pr * kor), 255u); dg = SDL_min(dg + DIV255(pg * kog), 255u);
+                        db = SDL_min(db + DIV255(pb * kob), 255u);
+                    }
+                    line[x] = (da << 24) | (dr << 16) | (dg << 8) | db;
+                    if (first < 0) first = x;
+                    last = x;
+                }
+            } else
             for (x = xs; x < xe; x++, A += dA, B += dB, U += dU, V += dV) {
                 const unsigned char* sp;
                 unsigned char smooth[4];
@@ -936,6 +1134,7 @@ void PortHdLayoutShutdown(void) {
     GaugeTargetsRelease();
 #endif
     GaugeCacheRelease();
+    GaugeMipsRelease();
     TexturePreRelease();
     for (i = 0; i < HD_LAYOUT_TEXTURE_COUNT; i++) {
         int f;
@@ -1429,6 +1628,8 @@ static int GaugeSurfaceDraw(SDL_Renderer* renderer, float rx, float ry, int w, i
     return 1;
 }
 
+static double sRebuildMs, sRebuildMaxMs; /* KHCOM_GAUGE_STATS: the rebuilds' time, all and the longest */
+
 static int GaugeLayerShow(SDL_Renderer* renderer, int li, float rx, float ry, float lx, float ly, float s,
                           const float* tint, int w, int h, uint32_t frame) {
     GaugeLayer* L = &sLayer[li];
@@ -1465,6 +1666,7 @@ static int GaugeLayerShow(SDL_Renderer* renderer, int li, float rx, float ry, fl
         const uint32_t* px;
         int pitch, xx;
         SDL_FRect box = { 0, 0, (float)w, (float)h };
+        const Uint64 t0 = stats ? SDL_GetPerformanceCounter() : 0;
         SDL_SetRenderDrawColor(sCacheRenderer, 0, 0, 0, 0);
         SDL_SetRenderDrawBlendMode(sCacheRenderer, SDL_BLENDMODE_NONE);
         SDL_RenderFillRect(sCacheRenderer, &box);
@@ -1492,6 +1694,11 @@ static int GaugeLayerShow(SDL_Renderer* renderer, int li, float rx, float ry, fl
             sCacheSpan[row * 2] = (int16_t)first;
             sCacheSpan[row * 2 + 1] = (int16_t)last;
         }
+        if (stats) {
+            const double ms = (SDL_GetPerformanceCounter() - t0) * 1000.0 / (double)SDL_GetPerformanceFrequency();
+            sRebuildMs += ms;
+            sRebuildMaxMs = SDL_max(sRebuildMaxMs, ms);
+        }
         GaugeFrameStore(hash, key, w, h, frame);
         e = GaugeFrameFind(hash, w, h);
         L->built = sLayerBuilt = frame;
@@ -1514,8 +1721,9 @@ static int GaugeLayerShow(SDL_Renderer* renderer, int li, float rx, float ry, fl
         if (calls % 200 == 0) {
             int used = 0, q;
             for (q = 0; q < GAUGE_FRAMES; q++) used += sFrames[q].px != NULL;
-            PortLog("gauge stats frame %u layercalls %d rebuilds %d dryruns %d entries %d bytes %u hp %d state %d", (unsigned)frame,
-                    calls, rebuilds, dryruns, used, (unsigned)sFrameBytes, sGauge.hp, sGauge.stateAnim);
+            PortLog("gauge stats frame %u layercalls %d rebuilds %d dryruns %d entries %d bytes %u hp %d state %d rebuild ms "
+                    "total %.2f max %.2f", (unsigned)frame, calls, rebuilds, dryruns, used, (unsigned)sFrameBytes, sGauge.hp,
+                    sGauge.stateAnim, sRebuildMs, sRebuildMaxMs);
         }
     }
     if (!L->valid || !L->shown)
