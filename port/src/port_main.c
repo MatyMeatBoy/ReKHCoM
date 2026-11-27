@@ -1118,6 +1118,30 @@ static float AllmapScale(void) {
 #endif
 }
 
+/* allmap.c, AllmapCenterOnRoom: the GBA rows of the world map at its GA36 zoom
+   that neither the header (its bar and the room's name box reach row 17) nor
+   the footer (its bands start at row 141) cover. The top leaves room for the
+   hand and the A above the selected room (12 rows) and a stair's arrow. */
+int PortGa36AllmapClearRows(int* top, int* bottom) {
+    if (AllmapScale() <= 0)
+        return 0;
+    *top = 32;
+    *bottom = 141;
+    return 1;
+}
+
+/* mode_allmap.c: at the same zoom the rooms (BG0, BG1) are left out of the
+   header's rows (to its bar and name box's last row, 17) and of the footer's
+   (from its first band, row 141), so a room scrolled there passes under them
+   with a clean edge instead of drawn over their bands or beside their text. */
+int PortGa36AllmapCoverRows(int* header, int* footer) {
+    if (AllmapScale() <= 0)
+        return 0;
+    *header = 18;
+    *footer = 141;
+    return 1;
+}
+
 /* GA36 4:3 world map at its own fitted zoom: the header goes up to the panel's
    top and the footer down to its bottom; the band rows next to them (one
    colour across the width) stretch over the space they leave, so the view in
