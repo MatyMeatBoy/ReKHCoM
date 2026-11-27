@@ -328,11 +328,16 @@ void mode_allmap_1() {
            (BG0, BG1) out of the header's rows, so nothing of them is moved up with it; window 0 (its left part)
            also the cursor's sprites, window 1 (the rest) keeps the sprites of the room's name. */
         extern int gPortAllmapCoverRows;
+        extern int PortGa36AllmapCoverRows(int* header, int* footer);
         static u8 sCovering;
-        if (gPortAllmapCoverRows > 0) {
+        int header = gPortAllmapCoverRows, footer = 0;
+        /* GA36 at its 2x zoom: the footer's rows too, window 1 wrapping from them round to the header's */
+        PortGa36AllmapCoverRows(&header, &footer);
+        if (header > 0) {
             gWin0H = WIN_RANGE(0, 128);
             gWin1H = WIN_RANGE(0, DISPLAY_WIDTH);
-            gWin0V = gWin1V = WIN_RANGE(0, gPortAllmapCoverRows);
+            gWin0V = WIN_RANGE(0, header);
+            gWin1V = footer > header ? WIN_RANGE(footer, header) : WIN_RANGE(0, header);
             gWinIn = WININ_WIN0_BG2 | WININ_WIN0_BG3 | WININ_WIN0_CLR |
                      ((WININ_WIN0_BG2 | WININ_WIN0_BG3 | WININ_WIN0_OBJ | WININ_WIN0_CLR) << 8);
             gWinOut = (gWinOut & 0xFF00) | 0x3F;

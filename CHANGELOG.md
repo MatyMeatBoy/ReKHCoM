@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.14
+
+- GA36 v0.12, world map: the selected room, the hand cursor, the "A" and the room name stay clear of the header and the footer. The camera keeps the selected room between them; rooms that scroll past the header or footer are hidden there cleanly instead of drawing over the bars. The map stays at a whole 2x scale, with even lines.
+
 ## v2.13
 
 - HD HP gauge: no longer flickers or restarts its animation while spells and effects make the game skip a HUD frame. The face backdrop reaches the ring under its three quarters, so a bright room no longer shows through as a white crescent between the face and the ring (`KHCOM_HD_GAUGE_BACKDROP_ORIGINAL=1` keeps Re:CoM's). After a hit, the face keeps its backdrop: the ring's hit animation plays once and then returns to the normal or low-HP state, where it drew nothing for the rest of the hurt face.
