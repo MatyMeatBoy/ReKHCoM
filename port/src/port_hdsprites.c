@@ -1798,7 +1798,9 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
     int n = 0, i, bx0 = 640, by0 = 480, bx1 = 0, by1 = 0;
     uint32_t key = 2166136261u;
     if (off < 0) off = SDL_getenv("KHCOM_HD_PART_CACHE_OFF") != NULL;
-    if (off || darken > 0 || brighten > 0 || sDrawCount[layer] < 1 || sDrawCount[layer] > PART_CACHE_MAX)
+    /* the game's darkening (the SELECT menu over the title, fades) is applied when copying: refusing it drew every part
+       again each frame and the title's menu ran slow (user, 27/11); a whitening still draws as usual */
+    if (off || brighten > 0 || darken >= 16 || sDrawCount[layer] < 1 || sDrawCount[layer] > PART_CACHE_MAX)
         return sPartStat[3]++, 0;
     for (i = 0; i < sDrawCount[layer]; i++) {
         const HdSpriteDraw* q = &sDraws[layer][i];
@@ -1890,8 +1892,10 @@ static int PartCacheDraw(SDL_Renderer* renderer, int layer, float ox, float oy, 
         }
         sPartX = bx0; sPartY = by0; sPartW = w; sPartH = h; sPartKey = key;
     }
-    extern bool PortFbBlendPremulRuns(SDL_Renderer*, const uint32_t*, const uint16_t*, const uint32_t*, int, int, int, int);
-    return PortFbBlendPremulRuns(renderer, sPartLayer, sPartRuns, sPartRowStart, sPartW, sPartH, sPartX, sPartY);
+    extern bool PortFbBlendPremulRuns(SDL_Renderer*, const uint32_t*, const uint16_t*, const uint32_t*, int, int, int, int,
+                                      unsigned);
+    return PortFbBlendPremulRuns(renderer, sPartLayer, sPartRuns, sPartRowStart, sPartW, sPartH, sPartX, sPartY,
+                                 darken > 0 ? 256u - (unsigned)darken * 16u : 256u);
 }
 #endif
 
