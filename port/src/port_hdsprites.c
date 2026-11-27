@@ -1253,7 +1253,29 @@ static int PackRuns(HdSpriteState* st, const unsigned char* px, int w, int h) {
 }
 #endif
 
+/* KHCOM_PIECE_LOG: how the presentation's HD parts were drawn (count, time): runs, plain 1:1, scaled, rasteriser,
+   SDL. Logged with the piece log (port_main.c). */
+uint32_t gPortQuadCount[8];
+uint64_t gPortQuadTicks[8];
+static int QuadPath(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c, int* path);
 static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c) {
+    int path = 5;
+    static int logOn = -1;
+    if (logOn < 0) logOn = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
+    if (logOn) {
+        /* what SDL had queued before this part (other layers) is drawn here: counted apart (slot 4) */
+        const uint64_t f0 = SDL_GetPerformanceCounter();
+        SDL_FlushRenderer(sRenderer);
+        gPortQuadCount[4]++;
+        gPortQuadTicks[4] += SDL_GetPerformanceCounter() - f0;
+    }
+    const uint64_t t0 = SDL_GetPerformanceCounter();
+    const int r = QuadPath(t, q, ox, oy, scale, c, &path);
+    gPortQuadCount[path]++;
+    gPortQuadTicks[path] += SDL_GetPerformanceCounter() - t0;
+    return r;
+}
+static int QuadPath(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float scale, SDL_FColor c, int* path) {
     SDL_Vertex v[4];
     static const int kIndex[6] = { 0, 1, 2, 0, 2, 3 };
     float area;
@@ -1360,7 +1382,7 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                     sx = SDL_clamp(sx, 0, pw - 1); sy = SDL_clamp(sy, 0, ph - 1);
                     bw = SDL_min(bw, pw - sx); bh = SDL_min(bh, ph - sy);
                     if (PortFbBlendArgbRuns(sRenderer, st->packed, pw, st->packRuns, st->packRowStart, sx, sy, bw, bh, bx, by))
-                        return 1;
+                        return *path = 0, 1;
                 }
                 if (upright && (pw != fw || ph != fh)) {
                     /* upright but not at its size (a zoom, or a copy still being made): scaled by a column table */
@@ -1372,7 +1394,7 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                                               (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
                                               (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
                                               white))
-                        return 1;
+                        return *path = 2, 1;
                 }
                 if (upright && pw == fw && ph == fh) {
                     extern bool PortFbBlendRgba(SDL_Renderer*, const unsigned char*, int, int, int, int, int, int, int,
@@ -1386,14 +1408,14 @@ static int Quad(SDL_Texture* t, const HdSpriteDraw* q, float ox, float oy, float
                                         (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
                                         (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
                                         white))
-                        return 1;
+                        return *path = 1, 1;
                 }
             }
             if (PortFbRasterQuad(sRenderer, px, pw, ph, v,
                                  (unsigned)(SDL_clamp(c.r, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.g, 0.0f, 1.0f) * 255.0f + 0.5f),
                                  (unsigned)(SDL_clamp(c.b, 0.0f, 1.0f) * 255.0f + 0.5f), (unsigned)(SDL_clamp(c.a, 0.0f, 1.0f) * 255.0f + 0.5f),
                                  white))
-                return 1;
+                return *path = 3, 1;
         }
     }
 #endif
@@ -1654,6 +1676,15 @@ int PortHdHudOpponentStockDrop(void) {
     return 6;
 }
 
+/* GBA pixels the opponent's stock total moves with Re:CoM's enemy bar on a shared canvas: under its stocked cards
+   (they drop 6 under the bar and end about y 41), not at the top where the opponent's sleight name shows ("Tormenta",
+   user 26/11); its x a little right, under the stack. axis 0 x, 1 y. */
+int PortHdHudOpponentStockValueShift(int axis) {
+    if (!PortHdHudOpponentStockDrop())
+        return 0;
+    return axis ? 33 : 12;
+}
+
 int PortHdHudStockShift(int axis) {
     extern int PortHdGaugeShown(void);
     if (!HD_HUD_ON || !PortHdGaugeShown())
@@ -1697,7 +1728,7 @@ static SDL_Vertex RingVertex(float px, float py, float cx, float cy, float s, SD
     return v;
 }
 
-static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
+static void RingDrawTo(SDL_Renderer* rr, SDL_Texture* full, SDL_Texture* empty, float cx, float cy, float s, SDL_FColor c) {
     static const int kQuad[6] = { 0, 1, 2, 0, 2, 3 };
     const float ringLen = 1.5f * SDL_PI_F * RING_RMID, barLen = RING_BAR_END - RING_CX;
     float filled = (ringLen + barLen) * sRingRatio / 256.0f, end;
@@ -1710,7 +1741,7 @@ static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
     v[3] = RingVertex(0, 360, cx, cy, s, c);
     v[1].position.x += 0.01f; /* off the triangle path SDL's software renderer copies, and reads past (Quad) */
     v[1].position.y += 0.01f;
-    SDL_RenderGeometry(sRenderer, sRingEmpty, v, 4, kQuad, 6);
+    SDL_RenderGeometry(rr, empty, v, 4, kQuad, 6);
     if (filled <= 0)
         return;
     /* the ring: a fan from its lower right end (angle 0), clockwise on the screen */
@@ -1726,7 +1757,7 @@ static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
             idx[ni++] = n - 1;
         }
     }
-    SDL_RenderGeometry(sRenderer, sRingFull, fan, n, idx, ni);
+    SDL_RenderGeometry(rr, full, fan, n, idx, ni);
     /* the bar: the top right quarter, up to the HP's length */
     if (filled > ringLen) {
         float x = filled - ringLen >= barLen ? 592.0f : RING_CX + (filled - ringLen);
@@ -1736,8 +1767,12 @@ static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
         v[3] = RingVertex(RING_CX, RING_CY, cx, cy, s, c);
         v[1].position.x += 0.01f;
         v[1].position.y += 0.01f;
-        SDL_RenderGeometry(sRenderer, sRingFull, v, 4, kQuad, 6);
+        SDL_RenderGeometry(rr, full, v, 4, kQuad, 6);
     }
+}
+
+static void RingDraw(float cx, float cy, float s, SDL_FColor c) {
+    RingDrawTo(sRenderer, sRingFull, sRingEmpty, cx, cy, s, c);
 }
 
 #if defined(PORT_LINUX) && __STDC_HOSTED__
@@ -1875,12 +1910,25 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
         extern float gPortHdEnemyGaugeZoom;
         const int hudW = gPortHudW;
         if (sharedHud) gPortHudW = gPortScreen.width;
+        static int gaugeLog = -1;
+        if (gaugeLog < 0) gaugeLog = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
+        if (gaugeLog) SDL_FlushRenderer(renderer);
+        const uint64_t g0 = SDL_GetPerformanceCounter();
         PortHdGaugeDraw(renderer, ox, hudOy, hudScale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
         /* on the small panel Re:CoM's thin enemy bar would read at half the cartridge's: 4/3 (the remaster texture pixel for pixel), from the same right edge */
         gPortHdEnemyGaugeZoom = sharedHud ? 4.0f / 3.0f : 1.0f; /* its texture 1:1 */
+        if (gaugeLog) SDL_FlushRenderer(renderer);
+        const uint64_t e0 = SDL_GetPerformanceCounter();
         PortHdEnemyGaugeDraw(renderer, ox, hudOy, scale, 1.0f - (darken > 0 ? darken / 16.0f : 0.0f));
         gPortHdEnemyGaugeZoom = 1.0f;
         gPortHudW = hudW;
+        if (gaugeLog) {
+            SDL_FlushRenderer(renderer);
+            gPortQuadCount[7]++; /* of them, the enemy's */
+            gPortQuadTicks[7] += SDL_GetPerformanceCounter() - e0;
+            gPortQuadCount[6]++; /* the HP gauges */
+            gPortQuadTicks[6] += SDL_GetPerformanceCounter() - g0;
+        }
     }
     extern uint64_t gPortPiece[24];
     uint64_t _pt = SDL_GetPerformanceCounter();
@@ -1934,8 +1982,17 @@ void PortHdSpritesDraw(SDL_Renderer* renderer, int layer, float ox, float oy, fl
                picture (faces are drawn unturned) */
             const HdSpriteDef* d = &kHdSprites[q->id];
             float fx = q->x[0] - (q->u0 * d->w + d->x0), fy = q->y[0] - (q->v0 * d->h + d->y0);
+            static int ringLog = -1;
+            if (ringLog < 0) ringLog = SDL_getenv("KHCOM_PIECE_LOG") != NULL;
+            if (ringLog) SDL_FlushRenderer(renderer);
+            const uint64_t r0 = SDL_GetPerformanceCounter();
             RingDraw(ox + (fx + RING_FACE_X) * qs, qy + (fy + RING_FACE_Y) * qs, qs / 8.0f,
                      (SDL_FColor){ shade, shade, shade, q->alpha / 255.0f });
+            if (ringLog) {
+                SDL_FlushRenderer(renderer);
+                gPortQuadCount[3]++; /* slot 3 (raster, unused here): the HP ring */
+                gPortQuadTicks[3] += SDL_GetPerformanceCounter() - r0;
+            }
             sRingRatio = -1; /* once a frame, behind its first face part */
         }
         /* At full white the coloured base must not remain under its own

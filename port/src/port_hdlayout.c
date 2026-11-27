@@ -639,6 +639,7 @@ static int CacheRasterQuad(const HdLayoutTexture* t, const SDL_Vertex* v, const 
 /* The gauge cache's dry run: what would be drawn goes into a hash instead of the renderer. */
 static int sGeoDry;
 static uint32_t sGeoHash;
+static float sGeoX0, sGeoY0, sGeoX1, sGeoY1; /* the dry run's box (the enemy cache's size) */
 static void GeoMix(const void* p, size_t n) {
     const unsigned char* b = (const unsigned char*)p;
     while (n--) sGeoHash = (sGeoHash ^ *b++) * 16777619u;
@@ -692,6 +693,10 @@ static int DrawSprite(SDL_Renderer* r, const HdLayoutTexture* t, const unsigned 
         v[k].tex_coord.y = over[k].tex_coord.y = tv[k];
     }
     if (sGeoDry) {
+        for (k = 0; k < 4; k++) {
+            sGeoX0 = SDL_min(sGeoX0, v[k].position.x); sGeoX1 = SDL_max(sGeoX1, v[k].position.x);
+            sGeoY0 = SDL_min(sGeoY0, v[k].position.y); sGeoY1 = SDL_max(sGeoY1, v[k].position.y);
+        }
         GeoMix(v, sizeof(v));
         GeoMix(&bright, sizeof(bright));
         GeoMix(&blend, sizeof(blend));
@@ -1151,12 +1156,15 @@ typedef struct {
     uint32_t hash, key, built;
     GaugeFrame* shown; /* the entry on screen (valid implies one) */
 } GaugeLayer;
-static GaugeLayer sLayer[2];
+static GaugeLayer sLayer[3]; /* 2: the enemy's bar (EnemyCached) */
+/* the enemy bar's pieces this frame (PortHdEnemyGaugeDraw): each place's frame, -1 not drawn */
+static int sEnemyPlan[7];
+static const int kEnemyPlaceGroup[7];
 static uint32_t sLayerBuilt; /* frame of the latest rebuild, any layer */
 
 static void GaugeFrameDrop(GaugeFrame* e) {
     int li;
-    for (li = 0; li < 2; li++)
+    for (li = 0; li < 3; li++)
         if (sLayer[li].shown == e) { sLayer[li].shown = NULL; sLayer[li].valid = 0; }
     SDL_free(e->span);
     SDL_free(e->px);
@@ -1308,7 +1316,9 @@ static uint32_t GaugeKey(int layer, float lx, float ly, float s, const float* ti
     v[0] = layer;
     v[6] = w;
     v[7] = h;
-    if (layer == 0) {
+    if (layer == 2) {
+        /* the plan, mixed in below */
+    } else if (layer == 0) {
         v[1] = sGauge.stateAnim;
         v[2] = LayoutEffFrame(HD_LAYOUT_GAUGE, 1, sGauge.stateAnim, sGauge.stateFrame);
         v[3] = GAUGE_LEN(sGauge.maxHp);
@@ -1322,6 +1332,10 @@ static uint32_t GaugeKey(int layer, float lx, float ly, float s, const float* ti
     for (n = 0; n < sizeof(v); n++) k = (k ^ b[n]) * 16777619u;
     b = (const unsigned char*)f;
     for (n = 0; n < sizeof(f); n++) k = (k ^ b[n]) * 16777619u;
+    if (layer == 2) {
+        b = (const unsigned char*)sEnemyPlan;
+        for (n = 0; n < sizeof(sEnemyPlan); n++) k = (k ^ b[n]) * 16777619u;
+    }
     return k ? k : 1;
 }
 
@@ -1474,12 +1488,14 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
     if (disabled || sCacheFailed || w <= 0 || h <= 0 || w > 2048 || h > 2048)
         return 0;
     if (renderer != sCacheOwner || w > sCacheW || h > sCacheH) {
-        if (!GaugeCachePrepare(renderer, w, h))
+        /* the surface is shared with the enemy's bar: never smaller than what either asked */
+        if (!GaugeCachePrepare(renderer, renderer == sCacheOwner ? SDL_max(w, sCacheW) : w,
+                               renderer == sCacheOwner ? SDL_max(h, sCacheH) : h))
             return 0;
     }
     {
         static int lastW, lastH;
-        if (w != lastW || h != lastH) memset(sLayer, 0, sizeof(sLayer)); /* another box: rebuild */
+        if (w != lastW || h != lastH) memset(sLayer, 0, 2 * sizeof(sLayer[0])); /* another box: rebuild */
         lastW = w;
         lastH = h;
     }
@@ -1487,6 +1503,45 @@ static int GaugeCached(SDL_Renderer* renderer, float x, float y, float s, const 
         if (!GaugeLayerShow(renderer, li, rx, ry, lx, ly, s, tint, w, h, frame))
             return li ? 1 : 0; /* a failed face leaves the bars drawn */
     return 1;
+}
+
+/* The enemy's bar from the cache: its box, every frame it can draw (all places full, a bar counter shown), measured once
+   by a dry run in its own units. */
+static int EnemyCached(SDL_Renderer* renderer, float x, float y, float s, const float* tint) {
+    static int measured, disabled = -1, lastW, lastH;
+    static float ux0, uy0, ux1, uy1;
+    if (disabled < 0) disabled = SDL_getenv("KHCOM_HD_GAUGE_NO_CACHE") != NULL || SDL_getenv("KHCOM_HD_ENEMY_NO_CACHE") != NULL;
+    if (disabled || sCacheFailed)
+        return 0;
+    if (!measured) {
+        int plan[7], i;
+        memcpy(plan, sEnemyPlan, sizeof(plan));
+        for (i = 0; i < 7; i++) sEnemyPlan[i] = i < 4 ? HD_LAYOUT_HOLD(i == 0 ? 0 : 200) : HD_LAYOUT_HOLD(1);
+        sGeoX0 = sGeoY0 = 1e9f; sGeoX1 = sGeoY1 = -1e9f;
+        sGeoDry = 1;
+        sGeoHash = 2166136261u;
+        GaugeLayerParts(renderer, 2, 0.0f, 0.0f, 1.0f, tint);
+        sGeoDry = 0;
+        memcpy(sEnemyPlan, plan, sizeof(plan));
+        if (sGeoX1 < sGeoX0 || sGeoY1 < sGeoY0) { disabled = 1; return 0; }
+        /* a margin for the hit's glow and the filter's reach */
+        ux0 = sGeoX0 - 8.0f; uy0 = sGeoY0 - 8.0f; ux1 = sGeoX1 + 8.0f; uy1 = sGeoY1 + 8.0f;
+        measured = 1;
+        PortLog("gauge cache: enemy bar box %.1f,%.1f to %.1f,%.1f", ux0, uy0, ux1, uy1);
+    }
+    float rx = SDL_floorf(x + ux0 * s), ry = SDL_floorf(y + uy0 * s), lx = x - rx, ly = y - ry;
+    int w = (int)SDL_ceilf((ux1 - ux0) * s) + 2, h = (int)SDL_ceilf((uy1 - uy0) * s) + 2;
+    if (w <= 0 || h <= 0 || w > 2048 || h > 2048)
+        return 0;
+    if (renderer != sCacheOwner || w > sCacheW || h > sCacheH) {
+        if (!GaugeCachePrepare(renderer, renderer == sCacheOwner ? SDL_max(w, sCacheW) : w,
+                               renderer == sCacheOwner ? SDL_max(h, sCacheH) : h))
+            return 0;
+    }
+    if (w != lastW || h != lastH) memset(&sLayer[2], 0, sizeof(sLayer[2]));
+    lastW = w;
+    lastH = h;
+    return GaugeLayerShow(renderer, 2, rx, ry, lx, ly, s, tint, w, h, PortFrameCount());
 }
 
 void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, float shade) {
@@ -1597,6 +1652,14 @@ void PortHdGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scale, fl
 }
 
 static void GaugeLayerParts(SDL_Renderer* renderer, int layer, float x, float y, float s, const float* tint) {
+    if (layer == 2) { /* the enemy's bar: its planned places */
+        int i;
+        for (i = 0; i < 7; i++)
+            if (sEnemyPlan[i] >= 0)
+                PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, kEnemyPlaceGroup[i], sEnemyPlan[i], x, y, s,
+                                 1.0f, tint);
+        return;
+    }
     if (layer == 0) {
         PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, sGauge.stateAnim, sGauge.stateFrame, x, y, s, 1.0f, tint);
         PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, 7, HD_LAYOUT_HOLD(GAUGE_LEN(sGauge.maxHp)), x, y, s,
@@ -1721,6 +1784,7 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
         PortLog("hd enemy gauge %u hp %d trail %d layer %d", (unsigned)PortFrameCount(), sEnemy.hp, sEnemy.trail, layer);
     for (i = 0; i < 7; i++) {
         int frame;
+        sEnemyPlan[i] = -1;
         if (i >= 4 && layers <= 0)
             continue; /* the bars' counter: only with bars left */
         if (i == 0 && (top <= 0 || layer < top))
@@ -1733,6 +1797,13 @@ void PortHdEnemyGaugeDraw(SDL_Renderer* renderer, float ox, float oy, float scal
               : i == 2 ? HD_LAYOUT_HOLD(SDL_clamp(trailFrame, 0, 200))
               : i == 3 ? HD_LAYOUT_HOLD(SDL_clamp(hpFrame, 0, 200))
               : HD_LAYOUT_HOLD(layers);
-        PortHdLayoutDraw(renderer, HD_LAYOUT_GAUGE, HD_LAYOUT_TEX_GAUGE, 1, kEnemyPlaceGroup[i], frame, x, y, s, 1.0f, tint);
+        sEnemyPlan[i] = frame;
     }
+#if __STDC_HOSTED__
+    /* SDL's software renderer (handhelds): drawn piece by piece it cost GA36 6.4 ms a frame (USBdiag, 26/11, Riku);
+       cached like Sora's gauge, a third layer with a box of its own */
+    if (SDL_strcmp(SDL_GetRendererName(renderer), SDL_SOFTWARE_RENDERER) == 0 && EnemyCached(renderer, x, y, s, tint))
+        return;
+#endif
+    GaugeLayerParts(renderer, 2, x, y, s, tint);
 }

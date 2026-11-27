@@ -28,6 +28,22 @@ static s32 sPcmActiveBufferIndex;
 static s32 sPcmSamplesPerBuffer;
 static s8 sPcmOutputBufferA[0x2C0];
 static s8 sPcmOutputBufferB[0x2C0];
+#ifdef PLATFORM_PC
+/* The port: the same samples before the cartridge cuts them to 8 bits (>> 8). The staff roll's song is the
+   game's one PCM stream, and at 8 bits it hisses well above the rest of the music (issue #641: "sounds really
+   bad"); the mixer reads these instead (port_audio.c FifoRead), KHCOM_CREDITS_8BIT keeps the cartridge's. */
+static s16 sPcmWideA[0x2C0];
+static s16 sPcmWideB[0x2C0];
+#define PCM_WIDE(v) ((s16)((v) > 32767 ? 32767 : (v) < -32768 ? -32768 : (v)))
+
+/* the full-precision copy of the 8-bit buffer that holds addr (NULL: not one of them), and addr's index in it */
+const s16* PcmPlaybackWide(u32 addr, s32* index) {
+    u32 a = (u32)(s32)sPcmOutputBufferA, b = (u32)(s32)sPcmOutputBufferB;
+    if (addr >= a && addr < a + sizeof(sPcmOutputBufferA)) { *index = (s32)(addr - a); return sPcmWideA; }
+    if (addr >= b && addr < b + sizeof(sPcmOutputBufferB)) { *index = (s32)(addr - b); return sPcmWideB; }
+    return 0;
+}
+#endif
 
 #define DMA_SOUND_FIFO                                                        \
     ((DMA_START_SPECIAL | DMA_32BIT | DMA_REPEAT | DMA_DEST_FIXED) << 16)
@@ -94,6 +110,14 @@ void PcmPlaybackUpdate() {
     REG_DMA1CNT ^= DMA_ENABLE << 16;
     sPcmActiveBufferIndex = sPcmActiveBufferIndex == 1 ? 2 : 1;
     dst = sPcmActiveBufferIndex == 1 ? sPcmOutputBufferB : sPcmOutputBufferA;
+#ifdef PLATFORM_PC
+    {
+        s16* wide = sPcmActiveBufferIndex == 1 ? sPcmWideB : sPcmWideA;
+        s32 p = pos;
+        for (i = 0; i < sPcmSamplesPerBuffer; i++, p++)
+            wide[i] = PCM_WIDE(src[p & 0x7FF]);
+    }
+#endif
 
     if (pos + sPcmSamplesPerBuffer <= 0x7FF) {
         for (i = 0; i < sPcmSamplesPerBuffer; i++) {
