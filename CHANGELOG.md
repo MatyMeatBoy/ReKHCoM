@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.12
+
+- Credits song (Sora and Riku): the game's one streamed PCM track now plays at the precision it is decoded with, instead of cut to 8 bits as on the cartridge, without its hiss and without a click near the end (#641). `KHCOM_CREDITS_8BIT=1` plays the cartridge's 8-bit stream.
+- Android: HD movies use the software H.264 decoder by default on MediaTek systems, where the hardware decoder showed green vertical bands (#643). `KHCOM_HDMOVIE_HW` keeps the hardware decoder.
+- GA36 v0.10:
+  - Frames reach the panel by KMS page flips, with the panel retimed from about 55.7 Hz to 59.72 Hz: no tearing and no periodic judder when walking. `KHCOM_KMS=0` restores the previous `/dev/fb0` copy.
+  - Riku's (and every enemy's) HD HP bar is cached: in HD battles, slow frames over 1000 went from 32 to 0.
+  - The opponent's stock total sits under its cards with the HD enemy bar.
+- Anbernic/R36S keeps the previous framebuffer path (`KHCOM_KMS=0` by default) until the page flips are tested there.
+
 ## v2.10
 
 - Rendering on every platform: the renderer fast paths first measured on the GA36 handheld are now on by default (vectorised tile decoding, composition and colour-effect blending, plainer rows resolved once, sprite rows by tile runs, menu background reuse). Pictures are identical to the previous paths. On PC the NEON kernels build through SIMDe as SSE; in a Windows test the composition ran 1.5× to 2.6× faster, and field scenes at 1080p rose from 75 to 109 uncapped FPS. `KHCOM_FAST_PATHS=0` restores the previous paths for comparison.

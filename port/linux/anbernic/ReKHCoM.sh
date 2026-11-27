@@ -28,6 +28,8 @@ fi
 GAMEDIR="$(cd "$(dirname "$0")" && pwd)/rekhcom"
 cd "$GAMEDIR" || exit 1
 export KHCOM_FBDEV="${KHCOM_FBDEV:-/dev/fb0}"
+# KMS page flips (fbdev_linux.c) are verified on the GA36 panel only: the old /dev/fb0 copy here until tested
+export KHCOM_KMS="${KHCOM_KMS:-0}"
 export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-alsa}"
 
 if [ -n "$GPTOKEYB" ]; then
